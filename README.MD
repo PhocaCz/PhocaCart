@@ -1,0 +1,1 @@
+Phoca Cart is Joomla! CMS extension. Component - e-commerce solution for Joomla! CMS
