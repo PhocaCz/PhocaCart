@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="sku" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC" />
+<field name="upc" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC" />
+<field name="ean" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC" />
+<field name="jan" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_JAN_LABEL" description="COM_PHOCACART_FIELD_JAN_DESC" />
+<field name="mpn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MPN_LABEL" description="COM_PHOCACART_FIELD_MPN_DESC" />
+<field name="isbn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ISBN_LABEL" description="COM_PHOCACART_FIELD_ISBN_DESC" />
+
+<field name="price" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRICE_LABEL" description="COM_PHOCACART_FIELD_PRICE_DESC" />
+<field name="price_original" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_DESC" />
+
+<field name="tax_id" type="phocatax" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
+
+<field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" class="inputbox" required="true" />
+<field name="manufacturer_id" type="phocamanufacturer" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC" class="inputbox" />
+
+<field name="ordering" type="PhocaCartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+		
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC" />
+
+<field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC" />
+<field name="min_quantity" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_DESC" />
+<field name="stockstatus_a_id" type="phocastockstatus" manager="a" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2" />
+<field name="stockstatus_b_id" type="phocastockstatus" manager="b" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1" />
+
+<field name="related" type="PhocaSelectItem"  label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL"  description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" />
+
+<field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
+
+<field name="download_folder" type="phocacarttoken" readonly="true" manager="folder" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_DESC" />
+
+<field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
+
+<field name="download_token" type="phocacarttoken" manager="token" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC" />
+
+<field name="download_hits" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC" />
+
+<field name="attributes" type="PhocaAttributes" multiple="1" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" class="inputbox" size="1" />
+
+<field name="length" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LENGTH_LABEL" description="COM_PHOCACART_FIELD_LENGTH_DESC" />
+<field name="width" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_WIDTH_LABEL" description="COM_PHOCACART_FIELD_WIDTH_DESC" />
+<field name="height" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_HEIGHT_DESC" />
+
+
+<field name="weight" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_WEIGHT_DESC" />
+
+
+<field name="volume" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_VOLUME_LABEL" description="COM_PHOCACART_FIELD_VOLUME_DESC" />
+
+
+
+<field name="metakey" type="textarea"
+			label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
+			class="inputbox" rows="3" cols="30" />
+
+<field name="metadesc" type="textarea"
+	label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
+	class="inputbox" rows="3" cols="30" />
+	</fieldset>
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field>
+
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+
+<field name="tags" type="phocatags" multiple="1" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="inputbox" size="1" />
+<!--
+<field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
+-->
+	</fieldset>
+	
+<fields name="metadata">
+<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+<!--
+	<field name="robots" type="list"
+		label="JField_Metadata_Robots_Label" description="JField_Metadata_Robots_Desc"
+	>
+		<option value="">JGLOBAL_USE_GLOBAL</option>
+		<option value="0">JGLOBAL_INDEX_FOLLOW</option>
+		<option value="1">JGLOBAL_NOINDEX_FOLLOW</option>
+		<option value="2">JGLOBAL_INDEX_NOFOLLOW</option>
+		<option value="3">JGLOBAL_NOINDEX_NOFOLLOW</option>
+		<option value="4">JGLOBAL_NO_ROBOTS_TAG</option>
+	</field>
+
+	<field name="author" type="text" label="JAUTHOR"
+		description="JField_Metadata_Author_Desc" size="20" />
+
+	<field name="rights" type="text"
+		label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
+		required="" filter="string" cols="30" rows="2" /> -->
+</fieldset>
+</fields>
+
+	
+</form>

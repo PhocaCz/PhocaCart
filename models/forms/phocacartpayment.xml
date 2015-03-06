@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"  />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="method" type="phocaPaymentMethod" table="" class="inputbox" label="COM_PHOCACART_FIELD_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_METHOD_DESC" />
+
+<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
+
+<field name="ordering" type="phocacartOrdering" table="payment" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+
+<field name="cost" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COST_LABEL" description="COM_PHOCACART_FIELD_COST_DESC" />
+
+<field name="tax_id" type="phocatax" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
+
+<!-- AMOUNT -->
+<field name="lowest_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LOWEST_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_LOWEST_AMOUNT_DESC" />
+<field name="highest_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_HIGHEST_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_HIGHEST_AMOUNT_DESC" />
+<field name="active_amount" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_AMOUNT_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<!-- REGION -->
+<field name="country" type="PhocaCartCountries" table="payment" multiple="1" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
+
+<field name="active_country" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<!-- COUNTRY -->
+<field name="region" type="PhocaCartRegions" table="payment" multiple="1" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
+
+<field name="active_region" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_REGION_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_REGION_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<!-- SHIPPING -->
+<field name="shipping" type="PhocaCartShipping" table="payment" multiple="1" label="COM_PHOCACART_FIELD_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_DESC" class="inputbox" size="1" />
+
+<field name="active_shipping" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_SHIPPING_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+
+	</fieldset>
+	
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+
+
+
+	
+	</fieldset>
+
+	
+</form>

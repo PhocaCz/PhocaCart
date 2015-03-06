@@ -1,0 +1,169 @@
+<?php
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Extension
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+defined('_JEXEC') or die();
+
+class PhocaCartStock
+{
+	public static function getStockStatusData($stockStatusId, $available = 1) {
+	
+		$db = JFactory::getDBO();
+		
+		if ($available == 1) {
+			$statusMethod = 'p.stockstatus_a_id';// Status when product is in stock A(P > 0), or stock is not checked
+		} else {
+			$statusMethod = 'p.stockstatus_n_id';// Status when product is not in stock N(P = 0)
+		}
+		
+		$query = 'SELECT s.id, s.title, s.image FROM #__phocacart_stock_statuses AS s'
+				.' LEFT JOIN #__phocacart_products AS p ON s.id = '.$statusMethod
+			    .' WHERE s.id = '.(int) $stockStatusId;
+		$db->setQuery($query);
+		$data = $db->loadObjectList();
+			
+		
+		return $data;
+	}
+	
+	public static function getStockStatus($stockCount, $minQuantity, $stockStatusIdA, $stockStatusIdN) {
+		
+		// A > 0 OR Not checking
+		// N = 0
+		$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		$stock_checking			= $paramsC->get( 'stock_checking', 0 );
+		$display_stock_status	= $paramsC->get( 'display_stock_status', 0 );
+		$stock_checkout			= $paramsC->get( 'stock_checkout', 0 );
+		
+		$stock 	= array();
+		
+		/*
+		if($stockStatusIdN > 0) {
+			$dataB = self::getStockStatusData($stockStatusId);
+		}*/
+		
+		$stock['stock_count'] 	= false;
+		$stock['stock_status'] 	= false;
+		$stock['status_image'] 	= false;
+			
+		if ($display_stock_status == 1) {
+			if ($stock_checking == 1) {
+				if ((int)$stock > 0) {
+					// 1 There is product in stock, display status - if set
+					if($stockStatusIdA > 0) {
+						$data = self::getStockStatusData($stockStatusIdA, 1);
+						if (!empty($data) && $data[0]->title != '') {
+							$stock['stock_status'] = $data[0]->title;
+						}
+						if (!empty($data) && $data[0]->image != '') {
+							$stock['status_image'] = $data[0]->image;
+						}
+					}
+					$stock['stock_count'] = $stockCount;
+				} else {
+					// 2 There is no product in stock, display status - if set
+					if($stockStatusIdN > 0) {
+						$data = self::getStockStatusData($stockStatusIdN, 0);
+						if (!empty($data) && $data[0]->title != '') {
+							$stock['stock_status'] = $data[0]->title;
+						}
+						if (!empty($data) && $data[0]->image != '') {
+							$stock['status_image'] = $data[0]->image;
+						}
+					}
+					$stock['stock_count'] = 0;
+				}
+			} else {
+				// 3 No stock checking we don't care about count of products but we want to display status
+				if($stockStatusIdA > 0) {
+					$data = self::getStockStatusData($stockStatusIdA, 1);
+					if (!empty($data) && $data[0]->title != '') {
+						$stock['stock_status'] = $data[0]->title;
+					}
+					if (!empty($data) && $data[0]->image != '') {
+						$stock['status_image'] = $data[0]->image;
+					}
+				}
+				// Stock count is set to false
+			}
+		
+		}
+		
+		$stock['min_quantity'] = false;
+		if ($minQuantity > 0) {
+			$stock['min_quantity'] = $minQuantity;
+		}
+		
+		return $stock;
+	}
+	
+	public static function getStockStatusOutput($stockStatus) {
+		$o = '';
+		if ($stockStatus['stock_status'] && $stockStatus['stock_count']) {
+			$o .= $stockStatus['stock_status'] . ' ('.$stockStatus['stock_count'].')';
+		} else if (!$stockStatus['stock_status'] && $stockStatus['stock_count']) {
+			$o .= $stockStatus['stock_count'];
+		} else if ($stockStatus['stock_status'] && !$stockStatus['stock_count']) {
+			$o .= $stockStatus['stock_status'];
+		}
+		
+		if ($stockStatus['status_image']) {
+			$o .= '<img src="'.JURI::base(true).'/'.$stockStatus['status_image'].'" alt="" class="img-responsive ph-image" />';
+		}
+		return $o;
+	}
+	
+	
+	/* Handling of stock */
+	public static function handleStockProduct($productId, $orderStatusId, $quantity, $stockMovement = '') {
+		
+		// We know the stock movement, ignore the status
+		if ($stockMovement == '+' || $stockMovement == '-') {
+			$status = array();
+			$status['stock_movements'] = $stockMovement;
+		} else {
+			$status = PhocaCartOrderStatus::getStatus((int)$orderStatusId);
+		}
+		
+		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
+			$db = JFactory::getDBO();
+			$query = 'UPDATE #__phocacart_products SET stock = stock + '.(int)$quantity.' WHERE id = '.(int)$productId;
+			$db->setQuery($query);
+			$db->execute();
+		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
+			$db = JFactory::getDBO();
+			$query = 'UPDATE #__phocacart_products SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$productId;
+			$db->setQuery($query);
+			$db->execute();
+		}
+		return true;
+	}
+	
+	public static function handleStockAttributeOption($optionId, $orderStatusId, $quantity, $stockMovement = '') {
+
+		// We know the stock movement, ignore the status
+		if ($stockMovement == '+' || $stockMovement == '-') {
+			$status = array();
+			$status['stock_movements'] = $stockMovement;
+		} else {
+			$status = PhocaCartOrderStatus::getStatus((int)$orderStatusId);
+		}
+		
+		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
+			$db = JFactory::getDBO();
+			$query = 'UPDATE #__phocacart_attribute_values SET stock = stock + '.(int)$quantity.' WHERE id = '.(int)$optionId;
+			$db->setQuery($query);
+			$db->execute();
+		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
+			$db = JFactory::getDBO();
+			$query = 'UPDATE #__phocacart_attribute_values SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$optionId;
+			$db->setQuery($query);
+			$db->execute();
+		}
+		return true;
+	}
+}

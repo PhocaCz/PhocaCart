@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" required="true" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="label" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LABEL_LABEL" description="COM_PHOCACART_FIELD_LABEL_DESC" required="true" />
+
+<field name="description" type="textarea" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" class="inputbox" rows="3" cols="30"  required="true" />
+
+<field name="id_input" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ID_LABEL" description="COM_PHOCACART_FIELD_ID_DESC" />
+
+<field name="type" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" required="true" />
+<field name="default" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" />
+<field name="size" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" />
+<field name="cols" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COLS_LABEL" description="COM_PHOCACART_FIELD_COLS_DESC" />
+<field name="rows" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ROWS_LABEL" description="COM_PHOCACART_FIELD_ROWS_DESC" />
+<field name="class" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CLASS_LABEL" description="COM_PHOCACART_FIELD_CLASS_DESC" />
+<field name="filter" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FILTER_LABEL" description="COM_PHOCACART_FIELD_FILTER_DESC" />
+
+<field name="read_only" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_READ_ONLY_LABEL" description="COM_PHOCACART_FIELD_READ_ONLY_DESC" >
+<option value="0">COM_PHOCACART_NO</option>
+<option value="1">COM_PHOCACART_YES</option>
+<option value="2">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS</option>
+</field>
+
+<field name="validate" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_VALIDATE_LABEL" description="COM_PHOCACART_FIELD_VALIDATE_DESC" />
+
+<field name="unique" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_UNIQUE_LABEL" description="COM_PHOCACART_FIELD_UNIQUE_DESC" >
+<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+<field name="preicon" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PREICON_LABEL" description="COM_PHOCACART_FIELD_PREICON_DESC" />
+
+<field name="additional" label="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_DESC" class="inputbox" />
+
+
+<field name="ordering" type="PhocaCartOrdering" table="formfield" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+
+	</fieldset>
+
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="display_billing" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_BILLING_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_BILLING_FORM_DESC" >
+<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
+<field name="display_shipping" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_FORM_DESC" >
+<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
+<field name="display_user_account" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_DESC" >
+<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+<!--
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field> -->
+
+
+	</fieldset>
+
+
+	
+</form>

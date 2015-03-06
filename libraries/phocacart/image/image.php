@@ -1,0 +1,86 @@
+<?php
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Extension
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
+class PhocaCartImage
+{
+	public static function getThumbnailName($path, $filename, $size) {
+		
+		$thumbName	= new StdClass();
+		$title 		= self::getTitleFromFile($filename , 1);
+		switch ($size) {
+			case 'large':
+			$fileNameThumb 	= 'phoca_thumb_l_'. $title;
+			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			break;
+
+			case 'medium':
+			$fileNameThumb 	= 'phoca_thumb_m_'. $title;
+			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			break;
+			
+			default:
+			case 'small':
+			$fileNameThumb 	= 'phoca_thumb_s_'. $title;
+			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			break;	
+		}
+		return $thumbName;
+	}
+	
+	public static function getTitleFromFile(&$filename, $displayExt = 0) {
+		
+		$filename 			= str_replace('//', '/', $filename);
+		//$filename			= str_replace(DS, '/', $filename);
+		$folderArray		= explode('/', $filename);
+		$countFolderArray	= count($folderArray);
+		$lastArrayValue 	= $countFolderArray - 1;
+		
+		$title = new stdClass();
+		$title->with_extension 		= $folderArray[$lastArrayValue];
+		$title->without_extension	= self::removeExtension($folderArray[$lastArrayValue]);
+		
+		if ($displayExt == 1) {
+			return $title->with_extension;
+		} else if ($displayExt == 0) {
+			return $title->without_extension;
+		} else {
+			return $title;
+		}
+	}
+	
+	public static function removeExtension($filename) {
+		return substr($filename, 0, strrpos( $filename, '.' ));
+	}
+
+	public static function getJpegQuality($jpegQuality) {
+		if ((int)$jpegQuality < 0) {
+			$jpegQuality = 0;
+		}
+		if ((int)$jpegQuality > 100) {
+			$jpegQuality = 100;
+		}
+		return $jpegQuality;
+	}
+	
+	public static function getAdditionalImages($itemId) {
+		$db = JFactory::getDBO();
+		$query = 'SELECT i.image FROM #__phocacart_product_images AS i'
+				.' LEFT JOIN #__phocacart_products AS p ON p.id = i.product_id'
+			    .' WHERE p.id = '.(int) $itemId;
+		$db->setQuery($query);
+		$images = $db->loadObjectList();
+		
+		return $images;
+	}
+}
+?>

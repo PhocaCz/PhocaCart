@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="code" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CURRENCY_CODE_LABEL" description="COM_PHOCACART_FIELD_CURRENCY_CODE_DESC"  />
+<field name="exchange_rate" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EXCHANGE_RATE_LABEL" description="COM_PHOCACART_FIELD_EXCHANGE_RATE_DESC"  />
+
+<field name="price_format" type="list" default="0" label="COM_PHOCACART_FIELD_PRICE_FORMAT_LABEL" description="COM_PHOCACART_FIELD_PRICE_FORMAT_DESC" >
+				<option value="0">COM_PHOCACART_PRICE_S_CURRENCY_SYMBOL</option>
+				<option value="1">COM_PHOCACART_PRICE_CURRENCY_SYMBOL</option>
+				<option value="2">COM_PHOCACART_CURRENCY_SYMBOL_PRICE</option>
+				<option value="3">COM_PHOCACART_CURRENCY_SYMBOL_S_PRICE</option>
+			</field>
+		<field name="price_currency_symbol" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_CURRENCY_SYMBOL_LABEL" description="COM_PHOCACART_FIELD_PRICE_CURRENCY_SYMBOL_LABEL" />
+		
+		<field name="price_dec_symbol" default="," size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_DECIMAL_SYMBOL_LABEL" description="COM_PHOCACART_FIELD_PRICE_DECIMAL_SYMBOL_DESC" />
+		
+		<field name="price_decimals" default="2" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_DECIMALS_LABEL" description="COM_PHOCACART_FIELD_PRICE_DECIMALS_DESC" />
+		<field name="price_thousands_sep" default="." size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_THOUSANDS_SEPARATOR_LABEL" description="COM_PHOCACART_FIELD_PRICE_THOUSANDS_SEPARATOR_DESC" />
+		
+		<field name="price_suffix" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_SUFFIX_DESC" />
+		<field name="price_prefix" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" />
+		
+
+<field name="ordering" type="PhocaCartOrdering" table="currency" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+	
+	</fieldset>
+
+
+
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field>
+
+<!--
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+
+<field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
+-->
+	</fieldset>
+	
+<fields name="metadata">
+<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+<!--
+	<field name="robots" type="list"
+		label="JField_Metadata_Robots_Label" description="JField_Metadata_Robots_Desc"
+	>
+		<option value="">JGLOBAL_USE_GLOBAL</option>
+		<option value="0">JGLOBAL_INDEX_FOLLOW</option>
+		<option value="1">JGLOBAL_NOINDEX_FOLLOW</option>
+		<option value="2">JGLOBAL_INDEX_NOFOLLOW</option>
+		<option value="3">JGLOBAL_NOINDEX_NOFOLLOW</option>
+		<option value="4">JGLOBAL_NO_ROBOTS_TAG</option>
+	</field>
+
+	<field name="author" type="text" label="JAUTHOR"
+		description="JField_Metadata_Author_Desc" size="20" />
+
+	<field name="rights" type="text"
+		label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
+		required="" filter="string" cols="30" rows="2" /> -->
+</fieldset>
+</fields>
+
+	
+</form>

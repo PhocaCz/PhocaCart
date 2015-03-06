@@ -1,0 +1,69 @@
+<?php
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Extension
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+defined('_JEXEC') or die('Restricted access');
+
+jimport('joomla.application.component.controller');
+$app		= JFactory::getApplication();
+$option 	= $app->input->get('option');
+
+$l['cp']	= array('COM_PHOCACART_CONTROL_PANEL', '');
+$l['ps']	= array('COM_PHOCACART_PRODUCTS', 'phocacartitems');
+$l['cs']	= array('COM_PHOCACART_CATEGORIES', 'phocacartcategories');
+$l['sp']	= array('COM_PHOCACART_SPECIFICATIONS', 'phocacartspecifications');
+$l['mn']	= array('COM_PHOCACART_MANUFACTURERS', 'phocacartmanufacturers');
+$l['os']	= array('COM_PHOCACART_ORDERS', 'phocacartorders');
+$l['st']	= array('COM_PHOCACART_ORDER_STATUSES', 'phocacartstatuses');
+$l['sk']	= array('COM_PHOCACART_STOCK_STATUSES', 'phocacartstockstatuses');
+$l['sh']	= array('COM_PHOCACART_SHIPPING', 'phocacartshippings');
+$l['ct']	= array('COM_PHOCACART_COUNTRIES', 'phocacartcountries');
+$l['re']	= array('COM_PHOCACART_REGIONS', 'phocacartregions');
+$l['pa']	= array('COM_PHOCACART_PAYMENT', 'phocacartpayments');
+$l['cu']	= array('COM_PHOCACART_CURRENCIES', 'phocacartcurrencies');
+$l['tx']	= array('COM_PHOCACART_TAXES', 'phocacarttaxes');
+$l['us']	= array('COM_PHOCACART_USERS', 'phocacartusers');
+$l['ff']	= array('COM_PHOCACART_FORM_FIELDS', 'phocacartformfields');
+$l['rw']	= array('COM_PHOCACART_REVIEWS', 'phocacartreviews');
+//$l['vo']	= array('COM_PHOCACART_VOUCHERS', 'phocacartvouchers');
+$l['co']	= array('COM_PHOCACART_COUPONS', 'phocacartcoupons');
+$l['do']	= array('COM_PHOCACART_DOWNLOADS', 'phocacartdownloads');
+$l['tg']	= array('COM_PHOCACART_TAGS', 'phocacarttags');
+$l['sc']	= array('COM_PHOCACART_STATISTICS', 'phocacartstatistics');
+$l['lo']	= array('COM_PHOCACART_SYSTEM_LOG', 'phocacartlogs');
+$l['in']	= array('COM_PHOCACART_INFO', 'phocacartinfo');
+
+// Submenu view
+
+
+$view	= JFactory::getApplication()->input->get('view');
+$layout	= JFactory::getApplication()->input->get('layout');
+
+if ($layout == 'edit') {
+} else {
+	foreach ($l as $k => $v) {
+		
+		if ($v[1] == '') {
+			$link = 'index.php?option='.$option;
+		} else {
+			$link = 'index.php?option='.$option.'&view=';
+		}
+
+		if ($view == $v[1]) {
+			JHtmlSidebar::addEntry(JText::_($v[0]), $link.$v[1], true );
+		} else {
+			JHtmlSidebar::addEntry(JText::_($v[0]), $link.$v[1]);
+		}
+	}
+}
+class phocaCartCpController extends JControllerLegacy
+{
+	function display($cachable = false, $urlparams = array()) {
+		parent::display($cachable, $urlparams);
+	}
+}
+?>

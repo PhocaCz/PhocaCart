@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+
+<fieldset name="user" addrulepath="components/com_phocacart/models/rules" addfieldpath="components/com_phocacart/models/fields" label="COM_PHOCACART_FORM_LABEL">
+			
+
+
+
+			
+		
+	</fieldset>
+	
+	<fieldset name="hidden">
+	
+			
+	</fieldset>
+</form>

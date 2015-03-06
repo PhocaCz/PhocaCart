@@ -1,0 +1,58 @@
+@font-face {
+	font-family: 'phIcoMoon';
+	src: url('fonts/icomoon.eot');
+	src: url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.svg#phIcoMoon') format('svg'),
+		url('fonts/icomoon.woff') format('woff'),
+		url('fonts/icomoon.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[data-icon]:before {
+	font-family: 'phIcoMoon';
+	content: attr(data-icon);
+	speak: none;
+}
+[class^="icon-"],
+[class*=" icon-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	*margin-right: .3em;
+	line-height: 14px;
+}
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+	font-family: 'phIcoMoon';
+	font-style: normal;
+	speak: none;
+}
+[class^="icon-"].disabled,
+[class*=" icon-"].disabled {
+	font-weight: normal;
+}
+.icon-ph-invoice:before {
+	font-family: 'phIcoMoon' !important;
+	content: "\e600";
+} 
+.icon-ph-del-note:before {
+	font-family: 'phIcoMoon' !important;
+	content: "\e601";
+} 
+.icon-ph-cart1:before {
+	font-family: 'phIcoMoon' !important;
+	content: "\e602";
+}
+.icon-ph-cart2:before {
+	font-family: 'phIcoMoon' !important;
+	content: "\e603";
+} 
+.icon-ph-cart3:before {
+	font-family: 'phIcoMoon' !important;
+	content: "\e604";
+}
+.icon-ph-earth:before {
+	font-family: 'phIcoMoon' !important;
+	content: "\e605";
+} 

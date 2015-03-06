@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="code2" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CODE2_LABEL" description="COM_PHOCACART_FIELD_CODE2_DESC"  />
+<field name="code3" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CODE_LABEL" description="COM_PHOCACART_FIELD_CODE_DESC"  />
+
+<field name="ordering" type="PhocaCartOrdering" table="country" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+
+
+<field name="metakey" type="textarea"
+			label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
+			class="inputbox" rows="3" cols="30" />
+
+<field name="metadesc" type="textarea"
+	label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
+	class="inputbox" rows="3" cols="30" />
+	</fieldset>
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field>
+
+<!--
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+
+<field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
+-->
+	</fieldset>
+	
+<fields name="metadata">
+<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+<!--
+	<field name="robots" type="list"
+		label="JField_Metadata_Robots_Label" description="JField_Metadata_Robots_Desc"
+	>
+		<option value="">JGLOBAL_USE_GLOBAL</option>
+		<option value="0">JGLOBAL_INDEX_FOLLOW</option>
+		<option value="1">JGLOBAL_NOINDEX_FOLLOW</option>
+		<option value="2">JGLOBAL_INDEX_NOFOLLOW</option>
+		<option value="3">JGLOBAL_NOINDEX_NOFOLLOW</option>
+		<option value="4">JGLOBAL_NO_ROBOTS_TAG</option>
+	</field>
+
+	<field name="author" type="text" label="JAUTHOR"
+		description="JField_Metadata_Author_Desc" size="20" />
+
+	<field name="rights" type="text"
+		label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
+		required="" filter="string" cols="30" rows="2" /> -->
+</fieldset>
+</fields>
+
+	
+</form>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_PHOCACART_DOWNLOAD_LAYOUT">
+		<message>
+			<![CDATA[COM_PHOCACART_DOWNLOAD_LAYOUT_DESC]]>
+		</message>
+	</layout>
+	
+		<name>COM_PHOCACART_DOWNLOAD_LAYOUT</name>
+		<description>COM_PHOCACART_DOWNLOAD_LAYOUT_DESC</description>
+		
+		<fields name="params">
+<fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields" >
+
+			
+			
+		</fieldset>
+</fields>
+
+</metadata>

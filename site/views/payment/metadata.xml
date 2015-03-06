@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<!--<view title="COM_PHOCACART_PAYMENT_GROUP">
+		<message><![CDATA[COM_PHOCACART_PAYMENT_GROUP_DESC]]></message>
+	</view>-->
+	<view hidden="true" />
+</metadata>
