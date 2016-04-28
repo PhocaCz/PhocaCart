@@ -28,6 +28,12 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 // 5 ... PAYMENT CANCELED
 
 
+// STOCK
+// stock_checking - set if stock is checked or not
+// stock_checkout - if stock is checked (stock_checking = 1), set if user can order product which is not on stock
+// stockvalid - when we make checkout, it can happen that some of the product is not on stock, so we store this info to variable stockvalid
+//            - e.g. we check the stock, product A is on stock, product B not and user ordered both - stockvalid = 0
+
 
 
 class PhocaCartSettings
@@ -62,6 +68,19 @@ class PhocaCartSettings
 			
 		}
 		return $group;
+	}
+	
+	public static function getListFilterParams($includeId = 0) {	
+		$p[] = 'price_from';
+		$p[] = 'price_to';
+		$p[] = 'tag';
+		$p[] = 'manufacturer';
+		$p[] = 'a';
+		$p[] = 's';
+		if ($includeId > 0) {
+			$p[] = 'id';
+		}
+		return $p;
 	}
 	
 	/*

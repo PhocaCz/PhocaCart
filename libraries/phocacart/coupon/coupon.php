@@ -46,11 +46,12 @@ class PhocaCartCoupon
 			.' LEFT JOIN #__phocacart_coupon_count_user AS cu ON cu.coupon_id = c.id AND cu.user_id = '.(int)$user->id // limit c for user
 			. $where
 			//.' GROUP BY c.id'
+			.' ORDER BY c.id'
 			.' LIMIT 1';
 			
 			$db->setQuery($query);
 			$coupon = $db->loadAssoc(); 
-			
+		
 			if (!empty($coupon)) {
 				$this->coupon = $coupon;
 				return true;
@@ -245,13 +246,15 @@ class PhocaCartCoupon
 		if ($select == 1) {
 			$query = 'SELECT co.coupon_id';
 		} else {
-			$query = 'SELECT a.id as id, a.title as title, c.title as category_title';
+			$query = 'SELECT a.id as id, a.title as title, group_concat(c.title SEPARATOR \' \') AS categories_title';
 		}
 		$query .= ' FROM #__phocacart_products AS a'
 		.' LEFT JOIN #__phocacart_coupon_products AS co ON a.id = co.product_id'
-		.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
-		.' WHERE co.coupon_id = '.(int) $couponId;
-		
+		//.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
+		.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
+		.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+		.' WHERE co.coupon_id = '.(int) $couponId
+		.' GROUP BY a.id';
 		$db->setQuery($query);
 		
 		if ($select == 1) {
@@ -283,6 +286,20 @@ class PhocaCartCoupon
 		} else {
 			$coupon = $db->loadObjectList();
 		}
+		return $coupon;
+	}
+	
+	public static function getCouponTitleById($couponId) {
+	
+		$db =JFactory::getDBO();
+		$query = 'SELECT c.title'
+		.' FROM #__phocacart_coupons AS c'
+		.' WHERE c.id = '.(int) $couponId
+		.' ORDER BY c.id'
+		.' LIMIT 1';	
+		$db->setQuery($query);
+		
+		$coupon = $db->loadObject();
 		return $coupon;
 	}
 }

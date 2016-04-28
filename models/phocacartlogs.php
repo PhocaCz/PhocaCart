@@ -138,12 +138,12 @@ class PhocaCartCpModelPhocaCartLogs extends JModelList
 		}
 	
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering');
-		$orderDirn	= $this->state->get('list.direction');
+		$orderCol	= $this->state->get('list.ordering', 'title');
+		$orderDirn	= $this->state->get('list.direction', 'asc');
 		
-		if ($orderCol != 'a.id') {
+		/*if ($orderCol != 'a.id') {
 			$orderCol = 'a.id';
-		}
+		}*/
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));

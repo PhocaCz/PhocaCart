@@ -2,12 +2,12 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>25/11/2014</creationDate>
+	<creationDate>26/04/2016</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.0.0 Beta1</version>
+	<version>3.0.0 RC2</version>
 	<description>Phoca Cart</description>
 	<scriptfile>install/script.php</scriptfile>
 
@@ -35,6 +35,7 @@
 		<folder>assets</folder>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
+		<folder>layouts</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
@@ -75,6 +76,7 @@
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-coupon.png" alt="COM_PHOCACART_COUPONS" view="phocacartcoupons" link="option=com_phocacart&amp;view=phocacartcoupons">COM_PHOCACART_COUPONS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-download.png" alt="COM_PHOCACART_DOWNLOADS" view="phocacartdownloads" link="option=com_phocacart&amp;view=phocacartdownloads">COM_PHOCACART_DOWNLOADS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-tag.png" alt="COM_PHOCACART_TAGS" view="phocacarttags" link="option=com_phocacart&amp;view=phocacarttags">COM_PHOCACART_TAGS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-feeds.png" alt="COM_PHOCACART_XML_FEEDS" view="phocacartfeeds" link="option=com_phocacart&amp;view=phocacartfeeds">COM_PHOCACART_XML_FEEDS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-statistics.png" alt="COM_PHOCACART_STATISTICS" view="phocacartstatistics" link="option=com_phocacart&amp;view=phocacartstatistics">COM_PHOCACART_STATISTICS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-log.png" alt="COM_PHOCACART_SYSTEM_LOG" view="phocacartlogs" link="option=com_phocacart&amp;view=phocacartlogs">COM_PHOCACART_SYSTEM_LOG</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-info.png" alt="COM_PHOCACART_INFO" view="phocacartinfo" link="option=com_phocacart&amp;view=phocacartinfo">COM_PHOCACART_INFO</menu>

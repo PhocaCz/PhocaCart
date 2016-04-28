@@ -39,10 +39,6 @@ class PhocaCartAccess
 		$this->paymentview		= 0;
 		$this->paymentnotused	= 0;
 		$this->confirm			= 0;
-		
-
 	}
-	
-	
 }
 ?>

@@ -103,7 +103,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 			$notifyOther = 1;
 		}
 		
-		$notify = PhocaCartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements']); 
+		$notify = PhocaCartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements']); 
 		
 		PhocaCartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment']);
 		

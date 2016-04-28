@@ -45,7 +45,7 @@ class PhocaCartPayment
 				.' ORDER BY p.ordering';
 		$db->setQuery($query);*/
 		
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.title, p.image, p.access,'
+		$query = ' SELECT p.id, p.tax_id, p.cost, p.title, p.image, p.access, p.description,'
 				.' p.active_amount, p.active_country, p.active_region, p.active_shipping,'
 				.' p.lowest_amount, p.highest_amount,'
 				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
@@ -183,11 +183,12 @@ class PhocaCartPayment
 				.' LIMIT 1';
 		$db->setQuery($query);*/
 		
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.title, p.image, p.method, p.params, '
+		$query = ' SELECT p.id, p.tax_id, p.cost, p.title, p.image, p.method, p.params, p.description, '
 				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId
+				.' ORDER BY p.id'
 				.' LIMIT 1';
 		$db->setQuery($query);
 

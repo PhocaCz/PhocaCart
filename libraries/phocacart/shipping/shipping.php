@@ -28,7 +28,7 @@ class PhocaCartShipping
 		// ACCESS
 		$accessWhere = " AND s.access IN (".$userLevels.")";
 		
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.title, s.image, s.access,'
+		$query = ' SELECT s.id, s.tax_id, s.cost, s.title, s.description, s.image, s.access,'
 				.' s.active_amount, s.active_country, s.active_region, s.active_weight,'
 				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight,'
 				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
@@ -156,11 +156,12 @@ class PhocaCartShipping
 		
 		$db = JFactory::getDBO();
 		
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.title, s.image,'
+		$query = ' SELECT s.id, s.tax_id, s.cost, s.title, s.description, s.image,'
 				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
 				.' WHERE s.id = '.(int)$shippingId
+				.' ORDER BY s.id'
 				.' LIMIT 1';
 		$db->setQuery($query);
 

@@ -1,230 +1,500 @@
 <?php
-/* @package Joomla
- * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- */
-defined('_JEXEC') or die();
-
 /**
- * Method to build Route
- * @param array $query
- */ 
-function PhocaCartBuildRoute(&$query)
+ * @package     Joomla.Site
+ * @subpackage  com_phocacart
+ *
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+defined('_JEXEC') or die;
+
+if (! class_exists('PhocaCartLoader')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
+}
+phocacartimport('phocacart.category.category');
+
+class PhocaCartRouter extends JComponentRouterBase
 {
-	$viewsNoId 	= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info');
-	$viewsId	= array('category', 'item');
-	
-	static $items;
-	$segments	= array();
-	$itemid		= null;
-	
-	$app = JFactory::getApplication();
-	$menu = $app->getMenu();
-	
+	public function build(&$query) {
 		
-	// Break up the weblink/category id into numeric and alias values.
-	if (isset($query['id']) && strpos($query['id'], ':')) {
-		list($query['id'], $query['alias']) = explode(':', $query['id'], 2);
-	}
-
-	// Break up the category id into numeric and alias values.
-/*	if (isset($query['catid']) && strpos($query['catid'], ':')) {
-		list($query['catid'], $query['catalias']) = explode(':', $query['catid'], 2);
-	}*/
-
-	// Get the menu items for this component.
-	if (!$items) {
-
-		//$app		= JFactory::getApplication();
-		$app    	= JApplication::getInstance('site');
-		$menu		= $app->getMenu();
-		$items		= $menu->getItems('component', 'com_phocacart');
+		$viewsNoId 	= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items');
+		$viewsId	= array('category', 'item', 'items', 'feed');
+		$viewsAll	= array_merge($viewsNoId, $viewsId);
 		
-	}
-	
+		$segments = array();
 
-	// Search for an appropriate menu item.
-	if (is_array($items))
-	{
-		// If only the option and itemid are specified in the query, return that item.
-		if (!isset($query['view']) && !isset($query['id']) && !isset($query['catid']) && !isset($query['download']) && isset($query['Itemid'])) {
-			$itemid = (int) $query['Itemid'];
+		// Get a menu item based on Itemid or currently active
+		$params = JComponentHelper::getParams('com_phocacart');
+		$advanced = $params->get('sef_advanced_link', 0);
+
+		// Unset limitstart=0 since it's pointless
+		if (isset($query['limitstart']) && $query['limitstart'] == 0)
+		{
+			unset($query['limitstart']);
 		}
 
-	
-		// ------------------------------------------------------
-		// Search for a specific link based on the critera given.
+		// We need a menu item.  Either the one specified in the query, or the current active one if none specified
+		if (empty($query['Itemid']))
+		{
+			$menuItem = $this->menu->getActive();
+			$menuItemGiven = false;
+		}
+		else
+		{
+			$menuItem = $this->menu->getItem($query['Itemid']);
+			$menuItemGiven = true;
+		}
+
+		// Check again
+		if ($menuItemGiven && isset($menuItem) && $menuItem->component != 'com_phocacart')
+		{
+			$menuItemGiven = false;
+			unset($query['Itemid']);
+		}
+
+		if (isset($query['view']))
+		{
+			$view = $query['view'];
+		}
+		else
+		{
+			// We need to have a view in the query or it is an invalid URL
+			return $segments;
+		}
+
 		
-		if (!$itemid) {
-			foreach ($items as $item) {
-				
-				if (isset($item->id) && isset($query['Itemid']) && $item->id == $query['Itemid']) {
-					// We have found the same itemid, now check if the view is equal
-					// Only if we find the menu link to the asked view, if there is other menu link
-					// e.g. one level higher (categories - category - item) create the itemid below
-					if (isset($query['view']) && isset($item->query['view']) && $query['view'] == $item->query['view']) {
-						$itemid	= $item->id;
-					}	
-				}
-				
-				/*if (isset($item->query['view']) && $item->query['view'] == 'category' && isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-					$itemid	= $item->id;
-				} else if (isset($item->query['view']) && $item->query['view'] == 'item' && isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-					$itemid	= $item->id;
-				} else if (isset($item->query['view']) && $item->query['view'] == 'checkout' && isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-					$itemid	= $item->id;
-				}
-				
-				else if (isset($item->query['view']) && $item->query['view'] == 'checkout'
-					&& isset($query['view']) && $query['view'] != 'category'
-					
-					
-					&& isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-						$itemid	= $item->id;
-				}
-				
-				else if (isset($item->query['view']) && $item->query['view'] == 'account'
-					&& isset($query['view']) && $query['view'] != 'category'
-					
-					
-					&& isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-						$itemid	= $item->id;
-				}
-				
-				else if (isset($item->query['view']) && $item->query['view'] == 'comparison'
-					&& isset($query['view']) && $query['view'] != 'category'
-					
-					
-					&& isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-						$itemid	= $item->id;
-				}
-				else if (isset($item->query['view']) && $item->query['view'] == 'download'
-					&& isset($query['view']) && $query['view'] != 'category'
-					
-					
-					&& isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-						$itemid	= $item->id;
-						
-						
-				}
-				else if (isset($item->query['view']) && $item->query['view'] == 'orders'
-					&& isset($query['view']) && $query['view'] != 'category'
-					
-					
-					&& isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-						$itemid	= $item->id;
-					
-				}
-				else if (isset($item->query['view']) && $item->query['view'] == 'terms'
-					&& isset($query['view']) && $query['view'] != 'category'
-					
-					
-					&& isset($item->query['id']) && isset($query['id']) && $item->query['id'] == $query['id']) {
-						$itemid	= $item->id;
-				}*/
-			}
+	
+		// Are we dealing with an item or category that is attached to a menu item?
+	/*	if (($menuItem instanceof stdClass)
+			&& $menuItem->query['view'] == $query['view']
+			&& isset($query['id'])
+			&& $menuItem->query['id'] == (int) $query['id'])
+		{*/
 			
-		}
-	}
-
-	// Check if the router found an appropriate itemid.
-	if (!$itemid) {
-		// Check if a category was specified
-		if (isset($query['id'])) { // Check if a id was specified.
-			if (isset($query['alias'])) {
-				$query['id'] .= ':'.$query['alias'];
-			}
-
-			// Push the id onto the stack.
-			//$segments[] = $query['id'];
-			if(isset($query['view'])) {
-				$segments[]	= $query['view'];
-			}
-			$segments[] = $query['id'];
+		if (($menuItem instanceof stdClass)
+			&& $menuItem->query['view'] == $query['view']
+			&& isset($query['view']) && in_array($query['view'], $viewsNoId)
+			)
+		{
+			
+			
 			unset($query['view']);
+
+			if (isset($query['catid']))
+			{
+				unset($query['catid']);
+			}
+
+			if (isset($query['layout']))
+			{
+				unset($query['layout']);
+			}
+
 			unset($query['id']);
-			unset($query['alias']);
+
+			return $segments;
+		}
+
+		if ($view == 'category' || $view == 'item')
+		{
+			if (!$menuItemGiven)
+			{
+				$segments[] = $view;
+			}
+
+			unset($query['view']);
+
+			if ($view == 'item')
+			{
+				if (isset($query['id']) && isset($query['catid']) && $query['catid'])
+				{
+					$catid = $query['catid'];
+
+					// Make sure we have the id and the alias
+					if (strpos($query['id'], ':') === false)
+					{
+						$db = JFactory::getDbo();
+						$dbQuery = $db->getQuery(true)
+							->select('alias')
+							->from('#__phocacart_products')
+							->where('id=' . (int) $query['id']);
+						$db->setQuery($dbQuery);
+						$alias = $db->loadResult();
+						$query['id'] = $query['id'] . ':' . $alias;
+					}
+				}
+				else
+				{
+					// We should have these two set for this view.  If we don't, it is an error
+					return $segments;
+				}
+			}
+			else
+			{
+				if (isset($query['id']))
+				{
+					$catid = $query['id'];
+				}
+				else
+				{
+					// We should have id set for this view.  If we don't, it is an error
+					return $segments;
+				}
+			}
+
+			if ($menuItemGiven && isset($menuItem->query['id']))
+			{
+				$mCatid = $menuItem->query['id'];
+			}
+			else
+			{
+				$mCatid = 0;
+			}
+
+			//$categories = JCategories::getInstance('Content');
+			//$category = $categories->get($catid);
+			$category = PhocaCartCategory::getCategoryById($catid);
+			
+			if (!$category)
+			{
+				// We couldn't find the category we were given.  Bail.
+				return $segments;
+			}
+
+			
+			$path = PhocaCartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
+			
+		
+			$array = array();
+
+			foreach ($path as $id)
+			{
+				$id = $id['id']. ':'.$id['alias'];
+				if ((int) $id == (int) $mCatid)
+				{
+					break;
+				}
+
+				list($tmp, $id) = explode(':', $id, 2);
+
+				$array[] = $id;
+			}
+
+			$array = array_reverse($array);
+
+			if (!$advanced && count($array))
+			{
+				$array[0] = (int) $catid . ':' . $array[0];
+			}
+
+			$segments = array_merge($segments, $array);
+
+			if ($view == 'item')
+			{
+				if ($advanced)
+				{
+					list($tmp, $id) = explode(':', $query['id'], 2);
+				}
+				else
+				{
+					$id = $query['id'];
+				}
+
+				$segments[] = $id;
+			}
+
+			unset($query['id']);
 			unset($query['catid']);
-			unset($query['catalias']);
+		}
+
+		if (!isset($query['id'])) { // Check if a id was specified.
+			if (isset($query['view']) && in_array($query['view'], $viewsNoId)) {
+				$segments[]	= $query['view']; // Every View without ID
+				unset($query['view']);
+			}
 			
 		} else {
-			if (isset($query['view']) && in_array($query['view'], $viewsNoId)) {
-				if(isset($query['view'])) {
-					
-					
-					
-					$segments[]	= $query['view']; // Every View without ID
+			if (isset($query['view']) && in_array($query['view'], $viewsId)) {
+				
+				$segments[]	= $query['view']; // Every View with ID except (category and item): items, feed
+				$segments[]	= $query['id'];
+				unset($query['id']);
+				unset($query['view']);
+			}
+			
+		}
+		
+	
+
+	
+
+		/*
+		 * If the layout is specified and it is the same as the layout in the menu item, we
+		 * unset it so it doesn't go into the query string.
+		 */
+		if (isset($query['layout']))
+		{
+			if ($menuItemGiven && isset($menuItem->query['layout']))
+			{
+				if ($query['layout'] == $menuItem->query['layout'])
+				{
+					unset($query['layout']);
 				}
 			}
-			unset($query['view']);
+			else
+			{
+				if ($query['layout'] == 'default')
+				{
+					unset($query['layout']);
+				}
+			}
 		}
-	} else {
-		
-		$query['Itemid'] = $itemid;
-		// Remove the unnecessary URL segments.
-		unset($query['view']);
-		unset($query['id']);
-		unset($query['alias']);
+
+		$total = count($segments);
+
+		for ($i = 0; $i < $total; $i++)
+		{
+			$segments[$i] = str_replace(':', '-', $segments[$i]);
+		}
+
+		return $segments;
 	}
-	
-	return $segments;
+
+	public function parse(&$segments) {
+		
+		$viewsNoId 	= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items');
+		$viewsId	= array('category', 'item', 'items', 'feed');
+		
+		$total = count($segments);
+		$vars = array();
+
+		for ($i = 0; $i < $total; $i++)
+		{
+			$segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);
+		}
+
+		// Get the active menu item.
+		$item = $this->menu->getActive();
+		$params = JComponentHelper::getParams('com_phocacart');
+		$advanced = $params->get('sef_advanced_link', 0);
+		$db = JFactory::getDbo();
+
+		// Count route segments
+		$count = count($segments);
+
+		/*
+		 * Standard routing for items.  If we don't pick up an Itemid then we get the view from the segments
+		 * the first segment is the view and the last segment is the id of the item or category.
+		 */
+		if (!isset($item))
+		{
+			$vars['view'] = $segments[0];
+
+			// Called if no menu item created
+			$vars['id'] = $segments[$count - 1];
+
+			return $vars;
+		}
+
+		// First handle views without ID
+		if ($count == 1) {
+			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
+					$vars['view']  = $segments[0];
+				return $vars;
+			}
+		}
+
+		/*
+		 * If there is only one segment, then it points to either an item or a category.
+		 * We test it first to see if it is a category.  If the id and alias match a category,
+		 * then we assume it is a category.  If they don't we assume it is an item
+		 */
+		
+		if ($count == 1)
+		{
+			// We check to see if an alias is given.  If not, we assume it is an item
+			if (strpos($segments[0], ':') === false)
+			{
+				$vars['view'] = 'item';
+				$vars['id'] = (int) $segments[0];
+
+				return $vars;
+			}
+
+			list($id, $alias) = explode(':', $segments[0], 2);
+
+			// First we check if it is a category
+			///$category = JCategories::getInstance('Content')->get($id);
+			$category = PhocaCartCategory::getCategoryById($id);
+			
+			if ($category && $category->alias == $alias)
+			{
+				$vars['view'] = 'category';
+				$vars['id'] = $id;
+
+				return $vars;
+			}
+			else
+			{
+				// TODO specify catid - load from libraries
+				$query = $db->getQuery(true)
+					->select($db->quoteName(array('alias', 'catid')))
+					->from($db->quoteName('#__phocacart_products'))
+					->where($db->quoteName('id') . ' = ' . (int) $id);
+				$db->setQuery($query);
+				$item = $db->loadObject();
+
+				if ($item)
+				{
+					if ($item->alias == $alias)
+					{
+						$vars['view'] = 'item';
+						$vars['catid'] = (int) $item->catid;
+						$vars['id'] = (int) $id;
+
+						return $vars;
+					}
+				}
+			}
+		}
+
+		/*
+		 * If there was more than one segment, then we can determine where the URL points to
+		 * because the first segment will have the target category id prepended to it.  If the
+		 * last segment has a number prepended, it is an item, otherwise, it is a category.
+		 */
+		
+		if (!$advanced)
+		{
+			$cat_id = (int) $segments[0];
+
+			$item_id = (int) $segments[$count - 1];
+
+			if ($cat_id > 0) {
+				if ($item_id > 0)
+				{
+					$vars['view'] = 'item';
+					$vars['catid'] = $cat_id;
+					$vars['id'] = $item_id;
+				}
+				else
+				{
+					$vars['view'] = 'category';
+					$vars['id'] = $cat_id;
+				}
+			} else {
+				if ($item_id > 0)
+				{
+					// Other than category or item view with ID (items, feed)
+					$vars['view'] = $segments[0];
+					$vars['id'] = $item_id;
+					
+				}
+			}
+			
+			return $vars;
+		}
+
+		// We get the category id from the menu item and search from there
+		$id = $item->query['id'];
+		$category = PhocaCartCategory::getCategoryById($id);
+
+		if (!$category)
+		{
+			JError::raiseError(404, JText::_('COM_PHOCACART_ERROR_PARENT_CATEGORY_NOT_FOUND'));
+
+			return $vars;
+		}
+
+		$categories = PhocaCartCategory::getChildren($category->id);
+		$vars['catid'] = $id;
+		$vars['id'] = $id;
+		$found = 0;
+
+		foreach ($segments as $segment)
+		{
+			$segment = str_replace(':', '-', $segment);
+
+			foreach ($categories as $category)
+			{
+				if ($category->alias == $segment)
+				{
+					$vars['id'] = $category->id;
+					$vars['catid'] = $category->id;
+					$vars['view'] = 'category';
+					$categories = PhocaCartCategory::getChildren($category->id);
+					$found = 1;
+					break;
+				}
+			}
+
+			if ($found == 0)
+			{
+				if ($advanced)
+				{
+					$db = JFactory::getDbo();
+					$query = $db->getQuery(true)
+						->select($db->quoteName('id'))
+						->from('#__phocacart_item')
+						->where($db->quoteName('catid') . ' = ' . (int) $vars['catid'])
+						->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
+					$db->setQuery($query);
+					$cid = $db->loadResult();
+				}
+				else
+				{
+					$cid = $segment;
+				}
+
+				$vars['id'] = $cid;
+				$vars['view'] = 'item';
+			}
+
+			$found = 0;
+		}
+		
+		
+
+		return $vars;
+	}
 }
 
 /**
- * Method to parse Route
- * @param array $segments
- */ 
+ * Content router functions
+ *
+ * These functions are proxys for the new router interface
+ * for old SEF extensions.
+ *
+ * @param   array  &$query  An array of URL arguments
+ *
+ * @return  array  The URL arguments to use to assemble the subsequent URL.
+ *
+ * @deprecated  4.0  Use Class based routers instead
+ */
+function PhocaCartBuildRoute(&$query)
+{
+	$router = new PhocaCartRouter;
+
+	return $router->build($query);
+}
+
+/**
+ * Parse the segments of a URL.
+ *
+ * This function is a proxy for the new router interface
+ * for old SEF extensions.
+ *
+ * @param   array  $segments  The segments of the URL to parse.
+ *
+ * @return  array  The URL attributes to be used by the application.
+ *
+ * @since   3.3
+ * @deprecated  4.0  Use Class based routers instead
+ */
 function PhocaCartParseRoute($segments)
 {
-	
-	$viewsNoId 	= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info');
-	$viewsId	= array('category', 'item');
-	
-	$vars = array();
+	$router = new PhocaCartRouter;
 
-	//Get the active menu item
-	$app		= JFactory::getApplication();
-	$menu		= $app->getMenu();
-	$item 		= $menu->getActive();
-
-	// Count route segments
-	$count = count($segments);
-	
-	//Standard routing
-	
-	if(!isset($item))  {
-		if ($count > 2) {
-			$vars['view'] = 'categories';
-		} else if ($count == 2) {
-			$vars['view']  = $segments[$count - 2];
-			$vars['id']    = $segments[$count - 1];
-		} else if ($count == 1) {
-			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
-				$vars['view']  = $segments[0];
-			} else {
-				$vars['view']  = 'categories';
-			}
-		} 
-	} else {
-		
-		if($count == 1) {
-			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
-				$vars['view'] 	= $segments[0];
-			} else {
-				switch($item->query['view']) {
-					case 'category':			$vars['view'] 	= 'category';break;
-					case 'item':				$vars['view'] 	= 'item';break;
-					case 'categories': default:	$vars['view'] 	= 'categories';break;
-				}
-			}
-		} else if ($count == 2) {
-			$vars['view'] 	= $segments[$count-2];
-			$vars['id'] 	= $segments[$count-1];
-		}
-	}
-	return $vars;
+	return $router->parse($segments);
 }
-?>

@@ -19,6 +19,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$user = JFactory::getUser();
 
 		if (!empty($record->catid)) {
+			// catid not used
 			return $user->authorise('core.delete', 'com_phocacart.phocacartitem.'.(int) $record->catid);
 		} else {
 			return parent::canDelete($record);
@@ -29,6 +30,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$user = JFactory::getUser();
 
 		if (!empty($record->catid)) {
+			// catid not used
 			return $user->authorise('core.edit.state', 'com_phocacart.phocacartitem.'.(int) $record->catid);
 		} else {
 			return parent::canEditState($record);
@@ -90,26 +92,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			//$table->created	= $date->toSql();
 
 			// Set ordering to the last item if not set
-			if (empty($table->ordering)) {
+			// WE HAVE SPECIFIC ORDERING
+			/*if (empty($table->ordering)) {
 				$db = JFactory::getDbo();
 				//$db->setQuery('SELECT MAX(ordering) FROM #__phocadownload');
-				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_products WHERE catid = '.(int)$table->catid);
+				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_productcategories WHERE category_id = '.(int)$table->category_id);
 				$max = $db->loadResult();
 				$table->ordering = $max+1;
-			}
+			}*/
 		}
 		else {
 			// Set the values
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
-	}
-
-	protected function getReorderConditions($table = null) {
-		$condition = array();
-		$condition[] = 'catid = '. (int) $table->catid;
-		//$condition[] = 'state >= 0';
-		return $condition;
 	}
 
 	
@@ -146,10 +142,11 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 		// if new item, order last in appropriate group
-		if (!$table->id) {
-			$where = 'catid = ' . (int) $table->catid ;
-			$table->ordering = $table->getNextOrder( $where );
-		}
+		// Not used in multiple mode
+		//if (!$table->id) {
+		//	$where = 'catid = ' . (int) $table->catid ;
+		//	$table->ordering = $table->getNextOrder( $where );
+		//}
 
 		// Prepare the row for saving
 		$this->prepareTable($table);
@@ -166,12 +163,16 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->setError($table->getError());
 			return false;
 		} */
+		
+		
 
 		// Store the data.
 		if (!$table->store()) {
 			$this->setError($table->getError());
 			return false;
 		}
+		
+
 		
 		
 		// Test Thumbnails (Create if not exists)
@@ -181,10 +182,26 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 					
 		if ((int)$table->id > 0) {
 			
-			if (!isset($data['related'])) {
-				$data['related'] = '';
+			if (!isset($data['catid_multiple'])) {
+				$data['catid_multiple'] = array();
 			}
-			PhocaCartRelated::storeRelatedItemsById($data['related'], (int)$table->id );
+			PhocaCartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->id);
+			
+			if (isset($data['featured'])) {
+				$this->featured((int)$table->id, $data['featured']);
+			}
+			
+			$dataRelated = '';
+			if (!isset($data['related'])) {
+				$dataRelated = '';
+			} else {
+				$dataRelated = $data['related'];
+				if (isset($data['related'][0])) {
+					$dataRelated = $data['related'][0];
+				}
+			}
+			
+			PhocaCartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
 			
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
@@ -197,6 +214,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			PhocaCartAttribute::storeAttributesById((int)$table->id, $pFormAttr);
 			$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
 			PhocaCartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
+			
+			
 			
 			
 			if (!isset($data['tags'])) {
@@ -231,6 +250,18 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			JArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					JLog::add($error, JLog::WARNING, 'jerror');
+					return false;
+				} else {
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+					return false;
+				}
+			}
+			
 			// 1. DELETE ITEMS
 			$query = 'DELETE FROM #__phocacart_products'
 				. ' WHERE id IN ( '.$cids.' )';
@@ -261,11 +292,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
+			
 			// 4. DELETE RELATED
 			$query = 'DELETE FROM #__phocacart_product_related'
 				. ' WHERE product_a IN ( '.$cids.' ) OR product_b IN ('.$cids.')';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
+			
+			// 4B. DELETE FEATURED
+			$query = 'DELETE FROM #__phocacart_product_featured'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			$tableF = $this->getTable('PhocaCartFeatured', 'Table');
+			$tableF->reorder();
 			
 			// 5. DELETE IMAGES
 			$query = 'DELETE FROM #__phocacart_product_images'
@@ -279,14 +319,25 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
+			// 7. DELETE CATEGORY RELATIONSHIP
+			$query = 'DELETE FROM #__phocacart_product_categories'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
 		}
 		return true;
 	}
 
 	protected function batchCopy($value, $pks, $contexts)
 	{
+		
+		// Destination Category
 		$categoryId	= (int) $value;
-
+		// Source Category (current category)
+		$app 			= JFactory::getApplication('administrator');
+		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
+		
 		$table	= $this->getTable();
 		$db		= $this->getDbo();
 
@@ -352,12 +403,13 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$table->id		= 0;
 
 			// New category ID
-			$table->catid	= $categoryId;
+		//	$table->catid	= $categoryId;
 			
 			// Ordering
-			$table->ordering = $this->increaseOrdering($categoryId);
+		//	$table->ordering = $this->increaseOrdering($categoryId);
 
 			$table->hits = 0;
+			
 
 			// Check the row.
 			if (!$table->check()) {
@@ -375,6 +427,23 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 			// Add the new ID to the array
 			$newIds[$i]	= $newId;
+			
+			// Store other new information
+			PhocaCartBatchHelper::storeProductItems($pk, (int)$newId);
+			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
+			$currentDataCat = PhocaCartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
+																							 // will be copied too
+			// 1) Bind categories - destination category + all categories from source product (source product -> destination product)
+			$dataCat2		= array_merge($dataCat, $currentDataCat);
+			// 2) Remove duplicates
+			$dataCat2		= array_unique($dataCat2);
+			// 3) Remove the source category - we copy product from source category and the product is included in source category
+			//    so don't copy it again to not get duplicates in the same category
+			$currentCatidA 	= array(0 => (int)$currentCatid);
+			$dataCat2 		= array_diff($dataCat2, $currentCatidA);
+	
+			PhocaCartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
+			
 			$i++;
 		}
 
@@ -453,7 +522,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			}
 
 			// Set the new category ID
-			$table->catid = $categoryId;
+		//	$table->catid = $categoryId;
 
 			// Check the row.
 			if (!$table->check()) {
@@ -466,6 +535,10 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
+			
+			$dataCat[]	= (int)$categoryId;
+			
+			PhocaCartCategoryMultiple::storeCategories($dataCat, (int)$table->id);
 		}
 
 		// Clean the cache
@@ -474,17 +547,6 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		return true;
 	}
 	
-
-	
-	
-	public function increaseOrdering($categoryId) {
-		
-		$ordering = 1;
-		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_products WHERE catid='.(int)$categoryId);
-		$max = $this->_db->loadResult();
-		$ordering = $max + 1;
-		return $ordering;
-	}
 	
 	function recreate($cid = array(), &$message) {
 		
@@ -567,6 +629,215 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			return false;
 		}
 		return true;
+	}
+	
+	public function featured($pks, $value = 0) {
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_PHOCACART_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		$table = $this->getTable('PhocaCartFeatured', 'Table');
+		
+		
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+						->update($db->quoteName('#__phocacart_products'))
+						->set('featured = ' . (int) $value)
+						->where('id IN (' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$db->execute();
+
+			if ((int) $value == 0)
+			{
+				// Adjust the mapping table.
+				// Clear the existing features settings.
+				$query = $db->getQuery(true)
+							->delete($db->quoteName('#__phocacart_product_featured'))
+							->where('product_id IN (' . implode(',', $pks) . ')');
+				$db->setQuery($query);
+				$db->execute();
+			}
+			else
+			{
+				// first, we find out which of our new featured articles are already featured.
+				$query = $db->getQuery(true)
+					->select('f.product_id')
+					->from('#__phocacart_product_featured AS f')
+					->where('product_id IN (' . implode(',', $pks) . ')');
+				//echo $query;
+				$db->setQuery($query);
+
+				$old_featured = $db->loadColumn();
+
+				// we diff the arrays to get a list of the articles that are newly featured
+				$new_featured = array_diff($pks, $old_featured);
+
+				// Featuring.
+				$tuples = array();
+				foreach ($new_featured as $pk)
+				{
+					$tuples[] = $pk . ', 0';
+				}
+				if (count($tuples))
+				{
+					$db = $this->getDbo();
+					$columns = array('product_id', 'ordering');
+					$query = $db->getQuery(true)
+						->insert($db->quoteName('#__phocacart_product_featured'))
+						->columns($db->quoteName($columns))
+						->values($tuples);
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		$table->reorder();
+
+		$this->cleanCache();
+
+		return true;
+	}
+	
+	
+	/* Multiple categories */
+	
+	public function saveorder($pks = null, $order = null)
+	{
+		// PHOCAEDIT
+		//$table = $this->getTable();
+		$table 	= $this->getTable('PhocaCartProductCategories', 'Table');
+		
+		// CURRENT CATEGORY
+		$app 			= JFactory::getApplication('administrator');
+		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
+		
+
+		$tableClassName = get_class($table);
+		$contentType = new JUcmType;
+		$type = $contentType->getTypeByTable($tableClassName);
+		$tagsObserver = $table->getObserverOfClass('JTableObserverTags');
+		$conditions = array();
+		
+
+		if (empty($pks))
+		{
+			return JError::raiseWarning(500, JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+		}
+
+		// Update ordering values
+		foreach ($pks as $i => $pk)
+		{
+			$table->load(array('product_id' => (int) $pk, 'category_id' => (int)$currentCatid));
+			
+			
+
+			// Access checks.
+			if (!$this->canEditState($table))
+			{
+				// Prune items that you can't change.
+				unset($pks[$i]);
+				JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+			}
+			elseif ($table->ordering != $order[$i])
+			{
+				$table->ordering = $order[$i];
+
+				
+				if ($type)
+				{
+					$this->createTagsHelper($tagsObserver, $type, $pk, $type->type_alias, $table);
+				}
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+
+				// Remember to reorder within position and client_id
+				$condition = $this->getReorderConditions($table);
+				
+				$found = false;
+
+				foreach ($conditions as $cond)
+				{
+					if ($cond[1] == $condition)
+					{
+						$found = true;
+						break;
+					}
+				}
+
+				if (!$found)
+				{
+					$key = $table->getKeyName();
+					$conditions[] = array($table->$key, $condition);
+				}
+			}
+		}
+
+		// Execute reorder for each category.
+		
+		foreach ($conditions as $cond)
+		{
+			
+			$table->load(array('product_id' => (int) $cond[0], 'category_id' => (int)$currentCatid));
+			
+			$table->reorder($cond[1]);
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
+	
+	/*
+	protected function getReorderConditions($table = null) {
+		$condition = array();
+		$condition[] = 'catid = '. (int) $table->catid;
+		return $condition;
+	}
+	
+	
+	public function increaseOrdering($categoryId) {
+		$ordering = 1;
+		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_products WHERE catid='.(int)$categoryId);
+		$max = $this->_db->loadResult();
+		$ordering = $max + 1;
+		return $ordering;
+	}*/
+	
+	protected function getReorderConditions($table = null) {
+		$condition = array();
+		$condition[] = 'category_id = '. (int) $table->category_id ;
+		//$condition[] = 'product_id = '. (int) $table->product_id ;
+		return $condition;
+	}
+	
+	
+	public function increaseOrdering($categoryId) {
+		$ordering = 1;
+		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_product_categories WHERE category_id='.(int)$categoryId);
+		$max = $this->_db->loadResult();
+		$ordering = $max + 1;
+		return $ordering;
 	}
 }
 ?>

@@ -29,7 +29,9 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$s[] 	= 'function phUpdateRegion'.$this->id.'(value) {';
 		
 		
-		$config = JComponentHelper::getParams('com_media');
+		$config 	= JComponentHelper::getParams('com_media');
+		$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
+		$load_chosen= $paramsC->get( 'load_chosen', 1 );
 
 		if (!$app->isAdmin()) {
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. JSession::getFormToken().'=1\';';
@@ -48,7 +50,9 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$s[] 	= '         if ( data.status == 1 ){';
 		$s[] 	= '            jQuery(\'#'.$regionId.'\').empty().append(data.content);';
 		if (!$app->isAdmin()) {
-			$s[] 	= '	           jQuery(\'#'.$regionId.'\').trigger("chosen:updated");';//Reload Chosen
+			if ($load_chosen == 1) {
+				$s[] 	= '	           jQuery(\'#'.$regionId.'\').trigger("chosen:updated");';//Reload Chosen
+			}
 		} else {
 			// in admin, older version of chosen is used
 			$s[] 	= '	           jQuery(\'#'.$regionId.'\').trigger("liszt:updated");';//Reload Chosen older version

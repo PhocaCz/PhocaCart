@@ -14,8 +14,9 @@ class PhocaCartOrderRender
 	
 	public function render($id, $type = 1, $format = 1, $token = '') {
 		
+	
 		if ($id < 1) {
-			return 'NO ORDER FOUND';
+			return JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND');
 		}
 		
 		 
@@ -36,6 +37,8 @@ class PhocaCartOrderRender
 		$common		= $order->getItemCommon($id);
 		
 		$app 	= JFactory::getApplication();
+		
+		// Not for admin
 		if (!$app->isAdmin()){
 			$user = JFactory::getUser();
 			

@@ -35,7 +35,7 @@ class PhocaCartCpViewPhocaCartReviews extends JViewLegacy
 		}
 		
 		JHTML::stylesheet( $this->t['s'] );
-		
+	
 		$this->addToolbar();
 		parent::display($tpl);
 	}

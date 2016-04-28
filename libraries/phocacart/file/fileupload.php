@@ -17,7 +17,7 @@ class PhocaCartFileUpload
 				
 		$paramsC 		= JComponentHelper::getParams('com_phocacart');
 		$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
-		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 1 );
+		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 4 );
 		
 		$overwriteExistingFiles 	= $paramsC->get( 'overwrite_existing_files', 0 );
 		
@@ -300,7 +300,7 @@ class PhocaCartFileUpload
 				}
 				
 				
-				if(!JFile::upload($file['tmp_name'], $filepathImgFinal)) {
+				if(!JFile::upload($file['tmp_name'], $filepathImgFinal, false, true)) {
 					jexit(json_encode(array( 'jsonrpc' => '2.0', 'result' => 'error', 'code' => 109,
 					'message' => JText::_('COM_PHOCACART_ERROR').': ',
 					'details' => JTEXT::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE') .'<br />'
@@ -419,7 +419,7 @@ class PhocaCartFileUpload
 				}
 			}
 
-			if (!JFile::upload($file['tmp_name'], $filepath)) {
+			if (!JFile::upload($file['tmp_name'], $filepath, false, true)) {
 				if ($return) {
 					$app->enqueueMessage( JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
 					$app->redirect(base64_decode($return).'&manager='.(string)$manager.'&folder='.$folderUrl);

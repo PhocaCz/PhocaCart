@@ -84,6 +84,15 @@ class PhocaCartRenderAdminView
 		return $o;
 	}
 	
+	public function itemLabel($item, $label) {
+		$o = '';
+		$o .= '<div class="control-group">'."\n";
+		$o .= '<div class="control-label">'. $label . '</div>'."\n"
+		. '<div class="controls">' . $item.'</div>'."\n"
+		. '</div>' . "\n";
+		return $o;
+	}
+	
 	public function itemText($item, $label) {
 		$o = '';
 		$o .= '<div class="control-group ph-control-group-text">'."\n";
@@ -166,7 +175,7 @@ class PhocaCartRenderAdminView
 		return $o;
 	}
 	
-	public function additionalAttributesRow($id, $title, $required, $type, $js = 0) {
+	public function additionalAttributesRow($id, $title, $alias, $required, $type, $js = 0) {
 		
 		$requiredArray	= PhocaCartAttribute::getRequiredArray();
 		$typeArray		= PhocaCartAttribute::getTypeArray();
@@ -178,17 +187,22 @@ class PhocaCartRenderAdminView
 		if ($id == 0) {
 			// Add Header
 			$o .= '<div class="ph-row">'."\n"
-			. '<div class="span3">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
+			. '<div class="span2">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
+			. '<div class="span2">'. JText::_('COM_PHOCACART_ALIAS') . '</div>'
 			. '<div class="span1">'. JText::_('COM_PHOCACART_REQUIRED') . '</div>'
 			. '<div class="span2">'. JText::_('COM_PHOCACART_TYPE') . '</div>'
-			. '<div class="span6">&nbsp;</div>'
+			. '<div class="span5">&nbsp;</div>'
 			.'</div><div class="ph-cb"></div>'."\n";
 		}
 	
 		$o .= '<div class="ph-row-attribute'.$id.' ph-row-attribute" id="phrowattribute'.$id.'" >'
 
-		.'<div class="span3">'
-		.'<input id="jform_attrtitle'.$id.'" name="pformattr['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox" size="40" type="text">'
+		.'<div class="span2">'
+		.'<input id="jform_attrtitle'.$id.'" name="pformattr['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox input-small" size="40" type="text">'
+		.'</div>'
+		
+		.'<div class="span2">'
+		.'<input id="jform_attralias'.$id.'" name="pformattr['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox input-small" size="20" type="text">'
 		.'</div>'
 		
 		.'<div class="span1">'
@@ -200,7 +214,7 @@ class PhocaCartRenderAdminView
 		.'<input type="hidden" name="pformattr['.$id.'][attrid]" id="jform_attrid'.$id.'" value="'.$id.'" />'
 		.'</div>'
 	
-		.'<div class="span6"><a class="btn btn-danger btn-mini" href="#" onclick="phRemoveRowAttribute('.$id.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_ATTRIBUTE').'</a></div>'
+		.'<div class="span4"><a class="btn btn-danger btn-mini" href="#" onclick="phRemoveRowAttribute('.$id.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_ATTRIBUTE').'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 		
 		. '</div>';
@@ -236,7 +250,8 @@ class PhocaCartRenderAdminView
 		return $o;
 	}
 	
-	public function additionalOptionsRow($id, $attrId, $title, $operator, $amount, $stock, $operatorWeight, $weight) {
+	public function additionalOptionsRow($id, $attrId, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image) {
+		
 		
 		$operatorArray 	= PhocaCartAttribute::getOperatorArray();
 		$o				= '';
@@ -245,28 +260,66 @@ class PhocaCartRenderAdminView
 		$o .= '<div class="ph-option-box" id="phOptionBox'.$attrId.$id.'">';
 		$o .= '<div class="ph-row-option'.$attrId.$id.' ph-row-option-attrid'.$attrId.'" id="phrowoption'.$attrId.$id.'" >'
 	
-		.'<div class="span3">'
-		.'<input id="jform_optiontitle'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox" size="40" type="text">'
+		.'<div class="span2">'
+		.'<input id="jform_optiontitle'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox input-small" size="40" type="text">'
 		.'</div>'
+		
+		.'<div class="span2">'
+		.'<input id="jform_optionalias'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox input-small" size="30" type="text">'
+		.'</div>'
+		
+		// Amount - Value
 		.'<div class="span1">'
 		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][option]['.$id.'][operator]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operator), 'jform_optionoperator'.$attrId. $id)
 		.'</div>'
-		.'<div class="span2">'
-		.'<input id="jform_optionamount'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][amount]" value="'.htmlspecialchars($amount).'" class="inputbox input-small" size="40" type="text">'
+		.'<div class="span1">'
+		.'<input id="jform_optionamount'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][amount]" value="'.htmlspecialchars($amount).'" class="inputbox input-mini" size="30" type="text">'
 		.'</div>'
-		.'<div class="span2">'
-		.'<input id="jform_optionstock'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][stock]" value="'.htmlspecialchars($stock).'" class="inputbox input-small" size="40" type="text">'
+		
+		// Stock
+		.'<div class="span1">'
+		.'<input id="jform_optionstock'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][stock]" value="'.htmlspecialchars($stock).'" class="inputbox input-mini" size="30" type="text">'
+		
 		.'<input type="hidden" name="pformattr['.$attrId.'][option]['.$id.'][id]" id="jform_optionid'.$attrId.$id.'" value="'.$id.'" />'
 		.'</div>'
 		
+		
 		// Weight
 		.'<div class="span1">'
-		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][option]['.$id.'][operatorweight]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operatorWeight), 'jform_optionoperatorweight'.$attrId. $id)
+		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][option]['.$id.'][operator_weight]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operatorWeight), 'jform_optionoperatorweight'.$attrId. $id)
 		.'</div>'
 		
-		.'<div class="span2">'
-		.'<input id="jform_optionweight'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][weight]" value="'.htmlspecialchars($weight).'" class="inputbox input-small" size="40" type="text">'
-		.'</div>'
+		.'<div class="span1">'
+		.'<input id="jform_optionweight'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][weight]" value="'.htmlspecialchars($weight).'" class="inputbox input-mini" size="40" type="text">'
+		.'</div>'	
+		
+		// Image
+		.'<div class="span2">';
+		
+		if (is_numeric($attrId) && is_numeric($id)) {
+			JHtml::_('behavior.modal', 'a.modal_jform_optionimage'.$attrId.$id);
+		} else {
+			// Don't render anything for items which will be added by javascript
+			// it is set in javascript addnewrow function
+			// administrator\components\com_phocacart\libraries\phocacart\render\renderjs.php line cca 171
+		}
+		
+		$group 			= PhocaCartSettings::getManagerGroup('productimage');
+		$managerOutput	= '&amp;manager=productimage';
+		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
+		$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field=jform_optionimage'.$attrId.$id;
+		$attr			= '';
+		
+		$html[] = '<div class="input-append">';
+		$html[] = '<input class="imageCreateThumbs ph-w40" type="text" id="jform_optionimage'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][image]" value="'. htmlspecialchars($image).'"' .' '.$attr.' />';
+		$html[] = '<a class="modal_jform_optionimage'.$attrId.$id.' btn" title="'.JText::_($textButton).'"'
+				.' href="'.$link.'"'
+				.' rel="{handler: &quot;iframe&quot;, size: {x: 780, y: 560}}">'
+				. JText::_($textButton).'</a>';
+		$html[] = '</div>'. "\n";
+		
+		$o .= implode("\n", $html);
+		$o .= '</div>'
 	
 		//.'</div>'
 		
@@ -283,20 +336,22 @@ class PhocaCartRenderAdminView
 		
 		$o = '<h4>'.JText::_('COM_PHOCACART_OPTIONS').'</h4>';
 		$o .= '<div class="ph-row">'."\n"
-		. '<div class="span3">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
+		. '<div class="span2">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
+		. '<div class="span2">'. JText::_('COM_PHOCACART_ALIAS') . '</div>'
+		. '<div class="span1">'. JText::_('COM_PHOCACART_VALUE') . '</div>'
 		. '<div class="span1">&nbsp;</div>'
-		. '<div class="span2">'. JText::_('COM_PHOCACART_VALUE') . '</div>'
-		//. '<div class="span1">&nbsp;</div>'
-		. '<div class="span2">'. JText::_('COM_PHOCACART_IN_STOCK') . '</div>'
-		. '<div class="span1">&nbsp;</div>'
+		
+		. '<div class="span1">'. JText::_('COM_PHOCACART_IN_STOCK') . '</div>'
+		
 		. '<div class="span2">'. JText::_('COM_PHOCACART_WEIGHT') . '</div>'
-		. '<div class="span1">&nbsp;</div>'
+		. '<div class="span1">'. JText::_('COM_PHOCACART_IMAGE') . '</div>'
+		. '<div class="span2">&nbsp;</div>'
 		.'</div><div class="ph-cb"></div>'."\n";
 		return $o;
 	}
 	
 	
-	public function additionalSpecificationsRow($id, $title, $value, $group, $js = 0) {
+	public function additionalSpecificationsRow($id, $title, $alias, $value, $alias_value, $group, $js = 0) {
 		
 		$groupArray	= PhocaCartSpecification::getGroupArray();
 		$o				= '';
@@ -323,7 +378,30 @@ class PhocaCartRenderAdminView
 		.'<div class="span4"><a class="btn btn-danger btn-mini" href="#" onclick="phRemoveRowSpecification('.$id.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_PARAMETER').'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 		
-		. '</div></div>';
+		
+		
+		
+		// ALIASES
+		.'<div class="ph-row-specification">'
+		
+		.'<div class="span3">'
+		. JText::_('COM_PHOCACART_ALIAS_PARAMETER') . '<br /><input id="jform_specalias'.$id.'" name="pformspec['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox" size="40" type="text">'
+		.'</div>'
+		
+		.'<div class="span3">'
+		. JText::_('COM_PHOCACART_ALIAS_VALUE') . '<br /><input id="jform_specalias_value'.$id.'" name="pformspec['.$id.'][alias_value]" value="'.htmlspecialchars($alias_value).'" class="inputbox" size="40" type="text">'
+		.'</div>'
+		
+		.'<div class="span2"> </div>'
+		
+		.'<div class="span4"> </div>'
+		.'<div class="ph-cb ph-pad-b"></div>'
+		
+		.'</div>'
+		
+		. '</div>'
+		. '</div>';
+		
 		
 		return $o;
 	}

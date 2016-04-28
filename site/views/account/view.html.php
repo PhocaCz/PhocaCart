@@ -41,15 +41,10 @@ class PhocaCartViewAccount extends JViewLegacy
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
 		$this->t['linkaccount']				= JRoute::_(PhocaCartRoute::getAccountRoute());
 		$this->t['linkcheckout']			= JRoute::_(PhocaCartRoute::getCheckoutRoute());
-		
 		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['display_edit_profile']	= $this->p->get( 'display_edit_profile', 1 );
+		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		
-		JHTML::stylesheet('media/com_phocacart/css/main.css' );
-		if ($this->t['load_bootstrap'] == 1) {
-			JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			$document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		}
 		
 		$lang = JFactory::getLanguage();
 		//$lang->load('com_users.sys');
@@ -60,12 +55,12 @@ class PhocaCartViewAccount extends JViewLegacy
 			// Checkout Model
 			jimport('joomla.application.component.model');
 			JModelLegacy::addIncludePath(JPATH_SITE.'/components/com_phocacart/models');
-			$modelCheckout = JModelLegacy::getInstance( 'Checkout', 'PhocaCartModel' );
+			$modelCheckout 				= JModelLegacy::getInstance( 'Checkout', 'PhocaCartModel' );
 
 			// Check if all form items are filled out by user, if yes, don't load the form and save some queries
-			$this->fields2					= $modelCheckout->getFields(0,0,1); // Fields will be loaded in every case
-			$this->data2					= $modelCheckout->getData();
-			$this->form2					= $modelCheckout->getForm();
+			$this->fields2				= $modelCheckout->getFields(0,0,1); // Fields will be loaded in every case
+			$this->data2				= $modelCheckout->getData();
+			$this->form2				= $modelCheckout->getForm();
 			$this->t['dataaddressform']	= PhocaCartUser::getAddressDataForm($this->form2, $this->fields2['array'], $this->u);
 			
 		
@@ -73,14 +68,12 @@ class PhocaCartViewAccount extends JViewLegacy
 			jimport('joomla.application.component.model');
 			//JLoader::import('user',JPATH_SITE.DS.'components'.DS.'com_users'.DS .'models');
 			JModelLegacy::addIncludePath(JPATH_SITE.'/components/com_users/models');
-			$modelUsers = JModelLegacy::getInstance( 'Profile', 'UsersModel' );
+			$modelUsers 			= JModelLegacy::getInstance( 'Profile', 'UsersModel' );
 			$this->data	            = $modelUsers->getData();
-			$loadformpath = JPATH_SITE.'/components/com_users/models';
+			$loadformpath 			= JPATH_SITE.'/components/com_users/models';
 			JForm::addFormPath($loadformpath.'/forms');
 			JForm::addFieldPath($loadformpath.'/fields');
-			$this->form	  = $modelUsers->getForm();
-		
-			
+			$this->form	  			= $modelUsers->getForm();
 			
 			$this->state            = $modelUsers->getState();
 			$this->params           = $this->state->get('params');
@@ -92,17 +85,9 @@ class PhocaCartViewAccount extends JViewLegacy
 			
 		}
 		
-		//CHOSEN
-		$document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/chosen/chosen.jquery.min.js');
-		$js = "\n". 'jQuery(document).ready(function(){';
-		$js .= '   jQuery(".chosen-select").chosen({disable_search_threshold: 10});'."\n"; // Set chosen, created hidden will be required
-		$js .= '   jQuery(".chosen-select").attr(\'style\',\'display:visible; position:absolute; clip:rect(0,0,0,0)\');'."\n";
-		$js .= '});'."\n";
-		$document->addScriptDeclaration($js);
-		JHTML::stylesheet( 'media/com_phocacart/js/chosen/chosen.css' );
-		JHTML::stylesheet( 'media/com_phocacart/js/chosen/chosen-bootstrap.css' );
-		
+		$media = new PhocaCartRenderMedia();
+		$media->loadBootstrap($this->t['load_bootstrap']);
+		$media->loadChosen($this->t['load_chosen']);
 		PhocaCartRenderJs::renderBillingAndShippingSame();
 		
 		$this->_prepareDocument();

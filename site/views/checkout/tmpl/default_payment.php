@@ -21,7 +21,7 @@ if ($this->a->paymentnotused == 1) {
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
 	echo '<div class="ph-checkout-box-action">';
@@ -32,7 +32,13 @@ if ($this->a->paymentnotused == 1) {
 	
 	if (isset($this->t['paymentmethod']) && $this->t['paymentmethod']['title'] != '') {
 	
-		echo '<div class="col-sm-8 col-md-8 ">'.$this->t['paymentmethod']['title'].'</div>';
+		echo '<div class="col-sm-8 col-md-8 ">'.$this->t['paymentmethod']['title'];
+		
+		if ($this->t['display_payment_desc'] && $this->t['paymentmethod']['description'] != '') {
+			echo '<div class="ph-checkout-payment-desc">'.JHTML::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
+		}
+		
+		echo '</div>';
 		
 		echo '<div class="col-sm-4 col-md-4 ">';
 		echo '<div class="pull-right ph-checkout-payment-edit">';
@@ -42,7 +48,7 @@ if ($this->a->paymentnotused == 1) {
 	
 	}
 	echo '<div class="ph-cb"></div>';
-	echo '</div>'."\n";// end row action
+	echo '</div><div class="ph-cb"></div>'."\n";// end row action
 	
 	echo '</div>'."\n";// end box action
 
@@ -63,7 +69,7 @@ if ($this->a->paymentnotused == 1) {
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutPayment">';
 	echo '<div class="ph-checkout-box-action">';
@@ -86,6 +92,11 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="radio">';
 		echo '<label><input type="radio" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >'.$v->title.'</label>';
 		echo '</div>';
+		
+		if ($this->t['display_payment_desc'] && $v->description != '') {
+			echo '<div class="ph-checkout-payment-desc">'.JHTML::_('content.prepare', $v->description).'</div>';
+		}
+		
 		echo '</div>';
 		
 		echo '<div class="col-sm-6 col-md-6"><div class="radio">';
@@ -122,7 +133,7 @@ if ($this->a->paymentnotused == 1) {
 	//echo '<div class="radio">';
 	echo '<label>'.JText::_('COM_PHOCACART_COUPON_CODE').' <input type="text" name="phcoupon" id="phcoupon" value="" ></label>';
 	//echo '</div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
 	echo '</div>';// end payment cost box
 	echo '</div>';// end payment row	
@@ -146,6 +157,6 @@ if ($this->a->paymentnotused == 1) {
 } else {
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 }
 ?>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="header" type="textarea" label="COM_PHOCACART_FIELD_XML_HEADER_LABEL" description="COM_PHOCACART_FIELD_XML_HEADER_DESC" rows="4" cols="40" filter="raw" />
+
+<field name="footer" type="textarea" label="COM_PHOCACART_FIELD_XML_FOOTER_LABEL" description="COM_PHOCACART_FIELD_XML_FOOTEr_DESC" rows="4" cols="40" filter="raw" />
+
+
+<field name="root" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_XML_ROOT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_XML_ROOT_ELEMENT_DESC"  />
+
+<field name="item" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_XML_ITEM_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_XML_ITEM_ELEMENT_DESC"  />
+
+<field name="ordering" type="PhocaCartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+
+	</fieldset>
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+	
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field>
+
+
+
+	</fieldset>
+	
+	
+<fields name="item_params">
+	<fieldset name="item_params" label="COM_PHOCACART_PRODUCT_OPTIONS">
+
+<field name="item_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_ELEMENT_DESC"  />
+
+<field name="item_title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_TITLE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TITLE_ELEMENT_DESC"  />
+
+<field name="item_title_extended" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_TITLE_EXTENDED_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TITLE_EXTENDED_ELEMENT_DESC"  />
+
+<field name="item_sku" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_SKU_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SKU_ELEMENT_DESC"  />
+<field name="item_EAN" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_EAN_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_EAN_ELEMENT_DESC"  />
+
+<field name="item_description_short" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_SHORT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_SHORT_DESC"  />
+
+<field name="item_description_long" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_LONG_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_LONG_LABEL"  />
+
+<field name="item_url" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_URL_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_URL_ELEMENT_DESC"  />
+
+<field name="item_url_image" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_IMAGE_URL_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_IMAGE_URL_ELEMENT_DESC"  />
+
+<field name="item_url_video" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_VIDEO_URL_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_VIDEO_URL_ELEMENT_DESC"  />
+
+<field name="item_manufacturer" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MANUFACTURER_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_MANUFACTURER_ELEMENT_DESC"  />
+
+<field name="item_category" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_ELEMENT_DESC"  />
+
+<field name="item_categories" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_CATEGORIES_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CATEGORIES_ELEMENT_DESC"  />
+
+<field name="feed_category" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FEED_CATEGORY_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FEED_CATEGORY_ELEMENT_DESC"  />
+
+<field name="item_original_price_with_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_WITH_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_WITH_VAT_ELEMENT_DESC"  />
+
+<field name="item_original_price_without_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_WITHOUT_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_WITHOUT_VAT_ELEMENT_DESC"  />
+
+<field name="item_final_price_with_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FINAL_PRICE_WITH_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FINAL_PRICE_WITH_VAT_ELEMENT_DESC"  />
+
+<field name="item_final_price_without_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FINAL_PRICE_WITHOUT_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FINAL_PRICE_WITHOUT_VAT_ELEMENT_DESC"  />	
+
+<field name="item_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_VAT_ELEMENT_DESC"  />
+
+<field name="item_currency" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_CURRENCY_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CURRENCY_ELEMENT_DESC"  />
+
+<field name="item_stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_ELEMENT_DESC"  />
+
+<field name="item_delivery_date" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_STOCK_STATUS_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_STOCK_STATUS_ELEMENT_DESC"  />
+
+<field name="feed_delivery_date" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FEED_DELIVERY_DATE_STOCK_STATUS_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FEED_DELIVERY_DATE_STOCK_STATUS_ELEMENT_DESC"  />
+
+
+<field name="item_attribute" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_ELEMENT_DESC"  />
+
+<field name="item_attribute_name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_NAME_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_NAME_ELEMENT_DESC"  />
+
+<field name="item_attribute_value" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_VALUE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_VALUE_ELEMENT_DESC"  />
+
+
+<!--
+<field name="item_delivery" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DELIVERY_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_DELIVERY_ELEMENT_DESC"  />
+
+<field name="item_delivery_name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DELIVERY_NAME_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_DELIVERY_NAME_ELEMENT_DESC"  />
+
+<field name="item_delivery_price" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DELIVERY_PRICE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_DELIVERY_PRICE_ELEMENT_DESC"  />
+
+<field name="item_group_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_GROUP_ID_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_GROUP_ID_ELEMENT_DESC"  />
+
+-->
+
+	</fieldset>
+</fields>
+
+
+
+<fields name="feed_params">
+	<fieldset name="feed_params" label="COM_PHOCACART_FEED_OPTIONS">
+
+<field name="export_published_only" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_EXPORT_ONLY_PUBLISHED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_EXPORT_ONLY_PUBLISHED_PRODUCTS_LABEL">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="export_in_stock_only" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_EXPORT_ONLY_PRODUCTS_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_EXPORT_ONLY_PRODUCTS_IN_STOCK_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="export_price_only" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_EXPORT_ONLY_PRODUCTS_WITH_PRICE_LABEL" description="COM_PHOCACART_FIELD_EXPORT_ONLY_PRODUCTS_WITH_PRICE_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="strip_html_tags_desc" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_STRIP_HTML_TAGS_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_STRIP_HTML_TAGS_DESCRIPTION_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_attributes" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="item_limit" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_LIMIT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_LIMIT_DESC"  />
+
+<field name="item_ordering" type="list" default="1" label="COM_PHOCACART_FIELD_PRODUCT_ORDERING_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ORDERING_DESC">
+	<option value="1">COM_PHOCACART_ORDERING_ASC</option>
+	<option value="2">COM_PHOCACART_ORDERING_DESC</option>
+	<option value="3">COM_PHOCACART_TITLE_ASC</option>
+	<option value="4">COM_PHOCACART_TITLE_DESC</option>
+	<option value="5">COM_PHOCACART_PRICE_ASC</option>
+	<option value="6">COM_PHOCACART_PRICE_DESC</option>
+	<option value="7">COM_PHOCACART_DATE_ASC</option>
+	<option value="8">COM_PHOCACART_DATE_DESC</option>
+	<option value="9">COM_PHOCACART_RATING_ASC</option>
+	<option value="10">COM_PHOCACART_RATING_DESC</option>
+</field>
+
+<field name="category_ordering" type="list" default="0" label="COM_PHOCACART_FIELD_CATEGORY_ORDERING_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ORDERING_DESC">
+	<option value="0">COM_PHOCACART_ORDERING_NOT_SET</option>
+	<option value="1">COM_PHOCACART_ORDERING_ASC</option>
+	<option value="2">COM_PHOCACART_ORDERING_DESC</option>
+	<option value="3">COM_PHOCACART_TITLE_ASC</option>
+	<option value="4">COM_PHOCACART_TITLE_DESC</option>
+	<option value="5">COM_PHOCACART_DATE_ASC</option>
+	<option value="6">COM_PHOCACART_DATE_DESC</option>
+</field>
+
+<field name="category_separator" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_SEPARATOR_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SEPARATOR_DESC"  />
+
+	</fieldset>
+</fields>
+
+</form>

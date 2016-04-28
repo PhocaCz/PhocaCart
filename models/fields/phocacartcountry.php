@@ -24,15 +24,7 @@ class JFormFieldPhocaCartCountry extends JFormField
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 	
-		// TODO - check for other views than category edit
-		/*$view 	= JRequest::getVar( 'view' );
-		$catId	= -1;
-		if ($view == 'phocacartcategory') {
-			$id 	= $this->form->getValue('id'); // id of current category
-			if ((int)$id > 0) {
-				$catId = $id;
-			}
-		}*/
+	
 		
 		
 		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;

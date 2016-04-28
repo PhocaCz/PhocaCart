@@ -30,6 +30,9 @@ class PhocaCartViewOrder extends JViewLegacy
 		}
 		$order	= new PhocaCartOrderRender();
 		$o = $order->render($id, $type, $format, $token);
+		
+		$media = new PhocaCartRenderMedia();
+		
 		echo $o;
 		
 	}

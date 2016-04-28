@@ -42,7 +42,7 @@ class PhocaCartCpModelPhocaCartDownload extends JModelAdmin
 		}
 		return $data;
 	}
-	/*
+	
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -62,7 +62,7 @@ class PhocaCartCpModelPhocaCartDownload extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_payment_methods');
+				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads');
 				$max = $db->loadResult();
 
 				$table->ordering = $max+1;
@@ -74,7 +74,7 @@ class PhocaCartCpModelPhocaCartDownload extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+	/*
 	public function save($data)
 	{
 		$dispatcher = JEventDispatcher::getInstance();

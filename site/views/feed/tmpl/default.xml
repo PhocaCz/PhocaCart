@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_PHOCACART_XML_FEED_LAYOUT">
+		<message>
+			<![CDATA[COM_PHOCACART_XML_FEED_LAYOUT_DESC]]>
+		</message>
+	</layout>
+	
+		<name>COM_PHOCACART_XML_FEED_LAYOUT</name>
+		<description>COM_PHOCACART_XML_FEED_LAYOUT_DESC</description>
+		
+		<fields name="request">
+<fieldset name="request" addfieldpath="/administrator/components/com_phocacart/models/fields" >
+		
+		<field name="format" section="com_phocacart" default="xml" type="hidden" />
+		
+		<field name="id" type="phocacartfeed" section="com_phocacart" default="0" label="COM_PHOCACART_FIELD_SELECT_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_SELECT_XML_FEED_DESC" required="true" />
+		
+		<!-- <field name="format" type="text" section="com_phocacart" default="xml" label="COM_PHOCACART_FIELD_SELECT_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_SELECT_XML_FEED_DESC" required="true" /> -->
+		
+		
+			
+		</fieldset>
+</fields>
+
+</metadata>

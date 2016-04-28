@@ -11,13 +11,8 @@ jimport('joomla.application.component.model');
 
 class PhocaCartModelAccount extends JModelLegacy
 {
-	
-
 	public function __construct() {	
-		parent::__construct();
-		
+		parent::__construct();		
 	}
-	
-	
 }
 ?>

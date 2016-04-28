@@ -33,6 +33,7 @@ $l['rw']	= array('COM_PHOCACART_REVIEWS', 'phocacartreviews');
 $l['co']	= array('COM_PHOCACART_COUPONS', 'phocacartcoupons');
 $l['do']	= array('COM_PHOCACART_DOWNLOADS', 'phocacartdownloads');
 $l['tg']	= array('COM_PHOCACART_TAGS', 'phocacarttags');
+$l['fd']	= array('COM_PHOCACART_XML_FEEDS', 'phocacartfeeds');
 $l['sc']	= array('COM_PHOCACART_STATISTICS', 'phocacartstatistics');
 $l['lo']	= array('COM_PHOCACART_SYSTEM_LOG', 'phocacartlogs');
 $l['in']	= array('COM_PHOCACART_INFO', 'phocacartinfo');

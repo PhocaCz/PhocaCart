@@ -24,8 +24,33 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
 
+		// Multiple categories, ordering
+		$this->t['catid']	= $this->escape($this->state->get('filter.category_id'));
+		$this->t['ordering']= false;// Is specific ordering used (ordering in phocacart_product_categories reference table)
+		if (isset($this->t['catid']) && (int)$this->t['catid'] > 0) {
+			$this->t['ordering']= true;
+		} 
+		
+		// Multiple categories: Orderinga and list all ids on the site ($idItems)
+		$idItems			= array();
 		foreach ($this->items as &$item) {
-			$this->ordering[$item->catid][] = $item->id;
+			if (isset($this->t['catid']) && (int)$this->t['catid'] > 0) {
+				$this->ordering[(int)$this->t['catid']][] = $item->id;
+			}
+			$idItems[] = $item->id;
+		}
+		
+		// Make list of categories for each product (don't run group_concat alternative but own sql)
+		$categories	= PhocaCartCategoryMultiple::getCategoriesByProducts($idItems);
+		
+		$this->t['categories'] = array();
+		if (!empty($categories)) {
+			foreach ($categories as $k => $v) {
+				$id = $v['product_id'];
+				$this->t['categories'][$id][$k]['id'] = $v['id'];  
+				$this->t['categories'][$id][$k]['alias'] = $v['alias'];
+				$this->t['categories'][$id][$k]['title'] = $v['title'];
+			}
 		}
 		
 		JHTML::stylesheet( $this->t['s'] );
@@ -56,6 +81,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 			JToolBarHelper::divider();
 			JToolBarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			JToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
 		}
 
 		if ($canDo->get('core.delete')) {
@@ -82,13 +108,14 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 	
 	protected function getSortFields() {
 		return array(
-			'a.ordering'	=> JText::_('JGRID_HEADING_ORDERING'),
+			'pc.ordering'	=> JText::_('JGRID_HEADING_ORDERING'),
 			'a.title' 		=> JText::_($this->t['l'] . '_TITLE'),
 			'a.image' 		=> JText::_($this->t['l'] . '_IMAGE'),
 			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
 			'a.published' 	=> JText::_($this->t['l'] . '_PUBLISHED'),
 			'category_id' 	=> JText::_($this->t['l'] . '_CATEGORY'),
 			'language' 		=> JText::_('JGRID_HEADING_LANGUAGE'),
+			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
 			'a.id' 			=> JText::_('JGRID_HEADING_ID')
 		);
 	}

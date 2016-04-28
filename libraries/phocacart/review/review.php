@@ -39,7 +39,8 @@ class PhocaCartReview
 			// Check if user added some review to the product
 			$query = 'SELECT a.id FROM #__phocacart_reviews AS a'
 				   .' WHERE a.product_id = '.(int) $productId
-				   .' AND a.user_id = '.(int)$userId;
+				   .' AND a.user_id = '.(int)$userId
+				   .' ORDER BY a.id';
 			$db->setQuery($query);
 			$reviewed = $db->loadColumn();
 			if (!empty($reviewed)) {

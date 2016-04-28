@@ -23,6 +23,7 @@ phocacartimport('phocacart.utils.utils');
 phocacartimport('phocacart.utils.settings');
 phocacartimport('phocacart.utils.exception');
 phocacartimport('phocacart.utils.log');
+phocacartimport('phocacart.utils.batchhelper');
 phocacartimport('phocacart.date.date');
 phocacartimport('phocacart.path.path');
 phocacartimport('phocacart.file.file');
@@ -47,7 +48,9 @@ phocacartimport('phocacart.render.renderadminviews');
 phocacartimport('phocacart.render.renderjs');
 phocacartimport('phocacart.html.category');
 phocacartimport('phocacart.html.batch');
+phocacartimport('phocacart.html.featured');
 phocacartimport('phocacart.category.category');
+phocacartimport('phocacart.category.categorymultiple');
 phocacartimport('phocacart.tag.tag');
 phocacartimport('phocacart.user.user');
 phocacartimport('phocacart.user.guestuser');
@@ -65,6 +68,8 @@ phocacartimport('phocacart.price.price');
 phocacartimport('phocacart.download.download');
 phocacartimport('phocacart.email.email');
 phocacartimport('phocacart.stock.stock');
+phocacartimport('phocacart.statistics.statistics');
+
 
 jimport('joomla.application.component.controller');
 $controller	= JControllerLegacy::getInstance('phocacartCp');

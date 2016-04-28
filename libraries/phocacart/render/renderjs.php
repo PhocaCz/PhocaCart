@@ -7,8 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-class PhocaCartRenderJs
+final class PhocaCartRenderJs
 {
+	private function __construct(){}
 
 	public static function renderAjaxTopHtml($text = '') {
 		$o = '<div id="ph-ajaxtop">';
@@ -88,10 +89,10 @@ class PhocaCartRenderJs
 		$s[] 	= '   jQuery(\'#phrowboximage\').append(phNewRow);';
 		$s[] 	= '	  phRowCountImage++;';
 		
-		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen
+		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen Admin
 		//$s[] 	= '	  jQuery(\'select\').trigger("chosen:updated");';//Reload Chosen
 		$s[] 	= ' ';
-		$s[] 	= '	  /* Initialize the modal button again */';
+		$s[] 	= '	  /* Initialize the modal button again - FOR IMAGES */';
 		$s[] 	= '	  /* SqueezeBox.initialize({}); */';
 		$s[] 	= '	  SqueezeBox.assign($$(\''.$poPup.'\'), {';
 		$s[] 	= '	     parse: \'rel\'';
@@ -120,7 +121,7 @@ class PhocaCartRenderJs
 		$s[] 	= '   jQuery(\'#phrowboxattribute\').append(phNewRow);';
 		$s[] 	= '	  phRowCountAttribute++;';
 		
-		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen
+		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen Admin
 		//$s[] 	= '	  jQuery(\'select\').trigger("chosen:updated");';//Reload Chosen
 		$s[] 	= ' ';
 		
@@ -141,6 +142,22 @@ class PhocaCartRenderJs
 	
 	public static function renderJsManageRowOption($j,  $newRow, $newHeader) {
 		$s 	= array();
+		
+		/* $s[] 	= '
+		jQuery(function($) {
+			jQuery(function($) {
+				SqueezeBox.initialize({});
+			
+
+			SqueezeBox.assign($(\'a.modal_jform_optionimage00\').get(), {parse: \'rel\'});
+			SqueezeBox.assign($(\'a.modal_jform_optionimage01\').get(), {parse: \'rel\'});
+			SqueezeBox.assign($(\'a.modal_jform_optionimage02\').get(), {parse: \'rel\'});
+			//SqueezeBox.assign($(\'a.modal_jform_optionimage03\').get(), {parse: \'rel\'});
+			//SqueezeBox.assign($(\'a.modal_jform_optionimage04\').get(), {parse: \'rel\'});
+			});
+		});
+		function jModalClose() {SqueezeBox.close();}'	;*/
+		
 		$s[] 	= 'var phRowCountOption = '.$j.';';
 		$s[] 	= 'function phAddRowOption(attrid) {';
 		$s[] 	= '	  var phNewRow		= 	\'<div></div>'. $newRow .'\';';
@@ -150,9 +167,17 @@ class PhocaCartRenderJs
 		$s[] 	= '	     jQuery(\'#phrowboxoption\' + attrid).append(phNewHeader);';
 		$s[] 	= '	  }';
 		$s[] 	= '   jQuery(\'#phrowboxoption\' + attrid).append(phNewRow);';
-		$s[] 	= '	  phRowCountOption++;';
+			
+		// Modal Box Popup wee need to initialize it for every newly added item
+		$s[]	= '   /* Initialize the modal button again - FOR IMAGES IN ATTRIBUTE OPTIONS */';
+		$s[]	= '   SqueezeBox.initialize({});';
+		$s[]	= '   var phModalFormOption = \'a.modal_jform_optionimage\' + attrid + phRowCountOption;';
+		$s[]	= '   SqueezeBox.assign(jQuery(phModalFormOption).get(), {parse: \'rel\'});';
+		$s[]	= '   function jModalClose() {SqueezeBox.close();}';
+		// End Modal Box
 		
-		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen
+		$s[] 	= '	  phRowCountOption++;';
+		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen Admin
 		//$s[] 	= '	  jQuery(\'select\').trigger("chosen:updated");';//Reload Chosen
 		$s[] 	= ' ';
 
@@ -183,7 +208,7 @@ class PhocaCartRenderJs
 		$s[] 	= '	  }';
 		$s[] 	= '   jQuery(\'#phrowboxspecification\').append(phNewRow);';
 		$s[] 	= '	  phRowCountSpecification++;';
-		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen
+		$s[] 	= '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen Admin
 		//$s[] 	= '	  jQuery(\'select\').trigger("chosen:updated");';//Reload Chosen
 		$s[] 	= ' ';
 		$s[] 	= '}';
@@ -213,14 +238,17 @@ class PhocaCartRenderJs
 	
 	public static function renderBillingAndShippingSame() {
 		
+		
+		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$load_chosen 		= $paramsC->get( 'load_chosen', 1 );
 		// BILLING AND SHIPPING THE SAME
 		// If checkbox will be enabled (Shipping and Billing address is the same) - remove the required protection of input fields
 		$s 	= array();
 
 		$s[] = 'jQuery(document).ready(function(){';
 
-		$s[] = '   phBgInputCh  = jQuery("#phShippingAddress .chosen-single").css("background");';
-		$s[] = '   phBgInputI	= jQuery(".phShippingFormFields").css("background");';
+		//$s[] = '   phBgInputCh  = jQuery("#phShippingAddress .chosen-single").css("background");';
+		//$s[] = '   phBgInputI	= jQuery(".phShippingFormFields").css("background");';
 		$s[] = '   phDisableRequirement();';
 	  
 		$s[] = '   jQuery("#phCheckoutBillingSameAsShipping").live(\'click\', function() {';
@@ -228,31 +256,396 @@ class PhocaCartRenderJs
 		$s[] = '   })';
 	  
 		$s[] = '   function phDisableRequirement() {';
+		
+		//$s[] = '   var phBgInputCh  = jQuery("#phShippingAddress .chosen-single").css("background");';
+		//$s[] = '   var phBgInputI	= jQuery(".phShippingFormFields").css("background");';
+		
+		$s[] = '		var selectC = jQuery("#jform_country_phs");';
+		$s[] = '		var selectR = jQuery("#jform_region_phs");';
 	  
 		$s[] = '      var checked = jQuery(\'#phCheckoutBillingSameAsShipping\').prop(\'checked\');';
 
 		$s[] = '      if (checked) {';
 		//jQuery(".phShippingFormFieldsRequired").prop("disabled", true);//.trigger("chosen:updated");// Not working - using readonly instead
 		//jQuery(".phShippingFormFields").prop("readonly", true);// Not working for Select box
+		
+		$s[] = '		jQuery(".phShippingFormFields").prop("readonly", true);';
+		$s[] = '		selectC.attr("disabled", "disabled");';
+		$s[] = '		selectR.attr("disabled", "disabled");';
+		
+		
 		$s[] = '	     jQuery(".phShippingFormFieldsRequired").removeAttr(\'aria-required\');';
 		$s[] = '	     jQuery(".phShippingFormFieldsRequired").removeAttr(\'required\');';	
-		$s[] = '	     jQuery("#phShippingAddress .chosen-single").css(\'background\', \'#f0f0f0\');';
-		$s[] = '	     jQuery(".phShippingFormFields").css(\'background\', \'#f0f0f0\');';	
-		$s[] = '	     jQuery(".phShippingFormFieldsRequired").trigger("chosen:updated");';
-		$s[] = '	     jQuery(".phShippingFormFields").trigger("chosen:updated");';
+		//$s[] = '	     jQuery("#phShippingAddress .chosen-single").css(\'background\', \'#f0f0f0\');';
+		//$s[] = '	     jQuery(".phShippingFormFields").css(\'background\', \'#f0f0f0\');';	
+		if ($load_chosen == 1) {
+			$s[] = '	     jQuery(".phShippingFormFieldsRequired").trigger("chosen:updated");';
+			$s[] = '	     jQuery(".phShippingFormFields").trigger("chosen:updated");';
+		}
 		$s[] = '      } else {';
 		  
 		$s[] = '	     jQuery(".phShippingFormFieldsRequired").prop(\'aria-required\', \'true\');';
 		$s[] = '	     jQuery(".phShippingFormFieldsRequired").prop(\'required\', \'true\');';
 		//jQuery(".phShippingFormFields").removeAttr(\'readonly\'); 
-		$s[] = '	     jQuery("#phShippingAddress .chosen-single").css(\'background\', phBgInputCh);'; 
-		$s[] = '	     jQuery(".phShippingFormFields").css(\'background\', phBgInputI);';
-		$s[] = '	     jQuery(".phShippingFormFieldsRequired").trigger("chosen:updated");';
-		$s[] = '	     jQuery(".phShippingFormFields").trigger("chosen:updated");';
+		//$s[] = '	     jQuery("#phShippingAddress .chosen-single").css(\'background\', phBgInputCh);'; 
+		//$s[] = '	     jQuery(".phShippingFormFields").css(\'background\', phBgInputI);';
+		
+		$s[] = '	    jQuery(".phShippingFormFields").removeAttr(\'readonly\');';
+		$s[] = '		selectC.removeAttr("disabled");';
+		$s[] = '		selectR.removeAttr("disabled");';
+		if ($load_chosen == 1) {
+			$s[] = '	     jQuery(".phShippingFormFieldsRequired").trigger("chosen:updated");';
+			$s[] = '	     jQuery(".phShippingFormFields").trigger("chosen:updated");';
+		}
 		$s[] = '      }';
 		$s[] = '   }';
 		$s[] = '});';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+	}
+	
+	public static function renderAjaxChangeProductPriceByOptions($id = 0, $class = '') {
+		
+		$paramsC 				= JComponentHelper::getParams('com_phocacart') ;
+		$attribute_change_price = $paramsC->get( 'attribute_change_price', 1 );
+		if ($attribute_change_price == 0) {
+			return false;
+		}
+		if ($id == 0) {
+			return false;
+		}
+
+		$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=checkout.changepricebox&format=json&'. JSession::getFormToken().'=1';
+		$s[] = 'jQuery(document).ready(function(){';
+		$s[] = '	jQuery("#phItemPriceBoxForm select.ph-item-input-select-attributes").change(function(){';
+		$s[] = '		var phUrl 	= "'. $urlAjax.'";';
+		$s[] = '		var phId 	= '.(int)$id.';';
+		$s[] = '		var phClass = "'.$class.'";';
+		$s[] = '		var phDataA = jQuery("#phItemPriceBoxForm select").serialize();';
+		$s[] = '		var phData 	= \'id=\'+phId+\'&\'+phDataA+\'&\'+\'class=\'+phClass;';
+		$s[] = ' ';		
+		$s[] = '		phRequest = jQuery.ajax({';
+		$s[] = '			type: "POST",';
+		$s[] = '			url: phUrl,';
+		$s[] = '			async: "false",';
+		$s[] = '			cache: "false",';
+		$s[] = '			data: phData,';
+		$s[] = '			dataType:"JSON",';
+		$s[] = '			success: function(data){';
+		$s[] = '				if (data.status == 1){';
+		$s[] = '					jQuery("#phItemPriceBox").html(data.item);';
+		$s[] = '			   } else {';
+		//$s[] = '					// Don\'t change the price box, don't render any error message
+		$s[] = '			   }';
+		$s[] = '			}';
+		$s[] = '		})';	
+		$s[] = '	})';
+		$s[] = '})';
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+	}
+	
+	
+	public static function renderAjaxAddToCart() {
+		
+		$paramsC 		= JComponentHelper::getParams('com_phocacart') ;
+		$add_cart_method= $paramsC->get( 'add_cart_method', 0 );
+		
+		// We need to refresh checkout site when AJAX used for removing or adding products to cart
+		$app 		= JFactory::getApplication();
+		$view 		= $app->input->get('view', '');
+		$option 	= $app->input->get('option', '');
+		if ($option == 'com_phocacart' && $view == 'checkout') {
+			$cView = 1;
+		} else {
+			$cView = 0;
+		}
+		
+		if ($add_cart_method == 0) {
+			return false;
+		}
+		
+		if ($add_cart_method == 2) {
+			JHTML::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+		}
+		
+		if ($add_cart_method > 0) {
+			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=checkout.add&format=json&'. JSession::getFormToken().'=1&checkoutview='.(int)$cView;
+			$s[] = 'jQuery(document).ready(function(){';
+			$s[] = '	jQuery(".phItemCartBoxForm").on(\'submit\', function (e) {';
+			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '		var phCheckoutView = '.(int)$cView.'';
+			$s[] = '		var phData = jQuery(this).serialize();';
+			$s[] = ' ';		
+			$s[] = '		phRequest = jQuery.ajax({';
+			$s[] = '			type: "POST",';
+			$s[] = '			url: phUrl,';
+			$s[] = '			async: "false",';
+			$s[] = '			cache: "false",';
+			$s[] = '			data: phData,';
+			$s[] = '			dataType:"JSON",';
+			$s[] = '			success: function(data){';
+			$s[] = '				if (data.status == 1){';
+			$s[] = '					jQuery("#phItemCartBox").html(data.item);';
+			if ($add_cart_method == 2) {
+				$s[] = ' 					jQuery("#phContainer").html(data.popup);';
+				$s[] = ' 					jQuery("#phAddToCartPopup").modal();';
+			}
+			if ($add_cart_method == 1) {
+				// If no popup is displayed we can relaod the page when we are in comparison page
+				// If popup, this will be done when clicking continue or comparison list
+				$s[] = '						if (phCheckoutView == 1) {';
+				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			   			}';
+			}
+			$s[] = '			   } else if (data.status == 0){';
+			$s[] = '					jQuery("#phItemCartBox").html(data.error);';
+			$s[] = '			   } else {';
+			//$s[] = '					// Don\'t change the price box';
+			$s[] = '			   }';
+			$s[] = '			}';
+			$s[] = '		})';
+			$s[] = '		e.preventDefault();';
+			$s[] = '       return false;';	
+			$s[] = '	})';
+			$s[] = '})';
+			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		}
+	}
+	
+	
+	public static function renderAjaxAddToCompare() {
+		
+		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		
+		// We need to refresh comparison site when AJAX used for removing or adding products to comparison list
+		$app 		= JFactory::getApplication();
+		$view 		= $app->input->get('view', '');
+		$option 	= $app->input->get('option', '');
+		if ($option == 'com_phocacart' && $view == 'comparison') {
+			$cView = 1;
+		} else {
+			$cView = 0;
+		}
+		
+		if ($add_compare_method == 0) {
+			return false;
+		}
+		if ($add_compare_method == 2) {
+			JHTML::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+		}
+		
+		if ($add_compare_method > 0) {	
+			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=comparison.add&format=json&'. JSession::getFormToken().'=1&comparisonview='.(int)$cView;
+			//$s[] = 'jQuery(document).ready(function(){';
+			//$s[] = '	jQuery(".phItemCompareBoxForm").on(\'submit\', function (e) {';
+			$s[] = '	function phItemCompareBoxFormAjax(phItemId) {';
+			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '		var phItem = \'#\' + phItemId;';
+			$s[] = '		var phComparisonView = '.(int)$cView.'';
+			$s[] = '		var phData = jQuery(phItem).serialize();';
+			$s[] = ' ';		
+			$s[] = '		phRequest = jQuery.ajax({';
+			$s[] = '			type: "POST",';
+			$s[] = '			url: phUrl,';
+			$s[] = '			async: "false",';
+			$s[] = '			cache: "false",';
+			$s[] = '			data: phData,';
+			$s[] = '			dataType:"JSON",';
+			$s[] = '			success: function(data){';
+			$s[] = '				if (data.status == 1){';
+			$s[] = '					jQuery("#phItemCompareBox").html(data.item);';
+			if ($add_compare_method == 2) {
+				$s[] = ' 					jQuery("#phContainer").html(data.popup);';
+				$s[] = ' 					jQuery("#phAddToComparePopup").modal();';
+			}
+			if ($add_compare_method == 1) {
+				// If no popup is displayed we can relaod the page when we are in comparison page
+				// If popup, this will be done when clicking continue or comparison list
+				$s[] = '						if (phComparisonView == 1) {';
+				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			   			}';
+			}
+			$s[] = '			   } else {';
+			//$s[] = '					// Don\'t change the price box';
+			$s[] = '			   }';
+			$s[] = '			}';
+			$s[] = '		})';
+			//$s[] = '		e.preventDefault();';
+			//$s[] = '       return false;';	
+			$s[] = '	}';
+			//$s[] = '})';
+			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		}
+	}
+	
+	public static function renderAjaxRemoveFromCompare() {
+		
+		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		
+		// We need to refresh comparison site when AJAX used for removing or adding products to comparison list
+		$app 		= JFactory::getApplication();
+		$view 		= $app->input->get('view', '');
+		$option 	= $app->input->get('option', '');
+		if ($option == 'com_phocacart' && $view == 'comparison') {
+			$cView = 1;
+		} else {
+			$cView = 0;
+		}
+		
+		
+		if ($add_compare_method == 0) {
+			return false;
+		}
+		if ($add_compare_method == 2) {
+			JHTML::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+		}
+		
+		if ($add_compare_method > 0) {	
+			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=comparison.remove&format=json&'. JSession::getFormToken().'=1&comparisonview='.(int)$cView;
+			//$s[] = 'jQuery(document).ready(function(){';
+			//$s[] = '	jQuery(".phItemCompareBoxForm").on(\'submit\', function (e) {';
+			$s[] = '	function phItemRemoveCompareFormAjax(phItemId) {';
+			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '		var phItem = \'#\' + phItemId;';
+			$s[] = '		var phComparisonView = '.(int)$cView.'';
+			$s[] = '		var phData = jQuery(phItem).serialize();';
+			$s[] = ' ';		
+			$s[] = '		phRequest = jQuery.ajax({';
+			$s[] = '			type: "POST",';
+			$s[] = '			url: phUrl,';
+			$s[] = '			async: "false",';
+			$s[] = '			cache: "false",';
+			$s[] = '			data: phData,';
+			$s[] = '			dataType:"JSON",';
+			$s[] = '			success: function(data){';
+			$s[] = '				if (data.status == 1){';
+			$s[] = '					jQuery("#phItemCompareBox").html(data.item);';
+			if ($add_compare_method == 2) {
+				// Display the popup
+				$s[] = ' 					jQuery("#phContainerModuleCompare").html(data.popup);';
+				$s[] = ' 					jQuery("#phRemoveFromComparePopup").modal();';
+			}
+			if ($add_compare_method == 1) {
+				// If no popup is displayed we can relaod the page when we are in comparison page
+				// If popup, this will be done when clicking continue or comparison list
+				$s[] = '						if (phComparisonView == 1) {';
+				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			   			}';
+			}	
+			$s[] = '			   } else {';
+			//$s[] = '					// Don\'t change the price box';
+			$s[] = '			   }';
+			$s[] = '			}';
+			$s[] = '		})';
+			//$s[] = '		e.preventDefault();';
+			//$s[] = '       return false;';	
+			$s[] = '	}';
+			//$s[] = '})';
+			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		}
+	}
+
+	
+	// Singleton - do not load items more times from database
+	/*public static function renderLoaderFullOverlay() {
+		
+		if( self::$fullOverlay == '' ) {
+			
+			$s 	= array();
+			$s[] = 'var phOverlay = jQuery(\'<div id="phOverlay"><div id="phLoaderFull"> </div></div>\');';
+			$s[] = 'phOverlay.appendTo(document.body);';
+			$s[] = 'jQuery("#phOverlay").fadeIn().css("display","block");';
+			self::$fullOverlay = implode("\n", $s);
+		}		
+		return self::$fullOverlay;
+	}*/
+	
+	// Singleton - check if loaded - xxx No Singleton, it must be inside each javascript function
+	public static function renderLoaderFullOverlay() {
+		//static $fullOverlay = 0;
+		//if( $fullOverlay == 0) {
+			$s 	= array();
+			$s[] = 'var phOverlay = jQuery(\'<div id="phOverlay"><div id="phLoaderFull"> </div></div>\');';
+			$s[] = 'phOverlay.appendTo(document.body);';
+			$s[] = 'jQuery("#phOverlay").fadeIn().css("display","block");';
+			$fullOverlay = 1;
+			return implode("\n", $s);
+		//} else {
+		//	return '';
+		//}		
+		
+		/*
+		var phOverlay = jQuery('<div id="phOverlay"><div id="phLoaderFull"> </div></div>');
+		phOverlay.appendTo(document.body);
+		var $loading = jQuery('#phOverlay').hide();
+		jQuery(document)
+		  .ajaxStart(function () {
+			$loading.show();
+		  })
+		  .ajaxStop(function () {
+			$loading.hide();
+		  });
+		*/
+	}
+	
+	
+	public static function renderMagnific() {
+		
+		$document	= JFactory::getDocument();
+		$document->addScript(JURI::base(true).'/media/com_phocacart/js/magnific/jquery.magnific-popup.min.js');
+		$document->addStyleSheet(JURI::base(true).'/media/com_phocacart/js/magnific/magnific-popup.css');
+		$s = array();
+		$s[] = 'jQuery(document).ready(function() {';
+		$s[] = '	jQuery(\'#phImageBox\').magnificPopup({';
+		$s[] = '		tLoading: \''.JText::_('COM_PHOCACART_LOADING').'\',';
+		$s[] = '		tClose: \''.JText::_('COM_PHOCACART_CLOSE').'\',';
+		$s[] = '		delegate: \'a.magnific\',';
+		$s[] = '		type: \'image\',';
+		$s[] = '		mainClass: \'mfp-img-mobile\',';
+		$s[] = '		zoom: {';
+		$s[] = '			enabled: true,';
+		$s[] = '			duration: 300,';
+		$s[] = '			easing: \'ease-in-out\'';
+		$s[] = '		},';
+		$s[] = '		gallery: {';
+		$s[] = '			enabled: true,';
+		$s[] = '			navigateByImgClick: true,';
+		$s[] = '			tPrev: \''.JText::_('COM_PHOCACART_PREVIOUS').'\',';
+		$s[] = '			tNext: \''.JText::_('COM_PHOCACART_NEXT').'\',';
+		$s[] = '			tCounter: \''.JText::_('COM_PHOCACART_MAGNIFIC_CURR_OF_TOTAL').'\'';
+		$s[] = '		},';
+		$s[] = '		image: {';
+		$s[] = '			titleSrc: function(item) {';
+		$s[] = '				return item.el.attr(\'title\');';
+		$s[] = '			},';
+		$s[] = '			tError: \''.JText::_('COM_PHOCACART_IMAGE_NOT_LOADED').'\'';
+		$s[] = '		}';
+		$s[] = '	});';
+		$s[] = '});';
+		
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+				
+	}
+	
+	public static function renderPrettyPhoto() {
+		$document	= JFactory::getDocument();
+		JHTML::stylesheet( 'media/com_phocacart/js/prettyphoto/css/prettyPhoto.css' );
+		$document->addScript(JURI::root(true).'/media/com_phocacart/js/prettyphoto/js/jquery.prettyPhoto.js');
+		
+		$js = "\n". 'jQuery(document).ready(function(){
+			jQuery("a[rel^=\'prettyPhoto\']").prettyPhoto({'."\n";
+		$js .= '  social_tools: 0'."\n";		
+		$js .= '  });
+		});'."\n";
+
+		$document->addScriptDeclaration($js);
+	}
+	
+	
+	public final function __clone() {
+		JError::raiseWarning(500, 'Function Error: Cannot clone instance of Singleton pattern');// No JText - for developers only
+		return false;
 	}
 }
 ?>

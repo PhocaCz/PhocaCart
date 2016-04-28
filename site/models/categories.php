@@ -11,21 +11,19 @@ jimport('joomla.application.component.model');
 
 class PhocaCartModelCategories extends JModelLegacy
 {
-	var $categories 			= null;
-	var $categories_ordering	= null;
-	var $category_ordering		= null;
+	protected $categories 			= null;
+	protected $categories_ordering	= null;
+	protected $category_ordering		= null;
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$app	= JFactory::getApplication();
 		$this->setState('filter.language',$app->getLanguageFilter());
 	}
 
-	function getCategoriesList($displaySubcategories = 0) {
+	public function getCategoriesList($displaySubcategories = 0) {
 		if (empty($this->categories)) {			
 			$categoriesOrdering = $this->getCategoryOrdering();
-			
-			
 			
 			if ((int)$displaySubcategories > 0) {
 				$id = -1; // display subcategories - -1 means to load all items
@@ -34,8 +32,7 @@ class PhocaCartModelCategories extends JModelLegacy
 			}
 			
 			$query			= $this->getCategoriesListQuery($id, $categoriesOrdering);
-			
-			$categories 	= $this->_getList( $query );
+			$categories 	= $this->_getList($query);
 			
 			if (!empty($categories)) {
 				
@@ -64,11 +61,10 @@ class PhocaCartModelCategories extends JModelLegacy
 			}*/
 			
 		}
-		
 		return $this->categories;
 	}
 
-	function getCategoriesListQuery($id, $categoriesOrdering) {
+	public function getCategoriesListQuery($id, $categoriesOrdering) {
 		
 		$wheres		= array();
 		$user 		= JFactory::getUser();
@@ -113,7 +109,11 @@ class PhocaCartModelCategories extends JModelLegacy
 		$query =  " SELECT c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat"
 		. " FROM #__phocacart_categories AS c"
 		//. " LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id AND s.published = 1"
-		. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
+		
+		//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
+		//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1"
+		//. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
+		
 		. " WHERE " . implode( " AND ", $wheres )
 		. " GROUP BY c.id"
 		. " ORDER BY ".$categoriesOrdering;
@@ -123,11 +123,12 @@ class PhocaCartModelCategories extends JModelLegacy
 						 #__phocacart_categories as s
 						 on s.parent_id = c.id
 					group by c.id";*/
-
+					
+		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}
 	
-	function getCategoryOrdering() {
+	public function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
 			$app						= JFactory::getApplication();
 			$params 					= $app->getParams();

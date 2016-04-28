@@ -31,6 +31,7 @@ function phCheckRequestStatus(i, task) {
 		}, 1000);
 	} else {
 		if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+			<?php echo $this->form->getField('description')->save(); ?>
 			Joomla.submitform(task, document.getElementById('adminForm'));
 		} else {
 			alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
@@ -53,7 +54,7 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'alias', 'image', 'parent_id', 'ordering', 'access');
+$formArray = array ('title', 'alias', 'image', 'parent_id', 'ordering', 'access', 'title_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);

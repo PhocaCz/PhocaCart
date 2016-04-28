@@ -38,7 +38,7 @@ class PhocaCartOrdering
 			
 			default://PRODUCTS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'a.ordering DESC';break;
+					case 2:$orderingOutput	= 'pc.ordering DESC';break;
 					case 3:$orderingOutput	= 'a.title ASC';break;
 					case 4:$orderingOutput	= 'a.title DESC';break;
 					case 5:$orderingOutput	= 'a.price ASC';break;
@@ -47,7 +47,7 @@ class PhocaCartOrdering
 					case 8:$orderingOutput	= 'a.date DESC';break;
 					case 9:$orderingOutput	= 'rating ASC';break;
 					case 10:$orderingOutput	= 'rating DESC';break;
-					case 1:default:$orderingOutput = 'a.ordering ASC';break;
+					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
 				}
 			break;
 		}	
@@ -106,5 +106,34 @@ class PhocaCartOrdering
 				16 => JText::_('COM_PHOCACART_HITS_DESC'));
 		return $itemOrdering;
 	}*/
+	
+
+	public static function getOrderingCombination($orderingItem = 0, $orderingCat = 0) {
+		
+		$itemOrdering	= '';
+		$catOrdering	= '';
+		$ordering		= '';
+		
+		if ($orderingItem > 0) {
+			$itemOrdering 	= PhocaCartOrdering::getOrderingText($orderingItem,0);
+			
+		}
+		if ($orderingCat > 0) {
+			$catOrdering 	= PhocaCartOrdering::getOrderingText($orderingCat,1);
+		}
+		
+		if ($catOrdering != '' && $itemOrdering == '') {
+			$ordering = $catOrdeing;
+		}
+		if ($catOrdering == '' && $itemOrdering != '') {
+			$ordering = $itemOrdering;
+		}
+		
+		if ($catOrdering != '' && $itemOrdering != '') {
+			$ordering = $catOrdering . ', '.$itemOrdering;
+		}
+		return $ordering;
+		
+	}
 }
 ?>

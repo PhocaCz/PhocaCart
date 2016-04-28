@@ -13,7 +13,7 @@ class PhocaCartRegion
 	public static function getRegionById($regionId) {
 		
 		$db =JFactory::getDBO();
-		$query = 'SELECT title FROM #__phocacart_regions WHERE id = '.(int) $regionId. ' LIMIT 1';
+		$query = 'SELECT title FROM #__phocacart_regions WHERE id = '.(int) $regionId. ' ORDER BY title LIMIT 1';
 		$db->setQuery($query);
 		$region = $db->loadColumn();
 		if(isset($region[0])) {
@@ -27,7 +27,8 @@ class PhocaCartRegion
 		$db =JFactory::getDBO();
 		
 		$query = 'SELECT a.id, a.title FROM #__phocacart_regions AS a'
-			    .' WHERE a.country_Id = '.(int) $countryId;
+			    .' WHERE a.country_Id = '.(int) $countryId
+				.' ORDER BY a.id';
 		$db->setQuery($query);
 		$regions = $db->loadObjectList();
 	

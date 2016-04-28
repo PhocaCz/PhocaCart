@@ -14,7 +14,7 @@ class PhocaCartCountry
 	public static function getCountryById($countryId) {
 		
 		$db =JFactory::getDBO();
-		$query = 'SELECT title FROM #__phocacart_countries WHERE id = '.(int) $countryId. ' LIMIT 1';
+		$query = 'SELECT title FROM #__phocacart_countries WHERE id = '.(int) $countryId. ' ORDER BY title LIMIT 1';
 		$db->setQuery($query);
 		$country = $db->loadColumn();
 		if(isset($country[0])) {
@@ -55,7 +55,8 @@ class PhocaCartCountry
 		}
 		$query .= ' FROM #__phocacart_countries AS a'
 				.' LEFT JOIN '.$t.' AS c ON a.id = c.country_id'
-			    .' WHERE c.'.$c.' = '.(int) $id;
+			    .' WHERE c.'.$c.' = '.(int) $id
+				.' ORDER BY a.id';
 		$db->setQuery($query);
 		
 		if ($select == 1) {

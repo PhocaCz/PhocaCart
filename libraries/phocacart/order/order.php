@@ -21,11 +21,13 @@ class PhocaCartOrder
 	}
 	public function saveOrder($comment) {
 		
-		$msgSuffix		= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-		$pC 			= JComponentHelper::getParams('com_phocacart') ;
-		$stock_checkout	= $pC->get( 'stock_checkout', 0 );
-		$unit_weight	= $pC->get( 'unit_weight', '' );
-		$unit_volume	= $pC->get( 'unit_volume', '' );
+		$msgSuffix			= '<span id="ph-msg-ns" class="ph-hidden"></span>';
+		$pC 				= JComponentHelper::getParams('com_phocacart') ;
+		$min_order_amount	= $pC->get( 'min_order_amount', 0 );
+		$stock_checkout		= $pC->get( 'stock_checkout', 0 );
+		$stock_checking		= $pC->get( 'stock_checking', 0 );
+		$unit_weight		= $pC->get( 'unit_weight', '' );
+		$unit_volume		= $pC->get( 'unit_volume', '' );
 		
 		$uri 			= JFactory::getURI();
 		$action			= $uri->toString();
@@ -36,6 +38,7 @@ class PhocaCartOrder
 		$cart			= new PhocaCartRenderCheckout();
 		$cart->setFullItems();
 		$items 			= $cart->getFullItems();
+		$currency		= PhocaCartCurrency::getCurrency();
 		
 		if (!$items) {
 			$msg = JText::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY');
@@ -66,13 +69,30 @@ class PhocaCartOrder
 		$total		= $cart->getTotal();
 		
 		
+		// --------------------
+		// CHECK MINIMUM ORDER AMOUNT
+		// --------------------
+		if($min_order_amount > 0 && $total['brutto'] < $min_order_amount) {
+			$price = new PhocaCartPrice();
+			$price->setCurrency($currency->id);
+			$priceFb = $price->getPriceFormat($total['brutto']);
+			$priceFm = $price->getPriceFormat($min_order_amount);
+			$msg = JText::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_NOT_MET_UPDATE_CART_BEFORE_ORDERING');
+			$msg .= '<br />';
+			$msg .=JText::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_IS') . ': '. $priceFm;
+			$msg .= '<br />';
+			$msg .=JText::_('COM_PHOCACART_YOUR_ORDER_AMOUNT_IS') . ': '. $priceFb;
+			$app->enqueueMessage($msg.$msgSuffix, 'error');
+			$app->redirect($action);
+			exit;
+		}
 		
 		
 		// --------------------
 		// CHECK STOCK VALIDITY
 		// --------------------
 		$stockValid		= $cart->getStockValid();
-		if($stock_checkout == 1 && $stockValid == 0) {
+		if($stock_checking == 1 && $stock_checkout == 1 && $stockValid == 0) {
 			$msg = JText::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING');
 			$app->enqueueMessage($msg.$msgSuffix, 'error');
 			$app->redirect($action);
@@ -90,7 +110,7 @@ class PhocaCartOrder
 			exit;
 		}
 		
-		$currency	= PhocaCartCurrency::getCurrency();
+		
 		$db 		= JFactory::getDBO();
 		
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_phocacart/tables');
@@ -102,7 +122,7 @@ class PhocaCartOrder
 		} else {
 			$d['user_id'] 				= (int)$user->id;
 		}
-		$d['status_id']				= 1;// Ordered
+		$d['status_id']				= 1;// Ordered (Pending)
 		$d['published']				= 1;
 		$d['shipping_id']			= (int)$shippingId;
 		$d['payment_id']			= (int)$payment['id'];
@@ -161,8 +181,6 @@ class PhocaCartOrder
 		
 		}
 
-	
-	
 	
 		
 		$row = JTable::getInstance('PhocaCartOrder', 'Table', array());
@@ -245,11 +263,14 @@ class PhocaCartOrder
 			// HISTORY AND ORDER STATUS
 			$this->cleanTable('phocacart_order_history', $row->id);
 			$notify = 0;
-			//$notify = PhocaCartStatus::notify($d['status_id']);
+			$status = PhocaCartOrderStatus::getStatus($d['status_id']);
+			if (isset($status['email_customer'])) {
+				$notify = $status['email_customer'];
+			}
 			$this->saveOrderHistory($d['status_id'], $notify, $user->id, $row->id);
 			
 			// BE AWARE***********
-			// $d is newly defined
+			// $d is newly defined so use d2
 			// *******************
 			
 			// TOTAL
@@ -257,8 +278,8 @@ class PhocaCartOrder
 				$this->cleanTable('phocacart_order_total', $row->id);
 				
 				$ordering 		= 1;
-				$d				= array();
-				$d['order_id']	= $row->id;
+				$d2				= array();
+				$d2['order_id']	= $row->id;
 				if (isset($total['netto'])) {
 				
 					// Discount
@@ -267,39 +288,39 @@ class PhocaCartOrder
 						$discount = $total['cnetto'];
 					}
 				
-					$d['title']		= JText::_('COM_PHOCACART_SUBTOTAL');
-					$d['type']		= 'netto';
-					$d['amount']	= $total['netto'];
-					$d['ordering']	= $ordering;
-					$this->saveOrderTotal($d);
+					$d2['title']		= JText::_('COM_PHOCACART_SUBTOTAL');
+					$d2['type']		= 'netto';
+					$d2['amount']	= $total['netto'];
+					$d2['ordering']	= $ordering;
+					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 				
 				if (isset($total['cnetto'])) {
-					$d['title']		= JText::_('COM_PHOCACART_COUPON');
-					//$d['title']		= JText::_('COM_PHOCACART_COUPON_EXCL_TAX');
+					$d2['title']		= JText::_('COM_PHOCACART_COUPON');
+					//$d2['title']		= JText::_('COM_PHOCACART_COUPON_EXCL_TAX');
 					
 					if (isset($coupon['title']) && $coupon['title'] != '') {
-						$d['title'] = $coupon['title'];// . ' ' . JText::_('COM_PHOCACART_EXCL_TAX_SUFFIX');
+						$d2['title'] = $coupon['title'];// . ' ' . JText::_('COM_PHOCACART_EXCL_TAX_SUFFIX');
 					}
 					
-					$d['type']		= 'cnetto';
-					$d['amount']	= '-' . $total['cnetto'];
-					$d['ordering']	= $ordering;
-					$this->saveOrderTotal($d);
+					$d2['type']		= 'cnetto';
+					$d2['amount']	= '-' . $total['cnetto'];
+					$d2['ordering']	= $ordering;
+					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 				
 				if (isset($total['cbrutto'])) {
-					$d['title']		= JText::_('COM_PHOCACART_COUPON');
-					//$d['title']		= JText::_('COM_PHOCACART_COUPON_INCL_TAX');
+					$d2['title']		= JText::_('COM_PHOCACART_COUPON');
+					//$d2['title']		= JText::_('COM_PHOCACART_COUPON_INCL_TAX');
 					if (isset($coupon['title']) && $coupon['title'] != '') {
-						$d['title'] = $coupon['title'];// . ' ' . JText::_('COM_PHOCACART_INCL_TAX_SUFFIX');
+						$d2['title'] = $coupon['title'];// . ' ' . JText::_('COM_PHOCACART_INCL_TAX_SUFFIX');
 					}
-					$d['type']		= 'cbrutto';
-					$d['amount']	= '-' . $total['cbrutto'];
-					$d['ordering']	= $ordering;
-					$this->saveOrderTotal($d);
+					$d2['type']		= 'cbrutto';
+					$d2['amount']	= '-' . $total['cbrutto'];
+					$d2['ordering']	= $ordering;
+					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 				
@@ -313,69 +334,69 @@ class PhocaCartOrder
 						}
 					
 						if ($v['tax'] > 0) {
-							$d['title']		= $v['title'];
-							$d['type']		= 'tax';
-							$d['amount']	= $v['tax'] - $discount;
-							$d['ordering']	= $ordering;
-							$this->saveOrderTotal($d);
+							$d2['title']		= $v['title'];
+							$d2['type']		= 'tax';
+							$d2['amount']	= $v['tax'] - $discount;
+							$d2['ordering']	= $ordering;
+							$this->saveOrderTotal($d2);
 							$ordering++;
 						}
 					}
 				}
 				if (!empty($shippingC)) {
 					if (isset($shippingC['nettotxt']) && isset($shippingC['netto'])) {
-						$d['title']		= $shippingC['nettotxt'];
-						$d['type']		= 'snetto';
-						$d['amount']	= $shippingC['netto'];
-						$d['ordering']	= $ordering;
-						$this->saveOrderTotal($d);
+						$d2['title']		= $shippingC['nettotxt'];
+						$d2['type']		= 'snetto';
+						$d2['amount']	= $shippingC['netto'];
+						$d2['ordering']	= $ordering;
+						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 					
 					if (isset($shippingC['taxtxt']) && isset($shippingC['tax'])) {
-						$d['title']		= $shippingC['taxtxt'];
-						$d['type']		= 'stax';
-						$d['amount']	= $shippingC['tax'];
-						$d['ordering']	= $ordering;
-						$this->saveOrderTotal($d);
+						$d2['title']		= $shippingC['taxtxt'];
+						$d2['type']		= 'stax';
+						$d2['amount']	= $shippingC['tax'];
+						$d2['ordering']	= $ordering;
+						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 					
 					if (isset($shippingC['bruttotxt']) && isset($shippingC['brutto'])) {
-						$d['title']		= $shippingC['bruttotxt'];
-						$d['type']		= 'sbrutto';
-						$d['amount']	= $shippingC['brutto'];
-						$d['ordering']	= $ordering;
-						$this->saveOrderTotal($d);
+						$d2['title']		= $shippingC['bruttotxt'];
+						$d2['type']		= 'sbrutto';
+						$d2['amount']	= $shippingC['brutto'];
+						$d2['ordering']	= $ordering;
+						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 				}
 				
 				if (!empty($paymentC)) {
 					if (isset($paymentC['nettotxt']) && isset($paymentC['netto'])) {
-						$d['title']		= $paymentC['nettotxt'];
-						$d['type']		= 'pnetto';
-						$d['amount']	= $paymentC['netto'];
-						$d['ordering']	= $ordering;
-						$this->saveOrderTotal($d);
+						$d2['title']		= $paymentC['nettotxt'];
+						$d2['type']		= 'pnetto';
+						$d2['amount']	= $paymentC['netto'];
+						$d2['ordering']	= $ordering;
+						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 					
 					if (isset($paymentC['taxtxt']) && isset($paymentC['tax'])) {
-						$d['title']		= $paymentC['taxtxt'];
-						$d['type']		= 'ptax';
-						$d['amount']	= $paymentC['tax'];
-						$d['ordering']	= $ordering;
-						$this->saveOrderTotal($d);
+						$d2['title']		= $paymentC['taxtxt'];
+						$d2['type']		= 'ptax';
+						$d2['amount']	= $paymentC['tax'];
+						$d2['ordering']	= $ordering;
+						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 					
 					if (isset($paymentC['bruttotxt']) && isset($paymentC['brutto'])) {
-						$d['title']		= $paymentC['bruttotxt'];
-						$d['type']		= 'pbrutto';
-						$d['amount']	= $paymentC['brutto'];
-						$d['ordering']	= $ordering;
-						$this->saveOrderTotal($d);
+						$d2['title']		= $paymentC['bruttotxt'];
+						$d2['type']		= 'pbrutto';
+						$d2['amount']	= $paymentC['brutto'];
+						$d2['ordering']	= $ordering;
+						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 				}
@@ -388,18 +409,19 @@ class PhocaCartOrder
 						$discount = $total['cbrutto'];
 					}
 					
-					$d['title']		= JText::_('COM_PHOCACART_TOTAL');
-					$d['type']		= 'brutto';
-					$d['amount']	= $total['brutto'] - $discount;
-					$d['ordering']	= $ordering;
-					$this->saveOrderTotal($d);
+					$d2['title']		= JText::_('COM_PHOCACART_TOTAL');
+					$d2['type']		= 'brutto';
+					$d2['amount']	= $total['brutto'] - $discount;
+					$d2['ordering']	= $ordering;
+				
+					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 			}
 			
 			
-			$statusId = 1;// Pending PHSTATUS
-			PhocaCartOrderStatus::changeStatus($row->id, $statusId);// Notify user, notify others, emails send - will be decided in function
+			$statusId = 1;// Pending PHSTATUS                       
+			PhocaCartOrderStatus::changeStatus($row->id, $statusId, $d['order_token']);// Notify user, notify others, emails send - will be decided in function
 			
 			// Proceed or not proceed to payment gateway - depends on payment method
 			// By every new order - clean the proceed payment session
@@ -473,7 +495,7 @@ class PhocaCartOrder
 	public function saveOrderProducts($d, $orderId) {
 		$row = JTable::getInstance('PhocaCartOrderProducts', 'Table', array());
 		
-		$checkP = PhocaCartProduct::checkIfAccessPossible($d['id']);
+		$checkP = PhocaCartProduct::checkIfAccessPossible($d['id'], $d['catid']);
 		if (!$checkP) {
 			return false;
 		}
@@ -483,6 +505,7 @@ class PhocaCartOrder
 		$d['published']			= 1;
 		$d['order_id'] 			= (int)$orderId;
 		$d['product_id']		= (int)$d['id'];
+		$d['category_id']		= (int)$d['catid'];
 		$d['product_id_key']	= $d['idkey'];
 		unset($d['id']);// we do new autoincrement
 		
@@ -568,6 +591,11 @@ class PhocaCartOrder
 			// DOWNLOAD - we are here because we need Product ID and Order Product ID - both are different ids
 			$this->saveOrderDownloads($row->id, $d['product_id'], $d['order_id']);
 		}
+		
+		if ($row->id > 0) {
+			// UPDATE the number of sales of one product - to save sql queries in frontend
+			$this->updateNumberOfSalesOfProduct($row->id, $d['product_id'], $d['order_id']);
+		}
 
 		return true;
 	
@@ -619,12 +647,13 @@ class PhocaCartOrder
 			throw new Exception($row->getError());
 			return false;
 		}
-		
+	
 		
 		if (!$row->store()) {
 			throw new Exception($row->getError());
 			return false;
 		}
+
 		return true;
 	}
 	
@@ -679,7 +708,15 @@ class PhocaCartOrder
 		$d['download_file']		= $product->download_file;
 		$d['download_hits']		= 0;
 		$d['published']			= 0;
-		$d['date']				= gmdate('Y-m-d H:i:s');;
+		$d['date']				= gmdate('Y-m-d H:i:s');
+		
+		$d['ordering']			= 0;
+		$db = JFactory::getDbo();
+		//$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads WHERE catid = '.(int)$orderId);
+		$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads');
+		$max = $db->loadResult();
+		$d['ordering'] = $max+1;
+		
 		
 		
 		if (!$row->bind($d)) {
@@ -699,6 +736,28 @@ class PhocaCartOrder
 		}
 		
 		$this->downloadable_product = 1;
+		return true;
+	}
+	
+	
+	public function updateNumberOfSalesOfProduct($orderProductId, $productId, $orderId) {
+
+		// We store the number of sales of one product directly to product table
+		// because of saving SQL queries in frontend, to not run sql query for each product
+		$db = JFactory::getDBO();
+		$query = ' SELECT sum(quantity) FROM #__phocacart_order_products'
+			    .' WHERE product_id = '.(int) $productId
+				.' LIMIT 0,1';
+		$db->setQuery($query);
+		$sum = $db->loadColumn();
+		if (isset($sum[0])){
+			$query = ' UPDATE #__phocacart_products'
+			    .' SET sales = '.(int)$sum[0]
+				.' WHERE id = '.(int)$productId;
+			$db->setQuery($query);
+			$db->execute();
+			
+		}
 		return true;
 	}
 	
@@ -740,7 +799,7 @@ class PhocaCartOrder
 	public static function getOrderStatus($statusId) {
 	
 		$db 	= JFactory::getDBO();
-		$query 	= ' SELECT a.title FROM #__phocacart_order_statuses WHERE id = '. (int)$statusId;
+		$query 	= ' SELECT a.title FROM #__phocacart_order_statuses WHERE id = '. (int)$statusId . ' ORDER BY a.title';
 		$db->setQuery($query);
 		$status = $db->loadAssoc();
 	}

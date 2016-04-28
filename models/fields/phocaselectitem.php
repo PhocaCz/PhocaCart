@@ -9,6 +9,13 @@
 defined('JPATH_BASE') or die();
 jimport('joomla.form.formfield');
 
+if (! class_exists('PhocaCartRelated')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/related/related.php');
+}
+if (! class_exists('PhocaCartProduct')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/product/product.php');
+}
+
 class JFormFieldPhocaSelectItem extends JFormField
 {
 	public $type = 'PhocaSelectItem';
@@ -16,26 +23,60 @@ class JFormFieldPhocaSelectItem extends JFormField
 	protected function getInput() {
 		$html 	= array();
 		$url 	= 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' typeahead"' : ' class="typeahead"';
-		$attr 	.= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
+		
+		// Possible problem with modal
+		//$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' typeahead"' : ' class="typeahead"';
+		$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' "' : ' class=""';
+		
+		$attr  .= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
+		$attr  .= $this->element['required'] ? ' required aria-required="true"' : '';
+		
+		
+		$related = $this->element['related'] ? true : false;
+
+		//$attr  .= $this->multiple ? ' multiple' : '';
+		
+		// Be aware
+		// multiple = true -> name will be $this->name = jform[related][]
+		// multiple = false -> name will be $this->name = jform[related]
+		
+		
+		if ($this->multiple) {
+			$multiple = 'true';
+		} else {
+			$multiple = 'false';
+		}
+		
+		
 		$onchange 	= (string) $this->element['onchange'];
-		
-		$id 	= $this->form->getValue('id');
-		
 		$value = '';
-		if ((int)$id > 0) {
-			$relatedOption	= PhocaCartRelated::getRelatedItemsById((int)$id);
-			if(!empty($relatedOption)) {
-				$i = 0;
-				foreach($relatedOption as $k => $v) {
-					if ($i > 0) {
-						$value .= ',';
+		if ($related) {
+			// Related product - select related products by "parent" product ID
+			$id 	= $this->form->getValue('id');
+		
+			
+			if ((int)$id > 0) {
+				$relatedOption	= PhocaCartRelated::getRelatedItemsById((int)$id);
+				if(!empty($relatedOption)) {
+					$i = 0;
+					foreach($relatedOption as $k => $v) {
+						if ($i > 0) {
+							$value .= ',';
+						}
+						$value .= (int)$v->id . ':'. $v->title .' ('.$v->categories_title.')';
+						$i++;
 					}
-					$value .= (int)$v->id . ':'. $v->title .' ('.$v->category_title.')';
-					$i++;
 				}
 			}
+		} else {
+			// Standard product - only select one product by ID
+			$product = PhocaCartProduct::getProductByProductId((int)$this->value);// We don't need catid, we get all categories title
+			if(isset($product->id)) {
+				$value .= (int)$product->id . ':'. $product->title .' ('.$product->categories_title.')';
+			}
+			$id = (int)$this->value;
 		}
+	
 		
 		$document = JFactory::getDocument();
 		JHtml::stylesheet('media/com_phocacart/js/administrator/select2/select2.css' );
@@ -60,7 +101,7 @@ $s[] = ' function phSearchItemsMultiple(element, url) {';
 $s[] = '  jQuery(element).select2({';
 $s[] = '   placeholder: "",';
 $s[] = '   minimumInputLength: 1,';
-$s[] = '   multiple: true,';
+$s[] = '   multiple: '.$multiple.',';
 $s[] = '   ajax: {';
 $s[] = '    url: url,';
 $s[] = '    dataType: \'json\',';
@@ -91,7 +132,11 @@ $s[] = '       title: item[1]';
 $s[] = '      });';
 $s[] = '    });';
 $s[] = '    jQuery(element).val(\'\');';
-$s[] = '    callback(data);';
+if ($multiple == 'false') {
+	$s[] = '    callback(data[0]);';// NOT MULTIPLE
+} else {
+	$s[] = '    callback(data);';// MULTIPLE
+}
 $s[] = '   }';
 $s[] = '  });';
 $s[] = ' };';
@@ -117,9 +162,11 @@ $s[] = '});';
 
     $document->addScriptDeclaration(implode("\n", $s));
 
+		
 		$html[] = '<div>';
 		$html[] = '<input type="hidden" style="width: 400px;" id="'.$this->id.'" name="'.$this->name.'" value="'. $value.'"' .' '.$attr.' />';
 		$html[] = '</div>'. "\n";
+		
 		return implode("\n", $html);
 	}
 }

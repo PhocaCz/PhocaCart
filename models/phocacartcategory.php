@@ -8,6 +8,7 @@
  */
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
+use Joomla\String\StringHelper;
 
 class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 {
@@ -126,6 +127,18 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 			JArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					JLog::add($error, JLog::WARNING, 'jerror');
+					return false;
+				} else {
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+					return false;
+				}
+			}
+			
 			// FIRST - if there are subcategories - - - - - 	
 			$query = 'SELECT c.id, c.title, COUNT( s.parent_id ) AS numcat'
 			. ' FROM #__phocacart_categories AS c'
@@ -158,9 +171,9 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 				$cids = implode( ',', $cid );
 			
 				// Select id's from product table, if there are some items, don't delete it.
-				$query = 'SELECT c.id, c.title, COUNT( s.catid ) AS numcat'
+				$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numcat'
 				. ' FROM #__phocacart_categories AS c'
-				. ' LEFT JOIN #__phocacart_products AS s ON s.catid = c.id'
+				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
 				. ' WHERE c.id IN ( '.$cids.' )'
 				. ' GROUP BY c.id';
 			
@@ -190,6 +203,12 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 						$this->setError($this->_db->getErrorMsg());
 						return false;
 					}
+					
+					// 7. DELETE CATEGORY RELATIONSHIP (should not happen as this should be deleted when products are deleted)
+					$query = 'DELETE FROM #__phocacart_product_categories'
+						. ' WHERE category_id IN ( '.$cids.' )';
+					$this->_db->setQuery( $query );
+					$this->_db->execute();
 					
 					// Delete items in phocadownload_user_category
 				/*	$query = 'DELETE FROM #__phocadownload_user_category'
@@ -516,8 +535,10 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 		$table = $this->getTable();
 		while ($table->load(array('alias' => $alias, 'parent_id' => $category_id)))
 		{
-			$title = JString::increment($title);
-			$alias = JString::increment($alias, 'dash');
+			//$title = JString::increment($title);
+			//$alias = JString::increment($alias, 'dash');
+			$title = StringHelper::increment($title);
+			$alias = StringHelper::increment($alias, 'dash');
 		}
 
 		return array($title, $alias);

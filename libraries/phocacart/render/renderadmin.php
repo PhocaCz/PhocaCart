@@ -11,12 +11,20 @@
 defined('_JEXEC') or die();
 class PhocaCartRenderAdmin
 {
-	public static function quickIconButton( $link, $image, $text, $imgUrl ) {
+	/*public static function quickIconButton( $link, $image, $text, $imgUrl ) {
+		
+		return '<div class="thumbnails ph-icon" style="text-align: center">'
+		.'<a class="thumbnail ph-icon-inside" style="text-align: center" href="'.$link.'">'
+		.JHTML::_('image', $imgUrl . $image, $text )
+		.'<br />'.$text.'</a></div>'. "\n";
+	}
+	*/
+	public static function quickIconButton( $link, $text = '', $icon = '', $color = '') {
 		
 		return '<div class="thumbnails ph-icon">'
 		.'<a class="thumbnail ph-icon-inside" href="'.$link.'">'
-		.JHTML::_('image', $imgUrl . $image, $text )
-		.'<br /><span>'.$text.'</span></a></div>'. "\n";
+		.'<span style="color: '.$color.';" class="glyphicon glyphicon-'.$icon.' ph-icon-cp-large"></span>'
+		.'<br /><span class="ph-icon-cp-title">'.$text.'</span></a></div>'. "\n";
 	}
 	
 	public static function getLinks() {
@@ -30,8 +38,8 @@ class PhocaCartRenderAdmin
 			
 			case 'com_phocacart':
 				$links[]	= array('Phoca Cart site', 'http://www.phoca.cz/phocacart');
-				$links[]	= array('Phoca Cart documentation site', 'http://www.phoca.cz/');//TODO
-				$links[]	= array('Phoca Cart download site', 'http://www.phoca.cz/');//TODO
+				$links[]	= array('Phoca Cart documentation site', 'http://www.phoca.cz/documentation/category/116-phoca-cart-component');
+				$links[]	= array('Phoca Cart download site', 'http://www.phoca.cz/download/category/100-phoca-cart-component');
 			break;
 		
 		}

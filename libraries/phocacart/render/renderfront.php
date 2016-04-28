@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 class PhocaCartRenderFront
 {
-	public static function renderNewIcon($date) {
+	public static function renderNewIcon($date, $size = 1) {
 		$app	= JFactory::getApplication();
 		$params = $app->getParams();
 		$new	= $params->get( 'display_new', 0 );
@@ -23,8 +23,39 @@ class PhocaCartRenderFront
 			$dateExists = $dateToday - $dateAdded;
 			$dateNew	= (int)$new * 24 * 60 * 60;
 			if ($dateExists < $dateNew) {
-				$o .= '<div class="ph-new-icon"><span class="label label-warning">'.JText::_('COM_PHOCACART_NEW').'</span></div>';
+				$o .= '<div class="ph-corner-icon-wrapper ph-corner-icon'.$size.'-wrapper"><div class="ph-corner-icon ph-corner-icon'.$size.' ph-corner-icon-new">'.JText::_('COM_PHOCACART_NEW').'</div></div>';
+				
 			}
+		}
+		return $o;
+	}
+	
+	public static function renderHotIcon($sales, $size = 1) {
+		$app	= JFactory::getApplication();
+		$params = $app->getParams();
+		$hot	= $params->get( 'display_hot', 0 );
+		
+		$o = '';
+		if ($hot == 0) {
+			$o .= '';
+		} else {
+			if ($sales > $hot || $sales == $hot) {
+				$o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon'.$size.'-wrapper"><div class="ph-corner-icon ph-corner-icon'.$size.' ph-corner-icon-hot">'.JText::_('COM_PHOCACART_HOT').'</div></div>';
+			}
+		}
+		return $o;
+	}
+	
+	public static function renderFeaturedIcon($featured, $size = 1) {
+		$app	= JFactory::getApplication();
+		$params = $app->getParams();
+		$feat	= $params->get( 'display_featured', '' );
+		
+		$o = '';
+		if ($featured == 0) {
+			$o .= '';
+		} else {
+			$o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon'.$size.'-wrapper"><div class="ph-corner-icon ph-corner-icon'.$size.' ph-corner-icon-featured">'.JText::_($feat).'</div></div>';
 		}
 		return $o;
 	}
@@ -100,7 +131,18 @@ class PhocaCartRenderFront
 		
 		// Breadcrumbs TODO (Add the whole tree)
 		if ($type == 'category') {
-			if (isset($category->parentid)) {
+			
+			$path = PhocaCartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
+			$curpath = $pathway->getPathwayNames();
+			
+			if (!empty($path)) {
+				$path = array_reverse($path);
+				foreach ($path as $k => $v) {
+					$pathway->addItem($v['title'], JRoute::_(PhocaCartRoute::getCategoryRoute($v['id'], $v['alias'])));
+					
+				}
+			}
+			/*if (isset($category->parentid)) {
 				if ($category->parentid == 0) {
 					// $pathway->addItem( JText::_('COM_PHOCACART_CATEGORIES'), JRoute::_(PhocaCartRoute::getCategoriesRoute()));
 				} else if ($category->parentid > 0) {
@@ -112,24 +154,94 @@ class PhocaCartRenderFront
 						$pathway->addItem($category->parenttitle, JRoute::_(PhocaCartRoute::getCategoryRoute($category->parentid, $category->parentalias)));
 					}
 				}
-			}
+			}*/
 
-			if (isset($category->title) && !empty($category->title)) {
+			/*if (isset($category->title) && !empty($category->title)) {
 				$curpath = $pathway->getPathwayNames();
 				if( (!empty($curpath) && $category->title != $curpath[count($curpath)-1]) || empty($curpath)){
 					$pathway->addItem($category->title);
 				}
-			}
+			}*/
 		} else if ($type == 'item') {
-			if (isset($category->id)) {
+			
+			$path = PhocaCartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
+			$curpath = $pathway->getPathwayNames();
+			
+			if (!empty($path)) {
+				$path = array_reverse($path);
+				foreach ($path as $k => $v) {
+					$pathway->addItem($v['title'], JRoute::_(PhocaCartRoute::getCategoryRoute($v['id'], $v['alias'])));
+					
+				}
+			}
+			
+		/*	if (isset($category->id) && isset($category->title) && isset($category->alias)) {
 				if ($category->id > 0) {
 					$pathway->addItem($category->title, JRoute::_(PhocaCartRoute::getCategoryRoute($category->id, $category->alias)));
 				}
-			}
+			}*/
 		
 			if (isset($item->title) && !empty($item->title)) {
 				$pathway->addItem($item->title);
 			}
 		}
+	}
+	
+	public static function displayVideo($url, $view = 0, $ywidth = 0, $yheight = 0) {
+	
+		$o = '';
+		if ($url != '' && PhocaCartUtils::isURLAddress($url) ) {
+			
+			
+			$ssl 	= strpos($url, 'https');
+			$yLink	= 'http://www.youtube.com/v/';
+			if ($ssl != false) {
+				$yLink = 'https://www.youtube.com/v/';
+			}
+			
+			$shortUrl	= 'http://youtu.be/';
+			$shortUrl2	= 'https://youtu.be/';
+			$pos 		= strpos($url, $shortUrl);
+			$pos2 		= strpos($url, $shortUrl2);
+			if ($pos !== false) {
+				$code 		= str_replace($shortUrl, '', $url);
+			} else if ($pos2 !== false) {
+				$code 		= str_replace($shortUrl2, '', $url);
+			} else {
+				$codeArray 	= explode('=', $url);
+				$code 		= str_replace($codeArray[0].'=', '', $url);
+			}
+			
+			
+			
+			/*if ($view == 0) {
+				// Category View
+				$youtubeheight	= $this->params->get( 'youtube_height_cv', 360 );
+				$youtubewidth	= $this->params->get( 'youtube_width_cv', 480 );
+			} else {
+				// Detail View
+				$youtubeheight	= $this->params->get( 'youtube_height_dv', 360 );
+				$youtubewidth	= $this->params->get( 'youtube_width_dv', 480 );
+			}
+			
+			if ((int)$ywidth > 0) {
+				$youtubewidth	= (int)$ywidth;
+			}
+			if ((int)$yheight > 0) {
+				$youtubeheight	= (int)$yheight;
+			}*/
+
+			
+			$o .= '<div class="ph-video-container">';
+			$o .= '<object data="http://www.youtube.com/embed/'.$code.'"></object>';
+			/*$o .= '<object data="http://www.youtube.com/v/'.$code.'" type="application/x-shockwave-flash">'
+			.'<param name="movie" value="http://www.youtube.com/v/'.$code.'" />'
+			.'<param name="allowFullScreen" value="true" />'
+			.'<param name="allowscriptaccess" value="always" />'
+			.'<embed src="'.$yLink.$code.'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" /></object>';*/
+			$o .= '</div>';
+			
+		}
+		return $o;
 	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metadata>
+<!--<metadata>
 	<layout title="COM_PHOCACART_PAYMENT_LAYOUT">
 		<message>
 			<![CDATA[COM_PHOCACART_PAYMENT_LAYOUT_DESC]]>
@@ -16,4 +16,4 @@
 		</fieldset>
 </fields>
 
-</metadata>
+</metadata>-->

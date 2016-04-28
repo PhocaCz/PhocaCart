@@ -27,7 +27,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 				'category_id', 'category_id',
 				'state', 'a.state',
 				'access', 'a.access', 'access_level',
-				'ordering', 'a.ordering',
+				'ordering', 'pc.ordering',
 				'language', 'a.language',
 				'hits', 'a.hits',
 				'published','a.published',
@@ -110,9 +110,11 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
 		// Join over the categories.
 		$query->select('c.title AS category_title, c.id AS category_id');
-		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.catid');
-		
+		$query->join('LEFT', '#__phocacart_product_categories AS pc ON a.id = pc.product_id');
+		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
 	
+		// Not used
+		//$query->select("group_concat(c.id, '|^|', c.alias, '|^|', c.title SEPARATOR '|~|') as categories");
 		
 		//$query->select('v.average AS ratingavg');
 		//$query->join('LEFT', '#__phocadownload_img_votes_statistics AS v ON v.imgid = a.id');
@@ -134,7 +136,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		// Filter by category.
 		$categoryId = $this->getState('filter.category_id');
 		if (is_numeric($categoryId)) {
-			$query->where('a.catid = ' . (int) $categoryId);
+			//$query->where('a.catid = ' . (int) $categoryId);
+			$query->where('pc.category_id = ' . (int) $categoryId);
 		}
 		
 		// Filter on the language.
@@ -159,14 +162,15 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$query->group('a.id');
 
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering');
-		$orderDirn	= $this->state->get('list.direction');
-		if ($orderCol == 'a.ordering' || $orderCol == 'category_title') {
-			$orderCol = 'category_title '.$orderDirn.', a.ordering';
+		$orderCol	= $this->state->get('list.ordering', 'title');
+		$orderDirn	= $this->state->get('list.direction', 'asc');
+		if ($orderCol == 'pc.ordering' || $orderCol == 'category_title') {
+			$orderCol = 'category_title '.$orderDirn.', pc.ordering';
 		}
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
+	
 		return $query;
 	}
 }

@@ -12,17 +12,17 @@ defined('_JEXEC') or die();
 if ($this->a->confirm == 1) {
 	
 	
-	if ($this->t['stock_checkout'] == 1 && $this->t['stockvalid'] == 0) {
+	if ($this->t['stock_checking'] == 1 && $this->t['stock_checkout'] == 1 && $this->t['stockvalid'] == 0) {
 		// Header
 		echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" id="phcheckoutconfirmedit" >';
 		echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
-		echo '</div>';
+		echo '</div><div class="ph-cb"></div>';
 	
 	} else if ($this->t['minqtyvalid'] == 0) {
 		// Header
 		echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 		echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
-		echo '</div>';
+		echo '</div><div class="ph-cb"></div>';
 	
 	} else {
 		// Header
@@ -48,7 +48,7 @@ if ($this->a->confirm == 1) {
 		
 		echo ' <div class="pull-right ph-checkout-confirm">';	
 		echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-ok"></span> '.JText::_('COM_PHOCACART_CONFIRM_ORDER').'</button>';
-		echo '</div>';
+		echo '</div><div class="ph-cb"></div>';
 		
 		
 		$linkTermsHandler= 'onclick="window.open(this.href, \'orderview\', \'width=780,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';

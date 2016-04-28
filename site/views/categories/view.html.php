@@ -14,15 +14,12 @@ class PhocaCartViewCategories extends JViewLegacy
 	protected $t;
 	protected $p;
 
-	function display($tpl = null)
-	{		
-
+	public function display($tpl = null) {		
+		
 		$app									= JFactory::getApplication();
 		$model									= $this->getModel();
 		$document								= JFactory::getDocument();
 		$this->p 								= $app->getParams();
-		
-
 
 		$this->t['csv_display_subcategories']	= $this->p->get( 'csv_display_subcategories', 0 );
 		$this->t['categories']					= $model->getCategoriesList($this->t['csv_display_subcategories']);
@@ -36,31 +33,12 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['image_width_cats']			= $this->p->get( 'image_width_cats', '' );
 		$this->t['image_height_cats']			= $this->p->get( 'image_height_cats', '' );
 		
-		
-		JHTML::stylesheet('media/com_phocacart/css/main.css' );
-		if ($this->t['load_bootstrap'] == 1) {
-			JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			$document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		}
-		
-		if ($this->t['equal_height'] == 1) {
-			JHtml::_('jquery.framework', false);
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.equalheights.min.js');
-			/*$document->addScriptDeclaration(
-			'jQuery(document).ready(function(){
-				jQuery(\'.ph-thumbnail\').equalHeights();
-			});');*/
-			
-			$document->addScriptDeclaration(
-			'jQuery(window).load(function(){
-				jQuery(\'.ph-thumbnail\').equalHeights();
-			});');
-			
-			
-		}
+		$media = new PhocaCartRenderMedia();
+		$media->loadBootstrap($this->t['load_bootstrap']);
+		//$media->loadChosen($this->t['load_chosen']);
+		$media->loadEqualHeights($this->t['equal_height']);
 		
 		$this->t['path'] = PhocaCartPath::getPath('categoryimage');
-		
 		
 		$this->_prepareDocument();
 		parent::display($tpl);

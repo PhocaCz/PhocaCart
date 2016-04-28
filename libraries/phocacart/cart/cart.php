@@ -97,7 +97,12 @@ class PhocaCartCart
 		
 	}
 	
-	public function addItems($id = 0, $quantity = 0, $attributes = array(), $idKey = '') {
+	/*
+	 * Catid is only for information from which place the product was added to the cart
+	 * When making order, this will be recheck
+	 */
+	
+	public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
 		
 		if ($idKey != '') {
 			// we get idkey as string - from checkout update or remove -  used in CHECKOUT
@@ -105,7 +110,7 @@ class PhocaCartCart
 			// we get id as int standard id of product - attributes can be listed in form - used in CATEGORY, ITEM, ITEMS
 			$k = (int)$id . ':';
 			
-			$checkP = PhocaCartProduct::checkIfAccessPossible($id);
+			$checkP = PhocaCartProduct::checkIfAccessPossible($id, $catid);
 			if (!$checkP) {	
 				$uri 			= JFactory::getURI();
 				$action			= $uri->toString();
@@ -159,7 +164,10 @@ class PhocaCartCart
 			$k .= ':';
 		}
 		
-	
+		if ($k != '' && (int)$catid > 0) {
+			$this->items[$k]['catid'] = (int)$catid;
+		}
+		
 		if ($k != '' && (int)$quantity > 0) {
 			if(isset($this->items[$k]['quantity']) && (int)$this->items[$k]['quantity'] > 0) {
 				
@@ -255,7 +263,6 @@ class PhocaCartCart
 				
 				
 				$price	= new PhocaCartPrice();
-				
 				// COUPON - basic check
 				$couponI 	= array();
 				$couponVB	= 0;// check basic
@@ -328,7 +335,7 @@ class PhocaCartCart
 						$attribs = unserialize(base64_decode($item[1]));
 					}
 					
-					$item2 = PhocaCartProduct::getProduct($itemId);
+					$item2 = PhocaCartProduct::getProduct((int)$itemId, (int)$v['catid']);
 					
 					// Correct the tax rate - no tax calculation, no tax rate for each product
 					if (!empty($item2) && $tax_calculation == 0) {
@@ -338,7 +345,7 @@ class PhocaCartCart
 					
 					if (isset($item2->id) && (int)$item2->id > 0) {
 						$this->fullitems[$k]['title'] 		= $item2->title;
-						$this->fullitems[$k]['catid'] 		= $item2->catid;
+						$this->fullitems[$k]['catid']		= $item2->catid;
 						$this->fullitems[$k]['alias'] 		= $item2->alias;
 						$this->fullitems[$k]['sku'] 		= $item2->sku;
 						$this->fullitems[$k]['image'] 		= $item2->image;
@@ -747,6 +754,18 @@ class PhocaCartCart
 		$payment['title'] 	= $this->paymenttitle;
 		$payment['method'] 	= $this->paymentmethod;
 		$payment['id']		= $this->paymentid;
+		
+		// E.g. guest checkout
+		if (isset($payment['id']) && (int)$payment['id'] > 0 && $payment['title'] == '' && $payment['method'] == '') {
+			$paymentNew	= new PhocaCartPayment();
+			$pI	= $paymentNew->getPaymentMethod((int)$payment['id']);
+			if (isset($pI->title)) {
+				$payment['title'] 	= $pI->title;
+			}
+			if (isset($pI->method)) {
+				$payment['method'] 	= $pI->method;
+			}
+		}
 		return $payment;
 	}
 	
@@ -754,6 +773,15 @@ class PhocaCartCart
 		$coupon = array();
 		$coupon['title'] 	= $this->coupontitle;
 		$coupon['id']		= $this->couponid;
+		
+		// E.g. guest checkout
+		if (isset($coupon['id']) && (int)$coupon['id'] > 0 && $coupon['title'] == '') {
+			$cI = PhocaCartCoupon::getCouponTitleById((int)$coupon['id']);
+			if (isset($cI->title)) {
+				$coupon['title'] 	= $cI->title;
+			}
+			
+		}
 		return $coupon;
 	}
 	
@@ -810,7 +838,8 @@ class PhocaCartCart
 			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->taxrate, $sI->taxcalctype, $sI->taxtitle, $sI->freeshipping);
 			
 			$this->shippingcosts = $priceI;
-			$this->shippingcosts['title'] = $sI->title;
+			$this->shippingcosts['title'] 		= $sI->title;
+			$this->shippingcosts['description'] = $sI->description;
 			
 			if (isset($priceI['brutto']) && $priceI['brutto'] >  0) {
 				$this->total['brutto'] += $priceI['brutto'];
@@ -843,6 +872,7 @@ class PhocaCartCart
 			
 			$this->paymentcosts = $priceI;
 			$this->paymentcosts['title'] = $pI->title;
+			$this->paymentcosts['description'] = $pI->description;
 			
 			if (isset($priceI['brutto']) && $priceI['brutto'] >  0) {
 				$this->total['brutto'] += $priceI['brutto'];

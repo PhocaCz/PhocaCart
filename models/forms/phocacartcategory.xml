@@ -19,6 +19,8 @@
 
 <field name="image" type="phocaselectfilenameimage" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
 
+<field name="title_feed" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC" />
+
 <field name="metakey" type="textarea"
 			label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
 			class="inputbox" rows="3" cols="30" />

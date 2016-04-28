@@ -229,6 +229,8 @@ class PhocaCartModelCheckout extends JModelForm
 		$data['payment'] 	= (int)$paymentId;
 		$data['coupon'] 	= (int)$couponId;
 		$data['user_id']	= (int)$user->id;
+		
+		
 		$row = $this->getTable('PhocaCartCart', 'Table');
 		
 		

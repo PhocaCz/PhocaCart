@@ -13,6 +13,12 @@ class PhocaCartImage
 	public static function getThumbnailName($path, $filename, $size) {
 		
 		$thumbName	= new StdClass();
+		if ($filename == '') {
+			$thumbName->abs = false;
+			$thumbName->rel	= false;
+			return $thumbName;
+		}
+		
 		$title 		= self::getTitleFromFile($filename , 1);
 		switch ($size) {
 			case 'large':
@@ -76,7 +82,8 @@ class PhocaCartImage
 		$db = JFactory::getDBO();
 		$query = 'SELECT i.image FROM #__phocacart_product_images AS i'
 				.' LEFT JOIN #__phocacart_products AS p ON p.id = i.product_id'
-			    .' WHERE p.id = '.(int) $itemId;
+			    .' WHERE p.id = '.(int) $itemId
+				.' ORDER BY i.image';
 		$db->setQuery($query);
 		$images = $db->loadObjectList();
 		

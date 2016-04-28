@@ -140,7 +140,7 @@ class PhocaCartCpModelPhocaCartUsers extends JModelList
 		$query->where('u.name <> '.$db->quote('Super User'));
 		$query->group('u.id');
 	
-		$orderCol	= $this->state->get('list.ordering');
+		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'u.name');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 

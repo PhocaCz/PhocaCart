@@ -31,7 +31,7 @@ class JFormFieldPhocaCouponProduct extends JFormField
 					if ($i > 0) {
 						$value .= ',';
 					}
-					$value .= (int)$v->id . ':'. $v->title .' ('.$v->category_title.')';
+					$value .= (int)$v->id . ':'. $v->title .' ('.$v->categories_title.')';
 					$i++;
 				}
 			}

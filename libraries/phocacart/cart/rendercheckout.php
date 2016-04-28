@@ -23,6 +23,7 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 		$pC 					= JComponentHelper::getParams('com_phocacart') ;
 		$p['tax_calculation']	= $pC->get( 'tax_calculation', 0 );
 		$p['stock_checkout']	= $pC->get( 'stock_checkout', 0 );
+		$p['stock_checking']	= $pC->get( 'stock_checking', 0 );
 		$uri 					= JFactory::getURI();
 		$url['action']			= $uri->toString();
 		$url['actionbase64']	= base64_encode($url['action']);
@@ -85,9 +86,13 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 				$priceItem = $price->getPriceFormat($priceItem);
 				
 				$image 		= '';
-				$thumbnail 	= PhocaCartFileThumbnail::getThumbnailName($v['image'], 'small', 'productimage');
-				if (isset($thumbnail->rel)) {
-					$image = '<img src="'.JURI::base(true).'/'.$thumbnail->rel.'" alt="'.strip_tags($v['title']).'" />';
+				if (isset($v['image']) && $v['image'] != '') {
+					$thumbnail 	= PhocaCartFileThumbnail::getThumbnailName($v['image'], 'small', 'productimage');
+					if (isset($thumbnail->rel)) {
+						$image = '<img src="'.JURI::base(true).'/'.$thumbnail->rel.'" alt="'.strip_tags($v['title']).'" />';
+					}
+				} else {
+					$image = '<div class="ph-no-image"><span class="glyphicon glyphicon-ban-circle"</span></div>';
 				}
 				
 				$o[] = '<tr>';
@@ -107,6 +112,7 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 				$o[] = '<form action="'.$url['linkcheckout'].'" class="form-inline" method="post">';
 				$o[] = '<div class="form-group">';
 				$o[] = '<input type="hidden" name="id" value="'.(int)$v['id'].'">';
+				$o[] = '<input type="hidden" name="catid" value="'.(int)$v['catid'].'">';
 				$o[] = '<input type="hidden" name="idkey" value="'.$v['idkey'].'">';
 				$o[] = '<input type="text" class="form-control ph-input-quantity ph-input-sm" name="quantity" value="'.$v['quantity'].'">';
 				$o[] = '<input type="hidden" name="task" value="checkout.update">';
@@ -141,7 +147,7 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 				}
 				
 				// STOCK VALID
-				if ($v['stockvalid'] == 0 && $p['stock_checkout'] == 1) {
+				if ($v['stockvalid'] == 0 && $p['stock_checkout'] == 1 && $p['stock_checking'] == 1) {
 					$c1 = $c - 1;
 					
 					$o[] = '<tr><td></td><td colspan="'. $c1 .'">';

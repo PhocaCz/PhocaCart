@@ -41,8 +41,9 @@ class JFormFieldPhocaPaymentMethod extends JFormField
 		$s[] 	= '         if ( data.status == 1 ){';
 		$s[] 	= '            jQuery("#ph-extended-params").html(data.message);';
 		$s[] 	= '            jQuery("#ph-extended-params-msg").hide();';
-		$s[] 	= '	  		   jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen
+		$s[] 	= '	  		   jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen Adm
 		
+		$s[]	= '				jQuery(\'.hasTooltip\').tooltip({"html": true,"container": "body"});';//Reload Tooltip
 		$s[]	= '				var sandbox = jQuery("#phform_params_sandbox").val();';
 		$s[]	= '				if (sandbox == 1) {';
 		$s[]	= '					jQuery("#ph-sandbox-msg").show();';

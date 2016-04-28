@@ -68,6 +68,7 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 				}
 			}
 		}
+	
 		
 		$dataAmount = '';
 		$dataOrders = '';
@@ -77,7 +78,9 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 			if ($dataAmount != '') {
 				$dataAmount .= ', ';
 			}
-			$dataAmount .= '["'.$i.'",'.$v.']';
+			//$dataAmount .= '["'.$i.'",'.$v.']';
+			//$dataAmount .= '\''.$v.'\'';
+			$dataAmount .= (int)$v;
 			$i++;
 		}
 		$i = 1;
@@ -88,172 +91,28 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 			if ($dataTicks != '') {
 				$dataTicks .= ', ';
 			}
-			$dataOrders .= '["'.$i.'",'.$v.']';
-			$dataTicks .= '['.$i.',"'.$k.'"]';
+			//$dataOrders .= '["'.$i.'",'.$v.']';
+			//$dataOrders .= '\''.$v.'\'';
+			$dataOrders .= (int)$v;
+			//$dataTicks .= '['.$i.',"'.$k.'"]';
+			$dataTicks .= '\''.$k.'\'';
+			
 			$i++;
 		}
 		
 		
 		JHTML::stylesheet( $this->t['s'] );
+
 		
 		JHtml::_('jquery.framework', false);
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.flot.min.js');
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.flot.axislabels.js');
-		$s	= array();
-		$s[]= 'jQuery(document).ready(function () {';
-		$s[]= '
-var graphData = [{
-		// Total Amount
-        data: [ '.$dataAmount.' ],
-		//label: "Total Amount",
-		yaxis: 2,
-        color: "#71c73e",
-		labelColor: "#000"
-    }, {
-        // Total Orders
-        data: [ '.$dataOrders.'],
-		//label: "Total Orders",
-		yaxis: 1,
-		color: "#77b7c5",
-        points: { radius: 4, fillColor: "#77b7c5" }
-    }
-];
+		PhocaCartStatistics::RenderChartJs($dataAmount, JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $dataOrders, JText::_('COM_PHOCACART_TOTAL_ORDERS'), $dataTicks);
 		
+		// Most viewed and best-selling products
 		
-// Lines
-jQuery.plot(jQuery(\'#graph-lines\'), graphData, {
-    series: {
-        points: {
-            show: true,
-            radius: 5
-        },
-        lines: {
-            show: true
-        },
-        shadowSize: 2
-    },
-    grid: {
-        color: "#f0f0f0",
-        borderColor: "transparent",
-        borderWidth: 20,
-        hoverable: true
-    },
-    xaxis: {
-        tickColor: "#fcfcfc",
-		ticks: ['.$dataTicks.']
-    },
-    yaxes: [{
-        position: "right",
-        color: "#f0f0f0",
-		tickDecimals: 0,
-		axisLabel: "Total Orders",
-		axisLabelUseCanvas: true,
-        axisLabelPadding: 10,
-		axisLabelColour: "#999999"
-    }, {
-		position: "left",
-        color: "#f0f0f0",
-		tickDecimals: 2,
-		axisLabel: "Total Amount",
-		axisLabelUseCanvas: true,
-        axisLabelPadding: 10,
-		axisLabelColour: "#999999"
-	}]
-});
- 
-// Bars
-jQuery.plot(jQuery(\'#graph-bars\'), graphData, {
-    series: {
-        bars: {
-            show: true,
-            barWidth: .9,
-            align: \'center\'
-        },
-        shadowSize: 2
-    },
-    grid: {
-        color: \'#f0f0f0\',
-        borderColor: \'transparent\',
-        borderWidth: 20,
-        hoverable: true
-    },
-    xaxis: {
-        tickColor: "#fcfcfc",
-		ticks: ['.$dataTicks.']
-    },
-    yaxes: [{
-        position: "right",
-        color: "#f0f0f0",
-		tickDecimals: 0,
-		axisLabel: "'.JText::_('COM_PHOCACART_TOTAL_ORDERS', true).'",
-		axisLabelUseCanvas: true,
-        axisLabelPadding: 10,
-		axisLabelColour: "#999999"
-    }, {
-		position: "left",
-        color: "#f0f0f0",
-		tickDecimals: 2,
-		axisLabel: "'.JText::_('COM_PHOCACART_TOTAL_AMOUNT', true).'",
-		axisLabelUseCanvas: true,
-        axisLabelPadding: 10,
-		axisLabelColour: "#999999"
-	}]
-});
+		$this->t['most_viewed'] 	= PhocaCartProduct::getMostViewedProducts();
+		$this->t['best_selling'] 	= PhocaCartProduct::getBestSellingProducts();
+		$this->t['best_selling2'] 	= PhocaCartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to']);
 
-
-jQuery(\'#graph-bars\').hide();
- 
-jQuery(\'#lines\').on(\'click\', function (e) {
-    jQuery(\'#bars\').removeClass(\'active\');
-    jQuery(\'#graph-bars\').fadeOut();
-    jQuery(this).addClass(\'active\');
-    jQuery(\'#graph-lines\').fadeIn();
-    e.preventDefault();
-});
- 
-jQuery(\'#bars\').on(\'click\', function (e) {
-    jQuery(\'#lines\').removeClass(\'active\');
-    jQuery(\'#graph-lines\').fadeOut();
-    jQuery(this).addClass(\'active\');
-    jQuery(\'#graph-bars\').fadeIn().removeClass(\'hidden\');
-    e.preventDefault();
-});
-
-
-function showTooltip(x, y, contents) {
-    jQuery(\'<div id="tooltip">\' + contents + \'</div>\').css({
-        top: y - 16,
-        left: x + 20
-    }).appendTo(\'body\').fadeIn();
-}
- 
-var previousPoint = null;
- 
-jQuery(\'#graph-lines, #graph-bars\').bind(\'plothover\', function (event, pos, item) {
-    if (item) {
-		console.log(item.series.yaxis.options.axisLabel);
-        if (previousPoint != item.dataIndex) {
-            previousPoint = item.dataIndex;
-            jQuery(\'#tooltip\').remove();
-            var x = item.datapoint[0],
-                y = item.datapoint[1];
-				
-				if (item.series.yaxis.options.axisLabel == "'.JText::_('COM_PHOCACART_TOTAL_AMOUNT').'") {
-					showTooltip(item.pageX, item.pageY, item.series.yaxis.options.axisLabel + ": " + y.toFixed(2) );
-				} else {
-					showTooltip(item.pageX, item.pageY, item.series.yaxis.options.axisLabel + ": " + y );
-				}
-                
-        }
-    } else {
-        jQuery(\'#tooltip\').remove();
-        previousPoint = null;
-    }
-});';
-
-	$s[]= '});';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-		JHTML::stylesheet( 'media/com_phocacart/css/graph.css' );
 		
 		$this->addToolbar();
 		parent::display($tpl);

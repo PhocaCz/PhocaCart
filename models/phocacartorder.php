@@ -194,6 +194,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 		// Store the history
 		$notify 	= PhocaCartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']); 
 		$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
+	
 		PhocaCartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
 		
 		

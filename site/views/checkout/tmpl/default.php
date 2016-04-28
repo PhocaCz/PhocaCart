@@ -19,7 +19,8 @@ echo '</h1>';
 
 
 if ( isset($this->t['checkout_desc']) && $this->t['checkout_desc'] != '') {
-	echo '<div class="ph-desc">'. $this->t['checkout_desc']. '</div>';
+	// Checkout description
+	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['checkout_desc']). '</div>';
 }
 
 

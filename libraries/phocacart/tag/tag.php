@@ -34,6 +34,17 @@ class PhocaCartTag
 		return $tags;
 	}
 	
+	public static function getAllTags() {
+	
+		$db = JFactory::getDBO();
+		
+		$query = 'SELECT a.id, a.title, a.alias FROM #__phocacart_tags AS a WHERE a.published = 1 ORDER BY a.id';
+		$db->setQuery($query);
+		$tags = $db->loadObjectList();	
+	
+		return $tags;
+	}
+	
 	public static function storeTags($tagsArray, $itemId) {
 	
 	
@@ -120,7 +131,8 @@ class PhocaCartTag
 						$o .= $v->title;
 					}
 				} else if ($tl == 3) {
-					$link = PhocaCartRoute::getCategoryRouteByTag($v->id);
+					$link = PhocaCartRoute::getItemsRoute();
+					$link = $link . PhocaCartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
 					$o .= '<a href="'.$link.'">'.$v->title.'</a>';
 				}
 				

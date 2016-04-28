@@ -20,13 +20,24 @@ class PhocaCartCpControllerPhocaCartCommons extends JControllerAdmin
 	}
 	
 	public function saveOrderAjax() {
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		
+		//JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		$pks = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('order', array(), 'array');
+		
+		// TEST per URL
+		//$pks = $this->input->get->get('cid', array(), 'array');
+		//$order = $this->input->get->get('order', array(), 'array');
+		//print_r($pks);
+		//print_r($order);
+		
+		
 		JArrayHelper::toInteger($pks);
 		JArrayHelper::toInteger($order);
 		$model = $this->getModel();
 		$return = $model->saveorder($pks, $order);
+	
+		
 		if ($return) { echo "1";}
 		JFactory::getApplication()->close();
 	}

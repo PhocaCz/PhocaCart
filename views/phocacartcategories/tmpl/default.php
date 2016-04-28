@@ -27,15 +27,21 @@ $sortFields = $this->getSortFields();
 
 echo $r->jsJorderTable($listOrder);
 
-echo '<div class="clearfix"></div>';
+//echo '<div class="clearfix"></div>';
+
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-echo $r->startFilter($this->t['l'].'_FILTER');
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
-echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
+echo $r->startFilter();
+//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
 echo $r->endFilter();
 
 echo $r->startMainContainer();
+
+if ($this->t['search']) {
+	echo '<div class="alert alert-message">' . JText::_('COM_PHOCACART_SEARCH_FILTER_IS_ACTIVE') .'</div>';
+}
+
 echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
 							$this->escape($this->state->get('filter.search')));
@@ -43,6 +49,13 @@ echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR')
 echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
 echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
 echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
+
+echo $r->startFilterBar(2);
+echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
+echo $r->selectFilterLevels('COM_PHOCACART_SELECT_MAX_LEVELS', $this->state->get('filter.level'));
+echo $r->endFilterBar();
+
 echo $r->endFilterBar();		
 
 echo $r->startTable('categoryList');
@@ -56,6 +69,7 @@ echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHE
 echo '<th class="ph-parentcattitle">'.JHTML::_('grid.sort', $this->t['l'].'_PARENT_CATEGORY', 'parentcat_title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
 echo '<th class="ph-language">'.JHTML::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-hits">'.JHTML::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
@@ -82,11 +96,19 @@ $linkEdit 		= JRoute::_( $urlEdit.(int) $item->id );
 $linkParent		= JRoute::_( $urlEdit.(int) $item->parent_id );
 $canEditParent	= $user->authorise('core.edit', $this->t['o']);
 
-$parentsStr = ' '.$item->parentstree;
+$parentsStr = '';
+if (isset($item->parentstree)) {
+	$parentsStr = ' '.$item->parentstree;
+}
+if (!isset($item->level)) {
+	$item->level = 0;
+}
 
 $iD = $i % 2;
 echo "\n\n";
+
 echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" item-id="'.$item->id.'" parents="'.$parentsStr.'" level="'. $item->level.'">'. "\n";
+//echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" >'. "\n";
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");						
@@ -114,6 +136,7 @@ echo $r->td($this->escape($item->access_level), "small hidden-phone");
 						
 
 echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
+echo $r->td($item->hits, "small hidden-phone");
 echo $r->td($item->id, "small hidden-phone");
 
 echo '</tr>'. "\n";
@@ -123,12 +146,12 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 8);
+echo $r->tblFoot($this->pagination->getListFooter(), 9);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');
 
-echo $r->formInputs($listOrder, $originalOrders);
+echo $r->formInputs($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
 ?>

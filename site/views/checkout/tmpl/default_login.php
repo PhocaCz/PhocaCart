@@ -24,7 +24,7 @@ if($this->a->login == 0) {
 	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutloginedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
 	
 	echo '<div class="ph-checkout-box-action">';
@@ -71,10 +71,11 @@ if($this->a->login == 0) {
 	
 
 	echo '<div class="col-sm-4 col-md-4 ph-left-border">';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
+	
 	$usersConfig = JComponentHelper::getParams('com_users');
 	//echo '<ul class="unstyled">'. "\n";
 	if ($usersConfig->get('allowUserRegistration')) {
+		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
 		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
 		
 		echo '<a class="btn btn-primary btn-sm ph-checkout-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="glyphicon glyphicon-user"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
@@ -104,24 +105,24 @@ if($this->a->login == 0) {
 	echo '<div class="ph-cb"></div>';
 	echo '</div>'. "\n";// end checkout box login
 
-	echo '</form>'. "\n";
+	//echo '</form>'. "\n";
 	
 } else if($this->a->login == 1) {
 
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutloginview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<div class="ph-checkout-box-action">';
 	echo '<div class="col-sm-12 col-md-12">';
 	echo '<div>'.JText::_('COM_PHOCACART_YOU_ARE_LOGGED_IN_AS').' <b>'.$this->u->name.'</b></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	echo '</div>';
 } else if($this->a->login == 2) {
 
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_GUEST_CHECKOUT').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<div class="ph-checkout-box-action">';
 	echo '<div class="col-sm-12 col-md-12">';
@@ -143,7 +144,7 @@ if($this->a->login == 0) {
 	echo JHtml::_('form.token');
 	echo '</form>';
 	
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	echo '</div>';
 }
 ?>

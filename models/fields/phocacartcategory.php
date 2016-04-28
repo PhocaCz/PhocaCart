@@ -19,6 +19,30 @@ class JFormFieldPhocaCartCategory extends JFormField
 	protected function getInput() {
 		
 		$db = JFactory::getDBO();
+		
+		$javascript	= '';
+		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
+		$multiple	= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$attr		= '';
+		$attr		.= 'class="inputbox" ';
+		if ($multiple) {
+			$attr		.= 'size="4" multiple="multiple" ';
+		}
+		if ($required) {
+			$attr		.= 'required aria-required="true" ';
+		}
+		$attr		.= $javascript . ' ';
+		
+		
+		// Multiple load more values
+		$activeCats = array();
+		$id 		= 0;
+		if ($multiple) {
+			$id = (int) $this->form->getValue('id');
+			if ((int)$id > 0) {
+				$activeCats	= PhocaCartCategoryMultiple::getCategories($id, 1);
+			}
+		}
 
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
@@ -39,19 +63,25 @@ class JFormFieldPhocaCartCategory extends JFormField
 		}
 		
 		
-		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
+		
 		
 		$tree = array();
 		$text = '';
 		$tree = PhocaCartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
 		
-		//if ($required == TRUE) {
+		if ($multiple) {
 		
-		//} else {
-		
+		} else {
 			array_unshift($tree, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
-		//}
-		return JHTML::_('select.genericlist',  $tree,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		}
+
+		if (!empty($activeCats)) {
+			return JHTML::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
+		
+		} else {
+			return JHTML::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		}
+		
 	}
 }
 ?>

@@ -28,10 +28,15 @@ class JFormFieldPhocaStockstatus extends JFormField
 		// DEFAULT VALUES
 		if ($man == 'a' && $this->value == 0) {
 			$this->value = 2; // set default value for products in stock
-		} else if ($man == 'b' && $this->value == 0) {
+		} else if ($man == 'n' && $this->value == 0) {
 			$this->value = 1;// set default value when there is no product in stock
 		}
 		
+		if (!empty($data)) {
+			foreach($data as $k => $v) {
+				$v->text = JText::_($v->text);
+			}
+		}
 		
 		array_unshift($data, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_STOCK_STATUS').' -', 'value', 'text'));
 		return JHTML::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );

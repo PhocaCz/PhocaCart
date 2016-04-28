@@ -13,7 +13,7 @@ if ($this->a->addressedit == 1) {
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutaddressedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
 	echo '<div class="ph-checkout-box-action">';
@@ -26,7 +26,7 @@ if ($this->a->addressedit == 1) {
 	echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" id="phShippingAddress" >';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
 	echo $this->t['dataaddressform']['s'];
-	echo '</div>';// end row
+	echo '</div><div class="ph-cb"></div>';// end row
 	
 	echo '<div class="ph-cb"></div>';
 	
@@ -61,7 +61,7 @@ if ($this->a->addressedit == 1) {
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header"  id="phcheckoutaddressview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
 	echo '<div class="ph-checkout-box-action">';
@@ -75,7 +75,7 @@ if ($this->a->addressedit == 1) {
 	echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" >';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
 	echo $this->t['dataaddressoutput']['s'];
-	echo '</div>';// end row
+	echo '</div><div class="ph-cb"></div>';// end row
 	
 	
 	echo '<div class="ph-cb"></div>';
@@ -99,6 +99,6 @@ if ($this->a->addressedit == 1) {
 } else {
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 }
 ?>

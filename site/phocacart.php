@@ -12,12 +12,14 @@ require_once( JPATH_COMPONENT.'/controller.php' );
 require_once( JPATH_COMPONENT.'/helpers/route.php' );
 
 if (! class_exists('PhocaCartLoader')) {
-    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocacart'.DS.'libraries'.DS.'loader.php');
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
 }
 
 phocacartimport('phocacart.utils.settings');
 phocacartimport('phocacart.utils.utils');
 phocacartimport('phocacart.utils.log');
+phocacartimport('phocacart.category.category');
+phocacartimport('phocacart.category.categorymultiple');
 phocacartimport('phocacart.date.date');
 phocacartimport('phocacart.path.path');
 phocacartimport('phocacart.path.route');
@@ -57,6 +59,9 @@ phocacartimport('phocacart.compare.compare');
 phocacartimport('phocacart.download.download');
 phocacartimport('phocacart.render.renderfront');
 phocacartimport('phocacart.email.email');
+phocacartimport('phocacart.search.search');
+phocacartimport('phocacart.feed.feed');
+phocacartimport('phocacart.render.rendermedia');
 
 /*
 if($controller = JRequest::getWord('controller')) {

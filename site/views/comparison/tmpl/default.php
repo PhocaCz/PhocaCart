@@ -27,6 +27,7 @@ if (!empty($this->t['items'])) {
 	$c['remove'] 	= '<tr><td class="ph-middle"></td>';
 	$c['desc']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_DESCRIPTION').'</b></td>';
 	$c['man'] 		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_MANUFACTURER').'</b></td>';
+	$c2['link'] 	= '<tr><td></td>';
 
 	if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_AVAILABILITY').'</b></td>';}
 
@@ -47,9 +48,21 @@ if (!empty($this->t['items'])) {
 		
 		
 		$c['title'] .= '<td><h3>'.$v['title'].'</h3>';
-		$image = PhocaCartImage::getThumbnailName($this->t['pathitem'], $v['image'], 'small');
+		$image 	= PhocaCartImage::getThumbnailName($this->t['pathitem'], $v['image'], 'small');
+		
+		if (isset($v['catid2']) && (int)$v['catid2'] > 0 && isset($v['catalias2']) && $v['catalias2'] != '') {
+			$link 	= JRoute::_(PhocaCartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
+		} else {
+			$link 	= JRoute::_(PhocaCartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
+		}
+		
+		
 		if (isset($image->rel) && $image->rel != '') {
-			$c['title'] .= '<div class="ph-center" ><img class="ph-center" src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive img-thumbnail ph-image-full" /></div>';
+			$c['title'] .= '<div class="ph-center" >';
+			$c['title'] .= '<a href="'.$link.'">';
+			$c['title'] .= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive" />';
+			$c['title'] .= '</a>';
+			$c['title'] .= '</div>';
 		}
 		$c['title'] .= '</td>';
 		
@@ -69,16 +82,16 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '</form>';
 		$c['remove'] .= '</td>';
 		
-		$c['desc'] .= '<td>'.$v['description'].'</td>';
+		$c['desc'] .= '<td>'.JHTML::_('content.prepare', $v['description']).'</td>';
 		$c['man'] .= '<td class="ph-center">'.$v['manufacturer_title'].'</td>';
 		
-		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.$v['stock'].'</td>';}
+		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.JText::_($v['stock']).'</td>';}
 		
-		if ($this->t['value']['length'] == 1)	{ $c['length'] 	.= '<td class="ph-center">'.$v['length'].' '.$this->t['unit_size'].'</td>';}
-		if ($this->t['value']['width'] == 1)	{ $c['width'] 	.= '<td class="ph-center">'.$v['width'].' '.$this->t['unit_size'].'</td>';}
-		if ($this->t['value']['height'] == 1)	{ $c['height'] 	.= '<td class="ph-center">'.$v['height'].' '.$this->t['unit_size'].'</td>';}
-		if ($this->t['value']['weight'] == 1)	{ $c['weight'] 	.= '<td class="ph-center">'.$v['weight'].' '.$this->t['unit_weight'].'</td>';}
-		if ($this->t['value']['volume'] == 1)	{ $c['volume'] 	.= '<td class="ph-center">'.$v['volume'].' '.$this->t['unit_volume'].'</td>';}
+		if ($this->t['value']['length'] == 1)	{ $c['length'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['length']).' '.$this->t['unit_size'].'</td>';}
+		if ($this->t['value']['width'] == 1)	{ $c['width'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['width']).' '.$this->t['unit_size'].'</td>';}
+		if ($this->t['value']['height'] == 1)	{ $c['height'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['height']).' '.$this->t['unit_size'].'</td>';}
+		if ($this->t['value']['weight'] == 1)	{ $c['weight'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['weight']).' '.$this->t['unit_weight'].'</td>';}
+		if ($this->t['value']['volume'] == 1)	{ $c['volume'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['volume']).' '.$this->t['unit_volume'].'</td>';}
 		
 		if ($this->t['value']['attrib'] == 1) 	{ 
 			$c['attrib'] 	.= '<td>';
@@ -96,17 +109,20 @@ if (!empty($this->t['items'])) {
 			
 			}
 			$c['attrib'] 	.= '</td>';
-		}
+		} 
 		
-	
+		$c2['link'] .= '<td class="ph-center">';
+		$c2['link'] .= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-search"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+		$c2['link'] .= '</td>';
 	
 	}
 	
-	$c['title'] .= '</tr>';
-	$c['price'] .= '</tr>';
-	$c['desc'] .= '</tr>';
-	$c['man'] .= '</tr>';
-	$c['remove'] .= '</tr>';
+	$c['title'] 	.= '</tr>';
+	$c['price'] 	.= '</tr>';
+	$c['desc'] 		.= '</tr>';
+	$c['man'] 		.= '</tr>';
+	$c['remove'] 	.= '</tr>';
+	$c2['link']		.= '</tr>';
 
 	if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '</tr>';}
 	
@@ -147,6 +163,12 @@ if (!empty($this->t['items'])) {
 			}
 		}
 	}
+	
+	// Link to product
+	foreach($c2 as $k => $v) {
+		echo $v;
+	}
+	
 	echo '</table>';
 	echo '</div>';// end comparison items
 } else {

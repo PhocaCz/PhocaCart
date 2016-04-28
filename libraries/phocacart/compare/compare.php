@@ -18,12 +18,12 @@ class PhocaCartCompare
 		$this->items	= $session->get('compare', array(), 'phocaCart');
 	}
 	
-	public function addItem($id = 0) {
+	public function addItem($id = 0, $catid = 0) {
 		if ($id > 0) {
 			$app 			= JFactory::getApplication();
 			
 			$count = count($this->items);
-			
+		
 			if ($count > 2) {
 				$message = JText::_('COM_PHOCACART_ONLY_THREE_PRODUCTS_CAN_BE_LISTED_IN_COMPARISON_LIST');
 				$app->enqueueMessage($message, 'error');
@@ -36,7 +36,8 @@ class PhocaCartCompare
 				$app->enqueueMessage($message, 'error');
 				return false;
 			} else {
-				$this->items[$id] = $id;
+				$this->items[$id]['id'] = $id;
+				$this->items[$id]['catid'] = $catid;
 				$session 		= JFactory::getSession();
 				$session->set('compare', $this->items, 'phocaCart');
 			}
@@ -69,77 +70,109 @@ class PhocaCartCompare
 		return $this->items;
 	}
 	
-	public function renderList() {
-		$db = JFactory::getDBO();
-		$items = '';
-		if (!empty($this->items)) {
-			$items = implode (',', $this->items);
-		} else {
+	
+	public function getQueryList($items, $full = 0){
+		
+		$user 		= JFactory::getUser();
+		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		
+		$itemsS		= $this->getItemsIdString($items);
+		
+		if ($itemsS == '') {
 			return false;
 		}
 		
-		$where[]	= 'a.id IN ('.(string)$items.')';
-		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
-		$query = 'SELECT a.id, a.title'
-				.' FROM #__phocacart_products AS a'
-			    . $where;
-		$db->setQuery($query);
-
-		$compare 		= $db->loadObjectList();
-		$uri 			= JFactory::getURI();
-		$action			= $uri->toString();
-		$actionBase64	= base64_encode($action);
-		$linkComparison	= JRoute::_(PhocaCartRoute::getComparisonRoute());
+		$wheres[] = 'a.id IN ('.(string)$itemsS.')';	
+		$wheres[] = " c.access IN (".$userLevels.")";
+		$wheres[] = " a.access IN (".$userLevels.")";
+		$wheres[] = " c.published = 1";
+		$wheres[] = " a.published = 1";
+		
+		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
+		
+		if ($full == 1) {
+			$query = 
+			 ' SELECT a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
+			.' c.id as catid, c.alias as catalias, c.title as cattitle, count(pc.category_id) AS count_categories,'
+			.' a.length, a.width, a.height, a.weight, a.volume,'
+			.' a.stock, a.min_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' m.title as manufacturer_title'
+			.' FROM #__phocacart_products AS a'
+			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
+			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+			.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
+			.  $where
+			. ' GROUP BY a.id'
+			. ' ORDER BY a.id';
+		} else {
+			$query = 
+			 ' SELECT a.id as id, a.title as title, a.alias as alias,'
+			.' c.id as catid, c.alias as catalias, c.title as cattitle, count(pc.category_id) AS count_categories'
+			.' FROM #__phocacart_products AS a'
+			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
+			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+			.  $where
+			. ' GROUP BY a.id'
+			. ' ORDER BY a.id';
+		}	
+		return $query;
+	}
 	
-		if (!empty($compare)) {
-			foreach ($compare as $k => $v) {
-				echo '<div class="row">';
-				echo '<div class="col-sm-8 col-md-8">' . $v->title . '</div>';
-				
-				echo '<div class="col-sm-4 col-md-4">';
-				
-				echo '<form action="'.$linkComparison.'" method="post" id="phCompareRemove'.(int)$v->id.'">';
-				echo '<input type="hidden" name="id" value="'.(int)$v->id.'">';
-				echo '<input type="hidden" name="task" value="comparison.remove">';
-				echo '<input type="hidden" name="tmpl" value="component" />';
-				echo '<input type="hidden" name="option" value="com_phocacart" />';
-				echo '<input type="hidden" name="return" value="'.$actionBase64.'" />';
-				echo '<div class="pull-right">';
-				echo '<div class="ph-category-item-compare"><a href="javascript::void();" onclick="document.getElementById(\'phCompareRemove'.(int)$v->id.'\').submit();" title="'.JText::_('COM_PHOCACART_COMPARE').'"><span class="glyphicon glyphicon-remove"></span></a></div>';
-				echo '</div>';
-				echo JHtml::_('form.token');
-				echo '</form>';
-				
-				echo '</div>';
-				
-				echo '</div>';
-			
+	public function getItemsIdString($items) {
+		
+		$itemsR = '';
+		if (!empty($items)) {
+			$itemsA = array();
+			foreach($items as $k => $v) {
+				if (isset($v['id']) && (int)$v['id'] > 0) {
+					$itemsA[] = $v['id'];
+				}
 			}
+			$itemsR = implode (',', $itemsA);
 		}
-		$linkCompare = JRoute::_(PhocaCartRoute::getComparisonRoute());
-		echo '<div class="ph-small ph-right ph-u ph-cart-link-checkout"><a href="'.$linkCompare.'">'.JText::_('COM_PHOCACART_VIEW_COMPARISON_LIST').'</a></div>';
+		
+		if ($itemsR == '') {
+			return false;
+		}
+		return $itemsR;
+	}
+	
+	public function renderList() {
+		
+		$db 				= JFactory::getDBO();
+		$uri 				= JFactory::getURI();
+		$action				= $uri->toString();
+		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		$query				= $this->getQueryList($this->items);
+		
+		$d					= array();
+		
+		if ($query) {
+			//echo nl2br(str_replace('#__', 'jos_', $query));
+			$db->setQuery($query);
+			$d['compare'] 			= $db->loadObjectList();
+			PhocaCartCategoryMultiple::setBestMatchCategory($d['compare'], $this->items, 1);// returned by reference
+		}	
+		$d['actionbase64']		= base64_encode($action);
+		$d['linkcomparison']	= JRoute::_(PhocaCartRoute::getComparisonRoute());
+		$d['method']			= $add_compare_method;
+			
+		$layoutC 			= new JLayoutFile('list_compare', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		echo $layoutC->render($d);
 	}
 	
 	public function getFullItems() {
-		$db = JFactory::getDBO();
-		$items = '';
-		if (!empty($this->items)) {
-			$items = implode (',', $this->items);
-		} else {
-			return false;
+		
+		$db 		= JFactory::getDBO();
+		$query		= $this->getQueryList($this->items, 1);
+		
+		$products	= array();
+		if ($query) {
+			$db->setQuery($query);
+			$products = $db->loadAssocList();
+			PhocaCartCategoryMultiple::setBestMatchCategory($products, $this->items);// returned by reference
 		}
-
-		$where[]	= 'a.id IN ('.(string)$items.')';
-		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
-		$query = 'SELECT a.id, a.title, a.description, a.price, a.image,'
-				.' a.length, a.width, a.height, a.weight, a.volume,'
-				.' a.stock, a.min_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
-				.' m.title as manufacturer_title'
-				.' FROM #__phocacart_products AS a'
-				.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
-			    . $where;
-		$db->setQuery($query);
-		$products = $db->loadAssocList();
 		return $products;
 	
 	}

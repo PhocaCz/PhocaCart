@@ -17,12 +17,13 @@ class PhocaCartControllerComparison extends JControllerForm
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
+		$item['catid']		= $this->input->get( 'catid', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		
 		$compare	= new PhocaCartCompare();
-		$added	= $compare->addItem((int)$item['id']);
+		$added	= $compare->addItem((int)$item['id'], (int)$item['catid']);
 		if ($added) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_COMPARISON_LIST'), 'success');
+			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_COMPARISON_LIST'), 'message');
 		} else {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_COMPARISON_LIST'), 'error');
 		}
@@ -41,7 +42,7 @@ class PhocaCartControllerComparison extends JControllerForm
 		$compare	= new PhocaCartCompare();
 		$added	= $compare->removeItem((int)$item['id']);
 		if ($added) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_COMPARISON_LIST'), 'success');
+			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_COMPARISON_LIST'), 'message');
 		} else {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_COMPARISON_LIST'), 'error');
 		}

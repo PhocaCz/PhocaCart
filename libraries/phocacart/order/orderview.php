@@ -114,6 +114,7 @@ class PhocaCartOrderView
 				.' LEFT JOIN #__phocacart_countries AS c ON c.id = u.country'
 				.' LEFT JOIN #__phocacart_regions AS r ON r.id = u.region'
 			    .' WHERE u.order_id = '.(int)$orderId. ' AND (u.type = 1 OR u.type = 0)'
+				.' ORDER BY u.id'
 				.' LIMIT 0,2';
 		$db->setQuery($query);
 		$userList = $db->loadAssocList();
@@ -133,7 +134,8 @@ class PhocaCartOrderView
 				.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
 				.' LEFT JOIN #__phocacart_coupons AS c ON c.id = o.coupon_id'
 				.' LEFT JOIN #__phocacart_currencies AS cu ON cu.id = o.currency_id'
-			    .' WHERE o.id = '.(int)$orderId;
+			    .' WHERE o.id = '.(int)$orderId
+				.' ORDER BY o.id';
 		$db->setQuery($query);
 		$order = $db->loadObject();
 		return $order;
@@ -147,7 +149,8 @@ class PhocaCartOrderView
 				.' LEFT JOIN #__phocacart_order_products AS p ON o.id = p.order_id'
 				.' LEFT JOIN #__phocacart_products AS pr ON pr.id = p.product_id'
 				.' LEFT JOIN #__phocacart_order_downloads AS pd ON pd.order_product_id = p.id'
-			    .' WHERE o.id = '.(int)$orderId;
+			    .' WHERE o.id = '.(int)$orderId
+				.' ORDER BY p.id';
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
 		
@@ -191,7 +194,8 @@ class PhocaCartOrderView
 				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title'
 				.' FROM #__phocacart_order_products AS p'
 				.' LEFT JOIN #__phocacart_order_attributes AS a ON p.id = a.order_product_id'
-			    .' WHERE p.id = '.(int)$orderProductId . ' AND p.order_id = '.(int)$orderId;
+			    .' WHERE p.id = '.(int)$orderProductId . ' AND p.order_id = '.(int)$orderId
+				.' ORDER BY p.id';
 		$db->setQuery($query);
 		
 		$items = $db->loadObjectList();

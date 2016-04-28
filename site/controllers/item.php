@@ -19,6 +19,7 @@ class PhocaCartControllerItem extends JControllerForm
 		$u					= JFactory::getUser();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
+		$item['catid']		= $this->input->get( 'catid', 0, 'int' );
 		$item['rating']		= $this->input->get( 'rating', 0, 'int'  );
 		$item['name']		= $this->input->get( 'name', 0, 'string'  );
 		$item['review']		= $this->input->get( 'review', 0, 'string'  );
@@ -47,7 +48,7 @@ class PhocaCartControllerItem extends JControllerForm
 			if ($approve_review == 1) {
 				$msg .= '. '. JText::_('COM_PHOCACART_REVIEW_NEED_TO_BE_APPROVED_BEFORE_DISPLAYING').'.';
 			}
-			$app->enqueueMessage($msg, 'success');
+			$app->enqueueMessage($msg, 'message');
 		} else {
 			if ($error == 1) {
 				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_YOU_HAVE_ALREADY_REVIEWED_THIS_PRODUCT'), 'warning');

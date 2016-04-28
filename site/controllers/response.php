@@ -22,7 +22,7 @@ class PhocaCartControllerResponse extends JControllerForm
 
 		//JRequest::checkToken() or jexit( 'Invalid Token' );
 		$return = PhocaCartRoute::getInfoRoute();
-		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECIEVED'), 'success');
+		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECIEVED'), 'message');
 		//$session->set('infomessage', 3, 'phocaCart');
 		//$session->set('infomessage', 4, 'phocaCart');
 		// NO message here, we have set the message during order and it stays unchanged as it is in session
@@ -50,12 +50,13 @@ class PhocaCartControllerResponse extends JControllerForm
 		
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
+		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
 		$uri	= JFactory::getUri();
 		
 		$dispatcher = JEventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			$dispatcher->trigger('PCPbeforeCheckPayment', array());
+			$dispatcher->trigger('PCPbeforeCheckPayment', array($pid));
 		} else {
 			
 			JLog::add('Paypal Standard: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');

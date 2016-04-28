@@ -37,36 +37,31 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['linkcheckout']	= JRoute::_(PhocaCartRoute::getCheckoutRoute());
 		
 		$this->t['checkout_desc']	= $this->p->get( 'checkout_desc', '');
-		$this->t['load_bootstrap']	= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['stock_checkout']	= $this->p->get( 'stock_checkout', 0 );
+		$this->t['stock_checking']	= $this->p->get( 'stock_checking', 0 );
 		$this->t['guest_checkout']	= $this->p->get( 'guest_checkout', 0 );
+		$this->t['load_bootstrap']	= $this->p->get( 'load_bootstrap', 0 );
+		$this->t['load_chosen']		= $this->p->get( 'load_chosen', 1 );
+		
+		$this->t['display_shipping_desc']		= $this->p->get( 'display_shipping_desc', 0 );
+		$this->t['display_payment_desc']		= $this->p->get( 'display_payment_desc', 0 );
+		
 		$scrollTo					= '';
 		
 		/*$cart	= new PhocaCartRenderCheckout();
-echo '<div class="alert alert-info">';
-echo $cart->render();
-echo '</div>';*/
-
-		// Style
-		JHTML::stylesheet('media/com_phocacart/css/main.css' );
-		JHtml::_('jquery.framework', false);
-		if ($this->t['load_bootstrap'] == 1) {
-			JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			//$document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		}
+			echo '<div class="alert alert-info">';
+			echo $cart->render();
+			echo '</div>';*/
 		
 		// Cart
 		$this->cart	= new PhocaCartRenderCheckout();
 		$this->cart->setFullItems();
-		
-		
-		
+
 		if ((int)$this->u->id > 0) {
 			$this->a->login = 1;
 		} else if ($guest) {
 			$this->a->login = 2;
 		}
-		
 		
 		// Is there even a shipping or payment
 		$this->a->shippingnotused 	= PhocaCartShipping::isShippingNotUsed();
@@ -79,8 +74,7 @@ echo '</div>';*/
 		if ($this->a->shippingnotused == 1) {
 			$this->t['np'] = 3;
 		}
-			
-		
+
 		if ($this->a->login == 1 || $this->a->login == 2) {
 
 			// =======
@@ -156,6 +150,7 @@ echo '</div>';*/
 					$this->cart->addShippingCosts($shippingId);
 					$this->t['shippingmethod'] = $this->cart->getShippingCosts();
 					
+					
 				} else {
 					// Shipping cost is not stored in cart, display possible shipping methods
 					// We ask for total of cart because of amount rule
@@ -215,18 +210,6 @@ echo '</div>';*/
 				}
 			}
 			
-	
-			//CHOSEN
-			$document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/chosen/chosen.jquery.min.js');
-			$js = "\n". 'jQuery(document).ready(function(){';
-			$js .= '   jQuery(".chosen-select").chosen({disable_search_threshold: 10});'."\n"; // Set chosen, created hidden will be required
-			$js .= '   jQuery(".chosen-select").attr(\'style\',\'display:visible; position:absolute; clip:rect(0,0,0,0)\');'."\n";
-			$js .= '});'."\n";
-			$document->addScriptDeclaration($js);
-			JHTML::stylesheet( 'media/com_phocacart/js/chosen/chosen.css' );
-			JHTML::stylesheet( 'media/com_phocacart/js/chosen/chosen-bootstrap.css' );
-			
 			PhocaCartRenderJs::renderBillingAndShippingSame();
 		}
 		
@@ -248,11 +231,12 @@ echo '</div>';*/
 		if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
 			$this->a->confirm = 1;
 		}
-		
-		
- 
-		
-		
+
+		$media = new PhocaCartRenderMedia();
+		$media->loadBootstrap($this->t['load_bootstrap']);
+		$media->loadChosen($this->t['load_chosen']);
+		//$media->loadEqualHeights($this->t['equal_height']);
+
 		//Scroll to 
 		if ($scrollTo == '') {
 		} else if ($scrollTo == 'phcheckoutaddressedit' || $scrollTo == 'phcheckoutshippingedit' || $scrollTo == 'phcheckoutpaymentedit') {
@@ -266,7 +250,6 @@ echo '</div>';*/
 					//jQuery(\'html, body\').animate({scrollTop: jQuery("#'.$scrollTo.'").offset().top}, 1500 );
 				}
 			});';
-
 			$document->addScriptDeclaration($js);
 		} else if ($scrollTo == 'phcheckoutpaymentview') {
 			// last view - in fact phcheckoutconfirmedit
@@ -294,18 +277,14 @@ echo '</div>';*/
 			});';
 			$document->addScriptDeclaration($js);
 		}
-		
-		
+
 		
 		
 		// Render the cart (here because it can be changed above - shipping can be added)
-		//$total						= $this->cart->getTotal();
-	
-		
+		//$total				= $this->cart->getTotal();
 		$this->t['cartoutput']	= $this->cart->render();
 		$this->t['stockvalid']	= $this->cart->getStockValid();
 		$this->t['minqtyvalid']	= $this->cart->getMinimumQuantityValid();
-		
 
 		$this->_prepareDocument();
 		parent::display($tpl);

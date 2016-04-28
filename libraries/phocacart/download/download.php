@@ -48,6 +48,7 @@ class PhocaCartDownload
 				.' LEFT JOIN #__phocacart_orders AS o ON o.id = d.order_id'
 				.' LEFT JOIN #__users AS u ON u.id = o.user_id'
 				.' WHERE d.id = '.(int)$id .' AND d.published = 1'
+				.' ORDER BY d.id'
 				.' LIMIT 1';
 		$db->setQuery($query);
 		$file = $db->loadObject();
@@ -134,10 +135,7 @@ class PhocaCartDownload
 		if ((int)$user->id < 1 && ($tokenDownload == '' || $tokenOrder == '') && ($token != $file->download_token)) {
 			return false;
 		}
-		
-		
 
-		
 		
 		
 		// CHECK COUNT

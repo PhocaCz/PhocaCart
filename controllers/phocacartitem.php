@@ -40,5 +40,18 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		$app->redirect('index.php?option=com_phocacart&view=phocacartitems');
 	}
 	
+	/*
+	function removeduplicates() {
+		
+		$app	= JFactory::getApplication();
+		if (PhocaCartCategoryMultiple::removeDuplicates()) {
+			$message = JText::_( 'COM_PHOCACART_SUCCESS_DUPLICATES_REMOVED' );
+		} else {
+			$message = JText::_( 'COM_PHOCACART_ERROR_DUPLICATES_NOT_REMOVED' );
+		}
+		$app->enqueueMessage($message, 'message');
+		$app->redirect('index.php?option=com_phocacart&view=phocacartitems');
+	}*/
+	
 }
 ?>

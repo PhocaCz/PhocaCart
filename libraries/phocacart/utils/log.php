@@ -10,7 +10,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocaCartLog
 {
 	public static function add( $type = 0, $title = '', $typeid = 0, $description = '') {
-	
+
 		$paramsC 			= JComponentHelper::getParams('com_phocacart');
 		$enable_logging		= $paramsC->get( 'enable_logging', 0 );
 		
@@ -29,6 +29,13 @@ class PhocaCartLog
 				$userid = $user->id;
 			}
 			
+			// Ordering
+			$ordering = 0;
+			$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_logs');
+			$max = $db->loadResult();
+			$ordering = $max+1;
+			
+			
 			
 			$query = ' INSERT INTO #__phocacart_logs ('
 			.$db->quoteName('user_id').', '
@@ -39,6 +46,7 @@ class PhocaCartLog
 			.$db->quoteName('incoming_page').', '
 			.$db->quoteName('description').', '
 			.$db->quoteName('published').', '
+			.$db->quoteName('ordering').', '
 			.$db->quoteName('date').' )'
 			. ' VALUES ('
 			.$db->quote((int)$userid).', '
@@ -49,6 +57,7 @@ class PhocaCartLog
 			.$db->quote($incoming_page).', '
 			.$db->quote($description).', '
 			.$db->quote('1').', '
+			.$db->quote((int)$ordering).', '
 			.$db->quote(gmdate('Y-m-d H:i:s')).' )';
 			
 			$db->setQuery($query);

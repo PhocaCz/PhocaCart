@@ -132,5 +132,14 @@ class PhocaCartUtils
 			return $token;
 		}
 	}
+	
+	public static function isURLAddress($url) {
+		return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
+	}
+	
+	public static function round($value, $precision = 2) {
+		
+		return round($value, $precision);
+	}
 }
 ?>

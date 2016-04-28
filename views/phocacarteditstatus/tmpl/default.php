@@ -25,7 +25,7 @@ if (!empty($this->itemhistory)) {
 	foreach($this->itemhistory as $k => $v) {
 		echo '<tr class="ph-order-status-edit-item">';
 		echo '<td align="center">'.JHtml::date($v->date, 'd. m. Y. h:s').'<td>';
-		echo '<td align="center">'.$v->statustitle.'<td>';
+		echo '<td align="center">'.JText::_($v->statustitle).'<td>';
 		$userO = $v->user_name;
 		if (isset($v->user_username)) {
 			$userO .= ' <small>('.$v->user_username.')</small>';

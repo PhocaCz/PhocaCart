@@ -57,9 +57,26 @@ class com_phocacartInstallerScript
 				$error[] = 0;
 			}
 		}
+
+		// Enable plugins
+		$db  = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->update('#__extensions');
+		$query->set($db->quoteName('enabled') . ' = 1');
+		$query->where(
+		'('.$db->quoteName('name') . ' = ' . $db->quote('plg_pcp_cash_on_delivery')
+		. ' OR '
+		. $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_paypal_standard')
+		. ')');
+		$query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
+		$db->setQuery($query);
+		$db->execute();
+		
+		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		
 		JFactory::getApplication()->enqueueMessage($message, 'message');
 		$parent->getParent()->setRedirectURL('index.php?option=com_phocacart');
+		
 	}
 	function uninstall($parent) {
 		//echo '<p>' . JText::_('COM_PHOCACART_UNINSTALL_TEXT') . '</p>';
@@ -118,9 +135,11 @@ class com_phocacartInstallerScript
 
 	function preflight($type, $parent) {
 		//echo '<p>' . JText::_('COM_PHOCACART_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+		
 	}
 
 	function postflight($type, $parent)  {
 		//echo '<p>' . JText::_('COM_PHOCACART_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+		
 	}
 }

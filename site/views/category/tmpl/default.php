@@ -7,14 +7,22 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+$layoutC 	= new JLayoutFile('button_compare', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+$layoutA	= new JLayoutFile('button_add_to_cart_list', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+$layoutA2	= new JLayoutFile('button_buy_now_paddle', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+$layoutA3	= new JLayoutFile('button_external_link', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+$layoutV	= new JLayoutFile('button_product_view', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+$layoutP	= new JLayoutFile('product_price', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+
+echo '<div class="ph-loader2"></div>';
 echo '<div id="ph-pc-category-box" class="pc-category-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 if ( $this->p->get( 'show_page_heading' ) ) { 
 	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
-} else {
+} else if (isset($this->category[0]->title)) {
 	echo '<h1>'. $this->escape($this->category[0]->title) . '</h1>';
 }
-
 
 if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $this->t['display_back'] == 3)) {
 	if ($this->category[0]->parentid == 0) {
@@ -35,9 +43,8 @@ if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $th
 }
 
 if ( isset($this->category[0]->description) && $this->category[0]->description != '') {
-	echo '<div class="ph-desc">'. $this->category[0]->description. '</div>';
+	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->category[0]->description). '</div>';
 }
-
 
 if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 0) {
 	echo '<div class="ph-subcategories">'.JText::_('COM_PHOCACART_SUBCATEGORIES') . ':</div>';
@@ -54,7 +61,6 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 	echo '<hr />';
 }
 
-
 if (!empty($this->items)) {
 	echo '<div class="ph-items">';
 	$i = 0;
@@ -63,25 +69,32 @@ if (!empty($this->items)) {
 	$nw= 12/$nc;//1,2,3,4,6,12
 	echo '<div class="row">';
 	
+
 	foreach ($this->items as $v) {
 		
 		//if ($i%3==0) { echo '<div class="row">';}
 		
 		echo '<div class="col-sm-6 col-md-'.$nw.'">';
 		
+		$new = $hot = $feat = '';
+		$c = 1;
+		$new = PhocaCartRenderFront::renderNewIcon($v->date, $c);
+		if ($new != '') {$c++;}
+		$hot = PhocaCartRenderFront::renderHotIcon($v->sales, $c);
+		if ($hot != '') { $c++;}
+		$feat = PhocaCartRenderFront::renderFeaturedIcon($v->featured, $c);
+		echo $new . $hot . $feat;
+		
 		echo '<div class="thumbnail ph-thumbnail">';
-	
+
 		$image = PhocaCartImage::getThumbnailName($this->t['pathitem'], $v->image, 'medium');
-		
-		
-	
-			
+
 		/*if ($this->t['image_link'] == 1) {
 			$imageL = PhocaPhotoHelper::getThumbnailName($this->t['path'], $v->filename, 'large');
 			$link = JURI::base(true).'/'.$imageL->rel;
 			echo '<a href="'.$link.'" rel="prettyPhoto[pp_gal1]">';
 		} else {*/
-			$link = JRoute::_(PhocaCartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->categoryalias));
+			$link = JRoute::_(PhocaCartRoute::getItemRoute($v->id, $v->categoryid, $v->alias, $v->categoryalias));
 			echo '<a href="'.$link.'">';
 		//}
 		
@@ -95,8 +108,6 @@ if (!empty($this->items)) {
 		
 		echo '</a>';
 		
-		echo PhocaCartRenderFront::renderNewIcon($v->date);
-		
 		/*$imageAbs = $this->t['photopathabs'] . htmlspecialchars($v->folder).'/thumb.jpg';
 		$imageRel = $this->t['photopathrel'] . htmlspecialchars($v->folder).'/thumb.jpg';
 		if (isset($v->image) && $v->image != '') {
@@ -106,23 +117,17 @@ if (!empty($this->items)) {
 		}*/
 		
 		// CAPTION, DESCRIPTION
-		
-		
 		echo '<div class="caption">';
 		
-		// COMPARE
+		// :L: COMPARE
 		if ($this->t['display_compare'] == 1) {
-			echo '<form action="'.$this->t['linkcomparison'].'" method="post" id="phCompare'.(int)$v->id.'">';
-			echo '<input type="hidden" name="id" value="'.(int)$v->id.'">';
-			echo '<input type="hidden" name="task" value="comparison.add">';
-			echo '<input type="hidden" name="tmpl" value="component" />';
-			echo '<input type="hidden" name="option" value="com_phocacart" />';
-			echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-			echo '<div class="pull-right">';
-			echo '<div class="ph-category-item-compare"><a href="javascript::void();" onclick="document.getElementById(\'phCompare'.(int)$v->id.'\').submit();". title="'.JText::_('COM_PHOCACART_COMPARE').'"><span class="glyphicon glyphicon-stats"></span></a></div>';
-			echo '</div>';
-			echo JHtml::_('form.token');
-			echo '</form>';
+			$d			= array();
+			$d['linkc']	= $this->t['linkcomparison'];
+			$d['id']	= (int)$v->id;
+			$d['catid']	= $this->t['categoryid'];
+			$d['return']= $this->t['actionbase64'];
+			$d['method']= $this->t['add_compare_method'];
+			echo $layoutC->render($d);
 		}
 		
 		echo '<h3>'.$v->title.'</h3>';
@@ -130,75 +135,55 @@ if (!empty($this->items)) {
 		// Description box will be displayed even no description is set - to set height and have all columns same height
 		echo '<div class="ph-item-desc">';
 		if ($v->description != '') {
-			echo $v->description;
+			echo JHTML::_('content.prepare', $v->description);
 		}
 		echo '</div>';// end desc
 		
-		// PRICE
-		$price 		= new PhocaCartPrice;
-		$priceItems	= $price->getPriceItems($v->price, $v->taxrate, $v->taxcalculationtype, $v->taxtitle);
-		
-		echo '<div class="ph-category-price-box">';
+		// :L: PRICE
+		$price 				= new PhocaCartPrice;
+		$d					= array();
+		$d['priceitems']	= $price->getPriceItems($v->price, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit);
+		$d['priceitemsorig']= array();
 		if ($v->price_original != '' && $v->price_original > 0) {
-			$priceItemsOriginal = $price->getPriceItems($v->price_original, $v->taxrate, $v->taxcalculationtype);
-			if ($priceItemsOriginal['brutto']) {
-				echo '<div class="ph-price-txt">'.JText::_('COM_PHOCACART_ORIGINAL_PRICE').'</div>';
-				echo '<div class="ph-price-original">'.$priceItemsOriginal['bruttoformat'].'</div>';
-			}
-		
+			$d['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxrate, $v->taxcalculationtype);
 		}
-		if ($priceItems['netto']) {
-			echo '<div class="ph-price-txt">'.$priceItems['nettotxt'].'</div>';
-			echo '<div class="ph-price-netto">'.$priceItems['nettoformat'].'</div>';
-		}
-		if ($priceItems['tax']) {
-			echo '<div class="ph-tax-txt">'.$priceItems['taxtxt'].'</div>';
-			echo '<div class="ph-tax">'.$priceItems['taxformat'].'</div>';
-		}
-		if ($priceItems['brutto']) {
-			echo '<div class="ph-price-txt">'.$priceItems['bruttotxt'].'</div>';
-			echo '<div class="ph-price-brutto">'.$priceItems['bruttoformat'].'</div>';
-		}
-		echo '</div>'; // end price box
-		echo '<div class="ph-cb"></div>';
+		$d['class']			= 'ph-category-price-box';
+		echo $layoutP->render($d);
 		
 		// VIEW PRODUCT BUTTON
 		echo '<div class="ph-category-add-to-cart-box">';
 		
-		echo '<div class="pull-left">';
-		echo '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-search"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
-		echo '</div>';
+		// :L: LINK TO PRODUCT VIEW
+		$d					= array();
+		$d['link']			= $link;
+		echo $layoutV->render($d);
 		
-		if ($this->t['display_addtocart'] == 1) {
-		
+		// :L: ADD TO CART
+		if ((int)$this->t['category_addtocart'] == 1) {
+			$d					= array();
+			$d['link']			= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
+			$d['linkch']		= $this->t['linkcheckout'];// link to checkout (add to cart)
+			$d['id']			= (int)$v->id;
+			$d['catid']			= $this->t['categoryid'];
+			$d['return']		= $this->t['actionbase64'];
+			$d['attrrequired']	= 0;
 			if (isset($v->attribute_required) && $v->attribute_required == 1) {
-				// One of the attributes is required, cannot add to cart
-				
-				// CUSTOMIZATION - possible to customize
-				
-				echo '<div class="pull-right">';
-				echo '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-shopping-cart"></span> '.JText::_('COM_PHOCACART_ADD_TO_CART').'</a>';
-				echo '</div>';
-			
-			} else {
-				// ADD TO CART BUTTON
-				echo '<form action="'.$this->t['linkcheckout'].'" method="post">';
-				echo '<input type="hidden" name="id" value="'.(int)$v->id.'">';
-				echo '<input type="hidden" name="quantity" value="1">';
-				echo '<input type="hidden" name="task" value="checkout.add">';
-				echo '<input type="hidden" name="tmpl" value="component" />';
-				echo '<input type="hidden" name="option" value="com_phocacart" />';
-				echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-				echo '<div class="pull-right">';
-				echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-shopping-cart"></span> '.JText::_('COM_PHOCACART_ADD_TO_CART').'</button>';
-				echo '</div>';
-				echo JHtml::_('form.token');
-				echo '</form>';
-			
+				$d['attrrequired']	= 1;
 			}
+			echo $layoutA->render($d);
+		} else if ((int)$this->t['category_addtocart'] == 2 && (int)$v->external_id != '') {
+			// e.g. paddle
+			$d					= array();
+			$d['external_id']	= (int)$v->external_id;
+			$d['return']		= $this->t['actionbase64'];
+			echo $layoutA2->render($d);
+		} else if ((int)$this->t['category_addtocart'] == 3 && $v->external_link != '') {
+			$d					= array();
+			$d['external_link']	= $v->external_link;
+			$d['external_text']	= $v->external_text;
+			$d['return']		= $this->t['actionbase64'];
+			echo $layoutA3->render($d);
 		}
-		
-		
 		
 		echo '</div>';// end add to cart box
 		echo '<div class="clearfix"></div>';
@@ -219,6 +204,7 @@ if (!empty($this->items)) {
 	echo $this->loadTemplate('pagination');
 }
 echo '</div>';
+echo '<div id="phContainer"></div>';
 echo '<div>&nbsp;</div>';
 echo PhocaCartUtils::getInfo();
 ?>

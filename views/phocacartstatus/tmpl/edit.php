@@ -18,6 +18,8 @@ $r 			=  new $class();
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
 	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+		<?php echo $this->form->getField('email_text')->save(); ?>
+		<?php echo $this->form->getField('description')->save(); ?>
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
 	else {
@@ -37,12 +39,14 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'stock_movements', 'download', 'email_customer', 'email_others', 'email_subject', 'email_send');
+
+echo $r->item($this->form, 'title', '<small>('.JText::_($this->form->getValue('title')).')</small>', 1);
+
+$formArray = array ( 'stock_movements', 'download', 'email_customer', 'email_others', 'email_subject', 'email_send');
 echo $r->group($this->form, $formArray);
 
 $formArray = array('email_text');
 echo $r->group($this->form, $formArray, 1);
-
 
 $formArray = array ('ordering');
 echo $r->group($this->form, $formArray);

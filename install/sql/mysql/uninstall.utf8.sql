@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS `#__phocacart_categories`;
 DROP TABLE IF EXISTS `#__phocacart_products`;
+DROP TABLE IF EXISTS `#__phocacart_product_categories`;
+DROP TABLE IF EXISTS `#__phocacart_product_featured`;
 DROP TABLE IF EXISTS `#__phocacart_product_images`;
 DROP TABLE IF EXISTS `#__phocacart_attributes`;
 DROP TABLE IF EXISTS `#__phocacart_attribute_values`;

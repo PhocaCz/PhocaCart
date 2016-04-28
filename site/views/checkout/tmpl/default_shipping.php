@@ -19,11 +19,13 @@ if ($this->a->shippingnotused == 1) {
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
-	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
+	
 	echo '<div class="ph-checkout-box-action">';
+	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
 	echo '<div id="ph-request-message" style="display:none"></div>';
+	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-shipping-row" id="phShippingMethods" >';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
 	
@@ -67,7 +69,13 @@ if ($this->a->shippingnotused == 1) {
 	
 	if (isset($this->t['shippingmethod']) && $this->t['shippingmethod']['title'] != '') {
 	
-		echo '<div class="col-sm-8 col-md-8 ">'.$this->t['shippingmethod']['title'].'</div>';
+		echo '<div class="col-sm-8 col-md-8 ">'.$this->t['shippingmethod']['title'];
+		
+		if ($this->t['display_shipping_desc'] && $this->t['shippingmethod']['description'] != '') {
+			echo '<div class="ph-checkout-shipping-desc">'.JHTML::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
+		}
+		
+		echo '</div>';
 		
 		echo '<div class="col-sm-4 col-md-4 ">';
 		echo '<div class="pull-right ph-checkout-shipping-edit">';
@@ -77,7 +85,7 @@ if ($this->a->shippingnotused == 1) {
 	
 	}
 	echo '<div class="ph-cb"></div>';
-	echo '</div>'."\n";// end box action
+	echo '</div><div class="ph-cb"></div>'."\n";// end row action
 
 	echo '<input type="hidden" name="shippingedit" value="1" />';
 	//echo '<input type="hidden" name="tmpl" value="component" />';
@@ -90,14 +98,19 @@ if ($this->a->shippingnotused == 1) {
 // ADD OR EDIT - user didn't add the shipping yet or user wants to edit it now
 } else if ($this->a->shippingedit)  {
 
+
+
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 	
-	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
+	
 	echo '<div class="ph-checkout-box-action">';
 	echo '<div id="ph-request-message" style="display:none"></div>';
+	
+	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
+	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-shipping-row" id="phShippingMethods" >';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
 	
@@ -111,10 +124,14 @@ if ($this->a->shippingnotused == 1) {
 		}
 		$priceI = $price->getPriceItems($v->cost, $v->taxrate, $v->taxcalctype, $v->taxtitle, 1);
 
+		
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
 		echo '<label><input type="radio" name="phshippingopt" id="phshippingopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >'.$v->title.'</label>';
 		echo '</div>';
+		if ($this->t['display_shipping_desc'] && $v->description != '') {
+			echo '<div class="ph-checkout-shipping-desc">'.JHTML::_('content.prepare', $v->description).'</div>';
+		}
 		echo '</div>';
 		
 		echo '<div class="col-sm-6 col-md-6"><div class="radio">';
@@ -152,7 +169,7 @@ if ($this->a->shippingnotused == 1) {
 	echo '</div>';
 		
 	echo '<div class="ph-cb"></div>';	
-	echo '</div>'."\n";// end box action
+	echo '</div><div class="ph-cb"></div>'."\n";// end box action
 
 	echo '<input type="hidden" name="task" value="checkout.saveshipping" />'. "\n";
 	echo '<input type="hidden" name="tmpl" value="component" />';
@@ -165,7 +182,7 @@ if ($this->a->shippingnotused == 1) {
 }  else {
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
-	echo '</div>';
+	echo '</div><div class="ph-cb"></div>';
 }
 	
 	

@@ -23,7 +23,6 @@ class PhocaCartCpViewPhocaCartItem extends JViewLegacy
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
-		
 		JHTML::stylesheet( $this->t['s'] );
 		
 		$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';

@@ -10,27 +10,38 @@ defined('_JEXEC') or die();
 
 class PhocaCartAttribute
 {
-	public static function getAttributesById($productId) {
+	public static function getAttributesById($productId, $returnArray = 0) {
 	
 		$db = JFactory::getDBO();
 		
-		$query = 'SELECT a.id, a.title, a.required, a.type'
+		$query = 'SELECT a.id, a.title, a.alias, a.required, a.type'
 				.' FROM #__phocacart_attributes AS a'
-			    .' WHERE a.product_id = '.(int) $productId;
+			    .' WHERE a.product_id = '.(int) $productId
+				.' ORDER BY a.id';
 		$db->setQuery($query);
-		$attributes = $db->loadObjectList();
+		if ($returnArray) {
+			$attributes = $db->loadAssocList();
+		} else {
+			$attributes = $db->loadObjectList();
+		}
+		
 		return $attributes;
 	}
 	
-	public static function getOptionsById($attributeId) {
+	public static function getOptionsById($attributeId, $returnArray = 0) {
 	
 		$db =JFactory::getDBO();
 		
-		$query = 'SELECT a.id, a.title, a.amount, a.operator, a.stock, a.operator_weight, a.weight';
+		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image';
 		$query .= ' FROM #__phocacart_attribute_values AS a'
-			    .' WHERE a.attribute_id = '.(int) $attributeId;
+			    .' WHERE a.attribute_id = '.(int) $attributeId
+				.' ORDER BY a.id';
 		$db->setQuery($query);
-		$options = $db->loadObjectList();
+		if ($returnArray) {
+			$options = $db->loadAssocList();
+		} else {
+			$options = $db->loadObjectList();
+		}
 
 		return $options;
 	}
@@ -60,7 +71,8 @@ class PhocaCartAttribute
 			// Get attribute ids which will be removed (to remove options)
 			$query = ' SELECT id '
 					.' FROM #__phocacart_attributes'
-					. ' WHERE product_id = '. (int)$productId;
+					. ' WHERE product_id = '. (int)$productId
+					.' ORDER BY id';
 			$db->setQuery($query);
 			$deleteIds = $db->loadColumn();
 			
@@ -84,13 +96,17 @@ class PhocaCartAttribute
 			// ADD ATTRIBUTES
 			if (!empty($attributesArray)) {
 				
-				
-				
-				
+
 				foreach($attributesArray as $k => $v) {
+					
+					if(empty($v['alias'])) {
+						$v['alias'] = $v['title'];
+					}
+					$v['alias'] = PhocaCartUtils::getAliasName($v['alias']);
+					
 					$valuesString 	= '';
-					$valuesString 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.(int)$v['required'].', '.(int)$v['type'].')';
-					$query = ' INSERT INTO #__phocacart_attributes (product_id, title, required, type)'
+					$valuesString 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.(int)$v['required'].', '.(int)$v['type'].')';
+					$query = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type)'
 								.' VALUES '.(string)$valuesString;
 					$db->setQuery($query);
 					$db->execute(); // insert is not done together but step by step because of getting last insert id
@@ -101,13 +117,18 @@ class PhocaCartAttribute
 						
 						$options		= array();
 						foreach($v['option'] as $k2 => $v2) {
+							
+							if(empty($v2['alias'])) {
+								$v2['alias'] = $v2['title'];
+							}
+							$v2['alias'] = PhocaCartUtils::getAliasName($v2['alias']);
 						
-							$options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operatorweight']).', '.$db->quote($v2['weight']).')';
+							$options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).')';
 							if (!empty($options)) {
 								$valuesString2 = implode($options, ',');
 							}
 						}
-						$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, operator, amount, stock, operator_weight, weight)'
+						$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image)'
 									.' VALUES '.(string)$valuesString2;
 									
 						$db->setQuery($query);
@@ -135,14 +156,54 @@ class PhocaCartAttribute
 		}
 		return $attributes;
 	}
+
+	public static function getAllAttributesAndOptions() {
+			
+		$db = JFactory::getDBO();
+		
+		$query = 'SELECT v.id, v.title, v.alias, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias'
+				.' FROM  #__phocacart_attribute_values AS v'
+				.' LEFT JOIN  #__phocacart_attributes AS at ON at.id = v.attribute_id'
+				.' GROUP BY v.alias, attralias'
+				.' ORDER BY v.id';
+		$db->setQuery($query);
+		$attributes = $db->loadObjectList();
+
+		$a	= array();
+		if (!empty($attributes)) {
+			foreach($attributes as $k => $v) {
+				if (isset($v->attrtitle) && $v->attrtitle != '' 
+				&& isset($v->attrid) && $v->attrid != ''
+				&& isset($v->attralias) && $v->attralias != '') {
+					$a[$v->attralias]['title']				= $v->attrtitle;
+					$a[$v->attralias]['id']					= $v->attrid;
+					$a[$v->attralias]['alias']				= $v->attralias;
+					if (isset($v->title) && $v->title != '' 
+					&& isset($v->id) && $v->id != ''
+					&& isset($v->alias) && $v->alias != '') {	
+						$a[$v->attralias]['option'][$v->alias] = new stdClass();
+						$a[$v->attralias]['option'][$v->alias]->title	= $v->title;
+						$a[$v->attralias]['option'][$v->alias]->id		= $v->id;
+						$a[$v->attralias]['option'][$v->alias]->alias	= $v->alias;
+					} else {
+						$a[$v->attralias]['option'] = array();
+					}
+				} 
+			}
+			
+		}
+		return $a;
+		
+	}
 	
 	public static function getAttributeValue($id, $attributeId) {
 		$db =JFactory::getDBO();
-		$query = ' SELECT a.id, a.title, a.amount, a.operator, a.weight, a.operator_weight, a.stock,'
+		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image,'
 		.' aa.id as aid, aa.title as atitle'
 		.' FROM #__phocacart_attribute_values AS a'
 		.' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
 		.' WHERE a.id = '.(int)$id . ' AND a.attribute_id = '.(int)$attributeId
+		.' ORDER BY a.id'
 		.' LIMIT 1';
 		$db->setQuery($query);
 		$attrib = $db->loadObject();
@@ -169,6 +230,7 @@ class PhocaCartAttribute
 			$query = ' SELECT a.required'
 			.' FROM #__phocacart_attributes AS a'
 			.' WHERE a.id = '.(int)$id
+			.' ORDER BY a.id'
 			.' LIMIT 1';
 			$db->setQuery($query);
 			$attrib = $db->loadObject();
@@ -201,6 +263,7 @@ class PhocaCartAttribute
 		.' FROM #__phocacart_products AS a'
 		.' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
 		. ' WHERE ' . implode( ' AND ', $wheres )
+		. ' ORDER BY a.id'
 		. ' LIMIT 1';
 		$db->setQuery($query);
 		$attrib = $db->loadObject();
@@ -215,26 +278,8 @@ class PhocaCartAttribute
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-
-	
-
-	
-/*
-	public static function storeOptionsByAttributeId($attributeId, $optArray) {
+/*	public static function storeOptionsByAttributeId($attributeId, $optArray) {
 	
 		if ((int)$attributeId > 0) {
 			$db =JFactory::getDBO();
@@ -242,8 +287,7 @@ class PhocaCartAttribute
 					.' FROM #__phocacart_attribute_values'
 					. ' WHERE attribute_id = '. (int)$attributeId;
 			$db->setQuery($query);
-		
-			
+
 			if (!empty($optArray)) {
 				
 				$values 		= array();
@@ -268,8 +312,6 @@ class PhocaCartAttribute
 		}
 	}
 	
-	
-	
 	public static function getAllAttributesSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
 	
 		$db = JFactory::getDBO();
@@ -277,9 +319,7 @@ class PhocaCartAttribute
 				.' FROM #__phocacart_attributes AS a'
 				. ' ORDER BY '. $order;
 		$db->setQuery($query);
-		
-		
-		
+
 		$attributes = $db->loadObjectList();
 		
 		$attributesO = JHTML::_('select.genericlist', $attributes, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);

@@ -35,9 +35,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$this->setState('filter.language',$app->getLanguageFilter());
 		$this->setState('filter_order', JRequest::getCmd('filter_order', 'ordering'));
 		$this->setState('filter_order_dir', JRequest::getCmd('filter_order_Dir', 'ASC'));
-		
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
-		
 	}
 	
 	public function getPagination($categoryId) {
@@ -57,7 +55,7 @@ class PhocaCartModelCategory extends JModelLegacy
 	
 	public function getTotal($categoryId) {
 		if (empty($this->total)) {
-			$query = $this->getItemListQuery($categoryId);
+			$query = $this->getItemListQuery($categoryId, 1);
 			$this->total = $this->_getListCount($query);
 		}
 		return $this->total;
@@ -87,7 +85,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		return $this->subcategories;
 	}
 	
-	protected function getItemListQuery($categoryId) {
+	protected function getItemListQuery($categoryId, $count = 0) {
 	
 		$app		= JFactory::getApplication();
 		$user 		= JFactory::getUser();
@@ -109,56 +107,76 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " a.access IN (".$userLevels.")";
 		
+		if ($count == 1) {
+			$q = ' SELECT a.id'
+			. ' FROM #__phocacart_products AS a'
+			//. ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid'
+			. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id"
+			. " LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id"
+			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
+			. ' WHERE ' . implode( ' AND ', $wheres )
+			. ' GROUP BY a.id';
+			
+		} else {
+			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, a.catid, c.id AS categoryid, c.title AS categorytitle, c.alias AS categoryalias, a.price, a.price_original, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, '
+			. ' AVG(r.rating) AS rating,'
+			. ' at.required AS attribute_required'
+			. ' FROM #__phocacart_products AS a'
+			//. ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid'
+			. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id AND pc.category_id = ".(int)$categoryId
+			. " LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id"
+			. ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
+			. ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0'
+			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
+			. ' WHERE ' . implode( ' AND ', $wheres )
+			. ' GROUP BY a.id'
+			. ' ORDER BY '.$itemOrdering;
+		}
 		
-		
-		$query = ' SELECT a.id, a.title, a.image, a.alias, a.description, a.catid, c.id AS categoryid, c.title AS categorytitle, c.alias AS categoryalias, a.price, a.price_original, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date,'
-		.' AVG(r.rating) AS rating,'
-		.' at.required AS attribute_required'
-		.' FROM #__phocacart_products AS a'
-		.' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid'
-		.' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
-		.' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0'
-		.' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
-		. ' WHERE ' . implode( ' AND ', $wheres )
-		. ' GROUP BY a.id'
-		. ' ORDER BY '.$itemOrdering;	
-		return $query;
+		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
+		return $q;
 	}
 	
-	protected function getCategoriesQuery( $categoryId, $subcategories = FALSE ) {
+	protected function getCategoriesQuery($categoryId, $subcategories = FALSE) {
 		
 		$wheres		= array();
 		$app		= JFactory::getApplication();
 		$params 	= $app->getParams();
+		$user 		= JFactory::getUser();
+		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		
 		// Get the current category or get parent categories of the current category
 		if ($subcategories) {
 			$wheres[]			= " c.parent_id = ".(int)$categoryId;
 			$categoryOrdering 	= $this->getCategoryOrdering();
 		} else {
-			$wheres[]	= " c.id= ".(int)$categoryId;
+			$wheres[]			= " c.id= ".(int)$categoryId;
 		}
 
-		$wheres[] = " c.published = 1";
+		$wheres[] 		= " c.published = 1";
+		$wheres[] 		= " c.access IN (".$userLevels.")";
 		
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$wheres[] 	=  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
 		
 		if ($subcategories) {
-			$query = " SELECT  c.id, c.title, c.alias, COUNT(c.id) AS numdoc"
+			
+			$query = " SELECT  c.id, c.parent_id, c.title, c.alias, COUNT(c.id) AS numdoc"
 				. " FROM #__phocacart_categories AS c"
-				. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
+				//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
+				//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1 AND a.access IN (".$userLevels.")"
 				. " WHERE " . implode( " AND ", $wheres )
 				. " GROUP BY c.id"
 				. " ORDER BY ".$categoryOrdering;
 		} else {
-			$query = " SELECT c.id, c.title, c.alias, c.description, c.metakey, c.metadesc, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
+			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.description, c.metakey, c.metadesc, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
 				. " FROM #__phocacart_categories AS c"
 				. " LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id"
 				. " WHERE " . implode( " AND ", $wheres )
 				. " ORDER BY c.ordering";
 		}
+		//echo nl2br(str_replace('#__', 'jos_', $query));
 		return $query;
 	}
 	
@@ -182,6 +200,21 @@ class PhocaCartModelCategory extends JModelLegacy
 			$this->category_ordering 	= PhocaCartOrdering::getOrderingText($ordering, 1);
 		}
 		return $this->category_ordering;
+	}
+	
+	public function hit($pk = 0) {
+		$input = JFactory::getApplication()->input;
+		$hitcount = $input->getInt('hitcount', 1);
+
+		if ($hitcount) {
+			$pk = (!empty($pk)) ? $pk : (int) $this->getState('cateogry.id');
+
+			$table = JTable::getInstance('PhocaCartCategory', 'Table');
+			$table->load($pk);
+			$table->hit($pk);
+		}
+
+		return true;
 	}
 }
 ?>

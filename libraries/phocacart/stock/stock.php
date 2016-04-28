@@ -20,9 +20,10 @@ class PhocaCartStock
 			$statusMethod = 'p.stockstatus_n_id';// Status when product is not in stock N(P = 0)
 		}
 		
-		$query = 'SELECT s.id, s.title, s.image FROM #__phocacart_stock_statuses AS s'
+		$query = 'SELECT s.id, s.title, s.title_feed, s.image FROM #__phocacart_stock_statuses AS s'
 				.' LEFT JOIN #__phocacart_products AS p ON s.id = '.$statusMethod
-			    .' WHERE s.id = '.(int) $stockStatusId;
+			    .' WHERE s.id = '.(int) $stockStatusId
+				.' ORDER BY s.id';
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
 			
@@ -40,7 +41,7 @@ class PhocaCartStock
 		$stock_checkout			= $paramsC->get( 'stock_checkout', 0 );
 		
 		$stock 	= array();
-		
+
 		/*
 		if($stockStatusIdN > 0) {
 			$dataB = self::getStockStatusData($stockStatusId);
@@ -49,15 +50,18 @@ class PhocaCartStock
 		$stock['stock_count'] 	= false;
 		$stock['stock_status'] 	= false;
 		$stock['status_image'] 	= false;
+		
+		$stock['stock_status_feed'] = false; // Additional status text for feeds only - it is managed by $stock['stock_status']
 			
 		if ($display_stock_status == 1) {
 			if ($stock_checking == 1) {
-				if ((int)$stock > 0) {
+				if ((int)$stockCount > 0) {
 					// 1 There is product in stock, display status - if set
 					if($stockStatusIdA > 0) {
 						$data = self::getStockStatusData($stockStatusIdA, 1);
 						if (!empty($data) && $data[0]->title != '') {
-							$stock['stock_status'] = $data[0]->title;
+							$stock['stock_status'] 		= JText::_($data[0]->title);
+							$stock['stock_status_feed'] = JText::_($data[0]->title_feed);
 						}
 						if (!empty($data) && $data[0]->image != '') {
 							$stock['status_image'] = $data[0]->image;
@@ -69,7 +73,8 @@ class PhocaCartStock
 					if($stockStatusIdN > 0) {
 						$data = self::getStockStatusData($stockStatusIdN, 0);
 						if (!empty($data) && $data[0]->title != '') {
-							$stock['stock_status'] = $data[0]->title;
+							$stock['stock_status'] 		= JText::_($data[0]->title);
+							$stock['stock_status_feed'] = JText::_($data[0]->title_feed);
 						}
 						if (!empty($data) && $data[0]->image != '') {
 							$stock['status_image'] = $data[0]->image;
@@ -82,7 +87,8 @@ class PhocaCartStock
 				if($stockStatusIdA > 0) {
 					$data = self::getStockStatusData($stockStatusIdA, 1);
 					if (!empty($data) && $data[0]->title != '') {
-						$stock['stock_status'] = $data[0]->title;
+						$stock['stock_status'] 		= JText::_($data[0]->title);
+						$stock['stock_status_feed'] = JText::_($data[0]->title_feed);
 					}
 					if (!empty($data) && $data[0]->image != '') {
 						$stock['status_image'] = $data[0]->image;
@@ -103,6 +109,7 @@ class PhocaCartStock
 	
 	public static function getStockStatusOutput($stockStatus) {
 		$o = '';
+		
 		if ($stockStatus['stock_status'] && $stockStatus['stock_count']) {
 			$o .= $stockStatus['stock_status'] . ' ('.$stockStatus['stock_count'].')';
 		} else if (!$stockStatus['stock_status'] && $stockStatus['stock_count']) {
@@ -121,6 +128,9 @@ class PhocaCartStock
 	/* Handling of stock */
 	public static function handleStockProduct($productId, $orderStatusId, $quantity, $stockMovement = '') {
 		
+		$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		$negative_stocks		= $paramsC->get( 'negative_stocks', 1 );
+		
 		// We know the stock movement, ignore the status
 		if ($stockMovement == '+' || $stockMovement == '-') {
 			$status = array();
@@ -136,7 +146,15 @@ class PhocaCartStock
 			$db->execute();
 		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
 			$db = JFactory::getDBO();
-			$query = 'UPDATE #__phocacart_products SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$productId;
+			
+			if ($negative_stocks == 0) {
+				// we cannot have negative values in stock
+				$query = 'UPDATE #__phocacart_products SET stock = GREATEST(0, stock - '.(int)$quantity.') WHERE id = '.(int)$productId;
+			} else {
+				$query = 'UPDATE #__phocacart_products SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$productId;
+			}
+			
+			
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -145,6 +163,9 @@ class PhocaCartStock
 	
 	public static function handleStockAttributeOption($optionId, $orderStatusId, $quantity, $stockMovement = '') {
 
+		$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		$negative_stocks		= $paramsC->get( 'negative_stocks', 1 );
+		
 		// We know the stock movement, ignore the status
 		if ($stockMovement == '+' || $stockMovement == '-') {
 			$status = array();
@@ -160,7 +181,14 @@ class PhocaCartStock
 			$db->execute();
 		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
 			$db = JFactory::getDBO();
-			$query = 'UPDATE #__phocacart_attribute_values SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$optionId;
+			
+			if ($negative_stocks == 0) {
+				// we cannot have negative values in stock
+				$query = 'UPDATE #__phocacart_attribute_values SET stock = GREATEST(0, stock - '.(int)$quantity.') WHERE id = '.(int)$optionId;
+			} else {
+				$query = 'UPDATE #__phocacart_attribute_values SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$optionId;
+			}
+
 			$db->setQuery($query);
 			$db->execute();
 		}

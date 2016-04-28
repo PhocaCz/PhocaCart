@@ -27,7 +27,7 @@ class PhocaCartFileUploadMultiple
 		
 		$paramsC 		= JComponentHelper::getParams('com_phocacart');
 		$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
-		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 1 );
+		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 4 );
 	
 		JHtml::_('behavior.framework', true);// Load it here to be sure, it is loaded before jquery
 		JHtml::_('jquery.framework', false);// Load it here because of own nonConflict method (nonconflict is set below)
@@ -224,7 +224,7 @@ class PhocaCartFileUploadMultiple
 		$js.='    Uploader.bind(\'Error\', function(Up, ErrorObj) {'."\n";
 		$js.=''."\n";
 	//	$js.='         if (ErrorObj.code == 100) { '."\n";
-		//$js.='			pgJQ(\'#\' + ErrorObj.file.id).append(\'<div class="pgerrormsg">\'+ ErrorObj.message + ErrorObj.details +\'</div>\');'."\n";
+	//	$js.='        if (typeof ErrorObj.file.id !== \'undefined\') {';
 		$js.='			pgJQ(\'#\' + ErrorObj.file.id).append(\'<div class="alert alert-error">\'+ ErrorObj.message + ErrorObj.details +\'</div>\');'."\n";
 	//	$js.='         }'."\n";
 		$js.='    });	'."\n";

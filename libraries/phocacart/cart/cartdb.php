@@ -25,7 +25,8 @@ class PhocaCartCartDb
 					.' LEFT JOIN #__phocacart_shipping_methods AS s ON c.shipping = s.id'
 					.' LEFT JOIN #__phocacart_payment_methods AS p ON c.payment = p.id'
 					.' LEFT JOIN #__phocacart_coupons AS co ON c.coupon = co.id'
-					.' WHERE c.user_id = '.(int)$userId;
+					.' WHERE c.user_id = '.(int)$userId
+					.' ORDER BY c.cart';
 			$db->setQuery($query);
 			$cartDb = $db->loadAssoc();
 			

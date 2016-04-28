@@ -20,7 +20,7 @@ class PhocaCartViewTerms extends JViewLegacy
 		$this->p 					= $app->getParams();
 		$this->t['terms_conditions']= $this->p->get( 'terms_conditions', '' );
 		
-		JHTML::stylesheet('media/com_phocacart/css/main.css' );
+		$media = new PhocaCartRenderMedia();
 		
 		echo '<div class="ph-terms-box-in">';
 		echo $this->t['terms_conditions'];

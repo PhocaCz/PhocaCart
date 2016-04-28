@@ -37,7 +37,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			echo '<div class="col-sm-12 col-md-12 ph-orders-item-box-row" >';
 
 			echo '<div class="col-sm-2 col-md-2 ">'.PhocaCartOrder::getOrderNumber($v->id).'</div>';
-			$status = '<span class="label label-default">'.$v->status_title.'</span>';
+			$status = '<span class="label label-default">'.JText::_($v->status_title).'</span>';
 			echo '<div class="col-sm-2 col-md-2 ">'.$status.'</div>';
 			
 			echo '<div class="col-sm-3 col-md-3 ">'.JHtml::date($v->date, 'd. m. Y. h:s').'</div>';

@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 class PhocaCartImageAdditional
 {
-	public static function getImagesByProductId($productId) {
+	public static function getImagesByProductId($productId, $returnArray = 0) {
 	
 		$db = JFactory::getDBO();
 
@@ -19,10 +19,15 @@ class PhocaCartImageAdditional
 			    .' WHERE a.product_id = '.(int) $productId
 				.' ORDER BY a.id';
 		$db->setQuery($query);
-		$option = $db->loadObjectList();
-
+		if ($returnArray) {
+			$option = $db->loadAssocList();
+		} else {
+			$option = $db->loadObjectList();
+		}
+		
 		return $option;
 	}
+
 	
 	public static function storeImagesByProductId($productId, $imageArray) {
 	

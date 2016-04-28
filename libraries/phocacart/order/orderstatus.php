@@ -21,12 +21,13 @@ class PhocaCartOrderStatus
 			
 			$db = JFactory::getDBO();
 			$query = ' SELECT a.title, a.stock_movements, a.email_customer, a.email_others, a.email_subject, a.email_text, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
-					.' WHERE a.id = '.(int)$id;
+					.' WHERE a.id = '.(int)$id
+					.' ORDER BY a.id';
 			$db->setQuery($query);
 			$s = $db->loadObject();
 	
 			if (!empty($s) && isset($s->title) && $s->title != '') {
-				self::$status[$id]['title']				= $s->title;
+				self::$status[$id]['title']				= JText::_($s->title);
 				self::$status[$id]['id']				= (int)$id;
 				self::$status[$id]['stock_movements']	= $s->stock_movements;
 				self::$status[$id]['email_customer']	= $s->email_customer;
@@ -41,6 +42,13 @@ class PhocaCartOrderStatus
 				. ' ORDER BY a.ordering';
 				$db->setQuery( $query );
 				$data = $db->loadObjectList();
+				if (!empty($data)) {
+					foreach ($data as $k => $v) {
+						
+						$v->text = JText::_($v->text);
+					}
+					
+				}
 				self::$status[$id]['data'] = $data;
 				
 				
@@ -58,13 +66,14 @@ class PhocaCartOrderStatus
 	}
 	
 	/*
-	 * $notifyUser 0 ... no  1 ... yes 2 ... defined in order status settings
-	 * $notifyOthers   0 ... no  1 ... yes 2 ... defined in order status settings
-	 * $emailSend  0 ... no  1 ... yes 2 ... defined in order status settings
-	 * $stockMovements  = ... no  + ... plus - ... minus 2 ... defined in order status settings
+	 * $orderToken ... token of order when there is no user (guest checkout)
+	 * $notifyUser 0 ... no  1 ... yes 99 ... defined in order status settings
+	 * $notifyOthers   0 ... no  1 ... yes 99 ... defined in order status settings
+	 * $emailSend  0 ... no  1 ... order, 2 ... invoice, 3 ... delivery_note,  99 ... defined in order status settings
+	 * $stockMovements  = ... no  + ... plus - ... minus 99 ... defined in order status settings
 	 */
 	
-	public static function changeStatus( $orderId, $statusId, $notifyUser = 2, $notifyOthers = 2, $emailSend = 2, $stockMovements = '2') {
+	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99') {
 	
 	
 		
@@ -88,7 +97,7 @@ class PhocaCartOrderStatus
 			$notifyUserV = false;
 		} else if ($notifyUser == 1) {
 			$notifyUserV = true;
-		} else if ($notifyUser == 2) {
+		} else if ($notifyUser == 99) {
 			if (isset($status['email_customer']) && (int)$status['email_customer'] > 0) {
 				$notifyUserV = true;
 			}
@@ -99,7 +108,7 @@ class PhocaCartOrderStatus
 			$notifyOthersV = false;
 		} else if ($notifyOthers == 1 ) {
 			$notifyOthersV = true;
-		} else if ($notifyOthers == 2) {
+		} else if ($notifyOthers == 99) {
 			if (isset($status['email_others']) && $status['email_others'] != '') {
 				$notifyOthersV = true;
 			}
@@ -108,9 +117,26 @@ class PhocaCartOrderStatus
 		// 3) EMAIL SEND
 		if ($emailSend == 0) {
 			$emailSendV = 0;
-		} else if (($emailSend == 1 || $emailSend == 2) && (int)$status['email_send'] > 0) {
-			$emailSendV = (int)$status['email_send'];
+		} else if ($emailSend == 1) {
+			$emailSendV = 1;
+		} else if ($emailSend == 2) {
+			$emailSendV = 2;
+		} else if ($emailSend == 3) {
+			$emailSendV = 3;
+		} else if ($emailSend == 99) {
+			if (isset($status['email_send']) && $status['email_send'] == 0) {
+				$emailSendV = 0;
+			} else if (isset($status['email_send']) && $status['email_send'] == 1) {
+				$emailSendV = 1;
+			} else if (isset($status['email_send']) && $status['email_send'] == 2) {
+				$emailSendV = 2;
+			} else if (isset($status['email_send']) && $status['email_send'] == 3) {
+				$emailSendV = 3;
+			}
 		}
+		
+
+
 		
 		// 4) STOCK MOVEMENTS
 		if ($stockMovements == '0') {
@@ -120,7 +146,7 @@ class PhocaCartOrderStatus
 	
 		} else if ($stockMovements == '-') {
 			$stockMovementsV = '-';
-		} else if ($stockMovements == '2') {
+		} else if ($stockMovements == '99') {
 			if (isset($status['stock_movements']) && $status['stock_movements'] == '=') {
 				$stockMovementsV = '';
 			} else if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
@@ -209,6 +235,7 @@ class PhocaCartOrderStatus
 		if ($recipient != '' && JMailHelper::isEmailAddress($recipient)) {
 			
 			$sitename 		= $config->get('sitename');
+			
 			$orderNr = PhocaCartOrder::getOrderNumber($orderId);
 			if ($status['email_subject'] != '') {
 				$subject = $status['email_subject'] .' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr;
@@ -216,7 +243,12 @@ class PhocaCartOrderStatus
 				$subject = $sitename. ' - ' .$status['title'].' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr;
 			}
 			
-			if ($status['email_text'] != '') {
+			
+			//if ($status['email_text'] != '') {
+				$emptyBody = 0;
+				if ($status['email_text'] == '') {
+					$emptyBody = 1;
+				}
 				$body = $status['email_text'];
 				
 				// REPLACE
@@ -269,26 +301,39 @@ class PhocaCartOrderStatus
 					case 1:
 						$orderRender = new PhocaCartOrderRender();
 						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 1, 2);
+						$body .= $orderRender->render($orderId, 1, 2, $orderToken);
 					break;
 					case 2:
 						$orderRender = new PhocaCartOrderRender();
 						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 2, 2);
+						$body .= $orderRender->render($orderId, 2, 2, $orderToken);
 					break;
 					case 3:
 						$orderRender = new PhocaCartOrderRender();
 						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 3, 2);
+						$body .= $orderRender->render($orderId, 3, 2, $orderToken);
 					break;
 				
 				}
 				
-			}
+			//}
 
 			
-			if ($body == '') {
+			// if $emptyBody is empty (1) then it means, that there is not custom text
+			// so we can paste the order status message
+			// it does not mean, the body is empty, it can be filled with invoice, order or delivery note
+			// so this means:
+			// body (empty) + invoice/receipt/delivery note --> add status message
+			// body (custom text) + invoice/receipt/delivery --> don't add status message
+			// body (empty) --> add status message
+			// body (custom text) --> don't add status message
+			
+			/*if ($body == '') {
 				$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'];
+			}*/
+			
+			if ($emptyBody == 1) {
+				$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $body;
 			}
 			
 			

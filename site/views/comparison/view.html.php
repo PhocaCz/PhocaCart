@@ -59,7 +59,6 @@ class PhocaCartViewComparison extends JViewLegacy
 
 			foreach ($this->t['items'] as $k => $v) {
 			
-			
 				if($v['length'] > 0) {$this->t['value']['length'] = 1;} 
 				if($v['width'] > 0) {$this->t['value']['width'] = 1;} 
 				if($v['height'] > 0) {$this->t['value']['height'] = 1;} 
@@ -95,14 +94,10 @@ class PhocaCartViewComparison extends JViewLegacy
 			}
 		}
 		
-		
-		JHTML::stylesheet('media/com_phocacart/css/main.css' );
-		if ($this->t['load_bootstrap'] == 1) {
-			JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			$document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		}
-		
-		
+		$media = new PhocaCartRenderMedia();
+		$media->loadBootstrap($this->t['load_bootstrap']);
+		//$media->loadChosen($this->t['load_chosen']);
+		//$media->loadEqualHeights($this->t['equal_height']);
 		
 		$this->t['pathitem'] = PhocaCartPath::getPath('productimage');
 		$this->_prepareDocument();

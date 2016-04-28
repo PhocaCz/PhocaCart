@@ -12,7 +12,7 @@ if ( $this->p->get( 'show_page_heading' ) ) {
 	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
 }
 if ( $this->t['main_description'] != '') {
-	echo '<div class="ph-desc">'. $this->t['main_description']. '</div>';
+	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['main_description']). '</div>';
 }
 if (!empty($this->t['categories'])) {
 	echo '<div class="ph-categories">';

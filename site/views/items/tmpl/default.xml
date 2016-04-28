@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+<layout title="COM_PHOCACART_ITEM_LIST_LAYOUT">
+		<message>
+			<![CDATA[COM_PHOCACART_ITEM_LIST_LAYOUT_DESC]]>
+		</message>
+	</layout>
+		<name>COM_PHOCACART_ITEM_LIST_LAYOUT</name>
+		<description>COM_PHOCACART_ITEM_LIST_LAYOUT_DESC</description>
+		<fields name="request">
+		<fieldset name="request" addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+			
+		</fieldset>
+	</fields>
+	
+	<fields name="params">
+<fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields" >
+
+		<field name="show_pagination" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_DESC">
+				<option value="0">COM_PHOCACART_HIDE</option>
+				<option value="1">COM_PHOCACART_DISPLAY</option>
+			</field>
+			
+			<field name="show_pagination_limit"  class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LIMIT_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_LIMIT_DESC">
+				<option value="0">COM_PHOCACART_HIDE</option>
+				<option value="1">COM_PHOCACART_DISPLAY</option>
+			</field>
+
+		</fieldset>
+</fields>
+</metadata>

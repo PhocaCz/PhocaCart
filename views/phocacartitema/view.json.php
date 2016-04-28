@@ -32,16 +32,23 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 			
 			$query->select('a.id as id, a.title as title, a.image as image');
 			$query->from('`#__phocacart_products` AS a');
-			$query->select('c.title AS category_title, c.id AS category_id');
-			$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.catid');
+			//$query->select('c.title AS category_title, c.id AS category_id');
+			//$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.catid');
+			
+			$query->select('group_concat(c.title SEPARATOR \' \') AS categories_title');
+			$query->join('LEFT', '#__phocacart_product_categories AS pc ON pc.product_id = a.id');
+			$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
+			
 			$search = $db->Quote('%'.$db->escape($q, true).'%');
 			if ((int)$id > 0) {
 				$query->where('( a.id <> '.(int)$id.')');
 			}
 			$query->where('( a.title LIKE '.$search.')');
+			$query->group($db->escape('a.id'));
 			$query->order($db->escape('a.ordering'));
 			
 			$db->setQuery($query);
+			
 			if (!$db->query()) {
 				$response = array(
 				'status' => '0',
@@ -54,7 +61,7 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 			if (!empty($items)) {
 				foreach ($items as $k => $v) {
 					$itemsA[$k]['id'] 		= $v->id;
-					$itemsA[$k]['title'] 	= $v->title . '('.$v->category_title.')';
+					$itemsA[$k]['title'] 	= $v->title . ' ('.$v->categories_title.')';
 					if ($v->image != '') {
 						$thumb = PhocaCartFileThumbnail::getOrCreateThumbnail($v->image, '', 0, 0, 0, 0, 'productimage');
 						if ($thumb['thumb_name_s_no_rel'] != '') {

@@ -45,7 +45,7 @@ class PhocaCartPrice
 		}
 	
 		if ((int)$id > 0) {
-			$currency	= PhocaCartCurrency::getCurrency($id);
+			$currency	= PhocaCartCurrency::getCurrency((int)$id);
 		} else {
 			$currency	= PhocaCartCurrency::getCurrency();
 		}
@@ -123,14 +123,15 @@ class PhocaCartPrice
 	 * param format - format the price or not (add currency symbol, price decimals thousands separator, ...)
 	 */
 	
-	public function getPriceItems($price, $tax, $taxCalculationType, $taxTitle = '') {
+	public function getPriceItems($price, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '') {
 		
 		$priceO 			= array();
 		$paramsC 			= JComponentHelper::getParams('com_phocacart');
 		$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
+		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
 
 		$priceO['taxtxt']	= $taxTitle;
-		
+		$priceO['taxcalc'] 	= $tax_calculation;
 		// NO TAX
 		if ($tax_calculation == 0) {
 			$priceO['netto']		= $price;
@@ -138,6 +139,7 @@ class PhocaCartPrice
 			$priceO['brutto'] 		= $price;
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PRICE');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PRICE');
+			
 			
 		// EXCLUSIVE TAX
 		} else if ($tax_calculation == 1) {
@@ -170,6 +172,7 @@ class PhocaCartPrice
 			}
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PRICE_INCL_TAX');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PRICE_EXCL_TAX');	
+			
 		}
 		
 		if ($priceO['netto'] == $priceO['brutto']){
@@ -188,6 +191,14 @@ class PhocaCartPrice
 			}
 		//}
 		$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
+		
+		// Unit price
+		$priceO['base'] 		= '';
+		$priceO['baseformat'] 	= '';
+		if ($baseAmount > 0 && (int)$display_unit_price > 0) {
+			$priceO['base'] 		= $priceO['brutto'] / $baseAmount;
+			$priceO['baseformat'] 	= $this->getPriceFormat($priceO['base']).'/'.$baseUnit;
+		}
 		
 		
 		return $priceO;
@@ -360,16 +371,17 @@ class PhocaCartPrice
 		return $priceO;
 	}
 	
-	
+	// STATIC PART
 	/*
-	 * Used for example by orders - we don't want to have currenct exchange rate
+	 * Used for example by orders - we don't want to have current exchange rate
 	 * but rate which was actual in date of order
 	 */
 	public static function getCurrencyAndRateByOrder($orderId = 0) {
 		if ((int)$orderId > 0) {
 			$db = JFactory::getDBO();
-			$query = ' SELECT currency_id, currency_exchange_rate FROM #__phocacart_orders AS a'
-			    .' WHERE a.id = '.(int) $orderId;
+			$query = ' SELECT a.currency_id, a.currency_exchange_rate FROM #__phocacart_orders AS a'
+			    .' WHERE a.id = '.(int) $orderId
+				.' ORDER BY a.id';
 			$db->setQuery($query);
 
 			$currencyOrder = $db->loadObject();
@@ -383,13 +395,14 @@ class PhocaCartPrice
 		
 	}
 	
-	// STATIC PART
 	/* E.g. for payment methods, we need raw price converted by exchange rate
 	*/
-	public static function getRawPriceByCurrencyRate($price, $rate = 1) {
+	public static function convertPriceDefaultToCurrentCurrency($price, $rate = 1) {
 		$price *= $rate;
 		return $price;
 	}
-	
-	
+	public static function convertPriceCurrentToDefaultCurrency($price, $rate = 1) {
+		$price /= $rate;
+		return $price;
+	}	
 }

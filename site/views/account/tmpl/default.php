@@ -78,7 +78,7 @@ if ((int)$this->u->id > 0) {
 	$mP 	= new JRegistry();
 	$mP->loadString($module->params);
 
-	$lang = JFactory::getLanguage();
+	$lang 	= JFactory::getLanguage();
 	$lang->load('mod_login');
 	
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';

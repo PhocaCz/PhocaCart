@@ -31,9 +31,11 @@ function phCheckRequestStatus(i, task) {
 			phCheckRequestStatus(i, task);
 		}, 1000);
 	} else {
-		if (task != '<?php echo $this->t['task'] ?>.cancel' && document.id('jform_catid').value == '') {
+		<?php /*if (task != '<?php echo $this->t['task'] ?>.cancel' && document.id('jform_catid_multiple').value == '') {
 		alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(JText::_($this->t['l'].'_ERROR_CATEGORY_NOT_SELECTED'));?>');
-		} else if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+		} else */ ?> if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+			<?php echo $this->form->getField('description')->save(); ?>
+			<?php echo $this->form->getField('description_long')->save(); ?>
 			Joomla.submitform(task, document.getElementById('adminForm'));
 		}
 		else {
@@ -65,7 +67,8 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'ordering','access');
+// ORDERING cannot be used
+$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'featured', 'video');
 echo $r->group($this->form, $formArray);
 $formArray = array('description' );
 echo $r->group($this->form, $formArray, 1);
@@ -105,7 +108,7 @@ $i = 0; // i ... ATTRIBUTES
 $j = 0; // j ... OPTIONS
 if (!empty($this->attributes)) {
 	foreach ($this->attributes as $k => $v) {
-		echo $r->additionalAttributesRow((int)$i, $v->title, $v->required, $v->type, 0);
+		echo $r->additionalAttributesRow((int)$i, $v->title, $v->alias, $v->required, $v->type, 0);
 		if((int)$v->id > 0) {
 			$options	= PhocaCartAttribute::getOptionsById((int)$v->id);
 	
@@ -115,7 +118,7 @@ if (!empty($this->attributes)) {
 					if ($m == 0) {
 						echo $r->headerOption();
 					}
-					echo $r->additionalOptionsRow((int)$j, (int)$i, $v2->title, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight);
+					echo $r->additionalOptionsRow((int)$j, (int)$i, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image);
 					$j++;
 					$m++;
 				}
@@ -128,13 +131,13 @@ if (!empty($this->attributes)) {
 
 
 // Attribute	
-$newRow = $r->additionalAttributesRow('\' + phRowCountAttribute +  \'', '', '', '', 1);
+$newRow = $r->additionalAttributesRow('\' + phRowCountAttribute +  \'', '', '', '', '', 1);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 PhocaCartRenderJs::renderJsManageRowAttribute($i, $newRow);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_ATTRIBUTE'), 'attribute');
 
 // Option
-$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '');
+$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '');
 $newRow 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 $newHeader	= $r->headerOption();
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
@@ -156,12 +159,12 @@ if (!empty($this->specifications)) {
 		if ($i == 0) {
 			echo $r->headerSpecification();
 		}
-		echo $r->additionalSpecificationsRow((int)$i, $v->title, $v->value, $v->group_id, 0);
+		echo $r->additionalSpecificationsRow((int)$i, $v->title, $v->alias, $v->value, $v->alias_value, $v->group_id, 0);
 		$i++;
 	} 
 }
 	
-$newRow = $r->additionalSpecificationsRow('\' + phRowCountSpecification +  \'', '', '', '', 1);
+$newRow = $r->additionalSpecificationsRow('\' + phRowCountSpecification +  \'', '', '', '', '', '', 1);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 $newHeader	= $r->headerSpecification();
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
@@ -219,9 +222,8 @@ echo '<div class="tab-pane" id="related">'. "\n";
 $formArray = array ('related');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
-
 echo '<div class="tab-pane" id="stock">'. "\n";
-$formArray = array ('stock', 'min_quantity', 'stockstatus_a_id', 'stockstatus_b_id');
+$formArray = array ('stock', 'min_quantity', 'stockstatus_a_id', 'stockstatus_n_id');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 
@@ -231,12 +233,13 @@ echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 
 echo '<div class="tab-pane" id="size">'. "\n";
-$formArray = array ('length', 'width', 'height', 'weight', 'volume');
+$formArray = array ('length', 'width', 'height', 'weight', 'volume', 'unit_amount', 'unit_unit',);
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 
 echo '<div class="tab-pane" id="publishing">'."\n"; 
 foreach($this->form->getFieldset('publish') as $field) {
+	
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
 		echo '<div class="control-label">'.$field->label.'</div>';
