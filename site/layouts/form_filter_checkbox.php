@@ -23,7 +23,7 @@ $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
 		<div class="panel-body">
 			<?php
 			foreach ($d['items'] as $k => $v) {
-				
+			
 				$checked 	= '';
 				$value		= htmlspecialchars($v->alias);
 				if (isset($d['nrinalias']) && $d['nrinalias'] == 1) {

@@ -20,7 +20,7 @@ class PhocaCartViewComparison extends JViewLegacy
 		$model								= $this->getModel();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
-		$compare							= new PhocaCartCompare();
+		
 		//$this->t['categories']				= $model->getCategoriesList();
 
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
@@ -35,6 +35,8 @@ class PhocaCartViewComparison extends JViewLegacy
 		$this->t['unit_size']			= $this->p->get( 'unit_size', 0 );
 		$this->t['unit_weight']			= $this->p->get( 'unit_weight', 0 );
 		$this->t['unit_volume']			= $this->p->get( 'unit_volume', 0 );
+		
+		$this->t['hide_price']			= $this->p->get( 'hide_price', 0 );
 		
 		$uri 						= JFactory::getURI();
 		$this->t['action']			= $uri->toString();
@@ -86,7 +88,7 @@ class PhocaCartViewComparison extends JViewLegacy
 					}
 				}
 				
-				$stockStatus = PhocaCartStock::getStockStatus((int)$v['stock'], (int)$v['min_quantity'], (int)$v['stockstatus_a_id'],  (int)$v['stockstatus_n_id']);
+				$stockStatus = PhocaCartStock::getStockStatus((int)$v['stock'], (int)$v['min_quantity'], (int)$v['min_multiple_quantity'], (int)$v['stockstatus_a_id'],  (int)$v['stockstatus_n_id']);
 				$this->t['items'][$k]['stock'] = PhocaCartStock::getStockStatusOutput($stockStatus);
 				if ($this->t['items'][$k]['stock'] != '') {
 					$this->t['value']['stock'] = 1;
@@ -106,7 +108,7 @@ class PhocaCartViewComparison extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_COMPARISON'));
 	}
 }
 ?>

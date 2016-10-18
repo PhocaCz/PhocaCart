@@ -57,6 +57,7 @@ class JFormFieldPhocaSelectItem extends JFormField
 			
 			if ((int)$id > 0) {
 				$relatedOption	= PhocaCartRelated::getRelatedItemsById((int)$id);
+				
 				if(!empty($relatedOption)) {
 					$i = 0;
 					foreach($relatedOption as $k => $v) {

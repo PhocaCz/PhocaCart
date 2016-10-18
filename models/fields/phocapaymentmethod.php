@@ -25,7 +25,7 @@ class JFormFieldPhocaPaymentMethod extends JFormField
 		
 		$s[] 	= 'function phLoadParams(value) {';
 		$s[]	= '   var url = \''.$url.'\'';
-		$s[] 	= '   var phAjax = \'<div>'. JHtml::_( 'image', 'media/com_phocacart/images/administrator/icon-loading5.gif', ''). ' &nbsp; \' + \''. htmlspecialchars($text).'\' + \'</div>\';';
+		$s[] 	= '   var phAjax = \'<div class="ph-ajax-message"><div class="ph-loader"></div>\' + \''. htmlspecialchars($text).'\' + \'</div>\';';
 		$s[] 	= '   jQuery("#ph-extended-params-msg").html(phAjax);';
 		$s[] 	= '   jQuery("#ph-extended-params-msg").show();';
 		$s[] 	= '   jQuery("#ph-extended-params").show();';

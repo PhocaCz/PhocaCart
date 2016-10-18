@@ -16,7 +16,7 @@ class PhocaCartController extends JControllerLegacy
 	{
 		
 		if ( ! JFactory::getApplication()->input->get('view') ) {
-			JRequest::setVar('view', 'categories' );
+			JFactory::getApplication()->input->set('view', 'categories' );
 		}
 		/*if (JFactory::getApplication()->input->get('view') && JFactory::getApplication()->input->get('view') == 'feed') {
 			// Default view for Feed is XML

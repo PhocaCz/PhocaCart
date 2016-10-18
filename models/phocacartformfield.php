@@ -97,7 +97,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			if ($table->load($pk)) {
 				if (!$this->canEditState($table)) {
 					unset($pks[$i]);
-					JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDIT_STATE_NOT_PERMITTED'));
+					$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 				}
 			}
 		}

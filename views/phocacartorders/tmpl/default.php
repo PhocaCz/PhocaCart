@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.modal', 'a.modal_edit_status');
+//JHtml::_('behavior.modal', 'a.modal_edit_status');
 $class		= $this->t['n'] . 'RenderAdminViews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
@@ -49,7 +49,18 @@ echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();	
+
+
+$idMd = 'phEditStatusModal';
+$textButton = 'COM_PHOCACART_EDIT_STATUS';
+$w = 500;
+$h = 400;
+
+$rV = new PhocaCartRenderAdminView();
+echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
+
+	
 
 echo $r->startTable('categoryList');
 
@@ -76,10 +87,13 @@ $originalOrders = array();
 $parentsStr 	= "";		
 $j 				= 0;
 
+
+
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
 		//if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
 			$j++;
+			
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
@@ -107,7 +121,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -118,7 +132,7 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 if ($item->user_id > 0) {
 	$userO = $this->escape($item->user_name);
@@ -128,29 +142,44 @@ if ($item->user_id > 0) {
 } else {
 	$userO = '<span class="label label-info">'.JText::_('COM_PHOCACART_GUEST').'</span>';
 }
-echo $r->td($userO, "small hidden-phone");
+echo $r->td($userO, "small");
 
 //$status			= PhocaCartOrderStatus::getStatus((int)$item->status_id, $item->id);
 //$statusSelect	= JHTML::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="inputbox"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
 $status = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
-$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.JText::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
-echo $r->td($status, "small hidden-phone");
+//$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.JText::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
 
-$view = '<a href="'.$linkOrderView.'" class="btn btn-success btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search"></span></a>';
-$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-danger btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice"></span></a>';
-$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-warning btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note"></span></a>';
-echo $r->td($view, "small hidden-phone");
+$status .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
+
+echo $r->td($status, "small");
+
+$view = '<a href="'.$linkOrderView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search ph-icon-success"></span></a>';
+$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice ph-icon-danger"></span></a>';
+$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note ph-icon-warning"></span></a>';
+
+
+if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
+	
+	$formatPDF = '&format=pdf';
+	$view .= '<br />';
+	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search ph-icon-success"></span><br /><span class="ph-icon-success-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	
+}
+echo $r->td($view, "small");
+
 
 $price->setCurrency($item->currency_id, $item->id);
 $total = $price->getPriceFormat($item->total_amount);
-echo $r->td($total, "small hidden-phone ph-right ph-p-r-med");
+echo $r->td($total, "small ph-right ph-p-r-med");
 
-echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small hidden-phone");
-echo $r->td(JHtml::date($item->modified, 'd. m. Y h:s'), "small hidden-phone");
+echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small");
+echo $r->td(JHtml::date($item->modified, 'd. m. Y h:s'), "small");
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

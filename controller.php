@@ -6,7 +6,7 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controller');
 $app		= JFactory::getApplication();
@@ -34,6 +34,8 @@ $l['co']	= array('COM_PHOCACART_COUPONS', 'phocacartcoupons');
 $l['do']	= array('COM_PHOCACART_DOWNLOADS', 'phocacartdownloads');
 $l['tg']	= array('COM_PHOCACART_TAGS', 'phocacarttags');
 $l['fd']	= array('COM_PHOCACART_XML_FEEDS', 'phocacartfeeds');
+$l['wl']	= array('COM_PHOCACART_WISH_LISTS', 'phocacartwishlists');
+$l['qu']	= array('COM_PHOCACART_QUESTIONS', 'phocacartquestions');
 $l['sc']	= array('COM_PHOCACART_STATISTICS', 'phocacartstatistics');
 $l['lo']	= array('COM_PHOCACART_SYSTEM_LOG', 'phocacartlogs');
 $l['in']	= array('COM_PHOCACART_INFO', 'phocacartinfo');

@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
+//JHtml::_('formbehavior.chosen', 'select');
 
 //load user_profile plugin language
 $lang = JFactory::getLanguage();
@@ -148,7 +148,7 @@ echo '</div>';// end row
 echo '<div class="ph-cb"></div>';
 
 echo '<div class="pull-right ph-account-address-save">';
-echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 //echo '<input type="submit" value="submit" />';
 echo '</div>';
 

@@ -35,7 +35,7 @@ class PhocaCartCpViewPhocaCartCoupon extends JViewLegacy
 	protected function addToolbar() {
 		
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
-		JRequest::setVar('hidemainmenu', true);
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 		
 		$bar 		= JToolBar::getInstance('toolbar');
 		$user		= JFactory::getUser();

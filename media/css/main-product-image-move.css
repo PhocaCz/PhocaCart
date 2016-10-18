@@ -1,0 +1,33 @@
+/* Switch images category or items view */
+.phIBoxOH {
+    position: relative;
+}
+
+.phIBoxOH .phIBox {
+    border-radius: 0;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+.phIBoxOH .phIL,
+.phIBoxOH .phIR {
+    display: inline-block;
+    transition: opacity 0.7s ease 0s, transform 0.7s ease 0s;
+}
+
+.phIBoxOH:hover .phIL,
+.phIBoxOH:hover .phIR {
+    transform: translate(100%, 0px);
+}
+
+.phIBoxOH .phIBox .phIRBox {
+    left: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    transform: translate(-100%, 0px);
+    transition: all 0.5s ease-in-out 0s;
+    width: 100%;
+}

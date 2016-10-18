@@ -17,7 +17,7 @@ class PhocaCartCpControllerPhocaCartEditStatus extends PhocaCartCpControllerPhoc
 	
 	function editstatus() {
 	
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}

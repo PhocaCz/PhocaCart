@@ -13,7 +13,7 @@ jimport( 'joomla.filesystem.file' );
 
 class PhocaCartCpModelPhocaCartItems extends JModelList
 {
-	protected	$option 		= 'com_phocacart';
+	protected $option 	= 'com_phocacart';	
 	
 	public function __construct($config = array())
 	{

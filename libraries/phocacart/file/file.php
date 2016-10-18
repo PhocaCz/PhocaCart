@@ -40,7 +40,7 @@ class PhocaCartFile
 	public static function getFileSize($manager, $filename, $readable = 1) {
 		
 		$path			= PhocaCartPath::getPath($manager);
-		$fileNameAbs	= JPath::clean($path['orig_abs'] . DS . $filename);
+		$fileNameAbs	= JPath::clean($path['orig_abs'] . '/' . $filename);
 		
 		if ($readable == 1) {
 			return self::getFileSizeReadable(filesize($fileNameAbs));
@@ -52,7 +52,7 @@ class PhocaCartFile
 	public static function getFileTime($manager, $filename, $function, $format = "d. M Y") {
 		
 		$path			= PhocaDownloadPath::getPath($manager);
-		$fileNameAbs	= JPath::clean($path['orig_abs'] . DS . $filename);
+		$fileNameAbs	= JPath::clean($path['orig_abs'] . '/' . $filename);
 		if (JFile::exists($fileNameAbs)) {
 			switch($function) {
 				case 2:
@@ -99,7 +99,6 @@ class PhocaCartFile
 			preg_match($regex_one,$phocaDownload,$phocaDownloadParts);
 			$values_replace = array ("/^'/", "/'$/", "/^&#39;/", "/&#39;$/", "/<br \/>/");
 			$values = explode("=", $phocaDownloadParts[2], 2);	
-			
 			foreach ($values_replace as $key2 => $values2) {
 				$values = preg_replace($values2, '', $values);
 			}

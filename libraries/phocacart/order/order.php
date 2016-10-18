@@ -110,6 +110,17 @@ class PhocaCartOrder
 			exit;
 		}
 		
+		// --------------------
+		// CHECK MIN MULTIPLE QUANTITY
+		// --------------------
+		$minMultipleQuantityValid		= $cart->getMinimumMultipleQuantityValid();
+		if($minMultipleQuantityValid == 0) {
+			$msg = JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING');
+			$app->enqueueMessage($msg.$msgSuffix, 'error');
+			$app->redirect($action);
+			exit;
+		}
+		
 		
 		$db 		= JFactory::getDBO();
 		
@@ -538,12 +549,14 @@ class PhocaCartOrder
 		
 	
 		
-		if ($row->id > 0 && !empty($d['attributes'])) {
+		if ((int)$row->id > 0 && !empty($d['attributes'])) {
 			//$this->cleanTable('phocacart_order_attributes', $orderId); NOT HERE, we are in foreach
 			
 			foreach ($d['attributes'] as $k => $v) {
 				
 				$checkA = PhocaCartAttribute::checkIfRequired($v['aid'], $v['oid']);
+				
+				
 				if (!$checkA) {
 					return false;
 				}
@@ -576,8 +589,9 @@ class PhocaCartOrder
 					throw new Exception($row2->getError());
 					return false;
 				}
+				
 			}
-		} else if ($row->id > 0){
+		} else if ((int)$row->id > 0){
 			// Empty attributes - check if product include some required attribute
 			$checkA = PhocaCartAttribute::checkIfExistsAndRequired($d['product_id']);
 			if (!$checkA) {
@@ -808,7 +822,7 @@ class PhocaCartOrder
 		return str_pad($orderId, '10', '0', STR_PAD_LEFT);
 	}
 	
-	public static function getInvoiceNumber($orderId, $invoicePrefix) {
+	public static function getInvoiceNumber($orderId, $invoicePrefix = '') {
 		$l = strlen($invoicePrefix);
 		$n = 10 - $l;
 		if ($n < 0) {$n = 0;}

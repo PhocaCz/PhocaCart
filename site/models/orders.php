@@ -28,8 +28,8 @@ class PhocaCartModelOrders extends JModelLegacy
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', JRequest::getCmd('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', JRequest::getCmd('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', JFactory::getApplication()->input->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', JFactory::getApplication()->input->get('filter_order_Dir', 'ASC'));
 		
 	}
 	

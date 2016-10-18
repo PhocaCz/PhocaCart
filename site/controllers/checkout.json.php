@@ -13,7 +13,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	// Set Region
 	public function setregion() {
 	
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<div class="alert alert-danger">' . JText::_('JINVALID_TOKEN') . '</div>');
@@ -46,7 +46,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	// Change pricebox
 	function changepricebox($tpl = null){
 			
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
@@ -126,7 +126,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$d['class']			= $class;
 				// Original Price
 				$d['priceitemsorig']['bruttoformat'] = '';
-				if (isset($item->price_original) && $item->price_original != '') {
+				if (isset($item->price_original) && $item->price_original != '' && (int)$item->price_original >0) {
 					$d['priceitemsorig']['bruttoformat'] = $price->getPriceFormat($item->price_original);
 				}
 				
@@ -173,7 +173,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	// Add item to cart
 	function add($tpl = null){
 			
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');

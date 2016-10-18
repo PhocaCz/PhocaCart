@@ -81,6 +81,10 @@ class PhocaCartSpecification
 						$v['alias_value'] = PhocaCartUtils::getAliasName($v['alias_value']);
 					}
 					
+					if(empty($v['group_id'])) {
+						$v['group_id'] = 0;
+					}
+					
 					$values[] 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].')';
 				}
 				

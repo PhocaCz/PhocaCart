@@ -66,7 +66,7 @@ class PhocaCartViewAccount extends JViewLegacy
 		
 			// USER PROFILE - USER MODULE
 			jimport('joomla.application.component.model');
-			//JLoader::import('user',JPATH_SITE.DS.'components'.DS.'com_users'.DS .'models');
+			//JLoader::import('user',JPATH_SITE.'/components/com_users/models');
 			JModelLegacy::addIncludePath(JPATH_SITE.'/components/com_users/models');
 			$modelUsers 			= JModelLegacy::getInstance( 'Profile', 'UsersModel' );
 			$this->data	            = $modelUsers->getData();
@@ -96,7 +96,7 @@ class PhocaCartViewAccount extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ACCOUNT'));
 	}
 }
 ?>

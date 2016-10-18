@@ -31,7 +31,7 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 	echo '<input type="hidden" name="task" value="phocacartcart.emptycart">';
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />';
-	echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_USER_CART').'</button>';
+	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_USER_CART').'</button>';
 	echo '</div>';
 	echo JHtml::_('form.token');
 	echo '</form>';

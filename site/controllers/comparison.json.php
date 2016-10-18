@@ -13,14 +13,13 @@ class PhocaCartControllerComparison extends JControllerForm
 	
 	public function add() {
 		
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
-		
 		
 		$app					= JFactory::getApplication();
 		$item					= array();
@@ -85,7 +84,7 @@ class PhocaCartControllerComparison extends JControllerForm
 	
 	public function remove() {
 		
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');

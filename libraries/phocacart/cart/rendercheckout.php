@@ -45,6 +45,11 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 					$o[] = '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_FOR_PRODUCT'). ' '.$v['title']. ' '.JText::_('COM_PHOCACART_IS').': '.$v['minqty'].'</div>';
 				
 				}
+				
+				if (isset($v['minmltpqtyvalid']) && $v['minmltpqtyvalid'] == 0) {
+					$o[] = '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_FOR_PRODUCT'). ' '.$v['title']. ' '.JText::_('COM_PHOCACART_IS').': '.$v['minmltpqty'].'</div>';
+				
+				}
 			}
 		}
 
@@ -74,6 +79,7 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 		
 			
 			$o[] = '<tr><td colspan="'.$c.'"><div class="ph-hr"></div></td></tr>';
+			
 			
 			foreach($this->fullitems as $k => $v) {
 			
@@ -120,9 +126,9 @@ class PhocaCartRenderCheckout extends PhocaCartCart
 				$o[] = '<input type="hidden" name="option" value="com_phocacart" />';
 				$o[] = '<input type="hidden" name="return" value="'.$url['actionbase64'].'" />';
 				//UPDATE
-				$o[] = ' <button class="btn btn-success btn-xs ph-btn" role="button" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="glyphicon glyphicon-refresh"></span></button>';
+				$o[] = ' <button class="btn btn-success btn-xs ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="glyphicon glyphicon-refresh"></span></button>';
 				//DELETE
-				$o[] = ' <button class="btn btn-danger btn-xs ph-btn" role="button" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="glyphicon glyphicon-trash"></span></button>';
+				$o[] = ' <button class="btn btn-danger btn-xs ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="glyphicon glyphicon-trash"></span></button>';
 				$o[] = JHtml::_('form.token');
 				$o[] = '</div>';
 				$o[] = '</form>';

@@ -11,6 +11,12 @@ defined('_JEXEC') or die();
 if (! class_exists('PhocaCartCategory')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/category.php');
 }
+if (! class_exists('PhocaCartCategoryMultiple')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/categorymultiple.php');
+}
+
+$lang = JFactory::getLanguage();
+$lang->load('com_phocacart');
 
 class JFormFieldPhocaCartCategory extends JFormField
 {
@@ -52,8 +58,8 @@ class JFormFieldPhocaCartCategory extends JFormField
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 	
-		// TODO - check for other views than category edit
-		$view 	= JRequest::getVar( 'view' );
+		// TO DO - check for other views than category edit
+		$view 	= JFactory::getApplication()->input->get( 'view' );
 		$catId	= -1;
 		if ($view == 'phocacartcategory') {
 			$id 	= $this->form->getValue('id'); // id of current category

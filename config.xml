@@ -9,7 +9,9 @@
 
 <field name="checkout_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_DESC" />
 
-<field name="phocahead5" type="phocahead" default="COM_PHOCACART_CATEGORIES_VIEW_LABEL" label="" description=""/>
+
+
+<field name="phocahead1" type="phocahead" default="COM_PHOCACART_CATEGORIES_VIEW_LABEL" label="" description=""/>
 
 
 <field name="columns_cats" type="list" default="3" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_DESC">
@@ -23,7 +25,6 @@
 
 <field name="csv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_DESC" />
 
-
 <field name="csv_display_category_desc" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_DESCRIPTION_CSV_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_DESCRIPTION_CSV_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
@@ -33,15 +34,26 @@
 
 <field name="image_height_cats" default="" size="10" type="text" label="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORIES_VIEW_DESC" />
 
+<field name="display_view_category_button" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="2">COM_PHOCACART_YES_ICON_ONLY</option>
+</field>
+
+<field name="category_name_link" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_CATEGORY_NAME_AS_LINK_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_NAME_AS_LINK_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
 
 
 
+<field name="phocahead2" type="phocahead" default="COM_PHOCACART_CATEGORY_VIEW_LABEL" label="" description=""/>
 
-<field name="phocahead6" type="phocahead" default="COM_PHOCACART_CATEGORY_VIEW_LABEL" label="" description=""/>
 
 <field name="category_addtocart" type="list" default="1" label="COM_PHOCACART_FIELD_ADD_TO_CART_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_CART_CATEGORY_VIEW_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES_STANDARD</option>
+	<option value="4">COM_PHOCACART_YES_STANDARD_ICON_ONLY</option>
 	<option value="2">COM_PHOCACART_YES_BUY_NOW_PADDLE</option>
 	<option value="3">COM_PHOCACART_YES_EXTERNAL_LINK</option>
 </field>
@@ -84,35 +96,59 @@
 
 <field name="item_pagination_default" default="20" size="18" type="text" label="COM_PHOCACART_FIELD_DEFAULT_VALUE_PAGINATION_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_VALUE_PAGINATION_PRODUCTS_DESC"/>
 
-
 <field name="display_item_ordering"  class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ORDERING_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ORDERING_CATEGORY_VIEW_DESC">
-		<option value="0">COM_PHOCACART_HIDE</option>
-		<option value="1">COM_PHOCACART_DISPLAY</option>
-	</field>
-
-
-
+	<option value="0">COM_PHOCACART_HIDE</option>
+	<option value="1">COM_PHOCACART_DISPLAY</option>
+</field>
 
 <field name="image_width_cat" default="" size="10" type="text" label="COM_PHOCACART_FIELD_IMAGE_WIDTH_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_IMAGE_WIDTH_CATEGORY_VIEW_DESC" />
 
 <field name="image_height_cat" default="" size="10" type="text" label="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORY_VIEW_DESC" />
 
 
-<field name="phocahead11" type="phocahead" default="COM_PHOCACART_ITEMS_VIEW_LABEL" label="" description=""/>
+
+<field name="phocahead3" type="phocahead" default="COM_PHOCACART_ITEMS_VIEW_LABEL" label="" description=""/>
+
 
 <field name="items_addtocart" type="list" default="1" label="COM_PHOCACART_FIELD_ADD_TO_CART_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_CART_ITEMS_VIEW_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES_STANDARD</option>
+	<option value="4">COM_PHOCACART_YES_STANDARD_ICON_ONLY</option>
 	<option value="2">COM_PHOCACART_YES_BUY_NOW_PADDLE</option>
 	<option value="3">COM_PHOCACART_YES_EXTERNAL_LINK</option>
 </field>
 
 
-<field name="phocahead9" type="phocahead" default="COM_PHOCACART_ITEM_VIEW_LABEL" label="" description=""/>
+
+<field name="phocahead4" type="phocahead" default="COM_PHOCACART_CATEGORY_AND_ITEMS_VIEW_LABEL" label="" description=""/>
+
+
+<field name="display_view_product_button" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_VIEW_PRODUCT_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_VIEW_PRODUCT_BUTTON_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="2">COM_PHOCACART_YES_ICON_ONLY</option>
+</field>
+
+<field name="product_name_link" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_PRODUCT_NAME_AS_LINK_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_NAME_AS_LINK_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="switch_image_category_items" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+
+
+
+<field name="phocahead5" type="phocahead" default="COM_PHOCACART_ITEM_VIEW_LABEL" label="" description=""/>
+
 
 <field name="item_addtocart" type="list" default="1" label="COM_PHOCACART_FIELD_ADD_TO_CART_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_CART_ITEM_VIEW_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES_STANDARD</option>
+	<option value="4">COM_PHOCACART_YES_STANDARD_ICON_ONLY</option>
 	<option value="2">COM_PHOCACART_YES_BUY_NOW_PADDLE</option>
 	<option value="3">COM_PHOCACART_YES_EXTERNAL_LINK</option>
 </field>
@@ -139,7 +175,21 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-<field name="phocahead13" type="phocahead" default="COM_PHOCACART_CHECKOUT_VIEW_LABEL" label="" description=""/>
+<field name="item_askquestion" type="list" default="0" label="COM_PHOCACART_FIELD_ASK_A_QUESTON_BUTTON_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_ASK_A_QUESTON_BUTTON_ITEM_VIEW_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="2">COM_PHOCACART_YES_ONLY_IF_ADD_TO_CART_NOT_DISPLAYED</option>
+</field>
+
+<field name="popup_askquestion" type="list" default="1" label="COM_PHOCACART_FIELD_ASK_A_QUESTON_POPUP_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_ASK_A_QUESTON_POPUP_ITEM_VIEW_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+
+
+<field name="phocahead6" type="phocahead" default="COM_PHOCACART_CHECKOUT_VIEW_LABEL" label="" description=""/>
+
 
 <field name="display_shipping_desc" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_DESCRIPTION_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -155,7 +205,24 @@
 
 <field name="phocahead7" type="phocahead" default="COM_PHOCACART_GENERAL_DISPLAY_OPTIONS_LABEL" label="" description=""/>
 
+
 <field name="display_compare" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_COMPARE_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_COMPARE_ICON_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+
+<field name="display_wishlist" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WISH_LIST_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_WISH_LIST_ICON_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_quickview" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="fade_in_action_icons" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_FADE_IN_ACTION_ICONS_LABEL" description="COM_PHOCACART_FIELD_FADE_IN_ACTION_ICONS_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
@@ -170,6 +237,10 @@
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
+
+<field name="zero_price_text" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_DESC" />
+
+<field name="zero_price_label" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_DESC" />
 
 <field name="display_back" type="list" class="btn-group btn-group-yesno" default="3" label="COM_PHOCACART_FIELD_DISPLAY_BACK_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_BACK_BUTTON_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
@@ -192,7 +263,6 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-
 <field name="cart_metakey" default="" type="textarea" label="COM_PHOCACART_FIELD_META_KEYWORDS_LABEL" description="COM_PHOCACART_FIELD_META_KEYWORDS_DESC" />
 
 <field name="cart_metadesc" default="" type="textarea" label="COM_PHOCACART_FIELD_META_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_META_DESCRIPTION_DESC" />
@@ -212,7 +282,10 @@
 	<option value="2">COM_PHOCACART_MAGNIFIC</option>
 </field>
 
-<field name="phocahead14" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
+
+
+<field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
+
 
 <field name="add_cart_method" type="list" default="0" label="COM_PHOCACART_FIELD_ADD_TO_CART_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_CART_METHOD_DESC">
 	<option value="0">COM_PHOCACART_STANDARD</option>
@@ -226,15 +299,19 @@
 	<option value="2">COM_PHOCACART_AJAX_WITH_POPUP_WINDOW</option>
 </field>
 
+<field name="add_wishlist_method" type="list" default="0" label="COM_PHOCACART_FIELD_ADD_TO_WISH_LIST_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_WISH_LIST_METHOD_DESC">
+	<option value="0">COM_PHOCACART_STANDARD</option>
+	<option value="1">COM_PHOCACART_AJAX</option>
+	<option value="2">COM_PHOCACART_AJAX_WITH_POPUP_WINDOW</option>
+</field>
+
+
 		</fieldset>
 		
-
-
-	
-		
 		<fieldset name="calculation" label="COM_PHOCACART_CONFIG_HEAD_CALCULATION_LABEL">
+
 		
-		<field name="tax_calculation" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_TAX_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_TAX_CALCULATION_DESC">
+<field name="tax_calculation" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_TAX_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_TAX_CALCULATION_DESC">
 	<option value="2">COM_PHOCACART_TAX_INCLUSIVE_PRICE</option>
 	<option value="1">COM_PHOCACART_TAX_EXCLUSIVE_PRICE</option>
 	<option value="0">COM_PHOCACART_NO_TAX_PRICE</option>
@@ -246,7 +323,7 @@
 	<option value="0">COM_PHOCACART_NO_TAX_PRICE</option>
 </field>
 		
-		<field name="shipping_amount_rule" type="list" default="0" label="COM_PHOCACART_FIELD_AMOUNT_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_RULE_SHIPPING_DESC">
+<field name="shipping_amount_rule" type="list" default="0" label="COM_PHOCACART_FIELD_AMOUNT_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_RULE_SHIPPING_DESC">
 	<option value="2">COM_PHOCACART_TAX_INCLUSIVE_AMOUNT</option>
 	<option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
 	<option value="0">COM_PHOCACART_NO_TAX_AMOUNT</option>
@@ -258,7 +335,7 @@
 	<option value="0">COM_PHOCACART_NO_TAX_PRICE</option>
 </field>
 		
-		<field name="payment_amount_rule" type="list" default="0" label="COM_PHOCACART_FIELD_AMOUNT_RULE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_RULE_PAYMENT_DESC">
+<field name="payment_amount_rule" type="list" default="0" label="COM_PHOCACART_FIELD_AMOUNT_RULE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_RULE_PAYMENT_DESC">
 	<option value="2">COM_PHOCACART_TAX_INCLUSIVE_AMOUNT</option>
 	<option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
 	<option value="0">COM_PHOCACART_NO_TAX_AMOUNT</option>
@@ -271,39 +348,39 @@
 
 
 
+<field name="phocahead9" type="phocahead" default="COM_PHOCACART_CONFIG_STOCK_LABEL" label="" description=""/>
 
-<field name="phocahead1" type="phocahead" default="COM_PHOCACART_CONFIG_STOCK_LABEL" label="" description=""/>
 
 <field name="stock_checking" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_STOCK_CHECKING_LABEL" description="COM_PHOCACART_FIELD_STOCK_CHECKING_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
+<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="stock_checkout" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_CHECKOUT_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
+<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="negative_stocks" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_NEGATIVE_STOCKS_LABEL" description="COM_PHOCACART_FIELD_NEGATIVE_STOCKS_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
+<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="display_stock_status" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_STATUS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_STATUS_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
+<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
+
+
 <field name="phocahead10" type="phocahead" default="COM_PHOCACART_CONFIG_CHECKOUT_LABEL" label="" description=""/>
+
 
 <field name="min_order_amount" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_MINIMUM_ORDER_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_ORDER_AMOUNT_DESC"/>
 
 
 
-
-
-
-<field name="phocahead2" type="phocahead" default="COM_PHOCACART_CONFIG_UNITS" label="" description=""/>
+<field name="phocahead11" type="phocahead" default="COM_PHOCACART_CONFIG_UNITS" label="" description=""/>
 
 
 <field name="unit_size" default="mm" type="list" label="COM_PHOCACART_FIELD_SIZE_UNIT_LABEL" description="COM_PHOCACART_FIELD_SIZE_UNIT_DESC" >
@@ -337,38 +414,40 @@
 		
 		<fieldset name="users" label="COM_PHOCACART_CONFIG_HEAD_USERS_LABEL">
 
+		
 <field name="display_edit_profile" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_EDIT_PROFILE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_EDIT_PROFILE_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-		<field name="guest_checkout" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
+<field name="guest_checkout" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_DESC" >
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="order_guest_access" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_LABEL" description="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="download_guest_access" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DOWNLOAD_GUEST_ACCESS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_GUEST_ACCESS_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="enable_review" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_ENABLE_REVIEW_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 		
 		<field name="approve_review" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_APPROVE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_APPROVE_REVIEW_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 
-<field name="phocahead4" type="phocahead" default="COM_PHOCACART_CONFIG_DOWNLOAD_LABEL" label="" description=""/>
+
+<field name="phocahead12" type="phocahead" default="COM_PHOCACART_CONFIG_DOWNLOAD_LABEL" label="" description=""/>
 
 <field name="download_days" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_DESC"/>
 
@@ -379,38 +458,156 @@
 		<fieldset name="main" label="COM_PHOCACART_CONFIG_HEAD_MAIN_LABEL">
 		
 		
-		<field name="enable_logging" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_LOGGING_LABEL" description="COM_PHOCACART_FIELD_ENABLE_LOGGING_DESC" >
-	<option value="0">COM_PHOCACART_NO</option>
+<field name="enable_logging" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_LOGGING_LABEL" description="COM_PHOCACART_FIELD_ENABLE_LOGGING_DESC" >
 	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 		
-		
-<field name="phocahead8" type="phocahead" default="COM_PHOCACART_IMAGES_AND_THUMBNAILS_LABEL" label="" description=""/>
+	
+	
+<field name="phocahead13" type="phocahead" default="COM_PHOCACART_IMAGES_AND_THUMBNAILS_LABEL" label="" description=""/>
+
 
 <field name="large_image_width" default="640" size="4" type="text" label="COM_PHOCACART_FIELD_LARGE_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_LARGE_IMAGE_WIDTH_DESC"/>
+
 <field name="large_image_height" default="480" size="4" type="text" label="COM_PHOCACART_FIELD_LARGE_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_LARGE_IMAGE_HEIGHT_DESC"/>
 
 <field name="medium_image_width" default="300" size="4" type="text" label="COM_PHOCACART_FIELD_MEDIUM_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_MEDIUM_IMAGE_WIDTH_DESC"/>
+
 <field name="medium_image_height" default="200" size="4" type="text" label="COM_PHOCACART_FIELD_MEDIUM_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_MEDIUM_IMAGE_HEIGHT_DESC"/>
 
 <field name="small_image_width" default="180" size="4" type="text" label="COM_PHOCACART_FIELD_SMALL_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_SMALL_IMAGE_WIDTH_DESC"/>
+
 <field name="small_image_height" default="120" size="4" type="text" label="COM_PHOCACART_FIELD_SMALL_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_SMALL_IMAGE_HEIGHT_DESC"/>
 
+<field name="crop_thumbnail" type="list" default="5" label="COM_PHOCACART_FIELD_CROP_THUMBNAIL_LABEL" description="COM_PHOCACART_FIELD_CROP_THUMBNAIL_DESC">
+	<option value="0">COM_PHOCACART_NONE</option>
+	<option value="1">COM_PHOCACART_ONLY_LARGE_THUMBNAIL</option>
+	<option value="2">COM_PHOCACART_ONLY_MEDIUM_THUMBNAIL</option>
+	<option value="3">COM_PHOCACART_ONLY_SMALL_THUMBNAIL</option>
+	<option value="4">COM_PHOCACART_LARGE_AND_MEDIUM_THUMBNAIL</option>
+	<option value="5">COM_PHOCACART_MEDIUM_AND_SMALL_THUMBNAIL</option>
+	<option value="6">COM_PHOCACART_SMALL_AND_LARGE_THUMBNAIL</option>
+	<option value="7">COM_PHOCACART_ALL</option>
+</field>
 
-<field name="phocahead12" type="phocahead" default="COM_PHOCACART_GENERAL_OPTIONS_LABEL" label="" description=""/>
+
+
+<field name="phocahead14" type="phocahead" default="COM_PHOCACART_GENERAL_OPTIONS_LABEL" label="" description=""/>
+
 
 <field name="invoice_prefix" default="" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_PREFIX_LABEL" description="COM_PHOCACART_FIELD_INVOICE_PREFIX_DESC"/>
+
 <field name="invoice_terms_payment" default="" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_TERMS_OF_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_INVOICE_TERMS_OF_PAYMENT_DESC"/>
+
+<field name="attachment_format" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_DESC" >
+	<option value="0">COM_PHOCACART_HTML</option>
+	<option value="1">COM_PHOCACART_PDF</option>
+	<option value="2">COM_PHOCACART_BOTH</option>
+</field>
+
+
+
+<field name="phocahead15" type="phocahead" default="COM_PHOCACART_CATALOG_OPTIONS_LABEL" label="" description=""/>
+
+
+<field name="hide_price" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_PRICES_LABEL" description="COM_PHOCACART_FIELD_HIDE_PRICES_DESC" >
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="hide_addtocart" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_LABEL" description="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_DESC" >
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="hide_attributes" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_LABEL" >
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+
+
+<field name="phocahead16" type="phocahead" default="COM_PHOCACART_ASK_QUESTION_FEEDBACK_REPORT_OPTIONS_LABEL" label="" description=""/>
+
+
+<field name="enable_ask_question" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_ENABLE_ASK_QUESTION_LABEL" description="COM_PHOCACART_FIELD_ENABLE_ASK_QUESTION_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="question_description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_DESC" />
+
+<field name="display_name_form" class="btn-group" type="radio" default="2" label="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="2">COM_PHOCACART_YES_REQUIRED</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_email_form" class="btn-group" type="radio" default="2" label="COM_PHOCACART_FIELD_DISPLAY_EMAIL_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_EMAIL_FORM_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="2">COM_PHOCACART_YES_REQUIRED</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_phone_form" class="btn-group" type="radio" default="2" label="COM_PHOCACART_FIELD_DISPLAY_PHONE_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PHONE_FORM_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="2">COM_PHOCACART_YES_REQUIRED</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_message_form" class="btn-group" type="radio" default="2" label="COM_PHOCACART_FIELD_DISPLAY_MESSAGE_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_MESSAGE_FORM_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="2">COM_PHOCACART_YES_REQUIRED</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="enable_captcha_question" class="btn-group" type="radio" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_LABEL" description="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_DESC">
+	<option value="2">COM_PHOCACART_YES_REQUIRED</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="enable_hidden_field_question" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_QUESTION_LABEL" description="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_QUESTION_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="enable_time_check_question" type="text" default="0"  label="COM_PHOCACART_FIELD_ENABLE_TIME_CHECK_QUESTION_LABEL" description="COM_PHOCACART_FIELD_ENABLE_TIME_CHECK_QUESTION_DESC">
+</field>
+
+<field name="ip_ban" type="textarea" rows="2" cols="40" default="" label="COM_PHOCACART_FIELD_IP_BAN_LABEL" description="COM_PHOCACART_FIELD_IP_BAN_DESC"/>
+
+<field name="forbidden_word_filter" type="textarea" rows="3" cols="40" default="" label="COM_PHOCACART_FIELD_FORBIDDEN_WORD_FILTER_QUESTION_LABEL" description="COM_PHOCACART_FIELD_FORBIDDEN_WORD_FILTER_QUESTION_DESC"/>
+
+<field name="forbidden_whole_word_filter" type="textarea" rows="3" cols="40" default="" label="COM_PHOCACART_FIELD_FORBIDDEN_WHOLE_WORD_FILTER_QUESTION_LABEL" description="COM_PHOCACART_FIELD_FORBIDDEN_WHOLE_WORD_FILTER_QUESTION_DESC"/>
+
+<field name="max_char_question" default="3000" type="text" label="COM_PHOCACART_FIELD_MAXIMUM_CHARACTERS_MESSAGE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_CHARACTERS_MESSAGE_DESC"/>
+
+<field name="max_char_question_email" default="1000" type="text" label="COM_PHOCACART_FIELD_MAXIMUM_CHARACTERS_MESSAGE_EMAIL_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_CHARACTERS_MESSAGE_EMAIL_DESC"/>
+
+<field name="send_email_question"  type="user" section="com_phocacart" default="" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_DESC"/>
+
+
+
+<field name="phocahead17" type="phocahead" default="COM_PHOCACART_SECURITY_OPTIONS_LABEL" label="" description=""/>
+
+
+<field name="session_suffix" default="" type="text" label="COM_PHOCACART_FIELD_SESSION_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_SESSION_SUFFIX_DESC" />
+
+<field name="recaptcha_sitekey" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_LABEL"  description="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_DESC"/>  
+
+<field name="recaptcha_privatekey" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_DESC"/>
 
 
 		</fieldset>
 		
 		<fieldset name="store" label="COM_PHOCACART_CONFIG_HEAD_STORE_LABEL">
 		
+		
 <field name="store_title"  type="text" default="" label="COM_PHOCACART_FIELD_STORE_TITLE_LABEL" description="COM_PHOCACART_FIELD_STORE_TITLE_DESC" filter="string" />
 		
 <field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC" />
-					
+	
 <field name="store_info" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_STORE_INFORMATION_DESC" />
 
 
@@ -418,6 +615,7 @@
 	
 		<fieldset name="permissions_label" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
 			<field name="rules" type="rules" component="com_phocacart" filter="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component" description=""/>
+		
 		</fieldset>
 	
 	</fields>

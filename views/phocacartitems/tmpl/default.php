@@ -86,6 +86,8 @@ $originalOrders = array();
 $parentsStr 	= "";		
 $j 				= 0;
 
+$price			= new PhocaCartPrice();
+
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
 		//if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
@@ -116,7 +118,7 @@ echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->category_id.'" >'. "\n"
 
 //echo '<td>'.$item->category_id. '/'.$orderkey.'</td>';
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $this->t['ordering']);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');				
 $checkO = '';
 if ($item->checked_out) {
@@ -128,12 +130,12 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->title);
 }
 $checkO .= '<br /><span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 echo $r->td(
 	'<div class="btn-group">'.JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange)
 	. PhocaCartFeatured::featured($item->featured, $i, $canChange). '</div>',
-"small hidden-phone");
+"small");
 /*
 if ($canEditCat) {
 	$catO = '<a href="'. JRoute::_($linkCat).'">'. $this->escape($item->category_title).'</a>';
@@ -152,20 +154,20 @@ if (isset($this->t['categories'][$item->id])) {
 	}
 }
 
-echo $r->td(implode(' ', $catO), "small hidden-phone");	
-//echo $r->td($this->escape($item->access_level), "small hidden-phone");	
+echo $r->td(implode(' ', $catO), "small");	
+//echo $r->td($this->escape($item->access_level), "small");	
 						
 
-echo $r->td($item->price, "small hidden-phone");
-//echo $r->td($item->hits, "small hidden-phone");
+echo $r->td(PhocaCartPrice::cleanPrice($item->price), "small");
+//echo $r->td($item->hits, "small");
 
 
 
 echo $r->td($this->escape($item->access_level));
 
 echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
-echo $r->td($item->hits, "small hidden-phone");
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->hits, "small");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

@@ -11,9 +11,9 @@ defined('_JEXEC') or die();
 class PhocaCartControllerComparison extends JControllerForm
 {
 	
-	public function add() {
+	public function add() { 
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -33,7 +33,7 @@ class PhocaCartControllerComparison extends JControllerForm
 	
 		public function remove() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );

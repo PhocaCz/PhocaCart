@@ -8,12 +8,11 @@
  */
 defined('_JEXEC') or die();
 
+
 echo '<div id="ph-pc-download-box" class="pc-download-view'.$this->p->get( 'pageclass_sfx' ).'">';
-if ( $this->p->get( 'show_page_heading' ) ) { 
-	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
-} else {
-	echo '<h1>'. JText::_('COM_PHOCACART_DOWNLOAD'). '</h1>';
-}
+
+
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_DOWNLOAD')));
 
 if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_order'] != '')) {
 	if (!empty($this->t['files'])) {
@@ -88,7 +87,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 				echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 				echo '<input type="hidden" name="d" value="'.$this->t['token_download'].'" />';
 				echo '<input type="hidden" name="o" value="'.$this->t['token_order'].'" />';
-				echo '<button type="submit" class="btn btn-primary ph-btn" role="button"><span class="glyphicon glyphicon-download"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
+				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-download"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
 				echo JHtml::_('form.token');
 				echo '</form>';
 				

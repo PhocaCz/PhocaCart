@@ -103,9 +103,9 @@ class PhocaCartPrice
 	
 		if ($format == 0) { // IS USED FOR PERCENTAGE IN VAT TITLE ... e.g. VAT(10%)
 			if ($taxCalculationType == 2) { // FIX
-				$tax = $tax;
+				$tax = $tax + 0;
 			} else { // Percentage
-				$tax = $tax.'%';
+				$tax = ($tax + 0) .'%';
 			}
 		} else { // IS USED FOR PERCENTAGE in CALCUTATION: ... VAT(10%) --> 10,00 %
 			if ($taxCalculationType == 2) { // FIX
@@ -123,12 +123,15 @@ class PhocaCartPrice
 	 * param format - format the price or not (add currency symbol, price decimals thousands separator, ...)
 	 */
 	
-	public function getPriceItems($price, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '') {
+	public function getPriceItems($price, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0) {
 		
 		$priceO 			= array();
 		$paramsC 			= JComponentHelper::getParams('com_phocacart');
 		$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
 		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
+		$zero_price_text	= $paramsC->get( 'zero_price_text', '' );
+		$zero_price_label	= $paramsC->get( 'zero_price_label', '' );
+
 
 		$priceO['taxtxt']	= $taxTitle;
 		$priceO['taxcalc'] 	= $tax_calculation;
@@ -154,6 +157,7 @@ class PhocaCartPrice
 				$priceO['taxtxt']	= $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
 				
 			}
+			
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PRICE_INCL_TAX');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PRICE_EXCL_TAX');		
 	
@@ -198,6 +202,19 @@ class PhocaCartPrice
 		if ($baseAmount > 0 && (int)$display_unit_price > 0) {
 			$priceO['base'] 		= $priceO['brutto'] / $baseAmount;
 			$priceO['baseformat'] 	= $this->getPriceFormat($priceO['base']).'/'.$baseUnit;
+		}
+		
+		if ($price == 0 && $zeroPrice == 1) {
+			if ($zero_price_text != '') {
+				$priceO['nettoformat'] = $priceO['bruttoformat'] = $priceO['taxformat'] = JText::_($zero_price_text);
+			}
+			
+			if ($zero_price_label == '0') {
+				$priceO['nettotxt'] = $priceO['bruttotxt'] = $priceO['taxtxt'] = '';
+			} else if ($zero_price_label != '') {
+				$priceO['nettotxt'] = $priceO['bruttotxt'] = $priceO['taxtxt'] = JText::_($zero_price_label);
+			}
+			
 		}
 		
 		
@@ -405,4 +422,7 @@ class PhocaCartPrice
 		$price /= $rate;
 		return $price;
 	}	
+	public static function cleanPrice($price) {
+		return $price + 0;
+	}
 }

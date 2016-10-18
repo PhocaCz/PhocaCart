@@ -32,7 +32,7 @@ class PhocaCartControllerAccount extends JControllerForm
 		
 		// PHOCAEDIT
 		jimport('joomla.application.component.model');
-		//JLoader::import('user',JPATH_SITE.DS.'components'.DS.'com_users'.DS .'models');
+		//JLoader::import('user',JPATH_SITE.'/components/com_users/models');
 		JModelLegacy::addIncludePath(JPATH_SITE.'/components/com_users/models');
 		$model = JModelLegacy::getInstance( 'Profile', 'UsersModel' );
 		$this->data	  = $model->getData();
@@ -50,7 +50,7 @@ class PhocaCartControllerAccount extends JControllerForm
 		
 		if (!$form)
 		{
-			JError::raiseError(500, $model->getError());
+			throw new Exception($model->getError(), 500);
 			return false;
 		}
 

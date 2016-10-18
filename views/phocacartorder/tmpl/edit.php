@@ -22,7 +22,7 @@ Joomla.submitbutton = function(task) {
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
 	else {
-		alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
+		Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
 	}
 }
 </script><?php
@@ -103,9 +103,9 @@ if (!empty($this->itemproducts)) {
 		echo '<tr>';
 		echo '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'pform', 2).'</td>';
 		echo '<td>'.$r->itemCalc($v->id, 'quantity', $v->quantity, 'pform', 0).'</td>';
-		echo '<td>'.$r->itemCalc($v->id, 'netto', $v->netto).'</td>';
-		echo '<td>'.$r->itemCalc($v->id, 'tax', $v->tax).'</td>';
-		echo '<td>'.$r->itemCalc($v->id, 'brutto', $v->brutto).'</td>';
+		echo '<td>'.$r->itemCalc($v->id, 'netto', PhocaCartPrice::cleanPrice($v->netto)).'</td>';
+		echo '<td>'.$r->itemCalc($v->id, 'tax', PhocaCartPrice::cleanPrice($v->tax)).'</td>';
+		echo '<td>'.$r->itemCalc($v->id, 'brutto', PhocaCartPrice::cleanPrice($v->brutto)).'</td>';
 		echo '<td align="center">'.$r->itemCalcCheckBox($v->id, 'published', $v->published).'</td>';
 		echo '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->dbrutto).' )</td>';
 		echo '</tr>';
@@ -114,9 +114,9 @@ if (!empty($this->itemproducts)) {
 			echo '<tr>';
 			echo '<td colspan="2" align="right">'.JText::_('COM_PHOCACART_PRICE_AFTER_DISCOUNT').': </td>';
 			//echo '<td></td>';
-			echo '<td>'.$r->itemCalc($v->id, 'dnetto', $v->dnetto).'</td>';
-			echo '<td>'.$r->itemCalc($v->id, 'dtax', $v->dtax).'</td>';
-			echo '<td>'.$r->itemCalc($v->id, 'dbrutto', $v->dbrutto).'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'dnetto', PhocaCartPrice::cleanPrice($v->dnetto)).'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'dtax', PhocaCartPrice::cleanPrice($v->dtax)).'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'dbrutto', PhocaCartPrice::cleanPrice($v->dbrutto)).'</td>';
 			echo '<td align="center"></td>';
 			echo '<td class="ph-col-add-cur">( '.$this->pr->getPriceFormat($v->dbrutto).' )</td>';
 			echo '</tr>';
@@ -162,7 +162,7 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 		}
 	
 		echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
-		echo '<td>'.$r->itemCalc($v->id, 'amount', $v->amount, 'tform').'</td>';
+		echo '<td>'.$r->itemCalc($v->id, 'amount', PhocaCartPrice::cleanPrice($v->amount), 'tform').'</td>';
 		echo '<td align="center">'.$r->itemCalcCheckBox($v->id, 'published', $v->published, 'tform').'</td>';
 		echo '<td class="ph-col-add-cur">( '.$this->pr->getPriceFormat($v->amount).' )</td>';
 		echo '</tr>';

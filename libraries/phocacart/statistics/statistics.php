@@ -9,16 +9,18 @@
 defined('_JEXEC') or die();
 final class PhocaCartStatistics
 {
-	private function __construct(){}
-
-	public static function renderChartJs($dataA, $dataALabel, $dataB, $dataBLabel, $dataX) {
-
+	protected $fn = array();
+	
+	public function __construct() {
 
 		$document	= JFactory::getDocument();
 		JHtml::_('jquery.framework', false);
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/chartjs/Chart.min.js');
-		
-		
+		//$document->addScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.js');
+	}
+
+	public function renderChartJsLine($id, $dataA, $dataALabel, $dataB, $dataBLabel, $dataX) {
+
 		$bC 	= 'rgba(151,187,205,1)';
 		$baC	= 'rgba(151,187,205,0.1)';
 		$pbC	= 'rgba(255,255,255,1)';
@@ -29,10 +31,8 @@ final class PhocaCartStatistics
 		$pbC2	= 'rgba(255,255,255,1)';
 		$pbaC2 	= 'rgba(220,220,220,1)';
 		
-		
 		$o = "
-		
-var config = {
+var config".$id." = {
 type: 'line',
 data: {
 	datasets: [{
@@ -47,7 +47,6 @@ data: {
 		radius: 4,
 		pointHoverRadius: 5,
 		 
-		
 		label: '".htmlspecialchars($dataALabel)."',
 		/*fillColor: '#fff',
 		strokeColor: '#fff',
@@ -55,8 +54,7 @@ data: {
 		pointStrokeColor: '#fff',
 		pointHighlightFill: '#000',
 		pointHighlightStroke: '#fff'*/
-		
-		
+
 	}, {
 	   data: [".$dataB."],
 		yAxisID: 'y-axis-1',
@@ -69,21 +67,13 @@ data: {
 		pointHoverRadius: 5,
 		
 		label: '".htmlspecialchars($dataBLabel)."',
-		
-		
-		
+
 	}],
 	labels: [".htmlspecialchars($dataX)."
 	],
-	
 },
-
-
-
- scaleIntegersOnly: true,
-
+scaleIntegersOnly: true,
 options: {  
-		
 		responsive: true,
 		hoverMode: 'label',
 		stacked: false,
@@ -147,21 +137,73 @@ options: {
 			}],
 		},
 	}
-};
-
-window.onload = function() {
-var ctx = document.getElementById('ph-chart-area').getContext('2d');
-window.myLine = new Chart(ctx, config);
 };";
-
-
 		JFactory::getDocument()->addScriptDeclaration($o);
 	}
 	
-	public static function getDataChart($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	
+	public function renderChartJsPie($id, $data) {
+
+		$colors = array('#FFCC33', '#FF6633', '#FF3366', '#FF33CC', '#CC33FF');
+		$dS = $lS = $bS = '';
+		if (!empty($data)) {
+			
+			foreach($data as $k => $v) {
+				$d[$k] = '\''. $v['items']. '\'';
+				$l[$k] = '\''. $v['title']. '\'';
+				$c = $k%5;
+			
+				$b[$k] = '\''. $colors[$k]. '\'';
+			}
+			
+			$dS = implode(',', $d);
+			$lS = implode(',', $l);
+			$bS = implode(',', $b);
+		}
+
+		
+		$o = "
+var config".$id." = {
+	type: 'pie',
+	data: {
+		datasets: [{
+			data: [".htmlspecialchars($dS)."],
+			backgroundColor : [".htmlspecialchars($bS)."],
+		}],
+		labels: [".htmlspecialchars($lS)."]
+	},
+	options: {
+		responsive: true,
+	}
+};";
+		JFactory::getDocument()->addScriptDeclaration($o);
+	}
+	
+	public function setFunction($id, $type) {
+		$this->fn[$id]['id']	= $id;
+		$this->fn[$id]['type']	= $type;
+		$this->fn[$id]['area']	= $id;
+	}
+	
+	public function renderFunctions() {
+		
+		$s	 = array();
+		$s[] = 'window.onload = function() {';
+		
+		if (!empty($this->fn)) {
+			foreach($this->fn as $k => $v) {
+				$s[] = 'var ctx'.$v['id'].' = document.getElementById(\''.$v['area'].'\').getContext(\'2d\');';
+				$s[] = 'window.'.$v['type'].' = new Chart(ctx'.$v['id'].', config'.$v['id'].');';
+			}
+		}
+		$s[] = '};';
+		JFactory::getDocument()->addScriptDeclaration(implode( "\n", $s ));
+	}
+	
+	public function getDataChart($numberOfDate = '', $dateFrom = '', $dateTo = '') {
 		
 		
-		$db		= JFactory::getDbo();
+		$db	= JFactory::getDbo();
 		$q	= $db->getQuery(true);
 
 		$q->select('a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
@@ -241,12 +283,15 @@ window.myLine = new Chart(ctx, config);
 			$i++;
 		}
 		
+		$rData				= array();
+		$rData['amount']	= $dataAmount;
+		$rData['orders']	= $dataOrders;
+		$rData['ticks']		= $dataTicks;
 		
-		JHtml::_('jquery.framework', false);
-		PhocaCartStatistics::RenderChartJs($dataAmount, JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $dataOrders, JText::_('COM_PHOCACART_TOTAL_ORDERS'), $dataTicks);
+		return $rData;
 	}
 	
-	public static function getNumberOfOrders($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	public function getNumberOfOrders($numberOfDate = '', $dateFrom = '', $dateTo = '') {
 		
 		if ($numberOfDate == '') {
 			$numberOfDate = 7;
@@ -270,7 +315,7 @@ window.myLine = new Chart(ctx, config);
 		return 0;
 	}
 	
-	public static function getNumberOfUsers($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	public function getNumberOfUsers($numberOfDate = '', $dateFrom = '', $dateTo = '') {
 		
 		if ($numberOfDate == '') {
 			$numberOfDate = 7;
@@ -296,7 +341,7 @@ window.myLine = new Chart(ctx, config);
 		return 0;
 	}
 	
-	public static function getAmountOfOrders($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	public function getAmountOfOrders($numberOfDate = '', $dateFrom = '', $dateTo = '') {
 		
 		if ($numberOfDate == '') {
 			$numberOfDate = 7;
@@ -318,7 +363,7 @@ window.myLine = new Chart(ctx, config);
 		$db->setQuery($q);
 		$count = $db->loadRow();
 		if (isset($count[0]) && (int)$count[0] != 0) {
-			return PhocaCartStatistics::abreviateNumbers($count[0]);
+			return $this->abreviateNumbers($count[0]);
 		}
 		return 0;
 	}
@@ -327,7 +372,7 @@ window.myLine = new Chart(ctx, config);
 	 * http://stackoverflow.com/questions/13049851/php-number-abbreviator
 	 */
 	
-	public static function abreviateNumbers($value) {
+	public function abreviateNumbers($value) {
 		 
 		$abbreviations = array(12 => 'T', 9 => 'B', 6 => 'M', 3 => 'K', 0 => '');
 		foreach($abbreviations as $exponent => $abbreviation) {
@@ -336,14 +381,6 @@ window.myLine = new Chart(ctx, config);
 				return round(floatval($value / pow(10, $exponent)),1).$abbreviation;
 			}
 		}
-	}
-	
-	
-	
-	
-	public final function __clone() {
-		JError::raiseWarning(500, 'Function Error: Cannot clone instance of Singleton pattern');// No JText - for developers only
-		return false;
 	}
 }
 ?>

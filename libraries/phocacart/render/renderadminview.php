@@ -31,7 +31,7 @@ class PhocaCartRenderAdminView
 		$o = '<ul class="nav nav-tabs">';
 		$i = 0;
 		foreach($tabs as $k => $v) {
-			$cA = 0;
+			$cA = '';
 			if ($i == 0) {
 				$cA = 'class="active"';
 			}
@@ -144,8 +144,7 @@ class PhocaCartRenderAdminView
 		return $o;
 	}
 	
-	
-	
+	/*
 	public function additionalImagesRow($id, $url, $value = '', $js = 0) {
 		
 		// Will be displayed inside Javascript
@@ -173,6 +172,43 @@ class PhocaCartRenderAdminView
 		. '</div>';
 		
 		return $o;
+	}*/
+	
+	
+	public function additionalImagesRow($id, $url, $value = '', $js = 0, $w = 700, $h = 400) {
+		
+	
+		$idA			= 'phFileImageNameModalAT'; //phFileImageNameModal - standard image, phFileImageNameModalAT - additional images
+		$textButton		= 'COM_PHOCACART_FORM_SELECT_IMAGE';
+	
+		// Will be displayed inside Javascript
+		$o = '<div class="ph-row-image'.$id.' ph-row-image" id="phrowimage'.$id.'" >'
+		.'<div class="ph-add-item">';
+		
+		$o .='<span class="input-append">'
+		.'<input class="imageCreateThumbs inputbox" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value).'" size="40" type="text">';
+		//$o .= '<a class="modal_jform_image btn" title="'.JText::_('COM_PHOCACART_FORM_SELECT_IMAGE').'" href="'.$url.$id.'"';
+
+		//$o .= '<a href="#'.$idA.'" onclick="setPhRowImageId('.$id.')" role="button" class="btn btn-primary phbtnaddimages" data-toggle="modal" title="' . JText::_($textButton) . '">'
+		
+	
+		
+			$o .= ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url.$id.'" data-height="'.$h.'" data-width="'.$w.'">'
+			. '<span class="icon-list icon-white"></span> '
+			. JText::_($textButton) . '</a></span>';
+
+		
+		// Javascript rendered by modal windows $this->modalWindowDynamic() but in edit file to produce html code on right place
+
+		
+		$o .= '<input type="hidden" name="pformimg['.$id.'][imageid]" id="jform_imageid'.$id.'" value="'.$id.'" />'
+		.'</div>'
+		
+		.'<div class="ph-remove-row"><a class="btn btn-danger" href="#" onclick="phRemoveRowImage('.$id.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_IMAGE').'</a></div>'
+		.'<div class="ph-cb"></div>'
+		. '</div>';
+		
+		return $o;
 	}
 	
 	public function additionalAttributesRow($id, $title, $alias, $required, $type, $js = 0) {
@@ -182,7 +218,7 @@ class PhocaCartRenderAdminView
 		$o				= '';
 		
 		// Will be displayed inside Javascript
-		$o .= '<div class="ph-attribute-box" id="phAttributeBox'.$id.'">';
+		$o .= '<div id="phAttributeBox'.$id.'" class="ph-attribute-box" >';
 		
 		if ($id == 0) {
 			// Add Header
@@ -194,7 +230,8 @@ class PhocaCartRenderAdminView
 			. '<div class="span5">&nbsp;</div>'
 			.'</div><div class="ph-cb"></div>'."\n";
 		}
-	
+		
+
 		$o .= '<div class="ph-row-attribute'.$id.' ph-row-attribute" id="phrowattribute'.$id.'" >'
 
 		.'<div class="span2">'
@@ -214,7 +251,8 @@ class PhocaCartRenderAdminView
 		.'<input type="hidden" name="pformattr['.$id.'][attrid]" id="jform_attrid'.$id.'" value="'.$id.'" />'
 		.'</div>'
 	
-		.'<div class="span4"><a class="btn btn-danger btn-mini" href="#" onclick="phRemoveRowAttribute('.$id.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_ATTRIBUTE').'</a></div>'
+		.'<div class="span5"></div>'
+		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowAttribute('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_ATTRIBUTE').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 		
 		. '</div>';
@@ -241,7 +279,7 @@ class PhocaCartRenderAdminView
 		if ($js == 1) { 
 			$id = '\' + phRowOptionAttributeId +  \'';// if no javascript, get real id, if javascript, get js variable
 		}
-		$o .= '<div id="phrowboxoption'.$id.'"></div>';
+		$o .= '<div id="phrowboxoptionjs'.$id.'"></div>';
 		$o .= '<div style="clear:both;"></div>';
 		$o .= '<div class="ph-add-row"><a class="btn btn-primary btn-mini" href="#" onclick="phAddRowOption('.$id.'); return false;"><i class="icon-plus"></i> '.JText::_('COM_PHOCACART_ADD_OPTION').'</a></div>';
 
@@ -250,14 +288,15 @@ class PhocaCartRenderAdminView
 		return $o;
 	}
 	
-	public function additionalOptionsRow($id, $attrId, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image) {
+	public function additionalOptionsRow($id, $attrId, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image, $image_small, $color, $url, $url2, $w = 700, $h = 400) {
 		
-		
+	
+
 		$operatorArray 	= PhocaCartAttribute::getOperatorArray();
 		$o				= '';
 
 		// Will be displayed inside Javascript
-		$o .= '<div class="ph-option-box" id="phOptionBox'.$attrId.$id.'">';
+		$o .= '<div class="ph-option-box row-fluid" id="phOptionBox'.$attrId.$id.'">';
 		$o .= '<div class="ph-row-option'.$attrId.$id.' ph-row-option-attrid'.$attrId.'" id="phrowoption'.$attrId.$id.'" >'
 	
 		.'<div class="span2">'
@@ -272,6 +311,7 @@ class PhocaCartRenderAdminView
 		.'<div class="span1">'
 		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][option]['.$id.'][operator]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operator), 'jform_optionoperator'.$attrId. $id)
 		.'</div>'
+		
 		.'<div class="span1">'
 		.'<input id="jform_optionamount'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][amount]" value="'.htmlspecialchars($amount).'" class="inputbox input-mini" size="30" type="text">'
 		.'</div>'
@@ -291,62 +331,175 @@ class PhocaCartRenderAdminView
 		
 		.'<div class="span1">'
 		.'<input id="jform_optionweight'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][weight]" value="'.htmlspecialchars($weight).'" class="inputbox input-mini" size="40" type="text">'
-		.'</div>'	
+		.'</div>';	
 		
-		// Image
-		.'<div class="span2">';
 		
-		if (is_numeric($attrId) && is_numeric($id)) {
+		// Images
+		// -----
+		$o .= '<div class="span2">';
+		
+		/*if (is_numeric($attrId) && is_numeric($id)) {
 			JHtml::_('behavior.modal', 'a.modal_jform_optionimage'.$attrId.$id);
 		} else {
 			// Don't render anything for items which will be added by javascript
 			// it is set in javascript addnewrow function
 			// administrator\components\com_phocacart\libraries\phocacart\render\renderjs.php line cca 171
-		}
+		}*/
+		
+		// IMAGE LARGE
 		
 		$group 			= PhocaCartSettings::getManagerGroup('productimage');
 		$managerOutput	= '&amp;manager=productimage';
 		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
-		$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field=jform_optionimage'.$attrId.$id;
+		$textButton2	= 'COM_PHOCACART_LARGE';
+		//$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field=jform_optionimage'.$attrId.$id;
 		$attr			= '';
+		$idA			= 'phFileImageNameModalO';
 		
-		$html[] = '<div class="input-append">';
+		$html	= array();
+		$html[] = '<span class="input-append">';
 		$html[] = '<input class="imageCreateThumbs ph-w40" type="text" id="jform_optionimage'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][image]" value="'. htmlspecialchars($image).'"' .' '.$attr.' />';
-		$html[] = '<a class="modal_jform_optionimage'.$attrId.$id.' btn" title="'.JText::_($textButton).'"'
+		
+		/*$html[] = '<a class="modal_jform_optionimage'.$attrId.$id.' btn" title="'.JText::_($textButton).'"'
 				.' href="'.$link.'"'
 				.' rel="{handler: &quot;iframe&quot;, size: {x: 780, y: 560}}">'
 				. JText::_($textButton).'</a>';
-		$html[] = '</div>'. "\n";
+				
+				
+		$html[] = '<a href="#'.$idA.'" onclick="setPhRowImgOptionId('.$attrId.','.$id.')" role="button" class="btn btn-primary phbtnaddimagesoptions" data-toggle="modal" title="' . JText::_($textButton) . '">'
+			. '<span class="icon-list icon-white"></span> '
+			. JText::_($textButton) . '</a>';*/
+			
+		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
+			. '<span class="icon-list icon-white"></span>'
+			. JText::_($textButton2). '</a></span>';
+			
+		$html[] = '</span>'. "\n";
 		
 		$o .= implode("\n", $html);
-		$o .= '</div>'
-	
-		//.'</div>'
 		
-		.'<div class="span1"><a class="btn btn-danger btn-mini" href="#" onclick="phRemoveRowOption('.$id.','.$attrId.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_OPTION').'</a></div>'
+		$o .= '<div class="ph-br-small"></div>';
+		
+		// IMAGE SMALL
+		
+		$attr			= '';
+		$idA			= 'phFileImageNameModalO';
+		$textButton2	= 'COM_PHOCACART_SMALL';
+		
+		$html	= array();
+		$html[] = '<span class="input-append">';
+		$html[] = '<input class="imageCreateThumbs ph-w40" type="text" id="jform_optionimage_small'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][image_small]" value="'. htmlspecialchars($image_small).'"' .' '.$attr.' />';
+		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url2 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
+			. '<span class="icon-list icon-white"></span>'
+			. JText::_($textButton2). '</a></span>';
+			
+		$html[] = '</span>'. "\n";
+		
+		$o .= implode("\n", $html);
+		
+		
+		$o .= '</div>';
+		
+		
+		// Color
+		// -----
+		$o .= '<div class="span1">';
+		
+		$format 		= 'hex';
+		$keywords 		= '';
+		$validate 		= ' data-validate="hex"';
+		$class			= '';
+		$control		= '';
+		$readonly		= '';
+		$autocomplete 	= true;
+		$lang 			= JFactory::getLanguage();
+		$position		= '';
+		$disabled		= '';
+		$required		= '';
+		$onchange		= '';
+		$autofocus		= 'autofocus';
+		
+		if (in_array($format, array('rgb', 'rgba')) && $validate != 'color') {
+			$alpha = ($format == 'rgba') ? true : false;
+			$placeholder = $alpha ? 'rgba(0, 0, 0, 0.5)' : 'rgb(0, 0, 0)';
+		} else {
+			$placeholder = '#rrggbb';
+		}
+		
+		$inputclass   = ($keywords && ! in_array($format, array('rgb', 'rgba'))) ? ' keywords' : ' ' . $format;
+		$class        = ' class="' . trim('minicolors ' . $class) . ($validate == 'color' ? '' : $inputclass) . '"';
+		$control      = $control ? ' data-control="' . $control . '"' : '';
+		$format       = $format ? ' data-format="' . $format . '"' : '';
+		$keywords     = $keywords ? ' data-keywords="' . $keywords . '"' : '';
+		$readonly     = $readonly ? ' readonly' : '';
+		$hint         = ' placeholder="' . $placeholder . '"';
+		$autocomplete = ! $autocomplete ? ' autocomplete="off"' : '';
+		$direction    = $lang->isRTL() ? ' dir="ltr" style="text-align:right"' : '';
+		
+		JHtml::_('jquery.framework');
+		JHtml::_('script', 'system/html5fallback.js', false, true);
+		JHtml::_('behavior.colorpicker');
+		
+		/*$jQ = "jQuery('INPUT[type=minicolors]').on('change', function() {
+					var hex = jQuery(this).val(),
+					opacity = jQuery(this).attr('data-opacity');
+					jQuery('BODY').css('backgroundColor', hex);
+
+				});";
+		JFactory::getDocument()->addScriptDeclaration($jQ);*/
+		
+		$html 	= array();
+		$html[] =  '<input type="text" id="jform_optioncolor'.$attrId.$id.'" name="pformattr['.$attrId.'][option]['.$id.'][color]"'
+				. ' value="'. htmlspecialchars($color, ENT_COMPAT, 'UTF-8') . '"' 
+				. $hint . $class . $position . $control
+				. $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus
+				. $format . $keywords . $direction . $validate . '/>';
+		
+		
+		$o .= implode("\n", $html);
+		$o .= '</div>';
+		
+
+		
+		//$o .= '<div class="span1"></div>';
+		
+		
+		$o .= '<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowOption('.$id.','.$attrId.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_OPTION').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb"></div>'
-		. '</div>'
 		
+		
+		. '</div>'
 		.'</div>';
 		
 		return $o;
 	}
 	
-	public function headerOption() {
+	public function headerOption($id = 0) {
 		
-		$o = '<h4>'.JText::_('COM_PHOCACART_OPTIONS').'</h4>';
+		$o = '';
+
+		// we have two phrowboxoptions - phrowboxoption - loaded with php/mysql, phrowboxoptionjs - added by javascript
+		$o .= '<div id="phrowboxoption'.$id.'">';
+		
+		$o .= '<h4>'.JText::_('COM_PHOCACART_OPTIONS').'</h4>';
 		$o .= '<div class="ph-row">'."\n"
 		. '<div class="span2">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
 		. '<div class="span2">'. JText::_('COM_PHOCACART_ALIAS') . '</div>'
-		. '<div class="span1">'. JText::_('COM_PHOCACART_VALUE') . '</div>'
+		
 		. '<div class="span1">&nbsp;</div>'
+		. '<div class="span1">'. JText::_('COM_PHOCACART_VALUE') . '</div>'
 		
 		. '<div class="span1">'. JText::_('COM_PHOCACART_IN_STOCK') . '</div>'
 		
-		. '<div class="span2">'. JText::_('COM_PHOCACART_WEIGHT') . '</div>'
-		. '<div class="span1">'. JText::_('COM_PHOCACART_IMAGE') . '</div>'
-		. '<div class="span2">&nbsp;</div>'
+		. '<div class="span1">&nbsp;</div>'
+		. '<div class="span1">'. JText::_('COM_PHOCACART_WEIGHT') . '</div>'
+		
+		. '<div class="span2">'. JText::_('COM_PHOCACART_IMAGES') . '</div>'
+		. '<div class="span1">'. JText::_('COM_PHOCACART_COLOR') . '</div>'
+		//. '<div class="span1">&nbsp;</div>'
 		.'</div><div class="ph-cb"></div>'."\n";
+		
+		$o .= '</div>';
 		return $o;
 	}
 	
@@ -359,6 +512,17 @@ class PhocaCartRenderAdminView
 		// Will be displayed inside Javascript
 		$o .= '<div class="ph-specification-box" id="phSpecificationBox'.$id.'">';
 		
+		if ($id == 0) {
+			// Add Header
+			/*$o .= '<div class="ph-row">'."\n"
+			. '<div class="span2">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
+			. '<div class="span2">'. JText::_('COM_PHOCACART_ALIAS') . '</div>'
+			. '<div class="span1">'. JText::_('COM_PHOCACART_REQUIRED') . '</div>'
+			. '<div class="span2">'. JText::_('COM_PHOCACART_TYPE') . '</div>'
+			. '<div class="span5">&nbsp;</div>'
+			.'</div><div class="ph-cb"></div>'."\n";*/
+			$o .= $this->headerSpecification();
+		}
 	
 		$o .= '<div class="ph-row-specification'.$id.' ph-row-specification" id="phrowspecification'.$id.'" >'
 
@@ -375,7 +539,8 @@ class PhocaCartRenderAdminView
 		.'</div>'
 		
 	
-		.'<div class="span4"><a class="btn btn-danger btn-mini" href="#" onclick="phRemoveRowSpecification('.$id.'); return false;"><i class="icon-minus"></i> '.JText::_('COM_PHOCACART_REMOVE_PARAMETER').'</a></div>'
+		.'<div class="span4"></div>'
+		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowSpecification('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_PARAMETER').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 		
 		
@@ -407,6 +572,7 @@ class PhocaCartRenderAdminView
 	}
 	
 	public function headerSpecification() {
+		//$o = '<div class="ph-row" id="phrowboxspecificationheader">'."\n"
 		$o = '<div class="ph-row">'."\n"
 		. '<div class="span3">'. JText::_('COM_PHOCACART_PARAMETER') . '</div>'
 		. '<div class="span3">'. JText::_('COM_PHOCACART_VALUE') . '</div>'
@@ -414,6 +580,84 @@ class PhocaCartRenderAdminView
 		. '<div class="span4">&nbsp;</div>'
 		.'</div><div class="ph-cb"></div>'."\n";
 		return $o;
+	}
+	
+	
+	public function modalWindow($id, $link, $textButton) {
+		
+		// Add javascript for additional images
+		// Specific case for additional images
+		// In case we have more than one "select image form input" and the additional form inputs are made by javascript
+		// we need to differentiate between them - the field id for each form input
+		// phRowImage is a variable set when clicking select button for additional images
+		//$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field='.$this->id . '\'+ (phRowImage) +\'';
+		$html	= array();
+		$html[] = JHtml::_(
+			'bootstrap.renderModal',
+			$id,
+			array(
+				'url'    => $link,
+				'title'  => JText::_($textButton),
+				'width'  => '700px',
+				'height' => '400px',
+				'modalWidth' => '80',
+				'bodyHeight' => '70',
+				'footer' => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
+					. JText::_('COM_PHOCACART_CLOSE') . '</button>'
+			)
+		);
+		return implode("\n", $html);
+	}
+	
+	
+	public function modalWindowDynamic($id, $textButton, $w = 700, $h = 400, $reload = false) {
+		
+		
+		$s 	= array();
+		$s[] = 'jQuery(document).ready(function() {';
+		$s[] = '   jQuery(document.body).on(\'click\', \'a.'.$id.'ModalButton\' ,function(e) {';
+		$s[] = '      var src = jQuery(this).attr(\'data-src\');';
+		//$s[] = '      var height = jQuery(this).attr(\'data-height\') || '.$h.';';
+		//$s[] = '      var width = jQuery(this).attr(\'data-width\') || '.$w.';';
+		$s[] = '      jQuery("#'.$id.' iframe").attr({\'src\':src, \'height\': \'100%\', \'width\': \'auto\', \'max-height\': \'100%\'});';
+		$s[] = '   });';
+		
+		if ($reload) {
+			$s[] = '	jQuery("#'.$id.'").on("hidden", function () {';
+			$s[] = '	   var phOverlay = jQuery(\'<div id="phOverlay"><div id="phLoaderFull"> </div></div>\');';
+			$s[] = '	   phOverlay.appendTo(document.body);';
+			$s[] = '	   jQuery("#phOverlay").fadeIn().css("display","block");';
+			$s[] = '		setTimeout(function(){';
+			$s[] = '			window.parent.location.reload();';
+			$s[] = '		},10);';
+			$s[] = '	});';
+		}
+		$s[] = '})';
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+
+		$html	= array();
+		$html[] = JHtml::_(
+			'bootstrap.renderModal',
+			$id,
+			array(
+				//'url'    => $link,
+				'title'  => JText::_($textButton),
+				'width'  => $w.'px',
+				'height' => $h.'px',
+				'modalWidth' => '80',
+				'bodyHeight' => '70',
+				'footer' => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
+					. JText::_('COM_PHOCACART_CLOSE') . '</button>'
+			), 
+			'<iframe frameborder="0"></iframe>'
+		);
+		return implode("\n", $html);
+		
+		/* Row
+		$o .= ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url.$id.'" data-height="'.$h.'" data-width="'.$w.'">'
+			. '<span class="icon-list icon-white"></span> '
+			. JText::_($textButton) . '</a></span>';
+		*/
 	}
 	
 }

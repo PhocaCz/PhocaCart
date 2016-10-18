@@ -11,7 +11,7 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocaCartCategories extends JModelList
 {
-	protected	$option 	= 'com_phocacart';	
+	protected $option 	= 'com_phocacart';
 	protected $total		= 0;
 	public function __construct($config = array())
 	{

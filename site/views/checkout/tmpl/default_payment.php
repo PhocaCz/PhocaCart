@@ -42,7 +42,7 @@ if ($this->a->paymentnotused == 1) {
 		
 		echo '<div class="col-sm-4 col-md-4 ">';
 		echo '<div class="pull-right ph-checkout-payment-edit">';
-		echo '<button class="btn btn-success btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_PAYMENT').'</button>';
+		echo '<button class="btn btn-success btn-sm ph-btn"><span class="glyphicon glyphicon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_PAYMENT').'</button>';
 		echo '</div>';
 		echo '</div>';
 	
@@ -140,7 +140,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<div class="ph-cb"></div>';
 	
 	echo '<div class="pull-right ph-checkout-shipping-save">';
-	echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	echo '</div>';
 		
 	echo '<div class="ph-cb"></div>';	

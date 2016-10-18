@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `unit_amount` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `unit_unit` varchar(64) NOT NULL DEFAULT '',
   `min_quantity` int(11) NOT NULL DEFAULT '0',
+  `min_multiple_quantity` int(11) NOT NULL DEFAULT '0',
   `stockstatus_a_id` int(11) NOT NULL DEFAULT '0',
   `stockstatus_n_id` int(11) NOT NULL DEFAULT '0',
   `availability` text,
@@ -168,8 +169,13 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_attribute_values` (
   `volume` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `operator_volume` char(1) NOT NULL DEFAULT '0',
   `image` varchar(255) NOT NULL DEFAULT '',
+  `image_small` varchar(255) NOT NULL DEFAULT '',
+  `image_medium` varchar(255) NOT NULL DEFAULT '',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '',
+  `color` varchar(50) NOT NULL DEFAULT '',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `params` text,
   PRIMARY KEY (`id`),
   KEY `idx_attribute` (`attribute_id`) ,
   KEY `idx_alias` (`alias`),
@@ -269,6 +275,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_countries` (
   `type` int(11) NOT NULL DEFAULT '0',
   `code2` varchar(20) NOT NULL DEFAULT '',
   `code3` varchar(20) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -286,6 +293,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_regions` (
   `type` int(11) NOT NULL DEFAULT '0',
   `code2` varchar(20) NOT NULL DEFAULT '',
   `code3` varchar(20) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -348,6 +356,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_tags` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `link_ext` varchar(255) NOT NULL DEFAULT '',
   `link_cat` int(11) unsigned NOT NULL DEFAULT '0',
   `description` text,
@@ -372,6 +381,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_taxes` (
   `id` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `tax_rate` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `calculation_type` tinyint(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -388,6 +398,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_currencies` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `code` varchar(5) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `exchange_rate` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `price_format` tinyint(1) NOT NULL DEFAULT '0',
   `price_currency_symbol` varchar(10) NOT NULL DEFAULT '',
@@ -562,6 +573,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_users` (
   `newsletter` tinyint(1) NOT NULL DEFAULT '0',
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   
 	`name_first` varchar(100) NOT NULL DEFAULT '',
 	`name_middle` varchar(100) NOT NULL DEFAULT '',
@@ -606,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `stock_movements` char(1) NOT NULL DEFAULT '',
   `email_customer` tinyint(1) NOT NULL DEFAULT '0',
@@ -815,6 +828,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_feeds` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `image` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `header` text,
   `footer` text,
@@ -832,6 +846,52 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_feeds` (
   `language` char(7) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY (`type`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_wishlists` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`product_id` int(11) NOT NULL DEFAULT '0',
+	`category_id` int(11) NOT NULL DEFAULT '0',
+	`user_id` int(11) NOT NULL DEFAULT '0',
+	`title` varchar(255) NOT NULL DEFAULT '',
+	`alias` varchar(255) NOT NULL DEFAULT '',
+	`ip` varchar(40) NOT NULL DEFAULT '',
+	`user_agent` varchar(255) NOT NULL DEFAULT '',
+	`quantity` int(11) NOT NULL DEFAULT '0',
+	`type` tinyint(1) NOT NULL DEFAULT '0',
+	`priority` tinyint(1) NOT NULL DEFAULT '0',
+	`published` tinyint(1) NOT NULL DEFAULT '0',
+	`checked_out` int(11) unsigned NOT NULL DEFAULT '0',
+	`checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`ordering` int(11) NOT NULL DEFAULT '0',
+	`date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`params` text,
+	PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_questions` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `product_id` int(11) NOT NULL default '0',
+  `category_id` int(11) NOT NULL default '0',
+  `user_id` int(11) NOT NULL default '0',
+  `question_id` int(11) NOT NULL default '0',
+  `name` varchar(100) NOT NULL default '',
+  `email` varchar(50) NOT NULL default '',
+  `phone` varchar(20) NOT NULL default '',
+  `phone_mobile` varchar(20) NOT NULL default '',
+  `ip` varchar(20) NOT NULL default '',
+  `title` varchar(200) NOT NULL default '',
+  `alias` varchar(255) NOT NULL default '',
+  `message` text NOT NULL,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `published` tinyint(1) NOT NULL default '0',
+  `checked_out` int(11) NOT NULL default '0',
+  `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  `params` text NOT NULL,
+  `language` char(7) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  KEY `published` (`published`)
 ) DEFAULT CHARSET=utf8;
 
 
@@ -1055,10 +1115,72 @@ INSERT INTO `#__phocacart_form_fields` ( `title`, `label`, `description`, `type`
 -- ALTER TABLE  `#__phocacart_order_total` 		CHANGE  `amount`  `amount` DECIMAL( 15, 4 ) NOT NULL DEFAULT  '0';
 
 
+-- ---------
+-- RC2 -> RC3
+-- ---------
+
+-- ALTER TABLE  `#__phocacart_countries` 		ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_regions` 			ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_currencies` 		ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_users` 			ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_order_statuses` 	ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_taxes` 			ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_feeds` 			ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_tags` 			ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_products` 		ADD `min_multiple_quantity` int(11) NOT NULL DEFAULT '0';
+
+-- ALTER TABLE  `#__phocacart_attribute_values` 		ADD `color` varchar(50) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_attribute_values` 		ADD `type` tinyint(1) NOT NULL DEFAULT '0';
+-- ALTER TABLE  `#__phocacart_attribute_values` 		ADD `params` text;
+-- ALTER TABLE  `#__phocacart_attribute_values` 		ADD `image_small` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_attribute_values` 		ADD `image_medium` varchar(255) NOT NULL DEFAULT '';
 
 
+-- New table added
+-- ---------------
+--CREATE TABLE IF NOT EXISTS `#__phocacart_wishlists` (
+--	`id` int(11) NOT NULL AUTO_INCREMENT,
+--	`product_id` int(11) NOT NULL DEFAULT '0',
+--	`category_id` int(11) NOT NULL DEFAULT '0',
+--	`user_id` int(11) NOT NULL DEFAULT '0',
+--	`title` varchar(255) NOT NULL DEFAULT '',
+--	`alias` varchar(255) NOT NULL DEFAULT '',
+--	`ip` varchar(40) NOT NULL DEFAULT '',
+--	`user_agent` varchar(255) NOT NULL DEFAULT '',
+--	`quantity` int(11) NOT NULL DEFAULT '0',
+--	`type` tinyint(1) NOT NULL DEFAULT '0',
+--	`priority` tinyint(1) NOT NULL DEFAULT '0',
+--	`published` tinyint(1) NOT NULL DEFAULT '0',
+--	`checked_out` int(11) unsigned NOT NULL DEFAULT '0',
+--	`checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+--	`ordering` int(11) NOT NULL DEFAULT '0',
+--	`date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+--	`params` text,
+--	PRIMARY KEY (`id`)
+--) DEFAULT CHARSET=utf8;
 
-
-
-
+--CREATE TABLE IF NOT EXISTS `#__phocacart_questions` (
+--  `id` int(11) unsigned NOT NULL auto_increment,
+--  `product_id` int(11) NOT NULL default '0',
+--  `category_id` int(11) NOT NULL default '0',
+--  `user_id` int(11) NOT NULL default '0',
+--  `question_id` int(11) NOT NULL default '0',
+--  `name` varchar(100) NOT NULL default '',
+--  `email` varchar(50) NOT NULL default '',
+--  `phone` varchar(20) NOT NULL default '',
+--  `phone_mobile` varchar(20) NOT NULL default '',
+--  `ip` varchar(20) NOT NULL default '',
+--  `title` varchar(200) NOT NULL default '',
+--  `alias` varchar(255) NOT NULL default '',
+--  `message` text NOT NULL,
+--  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+--  `published` tinyint(1) NOT NULL default '0',
+--  `checked_out` int(11) NOT NULL default '0',
+--  `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+--	`ordering` int(11) NOT NULL DEFAULT '0',
+--  `params` text NOT NULL,
+--  `language` char(7) NOT NULL default '',
+--  PRIMARY KEY  (`id`),
+--  KEY `published` (`published`)
+--) DEFAULT CHARSET=utf8;
 

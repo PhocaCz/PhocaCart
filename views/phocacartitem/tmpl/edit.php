@@ -39,7 +39,7 @@ function phCheckRequestStatus(i, task) {
 			Joomla.submitform(task, document.getElementById('adminForm'));
 		}
 		else {
-			alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
+			Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
 		}
 	}
 }
@@ -67,6 +67,8 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
+
+
 // ORDERING cannot be used
 $formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'featured', 'video');
 echo $r->group($this->form, $formArray);
@@ -76,10 +78,13 @@ $formArray = array('description_long' );
 echo $r->group($this->form, $formArray, 1);
 //$formArray = array ('upc', 'ean', 'jan', 'mpn', 'isbn');
 //echo $r->group($this->form, $formArray);
+
 echo '</div>'. "\n";
 
 // IMAGES
 echo '<div class="tab-pane" id="image">'. "\n";
+
+
 $formArray = array ('image');
 echo $r->group($this->form, $formArray);
 echo '<h3>'.JText::_($this->t['l'].'_ADDITIONAL_IMAGES').'</h3>';
@@ -94,18 +99,32 @@ if (!empty($images)) {
 		$i++;
 	}
 }
-$newRow = $r->additionalImagesRow('\' + phRowCountImage +  \'', $url, '', 1);
+$w = 700;// modal window width
+$h = 400;// modal widnow height
+$newRow = $r->additionalImagesRow('\' + phRowCountImage +  \'', $url, '', 1, $w, $h);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-PhocaCartRenderJs::renderJsManageRowImage($i, $newRow, 'a.modal_jform_image', '');
+PhocaCartRenderJs::renderJsManageRowImage($i, $newRow);
+echo $r->modalWindowDynamic('phFileImageNameModalAT', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_IMAGE'), 'image');
+
 echo '</div>'. "\n";
 
 
+
+
 // ATTRIBUTES, OPTIONS 
+$w = 700;
+$h = 400;
+$urlO 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage';
+$urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_small';
+
 echo '<div class="tab-pane" id="attributes">'. "\n";
+
+
 echo '<h3>'.JText::_($this->t['l'].'_ATTRIBUTES').'</h3>';
 $i = 0; // i ... ATTRIBUTES
 $j = 0; // j ... OPTIONS
+
 if (!empty($this->attributes)) {
 	foreach ($this->attributes as $k => $v) {
 		echo $r->additionalAttributesRow((int)$i, $v->title, $v->alias, $v->required, $v->type, 0);
@@ -116,9 +135,14 @@ if (!empty($this->attributes)) {
 				$m = 0; // m ... NEW BEGINN OF OPTIONS - ADD HEADER (we cannot use $j because it counts and will be not cleared)
 				foreach ($options as $k2 => $v2) {
 					if ($m == 0) {
-						echo $r->headerOption();
+						echo $r->headerOption((int)$i);
 					}
-					echo $r->additionalOptionsRow((int)$j, (int)$i, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image);
+					
+					// Make the numbers more readable
+					// it has no influence on saving it to db
+					$v2->amount	= PhocaCartPrice::cleanPrice($v2->amount);
+					$v2->weight	= PhocaCartPrice::cleanPrice($v2->weight);
+					echo $r->additionalOptionsRow((int)$j, (int)$i, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image, $v2->image_small, $v2->color, $urlO, $urlO2, $w, $h);
 					$j++;
 					$m++;
 				}
@@ -137,8 +161,11 @@ PhocaCartRenderJs::renderJsManageRowAttribute($i, $newRow);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_ATTRIBUTE'), 'attribute');
 
 // Option
-$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '');
+//echo $r->modalWindow('phFileImageNameModalO', $urlO . '\'+ (phRowImgOption) +\'', 'COM_PHOCACART_FORM_SELECT_IMAGE');
+echo $r->modalWindowDynamic('phFileImageNameModalO', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
+$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '', '', '', $urlO, $urlO2, $w, $h);
 $newRow 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
+$newHeader	= '';
 $newHeader	= $r->headerOption();
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
 PhocaCartRenderJs::renderJsManageRowOption($j, $newRow, $newHeader);
@@ -156,9 +183,9 @@ echo '<h3>'.JText::_($this->t['l'].'_SPECIFICATIONS').'</h3>';
 $i = 0; //
 if (!empty($this->specifications)) {
 	foreach ($this->specifications as $k => $v) {
-		if ($i == 0) {
-			echo $r->headerSpecification();
-		}
+		//if ($i == 0) {
+		//	echo $r->headerSpecification();
+		//}
 		echo $r->additionalSpecificationsRow((int)$i, $v->title, $v->alias, $v->value, $v->alias_value, $v->group_id, 0);
 		$i++;
 	} 
@@ -166,14 +193,14 @@ if (!empty($this->specifications)) {
 	
 $newRow = $r->additionalSpecificationsRow('\' + phRowCountSpecification +  \'', '', '', '', '', '', 1);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-$newHeader	= $r->headerSpecification();
+//$newHeader	= $r->headerSpecification();
+$newHeader	= '';
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
 PhocaCartRenderJs::renderJsManageRowSpecification($i, $newRow, $newHeader);
-echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_PARAMETER'), 'specification');
+echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_PARAMETER'), 'specification');//phrowboxspecification in button
 
 echo '<div>&nbsp;</div>';
 //echo '</div>'. "\n";
-
 echo '</div>'. "\n";
 
 
@@ -223,7 +250,7 @@ $formArray = array ('related');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 echo '<div class="tab-pane" id="stock">'. "\n";
-$formArray = array ('stock', 'min_quantity', 'stockstatus_a_id', 'stockstatus_n_id');
+$formArray = array ('stock', 'min_quantity', 'min_multiple_quantity', 'stockstatus_a_id', 'stockstatus_n_id');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 

@@ -60,7 +60,7 @@ class PhocaCartRenderFront
 		return $o;
 	}
 	
-	public static function prepareDocument($document, $params, $category = false, $item = false) {
+	public static function prepareDocument($document, $params, $category = false, $item = false, $header = '') {
 	
 		$app			= JFactory::getApplication();
 		$menus			= $app->getMenu();
@@ -69,7 +69,10 @@ class PhocaCartRenderFront
 		$title 			= null;
 		$metakey 		= $params->get( 'cart_metakey', '' );
 		$metadesc 		= $params->get( 'cart_metadesc', '' );
-		$nameInTitle 	= 1;// TODO possible parameter Category or Title name
+		$nameInTitle 	= 1;// TO DO possible parameter Category or Title name
+		
+		$viewCurrent	= $app->input->get('view');
+		$viewLink		= $menu->query['view'];
 		
 		$type = '';
 		$name = array();
@@ -80,7 +83,7 @@ class PhocaCartRenderFront
 			$name = $category;
 			$type = 'category';
 		}
-	
+
 		if ($menu) {
 			$params->def('page_heading', $params->get('page_title', $menu->title));
 		} else {
@@ -88,7 +91,10 @@ class PhocaCartRenderFront
 		}
 		
 		$title 			= $params->get('page_title', '');
-		if (empty($title)) {
+	
+		if ($viewLink != $viewCurrent && $header != '') {
+			$title = $header;
+		} else if (empty($title)) {
 			$title = htmlspecialchars_decode($app->getCfg('sitename'));
 		} else if ($app->getCfg('sitename_pagetitles', 0) == 1) {
 			$title = JText::sprintf('JPAGETITLE', htmlspecialchars_decode($app->getCfg('sitename')), $title);
@@ -101,6 +107,7 @@ class PhocaCartRenderFront
 			}
 			$title = JText::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->getCfg('sitename')));
 		}
+		
 		$document->setTitle($title);
 
 		
@@ -129,7 +136,7 @@ class PhocaCartRenderFront
 			$document->setMetaData('title', $params->get('page_title', ''));
 		}
 		
-		// Breadcrumbs TODO (Add the whole tree)
+		// Breadcrumbs TO DO (Add the whole tree)
 		if ($type == 'category') {
 			
 			$path = PhocaCartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
@@ -162,7 +169,7 @@ class PhocaCartRenderFront
 					$pathway->addItem($category->title);
 				}
 			}*/
-		} else if ($type == 'item') {
+		} else if ($type == 'item' || $type == 'question') {
 			
 			$path = PhocaCartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
 			$curpath = $pathway->getPathwayNames();
@@ -184,6 +191,18 @@ class PhocaCartRenderFront
 			if (isset($item->title) && !empty($item->title)) {
 				$pathway->addItem($item->title);
 			}
+		} else {
+		
+			if ($viewCurrent == $viewLink) {
+				// Don't add anything to pathway as we display the title from menu link
+				// for example - comparision view has an menu link, use menu link title
+			} else {
+				// we are e.g. in comparison view but we use a menu link from categories
+				// so we need to add comparison header if exists
+				if ($header != '') {
+					$pathway->addItem($header);
+				}
+			}	
 		}
 	}
 	
@@ -243,5 +262,35 @@ class PhocaCartRenderFront
 			
 		}
 		return $o;
+	}
+	
+	public static function renderHeader($headers = array(), $tag = 'h1') {
+		
+		$app			= JFactory::getApplication();
+		//$menus		= $app->getMenu();
+		//$menu 		= $menus->getActive();
+		$p 				= $app->getParams();
+		$showPageHeading= $p->get('show_page_heading');
+		$pageHeading	= $p->get('page_heading');
+		
+		$h = array();
+		if ($showPageHeading && $pageHeading != '') { 
+			$h[] = htmlspecialchars($pageHeading); 
+		}
+		
+		if (!empty($headers)) {
+			foreach ($headers as $k => $v) {
+				if ($v != '') {
+					$h[] = htmlspecialchars($v);
+					break; // in array there are stored OR items (if empty try next, if not empty use this and do not try next)
+					       // PAGE HEADING AND NEXT ITEM OR NEXT NEXT ITEM
+				}
+			}
+		}
+		
+		if (!empty($h)) {
+			return '<' . strip_tags($tag) . '>' . implode(" - ", $h) . '</' . strip_tags($tag) . '>';
+		}
+		return false;
 	}
 }

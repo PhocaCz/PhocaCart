@@ -96,9 +96,9 @@ echo "\n\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
 //echo $r->tdOrder(0, $saveOrder, $orderkey);// ORDERING DISABLED
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
-echo $r->td($item->date, "small hidden-phone");
+echo $r->td($item->date, "small");
 /*$checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -109,20 +109,20 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->title);
 }*/
 $checkO = $this->escape($item->title);
-echo $r->td('<b>'.$checkO.'</b>', "small hidden-phone");
+echo $r->td('<b>'.$checkO.'</b>', "small");
 
 
-//echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+//echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($item->user_username, "small hidden-phone");
-echo $r->td($item->ip, "small hidden-phone");
+echo $r->td($item->user_username, "small");
+echo $r->td($item->ip, "small");
 
 // Because of Chrome
 $item->incoming_page = str_replace('?', '<wbr>?', $item->incoming_page);
 $item->incoming_page = str_replace('&amp;', '<wbr>&amp;', $item->incoming_page);
-echo $r->td($item->incoming_page, "small hidden-phone ph-incoming-page");
+echo $r->td($item->incoming_page, "small ph-incoming-page");
 echo $r->td('<textarea>'.$item->description.'</textarea>');
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

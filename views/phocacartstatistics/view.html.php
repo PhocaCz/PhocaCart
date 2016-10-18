@@ -15,6 +15,7 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+	protected $d;
 	
 	function display($tpl = null) {
 	
@@ -43,10 +44,10 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 			$this->items		= $this->get('Items');
 			//$this->pagination	= $this->get('Pagination');
 		}
-		
+	
 
 		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
+			throw new Exception(implode("\n", $errors), 500);
 			return false;
 		}
 		
@@ -70,51 +71,55 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 		}
 	
 		
-		$dataAmount = '';
-		$dataOrders = '';
-		$dataTicks	= '';
+		$this->d['amount'] 	= '';
+		$this->d['orders'] 	= '';
+		$this->d['ticks']	= '';
 		$i = 1;
 		foreach ($amount as $k => $v) {
-			if ($dataAmount != '') {
-				$dataAmount .= ', ';
+			if ($this->d['amount'] != '') {
+				$this->d['amount'] .= ', ';
 			}
-			//$dataAmount .= '["'.$i.'",'.$v.']';
-			//$dataAmount .= '\''.$v.'\'';
-			$dataAmount .= (int)$v;
+			//$this->d['amount'] .= '["'.$i.'",'.$v.']';
+			//$this->d['amount'] .= '\''.$v.'\'';
+			$this->d['amount'] .= (int)$v;
 			$i++;
 		}
 		$i = 1;
 		foreach ($orders as $k => $v) {
-			if ($dataOrders != '') {
-				$dataOrders .= ', ';
+			if ($this->d['orders'] != '') {
+				$this->d['orders'] .= ', ';
 			}
-			if ($dataTicks != '') {
-				$dataTicks .= ', ';
+			if ($this->d['ticks'] != '') {
+				$this->d['ticks'] .= ', ';
 			}
-			//$dataOrders .= '["'.$i.'",'.$v.']';
-			//$dataOrders .= '\''.$v.'\'';
-			$dataOrders .= (int)$v;
-			//$dataTicks .= '['.$i.',"'.$k.'"]';
-			$dataTicks .= '\''.$k.'\'';
+			//$this->d['orders'] .= '["'.$i.'",'.$v.']';
+			//$this->d['orders'] .= '\''.$v.'\'';
+			$this->d['orders'] .= (int)$v;
+			//$this->d['ticks'] .= '['.$i.',"'.$k.'"]';
+			$this->d['ticks'] .= '\''.$k.'\'';
 			
 			$i++;
 		}
 		
-		
 		JHTML::stylesheet( $this->t['s'] );
-
-		
 		JHtml::_('jquery.framework', false);
-		PhocaCartStatistics::RenderChartJs($dataAmount, JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $dataOrders, JText::_('COM_PHOCACART_TOTAL_ORDERS'), $dataTicks);
+		$document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.equalheights.min.js');
+		$document->addScriptDeclaration(
+		'jQuery(window).load(function(){
+			jQuery(\'.ph-admin-stat-box\').equalHeights();
+		});');
 		
-		// Most viewed and best-selling products
-		
+		// Most viewed and best-selling products	
 		$this->t['most_viewed'] 	= PhocaCartProduct::getMostViewedProducts();
 		$this->t['best_selling'] 	= PhocaCartProduct::getBestSellingProducts();
 		$this->t['best_selling2'] 	= PhocaCartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to']);
 
+		$this->t['most_viewed_count'] 	= PhocaCartProduct::getMostViewedProducts(0, false, false, true);
+		$this->t['best_selling_count'] 	= PhocaCartProduct::getBestSellingProducts(0, '', '', true);
+		$this->t['best_selling2_count'] = PhocaCartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to'], true);
 		
-		$this->addToolbar();
+
+		$this->addToolbar(); 
 		parent::display($tpl);
 	}
 	

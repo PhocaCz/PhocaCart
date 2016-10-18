@@ -30,9 +30,9 @@ if (!empty($d['compare'])) {
 			<input type="hidden" name="return" value="<?php echo $d['actionbase64']; ?>" />
 			<div class="pull-right">
 			<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="glyphicon glyphicon-remove"></span></a></div>
+				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="glyphicon glyphicon-remove"></span></a></div>
 			<?php } else { ?>
-				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="glyphicon glyphicon-remove"></span></a></div>
+				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="glyphicon glyphicon-remove"></span></a></div>
 			<?php } ?>
 			</div>
 		<?php echo JHtml::_('form.token'); ?>
@@ -43,4 +43,4 @@ if (!empty($d['compare'])) {
 	}
 }
 ?>
-<div class="ph-small ph-right ph-u ph-cart-link-checkout"><a href="<?php echo $d['linkcomparison']; ?>"><?php echo JText::_('COM_PHOCACART_VIEW_COMPARISON_LIST'); ?></a></div>
+<div class="ph-small ph-right ph-u ph-cart-link-compare"><a href="<?php echo $d['linkcomparison']; ?>"><?php echo JText::_('COM_PHOCACART_VIEW_COMPARISON_LIST'); ?></a></div>

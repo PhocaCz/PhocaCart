@@ -7,4 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+echo '<div id="ph-pc-terms-box" class="pc-terms-view'.$this->p->get( 'pageclass_sfx' ).'">';
+
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS')));
+
+echo '<div class="ph-terms-box-in">';
+echo $this->t['terms_conditions'];
+echo '</div>';
+
+echo '</div>';
 ?>

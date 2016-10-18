@@ -95,7 +95,7 @@ echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -106,15 +106,15 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($item->code2, "small hidden-phone");
-echo $r->td($item->code3, "small hidden-phone");
+echo $r->td($item->code2, "small");
+echo $r->td($item->code3, "small");
 
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

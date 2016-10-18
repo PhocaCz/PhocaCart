@@ -20,7 +20,7 @@ class PhocaCartViewOrder extends JViewLegacy
 		$this->p 			= $app->getParams();
 		$id					= $app->input->get('id', 0, 'int');
 		$type				= $app->input->get('type', 0, 'int');
-		$format				= $app->input->get('format', 0, 'int');
+		$format				= $app->input->get('format', '', 'string');
 		$token				= $app->input->get('o', '', 'string');
 		
 		$orderGuestAccess	= $this->p->get( 'order_guest_access', 0 );
@@ -38,7 +38,7 @@ class PhocaCartViewOrder extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDER'));
 	}
 }
 ?>

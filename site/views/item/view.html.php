@@ -8,8 +8,8 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
-jimport( 'joomla.itemsystem.folder' ); 
-jimport( 'joomla.itemsystem.file' );
+jimport( 'joomla.filesystem.folder' );  
+jimport( 'joomla.filesystem.file' );
 
 class PhocaCartViewItem extends JViewLegacy
 {
@@ -56,7 +56,20 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['image_popup_method']		= $this->p->get( 'image_popup_method', 1 );
+		$this->t['display_compare']			= $this->p->get( 'display_compare', 0 );
+		$this->t['display_wishlist']		= $this->p->get( 'display_wishlist', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
+		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
+		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
+		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
+		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
+		$this->t['item_askquestion']		= $this->p->get( 'item_askquestion', 0 );
+		$this->t['popup_askquestion']		= $this->p->get( 'popup_askquestion', 1 );
+
+		
+		if ($this->t['hide_addtocart'] == 1) {
+			$this->t['item_addtocart']		= 0;
+		}
 		
 		if (!$this->item) {
 			
@@ -67,7 +80,7 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['add_images']			= PhocaCartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocaCartRelated::getRelatedItemsById((int)$id, 0, 1);
 			$this->t['tags_output']			= PhocaCartTag::getTagsRendered((int)$id);
-			$this->t['stock_status']		= PhocaCartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
+			$this->t['stock_status']		= PhocaCartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
 			$this->t['stock_status_output'] = PhocaCartStock::getStockStatusOutput($this->t['stock_status']);
 			$this->t['attr_options']		= PhocaCartAttribute::getAttributesAndOptions((int)$id);
 			$this->t['specifications']		= PhocaCartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
@@ -79,7 +92,8 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['linkcheckout']		= JRoute::_(PhocaCartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			$this->t['linkitem']			= JRoute::_(PhocaCartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 
-			
+			$this->t['linkcomparison']	= JRoute::_(PhocaCartRoute::getComparisonRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkwishlist']	= JRoute::_(PhocaCartRoute::getWishListRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			
 			$this->itemnext[0]			= false;
 			$this->itemprev[0]			= false;
@@ -96,7 +110,9 @@ class PhocaCartViewItem extends JViewLegacy
 			$media->loadChosen($this->t['load_chosen']);
 			
 			$media->loadRating();
-			$media->loadSwapImage($this->t['dynamic_change_image']);
+			
+			$media->loadPhocaSwapImage($this->t['dynamic_change_image']);
+			$media->loadPhocaAttribute(1);
 			
 			if ($this->t['image_popup_method'] == 2) {
 				PhocaCartRenderJs::renderMagnific();
@@ -112,6 +128,11 @@ class PhocaCartViewItem extends JViewLegacy
 			
 			PhocaCartRenderJs::renderAjaxAddToCart();
 			PhocaCartRenderJs::renderAjaxAddToCompare();
+			PhocaCartRenderJs::renderAjaxAddToWishList();
+			
+			if ($this->t['popup_askquestion'] == 1) {
+				$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
+			}
 			
 			
 			if (isset($this->category[0]) && is_object($this->category[0]) && isset($this->item[0]) && is_object($this->item[0])){

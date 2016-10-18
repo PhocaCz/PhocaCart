@@ -18,7 +18,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 	}
 
 	function createfolder() {
-		JRequest::checkToken() or jexit( 'COM_PHOCADOWNLOAD_INVALID_TOKEN' );
+		JSession::checkToken() or jexit( 'COM_PHOCADOWNLOAD_INVALID_TOKEN' );
 		$app	= JFactory::getApplication();
 		
 		// Set FTP credentials, if given
@@ -29,13 +29,13 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
 		//$folder_permissions = octdec((int)$folder_permissions);
 
-		$folderNew		= JRequest::getCmd( 'foldername', '');
-		$folderCheck	= JRequest::getVar( 'foldername', null, '', 'string', JREQUEST_ALLOWRAW);
-		$parent			= JRequest::getVar( 'folderbase', '', '', 'path' );
-		$tab			= JRequest::getVar( 'tab', 0, '', 'string' );
-		$field			= JRequest::getVar( 'field');
-		$viewBack		= JRequest::getVar( 'viewback', '', '', 'phocacartmanager' );
-		$manager		= JRequest::getVar( 'manager', 'file', '', 'string' );
+		$folderNew		= $app->input->get( 'foldername', '');
+		$folderCheck	= $app->input->get( 'foldername', null, 'raw');
+		$parent			= $app->input->get( 'folderbase', '', 'path' );
+		$tab			= $app->input->get( 'tab', 0, 'string' );
+		$field			= $app->input->get( 'field');
+		$viewBack		= $app->input->get( 'viewback', 'phocacartmanager' );
+		$manager		= $app->input->get( 'manager', 'file', 'string' );
 		
 		
 		$link = '';
@@ -49,14 +49,14 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 			exit;
 		}
 
-		JRequest::setVar('folder', $parent);
+		JFactory::getApplication()->input->set('folder', $parent);
 
 		if (($folderCheck !== null) && ($folderNew !== $folderCheck)) {
 			$app->redirect($link, JText::_('COM_PHOCACART_WARNING_DIRNAME'));
 		}
 
 		if (strlen($folderNew) > 0) {
-			$folder = JPath::clean($path['orig_abs_ds'].$parent.DS.$folderNew);
+			$folder = JPath::clean($path['orig_abs_ds'].$parent.'/'.$folderNew);
 		
 			if (!JFolder::exists($folder) && !JFile::exists($folder)) {
 				//JFolder::create($path, $folder_permissions );
@@ -81,7 +81,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 				}
 				if (isset($folder)) {
 					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-					JFile::write($folder.DS."index.html", $data);
+					JFile::write($folder."/index.html", $data);
 				} else {
 					$app->redirect($link, JText::_('COM_PHOCACART_ERROR_FOLDER_CREATING'));
 				}
@@ -90,7 +90,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 			} else {
 				$app->redirect($link, JText::_('COM_PHOCACART_ERROR_FOLDER_CREATING_EXISTS'));
 			}
-			//JRequest::setVar('folder', ($parent) ? $parent.'/'.$folder : $folder);
+			//JFactory::getApplication()->input->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
 		}
 		$app->redirect($link);
 	}

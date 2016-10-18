@@ -26,7 +26,7 @@ class PhocaCartCpViewPhocaCartOrders extends JViewLegacy
 		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
+			throw new Exception(implode("\n", $errors), 500);
 			return false;
 		}
 		
@@ -37,6 +37,9 @@ class PhocaCartCpViewPhocaCartOrders extends JViewLegacy
 		
 		JHTML::stylesheet( $this->t['s'] );
 		JHTML::stylesheet( $this->t['css'] . 'icomoon/icomoon.css' );
+		
+		$this->t['plugin-pdf']		= PhocaCartExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+		$this->t['component-pdf']	= PhocaCartExtension::getExtensionInfo('com_phocapdf');
 				
 		
 		$this->addToolbar();

@@ -95,7 +95,7 @@ class PhocaCartCompare
 			 ' SELECT a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
 			.' c.id as catid, c.alias as catalias, c.title as cattitle, count(pc.category_id) AS count_categories,'
 			.' a.length, a.width, a.height, a.weight, a.volume,'
-			.' a.stock, a.min_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' m.title as manufacturer_title'
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'

@@ -20,9 +20,13 @@ $d = $displayData;
 	<label><?php echo JText::_('COM_PHOCACART_QTY'); ?>: </label> 
 	<input class="form-control ph-input-quantity" type="text" name="quantity" value="1" />
 	</div>
-	 <div class="form-group">
-	<button type="submit" class="btn btn-primary ph-btn" role="button"><span class="glyphicon glyphicon-shopping-cart"></span> <?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?></button>
-	<?php /* <input type="submit" value="submit" name="submit" role="btn btn-default" /> */ ?>
+	 <div class="form-group"><?php 
+	if ($d['addtocart'] == 1) {
+		?><button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?></button><?php
+	} else if ($d['addtocart'] == 4) {
+		?><button type="submit" class="btn btn-primary ph-btn" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?>"><span class="glyphicon glyphicon-shopping-cart"></span></button><?php
+	} ?>
+	<?php /* <input type="submit" value="submit" name="submit" role="button" /> */ ?>
 	</div>
 <?php echo JHtml::_('form.token'); ?>
 </div>

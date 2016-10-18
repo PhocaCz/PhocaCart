@@ -9,14 +9,7 @@
 defined('_JEXEC') or die();
 echo '<div id="ph-pc-checkout-box" class="pc-checkout-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-
-echo '<h1>';
-if ($this->p->get('show_page_heading')) { 
-	 $this->escape($this->p->get('page_heading'));
-}
-echo JText::_('COM_PHOCACART_CHECKOUT');
-echo '</h1>';
-
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_CHECKOUT')));
 
 if ( isset($this->t['checkout_desc']) && $this->t['checkout_desc'] != '') {
 	// Checkout description

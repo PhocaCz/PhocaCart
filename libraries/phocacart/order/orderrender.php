@@ -12,7 +12,7 @@ class PhocaCartOrderRender
 {
 	public function __construct() {}
 	
-	public function render($id, $type = 1, $format = 1, $token = '') {
+	public function render($id, $type = 1, $format = 'html', $token = '') {
 		
 	
 		if ($id < 1) {
@@ -35,7 +35,7 @@ class PhocaCartOrderRender
 		
 		$order 		= new PhocaCartOrderView();
 		$common		= $order->getItemCommon($id);
-		
+	
 		$app 	= JFactory::getApplication();
 		
 		// Not for admin
@@ -66,21 +66,21 @@ class PhocaCartOrderRender
 		// FORMAT - HTML
 		$box		= 'class="ph-idnr-box"';
 		$table 		= 'class="ph-idnr-box-in"';
-		$pho1 		= 'class="pho1"';
-		$pho2 		= 'class="pho2"';
-		$pho3 		= 'class="pho3"';
-		$pho4 		= 'class="pho4"';
-		$pho5 		= 'class="pho5"';
-		$pho6 		= 'class="pho6"';
-		$pho7 		= 'class="pho7"';
-		$pho6Sep 	= 'class="pho6 ph-idnr-sep"';
-		$pho7Sep 	= 'class="pho7 ph-idnr-sep"';
-		$pho8 		= 'class="pho8"';
-		$pho9 		= 'class="pho9"';
-		$pho10 		= 'class="pho10"';
-		$pho11 		= 'class="pho11"';
-		$pho12 		= 'class="pho12"';
-		$sep		= 'class="ph-idnr-sep"';
+		$pho1 		= $pho12	= 'class="pho1"';
+		$pho2 		= $pho22	= 'class="pho2"';
+		$pho3 		= $pho32	= 'class="pho3"';
+		$pho4 		= $pho42	= 'class="pho4"';
+		$pho5 		= $pho52	= 'class="pho5"';
+		$pho6 		= $pho62	= 'class="pho6"';
+		$pho7 		= $pho72	= 'class="pho7"';
+		$pho6Sep 	= $pho6Sep2	= 'class="pho6 ph-idnr-sep"';
+		$pho7Sep 	= $pho7Sep2	= 'class="pho7 ph-idnr-sep"';
+		$pho8 		= $pho82	= 'class="pho8"';
+		$pho9 		= $pho92	= 'class="pho9"';
+		$pho10 		= $pho102	= 'class="pho10"';
+		$pho11 		= $pho112	= 'class="pho11"';
+		$pho12 		= $pho122	= 'class="pho12"';
+		$sep		= $sep2		= 'class="ph-idnr-sep"';
 		$bBox		= 'class="ph-idnr-billing-box"';
 		$bBoxIn		= 'class="ph-idnr-billing-box-in"';
 		$sBox		= 'class="ph-idnr-shipping-box"';
@@ -90,9 +90,61 @@ class PhocaCartOrderRender
 		$bProduct	= 'class="ph-idnr-body-product"';
 		$sepH		= 'class="ph-idnr-sep-horizontal"';
 		$totalF		= 'class="ph-idnr-total"';
-		$toPay		= 'class="ph-idnr-to-pay"';
+		$toPayS		= 'class="ph-idnr-to-pay"';
+		$toPaySV	= 'class="ph-idnr-to-pay-value"';
+		$firstRow	= '';
 		
-		if ($format == 2) {
+		if ($format == 'pdf') {
+			$box		= '';
+			$table 		= 'style="width: 100%; font-family: sans-serif, arial; font-size: 80%;padding:3px;margin-top:-200px"';
+			$pho1 		= 'style="width: 8.3333%;"';
+			$pho2 		= 'style="width: 8.3333%;"';
+			$pho3 		= 'style="width: 8.3333%;"';
+			$pho4 		= 'style="width: 8.3333%;"';
+			$pho5 		= 'style="width: 8.3333%;"';
+			$pho6 		= 'style="width: 8.3333%;"';
+			$pho7 		= 'style="width: 8.3333%;"';
+			$pho6Sep 	= 'style="width: 3%;"';
+			$pho7Sep 	= 'style="width: 3%;"';
+			$pho8 		= 'style="width: 8.3333%;"';
+			$pho9 		= 'style="width: 8.3333%;"';
+			$pho10 		= 'style="width: 8.3333%;"';
+			$pho11 		= 'style="width: 8.3333%;"';
+			$pho12 		= 'style="width: 8.3333%;"';
+			$sep		= 'style="width: 3%;"';
+			
+			$pho12 		= 'style="width: 9%;"';
+			$pho22 		= 'style="width: 9%;"';
+			$pho32 		= 'style="width: 9%;"';
+			$pho42 		= 'style="width: 9%;"';
+			$pho52 		= 'style="width: 9%;"';
+			$pho62 		= 'style="width: 9%;"';
+			$pho72 		= 'style="width: 9%;"';
+			$pho6Sep2 	= 'style="width: 5%;"';
+			$pho7Sep2 	= 'style="width: 5%;"';
+			$pho82 		= 'style="width: 9%;"';
+			$pho92 		= 'style="width: 9%;"';
+			$pho102 	= 'style="width: 9%;"';
+			$pho112 	= 'style="width: 9%;"';
+			$pho122 	= 'style="width: 9%;"';
+			$seps2		= 'style="width: 10%;"';
+			
+			
+			$bBox		= 'style="border: 1pt solid #dddddd;"';
+			$bBoxIn		= 'style=""';
+			$sBox		= 'style="border: 1pt solid #dddddd;"';
+			$sBoxIn		= 'style=""';
+			$boxIn 		= 'style="width: 100%; font-family: sans-serif, arial; font-size: 60%;padding:3px 1px;"';
+			$hProduct 	= 'style="white-space:nowrap;font-weight: bold;background-color: #dddddd;"';
+			$bProduct	= 'style="white-space:nowrap;"';
+			$sepH		= 'style="border-top: 1pt solid #dddddd;"';
+			$totalF		= 'style=""';
+			$toPayS		= 'style="background-color: #eeeeee;padding: 20px;"';
+			$toPaySV	= 'style="background-color: #eeeeee;padding: 20px;text-align:right;"';
+			$firstRow	= 'style="font-size:0pt;"';
+		
+		} else if ($format == 'mail') {
+			
 			$box		= '';
 			$table 		= 'style="width: 100%; font-family: sans-serif, arial; font-size: 90%;"';
 			$pho1 		= 'style="width: 8.3333%;"';
@@ -110,6 +162,23 @@ class PhocaCartOrderRender
 			$pho11 		= 'style="width: 8.3333%;"';
 			$pho12 		= 'style="width: 8.3333%;"';
 			$sep		= 'style="width: 3%;"';
+			
+			$pho12 		= 'style="width: 9%;"';
+			$pho22 		= 'style="width: 9%;"';
+			$pho32 		= 'style="width: 9%;"';
+			$pho42 		= 'style="width: 9%;"';
+			$pho52 		= 'style="width: 9%;"';
+			$pho62 		= 'style="width: 9%;"';
+			$pho72 		= 'style="width: 9%;"';
+			$pho6Sep2 	= 'style="width: 5%;"';
+			$pho7Sep2 	= 'style="width: 5%;"';
+			$pho82 		= 'style="width: 9%;"';
+			$pho92 		= 'style="width: 9%;"';
+			$pho102 	= 'style="width: 9%;"';
+			$pho112 	= 'style="width: 9%;"';
+			$pho122 	= 'style="width: 9%;"';
+			$seps2		= 'style="width: 10%;"';
+			
 			$bBox		= 'style="border: 1px solid #ddd;padding: 10px;"';
 			$bBoxIn		= 'style=""';
 			$sBox		= 'style="border: 1px solid #ddd;padding: 10px;"';
@@ -119,8 +188,10 @@ class PhocaCartOrderRender
 			$bProduct	= 'style="white-space:nowrap;padding: 5px;"';
 			$sepH		= 'style="border-top: 1px solid #ddd;"';
 			$totalF		= 'style=""';
-			$toPay		= 'style="background: #ddd;padding: 20px;"';
-		
+			$toPayS		= 'style="background-color: #eeeeee;padding: 20px;"';
+			$toPaySV	= 'style="background-color: #eeeeee;padding: 20px;text-align:right;"';
+			$firstRow	= '';	
+			
 		}
 		
 		
@@ -128,10 +199,10 @@ class PhocaCartOrderRender
 		$o[] = '<div '.$box.'>';
 		$o[] = '<table '.$table.'>';
 		
-		$o[] = '<tr>';
-		$o[] = '<td '.$pho1.'>&nbsp;</td><td '.$pho2.'>&nbsp;</td><td '.$pho3.'>&nbsp;</td><td '.$pho4.'>&nbsp;</td>';	
-		$o[] = '<td '.$pho5.'>&nbsp;</td><td '.$pho6Sep.'>&nbsp;</td><td '.$pho7Sep.'>&nbsp;</td><td '.$pho8.'>&nbsp;</td>';	
-		$o[] = '<td '.$pho9.'>&nbsp;</td><td '.$pho10.'>&nbsp;</td><td '.$pho11.'>&nbsp;</td><td '.$pho12.'>&nbsp;</td>';	
+		$o[] = '<tr '.$firstRow.'>';
+		$o[] = '<td '.$pho12.'>&nbsp;</td><td '.$pho22.'>&nbsp;</td><td '.$pho32.'>&nbsp;</td><td '.$pho42.'>&nbsp;</td>';	
+		$o[] = '<td '.$pho52.'>&nbsp;</td><td '.$pho6Sep2.'>&nbsp;</td><td '.$pho7Sep2.'>&nbsp;</td><td '.$pho82.'>&nbsp;</td>';	
+		$o[] = '<td '.$pho92.'>&nbsp;</td><td '.$pho102.'>&nbsp;</td><td '.$pho112.'>&nbsp;</td><td '.$pho122.'>&nbsp;</td>';	
 		$o[] = '</tr>';
 		
 		// --------
@@ -148,27 +219,27 @@ class PhocaCartOrderRender
 		}
 		$o[] = '</td>';
 		
-		$o[] = '<td colspan="2" '.$sep.'></td>';
+		$o[] = '<td colspan="2" '.$sep2.'></td>';
 		
 		// --------
 		// HEADER RIGHT
 		$o[] = '<td colspan="5">';
 		if ($type == 1) {
 			$o[] = '<div><h1>'.JText::_('COM_PHOCACART_ORDER').'</h1></div>';
-			$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NUMBER').'</b>: '.PhocaCartOrder::getOrderNumber($common->id).'</div>';
+			$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocaCartOrder::getOrderNumber($common->id).'</div>';
 			$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($common->date, 'd. m. Y').'</div>';
 		} else if ($type == 2) {
 		
 			$o[] = '<div><h1>'.JText::_('COM_PHOCACART_INVOICE').'</h1></div>';
-			$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_NUMBER').'</b>: '.PhocaCartOrder::getInvoiceNumber($common->id, $invoice_prefix).'</div>';
+			$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_NR').'</b>: '.PhocaCartOrder::getInvoiceNumber($common->id, $invoice_prefix).'</div>';
 			$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($common->date, 'd. m. Y').'</div>';
 			
 	
 		
 		} else if ($type == 3) {
 			$o[] = '<div><h1>'.JText::_('COM_PHOCACART_DELIVERY_NOTE').'</h1></div>';
-			$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NUMBER').'</b>: '.PhocaCartOrder::getOrderNumber($common->id).'</div>';
-			$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($common->date, 'd. m. Y').'</div>';
+			$o[] = '<div style="margin:0;"><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocaCartOrder::getOrderNumber($common->id).'</div>';
+			$o[] = '<div style="margin:0"><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($common->date, 'd. m. Y').'</div>';
 		
 		}
 		$o[] = '<div>&nbsp;</div>';
@@ -214,10 +285,10 @@ class PhocaCartOrderRender
 			if ($v['zip'] != '') { $city[] = $v['zip'];}
 			if ($v['city'] != '') { $city[] = $v['city'];}
 			if (!empty($city)) {$o[] = implode("\n", $city).'<br />';}
-			echo '<br />';
+			//echo '<br />';
 			if (!empty($v['regiontitle'])) {$o[] = $v['regiontitle'].'<br />';}
 			if (!empty($v['countrytitle'])) {$o[] = $v['countrytitle'].'<br />';}
-			echo '<br />';
+			//echo '<br />';
 			if ($v['vat_1'] != '') { $o[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
 			if ($v['vat_2'] != '') { $o[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
 		}
@@ -245,10 +316,10 @@ class PhocaCartOrderRender
 			if ($v['zip'] != '') { $city[] = $v['zip'];}
 			if ($v['city'] != '') { $city[] = $v['city'];}
 			if (!empty($city)) {$o[] = implode("\n", $city).'<br />';}
-			echo '<br />';
+			//echo '<br />';
 			if (!empty($v['regiontitle'])) {$o[] = $v['regiontitle'].'<br />';}
 			if (!empty($v['countrytitle'])) {$o[] = $v['countrytitle'].'<br />';}
-			echo '<br />';
+			//echo '<br />';
 			if ($v['vat_1'] != '') { $o[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
 			if ($v['vat_2'] != '') { $o[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
 		}
@@ -374,6 +445,7 @@ class PhocaCartOrderRender
 		
 		$o[] = '<tr><td colspan="12" '.$sepH.'>&nbsp;</td></tr>';
 
+		$t = array();
 		$toPay = 0;
 		if (!empty($total)) {
 			foreach($total as $k => $v) {
@@ -414,13 +486,13 @@ class PhocaCartOrderRender
 		if ($toPay > 0) {
 			$o[] = '<tr class="ph-idnr-to-pay-box">';
 			$o[] = '<td colspan="7">&nbsp;</td>';
-			$o[] = '<td colspan="3" '.$toPay.'><b>'.JText::_('COM_PHOCACART_TO_PAY').'</b></td>';
-			$o[] = '<td style="text-align:right" colspan="2" '.$toPay.'><b>'.$price->getPriceFormat($toPay).'</b></td>';
+			$o[] = '<td colspan="3" '.$toPayS.'><b>'.JText::_('COM_PHOCACART_TO_PAY').'</b></td>';
+			$o[] = '<td colspan="2" '.$toPaySV.'><b>'.$price->getPriceFormat($toPay).'</b></td>';
 			$o[] = '</tr>';
 		}
 		
 		
-		$o[] = '<table>';// End box in
+		$o[] = '</table>';// End box in
 		$o[] = '</div>';// End box
 		
 		

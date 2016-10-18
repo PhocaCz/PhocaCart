@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 
+
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 

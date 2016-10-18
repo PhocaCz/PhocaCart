@@ -22,7 +22,7 @@ class PhocaCartLoader extends JLoader
 		
 		if (!isset($paths[$keyPath])) {
 			if ( !$base ) {
-				$base =  JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocacart'.DS.'libraries';
+				$base =  JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries';
 			}
 
 			$parts = explode( '.', $filePath );
@@ -40,18 +40,18 @@ class PhocaCartLoader extends JLoader
 					break;
 			}
 
-			$path  = str_replace( '.', DS, $filePath );
+			$path  = str_replace( '.', '/', $filePath );
 			
 			if (strpos($filePath, 'phocacart') === 0) {
 				$className	= 'PhocaCart'.$className;
-				$classes	= JLoader::register($className, $base.DS.$path.'.php');
+				$classes	= JLoader::register($className, $base.'/'.$path.'.php');
 				$rs			= isset($classes[strtolower($className)]);
 			} else {
 				// If it is not in the joomla namespace then we have no idea if
 				// it uses our pattern for class names/files so just include
 				// if the file exists or set it to false if not
 
-				$filename = $base.DS.$path.'.php';
+				$filename = $base.'/'.$path.'.php';
 				if (is_file($filename)) {
 					$rs   = (bool) include $filename;
 				} else {

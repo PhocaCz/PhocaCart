@@ -21,7 +21,7 @@ Joomla.submitbutton = function(task) {
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
 	else {
-		alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
+		Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
 	}
 }
 </script><?php
@@ -36,7 +36,7 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'code', 'exchange_rate', 'price_format', 'price_currency_symbol', 'price_dec_symbol', 'price_decimals', 'price_thousands_sep', 'price_suffix', 'price_prefix', 'ordering');
+$formArray = array ('title', 'code', 'exchange_rate', 'price_format', 'price_currency_symbol', 'price_dec_symbol', 'price_decimals', 'price_thousands_sep', 'price_suffix', 'price_prefix', 'image', 'ordering');
 echo $r->group($this->form, $formArray);
 
 echo '</div>'. "\n";

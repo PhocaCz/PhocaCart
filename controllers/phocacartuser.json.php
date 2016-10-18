@@ -12,7 +12,7 @@ class PhocaCartCpControllerPhocaCartUser extends JControllerForm
 {
 	public function setregion() {
 	
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<div class="alert alert-danger">' . JText::_('JINVALID_TOKEN') . '</div>');

@@ -61,7 +61,7 @@ class PhocaCartOrderStatus
 	}	
 	
 	public final function __clone() {
-		JError::raiseWarning(500, 'Function Error: Cannot clone instance of Singleton pattern');// No JText - for developers only
+		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
 	}
 	
@@ -86,6 +86,10 @@ class PhocaCartOrderStatus
 		
 		$config		= JFactory::getConfig();
 		
+		$paramsC 			= JComponentHelper::getParams('com_phocacart');
+		$invoice_prefix		= $paramsC->get('invoice_prefix', '');
+		$attachment_format	= $paramsC->get('attachment_format', 0 );
+		
 		// FIND THE RIGHT VALUES FOR VARIBALES - different if we are in frontend or backend
 		$notifyUserV 	= false;
 		$notifyOthersV	= false;
@@ -102,6 +106,7 @@ class PhocaCartOrderStatus
 				$notifyUserV = true;
 			}
 		}
+		
 		
 		// 2) NOTIFY OTHERS
 		if ($notifyOthers == 0) {
@@ -212,6 +217,7 @@ class PhocaCartOrderStatus
 						// Status ID will be ignored as we know the Stock Movement
 						PhocaCartStock::handleStockProduct((int)$v->product_id, $statusId, (int)$v->quantity, $stockMovementsV);
 					}
+					
 					if (!empty($v->attributes)) {
 						foreach($v->attributes as $k2 => $v2) {
 							if ((int)$v2->option_id > 0 && (int)$v2->productquantity  > 0) {
@@ -295,23 +301,95 @@ class PhocaCartOrderStatus
 			
 				
 				$body 	= PhocaCartEmail::completeMail($body, $r);
+			
 				
+				// PDF
+				$pdfV					= array();
+				$attachmentContent		= '';
+				$attachmentName			= '';
+				$pdfV['plugin-pdf']		= PhocaCartExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+				$pdfV['component-pdf']	= PhocaCartExtension::getExtensionInfo('com_phocapdf');
+				$pdfV['pdf']			= 0;
+				
+				if ($pdfV['plugin-pdf'] == 1 && $pdfV['component-pdf'] == 1) {
+					if (JFile::exists(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php')) {
+						require_once(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php');
+					} else {
+						throw new Exception('Error - Phoca PDF Helper - Render PDF file could not be found in system', 500);
+						return false;
+					}
+					$pdfV['pdf'] = 1;
+				}
 
 				switch ($emailSendV) {
 					case 1:
 						$orderRender = new PhocaCartOrderRender();
-						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 1, 2, $orderToken);
+						
+						if ($attachment_format == 0 || $attachment_format == 2) {
+							$body .= "<br><br>";
+							$body .= $orderRender->render($orderId, 1, 'mail', $orderToken);
+						}
+						
+						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+							$staticData					= array();
+							$orderNumber				= PhocaCartOrder::getOrderNumber($orderId);
+							$staticData['option']		= 'com_phocacart';
+							$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
+							$staticData['file']			= '';// Must be empty to not save the pdf to server
+							$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_ORDER'). '_'. $orderNumber).'.pdf';
+							$staticData['subject']		= '';
+							$staticData['keywords']		= '';
+							$staticData['output']		= $orderRender->render($orderId, 1, 'pdf', $orderToken);
+							$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
+							$attachmentName 			= $staticData['filename'];
+						}
+						
 					break;
 					case 2:
 						$orderRender = new PhocaCartOrderRender();
-						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 2, 2, $orderToken);
+						
+						if ($attachment_format == 0 || $attachment_format == 2) {
+							$body .= "<br><br>";
+							$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
+						}
+						
+						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+							$staticData					= array();
+							$invoiceNumber				= PhocaCartOrder::getInvoiceNumber($orderId, $invoice_prefix);
+							$staticData['option']		= 'com_phocacart';
+							$staticData['title']		= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
+							$staticData['file']			= '';// Must be empty to not save the pdf to server
+							$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_INVOICE'). '_'. $invoiceNumber).'.pdf';
+							$staticData['subject']		= '';
+							$staticData['keywords']		= '';
+							$staticData['output']		= $orderRender->render($orderId, 2, 'pdf', $orderToken);
+							$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
+							$attachmentName 			= $staticData['filename'];
+						}
+						
 					break;
 					case 3:
 						$orderRender = new PhocaCartOrderRender();
-						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 3, 2, $orderToken);
+						
+						if ($attachment_format == 0 || $attachment_format == 2) {
+							$body .= "<br><br>";
+							$body .= $orderRender->render($orderId, 3, 'mail', $orderToken);
+						}
+						
+						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+							$staticData					= array();
+							$orderNumber				= PhocaCartOrder::getOrderNumber($orderId);
+							$staticData['option']		= 'com_phocacart';
+							$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
+							$staticData['file']			= '';// Must be empty to not save the pdf to server
+							$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_ORDER'). '_'. $orderNumber).'.pdf';
+							$staticData['subject']		= '';
+							$staticData['keywords']		= '';
+							$staticData['output']		= $orderRender->render($orderId, 3, 'pdf', $orderToken);
+							$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
+							$attachmentName 			= $staticData['filename'];
+						}
+						
 					break;
 				
 				}
@@ -337,16 +415,23 @@ class PhocaCartOrderStatus
 			}
 			
 			
-				
-			$notify = PhocaCartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, $bcc);
+			
+			// Notify
+			// 1 ... sent
+			// 0 ... not sent
+			// -1 ... not sent (error)
+			$notify = PhocaCartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, $bcc, $attachmentContent, $attachmentName);
 			if ($notify) {
 				if ($app->isAdmin()){
 					$app->enqueueMessage(JText::_('COM_PHOCACART_EMAIL_IF_NO_ERROR_EMAIL_SENT'));
 				}
+				return $notify;// 1
+			} else {
+				return -1;
 			}
-			return $notify;
+			
 		}
-		return false;
+		return false;// 0
 	}
 	
 	/* Usually

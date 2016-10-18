@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-$fieldSets = $this->form->getFieldsets('metadata');
+$fieldSets = $this->form->getFieldsets('metadata'); 
 foreach ($fieldSets as $name => $fieldSet) :
 	?>
 	<fieldset class="panelform">

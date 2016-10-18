@@ -94,7 +94,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -106,15 +106,15 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->title);
 }
 //$checkO .= ' <span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($this->escape($item->code), "small hidden-phone");
-echo $r->td($this->escape($item->price_currency_symbol), "small hidden-phone");
-echo $r->td($this->escape($item->exchange_rate), "small hidden-phone");
+echo $r->td($this->escape($item->code), "small");
+echo $r->td($this->escape($item->price_currency_symbol), "small");
+echo $r->td($this->escape($item->exchange_rate), "small");
 
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

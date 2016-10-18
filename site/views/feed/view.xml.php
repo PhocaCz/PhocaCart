@@ -260,8 +260,8 @@ class PhocaCartViewFeed extends JViewLegacy
 					}
 					
 					// STOCK DELIVERY_DATE
-					if ($p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
-						$stockStatus 	= PhocaCartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+					if ($p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
+						$stockStatus 	= PhocaCartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
 						//$stockText		= PhocaCartStock::getStockStatusOutput($stockStatus);
 						if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
 							$o[] = $l.$p['item_delivery_date'].$r.$stockStatus['stock_status'].$e.$p['item_delivery_date'].$r;
@@ -269,8 +269,8 @@ class PhocaCartViewFeed extends JViewLegacy
 					}
 					
 					// STOCK DELIVERY_DATE FEED
-					if ($p['feed_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
-						$stockStatus 	= PhocaCartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+					if ($p['feed_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
+						$stockStatus 	= PhocaCartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
 						
 						
 						if (isset($stockStatus['stock_status_feed']) && $stockStatus['stock_status_feed'] != '') {

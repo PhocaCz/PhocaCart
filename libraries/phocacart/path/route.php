@@ -11,19 +11,19 @@
  * source software licenses. See COPYRIGHT.php for copyright notices and
  * details.
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 jimport('joomla.application.component.helper');
 
 
 class PhocaCartRoute
 {
-	public static function getCategoriesRoute()
-	{
-		// TEST SOLUTION
+	public static function getCategoriesRoute() {
+		
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
-		
+		$option		= $app->input->get( 'option', '', 'string' );
+		$view		= $app->input->get( 'view', '', 'string' );
 		
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -31,14 +31,9 @@ class PhocaCartRoute
 		}
 		
 		$itemId 	= 0;
-		
-		$option			= $app->input->get( 'option', '', 'string' );
-		$view			= $app->input->get( 'view', '', 'string' );
-		if ($option == 'com_phocacart' && $view == 'category') {
-			if ((int)$activeId > 0) {
-				// 2) if there are two menu links, try to select the one active
-				$itemId = $activeId;
-			}
+		if ((int)$activeId > 0 &&$option == 'com_phocacart' && $view == 'category') {
+			// 2) if there are two menu links, try to select the one active
+			$itemId = $activeId;
 		}
 		
 		$needles = array(
@@ -52,7 +47,6 @@ class PhocaCartRoute
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
 			}
-			
 			// $item->id should be a "categories view" and it should have preference to category view
 			// so first we check item->id then itemId
 			if (isset($item->id) && ((int)$item->id > 0)) {
@@ -64,9 +58,8 @@ class PhocaCartRoute
 		return $link;
 	}
 	
-	public static function getCategoryRoute($catid, $catidAlias = '')
-	{
-		// TEST SOLUTION
+	public static function getCategoryRoute($catid, $catidAlias = '') {
+
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
@@ -79,7 +72,6 @@ class PhocaCartRoute
 		}
 		
 		if ((int)$activeId > 0 && $option == 'com_phocacart' && $view == 'category') {
-		
 			$needles 	= array(
 				'category' => (int)$catid,
 				'categories' => (int)$activeId
@@ -95,24 +87,13 @@ class PhocaCartRoute
 			$catid = $catid . ':' . $catidAlias;
 		}
 
-		//Create the link
 		$link = 'index.php?option=com_phocacart&view=category&id='.$catid;
-
-		if($item = PhocaCartRoute::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if (isset($item->id) && ((int)$item->id > 0)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-
-		return $link;
+		return self::_buildLink($link, $needles);
 	}
 	
-	public static function getCategoryRouteByTag($tagId)
-	{
-		// TEST SOLUTION
+	
+	public static function getCategoryRouteByTag($tagId) {
+
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
@@ -123,7 +104,6 @@ class PhocaCartRoute
 			$activeId    = $active->id;
 		}
 		if ((int)$activeId > 0 && $option == 'com_phocacart') {
-		
 			$needles 	= array(
 				'category' => '',
 				'categories' => (int)$activeId
@@ -135,8 +115,6 @@ class PhocaCartRoute
 			);
 		}
 		
-		
-		
 		$db = JFactory::getDBO();
 				
 		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'
@@ -147,33 +125,20 @@ class PhocaCartRoute
 		$db->setQuery($query, 0, 1);
 		$tag = $db->loadObject();
 		
-		
 
-		//Create the link
 		if (isset($tag->id)) {
 			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid='.(int)$tag->id;
 		} else {
 			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid=0';
 		}
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if (isset($item->id) && ((int)$item->id > 0)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-
-		return $link;
+		return self::_buildLink($link, $needles);
 	}
 	
 	
 	/* Items route can be without id or with id, if id, then it is a category id
 	*/
-	public static function getItemsRoute($catid = '', $catidAlias = '')
-	{
-		// TEST SOLUTION
+	public static function getItemsRoute($catid = '', $catidAlias = '') {
+		
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
@@ -217,36 +182,20 @@ class PhocaCartRoute
 			}
 		}
 		
-		
-		
-		
 		if ($catidAlias != '') {
 			$catid = $catid . ':' . $catidAlias;
 		}
 
-		//Create the link
 		if ($catid != '') {
 			$link = 'index.php?option=com_phocacart&view=items&id='.$catid;
 		} else {
 			$link = 'index.php?option=com_phocacart&view=items';
 		}
-		
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if (isset($item->id) && ((int)$item->id > 0)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		}
-
-		return $link;
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '')
-	{
-		// TEST SOLUTION
+	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '') {
+
 		$app 			= JFactory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
@@ -264,15 +213,14 @@ class PhocaCartRoute
 		}
 		
 		if ((int)$activeId > 0 && $option == 'com_phocacart' && $view == 'item') {
-
 			$needles = array(
-				'detail'  => (int) $id,
+				'item'  => (int) $id,
 				'category' => (int) $catid,
 				'categories' => (int)$activeId
 			);
 		} else {
 			$needles = array(
-				'detail'  => (int) $id,
+				'item'  => (int) $id,
 				'category' => (int) $catid,
 				'categories' => ''
 			);
@@ -286,183 +234,113 @@ class PhocaCartRoute
 		}
 		
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getCheckoutRoute($id = 0, $catid = 0) {
+		$needles = array(
+			'checkout' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
 
+		$link = 'index.php?option=com_phocacart&view=checkout';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getAccountRoute($id = 0, $catid = 0) {
+		$needles = array(
+			'account' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
 
-		if($item = self::_findItem($needles)) {
-			if (isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
+		$link = 'index.php?option=com_phocacart&view=account';
+		return self::_buildLink($link, $needles);
+	}
+
+	
+	public static function getComparisonRoute($id = 0, $catid = 0) {
+		$needles = array(
+			'comparison' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=comparison';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getWishListRoute($id = 0, $catid = 0) {
+		$needles = array(
+			'wishlist' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=wishlist';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getPaymentRoute($id = 0, $catid = 0) {
+		$needles = array(
+			//'payment' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=payment';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getDownloadRoute($id = 0, $catid = 0) {
+		$needles = array(
+			'download' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=download';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getOrdersRoute($id = 0, $catid = 0) {
+		$needles = array(
+			'orders' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=orders';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getTermsRoute($id = 0, $catid = 0, $suffix = '') {
+		$needles = array(
+			'terms' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=terms';
+		if ($suffix != '') {
+			$link .= '&'.$suffix;
 		}
 
-		return $link;
-	}
-	
-	public static function getCheckoutRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			'checkout' => '',
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=checkout';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		return $link;
-	}
-	
-	public static function getAccountRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			'account' => '',
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=account';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		return $link;
-	}
-
-	
-	public static function getComparisonRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			'comparison' => '',
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=comparison';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		return $link;
-	}
-	
-	public static function getPaymentRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			//'payment' => '',
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=payment';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		return $link;
-	}
-	
-	public static function getDownloadRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			'download' => '',
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=download';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		
-		return $link;
-	}
-	
-	public static function getOrdersRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			'orders' => '',
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=orders';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		return $link;
-	}
-	
-	public static function getTermsRoute($id = 0, $catid = 0)
-	{
-		$needles = array(
-			'item'  => (int) $id,
-			'category' => (int) $catid,
-			'categories' => ''
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_phocacart&view=terms';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if(isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		};
-		return $link;
+		return self::_buildLink($link, $needles);
 	}
 	
 	
 	
-	public static function getInfoRoute($id = 0, $catid = 0)
-	{
+	public static function getInfoRoute($id = 0, $catid = 0) {
 		$needles = array(
 			//'info' => '',
 			'item'  => (int) $id,
@@ -470,23 +348,11 @@ class PhocaCartRoute
 			'categories' => ''
 		);
 		
-		//Create the link
 		$link = 'index.php?option=com_phocacart&view=info';
-
-		if($item = self::_findItem($needles)) {
-			if(isset($item->query['layout'])) {
-				$link .= '&layout='.$item->query['layout'];
-			}
-			if (isset($item->id)) {
-				$link .= '&Itemid='.$item->id;
-			}
-		}
-
-		return $link;
+		return self::_buildLink($link, $needles);
 	}
 	
-	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0)
-	{
+	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0) {
 		$needles = array(
 			'feed'  => (int) $id,
 			'categories' => ''
@@ -500,18 +366,75 @@ class PhocaCartRoute
 		if ($noSEF == 1) {
 			return $link;
 		}
+		return self::_buildLink($link, $needles);
+	}
+	
+	
+	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '') {
+
+		$app 			= JFactory::getApplication();
+		$menu 			= $app->getMenu();
+		$active 		= $menu->getActive();
+		$option			= $app->input->get( 'option', '', 'string' );
+		$view			= $app->input->get( 'view', '', 'string' );
+
+		$activeId 	= 0;
+		if (isset($active->id)){
+			$activeId    = $active->id;
+		}
+
+		if ((int)$activeId > 0 && $option == 'com_phocacart' && $view == 'question') {
+
+			$needles = array(
+				'question'  => '',
+				'item' => (int) $id,
+				'category' => (int) $catid,
+				'categories' => (int)$activeId
+			);
+		} else {
+			$needles = array(
+				'question'  => '',
+				'item' => (int) $id,
+				'category' => (int) $catid,
+				'categories' => ''
+			);
+		}
+
+		if ($idAlias != '') {
+			$id = (int)$id . ':' . $idAlias;
+		}
+		if ($catidAlias != '') {
+			$catid = (int)$catid . ':' . $catidAlias;
+		}
+		
+		$link = 'index.php?option=com_phocacart&view=question';
+		if ($id != 0) {
+			$link .= '&id='. $id;
+		}
+		if ($catid != 0) {
+			$link .= '&catid='. $catid;
+		}
+		if ($suffix != '') {
+			$link .= '&'.$suffix;
+		}
+		
+		return self::_buildLink($link, $needles);
+	}
+	
+	
+	
+	protected static function _buildLink($link, $needles) {
+		
 		if($item = self::_findItem($needles)) {
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
 			}
-			if(isset($item->id)) {
+			if (isset($item->id) && ((int)$item->id > 0)) {
 				$link .= '&Itemid='.$item->id;
 			}
-		};
+		}
 		return $link;
 	}
-	
-	
 	
 	
 
@@ -521,6 +444,7 @@ class PhocaCartRoute
 		$menus	= $app->getMenu('site', array());
 		$items	= $menus->getItems('component', 'com_phocacart');
 
+	
 		if(!$items) {
 			return $app->input->get('Itemid', 0, '', 'int');
 			//return null;
@@ -607,6 +531,7 @@ class PhocaCartRoute
 			$urlItemsView	= JRoute::_(PhocaCartRoute::getItemsRoute($a['id'], $a['alias']));
 			
 		}
+
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
 		// Cause URL problems

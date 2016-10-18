@@ -9,12 +9,9 @@
 defined('_JEXEC') or die();
 
 echo '<div id="ph-pc-comparison-box" class="pc-comparison-view'.$this->p->get( 'pageclass_sfx' ).'">';
-if ( $this->p->get( 'show_page_heading' ) ) { 
-	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
-} else {
-	echo '<h1>'. JText::_('COM_PHOCACART_COMPARISON'). '</h1>';
-}
 
+
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_COMPARISON')));
 
 
 
@@ -23,7 +20,10 @@ if (!empty($this->t['items'])) {
 
 	$c = array();
 	$c['title']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_PRODUCT').'</b></td>';
-	$c['price']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_PRICE').'</b></td>';
+	
+	if ($this->t['hide_price'] != 1) {
+		$c['price']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_PRICE').'</b></td>';
+	}
 	$c['remove'] 	= '<tr><td class="ph-middle"></td>';
 	$c['desc']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_DESCRIPTION').'</b></td>';
 	$c['man'] 		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_MANUFACTURER').'</b></td>';
@@ -66,8 +66,10 @@ if (!empty($this->t['items'])) {
 		}
 		$c['title'] .= '</td>';
 		
-		$c['price'] .= '<td class="ph-right">'.$price->getPriceFormat($v['price']).'</td>';
-		
+		if ($this->t['hide_price'] != 1) {
+			$c['price'] .= '<td class="ph-right">'.$price->getPriceFormat($v['price']).'</td>';
+		}
+	
 		$c['remove'] .= '<td>';
 		$c['remove'] .= '<form action="'.$this->t['linkcomparison'].'" method="post">';
 		$c['remove'] .= '<input type="hidden" name="id" value="'.(int)$v['id'].'">';
@@ -76,7 +78,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<input type="hidden" name="option" value="com_phocacart" />';
 		$c['remove'] .= '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		$c['remove'] .= '<div class="ph-center">';
-		$c['remove'] .= '<button type="submit" class="btn btn-primary ph-btn" role="button"><span class="glyphicon glyphicon-remove"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
+		$c['remove'] .= '<button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-remove"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
 		$c['remove'] .= '</div>';
 		$c['remove'] .= JHtml::_('form.token');
 		$c['remove'] .= '</form>';
@@ -118,7 +120,9 @@ if (!empty($this->t['items'])) {
 	}
 	
 	$c['title'] 	.= '</tr>';
-	$c['price'] 	.= '</tr>';
+	if ($this->t['hide_price'] != 1) {
+		$c['price'] 	.= '</tr>';
+	}
 	$c['desc'] 		.= '</tr>';
 	$c['man'] 		.= '</tr>';
 	$c['remove'] 	.= '</tr>';

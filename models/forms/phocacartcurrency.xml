@@ -28,6 +28,8 @@
 		<field name="price_suffix" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_SUFFIX_DESC" />
 		<field name="price_prefix" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" />
 		
+		<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
+		
 
 <field name="ordering" type="PhocaCartOrdering" table="currency" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 	

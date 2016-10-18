@@ -103,7 +103,7 @@ echo "\n\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -118,12 +118,12 @@ if (($canCreate || $canEdit) && (int)$item->id > 0) {
 if (isset($item->user_username)) {
 	$checkO .= ' <small>('.$item->user_username.')</small>';
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
  
 // Status
 // NOT ACTIVE
 if ((int)$item->id < 1 && (int)$item->cartuserid < 1) {
-	echo $r->td( '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small hidden-phone");
+	echo $r->td( '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
 }
 
 // ORDER MADE
@@ -132,7 +132,7 @@ else if ( (int)$item->orderuserid > 0 ) {
 	if ((int)$item->cartuserid > 0) {
 		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 	}
-	echo $r->td(  $o, "small hidden-phone");
+	echo $r->td(  $o, "small");
 } 
 
 // ADDED BILLING AND SHIPPING ADDRESS
@@ -141,7 +141,7 @@ else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '
 	if ((int)$item->cartuserid > 0) {
 		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 	}
-	echo $r->td(  $o, "small hidden-phone");
+	echo $r->td(  $o, "small");
 }
 
 
@@ -152,7 +152,7 @@ else if ( (int)$item->cartuserid > 0 || ($item->name_last != '' || $item->name_f
 	if ((int)$item->cartuserid > 0) {
 		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 	}
-	echo $r->td(  $o, "small hidden-phone");
+	echo $r->td(  $o, "small");
 }
 
 // ADDED ITEMS TO CART BUT NO ORDER, NO BILLING OR SHIPPING ADDRESS
@@ -162,17 +162,17 @@ else if ( (int)$item->cartuserid > 0) {
 	if ((int)$item->cartuserid > 0) {
 		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 	}
-	echo $r->td(  $o, "small hidden-phone");
+	echo $r->td(  $o, "small");
 }
 
 // OTHER
 else {
-	echo $r->td('-', "small hidden-phone"); 
+	echo $r->td('-', "small"); 
 }
-echo $r->td($item->name_last, "small hidden-phone");
-echo $r->td($item->name_first, "small hidden-phone");
-echo $r->td($item->address_1, "small hidden-phone");
-echo $r->td($item->user_id, "small hidden-phone");
+echo $r->td($item->name_last, "small");
+echo $r->td($item->name_first, "small");
+echo $r->td($item->address_1, "small");
+echo $r->td($item->user_id, "small");
 	
 echo '</tr>'. "\n";
 						

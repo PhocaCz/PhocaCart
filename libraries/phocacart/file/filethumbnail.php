@@ -27,20 +27,20 @@ class PhocaCartFileThumbnail
 		switch ($size) {
 			case 'large':
 			$fileNameThumb 	= 'phoca_thumb_l_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs'. DS . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;	
 			
 			case 'medium':
 			$fileNameThumb 	= 'phoca_thumb_m_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs'. DS . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;
 			
 			default:
 			case 'small':
 			$fileNameThumb 	= 'phoca_thumb_s_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs' . DS . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/'  . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;	
 		}
@@ -98,20 +98,20 @@ class PhocaCartFileThumbnail
 		//$additional_thumbnails 					= $paramsC->get( 'additional_thumbnails',0 );
 		
 		$path 									= PhocaCartPath::getPath($manager);
-		$origPathServer 						= str_replace(DS, '/', $path['orig_abs_ds']);
+		$origPathServer 						= str_replace('\\', '/', $path['orig_abs_ds']);
 		$file['name']							= PhocaCartFile::getTitleFromFilenameWithExt($fileNo);
 		$file['name_no']						= ltrim($fileNo, '/');
 		$file['name_original_abs']				= PhocaCartFile::getFileOriginal($fileNo, 0, $manager);
 		$file['name_original_rel']				= PhocaCartFile::getFileOriginal($fileNo, 1, $manager);
 		$file['path_without_file_name_original']= str_replace($file['name'], '', $file['name_original_abs']);
-		$file['path_without_file_name_thumb']	= str_replace($file['name'], '', $file['name_original_abs'] . 'thumbs' . DS);
-		//$file['path_without_name']				= str_replace(DS, '/', JPath::clean($origPathServer));
+		$file['path_without_file_name_thumb']	= str_replace($file['name'], '', $file['name_original_abs'] . 'thumbs' . '/');
+		//$file['path_without_name']				= str_replace('\\', '/', JPath::clean($origPathServer));
 		//$file['path_with_name_relative_no']		= str_replace($origPathServer, '', $file['name_original']);
 		/*
 		$file['path_with_name_relative']		= $path['orig_rel_ds'] . str_replace($origPathServer, '', $file['name_original']);
 		$file['path_with_name_relative_no']		= str_replace($origPathServer, '', $file['name_original']);
 		
-		$file['path_without_name']				= str_replace(DS, '/', JPath::clean($origPath.DS));
+		$file['path_without_name']				= str_replace('\\', '/', JPath::clean($origPath.'/'));
 		$file['path_without_name_relative']		= $path['orig_rel_ds'] . str_replace($origPathServer, '', $file['path_without_name']);
 		$file['path_without_name_relative_no']	= str_replace($origPathServer, '', $file['path_without_name']);
 		$file['path_without_name_thumbs'] 		= $file['path_without_name'] .'thumbs';
@@ -301,7 +301,7 @@ class PhocaCartFileThumbnail
 						//JFolder::create($folderThumbnail, $folder_permissions );
 						if (isset($folderThumbnail)) {
 							$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-							JFile::write($folderThumbnail.DS."index.html", $data);
+							JFile::write($folderThumbnail."/index.html", $data);
 						}
 						// folder was not created
 						if (!JFolder::exists($folderThumbnail)) {

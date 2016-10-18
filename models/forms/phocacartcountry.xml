@@ -12,6 +12,8 @@
 <field name="code2" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CODE2_LABEL" description="COM_PHOCACART_FIELD_CODE2_DESC"  />
 <field name="code3" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CODE_LABEL" description="COM_PHOCACART_FIELD_CODE_DESC"  />
 
+<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
+
 <field name="ordering" type="PhocaCartOrdering" table="country" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 

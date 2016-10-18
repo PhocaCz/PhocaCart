@@ -22,14 +22,13 @@ class PhocaCartViewTerms extends JViewLegacy
 		
 		$media = new PhocaCartRenderMedia();
 		
-		echo '<div class="ph-terms-box-in">';
-		echo $this->t['terms_conditions'];
-		echo '</div>';
+		$this->_prepareDocument();
+		parent::display($tpl);
 		
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS'));
 	}
 }
 ?>

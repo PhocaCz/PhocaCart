@@ -278,9 +278,9 @@ class PhocaCartRenderAdminViews
 		}
 	}
 	
-	/* TODO:
+	/* TO DO:
 	* CHANGE PATHS
-	* SET NEW PARAM IN PG: '/media/com_phocagallery/images/administrator/'
+	* SET NEW PARAM IN PG: '/media/com_phocacart/images/administrator/'
 	*/
 	public function tdImage($item, $button, $txtE, $class = '', $avatarAbs = '', $avatarRel = '') {
 		$o = '<td class="'.$class.'">'. "\n";

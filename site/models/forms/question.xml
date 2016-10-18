@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/components/com_phocacart/models/fields" addrulepath="/components/com_phocacart/models/rules">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly" />
+
+<field name="user_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" />
+
+<field name="product_id" type="hidden" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
+<field name="category_id" type="hidden" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_ID_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ID_DESC" />
+
+<field name="name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_NAME_LABEL" description="COM_PHOCACART_FIELD_F_NAME_DESC" />
+
+<field name="email" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_EMAIL_LABEL" description="COM_PHOCACART_FIELD_F_EMAIL_DESC" validate="phocacartemail" />
+
+<field name="phone" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_PHONE_LABEL" description="COM_PHOCACART_FIELD_F_PHONE_DESC" />
+
+<field name="phone_mobile" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_MOBILE_PHONE_LABEL" description="COM_PHOCACART_FIELD_F_MOBILE_PHONE_DESC" />
+
+<field name="message" type="textarea" class="inputbox ph-question-message"  label="COM_PHOCACART_FIELD_F_MESSAGE_LABEL" description="COM_PHOCACART_FIELD_F_MESSAGE_DESC" filter="safehtml" rows="7" cols="45" />
+
+<field
+			name="phq_captcha"
+			id="question-captcha"
+			type="phocacaptcha"
+			required="true"
+			label="COM_PHOCACART_SECURITY_CHECK"
+			description="COM_PHOCACART_PLEASE_PROVE_THAT_YOU_ARE_HUMAN"
+			validate="phocacartcaptcha"
+			preicon=""
+			posticon=""
+			posthref=""
+			class="inputbox"
+		/>
+
+<field name="ip" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IP_LABEL" description="COM_PHOCACART_FIELD_IP_DESC" />
+
+<field name="ordering" type="PhocaCartOrdering" table="region" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+	</fieldset>
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field>
+
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+
+	</fieldset>
+
+	<fieldset >
+		<field	name="hidden_field" type="text" preicon="icon-flag" id="phocacart-hidden" validate="phocacarthidden"/>
+	</fieldset>
+	
+</form>

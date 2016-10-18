@@ -15,12 +15,11 @@ $group 	= PhocaCartSettings::getManagerGroup($this->manager);
 
 if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
 	/* Own function - this function is used for e.g. additional images, etc. for input forms which 
-	   are rendered by javascript - addtional images, attribute options (values), etc. */
+	   are rendered by javascript - addtional images, attribute options (values), etc. */	   
 	$onclick= 'if (window.parent) window.parent.phAddValue(\''.$this->field.'\', \'' .$this->_tmp_file->path_with_name_relative_no.'\')';
 } else {
 	$onclick= 'if (window.parent) window.parent.'. $this->fce.'(\'' .$this->_tmp_file->path_with_name_relative_no.'\')';
 }
-
 
 if ($this->manager == 'filemultiple') {
 	$checked 	= JHTML::_('grid.id', $this->filei + count($this->folders), $this->files[$this->filei]->path_with_name_relative_no );

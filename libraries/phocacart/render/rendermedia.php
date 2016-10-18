@@ -12,6 +12,7 @@ class PhocaCartRenderMedia
 {
 	public $jquery			= 0;
 	protected $document		= false;
+	
 
 	public function __construct() {
 		JHTML::stylesheet('media/com_phocacart/css/main.css' );
@@ -19,8 +20,21 @@ class PhocaCartRenderMedia
 		$this->document	= JFactory::getDocument();
 	}
 	
+	public function loadProductHover($load = 0) {
+		if ($load == 1) {
+			JHTML::stylesheet('media/com_phocacart/css/main-product-hover.css' );
+		}
+	}
+	
+	public function loadPhocaMoveImage($load = 0) {
+		if ($load == 1) {
+			JHTML::stylesheet('media/com_phocacart/css/main-product-image-move.css' );
+		}
+	}
+	
 	public function loadBootstrap($load = 0) {
 		if ($load == 1) {
+
 			JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
 		}
@@ -43,16 +57,25 @@ class PhocaCartRenderMedia
 	public function loadEqualHeights($load = 0) {
 		if ($load == 1) {		
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.equalheights.min.js');
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.equalminheights.min.js');
 			$this->document->addScriptDeclaration(
 			'jQuery(window).load(function(){
-				jQuery(\'.ph-thumbnail\').equalHeights();
+				jQuery(\'.ph-thumbnail-c\').equalHeights();
 			});');
+			// not ph-thumbnail but only ph-thumbnail-c (in component area so module will not influence it)
 		}
 	}
 	
-	public function loadSwapImage($load = 0) {
-		if ($load = 0 == 1) {
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/swap.image.js');
+	public function loadPhocaSwapImage($load = 0) {
+		if ($load == 1) {
+			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaswapimage.js');
+		}
+	}
+
+	
+	public function loadPhocaAttribute($load = 0) {
+		if ($load == 1) {
+			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattribute.js');
 		}
 	}
 	

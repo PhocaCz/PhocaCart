@@ -97,7 +97,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 
 				
 $checkO = '';
@@ -109,10 +109,10 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 /*
 $rules = array();
@@ -122,16 +122,16 @@ if($item->active_region) {$rules[] = '<span class="label label-info label-info">
 if($item->active_weight) {$rules[] = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_WEIGHT_RULE'). '</span>';}
 
 
-echo $r->td(implode(" ", $rules), "small hidden-phone");*/
-echo $r->td($this->escape(PhocaCartOrder::getOrderNumber($item->order_id)), "small hidden-phone");
+echo $r->td(implode(" ", $rules), "small");*/
+echo $r->td($this->escape(PhocaCartOrder::getOrderNumber($item->order_id)), "small");
 
 $userO = $this->escape($item->user_name);
 if (isset($item->user_username)) {
 	$userO .= ' <small>('.$item->user_username.')</small>';
 }
-echo $r->td($userO, "small hidden-phone");
+echo $r->td($userO, "small");
 
-echo $r->td($item->download_file, "small hidden-phone");
+echo $r->td($item->download_file, "small");
 
 
 $status = '';
@@ -149,10 +149,10 @@ if ($status == '') {
 	$status = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_ACTIVE'). '</span>';
 }
 //COM_PHOCACART_DOWNLOAD_DATE_EXPIRED
-echo $r->td($status, "small hidden-phone");
-echo $r->td($item->date, "small hidden-phone");
-echo $r->td($item->download_hits, "small hidden-phone");
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($status, "small");
+echo $r->td($item->date, "small");
+echo $r->td($item->download_hits, "small");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

@@ -94,7 +94,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 
 $checkO = '';
 if ($item->checked_out) {
@@ -107,7 +107,7 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->productname);
 }
 
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
 					
@@ -127,12 +127,12 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->name);
 }
 $checkO .= $nameSuffix;
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td(substr($item->review, 0, 50) . ' ...', "small hidden-phone");
+echo $r->td(substr($item->review, 0, 50) . ' ...', "small");
 
 $rating = 0;
 if ((int)$item->rating > 0) {
@@ -140,9 +140,9 @@ if ((int)$item->rating > 0) {
 	$rating = $rating * 16;
 }
 $rating = '<div><span class="ph-stars"><span style="width:'.(int)$rating .'px;"></span></span></div>';
-echo $r->td($rating, "small hidden-phone");
+echo $r->td($rating, "small");
 
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

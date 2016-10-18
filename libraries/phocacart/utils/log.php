@@ -9,6 +9,10 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocaCartLog
 {
+	/* type - type : e.g warning, error, etc.
+	 * typeid - for example order id, category id, product id
+	 */
+	
 	public static function add( $type = 0, $title = '', $typeid = 0, $description = '') {
 
 		$paramsC 			= JComponentHelper::getParams('com_phocacart');

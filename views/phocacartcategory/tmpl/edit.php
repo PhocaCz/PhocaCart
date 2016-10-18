@@ -34,7 +34,7 @@ function phCheckRequestStatus(i, task) {
 			<?php echo $this->form->getField('description')->save(); ?>
 			Joomla.submitform(task, document.getElementById('adminForm'));
 		} else {
-			alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
+			Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
 		}
 	}
 }

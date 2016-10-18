@@ -90,7 +90,7 @@
 }
 
 .ph-item-buy-now-box {
-	margin-top: -1px;
+	/* margin-top: -1px; */
 }
 
 .pc-item-view .ph-item-buy-now-box {
@@ -488,7 +488,7 @@ table tr th.ph-checkout-cart-image {
 
 .ph-idnr-box {
 	margin: 5%;
-	margin-top: -9%;
+	margin-top: 0;
 }
 .ph-idnr-box-in {
 	width: 100%;
@@ -542,13 +542,42 @@ table.ph-idnr-box-in tr td {
 	padding: 2px 5px;
 }
 .ph-idnr-to-pay {
-	background: #ddd;
+	background: #eee;
 	padding: 20px;
+}
+.ph-idnr-to-pay-value {
+	background: #eee;
+	padding: 20px;
+	text-align: right;
 }
 
 
 .ph-category-item-compare {
 	float: right;
+	margin: 2px;
+}
+
+.ph-category-item-wishlist {
+	float: right;
+	margin: 2px;
+}
+
+.ph-category-item-quickview {
+	float: right;
+	margin: 2px;
+}
+
+.ph-category-item-compare  .glyphicon-stats {
+    color: #4491e4;
+}
+
+.ph-category-item-quickview .glyphicon-heart-empty,
+.ph-category-item-wishlist .glyphicon-heart {
+	color: #EA7C7C;
+}
+
+.ph-category-item-quickview .glyphicon-eye-open {
+	color: #555555;
 }
 
 .ph-comparison-table .img-responsive{width:100%;}
@@ -890,4 +919,146 @@ ul.ph-filter-module-category-tree li .checkbox{
 	text-align: left;
 }
 
+.ph-icon-pdf-text-box {
+	margin-top: -12px;
+}
+.ph-icon-pdf-text {
+	font-size: 60%;
+	margin-left: 6px;
+	margin-right: 6px;
+
+}
+
+/* Attribute */
+
+.phSelectBoxButton {
+    display: inline-block;
+    margin: 3px;
+    padding: 7px;
+	width: 15px;
+	height: 15px;
+    cursor: pointer;
+	border: 2px solid transparent;
+	box-sizing: content-box;
+	border-radius: 2px;
+	text-decoration: none;
+}
+
+.phSelectBoxButton.on {
+	  
+   border: 2px solid transparent;
+   padding: 7px;
+   width: 15px;
+   height: 15px;
+   color: #fff;
+   box-sizing: content-box;
+   border-radius: 2px;
+   text-decoration: none;
+}
+
+.phSelectBoxButton.on:after {
+ 
+  position: relative;
+  top: -2px;
+  left: -3px;
+  font-family: 'Glyphicons Halflings';
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+
+  content: '\e013'; /* Ok/check mark */
+  box-sizing: content-box;
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+.phSelectBoxButton:hover,
+.phSelectBoxButton.on:hover {
+	border: 2px solid #fff;
+}
+
+a.phSelectBoxButton:hover,
+a.phSelectBoxButton.on:hover,
+a.phSelectBoxButton:visited,
+a.phSelectBoxButton.on:visited,
+a.phSelectBoxButton:active,
+a.phSelectBoxButton.on:active,
+a.phSelectBoxButton:focus,
+a.phSelectBoxButton.on:focus {
+	text-decoration: none;
+}
+
+
+.phSelectBoxImage {
+    display: inline-block;
+    margin: 3px;
+    cursor: pointer;
+	border: 2px solid transparent;
+	box-sizing: content-box;
+	border-radius: 2px;
+	text-decoration: none;
+	position: relative;
+}
+
+.phSelectBoxButton.on {
+	  
+   border: 2px solid transparent;
+   color: #fff;
+   box-sizing: content-box;
+   border-radius: 2px;
+   text-decoration: none;
+}
+
+.phSelectBoxImage.on:after {
+ 
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  font-family: 'Glyphicons Halflings';
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+
+  content: '\e013'; /* Ok/check mark */
+  box-sizing: content-box;
+  border-radius: 2px;
+  text-decoration: none;
+  color: #ffcc00;
+
+}
+
+.phSelectBoxImage:hover,
+.phSelectBoxImage.on:hover {
+	border: 2px solid #fff;
+	background: #fff;
+}
+
+a.phSelectBoxImage:hover,
+a.phSelectBoxImage.on:hover,
+a.phSelectBoxImage:visited,
+a.phSelectBoxImage.on:visited,
+a.phSelectBoxImage:active,
+a.phSelectBoxImage.on:active,
+a.phSelectBoxImage:focus,
+a.phSelectBoxImage.on:focus {
+	text-decoration: none;
+}
+
+
+.ph-panel-body-color {
+	margin: 15px 5px;
+}
+
+.ph-question-message {
+
+}
+
+.ph-item-image-full-left-box {
+	text-align: left;
+}
+
+.phVMiddle,
+.pc-wishlist-view .phVMiddle {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
 

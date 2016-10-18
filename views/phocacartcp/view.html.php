@@ -26,7 +26,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'stockstatuses'	=> array($this->t['l'] . '_STOCK_STATUSES', 'tasks', '#777777'),
 		'shippings'		=> array($this->t['l'] . '_SHIPPING', 'barcode', '#afbb6a'),
 		'countries'		=> array($this->t['l'] . '_COUNTRIES', 'globe', '#478CD1'),
-		'regions'		=> array($this->t['l'] . '_REGIONS', 'globe', '#47D18C'),
+		'regions'		=> array($this->t['l'] . '_REGIONS', 'globe', '#01868B'),
 		'payments'		=> array($this->t['l'] . '_PAYMENT', 'credit-card', '#4f9ce2'),
 		'currencies'	=> array($this->t['l'] . '_CURRENCIES', 'eur', '#dca300'),
 		'taxes'			=> array($this->t['l'] . '_TAXES', 'calendar', '#dd5500'),
@@ -39,6 +39,8 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'downloads'		=> array($this->t['l'] . '_DOWNLOADS', 'download-alt', '#33af49'),
 		'tags'			=> array($this->t['l'] . '_TAGS', 'tag', '#CC0033'),
 		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', 'bullhorn', '#ffb300'),
+		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', 'heart', '#EA7C7C'),
+		'questions'		=> array($this->t['l'] . '_QUESTIONS', 'question-sign', '#9900CC'),
 		'statistics'	=> array($this->t['l'] . '_STATISTICS', 'stats', '#c1756d'),
 		'logs'			=> array($this->t['l'] . '_SYSTEM_LOG', 'list', '#c0c0c0'),
 		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#3378cc')
@@ -87,7 +89,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 	}
 	
 	protected function addToolbar() {
-		require_once JPATH_COMPONENT.DS.'helpers'.DS.'phocacartcp.php';
+		require_once JPATH_COMPONENT.'/helpers/phocacartcp.php';
 
 		$state	= $this->get('State');
 		$canDo	= PhocaCartCpHelper::getActions();

@@ -9,11 +9,11 @@
 defined('_JEXEC') or die();
 
 echo '<div id="ph-pc-orders-box" class="pc-orders-view'.$this->p->get( 'pageclass_sfx' ).'">';
-if ( $this->p->get( 'show_page_heading' ) ) { 
-	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
-} else {
-	echo '<h1>'. JText::_('COM_PHOCACART_ORDERS') . '</h1>';
-}
+
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ORDERS')));
+
+
+
 /*if ( $this->t['description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['description']. '</div>';
 }*/
@@ -56,12 +56,29 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$linkInvoiceView 	= JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=2'.$token );
 			$linkDelNoteView 	= JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=3'.$token );
 
-			$linkOrderViewHandler= 'onclick="window.open(this.href, \'orderview\', \'width=780,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';
+
+			
+			$linkOrderViewHandler= 'onclick="phWindowPopup(this.href, \'orderview\', 2, 1.3);return false;"';
 			
 			$view = '<a href="'.$linkOrderView.'" class="btn btn-success btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search"></span></a>';
 			$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-danger btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice"></span></a>';
 			$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-warning btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note"></span></a>';
 
+			if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
+	
+				$formatPDF = '&format=pdf';
+				$view .= '<br />';
+				
+				$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-success btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search"></span></a>';
+				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-danger btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice"></span></a>';
+				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-warning btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note"></span></a>';
+				$view .= '<div class="ph-icon-pdf-text-box"><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></div>';
+				
+			/*	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search ph-icon-success"></span><br /><span class="ph-icon-success-txt">PDF</span></a>';
+				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">PDF</span></a>';
+				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">PDF</span></a>';*/
+				
+			}
 			
 			echo $view;
 			
@@ -93,7 +110,7 @@ if (!empty($this->t['categories'])) {
 		//if ($i%$nc==0) { echo '<div class="row">';}
 		
 		echo '<div class="col-sm-6 col-md-'.$nw.'">';
-		echo '<div class="thumbnail ph-thumbnail">';
+		echo '<div class="thumbnail ph-thumbnail ph-thumbnail-c">';
 		
 		$image 	= PhocaCartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
 		$link	= JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias));

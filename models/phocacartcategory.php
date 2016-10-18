@@ -131,10 +131,10 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING, 'jerror');
+					JLog::add($error, JLog::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
 					return false;
 				}
 			}
@@ -149,7 +149,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 			$db->setQuery( $query );
 				
 			if (!($rows2 = $db->loadObjectList())) {
-				JError::raiseError( 500, $db->stderr('Load Data Problem') );
+				throw new Exception( $db->stderr('Load Data Problem'), 500 );
 				return false;
 			}
 
@@ -165,13 +165,13 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 			}
 			// - - - - - - - - - - - - - - -
 			
-			// Images with new cid - - - - -
+			// Product with new cid - - - - -
 			if (count( $cid )) {
 				JArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 			
 				// Select id's from product table, if there are some items, don't delete it.
-				$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numcat'
+				$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numproduct'
 				. ' FROM #__phocacart_categories AS c'
 				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
 				. ' WHERE c.id IN ( '.$cids.' )'
@@ -180,14 +180,15 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 				$db->setQuery( $query );
 
 				if (!($rows = $db->loadObjectList())) {
-					JError::raiseError( 500, $db->stderr('Load Data Problem') );
+					throw new Exception( $db->stderr('Load Data Problem'), 500 );
 					return false;
 				}
+				
 				
 				$err_img = array();
 				$cid 	 = array();
 				foreach ($rows as $row) {
-					if ($row->numcat == 0) {
+					if ($row->numproduct == 0) {
 						$cid[] = (int) $row->id;
 					} else {
 						$err_img[] = $row->title;
@@ -273,7 +274,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 		}
 
 		// Check that the user has create permission for the component
-		$extension	= JRequest::getCmd('option');
+		$extension	= JFactory::getApplication()->input->get('option');
 		$user		= JFactory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -376,7 +377,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 		}
 
 		// Check that user has create and edit permission for the component
-		$extension	= JRequest::getCmd('option');
+		$extension	= JFactory::getApplication()->input->get('option');
 		$user		= JFactory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));

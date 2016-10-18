@@ -16,7 +16,7 @@ class PhocaCartProduct
 		
 		$db 	= JFactory::getDBO();
 		$query = ' SELECT a.id, c.id as catid, a.alias, a.title, a.sku, a.price, a.price_original, a.tax_id as taxid, a.image, a.weight, a.volume, a.unit_amount, a.unit_unit,'
-				.' a.download_token, a.download_folder, a.download_file, a.download_hits, a.stock, a.min_quantity,'
+				.' a.download_token, a.download_folder, a.download_file, a.download_hits, a.stock, a.min_quantity, a.min_multiple_quantity,'
 				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
@@ -38,7 +38,11 @@ class PhocaCartProduct
 				//$product->catid is $product->catid
 			} else {
 				// Recheck the category id of product
-				$checkCategory = PhocaCartProduct::checkIfAccessPossible((int)$product->id, (int)$prioritizeCatid);
+				$checkCategory = false;
+				if (isset($product->id)) {
+					$checkCategory = PhocaCartProduct::checkIfAccessPossible((int)$product->id, (int)$prioritizeCatid);
+				}
+				
 				if ($checkCategory) {
 					$product->catid 	= (int)$prioritizeCatid;
 				}
@@ -139,7 +143,7 @@ class PhocaCartProduct
 	* checkPrice - check if the product has price or not ( > 0 )
 	*/
 	
-	public static function getProducts($limit = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0) {
+	public static function getProducts($limit = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array()) {
 	
 		phocacartimport('phocacart.ordering.ordering');
 		
@@ -166,7 +170,13 @@ class PhocaCartProduct
 			$wheres[] 		= " a.price > 0";
 		}
 		
-		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, a.price_original, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
+		if (!empty($categoryIds)) {
+			
+			$catIdsS = implode (',', $categoryIds);
+			$wheres[]	= 'pc.category_id IN ('.$catIdsS.')';
+		}
+		
+		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, a.price_original, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required';
 			
@@ -211,13 +221,14 @@ class PhocaCartProduct
 		. ' LIMIT 1';
 		$db->setQuery( $query );
 		$category = $db->loadRow();
+		
 		if (isset($category[0]) && $category[0] > 0) {
 			return $category[0];
 		}
 		return 0;
 	}
 	
-	public static function getMostViewedProducts($limit = 5, $checkPublished = false, $checkAccess = false) {
+	public static function getMostViewedProducts($limit = 5, $checkPublished = false, $checkAccess = false, $count = false) {
 		
 		$db 		= JFactory::getDBO();
 		$wheres		= array();
@@ -234,26 +245,46 @@ class PhocaCartProduct
 		$wheres[] 		= " a.hits > 0";
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
-		$query = 'SELECT a.id, a.title, a.alias, a.hits, c.id as catid, c.alias as catalias, c.title as cattitle'
-		. ' FROM #__phocacart_products AS a'
-		. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
-		. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-		.  $where
-		. ' GROUP BY a.id'
-		. ' ORDER BY a.hits DESC'
-		. ' LIMIT '.(int)$limit;
-		$db->setQuery( $query );
+		if ($count) {
+			$q = 'SELECT SUM(a.hits)'
+			. ' FROM #__phocacart_products AS a'
+			. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
+			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+			.  $where;
+			if ((int)$limit > 0) {
+				$q .=  ' LIMIT '.(int)$limit;
+			}
+			
+			$db->setQuery( $q );
+			$products = $db->loadResult();
 		
-		$products = $db->loadObjectList();
+		} else {
+		
+			$q = 'SELECT a.id, a.title, a.alias, a.hits, c.id as catid, c.alias as catalias, c.title as cattitle'
+			. ' FROM #__phocacart_products AS a'
+			. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
+			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+			.  $where
+			. ' GROUP BY a.id'
+			. ' ORDER BY a.hits DESC';
+			if ((int)$limit > 0) {
+				$q .=  ' LIMIT '.(int)$limit;
+			}
+			
+			$db->setQuery( $q );
+			$products = $db->loadObjectList();
+		}
+		
+		
 		return $products;
 	}
 	
-	public static function getBestSellingProducts($limit = 5, $dateFrom = '', $dateTo = '') {
+	public static function getBestSellingProducts($limit = 5, $dateFrom = '', $dateTo = '', $count = false) {
 		
 		$db 		= JFactory::getDBO();
 		$wheres		= array();
 		
-		$wheres[] 	= " a.id > 0";
+		$wheres[] 	= " o.id > 0";
 		
 		if ($dateTo != '' && $dateFrom != '') {
 			$dateFrom 	= $db->Quote($dateFrom);
@@ -263,26 +294,47 @@ class PhocaCartProduct
 		
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
-		
-		$q =  ' SELECT a.id, a.title, a.alias, COUNT( o.id ) AS count_products'
+		if ($count) {
+			$q =  ' SELECT count(o.id)'
 			. ' FROM #__phocacart_order_products AS o'
 			. ' LEFT JOIN #__phocacart_products AS a ON a.id = o.product_id';
-		if ($dateTo != '' && $dateFrom != '') {
-			$q .= ' LEFT JOIN #__phocacart_orders AS od ON od.id = o.order_id';
-		}
+			if ($dateTo != '' && $dateFrom != '') {
+				$q .= ' LEFT JOIN #__phocacart_orders AS od ON od.id = o.order_id';
+			}
+			$q .= $where;
+			if ((int)$limit > 0) {
+				$q .=  ' LIMIT '.(int)$limit;
+			}
+			
+			
+			$db->setQuery($q);
+			$products = $db->loadResult();
+			
+		} else {
+			$q =  ' SELECT o.product_id AS id, o.title, o.alias, COUNT( o.id ) AS count_products'
+			. ' FROM #__phocacart_order_products AS o';
+			//. ' LEFT JOIN #__phocacart_products AS a ON a.id = o.product_id';
+			if ($dateTo != '' && $dateFrom != '') {
+				$q .= ' LEFT JOIN #__phocacart_orders AS od ON od.id = o.order_id';
+			}
 			$q .= $where
-			. ' GROUP BY a.id'
-			. ' ORDER BY count_products DESC'
-			. ' LIMIT '.(int)$limit;
+			. ' GROUP BY o.id'
+			. ' ORDER BY count_products DESC';
+			if ((int)$limit > 0) {
+				$q .=  ' LIMIT '.(int)$limit;
+			}
 		
-		$db->setQuery($q);
+			$db->setQuery($q);
+			$products = $db->loadObjectList();
+		}
+		
 		
 		
 		/* For now we don't need SEF url, if SEF url is needed, we need to get category alias and category id
 		 * This cannot be done in sql as then because of table jos_phocacart_product_categories will count count duplicities
 		 */
 		
-		$products = $db->loadObjectList();
+		
 		
 		/*
 		$productsA = array();

@@ -118,7 +118,8 @@ class PhocaCartCpModelPhocaCartCountry extends JModelAdmin
 				if ($query != '' && $query{0} != '#'){
 					$db->setQuery($query);
 					if (!$db->execute()){
-						JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
+						$app->enqueueMessage(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), 'error');
+						JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING);
 						return false;
 					}
 				}

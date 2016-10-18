@@ -32,7 +32,7 @@ class PhocaCartAttribute
 	
 		$db =JFactory::getDBO();
 		
-		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image';
+		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_small, a.color';
 		$query .= ' FROM #__phocacart_attribute_values AS a'
 			    .' WHERE a.attribute_id = '.(int) $attributeId
 				.' ORDER BY a.id';
@@ -47,7 +47,11 @@ class PhocaCartAttribute
 	}
 	
 	public static function getTypeArray() {
-		$o = array('1' => JText::_('COM_PHOCACART_ATTR_TYPE_SELECT'));
+		$o = array(
+		'1' => JText::_('COM_PHOCACART_ATTR_TYPE_SELECT'),
+		'2' => JText::_('COM_PHOCACART_ATTR_TYPE_COLOR'),
+		'3' => JText::_('COM_PHOCACART_ATTR_TYPE_IMAGE'),
+		);
 		return $o;
 	}
 	
@@ -123,12 +127,12 @@ class PhocaCartAttribute
 							}
 							$v2['alias'] = PhocaCartUtils::getAliasName($v2['alias']);
 						
-							$options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).')';
+							$options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).')';
 							if (!empty($options)) {
 								$valuesString2 = implode($options, ',');
 							}
 						}
-						$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image)'
+						$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_small, color)'
 									.' VALUES '.(string)$valuesString2;
 									
 						$db->setQuery($query);
@@ -161,7 +165,7 @@ class PhocaCartAttribute
 			
 		$db = JFactory::getDBO();
 		
-		$query = 'SELECT v.id, v.title, v.alias, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias'
+		$query = 'SELECT v.id, v.title, v.alias, v.image, v.image_small, v.color, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype'
 				.' FROM  #__phocacart_attribute_values AS v'
 				.' LEFT JOIN  #__phocacart_attributes AS at ON at.id = v.attribute_id'
 				.' GROUP BY v.alias, attralias'
@@ -178,13 +182,17 @@ class PhocaCartAttribute
 					$a[$v->attralias]['title']				= $v->attrtitle;
 					$a[$v->attralias]['id']					= $v->attrid;
 					$a[$v->attralias]['alias']				= $v->attralias;
+					$a[$v->attralias]['type']				= $v->attrtype;
 					if (isset($v->title) && $v->title != '' 
 					&& isset($v->id) && $v->id != ''
 					&& isset($v->alias) && $v->alias != '') {	
 						$a[$v->attralias]['option'][$v->alias] = new stdClass();
-						$a[$v->attralias]['option'][$v->alias]->title	= $v->title;
-						$a[$v->attralias]['option'][$v->alias]->id		= $v->id;
-						$a[$v->attralias]['option'][$v->alias]->alias	= $v->alias;
+						$a[$v->attralias]['option'][$v->alias]->title		= $v->title;
+						$a[$v->attralias]['option'][$v->alias]->id			= $v->id;
+						$a[$v->attralias]['option'][$v->alias]->alias		= $v->alias;
+						$a[$v->attralias]['option'][$v->alias]->image		= $v->image;
+						$a[$v->attralias]['option'][$v->alias]->image_small	= $v->image_small;
+						$a[$v->attralias]['option'][$v->alias]->color		= $v->color;
 					} else {
 						$a[$v->attralias]['option'] = array();
 					}
@@ -198,7 +206,7 @@ class PhocaCartAttribute
 	
 	public static function getAttributeValue($id, $attributeId) {
 		$db =JFactory::getDBO();
-		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image,'
+		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_small, a.color,'
 		.' aa.id as aid, aa.title as atitle'
 		.' FROM #__phocacart_attribute_values AS a'
 		.' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'

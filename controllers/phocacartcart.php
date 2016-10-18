@@ -16,7 +16,7 @@ class PhocaCartCpControllerPhocaCartCart extends PhocaCartCpControllerPhocaCartC
 	}
 
 	function emptycart() {
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}

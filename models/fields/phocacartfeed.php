@@ -26,7 +26,7 @@ class JFormFieldPhocaCartFeed extends JFormField
 		$data = $db->loadObjectList();
 	
 	
-	//	$view 	= JRequest::getVar( 'view' );
+	//	$view 	= JFactory::getApplication()->input->get( 'view' );
 		
 		//$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 

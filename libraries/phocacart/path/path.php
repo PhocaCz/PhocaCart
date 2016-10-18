@@ -23,8 +23,8 @@ class PhocaCartPath
 		
 		// Path of preview and play
 		//$downloadFolderPap 			= JPath::clean($downloadFolderPap);
-		//$path['orig_abs_pap'] 		= JPATH_ROOT .  DS . $downloadFolderPap;
-		//$path['orig_abs_pap_ds'] 	= $path['orig_abs_pap'] . DS ;
+		//$path['orig_abs_pap'] 		= JPATH_ROOT .  '/' . $downloadFolderPap;
+		//$path['orig_abs_pap_ds'] 	= $path['orig_abs_pap'] . '/' ;
 		
 		$path['media_abs_front_ds']			= JPATH_ROOT . '/media/com_phocacart/images/' ;
 	
@@ -64,13 +64,13 @@ class PhocaCartPath
 	
 	public static function getPathMedia() {
 		
-		//TODO create a singleton
+		// TO DO - create a singleton
 		$option 						= 'com_phocacart';
 		$instance 						= new StdClass();
 		$baseFront						= JURI::root(true);
-		$instance->media_css_abs		= JPATH_ROOT . DS . 'media'. DS . $option . DS . 'css' . DS;
-		$instance->media_img_abs		= JPATH_ROOT . DS . 'media'. DS . $option . DS . 'images' . DS;
-		$instance->media_js_abs			= JPATH_ROOT . DS . 'media'. DS . $option . DS . 'js' . DS;
+		$instance->media_css_abs		= JPATH_ROOT . '/' .  'media'. '/' .  $option . '/' .  'css' . '/';
+		$instance->media_img_abs		= JPATH_ROOT . '/' .  'media'. '/' .  $option . '/' .  'images' . '/';
+		$instance->media_js_abs			= JPATH_ROOT . '/' .  'media'. '/' .  $option . '/' .  'js' . '/';
 		$instance->media_css_rel		= 'media/'. $option .'/css/';
 		$instance->media_img_rel		= 'media/'. $option .'/images/';
 		$instance->media_js_rel			= 'components/'. $option .'/assets/';
@@ -90,7 +90,6 @@ class PhocaCartPath
 		$pos 			= strpos($uriS, 'administrator');
 		
 		if ($pos === false) {
-			
 			$uriL = str_replace(JURI::root(true), '', $uriS);
 			$uriL = ltrim($uriL, '/');
 			$formatLink = JURI::root(false). $uriL;

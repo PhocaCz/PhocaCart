@@ -52,6 +52,7 @@
 
 <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC" />
 <field name="min_quantity" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_DESC" />
+<field name="min_multiple_quantity" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_DESC" />
 <field name="stockstatus_a_id" type="phocastockstatus" manager="a" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2" />
 <field name="stockstatus_n_id" type="phocastockstatus" manager="n" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1" />
 

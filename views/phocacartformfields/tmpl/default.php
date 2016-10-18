@@ -97,7 +97,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -108,23 +108,23 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 
-echo $r->td($item->label . '<br /><small>('.JText::_($this->escape($item->label)).')</small>', "small hidden-phone");
-echo $r->td($item->type, "small hidden-phone");
+echo $r->td($item->label . '<br /><small>('.JText::_($this->escape($item->label)).')</small>', "small");
+echo $r->td($item->type, "small");
 
 
-echo $r->td(PhocaCartJGrid::displayBilling( $item->display_billing, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
-echo $r->td(PhocaCartJGrid::displayShipping( $item->display_shipping, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
-echo $r->td(PhocaCartJGrid::displayAccount( $item->display_account, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(PhocaCartJGrid::displayBilling( $item->display_billing, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(PhocaCartJGrid::displayShipping( $item->display_shipping, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(PhocaCartJGrid::displayAccount( $item->display_account, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($this->escape($item->access_level));
 
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

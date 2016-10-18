@@ -18,6 +18,8 @@ if (! class_exists('PhocaCartLoader')) {
 phocacartimport('phocacart.utils.settings');
 phocacartimport('phocacart.utils.utils');
 phocacartimport('phocacart.utils.log');
+phocacartimport('phocacart.security.security');
+phocacartimport('phocacart.utils.extension');
 phocacartimport('phocacart.category.category');
 phocacartimport('phocacart.category.categorymultiple');
 phocacartimport('phocacart.date.date');
@@ -56,26 +58,16 @@ phocacartimport('phocacart.order.orderstatus');
 phocacartimport('phocacart.order.orderview');
 phocacartimport('phocacart.order.orderrender');
 phocacartimport('phocacart.compare.compare');
+phocacartimport('phocacart.wishlist.wishlist');
 phocacartimport('phocacart.download.download');
 phocacartimport('phocacart.render.renderfront');
 phocacartimport('phocacart.email.email');
 phocacartimport('phocacart.search.search');
 phocacartimport('phocacart.feed.feed');
 phocacartimport('phocacart.render.rendermedia');
+phocacartimport('phocacart.captcha.recaptcha');
 
-/*
-if($controller = JRequest::getWord('controller')) {
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if (file_exists($path)) {
-        require_once $path;
-    } else {
-        $controller = '';
-    }
-}
-$classname    = 'PhocaCartController'.ucfirst($controller);
-$controller   = new $classname( );
-$controller->execute( JFactory::getApplication()->input->get('task') );
-$controller->redirect();*/
+
 
 $controller = JControllerLegacy::getInstance('PhocaCart');
 $controller->execute(JFactory::getApplication()->input->get('task'));

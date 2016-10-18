@@ -7,13 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-jimport( 'joomla.application.component.view');
+jimport( 'joomla.application.component.view'); 
 
 class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 {
 	function display($tpl = null){
 		
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
@@ -112,8 +112,7 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 		} else if ($task == 'rate') {
 		
 			$user 		=JFactory::getUser();
-			//$view 		= $app->input->get( 'view', '', 'get', '', JREQUEST_NOTRIM  );
-			//$Itemid		= $app->input->get( 'Itemid', 0, 'int');
+			
 		
 			$neededAccessLevels	= PhocaDownloadAccess::getNeededAccessLevels();
 			$access				= PhocaDownloadAccess::isAccess($user->getAuthorisedViewLevels(), $neededAccessLevels);

@@ -28,7 +28,7 @@ class PhocaCartRenderCart extends PhocaCartCart
 			$this->fullitems = $this->getFullItems();// get them from parent
 		}
 	
-		
+	
 		if (!empty($this->fullitems)) {
 			$o[] = '<table class="ph-cart-small-box">';
 			/*echo '<tr>';

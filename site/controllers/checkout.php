@@ -11,11 +11,11 @@ defined('_JEXEC') or die();
 class PhocaCartControllerCheckout extends JControllerForm
 {
 	/*
-	 * Add product to cart
+	 * Add product to cart 
 	 */
 	public function add() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -41,7 +41,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 * Change currency
 	 */
 	public function currency() {
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -61,7 +61,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 
 	 public function saveaddress() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app					= JFactory::getApplication();
 		$item					= array();
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
@@ -195,7 +195,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 
 	 public function saveshipping() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app					= JFactory::getApplication();
 		$item					= array();
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
@@ -241,7 +241,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 
 	 public function savepayment() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app						= JFactory::getApplication();
 		$item						= array();
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
@@ -309,7 +309,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 */
 	public function update() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -345,7 +345,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	/*
 	 public function saveshipping() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app					= JFactory::getApplication();
 		$item					= array();
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
@@ -375,7 +375,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 
 	 public function order() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app						= JFactory::getApplication();
 		$item						= array();
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
@@ -412,7 +412,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			if ($action == 4 || $action == 3) {
 				// Ordered OK, but now we proceed to payment
 				$session->set('infomessage', $action, 'phocaCart');
-				$app->redirect(JRoute::_(PhocaCartRoute::getPaymentRoute()));
+				$app->redirect(JRoute::_(PhocaCartRoute::getPaymentRoute(), false));
 				return true;
 				// This message should stay 
 				// when order - the message is created
@@ -426,7 +426,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				//$app->enqueueMessage($msg, 'message');
 				
 				$session->set('infomessage', $action, 'phocaCart');
-				$app->redirect(JRoute::_(PhocaCartRoute::getInfoRoute()));
+				$app->redirect(JRoute::_(PhocaCartRoute::getInfoRoute(), false));
 				return true;
 			}
 		}
@@ -436,7 +436,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	
 	public function setguest() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -465,7 +465,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	/*
 	public function compareadd() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -484,7 +484,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 	
 		public function compareremove() {
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );

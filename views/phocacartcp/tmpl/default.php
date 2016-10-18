@@ -16,7 +16,9 @@ defined('_JEXEC') or die();
 	<div class="adminform">
 		<div class="ph-cpanel-left">
 			<div id="cpanel"><?php
-
+			
+			
+$s		= new PhocaCartStatistics();
 $class	= $this->t['n'] . 'RenderAdmin';
 $link	= 'index.php?option='.$this->t['o'].'&view=';
 foreach ($this->views as $k => $v) {
@@ -34,13 +36,12 @@ foreach ($this->views as $k => $v) {
 		</div>
 		
 		<?php 
-		
-		$cOrdersW	= PhocaCartStatistics::getNumberOfOrders();
-		$cOrdersD	= PhocaCartStatistics::getNumberOfOrders(1);
-		$cUsersW	= PhocaCartStatistics::getNumberOfUsers();
-		$cUsersD	= PhocaCartStatistics::getNumberOfUsers(1);
-		$cAmountW	= PhocaCartStatistics::getAmountOfOrders();
-		$cAmountD	= PhocaCartStatistics::getAmountOfOrders(1);
+		$cOrdersW	= $s->getNumberOfOrders();
+		$cOrdersD	= $s->getNumberOfOrders(1);
+		$cUsersW	= $s->getNumberOfUsers();
+		$cUsersD	= $s->getNumberOfUsers(1);
+		$cAmountW	= $s->getAmountOfOrders();
+		$cAmountD	= $s->getAmountOfOrders(1);
 		
 		?>
 	
@@ -67,11 +68,17 @@ foreach ($this->views as $k => $v) {
 			
 			<div class="row">
 				
-				<div class="span12 ph-cpanel-infobox">
-				<?php PhocaCartStatistics::getDataChart(); ?>
-					<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div>
-	<div id="ph-canvas-holder2" class="ph-chart-canvas-holder" style="width: 100%;" >
-        <canvas id="ph-chart-area" class="ph-chart-area"s />
+				<div class="span12 ph-cpanel-infobox"><h3 class="ph-cpanel-color"><?php echo JText::_('COM_PHOCACART_CHART'); ?> (<?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?>)</h3>
+				<?php 
+				
+				$dataS = $s->getDataChart(); 
+				$s->renderChartJsLine('phChartAreaLine', $dataS['amount'], JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $dataS['orders'], JText::_('COM_PHOCACART_TOTAL_ORDERS'), $dataS['ticks']);
+				$s->setFunction('phChartAreaLine', 'Line');
+				$s->renderFunctions();
+				
+				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
+	<div id="ph-canvas-holder2" class="phChartAreaLineholder" style="width: 100%;" >
+        <canvas id="phChartAreaLine" class="ph-chart-area"s />
     </div>
 				</div>
 			</div>

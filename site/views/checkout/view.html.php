@@ -236,6 +236,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		$media->loadChosen($this->t['load_chosen']);
 		//$media->loadEqualHeights($this->t['equal_height']);
+		$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
 
 		//Scroll to 
 		if ($scrollTo == '') {
@@ -282,16 +283,17 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		// Render the cart (here because it can be changed above - shipping can be added)
 		//$total				= $this->cart->getTotal();
-		$this->t['cartoutput']	= $this->cart->render();
-		$this->t['stockvalid']	= $this->cart->getStockValid();
-		$this->t['minqtyvalid']	= $this->cart->getMinimumQuantityValid();
+		$this->t['cartoutput']		= $this->cart->render();
+		$this->t['stockvalid']		= $this->cart->getStockValid();
+		$this->t['minqtyvalid']		= $this->cart->getMinimumQuantityValid();
+		$this->t['minmltpqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
 
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_CHECKOUT'));
 	}
 }
 ?>

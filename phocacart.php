@@ -9,11 +9,11 @@
 defined('_JEXEC') or die();
 if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 if (!JFactory::getUser()->authorise('core.manage', 'com_phocacart')) {
-	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+	throw new Exception(JText::_('COM_PHOCACART_ERROR_ALERTNOAUTHOR'), 404);
 }
 
 if (! class_exists('PhocaCartLoader')) {
-    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocacart'.DS.'libraries'.DS.'loader.php');
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
 }
 
 jimport('joomla.filesystem.folder');
@@ -24,6 +24,7 @@ phocacartimport('phocacart.utils.settings');
 phocacartimport('phocacart.utils.exception');
 phocacartimport('phocacart.utils.log');
 phocacartimport('phocacart.utils.batchhelper');
+phocacartimport('phocacart.utils.extension');
 phocacartimport('phocacart.date.date');
 phocacartimport('phocacart.path.path');
 phocacartimport('phocacart.file.file');

@@ -14,7 +14,6 @@ if (isset($d['param2']) && $d['param2'] != '') {
 	$d['param2name']	= str_replace('-', '', $d['param2']);
 }
 
-
 if (isset($d['param2']) && $d['param2'] != '') {
 	// We have second parameter, so in first we define that the javascript should wait with redirect
 	$jsSet	= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 1);';

@@ -25,6 +25,7 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
 		// Check for request forgeries
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		$app	= JFactory::getApplication();
 		$user   = JFactory::getUser();
 		$ids    = $this->input->get('cid', array(), 'array');
 		$values = array('featured' => 1, 'unfeatured' => 0);
@@ -38,26 +39,20 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
 			{
 				// Prune items that you can't change.
 				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+				$this->setMessage($this->getError(), 'error');
 			}
 		}
 
-		if (empty($ids))
-		{
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
-		}
-		else
-		{
-			// Get the model.
+		if (empty($ids)) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NO_ITEMS_SELECTED'), 'error');
+		} else {
+
 			$model = $this->getModel();
-
-			// Publish the items.
-			if (!$model->featured($ids, $value))
-			{
-				JError::raiseWarning(500, $model->getError());
+			if (!$model->featured($ids, $value)) {
+				$app->enqueueMessage($model->getError(), 'error');
 			}
 		}
-
 		$this->setRedirect('index.php?option=com_phocacart&view=phocacartitems');
 	}
 }

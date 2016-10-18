@@ -14,7 +14,7 @@ class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
 	
 	function display($tpl = null){
 			
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$response = array(
 				'status' => '0',
 				'error' => '<div class="alert alert-error">' . JText::_('JINVALID_TOKEN') . '</div>');

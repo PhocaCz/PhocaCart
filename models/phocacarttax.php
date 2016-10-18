@@ -53,6 +53,13 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 		return $data;
 	}
 	
+	public function getItem($pk = null) {
+		if ($item = parent::getItem($pk)) {
+			$item->tax_rate	= PhocaCartPrice::cleanPrice($item->tax_rate);
+		}
+		return $item;
+	}
+	
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');

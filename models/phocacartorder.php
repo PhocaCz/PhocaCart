@@ -86,7 +86,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 	public function save($data) {
 		
 		$app	= JFactory::getApplication();
-		if (!JRequest::checkToken('request')) {
+		if (!JSession::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}

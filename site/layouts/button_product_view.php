@@ -10,5 +10,14 @@ defined('_JEXEC') or die();
 $d = $displayData;
 ?>
 <div class="pull-left">
-	<a href="<?php echo $d['link']; ?>" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-search"></span> <?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?></a>
+<?php
+if ($d['display_view_product_button'] == 1) {
+	
+	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-search"></span> <?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?></a><?php
+
+} else if ($d['display_view_product_button'] == 2) {
+	
+	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary btn-sm ph-btn" role="button" title="<?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?>"><span class="glyphicon glyphicon-search"></span></a><?php
+
+} ?>
 </div>

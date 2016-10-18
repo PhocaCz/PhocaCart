@@ -70,6 +70,18 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$registry = new JRegistry;
 			$registry->loadString($item->metadata);
 			$item->metadata = $registry->toArray();
+			
+			// Make the numbers more readable
+			// it has no influence on saving it to db
+			$item->price 			= PhocaCartPrice::cleanPrice($item->price);
+			$item->price_original 	= PhocaCartPrice::cleanPrice($item->price_original);
+			$item->length 			= PhocaCartPrice::cleanPrice($item->length);
+			$item->width 			= PhocaCartPrice::cleanPrice($item->width);
+			$item->height 			= PhocaCartPrice::cleanPrice($item->height);
+			$item->weight 			= PhocaCartPrice::cleanPrice($item->weight);
+			$item->volume			= PhocaCartPrice::cleanPrice($item->volume);
+			$item->unit_amount 		= PhocaCartPrice::cleanPrice($item->unit_amount);
+
 		}
 
 		return $item;
@@ -82,6 +94,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplication::stringURLSafe($table->alias);
+		
+
 
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
@@ -254,10 +268,10 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING, 'jerror');
+					JLog::add($error, JLog::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
 					return false;
 				}
 			}
@@ -325,6 +339,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
+			// 8. DELETE SPECIFICATIONS
+			$query = 'DELETE FROM #__phocacart_specifications'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
 		}
 		return true;
 	}
@@ -363,7 +383,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 		// Check that the user has create permission for the component
-		$extension	= JRequest::getCmd('option');
+		$extension	= JFactory::getApplication()->input->get('option');
 		$user		= JFactory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -492,7 +512,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 		// Check that user has create and edit permission for the component
-		$extension	= JRequest::getCmd('option');
+		$extension	= JFactory::getApplication()->input->get('option');
 		$user		= JFactory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -736,7 +756,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		if (empty($pks))
 		{
-			return JError::raiseWarning(500, JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+			return $app->enqueueMessage(JText::_($this->text_prefix.'_ERROR_NO_ITEMS_SELECTED'), 'error');
+			
 		}
 
 		// Update ordering values
@@ -751,7 +772,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			{
 				// Prune items that you can't change.
 				unset($pks[$i]);
-				JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+				JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING);
 			}
 			elseif ($table->ordering != $order[$i])
 			{

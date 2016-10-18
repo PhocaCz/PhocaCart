@@ -96,7 +96,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -107,23 +107,23 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 
-echo $r->td($this->escape($item->code), "small hidden-phone");
-echo $r->td($this->escape($item->discount), "small hidden-phone");
-echo $r->td($this->escape($item->valid_from), "small hidden-phone");
-echo $r->td($this->escape($item->valid_to), "small hidden-phone");
+echo $r->td($this->escape($item->code), "small");
+echo $r->td($this->escape(PhocaCartPrice::cleanPrice($item->discount)), "small");
+echo $r->td($this->escape($item->valid_from), "small");
+echo $r->td($this->escape($item->valid_to), "small");
 
 $status = PhocaCartDate::getActiveDate($item->valid_from, $item->valid_to, 1);
 if ($item->published == 0) {
 	$status = '<span class="label label-default">'.JText::_('COM_PHOCACART_UNPUBLISHED').'</span>';
 }
-echo $r->td($status, "small hidden-phone");
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($status, "small");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

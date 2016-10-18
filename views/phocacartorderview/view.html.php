@@ -17,7 +17,7 @@ class PhocaCartCpViewPhocaCartOrderView extends JViewLegacy
 		$this->t		= PhocaCartUtils::setVars('orderview');
 		$id				= $app->input->get('id', 0, 'int');
 		$type			= $app->input->get('type', 0, 'int');
-		$format			= $app->input->get('format', 0, 'int');
+		$format			= $app->input->get('format', '', 'string');
 		
 		$order	= new PhocaCartOrderRender();
 		$o = $order->render($id, $type, $format);

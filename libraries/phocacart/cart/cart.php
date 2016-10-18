@@ -32,6 +32,7 @@ class PhocaCartCart
 	protected $couponvalid 			= 0;// is the coupon valid - all three tests - basic, advanced, total
 	protected $stockvalid			= 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
 	protected $minqtyvalid			= 1;// check minimum order quantity
+	protected $minmltpqtyvalid		= 1;// check minimum multiple order quantity
 
 	public function __construct() {
 		$session 		= JFactory::getSession();
@@ -322,14 +323,15 @@ class PhocaCartCart
 					$this->fullitems[$k]['stock'] 		= 0; // database value set in product settings
 					$this->fullitems[$k]['stockvalid'] 	= 1; // variable to inform if stock validity is ok
 					$this->fullitems[$k]['minqty'] 		= 0; // database value set in product settings
+					$this->fullitems[$k]['minmltpqty'] 	= 0;
 					$this->fullitems[$k]['minqtyvalid'] = 1; // varible to inform if minimum order is ok
+					$this->fullitems[$k]['minmltpqtyvalid'] = 1;
 					
 					// Group
 					$this->fullitemsgroup[$itemId]['id']			= (int)$itemId;
 					$this->fullitemsgroup[$itemId]['title']			= '';
 					
 											
-					
 					$attribs = array();
 					if (!empty($item[1])) {
 						$attribs = unserialize(base64_decode($item[1]));
@@ -363,10 +365,12 @@ class PhocaCartCart
 						$this->fullitems[$k]['volume']		= $item2->volume;
 						$this->fullitems[$k]['stock'] 		= $item2->stock;
 						$this->fullitems[$k]['minqty'] 		= $item2->min_quantity;
+						$this->fullitems[$k]['minmltpqty'] 	= $item2->min_multiple_quantity;
 						
 						// Group
-						$this->fullitemsgroup[$itemId]['minqty']	= $item2->min_quantity;
-						$this->fullitemsgroup[$itemId]['title']		= $item2->title;
+						$this->fullitemsgroup[$itemId]['minqty']		= $item2->min_quantity;
+						$this->fullitemsgroup[$itemId]['minmltpqty']	= $item2->min_multiple_quantity;
+						$this->fullitemsgroup[$itemId]['title']			= $item2->title;
 						
 						//$this->fullitems[$k]['netto'] 		*= $fQ;
 						$this->total['netto']				+= ($this->fullitems[$k]['netto'] * $fQ);
@@ -395,9 +399,10 @@ class PhocaCartCart
 						
 						$taxSuffix = '';
 						if ($item2->taxcalctype == 1) {
-							$taxSuffix = ' ('.$item2->taxrate.'%)';
+							$taxSuffix = ' ('.($price->getTaxFormat($item2->taxrate, $item2->taxcalctype, 0)).')';
 						}
-						$this->total['tax'][$item2->taxid]['title']	= $item2->taxtitle . $taxSuffix ;
+						
+						$this->total['tax'][$item2->taxid]['title']	= $item2->taxtitle . $taxSuffix;
 						$this->total['tax'][$item2->taxid]['type']	= $item2->taxcalctype;
 						$this->total['tax'][$item2->taxid]['rate']	= $item2->taxrate;
 						
@@ -588,7 +593,7 @@ class PhocaCartCart
 						}
 					}
 					
-					
+				
 					// Last place to influence $k
 					
 					// STOCK VALID CHECK
@@ -623,13 +628,38 @@ class PhocaCartCart
 						$this->fullitemsgroup[$itemId]['minqtyvalid'] = 1;
 					}
 					
-					if (((int)$this->fullitemsgroup[$itemId]['quantity']) < (int)$this->fullitemsgroup[$itemId]['minqty']) {
+					if (!isset($this->fullitemsgroup[$itemId]['minmltpqtyvalid'])) {
+						$this->fullitemsgroup[$itemId]['minmltpqtyvalid'] = 1;
+					}
+					
+					if (empty($this->fullitemsgroup[$itemId]['minqty'])) {
+						$this->minqtyvalid = 1;
+						$this->fullitemsgroup[$itemId]['minqtyvalid'] = 1;
+						
+					} else if ((int)$this->fullitemsgroup[$itemId]['quantity'] < (int)$this->fullitemsgroup[$itemId]['minqty']) {
 						$this->minqtyvalid = 0;
 						$this->fullitemsgroup[$itemId]['minqtyvalid'] = 0;
 					} else {
 						// Set it back because we are in foreach
 						$this->minqtyvalid = 1;
 						$this->fullitemsgroup[$itemId]['minqtyvalid'] = 1;
+					}
+					
+					if (empty($this->fullitemsgroup[$itemId]['minmltpqty'])) {
+						$this->minmltpqtyvalid = 1;
+						$this->fullitemsgroup[$itemId]['minmltpqtyvalid'] = 1;
+					} else if ($this->fullitemsgroup[$itemId]['minmltpqty'] == 0) {
+						// Do not modulo by zere
+						// Set it back because we are in foreach
+						$this->minmltpqtyvalid = 1;
+						$this->fullitemsgroup[$itemId]['minmltpqtyvalid'] = 1;
+					} else if (((int)$this->fullitemsgroup[$itemId]['quantity']) % (int)$this->fullitemsgroup[$itemId]['minmltpqty'] != 0) {
+						$this->minmltpqtyvalid = 0;
+						$this->fullitemsgroup[$itemId]['minmltpqtyvalid'] = 0;
+					} else {
+						// Set it back because we are in foreach
+						$this->minmltpqtyvalid = 1;
+						$this->fullitemsgroup[$itemId]['minmltpqtyvalid'] = 1;
 					}
 					
 				}
@@ -813,6 +843,10 @@ class PhocaCartCart
 	
 	public function getMinimumQuantityValid() {
 		return $this->minqtyvalid;
+	}
+	
+	public function getMinimumMultipleQuantityValid() {
+		return $this->minmltpqtyvalid;
 	}
 	
 	public function addShippingCosts($shippingId = 0) {

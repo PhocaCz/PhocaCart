@@ -33,8 +33,8 @@ class PhocaCartModelItems extends JModelLegacy
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', JRequest::getCmd('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', JRequest::getCmd('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
 		
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
 		
@@ -111,6 +111,8 @@ class PhocaCartModelItems extends JModelLegacy
 		$wheres		= array();
 		$lefts		= array();
 		
+		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
+		
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
 		if ($this->getState('filter.language')) {
@@ -184,6 +186,14 @@ class PhocaCartModelItems extends JModelLegacy
 			$lefts[]	= $s['left'];
 		}
 		
+		// Additional Images
+		$leftImages = '';
+		$selImages = '';
+		if ($p['switch_image_category_items'] == 1) {
+			$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON a.id = im.product_id';
+			$selImages	= ' im.image as additional_image,';
+		}
+		
 		
 		// Remove empty values:
 		$wheres = array_filter($wheres);
@@ -212,11 +222,12 @@ class PhocaCartModelItems extends JModelLegacy
 			//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
 			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
 			
-			$q = ' SELECT a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.external_link, a.external_text, '
+			$q = ' SELECT a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.external_link, a.external_text,'. $selImages
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required'
 			. ' FROM #__phocacart_products AS a'
 			. implode( ' ', $lefts )
+			. $leftImages
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id'
 			. ' ORDER BY '.$itemOrdering;	

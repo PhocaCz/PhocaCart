@@ -9,11 +9,10 @@
 defined('_JEXEC') or die();
 
 echo '<div id="ph-pc-account-box" class="pc-account-view'.$this->p->get( 'pageclass_sfx' ).'">';
-if ( $this->p->get( 'show_page_heading' ) ) { 
-	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
-} else {
-	echo '<h1>'. JText::_('COM_PHOCACART_MY_ACCOUNT') . '</h1>';
-}
+
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_MY_ACCOUNT')));
+
+
 /*if ( $this->t['description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['description']. '</div>';
 }*/
@@ -51,7 +50,7 @@ if ((int)$this->u->id > 0) {
 	echo '<div class="ph-cb"></div>';
 	
 	echo '<div class="pull-right ph-account-address-save">';
-	echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
 	

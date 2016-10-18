@@ -27,10 +27,10 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 	public function display($tpl = null) {
 		
 		$this->t				= PhocaCartUtils::setVars('manager');
-		$this->field			= JRequest::getVar('field');
+		$this->field			= JFactory::getApplication()->input->get('field');
 		$this->fce 				= 'phocaSelectFileName_'.$this->field;
-		$this->manager 			= JRequest::getVar( 'manager', '', '', 'file' );
-		$downloadFolder			= JRequest::getVar( 'downloadfolder', '', '', 'string' );
+		$this->manager 			= JFactory::getApplication()->input->get( 'manager', '', '', 'file' );
+		$downloadFolder			= JFactory::getApplication()->input->get( 'downloadfolder', '', '', 'string' );
 		$downloadFolderExists	= PhocaCartFile::createDownloadFolder($downloadFolder);
 
 		$this->folderstate		= $this->get('FolderState');
@@ -58,7 +58,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		// - - - - - - - - - -
 		//TABS
 		// - - - - - - - - - - 
-		$this->t['tab'] 					= JRequest::getVar('tab', '', '', 'string');
+		$this->t['tab'] 					= JFactory::getApplication()->input->get('tab', '', '', 'string');
 		$this->t['currenttab']['upload'] 	= 1;
 		if((int)$this->t['enablemultiple']  >= 0) {
 			$this->t['currenttab']['multipleupload'] = 1;	
@@ -83,8 +83,8 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		// Multiple Upload
 		// - - - - - - - - - - -
 		// Get infos from multiple upload
-		$muFailed						= JRequest::getVar( 'mufailed', '0', '', 'int' );
-		$muUploaded						= JRequest::getVar( 'muuploaded', '0', '', 'int' );
+		$muFailed						= JFactory::getApplication()->input->get( 'mufailed', '0', '', 'int' );
+		$muUploaded						= JFactory::getApplication()->input->get( 'muuploaded', '0', '', 'int' );
 		$this->t['mu_response_msg']	= $muUploadedMsg 	= '';
 		
 		if ($muUploaded > 0) {
@@ -158,7 +158,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 	
 	protected function addToolbar() {
 	
-		JRequest::setVar('hidemainmenu', true);
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['task'].'.php';
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['task']).'Helper';

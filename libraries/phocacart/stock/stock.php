@@ -31,7 +31,7 @@ class PhocaCartStock
 		return $data;
 	}
 	
-	public static function getStockStatus($stockCount, $minQuantity, $stockStatusIdA, $stockStatusIdN) {
+	public static function getStockStatus($stockCount, $minQuantity, $minMultipleQuantity, $stockStatusIdA, $stockStatusIdN) {
 		
 		// A > 0 OR Not checking
 		// N = 0
@@ -102,6 +102,11 @@ class PhocaCartStock
 		$stock['min_quantity'] = false;
 		if ($minQuantity > 0) {
 			$stock['min_quantity'] = $minQuantity;
+		}
+		
+		$stock['min_multiple_quantity'] = false;
+		if ($minMultipleQuantity > 0) {
+			$stock['min_multiple_quantity'] = $minMultipleQuantity;
 		}
 		
 		return $stock;

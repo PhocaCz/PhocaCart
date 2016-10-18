@@ -10,9 +10,9 @@ defined('_JEXEC') or die();
 
 class PhocaCartControllerItem extends JControllerForm
 {
-	public function review() {
+	public function review() { 
 		
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		JSession::checkToken() or jexit( 'Invalid Token' );
 		$paramsC 			= JComponentHelper::getParams('com_phocacart');
 		$approve_review 	= $paramsC->get( 'approve_review',0 );
 		$app				= JFactory::getApplication();

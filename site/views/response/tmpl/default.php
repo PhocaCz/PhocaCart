@@ -7,17 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-echo '<div id="ph-pc-checkout-box" class="pc-checkout-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo '<div id="ph-pc-response-box" class="pc-response-view'.$this->p->get( 'pageclass_sfx' ).'">';
+
+echo PhocaCartRenderFront::renderHeader();
 
 
-echo '<h1>';
-if ($this->p->get('show_page_heading')) { 
-	 $this->escape($this->p->get('page_heading'));
-}
-echo '</h1>';
-
-
-echo '</div>';// end ph-pc-checkout-box
+echo '</div>';// end ph-pc-response-box
 echo '<div>&nbsp;</div>';
 echo PhocaCartUtils::getInfo();
 ?>

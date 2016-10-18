@@ -11,9 +11,15 @@ defined('_JEXEC') or die();
 class PhocaCartFilter
 {
 	public $taglist			= false;
+	public $tag				= false;
 	public $manufacturer	= false;
 	public $price			= false;
 	public $attributes		= false;
+	public $specifications	= false;
+	
+	public $enable_color_filter 		= false;
+	public $enable_image_filter 		= false;
+	public $image_style_image_filter 	= false;
 	
 	
 	public function __construct() {}
@@ -26,6 +32,11 @@ class PhocaCartFilter
 		$layout 	= new JLayoutFile('form_filter_checkbox', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
 		$layout2 	= new JLayoutFile('form_filter_text', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
 		$layout3 	= new JLayoutFile('form_filter_checkbox_categories', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layout4 	= new JLayoutFile('form_filter_color', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layout5 	= new JLayoutFile('form_filter_image', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		
+		
+		$pathProductImage = PhocaCartPath::getPath('productimage');
 		
 		// =FILTER=
 		$data['getparams']	= array();
@@ -69,8 +80,6 @@ class PhocaCartFilter
 			}
 		}
 	
-		
-		
 		// -PRICE-
 		$data['param'] 		= 'price_from';
 		$data['param2'] 	= 'price_to';
@@ -127,6 +136,7 @@ class PhocaCartFilter
 		if ($this->attributes) {
 			phocacartimport('phocacart.attribute.attribute');
 			$attributes = PhocaCartAttribute::getAllAttributesAndOptions();
+			
 			if (!empty($attributes)) {
 				foreach($attributes as $k => $v) {
 					$data				= array();
@@ -134,11 +144,25 @@ class PhocaCartFilter
 					$data['title']		= $v['title'];
 					$data['items']		= $v['option'];
 					$data['getparams']	= $this->getArrayParamValues($data['param'], 'array');
-					$data['formtype']	= 'checked';
 					$data['uniquevalue']= 0;
+					$data['pathitem']	= $pathProductImage;
 					
 					if (!empty($data['items'])) {
-						$o[] = $layout->render($data);
+						
+						if ($this->enable_color_filter && isset($v['type']) && ($v['type'] == 2)) {
+							// Color
+							$data['formtype']	= 'text';
+							$o[] = $layout4->render($data);
+						} else if ($this->enable_image_filter && isset($v['type']) && ($v['type'] == 3)) {
+							// Image
+							$data['formtype']	= 'text';
+							$data['style']		= strip_tags($this->image_style_image_filter);
+							$o[] = $layout5->render($data);
+						} else {
+							// Select
+							$data['formtype']	= 'checked';
+							$o[] = $layout->render($data);
+						}
 					}
 				}
 			}	

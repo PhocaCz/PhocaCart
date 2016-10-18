@@ -94,7 +94,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -105,13 +105,13 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 //$method = PhocaCartSettings::getPaymentMethod($item->method);
-echo $r->td(JText::_($item->method), "small hidden-phone");
+echo $r->td(JText::_($item->method), "small");
 
 $rules = array();
 if($item->active_amount) {$rules[] = '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_AMOUNT_RULE'). '</span>';}
@@ -120,11 +120,11 @@ if($item->active_region) {$rules[] = '<span class="label label-info label-info">
 if($item->active_shipping) {$rules[] = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_SHIPPING_RULE'). '</span>';}
 
 
-echo $r->td(implode(" ", $rules), "small hidden-phone");
+echo $r->td(implode(" ", $rules), "small");
 
 echo $r->td($this->escape($item->access_level));
 
-echo $r->td($item->id, "small hidden-phone");
+echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
 						

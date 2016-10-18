@@ -79,18 +79,20 @@ echo '<input class="btn btn-success" type="submit" name="submit" value="'.JText:
 
 echo '<div style="clear:both"></div>';
 //echo $r->endFilterBar();
-	
+
+// Chart
+$s = new PhocaCartStatistics();
+$s->renderChartJsLine('phChartAreaLine', $this->d['amount'], JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $this->d['orders'], JText::_('COM_PHOCACART_TOTAL_ORDERS'), $this->d['ticks']);
+$s->setFunction('phChartAreaLine', 'Line');
 
 if ($this->t['data_error'] == 1) {
-
 	echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MAXIMUM_NUMBER_OF_DAYS_SELECTED_EXCEEDED').' ('. JText::_('COM_PHOCACART_MAXIMUM_NUMBER_OF_DAYS_SELECTED') . ': '.$this->t['data_possible_days'].'</div>';
 } else {
-	?>
-	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div>
-	<div id="ph-canvas-holder" class="ph-chart-canvas-holder" style="width: 70%;" >
-        <canvas id="ph-chart-area" class="ph-chart-area"s />
+	/*
+	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
+	<div id="phChartAreaLineHolder" class="ph-chart-canvas-holder" style="width:95%" >
+        <canvas id="phChartAreaLine" class="ph-chart-area-line" />
     </div>
-
 	<?php
 }
 
@@ -102,15 +104,34 @@ echo '<div class="row ph-admin-stat-row">';
 
 // Best selling - period
 echo '<div class="span4 ph-admin-stat-box">';
-echo '<h2>'.JText::_('COM_PHOCACART_BEST_SELLING_PRODUCTS').'<br />';
+echo '<h2>'. JText::_('COM_PHOCACART_TOP_5') . ' - '. JText::_('COM_PHOCACART_BEST_SELLING_PRODUCTS').'<br />';
 echo '('. $this->t['date_from'] .' - '. $this->t['date_to'] .')</h2>';
 
+
+$dataBs2 = array();
 if (!empty($this->t['best_selling2'])) {
 	echo '<table>';
-	foreach ($this->t['best_selling'] as $k => $v) {
-		echo '<tr><td><a href="index.php?option=com_phocacart&task=phocacartitem.edit&id='.(int)$v->id.'" target="_blank">'. $v->title. '</td><td class="ph-table-td-left">'.$v->count_products.'x</td></tr>';
+	foreach ($this->t['best_selling2'] as $k => $v) {
+		$dataBs2[$k]['title'] = $v->title;
+		$dataBs2[$k]['items'] = $v->count_products;
+		echo '<tr><td>'. $v->title. '</td><td class="ph-table-td-left">'.$v->count_products.'x</td></tr>';
 	}
 	echo '</table>';
+	
+	$s->renderChartJsPie('phChartAreaPieBs2', $dataBs2);
+	$s->setFunction('phChartAreaPieBs2', 'Pie');
+	
+	echo '<div id="phChartAreaPieBs2Holder" style="width: 300px;margin-top:10px;" >';
+    echo '<canvas id="phChartAreaPieBs2" width="300" height="300" />';
+    echo '</div>';
+	
+	if ($this->t['best_selling2_count'] != '') {
+		echo '<div class="ph-stat-total">';
+		echo '<h3>'.JText::_('COM_PHOCACART_ALL_PRODUCTS'). '</h3>';
+		echo '<div>'.JText::_('COM_PHOCACART_TOTAL'). ': '.$this->t['best_selling2_count'].'</div>';
+		echo '</div>';
+	}
+	
 } else {
 	echo JText::_('COM_PHOCACART_NO_PRODUCTS_SOLD_IN_THIS_PERIOD');
 }
@@ -118,38 +139,79 @@ if (!empty($this->t['best_selling2'])) {
 echo '</div>';
 
 // Best selling
+$dataBs1 = array();
 echo '<div class="span4 ph-admin-stat-box">';
-echo '<h2>'.JText::_('COM_PHOCACART_BEST_SELLING_PRODUCTS').'<br />';
+echo '<h2>'. JText::_('COM_PHOCACART_TOP_5') . ' - '. JText::_('COM_PHOCACART_BEST_SELLING_PRODUCTS').'<br />';
 echo JText::_('COM_PHOCACART_FOR_THE_WHOLE_PERIOD').'</h2>';
 
 if (!empty($this->t['best_selling'])) {
+	
+	$dataBs = array();
 	echo '<table>';
 	foreach ($this->t['best_selling'] as $k => $v) {
-		echo '<tr><td><a href="index.php?option=com_phocacart&task=phocacartitem.edit&id='.(int)$v->id.'" target="_blank">'. $v->title. '</td><td class="ph-table-td-left">'.$v->count_products.'x</td></tr>';
+		$dataBs1[$k]['title'] = $v->title;
+		$dataBs1[$k]['items'] = $v->count_products;
+		echo '<tr><td>'. $v->title. '</td><td class="ph-table-td-left">'.$v->count_products.'x</td></tr>';
 	}
 	echo '</table>';
+	
+	$s->renderChartJsPie('phChartAreaPieBs1', $dataBs1);
+	$s->setFunction('phChartAreaPieBs1', 'Pie');
+	
+	echo '<div id="phChartAreaPieBs1Holder" style="width: 300px;margin-top:10px;" >';
+    echo '<canvas id="phChartAreaPieBs1" width="300" height="300" />';
+    echo '</div>';
+	
+	if ($this->t['best_selling_count'] != '') {
+		echo '<div class="ph-stat-total">';
+		echo '<h3>'.JText::_('COM_PHOCACART_ALL_PRODUCTS'). '</h3>';
+		echo '<div>'.JText::_('COM_PHOCACART_TOTAL'). ': '.$this->t['best_selling_count'].'</div>';
+		echo '</div>';
+	}
+	
 } else {
 	echo JText::_('COM_PHOCACART_NO_PRODUCTS_SOLD_FOR_THE_WHOLE_PERIOD');
 }
 echo '</div>';
 
 
+
 // Most viewed
+$dataMv = array();
 echo '<div class="span4 ph-admin-stat-box">';
-echo '<h2>'.JText::_('COM_PHOCACART_MOST_VIEWED_PRODUCTS').'<br />';
+echo '<h2>'. JText::_('COM_PHOCACART_TOP_5') . ' - '. JText::_('COM_PHOCACART_MOST_VIEWED_PRODUCTS').'<br />';
 	echo JText::_('COM_PHOCACART_FOR_THE_WHOLE_PERIOD').'</h2>';
 	
 if (!empty($this->t['most_viewed'])) {
 	echo '<table>';
 	foreach ($this->t['most_viewed'] as $k => $v) {
-		echo '<tr><td><a href="index.php?option=com_phocacart&task=phocacartitem.edit&id='.(int)$v->id.'" target="_blank">'. $v->title. '</td><td class="ph-table-td-left">'.$v->hits.'x</td></tr>';
+		$dataMv[$k]['title'] = $v->title;
+		$dataMv[$k]['items'] = $v->hits;
+		echo '<tr><td>'. $v->title. '</td><td class="ph-table-td-left">'.$v->hits.'x</td></tr>';
 	}
 	echo '</table>';
+	
+	$s->renderChartJsPie('phChartAreaPieMv', $dataMv);
+	$s->setFunction('phChartAreaPieMv', 'Pie');
+	
+	echo '<div id="phChartAreaPieMvHolder" style="width: 300px;margin-top:10px;" >';
+    echo '<canvas id="phChartAreaPieMv" width="300" height="300" />';
+    echo '</div>';
+	
+	if ($this->t['most_viewed_count'] != '') {
+		echo '<div class="ph-stat-total">';
+		echo '<h3>'.JText::_('COM_PHOCACART_ALL_PRODUCTS'). '</h3>';
+		echo '<div>'.JText::_('COM_PHOCACART_TOTAL'). ': '.$this->t['most_viewed_count'].'</div>';
+		echo '</div>';
+	}
 
 } else {
-	echo JText::_('COM_PHOCACART_NO_PRODUCTS_DISPLAYED_OF_ALL_TIME');
+	echo JText::_('COM_PHOCACART_NO_PRODUCTS_DISPLAYED_FOR_THE_WHOLE_PERIOD');
 }
 echo '</div>';
+
+$s->renderFunctions();
+
 
 //echo '<div class="span2"></div>';
 echo '</div>';// end row

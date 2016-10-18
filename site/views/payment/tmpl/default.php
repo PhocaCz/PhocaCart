@@ -9,16 +9,7 @@
 defined('_JEXEC') or die();
 echo '<div id="ph-pc-payment-box" class="pc-payment-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-
-echo '<h1>';
-if ($this->p->get('show_page_heading')) { 
-	 $this->escape($this->p->get('page_heading'));
-}
-echo JText::_('COM_PHOCACART_PAYMENT');
-echo '</h1>';
-
-
-
+echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_PAYMENT')));
 
 echo $this->t['o'];
 

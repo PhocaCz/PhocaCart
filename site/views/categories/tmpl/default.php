@@ -7,10 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+$layoutV	= new JLayoutFile('button_category_view', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+
 echo '<div id="ph-pc-categories-box" class="pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
-if ( $this->p->get( 'show_page_heading' ) ) { 
-	echo '<h1>'. $this->escape($this->p->get('page_heading')) . '</h1>';
-}
+
+echo PhocaCartRenderFront::renderHeader();
+
 if ( $this->t['main_description'] != '') {
 	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['main_description']). '</div>';
 }
@@ -26,7 +29,7 @@ if (!empty($this->t['categories'])) {
 		//if ($i%$nc==0) { echo '<div class="row">';}
 		
 		echo '<div class="col-sm-6 col-md-'.$nw.'">';
-		echo '<div class="thumbnail ph-thumbnail">';
+		echo '<div class="thumbnail ph-thumbnail ph-thumbnail-c">';
 		
 		$image 	= PhocaCartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
 		$link	= JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias));
@@ -41,8 +44,16 @@ if (!empty($this->t['categories'])) {
 			echo '</a>';
 		}
 		echo '<div class="caption">';
-		echo '<h3>'.$v->title.'</h3>';
-	
+		
+		echo '<h3>';
+		if ($this->t['category_name_link'] == 1)
+			echo '<a href="'.JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a>';
+		else {
+			echo $v->title;
+		}
+		echo '</h3>';
+		
+		
 		if (!empty($v->subcategories) && (int)$this->t['csv_display_subcategories'] > 0) {
 			echo '<ul>';
 			$j = 0;
@@ -64,7 +75,14 @@ if (!empty($this->t['categories'])) {
 		}
 		echo '</div>';
 		
-		echo '<p class="pull-right"><a href="'.JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias)).'" class="btn btn-primary" role="button">'.JText::_('COM_PHOCACART_VIEW_CATEGORY').'</a></p>';
+		
+		if ((int)$this->t['display_view_category_button'] > 0) {
+			$d									= array();
+			$d['link']							= JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias));
+			$d['display_view_category_button']	= $this->t['display_view_category_button'];
+			echo $layoutV->render($d);
+		}
+		
 		echo '<div class="clearfix"></div>';
 		echo '</div>';
 		echo '</div>';

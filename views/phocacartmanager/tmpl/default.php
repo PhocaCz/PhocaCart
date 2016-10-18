@@ -21,7 +21,7 @@ echo '<div class="ph-admin-path">' . JText::_('COM_PHOCACART_PATH'). ': '.JPath:
 echo '<table class="table table-hover table-condensed ph-multiple-table">'
 .'<thead>'
 .'<tr>';
-echo '<th class="hidden-phone ph-check">'. "\n";
+echo '<th class=" ph-check">'. "\n";
 //echo '<input type="checkbox" name="checkall-toggle" value="" title="'.JText::_('JGLOBAL_CHECK_ALL').'" onclick="Joomla.checkAll(this)" />'. "\n";
 echo '</th>'. "\n";
 echo '<th width="20">&nbsp;</th>'

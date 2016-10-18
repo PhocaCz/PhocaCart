@@ -11,7 +11,7 @@ require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartCommon
 {
 	public function batch($model = null) {
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		$model	= $this->getModel('phocacartitem', '', array());
 		$this->setRedirect(JRoute::_('index.php?option=com_phocacart&view=phocacartitems'.$this->getRedirectToListAppend(), false));
 
@@ -21,11 +21,13 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 	
 	function recreate() {
 		$app	= JFactory::getApplication();
-		$cid 	= JRequest::getVar( 'cid', array(), '', 'array' );
+		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
 		JArrayHelper::toInteger($cid);
 
 		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'COM_PHOCACART_SELECT_ITEM_RECREATE' ) );
+			$message = JText::_( 'COM_PHOCACART_SELECT_ITEM_RECREATE' );
+			$app->enqueueMessage($message, 'error');
+			$app->redirect('index.php?option=com_phocacart&view=phocacartcategories');
 		}
 		$message = '';
 		$model = $this->getModel( 'phocacartitem' );

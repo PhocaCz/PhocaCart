@@ -26,20 +26,23 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 	}
 	
 	function displaybilling() {
-		JRequest::checkToken() or die(JText::_('JINVALID_TOKEN'));
-
-		$cid	= JRequest::getVar('cid', array(), '', 'array');
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		
+		$app	= JFactory::getApplication();
+		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displaybilling' => 1, 'hidebilling' => 0);
 		$task 	= $this->getTask();
 		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
 
+		
+		
 		if (empty($cid)) {
-			JError::raiseWarning(500, JText::_($this->text_prefix.'_NO_ITEM_SELECTED'));
+			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
 			JArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_billing')) {
-				JError::raiseWarning(500, $model->getError());
+				$app->enqueueMessage($model->getError(), 'error');
 			} else {
 				if ($value == 1) {
 					$ntext = $this->text_prefix.'_N_ITEMS_DISPLAYED';
@@ -53,20 +56,21 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 	}
 	
 	function displayshipping() {
-		JRequest::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		$cid	= JRequest::getVar('cid', array(), '', 'array');
+		$app	= JFactory::getApplication();
+		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayshipping' => 1, 'hideshipping' => 0);
 		$task 	= $this->getTask();
 		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid)) {
-			JError::raiseWarning(500, JText::_($this->text_prefix.'_NO_ITEM_SELECTED'));
+			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
 			JArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_shipping')) {
-				JError::raiseWarning(500, $model->getError());
+				$app->enqueueMessage($model->getError(), 'error');
 			} else {
 				if ($value == 1) {
 					$ntext = $this->text_prefix.'_N_ITEMS_DISPLAYED';
@@ -80,20 +84,21 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 	}
 	
 	function displayaccount() {
-		JRequest::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		$cid	= JRequest::getVar('cid', array(), '', 'array');
+		$app	= JFactory::getApplication();
+		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayaccount' => 1, 'hideaccount' => 0);
 		$task 	= $this->getTask();
 		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid)) {
-			JError::raiseWarning(500, JText::_($this->text_prefix.'_NO_ITEM_SELECTED'));
+			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
 			JArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_account')) {
-				JError::raiseWarning(500, $model->getError());
+				$app->enqueueMessage($model->getError(), 'error');
 			} else {
 				if ($value == 1) {
 					$ntext = $this->text_prefix.'_N_ITEMS_DISPLAYED';

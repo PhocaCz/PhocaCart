@@ -31,10 +31,14 @@ if (!empty($this->itemhistory)) {
 			$userO .= ' <small>('.$v->user_username.')</small>';
 		}
 		echo '<td align="center">'.$userO.'<td>';
+		
 		$notifyText = JText::_('COM_PHOCACART_NO');
-		if ($v->notify > 0) {
+		if ($v->notify == -1) {
+			$notifyText = JText::_('COM_PHOCACART_NO_ERROR');
+		} else if ($v->notify > 0) {
 			$notifyText = JText::_('COM_PHOCACART_YES');
 		}
+		
 		echo '<td align="center">'.$notifyText.'<td>';
 		$comment = '';
 		if ($v->comment != '') {
@@ -78,7 +82,7 @@ if (isset($this->item['email_others']) && $this->item['email_others'] != '') {
 echo '<td><input type="checkbox" name="jform[notify_others]" '.$checked.' /></td></tr>';
 
 
-echo '<tr><td>'.JText::_('COM_PHOCACART_FIELD_EMAIL_SEND_LABEL').'</td>';
+echo '<tr><td>'.JText::_('COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_LABEL').'</td>';
 echo '<td>'.PhocaCartOrderStatus::getEmailSendSelectBox($this->item['email_send']).'</tr>';
 
 
@@ -91,7 +95,7 @@ echo '<td>'.PhocaCartOrderStatus::getStockMovementsSelectBox($this->item['stock_
 
 echo '<tr><td></td>';
 echo '<td>';
-echo '<button class="btn btn-success btn-sm ph-btn" role="button"><span class="icon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_STATUS').'</button>';
+echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_STATUS').'</button>';
 echo '</td></tr>';
 echo '</table>';
 
@@ -107,7 +111,7 @@ echo '<input type="hidden" name="jform[id]" value="'.(int)$this->id.'">';
 echo '<input type="hidden" name="task" value="phocacarteditstatus.emptyhistory">';
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
-echo '<button class="btn btn-primary btn-sm ph-btn" role="button"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_ORDER_HISTORY').'</button>';
+echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_ORDER_HISTORY').'</button>';
 echo '</div>';
 echo JHtml::_('form.token');
 echo '</form>';

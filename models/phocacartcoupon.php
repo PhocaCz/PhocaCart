@@ -43,6 +43,13 @@ class PhocaCartCpModelPhocaCartCoupon extends JModelAdmin
 		return $data;
 	}
 	
+	public function getItem($pk = null) {
+		if ($item = parent::getItem($pk)) {
+			$item->discount	= PhocaCartPrice::cleanPrice($item->discount);
+		}
+		return $item;
+	}
+	
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();

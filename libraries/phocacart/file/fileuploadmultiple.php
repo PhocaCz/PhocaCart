@@ -73,9 +73,7 @@ class PhocaCartFileUploadMultiple
 	
 	static public function getMultipleUploadSizeFormat($size) {
 		$readableSize = PhocaCartFile::getFileSizeReadable($size, '%01.0f %s', 1);
-		
 		$readableSize 	= str_replace(' ', '', $readableSize);
-		
 		$readableSize 	= strtolower($readableSize);
 		return $readableSize;
 	}

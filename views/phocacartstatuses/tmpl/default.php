@@ -94,7 +94,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small hidden-phone");
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
 if ($item->checked_out) {
@@ -105,29 +105,29 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape(JText::_($item->title)) . ' <small>('.$this->escape($item->title).')</small>';
 }
-echo $r->td($checkO, "small hidden-phone");
+echo $r->td($checkO, "small");
 
 
-echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small hidden-phone");
+echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 
-echo $r->td($this->escape($item->stock_movements), "small hidden-phone ph-center");
+echo $r->td($this->escape($item->stock_movements), "small ph-center");
 
 if ($item->download == 1) {
 	$download = '<span class="label label-success">'.JText::_('COM_PHOCACART_YES').'</span>';
 } else {
 	$download = '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NO').'</span>';
 }
-echo $r->td($download, "small hidden-phone ph-center");
+echo $r->td($download, "small ph-center");
 
 if ($item->type == 1) {
 	$default = '<a data-original-title="'.JText::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip" title="'.JText::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
-	echo $r->td($default, "small hidden-phone ph-center");
+	echo $r->td($default, "small ph-center");
 }
 else {
-	echo $r->td('', "small hidden-phone");
+	echo $r->td('', "small");
 }
-echo $r->td($item->id, "small hidden-phone ph-center");
+echo $r->td($item->id, "small ph-center");
 
 echo '</tr>'. "\n";
 						

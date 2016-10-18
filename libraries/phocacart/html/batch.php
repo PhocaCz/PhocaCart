@@ -24,7 +24,7 @@ abstract class PhocaCartBatch
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocacart_categories AS a'
-		// TODO. ' WHERE a.published = '.(int)$published
+		// TO DO. ' WHERE a.published = '.(int)$published
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
