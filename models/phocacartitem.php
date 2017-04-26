@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modeladmin');
+use Joomla\String\StringHelper;
 
 class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 {
@@ -73,14 +74,14 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 			// Make the numbers more readable
 			// it has no influence on saving it to db
-			$item->price 			= PhocaCartPrice::cleanPrice($item->price);
-			$item->price_original 	= PhocaCartPrice::cleanPrice($item->price_original);
-			$item->length 			= PhocaCartPrice::cleanPrice($item->length);
-			$item->width 			= PhocaCartPrice::cleanPrice($item->width);
-			$item->height 			= PhocaCartPrice::cleanPrice($item->height);
-			$item->weight 			= PhocaCartPrice::cleanPrice($item->weight);
-			$item->volume			= PhocaCartPrice::cleanPrice($item->volume);
-			$item->unit_amount 		= PhocaCartPrice::cleanPrice($item->unit_amount);
+			$item->price 			= PhocacartPrice::cleanPrice($item->price);
+			$item->price_original 	= PhocacartPrice::cleanPrice($item->price_original);
+			$item->length 			= PhocacartPrice::cleanPrice($item->length);
+			$item->width 			= PhocacartPrice::cleanPrice($item->width);
+			$item->height 			= PhocacartPrice::cleanPrice($item->height);
+			$item->weight 			= PhocacartPrice::cleanPrice($item->weight);
+			$item->volume			= PhocacartPrice::cleanPrice($item->volume);
+			$item->unit_amount 		= PhocacartPrice::cleanPrice($item->unit_amount);
 
 		}
 
@@ -128,7 +129,17 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
 		}
-
+		$app		= JFactory::getApplication();
+		
+		// TO DO remove
+		/*$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
+		$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
+		$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
+		//PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
+		
+		$pFormImg = $app->input->post->get('pformimg', array(), 'array');
+		*/
+	
 		// Initialise variables;
 		$app		= JFactory::getApplication();
 		$dispatcher = JDispatcher::getInstance();
@@ -191,7 +202,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		
 		// Test Thumbnails (Create if not exists)
 		if ($table->image != '') {
-			$thumb = PhocaCartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
+			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
 		}
 					
 		if ((int)$table->id > 0) {
@@ -199,7 +210,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			if (!isset($data['catid_multiple'])) {
 				$data['catid_multiple'] = array();
 			}
-			PhocaCartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->id);
+			PhocacartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->id);
 			
 			if (isset($data['featured'])) {
 				$this->featured((int)$table->id, $data['featured']);
@@ -215,7 +226,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				}
 			}
 			
-			PhocaCartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
+			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
 			
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
@@ -223,19 +234,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 			
 			$pFormImg = $app->input->post->get('pformimg', array(), 'array');
-			PhocaCartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
+			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
 			$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
-			PhocaCartAttribute::storeAttributesById((int)$table->id, $pFormAttr);
+			PhocacartAttribute::storeAttributesById((int)$table->id, $pFormAttr);
 			$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
-			PhocaCartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
-			
+			PhocacartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
+			$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
+			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
 			
 			
 			
 			if (!isset($data['tags'])) {
 				$data['tags'] = array();
 			}
-			PhocaCartTag::storeTags($data['tags'], (int)$table->id);
+			PhocacartTag::storeTags($data['tags'], (int)$table->id);
 
 		}
 
@@ -313,34 +325,40 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 4B. DELETE FEATURED
+			// 5. DELETE FEATURED
 			$query = 'DELETE FROM #__phocacart_product_featured'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			$tableF = $this->getTable('PhocaCartFeatured', 'Table');
+			$tableF = $this->getTable('PhocacartFeatured', 'Table');
 			$tableF->reorder();
 			
-			// 5. DELETE IMAGES
+			// 6. DELETE IMAGES
 			$query = 'DELETE FROM #__phocacart_product_images'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 6. DELETE REVIEWS
+			// 7. DELETE REVIEWS
 			$query = 'DELETE FROM #__phocacart_reviews'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 7. DELETE CATEGORY RELATIONSHIP
+			// 8. DELETE CATEGORY RELATIONSHIP
 			$query = 'DELETE FROM #__phocacart_product_categories'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 8. DELETE SPECIFICATIONS
+			// 9. DELETE SPECIFICATIONS
 			$query = 'DELETE FROM #__phocacart_specifications'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 9. DELETE PRODUCT DISCOUNTS
+			$query = 'DELETE FROM #__phocacart_product_discounts'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
@@ -363,7 +381,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		// Check that the category exists
 		if ($categoryId) {
-			$categoryTable = JTable::getInstance('PhocaCartCategory', 'Table');
+			$categoryTable = JTable::getInstance('PhocacartCategory', 'Table');
 			if (!$categoryTable->load($categoryId)) {
 				if ($error = $categoryTable->getError()) {
 					// Fatal error
@@ -449,9 +467,9 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$newIds[$i]	= $newId;
 			
 			// Store other new information
-			PhocaCartBatchHelper::storeProductItems($pk, (int)$newId);
+			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId);
 			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
-			$currentDataCat = PhocaCartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
+			$currentDataCat = PhocacartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
 																							 // will be copied too
 			// 1) Bind categories - destination category + all categories from source product (source product -> destination product)
 			$dataCat2		= array_merge($dataCat, $currentDataCat);
@@ -462,7 +480,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$currentCatidA 	= array(0 => (int)$currentCatid);
 			$dataCat2 		= array_diff($dataCat2, $currentCatidA);
 	
-			PhocaCartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
+			PhocacartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
 			
 			$i++;
 		}
@@ -492,7 +510,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		// Check that the category exists
 		if ($categoryId) {
-			$categoryTable = JTable::getInstance('PhocaCartCategory', 'Table');
+			$categoryTable = JTable::getInstance('PhocacartCategory', 'Table');
 			if (!$categoryTable->load($categoryId)) {
 				if ($error = $categoryTable->getError()) {
 					// Fatal error
@@ -558,7 +576,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 			$dataCat[]	= (int)$categoryId;
 			
-			PhocaCartCategoryMultiple::storeCategories($dataCat, (int)$table->id);
+			PhocacartCategoryMultiple::storeCategories($dataCat, (int)$table->id);
 		}
 
 		// Clean the cache
@@ -583,7 +601,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				
 					if (isset($v->image) && $v->image != '') {
 						
-						$original	= PhocaCartFile::existsFileOriginal($v->image, 'productimage');
+						$original	= PhocacartFile::existsFileOriginal($v->image, 'productimage');
 						if (!$original) {
 							// Original does not exist - cannot generate new thumbnail
 							$message = JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
@@ -591,12 +609,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 						}
 						
 						// Delete old thumbnails
-						$deleteThubms = PhocaCartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'productimage');
+						$deleteThubms = PhocacartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'productimage');
 						if (!$deleteThubms) {
 							$message = JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
 							return false;
 						}
-						$createThubms = PhocaCartFileThumbnail::getOrCreateThumbnail($v->image, 0, 1,1,1,0,'productimage');
+						$createThubms = PhocacartFileThumbnail::getOrCreateThumbnail($v->image, 0, 1,1,1,0,'productimage');
 						if (!$createThubms) {
 							$message = JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 							return false;
@@ -612,7 +630,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 							if (isset($files2) && count($files2)) {
 								foreach($files2 as $k2 => $v2) {
 								
-									$original2	= PhocaCartFile::existsFileOriginal($v2->image, 'productimage');
+									$original2	= PhocacartFile::existsFileOriginal($v2->image, 'productimage');
 									if (!$original2) {
 										// Original does not exist - cannot generate new thumbnail
 										$message = JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
@@ -620,12 +638,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 									}
 									
 									// Delete old thumbnails
-									$deleteThubms2 = PhocaCartFileThumbnail::deleteFileThumbnail($v2->image, 1, 1, 1, 'productimage');
+									$deleteThubms2 = PhocacartFileThumbnail::deleteFileThumbnail($v2->image, 1, 1, 1, 'productimage');
 									if (!$deleteThubms2) {
 										$message = JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
 										return false;
 									}
-									$createThubms2 = PhocaCartFileThumbnail::getOrCreateThumbnail($v2->image, 0, 1,1,1,0,'productimage');
+									$createThubms2 = PhocacartFileThumbnail::getOrCreateThumbnail($v2->image, 0, 1,1,1,0,'productimage');
 									if (!$createThubms2) {
 										$message = JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 										return false;
@@ -662,7 +680,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			return false;
 		}
 
-		$table = $this->getTable('PhocaCartFeatured', 'Table');
+		$table = $this->getTable('PhocacartFeatured', 'Table');
 		
 		
 
@@ -740,7 +758,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	{
 		// PHOCAEDIT
 		//$table = $this->getTable();
-		$table 	= $this->getTable('PhocaCartProductCategories', 'Table');
+		$table 	= $this->getTable('PhocacartProductCategories', 'Table');
 		
 		// CURRENT CATEGORY
 		$app 			= JFactory::getApplication('administrator');
@@ -859,6 +877,66 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$max = $this->_db->loadResult();
 		$ordering = $max + 1;
 		return $ordering;
+	}
+	
+	protected function generateNewTitle($category_id, $alias, $title) {
+		// Alter the title & alias
+		$table = $this->getTable();
+		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name 
+		// not like standard new name for each category
+		while ($table->load(array('alias' => $alias))) {
+			//$title = JString::increment($title);
+			//$alias = JString::increment($alias, 'dash');
+			$title = StringHelper::increment($title);
+			$alias = StringHelper::increment($alias, 'dash');
+		}
+
+		return array($title, $alias);
+	}
+	
+	public function copyattributes(&$cid = array(), $idSource = 0) {
+		
+		$app	= JFactory::getApplication();
+		$cA = 0;
+		
+		if (count( $cid ) && (int)$idSource > 0) {
+			JArrayHelper::toInteger($cid);
+			
+			// Attributes
+			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
+			if (!empty($aA)) {
+				foreach ($aA as $k => $v) {
+					if (isset($v['id']) && $v['id'] > 0) {
+						$oA = PhocacartAttribute::getOptionsById((int)$v['id'], 1);
+						if (!empty($oA)) {
+							$aA[$k]['options'] = $oA;
+						}
+					}
+				}
+				
+			} else {
+				$app->enqueueMessage(JText::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
+				return false;
+			}
+			
+			if (!empty($aA)) {
+				foreach($cid as $k => $v) {
+					
+					if ((int)$v != $idSource) { // Do not copy to itself
+						PhocacartAttribute::storeAttributesById((int)$v, $aA);
+						$cA++;
+					}
+				}
+			}
+			
+		}
+		
+		if ((int)$cA > 0) {
+			return true;
+		} else {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ATTRIBUTE_COPIED'), 'error');
+			return false;
+		}
 	}
 }
 ?>

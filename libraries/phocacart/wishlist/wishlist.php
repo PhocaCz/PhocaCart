@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartWishList
+class PhocacartWishlist
 {
 	protected $items     		= array();
 	protected $user				= array();
@@ -57,7 +57,7 @@ class PhocaCartWishList
 				foreach($items as $k => $v) {
 					$itemsSorted[$v['product_id']]['product_id'] 	= $v['product_id'];
 					$itemsSorted[$v['product_id']]['category_id'] 	= $v['category_id'];
-					$itemsSorted[$v['product_id']]['user_id'] 	= $v['user_id'];
+					$itemsSorted[$v['product_id']]['user_id'] 		= $v['user_id'];
 				}
 
 				if (!empty($itemsSorted)) {
@@ -107,11 +107,14 @@ class PhocaCartWishList
 	
 	public function addItem($id = 0, $catid = 0) {
 		if ($id > 0) {
-			$app 			= JFactory::getApplication();
+			
+			$app			= JFactory::getApplication();
+			$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+			$maxWishListItems	= $paramsC->get( 'max_wishlist_items', 20 );
 			
 			$count = count($this->items);
 		
-			if ($count > 100) {
+			if ($count > (int)$maxWishListItems || $count == (int)$maxWishListItems) {
 				$message = JText::_('COM_PHOCACART_COUNT_OF_PRODUCTS_IN_WISH_LIST_IS_LIMITED');
 				$app->enqueueMessage($message, 'error');
 				return false;
@@ -257,7 +260,8 @@ class PhocaCartWishList
 		$db 				= JFactory::getDBO();
 		$uri 				= JFactory::getURI();
 		$action				= $uri->toString();
-		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
 		$query				= $this->getQueryList($this->items);
 		
@@ -267,13 +271,16 @@ class PhocaCartWishList
 			//echo nl2br(str_replace('#__', 'jos_', $query));
 			$db->setQuery($query);
 			$d['wishlist'] 			= $db->loadObjectList();
-			PhocaCartCategoryMultiple::setBestMatchCategory($d['wishtlist'], $this->items, 1);// returned by reference
+			
+			$tempItems = $this->correctItems();
+			PhocacartCategoryMultiple::setBestMatchCategory($d['wishlist'], $tempItems, 1);// returned by reference
+			
 		}	
 		$d['actionbase64']		= base64_encode($action);
-		$d['linkwishlist']		= JRoute::_(PhocaCartRoute::getWishListRoute());
+		$d['linkwishlist']		= JRoute::_(PhocacartRoute::getWishListRoute());
 		$d['method']			= $add_wishlist_method;
 			
-		$layoutW 			= new JLayoutFile('list_wishlist', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutW 			= new JLayoutFile('list_wishlist', null, array('component' => 'com_phocacart'));
 		echo $layoutW->render($d);
 	}
 	
@@ -286,10 +293,36 @@ class PhocaCartWishList
 		if ($query) {
 			$db->setQuery($query);
 			$products = $db->loadAssocList();
-			PhocaCartCategoryMultiple::setBestMatchCategory($products, $this->items);// returned by reference
+			
+			
+			$tempItems = array();
+			if (!empty($this->items)) {
+				foreach($this->items as $k => $v) {
+					$tempItems[$k]['id'] 		= $v['product_id'];
+					$tempItems[$k]['catid'] 	= $v['category_id'];
+				}
+			}
+			$tempItems = $this->correctItems();
+			PhocacartCategoryMultiple::setBestMatchCategory($products, $tempItems);// returned by reference
 		}
 		return $products;
 	
+	}
+	
+	// Correct $this->items array for finding the right category
+	public function correctItems() {
+		$tempItems = array();
+		if (!empty($this->items)) {
+			foreach($this->items as $k => $v) {
+				$tempItems[$k]['id'] 		= $v['product_id'];
+				$tempItems[$k]['catid'] 	= $v['category_id'];
+			}
+		}
+		return $tempItems;
+	}
+	
+	public function getWishListCountItems() {
+		return count($this->items);
 	}
 }
 ?>

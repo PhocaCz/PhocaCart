@@ -26,7 +26,7 @@ class PhocaCartCpModelPhocacartCurrency extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartCurrency', $prefix = 'Table', $config = array())
+	public function getTable($type = 'PhocacartCurrency', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}

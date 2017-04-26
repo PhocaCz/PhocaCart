@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-if (! class_exists('PhocaCartCategory')) {
+if (! class_exists('PhocacartCategory')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/category.php');
 }
 
@@ -36,12 +36,12 @@ class JFormFieldPhocaCouponCategory extends JFormField
 		$javascript = '';
 		$tree = array();
 		$text = '';
-		$tree = PhocaCartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
+		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
 		
 
 		$relatedOption = array();
 		if ((int)$id > 0) {
-			$relatedOption	= PhocaCartCoupon::getCouponCatsById((int)$id);
+			$relatedOption	= PhocacartCoupon::getCouponCatsById((int)$id);
 		}
 		
 		

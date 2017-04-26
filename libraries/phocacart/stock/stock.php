@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartStock
+class PhocacartStock
 {
 	public static function getStockStatusData($stockStatusId, $available = 1) {
 	
@@ -35,7 +35,8 @@ class PhocaCartStock
 		
 		// A > 0 OR Not checking
 		// N = 0
-		$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$stock_checking			= $paramsC->get( 'stock_checking', 0 );
 		$display_stock_status	= $paramsC->get( 'display_stock_status', 0 );
 		$stock_checkout			= $paramsC->get( 'stock_checkout', 0 );
@@ -133,15 +134,16 @@ class PhocaCartStock
 	/* Handling of stock */
 	public static function handleStockProduct($productId, $orderStatusId, $quantity, $stockMovement = '') {
 		
-		$paramsC 				= JComponentHelper::getParams('com_phocacart');
-		$negative_stocks		= $paramsC->get( 'negative_stocks', 1 );
+		$app				= JFactory::getApplication();
+		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$negative_stocks	= $paramsC->get( 'negative_stocks', 1 );
 		
 		// We know the stock movement, ignore the status
 		if ($stockMovement == '+' || $stockMovement == '-') {
 			$status = array();
 			$status['stock_movements'] = $stockMovement;
 		} else {
-			$status = PhocaCartOrderStatus::getStatus((int)$orderStatusId);
+			$status = PhocacartOrderStatus::getStatus((int)$orderStatusId);
 		}
 		
 		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
@@ -168,7 +170,8 @@ class PhocaCartStock
 	
 	public static function handleStockAttributeOption($optionId, $orderStatusId, $quantity, $stockMovement = '') {
 
-		$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$negative_stocks		= $paramsC->get( 'negative_stocks', 1 );
 		
 		// We know the stock movement, ignore the status
@@ -176,7 +179,7 @@ class PhocaCartStock
 			$status = array();
 			$status['stock_movements'] = $stockMovement;
 		} else {
-			$status = PhocaCartOrderStatus::getStatus((int)$orderStatusId);
+			$status = PhocacartOrderStatus::getStatus((int)$orderStatusId);
 		}
 		
 		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
@@ -194,6 +197,42 @@ class PhocaCartStock
 				$query = 'UPDATE #__phocacart_attribute_values SET stock = stock - '.(int)$quantity.' WHERE id = '.(int)$optionId;
 			}
 
+			$db->setQuery($query);
+			$db->execute();
+		}
+		return true;
+	}
+	
+	public static function handleStockProductKey($productKey, $orderStatusId, $quantity, $stockMovement = '') {
+		
+		$app				= JFactory::getApplication();
+		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$negative_stocks	= $paramsC->get( 'negative_stocks', 1 );
+		
+		// We know the stock movement, ignore the status
+		if ($stockMovement == '+' || $stockMovement == '-') {
+			$status = array();
+			$status['stock_movements'] = $stockMovement;
+		} else {
+			$status = PhocacartOrderStatus::getStatus((int)$orderStatusId);
+		}
+		
+		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
+			$db = JFactory::getDBO();
+			$query = 'UPDATE #__phocacart_product_stock SET stock = stock + '.(int)$quantity.' WHERE product_key = '.$db->quote($productKey);
+			$db->setQuery($query);
+			$db->execute();
+		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
+			$db = JFactory::getDBO();
+			
+			if ($negative_stocks == 0) {
+				// we cannot have negative values in stock
+				$query = 'UPDATE #__phocacart_product_stock SET stock = GREATEST(0, stock - '.(int)$quantity.') WHERE product_key = '.$db->quote($productKey);
+			} else {
+				$query = 'UPDATE #__phocacart_product_stock SET stock = stock - '.(int)$quantity.' WHERE product_key = '.$db->quote($productKey);
+			}
+			
+			
 			$db->setQuery($query);
 			$db->execute();
 		}

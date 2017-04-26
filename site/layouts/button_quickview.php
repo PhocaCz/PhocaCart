@@ -20,5 +20,6 @@ $d = $displayData;
 			<a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"><span class="glyphicon glyphicon-eye-open"></span></a>
 		</div>
 	</div>
+	<?php /*<div class="clearfix"></div> */ ?>
 	<?php echo JHtml::_('form.token'); ?>
 </form>

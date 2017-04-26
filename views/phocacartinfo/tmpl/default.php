@@ -9,9 +9,11 @@
 defined('_JEXEC') or die();
 
 echo '<form action="index.php" method="post" name="adminForm" id="'.$this->t['c'].'info-form">';
-echo '<div id="j-sidebar-container" class="span2">'.JHtmlSidebar::render().'</div>';
-echo '<div id="j-main-container" class="span9">'
-	.'<div style="float:right;margin:10px;">'
+echo '<div id="phAdminBox" class="row-fluid ph-admin-box">';
+echo '<div class="col-xs-12 col-sm-2 col-md-2 ph-admin-box-menu">'. JHtmlSidebar::render().'</div>';
+echo '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content">';
+
+echo '<div style="float:right;margin:10px;">'
 	. JHTML::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' )
 	.'</div>'
 	. JHTML::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz')
@@ -48,14 +50,13 @@ echo '<input type="hidden" name="task" value="" />'
 echo '<p>&nbsp;</p>';
 
 echo '<div style="border-top:1px solid #eee"></div><p>&nbsp;</p>'
-.'<div class="btn-group">
+.'<div>
 <a class="btn btn-large btn-primary" href="http://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'].'_CHECK_FOR_UPDATE') .'</a></div>';
 
 echo '<div style="margin-top:30px;height:39px;background: url(\''.JURI::root(true).'/media/com_'.$this->t['c'].'/images/administrator/line.png\') 100% 0 no-repeat;">&nbsp;</div>';
 
 echo '</div>';
-echo '<div class="span1"></div>';
-
+echo '</div>';
 echo '</div>';
 echo '</form>';
 ?>

@@ -65,6 +65,11 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
 		$this->t['item_askquestion']		= $this->p->get( 'item_askquestion', 0 );
 		$this->t['popup_askquestion']		= $this->p->get( 'popup_askquestion', 1 );
+		$this->t['title_next_prev']			= $this->p->get( 'title_next_prev', 1 );
+		$this->t['display_public_download'] = $this->p->get( 'display_public_download', 1 );
+		$this->t['display_external_link']	= $this->p->get( 'display_external_link', 1 );
+		
+	
 
 		
 		if ($this->t['hide_addtocart'] == 1) {
@@ -77,24 +82,24 @@ class PhocaCartViewItem extends JViewLegacy
 			
 		} else {
 		
-			$this->t['add_images']			= PhocaCartImage::getAdditionalImages((int)$id);
-			$this->t['rel_products']		= PhocaCartRelated::getRelatedItemsById((int)$id, 0, 1);
-			$this->t['tags_output']			= PhocaCartTag::getTagsRendered((int)$id);
-			$this->t['stock_status']		= PhocaCartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
-			$this->t['stock_status_output'] = PhocaCartStock::getStockStatusOutput($this->t['stock_status']);
-			$this->t['attr_options']		= PhocaCartAttribute::getAttributesAndOptions((int)$id);
-			$this->t['specifications']		= PhocaCartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
-			$this->t['reviews']				= PhocaCartReview::getReviewsByProduct((int)$id);
+			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
+			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
+			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
+			$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
+			$this->t['stock_status_output'] = PhocacartStock::getStockStatusOutput($this->t['stock_status']);
+			$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$id);
+			$this->t['specifications']		= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
+			$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
 		
 			$this->t['action']				= $uri->toString();
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
-			$this->t['linkcheckout']		= JRoute::_(PhocaCartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkitem']			= JRoute::_(PhocaCartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkcheckout']		= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkitem']			= JRoute::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 
-			$this->t['linkcomparison']	= JRoute::_(PhocaCartRoute::getComparisonRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkwishlist']	= JRoute::_(PhocaCartRoute::getWishListRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			
+			$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			$this->itemnext[0]			= false;
 			$this->itemprev[0]			= false;
 			if ($this->t['enable_item_navigation'] == 1) {
@@ -105,7 +110,7 @@ class PhocaCartViewItem extends JViewLegacy
 			}
 			
 			
-			$media = new PhocaCartRenderMedia();
+			$media = new PhocacartRenderMedia();
 			$media->loadBootstrap($this->t['load_bootstrap']);
 			$media->loadChosen($this->t['load_chosen']);
 			
@@ -115,20 +120,20 @@ class PhocaCartViewItem extends JViewLegacy
 			$media->loadPhocaAttribute(1);
 			
 			if ($this->t['image_popup_method'] == 2) {
-				PhocaCartRenderJs::renderMagnific();
+				PhocacartRenderJs::renderMagnific();
 				$this->t['image_rel'] = 'rel="magnific" class="magnific"';
 			} else {
-				PhocaCartRenderJs::renderPrettyPhoto();
+				PhocacartRenderJs::renderPrettyPhoto();
 				$this->t['image_rel'] = 'rel="prettyPhoto[pc_gal1]"';
 			}
 
 			if ($this->t['dynamic_change_price'] == 1) {
-				PhocaCartRenderJs::renderAjaxChangeProductPriceByOptions((int)$this->item[0]->id, 'ph-item-price-box');
+				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions((int)$this->item[0]->id, 'ph-item-price-box');
 			}
 			
-			PhocaCartRenderJs::renderAjaxAddToCart();
-			PhocaCartRenderJs::renderAjaxAddToCompare();
-			PhocaCartRenderJs::renderAjaxAddToWishList();
+			PhocacartRenderJs::renderAjaxAddToCart();
+			PhocacartRenderJs::renderAjaxAddToCompare();
+			PhocacartRenderJs::renderAjaxAddToWishList();
 			
 			if ($this->t['popup_askquestion'] == 1) {
 				$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
@@ -139,10 +144,11 @@ class PhocaCartViewItem extends JViewLegacy
 				$this->_prepareDocument($this->category[0], $this->item[0]);
 			}
 			
-			$this->t['pathitem'] = PhocaCartpath::getPath('productimage');
+			$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 			
 		}
 		$model->hit((int)$id);
+		PhocacartStatisticsHits::productHit((int)$id);
 		parent::display($tpl);
 	}
 	
@@ -157,7 +163,7 @@ class PhocaCartViewItem extends JViewLegacy
 		if (isset($this->item[0]) && is_object($this->item[0])) {
 			$item = $this->item[0];
 		}
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, $category, $item);
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, $category, $item);
 	}
 }
 ?>

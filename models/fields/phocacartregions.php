@@ -8,9 +8,9 @@
  */
 defined('_JEXEC') or die();
 
-class JFormFieldPhocaCartRegions extends JFormField
+class JFormFieldPhocacartRegions extends JFormField
 {
-	protected $type 		= 'PhocaCartRegions';
+	protected $type 		= 'PhocacartRegions';
 
 	protected function getInput() {
 		
@@ -20,6 +20,10 @@ class JFormFieldPhocaCartRegions extends JFormField
 			switch (strtolower($this->element['table'])) {	
 				case "payment":
 					$table = 'payment';
+				break;
+				
+				case "zone":
+					$table = 'zone';
 				break;
 				
 				case "shipping":
@@ -33,10 +37,10 @@ class JFormFieldPhocaCartRegions extends JFormField
 
 		$activeRegions = array();
 		if ((int)$id > 0) {
-			$activeRegions	= PhocaCartRegion::getRegions($id, 1, $table);
+			$activeRegions	= PhocacartRegion::getRegions($id, 1, $table);
 		}
 			
-		return PhocaCartRegion::getAllRegionsSelectBox($this->name.'[]', $this->id, $activeRegions, NULL,'id' );
+		return PhocacartRegion::getAllRegionsSelectBox($this->name.'[]', $this->id, $activeRegions, NULL,'id' );
 	}
 }
 ?>

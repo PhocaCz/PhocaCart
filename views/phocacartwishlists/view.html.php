@@ -18,7 +18,7 @@ class PhocaCartCpViewPhocaCartWishlists extends JViewLegacy
 	
 	function display($tpl = null) {
 		
-		$this->t			= PhocaCartUtils::setVars('wishlist');
+		$this->t			= PhocacartUtils::setVars('wishlist');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
@@ -35,7 +35,7 @@ class PhocaCartCpViewPhocaCartWishlists extends JViewLegacy
 			$this->ordering[(int)$item->user_id][] = $item->id;
 		}
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 	
 		$this->addToolbar();
 		parent::display($tpl);
@@ -48,27 +48,27 @@ class PhocaCartCpViewPhocaCartWishlists extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.question_id'));
 
-		JToolBarHelper::title( JText::_( $this->t['l'].'_WISH_LISTS' ), 'heart' );
+		JToolbarHelper::title( JText::_( $this->t['l'].'_WISH_LISTS' ), 'heart' );
 	
 		if ($canDo->get('core.create')) {
-			JToolBarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 	
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			//JToolBarHelper::divider();
-			//JToolBarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			//JToolBarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			//JToolbarHelper::divider();
+			//JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			//JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 	
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartwishlists.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartwishlists.delete', $this->t['l'].'_DELETE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 	
 	protected function getSortFields() {

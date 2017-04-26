@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartCategory extends JViewLegacy
+class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 {
 	protected $state;
 	protected $item;
@@ -18,7 +18,7 @@ class PhocaCartCpViewPhocaCartCategory extends JViewLegacy
 
 	public function display($tpl = null) {
 	
-		$this->t		= PhocaCartUtils::setVars('category');
+		$this->t		= PhocacartUtils::setVars('category');
 		
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
@@ -27,7 +27,7 @@ class PhocaCartCpViewPhocaCartCategory extends JViewLegacy
 		$model			= $this->getModel();
 
 		JHTML::_('behavior.calendar');
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 		
 		//Data from model
 		//$this->item	=& $this->get('Data');
@@ -46,9 +46,9 @@ class PhocaCartCpViewPhocaCartCategory extends JViewLegacy
 		}
 		
 		$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		PhocaCartRenderJS::renderAjaxDoRequest(JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'));
-		PhocaCartRenderJs::renderAjaxDoRequestAfterChange($url, 'categoryimage', 'imageCreateThumbs');
-		PhocaCartRenderJs::renderAjaxDoRequestAfterPaste($url, 'categoryimage');
+		PhocacartRenderJs::renderAjaxDoRequest(JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'));
+		PhocacartRenderJs::renderAjaxDoRequestAfterChange($url, 'categoryimage', 'imageCreateThumbs');
+		PhocacartRenderJs::renderAjaxDoRequestAfterPaste($url, 'categoryimage');
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -67,27 +67,27 @@ class PhocaCartCpViewPhocaCartCategory extends JViewLegacy
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.category_id'));
 
 		$text = $isNew ? JText::_( $this->t['l'].'_NEW' ) : JText::_($this->t['l'].'_EDIT');
-		JToolBarHelper::title(   JText::_( $this->t['l'].'_CATEGORY' ).': <small><small>[ ' . $text.' ]</small></small>' , 'folder');
+		JToolbarHelper::title(   JText::_( $this->t['l'].'_CATEGORY' ).': <small><small>[ ' . $text.' ]</small></small>' , 'folder-open');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
-			JToolBarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
-			JToolBarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			JToolBarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
+			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
+			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
+			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 			
 		}
 		// If an existing item, can save to a copy.
 		if (!$isNew && $canDo->get('core.create')) {
-			//JToolBarHelper::custom($this->t['c'].'cat.save2copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+			//JToolbarHelper::custom($this->t['c'].'cat.save2copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		}
 		if (empty($this->item->id))  {
-			JToolBarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
+			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolBarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
 ?>

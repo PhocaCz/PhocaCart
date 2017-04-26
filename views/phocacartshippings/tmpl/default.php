@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');

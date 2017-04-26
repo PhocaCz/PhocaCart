@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 
-abstract class PhocaCartFeatured
+abstract class PhocacartHtmlFeatured
 {
 	
 	public static function featured($value = 0, $i, $canChange = true)

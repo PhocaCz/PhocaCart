@@ -8,19 +8,19 @@
  */
 defined('_JEXEC') or die();
 
-if (! class_exists('PhocaCartCategory')) {
+if (! class_exists('PhocacartCategory')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/category.php');
 }
-if (! class_exists('PhocaCartCategoryMultiple')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/categorymultiple.php');
+if (! class_exists('PhocacartCategoryMultiple')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/multiple.php');
 }
 
 $lang = JFactory::getLanguage();
 $lang->load('com_phocacart');
 
-class JFormFieldPhocaCartCategory extends JFormField
+class JFormFieldPhocacartCategory extends JFormField
 {
-	protected $type 		= 'PhocaCartCategory';
+	protected $type 		= 'PhocacartCategory';
 
 	protected function getInput() {
 		
@@ -46,7 +46,7 @@ class JFormFieldPhocaCartCategory extends JFormField
 		if ($multiple) {
 			$id = (int) $this->form->getValue('id');
 			if ((int)$id > 0) {
-				$activeCats	= PhocaCartCategoryMultiple::getCategories($id, 1);
+				$activeCats	= PhocacartCategoryMultiple::getCategories($id, 1);
 			}
 		}
 
@@ -73,7 +73,7 @@ class JFormFieldPhocaCartCategory extends JFormField
 		
 		$tree = array();
 		$text = '';
-		$tree = PhocaCartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
+		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
 		
 		if ($multiple) {
 		

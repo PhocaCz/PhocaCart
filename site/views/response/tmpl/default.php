@@ -9,10 +9,10 @@
 defined('_JEXEC') or die();
 echo '<div id="ph-pc-response-box" class="pc-response-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocaCartRenderFront::renderHeader();
+echo PhocacartRenderFront::renderHeader();
 
 
 echo '</div>';// end ph-pc-response-box
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

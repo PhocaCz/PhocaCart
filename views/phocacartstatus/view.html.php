@@ -20,12 +20,12 @@ class PhocaCartCpViewPhocaCartStatus extends JViewLegacy
 	public function display($tpl = null) {
 		
 	
-		$this->t		= PhocaCartUtils::setVars('status');
+		$this->t		= PhocacartUtils::setVars('status');
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		
@@ -46,23 +46,23 @@ class PhocaCartCpViewPhocaCartStatus extends JViewLegacy
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.status_id'));
 		
 		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
-		JToolBarHelper::title(   JText::_( $this->t['l'] . '_ORDER_STATUS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'clock');
+		JToolbarHelper::title(   JText::_( $this->t['l'] . '_ORDER_STATUS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'time');
 		
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
-			JToolBarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
-			JToolBarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			JToolBarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
+			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
+			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
+			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
 	
 		if (empty($this->item->id))  {
-			JToolBarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
+			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolBarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
 ?>

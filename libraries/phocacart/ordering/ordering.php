@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-class PhocaCartOrdering
+class PhocacartOrdering
 {
 	public static function getOrderingText ($ordering, $type = 0) {
 	
@@ -36,6 +36,48 @@ class PhocaCartOrdering
 				}
 			break;
 			
+			case 3:// TAGS
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 't.ordering DESC';break;
+					case 3:$orderingOutput	= 't.title ASC';break;
+					case 4:$orderingOutput	= 't.title DESC';break;
+					case 5:$orderingOutput	= 't.id ASC';break;
+					case 6:$orderingOutput	= 't.id DESC';break;
+					case 1:default:$orderingOutput = 't.ordering ASC';break;
+				}
+			break;
+			
+			case 4:// MANUFACTURERS
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'm.ordering DESC';break;
+					case 3:$orderingOutput	= 'm.title ASC';break;
+					case 4:$orderingOutput	= 'm.title DESC';break;
+					case 5:$orderingOutput	= 'm.id ASC';break;
+					case 6:$orderingOutput	= 'm.id DESC';break;
+					case 1:default:$orderingOutput = 'm.ordering ASC';break;
+				}
+			break;
+			
+			case 5:// ATTRIBUTES
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'at.id DESC';break;
+					case 3:$orderingOutput	= 'at.title ASC, v.title ASC';break;
+					case 4:$orderingOutput	= 'at.title DESC, v.title DESC';break;
+					case 5:$orderingOutput	= 'v.id ASC';break;
+					case 6:$orderingOutput	= 'v.id DESC';break;
+					case 1:default:$orderingOutput = 'at.id ASC';break;
+				}
+			break;
+			
+			case 6:// SPECIFICATION
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 's.id DESC';break;
+					case 3:$orderingOutput	= 's.title ASC, s.value ASC';break;
+					case 4:$orderingOutput	= 's.title DESC, s.value DESC';break;
+					case 1:default:$orderingOutput = 's.id ASC';break;
+				}
+			break;
+			
 			default://PRODUCTS
 				switch ((int)$ordering) {
 					case 2:$orderingOutput	= 'pc.ordering DESC';break;
@@ -47,6 +89,10 @@ class PhocaCartOrdering
 					case 8:$orderingOutput	= 'a.date DESC';break;
 					case 9:$orderingOutput	= 'rating ASC';break;
 					case 10:$orderingOutput	= 'rating DESC';break;
+					
+					
+					case 11:$orderingOutput = 'a.id ASC';break;
+					case 12:$orderingOutput = 'a.id DESC';break;
 					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
 				}
 			break;
@@ -68,7 +114,7 @@ class PhocaCartOrdering
 			break;
 		}
 
-		$html 	= JHTML::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', $selected);
+		$html 	= JHTML::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phSubmitPaginationForm(this.form)"', 'value', 'text', $selected);
 		
 		return $html;
 	}
@@ -115,11 +161,11 @@ class PhocaCartOrdering
 		$ordering		= '';
 		
 		if ($orderingItem > 0) {
-			$itemOrdering 	= PhocaCartOrdering::getOrderingText($orderingItem,0);
+			$itemOrdering 	= PhocacartOrdering::getOrderingText($orderingItem,0);
 			
 		}
 		if ($orderingCat > 0) {
-			$catOrdering 	= PhocaCartOrdering::getOrderingText($orderingCat,1);
+			$catOrdering 	= PhocacartOrdering::getOrderingText($orderingCat,1);
 		}
 		
 		if ($catOrdering != '' && $itemOrdering == '') {

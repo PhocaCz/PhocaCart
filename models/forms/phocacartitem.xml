@@ -43,7 +43,7 @@
 
 <field name="manufacturer_id" type="phocamanufacturer" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC" class="inputbox" />
 
-<field name="ordering" type="PhocaCartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 		
@@ -51,14 +51,33 @@
 <field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC" />
 
 <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC" />
+<field name="stock_calculation" type="list" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_DESC" class="inputbox" size="1" default="0">
+	<option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
+	<option value="1">COM_PHOCACART_PRODUCT_VARIATIONS</option>
+	<option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+</field>
+
+
+
 <field name="min_quantity" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_DESC" />
 <field name="min_multiple_quantity" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_DESC" />
+
+<field name="min_quantity_calculation" default="0" type="list"  label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_DESC" >
+	<option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
+	<option value="1">COM_PHOCACART_PRODUCT_VARIATIONS</option>
+	<option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+</field>
+
 <field name="stockstatus_a_id" type="phocastockstatus" manager="a" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2" />
 <field name="stockstatus_n_id" type="phocastockstatus" manager="n" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1" />
 
 <field name="related" type="PhocaSelectItem"  label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL"  description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
 
 <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
+
+<field name="public_download_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
+
+<field name="public_download_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL" class="inputbox" size="40" />
 
 <field name="video" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_VIDEO_URL_LABEL" description="COM_PHOCACART_FIELD_VIDEO_URL_DESC" />
 

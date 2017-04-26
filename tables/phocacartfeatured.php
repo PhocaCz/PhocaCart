@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
  * @package     Joomla.Administrator
  * @subpackage  com_content
  */
-class TablePhocaCartFeatured extends JTable
+class TablePhocacartFeatured extends JTable
 {
 	/**
 	 * @param   JDatabaseDriver  A database connector object

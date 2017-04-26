@@ -19,7 +19,27 @@ class PhocaCartControllerDownload extends JControllerForm
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		
 		if ($item['id'] > 0) {
-			$download = PhocaCartDownload::download($item['id']);
+			$download = PhocacartDownload::download($item['id']);
+			if (!$download) {
+				$app->enqueueMessage(JText::_('COM_PHOCACART_FILE_CANNOT_BE_DOWNLOADED'), 'error');
+			}
+		} else {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_FILE_FOUND'), 'error');
+		}
+		
+		$app->redirect(base64_decode($item['return']));
+	}
+	
+	public function downloadpublic() {
+	
+		JSession::checkToken() or jexit( 'Invalid Token' );
+		$app				= JFactory::getApplication();
+		$item				= array();
+		$item['id']			= $this->input->get( 'id', 0, 'int' );
+		$item['return']		= $this->input->get( 'return', '', 'string'  );
+		
+		if ($item['id'] > 0) {
+			$download = PhocacartDownload::downloadPublic($item['id']);
 			if (!$download) {
 				$app->enqueueMessage(JText::_('COM_PHOCACART_FILE_CANNOT_BE_DOWNLOADED'), 'error');
 			}

@@ -39,8 +39,8 @@ class PhocaCartViewAccount extends JViewLegacy
 		
 		$this->t['action']					= $uri->toString();
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
-		$this->t['linkaccount']				= JRoute::_(PhocaCartRoute::getAccountRoute());
-		$this->t['linkcheckout']			= JRoute::_(PhocaCartRoute::getCheckoutRoute());
+		$this->t['linkaccount']				= JRoute::_(PhocacartRoute::getAccountRoute());
+		$this->t['linkcheckout']			= JRoute::_(PhocacartRoute::getCheckoutRoute());
 		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['display_edit_profile']	= $this->p->get( 'display_edit_profile', 1 );
 		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
@@ -61,7 +61,7 @@ class PhocaCartViewAccount extends JViewLegacy
 			$this->fields2				= $modelCheckout->getFields(0,0,1); // Fields will be loaded in every case
 			$this->data2				= $modelCheckout->getData();
 			$this->form2				= $modelCheckout->getForm();
-			$this->t['dataaddressform']	= PhocaCartUser::getAddressDataForm($this->form2, $this->fields2['array'], $this->u);
+			$this->t['dataaddressform']	= PhocacartUser::getAddressDataForm($this->form2, $this->fields2['array'], $this->u);
 			
 		
 			// USER PROFILE - USER MODULE
@@ -85,10 +85,10 @@ class PhocaCartViewAccount extends JViewLegacy
 			
 		}
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		$media->loadChosen($this->t['load_chosen']);
-		PhocaCartRenderJs::renderBillingAndShippingSame();
+		PhocacartRenderJs::renderBillingAndShippingSame();
 		
 		$this->_prepareDocument();
 		parent::display($tpl);
@@ -96,7 +96,7 @@ class PhocaCartViewAccount extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ACCOUNT'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ACCOUNT'));
 	}
 }
 ?>

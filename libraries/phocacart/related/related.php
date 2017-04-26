@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartRelated
+class PhocacartRelated
 {
 	public static function storeRelatedItemsById($relatedString, $productId) {
 	
@@ -65,13 +65,15 @@ class PhocaCartRelated
 			$wheres[] = " c.published = 1";
 			$wheres[] = " a.published = 1";
 			
-			$catid	= PhocaCartCategoryMultiple::getCurrentCategoryId();
+			$catid	= PhocacartCategoryMultiple::getCurrentCategoryId();
 
 		}
 		
 		if ($select == 1) {
 			$query = ' SELECT t.product_b';
-		} else {
+		} else if ($select == 2) {
+			$query = ' SELECT a.id, a.alias';
+		}else {
 			$query = ' SELECT a.id as id, a.title as title, a.image as image, a.alias as alias,'
 					.' c.id as catid, c.alias as catalias, c.title as cattitle';
 		}
@@ -106,5 +108,20 @@ class PhocaCartRelated
 		}
 
 		return $related;
+	}
+	
+	public static function correctProductId($productIdChange) {
+		$db 		= JFactory::getDBO();
+		if (!empty($productIdChange)) {
+			foreach($productIdChange as $new => $old) {
+				if ($new == $old) {
+					continue;
+				}
+				$q = 'UPDATE #__phocacart_product_related SET product_b = '.(int)$new.' WHERE product_b = '.(int)$old;
+				$db->setQuery($q);
+				$db->execute();
+			}
+		}
+		return true;
 	}
 }

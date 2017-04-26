@@ -20,7 +20,7 @@ class PhocaCartControllerWishList extends JControllerForm
 		$item['catid']		= $this->input->get( 'catid', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		
-		$wishlist	= new PhocaCartWishList();
+		$wishlist	= new PhocacartWishlist();
 		$added		= $wishlist->addItem((int)$item['id'], (int)$item['catid']);
 		if ($added) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_WISH_LIST'), 'message');
@@ -39,7 +39,7 @@ class PhocaCartControllerWishList extends JControllerForm
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		
-		$wishlist	= new PhocaCartWishList();
+		$wishlist	= new PhocacartWishlist();
 		$added	= $wishlist->removeItem((int)$item['id']);
 		if ($added) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_WISH_LIST'), 'message');

@@ -9,23 +9,23 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartOrderView extends JViewLegacy
+class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 {
 	public function display($tpl = null) {
 		
 		$app			= JFactory::getApplication();
-		$this->t		= PhocaCartUtils::setVars('orderview');
+		$this->t		= PhocacartUtils::setVars('orderview');
 		$id				= $app->input->get('id', 0, 'int');
 		$type			= $app->input->get('type', 0, 'int');
 		$format			= $app->input->get('format', '', 'string');
 		
-		$order	= new PhocaCartOrderRender();
+		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format);
 		echo $o;
 		
 		
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 
 		parent::display($tpl);	
 	}

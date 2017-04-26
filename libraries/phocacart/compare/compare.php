@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartCompare
+class PhocacartCompare
 {
 	protected $items     		= array();
 
@@ -142,7 +142,8 @@ class PhocaCartCompare
 		$db 				= JFactory::getDBO();
 		$uri 				= JFactory::getURI();
 		$action				= $uri->toString();
-		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$app				= JFactory::getApplication();
+		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
 		$query				= $this->getQueryList($this->items);
 		
@@ -152,13 +153,15 @@ class PhocaCartCompare
 			//echo nl2br(str_replace('#__', 'jos_', $query));
 			$db->setQuery($query);
 			$d['compare'] 			= $db->loadObjectList();
-			PhocaCartCategoryMultiple::setBestMatchCategory($d['compare'], $this->items, 1);// returned by reference
+			
+			PhocacartCategoryMultiple::setBestMatchCategory($d['compare'], $this->items, 1);// returned by reference
+			
 		}	
 		$d['actionbase64']		= base64_encode($action);
-		$d['linkcomparison']	= JRoute::_(PhocaCartRoute::getComparisonRoute());
+		$d['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute());
 		$d['method']			= $add_compare_method;
 			
-		$layoutC 			= new JLayoutFile('list_compare', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutC 			= new JLayoutFile('list_compare', null, array('component' => 'com_phocacart'));
 		echo $layoutC->render($d);
 	}
 	
@@ -171,10 +174,15 @@ class PhocaCartCompare
 		if ($query) {
 			$db->setQuery($query);
 			$products = $db->loadAssocList();
-			PhocaCartCategoryMultiple::setBestMatchCategory($products, $this->items);// returned by reference
+			
+			PhocacartCategoryMultiple::setBestMatchCategory($products, $this->items);// returned by reference
 		}
 		return $products;
 	
+	}
+	
+	public function getComapareCountItems() {
+		return count($this->items);
 	}
 }
 ?>

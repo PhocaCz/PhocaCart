@@ -18,10 +18,10 @@ class JFormFieldPhocaAttributes extends JFormField
 
 		$activeAttributes = array();
 		if ((int)$id > 0) {
-			$activeAttributes	= PhocaCartAttribute::getAttributesById($id, 1);
+			$activeAttributes	= PhocacartAttribute::getAttributesById($id, 1);
 		}
 			
-		return PhocaCartAttribute::getAllAttributesSelectBox($this->name.'[]', $this->id, $activeAttributes, NULL,'id' );
+		return PhocacartAttribute::getAllAttributesSelectBox($this->name.'[]', $this->id, $activeAttributes, NULL,'id' );
 	}
 }
 ?>

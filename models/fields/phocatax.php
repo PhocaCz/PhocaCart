@@ -23,6 +23,12 @@ class JFormFieldPhocaTax extends JFormField
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 		
+		if (!empty($data)) {
+			foreach($data as $k => $v) {
+				$data[$k]->text = JText::_($v->text);
+			}
+		}
+		
 		array_unshift($data, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_TAX').' -', 'value', 'text'));
 		return JHTML::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}

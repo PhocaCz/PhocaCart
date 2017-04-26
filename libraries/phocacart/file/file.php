@@ -10,7 +10,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.filesystem.folder' ); 
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartFile
+class PhocacartFile
 {
 	/*
 	 * http://aidanlister.com/repos/v/function.size_readable.php
@@ -39,7 +39,7 @@ class PhocaCartFile
 	
 	public static function getFileSize($manager, $filename, $readable = 1) {
 		
-		$path			= PhocaCartPath::getPath($manager);
+		$path			= PhocacartPath::getPath($manager);
 		$fileNameAbs	= JPath::clean($path['orig_abs'] . '/' . $filename);
 		
 		if ($readable == 1) {
@@ -164,7 +164,7 @@ class PhocaCartFile
 		$string = false;
 		$string = preg_match( "/\./i", $folder_array[$last_array_value] );
 		if ($string) {
-			return PhocaCartFile::removeExtension($folder_array[$last_array_value]);
+			return PhocacartFile::removeExtension($folder_array[$last_array_value]);
 		} else {
 			return $folder_array[$last_array_value];
 		}
@@ -187,7 +187,7 @@ class PhocaCartFile
 	}
 	
 	public static function getFileOriginal($filename, $rel = 0, $manager) {
-		$path	= PhocaCartPath::getPath($manager);
+		$path	= PhocacartPath::getPath($manager);
 		if ($rel == 1) {
 			return str_replace('//', '/', $path['orig_rel_ds'] . $filename);
 		} else {
@@ -196,7 +196,7 @@ class PhocaCartFile
 	}
 	
 	public static function createDownloadFolder($folder) {
-		$path = PhocaCartPath::getPath('productfile');
+		$path = PhocacartPath::getPath('productfile');
 		if (!JFolder::exists($path['orig_abs_ds'] . $folder )) {
 			if (JFolder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
 				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";

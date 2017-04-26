@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartShipping extends JModelAdmin
+class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -22,7 +22,7 @@ class PhocaCartCpModelPhocaCartShipping extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartShipping', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartShipping', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -101,6 +101,21 @@ class PhocaCartCpModelPhocaCartShipping extends JModelAdmin
 				$table->load($pk);
 				$isNew = false;
 			}
+			
+			// Plugin parameters are converted to params column in shipping table (x001)
+			// Store form parameters of selected method
+			$app			= JFactory::getApplication();
+			$dataPh			= $app->input->get('phform', array(), 'array');
+			if (!empty($dataPh['params'])) {
+				$registry 	= new JRegistry($dataPh['params']);
+				//$registry 	= new JRegistry($dataPh);
+				$dataPhNew 	= $registry->toString();
+				if($dataPhNew != '') {
+					$data['params'] = $dataPhNew;
+				}
+			} else {
+				$data['params'] = '';
+			}
 
 			// Bind the data.
 			if (!$table->bind($data))
@@ -138,17 +153,23 @@ class PhocaCartCpModelPhocaCartShipping extends JModelAdmin
 			
 			if ((int)$table->id > 0) {
 				
+				if (!isset($data['zone'])) {
+					$data['zone'] = array();
+				}
+				
+				PhocacartZone::storeZones($data['zone'], (int)$table->id);
+				
 				if (!isset($data['country'])) {
 					$data['country'] = array();
 				}
 				
-				PhocaCartCountry::storeCountries($data['country'], (int)$table->id);
+				PhocacartCountry::storeCountries($data['country'], (int)$table->id);
 				
 				if (!isset($data['region'])) {
 					$data['region'] = array();
 				}
 				
-				PhocaCartRegion::storeRegions($data['region'], (int)$table->id);
+				PhocacartRegion::storeRegions($data['region'], (int)$table->id);
 				
 			
 			}

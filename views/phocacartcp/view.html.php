@@ -15,7 +15,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 	
 	function display($tpl = null) {
 		
-		$this->t	= PhocaCartUtils::setVars();
+		$this->t	= PhocacartUtils::setVars();
 		$this->views= array(
 		'items'			=> array($this->t['l'] . '_PRODUCTS', 'folder-close', '#c1a46d'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', 'folder-open', '#da7400'),
@@ -27,6 +27,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'shippings'		=> array($this->t['l'] . '_SHIPPING', 'barcode', '#afbb6a'),
 		'countries'		=> array($this->t['l'] . '_COUNTRIES', 'globe', '#478CD1'),
 		'regions'		=> array($this->t['l'] . '_REGIONS', 'globe', '#01868B'),
+		'zones'			=> array($this->t['l'] . '_ZONES', 'globe', '#a5dee5'),
 		'payments'		=> array($this->t['l'] . '_PAYMENT', 'credit-card', '#4f9ce2'),
 		'currencies'	=> array($this->t['l'] . '_CURRENCIES', 'eur', '#dca300'),
 		'taxes'			=> array($this->t['l'] . '_TAXES', 'calendar', '#dd5500'),
@@ -36,12 +37,16 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		//'ratings'		=> array($this->t['l'] . '_RATINGS', 'xxx', '#ffde00'),
 		//'vouchers'	=> array($this->t['l'] . '_VOUCHERS', 'xxx', '#ffde00'),
 		'coupons'		=> array($this->t['l'] . '_COUPONS', 'gift', '#FF6685'),
+		'discounts'		=> array($this->t['l'] . '_DISCOUNTS', 'piggy-bank', '#aa56fe'),
 		'downloads'		=> array($this->t['l'] . '_DOWNLOADS', 'download-alt', '#33af49'),
 		'tags'			=> array($this->t['l'] . '_TAGS', 'tag', '#CC0033'),
 		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', 'bullhorn', '#ffb300'),
 		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', 'heart', '#EA7C7C'),
 		'questions'		=> array($this->t['l'] . '_QUESTIONS', 'question-sign', '#9900CC'),
 		'statistics'	=> array($this->t['l'] . '_STATISTICS', 'stats', '#c1756d'),
+		'hits'			=> array($this->t['l'] . '_HITS', 'equalizer', '#fb1000'),
+		'imports'		=> array($this->t['l'] . '_IMPORT', 'import', '#668099'),
+		'exports'		=> array($this->t['l'] . '_EXPORT', 'export', '#669999'),
 		'logs'			=> array($this->t['l'] . '_SYSTEM_LOG', 'list', '#c0c0c0'),
 		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#3378cc')
 		);
@@ -74,14 +79,26 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#7fadf8')
 		);
 		*/
-		JHTML::stylesheet( $this->t['s'] );
-		JHTML::_('behavior.tooltip');
-		$this->t['version'] = PhocaCartUtils::getPhocaVersion('com_phocacart');
 		
+		$this->t['version'] = PhocacartUtils::getPhocaVersion('com_phocacart');
 		
-		JHtml::_('jquery.framework', false);
-		$document					= JFactory::getDocument();
-		JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
+		$paramsC = JComponentHelper::getParams('com_phocacart');
+		$this->t['enable_wizard']	= $paramsC->get( 'enable_wizard', 1 );
+		
+		if ($this->t['enable_wizard'] == 1) {
+			
+			$category 	= PhocacartUtils::doesExist('category');
+			$product	= PhocacartUtils::doesExist('product');
+			
+			// If wizard enabled (1) but category and product is set, don't display it
+			// If wizard enabled (2 - force enable) display it in every case
+			if ($category == 1 && $product == 1) {
+				$this->t['enable_wizard'] = 0;
+			}
+			
+		}
+		
+		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -93,7 +110,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 
 		$state	= $this->get('State');
 		$canDo	= PhocaCartCpHelper::getActions();
-		JToolBarHelper::title( JText::_( 'COM_PHOCACART_PC_CONTROL_PANEL' ), 'home-2 cpanel' );
+		JToolbarHelper::title( JText::_( 'COM_PHOCACART_PC_CONTROL_PANEL' ), 'home' );
 		
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = JToolBar::getInstance( 'toolbar' );
@@ -101,11 +118,11 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		$bar->appendButton('Custom', $dhtml);
 		
 		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_phocacart');
-			JToolBarHelper::divider();
+			JToolbarHelper::preferences('com_phocacart');
+			JToolbarHelper::divider();
 		}
 		
-		JToolBarHelper::help( 'screen.phocacart', true );
+		JToolbarHelper::help( 'screen.phocacart', true );
 	}
 }
 ?>

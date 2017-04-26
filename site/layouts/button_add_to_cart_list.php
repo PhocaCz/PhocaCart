@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 $d = $displayData;
+
 // One of the attributes is required, cannot add to cart
 if ($d['attrrequired'] == 1) { ?>			
 	<div class="pull-right"><?php
@@ -33,6 +34,7 @@ if ($d['attrrequired'] == 1) { ?>
 		?><button class="btn btn-primary btn-sm ph-btn" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?>"><span class="glyphicon glyphicon-shopping-cart"></span></button><?php
 	} ?>
 	</div>
+	<div class="clearfix"></div>
 	<?php echo JHtml::_('form.token'); ?>
 	</form>
 	

@@ -8,11 +8,11 @@
  */
 defined('_JEXEC') or die();
 
-$layoutV	= new JLayoutFile('button_category_view', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+$layoutV	= new JLayoutFile('button_category_view', null, array('component' => 'com_phocacart'));
 
 echo '<div id="ph-pc-categories-box" class="pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocaCartRenderFront::renderHeader();
+echo PhocacartRenderFront::renderHeader();
 
 if ( $this->t['main_description'] != '') {
 	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['main_description']). '</div>';
@@ -31,8 +31,8 @@ if (!empty($this->t['categories'])) {
 		echo '<div class="col-sm-6 col-md-'.$nw.'">';
 		echo '<div class="thumbnail ph-thumbnail ph-thumbnail-c">';
 		
-		$image 	= PhocaCartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
-		$link	= JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias));
+		$image 	= PhocacartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
+		$link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 		
 		if (isset($image->rel) && $image->rel != '') {
 			echo '<a href="'.$link.'">';
@@ -42,12 +42,19 @@ if (!empty($this->t['categories'])) {
 			}
 			echo ' />';
 			echo '</a>';
+		} else {
+			// No image, add possible image per CSS
+			//echo '<a href="'.$link.'">';
+			echo '<div class="ph-image-box-content">';
+			echo '<div class="ph-image-box-content-item-'.strip_tags($v->alias).'"></div>';
+			echo '</div>';
+			//echo '</a>';
 		}
 		echo '<div class="caption">';
 		
 		echo '<h3>';
 		if ($this->t['category_name_link'] == 1)
-			echo '<a href="'.JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a>';
+			echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a>';
 		else {
 			echo $v->title;
 		}
@@ -61,7 +68,7 @@ if (!empty($this->t['categories'])) {
 				if ($j == (int)$this->t['csv_display_subcategories']) {
 					break;
 				}
-				$link2	= JRoute::_(PhocaCartRoute::getCategoryRoute($v2->id, $v2->alias));
+				$link2	= JRoute::_(PhocacartRoute::getCategoryRoute($v2->id, $v2->alias));
 				echo '<li><a href="'.$link2.'">'.$v2->title.'</a></li>';
 				$j++;
 			}
@@ -78,7 +85,7 @@ if (!empty($this->t['categories'])) {
 		
 		if ((int)$this->t['display_view_category_button'] > 0) {
 			$d									= array();
-			$d['link']							= JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias));
+			$d['link']							= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 			$d['display_view_category_button']	= $this->t['display_view_category_button'];
 			echo $layoutV->render($d);
 		}
@@ -95,5 +102,5 @@ if (!empty($this->t['categories'])) {
 }
 echo '</div>';
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

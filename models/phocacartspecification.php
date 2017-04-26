@@ -10,7 +10,7 @@ defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
 
-class PhocaCartCpModelPhocaCartSpecification extends JModelAdmin
+class PhocaCartCpModelPhocacartSpecification extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -27,7 +27,7 @@ class PhocaCartCpModelPhocaCartSpecification extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartSpecification', $prefix = 'Table', $config = array())
+	public function getTable($type = 'PhocacartSpecification', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}

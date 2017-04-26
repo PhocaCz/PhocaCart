@@ -20,7 +20,7 @@ class PhocaCartControllerComparison extends JControllerForm
 		$item['catid']		= $this->input->get( 'catid', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		
-		$compare	= new PhocaCartCompare();
+		$compare	= new PhocacartCompare();
 		$added	= $compare->addItem((int)$item['id'], (int)$item['catid']);
 		if ($added) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_COMPARISON_LIST'), 'message');
@@ -39,7 +39,7 @@ class PhocaCartControllerComparison extends JControllerForm
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		
-		$compare	= new PhocaCartCompare();
+		$compare	= new PhocacartCompare();
 		$added	= $compare->removeItem((int)$item['id']);
 		if ($added) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_COMPARISON_LIST'), 'message');

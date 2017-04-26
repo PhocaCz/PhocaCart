@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.filter.input');
 
-class TablePhocaCartSpecification extends JTable
+class TablePhocacartSpecification extends JTable
 {
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_specification_groups', 'id', $db);
@@ -20,7 +20,7 @@ class TablePhocaCartSpecification extends JTable
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
-		$this->alias = PhocaCartUtils::getAliasName($this->alias);
+		$this->alias = PhocacartUtils::getAliasName($this->alias);
 
 		return true;
 	}

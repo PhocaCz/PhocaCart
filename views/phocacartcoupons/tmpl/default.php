@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -114,11 +114,11 @@ echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].
 
 
 echo $r->td($this->escape($item->code), "small");
-echo $r->td($this->escape(PhocaCartPrice::cleanPrice($item->discount)), "small");
+echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->discount)), "small");
 echo $r->td($this->escape($item->valid_from), "small");
 echo $r->td($this->escape($item->valid_to), "small");
 
-$status = PhocaCartDate::getActiveDate($item->valid_from, $item->valid_to, 1);
+$status = PhocacartDate::getActiveDate($item->valid_from, $item->valid_to, 1);
 if ($item->published == 0) {
 	$status = '<span class="label label-default">'.JText::_('COM_PHOCACART_UNPUBLISHED').'</span>';
 }

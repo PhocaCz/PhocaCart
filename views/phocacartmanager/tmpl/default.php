@@ -12,7 +12,7 @@ JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 
-$r 			=  new PhocaCartRenderAdminView();
+$r 			=  new PhocacartRenderAdminview();
 
 echo '<div id="phocacartmanager">';
 echo '<div class="span12 form-horizontal">';
@@ -85,7 +85,7 @@ echo $this->loadTemplate('multipleupload');
 echo '</div>'. "\n";
 
 echo '<div class="tab-pane" id="createfolder">'. "\n";
-echo PhocaCartFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $this->currentFolder, 'phocacartmanager', 'manager='.$this->manager.'&amp;tab=createfolder&amp;field='. $this->field );
+echo PhocacartFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $this->currentFolder, 'phocacartmanager', 'manager='.$this->manager.'&amp;tab=createfolder&amp;field='. $this->field );
 echo '</div>'. "\n";
 
 echo '</div>'. "\n";

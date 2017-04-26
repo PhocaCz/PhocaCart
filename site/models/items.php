@@ -25,10 +25,11 @@ class PhocaCartModelItems extends JModelLegacy
 		
 		$app				= JFactory::getApplication();
 		$config 			= JFactory::getConfig();		
-		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$paramsC 			= $app->getParams();
 		$item_pagination	= $paramsC->get( 'item_pagination_default', '20' );
 		$item_ordering		= $paramsC->get( 'item_ordering', 1 );
-	
+		$layout_type		= $paramsC->get( 'layout_type', 'grid' );
+		
 		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
@@ -37,7 +38,8 @@ class PhocaCartModelItems extends JModelLegacy
 		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
 		
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
-		
+		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
+	
 		
 		// =FILTER=
 		$this->setState('tag', $app->input->get('tag', '', 'string'));
@@ -54,17 +56,23 @@ class PhocaCartModelItems extends JModelLegacy
 		
 	}
 	
+	public function getLayoutType() {
+		$layoutType 	= $this->getState('layouttype');
+		$layoutType		= PhocacartRenderFront::getLayoutType($layoutType);
+		return $layoutType;
+	}
+	
 	public function getPagination() {
 		if (empty($this->pagination)) {
 			jimport('joomla.html.pagination');
-			$this->pagination = new PhocaCartPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
+			$this->pagination = new PhocacartPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
 		}
 		return $this->pagination;
 	}
 	
 	function getOrdering() {
 		if(empty($this->ordering)) {
-			$this->ordering = PhocaCartOrdering::renderOrderingFront($this->getState('itemordering'), 1);
+			$this->ordering = PhocacartOrdering::renderOrderingFront($this->getState('itemordering'), 1);
 		}
 		return $this->ordering;
 	}
@@ -129,61 +137,62 @@ class PhocaCartModelItems extends JModelLegacy
 		// =FILTER=
 		// -TAG-
 		if ($this->getState('tag')) {
-			$s = PhocaCartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+			$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		// -MANUFACTURER-
 		if ($this->getState('manufacturer')) {
-			$s = PhocaCartSearch::getSqlParts('int', 'manufacturer', $this->getState('manufacturer'));
+			$s = PhocacartSearch::getSqlParts('int', 'manufacturer', $this->getState('manufacturer'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		// -PRICE-
 		if ($this->getState('price_from')) {
-			$s = PhocaCartSearch::getSqlParts('int', 'price_from', $this->getState('price_from'));
+			$s = PhocacartSearch::getSqlParts('int', 'price_from', $this->getState('price_from'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		if ($this->getState('price_to')) {
-			$s = PhocaCartSearch::getSqlParts('int', 'price_to', $this->getState('price_to'));
+			$s = PhocacartSearch::getSqlParts('int', 'price_to', $this->getState('price_to'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		
 		// -CATEGORY-
 		if ($this->getState('id')) {
-			$s = PhocaCartSearch::getSqlParts('int', 'id', $this->getState('id'));
+			$s = PhocacartSearch::getSqlParts('int', 'id', $this->getState('id'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		
 		// -CATEGORY MORE-
 		if ($this->getState('c')) {
-			$s = PhocaCartSearch::getSqlParts('int', 'c', $this->getState('c'));
+			$s = PhocacartSearch::getSqlParts('int', 'c', $this->getState('c'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		
 		// -ATTRIBUTES-
 		if ($this->getState('a')) {
-			$s = PhocaCartSearch::getSqlParts('array', 'a', $this->getState('a'));
+			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		
 		// -SPECIFICATIONS-
 		if ($this->getState('s')) {
-			$s = PhocaCartSearch::getSqlParts('array', 's', $this->getState('s'));
+			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'));
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 		
 		// =SEARCH=
 		if ($this->getState('search')) {
-			$s = PhocaCartSearch::getSqlParts('string', 'search', $this->getState('search'));
+			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'));
 			$wheres[]	= '('.$s['where'].')';
 			$lefts[]	= $s['left'];
+			PhocacartStatisticsHits::searchHit($this->getState('search'));
 		}
 		
 		// Additional Images
@@ -222,7 +231,7 @@ class PhocaCartModelItems extends JModelLegacy
 			//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
 			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
 			
-			$q = ' SELECT a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.external_link, a.external_text,'. $selImages
+			$q = ' SELECT a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.external_link, a.external_text,'. $selImages
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required'
 			. ' FROM #__phocacart_products AS a'
@@ -280,7 +289,7 @@ class PhocaCartModelItems extends JModelLegacy
 			$params						= $app->getParams();
 			//$ordering					= $params->get( 'item_ordering', 1 );
 			$ordering					= $this->getState('itemordering');
-			$this->item_ordering 		= PhocaCartOrdering::getOrderingText($ordering);
+			$this->item_ordering 		= PhocacartOrdering::getOrderingText($ordering);
 		}
 		return $this->item_ordering;
 	}
@@ -290,7 +299,7 @@ class PhocaCartModelItems extends JModelLegacy
 			$app						= JFactory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
-			$this->category_ordering 	= PhocaCartOrdering::getOrderingText($ordering, 1);
+			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);
 		}
 		return $this->category_ordering;
 	}

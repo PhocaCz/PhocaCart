@@ -25,7 +25,7 @@ class JFormFieldPhocacaptcha extends JFormField
 		switch ($id){
 			default:
 			case 1:
-				$retval = PhocaCartRecaptcha::render();
+				$retval = PhocacartCaptchaRecaptcha::render();
 			break;
 		}
 

@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.view' );
  
-class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
+class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 {
 	protected $items;
 	protected $pagination;
@@ -20,12 +20,12 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 	function display($tpl = null) {
 	
 		$document				= JFactory::getDocument();
-		$this->t				= PhocaCartUtils::setVars('statistic');
+		$this->t				= PhocacartUtils::setVars('statistic');
 		$this->state			= $this->get('State');
-		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocaCartDate::getCurrentDate(30));
-		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocaCartDate::getCurrentDate());
+		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
+		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());
 		
-		$dateDays = PhocaCartDate::getDateDays($this->t['date_from'], $this->t['date_to']);
+		$dateDays = PhocacartDate::getDateDays($this->t['date_from'], $this->t['date_to']);
 		if (!empty($dateDays)) {
 			$count	= iterator_count($dateDays);
 		} else {
@@ -101,7 +101,7 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 			$i++;
 		}
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 		JHtml::_('jquery.framework', false);
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.equalheights.min.js');
 		$document->addScriptDeclaration(
@@ -110,13 +110,13 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 		});');
 		
 		// Most viewed and best-selling products	
-		$this->t['most_viewed'] 	= PhocaCartProduct::getMostViewedProducts();
-		$this->t['best_selling'] 	= PhocaCartProduct::getBestSellingProducts();
-		$this->t['best_selling2'] 	= PhocaCartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to']);
+		$this->t['most_viewed'] 	= PhocacartProduct::getMostViewedProducts();
+		$this->t['best_selling'] 	= PhocacartProduct::getBestSellingProducts();
+		$this->t['best_selling2'] 	= PhocacartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to']);
 
-		$this->t['most_viewed_count'] 	= PhocaCartProduct::getMostViewedProducts(0, false, false, true);
-		$this->t['best_selling_count'] 	= PhocaCartProduct::getBestSellingProducts(0, '', '', true);
-		$this->t['best_selling2_count'] = PhocaCartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to'], true);
+		$this->t['most_viewed_count'] 	= PhocacartProduct::getMostViewedProducts(0, false, false, true);
+		$this->t['best_selling_count'] 	= PhocacartProduct::getBestSellingProducts(0, '', '', true);
+		$this->t['best_selling2_count'] = PhocacartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to'], true);
 		
 
 		$this->addToolbar(); 
@@ -130,7 +130,7 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.statistic_id'));
 
-		JToolBarHelper::title( JText::_( $this->t['l'].'_STATISTICS' ), 'chart' );
+		JToolbarHelper::title( JText::_( $this->t['l'].'_STATISTICS' ), 'stats' );
 		
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = JToolBar::getInstance( 'toolbar' );
@@ -139,24 +139,24 @@ class PhocaCartCpViewPhocaCartStatistics extends JViewLegacy
 		
 	/*
 		if ($canDo->get('core.create')) {
-			JToolBarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 	
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolBarHelper::divider();
-			JToolBarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			JToolbarHelper::divider();
+			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 	
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartlogs.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartlogs.delete', $this->t['l'].'_DELETE');
 		}*/
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 	
 	protected function getSortFields() {

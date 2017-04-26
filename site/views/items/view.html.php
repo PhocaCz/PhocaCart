@@ -11,6 +11,8 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
+jimport( 'joomla.filesystem.folder' );  
+jimport( 'joomla.filesystem.file' );										
 
 class PhocaCartViewItems extends JViewLegacy
 {
@@ -29,7 +31,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$document					= JFactory::getDocument();
 		$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );// optional
 		$this->t['limitstart']		= $app->input->get( 'limitstart', 0, 'int' );
-		$this->items				= $model->getItemList();
+		$this->t['ajax'] 			= 0;
 		
 		// PARAMS
 		$this->t['display_new']				= $this->p->get( 'display_new', 0 );
@@ -50,7 +52,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['display_quickview']		= $this->p->get( 'display_quickview', 0 );
 		$this->t['fade_in_action_icons']	= $this->p->get( 'fade_in_action_icons', 0 );
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
-		$this->t['items_addtocart']			= $this->p->get( 'items_addtocart', 1 );
+		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
 		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
@@ -58,8 +60,9 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
 		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
 		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
+		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );																	  
 		if ($this->t['hide_addtocart'] == 1) {
-			$this->t['items_addtocart']		= 0;
+			$this->t['category_addtocart']		= 0;
 		}
 		$this->t['display_view_product_button']	= $this->p->get( 'display_view_product_button', 1 );
 		$this->t['product_name_link']			= $this->p->get( 'product_name_link', 0 );
@@ -68,43 +71,42 @@ class PhocaCartViewItems extends JViewLegacy
 		//$this->category					= $model->getCategory($this->t['categoryid']);
 		//$this->subcategories				= $model->getSubcategories($this->t['categoryid']);
 		$this->items						= $model->getItemList();
+		
 		$this->t['pagination']				= $model->getPagination();
 		$this->t['ordering']				= $model->getOrdering();
-		$this->t['photopathrel']			= JURI::base().'phocaphoto/';
-		$this->t['photopathabs']			= JPATH_ROOT .'/phocaphoto/';
+		
+		$this->t['layouttype']				= $model->getLayoutType();
+				
+		$this->t['layouttypeactive'] 		= PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
+		$this->t['columns_cat'] 			= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat'] : 1;
+		
+
 		$this->t['action']					= $uri->toString();
 		//$this->t['actionbase64']			= base64_encode(htmlspecialchars($this->t['action']));
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
-		$this->t['linkcheckout']			= JRoute::_(PhocaCartRoute::getCheckoutRoute(0));
-		$this->t['linkcomparison']			= JRoute::_(PhocaCartRoute::getComparisonRoute(0));
-		$this->t['linkwishlist']			= JRoute::_(PhocaCartRoute::getWishListRoute(0));
+		$this->t['linkcheckout']			= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
+		$this->t['linkcomparison']			= JRoute::_(PhocacartRoute::getComparisonRoute(0));
+		$this->t['linkwishlist']			= JRoute::_(PhocacartRoute::getWishListRoute(0));
+		$this->t['limitstarturl'] 			= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
+		$this->t['class_thumbnail'] 		= $this->t['fade_in_action_icons'] ? '' : 'thumbnail';
+		$this->t['row-flex'] 				= $this->t['equal_height'] ? 'row-flex' : '';
+
 		
-		
-		if ($this->t['limitstart'] > 0 ) {
-			$this->t['limitstarturl'] =  '&start='.$this->t['limitstart'];
-		} else {
-			$this->t['limitstarturl'] = '';
-		}
-		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		$media->loadChosen($this->t['load_chosen']);
-		$media->loadEqualHeights($this->t['equal_height']);
+		//$media->loadEqualHeights($this->t['equal_height']);
 		$media->loadProductHover($this->t['fade_in_action_icons']);
 		
-		$this->t['class_thumbnail'] = 'thumbnail';
-			if ($this->t['fade_in_action_icons']) {
-				$this->t['class_thumbnail'] = '';
-			}
-		
-		PhocaCartRenderJs::renderAjaxAddToCart();
-		PhocaCartRenderJs::renderAjaxAddToCompare();
-		PhocaCartRenderJs::renderAjaxAddToWishList();
+		PhocacartRenderJs::renderAjaxAddToCart();
+		PhocacartRenderJs::renderAjaxAddToCompare();
+		PhocacartRenderJs::renderAjaxAddToWishList();
+		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phItemsBox', $this->t['load_chosen'], $this->t['equal_height']);
 		
 		if ($this->t['display_quickview'] == 1) {
-			PhocaCartRenderJs::renderAjaxQuickViewBox();
+			PhocacartRenderJs::renderAjaxQuickViewBox();
 			if ($this->t['dynamic_change_price'] == 1) {
-				PhocaCartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ph-item-price-box');// We need to load it here
+				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ph-item-price-box');// We need to load it here
 			}
 			$media->loadPhocaAttribute(1);// We need to load it here
 			$media->loadPhocaSwapImage($this->t['dynamic_change_image']);// We need to load it here in ITEM (QUICK VIEW) VIEW
@@ -113,8 +115,8 @@ class PhocaCartViewItems extends JViewLegacy
 		$media->loadPhocaMoveImage($this->t['switch_image_category_items']);// Move (switch) images in CATEGORY, ITEMS VIEW
 
 		$this->_prepareDocument();
-		$this->t['pathcat'] = PhocaCartPath::getPath('categoryimage');
-		$this->t['pathitem'] = PhocaCartpath::getPath('productimage');
+		$this->t['pathcat'] = PhocacartPath::getPath('categoryimage');
+		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		
 		
 		parent::display($tpl);
@@ -127,7 +129,7 @@ class PhocaCartViewItems extends JViewLegacy
 		if (isset($this->category[0]) && is_object($this->category[0])) {
 			$category = $this->category[0];
 		}
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, $category);
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, $category);
 	}
 }
 ?>

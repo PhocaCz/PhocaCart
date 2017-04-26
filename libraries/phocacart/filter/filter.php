@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartFilter
+class PhocacartFilter
 {
 	public $taglist			= false;
 	public $tag				= false;
@@ -21,6 +21,11 @@ class PhocaCartFilter
 	public $enable_image_filter 		= false;
 	public $image_style_image_filter 	= false;
 	
+	public $ordering_tag				= 1;
+	public $ordering_manufacturer		= 1;
+	public $ordering_attribute			= 1;
+	public $ordering_specification		= 1;
+	
 	
 	public function __construct() {}
 	
@@ -29,14 +34,14 @@ class PhocaCartFilter
 		// $db = JFactory::getDBO();
 		$o			= array();
 		//$app		= JFactory::getApplication();
-		$layout 	= new JLayoutFile('form_filter_checkbox', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-		$layout2 	= new JLayoutFile('form_filter_text', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-		$layout3 	= new JLayoutFile('form_filter_checkbox_categories', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-		$layout4 	= new JLayoutFile('form_filter_color', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-		$layout5 	= new JLayoutFile('form_filter_image', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layout 	= new JLayoutFile('form_filter_checkbox', null, array('component' => 'com_phocacart'));
+		$layout2 	= new JLayoutFile('form_filter_text', null, array('component' => 'com_phocacart'));
+		$layout3 	= new JLayoutFile('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));
+		$layout4 	= new JLayoutFile('form_filter_color', null, array('component' => 'com_phocacart'));
+		$layout5 	= new JLayoutFile('form_filter_image', null, array('component' => 'com_phocacart'));
 		
 		
-		$pathProductImage = PhocaCartPath::getPath('productimage');
+		$pathProductImage = PhocacartPath::getPath('productimage');
 		
 		// =FILTER=
 		$data['getparams']	= array();
@@ -44,7 +49,7 @@ class PhocaCartFilter
 		//-CATEGORY- ACTIVE CATEGORY
 		$data['param'] 		= 'id';
 		$data['title']		= JText::_('COM_PHOCACART_CATEGORY');
-		$category			= PhocaCartRoute::getIdForItemsRoute();
+		$category			= PhocacartRoute::getIdForItemsRoute();
 		
 		$data['getparams'][]= $category['idalias'];
 		$data['nrinalias']	= 1;
@@ -53,8 +58,8 @@ class PhocaCartFilter
 		
 
 		if ((int)$this->category == 1 && (int)$category['id'] > 0) {
-			phocacartimport('phocacart.category.category');
-			$data['items'][] = PhocaCartCategory::getCategoryById($category['id']);
+			/* phocacart import('phocacart.category.category');*/
+			$data['items'][] = PhocacartCategory::getCategoryById($category['id']);
 		
 			if (!empty($data['items'])) {
 				$o[] = $layout->render($data);
@@ -72,8 +77,8 @@ class PhocaCartFilter
 		$data['uniquevalue']= 0;
 		
 		if ((int)$this->category == 2) {
-			$data['items'] 	= PhocaCartCategory::getCategoryTreeArray();
-			$data['output']	= PhocaCartCategory::nestedToCheckBox($data['items'], $data);
+			$data['items'] 	= PhocacartCategory::getCategoryTreeArray();
+			$data['output']	= PhocacartCategory::nestedToCheckBox($data['items'], $data);
 			
 			if (!empty($data['items'])) {
 				$o[] = $layout3->render($data);
@@ -107,8 +112,8 @@ class PhocaCartFilter
 		$data['uniquevalue']= 0;
 		
 		if ($this->tag) {
-			phocacartimport('phocacart.tag.tag');
-			$data['items'] = PhocaCartTag::getAllTags();
+			/*phocacart import('phocacart.tag.tag');*/
+			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag);
 		}
 		
 		if (!empty($data['items'])) {
@@ -124,8 +129,8 @@ class PhocaCartFilter
 		$data['uniquevalue']= 0;
 		
 		if ($this->manufacturer) {
-			phocacartimport('phocacart.manufacturer.manufacturer');
-			$data['items'] = PhocaCartManufacturer::getAllManufacturers();
+			/*phocacart import('phocacart.manufacturer.manufacturer');*/
+			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer);
 		}
 		
 		if (!empty($data['items'])) {
@@ -134,26 +139,27 @@ class PhocaCartFilter
 		
 		// -ATTRIBUTES-
 		if ($this->attributes) {
-			phocacartimport('phocacart.attribute.attribute');
-			$attributes = PhocaCartAttribute::getAllAttributesAndOptions();
+			/*phocacart import('phocacart.attribute.attribute');*/
+			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute);
 			
 			if (!empty($attributes)) {
 				foreach($attributes as $k => $v) {
+					
 					$data				= array();
 					$data['param'] 		= 'a['.$v['alias']. ']';
 					$data['title']		= $v['title'];
-					$data['items']		= $v['option'];
+					$data['items']		= $v['options'];
 					$data['getparams']	= $this->getArrayParamValues($data['param'], 'array');
 					$data['uniquevalue']= 0;
 					$data['pathitem']	= $pathProductImage;
 					
 					if (!empty($data['items'])) {
 						
-						if ($this->enable_color_filter && isset($v['type']) && ($v['type'] == 2)) {
+						if ($this->enable_color_filter && isset($v['type']) && ($v['type'] == 2 || $v['type'] == 5)) {
 							// Color
 							$data['formtype']	= 'text';
 							$o[] = $layout4->render($data);
-						} else if ($this->enable_image_filter && isset($v['type']) && ($v['type'] == 3)) {
+						} else if ($this->enable_image_filter && isset($v['type']) && ($v['type'] == 3 || $v['type'] == 6)) {
 							// Image
 							$data['formtype']	= 'text';
 							$data['style']		= strip_tags($this->image_style_image_filter);
@@ -170,8 +176,8 @@ class PhocaCartFilter
 		
 		// -SPECIFICATIONS-
 		if ($this->specifications) {
-			phocacartimport('phocacart.specification.specification');
-			$specifications = PhocaCartSpecification::getAllSpecificationsAndValues();
+			/*phocacart import('phocacart.specification.specification');*/
+			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification);
 			if (!empty($specifications)) {
 				foreach($specifications as $k => $v) {
 					$data				= array();

@@ -28,17 +28,17 @@ class PhocaCartViewOrder extends JViewLegacy
 		if ($orderGuestAccess == 0) {
 			$token = '';
 		}
-		$order	= new PhocaCartOrderRender();
+		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format, $token);
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		
 		echo $o;
 		
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDER'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDER'));
 	}
 }
 ?>

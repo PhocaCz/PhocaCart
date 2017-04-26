@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartUser
+class PhocacartUser
 {
 
 	protected $guest = array();
@@ -246,7 +246,37 @@ class PhocaCartUser
 				}
 			}
 		}
+		
+		if (!empty($dataNew[1])) {
+			// Set right type for shipping address
+			if ($array == 1) {
+				$dataNew[1]['type'] = 1;
+			} else {
+				$dataNew[1]->type = 1;
+			}
+		}
 		return $dataNew;
+	}
+	
+	public static function getUserInfo() {
+		
+		$u				= array();
+		$user 			= JFactory::getUser();
+		$u['username']	= '';
+		$u['id']		= 0;
+		$u['ip']		= '';
+		
+		if (isset($user->id)) {
+			$u['id'] = $user->id;
+		}
+		
+		if (isset($user->username)) {
+			$u['username'] = $user->username;
+		}
+		
+		$u['ip']		= PhocacartUtils::getIp();
+		
+		return $u;
 	}
 	
 
@@ -296,9 +326,9 @@ class PhocaCartUser
 					if ($v->title == 'name_first' || $v->title == 'name_middle' || $v->title == 'name_last' || $v->title == 'name_degree' ) {
 						$billNameO .= $value . ' ';
 					} else if ($v->title == 'country') {
-						$billingO .= '<div class="col-sm-12">'.PhocaCartCountry::getCountryById((int)$value).'</div>';
+						$billingO .= '<div class="col-sm-12">'.PhocacartCountry::getCountryById((int)$value).'</div>';
 					} else if ($v->title == 'region') {
-						$billingO .= '<div class="col-sm-12">'.PhocaCartRegion::getRegionById((int)$value).'</div>';
+						$billingO .= '<div class="col-sm-12">'.PhocacartRegion::getRegionById((int)$value).'</div>';
 					} else {
 						$billingO .= '<div class="col-sm-12">'.$value.'</div>';
 					}
@@ -334,9 +364,9 @@ class PhocaCartUser
 					if ($v->title == 'name_first' || $v->title == 'name_middle' || $v->title == 'name_last' || $v->title == 'name_degree' ) {
 						$shipNameO .= $value . ' ';
 					} else if ($v->title == 'country') {
-						$shippingO .= '<div class="col-sm-12">'.PhocaCartCountry::getCountryById((int)$value).'</div>';
+						$shippingO .= '<div class="col-sm-12">'.PhocacartCountry::getCountryById((int)$value).'</div>';
 					} else if ($v->title == 'region') {
-						$shippingO .= '<div class="col-sm-12">'.PhocaCartRegion::getRegionById((int)$value).'</div>';
+						$shippingO .= '<div class="col-sm-12">'.PhocacartRegion::getRegionById((int)$value).'</div>';
 					} else {
 						$shippingO .= '<div class="col-sm-12">'.$value.'</div>';
 					}

@@ -17,7 +17,7 @@ if (! class_exists('JHtmlJGrid')) {
 	require_once( JPATH_SITE.'/libraries/joomla/html/html/jgrid.php' );
 }
 
-class PhocaCartJGrid extends JHtmlJGrid
+class PhocacartHtmlJgrid extends JHtmlJGrid
 {
 	
 	public static function displayBilling($value, $i, $prefix = '', $enabled = true, $checkbox='cb')

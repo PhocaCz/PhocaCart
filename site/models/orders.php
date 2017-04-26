@@ -21,9 +21,9 @@ class PhocaCartModelOrders extends JModelLegacy
 		
 		$app		= JFactory::getApplication();
 		$config 	= JFactory::getConfig();		
-		$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
+		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
+		$paramsC 	= $app->getParams();
 		$defaultP	= $paramsC->get( 'default_pagination', '20' );
-	
 		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.orders.limit', 'limit', $defaultP, 'int'));
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
@@ -36,7 +36,7 @@ class PhocaCartModelOrders extends JModelLegacy
 	public function getPagination($userId) {
 		if (empty($this->pagination)) {
 			jimport('joomla.html.pagination');
-			$this->pagination = new PhocaCartPagination( $this->getTotal($userId), $this->getState('limitstart'), $this->getState('limit') );
+			$this->pagination = new PhocacartPagination( $this->getTotal($userId), $this->getState('limitstart'), $this->getState('limit') );
 		}
 		return $this->pagination;
 	}
@@ -94,7 +94,7 @@ class PhocaCartModelOrders extends JModelLegacy
 			$app						= JFactory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'order_ordering', 8 );
-			$this->orders_ordering 		= PhocaCartOrdering::getOrderingText($ordering, 2);
+			$this->orders_ordering 		= PhocacartOrdering::getOrderingText($ordering, 2);
 		}
 		return $this->orders_ordering;
 	}

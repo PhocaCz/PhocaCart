@@ -18,7 +18,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 
 	function display($tpl = null) {
 	
-		$this->t			= PhocaCartUtils::setVars('category');
+		$this->t			= PhocacartUtils::setVars('category');
 		$model 				= $this->getModel();
 		$this->items		= $model->getItems();
 		$this->pagination	= $model->getPagination();
@@ -57,7 +57,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 			$this->pagination	= $model->getPagination();
 		}
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -68,25 +68,25 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.category_id'));
-		JToolBarHelper::title( JText::_( $this->t['l'].'_CATEGORIES' ), 'folder' );
+		JToolbarHelper::title( JText::_( $this->t['l'].'_CATEGORIES' ), 'folder-open' );
 		$user  = JFactory::getUser();
 		$bar = JToolBar::getInstance('toolbar');
 		
 		if ($canDo->get('core.create')) {
-			JToolBarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolBarHelper::divider();
-			JToolBarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			JToolbarHelper::divider();
+			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
 		
 		// Add a batch button
@@ -103,8 +103,8 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){submitbutton(\'phocacartcategory.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
 		$bar->appendButton('Custom', $dhtml);
 		
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 		
 	}
 	

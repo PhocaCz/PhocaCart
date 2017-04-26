@@ -8,9 +8,9 @@
  */
 defined('_JEXEC') or die();
 
-class JFormFieldPhocaCartOrderStatus extends JFormField
+class JFormFieldPhocacartOrderStatus extends JFormField
 {
-	protected $type 		= 'PhocaCartOrderStatus';
+	protected $type 		= 'PhocacartOrderStatus';
 
 	protected function getInput() {
 		
@@ -20,7 +20,7 @@ class JFormFieldPhocaCartOrderStatus extends JFormField
 			$id = 1;// set default "pending"
 		}
 		
-		$status = PhocaCartOrderStatus::getStatus($id);
+		$status = PhocacartOrderStatus::getStatus($id);
 		
 		//array_unshift($status['data'], JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SET_STATUS').' -', 'value', 'text'));
 

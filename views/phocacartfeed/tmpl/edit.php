@@ -12,7 +12,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminView'; 
+$class		= $this->t['n'] . 'RenderAdminview'; 
 $r 			=  new $class();
 ?>
 <script type="text/javascript">
@@ -79,12 +79,12 @@ echo '</div>';
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
-echo '<div class="span2">';
+echo '<div class="col-xs-12 col-sm-2 col-md-2">';
 
 if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->alias) && $this->item->alias != '') {
-	phocacartimport('phocacart.path.route');
-	$xmlLink 		= PhocaCartRoute::getFeedRoute((int)$this->item->id, $this->item->alias);
-	$xmlLink2 		= PhocaCartRoute::getFeedRoute((int)$this->item->id, $this->item->alias, 1);
+	/* phocacart import('phocacart.path.route'); */
+	$xmlLink 		= PhocacartRoute::getFeedRoute((int)$this->item->id, $this->item->alias);
+	$xmlLink2 		= PhocacartRoute::getFeedRoute((int)$this->item->id, $this->item->alias, 1);
 	$app    		= JApplication::getInstance('site');
 	$router 		= $app->getRouter();
 	$uri 			= $router->build($xmlLink);

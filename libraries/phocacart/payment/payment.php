@@ -20,7 +20,7 @@ defined('_JEXEC') or die();
  * 
  */
 
-class PhocaCartPayment
+class PhocacartPayment
 {
 	public function __construct() {
 		
@@ -28,7 +28,8 @@ class PhocaCartPayment
 	
 	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $id = 0) {
 		
-		$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$payment_amount_rule	= $paramsC->get( 'payment_amount_rule', 0 );
 		
 		$user 					= JFactory::getUser();
@@ -45,16 +46,18 @@ class PhocaCartPayment
 				.' ORDER BY p.ordering';
 		$db->setQuery($query);*/
 		
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.title, p.image, p.access, p.description,'
-				.' p.active_amount, p.active_country, p.active_region, p.active_shipping,'
+		$query = ' SELECT p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
+				.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 				.' p.lowest_amount, p.highest_amount,'
-				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
 				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
+				.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
 				.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_payment_method_regions AS r ON r.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_countries AS c ON c.payment_id = p.id'
+				.' LEFT JOIN #__phocacart_payment_method_zones AS z ON z.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_shipping AS s ON s.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.published = 1'
@@ -65,8 +68,9 @@ class PhocaCartPayment
 		} else {
 			$query .= ' GROUP BY p.id';
 		}
+		
+		PhocacartUtils::setConcatCharCount();
 		$db->setQuery($query);
-
 		$payments = $db->loadObjectList();
 		
 		if (!empty($payments) && !isset($payments[0]->id) || (isset($payments[0]->id) && (int)$payments[0]->id < 1)) {
@@ -80,6 +84,7 @@ class PhocaCartPayment
 			
 				$v->active = 0;
 				$a = 0;
+				$z = 0;
 				$c = 0;
 				$r = 0;
 				$s = 0;
@@ -103,6 +108,21 @@ class PhocaCartPayment
 					}
 				} else {
 					$a = 1;
+				}
+				
+				// Zone Rule
+				
+				if($v->active_zone == 1) {
+					if (isset($v->zone) && $v->zone != '')  {
+						$zones = explode(',', $v->zone);
+						
+						if (PhocacartZone::isCountryOrRegionIncluded($zones, (int)$country, (int)$region)) {
+							$z = 1;
+						}
+					}
+				
+				} else {
+					$z = 1;
 				}
 				
 				// Country Rule
@@ -150,7 +170,7 @@ class PhocaCartPayment
 				}
 				
 				// if some of the rules is not valid, all the payment is NOT valid
-				if ($a == 0 || $c == 0 || $r == 0 || $s == 0) {
+				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $s == 0) {
 					$v->active = 0;
 				} else {
 					$v->active = 1;
@@ -183,8 +203,8 @@ class PhocaCartPayment
 				.' LIMIT 1';
 		$db->setQuery($query);*/
 		
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.title, p.image, p.method, p.params, p.description, '
-				.' t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
+		$query = ' SELECT p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId
@@ -239,7 +259,11 @@ class PhocaCartPayment
 		return false;
 	}
 	
-	public static function getPaymentMethods($namePlugin = '') {
+	/*
+	 * Get all PCP Plugins
+	 */
+	
+	public static function getPaymentPluginMethods($namePlugin = '') {
 		
 		$db 	= JFactory::getDBO();
 		$lang	= JFactory::getLanguage();

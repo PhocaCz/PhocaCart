@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartFeed
+class PhocacartFeed
 {
 	public static function getFeed($id) {
 	

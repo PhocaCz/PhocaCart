@@ -22,6 +22,10 @@ class JFormFieldPhocaCartCountries extends JFormField
 					$table = 'payment';
 				break;
 				
+				case "zone":
+					$table = 'zone';
+				break;
+				
 				case "shipping":
 				default:
 					$table = 'shipping';
@@ -33,10 +37,10 @@ class JFormFieldPhocaCartCountries extends JFormField
 
 		$activeCountries = array();
 		if ((int)$id > 0) {
-			$activeCountries	= PhocaCartCountry::getCountries($id, 1, $table);
+			$activeCountries	= PhocacartCountry::getCountries($id, 1, $table);
 		}
 			
-		return PhocaCartCountry::getAllCountriesSelectBox($this->name.'[]', $this->id, $activeCountries, NULL,'id' );
+		return PhocacartCountry::getAllCountriesSelectBox($this->name.'[]', $this->id, $activeCountries, NULL,'id' );
 	}
 }
 ?>

@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
-class PhocaCartCpControllerPhocaCartUser extends PhocaCartCpControllerPhocaCartCommon {
+class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartCommon {
 
 
 	public function save($key = null, $urlVar = null)
@@ -160,7 +160,7 @@ class PhocaCartCpControllerPhocaCartUser extends PhocaCartCpControllerPhocaCartC
 			
 			
 			// Form Items
-			/*$items = PhocaCartFormItems::getFormItems(1,1,0);
+			/*$items = PhocacartFormItems::getFormItems(1,1,0);
 			if(!empty($items)) {
 				foreach($items as $k => $v) {
 					if ($v->required == 1) {
@@ -233,7 +233,7 @@ class PhocaCartCpControllerPhocaCartUser extends PhocaCartCpControllerPhocaCartC
 		}
 		
 		// Remove shipping because shipping methods can change while chaning address
-		/*PhocaCartShipping::removeShipping();
+		/*PhocacartShipping::removeShipping();
 		$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 		$app->enqueueMessage($msg, 'success');
 		$app->redirect(base64_decode($item['return']));*/

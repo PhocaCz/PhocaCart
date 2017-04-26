@@ -75,6 +75,13 @@ function phCleanAloneQuestionMark(url) {
 	}
 	return url;
 }
+
+function phFilterValue(value) {
+	var v;
+	v = phReplaceAll('<', '', value);
+	v = phReplaceAll('>', '', v);
+	return v;
+}
 /*
 function phSetUrl(url) {	
 	var urlItemsView= url;
@@ -86,7 +93,6 @@ function phSetUrl(url) {
 
 function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait) {	
 	
-
 	/*
 	 * If there is empty phFilterNewUrlRemove, this means:
 	 * a) there were no previous parameter which is waiting or
@@ -154,14 +160,13 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 		mergeMode = 2;
 	}
 	
-	
 
 	var url;
 	if (isItemsView == 1) {
 		url = location.search;
 	} else {
 		url = urlItemsView;
-		return false; // Not possible to deselect in other than items view
+		return 2; //return false; // Not possible to deselect in other than items view
 	}
 	
 
@@ -184,7 +189,6 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 	/* String -> Array */
 	phFilterNewUrlRemove	= phStringToArray(phFilterNewUrlRemove);
 	phFilterNewUrlRemove 	= phCleanAloneQuestionMark(phFilterNewUrlRemove);
-	
 	
 	
 	// Wait for next parameter
@@ -211,6 +215,8 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 	 * b) url which had parameters but they were removed while working with this function and waiting
 	 */
 	
+	
+	value = phFilterValue(value);
 	
 	/* Array -> String */
 	param 			= phArrayToString(param);
@@ -324,3 +330,7 @@ jQuery(document).ready(function () {
 			.addClass("glyphicon-triangle-right");
     });
 });
+
+function phClearField(field) {
+	jQuery(field).val('');
+}

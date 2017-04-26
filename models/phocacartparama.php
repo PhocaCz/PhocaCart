@@ -29,14 +29,21 @@ class PhocaCartCpModelPhocaCartParamA extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartPayment', $prefix = 'Table', $config = array()) {
+	// PhocacartPayment
+	// PhocacartShipping
+	public function getTable($type = 'PhocacartPayment', $prefix = 'Table', $config = array()) {
+		$app	= JFactory::getApplication();
+		$type	= $app->input->get( 'type', '', 'int'  );
+		if ($type == 2) {
+			$type = 'PhocacartShipping';
+		} else {
+			$type = 'PhocacartPayment';
+		}
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
 	public function getForm($data = array(), $loadData = true) {
 		
-		
-		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm($this->formNameR, $this->formName, array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -54,16 +61,28 @@ class PhocaCartCpModelPhocaCartParamA extends JModelAdmin
 	
 	
 	/*
-	 * Add additional parameter of the payment method to load it in payment options (x001)
+	 * Add additional parameter of the payment method to load it in payment options (x001) - pcp
+	 * Add additional parameter of the shipping method to load it in shipping options (x001) - pcs
 	 */
 	
 	protected function preprocessForm(JForm $form, $data, $group = 'pcp') {
 		
+	
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
+		
+		$app	= JFactory::getApplication();
+		$type	= $app->input->get( 'type', '', 'int'  );
+		if ($type == 2) {
+			$group 	= 'pcs';
+			$folder = 'pcs';
+		} else {
+			$group 	= 'pcp';
+			$folder = 'pcp';
+		}
 
 		// Initialise variables.
-		$folder		= 'pcp';//$this->getState('item.folder');
+		//$folder		= 'pcp';//$this->getState('item.folder');
 		//$element	= $this->getState('item.element');
 		$app		= JFactory::getApplication();
 		$method		= $app->input->get( 'method', '', 'string'  );// get the method, when start or when changed the select box
@@ -73,7 +92,7 @@ class PhocaCartCpModelPhocaCartParamA extends JModelAdmin
 
 		if (empty($folder) || empty($element)) {
 			//$app = JFactory::getApplication();
-			//$app->redirect(JRoute::_('index.php?option=com_phocapdf&view=phocapdfcp',false), JText::_('COM_PHOCACART_NO_FOLDER_OR_ELEMENT_FOUND'));
+			//$app->re-direct(JRoute::_('index.php?option=com_phocapdf&view=phocapdfcp',false), JText::_('COM_PHOCACART_NO_FOLDER_OR_ELEMENT_FOUND'));
 		}
 		// Try 1.6 format: /plugins/folder/element/element.xml
 		$formFile = JPath::clean($client->path.'/plugins/'.$folder.'/'.$element.'/'.$element.'.xml');

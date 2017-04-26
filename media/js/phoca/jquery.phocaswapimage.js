@@ -27,6 +27,7 @@
 			phO.phAttributesBox	= jQuery(form +' '+ select);
 			phO.phCustomHref	= customHref;
 			
+			
 		},
 		
 		Display: 	function() {
@@ -35,14 +36,15 @@
 			//jQuery(document).on('change', phO.phAttributesBox, function(){
 			phO.phAttributesBox.on('change', function(){
 			
+				
 				// Set image from current selectbox (selectbox which was changed)
-				var phNewSrc		= jQuery(this).find(':selected').data('image-option');
+				var phNewSrc		= jQuery(this).find(':selected,:checked').data('image-option');
+
 				// Find selected image from all attributes select boxes 
 				var phSelectedSrc 	= false;
 				phO.phAttributesBox.each(function( index ) {
-				  var phFoundSrc	= jQuery(this).find(':selected').data('image-option');
+				  var phFoundSrc	= jQuery(this).find(':selected,:checked').data('image-option');
 				  if(phFoundSrc) {
-					  
 					  phSelectedSrc = phFoundSrc;
 				  }
 				});

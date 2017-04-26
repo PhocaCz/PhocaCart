@@ -17,12 +17,12 @@ class PhocaCartModelCheckout extends JModelForm
 
 	public function getFields($billing = 1, $shipping = 1, $account = 0){
 		if (empty($this->fields)) {
-			$this->fields = PhocaCartFormUser::getFormXml('', '_phs', $billing, $shipping, $account);//Fields in XML Format
+			$this->fields = PhocacartFormUser::getFormXml('', '_phs', $billing, $shipping, $account);//Fields in XML Format
 		}
 		return $this->fields;
 	}
 	
-	public function getTable($type = 'PhocaCartUser', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartUser', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -53,8 +53,8 @@ class PhocaCartModelCheckout extends JModelForm
 	public function getItem($pk = null) {
 		$app	= JFactory::getApplication();
 		$user 	= JFactory::getUser();
-		$table 	= $this->getTable('PhocaCartUser', 'Table');
-		$tableS 	= $this->getTable('PhocaCartUser', 'Table');
+		$table 	= $this->getTable('PhocacartUser', 'Table');
+		$tableS 	= $this->getTable('PhocacartUser', 'Table');
 		
 		// Billing
 		if(isset($user->id) && (int)$user->id > 0) {
@@ -134,7 +134,7 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 		$data['user_id']	= (int)$user->id;
 		$data['type']		= (int)$type;
-		$row = $this->getTable('PhocaCartUser', 'Table');
+		$row = $this->getTable('PhocacartUser', 'Table');
 
 		if(isset($user->id) && $user->id > 0) {
 			if (!$row->load(array('user_id' => (int)$user->id, 'type' => $type))) {
@@ -178,7 +178,7 @@ class PhocaCartModelCheckout extends JModelForm
 		$data['user_id']	= (int)$user->id;
 		
 		
-		$row = $this->getTable('PhocaCartCart', 'Table');
+		$row = $this->getTable('PhocacartCart', 'Table');
 		
 		
 		
@@ -231,7 +231,7 @@ class PhocaCartModelCheckout extends JModelForm
 		$data['user_id']	= (int)$user->id;
 		
 		
-		$row = $this->getTable('PhocaCartCart', 'Table');
+		$row = $this->getTable('PhocacartCart', 'Table');
 		
 		
 		if(isset($user->id) && $user->id > 0) {
@@ -278,7 +278,7 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	public function getFieldsGuest(){
 		if (empty($this->fieldsguest)) {
-			$this->fieldsguest = PhocaCartFormUser::getFormXml('', '_phs', 1, 1, 0, 1);//Fields in XML Format
+			$this->fieldsguest = PhocacartFormUser::getFormXml('', '_phs', 1, 1, 0, 1);//Fields in XML Format
 		}
 		return $this->fieldsguest;
 	}
@@ -362,14 +362,14 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	public function getItemGuest($pk = null) {
 		
-		$guest 	= new PhocaCartGuestUser();
+		$guest 	= new PhocacartUserGuestuser();
 		$item	= $guest->getAddress();
 
 		return $item;
 	}
 	
 	public function saveAddressGuest($data) {
-		$guest	= new PhocaCartGuestUser();
+		$guest	= new PhocacartUserGuestuser();
 		$data['user_id']	= 0;
 		$data['type']		= 0;
 		if ($guest->storeAddress($data)) {
@@ -382,36 +382,36 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	public function getDataGuest() {
 		
-		$guest	= new PhocaCartGuestUser();
+		$guest	= new PhocacartUserGuestuser();
 		$data	= $guest->getAddress();
 		if (!empty($data)) {
 			
 			
-			$dataN = PhocaCartUser::convertAddressTwo($data, 0);
+			$dataN = PhocacartUser::convertAddressTwo($data, 0);
 			
 			$dataN[0]->countrytitle = null;
 			$dataN[0]->regiontitle = null;
 			$dataN[1]->countrytitle = null;
 			$dataN[1]->regiontitle = null;
 			if (isset($dataN[0]->country) && $dataN[0]->country > 0) {
-				$dataN[0]->countrytitle = PhocaCartCountry::getCountryById($dataN[0]->country);
+				$dataN[0]->countrytitle = PhocacartCountry::getCountryById($dataN[0]->country);
 			}
 			if (isset($dataN[0]->region) && $dataN[0]->region > 0) {
-				$dataN[0]->regiontitle = PhocaCartRegion::getRegionById($dataN[0]->region);
+				$dataN[0]->regiontitle = PhocacartRegion::getRegionById($dataN[0]->region);
 			}
 			if (isset($dataN[1]->country) && $dataN[1]->country > 0 ) {
 				if (isset($dataN[0]->country) && $dataN[0]->country == $dataN[1]->country) {
 					$dataN[1]->countrytitle = $dataN[0]->countrytitle;//great to save one sql query
 					
 				} else {
-					$dataN[1]->countrytitle = PhocaCartCountry::getCountryById($dataN[1]->country);
+					$dataN[1]->countrytitle = PhocacartCountry::getCountryById($dataN[1]->country);
 				}
 			}
 			if (isset($dataN[1]->region) && $dataN[1]->region > 0 ) {
 				if (isset($dataN[0]->region) && $dataN[0]->region == $dataN[1]->region) {
 					$dataN[1]->regiontitle = $dataN[0]->regiontitle;//great to save one sql query
 				} else {
-					$dataN[1]->regiontitle = PhocaCartRegion::getRegionById($dataN[1]->region);
+					$dataN[1]->regiontitle = PhocacartRegion::getRegionById($dataN[1]->region);
 				}
 			}
 
@@ -422,7 +422,7 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	public function saveShippingGuest($shippingId) {
 		
-		if (PhocaCartGuestUser::storeShipping((int)$shippingId)) {
+		if (PhocacartUserGuestuser::storeShipping((int)$shippingId)) {
 			return true;
 		}
 		return false;
@@ -431,7 +431,7 @@ class PhocaCartModelCheckout extends JModelForm
 	public function savePaymentAndCouponGuest($paymentId, $couponId) {
 		
 		
-		if (PhocaCartGuestUser::storePayment((int)$paymentId) &&  PhocaCartGuestUser::storeCoupon((int)$couponId)) {
+		if (PhocacartUserGuestuser::storePayment((int)$paymentId) &&  PhocacartUserGuestuser::storeCoupon((int)$couponId)) {
 			return true;
 		}
 		return false;

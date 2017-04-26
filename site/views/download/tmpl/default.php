@@ -12,14 +12,14 @@ defined('_JEXEC') or die();
 echo '<div id="ph-pc-download-box" class="pc-download-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 
-echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_DOWNLOAD')));
+echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_DOWNLOAD')));
 
 if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_order'] != '')) {
 	if (!empty($this->t['files'])) {
 
 		//echo '<div class="ph-download-files">';
 		
-		echo '<div class="ph-download-header-box-row">';
+		echo '<div class="row-fluid ph-download-header-box-row ph-vertical-align">';
 		echo '<div class="col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_TITLE').'</div>';
 		echo '<div class="col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FILENAME').'</div>';
 		echo '<div class="col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_STATUS').'</div>';
@@ -27,9 +27,11 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 		echo '<div class="ph-cb"></div>';
 		echo '</div>';
 		
-		echo '<div class="ph-download-item-box-row">';
+		
 		foreach ($this->t['files'] as $k => $v) {
 		
+			echo '<div class="row-fluid ph-download-item-box-row ph-vertical-align">';
+			
 			echo '<div class="col-sm-3 col-md-3">'.$v->title.'</div>';
 			
 			$fileA = explode('/', $v->download_file);
@@ -46,7 +48,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 			}
 
-			if((int)$this->t['download_days'] > 0 && !PhocaCartDownload::isActive($v->date, $this->t['download_days'])) {
+			if((int)$this->t['download_days'] > 0 && !PhocacartDownload::isActive($v->date, $this->t['download_days'])) {
 				$status .= '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span><br />';
 
 			}
@@ -65,7 +67,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 					$status .= JText::_('COM_PHOCACART_REMAINING'). '</span>';
 				}
 				
-				$dateValid = PhocaCartDownload::validUntil($v->date, $this->t['download_days']);
+				$dateValid = PhocacartDownload::validUntil($v->date, $this->t['download_days']);
 				if ($dateValid) {
 					$status .= '<br /> <span class="ph-small">'.JText::_('COM_PHOCACART_DOWNLOAD_VALID_UNTIL'). ': ';
 					$status .= ' '.$dateValid.'<span>';
@@ -96,9 +98,10 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 			} else {
 				echo '<div class="col-sm-3 col-md-3 ph-center"><span class="glyphicon glyphicon-ban-circle ph-red"></span></div>';
 			}
-			echo '<div class="ph-cb ph-download-item-box-row-line"></div>';
+			
+			echo '</div>';// end row
 		}
-		echo '</div>';// end row
+		echo '<div class="ph-cb ph-download-item-box-row-line"></div>';
 		
 		//echo '</div>';// end download files
 	} else {
@@ -113,5 +116,5 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 echo '</div>';// end comparison box
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

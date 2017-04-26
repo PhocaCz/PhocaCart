@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartOrders extends JModelList
+class PhocaCartCpModelPhocacartOrders extends JModelList
 {
 	protected $option 	= 'com_phocacart';	
 	
@@ -59,7 +59,7 @@ class PhocaCartCpModelPhocaCartOrders extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.date', 'asc');
+		parent::populateState('a.date', 'desc');
 	}
 	
 	protected function getStoreId($id = '')

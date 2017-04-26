@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields addfieldpath="/administrator/components/com_phocacart/models/fields" >
+	<fieldset name="shipping">
+
+	</fieldset>
+	</fields>
+</form>

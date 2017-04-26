@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartCpControllerPhocaCartUser extends JControllerForm
+class PhocaCartCpControllerPhocacartUser extends JControllerForm
 {
 	public function setregion() {
 	
@@ -25,7 +25,7 @@ class PhocaCartCpControllerPhocaCartUser extends JControllerForm
 		
 		//$model = $this->getModel('checkout');
 		//$options = $model->getRegions($id);
-		$options = PhocaCartRegion::getRegionsByCountry($id);
+		$options = PhocacartRegion::getRegionsByCountry($id);
 		$o = '';
 		if(!empty($options)) {
 			

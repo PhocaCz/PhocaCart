@@ -8,13 +8,14 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartCurrency
+class PhocacartCurrency
 {
-	//private static $currency 		= false;
-	private static $defaultcurrency		= false;
-	private static $defaultcurrencycode	= false;
-	private static $allcurrencies		= false;
-	private static $currency			= array();
+	//private static $currency 				= false;
+	private static $defaultcurrency			= false;
+	private static $defaultcurrencycode		= false;
+	private static $defaultcurrencyarray	= false;
+	private static $allcurrencies			= false;
+	private static $currency				= array();
 	
 	private function __construct(){}
 	
@@ -117,6 +118,25 @@ class PhocaCartCurrency
 		return self::$defaultcurrencycode;
 	}
 	
+	public static function getDefaultCurrencyArray() {
+		
+		if(self::$defaultcurrencyarray === false){
+			$db = JFactory::getDBO();
+			$query = ' SELECT a.id, a.title, a.code, a.exchange_rate FROM #__phocacart_currencies AS a'
+					.' WHERE a.exchange_rate = 1'
+					.' ORDER BY a.code';
+			$db->setQuery($query);
+			$c = $db->loadAssoc();
+			
+			if (!empty($c)) {
+				self::$defaultcurrencyarray = $c;
+			} else {
+				self::$defaultcurrencyarray = false;
+			}
+		}
+		return self::$defaultcurrencyarray;
+	}
+	
 	public static function getAllCurrencies() {
 		
 		if(self::$allcurrencies === false){
@@ -177,110 +197,33 @@ class PhocaCartCurrency
 		return $o;
 	}
 	
+	public static function getCurrencyRelation($currentCurrency, $defaultCurrency){
+		
+		$o = '';
+		if (isset($currentCurrency['id']) && isset($defaultCurrency['id'])) {
+			
+			if ($currentCurrency['id'] == $defaultCurrency['id']) {
+				return '';
+			}
+			
+			if (isset($currentCurrency['exchange_rate']) && isset($defaultCurrency['exchange_rate'])) {
+				if ($currentCurrency['exchange_rate'] > 0) {
+					$o .= '<div>1 '.$defaultCurrency['code'] . ' = '. PhocacartPrice::cleanPrice($currentCurrency['exchange_rate']). ' '. $currentCurrency['code'].'</div>';
+				}
+				$o .= '<div>1 '.$currentCurrency['code'] . ' = '. PhocacartPrice::cleanPrice(round((1 / $currentCurrency['exchange_rate']), 8))  . ' '. $defaultCurrency['code'].'</div>';
+				return $o;
+			}
+		}
+		
+		return;
+		
+	}
+	
 	
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
 	}
 }
-/*
-?>
 
-class PhocaCartCurrency
-{
-	protected $currency     	= 0;
-
-	public function __construct() {
-		$session 		= JFactory::getSession();
-		$this->currency	= $session->get('currency', 0, 'phocaCart');
-		if ((int)$this->currency < 1) {
-			$this->currency = $this->getDefaultCurrency();
-		}
-	}
-	
-	public function getDefaultCurrency() {
-		$db = JFactory::getDBO();
-		$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
-					.' WHERE a.exchange_rate = 1';
-		$db->setQuery($query);
-		$currency = $db->loadObject();
-		if (isset($currency->id)) {
-			return $currency->id;
-		} else {
-			return false;
-		}	
-	}
-	
-	public function getCurrentCurrency() {
-		return $this->currency;
-	}
-	
-	public function setCurrentCurrency($currencyId) {
-		$session 		= JFactory::getSession();
-		$session->set('currency', (int)$currencyId, 'phocaCart');
-	}
-	
-	public function getCurrencyData($currencyId) {
-		$db = JFactory::getDBO();
-		$query = ' SELECT a.* FROM #__phocacart_currencies AS a'
-				.' WHERE a.id = '.(int)$currencyId;
-		$db->setQuery($query);
-		$currency = $db->loadObject();
-		
-		if (!empty($currency)) {
-			return $currency;
-		} else {
-			return false;
-		}
-	}
-	
-	public function getAllCurrencies() {
-		$db = JFactory::getDBO();
-		$query = ' SELECT a.id as value, CONCAT_WS(\'\', a.title, \' (\', a.code, \')\') as text FROM #__phocacart_currencies AS a'
-				.' WHERE a.published = 1';
-		$db->setQuery($query);
-		$currencies = $db->loadObjectList();
-		if (!empty($currencies)) {
-			return $currencies;
-		} else {
-			return false;
-		}
-	}
-	
-	public function getCurrenciesSelectBox() {
-		$currencies = $this->getAllCurrencies();
-		$active		= $this->currency;
-		$o = JHTML::_('select.genericlist',  $currencies, 'id', 'class="form-control chosen-select ph-input-select-currencies"', 'value', 'text', $active);
-		return $o;
-	}
-	
-		/*
-	public static function getDefaultCurrency() {
-		
-		$db = JFactory::getDBO();
-		$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
-					.' WHERE a.exchange_rate = 1';
-		$db->setQuery($query);
-		$currency = $db->loadObject();
-		if (isset($currency->id)) {
-			return $currency->id;
-		} else {
-			return false;
-		}	
-	}*/
-	
-	/*
-	public static function getAllCurrencies() {
-		$db = JFactory::getDBO();
-		$query = ' SELECT a.id as value, CONCAT_WS(\'\', a.title, \' (\', a.code, \')\') as text FROM #__phocacart_currencies AS a'
-				.' WHERE a.published = 1';
-		$db->setQuery($query);
-		$currencies = $db->loadObjectList();
-		if (!empty($currencies)) {
-			return $currencies;
-		} else {
-			return false;
-		}
-	}
-}*/
 ?>

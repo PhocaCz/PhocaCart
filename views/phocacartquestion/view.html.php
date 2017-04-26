@@ -18,12 +18,12 @@ class PhocaCartCpViewPhocaCartQuestion extends JViewLegacy
 
 	public function display($tpl = null) {
 		
-		$this->t		= PhocaCartUtils::setVars('question');
+		$this->t		= PhocacartUtils::setVars('question');
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);	
@@ -41,23 +41,23 @@ class PhocaCartCpViewPhocaCartQuestion extends JViewLegacy
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.question_id'));
 		
 		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
-		JToolBarHelper::title(   JText::_( $this->t['l'] . '_QUESTION' ).': <small><small>[ ' . $text.' ]</small></small>' , 'question-sign');
+		JToolbarHelper::title(   JText::_( $this->t['l'] . '_QUESTION' ).': <small><small>[ ' . $text.' ]</small></small>' , 'question-sign');
 		
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
-			JToolBarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
-			JToolBarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			JToolBarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
+			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
+			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
+			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
 	
 		if (empty($this->item->id))  {
-			JToolBarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
+			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolBarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
 ?>

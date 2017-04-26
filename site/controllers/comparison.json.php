@@ -28,9 +28,9 @@ class PhocaCartControllerComparison extends JControllerForm
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
 		$item['comparisonview']	= $this->input->get( 'comparisonview', 0, 'int'  );
 		
-		$compare	= new PhocaCartCompare();
+		$compare	= new PhocacartCompare();
 		$added		= $compare->addItem((int)$item['id'], (int)$item['catid']);
-		//$catid		= PhocaCartProduct::getCategoryByProductId((int)$item['id']);
+		//$catid		= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 		
 		$o = $o2 = '';
 		// Content of the comparison list
@@ -41,9 +41,9 @@ class PhocaCartControllerComparison extends JControllerForm
 		
 		// Render the layout
 		$d = '';
-		$layoutC	= new JLayoutFile('popup_add_to_compare', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutC	= new JLayoutFile('popup_add_to_compare', null, array('component' => 'com_phocacart'));
 		
-		$d['link_comparison'] = JRoute::_(PhocaCartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_comparison'] = JRoute::_(PhocacartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on comparison site
 		// If yes and one item will be deleted per AJAX, we need to refresh comparison site
@@ -55,28 +55,23 @@ class PhocaCartControllerComparison extends JControllerForm
 		} else {
 			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_COMPARISON_LIST');
 			
-			$m = $app->getMessageQueue();
-			$mO = '';
-			 if (!empty($m)) {
-			   $mO .= '<ul id="system-messages">';
-			   foreach($m as $k => $v) {
-				  $mO .=  '<li class="' . $v['type'] . ' ph-msg-error">' . $v['message'] . '</li>';      
-			   }
-			   $mO .=  '</ul>';
-			}
+			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;
 		}
 		
 		// Popup with info - Continue,Proceed to Comparison list
-		ob_start();
-		echo $layoutC->render($d);
-		$o2 = ob_get_contents();
-		ob_end_clean();
+		//ob_start();
+		$o2 = $layoutC->render($d);
+		//$o2 = ob_get_contents();
+		//ob_end_clean();
+		
+		$count = $compare->getComapareCountItems();
 			
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
-			'popup'		=> $o2);
+			'popup'		=> $o2,
+			'count'		=> $count);
 		
 		echo json_encode($response);
 		return;
@@ -99,9 +94,9 @@ class PhocaCartControllerComparison extends JControllerForm
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
 		$item['comparisonview']	= $this->input->get( 'comparisonview', 0, 'int'  );
 		
-		$compare	= new PhocaCartCompare();
+		$compare	= new PhocacartCompare();
 		$added		= $compare->removeItem((int)$item['id']);
-		//$catid		= PhocaCartProduct::getCategoryByProductId((int)$item['id']);
+		//$catid		= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 		
 		$o = $o2 = '';
 		// Content of the comparison list
@@ -112,9 +107,9 @@ class PhocaCartControllerComparison extends JControllerForm
 		
 		// Render the layout
 		$d = '';
-		$layoutC	= new JLayoutFile('popup_remove_from_compare', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutC	= new JLayoutFile('popup_remove_from_compare', null, array('component' => 'com_phocacart'));
 		
-		$d['link_comparison'] = JRoute::_(PhocaCartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_comparison'] = JRoute::_(PhocacartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on comparison site
 		// If yes and one item will be deleted per AJAX, we need to refresh comparison site
@@ -128,28 +123,23 @@ class PhocaCartControllerComparison extends JControllerForm
 		} else {
 			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_COMPARISON_LIST');
 			
-			$m = $app->getMessageQueue();
-			$mO = '';
-			 if (!empty($m)) {
-			   $mO .= '<ul id="system-messages">';
-			   foreach($m as $k => $v) {
-				  $mO .=  '<li class="' . $v['type'] . ' ph-msg-error">' . $v['message'] . '</li>';      
-			   }
-			   $mO .=  '</ul>';
-			}
+			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;
 		}
 		
 		// Popup with info - Continue,Proceed to Comparison list
-		ob_start();
-		echo $layoutC->render($d);
-		$o2 = ob_get_contents();
-		ob_end_clean();
+		//ob_start();
+		$o2 = $layoutC->render($d);
+		//$o2 = ob_get_contents();
+		//ob_end_clean();
+		
+		$count = $compare->getComapareCountItems();
 			
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
-			'popup'		=> $o2);
+			'popup'		=> $o2,
+			'count'		=> $count);
 		
 		echo json_encode($response);
 		return;

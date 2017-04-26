@@ -28,5 +28,6 @@ $d = $displayData;
 	} ?>
 	<?php /* <input type="submit" value="submit" name="submit" role="button" /> */ ?>
 	</div>
+	<div class="clearfix"></div>
 <?php echo JHtml::_('form.token'); ?>
 </div>

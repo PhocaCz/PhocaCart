@@ -8,9 +8,9 @@
  */
 defined('_JEXEC') or die();
 
-class JFormFieldPhocaCartShipping extends JFormField
+class JFormFieldPhocacartShipping extends JFormField
 {
-	protected $type 		= 'PhocaCartShipping';
+	protected $type 		= 'PhocacartShipping';
 
 	protected function getInput() {
 		
@@ -33,10 +33,10 @@ class JFormFieldPhocaCartShipping extends JFormField
 
 		$activeMethods = array();
 		if ((int)$id > 0) {
-			$activeMethods	= PhocaCartShipping::getShippingMethods($id, 1, $table);
+			$activeMethods	= PhocacartShipping::getShippingMethods($id, 1, $table);
 		}
 			
-		return PhocaCartShipping::getAllShippingMethodsSelectBox($this->name.'[]', $this->id, $activeMethods, NULL,'id' );
+		return PhocacartShipping::getAllShippingMethodsSelectBox($this->name.'[]', $this->id, $activeMethods, NULL,'id' );
 	}
 }
 ?>

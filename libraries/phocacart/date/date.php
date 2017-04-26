@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartDate
+class PhocacartDate
 {
 	public static function getActiveDate($from, $to, $returnText = 0) {
 		

@@ -8,12 +8,12 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport('joomla.html.pagination');
-class PhocaCartPagination extends JPagination
+class PhocacartPagination extends JPagination
 {
 	function getLimitBox() {
 		
-		$app				= JFactory::getApplication();
-		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$pagination 		= $paramsC->get( 'item_pagination', '5,10,15,20,50,100' );
 		$paginationArray	= explode( ',', $pagination );
 		
@@ -31,7 +31,7 @@ class PhocaCartPagination extends JPagination
 		if ($app->isAdmin()) {
 			$html = JHTML::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="submitform();"', 'value', 'text', $selected);
 		} else {
-			$html = JHTML::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', $selected);
+			$html = JHTML::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="phSubmitPaginationForm(this.form)"', 'value', 'text', $selected);
 		}
 		return $html;
 	}

@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -13,7 +13,7 @@ JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 //JHtml::_('behavior.modal', 'a.modal_edit_status');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -57,7 +57,7 @@ $textButton = 'COM_PHOCACART_EDIT_STATUS';
 $w = 500;
 $h = 400;
 
-$rV = new PhocaCartRenderAdminView();
+$rV = new PhocacartRenderAdminview();
 echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
 	
@@ -82,7 +82,7 @@ echo $r->endTblHeader();
 			
 echo '<tbody>'. "\n";
 
-$price			= new PhocaCartPrice();
+$price			= new PhocacartPrice();
 $originalOrders = array();	
 $parentsStr 	= "";		
 $j 				= 0;
@@ -128,7 +128,7 @@ if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape(PhocaCartOrder::getOrderNumber($item->id)).'</a>';
+	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape(PhocacartOrder::getOrderNumber($item->id)).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }
@@ -144,7 +144,7 @@ if ($item->user_id > 0) {
 }
 echo $r->td($userO, "small");
 
-//$status			= PhocaCartOrderStatus::getStatus((int)$item->status_id, $item->id);
+//$status			= PhocacartOrderStatus::getStatus((int)$item->status_id, $item->id);
 //$statusSelect	= JHTML::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="inputbox"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
 $status = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
 //$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.JText::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
@@ -153,18 +153,18 @@ $status .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'Modal
 
 echo $r->td($status, "small");
 
-$view = '<a href="'.$linkOrderView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search ph-icon-success"></span></a>';
-$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice ph-icon-danger"></span></a>';
-$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note ph-icon-warning"></span></a>';
+$view = '<a href="'.$linkOrderView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search ph-icon-success"></span></a>';
+$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt ph-icon-danger"></span></a>';
+$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode ph-icon-warning"></span></a>';
 
 
 if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 	
 	$formatPDF = '&format=pdf';
 	$view .= '<br />';
-	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search icon-search ph-icon-success"></span><br /><span class="ph-icon-success-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
-	$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt icon-ph-invoice ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
-	$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search ph-icon-success"></span><br /><span class="ph-icon-success-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
 	
 }
 echo $r->td($view, "small");

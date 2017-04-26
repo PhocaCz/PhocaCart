@@ -15,11 +15,13 @@ if (isset($d['param2']) && $d['param2'] != '') {
 }
 
 if (isset($d['param2']) && $d['param2'] != '') {
-	// We have second parameter, so in first we define that the javascript should wait with redirect
+	// We have second parameter, so in first we define that the javascript should wait with re-direct
 	$jsSet	= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 1);';
 	$jsSet	.= 'phChangeFilter(\''.$d['param2'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['param2name'].'&quot;]\').val(), 1, \'text\', 1);';
-	$jsClear= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1, 1);';
-	$jsClear.= 'phChangeFilter(\''.$d['param2'].'\', \'\', 0, \'text\', 1);';
+	$jsClear		 = 'phClearField(\'#'.$d['id'].$d['paramname'].'\');';
+	$jsClear		.= 'phClearField(\'#'.$d['id'].$d['param2name'].'\');';
+	$jsClear		.= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1, 1);';
+	$jsClear		.= 'phChangeFilter(\''.$d['param2'].'\', \'\', 0, \'text\', 1);';
 } else {
 	// We have only one parameter so we don't need define wait and the site is reloaded immediately
 	$jsSet	= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1);';
@@ -41,13 +43,13 @@ $displayData 	= null;
 		
 			<div class="form-group">
 				<label class="col-sm-5" for="<?php echo $d['paramname']; ?>"><?php echo $d['title1']; ?></label>
-				<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['paramname']; ?>" value="<?php echo $d['getparams'][0]; ?>" /></div>
+				<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['paramname']; ?>" value="<?php echo $d['getparams'][0]; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" /></div>
 			</div>
 			<?php
 			if (isset($d['param2']) && $d['param2'] != '') { ?>
 				<div class="form-group">
 					<label class="col-sm-5" for="<?php echo $d['param2name']; ?>"><?php echo $d['title2']; ?></label>
-					<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['param2name']; ?>" value="<?php echo $d['getparams2'][0]; ?>" /></div>
+					<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['param2name']; ?>" value="<?php echo $d['getparams2'][0]; ?>" id="<?php echo $d['id'].$d['param2name']; ?>" /></div>
 				</div>
 			<?php } ?>
 			

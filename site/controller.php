@@ -24,7 +24,10 @@ class PhocaCartController extends JControllerLegacy
 			$this->getView('feed', 'xml');
 		}*/
 		
-		$paramsC 	= JComponentHelper::getParams('com_phocacart');
+		//$paramsC 	= JComponentHelper::getParams('com_phocacart');
+		$app		= JFactory::getApplication();
+		$paramsC 	= $app->getParams();
+
 		$cache 		= $paramsC->get( 'enable_cache', 0 );
 		$cachable 	= false;
 		if ($cache == 1) {

@@ -1,0 +1,71 @@
+/* J! 3.7 */
+#content {
+	padding: 0px;
+	margin: 0px;
+
+}
+
+.subhead-collapse.collapse {
+
+	margin-bottom: 12px;
+
+}
+
+body.com_phocacart #toolbar [class^="icon-"],
+body.com_phocacart #toolbar [class*=" icon-"] {
+    
+    border-right: 0px;
+	background: transparent;
+	margin: 0 -6px 0 -6px;
+	z-index: 1;
+}
+
+body.com_phocacart #toolbar [class^="icon-apply"],
+body.com_phocacart #toolbar [class*=" icon-apply"],
+body.com_phocacart #toolbar [class^="icon-new"],
+body.com_phocacart #toolbar [class*=" icon-new"] {
+    
+    border-right: 0px;
+	background: transparent;
+	margin: 0 0px 0 -6px;
+}
+
+
+body.com_phocacart .chzn-container-single .chzn-single div {
+    background-color: #fff;
+    border-left: 0px;
+    bottom: 0;
+    height: auto;
+    text-align: center;
+    width: 28px;
+}
+
+body.com_phocacart #toolbar .btn {
+    line-height: 24px;
+    margin-right: 4px;
+    padding: 3px 12px 3px 10px;
+}
+
+.chzn-container-multi .chzn-choices li.search-choice .search-choice-close:before {
+	
+}
+
+
+#phAdminEdit .chzn-container-multi .chzn-choices li.search-choice .search-choice-close {
+    background: url(../../js/chosen/chosen-sprite-white.png) -42px 1px no-repeat !important;
+	background: none !important;
+}
+
+ 
+#phAdminEdit .chzn-container-single .chzn-single div b {
+    margin-top: 0px !important;
+    box-shadow: none;
+}
+/*
+a.js-btn.btn.btn-exit, a.js-btn.btn.btn-today, a.js-btn.btn.btn-clear {
+    cursor: pointer;
+    text-decoration: none;
+    min-width: 60px;
+    position: absolute;
+    right: 10px;
+}*/

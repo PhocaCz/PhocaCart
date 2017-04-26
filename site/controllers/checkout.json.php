@@ -26,7 +26,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 		//$model = $this->getModel('checkout');
 		//$options = $model->getRegions($id);
-		$options = PhocaCartRegion::getRegionsByCountry($id);
+		$options = PhocacartRegion::getRegionsByCountry($id);
 		$o = '';
 		if(!empty($options)) {
 			
@@ -55,20 +55,35 @@ class PhocaCartControllerCheckout extends JControllerForm
 		}
 		
 		$priceO 			= array();
-		$paramsC 			= JComponentHelper::getParams('com_phocacart');
+		//$paramsC 			= JComponentHelper::getParams('com_phocacart');
+		$app		= JFactory::getApplication();
+		$paramsC 	= $app->getParams();
 		//$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
 		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
 		
-		$app		= JFactory::getApplication();
 		$attribute	= $app->input->get( 'attribute', '', 'array'  );
 		$id			= $app->input->get( 'id', 0, 'int'  );
 		$class		= $app->input->get( 'class', 0, 'string'  );
 		
-		// Sanitanize data
+		
+		
+		// Sanitanize data and do the same level for all attributes:
+		// select attribute = 1
+		// checkbox attribute = array(0 => 1, 1 => 1) attribute[]
 		$aA = array();
 		if (!empty($attribute)) {
 			foreach($attribute as $k => $v) {
-				$aA[(int)$k] = (int)$v;
+				if (is_array($v) && !empty($v)) {
+					foreach($v as $k2 => $v2) {
+						if ((int)$v2 > 0) {
+							$aA[(int)$k][] = (int)$v2;
+						}
+					}
+				} else {
+					if ((int)$v > 0) {
+						$aA[(int)$k][] = $v;
+					}
+				}
 			}
 		}
 
@@ -81,13 +96,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 		
 		if ((int)$id > 0) {
-			$price	= new PhocaCartPrice();
-			$item 	= PhocaCartProduct::getProduct((int)$id);// We don't need catid
+			$price	= new PhocacartPrice();
+			$item 	= PhocacartProduct::getProduct((int)$id);// We don't need catid
 			$priceO = array();
 			
 			if (!empty($item)) {
 				
-				$priceP = $price->getPriceItems($item->price, $item->taxrate, $item->taxcalctype, $item->taxtitle);
+				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalctype, $item->taxtitle);
 				
 				// Main price of the product
 				$priceO['netto']	= $priceP['netto'];
@@ -97,26 +112,32 @@ class PhocaCartControllerCheckout extends JControllerForm
 				// ATTRIBUTES
 				if (!empty($aA)) {
 					foreach ($aA as $k => $v) {
-						if ((int)$k > 0 && (int)$v > 0) {
-							
-							$attrib = PhocaCartAttribute::getAttributeValue((int)$v, (int)$k);
-							
-							if (isset($attrib->title) && isset($attrib->amount) && isset($attrib->operator)) {
-								$priceA = $price->getPriceItems($attrib->amount, $item->taxrate, $item->taxcalctype, $item->taxtitle);
-								
-								if ($attrib->operator == '-') {
-									$priceP['netto']	-= $priceA['netto'];
-									$priceP['brutto']	-= $priceA['brutto'];
-									$priceP['tax']		-= $priceA['tax'];
+						if(!empty($v)) {
+							// Be aware the k2 is not the key of attribute
+							// this is the k
+							foreach ($v as $k2 => $v2) {
+								if ((int)$k > 0 && (int)$v2 > 0) {
 									
-								} else if ($attrib->operator == '+') {
-									$priceP['netto']	+= $priceA['netto'] ;
-									$priceP['brutto']	+= $priceA['brutto'] ;
-									$priceP['tax']		+= $priceA['tax'] ;
+									$attrib = PhocacartAttribute::getAttributeValue((int)$v2, (int)$k);
 									
+									if (isset($attrib->title) && isset($attrib->amount) && isset($attrib->operator)) {
+										$priceA = $price->getPriceItems($attrib->amount, $item->taxid, $item->taxrate, $item->taxcalctype, $item->taxtitle);
+										
+										if ($attrib->operator == '-') {
+											$priceP['netto']	-= $priceA['netto'];
+											$priceP['brutto']	-= $priceA['brutto'];
+											$priceP['tax']		-= $priceA['tax'];
+											
+										} else if ($attrib->operator == '+') {
+											$priceP['netto']	+= $priceA['netto'] ;
+											$priceP['brutto']	+= $priceA['brutto'] ;
+											$priceP['tax']		+= $priceA['tax'] ;
+											
+										}
+									}
 								}
 							}
-						}			
+						}
 					}
 				}
 
@@ -147,11 +168,11 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$d['priceitems']		= $priceP;
 				
 				// Render the layout
-				$layoutP	= new JLayoutFile('product_price', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-				ob_start();
-				echo $layoutP->render($d);
-				$o = ob_get_contents();
-				ob_end_clean();
+				$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+				//ob_start();
+				$o = $layoutP->render($d);
+				//$o = ob_get_contents();
+				//ob_end_clean();
 	
 				$response = array(
 					'status' => '1',
@@ -181,6 +202,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			return;
 		}
 		
+		
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -190,26 +212,43 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['attribute']	= $this->input->get( 'attribute', array(), 'array'  );
 		$item['checkoutview']	= $this->input->get( 'checkoutview', 0, 'int'  );
 		
-		//$catid	= PhocaCartProduct::getCategoryByProductId((int)$item['id']);
 		
-		//$cart	= new PhocaCartCart();
-		$cart	= new PhocaCartRenderCart();// is subclass of PhocaCartCart, so we can use only subclass
+		
+		//$catid	= PhocacartProduct::getCategoryByProductId((int)$item['id']);
+		
+		//$cart	= new PhocacartCart();
+		$cart	= new PhocacartCartRendercart(1);// is subclass of PhocacartCart, so we can use only subclass
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
-		//$catid	= PhocaCartProduct::getCategoryByProductId((int)$item['id']);
+	
+		if (!$added) {
+			
+			$mO = PhocacartRenderFront::renderMessageQueue();
+			$response = array(
+				'status' => '0',
+				'error' => $mO);
+			echo json_encode($response);
+			return;
+		}
+	
+		//$catid	= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 		$cart->setFullItems();
 	
 		$o = $o2 = '';
 		// Content of the cart
+		
+		
 		ob_start();
 		echo $cart->render();
 		$o = ob_get_contents();
 		ob_end_clean();
 		
+		
+		
 		// Render the layout
 		$d = '';
-		$layoutP	= new JLayoutFile('popup_add_to_cart', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutP	= new JLayoutFile('popup_add_to_cart', null, array('component' => 'com_phocacart'));
 		
-		$d['link_checkout'] = JRoute::_(PhocaCartRoute::getCheckoutRoute((int)$item['id'], (int)$item['catid']));
+		$d['link_checkout'] = JRoute::_(PhocacartRoute::getCheckoutRoute((int)$item['id'], (int)$item['catid']));
 		$d['link_continue'] = '';
 		// It can happen that add to cart button will be e.g. in module and when the module will be displayed on checkout site:
 		// If yes and one item will be added per AJAX, we need to refresh checkout site
@@ -223,15 +262,27 @@ class PhocaCartControllerCheckout extends JControllerForm
 		}
 		
 		// Popup with info - Continue,Proceed to Checkout
-		ob_start();
-		echo $layoutP->render($d);
-		$o2 = ob_get_contents();
-		ob_end_clean();
+		//ob_start();
+		$o2 = $layoutP->render($d);
+		//$o2 = ob_get_contents();
+		//ob_end_clean();
+		
+	
+		$price	= new PhocacartPrice();
+		$count	= $cart->getCartCountItems();
+		$total	= 0;
+		$totalA	= $cart->getCartTotalItems();
+		if (isset($totalA['fbrutto'])) {
+			//$total = $price->getPriceFormat($totalA['fbrutto']); Set in Layout
+			$total = $totalA['fbrutto'];
+		}
 			
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
-			'popup'		=> $o2);
+			'popup'		=> $o2,
+			'count'		=> $count,
+			'total'		=> $total);
 		
 		echo json_encode($response);
 		return;

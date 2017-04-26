@@ -7,8 +7,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
-
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 
@@ -21,7 +19,7 @@ if ($this->p->get('show_pagination')) {
 	$s = 12;
 	if ($this->p->get('display_item_ordering')) {
 		$s = 7;
-		echo '<div class="col-xs-'.$s.' col-sm-'.$s.' col-md-'.$s.' ">';
+		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-center-pagination">';
 		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select" style="width: 16em"', $this->t['ordering']);
 		echo '</div>';
 		
@@ -33,7 +31,7 @@ if ($this->p->get('show_pagination')) {
 	
 	if ($this->p->get('show_pagination_limit')) {
 		$s = 5;
-		echo '<div class="col-xs-'.$s.' col-sm-'.$s.' col-md-'.$s.' ph-center-pagination">';
+		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-center-pagination">';
 		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getLimitBox());
 		echo '</div>';
 	}

@@ -9,17 +9,23 @@
 
 <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
+<field name="method" type="phocaPluginMethod" plugintype="2" table="" class="inputbox" label="COM_PHOCACART_FIELD_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_METHOD_DESC" />
+
 <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
-<field name="ordering" type="PhocaCartOrdering" table="shipping" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="PhocacartOrdering" table="shipping" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 
 <field name="cost" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COST_LABEL" description="COM_PHOCACART_FIELD_COST_DESC" />
 
 <field name="tax_id" type="phocatax" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
 
+<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="1">
+	<option value="1">COM_PHOCACART_PERCENTAGE</option>
+	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
+</field>
 
 <!-- Height -->
 <field name="lowest_weight" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LOWEST_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_LOWEST_WEIGHT_DESC" />
@@ -37,8 +43,15 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
+<!-- ZONE -->
+<field name="zone" type="PhocacartZones" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_ZONES_LABEL" description="COM_PHOCACART_FIELD_ZONES_DESC" class="inputbox" size="1" />
 
-<!-- REGION -->
+<field name="active_zone" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_ZONE_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_ZONE_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<!-- COUNTRY -->
 <field name="country" type="PhocaCartCountries" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
 
 <field name="active_country" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_DESC">
@@ -46,8 +59,8 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-<!-- COUNTRY -->
-<field name="region" type="PhocaCartRegions" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
+<!-- REGION -->
+<field name="region" type="PhocacartRegions" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
 
 <field name="active_region" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_REGION_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_REGION_DESC">
 	<option value="1">COM_PHOCACART_YES</option>

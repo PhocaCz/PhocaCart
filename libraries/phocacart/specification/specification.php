@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartSpecification
+class PhocacartSpecification
 {
 	public static function getSpecificationsById($productId, $returnArray = 0) {
 	
@@ -47,6 +47,116 @@ class PhocaCartSpecification
 	}
 	
 	
+	public static function storeSpecificationsById($productId, $specsArray, $new = 0) {
+	
+		if ((int)$productId > 0) {
+			$db =JFactory::getDBO();
+			
+		
+			
+			$notDeleteSpecs = array();
+			
+			if (!empty($specsArray)) {
+				$values 	= array();
+				foreach($specsArray as $k => $v) {
+					
+					// Don't store empty specification
+					if ($v['title'] == '') {
+						continue;
+					}
+					
+					if(empty($v['alias'])) {
+						$v['alias'] = $v['title'];
+					}
+					$v['alias'] = PhocacartUtils::getAliasName($v['alias']);
+					
+					if(empty($v['alias_value'])) {
+						$v['alias_value'] = $v['value'];
+					}
+					
+					// When no value, then no alias
+					if ($v['alias_value'] != '') {
+						$v['alias_value'] = PhocacartUtils::getAliasName($v['alias_value']);
+					}
+					
+					if(empty($v['group_id'])) {
+						$v['group_id'] = 0;
+					}
+					
+					// correct simple xml
+					if (empty($v['title'])) 		{$v['title'] 			= '';}
+					if (empty($v['alias'])) 		{$v['alias'] 			= '';}
+					if (empty($v['value'])) 		{$v['value'] 			= '';}
+					if (empty($v['alias_value'])) 	{$v['alias_value'] 		= '';}
+					if (empty($v['group_id'])) 		{$v['group_id'] 		= '';}
+					
+					$idExists = 0;
+					
+					if ($new == 0) {	
+						if (isset($v['id']) && $v['id'] > 0) {
+							
+							// Does the row exist
+							$query = ' SELECT id '
+							.' FROM #__phocacart_specifications'
+							. ' WHERE id = '. (int)$v['id']
+							.' ORDER BY id';
+							$db->setQuery($query);
+							$idExists = $db->loadResult();
+							
+						}
+					}
+					
+					if ((int)$idExists > 0) {
+									
+						$query = 'UPDATE #__phocacart_specifications SET'
+						.' product_id = '.(int)$productId.','
+						.' title = '.$db->quote($v['title']).','
+						.' alias = '.$db->quote($v['alias']).','
+						.' value = '.$db->quote($v['value']).','
+						.' alias_value = '.$db->quote($v['alias_value']).','
+						.' group_id = '.(int)$v['group_id']
+						.' WHERE id = '.(int)$idExists;
+						$db->setQuery($query);
+						$db->execute();
+						
+						$newIdS 				= $idExists;
+						
+					} else {
+						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].')';
+						
+						$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id)'
+								.' VALUES '.$values;
+						$db->setQuery($query);
+						$db->execute();
+						
+						$newIdS = $db->insertid();
+					}
+					
+					$notDeleteSpecs[]	= $newIdS;
+				}
+			}
+			
+			// Remove all specifications except the active
+			if (!empty($notDeleteSpecs)) {
+				$notDeleteSpecsString = implode($notDeleteSpecs, ',');
+				$query = ' DELETE '
+						.' FROM #__phocacart_specifications'
+						.' WHERE product_id = '. (int)$productId
+						.' AND id NOT IN ('.$notDeleteSpecsString.')';
+				
+			} else {
+				$query = ' DELETE '
+						.' FROM #__phocacart_specifications'
+						.' WHERE product_id = '. (int)$productId;
+			}
+			$db->setQuery($query);
+			$db->execute();
+
+		}
+	}
+	
+	
+	/*
 	public static function storeSpecificationsById($productId, $specsArray) {
 	
 		if ((int)$productId > 0) {
@@ -70,7 +180,7 @@ class PhocaCartSpecification
 					if(empty($v['alias'])) {
 						$v['alias'] = $v['title'];
 					}
-					$v['alias'] = PhocaCartUtils::getAliasName($v['alias']);
+					$v['alias'] = PhocacartUtils::getAliasName($v['alias']);
 					
 					if(empty($v['alias_value'])) {
 						$v['alias_value'] = $v['value'];
@@ -78,12 +188,19 @@ class PhocaCartSpecification
 					
 					// When no value, then no alias
 					if ($v['alias_value'] != '') {
-						$v['alias_value'] = PhocaCartUtils::getAliasName($v['alias_value']);
+						$v['alias_value'] = PhocacartUtils::getAliasName($v['alias_value']);
 					}
 					
 					if(empty($v['group_id'])) {
 						$v['group_id'] = 0;
 					}
+					
+					// correct simple xml
+					if (empty($v['title'])) 		{$v['title'] 			= '';}
+					if (empty($v['alias'])) 		{$v['alias'] 			= '';}
+					if (empty($v['value'])) 		{$v['value'] 			= '';}
+					if (empty($v['alias_value'])) 	{$v['alias_value'] 		= '';}
+					if (empty($v['group_id'])) 		{$v['group_id'] 		= '';}
 					
 					$values[] 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].')';
 				}
@@ -98,6 +215,7 @@ class PhocaCartSpecification
 			}
 		}
 	}
+	*/
 	
 	public static function getSpecificationGroupsAndSpecifications($productId) {
 		
@@ -123,14 +241,15 @@ class PhocaCartSpecification
 	
 	}
 	
-	public static function getAllSpecificationsAndValues() {
+	public static function getAllSpecificationsAndValues($ordering = 1) {
 			
-		$db = JFactory::getDBO();
+		$db 			= JFactory::getDBO();
+		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 6);
 		
 		$query = 'SELECT s.id, s.title, s.alias, s.value, s.alias_value'
 				.' FROM  #__phocacart_specifications AS s'
 				.' GROUP BY s.alias, s.alias_value'
-				.' ORDER BY s.id';
+				.' ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$specifications = $db->loadObjectList();
 

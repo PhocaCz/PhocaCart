@@ -28,7 +28,7 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 		if (isset($q) && $q != '') {
 			$db		= JFactory::getDbo();
 			$query	= $db->getQuery(true);
-			$path	= PhocaCartPath::getPath('productimage');
+			$path	= PhocacartPath::getPath('productimage');
 			
 			$query->select('a.id as id, a.title as title, a.image as image');
 			$query->from('`#__phocacart_products` AS a');
@@ -63,7 +63,7 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 					$itemsA[$k]['id'] 		= $v->id;
 					$itemsA[$k]['title'] 	= $v->title . ' ('.$v->categories_title.')';
 					if ($v->image != '') {
-						$thumb = PhocaCartFileThumbnail::getOrCreateThumbnail($v->image, '', 0, 0, 0, 0, 'productimage');
+						$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($v->image, '', 0, 0, 0, 0, 'productimage');
 						if ($thumb['thumb_name_s_no_rel'] != '') {
 							$itemsA[$k]['image']= $thumb['thumb_name_s_no_rel'];
 						}

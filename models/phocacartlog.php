@@ -9,13 +9,13 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartLog extends JModelAdmin
+class PhocaCartCpModelPhocacartLog extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 	
 	
-	public function getTable($type = 'PhocaCartLog', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartLog', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	

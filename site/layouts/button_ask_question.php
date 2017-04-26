@@ -19,6 +19,7 @@ if ($d['popup'] == 1) { ?>
 	<div class="pull-right">
 	<a href="<?php echo $d['link']; ?>" class="btn btn-default btn-primary ph-btn" role="button"><span class="glyphicon glyphicon-question-sign"></span> <?php echo JText::_('COM_PHOCACART_ASK_A_QUESTION'); ?></a>
 </div>
+<div class="clearfix"></div>
 	
 <?php }
 ?>

@@ -11,7 +11,7 @@ if (! class_exists('JHtmlGrid')) {
 	require_once( JPATH_SITE.'/libraries/joomla/html/html/grid.php' );
 }
 //jimport('joomla.html.html.jgrid'); 
-class PhocaCartGrid extends JHtmlJGrid
+class PhocacartHtmlGrid extends JHtmlJGrid
 {
 	
 }

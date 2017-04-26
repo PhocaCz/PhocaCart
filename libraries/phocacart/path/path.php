@@ -8,16 +8,17 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class PhocaCartPath
+class PhocacartPath
 {
 	public static function getPath( $manager = '') {
 	
-		$group 		= PhocaCartSettings::getManagerGroup($manager);
+		$group 		= PhocacartUtilsSettings::getManagerGroup($manager);
 		
-		$paramsC	= JComponentHelper::getParams( 'com_phocacart' );
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		// Folder where to stored files for download
-		$downloadFolder		= $paramsC->get( 'download_folder', 'phocacartdownload' );
-		//$downloadFolderPap	= $paramsC->get( 'download_folder_pap', 'phocadownloadpap' );
+		$downloadFolder			= $paramsC->get( 'download_folder', 'phocacartdownload' );
+		$downloadFolderPublic	= $paramsC->get( 'public_download_folder', 'phocacartdownloadpublic' );
 		// Absolute path which can be outside public_html - if this will be set, download folder will be ignored
 		$absolutePath		= $paramsC->get( 'absolute_path', '' );
 		
@@ -28,7 +29,16 @@ class PhocaCartPath
 		
 		$path['media_abs_front_ds']			= JPATH_ROOT . '/media/com_phocacart/images/' ;
 	
-		if ($group['f'] == 4) {
+		if ($group['f'] == 6) {
+			$downloadFolderPublic 			= JPath::clean($downloadFolderPublic);
+			$path['orig_abs'] 				= JPATH_ROOT . '/' . $downloadFolderPublic;
+			$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $downloadFolderPublic . '/';
+			
+			$downloadFolderPublicRel 		= JPath::clean($downloadFolderPublic);
+			$path['orig_rel_ds'] 			= '../' . $downloadFolderPublicRel;
+			$path['orig_rel_ds'] 			= '../' . $downloadFolderPublicRel .'/';
+			
+		} else if ($group['f'] == 4) {
 			// Images Categories
 			$path['orig_abs'] 				= JPATH_ROOT . '/images/phocacartcategories' ;
 			$path['orig_abs_ds'] 			= $path['orig_abs'] .'/' ;

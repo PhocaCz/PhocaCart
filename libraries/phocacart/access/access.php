@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartAccess
+class PhocacartAccess
 {
 	public $login 			= 0; // 0 ... not logged in, 1 ... logged in, 2 ... guest checkout
 	public $addressadded 	= 0;

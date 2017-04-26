@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartSecurity
+class PhocacartSecurity
 {
 	public function __construct() {}
 	

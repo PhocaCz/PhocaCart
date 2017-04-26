@@ -24,37 +24,36 @@ class PhocaCartViewCheckout extends JViewLegacy
 	
 	function display($tpl = null) {
 		
-		$document					= JFactory::getDocument();		
-		$app						= JFactory::getApplication();
-		$uri 						= JFactory::getURI();
-		$this->u					= JFactory::getUser();
-		$this->p					= $app->getParams();
-		$this->a					= new PhocaCartAccess();
-		$guest						= PhocaCartGuestUser::getGuestUser();
+		$document							= JFactory::getDocument();		
+		$app								= JFactory::getApplication();
+		$uri 								= JFactory::getURI();
+		$this->u							= JFactory::getUser();
+		$this->p							= $app->getParams();
+		$this->a							= new PhocacartAccess();
+		$guest								= PhocacartUserGuestuser::getGuestUser();
 		
-		$this->t['action']			= $uri->toString();
-		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		$this->t['linkcheckout']	= JRoute::_(PhocaCartRoute::getCheckoutRoute());
+		$this->t['action']					= $uri->toString();
+		$this->t['actionbase64']			= base64_encode($this->t['action']);
+		$this->t['linkcheckout']			= JRoute::_(PhocacartRoute::getCheckoutRoute());
 		
-		$this->t['checkout_desc']	= $this->p->get( 'checkout_desc', '');
-		$this->t['stock_checkout']	= $this->p->get( 'stock_checkout', 0 );
-		$this->t['stock_checking']	= $this->p->get( 'stock_checking', 0 );
-		$this->t['guest_checkout']	= $this->p->get( 'guest_checkout', 0 );
-		$this->t['load_bootstrap']	= $this->p->get( 'load_bootstrap', 0 );
-		$this->t['load_chosen']		= $this->p->get( 'load_chosen', 1 );
+		$this->t['checkout_desc']			= $this->p->get( 'checkout_desc', '');
+		$this->t['stock_checkout']			= $this->p->get( 'stock_checkout', 0 );
+		$this->t['stock_checking']			= $this->p->get( 'stock_checking', 0 );
+		$this->t['guest_checkout']			= $this->p->get( 'guest_checkout', 0 );
+		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
+		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
+		$this->t['icon_suffix']				= $this->p->get( 'icon_suffix', '-circle' );
+		$this->t['display_shipping_desc']	= $this->p->get( 'display_shipping_desc', 0 );
+		$this->t['display_payment_desc']	= $this->p->get( 'display_payment_desc', 0 );
+		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
+		$this->t['zero_shipping_price']		= $this->p->get( 'zero_shipping_price', 1 );
+		$this->t['zero_payment_price']		= $this->p->get( 'zero_payment_price', 1 );
 		
-		$this->t['display_shipping_desc']		= $this->p->get( 'display_shipping_desc', 0 );
-		$this->t['display_payment_desc']		= $this->p->get( 'display_payment_desc', 0 );
+		$scrollTo							= '';
 		
-		$scrollTo					= '';
-		
-		/*$cart	= new PhocaCartRenderCheckout();
-			echo '<div class="alert alert-info">';
-			echo $cart->render();
-			echo '</div>';*/
 		
 		// Cart
-		$this->cart	= new PhocaCartRenderCheckout();
+		$this->cart	= new PhocacartCartRendercheckout();
 		$this->cart->setFullItems();
 
 		if ((int)$this->u->id > 0) {
@@ -64,13 +63,14 @@ class PhocaCartViewCheckout extends JViewLegacy
 		}
 		
 		// Is there even a shipping or payment
-		$this->a->shippingnotused 	= PhocaCartShipping::isShippingNotUsed();
-		$this->a->paymentnotused	= PhocaCartPayment::isPaymentNotUsed();
+		$this->a->shippingnotused 	= PhocacartShipping::isShippingNotUsed();
+		$this->a->paymentnotused	= PhocacartPayment::isPaymentNotUsed();
+		
 		// Numbers
-		$this->t['nl'] = 1;
-		$this->t['na'] = 2;
-		$this->t['ns'] = 3;
-		$this->t['np'] = 4;
+		$this->t['nl'] = 1;// Login
+		$this->t['na'] = 2;// Address
+		$this->t['ns'] = 3;// Shipping
+		$this->t['np'] = 4;// Payment
 		if ($this->a->shippingnotused == 1) {
 			$this->t['np'] = 3;
 		}
@@ -88,7 +88,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$this->fields	= $this->get('FieldsGuest'); // Fields will be loaded in every case				
 				if ($this->a->addressedit == 0) {
 					$this->data	= $this->get('DataGuest');
-					$this->t['dataaddressoutput']	= PhocaCartUser::getAddressDataOutput($this->data, $this->fields['array'], $this->u, 1);
+					$this->t['dataaddressoutput']	= PhocacartUser::getAddressDataOutput($this->data, $this->fields['array'], $this->u, 1);
 				}
 				//Some required field is not filled out 
 				if (isset($this->t['dataaddressoutput']['filled']) && $this->t['dataaddressoutput']['filled'] == 1) {
@@ -102,7 +102,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->addressedit 		= 1;
 					$scrollTo 					= 'phcheckoutaddressedit';
 					$this->form					= $this->get('FormGuest');
-					$this->t['dataaddressform']	= PhocaCartUser::getAddressDataForm($this->form, $this->fields['array'], '', '', '_phs', 1);
+					$this->t['dataaddressform']	= PhocacartUser::getAddressDataForm($this->form, $this->fields['array'], '', '', '_phs', 1);
 				}
 			// REGISTERED
 			} else {
@@ -110,7 +110,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$this->fields	= $this->get('Fields'); // Fields will be loaded in every case
 				if ($this->a->addressedit == 0) {
 					$this->data	= $this->get('Data');
-					$this->t['dataaddressoutput']	= PhocaCartUser::getAddressDataOutput($this->data, $this->fields['array'], $this->u);
+					$this->t['dataaddressoutput']	= PhocacartUser::getAddressDataOutput($this->data, $this->fields['array'], $this->u);
 				}
 				//Some required field is not filled out 
 				if (isset($this->t['dataaddressoutput']['filled']) && $this->t['dataaddressoutput']['filled'] == 1) {
@@ -123,7 +123,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->addressview 		= 0;
 					$this->a->addressedit 		= 1;
 					$this->form					= $this->get('Form');
-					$this->t['dataaddressform']	= PhocaCartUser::getAddressDataForm($this->form, $this->fields['array'], $this->u);
+					$this->t['dataaddressform']	= PhocacartUser::getAddressDataForm($this->form, $this->fields['array'], $this->u);
 					$scrollTo 					= 'phcheckoutaddressedit';
 				}
 			}
@@ -158,18 +158,19 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->shippingview		= 0;
 					$this->a->shippingedit		= 1;
 					$scrollTo 					= 'phcheckoutshippingedit';
-					$shipping					= new PhocaCartShipping();
+					$shipping					= new PhocacartShipping();
 					$total						= $this->cart->getTotal();
 					
 					$country = 0;
 					if(isset($this->t['dataaddressoutput']['bcountry']) && (int)$this->t['dataaddressoutput']['bcountry']) {
 						$country = (int)$this->t['dataaddressoutput']['bcountry'];
 					}
+					
 					$region = 0;
 					if(isset($this->t['dataaddressoutput']['bregion']) && (int)$this->t['dataaddressoutput']['bregion']) {
 						$region = (int)$this->t['dataaddressoutput']['bregion'];
 					}
-					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total['netto'], $total['brutto'], $country, $region, $total['weight']);
+					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $total[0]['weight']);
 					
 				}
 			}
@@ -195,22 +196,24 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->paymentview		= 0;
 					$this->a->paymentedit		= 1;
 					$scrollTo 					= 'phcheckoutpaymentedit';
-					$payment					= new PhocaCartPayment();
+					$payment					= new PhocacartPayment();
 					$shippingId 				= $this->cart->getShippingId();// Shipping stored in cart or not?
 					$total						= $this->cart->getTotal();
+					
 					$country = 0;
 					if(isset($this->t['dataaddressoutput']['bcountry']) && (int)$this->t['dataaddressoutput']['bcountry']) {
 						$country = (int)$this->t['dataaddressoutput']['bcountry'];
 					}
+					
 					$region = 0;
 					if(isset($this->t['dataaddressoutput']['bregion']) && (int)$this->t['dataaddressoutput']['bregion']) {
 						$region = (int)$this->t['dataaddressoutput']['bregion'];
 					}
-					$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total['netto'], $total['brutto'], $country, $region, $shippingId);
+					$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId);
 				}
 			}
 			
-			PhocaCartRenderJs::renderBillingAndShippingSame();
+			PhocacartRenderJs::renderBillingAndShippingSame();
 		}
 		
 		
@@ -232,7 +235,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 			$this->a->confirm = 1;
 		}
 
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		$media->loadChosen($this->t['load_chosen']);
 		//$media->loadEqualHeights($this->t['equal_height']);
@@ -283,17 +286,17 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		// Render the cart (here because it can be changed above - shipping can be added)
 		//$total				= $this->cart->getTotal();
-		$this->t['cartoutput']		= $this->cart->render();
-		$this->t['stockvalid']		= $this->cart->getStockValid();
-		$this->t['minqtyvalid']		= $this->cart->getMinimumQuantityValid();
-		$this->t['minmltpqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
+		$this->t['cartoutput']			= $this->cart->render();
+		$this->t['stockvalid']			= $this->cart->getStockValid();
+		$this->t['minqtyvalid']			= $this->cart->getMinimumQuantityValid();
+		$this->t['minmultipleqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
 
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_CHECKOUT'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_CHECKOUT'));
 	}
 }
 ?>

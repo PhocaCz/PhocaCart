@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartStatistics extends JModelList
+class PhocaCartCpModelPhocacartStatistics extends JModelList
 {
 	protected $option 	= 'com_phocacart';	
 	
@@ -44,10 +44,10 @@ class PhocaCartCpModelPhocaCartStatistics extends JModelList
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 		
-		$date_from = $app->getUserStateFromRequest($this->context.'.filter.date_from', 'filter_date_from', PhocaCartDate::getCurrentDate(30), 'string');
+		$date_from = $app->getUserStateFromRequest($this->context.'.filter.date_from', 'filter_date_from', PhocacartDate::getCurrentDate(30), 'string');
 		$this->setState('filter.date_from', $date_from);
 		
-		$date_to = $app->getUserStateFromRequest($this->context.'.filter.date_to', 'filter_date_to', PhocaCartDate::getCurrentDate(), 'string');
+		$date_to = $app->getUserStateFromRequest($this->context.'.filter.date_to', 'filter_date_to', PhocacartDate::getCurrentDate(), 'string');
 		$this->setState('filter.date_to', $date_to);
 
 		
@@ -93,8 +93,8 @@ class PhocaCartCpModelPhocaCartStatistics extends JModelList
 	
 
 		// Filter by search in title
-		$dateFrom = $this->getState('filter.date_from', PhocaCartDate::getCurrentDate(30));
-		$dateTo = $this->getState('filter.date_to', PhocaCartDate::getCurrentDate());
+		$dateFrom = $this->getState('filter.date_from', PhocacartDate::getCurrentDate(30));
+		$dateTo = $this->getState('filter.date_to', PhocacartDate::getCurrentDate());
 
 
 		if ($dateTo != '' && $dateFrom != '') {

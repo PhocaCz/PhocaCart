@@ -7,49 +7,57 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-class PhocaCartBatchHelper
+class PhocacartUtilsBatchhelper
 {
 	public static function storeProductItems($idSource, $idDest) {
 		
 		if ($idSource > 0 && $idDest > 0) {
 			
 			// Related products
-			$aR = PhocaCartRelated::getRelatedItemsById($idSource, 1);
+			$aR = PhocacartRelated::getRelatedItemsById($idSource, 1);
 			$aRS = '';
 			if ($aR != '') {
 				$aRS = implode(',', $aR);
 			}
 		
-			PhocaCartRelated::storeRelatedItemsById($aRS, (int)$idDest );
+			PhocacartRelated::storeRelatedItemsById($aRS, (int)$idDest );
 			// Additional Images
-			$iA = PhocaCartImageAdditional::getImagesByProductId($idSource, 1);
-			PhocaCartImageAdditional::storeImagesByProductId((int)$idDest, $iA);
+			$iA = PhocacartImageAdditional::getImagesByProductId($idSource, 1);
+			PhocacartImageAdditional::storeImagesByProductId((int)$idDest, $iA);
 			
 			// Attributes
-			$aA = PhocaCartAttribute::getAttributesById($idSource, 1);
+			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
 			if (!empty($aA)) {
 				foreach ($aA as $k => $v) {
 					if (isset($v['id']) && $v['id'] > 0) {
-						$oA = PhocaCartAttribute::getOptionsById((int)$v['id'], 1);
+						$oA = PhocacartAttribute::getOptionsById((int)$v['id'], 1);
 						if (!empty($oA)) {
-							$aA[$k]['option'] = $oA;
+							$aA[$k]['options'] = $oA;
 						}
 					}
 				}
 				
 			}	
-			PhocaCartAttribute::storeAttributesById((int)$idDest, $aA);
+			PhocacartAttribute::storeAttributesById((int)$idDest, $aA, 1);
 			
 			// Specifications
-			$sA = PhocaCartSpecification::getSpecificationsById($idSource, 1);
-			PhocaCartSpecification::storeSpecificationsById((int)$idDest, $sA);
+			$sA = PhocacartSpecification::getSpecificationsById($idSource, 1);
+			PhocacartSpecification::storeSpecificationsById((int)$idDest, $sA, 1);
+			
+			// Discounts
+			$dA = PhocacartDiscountProduct::getDiscountsById($idSource, 1);
+			PhocacartDiscountProduct::storeDiscountsById((int)$idDest, $dA, 1);
+			
+			// Advanced Stock Options
+			$aSOA = PhocacartAttribute::storeCombinationsById($idSource, 1);
+			PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOA, 1);
 		
 			// Tags
-			$tA = PhocaCartTag::getTags($idSource, 1);
+			$tA = PhocacartTag::getTags($idSource, 1);
 			if (!isset($tA)) {
 				$tA = array();
 			}
-			PhocaCartTag::storeTags($tA, (int)$idDest);
+			PhocacartTag::storeTags($tA, (int)$idDest);
 		}
 		return true;
 	}

@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -35,7 +35,7 @@ echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
 echo $r->startFilter();
 //echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 //echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-//echo $r->selectFilterCategory(PhocaCartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
+//echo $r->selectFilterCategory(PhocacartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
 echo $r->endFilter();
 
 echo $r->startMainContainer();
@@ -50,7 +50,7 @@ echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
 echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-echo $r->selectFilterCategory(PhocaCartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
+echo $r->selectFilterCategory(PhocacartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
 echo $r->endFilterBar();
 
 echo $r->endFilterBar();
@@ -86,7 +86,7 @@ $originalOrders = array();
 $parentsStr 	= "";		
 $j 				= 0;
 
-$price			= new PhocaCartPrice();
+$price			= new PhocacartPrice();
 
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
@@ -125,16 +125,16 @@ if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. JRoute::_($linkEdit).'"><span id="phIdTitle'.$item->id.'">'. $this->escape($item->title).'</span></a>';
 } else {
-	$checkO .= $this->escape($item->title);
+	$checkO .= '<span id="phIdTitle'.$item->id.'">'.$this->escape($item->title).'</span>';// Id needed for displaying Copy Attributes Titles
 }
 $checkO .= '<br /><span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
 echo $r->td($checkO, "small");
 
 echo $r->td(
 	'<div class="btn-group">'.JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange)
-	. PhocaCartFeatured::featured($item->featured, $i, $canChange). '</div>',
+	. PhocacartHtmlFeatured::featured($item->featured, $i, $canChange). '</div>',
 "small");
 /*
 if ($canEditCat) {
@@ -158,7 +158,7 @@ echo $r->td(implode(' ', $catO), "small");
 //echo $r->td($this->escape($item->access_level), "small");	
 						
 
-echo $r->td(PhocaCartPrice::cleanPrice($item->price), "small");
+echo $r->td(PhocacartPrice::cleanPrice($item->price), "small");
 //echo $r->td($item->hits, "small");
 
 
@@ -180,6 +180,8 @@ echo $r->tblFoot($this->pagination->getListFooter(), 16);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');
+
+echo $this->loadTemplate('copy_attributes');
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();

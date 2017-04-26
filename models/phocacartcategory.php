@@ -10,7 +10,7 @@ defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
 
-class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
+class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -36,7 +36,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 		}
 	}
 	
-	public function getTable($type = 'PhocaCartCategory', $prefix = 'Table', $config = array()){
+	public function getTable($type = 'PhocacartCategory', $prefix = 'Table', $config = array()){
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -113,7 +113,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 	public function save($data) {
 		// Test thumbnail of category image
 		if(isset($data['image']) && $data['image'] != '') {
-			$thumb = PhocaCartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
+			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
 		}
 		return parent::save($data);
 	}
@@ -252,7 +252,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 
 		// Check that the category exists
 		if ($categoryId) {
-			$categoryTable = JTable::getInstance('PhocaCartCategory', 'Table');
+			$categoryTable = JTable::getInstance('PhocacartCategory', 'Table');
 			
 			if (!$categoryTable->load($categoryId)) {
 				if ($error = $categoryTable->getError()) {
@@ -356,7 +356,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 
 		// Check that the category exists
 		if ($categoryId) {
-			$categoryTable = JTable::getInstance('PhocaCartCategory', 'Table');
+			$categoryTable = JTable::getInstance('PhocacartCategory', 'Table');
 			if (!$categoryTable->load($categoryId)) {
 				if ($error = $categoryTable->getError()) {
 					// Fatal error
@@ -560,7 +560,7 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 				
 					if (isset($v->image) && $v->image != '') {
 						
-						$original	= PhocaCartFile::existsFileOriginal($v->image, 'categoryimage');
+						$original	= PhocacartFile::existsFileOriginal($v->image, 'categoryimage');
 						if (!$original) {
 							// Original does not exist - cannot generate new thumbnail
 							$message = JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
@@ -568,12 +568,12 @@ class PhocaCartCpModelPhocaCartCategory extends JModelAdmin
 						}
 						
 						// Delete old thumbnails
-						$deleteThubms = PhocaCartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'categoryimage');
+						$deleteThubms = PhocacartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'categoryimage');
 						if (!$deleteThubms) {
 							$message = JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
 							return false;
 						}
-						$createThubms = PhocaCartFileThumbnail::getOrCreateThumbnail($v->image, 0, 1,1,1,0,'categoryimage');
+						$createThubms = PhocacartFileThumbnail::getOrCreateThumbnail($v->image, 0, 1,1,1,0,'categoryimage');
 						if (!$createThubms) {
 							$message = JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 							return false;

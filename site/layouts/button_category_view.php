@@ -22,3 +22,4 @@ if ($d['display_view_category_button'] == 1) {
 
 } ?>
 </div>
+<div class="clearfix"></div>

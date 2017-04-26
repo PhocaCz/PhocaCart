@@ -84,6 +84,8 @@ class PhocaCartModelItem extends JModelLegacy
 				.' LEFT JOIN #__phocacart_categories AS cc ON cc.id = pc.category_id'
 				.' WHERE ' . implode( ' AND ', $wheres )
 				.' ORDER BY pc.ordering '.$order;		
+				
+				
 		return $query;
 	
 	}
@@ -109,7 +111,7 @@ class PhocaCartModelItem extends JModelLegacy
 			$wheres[] =  ' cc.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
 		
-		$query = ' SELECT i.id, i.title, i.alias, i.description, i.ordering, i.metadesc, i.metakey, i.image, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, cc.id AS catid, cc.title AS cattitle, cc.alias AS catalias, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle'
+		$query = ' SELECT i.id, i.title, i.alias, i.description, pc.ordering, i.metadesc, i.metakey, i.image, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, cc.id AS catid, cc.title AS cattitle, cc.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle'
 				.' FROM #__phocacart_products AS i' 
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = i.id'
 				.' LEFT JOIN #__phocacart_categories AS cc ON cc.id = pc.category_id'

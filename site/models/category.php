@@ -14,6 +14,7 @@ class PhocaCartModelCategory extends JModelLegacy
 	
 	protected $item 				= null;
 	protected $item_ordering		= null;
+	protected $layout_type			= null;
 	protected $category 			= null;
 	protected $subcategories 		= null;
 	protected $category_ordering	= null;
@@ -26,9 +27,11 @@ class PhocaCartModelCategory extends JModelLegacy
 		
 		$app				= JFactory::getApplication();
 		$config 			= JFactory::getConfig();		
-		$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		//$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$paramsC 			= $app->getParams();
 		$item_pagination	= $paramsC->get( 'item_pagination_default', '20' );
 		$item_ordering		= $paramsC->get( 'item_ordering', 1 );
+		$layout_type		= $paramsC->get( 'layout_type', 'grid' );
 	
 		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
@@ -37,19 +40,28 @@ class PhocaCartModelCategory extends JModelLegacy
 		$this->setState('filter_order', JFactory::getApplication()->input->get('filter_order', 'ordering'));
 		$this->setState('filter_order_dir', JFactory::getApplication()->input->get('filter_order_Dir', 'ASC'));
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
+		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
+	
+		
+	}
+	
+	public function getLayoutType() {
+		$layoutType 	= $this->getState('layouttype');
+		$layoutType		= PhocacartRenderFront::getLayoutType($layoutType);
+		return $layoutType;
 	}
 	
 	public function getPagination($categoryId) {
 		if (empty($this->pagination)) {
 			jimport('joomla.html.pagination');
-			$this->pagination = new PhocaCartPagination( $this->getTotal($categoryId), $this->getState('limitstart'), $this->getState('limit') );
+			$this->pagination = new PhocacartPagination( $this->getTotal($categoryId), $this->getState('limitstart'), $this->getState('limit') );
 		}
 		return $this->pagination;
 	}
 	
 	function getOrdering() {
 		if(empty($this->ordering)) {
-			$this->ordering = PhocaCartOrdering::renderOrderingFront($this->getState('itemordering'), 1);
+			$this->ordering = PhocacartOrdering::renderOrderingFront($this->getState('itemordering'), 1);
 		}
 		return $this->ordering;
 	}
@@ -129,7 +141,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			. ' GROUP BY a.id';
 			
 		} else {
-			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
+			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required'
 			. ' FROM #__phocacart_products AS a'
@@ -199,7 +211,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			$params						= $app->getParams();
 			//$ordering					= $params->get( 'item_ordering', 1 );
 			$ordering					= $this->getState('itemordering');
-			$this->item_ordering 		= PhocaCartOrdering::getOrderingText($ordering);
+			$this->item_ordering 		= PhocacartOrdering::getOrderingText($ordering);
 		}
 		return $this->item_ordering;
 	}
@@ -209,7 +221,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			$app						= JFactory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
-			$this->category_ordering 	= PhocaCartOrdering::getOrderingText($ordering, 1);
+			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);
 		}
 		return $this->category_ordering;
 	}
@@ -221,7 +233,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		if ($hitcount) {
 			$pk = (!empty($pk)) ? $pk : (int) $this->getState('cateogry.id');
 
-			$table = JTable::getInstance('PhocaCartCategory', 'Table');
+			$table = JTable::getInstance('PhocacartCategory', 'Table');
 			$table->load($pk);
 			$table->hit($pk);
 		}

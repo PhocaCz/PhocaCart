@@ -30,12 +30,16 @@ class JFormFieldPhocaFormCountry extends JFormField
 		
 		
 		$config 	= JComponentHelper::getParams('com_media');
-		$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
-		$load_chosen= $paramsC->get( 'load_chosen', 1 );
+		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
+		
 
 		if (!$app->isAdmin()) {
+			$paramsC 	= $app->getParams();
+			$load_chosen= $paramsC->get( 'load_chosen', 1 );
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. JSession::getFormToken().'=1\';';
 		} else {
+			$paramsC 	= JComponentHelper::getParams('com_phocacart');
+			$load_chosen= $paramsC->get( 'load_chosen', 1 );
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=phocacartuser.setregion&format=json&'. JSession::getFormToken().'=1\';';
 		}
 		

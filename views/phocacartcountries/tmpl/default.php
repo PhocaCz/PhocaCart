@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -49,7 +49,14 @@ echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();	
+
+$idMd = 'phEditStatusModal';
+$textButton = 'COM_PHOCACART_EDIT_TAX';
+$w = 500;
+$h = 400;
+$rV = new PhocacartRenderAdminview();
+echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
 echo $r->startTable('categoryList');
 
@@ -58,6 +65,7 @@ echo $r->startTblHeader();
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-taxrate">'.JText::_($this->t['l'].'_TAX_RATE').'</th>'."\n";
 echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-code">'.JHTML::_('grid.sort',  	$this->t['l'].'_CODE2', 'a.code2', $listDirn, $listOrder ).'</th>'."\n";	
 echo '<th class="ph-code">'.JHTML::_('grid.sort',  	$this->t['l'].'_CODE3', 'a.code3', $listDirn, $listOrder ).'</th>'."\n";	
@@ -70,6 +78,7 @@ echo '<tbody>'. "\n";
 $originalOrders = array();	
 $parentsStr 	= "";		
 $j 				= 0;
+
 
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
@@ -85,6 +94,7 @@ $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
 $linkEdit 		= JRoute::_( $urlEdit. $item->id );
+$linkTax 		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartedittax&type=1&tmpl=component&id='.(int)$item->id  );
 
 
 
@@ -101,6 +111,11 @@ $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
+
+if (isset($item->code2) && $item->code2 != '') {
+	$checkO .= ' <span>'.PhocacartCountry::getCountryFlag($item->code2, 0, $item->image, '20px') . '<span> '; 
+}
+
 if ($canCreate || $canEdit) {
 	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
 } else {
@@ -108,6 +123,25 @@ if ($canCreate || $canEdit) {
 }
 echo $r->td($checkO, "small");
 
+//$tax = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
+$tax = '';
+
+$tax .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkTax.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
+
+if (isset($item->tc_tax_rate) && $item->tc_tax_rate != '') {
+	$taxRateA = explode(',', $item->tc_tax_rate);
+	
+	if (!empty($taxRateA)) {
+		
+		foreach($taxRateA as $k => $v) {
+			$taxRateA[$k] = PhocacartPrice::cleanPrice($v);
+		}
+		$taxRateS = implode(', ', $taxRateA);
+		$tax .= ' <small>('.$taxRateS.')</small>';
+	}
+}
+
+echo $r->td($tax, "small");
 
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
@@ -123,7 +157,7 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 7);
+echo $r->tblFoot($this->pagination->getListFooter(), 8);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);

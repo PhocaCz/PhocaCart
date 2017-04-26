@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartRegions extends JModelList
+class PhocaCartCpModelPhocacartRegions extends JModelList
 {
 	protected $option 	= 'com_phocacart';	
 	
@@ -99,9 +99,13 @@ class PhocaCartCpModelPhocaCartRegions extends JModelList
 			$query->where('a.access = '.(int) $access);
 		}*/
 		
+		
+		
 		$query->select('c.title AS country_title, c.id AS country_id');
 		$query->join('LEFT', '#__phocacart_countries AS c ON c.id = a.country_id');
 
+		$query->select('GROUP_CONCAT(tr.tax_rate) AS tr_tax_rate');
+		$query->join('LEFT', '#__phocacart_tax_regions AS tr ON a.id = tr.region_id');
 
 		// Filter by published state.
 		$published = $this->getState('filter.state');
@@ -132,6 +136,8 @@ class PhocaCartCpModelPhocaCartRegions extends JModelList
 		if (is_numeric($countryId)) {
 			$query->where('a.country_id = ' . (int) $countryId);
 		}
+		
+		$query->group('a.id');
 	
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');

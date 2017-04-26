@@ -26,7 +26,7 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartTax', $prefix = 'Table', $config = array())
+	public function getTable($type = 'PhocacartTax', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -55,7 +55,7 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 	
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
-			$item->tax_rate	= PhocaCartPrice::cleanPrice($item->tax_rate);
+			$item->tax_rate	= PhocacartPrice::cleanPrice($item->tax_rate);
 		}
 		return $item;
 	}
@@ -91,6 +91,42 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
+	}
+	
+	public function delete(&$cid = array()) {
+		
+		
+		if (count( $cid )) {
+			JArrayHelper::toInteger($cid);
+			$cids = implode( ',', $cid );
+			
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					JLog::add($error, JLog::WARNING);
+					return false;
+				} else {
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					return false;
+				}
+			}
+			
+			// 1. DELETE TAXES
+			$query = 'DELETE FROM #__phocacart_taxes'
+				. ' WHERE id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			
+			// 2. DELETE COUNTRY TAXES
+			$query = 'DELETE FROM #__phocacart_tax_countries'
+				. ' WHERE tax_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+		}
+		return true;
 	}
 }
 ?>

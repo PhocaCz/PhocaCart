@@ -15,6 +15,8 @@
 
 <field name="total_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_TOTAL_AMOUNT_DESC" />
 
+<field name="quantity_from" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_DESC" />
+
 <field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="1">
 	<option value="1">COM_PHOCACART_PERCENTAGE</option>
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
@@ -39,7 +41,7 @@
 <field name="cat_ids" type="phocacouponcategory" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" multiple="1" class="inputbox" />
 <field name="product_ids" type="phocacouponproduct" label="COM_PHOCACART_FIELD_COUPON_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_COUPON_PRODUCT_DESC" class="inputbox" />
 
-<field name="ordering" type="PhocaCartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 		

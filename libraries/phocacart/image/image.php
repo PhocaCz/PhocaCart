@@ -8,7 +8,7 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class PhocaCartImage
+class PhocacartImage
 {
 	public static function getThumbnailName($path, $filename, $size) {
 		
@@ -88,6 +88,28 @@ class PhocaCartImage
 		$images = $db->loadObjectList();
 		
 		return $images;
+	}
+	
+	public static function getImage($image, $path = '', $width = '', $height = '') {
+		
+		if (JFile::exists(JPATH_ROOT.'/'.$image)) {
+			$style = ' style="';
+			if ($width = '') {
+				$style .= 'width: '.$width.';'; 
+			}
+			if ($width = '') {
+				$style .= 'height: '.$width.';'; 
+			}
+			$style = '" ';
+			
+			if ($path != '') {
+				$path = $path . '/';
+			}
+
+			return '<img src="'.JURI::root(true) .'/'. $path . $image.'"'.$style.'alt=""/>';
+		} else {
+			return false;
+		}
 	}
 }
 ?>

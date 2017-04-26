@@ -21,6 +21,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		$document								= JFactory::getDocument();
 		$this->p 								= $app->getParams();
 
+
 		$this->t['csv_display_subcategories']	= $this->p->get( 'csv_display_subcategories', 0 );
 		$this->t['categories']					= $model->getCategoriesList($this->t['csv_display_subcategories']);
 		$this->t['csv_display_category_desc']	= $this->p->get( 'csv_display_category_desc', 0 );
@@ -35,13 +36,12 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['display_view_category_button']= $this->p->get( 'display_view_category_button', 1 );
 		$this->t['category_name_link']			= $this->p->get( 'category_name_link', 0 );
 	
-
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		//$media->loadChosen($this->t['load_chosen']);
 		$media->loadEqualHeights($this->t['equal_height']);
 		
-		$this->t['path'] = PhocaCartPath::getPath('categoryimage');
+		$this->t['path'] = PhocacartPath::getPath('categoryimage');
 		
 		$this->_prepareDocument();
 		parent::display($tpl);
@@ -49,7 +49,7 @@ class PhocaCartViewCategories extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocacartRenderFront::prepareDocument($this->document, $this->p);
 	}
 }
 ?>

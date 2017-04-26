@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
-class PhocaCartCpControllerPhocaCartCategory extends PhocaCartCpControllerPhocaCartCommon
+class PhocaCartCpControllerPhocacartCategory extends PhocaCartCpControllerPhocaCartCommon
 {	
 	public function batch($model = null) {
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -32,7 +32,7 @@ class PhocaCartCpControllerPhocaCartCategory extends PhocaCartCpControllerPhocaC
 		
 		$model = $this->getModel( 'phocacartcategory' );
 		if(!$model->recreate($cid, $message)) {
-			$message = PhocaCartUtils::setMessage($message, JText::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
+			$message = PhocacartUtils::setMessage($message, JText::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
 			$app->enqueueMessage($message, 'error');
 		} else {
 			$message = JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' );

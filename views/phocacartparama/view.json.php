@@ -25,9 +25,10 @@ class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
 		$app		= JFactory::getApplication();
 		$method		= $app->input->get( 'method', '', 'string'  );
 		$id			= $app->input->get( 'id', '', 'int'  );
+		$type		= $app->input->get( 'type', '', 'int'  ); // 1) payment plugin 2) shipping plugin
 	
 	
-		//$method		= PhocaCartSettings::getPaymentMethod((int)$method);
+		//$method		= PhocacartUtilsSettings::getPaymentMethod((int)$method);
 		
 		// TEMP
 		//$method = 'paypal';
@@ -35,16 +36,22 @@ class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
 		// index.php?option=com_phocacart&view=phocacartparama&format=json&tmpl=component&5bf6b09593b13dd0b717228bb82296a9=1&id=1
 		$model = $this->getModel();
 		//$method = 'coupon';
-		$model->setFormName('com_phocacart.phocacartpaymentmethod', 'phocacartpaymentmethod'); // Abstract XML
+		if ($type == 2) {
+			$model->setFormName('com_phocacart.phocacartshippingmethod', 'phocacartshippingmethod'); // Abstract XML
+			
+		} else {
+			$model->setFormName('com_phocacart.phocacartpaymentmethod', 'phocacartpaymentmethod'); // Abstract XML
+		}
+		
 		$form		= $model->getForm();
 		$item		= $model->getItem();
 		
 		/*
-		 * PAYMENT - method selected in Phoca Cart (x001)
+		 * PAYMENT - method selected in Phoca Cart (x001) (or SHIPPINNG))
 		 * PAYMENT METHOD - method type like Paypal, Cash on Delivery - set in plugin
 		 * Payment method parameters are defined in plugins plugins/pcp/paypal_standard.xml e.g.
 		 * This ajax loads the XML from plugin and bind the data with common payment table: 
-		 * #__phocacart_payment_methods
+		 * #__phocacart_payment_methods (#__phocacart_shipping_methods)
 		 * 
 		 * In plugin, parameters are only defined in form tag, but stored are in params column of table: #__phocacart_payment_methods
 		 *
@@ -98,7 +105,12 @@ class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
 		
 		$message = '';
 		if ($i == 0 || $o == '') {
-			$message = '<div class="ph-extended-params-inbox">' . JText::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_PAYMENT_METHOD') . '</div>';
+			
+			if ($type == 2) {
+				$message = '<div class="ph-extended-params-inbox">' . JText::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_SHIPPING_METHOD') . '</div>';
+			} else {
+				$message = '<div class="ph-extended-params-inbox">' . JText::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_PAYMENT_METHOD') . '</div>';
+			}
 		} else {
 			$message = '<div class="ph-extended-params-inbox">' . $o . '</div>';
 		}

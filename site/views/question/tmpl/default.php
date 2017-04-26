@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 echo '<div id="ph-pc-question-box" class="pc-question-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ASK_A_QUESTION')));
+echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ASK_A_QUESTION')));
 
 
 if ( isset($this->item[0]->title) && $this->item[0]->title != '') {
@@ -24,10 +24,10 @@ if (isset($this->item[0])) {
 	echo '<div class="col-xs-12 col-sm-6 col-md-6">';
 	$x = $this->item[0];
 	
-	$link = JRoute::_(PhocaCartRoute::getItemRoute($x->id, $x->catid, $x->alias, $x->catalias));
+	$link = JRoute::_(PhocacartRoute::getItemRoute($x->id, $x->catid, $x->alias, $x->catalias));
 	// IMAGE
 	echo '<div class="ph-item-image-full-box ph-item-image-full-left-box">';
-	$image 	= PhocaCartImage::getThumbnailName($this->t['pathitem'], $x->image, 'medium');
+	$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'medium');
 
 	if (isset($image->rel) && $image->rel != '') {
 		echo '<a href="'.$link.'" >';

@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -100,17 +100,17 @@ if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape(JText::_($item->title)).'</a>';
 } else {
-	$checkO .= $this->escape($item->title);
+	$checkO .= $this->escape(JText::_($item->title));
 }
-//$checkO .= ' <span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
+$checkO .= ' <small>('.$this->escape($item->title).')</small>';
 echo $r->td($checkO, "small");
 
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($this->escape(PhocaCartPrice::cleanPrice($item->tax_rate)), "small");
-$calcType = PhocaCartSettings::getTaxCalculationType($item->calculation_type);
+echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->tax_rate)), "small");
+$calcType = PhocacartUtilsSettings::getTaxCalculationType($item->calculation_type);
 echo $r->td($this->escape($calcType), "small");
 echo $r->td($item->id, "small");
 

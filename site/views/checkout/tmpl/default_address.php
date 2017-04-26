@@ -12,7 +12,7 @@ if ($this->a->addressedit == 1) {
 		
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutaddressedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutaddressedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
@@ -60,7 +60,7 @@ if ($this->a->addressedit == 1) {
 	// User completed all items in the form
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header"  id="phcheckoutaddressview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header"  id="phcheckoutaddressview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
@@ -98,7 +98,7 @@ if ($this->a->addressedit == 1) {
 		
 } else {
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 }
 ?>

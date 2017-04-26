@@ -30,7 +30,7 @@ $published = $this->state->get('filter.state');
 		<div class="control-group">
 			<div class="controls">
 				<?php 
-				$class	=	$this->t['n'].'Batch';
+				$class	=	$this->t['n'].'HtmlBatch';
 				echo $class::item($published, 1);
 				?>
 			</div>

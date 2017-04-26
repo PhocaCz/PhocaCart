@@ -20,7 +20,7 @@ class PhocaCartViewTerms extends JViewLegacy
 		$this->p 					= $app->getParams();
 		$this->t['terms_conditions']= $this->p->get( 'terms_conditions', '' );
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		
 		$this->_prepareDocument();
 		parent::display($tpl);
@@ -28,7 +28,7 @@ class PhocaCartViewTerms extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS'));
 	}
 }
 ?>

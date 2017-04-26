@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 echo '<div id="ph-pc-account-box" class="pc-account-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_MY_ACCOUNT')));
+echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_MY_ACCOUNT')));
 
 
 /*if ( $this->t['description'] != '') {
@@ -155,5 +155,5 @@ if ((int)$this->u->id > 0) {
 echo '</div>';
 echo '<div>&nbsp;</div>';
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

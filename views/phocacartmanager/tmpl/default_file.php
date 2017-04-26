@@ -10,8 +10,8 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.filesystem.file' );
 
-$ext 	= PhocaCartFile::getExtension( $this->_tmp_file->path_without_name_relative );
-$group 	= PhocaCartSettings::getManagerGroup($this->manager);
+$ext 	= PhocacartFile::getExtension( $this->_tmp_file->path_without_name_relative );
+$group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 
 if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
 	/* Own function - this function is used for e.g. additional images, etc. for input forms which 
@@ -24,7 +24,7 @@ if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
 if ($this->manager == 'filemultiple') {
 	$checked 	= JHTML::_('grid.id', $this->filei + count($this->folders), $this->files[$this->filei]->path_with_name_relative_no );
 	
-	$icon		= PhocaCartFile::getMimeTypeIcon($this->_tmp_file->name);
+	$icon		= PhocacartFile::getMimeTypeIcon($this->_tmp_file->name);
 	echo '<tr>'
 	.' <td>'. $checked .'</td>'
 	.' <td class="ph-img-table">'

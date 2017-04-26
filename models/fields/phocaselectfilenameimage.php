@@ -17,7 +17,7 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 
 		$html 			= array();
 		$managerOutput	= $this->element['manager'] ? '&amp;manager='.(string) $this->element['manager'] : '';
-		$group 			= PhocaCartSettings::getManagerGroup((string) $this->element['manager']);
+		$group 			= PhocacartUtilsSettings::getManagerGroup((string) $this->element['manager']);
 		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
 		
 		$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field='.$this->id;

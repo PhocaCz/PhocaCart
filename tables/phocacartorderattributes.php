@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
-class TablePhocaCartOrderAttributes extends JTable
+class TablePhocacartOrderAttributes extends JTable
 {
 	function __construct( &$db ) {
 		parent::__construct( '#__phocacart_order_attributes', 'id', $db );

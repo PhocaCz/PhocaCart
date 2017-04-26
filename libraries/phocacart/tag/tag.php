@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartTag
+class PhocacartTag
 {
 	public static function getTags($itemId, $select = 0) {
 	
@@ -16,6 +16,8 @@ class PhocaCartTag
 		
 		if ($select == 1) {
 			$query = 'SELECT r.tag_id';
+		} else if ($select == 2){
+			$query = 'SELECT a.id, a.alias ';
 		} else {
 			$query = 'SELECT a.*';
 		}
@@ -34,11 +36,12 @@ class PhocaCartTag
 		return $tags;
 	}
 	
-	public static function getAllTags() {
+	public static function getAllTags($ordering = 1) {
 	
-		$db = JFactory::getDBO();
+		$db 			= JFactory::getDBO();
+		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
 		
-		$query = 'SELECT a.id, a.title, a.alias FROM #__phocacart_tags AS a WHERE a.published = 1 ORDER BY a.id';
+		$query = 'SELECT t.id, t.title, t.alias FROM #__phocacart_tags AS t WHERE t.published = 1 ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();	
 	
@@ -122,7 +125,7 @@ class PhocaCartTag
 						$category = $db->loadObject();
 						
 						if (isset($category->id) && isset($category->alias)) {
-							$link = PhocaCartRoute::getCategoryRoute($category->id, $category->alias);
+							$link = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
 							$o .= '<a href="'.$link.'">'.$v->title.'</a>';
 						} else {
 							$o .= $v->title;
@@ -131,8 +134,8 @@ class PhocaCartTag
 						$o .= $v->title;
 					}
 				} else if ($tl == 3) {
-					$link = PhocaCartRoute::getItemsRoute();
-					$link = $link . PhocaCartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
+					$link = PhocacartRoute::getItemsRoute();
+					$link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
 					$o .= '<a href="'.$link.'">'.$v->title.'</a>';
 				}
 				

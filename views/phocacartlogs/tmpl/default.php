@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -59,7 +59,7 @@ echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-date">'.JHTML::_('grid.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-user">'.JHTML::_('grid.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-ip">'.JHTML::_('grid.sort',  		$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-incoming-page">'.JHTML::_('grid.sort',  $this->t['l'].'_INCOMING_PAGE', 'a.incoming_page', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-description">'.JHTML::_('grid.sort',  $this->t['l'].'_MESSAGE', 'a.description', $listDirn, $listOrder ).'</th>'."\n";	
@@ -111,7 +111,7 @@ if ($canCreate || $canEdit) {
 $checkO = $this->escape($item->title);
 echo $r->td('<b>'.$checkO.'</b>', "small");
 
-
+//echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small");
 //echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($item->user_username, "small");

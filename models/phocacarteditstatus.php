@@ -26,7 +26,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		$db->setQuery( $query );
 		$item = $db->loadObject();
 		if (isset($item->status_id) && (int)$item->status_id > 0) {
-			$status = PhocaCartOrderStatus::getStatus($item->status_id);
+			$status = PhocacartOrderStatus::getStatus($item->status_id);
 			
 			$status['select'] = JHTML::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
@@ -61,7 +61,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		$data['id']			= (int)$data['id'];
 		$data['status_id']	= (int)$data['status_id'];
 		$data['email_send']	= (int)$data['email_send'];
-		$row 				= $this->getTable('PhocaCartOrder', 'Table');
+		$row 				= $this->getTable('PhocacartOrder', 'Table');
 		$user 				= JFactory::getUser();
 
 		if(isset($data['id']) && $data['id'] > 0) {
@@ -105,9 +105,9 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		
 	
 		
-		$notify = PhocaCartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements']); 
+		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements']); 
 		
-		PhocaCartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment']);
+		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment']);
 		
 		
 		return $row->id;

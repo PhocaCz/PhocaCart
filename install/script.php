@@ -27,6 +27,14 @@ class com_phocacartInstallerScript
 		$folder[2][0]	=	'phocacartdownload' ;
 		$folder[2][1]	= 	JPATH_ROOT . '/' . $folder[2][0];
 		
+		$folder[3][0]	=	'phocacartdownloadpublic' ;
+		$folder[3][1]	= 	JPATH_ROOT . '/' . $folder[3][0];
+		
+		$folder[4][0]	=	'plugins/pcp' ;
+		$folder[4][1]	= 	JPATH_ROOT . '/' . $folder[4][0];
+		
+		$folder[5][0]	=	'plugins/pcp' ;
+		$folder[5][1]	= 	JPATH_ROOT . '/' . $folder[5][0];
 		
 		$message = '';
 		$error	 = array();
@@ -67,6 +75,8 @@ class com_phocacartInstallerScript
 		'('.$db->quoteName('name') . ' = ' . $db->quote('plg_pcp_cash_on_delivery')
 		. ' OR '
 		. $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_paypal_standard')
+		. ' OR '
+		. $db->quoteName('name') . ' = ' . $db->quote('plg_pcs_shipping_standard')
 		. ')');
 		$query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
 		$db->setQuery($query);
@@ -93,6 +103,15 @@ class com_phocacartInstallerScript
 		
 		$folder[2][0]	=	'phocacartdownload' ;
 		$folder[2][1]	= 	JPATH_ROOT . '/' . $folder[2][0];
+		
+		$folder[3][0]	=	'phocacartdownloadpublic' ;
+		$folder[3][1]	= 	JPATH_ROOT . '/' . $folder[3][0];
+		
+		$folder[4][0]	=	'plugins/pcp' ;
+		$folder[4][1]	= 	JPATH_ROOT . '/' . $folder[4][0];
+		
+		$folder[5][0]	=	'plugins/pcp' ;
+		$folder[5][1]	= 	JPATH_ROOT . '/' . $folder[5][0];
 		
 		$message = '';
 		$error	 = array();

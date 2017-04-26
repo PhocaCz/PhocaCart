@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartUser extends JModelAdmin
+class PhocaCartCpModelPhocacartUser extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -18,7 +18,7 @@ class PhocaCartCpModelPhocaCartUser extends JModelAdmin
 
 	public function getFields(){
 		if (empty($this->fields)) {
-			$this->fields = PhocaCartFormUser::getFormXml('', '_phs', 1, 1, 0);//Fields in XML Format
+			$this->fields = PhocacartFormUser::getFormXml('', '_phs', 1, 1, 0);//Fields in XML Format
 		}
 		return $this->fields;
 	}
@@ -32,7 +32,7 @@ class PhocaCartCpModelPhocaCartUser extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartUser', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartUser', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -61,8 +61,8 @@ class PhocaCartCpModelPhocaCartUser extends JModelAdmin
 	public function getItem($pk = null) {
 		$app	= JFactory::getApplication();
 		$user 	= $this->getUser();
-		$table 	= $this->getTable('PhocaCartUser', 'Table');
-		$tableS 	= $this->getTable('PhocaCartUser', 'Table');
+		$table 	= $this->getTable('PhocacartUser', 'Table');
+		$tableS 	= $this->getTable('PhocacartUser', 'Table');
 		
 		// Billing
 		if(isset($user->id) && (int)$user->id > 0) {
@@ -133,7 +133,7 @@ class PhocaCartCpModelPhocaCartUser extends JModelAdmin
 		$app	= JFactory::getApplication();
 		
 		$data['type']		= (int)$type;
-		$row = $this->getTable('PhocaCartUser', 'Table');
+		$row = $this->getTable('PhocacartUser', 'Table');
 
 		if(isset($data['user_id']) && $data['user_id'] > 0) {
 			if (!$row->load(array('user_id' => (int)$data['user_id'], 'type' => $type))) {

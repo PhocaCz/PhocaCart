@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartRegion
+class PhocacartRegion
 {
 	public static function getRegionById($regionId) {
 		
@@ -47,6 +47,9 @@ class PhocaCartRegion
 		} else if ($table == 'payment') {
 			$t = '#__phocacart_payment_method_regions';
 			$c = 'payment_id';
+		}  else if ($table == 'zone') {
+			$t = '#__phocacart_zone_regions';
+			$c = 'zone_id';
 		}
 		
 		$db =JFactory::getDBO();
@@ -77,6 +80,9 @@ class PhocaCartRegion
 		} else if ($table == 'payment') {
 			$t = '#__phocacart_payment_method_regions';
 			$c = 'payment_id';
+		}  else if ($table == 'zone') {
+			$t = '#__phocacart_zone_regions';
+			$c = 'zone_id';
 		}
 	
 		if ((int)$id > 0) {
@@ -188,7 +194,7 @@ class PhocaCartRegion
 		$imgObject = $db->loadObjectList();
 		
 		if (!$db->query()) {
-			echo PhocaCartException::renderErrorInfo($db->getErrorMsg());
+			echo PhocacartUtilsException::renderErrorInfo($db->getErrorMsg());
 			return false;
 		}
 		
@@ -226,11 +232,11 @@ class PhocaCartRegion
 					$category = $db->loadObject();
 					
 					if (!$db->query()) {
-						echo PhocaCartException::renderErrorInfo($db->getErrorMsg());
+						echo PhocacartUtilsException::renderErrorInfo($db->getErrorMsg());
 						return false;
 					}
 					if (isset($category->id) && isset($category->alias)) {
-						$link = PhocaCartRoute::getCategoryRoute($category->id, $category->alias);
+						$link = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
 						$o .= '<a href="'.$link.'" '.$targetO.'>'.$v->title.'</a>';
 					} else {
 						$o .= $v->title;
@@ -239,7 +245,7 @@ class PhocaCartRegion
 					$o .= $v->title;
 				}
 			} else if ($tl == 3) {
-				$link = PhocaCartRoute::getCategoryRouteByTag($v->id);
+				$link = PhocacartRoute::getCategoryRouteByTag($v->id);
 				$o .= '<a href="'.$link.'" '.$targetO.'>'.$v->title.'</a>';
 			}
 			

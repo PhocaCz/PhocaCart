@@ -29,20 +29,20 @@ class PhocaCartViewOrder extends JViewLegacy
 		if ($orderGuestAccess == 0) {
 			$token = '';
 		}
-		$order	= new PhocaCartOrderRender();
+		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format, $token);
 		
-		//$media = new PhocaCartRenderMedia();
+		//$media = new PhocacartRenderMedia();
 		
 		switch($type) {
 			case 2:
-				$invoiceNumber	= PhocaCartOrder::getInvoiceNumber($id, $invoice_prefix);
+				$invoiceNumber	= PhocacartOrder::getInvoiceNumber($id, $invoice_prefix);
 				$title			= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
 			break;
 			case 1:
 			case 3:
 			default:
-				$orderNumber	= PhocaCartOrder::getOrderNumber($id);
+				$orderNumber	= PhocacartOrder::getOrderNumber($id);
 				$title			= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 			break;
 		}
@@ -54,7 +54,7 @@ class PhocaCartViewOrder extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		PhocacartRenderFront::prepareDocument($this->document, $this->p);
 	}
 }
 ?>

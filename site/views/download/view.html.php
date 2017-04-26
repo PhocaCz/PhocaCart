@@ -29,7 +29,7 @@ class PhocaCartViewDownload extends JViewLegacy
 			$this->t['token_download'] = '';
 			$this->t['token_order'] = '';
 		}
-		$this->t['files']					= PhocaCartDownload::getDownloadFiles($this->u->id, $this->t['token_download'], $this->t['token_order'] );
+		$this->t['files']					= PhocacartDownload::getDownloadFiles($this->u->id, $this->t['token_download'], $this->t['token_order'] );
 
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
@@ -45,21 +45,21 @@ class PhocaCartViewDownload extends JViewLegacy
 		$uri 						= JFactory::getURI();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		$this->t['linkdownload']	= JRoute::_(PhocaCartRoute::getDownloadRoute());
+		$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute());
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		//$media->loadChosen($this->t['load_chosen']);
 		//$media->loadEqualHeights($this->t['equal_height']);
 		
-		$this->t['pathfile'] = PhocaCartPath::getPath('productfile');
+		$this->t['pathfile'] = PhocacartPath::getPath('productfile');
 		$this->_prepareDocument();
 		parent::display($tpl);
 		
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_DOWNLOAD'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_DOWNLOAD'));
 	}
 }
 ?>

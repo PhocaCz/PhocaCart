@@ -8,5 +8,5 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
-class PhocaCartCpControllerPhocaCartCoupon extends PhocaCartCpControllerPhocaCartCommon {}
+class PhocaCartCpControllerPhocacartCoupon extends PhocaCartCpControllerPhocaCartCommon {}
 ?>

@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 echo '<div id="ph-pc-comparison-box" class="pc-comparison-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 
-echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_COMPARISON')));
+echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_COMPARISON')));
 
 
 
@@ -42,18 +42,18 @@ if (!empty($this->t['items'])) {
 	
 
 	$count = count($this->t['items']);
-	$price = new PhocaCartPrice();
+	$price = new PhocacartPrice();
 
 	foreach($this->t['items'] as $k => $v) {
 		
 		
 		$c['title'] .= '<td><h3>'.$v['title'].'</h3>';
-		$image 	= PhocaCartImage::getThumbnailName($this->t['pathitem'], $v['image'], 'small');
+		$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v['image'], 'small');
 		
 		if (isset($v['catid2']) && (int)$v['catid2'] > 0 && isset($v['catalias2']) && $v['catalias2'] != '') {
-			$link 	= JRoute::_(PhocaCartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
+			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
 		} else {
-			$link 	= JRoute::_(PhocaCartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
+			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
 		}
 		
 		
@@ -89,11 +89,11 @@ if (!empty($this->t['items'])) {
 		
 		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.JText::_($v['stock']).'</td>';}
 		
-		if ($this->t['value']['length'] == 1)	{ $c['length'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['length']).' '.$this->t['unit_size'].'</td>';}
-		if ($this->t['value']['width'] == 1)	{ $c['width'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['width']).' '.$this->t['unit_size'].'</td>';}
-		if ($this->t['value']['height'] == 1)	{ $c['height'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['height']).' '.$this->t['unit_size'].'</td>';}
-		if ($this->t['value']['weight'] == 1)	{ $c['weight'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['weight']).' '.$this->t['unit_weight'].'</td>';}
-		if ($this->t['value']['volume'] == 1)	{ $c['volume'] 	.= '<td class="ph-center">'.PhocaCartUtils::round($v['volume']).' '.$this->t['unit_volume'].'</td>';}
+		if ($this->t['value']['length'] == 1)	{ $c['length'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['length']).' '.$this->t['unit_size'].'</td>';}
+		if ($this->t['value']['width'] == 1)	{ $c['width'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['width']).' '.$this->t['unit_size'].'</td>';}
+		if ($this->t['value']['height'] == 1)	{ $c['height'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['height']).' '.$this->t['unit_size'].'</td>';}
+		if ($this->t['value']['weight'] == 1)	{ $c['weight'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['weight']).' '.$this->t['unit_weight'].'</td>';}
+		if ($this->t['value']['volume'] == 1)	{ $c['volume'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['volume']).' '.$this->t['unit_volume'].'</td>';}
 		
 		if ($this->t['value']['attrib'] == 1) 	{ 
 			$c['attrib'] 	.= '<td>';
@@ -183,5 +183,5 @@ if (!empty($this->t['items'])) {
 
 echo '</div>';// end comparison box
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

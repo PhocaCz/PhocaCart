@@ -12,7 +12,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminView';
+$class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new $class();
 ?>
 <script type="text/javascript">
@@ -56,7 +56,19 @@ echo '</div>';
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
-echo '<div class="span2"></div>';//end span2
+echo '<div class="col-xs-12 col-sm-2 col-md-2">';
+if ((int)$this->item->id > 0) {
+	$this->t['current_currency'] = array();
+	$this->t['current_currency']['id'] = $this->item->id;
+	$this->t['current_currency']['code'] = $this->item->code;
+	$this->t['current_currency']['exchange_rate'] = $this->item->exchange_rate;
+
+	$exchangeInfo = PhocacartCurrency::getCurrencyRelation($this->t['current_currency'], $this->t['default_currency']);
+	if ($exchangeInfo != '') {
+		echo '<div class="alert alert-info"><small>'. $exchangeInfo.'</small></div>';
+	}
+}
+echo '</div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
 ?>

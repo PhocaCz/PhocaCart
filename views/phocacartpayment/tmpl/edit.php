@@ -13,7 +13,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminView';
+$class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new $class();
 ?>
 <script type="text/javascript">
@@ -33,6 +33,7 @@ echo '<div class="span10 form-horizontal">';
 $tabs = array (
 'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
 'amount' 		=> JText::_($this->t['l'].'_AMOUNT_RULE'),
+'zone' 			=> JText::_($this->t['l'].'_ZONE_RULE'),
 'country' 		=> JText::_($this->t['l'].'_COUNTRY_RULE'),
 'region' 		=> JText::_($this->t['l'].'_REGION_RULE'),
 'shipping' 		=> JText::_($this->t['l'].'_SHIPPING_RULE'),
@@ -43,7 +44,7 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'cost', 'tax_id');
+$formArray = array ('title', 'cost', 'tax_id', 'calculation_type');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');
@@ -59,6 +60,11 @@ echo '</div>';
 
 echo '<div class="tab-pane" id="amount">'."\n"; 
 $formArray = array ('lowest_amount', 'highest_amount', 'active_amount');
+echo $r->group($this->form, $formArray);
+echo '</div>';
+
+echo '<div class="tab-pane" id="zone">'."\n"; 
+$formArray = array ('zone', 'active_zone');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
@@ -97,10 +103,10 @@ echo '</div>';
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
-echo '<div class="span2">';
+echo '<div class="col-xs-12 col-sm-2 col-md-2">';
 echo '<div id="ph-sandbox-msg" class="alert alert-danger">'.JText::_('COM_PHOCACART_SANDBOX_ENABLED_NO_REAL_MONEY_WILL_BE_TRANSFERRED').'</div>';
 echo '</div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
-echo PhocaCartRenderJs::renderAjaxTopHtml();
+echo PhocacartRenderJs::renderAjaxTopHtml();
 ?>

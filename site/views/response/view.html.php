@@ -27,7 +27,7 @@ class PhocaCartViewResponse extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		//PhocaCartRenderFront::prepareDocument($this->document, $this->p);
+		//PhocacartRenderFront::prepareDocument($this->document, $this->p);
 	}
 }
 ?>

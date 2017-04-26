@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -112,7 +112,14 @@ echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].
 
 echo $r->td($this->escape($item->code), "small");
 echo $r->td($this->escape($item->price_currency_symbol), "small");
-echo $r->td($this->escape($item->exchange_rate), "small");
+
+$this->t['current_currency'] = array();
+$this->t['current_currency']['id'] = $item->id;
+$this->t['current_currency']['code'] = $item->code;
+$this->t['current_currency']['exchange_rate'] = $item->exchange_rate;
+
+$exchangeInfo = PhocacartCurrency::getCurrencyRelation($this->t['current_currency'], $this->t['default_currency']);
+echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->exchange_rate)) . $exchangeInfo, "small");
 
 echo $r->td($item->id, "small");
 

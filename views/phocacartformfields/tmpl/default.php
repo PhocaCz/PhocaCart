@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -118,9 +118,9 @@ echo $r->td($item->label . '<br /><small>('.JText::_($this->escape($item->label)
 echo $r->td($item->type, "small");
 
 
-echo $r->td(PhocaCartJGrid::displayBilling( $item->display_billing, $i, $this->t['tasks'].'.', $canChange), "small");
-echo $r->td(PhocaCartJGrid::displayShipping( $item->display_shipping, $i, $this->t['tasks'].'.', $canChange), "small");
-echo $r->td(PhocaCartJGrid::displayAccount( $item->display_account, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(PhocacartHtmlJgrid::displayBilling( $item->display_billing, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(PhocacartHtmlJgrid::displayShipping( $item->display_shipping, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(PhocacartHtmlJgrid::displayAccount( $item->display_account, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($this->escape($item->access_level));
 

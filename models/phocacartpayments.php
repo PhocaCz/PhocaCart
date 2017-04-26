@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartPayments extends JModelList
+class PhocaCartCpModelPhocacartPayments extends JModelList
 {
 	protected $option 	= 'com_phocacart';	
 	

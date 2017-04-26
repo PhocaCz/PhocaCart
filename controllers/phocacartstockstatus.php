@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
-class PhocaCartCpControllerPhocaCartStockStatus extends PhocaCartCpControllerPhocaCartCommon {
+class PhocaCartCpControllerPhocacartStockStatus extends PhocaCartCpControllerPhocaCartCommon {
 	
 	public function __construct($config = array()) {
 		$this->view_list = 'phocacartstockstatuses';

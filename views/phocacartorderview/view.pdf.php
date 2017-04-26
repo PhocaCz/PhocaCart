@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartOrderView extends JViewLegacy
+class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 {
 	
 	protected $t;
@@ -17,7 +17,7 @@ class PhocaCartCpViewPhocaCartOrderView extends JViewLegacy
 	public function display($tpl = null) {
 		
 		$app			= JFactory::getApplication();
-		$this->t		= PhocaCartUtils::setVars('orderview');
+		$this->t		= PhocacartUtils::setVars('orderview');
 		$id				= $app->input->get('id', 0, 'int');
 		$type			= $app->input->get('type', 0, 'int');
 		$format			= $app->input->get('format', '', 'string');
@@ -26,18 +26,18 @@ class PhocaCartCpViewPhocaCartOrderView extends JViewLegacy
 		$paramsC 		= JComponentHelper::getParams('com_phocacart');
 		$invoice_prefix	= $paramsC->get( 'invoice_prefix', '');
 		
-		$order	= new PhocaCartOrderRender();
+		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format);
 		
 		switch($type) {
 			case 2:
-				$invoiceNumber	= PhocaCartOrder::getInvoiceNumber($id, $invoice_prefix);
+				$invoiceNumber	= PhocacartOrder::getInvoiceNumber($id, $invoice_prefix);
 				$title			= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
 			break;
 			case 1:
 			case 3:
 			default:
-				$orderNumber	= PhocaCartOrder::getOrderNumber($id);
+				$orderNumber	= PhocacartOrder::getOrderNumber($id);
 				$title			= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 			break;
 		}
@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocaCartOrderView extends JViewLegacy
 
 		
 		
-		//JHTML::stylesheet( $this->t['s'] );
+		//$media = new PhocacartRenderAdminmedia();
 
 		//parent::display($tpl);	
 	}

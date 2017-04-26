@@ -8,9 +8,9 @@
  */
 defined('_JEXEC') or die();
 
-class JFormFieldPhocaCartCountry extends JFormField
+class JFormFieldPhocacartCountry extends JFormField
 {
-	protected $type 		= 'PhocaCartCountry';
+	protected $type 		= 'PhocacartCountry';
 
 	protected function getInput() {
 		

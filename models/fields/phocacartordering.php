@@ -10,10 +10,10 @@ defined('JPATH_BASE') or die();
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
-class JFormFieldPhocaCartOrdering extends JFormField
+class JFormFieldPhocacartOrdering extends JFormField
 {
 
-	protected $type = 'PhocaCartOrdering';
+	protected $type = 'PhocacartOrdering';
 
 	protected function getInput() {
 		// Initialize variables.
@@ -105,6 +105,24 @@ class JFormFieldPhocaCartOrdering extends JFormField
 					$table		=	'#__phocacart_orders';
 				break;
 				
+				case "review":
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_reviews';
+				break;
+				
+				case "question":
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_questions';
+				break;
+				
+				case "wishlist":
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_wishlists';
+				break;
+				
 			}
 		} else {
 			$whereLabel	=	'catid';
@@ -120,7 +138,6 @@ class JFormFieldPhocaCartOrdering extends JFormField
 		// Initialize JavaScript field attributes.
 		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
 
-		
 
 		// Build the query for the ordering list.
 		$query = 'SELECT ordering AS value, title AS text' .

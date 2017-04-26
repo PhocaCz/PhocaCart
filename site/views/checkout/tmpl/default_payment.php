@@ -20,7 +20,7 @@ if ($this->a->paymentnotused == 1) {
 
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
@@ -62,13 +62,14 @@ if ($this->a->paymentnotused == 1) {
 
 // PAYMENT EDIT
 } else if ($this->a->paymentedit == 1) {
-
-	$price	= new PhocaCartPrice();
+	
+	$total	= $this->cart->getTotal();
+	$price	= new PhocacartPrice();
 	
 	// Paymnet is not added or we edit it but payment is added, we can edit
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutPayment">';
@@ -86,7 +87,7 @@ if ($this->a->paymentnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItems($v->cost, $v->taxrate, $v->taxcalctype, $v->taxtitle, 1);
+		$priceI = $price->getPriceItemsPayment($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalctype, $v->taxtitle, 0, 1, '');
 
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
@@ -100,26 +101,33 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';
 		
 		echo '<div class="col-sm-6 col-md-6"><div class="radio">';
+		
+		if ($this->t['zero_payment_price'] == 0 && $priceI['zero'] == 1) {
+			// Display nothing
+		} else if ($this->t['zero_payment_price'] == 2 && $priceI['zero'] == 1) {
+			// Display free text
+			echo '<div class="col-sm-8 col-md-8"></div>';
+			echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-tax">'.JText::_('COM_PHOCACART_FREE').'</div>';
+		} else {
 			
-		if (isset($priceI['nettoformat']) && isset($priceI['bruttoformat']) && $priceI['nettoformat'] == $priceI['bruttoformat']) {
+			if ($priceI['nettoformat'] == $priceI['bruttoformat']) {
 		
-		} else if (isset($priceI['nettoformat']) && $priceI['nettoformat'] != '' && isset($priceI['nettotxt']) && $priceI['nettotxt'] != '') {
-			//echo '<div class="col-sm-6 col-md-6"></div>';
-			echo '<div class="col-sm-8 col-md-8">'.$priceI['nettotxt'].'</div>';
-			echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-netto">'.$priceI['nettoformat'].'</div>';
+			} else if ($priceI['nettoformat'] != '') {
+				echo '<div class="col-sm-8 col-md-8">'.$priceI['nettotxt'].'</div>';
+				echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-netto">'.$priceI['nettoformat'].'</div>';
+			}
+			
+			if ($priceI['taxformat'] != '') {
+				echo '<div class="col-sm-8 col-md-8">'.$priceI['taxtxt'].'</div>';
+				echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-tax">'.$priceI['taxformat'].'</div>';
+			}
+			
+			if ($priceI['bruttoformat'] != '') {
+				echo '<div class="col-sm-8 col-md-8">'.$priceI['bruttotxt'].'</div>';
+				echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-brutto">'.$priceI['bruttoformat'].'</div>';
+			}
 		}
 		
-		if (isset($priceI['taxformat']) && $priceI['taxformat'] != '' && isset($priceI['taxtxt']) && $priceI['taxtxt'] != '') {
-			//echo '<div class="col-sm-6 col-md-6"></div>';
-			echo '<div class="col-sm-8 col-md-8">'.$priceI['taxtxt'].'</div>';
-			echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-tax">'.$priceI['taxformat'].'</div>';
-		}
-		
-		if (isset($priceI['bruttoformat']) && $priceI['bruttoformat'] != '' && isset($priceI['bruttotxt']) && $priceI['bruttotxt'] != '') {
-			//echo '<div class="col-sm-6 col-md-6"></div>';
-			echo '<div class="col-sm-8 col-md-8">'.$priceI['bruttotxt'].'</div>';
-			echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-brutto">'.$priceI['bruttoformat'].'</div>';
-		}
 		echo '</div></div>';
 		
 		
@@ -156,7 +164,7 @@ if ($this->a->paymentnotused == 1) {
 // PAYMENT NOT ADDED OR SHIPPING IS EDITED OR ADDRESS IS EDITED
 } else {
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 }
 ?>

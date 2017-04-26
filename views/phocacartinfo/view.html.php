@@ -14,9 +14,9 @@ class PhocaCartCpViewPhocaCartInfo extends JViewLegacy
 	protected $t;
 	
 	public function display($tpl = null) {
-		$this->t	= PhocaCartUtils::setVars();
-		JHTML::stylesheet( $this->t['s'] );
-		$this->t['version'] = PhocaCartUtils::getPhocaVersion('com_phocacart');
+		$this->t	= PhocacartUtils::setVars();
+		$media = new PhocacartRenderAdminmedia();
+		$this->t['version'] = PhocacartUtils::getPhocaVersion('com_phocacart');
 		$this->addToolbar();
 		parent::display($tpl);
 	}
@@ -26,7 +26,7 @@ class PhocaCartCpViewPhocaCartInfo extends JViewLegacy
 		$class	= $this->t['n'] . 'CpHelper';
 		$canDo	= $class::getActions($this->t['c']);
 
-		JToolBarHelper::title( JText::_($this->t['l'].'_PM_INFO' ), 'info' );
+		JToolbarHelper::title( JText::_($this->t['l'].'_PM_INFO' ), 'info-sign' );
 		
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = JToolBar::getInstance( 'toolbar' );
@@ -36,8 +36,8 @@ class PhocaCartCpViewPhocaCartInfo extends JViewLegacy
 		if ($canDo->get('core.admin')) {
 			JToolbarHelper::preferences('com_'.$this->t['c']);
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
 ?>

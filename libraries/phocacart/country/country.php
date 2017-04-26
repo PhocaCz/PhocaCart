@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
-class PhocaCartCountry
+class PhocacartCountry
 {	
 	public static function getCountryById($countryId) {
 		
@@ -44,6 +44,9 @@ class PhocaCartCountry
 		} else if ($table == 'payment') {
 			$t = '#__phocacart_payment_method_countries';
 			$c = 'payment_id';
+		} else if ($table == 'zone') {
+			$t = '#__phocacart_zone_countries';
+			$c = 'zone_id';
 		}
 		
 		$db =JFactory::getDBO();
@@ -82,6 +85,9 @@ class PhocaCartCountry
 		} else if ($table == 'payment') {
 			$t = '#__phocacart_payment_method_countries';
 			$c = 'payment_id';
+		} else if ($table == 'zone') {
+			$t = '#__phocacart_zone_countries';
+			$c = 'zone_id';
 		}
 	
 		if ((int)$id > 0) {
@@ -126,6 +132,35 @@ class PhocaCartCountry
 		$countriesO = JHTML::_('select.genericlist', $countries, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		
 		return $countriesO;
+	}
+	
+	public static function getCountryFlag($code = '', $frontend = 0, $image = '', $width = '', $height = '') {
+		
+		if ($image != '') {
+			$imageO = PhocacartImage::getImage($image, '', $width, $height);
+			if ($imageO) {
+				return $imageO;
+			}
+		}
+		
+		if ($code != '') {
+			//$link	= '/media/mod_languages/images/'. strip_tags(strtolower($code)). '.gif';
+			//$link	= '/media/com_phocacart/images/flags/'. strip_tags(strtolower($code)). '-22x14.png';
+			$link	= '/media/com_phocacart/images/flags/'. strip_tags(strtolower($code)). '.png';
+			
+			$abs	= JPATH_ROOT . $link;
+			
+			if ($frontend == 1) {
+				$rel	= JURI::base(true) . $link;
+			} else {
+				$rel	= str_replace('/administrator', '', JURI::base(true)) . $link;
+			}
+
+			if(JFile::exists($abs)) {
+				return '<img src="'.$rel.'" alt="" />';
+			}
+		}
+		return '';
 	}
 }
 ?>

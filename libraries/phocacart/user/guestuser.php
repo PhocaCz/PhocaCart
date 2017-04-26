@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartGuestUser
+class PhocacartUserGuestuser
 {
 	public static function getGuestUser() {
 		$p 				= JComponentHelper::getParams('com_phocacart') ;
@@ -100,10 +100,8 @@ class PhocaCartGuestUser
 	public static function getUserAddressGuest() {
 		$session = JFactory::getSession();
 		$address = $session->get('guestaddress', false, 'phocaCart');
-		
 		$data = array();
-		$data = PhocaCartUser::convertAddressTwo($address, 0);
-	
+		$data = PhocacartUser::convertAddressTwo($address, 0);
 		return $data;
 	}
 

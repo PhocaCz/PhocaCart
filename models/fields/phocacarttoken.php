@@ -26,7 +26,7 @@ class JFormFieldPhocaCartToken extends JFormField
 		$disabled	= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$manager	= $this->element['manager'] ? $this->element['manager'] : '';
 		
-		$token = PhocaCartUtils::getToken($manager);
+		$token = PhocacartUtils::getToken($manager);
 	
 		if ($this->value == '') {
 			$this->value = htmlspecialchars((string)$token);

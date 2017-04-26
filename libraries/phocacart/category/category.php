@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
-final class PhocaCartCategory
+final class PhocacartCategory
 {
 	private static $categoryA = array();
 	private static $categoryF = array();
@@ -66,7 +66,7 @@ final class PhocaCartCategory
 			$db->setQuery($queryAll);
 			$catDataAll 		= $db->loadObjectList();
 
-			$catDataTree	= PhocaCartCategory::CategoryTreeOption($catDataAll, $tree, 0, $text, -1);
+			$catDataTree	= PhocacartCategory::CategoryTreeOption($catDataAll, $tree, 0, $text, -1);
 			
 			$catDataTreeRights = array();
 			/*foreach ($catData as $k => $v) {
@@ -127,7 +127,7 @@ final class PhocaCartCategory
 		
 		$tree = array();
 		$text = '';
-		$tree = PhocaCartCategory::CategoryTreeOption($items, $tree, 0, $text, $catId);
+		$tree = PhocacartCategory::CategoryTreeOption($items, $tree, 0, $text, $catId);
 		
 		return $tree;
 
@@ -225,7 +225,7 @@ final class PhocaCartCategory
 		if (sizeof($data) > 0) {
 			$result[] = '<ul>';
 			foreach ($data as $k => $v) {
-				$link 		= JRoute::_(PhocaCartRoute::getCategoryRoute($v['id'], $v['alias']));
+				$link 		= JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
 				
 				// Current Category is selected
 				if ($currentCatid == $v['id']) {
@@ -276,17 +276,25 @@ final class PhocaCartCategory
 		return implode($result);
 	}
 	
-	public static function getCategoryTreeFormat($ordering = 1) {
+	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '') {
 		
-		if( empty(self::$categoryF[$ordering])) {
-			phocacartimport('phocacart.ordering.ordering');
-			$itemOrdering 	= PhocaCartOrdering::getOrderingText($ordering,1);
+		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide);
+		if( empty(self::$categoryF[$cis])) {
+			/* phocacart import('phocacart.ordering.ordering');*/
+			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
 			$db 			= JFactory::getDBO();
 			$wheres			= array();
 			$user 			= JFactory::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " c.published = 1";
+			
+			if ($display != '') {
+				$wheres[] = " c.id IN (".$display.")";
+			}
+			if ($hide != '') {
+				$wheres[] = " c.id NOT IN (".$hide.")";
+			}
 			
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
@@ -296,16 +304,18 @@ final class PhocaCartCategory
 			$items 						= $db->loadAssocList();
 			$tree 						= self::categoryTree($items);
 			$currentCatid				= self::getActiveCategoryId();
-			self::$categoryF[$ordering] = self::nestedToUl($tree, $currentCatid);	
+			self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);	
 		}		
-		return self::$categoryF[$ordering];
+	
+		return self::$categoryF[$cis];
 	}
 	
-	public static function getCategoryTreeArray($ordering = 1) {
+	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '') {
 		
-		if( empty(self::$categoryA[$ordering])) {
-			phocacartimport('phocacart.ordering.ordering');
-			$itemOrdering 	= PhocaCartOrdering::getOrderingText($ordering,1);
+		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide);
+		if( empty(self::$categoryA[$cis])) {
+			/*phocacart import('phocacart.ordering.ordering');*/
+			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
 			$db 			= JFactory::getDBO();
 			$wheres			= array();
 			$user 			= JFactory::getUser();
@@ -313,15 +323,22 @@ final class PhocaCartCategory
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " c.published = 1";
 			
+			if ($display != '') {
+				$wheres[] = " c.id IN (".$display.")";
+			}
+			if ($hide != '') {
+				$wheres[] = " c.id NOT IN (".$hide.")";
+			}
+			
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
 			$items 						= $db->loadAssocList();
-			self::$categoryA[$ordering]	= self::categoryTree($items);	
+			self::$categoryA[$cis]	= self::categoryTree($items);	
 		}		
-		return self::$categoryA[$ordering];
+		return self::$categoryA[$cis];
 	}
 	
 	public static function getActiveCategoryId() {

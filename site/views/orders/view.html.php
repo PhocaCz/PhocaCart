@@ -46,22 +46,22 @@ class PhocaCartViewOrders extends JViewLegacy
 		$this->t['display_subcat_cats_view']= $this->p->get( 'display_subcat_cats_view', 3 );
 		*/
 		
-		$this->t['plugin-pdf']		= PhocaCartExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
-		$this->t['component-pdf']	= PhocaCartExtension::getExtensionInfo('com_phocapdf');
+		$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+		$this->t['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
 	
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
 		
-		//$this->t['path'] = PhocaCartPath::getPath('categoryimage');
+		//$this->t['path'] = PhocacartPath::getPath('categoryimage');
 		$this->_prepareDocument();
 		parent::display($tpl);
 		
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDERS'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDERS'));
 	}
 	
 }

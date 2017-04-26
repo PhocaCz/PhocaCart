@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
-class PhocaCartCpControllerPhocaCartStatistics extends PhocaCartCpControllerPhocaCartCommons
+class PhocaCartCpControllerPhocacartStatistics extends PhocaCartCpControllerPhocaCartCommons
 {
 	public function &getModel($name = 'PhocaCartStatistic', $prefix = 'PhocaCartCpModel', $config = array()) {
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));

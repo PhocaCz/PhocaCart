@@ -12,7 +12,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminView';
+$class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new $class();
 ?>
 <script type="text/javascript">
@@ -39,14 +39,14 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'code', 'discount', 'calculation_type');
+$formArray = array ('title', 'code', 'discount', 'calculation_type', 'access');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
 echo '</div>';
 
 echo '<div class="tab-pane" id="rules">'."\n"; 
-$formArray = array ('total_amount', 'free_shipping', 'free_payment', 'available_quantity', 'available_quantity_user', 'product_ids', 'cat_ids');
+$formArray = array ('total_amount', 'quantity_from', 'available_quantity', 'available_quantity_user', 'product_ids', 'cat_ids', 'free_shipping', 'free_payment');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
@@ -65,7 +65,7 @@ echo '</div>';
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
-echo '<div class="span2"></div>';//end span2
+echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
 ?>

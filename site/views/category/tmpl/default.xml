@@ -18,14 +18,15 @@
 <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields" >
 
 		<field name="show_pagination" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_DESC">
-				<option value="0">COM_PHOCACART_HIDE</option>
-				<option value="1">COM_PHOCACART_DISPLAY</option>
-			</field>
-			
-			<field name="show_pagination_limit"  class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LIMIT_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_LIMIT_DESC">
-				<option value="0">COM_PHOCACART_HIDE</option>
-				<option value="1">COM_PHOCACART_DISPLAY</option>
-			</field>
+			<option value="0">COM_PHOCACART_HIDE</option>
+			<option value="1">COM_PHOCACART_DISPLAY</option>
+		</field>
+
+		<field name="show_pagination_top" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_DESC">
+			<option value="0">COM_PHOCACART_HIDE</option>
+			<option value="1">COM_PHOCACART_DISPLAY</option>
+		</field>
+
 
 		</fieldset>
 </fields>

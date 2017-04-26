@@ -16,7 +16,7 @@ class JFormFieldPhocaUnit extends JFormField
 	
 		$units = array();
 		if ($this->element['table']) {
-			$units = PhocaCartSettings::getUnit(0, $this->element['table']);
+			$units = PhocacartUtilsSettings::getUnit(0, $this->element['table']);
 		}
 		
 		$unitsA = array();

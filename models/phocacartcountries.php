@@ -92,6 +92,10 @@ class PhocaCartCpModelPhocaCartCountries extends JModelList
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 		
+		
+		$query->select('GROUP_CONCAT(tc.tax_rate) AS tc_tax_rate');
+		$query->join('LEFT', '#__phocacart_tax_countries AS tc ON a.id = tc.country_id');
+		
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
@@ -123,6 +127,8 @@ class PhocaCartCpModelPhocaCartCountries extends JModelList
 				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
+		
+		$query->group('a.id');
 	
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');

@@ -42,7 +42,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		
 		// Security
 		$namespace  = 'phccrt' . $this->p->get('session_suffix');
-		$session->set('form_id', PhocaCartUtils::getRandomString(mt_rand(6,10)), 'phocacart');
+		$session->set('form_id', PhocacartUtils::getRandomString(mt_rand(6,10)), 'phocacart');
 
 		if((int)$this->p->get('enable_time_check_question', 0) > 0) {
 			$sesstime = $session->get('time', time(), $namespace);
@@ -51,11 +51,11 @@ class PhocaCartViewQuestion extends JViewLegacy
 
 		// Securitry Hidden Field
 		if ($this->p->get('enable_hidden_field_question', 0) == 1) {
-			$this->p->set('hidden_field_position', PhocaCartSecurity::setHiddenFieldPos($this->p->get('display_name_form'), $this->p->get('display_email_form'), $this->p->get('display_phone_form'), $this->p->get('display_message_form')));
+			$this->p->set('hidden_field_position', PhocacartSecurity::setHiddenFieldPos($this->p->get('display_name_form'), $this->p->get('display_email_form'), $this->p->get('display_phone_form'), $this->p->get('display_message_form')));
 			
-			$session->set('hidden_field_id', 'hf'.PhocaCartUtils::getRandomString(mt_rand(6,10)), $namespace);
-			$session->set('hidden_field_name', 'hf'.PhocaCartUtils::getRandomString(mt_rand(6,10)), $namespace);
-			$session->set('hidden_field_class', 'pc'.PhocaCartUtils::getRandomString(mt_rand(6,10)), $namespace);
+			$session->set('hidden_field_id', 'hf'.PhocacartUtils::getRandomString(mt_rand(6,10)), $namespace);
+			$session->set('hidden_field_name', 'hf'.PhocacartUtils::getRandomString(mt_rand(6,10)), $namespace);
+			$session->set('hidden_field_class', 'pc'.PhocacartUtils::getRandomString(mt_rand(6,10)), $namespace);
 				
 			$this->p->set('hidden_field_id', $session->get('hidden_field_id', '', $namespace));
 			$this->p->set('hidden_field_name', $session->get('hidden_field_name', '', $namespace));
@@ -97,7 +97,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 			." </style> \n");
 		}
 		
-		$this->t['pathitem'] = PhocaCartpath::getPath('productimage');
+		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		
 		$this->form		= $this->get('Form');
 		
@@ -109,7 +109,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		}
 		
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		$media->loadChosen($this->t['load_chosen']);
 		
@@ -120,7 +120,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 	
 	protected function _prepareDocument() {
 	
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ASK_A_QUESTION'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ASK_A_QUESTION'));
 	}
 }
 ?>

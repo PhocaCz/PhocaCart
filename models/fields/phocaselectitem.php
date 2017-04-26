@@ -9,10 +9,10 @@
 defined('JPATH_BASE') or die();
 jimport('joomla.form.formfield');
 
-if (! class_exists('PhocaCartRelated')) {
+if (! class_exists('PhocacartRelated')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/related/related.php');
 }
-if (! class_exists('PhocaCartProduct')) {
+if (! class_exists('PhocacartProduct')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/product/product.php');
 }
 
@@ -20,7 +20,7 @@ class JFormFieldPhocaSelectItem extends JFormField
 {
 	public $type = 'PhocaSelectItem';
 
-	protected function getInput() {
+	public function getInput() {
 		$html 	= array();
 		$url 	= 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&'. JSession::getFormToken().'=1';
 		
@@ -54,9 +54,9 @@ class JFormFieldPhocaSelectItem extends JFormField
 			// Related product - select related products by "parent" product ID
 			$id 	= $this->form->getValue('id');
 		
-			
+		
 			if ((int)$id > 0) {
-				$relatedOption	= PhocaCartRelated::getRelatedItemsById((int)$id);
+				$relatedOption	= PhocacartRelated::getRelatedItemsById((int)$id);
 				
 				if(!empty($relatedOption)) {
 					$i = 0;
@@ -71,12 +71,13 @@ class JFormFieldPhocaSelectItem extends JFormField
 			}
 		} else {
 			// Standard product - only select one product by ID
-			$product = PhocaCartProduct::getProductByProductId((int)$this->value);// We don't need catid, we get all categories title
+			$product = PhocacartProduct::getProductByProductId((int)$this->value);// We don't need catid, we get all categories title
 			if(isset($product->id)) {
 				$value .= (int)$product->id . ':'. $product->title .' ('.$product->categories_title.')';
 			}
 			$id = (int)$this->value;
 		}
+	
 	
 		
 		$document = JFactory::getDocument();
@@ -169,6 +170,19 @@ $s[] = '});';
 		$html[] = '</div>'. "\n";
 		
 		return implode("\n", $html);
+	}
+	
+	public function getInputWithoutFormData() {
+		
+		$this->value				= '';
+		$this->id					= 'copy_attributes';
+		$this->name					= 'copy_attributes';
+		$this->element['related']	= false;
+		$this->element['class']		= '';
+		$this->element['size']		= '';
+		$this->element['required']	= '';
+		$this->element['onchange']	= '';
+		return $this->getInput();
 	}
 }
 ?>

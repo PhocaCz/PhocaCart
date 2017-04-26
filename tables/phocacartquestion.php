@@ -19,7 +19,7 @@ class TablePhocaCartQuestion extends JTable
 		/*if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
-		$this->alias = PhocaCartUtils::getAliasName($this->alias);
+		$this->alias = PhocacartUtils::getAliasName($this->alias);
 		*/
 		return true;
 	}

@@ -23,7 +23,7 @@ if($this->a->login == 0) {
 	$lang->load('mod_login');
 	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutloginedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutloginedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	
@@ -110,7 +110,7 @@ if($this->a->login == 0) {
 } else if($this->a->login == 1) {
 
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutloginview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutloginview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<div class="ph-checkout-box-action">';
@@ -121,7 +121,7 @@ if($this->a->login == 0) {
 } else if($this->a->login == 2) {
 
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_GUEST_CHECKOUT').'</h3></div>';
+	echo '<div class="ph-checkout-box-header"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_GUEST_CHECKOUT').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<div class="ph-checkout-box-action">';

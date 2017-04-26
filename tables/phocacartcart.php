@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.filter.input');
 
-class TablePhocaCartCart extends JTable
+class TablePhocacartCart extends JTable
 {
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_cart', 'user_id', $db);

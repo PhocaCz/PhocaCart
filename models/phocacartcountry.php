@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartCountry extends JModelAdmin
+class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -26,7 +26,7 @@ class PhocaCartCpModelPhocaCartCountry extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartCountry', $prefix = 'Table', $config = array())
+	public function getTable($type = 'PhocacartCountry', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -129,6 +129,63 @@ class PhocaCartCpModelPhocaCartCountry extends JModelAdmin
 			$app->enqueueMessage(JText::_('COM_PHOCACART_IMPORT_FILE_NOT_EXIST'), 'error');
 			return false;
 		}
+	}
+	
+	public function delete(&$cid = array()) {
+		
+		$paramsC 			= JComponentHelper::getParams('com_phocacart');
+		$delete_regions		= $paramsC->get( 'delete_regions', 0 );
+		
+		if (count( $cid )) {
+			JArrayHelper::toInteger($cid);
+			$cids = implode( ',', $cid );
+			
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					JLog::add($error, JLog::WARNING);
+					return false;
+				} else {
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					return false;
+				}
+			}
+			
+			// 1. DELETE COUNTRIES
+			$query = 'DELETE FROM #__phocacart_countries'
+				. ' WHERE id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			
+			// 2. DELETE COUNTRY TAXES
+			$query = 'DELETE FROM #__phocacart_tax_countries'
+				. ' WHERE country_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 3. DELETE REGIONS
+			if ($delete_regions == 1) {
+				$query = 'DELETE FROM #__phocacart_regions'
+					. ' WHERE country_id IN ( '.$cids.' )';
+				$this->_db->setQuery( $query );
+				$this->_db->execute();
+			}
+			
+			// 4. DELETE COUNTRIES IN SHIPPING METHOD
+			$query = 'DELETE FROM #__phocacart_shipping_method_countries'
+				. ' WHERE country_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 5. DELETE COUNTRIES IN PAYMENT METHOD
+			$query = 'DELETE FROM #__phocacart_payment_method_countries'
+				. ' WHERE country_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+		}
+		return true;
 	}
 }
 ?>

@@ -24,7 +24,7 @@ class JFormFieldPhocaCouponProduct extends JFormField
 		
 		$value = '';
 		if ((int)$id > 0) {
-			$relatedOption	= PhocaCartCoupon::getCouponProductsById((int)$id);
+			$relatedOption	= PhocacartCoupon::getCouponProductsById((int)$id);
 			if(!empty($relatedOption)) {
 				$i = 0;
 				foreach($relatedOption as $k => $v) {

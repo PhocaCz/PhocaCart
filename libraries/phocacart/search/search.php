@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartSearch
+class PhocacartSearch
 {
 	public function __construct() {}
 	
@@ -21,12 +21,12 @@ class PhocaCartSearch
 		$data['param'] 			= 'search';
 		$data['getparams']		= htmlspecialchars($app->input->get('search', '', 'string'));
 		$data['title']			= JText::_('COM_PHOCACART_SEARCH');
-		$category				= PhocaCartRoute::getIdForItemsRoute();
+		$category				= PhocacartRoute::getIdForItemsRoute();
 		//$data['getparams'][]	= $category['idalias'];
-		$data['activefilter']	= PhocaCartRoute::isFilterActive();
+		$data['activefilter']	= PhocacartRoute::isFilterActive();
 		$data['searchoptions']	= $searchOptions;
 		//$app		= JFactory::getApplication();
-		$layout 	= new JLayoutFile('form_search', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layout 	= new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
 		$o[] = $layout->render($data);
 		$o2 = implode("\n", $o);
 		return $o2;
@@ -107,8 +107,8 @@ class PhocaCartSearch
 				
 				case 'price_from':
 				case 'price_to':
-					$currency	= PhocaCartCurrency::getCurrency();
-					$price		= PhocaCartPrice::convertPriceCurrentToDefaultCurrency($in, $currency->exchange_rate );
+					$currency	= PhocacartCurrency::getCurrency();
+					$price		= PhocacartPrice::convertPriceCurrentToDefaultCurrency($in, $currency->exchange_rate );
 					
 					if ($search == 'price_from') {
 						$where 	= ' a.price >= '.$db->quote($price);

@@ -16,7 +16,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 	protected $option 			= 'com_phocacart';	
 	protected $text_prefix 		= 'com_phocacart';
 	
-	public function getTable($type = 'PhocaCartCategory', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartCategory', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 		
@@ -46,6 +46,8 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 			$folder		= $app->input->get( 'folder', '', 'path' );
 			$upload		= $app->input->get( 'upload', '', 'int' );
 			$manager	= $app->input->get( 'manager', '', 'path' );
+			
+		
 			
 			$this->setState('folder', $folder);
 			$this->setState('manager', $manager);
@@ -91,8 +93,8 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		if ($manager == 'undefined') {
 			$manager = '';
 		}
-		$path 	= PhocaCartPath::getPath($manager);
-		$group	= PhocaCartSettings::getManagerGroup($manager);
+		$path 	= PhocacartPath::getPath($manager);
+		$group	= PhocacartUtilsSettings::getManagerGroup($manager);
 		
 		// Initialize variables
 		if (strlen($current) > 0) {

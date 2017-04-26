@@ -15,8 +15,8 @@ class JFormFieldPhocaSelectFilename extends JFormField
 
 	protected function getInput() {
 		$html 			= array();
-		$managerOutput	= $this->element['manager'] ? '&amp;manager='.(string) $this->element['manager'] : '';
-		$group 			= PhocaCartSettings::getManagerGroup((string) $this->element['manager']);
+		$managerOutput	= $this->element['manager'] ? '&amp;manager='.(string)$this->element['manager'] : '';
+		$group 			= PhocacartUtilsSettings::getManagerGroup((string) $this->element['manager']);
 		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
 		$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field='.$this->id;
 
@@ -24,14 +24,19 @@ class JFormFieldPhocaSelectFilename extends JFormField
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="text_area"';
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
-		$idA			= 'phFileNameModal';
+		
+		if ((string)$this->element['manager'] == 'publicfile') {
+			$idA			= 'phFileNameModalPublic';
+		} else {
+			$idA			= 'phFileNameModal';
+		}
 		$w				= 700;
 		$h				= 400;
 		
 		
 		JHtml::_('jquery.framework');
 		
-		if ($this->element['manager'] == 'productfile') {
+		if ((string)$this->element['manager'] == 'productfile') {
 			
 			// This function selects the right folder when clicking on selecting e.g. download file
 			// Set by the folder stored in download tab in product edit
@@ -51,6 +56,36 @@ class JFormFieldPhocaSelectFilename extends JFormField
 			$s[] = '   	  src = src + "&folder=" + phDownloadFolder + "&downloadfolder=" + phDownloadFolder;';
 			$s[] = '      var height = jQuery(this).attr(\'data-height\') || '.$w.';';
 			$s[] = '      var width = jQuery(this).attr(\'data-width\') || '.$h.';';
+			$s[] = '      jQuery("#'.$idA.' iframe").attr({\'src\':src, \'height\': height, \'width\': width});';
+			$s[] = '   });';
+			
+			$s[] = '})';
+			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+	
+			
+			$s = array();
+			$s[] = '	function phocaSelectFileName_'.$this->id.'(title) {';
+			$s[] = '		document.getElementById("'.$this->id.'").value = title;';
+			$s[] = '		'.$onchange;
+			$s[] 	= '   jQuery(\'.modal\').modal(\'hide\');';
+			//$s[] = '		SqueezeBox.close();';
+			$s[] = '	}';
+			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		
+		} else if ((string)$this->element['manager'] == 'publicfile') {
+			
+	
+			$s 	= array();
+			$s[] = 'jQuery(document).ready(function() {';
+
+			$s[] = '   jQuery(\'a.'.$idA.'ModalButton\').on(\'click\', function(e) {';
+			$s[] = '      var src = jQuery(this).attr(\'data-src\');';
+			//$s[] = '      var phDownloadFolder = jQuery(\'#jform_download_folder\').val();';
+			$s[] = '   	  src = src + "&folder=&downloadfolder=";';
+			$s[] = '      var height = jQuery(this).attr(\'data-height\') || '.$w.';';
+			$s[] = '      var width = jQuery(this).attr(\'data-width\') || '.$h.';';
+			$s[] = '      height = height + \'px\';';
+			$s[] = '      width = width + \'px\';';
 			$s[] = '      jQuery("#'.$idA.' iframe").attr({\'src\':src, \'height\': height, \'width\': width});';
 			$s[] = '   });';
 			
@@ -97,7 +132,7 @@ class JFormFieldPhocaSelectFilename extends JFormField
 		/*JHtml::_('behavior.modal', 'a.modal_'.$this->id);
 		
 		if ($this->element['manager'] == 'productfile') {
-			PhocaCartRenderJs::renderJsAppendValueToUrl(/* TO DO*//*);
+			PhocacartRenderJs::renderJsAppendValueToUrl(/* TO DO*//*);
 			$s = array();
 			$s[] = '	function phocaSelectFileName_'.$this->id.'(title) {';
 			$s[] = '		document.getElementById("'.$this->id.'").value = title;';

@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
+class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -19,7 +19,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 	// Billing and Shipping
 	public function getFieldsBaS(){
 		if (empty($this->fieldsbas)) {
-			$this->fieldsbas = PhocaCartFormUser::getFormXml('_phb', '_phs', 1, 1, 0);
+			$this->fieldsbas = PhocacartFormUser::getFormXml('_phb', '_phs', 1, 1, 0);
 		}
 		return $this->fieldsbas;
 	}
@@ -35,7 +35,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 		
 		try {
 			$form = JForm::getInstance('com_phocacart.order.bas', (string)$this->fieldsbas['xml'], $options, false, false);
-			$order= new PhocaCartOrderView();
+			$order= new PhocacartOrderView();
 			$data = $order->getItemBaS($orderId);
 			$this->preprocessForm($form, $data);
 			$form->bind($data);
@@ -59,7 +59,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartOrder', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartOrder', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -91,11 +91,12 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 			return false;
 		}
 		
-		$order	= new PhocaCartOrder();
+		$order	= new PhocacartOrder();
 		$jform 	= $app->input->get('jform', array(), 'array');
 		$pform 	= $app->input->get('pform', array(), 'array');
 		$aform 	= $app->input->get('aform', array(), 'array');
 		$tform 	= $app->input->get('tform', array(), 'array');
+		$dform 	= $app->input->get('dform', array(), 'array');
 		
 		
 		// Shipping, Billing
@@ -148,6 +149,19 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 			}
 		}
 		
+		// Discount Products
+		if (!empty($dform)) {
+			foreach ($dform as $k => $v) {
+				$v['id'] 		= $k;
+				if (isset($v['published'])) {
+					$v['published'] = 1;
+				} else {
+					$v['published'] = 0;
+				}
+				$discount = $this->storeOrderProductDiscounts($v);
+			}
+		}
+		
 		// Total
 		if (!empty($tform)) {
 			foreach ($tform as $k => $v) {
@@ -192,10 +206,10 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 		}
 		
 		// Store the history
-		$notify 	= PhocaCartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']); 
+		$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']); 
 		$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
 	
-		PhocaCartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
+		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
 		
 		
 		$cache = JFactory::getCache($this->option);
@@ -212,7 +226,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 	
 	
 	public function storeOrderProducts($d) {
-		$row = JTable::getInstance('PhocaCartOrderProducts', 'Table', array());
+		$row = JTable::getInstance('PhocacartOrderProducts', 'Table', array());
 
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
@@ -231,7 +245,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 	}
 	
 	public function storeOrderAttributes($d) {
-		$row = JTable::getInstance('PhocaCartOrderAttributes', 'Table', array());
+		$row = JTable::getInstance('PhocacartOrderAttributes', 'Table', array());
 
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
@@ -250,7 +264,7 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 	}
 	
 	public function storeOrderTotal($d) {
-		$row = JTable::getInstance('PhocaCartOrderTotal', 'Table', array());
+		$row = JTable::getInstance('PhocacartOrderTotal', 'Table', array());
 
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
@@ -269,7 +283,26 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 	}
 	
 	public function storeOrderAddress($d) {
-		$row = JTable::getInstance('PhocaCartOrderUsers', 'Table', array());
+		$row = JTable::getInstance('PhocacartOrderUsers', 'Table', array());
+
+		if (!$row->bind($d)) {
+			throw new Exception($db->getErrorMsg());
+			return false;
+		}
+		
+		if (!$row->check()) {
+			throw new Exception($row->getError());
+			return false;
+		}
+		
+		if (!$row->store()) {
+			throw new Exception($row->getError());
+			return false;
+		}
+	}
+	
+	public function storeOrderProductDiscounts($d) {
+		$row = JTable::getInstance('PhocacartOrderProductDiscounts', 'Table', array());
 
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
@@ -310,37 +343,49 @@ class PhocaCartCpModelPhocaCartOrder extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 3. DELETE COUPONS
+			// 3. DELETE DISCOUNTS
+			$query = 'DELETE FROM #__phocacart_order_discounts'
+					. ' WHERE order_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 4. DELETE COUPONS
 			$query = 'DELETE FROM #__phocacart_order_coupons'
 					. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 4. DELETE DOWNLOADS
+			// 5. DELETE DOWNLOADS
 			$query = 'DELETE FROM #__phocacart_order_downloads'
 				. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 5. DELETE HISTORY
+			// 6. DELETE HISTORY
 			$query = 'DELETE FROM #__phocacart_order_history'
 				. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 6. DELETE PRODUCTS
+			// 7. DELETE PRODUCTS
 			$query = 'DELETE FROM #__phocacart_order_products'
 				. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 7. DELETE TOTAL
+			// 8. DELETE PRODUCT Discounts
+			$query = 'DELETE FROM #__phocacart_order_product_discounts'
+				. ' WHERE order_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 9. DELETE TOTAL
 			$query = 'DELETE FROM #__phocacart_order_total'
 				. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 8. DELETE USERS
+			// 10. DELETE USERS
 			$query = 'DELETE FROM #__phocacart_order_users'
 				. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );

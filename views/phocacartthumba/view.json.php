@@ -25,7 +25,7 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 		$fileName	= $app->input->get( 'filename', '', 'string'  );
 		$fileName	= rawUrlDecode($fileName);
 		$manager	= $app->input->get( 'manager', '', 'string'  );
-		$path		= PhocaCartPath::getPath($manager);
+		$path		= PhocacartPath::getPath($manager);
 		$absPath	= $path['orig_abs_ds'] . $fileName;
 		
 		if (!JFile::exists($absPath)) {
@@ -37,7 +37,7 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 		
 		}
 		
-		$folder 		= PhocaCartFile::getFolderFromTheFile($fileName);
+		$folder 		= PhocacartFile::getFolderFromTheFile($fileName);
 		$absPathFolder	= $path['orig_abs_ds'] . $folder;
 		
 		/*
@@ -55,16 +55,31 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 		}*/
 		
 		
-		$thumbnail = PhocaCartFileThumbnail::getOrCreateThumbnail($fileName, '', 1, 1, 1, 0, $manager);
+		$ext = strtolower(JFile::getExt($fileName));
 		
-		//DO THUMBNAILS and return if true or false
-		$string = $thumbnail;
-		if (is_array($thumbnail)) {
-			$string = '';
-			foreach ($thumbnail as $k => $v) {
-				$string .= '['.$k.'] ... '.$v.'<br />';
-			}
+		
+		switch ($ext) {
+			case 'jpg':
+			case 'png':
+			case 'gif':
+			case 'jpeg':
+				$thumbnail = PhocacartFileThumbnail::getOrCreateThumbnail($fileName, '', 1, 1, 1, 0, $manager);
+				
+				//DO THUMBNAILS and return if true or false
+				$string = $thumbnail;
+				if (is_array($thumbnail)) {
+					$string = '';
+					foreach ($thumbnail as $k => $v) {
+						$string .= '['.$k.'] ... '.$v.'<br />';
+					}
+				}
+			break;
+			default:
+				$string = JText::_('COM_PHOCACART_SELECTED_IMAGE_TYPE_NOT_SUPPORTED');
+			break;
 		}
+		
+		
 		
 		$msg = $string;
 		$response = array(
@@ -82,6 +97,8 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 		echo json_encode($response);
 		return;*/
 			
+			
+		/*
 		$app	= JFactory::getApplication();
 		$params			= &$app->getParams();
 		
@@ -199,6 +216,7 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 			echo json_encode($response);
 			return;
 		}
+		*/
 	}
 }
 ?>

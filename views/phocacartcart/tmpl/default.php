@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 
 	$link	= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartcart&tmpl=component&&id='.(int)$this->item->user_id);
-	$cart	= new PhocaCartRenderCart();
+	$cart	= new PhocacartCartRendercart();
 	$cart->setFullItems();
 	echo '<div class="ph-cart-info-box">';
 	echo $cart->render();

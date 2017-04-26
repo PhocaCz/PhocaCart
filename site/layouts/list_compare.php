@@ -12,10 +12,11 @@ $d = $displayData;
 if (!empty($d['compare'])) {
 	foreach ($d['compare'] as $k => $v) {
 		// Try to find the best menu link
+		
 		if (isset($v->catid2) && (int)$v->catid2 > 0 && isset($v->catalias2) && $v->catalias2 != '') {
-			$linkProduct 	= JRoute::_(PhocaCartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
+			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
 		} else {
-			$linkProduct 	= JRoute::_(PhocaCartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 		}
 		
 ?>

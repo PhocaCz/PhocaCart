@@ -13,9 +13,10 @@ class PhocaCartControllerItem extends JControllerForm
 	public function review() { 
 		
 		JSession::checkToken() or jexit( 'Invalid Token' );
-		$paramsC 			= JComponentHelper::getParams('com_phocacart');
-		$approve_review 	= $paramsC->get( 'approve_review',0 );
+		//$paramsC 			= JComponentHelper::getParams('com_phocacart');
 		$app				= JFactory::getApplication();
+		$paramsC 			= $app->getParams();
+		$approve_review 	= $paramsC->get( 'approve_review',0 );
 		$u					= JFactory::getUser();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -41,7 +42,7 @@ class PhocaCartControllerItem extends JControllerForm
 		}
 		
 		$error = 0;// Error message from database
-		$added = PhocaCartReview::addReview($error, $approve_review, $item['id'], $u->id, $item['name'], $item['rating'], $item['review']);
+		$added = PhocacartReview::addReview($error, $approve_review, $item['id'], $u->id, $item['name'], $item['rating'], $item['review']);
 		
 		if ($added) {
 			$msg = JText::_('COM_PHOCACART_THANK_YOU_FOR_YOUR_REVIEW');

@@ -10,10 +10,21 @@ defined('_JEXEC') or die();
 $d 				= $displayData;
 $d['paramname']	= str_replace('_', '', $d['param']);
 $jsSet			= 'phChangeSearch(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1);';
-$jsClear		= 'phChangeSearch(\''.$d['param'].'\', \'\', 0, \'text\', 1);';
+$jsClear		= 'phClearField(\'#'.$d['id'].$d['paramname'].'\');phChangeSearch(\''.$d['param'].'\', \'\', 0, \'text\', 1);';
 $displayData 	= null;
 $checkedAll 	= '';
 $checkedFilter	= '';
+
+$js  = 'jQuery(document).ready(function(){'."\n";
+$js .= '   jQuery("#'.$d['id'].$d['paramname'].'").keyup(function(event){'."\n";
+$js .= '      if(event.keyCode == 13){'."\n";
+$js .= '         jQuery("#'.$d['id'].$d['paramname'].'Btn'.'").click();'."\n";
+$js .= '      }'."\n";
+$js .= '   });'."\n";
+$js .= '});'."\n";
+$document = JFactory::getDocument();
+$document->addScriptDeclaration($js);
+
 if (isset($d['activefilter']) && $d['activefilter']) {
 	$checkedFilter = 'checked';
 } else {
@@ -25,9 +36,9 @@ if (isset($d['activefilter']) && $d['activefilter']) {
   <div class="col-lg-12">
 	
 	<div class="input-group" id="<?php echo $d['id']; ?>">
-      <input type="text" class="form-control" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_('COM_PHOCACART_SEARCH_FOR'); ?>" value="<?php echo $d['getparams']; ?>">
+      <input type="text" class="form-control" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_('COM_PHOCACART_SEARCH_FOR'); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" />
       <span class="input-group-btn">
-        <button class="btn btn-default btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" ><span class="glyphicon glyphicon-search"></span></button>
+        <button class="btn btn-default btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'].$d['paramname'].'Btn'; ?>" ><span class="glyphicon glyphicon-search"></span></button>
 		<button class="btn btn-default btn-danger tip hasTooltip" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo JText::_('COM_PHOCACART_CLEAR'); ?>" ><span class="glyphicon glyphicon-remove" ></span></button>
       </span>
     </div>

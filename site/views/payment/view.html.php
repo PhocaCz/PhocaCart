@@ -26,8 +26,8 @@ class PhocaCartViewPayment extends JViewLegacy
 		$session 					= JFactory::getSession();
 		$this->t['proceedpayment'] 	= $session->get('proceedpayment', array(), 'phocaCart');
 		
-		$order 			= new PhocaCartOrderView();
-		$payment		= new PhocaCartPayment();
+		$order 			= new PhocacartOrderView();
+		$payment		= new PhocacartPayment();
 		
 		$id				= 0;
 		if (isset($this->t['proceedpayment']['orderid'])) {
@@ -62,14 +62,14 @@ class PhocaCartViewPayment extends JViewLegacy
 			$this->t['o'] = '';
 		}
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_PAYMENT'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_PAYMENT'));
 	}
 }
 ?>

@@ -18,7 +18,7 @@
 
 <field name="item" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_XML_ITEM_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_XML_ITEM_ELEMENT_DESC"  />
 
-<field name="ordering" type="PhocaCartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
@@ -63,7 +63,7 @@
 
 <field name="item_url_video" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_VIDEO_URL_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_VIDEO_URL_ELEMENT_DESC"  />
 
-<field name="item_manufacturer" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MANUFACTURER_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_MANUFACTURER_ELEMENT_DESC"  />
+<field name="item_manufacturer" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MANUFACTURER_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_ELEMENT_DESC"  />
 
 <field name="item_category" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_ELEMENT_DESC"  />
 

@@ -8,5 +8,5 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/helpers/phocacartcommon.php';
-class PhocaCartFeedsHelper extends PhocaCartCommonHelper {}
+class PhocacartFeedsHelper extends PhocaCartCommonHelper {}
 ?>

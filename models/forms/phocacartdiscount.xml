@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+
+
+<field name="discount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_DESC" />
+
+<field name="total_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_TOTAL_AMOUNT_DESC" />
+
+<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="1">
+	<option value="1">COM_PHOCACART_PERCENTAGE</option>
+	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
+</field>
+
+<!--
+<field name="quantity_from" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_QUANTITY_FROM_LABEL" description="COM_PHOCACART_FIELD_QUANTITY_FROM_DESC" />
+-->
+<field name="quantity_from" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_DESC" />
+
+<field name="quantity_to" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_QUANTITY_TO_LABEL" description="COM_PHOCACART_FIELD_QUANTITY_FROM_DESC" />
+
+<field name="free_shipping" type="list" label="COM_PHOCACART_FIELD_FREE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_FREE_SHIPPING_DESC" class="inputbox" size="1" default="0">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option	value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="free_payment" type="list" label="COM_PHOCACART_FIELD_FREE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_FREE_PAYMENT_DESC" class="inputbox" size="1" default="0">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option	value="0">COM_PHOCACART_NO</option>
+</field>
+
+
+
+
+<field name="cat_ids" type="phocadiscountcategory" label="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_DESC" multiple="1" class="inputbox" />
+<field name="product_ids" type="phocadiscountproduct" label="COM_PHOCACART_FIELD_DISCOUNT_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_PRODUCT_DESC" class="inputbox" />
+
+<field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+		
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+
+
+
+	</fieldset>
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+	
+	<field name="valid_from" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_FROM_DESC" filter="safehtml" />
+
+<field name="valid_to" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_TO_DESC" filter="safehtml" />
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+	<option value="*">JALL</option>
+</field>
+
+
+
+	</fieldset>
+</form>

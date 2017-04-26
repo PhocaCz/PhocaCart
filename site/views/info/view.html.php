@@ -26,14 +26,14 @@ class PhocaCartViewInfo extends JViewLegacy
 		$this->t['infomessage'] = $session->get('infomessage', 0, 'phocaCart');
 		$session->set('infomessage', 0, 'phocaCart');
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_INFO'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_INFO'));
 	}
 }
 ?>

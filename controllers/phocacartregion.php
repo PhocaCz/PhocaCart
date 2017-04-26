@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
-class PhocaCartCpControllerPhocaCartRegion extends PhocaCartCpControllerPhocaCartCommon {
+class PhocaCartCpControllerPhocacartRegion extends PhocaCartCpControllerPhocaCartCommon {
 
 
 	function importregions() {

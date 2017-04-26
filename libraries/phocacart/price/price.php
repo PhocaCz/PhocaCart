@@ -8,7 +8,8 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartPrice
+
+class PhocacartPrice
 {
 	protected $price_decimals 		= 2;
 	protected $price_dec_symbol		= '.';
@@ -31,7 +32,8 @@ class PhocaCartPrice
 		// a) the currency exchange rate set in currency (can change in time)
 		// b) the currency exchange reat set in order (the order exchange rate should not change in time)
 		
-		$paramsC 			= JComponentHelper::getParams('com_phocacart');
+		$app			= JFactory::getApplication();
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$exchange_rate_order= $paramsC->get( 'exchange_rate_order', 0 );
 		
 		$currencyOrder = false;
@@ -45,9 +47,9 @@ class PhocaCartPrice
 		}
 	
 		if ((int)$id > 0) {
-			$currency	= PhocaCartCurrency::getCurrency((int)$id);
+			$currency	= PhocacartCurrency::getCurrency((int)$id);
 		} else {
-			$currency	= PhocaCartCurrency::getCurrency();
+			$currency	= PhocacartCurrency::getCurrency();
 		}
 		
 		// 1) change the currency exchange rate by order
@@ -69,12 +71,26 @@ class PhocaCartPrice
 	
 	}
 	
+	/*
+	 * 1) the price can be negative - for example rounding
+	 * 2) or we can force the negative - e.g. for discount
+	 */
 	
+	public function getPriceFormat($price, $negative = 0) {
 	
-	public function getPriceFormat($price) {
-	
-
+		
+		if ($price < 0) {
+			$negative = 1;
+		}
+		
+		
 		$price *= $this->exchange_rate;
+		
+		$price = $this->roundPrice($price);
+		
+		if ($negative) {
+			$price = abs($price);
+		}
 		
 		$price = number_format((double)$price, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep);
 	
@@ -95,8 +111,14 @@ class PhocaCartPrice
 			default:
 				$price = $price . ' ' . $this->price_currency_symbol;
 			break;
-		}	
-		return $this->price_prefix . $price . $this->price_suffix;
+		}
+		
+		if ($negative) {
+			return '- ' . $this->price_prefix . $price . $this->price_suffix;
+		} else {
+			return $this->price_prefix . $price . $this->price_suffix;
+		}
+		
 	}
 	
 	public function getTaxFormat($tax, $taxCalculationType, $format = 1) {
@@ -123,18 +145,36 @@ class PhocaCartPrice
 	 * param format - format the price or not (add currency symbol, price decimals thousands separator, ...)
 	 */
 	
-	public function getPriceItems($price, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0) {
+	public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1) {
 		
-		$priceO 			= array();
-		$paramsC 			= JComponentHelper::getParams('com_phocacart');
-		$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
-		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
-		$zero_price_text	= $paramsC->get( 'zero_price_text', '' );
-		$zero_price_label	= $paramsC->get( 'zero_price_label', '' );
+		// We need to round because if not
+		// BRUTTO          0.15  ... 0.15
+		// TAX             0.025 ... 0.03
+		// NETTO           0.125 ... 0.13
+		// BRUTTO IS WRONG 0.15  ... 0.16
+		if ($round == 1) {$price = $this->roundPrice($price);}
+	
+		
+		// Change TAX based on country or region
+		$taxChangedA 				= PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
+		$tax 						= $this->roundPrice($taxChangedA['taxrate']);
+		$taxTitle					= $taxChangedA['taxtitle'];
+		
+		$taxTitle					= JText::_($taxTitle);
+		
+		$priceO 					= array();
+		$app						= JFactory::getApplication();
+		$paramsC 					= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$tax_calculation			= $paramsC->get( 'tax_calculation', 0 );
+		$display_unit_price			= $paramsC->get( 'display_unit_price', 1 );
+		$zero_price_text			= $paramsC->get( 'zero_price_text', '' );
+		$zero_price_label			= $paramsC->get( 'zero_price_label', '' );
 
 
-		$priceO['taxtxt']	= $taxTitle;
-		$priceO['taxcalc'] 	= $tax_calculation;
+		$priceO['taxtxt']			= $taxTitle;
+		$priceO['taxcalc'] 			= $tax_calculation;
+		$priceO['zero']				= 0;
+		
 		// NO TAX
 		if ($tax_calculation == 0) {
 			$priceO['netto']		= $price;
@@ -151,9 +191,11 @@ class PhocaCartPrice
 				$priceO['tax']		= $tax;
 				$priceO['brutto']	= $priceO['netto'] + $tax;
 				$priceO['taxtxt']	= $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
-			} else { // Percentage
-				$priceO['tax']		= $priceO['netto'] * $tax / 100;
+			} else { // Percentage				
+				$priceO['tax']		= $priceO['netto'] * ($tax / 100);
+				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax']);}
 				$priceO['brutto']	= $priceO['netto'] + $priceO['tax'];
+				
 				$priceO['taxtxt']	= $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
 				
 			}
@@ -169,8 +211,15 @@ class PhocaCartPrice
 				$priceO['netto']	= $priceO['brutto'] - $tax;
 				$priceO['taxtxt']	= $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
 			} else { // Percentage
-				$priceO['netto']	= $priceO['brutto'] * 100 / ($tax + 100);
-				$priceO['tax']		= $priceO['brutto'] - $priceO['netto'];
+			
+				$priceO['tax']		= $priceO['brutto'] - ($priceO['brutto'] / (($tax / 100) + 1));
+				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax']);}
+				$priceO['netto']	= $priceO['brutto'] - $priceO['tax'];
+				//$priceO['netto']	= $priceO['brutto'] * 100 / ($tax + 100);
+				//$priceO['tax']	= $priceO['brutto'] - $priceO['netto'];
+				//$coefficient		= $tax / ($tax + 100);
+				//$priceO['tax']	= $priceO['brutto'] * $coefficient; // POSIBLE TO DO - round e.g. to 4
+				//$priceO['netto']	= $priceO['brutto'] - $priceO['tax'];
 				$priceO['taxtxt']	= $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
 				
 			}
@@ -201,6 +250,7 @@ class PhocaCartPrice
 		$priceO['baseformat'] 	= '';
 		if ($baseAmount > 0 && (int)$display_unit_price > 0) {
 			$priceO['base'] 		= $priceO['brutto'] / $baseAmount;
+			if ($round == 1) 		{ $priceO['base'] = $this->roundPrice($priceO['base']);}
 			$priceO['baseformat'] 	= $this->getPriceFormat($priceO['base']).'/'.$baseUnit;
 		}
 		
@@ -217,29 +267,101 @@ class PhocaCartPrice
 			
 		}
 		
+		if ($priceO['brutto'] == 0 && $priceO['netto'] == 0) {
+			$priceO['zero'] = 1;
+		}
+		
 		
 		return $priceO;
 	}
 	
-	public function getPriceItemsShipping($price, $tax, $taxCalculationType, $taxTitle = '', $freeShipping = 0) {
+	/*
+	 * $type ... price, shipping, payment
+	 * ROUNDING - TAX EXCLUSIVE - ROUND UP
+	 * ROUNDING - TAX INCLUSIVE - ROUND DOWN
+	 */
+	public function roundPrice($price, $type = 'price') {
 		
+		$app						= JFactory::getApplication();
+		$paramsC 					= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$rounding_calculation		= $paramsC->get( 'rounding_calculation', 2 );
+		/*$tax_calculation			= $paramsC->get( 'tax_calculation', 0 );
+		$tax_calculation_shipping	= $paramsC->get( 'tax_calculation_shipping', 0 );
+		$tax_calculation_payment	= $paramsC->get( 'tax_calculation_payment', 0 );
+		
+		switch($type) {
+			
+			case 'shipping':
+				//        if tax_calculation_shipping == inclusive then rown down else round up
+				$rounding = $tax_calculation_shipping == 2 ? 2 : 1;
+			break;
+			case 'payment':
+				$rounding = $tax_calculation_payment == 2 ? 2 : 1;
+			break;
+			case 'price':
+			default:
+				$rounding = $tax_calculation == 2 ? 2 : 1;
+			break;
+			
+		}*/
+		$rounding = $rounding_calculation; // 1 ... down, 2 ... up
+		
+		return round($price, $this->price_decimals, $rounding);
+	}
+	
+	public function getPriceItemsShipping($price, $calculationType, $total, $taxId, $tax, $taxCalculationType, $taxTitle = '', $freeShipping = 0, $round = 1, $langPrefix = 'SHIPPING_') {
+		
+		// PERCENTAGE PRICE OF SHIPPING
+		// CALCULATED FROM TOTAL - PAYMENT - SHIPPING (TOTAL BEFORE SHIPPING AND PAYMENT PRICE)
+		// $total[brutto] can be changed e.g. to netto, etc.
+		if ($calculationType == 1 && isset($total['brutto'])) {
+			$price = $total['brutto'] * $price / 100;
+		}
+		
+		if ($round == 1) {$price = $this->roundPrice($price, 'shipping');}
+		
+		// Change TAX based on country or region
+		$taxChangedA 				= PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
+		$tax 						= $this->roundPrice($taxChangedA['taxrate'], 'shipping');
+		$taxTitle					= $taxChangedA['taxtitle'];
+		
+		$taxTitle					= JText::_($taxTitle);
 		
 		$priceO 					= array();
-		$paramsC 					= JComponentHelper::getParams('com_phocacart');
+		
+		// Define - the function always return all variables so we don't need to check them
+		$priceO['nettoformat']		= '';
+		$priceO['taxformat']		= '';
+		$priceO['bruttoformat']		= '';
+		$priceO['bruttotxt']		= '';
+		$priceO['netto']			= 0;
+		$priceO['tax']				= 0;
+		$priceO['brutto']			= 0;
+		$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');
+		$priceO['taxtxt']			= '';
+		$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
+		$priceO['zero']				= 0;
+		$priceO['freeshipping'] 	= 0;
+		
+		$app						= JFactory::getApplication();
+		$paramsC 					= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$tax_calculation_shipping	= $paramsC->get( 'tax_calculation_shipping', 0 );
 		
 		
-		$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_SHIPPING_PRICE_INCL_TAX');
-		$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_SHIPPING_PRICE_EXCL_TAX');
+		
 		
 		// E.G. if coupon set the shipping costs to null - free shipping
 		if ($freeShipping == 1) {
 			$priceO['netto']			= 0;
+			$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_FREE_SHIPPING');
 			$priceO['tax']				= 0;
 			$priceO['brutto'] 			= 0;
 			$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_FREE_SHIPPING');
 			$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
 			$priceO['freeshipping'] 	= 1;
+			$priceO['zero']				= 1;
+			$priceO['title']			= JText::_('COM_PHOCACART_FREE_SHIPPING');
+			$priceO['description']		= '';
 			return $priceO;
 		}
 	
@@ -258,14 +380,15 @@ class PhocaCartPrice
 			if ($taxCalculationType == 2) { // FIX
 				$priceO['tax']		= $tax;
 				$priceO['brutto']	= $priceO['netto'] + $tax;
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_SHIPPING_PRICE') . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
 			} else { // Percentage
-				$priceO['tax']		= $priceO['netto'] * $tax / 100;
+				$priceO['tax']		= $priceO['netto'] * ($tax / 100);
+				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax'], 'shipping');}
 				$priceO['brutto']	= $priceO['netto'] + $priceO['tax'];
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_SHIPPING_PRICE') . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';	
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';	
 			}
-			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_SHIPPING_PRICE_INCL_TAX');
-			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_SHIPPING_PRICE_EXCL_TAX');		
+			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
+			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');		
 	
 		// INCLUSIVE TAX
 		} else if ($tax_calculation_shipping == 2) {
@@ -273,21 +396,23 @@ class PhocaCartPrice
 			if ($taxCalculationType == 2) { // FIX
 				$priceO['tax']		= $tax;
 				$priceO['netto']	= $priceO['brutto'] - $tax;
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_SHIPPING_PRICE') . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
 			} else { // Percentage
-				$priceO['netto']	= $priceO['brutto'] * 100 / ($tax + 100);
-				$priceO['tax']		= $priceO['brutto'] - $priceO['netto'];
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_SHIPPING_PRICE') . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
+				
+				$priceO['tax']		= $priceO['brutto'] - ($priceO['brutto'] / (($tax / 100) + 1));
+				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax'], 'shipping');}
+				$priceO['netto']	= $priceO['brutto'] - $priceO['tax'];
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
 			}
-			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_SHIPPING_PRICE_INCL_TAX');
-			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_SHIPPING_PRICE_EXCL_TAX');	
+			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
+			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');	
 		}
 		
 		
 		if ($priceO['netto'] == $priceO['brutto']){
 			$priceO['netto'] 		= false;
-			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_SHIPPING_PRICE');
-			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_SHIPPING_PRICE');
+			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE');
+			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE');
 		}
 		
 		//if ($tax_calculation_shipping > 0) {
@@ -301,29 +426,77 @@ class PhocaCartPrice
 		$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
 		
 		
+		if ($priceO['brutto'] == 0 && $priceO['netto'] == 0) {
+			$priceO['zero'] = 1;
+		}
+		
+		/*
+		$priceI['nettoformat']	= isset($priceI['nettoformat']) ? $priceI['nettoformat'] : '';
+		$priceI['taxformat']	= isset($priceI['taxformat']) ? $priceI['taxformat'] : '';
+		$priceI['bruttoformat']	= isset($priceI['bruttoformat']) ? $priceI['bruttoformat'] : '';
+		$priceI['bruttotxt']	= isset($priceI['bruttotxt']) ? $priceI['bruttotxt'] : '';
+		$priceI['taxtxt']		= isset($priceI['taxtxt']) ? $priceI['taxtxt'] : '';
+		$priceI['bruttotxt']	= isset($priceI['bruttotxt']) ? $priceI['bruttotxt'] : '';
+		$priceI['netto']		= isset($priceI['netto']) ? $priceI['netto'] : 0;
+		$priceI['brutto']		= isset($priceI['brutto']) ? $priceI['brutto'] : 0;*/
+		
 		return $priceO;
 	}
 
 	
-	public function getPriceItemsPayment($price, $tax, $taxCalculationType, $taxTitle = '', $freePayment = 0) {
+	public function getPriceItemsPayment($price, $calculationType, $total, $taxId, $tax, $taxCalculationType, $taxTitle = '', $freePayment = 0, $round = 1, $langPrefix = 'PAYMENT_') {
 		
+		
+		// PERCENTAGE PRICE OF PAYMENT
+		// CALCULATED FROM TOTAL - PAYMENT (TOTAL BEFORE PAYMENT PRICE)
+		// $total[brutto] can be changed e.g. to netto, etc.
+		if ($calculationType == 1 && isset($total['brutto'])) {
+			$price = $total['brutto'] * $price / 100;
+		}
+		
+		
+		if ($round == 1) {$price = $this->roundPrice($price, 'payment');}
+		
+		
+		// Change TAX based on country or region
+		$taxChangedA 				= PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
+		$tax 						= $this->roundPrice($taxChangedA['taxrate'], 'payment');
+		$taxTitle					= $taxChangedA['taxtitle'];
+		
+		$taxTitle					= JText::_($taxTitle);
 		
 		$priceO 					= array();
-		$paramsC 					= JComponentHelper::getParams('com_phocacart');
+		$app						= JFactory::getApplication();
+		$paramsC 					= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$tax_calculation_payment	= $paramsC->get( 'tax_calculation_payment', 0 );
 		
-		
-		$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE_INCL_TAX');
-		$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE_EXCL_TAX');
+		// Define - the function always return all variables so we don't need to check them
+		$priceO['nettoformat']		= '';
+		$priceO['taxformat']		= '';
+		$priceO['bruttoformat']		= '';
+		$priceO['bruttotxt']		= '';
+		$priceO['netto']			= 0;
+		$priceO['tax']				= 0;
+		$priceO['brutto']			= 0;
+		$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');
+		$priceO['taxtxt']			= '';
+		$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
+		$priceO['zero']				= 0;
+		$priceO['freepayment'] 		= 0;
+
 		
 		// E.G. if coupon set the shipping costs to null - free shipping
 		if ($freePayment == 1) {
 			$priceO['netto']			= 0;
+			$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_FREE_PAYMENT');
 			$priceO['tax']				= 0;
 			$priceO['brutto'] 			= 0;
 			$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_FREE_PAYMENT');
 			$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
 			$priceO['freepayment'] 		= 1;
+			$priceO['zero']				= 1;
+			$priceO['title']			= JText::_('COM_PHOCACART_FREE_PAYMENT');
+			$priceO['description']		= '';
 			return $priceO;
 		}
 	
@@ -342,14 +515,16 @@ class PhocaCartPrice
 			if ($taxCalculationType == 2) { // FIX
 				$priceO['tax']		= $tax;
 				$priceO['brutto']	= $priceO['netto'] + $tax;
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_PAYMENT_PRICE') . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
 			} else { // Percentage
-				$priceO['tax']		= $priceO['netto'] * $tax / 100;
+			
+				$priceO['tax']		= $priceO['netto'] * ($tax / 100);
+				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax'], 'payment');}
 				$priceO['brutto']	= $priceO['netto'] + $priceO['tax'];
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_PAYMENT_PRICE') . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';	
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';	
 			}
-			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE_INCL_TAX');
-			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE_EXCL_TAX');		
+			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
+			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');		
 	
 		// INCLUSIVE TAX
 		} else if ($tax_calculation_payment == 2) {
@@ -357,21 +532,22 @@ class PhocaCartPrice
 			if ($taxCalculationType == 2) { // FIX
 				$priceO['tax']		= $tax;
 				$priceO['netto']	= $priceO['brutto'] - $tax;
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_PAYMENT_PRICE') . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
 			} else { // Percentage
-				$priceO['netto']	= $priceO['brutto'] * 100 / ($tax + 100);
-				$priceO['tax']		= $priceO['brutto'] - $priceO['netto'];
-				$priceO['taxtxt']	= JText::_('COM_PHOCACART_PAYMENT_PRICE') . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
+				$priceO['tax']		= $priceO['brutto'] - ($priceO['brutto'] / (($tax / 100) + 1));
+				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax'], 'payment');}
+				$priceO['netto']	= $priceO['brutto'] - $priceO['tax'];
+				$priceO['taxtxt']	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE') . ' ' . $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
 			}
-			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE_INCL_TAX');
-			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE_EXCL_TAX');	
+			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
+			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');	
 		}
 		
 		
 		if ($priceO['netto'] == $priceO['brutto']){
 			$priceO['netto'] 		= false;
-			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE');
-			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_PAYMENT_PRICE');
+			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE');
+			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE');
 		}
 		
 		//if ($tax_calculation_payment > 0) {
@@ -384,6 +560,9 @@ class PhocaCartPrice
 		//}
 		$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
 		
+		if ($priceO['brutto'] == 0 && $priceO['netto'] == 0) {
+			$priceO['zero'] = 1;
+		}
 		
 		return $priceO;
 	}

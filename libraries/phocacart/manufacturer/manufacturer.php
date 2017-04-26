@@ -8,13 +8,13 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartManufacturer
+class PhocacartManufacturer
 {	
-	public static function getAllManufacturers() {
+	public static function getAllManufacturers($ordering = 1) {
 	
-		$db = JFactory::getDBO();
-		
-		$query = 'SELECT a.id, a.title, a.alias FROM #__phocacart_manufacturers AS a WHERE a.published = 1 ORDER BY a.id';
+		$db 			= JFactory::getDBO();
+		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 4);
+		$query = 'SELECT m.id, m.title, m.alias FROM #__phocacart_manufacturers AS m WHERE m.published = 1 ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();	
 	

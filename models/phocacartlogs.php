@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartLogs extends JModelList
+class PhocaCartCpModelPhocacartLogs extends JModelList
 {
 	protected $option 	= 'com_phocacart';	
 	
@@ -20,6 +20,7 @@ class PhocaCartCpModelPhocaCartLogs extends JModelList
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'id', 'a.id',
+				'title', 'a.title',
 				'user_id','a.user_id',
 				'type_id', 'a.type_id',
 				'type', 'a.type',
@@ -138,8 +139,10 @@ class PhocaCartCpModelPhocaCartLogs extends JModelList
 		}
 	
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering', 'title');
+		$orderCol	= $this->state->get('list.ordering', 'date');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
+		
+	
 		
 		/*if ($orderCol != 'a.id') {
 			$orderCol = 'a.id';

@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -12,7 +12,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -123,7 +123,7 @@ if($item->active_weight) {$rules[] = '<span class="label label-success label-suc
 
 
 echo $r->td(implode(" ", $rules), "small");*/
-echo $r->td($this->escape(PhocaCartOrder::getOrderNumber($item->order_id)), "small");
+echo $r->td($this->escape(PhocacartOrder::getOrderNumber($item->order_id)), "small");
 
 $userO = $this->escape($item->user_name);
 if (isset($item->user_username)) {
@@ -140,7 +140,7 @@ if((int)$this->t['download_count'] > 0 && ((int)$this->t['download_count'] == (i
 
 }
 
-if((int)$this->t['download_days'] > 0 && !PhocaCartDownload::isActive($item->date, $this->t['download_days'])) {
+if((int)$this->t['download_days'] > 0 && !PhocacartDownload::isActive($item->date, $this->t['download_days'])) {
 	$status .= '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span>';
 
 }

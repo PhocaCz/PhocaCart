@@ -82,7 +82,7 @@ class PhocaCartViewItem extends JViewLegacy
 		
 		
 		$this->t['image_rel'] = '';
-		$this->t['pathitem'] = PhocaCartpath::getPath('productimage');
+		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		
 		if (!$this->item) {
 			
@@ -95,26 +95,26 @@ class PhocaCartViewItem extends JViewLegacy
 			
 		} else {
 		
-			//$this->t['add_images']			= PhocaCartImage::getAdditionalImages((int)$id);
-			//$this->t['rel_products']		= PhocaCartRelated::getRelatedItemsById((int)$id, 0, 1);
-			//$this->t['tags_output']			= PhocaCartTag::getTagsRendered((int)$id);
-			$this->t['stock_status']		= PhocaCartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
-			$this->t['stock_status_output'] = PhocaCartStock::getStockStatusOutput($this->t['stock_status']);
-			$this->t['attr_options']		= PhocaCartAttribute::getAttributesAndOptions((int)$id);
-			$this->t['specifications']		= PhocaCartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
-			//$this->t['reviews']				= PhocaCartReview::getReviewsByProduct((int)$id);
+			//$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
+			//$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
+			//$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
+			$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
+			$this->t['stock_status_output'] = PhocacartStock::getStockStatusOutput($this->t['stock_status']);
+			$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$id);
+			$this->t['specifications']		= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
+			//$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
 		
 			//$this->t['action']				= $uri->toString();
-			$this->t['action']				= JRoute::_(PhocaCartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['action']				= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
-			$this->t['linkcheckout']		= JRoute::_(PhocaCartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkitem']			= JRoute::_(PhocaCartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkcheckout']		= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkitem']			= JRoute::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 
 		
 			
 			/*
-			$media = new PhocaCartRenderMedia();
+			$media = new PhocacartRenderMedia();
 			$media->loadBootstrap($this->t['load_bootstrap']);
 			$media->loadChosen($this->t['load_chosen']);
 			
@@ -123,20 +123,20 @@ class PhocaCartViewItem extends JViewLegacy
 			$media->loadPhocaAttribute(1);
 			
 			if ($this->t['image_popup_method'] == 2) {
-				PhocaCartRenderJs::renderMagnific();
+				PhocacartRenderJs::renderMagnific();
 				$this->t['image_rel'] = 'rel="magnific" class="magnific"';
 			} else {
-				PhocaCartRenderJs::renderPrettyPhoto();
+				PhocacartRenderJs::renderPrettyPhoto();
 				$this->t['image_rel'] = 'rel="prettyPhoto[pc_gal1]"';
 			}
 
 			if ($this->t['dynamic_change_price'] == 1) {
-				PhocaCartRenderJs::renderAjaxChangeProductPriceByOptions((int)$this->item[0]->id, 'ph-item-price-box');
+				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions((int)$this->item[0]->id, 'ph-item-price-box');
 			}
 			
-			PhocaCartRenderJs::renderAjaxAddToCart();
-			PhocaCartRenderJs::renderAjaxAddToCompare();
-			PhocaCartRenderJs::renderAjaxAddToWishList();
+			PhocacartRenderJs::renderAjaxAddToCart();
+			PhocacartRenderJs::renderAjaxAddToCompare();
+			PhocacartRenderJs::renderAjaxAddToWishList();
 			
 			if ($this->t['popup_askquestion'] == 1) {
 				$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
@@ -147,12 +147,17 @@ class PhocaCartViewItem extends JViewLegacy
 				$this->_prepareDocument($this->category[0], $this->item[0]);
 			}
 			
-			$this->t['pathitem'] = PhocaCartpath::getPath('productimage');*/
+			$this->t['pathitem'] = PhocacartPath::getPath('productimage');*/
 			
-			$layoutP	= new JLayoutFile('product_price', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-			$layoutA	= new JLayoutFile('button_add_to_cart_item', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-			$layoutA2	= new JLayoutFile('button_buy_now_paddle', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
-			$layoutQV 	= new JLayoutFile('popup_quickview', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');		
+			$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+			$layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
+			$layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
+			$layoutQV 	= new JLayoutFile('popup_quickview', null, array('component' => 'com_phocacart'));
+			$layoutAtOS	= new JLayoutFile('attribute_options_select', null, array('component' => 'com_phocacart'));
+			$layoutAtOC	= new JLayoutFile('attribute_options_checkbox', null, array('component' => 'com_phocacart'));
+
+
+	
 			
 $o = '';
 $x = $this->item[0];
@@ -166,25 +171,16 @@ if (!empty($x)) {
 	// === IMAGE PANEL
 	$o[] = '<div id="phImageBox" class="col-xs-12 col-sm-6 col-md-6">';
 	
-	$new = $hot = $feat = '';
-	$c = 1;
-	$new = PhocaCartRenderFront::renderNewIcon($x->date, $c);
-	if ($new != '') {$c++;}
-	$hot = PhocaCartRenderFront::renderHotIcon($x->sales, $c);
-	if ($hot != '') { $c++;}
-	$feat = PhocaCartRenderFront::renderFeaturedIcon($x->featured, $c);
-	$o[] = $new . $hot . $feat;
-	$cssT = '';
-	$cssT2 = 'img-thumbnail';
-	if ($c > 1) {
-		$cssT = 'thumbnail';
-		$cssT2 = '';
-	}
+	$label 	= PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
+
 	
 	// IMAGE
-	$o[] = '<div class="ph-item-image-full-box '.$cssT.'">';
-	$image 	= PhocaCartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
-	$imageL = PhocaCartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
+	$o[] = '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
+	
+	$o[] = $label['new'] . $label['hot'] . $label['feat'];
+	
+	$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
+	$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
 	$link 	= JURI::base(true).'/'.$imageL->rel;
 		
 		 
@@ -197,7 +193,7 @@ if (!empty($x)) {
 		//    and this we will do per customHref in function Display: function(imgBox, form, select, customHref) {
 		//    custom href will be javascript:void(0); see this file, line cca 286 phSIO1'.(int)$formId.'.Init
 		$o[] = '<a href="javascript:void(0);" '.$this->t['image_rel'].'>';
-		$o[] = '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive '.$cssT2.' ph-image-full"';
+		$o[] = '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full"';
 		if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
 			$o[] = ' style="width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px"';
 		}
@@ -217,15 +213,15 @@ if (!empty($x)) {
 	
 
 	// :L: PRICE
-	$price 				= new PhocaCartPrice;// Can be used by options
+	$price 				= new PhocacartPrice;// Can be used by options
 	if ($this->t['hide_price'] != 1) {
 		
 		$d					= array();
-		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1);
+		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1);
 		
 		$d['priceitemsorig']= array();
 		if ($x->price_original != '' && $x->price_original > 0) {
-			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxrate, $x->taxcalculationtype);
+			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype);
 		}
 		$d['class']			= 'ph-item-price-box';
 		$o[] = '<div id="phItemPriceBox">';
@@ -277,98 +273,45 @@ if (!empty($x)) {
 	// ATTRIBUTES, OPTIONS
 	if (!empty($this->t['attr_options']) && $this->t['hide_attributes'] != 1) {
 		
-
-		// Javascript library phSwapImage
-		$formId = 1;
-		if ($this->t['dynamic_change_image'] == 1) {
-			$s = array();
-			$s[] = 'jQuery(document).ready(function() {';
-			$s[] = '	var phSIO1'.(int)$formId.' = new phSwapImage;';
-			$s[] = '	phSIO1'.(int)$formId.'.Init(\'.ph-item-image-full-box\', \'#phItemPriceBoxForm\', \'select.ph-item-input-select-attributes\', \'javascript:void(0);\');';// Added custom href as in Quick View there i no link of image
-			$s[] = '	phSIO1'.(int)$formId.'.Display();';
-			$s[] = '});';
-			//JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-			$o[] = '<script type="text/javascript">'.implode("\n", $s).'</script>';
-		}
+		$o[] =  PhocacartRenderJs::renderPhSwapImageInitialize(1, $this->t['dynamic_change_image'], 1);
 		
-		$o[] = '<div class="ph-item-attributes-box">';
-		$o[] = '<h4>'.JText::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';
-		
-		
+		$o[] =  '<div class="ph-item-attributes-box" id="phItemAttributesBox">';
+		$o[] =  '<h4>'.JText::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';
 		
 		foreach ($this->t['attr_options'] as $k => $v) {
 			
 			
-			// Color Type
+			// SELECTBOX COLOR, SELECTBOX IMAGE
 			if ($v->type == 2 || $v->type == 3) {
-				
-				// Javascript library phAttribute
-				$s = array();
-				$s[] = 'jQuery(document).ready(function() {';
-				$s[] = '	var phAO'.(int)$v->id.' = new phAttribute;';
-				$s[] = '	phAO'.(int)$v->id.'.Init('.(int)$v->id.', '.(int)$v->type.');';
-				$s[] = '	phAO'.(int)$v->id.'.Display();';
-				$s[] = '});';
-				//JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-				$o[] = '<script type="text/javascript">'.implode("\n", $s).'</script>';
+				$o[] = PhocacartRenderJs::renderPhAttributeSelectBoxInitialize((int)$v->id, (int)$v->type, 1);
 			}
 			
-			// If the attribute is required
-			$req 	= '';
-			$reqS	= '';
-			if (isset($v->required) && $v->required == 1) {
-				
-				$req = ' required="" aria-required="true"';
-				$reqS = '<span class="ph-req">*</span>';
-			}
-
+			// If the attribute is required, return different required parts (attribute - html5, class - jquery, span - heading)
+			// Set jquery required validation, which should help to html 5 in case of checkboxes (see more info in the funtion)
+			// TYPES SET for JQUERY require control: 4 5 6
+			$req = PhocacartRenderJs::renderRequiredParts((int)$v->id, (int)$v->required);
 			
-			$o[] = '<div class="ph-attribute-title">'.$v->title.$reqS.'</div>';
+			// HTML5 does not know to check checkboxes - if some value is set
+			// CHECKBOX, CHECKBOX COLOR, CHECKBOX IMAGE
+			if($v->type == 4 || $v->type == 5 || $v->type == 6) {
+				$o[] = PhocacartRenderJs::renderCheckBoxRequired((int)$v->id, 1);	
+			}
+			
+			$o[] = '<div class="ph-attribute-title">'.$v->title.$req['span'].'</div>';
 			if(!empty($v->options)) {
-			
 				
-			
-				$o[] = '<div id="phItemBoxAttribute'.$v->id.'"><select id="phItemAttribute'.$v->id.'" name="attribute['.$v->id.']" class="form-control chosen-select ph-item-input-select-attributes" '.$req.'>';
-				$o[] = '<option value="">Select Option</option>';
-				
-				
-				
-				foreach ($v->options as $k2 => $v2) {
-					if($v2->operator == '=') {
-						$operator = '';
-					} else {
-						$operator = $v2->operator;
-					}
-					$amount = $price->getPriceFormat($v2->amount);
-					
-					// Images to switch e.g.
-					$attrO		= '';
-					if ($this->t['dynamic_change_image'] == 1) {
-						if (isset($v2->image) && $v2->image != '') {
-							$imageO 	= PhocaCartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');
-							$linkO 		= JURI::base(true).'/'.$imageO->rel;
-							if (JFile::exists($imageO->abs)) {
-								$attrO		.= 'data-image-option="'.htmlspecialchars($linkO).'"';
-							}
-						}
-					}
-					
-					// Color
-					if ($v->type == 2 && isset($v2->color) && $v2->color != '') {
-						$attrO		.= ' data-color="'.strip_tags($v2->color).'"';
-					}
-					
-					// Image
-					if ($v->type == 3 && isset($v2->image_small) && $v2->image_small != '') {
-						$linkI 		= JURI::base(true).'/'.$this->t['pathitem']['orig_rel'].'/'.$v2->image_small;
-						$attrO		.= ' data-image="'.strip_tags($linkI).'"';
-					}
-					
-					$o[] = '<option '.$attrO.' value="'.$v2->id.'">'.htmlspecialchars($v2->title).' ('.$operator.' '.$amount.')</option>';
+				$d							= array();
+				$d['attribute']				= $v;
+				$d['required']				= $req;
+				$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+				$d['pathitem']				= $this->t['pathitem'];
+				$d['price']					= $price;
+
+				if ($v->type == 1 || $v->type == 2 || $v->type == 3) {
+					$o[] = $layoutAtOS->render($d);// SELECTBOX, SELECTBOX COLOR, SELECTBOX IMAGE
+				} else if ($v->type == 4 || $v->type == 5 || $v->type == 6) {
+					$o[] = $layoutAtOC->render($d);// CHECKBOX, CHECKBOX COLOR, CHECKBOX COLOR
 				}
-				
-				$o[] = '</select></div>';
-				$o[] = '<div id="phItemHiddenAttribute'.$v->id.'" style="display:none;"></div>';
 			}
 			
 		}
@@ -405,17 +348,20 @@ if (!empty($x)) {
 			
 			
 }
+
 			
 			$d				= array();
 			$d['content']	= implode("\n", $o);
 			// Popup with info - Continue,Proceed to Comparison list
-			ob_start();
-			echo $layoutQV->render($d);
-			$o2 = ob_get_contents();
-			ob_end_clean();
+			//ob_start();
+			$o2 = $layoutQV->render($d);
+			//$o2 = ob_get_contents();
+			//ob_end_clean();
 		
 			//echo implode("\n", $o);
+	
 			$model->hit((int)$id);
+			PhocacartStatisticsHits::productHit((int)$id);
 			
 			$response = array(
 			'status'	=> '1',

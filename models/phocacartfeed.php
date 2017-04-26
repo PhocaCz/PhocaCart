@@ -12,7 +12,7 @@ use Joomla\Registry\Registry;
 
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartFeed extends JModelAdmin
+class PhocaCartCpModelPhocacartFeed extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -25,7 +25,7 @@ class PhocaCartCpModelPhocaCartFeed extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartFeed', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartFeed', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	

@@ -11,7 +11,7 @@
 
 <field name="parent_id" type="phocacartcategory" label="COM_PHOCACART_FIELD_PARENT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PARENT_CATEGORY_DESC" class="inputbox" />
 
-<field name="ordering" type="PhocaCartOrdering" table="category" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="PhocacartOrdering" table="category" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 		

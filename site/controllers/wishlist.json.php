@@ -29,9 +29,9 @@ class PhocaCartControllerWishList extends JControllerForm
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
 		$item['wishlistview']	= $this->input->get( 'wishlistview', 0, 'int'  );
 		
-		$wishlist	= new PhocaCartWishList();
+		$wishlist	= new PhocacartWishlist();
 		$added		= $wishlist->addItem((int)$item['id'], (int)$item['catid']);
-		//$catid		= PhocaCartProduct::getCategoryByProductId((int)$item['id']);
+		//$catid		= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 		
 		$o = $o2 = '';
 		// Content of the wishlist list
@@ -42,9 +42,9 @@ class PhocaCartControllerWishList extends JControllerForm
 		
 		// Render the layout
 		$d = '';
-		$layoutW	= new JLayoutFile('popup_add_to_wishlist', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutW	= new JLayoutFile('popup_add_to_wishlist', null, array('component' => 'com_phocacart'));
 		
-		$d['link_wishlist'] = JRoute::_(PhocaCartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_wishlist'] = JRoute::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on wishlist site
 		// If yes and one item will be deleted per AJAX, we need to refresh wishlist site
@@ -56,28 +56,23 @@ class PhocaCartControllerWishList extends JControllerForm
 		} else {
 			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_WISH_LIST');
 			
-			$m = $app->getMessageQueue();
-			$mO = '';
-			 if (!empty($m)) {
-			   $mO .= '<ul id="system-messages">';
-			   foreach($m as $k => $v) {
-				  $mO .=  '<li class="' . $v['type'] . ' ph-msg-error">' . $v['message'] . '</li>';      
-			   }
-			   $mO .=  '</ul>';
-			}
+			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;
 		}
 		
 		// Popup with info - Continue,Proceed to wishlist list
-		ob_start();
-		echo $layoutW->render($d);
-		$o2 = ob_get_contents();
-		ob_end_clean();
+		//ob_start();
+		$o2 = $layoutW->render($d);
+		//$o2 = ob_get_contents();
+		//ob_end_clean();
+		
+		$count = $wishlist->getWishListCountItems();
 		
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
-			'popup'		=> $o2);
+			'popup'		=> $o2,
+			'count'		=> $count);
 
 		echo json_encode($response);
 		return;
@@ -102,7 +97,7 @@ class PhocaCartControllerWishList extends JControllerForm
 		
 		$wishlist	= new PhocaCartWishlist();
 		$added		= $wishlist->removeItem((int)$item['id']);
-		//$catid		= PhocaCartProduct::getCategoryByProductId((int)$item['id']);
+		//$catid		= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 		
 		$o = $o2 = '';
 		// Content of the wishlist list
@@ -113,9 +108,9 @@ class PhocaCartControllerWishList extends JControllerForm
 		
 		// Render the layout
 		$d = '';
-		$layoutW	= new JLayoutFile('popup_remove_from_wishlist', $basePath = JPATH_ROOT .'/components/com_phocacart/layouts');
+		$layoutW	= new JLayoutFile('popup_remove_from_wishlist', null, array('component' => 'com_phocacart'));
 		
-		$d['link_wishlist'] = JRoute::_(PhocaCartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_wishlist'] = JRoute::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on wishlist site
 		// If yes and one item will be deleted per AJAX, we need to refresh wishlist site
@@ -129,28 +124,23 @@ class PhocaCartControllerWishList extends JControllerForm
 		} else {
 			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_WISH_LIST');
 			
-			$m = $app->getMessageQueue();
-			$mO = '';
-			 if (!empty($m)) {
-			   $mO .= '<ul id="system-messages">';
-			   foreach($m as $k => $v) {
-				  $mO .=  '<li class="' . $v['type'] . ' ph-msg-error">' . $v['message'] . '</li>';      
-			   }
-			   $mO .=  '</ul>';
-			}
+			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;
 		}
 		
 		// Popup with info - Continue,Proceed to wishlist list
-		ob_start();
-		echo $layoutW->render($d);
-		$o2 = ob_get_contents();
-		ob_end_clean();
+		//ob_start();
+		$o2 = $layoutW->render($d);
+		//$o2 = ob_get_contents();
+		//ob_end_clean();
+		
+		$count = $wishlist->getWishListCountItems();
 			
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
-			'popup'		=> $o2);
+			'popup'		=> $o2,
+			'count'		=> $count);
 		
 		echo json_encode($response);
 		return;

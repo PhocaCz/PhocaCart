@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 echo '<div id="ph-pc-info-box" class="pc-info-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_INFO')));
+echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_INFO')));
 
 switch($this->t['infomessage']) {
 
@@ -42,5 +42,5 @@ switch($this->t['infomessage']) {
 
 echo '</div>';// end ph-pc-checkout-box
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

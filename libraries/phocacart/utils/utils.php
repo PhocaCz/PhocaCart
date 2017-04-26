@@ -7,23 +7,24 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-class PhocaCartUtils
+class PhocacartUtils
 {
 	public static function setVars( $task = '') {
 	
-		$a			= array();
-		$app		= JFactory::getApplication();
-		$a['o'] 	= htmlspecialchars(strip_tags($app->input->get('option')));
-		$a['c'] 	= str_replace('com_', '', $a['o']);
-		$a['n'] 	= 'Phoca' . ucfirst(str_replace('com_phoca', '', $a['o']));
-		$a['l'] 	= strtoupper($a['o']);
-		$a['i']		= 'media/'.$a['o'].'/images/administrator/';
-		$a['ja']	= 'media/'.$a['o'].'/js/administrator/';
-		$a['jf']	= 'media/'.$a['o'].'/js/';
-		$a['s']		= 'media/'.$a['o'].'/css/administrator/'.$a['c'].'.css';
-		$a['css']	= 'media/'.$a['o'].'/css/';
-		$a['task']	= $a['c'] . htmlspecialchars(strip_tags($task));
-		$a['tasks'] = $a['task']. 's';
+		$a				= array();
+		$app			= JFactory::getApplication();
+		$a['o'] 		= htmlspecialchars(strip_tags($app->input->get('option')));
+		$a['c'] 		= str_replace('com_', '', $a['o']);
+		$a['n'] 		= 'Phoca' . str_replace('com_phoca', '', $a['o']);
+		$a['l'] 		= strtoupper($a['o']);
+		$a['i']			= 'media/'.$a['o'].'/images/administrator/';
+		$a['ja']		= 'media/'.$a['o'].'/js/administrator/';
+		$a['jf']		= 'media/'.$a['o'].'/js/';
+		$a['s']			= 'media/'.$a['o'].'/css/administrator/'.$a['c'].'.css';
+		$a['css']		= 'media/'.$a['o'].'/css/';
+		$a['bootstrap']	= 'media/'.$a['o'].'/bootstrap/';
+		$a['task']		= $a['c'] . htmlspecialchars(strip_tags($task));
+		$a['tasks'] 	= $a['task']. 's';
 		
 		switch ($task) {
 		 case 'tax':
@@ -190,6 +191,173 @@ class PhocaCartUtils
 	        }
 	    }
 	    return $output;
+	}
+	
+	public static function convertEncoding($string) {
+	
+		$pC						= JComponentHelper::getParams( 'com_phocacart' );
+		$import_encoding_method	= $pC->get( 'import_encoding_method', '' );
+		$import_encoding		= $pC->get( 'import_encoding', '' );
+		$returnString		= '';
+
+		if ($import_encoding != '') { 
+			
+			if ($import_encoding_method == 1) { //'iconv'
+				$returnString = iconv( $import_encoding, "UTF-8", $string );
+			} else if ($import_encoding_method == 2) {//'mb_convert_encoding'
+				$returnString = mb_convert_encoding($string, "UTF-8", $import_encoding);
+			} else {
+				$returnString = $string;
+			}
+		} else {
+			$returnString = $string;
+		}
+
+		return self::removeUtf8Bom($returnString);
+	}
+	
+	public static function removeUtf8Bom($text) {
+		$bom = pack('H*','EFBBBF');
+		$text = preg_replace("/^$bom/", '', $text);
+		return $text;
+	}
+	
+	public static function getIp() {
+		
+		$ip = false;
+		if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) {
+			$ip  = $_SERVER['REMOTE_ADDR'];
+		} else {
+			$ip  = getenv('HTTP_X_FORWARDED_FOR');
+		}
+		if (!$ip) {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		
+		return $ip;
+	}
+	
+	public static function getIntFromString($string) {
+		
+		if (empty($string)) {
+			return '';
+		}
+		$int	= '';//$int = 0
+		$parts 	= explode(':', $string);
+		if (isset($parts[0])) {
+			$int = (int)$parts[0];
+		}
+		return $int;
+	}
+	
+	public static function StripHiddenChars($str) {
+		$chars = array("\r\n", "\n", "\r", "\t", "\0", "\x0B", "\xEF", "\xBB", "\xBF");
+
+		$str = str_replace($chars," ",$str);
+
+		return preg_replace('/\s+/',' ',$str);
+	}
+	
+	
+	public static function setOptionParameter($parameter, $value = '') {
+		
+		$component			= 'com_phocacart';
+		$paramsC			= JComponentHelper::getParams($component) ;
+		$paramsC->set($parameter, $value);
+		$data['params'] 	= $paramsC->toArray();
+		$table 				= JTable::getInstance('extension');
+		$idCom				= $table->find( array('element' => $component ));
+		$table->load($idCom);
+
+		if (!$table->bind($data)) {
+			throw new Exception($db->getErrorMsg());
+			return false;
+		}
+			
+		// pre-save checks
+		if (!$table->check()) {
+			throw new Exception($table->getError());
+			return false;
+		}
+
+		// save the changes
+		if (!$table->store()) {
+			throw new Exception($table->getError());
+			return false;
+		}
+		return true;
+	}
+	
+	public static function doesExist($type) {
+		
+		
+		switch ($type) {
+			case 'category':
+				$q = 'SELECT id FROM #__phocacart_categories ORDER BY id LIMIT 1';
+			break;
+			case 'tax':
+				$q = 'SELECT id FROM #__phocacart_taxes ORDER BY id LIMIT 1';
+			break;
+			case 'product':
+				$q = 'SELECT id FROM #__phocacart_products ORDER BY id LIMIT 1';
+			break;
+			case 'shipping':
+				$q = 'SELECT id FROM #__phocacart_shipping_methods ORDER BY id LIMIT 1';
+			break;
+			case 'payment':
+				$q = 'SELECT id FROM #__phocacart_payment_methods ORDER BY id LIMIT 1';
+			break;
+			case 'country':
+				$q = 'SELECT id FROM #__phocacart_countries ORDER BY id LIMIT 1';
+			break;
+			case 'region':
+				$q = 'SELECT id FROM #__phocacart_regions ORDER BY id LIMIT 1';
+			break;
+			case 'menu':
+				$q = 'SELECT id FROM #__menu WHERE client_id = 0 AND link LIKE \'index.php?option=com_phocacart%\' ORDER BY id LIMIT 1';
+			break;
+			case 'module':
+				$q = 'SELECT id FROM #__modules WHERE module LIKE \'mod_phocacart%\' ORDER BY id LIMIT 1';
+			break;
+			case 'option':
+			default:
+				$q = 'SELECT params FROM #__extensions WHERE type = \'component\' AND element = \'com_phocacart\' ORDER BY params LIMIT 1';
+			break;
+		}
+		
+		$db = JFactory::getDBO();
+		$db->setQuery($q);
+		$item = $db->loadResult();
+		
+		if ($type == 'option') {
+			$item = str_replace('{}', '', $item);
+			if (isset($item) && $item != '') { 
+				return 1;
+			}
+		} else {
+			if (isset($item) && (int)$item > 0) { 
+				return 1;
+			}
+		}
+		
+		return 0;
+		
+	}
+	
+	// $version - minimum version it must have
+	public static function isJCompatible($version) {
+		
+		$currentVersion = new JVersion();
+		if($currentVersion->isCompatible($version)) {
+			return true;
+		}
+		return false;
+	}
+	public static function setConcatCharCount($count = 16384) {
+		
+		$db = JFactory::getDBO();
+		$db->setQuery("SET @@group_concat_max_len = ".(int)$count);
+		$db->execute();
 	}
 }
 ?>

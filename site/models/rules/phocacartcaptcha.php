@@ -25,7 +25,7 @@ class JFormRulePhocacartCaptcha extends JFormRule
 		switch($captchaId) {
 			case 1:
 			default:
-				if (!PhocaCartRecaptcha::isValid()) {
+				if (!PhocacartCaptchaRecaptcha::isValid()) {
 				
 					// What happens when the CAPTCHA was entered incorrectly
 					return new JException(JText::_('COM_PHOCACART_WRONG_CAPTCHA' ), "105", E_USER_ERROR, $info, false);

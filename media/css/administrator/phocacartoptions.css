@@ -14,7 +14,7 @@ hr {
 	margin:5px 0;
 	display:block;
 	text-shadow: 0 1px 0 #ffffff;
-	margin-left: -180px;
+	margin-left: -300px;
 }
 
 .ph-options-head-expert {
@@ -25,5 +25,9 @@ hr {
 	margin:5px 0;
 	display:block;
 	text-shadow: 0 1px 0 #ffffff;
-	margin-left: -180px;
+	margin-left: -300px;
+}
+
+.form-horizontal .controls {
+    margin-left: 300px !important;
 }

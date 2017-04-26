@@ -1,0 +1,412 @@
+/*
+ * Custom CSS
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
+ */
+ 
+.j-sidebar-container {
+	border-radius: 0px;
+	border: 0px;
+	background: #fff;
+	margin: -11px 0 0 -1px;
+}
+
+.sidebar-nav .nav-list > li > a, .sidebar-nav .nav-list .nav-header {
+    text-shadow: none;
+	color: #fff;
+}
+
+.sidebar-nav .nav-list > li > a {
+    color: #555;
+    margin-left: -25px;
+    margin-right: -25px;
+    padding: 3px 25px;
+	border-left: 5px solid #fff;
+}
+
+.sidebar-nav .nav-list > li.active > a {
+    color: #3071a9;
+}
+
+.sidebar-nav .nav-list > .active > a, .sidebar-nav .nav-list > .active > a:hover, .sidebar-nav .nav-list > .active > a:focus {
+    background-color: transparent;
+	/*border-left: 5px solid #3071a9;*/
+    color: #3071a9;
+    text-shadow: none;
+}
+
+.sidebar-nav .nav > li > a:hover, .sidebar-nav .nav > li > a:focus {
+    background-color: transparent;
+    text-decoration: none;
+	/*border-left: 5px solid #3071a9;*/
+	color: #3071a9;
+}
+
+.subhead {
+    border-bottom: 0px;
+	background-color: #f2f2f2;
+}
+
+.btn-wrapper .btn-small {
+	padding: 6px 10px;
+}
+
+.btn-toolbar .btn {
+	border: 1px solid #DEDEDE !important;
+	background: #fff !important;
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
+.btn {
+	border: 1px solid #DEDEDE !important;
+	background: #fff !important;
+	box-shadow: none  !important;
+	text-shadow: none  !important;
+	border-radius: 3px !important;
+}
+
+.btn:hover, .btn:focus,
+.btn:visited, .btn:active {
+/*	background: #fff !important;
+	box-shadow: none !important;*/
+}
+
+
+
+
+
+.btn-toolbar .btn-success,
+.btn-success {
+    background-color: #00B19D !important;
+    background-image: none !important;
+    background-repeat: none !important;
+    border-color: #00B19D !important;
+    border: 1px solid #00B19D  !important;
+    color: #fff !important;
+	box-shadow: none !important;
+}
+
+.btn-success:hover, .btn-success:focus {
+	 background-color: #00B19D !important;
+	 border-color: #00B19D !important;
+	 border: 1px solid #00B19D  !important;
+}
+
+.btn-large.btn-primary,
+.btn-primary {
+	background-image: none !important;
+    background-repeat: none !important;
+    color: #fff !important;
+	box-shadow: none !important;
+	background-color: #3BAFDA !important;
+	border-color: #3BAFDA !important;
+	border: 0px !important;
+}
+
+.btn-large.btn-primary:hover, .btn-large.btn-primary:focus,
+.btn-primary:hover, .btn-primary:focus {
+	 background-color: #3BAFDA !important;
+	 border-color: #3BAFDA !important;
+	 /* border: 0px !important; */
+}
+
+.btn-large.btn-primary {
+	font-weight: bold;
+	text-shadow: none;
+}
+
+
+.btn-danger {
+	background-image: none !important;
+    background-repeat: none !important;
+    color: #fff !important;
+	box-shadow: none !important;
+	background-color: #F76397 !important;
+	border-color: #F76397 !important;
+	/*border: 0px !important;*/
+}
+
+.btn-danger:hover, .btn-danger:focus {
+	 background-color: #F76397 !important;
+	 border-color: #F76397 !important;
+	 border: 1px solid #f76397 !important;
+}
+
+.controls .btn-group.btn-group-yesno > .btn.active.btn-danger {
+	border: 1px solid #F76397 !important;
+}
+.controls .btn-group.btn-group-yesno > .btn.active.btn-success {
+	border: 1px solid #00B19D !important;
+}
+
+.controls .btn-group > .btn {
+	border-radius: 3px 0px 0px 3px !important;
+}
+
+.controls .btn-group > .btn:first-child {
+	border-radius: 3px 0px 0px 3px !important;
+	background: red !important;
+}
+
+.controls .btn-group > .btn:nth-child(4) {
+	border-radius: 0px !important;
+}
+.controls .btn-group > .btn:last-child {
+	border-radius: 0px 3px 3px 0px !important;
+}
+
+
+
+#adminForm .btn-micro, #adminForm .btn-micro.hasTooltip {
+	background: #fff !important;
+    color: #333  !important;
+	border: 1px solid #dedede;
+	box-shadow: 0px 0px 0px 0px transparent !important;
+	box-shadow: inset 0px 0px 0px 0px transparent !important;
+}
+
+#adminForm .btn-micro.active, #adminForm .btn-micro:active {
+    background: #fff !important;
+    color: #333 !important;
+	border: 1px solid #dedede !important;
+	box-shadow: 0px 0px 0px 0px transparent !important;
+	box-shadow: inset 0px 0px 0px 0px transparent !important;
+}
+.btn-micro:hover, .btn-micro:focus, .btn-micro:active, .btn-micro.active, .btn-micro.disabled, .btn-micro[disabled] {
+    background: #fff !important;
+    color: #333;
+	border: 1px solid #dedede;
+	box-shadow: 0px 0px 0px 0px transparent !important;
+	box-shadow: inset 0px 0px 0px 0px transparent !important;
+}
+
+
+
+
+.btn-inverse {
+    background-color: #363636  !important;
+	color: #fff  !important;
+	border: 0px  !important;
+}
+
+.header {
+    background-color: #3071A9;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    background-color: #fff  !important;
+    border: 1px solid #DEDEDE  !important;
+    box-shadow: none  !important;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s !important;
+}
+
+
+.controls .chzn-container-single .chzn-single,
+#phAdminEdit .chzn-container-single .chzn-single {
+    border: 1px solid #DEDEDE  !important;
+    box-shadow: none  !important;
+    color: #444 !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    border-radius: 3px !important;
+    text-shadow: none !important;
+}
+
+#phAdminEdit .select2-search-choice,
+#phAdminEdit .search-choice {
+	border: 1px solid #3BAFDA  !important;
+    box-shadow: none  !important;
+    color: #fff !important;
+    box-shadow: 0px 0px 0px 0px transparent !important;
+	box-shadow: inset 0px 0px 0px 0px transparent !important;
+	background-image:none;
+	text-shadow: none !important;
+	background: #3BAFDA;
+}
+#phAdminEdit .select2-search-choice-close,
+#phAdminEdit .chzn-container-multi .chzn-choices li.search-choice .search-choice-close {
+ 
+    background: url(../../js/chosen/chosen-sprite-white.png) -42px 1px no-repeat !important;
+
+}
+
+#phAdminEdit .select2-container-multi .select2-choices .select2-search-field input  {
+	
+	border: 0px !important;
+}
+#phAdminEdit .select2-search-choice-close {
+	height: 12px !important;
+}
+
+
+.controls .chzn-container-single .chzn-single div b,
+#phAdminView .chzn-container-single .chzn-single div b,
+#phAdminEdit .chzn-container-single .chzn-single div b  {
+	margin-top: 4px !important;
+	box-shadow: none;
+}
+
+
+.controls .chzn-container .chzn-drop,
+#phAdminView .chzn-container .chzn-drop,
+#phAdminEdit .chzn-container .chzn-drop {
+	top: 29px !important;
+	border-color: #dedede;
+	box-shadow: none;
+}
+
+.chzn-container-multi .chzn-choices li.search-field input[type="text"] {
+	margin: 0px !important;
+}
+
+.loginform .chzn-container-single .chzn-single {
+    border: 1px solid #cccccc  !important;
+}
+
+.loginform  input[type="text"], .loginform  input[type="password"] {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+
+#phEditPopup .chzn-container-single .chzn-single,
+.btn-toolbar .chzn-container-single .chzn-single {
+   /* background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%) repeat scroll 0 0 padding-box;*/
+   border: 1px solid #DEDEDE;
+   /*box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);*/
+   box-shadow: none;
+   color: #444;
+   height: 35px;
+   line-height: 24px; 
+   background: #fff;
+   padding: 5px 0 5px 8px;
+   box-shadow: none;
+   border-radius: 3px;
+   text-shadow: none;
+}
+
+
+#phEditPopup .chzn-container-single .chzn-single {
+
+	margin-bottom: 3px;
+}
+
+.chzn-container-active.chzn-with-drop .chzn-single {
+	border-color: #dedede !important;
+	box-shadow: none !important;
+	background: #fff !important;
+}
+.btn-toolbar .chzn-container .chzn-drop {
+	top: 34px !important;
+	border-color: #dedede;
+	box-shadow: none;
+}
+
+#phAdminEdit .chzn-container .chzn-choices,
+#phAdminEdit .chzn-container-active .chzn-choices {
+    border-color: #dedede;
+    box-shadow: 0px 0px 0px 0px transparent !important;
+	box-shadow: inset 0px 0px 0px 0px transparent !important;
+	background-image: none !important;
+}
+
+.filter-search .btn-group .btn {
+	background: #f2f2f2;
+}
+
+table.table-striped tr th {
+	color: #000;
+}
+
+table.table-striped {
+	margin-top: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+table.table-striped tr th {
+	color: #000;
+	border-bottom: 3px solid #e8e8e8;
+}
+
+table.table-striped tr th, table.table-striped tr th a {
+	color: #000;
+}
+
+#status {
+    background: #ebebeb;
+    border-top: 0px;
+    box-shadow: none;
+}
+
+.select2-container .select2-choice {
+    border: 1px solid #DEDEDE;
+	background-color: #fff;
+	background-image:none;
+}
+
+.select2-container .select2-choice .select2-arrow {
+   border-left: 1px solid #f2f2f2;
+   background-image: none;
+   background: #fff;
+}
+
+.input-append .add-on, .input-prepend .add-on {
+	border: 1px solid #DEDEDE;
+}
+
+.ph-options-head-expert,
+.ph-options-head {
+	border: 0px;
+	border-radius: 3px;
+}
+
+.chzn-container-multi .chzn-choices {
+    border: 1px solid #DEDEDE;
+	background-image: none;
+}
+
+.chzn-container .chzn-drop {
+    border-color: #DEDEDE;
+}
+
+.chzn-container-active.chzn-with-drop .chzn-single {
+    background-image: none;
+    border: 1px solid #DEDEDE;
+}
+
+.control-group .control-label {
+	width: 20em;
+}
+
+.well {
+    background-color: #f5f5f5;
+    border: 0;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
+}
+
+.ph-option-box input{
+	border: 1px solid #fff !important;
+}
+
+.ph-param-label {
+	
+}
+.ph-param-desc {
+	
+}
+.ph-option-param {
+	width: 20%;
+}
+.ph-option-value {
+	width: 80%;
+}

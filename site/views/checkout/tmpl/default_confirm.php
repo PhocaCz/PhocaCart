@@ -18,7 +18,7 @@ if ($this->a->confirm == 1) {
 		echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
 		echo '</div><div class="ph-cb"></div>';
 	
-	} else if ($this->t['minqtyvalid'] == 0 || $this->t['minmltpqtyvalid'] == 0) {
+	} else if ($this->t['minqtyvalid'] == 0 || $this->t['minmultipleqtyvalid'] == 0) {
 		// Header
 		if ($this->t['minqtyvalid'] == 0) {
 			echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
@@ -26,7 +26,7 @@ if ($this->a->confirm == 1) {
 			echo '</div><div class="ph-cb"></div>';
 		}
 		
-		if ($this->t['minmltpqtyvalid'] == 0) {
+		if ($this->t['minmultipleqtyvalid'] == 0) {
 			echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 			echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
 			echo '</div><div class="ph-cb"></div>';
@@ -59,7 +59,7 @@ if ($this->a->confirm == 1) {
 		echo '</div><div class="ph-cb"></div>';
 		
 		
-		$linkTerms 	= JRoute::_( PhocaCartRoute::getTermsRoute(0, 0, 'tmpl=component'));	
+		$linkTerms 	= JRoute::_( PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));	
 
 		echo '<div class="pull-right checkbox ph-checkout-checkbox-confirm">';
 		echo '<label><input type="checkbox" id="phCheckoutConfirmTermsConditions" name="phcheckouttac" required="" aria-required="true"> '.JText::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE'). ' <a href="'.$linkTerms.'" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS').'</a>';

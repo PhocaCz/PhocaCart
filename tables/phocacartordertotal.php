@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-class TablePhocaCartOrderTotal extends JTable
+class TablePhocacartOrderTotal extends JTable
 {
 	function __construct( &$db ) {
 		parent::__construct( '#__phocacart_order_total', 'id', $db );

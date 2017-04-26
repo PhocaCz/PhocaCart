@@ -12,13 +12,13 @@ $xml_item = "component";// component | template
 $xml_file = "phocacart.xml";		
 $xml_name = "com_phocacart";
 $xml_name2 = "Phoca Cart";
-$xml_creation_date = "17/10/2016";
+$xml_creation_date = "23/04/2017";
 $xml_author = "Jan Pavelka (www.phoca.cz)";
 $xml_author_email = "";
 $xml_author_url = "www.phoca.cz";
 $xml_copyright = "Jan Pavelka";
 $xml_license = "GNU/GPL";
-$xml_version = "3.0.0 RC3";
+$xml_version = "3.0.0 RC6";
 $xml_description = "Phoca Cart";
 $xml_copy_file = 1;//Copy other files in to administration area (only for development), ./front, ./language, ./other
 $xml_script_file = 'install/script.php';
@@ -60,6 +60,9 @@ $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.
 $t = 'COM_PHOCACART_REGIONS';$v = 'phocacartregions';
 $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-region.png', 3 => $t, 4 => $v);
 
+$t = 'COM_PHOCACART_ZONES';$v = 'phocacartzones';
+$xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-zone.png', 3 => $t, 4 => $v);
+
 $t = 'COM_PHOCACART_PAYMENT';$v = 'phocacartpayments';
 $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-payment.png', 3 => $t, 4 => $v);
 
@@ -81,6 +84,9 @@ $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.
 $t = 'COM_PHOCACART_COUPONS';$v = 'phocacartcoupons';
 $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-coupon.png', 3 => $t, 4 => $v);
 
+$t = 'COM_PHOCACART_DISCOUNTS';$v = 'phocacartdiscounts';
+$xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-discount.png', 3 => $t, 4 => $v);
+
 $t = 'COM_PHOCACART_DOWNLOADS';$v = 'phocacartdownloads';
 $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-download.png', 3 => $t, 4 => $v);
 
@@ -98,6 +104,18 @@ $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.
 
 $t = 'COM_PHOCACART_STATISTICS';$v = 'phocacartstatistics';
 $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-statistics.png', 3 => $t, 4 => $v);
+
+$t = 'COM_PHOCACART_HITS';$v = 'phocacarthits';
+$xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-hits.png', 3 => $t, 4 => $v);
+
+
+$t = 'COM_PHOCACART_IMPORT';$v = 'phocacartimports';
+$xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-import.png', 3 => $t, 4 => $v);
+
+
+$t = 'COM_PHOCACART_EXPORT';$v = 'phocacartexports';
+$xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-export.png', 3 => $t, 4 => $v);
+
 
 $t = 'COM_PHOCACART_SYSTEM_LOG';$v = 'phocacartlogs';
 $xml_submenu[] = array (0 => $t, 1 => 'option=com_phocacart&view='.$v, 2 => $iP.'icon-16-pc-menu-log.png', 3 => $t, 4 => $v);

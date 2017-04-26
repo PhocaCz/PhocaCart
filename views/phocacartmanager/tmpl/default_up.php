@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-$group 	= PhocaCartSettings::getManagerGroup($this->manager);
+$group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 $link = 'index.php?option='.$this->t['o'].'&amp;view='.$this->t['task'].'&amp;manager='.$this->manager . $group['c'] .'&amp;folder='.$this->folderstate->parent .'&amp;field='. $this->field;
 echo '<tr><td>&nbsp;</td>'
 .'<td class="ph-img-table">'

@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-final class PhocaCartStatistics
+final class PhocacartStatistics
 {
 	protected $fn = array();
 	
@@ -21,15 +21,15 @@ final class PhocaCartStatistics
 
 	public function renderChartJsLine($id, $dataA, $dataALabel, $dataB, $dataBLabel, $dataX) {
 
-		$bC 	= 'rgba(151,187,205,1)';
-		$baC	= 'rgba(151,187,205,0.1)';
+		$bC 	= 'rgba(52,140,212,1)';
+		$baC	= 'rgba(52,140,212,0.3)';
 		$pbC	= 'rgba(255,255,255,1)';
-		$pbaC 	= 'rgba(151,187,205,1)';
+		$pbaC 	= 'rgba(52,140,212,1)';
 		
-		$bC2 	= 'rgba(220,220,220,1)';
-		$baC2	= 'rgba(220,220,220,0.1)';
+		$bC2 	= 'rgba(30,166,154,1)';
+		$baC2	= 'rgba(30,166,154,0.3)';
 		$pbC2	= 'rgba(255,255,255,1)';
-		$pbaC2 	= 'rgba(220,220,220,1)';
+		$pbaC2 	= 'rgba(30,166,154,1)';
 		
 		$o = "
 var config".$id." = {
@@ -84,8 +84,8 @@ options: {
 					drawOnChartArea: true,
 					offsetGridLines: false,
 					show: true,
-					color: '#f0f0f0',
-					zeroLineColor: '#f0f0f0',
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
 					lineWidth: 1,
 					/*drawOnChartArea: true,
 					drawTicks: true,
@@ -100,8 +100,8 @@ options: {
 				id: 'y-axis-1',
 				gridLines: {
 					drawOnChartArea: true,
-					color: '#f0f0f0',
-					zeroLineColor: '#f0f0f0',
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
 					lineWidth: 1,
 				},
 				label: 'text',
@@ -121,8 +121,8 @@ options: {
 				id: 'y-axis-2',
 				gridLines: {
 					drawOnChartArea: false,
-					color: '#f0f0f0',
-					zeroLineColor: '#000',
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
 				},
 				label: 'text',
 				ticks: {
@@ -217,12 +217,12 @@ var config".$id." = {
 			$numberOfDate = 6; //7 days
 		}
 		if ($dateFrom == '') {
-			$dateFrom 	= PhocaCartDate::getCurrentDate($numberOfDate);
+			$dateFrom 	= PhocacartDate::getCurrentDate($numberOfDate);
 		}
 		if ($dateTo == '') {
-			$dateTo 	= PhocaCartDate::getCurrentDate();
+			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
-		$dateDays = PhocaCartDate::getDateDays($dateFrom, $dateTo);
+		$dateDays = PhocacartDate::getDateDays($dateFrom, $dateTo);
 
 
 		if ($dateTo != '' && $dateFrom != '') {
@@ -298,10 +298,10 @@ var config".$id." = {
 		}
 		
 		if ($dateFrom == '') {
-			$dateFrom 	= PhocaCartDate::getCurrentDate($numberOfDate);
+			$dateFrom 	= PhocacartDate::getCurrentDate($numberOfDate);
 		}
 		if ($dateTo == '') {
-			$dateTo 	= PhocaCartDate::getCurrentDate();
+			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
 		
 		$db		= JFactory::getDbo();
@@ -310,7 +310,7 @@ var config".$id." = {
 		$db->setQuery($q);
 		$count = $db->loadRow();
 		if (isset($count[0]) && (int)$count[0] != 0) {
-			return PhocaCartStatistics::abreviateNumbers($count[0]);
+			return PhocacartStatistics::abreviateNumbers($count[0]);
 		}
 		return 0;
 	}
@@ -322,10 +322,10 @@ var config".$id." = {
 		}
 		
 		if ($dateFrom == '') {
-			$dateFrom 	= PhocaCartDate::getCurrentDate($numberOfDate);
+			$dateFrom 	= PhocacartDate::getCurrentDate($numberOfDate);
 		}
 		if ($dateTo == '') {
-			$dateTo 	= PhocaCartDate::getCurrentDate();
+			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
 		
 		$db		= JFactory::getDbo();
@@ -336,7 +336,7 @@ var config".$id." = {
 		$count = $db->loadRow();
 		
 		if (isset($count[0]) && (int)$count[0] != 0) {
-			return PhocaCartStatistics::abreviateNumbers($count[0]);
+			return PhocacartStatistics::abreviateNumbers($count[0]);
 		}
 		return 0;
 	}
@@ -348,10 +348,10 @@ var config".$id." = {
 		}
 		
 		if ($dateFrom == '') {
-			$dateFrom 	= PhocaCartDate::getCurrentDate($numberOfDate);
+			$dateFrom 	= PhocacartDate::getCurrentDate($numberOfDate);
 		}
 		if ($dateTo == '') {
-			$dateTo 	= PhocaCartDate::getCurrentDate();
+			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
 		
 		$db		= JFactory::getDbo();

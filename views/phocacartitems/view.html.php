@@ -19,7 +19,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 	
 	function display($tpl = null) {
 		
-		$this->t			= PhocaCartUtils::setVars('item');
+		$this->t			= PhocacartUtils::setVars('item');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
@@ -41,7 +41,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		}
 		
 		// Make list of categories for each product (don't run group_concat alternative but own sql)
-		$categories	= PhocaCartCategoryMultiple::getCategoriesByProducts($idItems);
+		$categories	= PhocacartCategoryMultiple::getCategoriesByProducts($idItems);
 		
 		$this->t['categories'] = array();
 		if (!empty($categories)) {
@@ -53,7 +53,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 			}
 		}
 		
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 	
 		$this->addToolbar();
 		parent::display($tpl);
@@ -68,24 +68,24 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$user  	= JFactory::getUser();
 		$bar 	= JToolBar::getInstance('toolbar');
 		
-		JToolBarHelper::title( JText::_($this->t['l'].'_PRODUCTS'), 'file' );
+		JToolbarHelper::title( JText::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
 		if ($canDo->get('core.create')) {
-			JToolBarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
+			JToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
 		}
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::divider();
-			JToolBarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			JToolbarHelper::divider();
+			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 			JToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
 		
 		// Add a batch button
@@ -97,13 +97,20 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
+			
+			JHtml::_('bootstrap.modal', 'collapseModalCA');
+			$title = JText::_('COM_PHOCACART_COPY_ATTRIBUTES');
+			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModalCA\" class=\"btn btn-small\">
+						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
+						$title</button>";
+			$bar->appendButton('Custom', $dhtml, 'copy_attributes');
 		}
 		
 		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){submitbutton(\'phocacartitem.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
 		$bar->appendButton('Custom', $dhtml);
 		
-		JToolBarHelper::divider();
-		JToolBarHelper::help( 'screen.'.$this->t['c'], true );
+		JToolbarHelper::divider();
+		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 	
 	protected function getSortFields() {

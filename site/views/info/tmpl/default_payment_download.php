@@ -16,6 +16,6 @@ echo JText::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
 echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_DOWNLOADABLE_ITEMS_ADDITIONAL_INFO');
 echo '</div>';
 if ($this->u->id > 0) {
-	echo '<div><a href="'.PhocaCartRoute::getDownloadRoute().'">'.JText::_('COM_PHOCACART_DOWNLOAD_LINK').'</a></div>';
+	echo '<div><a href="'.PhocacartRoute::getDownloadRoute().'">'.JText::_('COM_PHOCACART_DOWNLOAD_LINK').'</a></div>';
 }
 ?>

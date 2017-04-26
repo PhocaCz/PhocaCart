@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartPayment extends JModelAdmin
+class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -22,7 +22,7 @@ class PhocaCartCpModelPhocaCartPayment extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartPayment', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartPayment', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -108,11 +108,15 @@ class PhocaCartCpModelPhocaCartPayment extends JModelAdmin
 			// Store form parameters of selected method
 			$app		= JFactory::getApplication();
 			$dataPh		= $app->input->get('phform', array(), 'array');
-			$registry 	= new JRegistry($dataPh['params']);
-			//$registry 	= new JRegistry($dataPh);
-			$dataPhNew 	= $registry->toString();
-			if($dataPhNew != '') {
-				$data['params'] = $dataPhNew;
+			if (!empty($dataPh['params'])) {
+				$registry 	= new JRegistry($dataPh['params']);
+				//$registry 	= new JRegistry($dataPh);
+				$dataPhNew 	= $registry->toString();
+				if($dataPhNew != '') {
+					$data['params'] = $dataPhNew;
+				}
+			} else {
+				$data['params'] = '';
 			}
 
 			// Bind the data.
@@ -154,23 +158,30 @@ class PhocaCartCpModelPhocaCartPayment extends JModelAdmin
 			
 			if ((int)$table->id > 0) {
 				
+				if (!isset($data['zone'])) {
+					$data['zone'] = array();
+				}
+				
+				PhocacartZone::storeZones($data['zone'], (int)$table->id, 'payment');
+				
+				
 				if (!isset($data['country'])) {
 					$data['country'] = array();
 				}
 				
-				PhocaCartCountry::storeCountries($data['country'], (int)$table->id, 'payment');
+				PhocacartCountry::storeCountries($data['country'], (int)$table->id, 'payment');
 				
 				if (!isset($data['region'])) {
 					$data['region'] = array();
 				}
 				
-				PhocaCartRegion::storeRegions($data['region'], (int)$table->id, 'payment');
+				PhocacartRegion::storeRegions($data['region'], (int)$table->id, 'payment');
 				
 				if (!isset($data['shipping'])) {
 					$data['shipping'] = array();
 				}
 				
-				PhocaCartShipping::storeShippingMethods($data['shipping'], (int)$table->id, 'payment');
+				PhocacartShipping::storeShippingMethods($data['shipping'], (int)$table->id, 'payment');
 			
 			}
 		

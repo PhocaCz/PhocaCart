@@ -13,6 +13,7 @@ class PhocaCartViewWishList extends JViewLegacy
 {
 	protected $t;
 	protected $p;
+	protected $u;
 
 	function display($tpl = null)
 	{		
@@ -20,6 +21,7 @@ class PhocaCartViewWishList extends JViewLegacy
 		$model								= $this->getModel();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
+		$this->u							= JFactory::getUser();
 		
 		//$this->t['categories']				= $model->getCategoriesList();
 
@@ -35,9 +37,9 @@ class PhocaCartViewWishList extends JViewLegacy
 		$uri 						= JFactory::getURI();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		$this->t['linkwishlist']	= JRoute::_(PhocaCartRoute::getWishListRoute());
+		$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute());
 		
-		$wishlist = new PhocaCartWishList();
+		$wishlist = new PhocacartWishlist();
 		$this->t['items'] = $wishlist->getFullItems();
 		
 
@@ -45,12 +47,12 @@ class PhocaCartViewWishList extends JViewLegacy
 
 			foreach ($this->t['items'] as $k => $v) {
 			
-			/*	$this->t['items'][$k]['attr_options']= PhocaCartAttribute::getAttributesAndOptions((int)$v['id']);
+			/*	$this->t['items'][$k]['attr_options']= PhocacartAttribute::getAttributesAndOptions((int)$v['id']);
 				if (!empty($this->t['items'][$k]['attr_options'])) {
 					$this->t['value']['attrib'] = 1;
 				}
 				
-				$this->t['items'][$k]['specifications']= PhocaCartSpecification::getSpecificationGroupsAndSpecifications((int)$v['id']);
+				$this->t['items'][$k]['specifications']= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$v['id']);
 				if (!empty($this->t['items'][$k]['specifications'])) {
 					foreach($this->t['items'][$k]['specifications'] as $k2 => $v2) {
 						//$this->t['spec'][$k2] = $v2[0];
@@ -66,27 +68,27 @@ class PhocaCartViewWishList extends JViewLegacy
 					}
 				}*/
 				
-				$stockStatus = PhocaCartStock::getStockStatus((int)$v['stock'], (int)$v['min_quantity'], (int)$v['min_multiple_quantity'], (int)$v['stockstatus_a_id'],  (int)$v['stockstatus_n_id']);
-				$this->t['items'][$k]['stock'] = PhocaCartStock::getStockStatusOutput($stockStatus);
+				$stockStatus = PhocacartStock::getStockStatus((int)$v['stock'], (int)$v['min_quantity'], (int)$v['min_multiple_quantity'], (int)$v['stockstatus_a_id'],  (int)$v['stockstatus_n_id']);
+				$this->t['items'][$k]['stock'] = PhocacartStock::getStockStatusOutput($stockStatus);
 				if ($this->t['items'][$k]['stock'] != '') {
 					$this->t['value']['stock'] = 1;
 				}
 			}
 		}
 		
-		$media = new PhocaCartRenderMedia();
+		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap($this->t['load_bootstrap']);
 		//$media->loadChosen($this->t['load_chosen']);
 		//$media->loadEqualHeights($this->t['equal_height']);
 		
-		$this->t['pathitem'] = PhocaCartPath::getPath('productimage');
+		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		$this->_prepareDocument();
 		parent::display($tpl);
 		
 	}
 	
 	protected function _prepareDocument() {
-		PhocaCartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_WISH_LIST'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_WISH_LIST'));
 	}
 }
 ?>

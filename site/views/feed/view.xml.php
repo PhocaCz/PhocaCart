@@ -22,7 +22,7 @@ class PhocaCartViewFeed extends JViewLegacy
 	
 		$app	= JFactory::getApplication();
 		$id		= $app->input->get( 'id', 0, 'int' );
-		$feed	= PhocaCartFeed::getFeed((int)$id);
+		$feed	= PhocacartFeed::getFeed((int)$id);
 	
 		$o		= array();
 		$l		= '<';
@@ -42,7 +42,7 @@ class PhocaCartViewFeed extends JViewLegacy
 				$iP->loadString($feed['item_params']);
 			}
 			
-			$this->t['pathitem'] = PhocaCartpath::getPath('productimage');
+			$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 			
 			// Feed Params
 			$p['export_published_only']	= $fP->get('export_published_only', 1);
@@ -94,7 +94,7 @@ class PhocaCartViewFeed extends JViewLegacy
 			}
 			*/
 			
-			$products = PhocaCartProduct::getProducts((int)$p['item_limit'], $p['item_ordering'], $p['category_ordering'], $p['export_published_only'], $p['export_in_stock_only'], $p['export_price_only'], 2);
+			$products = PhocacartProduct::getProducts(0, (int)$p['item_limit'], $p['item_ordering'], $p['category_ordering'], $p['export_published_only'], $p['export_in_stock_only'], $p['export_price_only'], 2);
 			
 			// HEADER
 			if (isset($feed['header']) && $feed['header'] != '') {
@@ -115,7 +115,7 @@ class PhocaCartViewFeed extends JViewLegacy
 			// but we don't need to run the function many times too.
 			$cur = '';
 			if ($p['item_currency'] != '') {
-				$cur	= PhocaCartCurrency::getDefaultCurrencyCode();
+				$cur	= PhocacartCurrency::getDefaultCurrencyCode();
 			}
 
 			// START FOREACH OF PRODUCTS
@@ -169,8 +169,8 @@ class PhocaCartViewFeed extends JViewLegacy
 					if ($p['item_original_price_with_vat'] != '' || $p['item_original_price_without_vat'] != ''
 					&& isset($v->price_original) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 						
-						$priceOc 	= new PhocaCartPrice;
-						$priceO		= $priceOc->getPriceItems($v->price_original, $v->taxrate, $v->taxcalculationtype);
+						$priceOc 	= new PhocacartPrice;
+						$priceO		= $priceOc->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype);
 						
 						if ($p['item_original_price_without_vat'] != '' && isset($priceO['netto']) && (int)$priceO['netto'] > 0) {
 							$o[] = $l.$p['item_original_price_without_vat'].$r.$priceO['netto'].$e.$p['item_original_price_without_vat'].$r;
@@ -184,8 +184,8 @@ class PhocaCartViewFeed extends JViewLegacy
 					if ($p['item_final_price_with_vat'] != '' || $p['item_final_price_without_vat'] != ''
 					&& isset($v->price) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 						
-						$priceFc 	= new PhocaCartPrice;
-						$priceF		= $priceFc->getPriceItems($v->price, $v->taxrate, $v->taxcalculationtype);
+						$priceFc 	= new PhocacartPrice;
+						$priceF		= $priceFc->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype);
 						
 						if ($p['item_final_price_without_vat'] != '' && isset($priceF['netto']) && (int)$priceF['netto'] > 0) {
 							$o[] = $l.$p['item_final_price_without_vat'].$r.$priceF['netto'].$e.$p['item_final_price_without_vat'].$r;
@@ -208,23 +208,23 @@ class PhocaCartViewFeed extends JViewLegacy
 					// PRODUCT URL
 					if ($p['item_url'] != '' && isset($v->id) && $v->id > 0 && isset($v->catid) && $v->catid > 0 && isset($v->alias) && isset($v->catalias)) {
 
-						$itemUrl 	= PhocaCartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias);
-						$itemUrl	= PhocaCartRoute::getFullUrl($itemUrl);
+						$itemUrl 	= PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias);
+						$itemUrl	= PhocacartRoute::getFullUrl($itemUrl);
 						$o[] = $l.$p['item_url'].$r.$itemUrl.$e.$p['item_url'].$r;
 					}
 					
 					// IMAGE URL
 					if ($p['item_url_image'] != '' && isset($v->image) && $v->image != '') {
-						$image 	= PhocaCartImage::getThumbnailName($this->t['pathitem'], $v->image, 'large');
+						$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, 'large');
 						if (isset($image->rel) && $image->rel != '') {
-							$imageUrl	= PhocaCartRoute::getFullUrl($image->rel);
+							$imageUrl	= PhocacartRoute::getFullUrl($image->rel);
 							$o[] = $l.$p['item_url_image'].$r.$imageUrl.$e.$p['item_url_image'].$r;
 						}
 					}
 					
 					// VIDEO URL
 					if ($p['item_url_video'] != '' && isset($v->video) && $v->video != '') {
-						if (PhocaCartUtils::isURLAddress($v->video)) {
+						if (PhocacartUtils::isURLAddress($v->video)) {
 							$o[] = $l.$p['item_url_video'].$r.$v->video.$e.$p['item_url_video'].$r;
 						}
 					}
@@ -261,8 +261,8 @@ class PhocaCartViewFeed extends JViewLegacy
 					
 					// STOCK DELIVERY_DATE
 					if ($p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
-						$stockStatus 	= PhocaCartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
-						//$stockText		= PhocaCartStock::getStockStatusOutput($stockStatus);
+						$stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+						//$stockText		= PhocacartStock::getStockStatusOutput($stockStatus);
 						if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
 							$o[] = $l.$p['item_delivery_date'].$r.$stockStatus['stock_status'].$e.$p['item_delivery_date'].$r;
 						}
@@ -270,7 +270,7 @@ class PhocaCartViewFeed extends JViewLegacy
 					
 					// STOCK DELIVERY_DATE FEED
 					if ($p['feed_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
-						$stockStatus 	= PhocaCartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+						$stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
 						
 						
 						if (isset($stockStatus['stock_status_feed']) && $stockStatus['stock_status_feed'] != '') {
@@ -285,7 +285,7 @@ class PhocaCartViewFeed extends JViewLegacy
 						// ATTRIBUTES - BE AWARE TO USER ATTRIBUTES
 						// RENDERING can take a lot of memory
 						// THE FORMAT can be not correct
-						$attributes = PhocaCartAttribute::getAttributesAndOptions((int)$v->id);
+						$attributes = PhocacartAttribute::getAttributesAndOptions((int)$v->id);
 						if (!empty($attributes)) {
 							foreach ($attributes as $k2 => $v2) {
 								if (isset($v2->title) && $v2->title != '') {

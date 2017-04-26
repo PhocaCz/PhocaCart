@@ -40,10 +40,10 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 		
 		$link = '';
 		if ($manager != '') {
-			$group 	= PhocaCartSettings::getManagerGroup($manager);
+			$group 	= PhocacartUtilsSettings::getManagerGroup($manager);
 			$link	= 'index.php?option=com_phocacart&view='.(string)$viewBack.'&manager='.(string)$manager
 						 .str_replace('&amp;', '&', $group['c']).'&folder='.$parent.'&tab='.(string)$tab.'&field='.$field;
-			$path	= PhocaCartPath::getPath($manager);// we use viewback to get right path
+			$path	= PhocacartPath::getPath($manager);// we use viewback to get right path
 		} else {
 			$app->redirect('index.php?option=com_phocacart', JText::_('COM_PHOCACART_ERROR_CONTROLLER_MANAGER_NOT_SET'));
 			exit;
@@ -96,12 +96,12 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 	}
 	
 	function multipleupload() {
-		$result = PhocaCartFileUpload::realMultipleUpload();
+		$result = PhocacartFileUpload::realMultipleUpload();
 		return true;	
 	}
 	
 	function upload() {
-		$result = PhocaCartFileUpload::realSingleUpload();
+		$result = PhocacartFileUpload::realSingleUpload();
 		return true;
 	}
 	

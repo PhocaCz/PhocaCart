@@ -25,5 +25,6 @@ $d = $displayData;
 		<?php } ?>
 		</div>
 	</div>
+	<?php /*<div class="clearfix"></div> */ ?>
 	<?php echo JHtml::_('form.token'); ?>
 </form>

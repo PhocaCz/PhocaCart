@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartCoupon extends JModelAdmin
+class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -22,7 +22,7 @@ class PhocaCartCpModelPhocaCartCoupon extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartCoupon', $prefix = 'Table', $config = array()) {
+	public function getTable($type = 'PhocacartCoupon', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
@@ -45,7 +45,7 @@ class PhocaCartCpModelPhocaCartCoupon extends JModelAdmin
 	
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
-			$item->discount	= PhocaCartPrice::cleanPrice($item->discount);
+			$item->discount	= PhocacartPrice::cleanPrice($item->discount);
 		}
 		return $item;
 	}
@@ -150,16 +150,12 @@ class PhocaCartCpModelPhocaCartCoupon extends JModelAdmin
 				if (!isset($data['product_ids'])) {
 					$data['product_ids'] = '';
 				}
-				PhocaCartCoupon::storeCouponProductsById($data['product_ids'], (int)$table->id );
+				PhocacartCoupon::storeCouponProductsById($data['product_ids'], (int)$table->id );
 				
 				if (!isset($data['cat_ids'])) {
 					$data['cat_ids'] = array();
 				}
-				
-				PhocaCartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->id);
-				
-				
-				
+				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->id);
 			}
 
 			// Clean the cache.

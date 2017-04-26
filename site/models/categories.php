@@ -66,24 +66,30 @@ class PhocaCartModelCategories extends JModelLegacy
 
 	public function getCategoriesListQuery($id, $categoriesOrdering) {
 		
-		$wheres		= array();
-		$user 		= JFactory::getUser();
-		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		$wheres				= array();
+		$user 				= JFactory::getUser();
+		$userLevels			= implode (',', $user->getAuthorisedViewLevels());
+		$app				= JFactory::getApplication();
+		$params 			= $app->getParams();
 		
-		
-		/*$app		= JFactory::getApplication();
-		$params 	= $app->getParams();
 		
 		$display_categories = $params->get('display_categories', '');
-		$hide_categories 	= $params->get('hide_categoriess', '');
+		$hide_categories 	= $params->get('hide_categories', '');
+		
+		if (!empty($display_categories)) {
+			$display_categories = implode(',', $display_categories);
+		}
+		if (!empty($hide_categories)) {
+			$hide_categories = implode(',', $hide_categories);
+		}
 		
 		if ( $display_categories != '' ) {
-			$wheres[] = " cc.id IN (".$display_categories.")";
+			$wheres[] = " c.id IN (".$display_categories.")";
 		}
 		
 		if ( $hide_categories != '' ) {
-			$wheres[] = " cc.id NOT IN (".$hide_categories.")";
-		}*/
+			$wheres[] = " c.id NOT IN (".$hide_categories.")";
+		}
 		
 		if ($id == -1) {
 			// No limit for parent_id - load all categories include subcategories
@@ -133,7 +139,7 @@ class PhocaCartModelCategories extends JModelLegacy
 			$app						= JFactory::getApplication();
 			$params 					= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
-			$this->category_ordering 	= PhocaCartOrdering::getOrderingText($ordering, 1);
+			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);
 		}
 		return $this->category_ordering;
 	}

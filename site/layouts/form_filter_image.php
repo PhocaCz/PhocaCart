@@ -21,6 +21,7 @@ $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
 			
 	<div id="collapse<?php echo $dParamAttr; ?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading<?php echo $dParamAttr; ?>">
 		<div class="panel-body ph-panel-body-color">
+			<div class="ph-mod-color-box">
 			<?php
 			
 			foreach ($d['items'] as $k => $v) {
@@ -53,6 +54,7 @@ $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
 					.'</a>';
 				}
 			}
+			echo '</div>';
 		?>
 		</div>
 	</div>

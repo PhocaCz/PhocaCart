@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 echo '<div id="ph-pc-orders-box" class="pc-orders-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocaCartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ORDERS')));
+echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ORDERS')));
 
 
 
@@ -32,11 +32,11 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 	echo '</div>';
 	if (!empty($this->t['orders'])) {
 		
-		$price			= new PhocaCartPrice();
+		$price			= new PhocacartPrice();
 		foreach($this->t['orders'] as $k => $v) {
 			echo '<div class="col-sm-12 col-md-12 ph-orders-item-box-row" >';
 
-			echo '<div class="col-sm-2 col-md-2 ">'.PhocaCartOrder::getOrderNumber($v->id).'</div>';
+			echo '<div class="col-sm-2 col-md-2 ">'.PhocacartOrder::getOrderNumber($v->id).'</div>';
 			$status = '<span class="label label-default">'.JText::_($v->status_title).'</span>';
 			echo '<div class="col-sm-2 col-md-2 ">'.$status.'</div>';
 			
@@ -112,8 +112,8 @@ if (!empty($this->t['categories'])) {
 		echo '<div class="col-sm-6 col-md-'.$nw.'">';
 		echo '<div class="thumbnail ph-thumbnail ph-thumbnail-c">';
 		
-		$image 	= PhocaCartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
-		$link	= JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias));
+		$image 	= PhocacartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
+		$link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 		
 		if (isset($image->rel) && $image->rel != '') {
 			echo '<a href="'.$link.'">';
@@ -147,7 +147,7 @@ if (!empty($this->t['categories'])) {
 		}
 		echo '</div>';
 		
-		echo '<p class="pull-right"><a href="'.JRoute::_(PhocaCartRoute::getCategoryRoute($v->id, $v->alias)).'" class="btn btn-primary" role="button">'.JText::_('COM_PHOCACART_VIEW_CATEGORY').'</a></p>';
+		echo '<p class="pull-right"><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'" class="btn btn-primary" role="button">'.JText::_('COM_PHOCACART_VIEW_CATEGORY').'</a></p>';
 		echo '<div class="clearfix"></div>';
 		echo '</div>';
 		echo '</div>';
@@ -161,5 +161,5 @@ if (!empty($this->t['categories'])) {
 echo '</div>';
 echo '<div>&nbsp;</div>';
 echo '<div>&nbsp;</div>';
-echo PhocaCartUtils::getInfo();
+echo PhocacartUtils::getInfo();
 ?>

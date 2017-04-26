@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die();
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartRegion extends JModelAdmin
+class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -26,7 +26,7 @@ class PhocaCartCpModelPhocaCartRegion extends JModelAdmin
 		return parent::canEditState($record);
 	}
 	
-	public function getTable($type = 'PhocaCartRegion', $prefix = 'Table', $config = array())
+	public function getTable($type = 'PhocacartRegion', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -137,6 +137,53 @@ class PhocaCartCpModelPhocaCartRegion extends JModelAdmin
 			$app->enqueueMessage(JText::_('COM_PHOCACART_IMPORT_FILE_NOT_EXIST'), 'error');
 			return false;
 		}
+	}
+	
+	public function delete(&$cid = array()) {
+		
+		if (count( $cid )) {
+			JArrayHelper::toInteger($cid);
+			$cids = implode( ',', $cid );
+			
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					JLog::add($error, JLog::WARNING);
+					return false;
+				} else {
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					return false;
+				}
+			}
+			
+			// 1. DELETE REGIONS
+			$query = 'DELETE FROM #__phocacart_regions'
+				. ' WHERE id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			
+			// 2. DELETE REGION TAXES
+			$query = 'DELETE FROM #__phocacart_tax_regions'
+				. ' WHERE region_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			
+			// 3. DELETE COUNTRIES IN SHIPPING METHOD
+			$query = 'DELETE FROM #__phocacart_shipping_method_regions'
+				. ' WHERE region_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 4. DELETE COUNTRIES IN PAYMENT METHOD
+			$query = 'DELETE FROM #__phocacart_payment_method_regions'
+				. ' WHERE region_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+		}
+		return true;
 	}
 }
 ?>

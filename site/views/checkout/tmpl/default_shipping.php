@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$price	= new PhocaCartPrice();
+$price	= new PhocacartPrice();
 	
 if ($this->a->shippingnotused == 1) {
 	
@@ -18,7 +18,7 @@ if ($this->a->shippingnotused == 1) {
 
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingview"><div class="pull-right"><span class="glyphicon glyphicon-ok-circle ph-checkout-icon-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	
@@ -36,7 +36,7 @@ if ($this->a->shippingnotused == 1) {
 		// Display the current one selected
 		if (isset($this->t['cartitems']['shipping']) && (int)$this->t['cartitems']['shipping'] == (int)$v->id) {
 			
-			//$priceI = $price->getPriceItems($v->cost, $v->taxrate, $v->taxcalctype, $v->taxtitle, 1, 1);
+			//$priceI = $price->getPriceItems($v->cost, $v->taxid, $v->taxrate, $v->taxcalctype, $v->taxtitle, 1, 1);
 
 			echo '<div class="col-sm-8 col-md-8 ">'.$v->title.'</div>';
 		
@@ -98,11 +98,12 @@ if ($this->a->shippingnotused == 1) {
 // ADD OR EDIT - user didn't add the shipping yet or user wants to edit it now
 } else if ($this->a->shippingedit)  {
 
-
-
+	$total	= $this->cart->getTotal();
+	$price	= new PhocacartPrice();
+	
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	
@@ -122,8 +123,8 @@ if ($this->a->shippingnotused == 1) {
 		if (isset($this->t['cartitems']['shipping']) && (int)$this->t['cartitems']['shipping'] == (int)$v->id) {
 			$checked = 'checked="checked"';
 		}
-		$priceI = $price->getPriceItems($v->cost, $v->taxrate, $v->taxcalctype, $v->taxtitle, 1);
-
+		
+		$priceI = $price->getPriceItemsShipping($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalctype, $v->taxtitle, 0, 1, '');
 		
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
@@ -136,25 +137,32 @@ if ($this->a->shippingnotused == 1) {
 		
 		echo '<div class="col-sm-6 col-md-6"><div class="radio">';
 		
-		if (isset($priceI['nettoformat']) && isset($priceI['bruttoformat']) && $priceI['nettoformat'] == $priceI['bruttoformat']) {
 	
-		} else if (isset($priceI['nettoformat']) && $priceI['nettoformat'] != '' && isset($priceI['nettotxt']) && $priceI['nettotxt'] != '') {
-			//echo '<div class="col-sm-6 col-md-6"></div>';
-			echo '<div class="col-sm-8 col-md-8">'.$priceI['nettotxt'].'</div>';
-			echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-netto">'.$priceI['nettoformat'].'</div>';
+		if ($this->t['zero_shipping_price'] == 0 && $priceI['zero'] == 1) {
+			// Display nothing
+		} else if ($this->t['zero_shipping_price'] == 2 && $priceI['zero'] == 1) {
+			// Display free text
+			echo '<div class="col-sm-8 col-md-8"></div>';
+			echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-tax">'.JText::_('COM_PHOCACART_FREE').'</div>';
+		} else {
+			if ($priceI['nettoformat'] == $priceI['bruttoformat']) {
+		
+			} else if ($priceI['nettoformat'] != '') {
+				echo '<div class="col-sm-8 col-md-8">'.$priceI['nettotxt'].'</div>';
+				echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-netto">'.$priceI['nettoformat'].'</div>';
+			}
+			
+			if ($priceI['taxformat'] != '') {
+				echo '<div class="col-sm-8 col-md-8">'.$priceI['taxtxt'].'</div>';
+				echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-tax">'.$priceI['taxformat'].'</div>';
+			}
+			
+			if ($priceI['bruttoformat'] != '') {
+				echo '<div class="col-sm-8 col-md-8">'.$priceI['bruttotxt'].'</div>';
+				echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-brutto">'.$priceI['bruttoformat'].'</div>';
+			}
 		}
 		
-		if (isset($priceI['taxformat']) && $priceI['taxformat'] != '' && isset($priceI['taxtxt']) && $priceI['taxtxt'] != '') {
-			//echo '<div class="col-sm-6 col-md-6"></div>';
-			echo '<div class="col-sm-8 col-md-8">'.$priceI['taxtxt'].'</div>';
-			echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-tax">'.$priceI['taxformat'].'</div>';
-		}
-		
-		if (isset($priceI['bruttoformat']) && $priceI['bruttoformat'] != '' && isset($priceI['bruttotxt']) && $priceI['bruttotxt'] != '') {
-			//echo '<div class="col-sm-6 col-md-6"></div>';
-			echo '<div class="col-sm-8 col-md-8">'.$priceI['bruttotxt'].'</div>';
-			echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-brutto">'.$priceI['bruttoformat'].'</div>';
-		}
 		echo '</div></div>';
 	
 		echo '<div class="ph-cb">&nbsp;</div>';
@@ -181,7 +189,7 @@ if ($this->a->shippingnotused == 1) {
 	
 }  else {
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 }
 	

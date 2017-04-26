@@ -3,7 +3,7 @@
  * @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @component Phoca Gallery
+ * @component Phoca Cart
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -15,7 +15,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 JHtml::_('behavior.modal', 'a.modal_view_cart');
 
-$class		= $this->t['n'] . 'RenderAdminViews';
+$class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -52,7 +52,14 @@ echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();
+
+$idMd = 'phViewCartModal';
+$textButton = 'COM_PHOCACART_VIEW_CART';
+$w = 500;
+$h = 400;
+$rV = new PhocacartRenderAdminview();
+echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);		
 
 echo $r->startTable('categoryList');
 
@@ -130,7 +137,8 @@ if ((int)$item->id < 1 && (int)$item->cartuserid < 1) {
 else if ( (int)$item->orderuserid > 0 ) {
 	$o = '<span class="label label-success">'.JText::_('COM_PHOCACART_ACTIVE_ORDER').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
 } 
@@ -139,7 +147,8 @@ else if ( (int)$item->orderuserid > 0 ) {
 else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '' || $item->city != '' || $item->address_1 != '')) {
 	$o = '<span class="label label-warning label-info">'.JText::_('COM_PHOCACART_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
 }
@@ -150,7 +159,8 @@ else if ( (int)$item->cartuserid > 0 || ($item->name_last != '' || $item->name_f
 
 	$o = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
 }
@@ -160,7 +170,8 @@ else if ( (int)$item->cartuserid > 0) {
 
 	$o = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
 }

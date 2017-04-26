@@ -119,10 +119,10 @@ class PhocaCartModelQuestion extends JModelForm
 			$productId			= 0;
 			if(isset($data['product_id']) && (int)$data['product_id'] > 0) {
 				if(isset($data['category_id']) && (int)$data['category_id'] > 0) {
-					$data['product'] = PhocaCartProduct::getProduct($data['product_id'], $data['category_id']);
-					$data['category'] = PhocaCartCategory::getCategoryById($data['category_id']);
+					$data['product'] = PhocacartProduct::getProduct($data['product_id'], $data['category_id']);
+					$data['category'] = PhocacartCategory::getCategoryById($data['category_id']);
 				} else {
-					$data['product'] = PhocaCartProduct::getProduct($data['product_id']);
+					$data['product'] = PhocacartProduct::getProduct($data['product_id']);
 				}
 				$productId = $data['product'];
 			}
@@ -132,7 +132,7 @@ class PhocaCartModelQuestion extends JModelForm
 		
 			if (!$send) {
 				$user 	= JFactory::getUser();
-				PhocaCartLog::add(1, 'Ask a Question - Problems with sending email', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id);
+				PhocacartLog::add(1, 'Ask a Question - Problems with sending email', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id);
 			}
 		}
 		

@@ -19,10 +19,10 @@ class JFormFieldPhocaTags extends JFormField
 
 		$activeTags = array();
 		if ((int)$id > 0) {
-			$activeTags	= PhocaCartTag::getTags($id, 1);
+			$activeTags	= PhocacartTag::getTags($id, 1);
 		}
 		
-		return PhocaCartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL,'id' );
+		return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL,'id' );
 	}
 }
 ?>

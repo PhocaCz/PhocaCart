@@ -8,17 +8,18 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartCoupon
+class PhocacartCoupon
 {
 	protected $coupon;
 
 	public function __construct() {}
 	
 	public function setCoupon($couponId = 0, $couponCode = '') {
-		$db 	= JFactory::getDBO();
-		$user 	= JFactory::getUser();
-		$guest	= PhocaCartGuestUser::getGuestUser();
-		$where 	= array();
+		$db 		= JFactory::getDBO();
+		$user 		= JFactory::getUser();
+		$guest		= PhocacartUserGuestuser::getGuestUser();
+		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		$where 		= array();
 		
 		if ((int)$couponId  > 0) {
 			$where[]	= 'c.id = '.(int)$couponId;
@@ -28,14 +29,16 @@ class PhocaCartCoupon
 			return false;
 		}
 		
+		// ACCESS
+		$where[] 	= "c.access IN (".$userLevels.")";
 		$where[]	= 'c.published = 1';
  
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		
 		if((isset($user->id) && $user->id > 0) || $guest) {
 			$query = 'SELECT c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
-			.' c.available_quantity, c.available_quantity_user, c.total_amount,'
-			.' calculation_type, free_shipping,'
+			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
+			.' c.calculation_type, c.free_shipping, c.free_payment,'
 			.' co.count AS count, cu.count AS countuser,'
 			.' GROUP_CONCAT(DISTINCT cp.product_id) AS product,' // line of selected products
 			.' GROUP_CONCAT(DISTINCT cc.category_id) AS category' // line of selected categories
@@ -44,11 +47,19 @@ class PhocaCartCoupon
 			.' LEFT JOIN #__phocacart_coupon_categories AS cc ON cc.coupon_id = c.id'
 			.' LEFT JOIN #__phocacart_coupon_count AS co ON co.coupon_id = c.id' // limit count for all coupons
 			.' LEFT JOIN #__phocacart_coupon_count_user AS cu ON cu.coupon_id = c.id AND cu.user_id = '.(int)$user->id // limit c for user
-			. $where
-			//.' GROUP BY c.id'
-			.' ORDER BY c.id'
+			. $where;
+			//.' GROUP BY c.id';
+			// SQL92 SQL99 ???
+			/*
+			, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
+			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
+			.' c.calculation_type, c.free_shipping, c.free_payment,'
+			.' co.count AS count, cu.count AS countuser'
+			*/
+			$query .= ' ORDER BY c.id'
 			.' LIMIT 1';
 			
+			PhocacartUtils::setConcatCharCount();
 			$db->setQuery($query);
 			$coupon = $db->loadAssoc(); 
 		
@@ -70,24 +81,35 @@ class PhocaCartCoupon
 	}
 	
 	
-	public function checkCouponBasic() {
+	/*
+	 * Coupon true does not mean it is valid
+	 * COUPON TRUE = access, published, available quantity, quantity user (basicCheck)
+	 * COUPON VALID = COUPON TRUE + total amount, total quantity, product id, category id checked (advancedCheck)
+	 */
+	
+	
+	public function checkCoupon($basicCheck = 0, $id = 0, $catid = 0, $quantity = 0, $amount = 0) {
 		
-		
+	
 		if (!empty($this->coupon)) {
-			// 1. EXISTS, PUBLISHED - solved in SQL query
+			
+			// -----------
+			// BASIC CHECK
+
+			// 1. ACCESS, EXISTS, PUBLISHED
+			// Checked in SQL
 		
-			// 2. DATE
+			// 2. VALID DATE FROM TO CHECK
 			if (isset($this->coupon['valid_from']) && isset($this->coupon['valid_to'])) {
-				$valid = PhocaCartDate::getActiveDate($this->coupon['valid_from'], $this->coupon['valid_to']);
+				$valid = PhocacartDate::getActiveDate($this->coupon['valid_from'], $this->coupon['valid_to']);
 				if ($valid != 1) {
 					return false;
 				}
-				// OK
 			} else {
 				return false;
 			}
-		
-			// 3. QUANTITY
+			
+			// 3. AVAILABLE QUANTITY
 			if (isset($this->coupon['available_quantity'])) {
 				
 				if ((int)$this->coupon['available_quantity'] == 0) {
@@ -116,12 +138,66 @@ class PhocaCartCoupon
 				return false;
 			}
 			
+			if ($basicCheck) {
+				return true;
+			}
+			
+
+			// 5. VALID TOTAL AMOUNT
+			if (isset($this->coupon['total_amount'])) {
+				if ($this->coupon['total_amount'] == 0) {
+					// OK we don't check the total amount as zero means, no total amount limit 
+				} else if ($this->coupon['total_amount'] > 0 && $amount < $this->coupon['total_amount']) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+			
+			// 6. VALID QUANTITY
+			if (isset($this->coupon['quantity_from'])) {
+				if ((int)$this->coupon['quantity_from'] == 0) {
+					// OK we don't check the quantity as zero means, no quantity limit 
+				} else if((int)$this->coupon['quantity_from'] > 0 &&  (int)$quantity < (int)$this->coupon['quantity_from']) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+			
+			// 7. VALID PRODUCT
+			if (!empty($this->coupon['product'])) {
+				$ids	= explode(',', $this->coupon['product']);
+				if (empty($ids)) {
+					// OK we don't check the quantity as zero means, no quantity limit 
+				} else {
+					if (!in_array($id, $ids)) {
+						return false;
+					}
+					
+				}
+			}
+			
+			// 8. VALID CATEGORY
+			if (!empty($this->coupon['category'])) {
+				$catids	= explode(',', $this->coupon['category']);
+				
+				if (empty($catids)) {
+					// OK we don't check the quantity as zero means, no quantity limit 
+				} else {
+					if (!in_array($catid, $catids)) {
+						return false;
+					}
+				}
+			}
+			
 			// Seems like everything is Ok
+			$this->coupon['valid'] = 1;
 			return true;
 		}
 		return false;
 	}
-	
+	/*
 	public function checkCouponAdvanced($id, $catid) {
 		
 		
@@ -167,7 +243,7 @@ class PhocaCartCoupon
 		}
 		return false;
 	}
-	
+	*/
 	
 	
 	

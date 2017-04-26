@@ -8,10 +8,12 @@
  */
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.view' );
-phocacartimport('phocacart.cart.cart');
-phocacartimport('phocacart.cart.cartdb');
-phocacartimport('phocacart.cart.rendercart');
-phocacartimport('phocacart.currency.currency');
+/*
+phocacart import('phocacart.cart.cart');
+phocacart import('phocacart.cart.cartdb');
+phocacart import('phocacart.cart.rendercart');
+phocacart import('phocacart.currency.currency');
+*/
  
 class PhocaCartCpViewPhocaCartEditStatus extends JViewLegacy
 {
@@ -24,13 +26,13 @@ class PhocaCartCpViewPhocaCartEditStatus extends JViewLegacy
 		$app				= JFactory::getApplication();
 		$this->id			= $app->input->get('id', 0, 'int');
 		
-		$this->t			= PhocaCartUtils::setVars('cart');
+		$this->t			= PhocacartUtils::setVars('cart');
 		$this->item			= $this->get('Data');
 		$this->itemhistory	= $this->get('HistoryData');
 		
 		
 
-		JHTML::stylesheet( $this->t['s'] );
+		$media = new PhocacartRenderAdminmedia();
 	
 		parent::display($tpl);
 	}

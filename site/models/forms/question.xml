@@ -36,7 +36,7 @@
 
 <field name="ip" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IP_LABEL" description="COM_PHOCACART_FIELD_IP_DESC" />
 
-<field name="ordering" type="PhocaCartOrdering" table="region" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="PhocacartOrdering" table="region" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 	</fieldset>
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >

@@ -18,6 +18,23 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		return parent::batch($model);
 	}
 	
+	public function copyattributes($model = null) {
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$model	= $this->getModel('phocacartitem', '', array());
+		$app	= JFactory::getApplication();
+		$cid 		= JFactory::getApplication()->input->get( 'cid', array(),'array' );
+		$idSource 	= JFactory::getApplication()->input->get( 'copy_attributes', 0, 'int' );
+		JArrayHelper::toInteger($cid);
+		
+
+		if(!$model->copyattributes($cid, $idSource)) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_ATTRIBUTES_NOT_COPIED'), 'error');
+		} else {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_ATTRIBUTES_COPIED'), 'message');
+		}
+		$this->setRedirect(JRoute::_('index.php?option=com_phocacart&view=phocacartitems'.$this->getRedirectToListAppend(), false));
+	}
+	
 	
 	function recreate() {
 		$app	= JFactory::getApplication();
@@ -32,7 +49,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		$message = '';
 		$model = $this->getModel( 'phocacartitem' );
 		if(!$model->recreate($cid, $message)) {
-			$message = PhocaCartUtils::setMessage($message, JText::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
+			$message = PhocacartUtils::setMessage($message, JText::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
 			$app->enqueueMessage($message, 'error');
 		} else {
 			$message = JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' );
@@ -46,7 +63,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 	function removeduplicates() {
 		
 		$app	= JFactory::getApplication();
-		if (PhocaCartCategoryMultiple::removeDuplicates()) {
+		if (PhocacartCategoryMultiple::removeDuplicates()) {
 			$message = JText::_( 'COM_PHOCACART_SUCCESS_DUPLICATES_REMOVED' );
 		} else {
 			$message = JText::_( 'COM_PHOCACART_ERROR_DUPLICATES_NOT_REMOVED' );

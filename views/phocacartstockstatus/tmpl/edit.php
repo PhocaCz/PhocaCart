@@ -12,7 +12,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminView';
+$class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new $class();
 ?>
 <script type="text/javascript">
@@ -61,7 +61,7 @@ echo '</div>';
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
-echo '<div class="span2"></div>';//end span2
+echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
 ?>

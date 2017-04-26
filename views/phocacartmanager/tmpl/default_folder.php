@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$group 	= PhocaCartSettings::getManagerGroup($this->manager);
+$group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 
 if ($this->manager == 'filemultiple') {
 	

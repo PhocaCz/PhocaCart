@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 defined('JPATH_PLATFORM') or die();
 
-abstract class PhocaCartBatch
+abstract class PhocacartHtmlBatch
 {
 	public static function item($published, $category = 0)
 	{
@@ -31,7 +31,7 @@ abstract class PhocaCartBatch
 		$tree = array();
 		$text = '';
 		$catId= -1;
-		$tree = PhocaCartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
+		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
 		
 		if ($category == 1) {
 			array_unshift($tree, JHTML::_('select.option', 0, JText::_('JLIB_HTML_ADD_TO_ROOT'), 'value', 'text'));

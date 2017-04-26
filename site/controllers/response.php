@@ -21,7 +21,7 @@ class PhocaCartControllerResponse extends JControllerForm
 		$session->set('proceedpayment', array(), 'phocaCart');
 
 		//JSession::checkToken() or jexit( 'Invalid Token' );
-		$return = PhocaCartRoute::getInfoRoute();
+		$return = PhocacartRoute::getInfoRoute();
 		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECIEVED'), 'message');
 		//$session->set('infomessage', 3, 'phocaCart');
 		//$session->set('infomessage', 4, 'phocaCart');
@@ -37,7 +37,7 @@ class PhocaCartControllerResponse extends JControllerForm
 		$session 	= JFactory::getSession();
 		$session->set('proceedpayment', array(), 'phocaCart');
 		//JSession::checkToken() or jexit( 'Invalid Token' );
-		$return = PhocaCartRoute::getInfoRoute();
+		$return = PhocacartRoute::getInfoRoute();
 		$session->set('infomessage', 5, 'phocaCart');
 		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_CANCELED'), 'info');
 		$app->redirect($return);

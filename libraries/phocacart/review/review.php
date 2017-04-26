@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartReview
+class PhocacartReview
 {
 	public static function getReviewsByProduct($productId) {
 		$db = JFactory::getDBO();
