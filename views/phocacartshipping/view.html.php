@@ -24,6 +24,7 @@ class PhocaCartCpViewPhocacartShipping extends JViewLegacy
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 		
+		
 		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
@@ -59,6 +60,8 @@ class PhocaCartCpViewPhocacartShipping extends JViewLegacy
 		}
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		
+		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
 ?>

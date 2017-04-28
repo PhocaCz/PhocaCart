@@ -39,6 +39,8 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartpayment.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
+			$price = new PhocacartPrice();
+			$data->cost = $price->cleanPrice($data->cost);
 		}
 		return $data;
 	}

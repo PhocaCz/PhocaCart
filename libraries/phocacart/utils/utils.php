@@ -58,7 +58,7 @@ class PhocacartUtils
 			}
 		}
 
-		$xml_items = '';
+		$xml_items = array();
 		if (count($xmlFilesInDir))
 		{
 			foreach ($xmlFilesInDir as $xmlfile)
@@ -287,6 +287,11 @@ class PhocacartUtils
 		}
 		return true;
 	}
+	
+	public static function setWizard($status) {
+		self::setOptionParameter('enable_wizard', $status);
+	}
+	
 	
 	public static function doesExist($type) {
 		

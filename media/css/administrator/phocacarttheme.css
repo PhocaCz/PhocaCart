@@ -179,6 +179,18 @@
 	padding-top: 5px;
 }
 
+#phAdminEdit .input-append .btn.button-select {
+	border-radius: 0px 3px 3px 0px !important;
+	height: 28px;
+	padding-top: 4px;
+}
+
+#phAdminEdit .input-append .btn.button-clear {
+	border-radius: 0px 3px 3px 0px !important;
+	height: 28px;
+	padding-top: 3px;
+}
+
 
 
 

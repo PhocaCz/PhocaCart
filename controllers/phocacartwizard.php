@@ -11,17 +11,86 @@ require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCartCommon
 
 {
+	// WIZARD
+	// 1 ... automatically opened when there are no items set
+	// 2 ... force wizard
+	// 10 ... force wizard page 1 (not the main page)
 	
 	public function skipwizard() {
 		
 		$app		= JFactory::getApplication();
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		
-		
-		PhocacartUtils::setOptionParameter('enable_wizard', 0);
-		
+		PhocacartUtils::setWizard(0);
 		$redirect	= 'index.php?option=com_phocacart';
 		$app->redirect($redirect);
-	}		
+	}
+
+	public function enablewizard() {
+		$app		= JFactory::getApplication();
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		PhocacartUtils::setWizard(2);	
+		$redirect	= 'index.php?option=com_phocacart';
+		$app->redirect($redirect);
+	}
+	
+	public function backtowizard() {
+		
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$app		= JFactory::getApplication();
+		$taskGroup	= $app->input->get('taskgroup', '');
+		
+		if ($taskGroup != '') {
+			$this->unlockTable($taskGroup);
+		}
+		
+		PhocacartUtils::setWizard(11);	
+		$redirect	= 'index.php?option=com_phocacart';
+		$app->redirect($redirect);
+	}
+	
+	public function unlockTable($taskGroup) {
+		
+		$a = str_replace('phocacart', '', $taskGroup);
+		$b = ucfirst($a);
+		$c = 'Phocacart'.strip_tags($b);
+		
+		$model 		= $this->getModel($c, 'PhocaCartCpModel');
+		$context 	= 'com_phocacart.edit.'.strip_tags($taskGroup);
+
+		
+		$table 		= $model->getTable();
+		$key 		= $table->getKeyName();
+		$recordId 	= $this->input->getInt($key);
+		
+
+		// Attempt to check-in the current record.
+		if ($recordId)
+		{
+			if (property_exists($table, 'checked_out'))
+			{
+				if ($model->checkin($recordId) === false)
+				{
+					// Check-in failed, go back to the record and display a notice.
+					/*$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+					$this->setMessage($this->getError(), 'error');
+
+					$this->setRedirect(
+						JRoute::_(
+							'index.php?option=' . $this->option . '&view=' . $this->view_item
+							. $this->getRedirectToItemAppend($recordId, $key), false
+						)
+					);*/
+
+					return false;
+				}
+			}
+		}
+
+		// Clean the session data and redirect.
+		$this->releaseEditId($context, $recordId);
+		JFactory::getApplication()->setUserState($context . '.data', null);
+
+		return true;
+	}
 }
 ?>

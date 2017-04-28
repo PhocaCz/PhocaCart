@@ -85,18 +85,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		$paramsC = JComponentHelper::getParams('com_phocacart');
 		$this->t['enable_wizard']	= $paramsC->get( 'enable_wizard', 1 );
 		
-		if ($this->t['enable_wizard'] == 1) {
-			
-			$category 	= PhocacartUtils::doesExist('category');
-			$product	= PhocacartUtils::doesExist('product');
-			
-			// If wizard enabled (1) but category and product is set, don't display it
-			// If wizard enabled (2 - force enable) display it in every case
-			if ($category == 1 && $product == 1) {
-				$this->t['enable_wizard'] = 0;
-			}
-			
-		}
+	
 		
 		$media = new PhocacartRenderAdminmedia();
 
@@ -117,12 +106,80 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.JText::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.JText::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
 		
+		
 		if ($canDo->get('core.admin')) {
 			JToolbarHelper::preferences('com_phocacart');
 			JToolbarHelper::divider();
 		}
 		
 		JToolbarHelper::help( 'screen.phocacart', true );
+		
+		$this->addModal();
+	}
+	
+	protected function addModal() {
+		
+		
+		// Getting Started Wizard
+		$this->t['modalwindowdynamic'] = '';
+		$autoOpenModal 	= 0;
+		$idMd 			= 'phWizardStatusModal';
+		$textButton 	= 'COM_PHOCACART_GETTING_STARTED_WIZARD';
+		$linkWizard 	= JRoute::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=0', false );
+		$w 				= 700;
+		$h 				= 400;
+		
+		// WIZARD
+		// 1 ... run wizard automatically but only if product and category do not exist
+		// 2 ... run wizard automatically - force it any way
+		// 11 ... run wizard automatically - go to first site of wizard
+		
+		// ------------------------------
+		// 1) MANUALLY RUN START WIZARD
+		// ------------------------------
+		// Render Button to Stard Wizard 
+		PhocacartRenderAdminview::renderWizardButton('start', $idMd , $linkWizard, $w, $h);
+
+		// ---------------------------------
+		// 2) AUTOMATICALLY RUN START WIZARD
+		// ---------------------------------
+		// 2a) Enable Wizard is disabled but category and product exists, don't run wizard at start automatically
+		// Seems like user added some data yet, he/she can start wizard manually
+		// 2b) But if in Options FORCE WIZARD SET, then run it (enable_wizard =2)
+		// 2c) But if in Options FORCE WIZARD SET, then run it (enable_wizard =2)
+		$category 	= PhocacartUtils::doesExist('category');
+		$product	= PhocacartUtils::doesExist('product');
+		if ($this->t['enable_wizard'] == 0 && $category == 1 && $product == 1) {
+			$autoOpenModal = 0;
+		} else if ($this->t['enable_wizard'] == 1 && $category == 0 && $product == 0) {
+			$autoOpenModal = 1;
+			$linkWizard = JRoute::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=0', false );
+		} else if ($this->t['enable_wizard'] == 2) {
+			$autoOpenModal = 1;
+			$linkWizard = JRoute::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=0', false );
+		}
+
+		// 2d) Run the first page of wizard - user currently work with wizard so it will be automatically loaded
+		// 11 means: 1 ... enable 1 ... to to page 1 = 11
+		if ($this->t['enable_wizard'] == 11) {
+			$autoOpenModal = 1;
+			$linkWizard = JRoute::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=1', false );
+		}
+
+
+		$customFooter = '<form action="'.JRoute::_('index.php?option=com_phocacart').'" method="post" style="display: inline;">'
+		.' <input type="hidden" name="task" value="phocacartwizard.skipwizard">'
+		.' <input type="hidden" name="tmpl" value="component" />'
+		.' <input type="hidden" name="option" value="com_phocacart" />'
+		.' <button class="btn btn-primary ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_SKIP_WIZARD').'</button>'
+		. JHtml::_('form.token')
+		. '</form> ';
+		$pageClass = 'ph-wizard-start-page-window';
+
+		$rV = new PhocacartRenderAdminview();
+		$this->t['modalwindowdynamic'] = $rV->modalWindowDynamic($idMd, $textButton, $w, $h, false, $autoOpenModal, $linkWizard, 'ph-body-iframe-wizard', $customFooter, $pageClass);
+		
+		
 	}
 }
 ?>
