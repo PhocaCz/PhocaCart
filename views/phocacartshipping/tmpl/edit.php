@@ -17,7 +17,7 @@ $r 			=  new $class();
 ?>
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.id('adminForm'))) {
+	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
 		<?php echo $this->form->getField('description')->save(); ?>
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
@@ -103,7 +103,7 @@ echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
 echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
-echo $r->formInputs($this->t['task']);
+echo $r->formInputs();
 echo $r->endForm();
 echo PhocacartRenderJs::renderAjaxTopHtml();
 ?>

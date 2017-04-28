@@ -2,7 +2,7 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>28/04/2017</creationDate>
+	<creationDate>23/04/2017</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
@@ -116,5 +116,4 @@
 	<updateservers>
 		<server type="extension" priority="1" name="updates"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml]]></server>
 	</updateservers>
-
 </extension>

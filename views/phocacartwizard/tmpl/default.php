@@ -32,8 +32,8 @@ $linkOptions		= 'index.php?option=com_config&view=component&component=com_phocac
 $urlAjax 			= 'index.php?option=com_phocacart&task=phocacartwizard.updatestatus&format=json&'. JSession::getFormToken().'=1';
 $urlAjaxSkipWizard 	= 'index.php?option=com_phocacart&task=phocacartwizard.skipwizard&format=json&'. JSession::getFormToken().'=1';
 
-PhocacartRenderJs::renderAjaxDoRequestWizard(); // Event what must happen to run renderAjaxDoRequestWizardAfterChange
-PhocacartRenderJs::renderAjaxDoRequestWizardAfterChange($urlAjax, 'phClickBtn');// Ajax to render changes
+PhocacartRenderJs::renderAjaxDoRequestWizard();
+PhocacartRenderJs::renderAjaxDoRequestWizardAfterChange($urlAjax, 'phClickBtn');
 PhocacartRenderJs::renderAjaxDoRequestWizardController($urlAjaxSkipWizard, 'phCloseWizard');
 
 
@@ -95,61 +95,61 @@ if ($this->page == 0) { ?>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_CATEGORY'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkCategoryEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_CATEGORY'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkCategoryEdit);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_CREATE_CATEGORY'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardCategory"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_TAX_IN_CASE_TAXABLE_PRODUCTS_WILL_BE_SOLD_IN_SHOP'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkTaxEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_TAX'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkTaxEdit);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_CREATE_TAX'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardTax"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_PRODUCT'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkProductEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_PRODUCT'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkProductEdit);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_CREATE_PRODUCT'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardProduct"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_SHIPPING_METHOD'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkShippingEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_SHIPPING_METHOD'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkShippingEdit);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_CREATE_SHIPPING_METHOD'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardShipping"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_PAYMENT_METHOD'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkPaymentEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_PAYMENT_METHOD'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkPaymentEdit);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_CREATE_PAYMENT_METHOD'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardPayment"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_COUNTRIES'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkCountryView);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_COUNTRY'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkCountryView);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_COUNTRY'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardCountry"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_REGIONS'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkRegionView);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_REGION'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkRegionView);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_REGION'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardRegion"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_MENU_LINK_TO_PHOCA_CART'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkMenus);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_MENU_LINK'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkMenus);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_CREATE_MENU_LINK'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardMenu"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
-		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="http://www.phoca.cz/download/category/100-phoca-cart-component"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkModules);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_MODULES'); ?></a></div>
+		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="http://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkModules);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_MODULES'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardModule"></div></div>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_EDIT_PHOCA_CART_OPTIONS'); ?></div>
-		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkOptions);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_OPTIONS'); ?></a></div>
+		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkOptions);?>" target="_blank"><?php echo JText::_('COM_PHOCACART_OPTIONS'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardOption"></div></div>
 	</div>
 	

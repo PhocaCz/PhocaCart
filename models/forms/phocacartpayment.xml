@@ -21,7 +21,7 @@
 
 <field name="tax_id" type="phocatax" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
 
-<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="0">
+<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="1">
 	<option value="1">COM_PHOCACART_PERCENTAGE</option>
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>

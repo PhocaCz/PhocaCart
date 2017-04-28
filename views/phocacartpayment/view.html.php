@@ -59,8 +59,6 @@ class PhocaCartCpViewPhocacartPayment extends JViewLegacy
 		}
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
-		
-		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
 ?>

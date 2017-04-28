@@ -795,17 +795,11 @@ border-radius: 2px;
 .view-phocacartimports [class^="icon-"].ph-icon-import::before,
 .view-phocacartimports [class*=" icon-"].ph-icon-import::before,
 .view-phocacartexports [class^="icon-"].ph-icon-export::before,
-.view-phocacartexports [class*=" icon-"].ph-icon-export::before,
-
-#ph-icon-wizard.ph-icon-wizard::before
+.view-phocacartexports [class*=" icon-"].ph-icon-export::before
 
  {
     font-family: "Glyphicons Halflings";
     font-style: normal;
-}
-
-#toolbar #toolbar-wizard {
-    float: right;
 }
 
 

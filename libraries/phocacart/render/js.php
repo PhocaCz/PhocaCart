@@ -1345,9 +1345,6 @@ $s[] = '})';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	
-	/* Ask for the changes, if something changes - e.g. category is created
-	 * return this to inform and update status in wizard modal window
-	 */
 	
 	public static function renderAjaxDoRequestWizard() {
 	
@@ -1436,14 +1433,7 @@ $s[] = '})';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	
-	
-	/*
-	 * Is used for:
-	 * - skip wizard in wizard view - modal window must be closed
-	 * - start wizard in control panel - modal windows stays unchanged
-	 */
-	
-	public static function renderAjaxDoRequestWizardController($url, $id, $closeModal = true) {
+	public static function renderAjaxDoRequestWizardController($url, $id) {
 	
 		$s 	= array();
 		
@@ -1472,9 +1462,7 @@ $s[] = '})';
 		// This function is a part of iframe in modal window
 		// We can close whole modal window through global function defined in
 		// modalWindowDynamic in administrator\components\com_phocacart\libraries\phocacart\render\renderadminview.php
-		if ($closeModal == true) {
-			$s[] = '  window.parent.phCloseModal();';
-		}
+		$s[] = '  window.parent.phCloseModal();';
 		
 		$s[] = '}';
 	

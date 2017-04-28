@@ -28,22 +28,6 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 		return;	
 	}
 	
-	public function enablewizard() {
-		
-		if (!JSession::checkToken('request')) {
-			$response = array(
-				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
-			echo json_encode($response);
-			return;
-		}
-		
-		PhocacartUtils::setWizard(2);	
-		$response = array('status' => '1');
-		echo json_encode($response);
-		return;	
-	}
-	
 	public function updatestatus() {
 		
 		if (!JSession::checkToken('request')) {

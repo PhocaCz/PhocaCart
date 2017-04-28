@@ -86,14 +86,8 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 		else {
 			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
-		
-		
-	
-		
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
-		
-		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
 ?>
