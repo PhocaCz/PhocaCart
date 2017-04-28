@@ -21,10 +21,15 @@ class PhocacartRenderAdminview
 		return '</div>'."\n".'</form>'."\n".'</div>'."\n";
 	}
 	
-	public function formInputs() {
-	
-		return '<input type="hidden" name="task" value="" />'. "\n"
-		. JHtml::_('form.token'). "\n";
+	public function formInputs($task = '') {
+		
+		$o = '';
+		$o .= '<input type="hidden" name="task" value="" />'. "\n";
+		if ($task != '') {
+			$o .= '<input type="hidden" name="taskgroup" value="'.strip_tags($task).'" />'. "\n";
+		}
+		$o .= JHtml::_('form.token'). "\n";
+		return $o;
 	}
 	
 	public function navigation($tabs) {
@@ -852,29 +857,30 @@ class PhocacartRenderAdminview
 		if ($autoOpen == 1) {
 			$s[] = '   jQuery("#'.$id.'").modal("show");';			
 			$s[] = '   jQuery("#'.$id.'").on("shown", function() {';
-			if ($iframeLink != '') {
-				$s[] = '      var src = "'.$iframeLink.'";';
-				$s[] = '      jQuery("iframe").load(function(){';
-				// Add specific class to body because of making the background transparent (body in iframe)
-				$s[] = '         jQuery(this).contents().find("body").addClass("ph-body-iframe");';
-				
-				// Get information about current page in start wizard and set white background to all pages larger than 1
-				// Only first page (page = 0) is different, it has background set in phocacart.css
-				if ($pageClass != '') {
-					$s[] = '         var phPage =jQuery(this).contents().find(".'.$pageClass.'").data("page");';
-					$s[] = '         if (phPage > 0) {';
-					$s[] = '            jQuery("#'.$id.' .modal-body").css("background", "#ffffff");';
-					$s[] = '         }';
-				}
-				if ($iframeClass != '') {
-					// Add specific class to body in iframe - to stylize it easily
-					$s[] = '         jQuery(this).contents().find("body").addClass("'.strip_tags(htmlspecialchars($iframeClass)).'");';
-				}
-				$s[] = '      });';
-			}
 		} else {
-			$s[] = '   jQuery(document.body).on(\'click\', \'a.'.$id.'ModalButton\' ,function(e) {';
+			$s[] = '   jQuery(document.body).on(\'click\', \'.'.$id.'ModalButton\' ,function(e) {';
 			$s[] = '      var src = jQuery(this).attr(\'data-src\');';
+		}
+		
+		if ($iframeLink != '') {
+			$s[] = '      var src = "'.$iframeLink.'";';
+			$s[] = '      jQuery("iframe").load(function(){';
+			// Add specific class to body because of making the background transparent (body in iframe)
+			$s[] = '         jQuery(this).contents().find("body").addClass("ph-body-iframe");';
+			
+			// Get information about current page in start wizard and set white background to all pages larger than 1
+			// Only first page (page = 0) is different, it has background set in phocacart.css
+			if ($pageClass != '') {
+				$s[] = '         var phPage =jQuery(this).contents().find(".'.$pageClass.'").data("page");';
+				$s[] = '         if (phPage > 0) {';
+				$s[] = '            jQuery("#'.$id.' .modal-body").css("background", "#ffffff");';
+				$s[] = '         }';
+			}
+			if ($iframeClass != '') {
+				// Add specific class to body in iframe - to stylize it easily
+				$s[] = '         jQuery(this).contents().find("body").addClass("'.strip_tags(htmlspecialchars($iframeClass)).'");';
+			}
+			$s[] = '      });';
 		}
 		
 		$s[] = '      var height = jQuery(this).attr(\'data-height\') || '.$w.';';
@@ -922,6 +928,39 @@ class PhocacartRenderAdminview
 			. '<span class="icon-list icon-white"></span> '
 			. JText::_($textButton) . '</a></span>';
 		*/
+	}
+	
+	public static function renderWizardButton($type = 'enable', $idMd = '', $url = '', $w = '', $h = '') {
+		
+		$paramsC 		= JComponentHelper::getParams('com_phocacart');
+		$enable_wizard	= $paramsC->get( 'enable_wizard', 1 );
+		
+		
+		// We have two evens when clicking on start wizard button
+		// Only applies to start wizard not on back wizard as this is not ajaxed - so controller will switch on the info
+		$id 	= 'phStardWizdard'; // wizard will be enabled in system - in options, so other parts of website know it
+		$class 	= 'btn btn-small btn-warning '.$idMd.'ModalButton';// modal window with wizard will be popuped
+		
+		if ($type == 'back' && $enable_wizard > 0) {
+			// BACK TO WIZARD (can be called everywhere)
+			$bar = JToolBar::getInstance( 'toolbar' );		
+			$dhtml = '<button onclick="Joomla.submitbutton(\'phocacartwizard.backtowizard\');" class="btn btn-small btn-warning">
+	<span id="ph-icon-wizard" class="icon-dummy glyphicon glyphicon-edit ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_BACK_TO_WIZARD').'</button>';
+		
+			$bar->appendButton('Custom', $dhtml, 'wizard');
+		} else if ($type == 'start') {
+			// START WIZARD (can be called only in control panel) - to start in ohter place, back to wizard format needs to be copied
+			// this button is starded by javascript in function modalWindowDynamic libraries\phocacart\render\adminview.php
+			$bar = JToolBar::getInstance( 'toolbar' );		
+			$dhtml = '<button id="'.$id.'" class="'.$class.'" data-target="#'.$idMd.'" data-toggle="modal" data-src="'.$url.'" data-width="'.$w.'" data-heigth="'.$h.'">
+	<span id="ph-icon-wizard" class="icon-dummy glyphicon glyphicon-edit ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_START_WIZARD').'</button>';
+			$bar->appendButton('Custom', $dhtml, 'wizard');
+			
+			// We have displayed the modal with wizard
+			// but we need to enable it in system so if we go from wizad to each task, it is enabled
+			$urlAjaxEnableWizard 	= 'index.php?option=com_phocacart&task=phocacartwizard.enablewizard&format=json&'. JSession::getFormToken().'=1';
+			PhocacartRenderJs::renderAjaxDoRequestWizardController($urlAjaxEnableWizard, $id, false);
+		}
 	}
 	
 }

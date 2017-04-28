@@ -141,6 +141,7 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 	
 	public function delete(&$cid = array()) {
 		
+		
 		if (count( $cid )) {
 			JArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );

@@ -18,7 +18,7 @@ $r 			=  new $class();
 ?>
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.id('adminForm'))) {
 		<?php echo $this->form->getField('description')->save(); ?>
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
@@ -106,7 +106,7 @@ echo '</div>';//end span10
 echo '<div class="col-xs-12 col-sm-2 col-md-2">';
 echo '<div id="ph-sandbox-msg" class="alert alert-danger">'.JText::_('COM_PHOCACART_SANDBOX_ENABLED_NO_REAL_MONEY_WILL_BE_TRANSFERRED').'</div>';
 echo '</div>';//end span2
-echo $r->formInputs();
+echo $r->formInputs($this->t['task']);
 echo $r->endForm();
 echo PhocacartRenderJs::renderAjaxTopHtml();
 ?>

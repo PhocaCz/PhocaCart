@@ -71,6 +71,8 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		JToolbarHelper::custom($this->t['task'].'.importcountries', 'dummy glyphicon glyphicon-globe ph-icon-earth', 'dummy glyphicon glyphicon-globe ph-icon-earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		
+		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 	
 	protected function getSortFields() {

@@ -112,4 +112,5 @@ class PhocacartRenderAdmin
 		$o .= '</div>';
 		return $o;
 	}
+	
 }

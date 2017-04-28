@@ -82,7 +82,7 @@
     background-image: none !important;
     background-repeat: none !important;
     border-color: #00B19D !important;
-    border: 1px solid #00B19D  !important;
+    border: 0px solid #00B19D  !important;
     color: #fff !important;
 	box-shadow: none !important;
 }
@@ -91,6 +91,29 @@
 	 background-color: #00B19D !important;
 	 border-color: #00B19D !important;
 	 border: 1px solid #00B19D  !important;
+}
+
+/*
+.alert-warning {
+	background-color: #FCF8E3  !important;
+	border-left: 5px solid #8A6D3B  !important;
+}*/
+
+.btn-toolbar .btn-warning,
+.btn-warning {
+	background-image: none !important;
+    background-repeat: none !important;
+    color: #fff !important;
+	box-shadow: none !important;
+	background-color: #FF9326 !important;
+	border-color: #FF9326 !important;
+	border: 0px !important;
+}
+
+.btn-warning:hover, .btn-warning:focus {
+	 background-color: #FF9326 !important;
+	 border-color: #FF9326 !important;
+	 border: 0px solid #FF9326 !important;
 }
 
 .btn-large.btn-primary,
@@ -115,6 +138,7 @@
 	font-weight: bold;
 	text-shadow: none;
 }
+
 
 
 .btn-danger {
@@ -410,3 +434,11 @@ table.table-striped tr th, table.table-striped tr th a {
 .ph-option-value {
 	width: 80%;
 }
+
+/*
+.nav-tabs > li > a, .nav-pills > li > a {
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+    margin-right: 2px;
+    line-height: 14px;
+}*/

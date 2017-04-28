@@ -103,8 +103,12 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){submitbutton(\'phocacartcategory.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
 		$bar->appendButton('Custom', $dhtml);
 		
+		
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		
+		PhocacartRenderAdminview::renderWizardButton('back');
 		
 	}
 	
