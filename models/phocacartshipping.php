@@ -173,6 +173,8 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 				
 				PhocacartRegion::storeRegions($data['region'], (int)$table->id);
 				
+				PhocacartGroup::storeGroupsById((int)$table->id, 7, $data['group']);
+				
 			
 			}
 
@@ -196,6 +198,75 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			$this->setState($this->getName() . '.id', $table->$pkName);
 		}
 		$this->setState($this->getName() . '.new', $isNew);
+
+		return true;
+	}
+	
+	public function delete(&$cid = array()) {
+
+		if (count( $cid )) {
+			$delete = parent::delete($cid);
+			if ($delete) {
+				
+				JArrayHelper::toInteger($cid);
+				$cids = implode( ',', $cid );
+			
+				$query = 'DELETE FROM #__phocacart_item_groups'
+				. ' WHERE item_id IN ( '.$cids.' )'
+				. ' AND type = 7';
+				$this->_db->setQuery( $query );
+				$this->_db->execute();
+			}
+		}
+	}
+	
+	
+	public function setDefault($id = 0) {
+		
+		$user = JFactory::getUser();
+		$db   = $this->getDbo();
+
+		if (!$user->authorise('core.edit.state', 'com_phocacart')) {
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+		}
+
+		$table = $this->getTable();
+
+		if (!$table->load((int) $id)){
+			throw new Exception(JText::_('COM_PHOCACART_ERROR_TABLE_NOT_FOUND'));
+		}
+
+		$db->setQuery("UPDATE #__phocacart_shipping_methods SET ".$db->quoteName('default')." = '0'");
+		$db->execute();
+
+		$db->setQuery("UPDATE #__phocacart_shipping_methods SET ".$db->quoteName('default')." = '1' WHERE id = " . (int) $id);
+		$db->execute();
+
+		$this->cleanCache();
+
+		return true;
+	}
+	
+	public function unsetDefault($id = 0) {
+		
+		$user = JFactory::getUser();
+		$db   = $this->getDbo();
+
+		if (!$user->authorise('core.edit.state', 'com_phocacart')) {
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+		}
+
+		$table = $this->getTable();
+
+		if (!$table->load((int) $id)){
+			throw new Exception(JText::_('COM_PHOCACART_ERROR_TABLE_NOT_FOUND'));
+		}
+
+		// It is possible that nothing will be set as default
+		$db->setQuery("UPDATE #__phocacart_shipping_methods SET ".$db->quoteName('default')." = '0' WHERE id = " . (int)$id);
+		$db->execute();
+
+		$this->cleanCache();
 
 		return true;
 	}

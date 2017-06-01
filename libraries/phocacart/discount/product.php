@@ -33,13 +33,17 @@ class PhocacartDiscountProduct
 			$db 			= JFactory::getDBO();
 			$user 			= JFactory::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
-			$where 			= array();
-			$where[]		= "a.product_id = ".(int)$id;
-			$where[] 		= "a.access IN (".$userLevels.")";
-			$where 			= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
+			$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+			$wheres 		= array();
+			$wheres[]		= "a.product_id = ".(int)$id;
+			$wheres[] 		= "a.access IN (".$userLevels.")";
+			$wheres[] 		= " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+			
+			$where 			= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 			
 			$query = 'SELECT a.id, a.title, a.alias, a.discount, a.access, a.calculation_type, a.quantity_from, a.valid_from, a.valid_to'
 					.' FROM #__phocacart_product_discounts AS a'
+					.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 4'// type 4 is product discount
 					. $where
 					.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -68,6 +72,7 @@ class PhocacartDiscountProduct
 		$app									= JFactory::getApplication();
 		$paramsC 								= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$discount_product_variations_quantity	= $paramsC->get( 'discount_product_variations_quantity', 1 );
+		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
 		
 		if ($discount_product_variations_quantity == 0) {
 			$quantity = $productQuantity;
@@ -80,11 +85,11 @@ class PhocacartDiscountProduct
 		
 		
 		if (!empty($discounts)) {
-			$maxQuantityKey = 0;// get the discount key with the maximal quantity
-			$maxQuantity	= 0;
+			$bestKey 		= 0;// get the discount key which best meet the rules
+			$maxDiscount	= 0;
 			foreach($discounts as $k => $v) {
 				
-				// 1. ACCESS CHECK 
+				// 1. ACCESS CHECK, GROUP CHECK
 				// Checked in SQL
 				
 				// 2. VALID DATE FROM TO CHECK
@@ -125,20 +130,35 @@ class PhocacartDiscountProduct
 				// minimum quantity = 30 -> discount 20%
 				// If customer buys 50 items, we need to select 20% so both 5% and 10% should be unset
 				// But if we have quantity_from == 0, this rule does not have quantity rule, it is first used.
-				if ((int)$v['quantity_from'] == 0) {
-					$maxQuantity 	= (int)$v['quantity_from'];
-					$maxQuantityKey	= $k;
-				} else if (isset($v['quantity_from']) && (int)$v['quantity_from'] > $maxQuantity) {
-					$maxQuantity 	= (int)$v['quantity_from'];
-					$maxQuantityKey	= $k;
+				//4.1 if more discountes meet rule select the one with maxDiscount
+				//4.2.if quantity is 0 for all select the largest discount (BUT be aware because of possible conflict)
+				
+				if ($discount_priority	== 2) {
+					if ((int)$v['quantity_from'] == 0) {
+						$maxDiscount 	= (int)$v['quantity_from'];
+						$bestKey		= $k;
+					} else if (isset($v['quantity_from']) && (int)$v['quantity_from'] > $maxDiscount) {
+						$maxDiscount 	= (int)$v['quantity_from'];
+						$bestKey		= $k;
+					}
+				} else {
+					if ((int)$v['discount'] == 0) {
+						$maxDiscount 	= (int)$v['discount'];
+						$bestKey		= $k;
+					} else if (isset($v['discount']) && (int)$v['discount'] > $maxDiscount) {
+						$maxDiscount 	= (int)$v['discount'];
+						$bestKey		= $k;
+					}
 				}
-
 			}
+			
+			// POSSIBLE CONFLICT discount vs. quantity - solved by parameter
+			// POSSIBLE CONFLICT percentage vs. fixed amount
 
 			
-			if (isset($discounts[$maxQuantityKey])) {
+			if (isset($discounts[$bestKey])) {
 				
-				return $discounts[$maxQuantityKey];
+				return $discounts[$bestKey];
 			} else {
 				return false;
 			}
@@ -167,10 +187,29 @@ class PhocacartDiscountProduct
 			    .' WHERE a.product_id = '.(int) $productId
 				.' ORDER BY a.id';
 		$db->setQuery($query);
+		
+		$activeGroups = array();
 		if ($returnArray) {
 			$discounts = $db->loadAssocList();
+			/*if (isset($discount[0]['id']) && (int)$discount[0]['id'] > 0) {
+				$activeGroups	= PhocacartGroup::getGroupsById((int)$discount[0]['id'], 4, 1);
+			}
+		
+			if (empty($activeGroups)) {
+				$activeGroups	= PhocacartGroup::getDefaultGroup(1);
+			}
+			$discounts[0]['group'] = $activeGroups;*/
+			
 		} else {
 			$discounts = $db->loadObjectList();
+			/*if (isset($discount[0]->id) && (int)$discount[0]->id > 0) {
+				$activeGroups	= PhocacartGroup::getGroupsById((int)$discount[0]->id, 4, 1);
+			}
+		
+			if (empty($activeGroups)) {
+				$activeGroups	= PhocacartGroup::getDefaultGroup(1);
+			}
+			$discounts[0]->group = $activeGroups;*/
 		}
 		return $discounts;
 	}
@@ -270,6 +309,10 @@ class PhocacartDiscountProduct
 						
 						$newIdD = $db->insertid();
 					}
+				
+		
+					PhocacartGroup::storeGroupsById((int)$newIdD, 4, $v['groups'], $productId);
+					
 					
 					$notDeleteDiscs[]	= $newIdD;
 				}
@@ -282,14 +325,30 @@ class PhocacartDiscountProduct
 						.' FROM #__phocacart_product_discounts'
 						.' WHERE product_id = '. (int)$productId
 						.' AND id NOT IN ('.$notDeleteDiscsString.')';
+						
+				$query2 = 'DELETE FROM #__phocacart_item_groups'
+					. ' WHERE item_id NOT IN ( '.$notDeleteDiscsString.' )'
+					. ' AND product_id = '.(int)$productId
+					. ' AND type = 4';
+				
 				
 			} else {
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_discounts'
 						.' WHERE product_id = '. (int)$productId;
+						
+				$query2 = 'DELETE FROM #__phocacart_item_groups'
+					. ' WHERE product_id = '.(int)$productId
+					. ' AND type = 4';
 			}
 			$db->setQuery($query);
 			$db->execute();
+			
+			$db->setQuery($query2);
+			$db->execute();
+			
+			
+			
 		}
 	}
 	

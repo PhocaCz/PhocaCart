@@ -55,7 +55,8 @@ class JFormFieldPhocaPluginMethod extends JFormField
 		$s[] 	= '            jQuery("#ph-extended-params-msg").hide();';
 		$s[] 	= '	  		   jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen Adm
 		
-		$s[]	= '				jQuery(\'.hasTooltip\').tooltip({"html": true,"container": "body"});';//Reload Tooltip
+		//$s[]	= '				jQuery(\'.hasTooltip\').tooltip({"html": true,"container": "body"});';//Reload Tooltip
+		$s[]	= '				jQuery(".hasPopover").popover({"html": true,"trigger": "hover focus","container": "body"});';
 		$s[]	= '				var sandbox = jQuery("#phform_params_sandbox").val();';
 		$s[]	= '				if (sandbox == 1) {';
 		$s[]	= '					jQuery("#ph-sandbox-msg").show();';

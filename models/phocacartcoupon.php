@@ -45,7 +45,8 @@ class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 	
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
-			$item->discount	= PhocacartPrice::cleanPrice($item->discount);
+			$item->discount		= PhocacartPrice::cleanPrice($item->discount);
+			$item->total_amount	= PhocacartPrice::cleanPrice($item->total_amount);
 		}
 		return $item;
 	}
@@ -156,6 +157,9 @@ class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 					$data['cat_ids'] = array();
 				}
 				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->id);
+				
+				
+				PhocacartGroup::storeGroupsById((int)$table->id, 6, $data['group']);
 			}
 
 			// Clean the cache.
@@ -180,6 +184,24 @@ class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 		$this->setState($this->getName() . '.new', $isNew);
 
 		return true;
+	}
+	
+	public function delete(&$cid = array()) {
+
+		if (count( $cid )) {
+			$delete = parent::delete($cid);
+			if ($delete) {
+				
+				JArrayHelper::toInteger($cid);
+				$cids = implode( ',', $cid );
+			
+				$query = 'DELETE FROM #__phocacart_item_groups'
+				. ' WHERE item_id IN ( '.$cids.' )'
+				. ' AND type = 6';
+				$this->_db->setQuery( $query );
+				$this->_db->execute();
+			}
+		}
 	}
 }
 ?>

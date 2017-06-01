@@ -37,9 +37,9 @@ class PhocaCartCpViewPhocaCartEditStockAdvanced extends JViewLegacy
 		$this->t['combinations']		= array();
 		$this->t['combinations_stock']	= array();
 		if (!empty($this->t['product'])) {
-			PhocaCartAttribute::getCombinations( $this->t['product']->id, $this->t['product']->title,  $this->t['attr_options'], $this->t['combinations']);
+			PhocacartAttribute::getCombinations( $this->t['product']->id, $this->t['product']->title,  $this->t['attr_options'], $this->t['combinations']);
 			// Load data from database
-			$this->t['combinations_stock'] = PhocaCartAttribute::getCombinationsStockByProductId($this->t['product']->id);
+			$this->t['combinations_stock'] = PhocacartAttribute::getCombinationsStockByProductId($this->t['product']->id);
 		}
 	
 

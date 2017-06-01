@@ -35,24 +35,27 @@ class PhocaCartViewItem extends JViewLegacy
 		$document				= JFactory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');
 		$catid					= $app->input->get('catid', 0, 'int');
+
 		$this->category			= $model->getCategory($id, $catid);
+
 		$this->item				= $model->getItem($id, $catid);
 		$this->t['catid']		= 0;
 		if (isset($this->category[0]->id)) {
 			$this->t['catid']	= (int)$this->category[0]->id;
 		}
 	
+	
+	
+	
 		// PARAMS
 		$this->t['tax_calculation'] 		= $this->p->get( 'tax_calculation', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['display_back']			= $this->p->get( 'display_back', 3 );
 		//$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['enable_item_navigation']	= $this->p->get( 'enable_item_navigation', 0 );
 		$this->t['item_addtocart']			= $this->p->get( 'item_addtocart', 1 );
 		$this->t['enable_review']			= $this->p->get( 'enable_review', 1 );
-		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['image_popup_method']		= $this->p->get( 'image_popup_method', 1 );
@@ -68,15 +71,15 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['title_next_prev']			= $this->p->get( 'title_next_prev', 1 );
 		$this->t['display_public_download'] = $this->p->get( 'display_public_download', 1 );
 		$this->t['display_external_link']	= $this->p->get( 'display_external_link', 1 );
-		
-	
+		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
+		$this->t['enable_price_history'] 	= $this->p->get( 'enable_price_history', 0 );
 
 		
 		if ($this->t['hide_addtocart'] == 1) {
 			$this->t['item_addtocart']		= 0;
 		}
 		
-		if (!$this->item) {
+		if (!isset($this->item[0]->id) || (isset($this->item[0]->id) && $this->item[0]->id < 1)) {
 			
 			echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
 			
@@ -90,7 +93,11 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$id);
 			$this->t['specifications']		= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
 			$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
-		
+			
+			if ($this->t['enable_price_history']) {
+				$this->t['price_history_data']	= PhocacartPriceHistory::getPriceHistoryChartById((int)$id);
+			}
+			
 			$this->t['action']				= $uri->toString();
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
@@ -111,13 +118,14 @@ class PhocaCartViewItem extends JViewLegacy
 			
 			
 			$media = new PhocacartRenderMedia();
-			$media->loadBootstrap($this->t['load_bootstrap']);
-			$media->loadChosen($this->t['load_chosen']);
-			
+			$media->loadBootstrap();
+			$media->loadChosen();
 			$media->loadRating();
-			
-			$media->loadPhocaSwapImage($this->t['dynamic_change_image']);
+			$media->loadPhocaSwapImage();
 			$media->loadPhocaAttribute(1);
+			if ($this->t['popup_askquestion'] == 1) {
+				$media->loadWindowPopup();
+			}
 			
 			if ($this->t['image_popup_method'] == 2) {
 				PhocacartRenderJs::renderMagnific();
@@ -135,9 +143,7 @@ class PhocaCartViewItem extends JViewLegacy
 			PhocacartRenderJs::renderAjaxAddToCompare();
 			PhocacartRenderJs::renderAjaxAddToWishList();
 			
-			if ($this->t['popup_askquestion'] == 1) {
-				$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
-			}
+			
 			
 			
 			if (isset($this->category[0]) && is_object($this->category[0]) && isset($this->item[0]) && is_object($this->item[0])){
@@ -149,6 +155,28 @@ class PhocaCartViewItem extends JViewLegacy
 		}
 		$model->hit((int)$id);
 		PhocacartStatisticsHits::productHit((int)$id);
+		
+		// Plugins ------------------------------------------
+		JPluginHelper::importPlugin('pcv');
+		$this->t['dispatcher']	= JEventDispatcher::getInstance();
+		$this->t['event']		= new stdClass;
+		
+		$results = $this->t['dispatcher']->trigger('onItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemBeforeHeader = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemAfterAddToCart = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemInsideTabPanel = $results;
+		
+		$results = $this->t['dispatcher']->trigger('onItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
+		// END Plugins --------------------------------------
+			
 		parent::display($tpl);
 	}
 	

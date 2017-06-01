@@ -126,7 +126,8 @@ class PhocacartOrderView
 		
 		$db = JFactory::getDBO();
 		$query = 'SELECT o.*,'
-				.' u.id AS user_id, u.name AS user_name, u.username AS user_username, p.title AS paymenttitle, s.title AS shippingtitle,'
+				.' u.id AS user_id, u.name AS user_name, u.username AS user_username, p.title AS paymenttitle,'
+				.' s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription,'
 				.' c.title AS coupontitle, cu.title AS currencytitle, d.title AS discounttitle'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__users AS u ON u.id = o.user_id'
@@ -240,6 +241,48 @@ class PhocacartOrderView
 		$db->setQuery($q);
 		$items = $db->loadObjectList();
 		return $items;
+	}
+	
+	
+	// Tracking
+	public static function getTrackingLink($common) {
+		$trackingLink = '';
+		
+		if (isset($common->tracking_link_custom) && $common->tracking_link_custom != '') {
+			$trackingLink = '<a href="'.$common->tracking_link_custom.'">'.$common->tracking_link_custom.'</a>';
+		} else if (isset($common->shippingtrackinglink) && $common->shippingtrackinglink != '' && isset($common->tracking_number) && $common->tracking_number != '') {
+			$trackingLink = '<a href="'.$common->shippingtrackinglink . $common->tracking_number.'">'.$common->shippingtrackinglink . $common->tracking_number.'</a>';
+		}
+		return $trackingLink;
+	}
+	
+	public static function getTrackingDescription($common) {
+		$trackingDescription = '';
+		if (isset($common->tracking_description_custom) && $common->tracking_description_custom != '') {
+			$trackingDescription = $common->tracking_description_custom;
+		} else if (isset($common->shippingtrackingdescription) && $common->shippingtrackingdescription != '') {
+			$trackingDescription = $common->shippingtrackingdescription;
+		}
+		return $trackingDescription;
+		
+	}
+	
+	public static function getShippingTitle($common) {
+		$shippingTitle = '';
+		if (isset($common->shippingtitle) && $common->shippingtitle != '') {
+			$shippingTitle = $common->shippingtitle;
+		}
+		return $shippingTitle;
+	}
+	
+	public static function getDateShipped($common) {
+		$dateShipped = '';
+		
+		if (isset($common->tracking_date_shipped) && $common->tracking_date_shipped != '' && $common->tracking_date_shipped != '0000-00-00 00:00:00') {	
+			$date 	= PhocacartUtils::date($common->tracking_date_shipped);
+			$dateShipped = $date;
+		}
+		return $dateShipped;
 	}
 }
 

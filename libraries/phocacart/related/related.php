@@ -59,9 +59,12 @@ class PhocacartRelated
 		if ($frontend) {
 			$user 		= JFactory::getUser();
 			$userLevels	= implode (',', $user->getAuthorisedViewLevels());
-		
+			$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+			
 			$wheres[] = " c.access IN (".$userLevels.")";
 			$wheres[] = " a.access IN (".$userLevels.")";
+			$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] = " c.published = 1";
 			$wheres[] = " a.published = 1";
 			
@@ -95,7 +98,8 @@ class PhocacartRelated
 		if ((int)$catid > 0) {
 			$query .= ' LEFT JOIN #__phocacart_categories AS c2 ON c2.id = pc.category_id and pc.category_id = '. (int)$catid;
 		}
-		
+		$query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
 		$query .= ' WHERE ' . implode( ' AND ', $wheres )
 				. ' GROUP BY a.id';
 				

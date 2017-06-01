@@ -178,8 +178,29 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 			$this->setState($this->getName() . '.id', $table->$pkName);
 		}
 		$this->setState($this->getName() . '.new', $isNew);
-
+		
+		if ((int)$table->id > 0) {
+			PhocacartGroup::storeGroupsById((int)$table->id, 5, $data['group']);
+		}
 		return true;
+	}
+	
+	public function delete(&$cid = array()) {
+
+		if (count( $cid )) {
+			$delete = parent::delete($cid);
+			if ($delete) {
+				
+				JArrayHelper::toInteger($cid);
+				$cids = implode( ',', $cid );
+			
+				$query = 'DELETE FROM #__phocacart_item_groups'
+				. ' WHERE item_id IN ( '.$cids.' )'
+				. ' AND type = 5';
+				$this->_db->setQuery( $query );
+				$this->_db->execute();
+			}
+		}
 	}
 }
 ?>

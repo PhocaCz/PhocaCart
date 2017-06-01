@@ -71,14 +71,16 @@ class JFormFieldPhocaSelectItem extends JFormField
 			}
 		} else {
 			// Standard product - only select one product by ID
-			$product = PhocacartProduct::getProductByProductId((int)$this->value);// We don't need catid, we get all categories title
+			$product = PhocacartProduct::getProductByProductId((int)$this->value);
+			
 			if(isset($product->id)) {
 				$value .= (int)$product->id . ':'. $product->title .' ('.$product->categories_title.')';
 			}
 			$id = (int)$this->value;
+			
 		}
 	
-	
+
 		
 		$document = JFactory::getDocument();
 		JHtml::stylesheet('media/com_phocacart/js/administrator/select2/select2.css' );
@@ -100,7 +102,7 @@ $s[] = '  });';
 $s[] = '})(jQuery);';
 $s[] = ' ';
 $s[] = ' function phSearchItemsMultiple(element, url) {';
-$s[] = '  jQuery(element).select2({';
+$s[] = '   jQuery(element).select2({';
 $s[] = '   placeholder: "",';
 $s[] = '   minimumInputLength: 1,';
 $s[] = '   multiple: '.$multiple.',';
@@ -115,10 +117,10 @@ $s[] = '      item_id: '.(int)$id.',';
 $s[] = '     }';
 $s[] = '    },';
 $s[] = '    results: function(data, page) {';
-$s[] = '	  if ( data.status == 0 ){';
+$s[] = '	   if ( data.status == 0 ){';
 $s[] = '       return { results: data.error }';
 $s[] = '      } else {';
-$s[] = '       return { results: data.items }';
+$s[] = '      return { results: data.items }';
 $s[] = '      }';
 $s[] = '    }';
 $s[] = '   },';
@@ -133,7 +135,7 @@ $s[] = '       id: item[0],';
 $s[] = '       title: item[1]';
 $s[] = '      });';
 $s[] = '    });';
-$s[] = '    jQuery(element).val(\'\');';
+//$s[] = '    jQuery(element).val(\'\');';
 if ($multiple == 'false') {
 	$s[] = '    callback(data[0]);';// NOT MULTIPLE
 } else {
@@ -152,7 +154,21 @@ $s[] = '  }';
 $s[] = ' };';
 $s[] = ' ';
 $s[] = ' function formatSelection(data) {';
-$s[] = '  return data.title;';
+
+// Menu link - we need to select category in menu link too
+// Options of categories will be loaded by ajax
+$s[] = '    if(data.categories && jQuery("#jform_request_catid").length) {';
+$s[] = '       jQuery("#jform_request_catid option").remove();';
+$s[] = '       jQuery(data.categories.split(",")).each(function(i) {';
+$s[] = '          var itemC = this.split(\':\');';
+$s[] = '          jQuery("#jform_request_catid").append(jQuery(\'<option>\', {value: itemC[0], text: itemC[1]}));';
+$s[] = '       });';
+$s[] = '	   jQuery("select").trigger("liszt:updated");';
+$s[] = '	   jQuery("select").trigger("chosen:updated");';
+//$s[] = '	   jQuery(".inputbox").chosen({disable_search_threshold : 10,allow_single_deselect : true});';
+$s[] = '    }';
+// End Menu link
+$s[] = '    return data.title;';
 $s[] = ' };';
 $s[] = ' ';
 $s[] = ' phSearchItemsMultiple("#'.$this->id.'", "'.$url.'");';
@@ -162,6 +178,8 @@ $s[] = ' phSearchItemsMultiple("#'.$this->id.'", "'.$url.'");';
 //$s[] = ' });';
 $s[] = '});';
 
+
+
     $document->addScriptDeclaration(implode("\n", $s));
 
 		
@@ -169,6 +187,7 @@ $s[] = '});';
 		$html[] = '<input type="hidden" style="width: 400px;" id="'.$this->id.'" name="'.$this->name.'" value="'. $value.'"' .' '.$attr.' />';
 		$html[] = '</div>'. "\n";
 		
+
 		return implode("\n", $html);
 	}
 	

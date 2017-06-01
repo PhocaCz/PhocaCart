@@ -20,12 +20,14 @@ class JFormFieldPhocacaptcha extends JFormField
 		$namespace	= 'pc'.$params->get('session_suffix', $string);
 		$captchaCnt = $session->get('captcha_cnt',  0, $namespace) + 1;
 						
+		// Possible extension of different captcha				
 		$id = $session->get('captcha_id', '', $namespace);
 		
 		switch ($id){
 			default:
 			case 1:
 				$retval = PhocacartCaptchaRecaptcha::render();
+				//$session->set('captcha_cnt', $captchaCnt, $namespace); 
 			break;
 		}
 

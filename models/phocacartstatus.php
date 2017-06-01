@@ -73,6 +73,12 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
+		
+		if (isset($table->type) && isset($table->published) && $table->type == 1 && $table->published == 0) {
+			$table->published = 1;
+			$app = JFactory::getApplication();
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
+		}
 	}
 	
 	public function delete(&$cid = array()) {
@@ -108,6 +114,66 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 			return true;
 		}
 		
+	}
+	
+	public function publish(&$pks, $value = 1)
+	{
+		
+		$user = JFactory::getUser();
+		$table = $this->getTable();
+		$pks = (array) $pks;
+		$app = JFactory::getApplication();
+
+		$error 	= 0;
+		foreach ($pks as $i => $pk){
+			$table->reset();
+
+			if ($table->load($pk)) {
+				
+				
+				if (!$this->canEditState($table)){
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+					return false;
+				}
+
+				// If the table is checked out by another user, drop it and report to the user trying to change its state.
+				if (property_exists($table, 'checked_out') && $table->checked_out && ($table->checked_out != $user->id)){
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'), JLog::WARNING, 'jerror');
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					return false;
+				}
+				
+				if (property_exists($table, 'type') && $table->type && ((int)$table->type == 1) && $value == 0){
+					$error = 1;
+					unset($pks[$i]);
+					//return false;
+				}			
+			}
+		}
+
+		
+		// Attempt to change the state of the records.
+		if (!empty($pks)) {
+			if (!$table->publish($pks, $value, $user->get('id'))) {
+				$this->setError($table->getError());
+				return false;
+			}
+		}
+		
+		
+	
+		if ($error) {
+			
+			//$this->setError(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
+			return true;
+		} else {
+			return true;
+		}
+		$this->cleanCache();
 	}
 }
 ?>

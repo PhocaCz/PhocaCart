@@ -3,12 +3,12 @@
 	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
 		<fieldset name="display" label="COM_PHOCACART_CONFIG_HEAD_DISPLAY_LABEL">
 
-<field name="main_description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_DESC" />
 
-<field name="terms_conditions" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_DESC" />
+<field name="main_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 
-<field name="checkout_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_DESC" />
+<field name="terms_conditions" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_LABEL"  description="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 
+<field name="checkout_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 
 
 <field name="phocahead1" type="phocahead" default="COM_PHOCACART_CATEGORIES_VIEW_LABEL" label="" description=""/>
@@ -243,6 +243,12 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
+<field name="enable_price_history" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_PRICE_HISTORY_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_PRICE_HISTORY_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+
 
 
 <field name="phocahead6" type="phocahead" default="COM_PHOCACART_CHECKOUT_VIEW_LABEL" label="" description=""/>
@@ -275,6 +281,12 @@
 	<option value="1">COM_PHOCACART_YES</option>
 </field>
 
+<field name="enable_captcha_checkout" type="list" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_CHECKOUT_DESC">
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_ALL_CUSTOMERS</option>
+	<option value="2">COM_PHOCACART_GUESTS_ONLY</option>
+</field>
+
 
 
 <field name="phocahead7" type="phocahead" default="COM_PHOCACART_GENERAL_DISPLAY_OPTIONS_LABEL" label="" description=""/>
@@ -292,6 +304,11 @@
 </field>
 
 <field name="display_quickview" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_addtocart_icon" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ICON_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
@@ -441,6 +458,16 @@
 	<option value="1">COM_PHOCACART_ROUND_HALF_DOWN</option>
 </field>
 
+<field name="enable_coupons" type="list" default="1" label="COM_PHOCACART_FIELD_ENABLE_COUPONS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COUPONS_DESC">
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
+<field name="enable_rewards" type="list" default="1" label="COM_PHOCACART_FIELD_ENABLE_REWARD_POINTS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_REWARD_POINTS_DESC">
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
 
 <!--
 <field name="rounding_calculation_subtotal" type="list" default="2" label="COM_PHOCACART_FIELD_ROUNDING_SUBTOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_ROUNDING_SUBTOTAL_AMOUNT_LABEL">
@@ -542,6 +569,11 @@
 		
 		<fieldset name="discount" label="COM_PHOCACART_CONFIG_HEAD_DISCOUNT_LABEL">
 		
+		<field name="discount_priority" default="1" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISCOUNT_PRIORITY_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_PRIORITY_DESC" >
+	<option value="1">COM_PHOCACART_HIGHEST_DISCOUNT</option>
+	<option value="2">COM_PHOCACART_HIGHEST_QUANTITY</option>
+</field>
+		
 		<field name="phocahead21" type="phocahead" default="COM_PHOCACART_CONFIG_PRODUCT_DISCOUNT_OPTIONS_LABEL" label="" description=""/>
 		
 		<field name="discount_product_variations_quantity" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_QUANTITY_RULE_PRODUCT_VARIATIONS_LABEL" description="COM_PHOCACART_FIELD_QUANTITY_RULE_PRODUCT_VARIATIONS_DESC" >
@@ -588,6 +620,12 @@
 		<field name="approve_review" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_APPROVE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_APPROVE_REVIEW_DESC" >
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="user_group_change_rule" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_RULE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_RULE_DESC" >
+	<option value="0">COM_PHOCACART_NEVER_CHANGE_USER_GROUP</option>
+	<option value="1">COM_PHOCACART_ONE_GROUP_HIGHEST_MINIMAL_SUM_OF_PURCHACHES_INCLUDING_DEFAULT</option>
+	<option value="2">COM_PHOCACART_ALL_GROUPS_INCLUDING_DEFAULT</option>
 </field>
 
 
@@ -701,7 +739,9 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-<field name="question_description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_DESC" />
+<field name="question_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
+
+
 
 <field name="display_name_form" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -842,8 +882,8 @@
 		
 <field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC" />
 	
-<field name="store_info" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_STORE_INFORMATION_DESC" />
 
+<field name="store_info" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL"  description="COM_PHOCACART_FIELD_STORE_INFORMATION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 
 		</fieldset>
 	

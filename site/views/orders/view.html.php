@@ -25,7 +25,6 @@ class PhocaCartViewOrders extends JViewLegacy
 		$this->t['orders']					= $model->getOrderList();
 		
 		$this->t['token']					= $app->input->get('o', '', 'string');
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['order_guest_access']		= $this->p->get( 'order_guest_access', 0 );
 		if ($this->t['order_guest_access'] == 0) {
 			$this->t['token'] = '';
@@ -50,10 +49,9 @@ class PhocaCartViewOrders extends JViewLegacy
 		$this->t['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
 	
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
-		
+		$media->loadBootstrap();
+		$media->loadWindowPopup();
+
 		//$this->t['path'] = PhocacartPath::getPath('categoryimage');
 		$this->_prepareDocument();
 		parent::display($tpl);

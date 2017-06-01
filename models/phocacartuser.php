@@ -36,12 +36,22 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		return JTable::getInstance($type, $prefix, $config);
 	}
 	
-	public function getForm($data = array(), $loadData = true) {
+	public function getFormSpecific($data = array(), $loadData = true) {
 		
 		if (empty($this->fields['xml'])) {
 			$this->fields = $this->getFields();
 		}
-		$form = $this->loadForm('com_phocacart.user', (string)$this->fields['xml'], array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_phocacart.userspecific', (string)$this->fields['xml'], array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
+	}
+	
+	public function getForm($data = array(), $loadData = true) {
+		
+		$form = $this->loadForm('com_phocacart.user', 'phocacartuser', array('control' => 'jform', 'load_data' => $loadData));
+		
 		if (empty($form)) {
 			return false;
 		}
@@ -60,13 +70,22 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 	
 	public function getItem($pk = null) {
 		$app	= JFactory::getApplication();
-		$user 	= $this->getUser();
+		
+		if (empty($pk)) {
+			$pk = (int) $this->getState($this->getName() . '.id');
+		}
+		
+		$user 	= $this->getUser($pk);
+		
+		
 		$table 	= $this->getTable('PhocacartUser', 'Table');
-		$tableS 	= $this->getTable('PhocacartUser', 'Table');
+		$tableS = $this->getTable('PhocacartUser', 'Table');
 		
 		// Billing
 		if(isset($user->id) && (int)$user->id > 0) {
+			
 			$return = $table->load(array('user_id' => (int)$user->id, 'type' => 0));
+			
 			if ($return === false && $table->getError()) {
 				$this->setError($table->getError());
 				return false;
@@ -106,7 +125,7 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 			$registry->loadString($item->params);
 			$item->params = $registry->toArray();
 		}*/
-
+		
 		return $item;
 	}
 	
@@ -131,16 +150,19 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 	public function save($data, $type = 0) {
 		
 		$app	= JFactory::getApplication();
-		
 		$data['type']		= (int)$type;
 		$row = $this->getTable('PhocacartUser', 'Table');
 
 		if(isset($data['user_id']) && $data['user_id'] > 0) {
 			if (!$row->load(array('user_id' => (int)$data['user_id'], 'type' => $type))) {
 				// No data yet
+				
+			} else {
+				if (isset($row->id) && (int)$row->id > 0 && (!isset($data['id']) || (isset($data['id']) && $data['id'] == ''))) {
+					$data['id'] = (int)$row->id;
+				}
 			}
 		}
-		//$row->bind($data);
 
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -161,7 +183,12 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 			return false;
 		}
 		
-		return $row->id;
+		// We save shipping and billing after each other - twice, so don't delete the group and run only once
+		if ($type == 0) {
+			PhocacartGroup::storeGroupsById((int)$row->user_id, 1, $data['group']);
+		}
+	
+		return $row->user_id;
 	}
 	
 	public function delete(&$cid = array()) {

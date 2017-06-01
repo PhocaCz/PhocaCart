@@ -39,7 +39,7 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'code', 'discount', 'calculation_type', 'access');
+$formArray = array ('title', 'code', 'discount', 'calculation_type', 'access', 'group');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);

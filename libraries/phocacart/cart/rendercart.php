@@ -19,6 +19,7 @@ class PhocacartCartRendercart extends PhocacartCart
 	public $params;
 
 	public function __construct() {
+		
 		parent::__construct();
 	}
 	

@@ -66,6 +66,11 @@ class PhocaCartCpViewPhocacartShippings extends JViewLegacy
 		if ($canDo->get('core.delete')) {
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartshippings.delete', $this->t['l'].'_DELETE');
 		}
+		
+		if ($canDo->get('core.edit.state')){
+			JToolbarHelper::makeDefault($this->t['tasks'].'.setDefault', 'COM_PHOCACART_DEFAULT');
+		}
+		
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 		

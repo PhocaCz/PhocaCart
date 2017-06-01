@@ -19,21 +19,23 @@ class PhocacartCoupon
 		$user 		= JFactory::getUser();
 		$guest		= PhocacartUserGuestuser::getGuestUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
-		$where 		= array();
+		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+		$wheres 		= array();
 		
 		if ((int)$couponId  > 0) {
-			$where[]	= 'c.id = '.(int)$couponId;
+			$wheres[]	= 'c.id = '.(int)$couponId;
 		} else if ($couponCode != '') {
-			$where[]	= 'c.code = '.$db->quote((string)$couponCode);
+			$wheres[]	= 'c.code = '.$db->quote((string)$couponCode);
 		} else {
 			return false;
 		}
 		
 		// ACCESS
-		$where[] 	= "c.access IN (".$userLevels.")";
-		$where[]	= 'c.published = 1';
+		$wheres[] 	= " c.access IN (".$userLevels.")";
+		$wheres[] 	= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		$wheres[]	= ' c.published = 1';
  
-		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
+		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		if((isset($user->id) && $user->id > 0) || $guest) {
 			$query = 'SELECT c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
@@ -47,15 +49,16 @@ class PhocacartCoupon
 			.' LEFT JOIN #__phocacart_coupon_categories AS cc ON cc.coupon_id = c.id'
 			.' LEFT JOIN #__phocacart_coupon_count AS co ON co.coupon_id = c.id' // limit count for all coupons
 			.' LEFT JOIN #__phocacart_coupon_count_user AS cu ON cu.coupon_id = c.id AND cu.user_id = '.(int)$user->id // limit c for user
-			. $where;
-			//.' GROUP BY c.id';
+			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 6'// type 6 is coupon
+			. $where
+			.' GROUP BY c.id';
 			// SQL92 SQL99 ???
-			/*
-			, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
+			
+			/*.', c.code, c.title, c.valid_from, c.valid_to, c.discount,'
 			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
-			.' c.calculation_type, c.free_shipping, c.free_payment,'
-			.' co.count AS count, cu.count AS countuser'
-			*/
+			.' c.calculation_type, c.free_shipping, c.free_payment';*/
+			//.' co.count AS count, cu.count AS countuser';
+			
 			$query .= ' ORDER BY c.id'
 			.' LIMIT 1';
 			
@@ -96,7 +99,7 @@ class PhocacartCoupon
 			// -----------
 			// BASIC CHECK
 
-			// 1. ACCESS, EXISTS, PUBLISHED
+			// 1. ACCESS, EXISTS, PUBLISHED, CUSTOMER GROUP
 			// Checked in SQL
 		
 			// 2. VALID DATE FROM TO CHECK

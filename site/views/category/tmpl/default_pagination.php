@@ -40,11 +40,11 @@ if ($this->p->get('show_pagination')) {
 	
 	
 	echo '<div class="clearfix"></div>';
-	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination">'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
+	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination pagination">'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
 	
 	echo '<div class="clearfix"></div>';
 	
-	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination ph-pagination-mt">';
+	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination ph-pagination-mt pagination">';
 	echo str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesCounter());
 	echo '</div>';
 	

@@ -9,7 +9,7 @@
 
 <field name="product_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" required="true" />
 
-<field name="user_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" required="true" />
+<field name="user_id" type="user" class="inputbox" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" required="true" />
 
 <field name="name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" required="true" />
 
@@ -39,7 +39,7 @@
 	<option value="*">JALL</option>
 </field>
 
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
 	</fieldset>
 

@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 /*
-if (! class_exists('PhocaCartLoader')) {
+if (! class_exists('PhocacartLoader')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
 }
 phocacart import('phocacart.category.category');
@@ -384,6 +384,7 @@ class PhocacartRouter extends JComponentRouterBase
 
 	public function parse(&$segments) {
 		
+
 		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
@@ -409,6 +410,7 @@ class PhocacartRouter extends JComponentRouterBase
 
 		// Count route segments
 		$count = count($segments);
+		
 
 		/*
 		 * Standard routing for items.  If we don't pick up an Itemid then we get the view from the segments
@@ -420,6 +422,7 @@ class PhocacartRouter extends JComponentRouterBase
 			// Called if no menu item created
 			$vars['id'] = $segments[$count - 1];
 
+	
 			return $vars;
 		}
 
@@ -427,12 +430,14 @@ class PhocacartRouter extends JComponentRouterBase
 		if ($count == 1) {
 			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
 					$vars['view']  = $segments[0];
+						
 				return $vars;
 			}
 			
 			// Question can include ID/CATID but can be without ID/CATID
 			if(isset($segments[0]) && in_array($segments[0], $viewsNotOwnId)) {
 					$vars['view']  = $segments[0];
+				
 				return $vars;
 			}
 		}
@@ -474,9 +479,7 @@ class PhocacartRouter extends JComponentRouterBase
 				$vars['id'] = $id;
 
 				return $vars;
-			}
-			else
-			{
+			} else {
 				// TO DO specify catid - load from libraries
 				$query = $db->getQuery(true)
 					->select($db->quoteName(array('alias', 'catid')))
@@ -486,13 +489,18 @@ class PhocacartRouter extends JComponentRouterBase
 				$item1 = $db->loadObject();
 
 				
-				if ($item1)
-				{
-					if ($item1->alias == $alias)
-					{
-						$vars['view'] = 'item';
-						$vars['catid'] = (int) $item1->catid;
-						$vars['id'] = (int) $id;
+				if ($item1) {
+					if ($item1->alias == $alias) {
+						
+						$vars['view'] 	= 'item';
+						$vars['id'] 	= (int) $id;
+						$vars['catid']	 = (int) $item1->catid;
+						
+						// We have direct link to category view and item1->catid is null
+						if ((int) $vars['catid'] == 0 && isset($item->query['id']) && $item->query['id'] > 0) {
+							$vars['catid'] = (int)$item->query['id'];
+						}
+						
 
 						return $vars;
 					}
@@ -571,7 +579,7 @@ class PhocacartRouter extends JComponentRouterBase
 				}
 			}
 			
-		
+			
 			return $vars;
 		}
 /*
@@ -649,7 +657,7 @@ class PhocacartRouter extends JComponentRouterBase
 			$found = 0;
 		}*/
 		
-		
+	
 
 		return $vars;
 	}

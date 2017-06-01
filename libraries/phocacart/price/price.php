@@ -145,13 +145,18 @@ class PhocacartPrice
 	 * param format - format the price or not (add currency symbol, price decimals thousands separator, ...)
 	 */
 	
-	public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1) {
+	public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null) {
 		
 		// We need to round because if not
 		// BRUTTO          0.15  ... 0.15
 		// TAX             0.025 ... 0.03
 		// NETTO           0.125 ... 0.13
 		// BRUTTO IS WRONG 0.15  ... 0.16
+		
+		if ($groupPrice !== null) {
+			$price = $groupPrice;
+		}
+		
 		if ($round == 1) {$price = $this->roundPrice($price);}
 	
 		
@@ -159,7 +164,6 @@ class PhocacartPrice
 		$taxChangedA 				= PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
 		$tax 						= $this->roundPrice($taxChangedA['taxrate']);
 		$taxTitle					= $taxChangedA['taxtitle'];
-		
 		$taxTitle					= JText::_($taxTitle);
 		
 		$priceO 					= array();
@@ -273,6 +277,17 @@ class PhocacartPrice
 		
 		
 		return $priceO;
+	}
+	
+	public function getPriceItem($price, $groupPrice = null, $format = 1) {
+		if ($groupPrice !== null) {
+			$price = $groupPrice;
+		}
+		
+		if ($format == 1) {
+			$price = $this->getPriceFormat($price);
+		}
+		return $price;
 	}
 	
 	/*
@@ -602,6 +617,7 @@ class PhocacartPrice
 		return $price;
 	}	
 	public static function cleanPrice($price) {
+		$price = (float)$price;
 		return $price + 0;
 	}
 }

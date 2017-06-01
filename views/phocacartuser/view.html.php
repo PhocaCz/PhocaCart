@@ -14,21 +14,35 @@ class PhocaCartCpViewPhocacartUser extends JViewLegacy
 	protected $state;
 	protected $item;
 	protected $form;
+	protected $formspecific;
 	protected $fields;
 	protected $t;
 	protected $u;
 
 	public function display($tpl = null) {
 		
-		$app			= JFactory::getApplication();
-		$this->t		= PhocacartUtils::setVars('user');
-		$this->state	= $this->get('State');
-		$this->form		= $this->get('Form');
-		$this->item		= $this->get('Item');
-		$this->fields	= $this->get('Fields');
+		$app					= JFactory::getApplication();
+		$this->t				= PhocacartUtils::setVars('user');
+		$this->state			= $this->get('State');
+		$this->form				= $this->get('Form');
+		$this->formspecific		= $this->get('FormSpecific');
+		$this->item				= $this->get('Item');
+		$this->fields			= $this->get('Fields');
 		
+
+		if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
+			$user_id		= $this->item->user_id;
+		} else {
+			$user_id		= $this->state->get($this->getName() . '.id');
+		}
 		
-		$this->u		= JFactory::getUser($this->item->user_id);
+		$this->u			= JFactory::getUser($user_id);
+		
+		// There are two forms
+		// 1) billing and shipping created by code
+		// 2) other info created by XML (user_id, group)
+		//$this->form->setValue('user_id', $user_id); // Add user_id to 2) so the field can get right Parameters
+		
 		
 	
 		$media = new PhocacartRenderAdminmedia();
@@ -49,7 +63,7 @@ class PhocaCartCpViewPhocacartUser extends JViewLegacy
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.user_id'));
 		
 		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
-		JToolbarHelper::title(   JText::_( $this->t['l'] . '_USER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'user');
+		JToolbarHelper::title(   JText::_( $this->t['l'] . '_CUSTOMER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'user');
 		
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

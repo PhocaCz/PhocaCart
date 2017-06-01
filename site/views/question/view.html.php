@@ -30,9 +30,8 @@ class PhocaCartViewQuestion extends JViewLegacy
 		$this->u							= JFactory::getUser();
 		
 		$this->p 							= $app->getParams();
-		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['question_description']	= $this->p->get( 'question_description', '' );
+		$this->t['question_description']	= PhocacartRenderFront::renderArticle($this->t['question_description']);
 		
 		$this->t['enable_ask_question'] 	= $this->p->get('enable_ask_question', 0);
 		if ($this->t['enable_ask_question'] == 0) {
@@ -110,8 +109,8 @@ class PhocaCartViewQuestion extends JViewLegacy
 		
 		
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		$media->loadChosen($this->t['load_chosen']);
+		$media->loadBootstrap();
+		$media->loadChosen();
 		
 		$this->_prepareDocument();
 

@@ -58,7 +58,7 @@ $displayData 	= null;
 			<div class="col-sm-7">
 				<div class="pull-right btn-group ph-zero ph-right-zero">
 					<button class="btn btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="glyphicon glyphicon-ok"></span></button>
-					<button class="btn  btn-danger tip hasTooltip pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="glyphicon glyphicon-remove"></span></button> 
+					<button class="btn btn-danger tip hasTooltip pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="glyphicon glyphicon-remove"></span></button> 
 				</div>
 			</div>
 			<?php

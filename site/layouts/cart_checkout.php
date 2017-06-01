@@ -168,6 +168,30 @@ if (!empty($d['fullitems'][1])) {
 		
 		// DISCOUNT price for each product
 		if ($p['display_discount_product'] == 1) {
+			
+			
+			// REWARD DISCOUNT
+			if($d['fullitems'][5][$k]['rewardproduct']) {
+				
+				$discountTitle = JText::_('COM_PHOCACART_REWARD_POINTS_PRICE');
+				if (isset($d['fullitems'][5][$k]['rewardproducttitle']) && $d['fullitems'][5][$k]['rewardproducttitle'] != '') {
+					$discountTitle = $d['fullitems'][5][$k]['rewardproducttitle'];
+				}
+				
+				echo '<div class="'.$r.$cV.' ph-checkout-discount-row">';
+				echo '<div class="'.$cI.$cVRow.'"></div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.' '.$d['fullitems'][5][$k]['rewardproducttxtsuffix'].'</div>';
+				if ((int)$p['tax_calculation'] > 0) {
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$price->getPriceFormat($d['fullitems'][5][$k]['netto']).'</div>';
+				}
+				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
+				if ((int)$p['tax_calculation'] > 0) {
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$price->getPriceFormat($d['fullitems'][5][$k]['tax'] * $v['quantity']).'</div>';
+				}
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$price->getPriceFormat($d['fullitems'][5][$k]['final']).'</div>';
+				echo '</div>'. "\n"; // end row
+			}
+			
 			// PRODUCT DISCOUNT
 			if($d['fullitems'][2][$k]['discountproduct']) {
 				
@@ -281,6 +305,15 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_SUBTOTAL').'</div>';
 		echo '<div class="'.$cTotB.' ph-right">'.$price->getPriceFormat($d['total'][1]['netto']).'</div>';
+		echo '</div>';// end row
+	}
+	
+	// REWARD DISCOUNT
+	if ($d['total'][5]['dnetto']) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cTotE.'"></div>';
+		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_REWARD_POINTS').$d['total'][5]['rewardproducttxtsuffix'].'</div>';
+		echo '<div class="'.$cTotB.' ph-right">'.$price->getPriceFormat($d['total'][5]['dnetto'], 1).'</div>';
 		echo '</div>';// end row
 	}
 	
@@ -407,6 +440,7 @@ if (!empty($d['fullitems'][1])) {
 	}
 	
 	// BRUTTO
+	
 	if ($d['total'][0]['brutto'] !== 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cTotE.'"></div>';

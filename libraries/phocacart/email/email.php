@@ -8,14 +8,14 @@
  */
 defined('_JEXEC') or die();
 
-class PhocaCartEmailMail extends JMail{
+class PhocacartEmailMail extends JMail{
 	
 	
 	public static function getInstance($id = 'Joomla', $exceptions = true)
 	{
 		if (empty(self::$instances[$id]))
 		{
-			self::$instances[$id] = new PhocaCartEmailMail($exceptions);
+			self::$instances[$id] = new PhocacartEmailMail($exceptions);
 		}
 
 		return self::$instances[$id];
@@ -45,11 +45,13 @@ class PhocaCartEmailMail extends JMail{
 
 		if ($this->addCc($cc) === false)
 		{
+			
 			return false;
 		}
 
+		
 		if ($this->addBcc($bcc) === false)
-		{
+		{	
 			return false;
 		}
 
@@ -87,9 +89,11 @@ class PhocaCartEmailMail extends JMail{
 
 		if ($this->setSender(array($from, $fromName, $autoReplyTo)) === false)
 		{
+			
 			return false;
 		}
-
+		
+		
 		return $this->Send();
 	}
 	
@@ -97,7 +101,7 @@ class PhocaCartEmailMail extends JMail{
 	
 	
 	
-class PhocaCartEmailFactory extends JFactory{
+class PhocacartEmailFactory extends JFactory{
 	
 	public static $mailer = null;
 	
@@ -128,7 +132,7 @@ class PhocaCartEmailFactory extends JFactory{
 		$mailer = $conf->get('mailer');
 
 		// Create a JMail object
-		$mail = PhocaCartEmailMail::getInstance();
+		$mail = PhocacartEmailMail::getInstance();
 
 		// Clean the email address
 		$mailfrom = JMailHelper::cleanLine($mailfrom);
@@ -142,13 +146,13 @@ class PhocaCartEmailFactory extends JFactory{
 				// Check for a false return value if exception throwing is disabled
 				if ($mail->setFrom($mailfrom, JMailHelper::cleanLine($fromname), false) === false)
 				{
-					PhocaCartLog::add(1, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
+					PhocacartLog::add(1, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
 					JLog::add(__METHOD__ . '() could not set the sender data.', JLog::WARNING, 'mail');
 				}
 			}
 			catch (phpmailerException $e)
 			{
-				PhocaCartLog::add(1, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
+				PhocacartLog::add(1, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
 				JLog::add(__METHOD__ . '() could not set the sender data.', JLog::WARNING, 'mail');
 			}
 		}
@@ -175,7 +179,7 @@ class PhocaCartEmailFactory extends JFactory{
 
 
 
-class PhocaCartEmail
+class PhocacartEmail
 {
 	
 	
@@ -205,6 +209,34 @@ class PhocaCartEmail
 		if ($bcc == '') {
 			$bcc = array();
 		}
+		
+		// REMOVE DUPLICITY EMAIL ADDRESS: recepient vs. cc vs. bcc
+		$dR 	= array(0 => $recipient);
+		$dCc	= is_array($cc) ? $cc : array(0 => $cc);
+		$dBcc	= is_array($bcc) ? $bcc : array(0 => $bcc);
+		
+		if (!empty($dCc)) {
+			foreach($dCc as $k => $v) {
+				if (in_array($v, $dR)) {
+					unset($dCc[$k]);
+				}
+			}
+		}
+		
+		if (!empty($dBcc)) {
+			foreach($dBcc as $k => $v) {
+				if (in_array($v, $dR)) {
+					unset($dBcc[$k]);
+				} else if (in_array($v, $dCc)) {
+					unset($dBcc[$k]);
+				}
+			}
+		}
+		// Set back cleaned arrays
+		$cc		= $dCc;
+		$bcc	= $dBcc; 
+		
+		
 		// Attachment
 		/*if (!empty($tmpl['attachment'])) {
 			$i = 0;
@@ -222,27 +254,29 @@ class PhocaCartEmail
 		$subject 	= html_entity_decode($subject, ENT_QUOTES);
 		$body 		= html_entity_decode($body, ENT_QUOTES);
 		
-		$mail 		= PhocaCartEmailFactory::getMailer();
+		$mail 		= PhocacartEmailFactory::getMailer();
 		
 		
-		$body 		= $body . PhocaCartUtils::getInfo($mode);
+		$body 		= $body . PhocacartUtils::getInfo($mode);
 	
+
 		$sendMail = $mail->sendMailA($from, $fromName, $recipient, $subject, $body, $mode, $cc, $bcc, $attachmentString, $attachmentFilename, $replyTo, $replyToName);
 		
 
 		if (isset($sendMail->message)) {
-			PhocaCartLog::add(1, 'Error sending email', 0, $sendMail->message . ', Mail From: '.$mailfrom );
+			PhocacartLog::add(1, 'Error sending email', 0, $sendMail->message . ', Mail From: '.$from );
 			return false;
 		} else if ($sendMail == 1) {
 			return true;
 		} else {
-			PhocaCartLog::add(1, 'Error sending email', 0,  'No error data set, Mail From: '.$mailfrom );
+			PhocacartLog::add(1, 'Error sending email', 0,  'No error data set, Mail From: '.$from );
 			return false;
 		}
 		
 	}
 	
 	public static function completeMail($body, $replace) {
+	
 	
 		
 		if (isset($replace['name'])) {
@@ -258,6 +292,26 @@ class PhocaCartEmail
 		if (isset($replace['orderlink'])) {
 			$body = str_replace('{orderlink}', $replace['orderlink'], $body);
 		}
+		
+		if (isset($replace['trackinglink'])) {
+			$body = str_replace('{trackinglink}', $replace['trackinglink'], $body);
+		}
+	
+		if (isset($replace['shippingtitle'])) {
+			$body = str_replace('{shippingtitle}', $replace['shippingtitle'], $body);
+		}
+		
+		if (isset($replace['dateshipped'])) {
+			$body = str_replace('{dateshipped}', $replace['dateshipped'], $body);
+		}
+		
+		if (isset($replace['trackingdescription'])) {
+			$body = str_replace('{trackingdescription}', $replace['trackingdescription'], $body);
+		}
+		
+		if (isset($replace['customercomment'])) {
+			$body = str_replace('{customercomment}', $replace['customercomment'], $body);
+		}
 
 		return $body;
 	}
@@ -267,7 +321,7 @@ class PhocaCartEmail
 		$app			= JFactory::getApplication();
 		$db 			= JFactory::getDBO();
 		$sitename 		= $app->getCfg( 'sitename' );
-		$paramsC 		= JComponentHelper::getParams('com_phocacart') ;
+		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$numCharEmail	= $paramsC->get( 'max_char_question_email', 1000 );
 		
 		//get all selected users
@@ -316,7 +370,7 @@ class PhocaCartEmail
 							. JText::_( 'COM_PHOCACART_SUBJECT' ) . ': '.$subject."\n"
 							. JText::_( 'COM_PHOCACART_MESSAGE' ) . ': '."\n"
 							. "\n\n"
-							.PhocaCartUtils::wordDelete($message, $numCharEmail, '...')."\n\n"
+							.PhocacartUtils::wordDelete($message, $numCharEmail, '...')."\n\n"
 							. "\n\n"
 							//. JText::_( 'COM_PHOCACART_CLICK_LINK_READ_FULL_POST' ) ."\n"
 							. $url."\n\n"
@@ -326,7 +380,7 @@ class PhocaCartEmail
 		$subject = html_entity_decode($subject, ENT_QUOTES);
 		$message = html_entity_decode($message, ENT_QUOTES);
 				
-		$notify = PhocaCartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $message, false, null, null, '', '', $mailfrom, $fromname);
+		$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $message, false, null, null, '', '', $mailfrom, $fromname);
 		
 		return $notify;
 	}

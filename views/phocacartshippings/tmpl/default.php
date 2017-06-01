@@ -59,6 +59,7 @@ echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title-small">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-default">'.JHTML::_('grid.sort',  $this->t['l'].'_DEFAULT', 'a.default', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-rule">'.JText::_(	$this->t['l'].'_ACTIVE_RULE_S').'</th>'."\n";	
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
 echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
@@ -109,6 +110,17 @@ echo $r->td($checkO, "small");
 
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
+
+if ($item->default == '0' || $item->default == '1') {
+	$default = JHtml::_('jgrid.isdefault', $item->default, $i, $this->t['tasks'].'.', $canChange);
+
+} else if ($canChange)  {
+	$default = '<a href="'. JRoute::_('index.php?option=com_phocacart&task='.$this->t['tasks'].'.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1').'">';
+}
+echo $r->td($default, "small");							
+							
+							
+
 $rules = array();
 if($item->active_amount) {$rules[] = '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_AMOUNT_RULE'). '</span>';}
 if($item->active_country) {$rules[] = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_COUNTRY_RULE'). '</span>';}
@@ -129,7 +141,7 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 7);
+echo $r->tblFoot($this->pagination->getListFooter(), 8);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);

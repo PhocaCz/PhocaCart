@@ -113,6 +113,23 @@ echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getStockMovem
 echo '<div class="span6 col-sm-6 col-md-6"></div>';
 echo '</div>';
 
+echo '<div class="row-fluid">';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getChangeUserGroupSelectBox($this->item['change_user_group']).'</div>';
+echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
+
+echo '<div class="row-fluid">';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getChangeChangePointsNeededSelectBox($this->item['change_points_needed']).'</div>';
+echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
+
+echo '<div class="row-fluid">';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getChangePointsReceivedSelectBox($this->item['change_points_received']).'</div>';
+echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
 
 echo '<div class="row-fluid">';
 echo '<div class="span3 col-sm-3 col-md-3 ph-tax-edit-button"><button class="btn btn-success btn-sm ph-btn"><span class="icon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_STATUS').'</button></div>';

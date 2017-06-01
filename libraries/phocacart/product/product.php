@@ -15,15 +15,42 @@ class PhocacartProduct
 	
 	public static function getProduct($productId, $prioritizeCatid = 0) {
 		
+
+		
 		$db 	= JFactory::getDBO();
-		$query = ' SELECT a.id, c.id as catid, a.alias, a.title, a.sku, a.price, a.price_original, a.tax_id as taxid, a.image, a.weight, a.volume, a.unit_amount, a.unit_unit,'
-				.' a.download_token, a.download_folder, a.download_file, a.download_hits, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.min_quantity_calculation,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
+		$wheres		= array();
+		$user 		= JFactory::getUser();
+		//$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+		
+		// Access is check by checkIfAccessPossible
+		//$wheres[] 	= " a.access IN (".$userLevels.")";
+		//$wheres[] 	= " c.access IN (".$userLevels.")";
+		//$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+		//$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		//$wheres[] 	= " a.published = 1";
+		//$wheres[] 	= " c.published = 1";
+		$wheres[] 	= ' a.id = '.(int)$productId;
+		///$wheres[] 	= ' c.id = '.(int)$catid;
+		
+		$query = ' SELECT a.id, c.id as catid, a.alias, a.title, a.sku, a.price, a.price_original, a.tax_id as taxid, a.image, a.weight, a.volume, a.unit_amount, a.unit_unit, a.length, a.width, a.height,'
+				.' a.download_token, a.download_folder, a.download_file, a.download_hits, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.min_quantity_calculation, a.points_needed, a.points_received,'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
+				.' min(ppg.price) as group_price, max(pptg.points_received) as group_points_received'
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
-				.' WHERE a.id = '.(int)$productId
+				
+			//	. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			//	. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+				
+				// user is in more groups, select lowest price by best group
+				. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+				// user is in more groups, select highest points by best group
+				. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+				
+				.' WHERE ' . implode( ' AND ', $wheres )
 				.' ORDER BY a.id'
 				.' LIMIT 1';
 		$db->setQuery($query);
@@ -78,8 +105,11 @@ class PhocacartProduct
 			$wheres		= array();
 			$user 		= JFactory::getUser();
 			$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+			$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres[] 	= " a.access IN (".$userLevels.")";
 			$wheres[] 	= " c.access IN (".$userLevels.")";
+			$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 	= " a.published = 1";
 			$wheres[] 	= " c.published = 1";
 			$wheres[] 	= ' a.id = '.(int)$id;
@@ -93,6 +123,8 @@ class PhocacartProduct
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
 			//.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
+			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			.' WHERE ' . implode( ' AND ', $wheres )
 			.' ORDER BY a.id'
 			.' LIMIT 1';
@@ -130,7 +162,10 @@ class PhocacartProduct
 	public static function getProductByProductId($id) {
 		
 		$db 	= JFactory::getDBO();
-		$query = ' SELECT a.id, a.title, group_concat(c.title SEPARATOR \' \') AS categories_title'
+		$query = ' SELECT a.id, a.title,'
+				.' group_concat(CONCAT_WS(":", c.id, c.title) SEPARATOR \',\') AS categories,'
+				.' group_concat(c.title SEPARATOR \' \') AS categories_title,'
+				.' group_concat(c.id SEPARATOR \',\') AS categories_id'
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
@@ -205,8 +240,11 @@ class PhocacartProduct
 		$wheres			= array();
 		$user 			= JFactory::getUser();
 		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
+		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$wheres[] 		= " a.access IN (".$userLevels.")";
 		$wheres[] 		= " c.access IN (".$userLevels.")";
+		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		
 		if ($checkPublished) {
 			$wheres[] 		= " a.published = 1";
@@ -227,7 +265,7 @@ class PhocacartProduct
 			$wheres[]	= 'pc.category_id IN ('.$catIdsS.')';
 		}
 		
-		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
+		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, min(ppg.price) as group_price, max(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required';
 			
@@ -252,6 +290,14 @@ class PhocacartProduct
 			. ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0'
 			. ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id'
 			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
+			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+			
+			// user is in more groups, select lowest price by best group
+			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			// user is in more groups, select highest points by best group
+			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id';
 			
@@ -319,12 +365,16 @@ class PhocacartProduct
 		$db 		= JFactory::getDBO();
 		$wheres		= array();
 		
-		if ($checkPublished) {
+		if ($checkAccess) {
 			$user 			= JFactory::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
+			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres[] 		= " a.access IN (".$userLevels.")";
+			$wheres[] 		= " c.access IN (".$userLevels.")";
+			$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		}
-		if ($checkAccess) {
+		if ($checkPublished) {
 			$wheres[] 		= " a.published = 1";
 		}
 		
@@ -335,8 +385,14 @@ class PhocacartProduct
 			$q = 'SELECT SUM(a.hits)'
 			. ' FROM #__phocacart_products AS a'
 			. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
-			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-			.  $where;
+			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+			
+			if ($checkAccess) {
+				$q .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+			}
+			
+			$q .=  $where;
 			if ((int)$limit > 0) {
 				$q .=  ' LIMIT '.(int)$limit;
 			}
@@ -349,8 +405,13 @@ class PhocacartProduct
 			$q = 'SELECT a.id, a.title, a.alias, a.hits, c.id as catid, c.alias as catalias, c.title as cattitle'
 			. ' FROM #__phocacart_products AS a'
 			. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
-			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-			.  $where
+			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+			if ($checkAccess) {
+				$q .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+			}
+			
+			$q .=  $where
 			. ' GROUP BY a.id'
 			. ' ORDER BY a.hits DESC';
 			if ((int)$limit > 0) {
@@ -692,8 +753,6 @@ class PhocacartProduct
 	public static function storeProduct($data, $importColumn = 1) {
 		
 
-		
-		
 		// Store
 		$table = JTable::getInstance('PhocaCartItem', 'Table', array());
 
@@ -797,14 +856,31 @@ class PhocacartProduct
 					$dataRelated = $data['related'][0];
 				}
 			}
+			
+			$advancedStockOptions = '';
+			if (!isset($data['advanced_stock_options'])) {
+				$advancedStockOptions = '';
+			} else {
+				$advancedStockOptions = $data['advanced_stock_options'];
+				if (is_array($data['advanced_stock_options']) && isset($data['advanced_stock_options'][0])) {
+					$advancedStockOptions = $data['advanced_stock_options'][0];
+				}
+			}
 
 			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
 			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['images']);
 			PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
-			PhocacartAttribute::storeCombinationsById((int)$table->id, $data['advanced_stock_options']);
+			PhocacartAttribute::storeCombinationsById((int)$table->id, $advancedStockOptions);
 			PhocacartSpecification::storeSpecificationsById((int)$table->id, $data['specifications']);
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $data['discounts']);
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
+			
+		
+			PhocacartGroup::storeProductPriceGroupsById($data['price_groups'], (int)$table->id);
+			PhocacartGroup::storeProductPointGroupsById($data['point_groups'], (int)$table->id);
+			PhocacartGroup::storeGroupsById((int)$table->id, 3, $data['groups']);
+			
+			PhocacartPriceHistory::storePriceHistoryCustomById($data['price_histories'], (int)$table->id);
 
 			return $table->id;
 		}

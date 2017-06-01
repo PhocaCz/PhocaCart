@@ -28,7 +28,7 @@ Joomla.submitbutton = function(task) {
 </script><?php
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="span10 form-horizontal">';
+echo '<div class="span12 form-horizontal">';
 $tabs = array (
 'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
 'amount' 		=> JText::_($this->t['l'].'_AMOUNT_RULE'),
@@ -36,21 +36,23 @@ $tabs = array (
 'country' 		=> JText::_($this->t['l'].'_COUNTRY_RULE'),
 'region' 		=> JText::_($this->t['l'].'_REGION_RULE'),
 'weight' 		=> JText::_($this->t['l'].'_WEIGHT_RULE'),
+'size' 			=> JText::_($this->t['l'].'_SIZE_RULE'),
 'method' 		=> JText::_($this->t['l'].'_SHIPPING_METHOD_OPTIONS'),
+'tracking' 		=> JText::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
 'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
 
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'cost', 'tax_id', 'calculation_type');
+$formArray = array ('title', 'cost', 'tax_id', 'calculation_type', 'default');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');
 echo $r->group($this->form, $formArray);
 echo '<div id="ph-extended-params-msg" class="ph-extended-params-msg"></div>';
 
-$formArray = array ('image', 'ordering', 'access');
+$formArray = array ('image', 'ordering', 'access', 'group');
 echo $r->group($this->form, $formArray);
 
 $formArray = array('description');
@@ -83,8 +85,19 @@ $formArray = array ('lowest_weight', 'highest_weight', 'active_weight');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
+echo '<div class="tab-pane" id="size">'."\n"; 
+//$formArray = array ('shortest_length', 'longest_length', 'lowest_width', 'largest_width', 'lowest_height', 'highest_height', 'active_size');
+$formArray = array ('maximal_length', 'maximal_width', 'maximal_height', 'active_size');
+echo $r->group($this->form, $formArray);
+echo '</div>';
+
 echo '<div class="tab-pane" id="method">'."\n"; 
 echo '<div id="ph-extended-params" class="ph-extended-params">'.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
+echo '</div>';
+
+echo '<div class="tab-pane" id="tracking">'."\n"; 
+$formArray = array ('tracking_link', 'tracking_description');
+echo $r->group($this->form, $formArray);
 echo '</div>';
 
 echo '<div class="tab-pane" id="publishing">'."\n"; 
@@ -102,7 +115,7 @@ echo '</div>';
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column
-echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
+//echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs($this->t['task']);
 echo $r->endForm();
 echo PhocacartRenderJs::renderAjaxTopHtml();

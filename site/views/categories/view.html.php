@@ -28,8 +28,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['cart_metakey'] 				= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 				= $this->p->get( 'cart_metadesc', '' );
 		$this->t['main_description']			= $this->p->get( 'main_description', '' );
-		$this->t['load_bootstrap']				= $this->p->get( 'load_bootstrap', 1 );
-		$this->t['equal_height']				= $this->p->get( 'equal_height', 1 );
+		$this->t['main_description']			= PhocacartRenderFront::renderArticle($this->t['main_description']);
 		$this->t['columns_cats']				= $this->p->get( 'columns_cats', 3 );
 		$this->t['image_width_cats']			= $this->p->get( 'image_width_cats', '' );
 		$this->t['image_height_cats']			= $this->p->get( 'image_height_cats', '' );
@@ -37,11 +36,20 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['category_name_link']			= $this->p->get( 'category_name_link', 0 );
 	
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		//$media->loadChosen($this->t['load_chosen']);
-		$media->loadEqualHeights($this->t['equal_height']);
+		$media->loadBootstrap();
+		//$media->loadChosen();
+		$media->loadEqualHeights();
 		
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
+		
+		// Plugins ------------------------------------------
+		JPluginHelper::importPlugin('pcv');
+		$this->t['dispatcher'] 	= JEventDispatcher::getInstance();
+		$this->t['event']		= new stdClass;
+		
+		$results = $this->t['dispatcher']->trigger('onCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
+		$this->t['event']->onCategoriesBeforeHeader = trim(implode("\n", $results));
+		// END Plugins --------------------------------------
 		
 		$this->_prepareDocument();
 		parent::display($tpl);

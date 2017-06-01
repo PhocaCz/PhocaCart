@@ -12,17 +12,31 @@ class PhocacartRenderMedia
 {
 	public $jquery			= 0;
 	protected $document		= false;
+	protected $p			= array();
 	
 
 	public function __construct() {
+		
+		$app	= JFactory::getApplication();
+		$params = $app->getParams();
+		$this->p['load_bootstrap']			= $params->get( 'load_bootstrap', 1 );
+		$this->p['load_chosen']				= $params->get( 'load_chosen', 1 );
+		$this->p['equal_height']			= $params->get( 'equal_height', 1 );
+		$this->p['fade_in_action_icons']	= $params->get( 'fade_in_action_icons', 0 );
+		$this->p['dynamic_change_image']	= $params->get( 'dynamic_change_image', 0);
+		
+		
 		JHTML::stylesheet('media/com_phocacart/css/main.css' );
 		JHtml::_('jquery.framework', false);
 		$this->document	= JFactory::getDocument();
 	}
 	
-	public function loadProductHover($load = 0) {
-		if ($load == 1) {
+	public function loadProductHover() {
+		if ($this->p['fade_in_action_icons'] == 1) {
 			JHTML::stylesheet('media/com_phocacart/css/main-product-hover.css' );
+			return '';
+		} else {
+			return 'thumbnail';
 		}
 	}
 	
@@ -32,16 +46,20 @@ class PhocacartRenderMedia
 		}
 	}
 	
-	public function loadBootstrap($load = 0) {
-		if ($load == 1) {
+	public function loadBootstrap() {
+		if ($this->p['load_bootstrap'] == 1) {
 
 			JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
 		}
 	}
 	
-	public function loadChosen($load = 0) {
-		if ($load == 1) {
+	public function loadWindowPopup() {
+		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
+	}
+	
+	public function loadChosen() {
+		if ($this->p['load_chosen'] == 1) {
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/chosen/chosen.jquery.min.js');
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/chosen/chosen.required.js');
@@ -61,8 +79,15 @@ class PhocacartRenderMedia
 	
 	
 	
-	public function loadEqualHeights($load = 0) {
-		if ($load == 1) {	
+	public function loadEqualHeights() {
+		
+		if ($this->p['equal_height'] == 1) {
+			return 'row-flex';
+		} else {
+			return '';
+		}
+			
+		/*if ($load == 1) {	
 
 			//$app			= JFactory::getApplication();
 			//$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
@@ -96,12 +121,12 @@ class PhocacartRenderMedia
 				});');
 			}
 			// not ph-thumbnail but only ph-thumbnail-c (in component area so module will not influence it)
-		}
+		}*/
 	}
 	
 	
-	public function loadPhocaSwapImage($load = 0) {
-		if ($load == 1) {
+	public function loadPhocaSwapImage() {
+		if ($this->p['dynamic_change_image'] == 1) {
 			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaswapimage.js');
 		}
 	}

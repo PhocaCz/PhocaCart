@@ -31,23 +31,27 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->p							= $app->getParams();
 		$this->a							= new PhocacartAccess();
 		$guest								= PhocacartUserGuestuser::getGuestUser();
+		$reward								= new PhocacartReward();
 		
 		$this->t['action']					= $uri->toString();
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
 		$this->t['linkcheckout']			= JRoute::_(PhocacartRoute::getCheckoutRoute());
 		
 		$this->t['checkout_desc']			= $this->p->get( 'checkout_desc', '');
+		$this->t['checkout_desc']			= PhocacartRenderFront::renderArticle($this->t['checkout_desc']);
 		$this->t['stock_checkout']			= $this->p->get( 'stock_checkout', 0 );
 		$this->t['stock_checking']			= $this->p->get( 'stock_checking', 0 );
 		$this->t['guest_checkout']			= $this->p->get( 'guest_checkout', 0 );
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
-		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		$this->t['icon_suffix']				= $this->p->get( 'icon_suffix', '-circle' );
 		$this->t['display_shipping_desc']	= $this->p->get( 'display_shipping_desc', 0 );
 		$this->t['display_payment_desc']	= $this->p->get( 'display_payment_desc', 0 );
-		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		$this->t['zero_shipping_price']		= $this->p->get( 'zero_shipping_price', 1 );
 		$this->t['zero_payment_price']		= $this->p->get( 'zero_payment_price', 1 );
+		
+		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 1 );
+		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
+		
+		$this->t['enable_captcha_checkout']	= PhocacartCaptcha::enableCaptchaCheckout();
 		
 		$scrollTo							= '';
 		
@@ -150,7 +154,6 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->cart->addShippingCosts($shippingId);
 					$this->t['shippingmethod'] = $this->cart->getShippingCosts();
 					
-					
 				} else {
 					// Shipping cost is not stored in cart, display possible shipping methods
 					// We ask for total of cart because of amount rule
@@ -170,7 +173,9 @@ class PhocaCartViewCheckout extends JViewLegacy
 					if(isset($this->t['dataaddressoutput']['bregion']) && (int)$this->t['dataaddressoutput']['bregion']) {
 						$region = (int)$this->t['dataaddressoutput']['bregion'];
 					}
-					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $total[0]['weight']);
+					
+					
+					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);
 					
 				}
 			}
@@ -209,7 +214,33 @@ class PhocaCartViewCheckout extends JViewLegacy
 					if(isset($this->t['dataaddressoutput']['bregion']) && (int)$this->t['dataaddressoutput']['bregion']) {
 						$region = (int)$this->t['dataaddressoutput']['bregion'];
 					}
-					$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId);
+					
+					$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $this->t['paymentmethod']['id']);
+					
+					$this->t['couponcodevalue'] = '';
+					if ($this->cart->getCouponCode() != '') {
+						$this->t['couponcodevalue'] = $this->cart->getCouponCode();
+					}
+					
+					// REWARD POINTS
+					$this->t['rewards'] 			= array();
+					$this->t['rewards']['apply'] 	= false;
+					if ($this->t['enable_rewards']) {
+						if ($this->u->id > 0) {
+							$this->t['rewards']['needed'] = $this->cart->getRewardPointsNeeded();
+							$this->t['rewards']['usertotal'] = $reward->getTotalPointsByUserId($this->u->id);
+							
+							$this->t['rewards']['usedvalue'] = '';
+							if ($this->cart->getRewardPointsUsed() != '' && (int)$this->cart->getRewardPointsUsed() > 0) {				
+								$this->t['rewards']['usedvalue'] = $this->cart->getRewardPointsUsed();
+							}
+							
+							if ($this->t['rewards']['usertotal'] > 0) {
+								$this->t['rewards']['text'] = '<small>('.JText::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS').': '.(int)$this->t['rewards']['usertotal'].', '.JText::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE').': '.(int)$this->t['rewards']['needed'].')</small>';
+								$this->t['rewards']['apply'] 	= true;
+							}
+						}
+					}
 				}
 			}
 			
@@ -236,50 +267,20 @@ class PhocaCartViewCheckout extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		$media->loadChosen($this->t['load_chosen']);
-		//$media->loadEqualHeights($this->t['equal_height']);
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/windowpopup.js');
+		$media->loadBootstrap();
+		$media->loadChosen();
+		$media->loadWindowPopup();
+		
 
 		//Scroll to 
 		if ($scrollTo == '') {
 		} else if ($scrollTo == 'phcheckoutaddressedit' || $scrollTo == 'phcheckoutshippingedit' || $scrollTo == 'phcheckoutpaymentedit') {
-			$js = "\n"
-			. 'jQuery(function() {
-				if (jQuery("#ph-msg-ns").length > 0){
-					jQuery(document).scrollTop( jQuery("#system-message").offset().top );
-					//jQuery(\'html,body\').animate({scrollTop: jQuery("#system-message").offset().top}, 1500 );
-				} else {
-					jQuery(document).scrollTop( jQuery("#'.$scrollTo.'").offset().top );
-					//jQuery(\'html, body\').animate({scrollTop: jQuery("#'.$scrollTo.'").offset().top}, 1500 );
-				}
-			});';
-			$document->addScriptDeclaration($js);
+			PhocacartRenderJs::renderJsScrollTo($scrollTo, 0);
 		} else if ($scrollTo == 'phcheckoutpaymentview') {
 			// last view - in fact phcheckoutconfirmedit
-			$js = "\n"
-			. 'jQuery(function() {
-				if (jQuery("#ph-msg-ns").length > 0){
-					jQuery(document).scrollTop( jQuery("#system-message").offset().top );
-					//jQuery(\'html,body\').animate({scrollTop: jQuery("#system-message").offset().top}, 1500 );
-				} else {
-					//jQuery(document).scrollTop( jQuery("#'.$scrollTo.'").offset().top );
-					jQuery(\'html,body\').animate({scrollTop: jQuery("#'.$scrollTo.'").offset().top}, 1500 );
-				}
-			});';
-			$document->addScriptDeclaration($js);
+			PhocacartRenderJs::renderJsScrollTo($scrollTo, 1);
 		} else {
-			/*$js = "\n". 'jQuery(function() {
-				jQuery(\'html, body\').animate({ scrollTop: jQuery("#'.$scrollTo.'").offset().top}, 1000);
-			});';*/
-			$js = "\n"
-			. 'jQuery(function() {
-				if (jQuery("#ph-msg-ns").length > 0){
-					jQuery(document).scrollTop( jQuery("#system-message").offset().top );
-					//jQuery(\'html,body\').animate({scrollTop: jQuery("#system-message").offset().top}, 1500 );
-				}
-			});';
-			$document->addScriptDeclaration($js);
+			PhocacartRenderJs::renderJsScrollTo('', 0);
 		}
 
 		
@@ -292,6 +293,31 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['minmultipleqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
 
 		$this->_prepareDocument();
+		
+		// Plugins ------------------------------------------
+		JPluginHelper::importPlugin('pcv');
+		$this->t['dispatcher']	= JEventDispatcher::getInstance();
+		$this->t['event']		= new stdClass;
+		
+		$results = $this->t['dispatcher']->trigger('onCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p));
+		$this->t['event']->onCheckoutAfterCart = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p));
+		$this->t['event']->onCheckoutAfterLogin = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p));
+		$this->t['event']->onCheckoutAfterAddress = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p));
+		$this->t['event']->onCheckoutAfterShipping = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p));
+		$this->t['event']->onCheckoutAfterPayment = trim(implode("\n", $results));
+		
+		$results = $this->t['dispatcher']->trigger('onCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p));
+		$this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
+		
+		// END Plugins --------------------------------------
 		parent::display($tpl);
 	}
 	

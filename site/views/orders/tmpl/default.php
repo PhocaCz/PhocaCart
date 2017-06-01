@@ -40,7 +40,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$status = '<span class="label label-default">'.JText::_($v->status_title).'</span>';
 			echo '<div class="col-sm-2 col-md-2 ">'.$status.'</div>';
 			
-			echo '<div class="col-sm-3 col-md-3 ">'.JHtml::date($v->date, 'd. m. Y. h:s').'</div>';
+			echo '<div class="col-sm-3 col-md-3 ">'.PhocacartUtils::date($v->date).'</div>';
 			
 			$price->setCurrency($v->currency_id);
 			$total = $price->getPriceFormat($v->total_amount);
@@ -84,6 +84,33 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			
 			echo '</div>';
 			
+			
+			echo '<div class="col-sm-12 col-md-12">';
+			
+			$r 							= array();
+			$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($v);
+			$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($v);
+			$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($v);
+			$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($v);
+			
+			if($r['shippingtitle'] != '' || $r['trackinglink'] != '') {
+				echo '<div class="ph-shipping-info-box">';
+				echo '<div class="ph-shipping-info-header">'.JText::_('COM_PHOCACART_SHIPPING_INFORMATION').'</div>';
+				if ($r['shippingtitle'] != '') {
+					echo '<div class="ph-shipping-title">'.$r['shippingtitle'].'</div>';
+				}
+				if ($r['trackingdescription'] != '') {
+					echo '<div class="ph-tracking-desc">'.$r['trackingdescription'].'</div>';
+				}
+				if ($r['trackinglink'] != '') {
+					echo '<div class="ph-tracking-link">'.JText::_('COM_PHOCACART_SHIPPING_TRACKING_LINK'). ': '.$r['trackinglink'].'</div>';
+				}
+				if ($r['dateshipped'] != '') {
+					echo '<div class="ph-date-shipped">'.JText::_('COM_PHOCACART_DATE_SHIPPED'). ': '.$r['dateshipped'].'</div>';
+				}
+				echo '</div>';
+			}
+			echo '</div>';
 			
 			echo '<div class="ph-cb"></div>';
 			echo '</div>';

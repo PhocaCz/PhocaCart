@@ -38,6 +38,8 @@ if (isset($this->category[0]->id) && ($this->t['display_back'] == 2 || $this->t[
 	}
 }
 
+echo $this->t['event']->onItemBeforeHeader;
+
 $title = '';
 if (isset($this->item[0]->title) && $this->item[0]->title != '') {
 	$title = $this->item[0]->title;
@@ -51,7 +53,7 @@ if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
 }
 
 $x = $this->item[0];
-if (!empty($x)) {
+if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	echo '<div class="row">';
 	
 	// === IMAGE PANEL
@@ -114,7 +116,7 @@ if (!empty($x)) {
 	if ($this->t['hide_price'] != 1) {
 		
 		$d					= array();
-		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1);
+		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 		
 		$d['priceitemsorig']= array();
 		if ($x->price_original != '' && $x->price_original > 0) {
@@ -124,6 +126,28 @@ if (!empty($x)) {
 		echo '<div id="phItemPriceBox">';
 		echo $layoutP->render($d);
 		echo '</div>';
+	}
+	
+	// REWARD POINTS - NEEDED
+	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
+	if ($pointsN) {
+		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
+		
+		echo '<div class="ph-reward">'.$pointsN.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	
+	// REWARD POINTS - RECEIVED
+	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
+	if ($pointsR) {
+		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_REWARD_POINTS').'</div>';
+		
+		echo '<div class="ph-reward">'.$pointsR.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
 	}
 	
 	// STOCK
@@ -240,6 +264,8 @@ if (!empty($x)) {
 	
 	echo '</form>';
 	echo '<div class="ph-cb"></div>';
+	
+	echo $this->t['event']->onItemAfterAddToCart;
 	
 	echo '<div class="ph-top-space"></div>';
 	
@@ -386,7 +412,8 @@ if (!empty($x)) {
 		echo $layoutEL->render($d);
 	}
 	
-
+	echo $this->t['event']->onItemBeforeEndPricePanel;
+	
 	echo '</div>';// end right side
 	
 	echo '</div>';// end row 1
@@ -598,6 +625,38 @@ if (!empty($x)) {
 		$active = '';
 	}
 	
+	// PRICE HISTORY
+	if ($this->t['enable_price_history'] && $this->t['price_history_data']) {
+		$tabLiO .= '<li class="'.$active.'"><a href="#phpricehistory" data-toggle="tab">'.JText::_('COM_PHOCACART_PRICE_HISTORY').'</a></li>';
+		
+		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phpricehistory">';
+		$tabO	.= '<div class="row">';
+		
+		$tabO	.= '<div class="ph-cpanel-chart-box">';
+		$tabO	.= '<div id="phChartAreaLineHolder" class="ph-chart-canvas-holder" style="width:95%" >';
+        $tabO	.= '<canvas id="phChartAreaLine" class="ph-chart-area-line" />';
+		$tabO	.= '</div>';
+		$tabO	.= '</div>';
+		
+
+		$tabO	.= '</div>';
+		$tabO	.= '</div>';
+	
+	}
+	
+	// TABS PLUGIN
+	if (!empty($this->t['event']->onItemInsideTabPanel) && is_array($this->t['event']->onItemInsideTabPanel)) {
+		foreach($this->t['event']->onItemInsideTabPanel as $k => $v) {
+			if (isset($v['title']) && isset($v['alias']) && isset($v['content'])) {
+				$tabLiO .= '<li class="'.$active.'"><a href="#'.strip_tags($v['alias']).'" data-toggle="tab">'.$v['title'].'</a></li>';
+				$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="'.strip_tags($v['alias']).'">';
+				$tabO	.= $v['content'];
+				$tabO	.= '</div>';
+				$active = '';
+			}
+		}
+	}
+	
 	
 	
 	if ($tabLiO != '') {
@@ -616,6 +675,7 @@ if (!empty($x)) {
 	
 	echo '</div>'; // end row 2 (bottom)
 	
+	echo $this->t['event']->onItemAfterTabs;
 	
 }
 

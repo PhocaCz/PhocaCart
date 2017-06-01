@@ -119,8 +119,9 @@ if ($this->a->shippingnotused == 1) {
 	
 	foreach($this->t['shippingmethods'] as $k => $v) {
 		
+		
 		$checked = '';
-		if (isset($this->t['cartitems']['shipping']) && (int)$this->t['cartitems']['shipping'] == (int)$v->id) {
+		if (isset($v->selected) && $v->selected == 1 ) {
 			$checked = 'checked="checked"';
 		}
 		

@@ -42,19 +42,22 @@ echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
 
-echo $r->item($this->form, 'title', '<small>('.JText::_($this->form->getValue('title')).')</small>', 1);
+$translatedTitle = $this->form->getValue('title') ? '<small>('.JText::_($this->form->getValue('title')).')</small>' : '';
+echo $r->item($this->form, 'title', $translatedTitle, 1);
 
-$formArray = array ( 'stock_movements', 'download', 'email_customer', 'email_others', 'email_subject', 'email_send');
+$formArray = array ( 'stock_movements', 'change_user_group', 'change_points_needed', 'change_points_received', 'download', 'email_customer', 'email_others', 'email_subject', 'email_send');
+echo $r->group($this->form, $formArray);
+
+$formArray = array ('ordering');
 echo $r->group($this->form, $formArray);
 
 $formArray = array('email_text');
 echo $r->group($this->form, $formArray, 1);
 
-$formArray = array ('ordering');
-echo $r->group($this->form, $formArray);
-
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
+
+
 echo '</div>';
 
 echo '<div class="tab-pane" id="publishing">'."\n"; 

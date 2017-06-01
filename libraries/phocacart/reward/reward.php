@@ -1,0 +1,156 @@
+<?php
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Extension
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+ 
+ /*
+  * $reward['points_needed'] or $reward['needed']		... how many points are needed to buy the product
+  * $reward['points_received'] or $reward['received'] 	... how many points do customer get when he/she buy the product
+  * $reward['wantstouse'] 								... how many points wants the customer use when buying items
+  * $reward['used'] 									... how many points were really used
+  * $reward['usertotal'] 								... how many points user have in his/her account
+  * $reward['usedtotal'] 								... how many points user used (and it was allowed) when ordering items
+  */
+defined('_JEXEC') or die();
+
+class PhocacartReward
+{
+	protected $reward;
+	protected $total;
+
+	public function __construct() {
+		
+		$this->total = array();
+	}
+	
+	public function getTotalPointsByUserId($userId) {
+	
+		if ($userId > 0) {
+			if (empty($this->total[$userId])) {
+			
+				$db = JFactory::getDBO();
+				
+				$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
+					.' WHERE a.user_id = '.(int) $userId
+					.' AND a.published = 1'
+					.' ORDER BY a.id';
+				$db->setQuery($query);
+				
+				$total = $db->loadResult();
+				if (!$total) {
+					$total = 0;
+				}
+				
+				$this->total[$userId] = (int)$total;
+			}
+			
+			return $this->total[$userId];
+		}
+		return 0;
+	}
+	
+	public function checkReward($points, $msgOn = 0) {
+		
+		
+		$app				= JFactory::getApplication();
+		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
+		
+		$rewards['usertotal'] 	= 0;
+		$rewards['wantstouse']	= (int)$points;
+		$rewards['used']		= false;
+		
+		
+		// 1. ENABLE REWARDS
+		if ($enable_rewards == 0) {
+			if ($msgOn == 1) {
+				$app->enqueueMessage(JText::_('COM_PHOCACART_REWARD_POINTS_DISABLED'), 'error');
+			}
+			return false;
+		}
+		
+		// 2. USER
+		$user 					= JFactory::getUser();
+		if ($user->id > 0) {
+			$rewards['usertotal'] = $this->getTotalPointsByUserId($user->id);
+		} else {
+			if ($msgOn == 1) {
+				$app->enqueueMessage(JText::_('COM_PHOCACART_USER_NOT_FOUND'), 'error');
+			}
+			return false;
+		}
+		
+		// 3. TOTAL
+		if ($rewards['usertotal'] == $rewards['wantstouse']) {
+			$rewards['used'] = $rewards['wantstouse'];
+		} else if ($rewards['usertotal'] > $rewards['wantstouse']) {
+			$rewards['used'] = $rewards['wantstouse'];
+		} else if ($rewards['usertotal'] < $rewards['wantstouse']) {
+			$rewards['used'] = $rewards['usertotal'];
+		}
+		
+		return $rewards['used'];
+	}
+	
+	public function calculatedRewardDiscountProduct(&$rewards) {
+		
+		$rewards['percentage']	= 0;
+		$rewards['usedproduct']	= 0;
+		
+		
+		if ($rewards['needed'] == $rewards['used']) {
+			
+			$rewards['usedproduct']	= $rewards['used'];
+			$rewards['percentage'] 	= 100;
+			$rewards['used']		= 0; // Rest
+			
+		} else if ($rewards['needed'] > $rewards['used']) {
+		
+			$rewards['usedproduct']	= $rewards['used'];
+			$rewards['percentage']	= 100 * $rewards['usedproduct'] / $rewards['needed'];
+			$rewards['used']		= $rewards['used'] - $rewards['usedproduct'];// Rest
+		
+		} else if ($rewards['used'] > $rewards['needed']) {
+			
+			$rewards['usedproduct']	= $rewards['needed'];
+			$rewards['percentage'] 	= 100;
+			$rewards['used'] 		= $rewards['used'] - $rewards['needed']; // Rest
+			
+		}
+		
+		$rewards['usedtotal'] += $rewards['usedproduct'];
+	}
+	
+	public static function getPoints($points, $type = 'received', $groupPoints = null) {
+		
+		$pointsO 			= null;
+		$app				= JFactory::getApplication();
+		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
+		
+		if ($enable_rewards == 0) {
+			return $pointsO;
+		}
+		if ($type == 'needed') {
+			
+			if ($points > 0) {
+				$pointsO = $points;
+			}
+		} else if ($type == 'received') {
+			
+			if ($points > 0) {
+				$pointsO = $points;
+			}
+			if ($groupPoints > 0) {
+				$pointsO = $groupPoints;
+			}
+		}
+		
+		return $pointsO;
+		
+	}
+}

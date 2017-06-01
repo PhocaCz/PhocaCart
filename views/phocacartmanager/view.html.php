@@ -44,7 +44,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		$this->t['uploadmaxsizeread'] 		= PhocacartFile::getFileSizeReadable($this->t['uploadmaxsize']);
 		$this->t['enablemultiple'] 			= $params->get( 'enable_multiple', 0 );
 		$this->t['multipleuploadmethod'] 	= $params->get( 'multiple_upload_method', 4 );
-		$media = new PhocacartRenderAdminmedia();
+		
 		
 		/*if ($this->manager == 'filemultiple') {
 			$this->form			= $this->get('Form');
@@ -137,6 +137,10 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		$this->t['path']			= PhocacartPath::getPath($this->manager);
 
 		$this->addToolbar();
+		
+		$media = new PhocacartRenderAdminmedia();
+		
+		
 		parent::display($tpl);
 		echo JHTML::_('behavior.keepalive');
 	}

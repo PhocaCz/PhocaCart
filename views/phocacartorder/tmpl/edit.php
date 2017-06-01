@@ -33,6 +33,7 @@ $tabs = array (
 'order' 		=> JText::_($this->t['l'].'_ORDER_OPTIONS'),
 'billing' 		=> JText::_($this->t['l'].'_BILLING_OPTIONS'),
 'shipping' 		=> JText::_($this->t['l'].'_SHIPPING_OPTIONS'),
+'tracking' 		=> JText::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
 'products' 		=> JText::_($this->t['l'].'_ORDERED_PRODUCTS'),
 'download' 		=> JText::_($this->t['l'].'_DOWNLOAD_LINKS'),
 'orderlink' 	=> JText::_($this->t['l'].'_ORDER_LINK'));
@@ -74,7 +75,7 @@ if ($this->itemcommon->paymenttitle != '') {
 	echo $r->itemText($this->itemcommon->paymenttitle, JText::_('COM_PHOCACART_PAYMENT_METHOD'));
 }
 
-$formArray = array ('id', 'status_id', 'order_token');
+$formArray = array ('id', 'status_id', 'order_token', 'comment');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
@@ -87,6 +88,23 @@ echo '</div>';
 echo '<div class="tab-pane" id="shipping">'."\n"; 
 echo $data['s'];
 echo '</div>';
+
+echo '<div class="tab-pane" id="tracking">'."\n"; 
+
+if ($this->itemcommon->shippingtrackinglink != '') {
+	PhocacartRenderJs::renderJsAddTrackingCode('jform_tracking_number', 'tracking-link');
+	echo $r->itemText($this->itemcommon->shippingtrackinglink, JText::_('COM_PHOCACART_TRACKING_LINK'), 'tracking-link');
+}
+
+$formArray = array ('tracking_number', 'tracking_link_custom', 'tracking_date_shipped', 'tracking_description_custom');
+echo $r->group($this->form, $formArray);
+
+if ($this->itemcommon->shippingtrackingdescription != '') {
+	echo $r->itemText($this->itemcommon->shippingtrackingdescription, JText::_('COM_PHOCACART_TRACKING_DESCRIPTION'));
+}
+
+echo '</div>';
+
 
 echo '<div class="tab-pane" id="products">'."\n"; 
 

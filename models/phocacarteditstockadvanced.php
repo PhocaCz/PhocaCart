@@ -57,7 +57,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 						.' AND id NOT IN ('.$notDeleteItemsString.')';
 			} else {
 				$query = ' DELETE '
-						.' FROM #__phocacart_attributes'
+						.' FROM #__phocacart_product_stock'
 						.' WHERE product_id = '. (int)$productId;
 			}
 			

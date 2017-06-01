@@ -41,7 +41,7 @@ class PhocaCartControllerWishList extends JControllerForm
 		ob_end_clean();
 		
 		// Render the layout
-		$d = '';
+		$d = array();
 		$layoutW	= new JLayoutFile('popup_add_to_wishlist', null, array('component' => 'com_phocacart'));
 		
 		$d['link_wishlist'] = JRoute::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
@@ -95,7 +95,7 @@ class PhocaCartControllerWishList extends JControllerForm
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
 		$item['wishlistview']	= $this->input->get( 'wishlistview', 0, 'int'  );
 		
-		$wishlist	= new PhocaCartWishlist();
+		$wishlist	= new PhocacartWishlist();
 		$added		= $wishlist->removeItem((int)$item['id']);
 		//$catid		= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 		
@@ -107,7 +107,7 @@ class PhocaCartControllerWishList extends JControllerForm
 		ob_end_clean();
 		
 		// Render the layout
-		$d = '';
+		$d = array();
 		$layoutW	= new JLayoutFile('popup_remove_from_wishlist', null, array('component' => 'com_phocacart'));
 		
 		$d['link_wishlist'] = JRoute::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);

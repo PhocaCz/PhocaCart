@@ -67,8 +67,21 @@ class PhocacartOrder
 		
 		$total		= $cart->getTotal();
 		
-		
-		
+		// --------------------
+		// CHECK CAPTCHA
+		// --------------------
+		$enable_captcha_checkout	= PhocacartCaptcha::enableCaptchaCheckout();
+		if ($enable_captcha_checkout) {
+			if (!PhocacartCaptchaRecaptcha::isValid()) {
+				$msg =JText::_('COM_PHOCACART_WRONG_CAPTCHA');
+				$app->enqueueMessage($msg, 'error');
+				return false;	
+				// What happens when the CAPTCHA was entered incorrectly
+				//$info = array();
+				//$info['field'] = 'question_captcha';
+				//return new JException(JText::_('COM_PHOCACART_WRONG_CAPTCHA' ), "105", E_USER_ERROR, $info, false);
+			}
+		}
 		
 		// --------------------
 		// CHECK MINIMUM ORDER AMOUNT
@@ -168,7 +181,7 @@ class PhocacartOrder
 			$region = (int)$address[0]->region;
 		}
 
-		$shippingMethods	= $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $total[0]['weight'], $shippingId);
+		$shippingMethods	= $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], $shippingId);
 		
 		$shippingNotUsed = PhocacartShipping::isShippingNotUsed();
 		
@@ -188,7 +201,7 @@ class PhocacartOrder
 		
 		}
 
-	
+
 		
 		$row = JTable::getInstance('PhocacartOrder', 'Table', array());
 
@@ -199,6 +212,8 @@ class PhocacartOrder
 		
 		$row->date 		= gmdate('Y-m-d H:i:s');
 		$row->modified	= $row->date;
+		
+		
 		
 		if (!$row->check()) {
 			throw new Exception($row->getError());
@@ -238,9 +253,12 @@ class PhocacartOrder
 				$this->cleanTable('phocacart_order_attributes', $row->id);
 				
 				foreach($fullItems[1] as $k => $v) {
+					
+					
 					// While saving:
 					// Check if attributes which are required were filled
 					// Check if products can be accessed (include their categories)
+					
 					
 					$orderProductId = $this->saveOrderProducts($v, $row->id);
 					
@@ -301,6 +319,19 @@ class PhocacartOrder
 			}
 			
 			
+			// REWARD
+			$this->cleanTable('phocacart_reward_points', $row->id);
+			
+			// REWARD DISCOUNT - user used the points to buy items
+			if ($user->id > 0 && isset($total[0]['rewardproductusedtotal']) && (int)$total[0]['rewardproductusedtotal'] > 0) {
+				$rewardProductTotal = -(int)$total[0]['rewardproductusedtotal'];
+				$this->saveRewardPoints($user->id, $rewardProductTotal, $row->id, 0, -1);
+			}
+			// REWARD POINTS + user get the points when buying items
+			if ($user->id > 0 && isset($total[0]['points_received']) && (int)$total[0]['points_received'] > 0) {
+				$this->saveRewardPoints($user->id, (int)$total[0]['points_received'], $row->id, 0, 1);
+			}
+			
 			
 			// HISTORY AND ORDER STATUS
 			$this->cleanTable('phocacart_order_history', $row->id);
@@ -328,6 +359,26 @@ class PhocacartOrder
 					$d2['amount']	= $total[1]['netto'];
 					$d2['ordering']	= $ordering;
 					$d2['published']= 1;
+					$this->saveOrderTotal($d2);
+					$ordering++;
+				}
+				
+				// Reward Discount
+				if (isset($total[5]['dnetto'])) {
+					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT');
+					$d2['type']		= 'dnetto';
+					$d2['amount']	= '-'.$total[5]['dnetto'];
+					$d2['ordering']	= $ordering;
+					$d2['published']= 1;
+					$this->saveOrderTotal($d2);
+					$ordering++;
+				}
+				if (isset($total[5]['dbrutto'])) {
+					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT');
+					$d2['type']		= 'dbrutto';
+					$d2['amount']	= '-'.$total[5]['dbrutto'];
+					$d2['ordering']	= $ordering;
+					$d2['published']= 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
@@ -588,6 +639,9 @@ class PhocacartOrder
 		$d['order_id'] 			= (int)$orderId;
 		$d['user_address_id']	= (int)$d['id'];
 		$d['user_token']		= PhocacartUtils::getToken();
+		$userGroups				= PhocacartGroup::getGroupsById((int)$d['user_id'], 1, 1);
+		$d['user_groups']		= serialize($userGroups);
+		
 		unset($d['id']);// we do new autoincrement
 		$row = JTable::getInstance('PhocacartOrderUsers', 'Table', array());
 		
@@ -619,6 +673,13 @@ class PhocacartOrder
 			return false;
 		}
 		
+		
+		// Additional info
+		$d['default_price'] 				= $d['default_price'];
+		$d['default_tax_rate'] 				= $d['taxrate'];
+		$d['default_tax_calculation_rate'] 	= $d['taxtcalctype'];
+		$d['default_points_received'] 		= $d['default_points_received'];
+	
 		
 		$d['status_id']			= 1;// pending
 		$d['published']			= 1;
@@ -961,6 +1022,39 @@ class PhocacartOrder
 		}
 		
 		
+		return true;
+	}
+	
+	
+	public function saveRewardPoints($userId, $points, $orderId, $published = 0, $type = 0) {
+
+		$row = JTable::getInstance('PhocacartRewardPoint', 'Table', array());
+		
+		$d 						= array();
+		$d['date']				= gmdate('Y-m-d H:i:s');
+		$d['published']			= (int)$published;
+		$d['title']				= JText::_('COM_PHOCACART_ORDER_NUMBER') . ' '. self::getOrderNumber($orderId) . ' ('.$d['date'].')';
+		$d['points']			= (int)$points;
+		$d['user_id']			= (int)$userId;
+		$d['order_id']			= (int)$orderId;
+		$d['type']				= (int)$type;
+		
+		
+		if (!$row->bind($d)) {
+			throw new Exception($db->getErrorMsg());
+			return false;
+		}
+		
+		if (!$row->check()) {
+			throw new Exception($row->getError());
+			return false;
+		}
+		
+		
+		if (!$row->store()) {
+			throw new Exception($row->getError());
+			return false;
+		}
 		return true;
 	}
 	

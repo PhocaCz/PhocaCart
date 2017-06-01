@@ -364,5 +364,30 @@ class PhocacartUtils
 		$db->setQuery("SET @@group_concat_max_len = ".(int)$count);
 		$db->execute();
 	}
+	
+	public static function issetMessage() {
+		
+		$app		= JFactory::getApplication();
+		$message 	= $app->getMessageQueue();
+
+		if (!empty($message)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static function date($date, $format = '') {
+		if ($format == '') {
+			$format = JText::_('DATE_FORMAT_LC2');
+		}
+		/*$user	= JFactory::getUser();
+		$config = JFactory::getConfig();
+		$dateF 	= JFactory::getDate($date, 'UTC');
+		$dateF->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
+		$dateN	= $dateF->format('Y-m-d h:i:s', true, false);
+		//$dateN = JHtml::date($v->date, 'd. m. Y h:s');*/
+		$dateN = JHtml::_('date', $date, $format);
+		return $dateN;
+	}
 }
 ?>

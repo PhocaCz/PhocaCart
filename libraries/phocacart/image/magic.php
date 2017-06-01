@@ -41,7 +41,7 @@ class PhocacartImageMagic
 		
 		/* // While front upload we don't display the process page
 		if ($frontUpload == 0) {
-			$stopText = PhocaCartRenderProcess::displayStopThumbnailsCreating();
+			$stopText = PhocacartRenderProcess::displayStopThumbnailsCreating();
 			echo $stopText;
 		}*/
 		// Memory - - - - - - - -

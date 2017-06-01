@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 $d = $displayData;
+
 ?>
 <div id="phQuickViewPopup" class="modal zoom" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -17,7 +18,7 @@ $d = $displayData;
 		  <h4><span class="glyphicon glyphicon-eye-open"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
         </div>
         <div class="modal-body">
-			<?php /* <div id="phQuickViewPopupBody"></div> */ echo $d['content']; ?>
+			<?php echo $d['content']; ?>
         </div>
 		<div class="modal-footer"></div>
 	   </div>

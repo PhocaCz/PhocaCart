@@ -44,14 +44,14 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'cost', 'tax_id', 'calculation_type');
+$formArray = array ('title', 'cost', 'tax_id', 'calculation_type', 'default');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');
 echo $r->group($this->form, $formArray);
 echo '<div id="ph-extended-params-msg" class="ph-extended-params-msg"></div>';
 
-$formArray = array ('image', 'ordering', 'access');
+$formArray = array ('image', 'ordering', 'access', 'group');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);

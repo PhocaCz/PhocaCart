@@ -162,6 +162,14 @@ if (!empty($d['fullitems'])) {
 		echo '</div>';// end row
 	}
 	
+	// REWARD DISCOUNT
+	if ($d['total'][5]['dnetto']) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cT.' ph-small">'.JText::_('COM_PHOCACART_REWARD_POINTS').$d['total'][5]['rewardproducttxtsuffix'].'</div>';
+		echo '<div class="'.$cP.' ph-small ph-right">'.$price->getPriceFormat($d['total'][5]['dnetto'], 1).'</div>';
+		echo '</div>';// end row
+	}
+	
 	// PRODUCT DISCOUNT
 	if ($d['total'][2]['dnetto']) {
 		echo '<div class="'.$r.'">';
@@ -312,8 +320,10 @@ if (!empty($d['fullitems'])) {
 
 if ($app->getName() != 'administrator') {
 	
+
 	$linkCheckout		= JRoute::_(PhocacartRoute::getCheckoutRoute());
 	$linkCheckoutHtml	= '<div class="ph-small ph-right ph-u ph-cart-link-checkout"><a href="'.$linkCheckout.'">'.JText::_('COM_PHOCACART_VIEW_CART_CHECKOUT').'</a></div>';
+	
 	if (isset($d['params']['display_checkout_link']) && $d['params']['display_checkout_link'] == 1) {
 		echo $linkCheckoutHtml;
 	} else if (isset($d['params']['display_checkout_link']) && $d['params']['display_checkout_link'] == 2 && !empty($d['fullitems'])) {

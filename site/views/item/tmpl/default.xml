@@ -11,7 +11,11 @@
    <fields name="request">
       <fieldset name="request" addfieldpath="/administrator/components/com_phocacart/models/fields">
 
-         <field 
+        
+		 
+		 
+		 
+		  <field 
             name="id" 
             type="phocaselectitem" 
             section="com_phocacart" 
@@ -22,6 +26,20 @@
             required="true"
 			multiple="false"
          />
+		 
+		 <field 
+            name="catid" 
+            type="phocaselectitemcategory" 
+            section="com_phocacart" 
+            class="inputbox"
+            default="1" 
+            label="COM_PHOCACART_FIELD_CATEGORY_LABEL" 
+            description="COM_PHOCACART_FIELD_CATEGORY_DESC" 
+            required="true"
+			multiple="false"
+			
+         />
+		
       </fieldset>
    </fields>
   

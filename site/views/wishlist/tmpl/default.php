@@ -75,7 +75,7 @@ if (!empty($this->t['items'])) {
 		}
 		
 		if ($this->t['hide_price'] != 1) {
-			echo '<div class="col-sm-2 col-md-2 phVMiddle">'.$price->getPriceFormat($v['price']).'</div>';
+			echo '<div class="col-sm-2 col-md-2 phVMiddle">'.$price->getPriceItem($v['price'], $v['group_price']).'</div>';
 		} else {
 			echo '<div class="col-sm-2 col-md-2 phVMiddle"></div>';
 		}
@@ -89,7 +89,7 @@ if (!empty($this->t['items'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		//echo '<div class="ph-center">';
-		echo '<button type="submit" class="btn btn-primary ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="glyphicon glyphicon-remove"></span></button>';
+		echo '<button type="submit" class="btn btn-danger ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="glyphicon glyphicon-remove"></span></button>';
 		//echo '</div>';
 		
 		

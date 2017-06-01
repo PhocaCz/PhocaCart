@@ -114,7 +114,7 @@ class PhocacartOrdering
 			break;
 		}
 
-		$html 	= JHTML::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phSubmitPaginationForm(this.form)"', 'value', 'text', $selected);
+		$html 	= JHTML::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form)"', 'value', 'text', $selected);
 		
 		return $html;
 	}

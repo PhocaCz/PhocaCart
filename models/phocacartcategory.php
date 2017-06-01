@@ -115,7 +115,15 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if(isset($data['image']) && $data['image'] != '') {
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
 		}
-		return parent::save($data);
+	
+		$save = parent::save($data);
+		if ($save) {
+			$savedId = $this->getState($this->getName().'.id');
+			if ((int)$savedId > 0) {
+				PhocacartGroup::storeGroupsById((int)$savedId, 2, $data['group']);
+			}
+		}
+		return $save;
 	}
 
 	public function delete(&$cid = array()) {
@@ -219,6 +227,13 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 						$this->setError($this->_db->getErrorMsg());
 						return false;
 					}*/
+					
+					// 9. DELETE PRODUCT CUSTOMER GROUPS
+					$query = 'DELETE FROM #__phocacart_item_groups'
+						. ' WHERE item_id IN ( '.$cids.' )'
+						. ' AND type = 2';
+					$this->_db->setQuery( $query );
+					$this->_db->execute();
 				}
 			}
 			
@@ -338,6 +353,10 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 			// Add the new ID to the array
 			$newIds[$i]	= $newId;
+			// Store other new information
+			PhocacartUtilsBatchhelper::storeCategoryItems($pk, (int)$newId);
+			
+			
 			$i++;
 		}
 

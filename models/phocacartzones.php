@@ -39,8 +39,6 @@ class PhocaCartCpModelPhocacartZones extends JModelList
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-/*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);*/
 		
 
 
@@ -62,7 +60,6 @@ class PhocaCartCpModelPhocacartZones extends JModelList
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
-		//$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.zone_id');
 		
@@ -92,14 +89,7 @@ class PhocaCartCpModelPhocacartZones extends JModelList
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 		
-		
-	
-		
 
-		// Filter by access level.
-/*		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = '.(int) $access);
-		}*/
 		
 
 

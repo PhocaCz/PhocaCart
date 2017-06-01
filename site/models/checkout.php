@@ -218,7 +218,7 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	}
 	
-	public function savePaymentAndCoupon($paymentId, $couponId) {
+	public function savePaymentAndCouponAndReward($paymentId, $couponId, $reward) {
 		$app	= JFactory::getApplication();
 		$user 	= JFactory::getUser();
 		if ((int)$user->id < 1) {
@@ -229,6 +229,7 @@ class PhocaCartModelCheckout extends JModelForm
 		$data['payment'] 	= (int)$paymentId;
 		$data['coupon'] 	= (int)$couponId;
 		$data['user_id']	= (int)$user->id;
+		$data['reward'] 	= (int)$reward;
 		
 		
 		$row = $this->getTable('PhocacartCart', 'Table');

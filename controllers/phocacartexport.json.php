@@ -36,7 +36,7 @@ class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCar
 		}
 		$limitCount		= $this->t['import_export_pagination'];
 		
-		$d = '';
+		$d = array();
 		$d['products'] 			= PhocacartProduct::getProductsFull($limitOffset, $limitCount, 11);
 		//$d['productcolumns'] 	= PhocacartProduct::getProductColumns();// 1 and 2 line - Header - Filtering of columns Set in layout
 		$d['page']				= $page;// Pagination

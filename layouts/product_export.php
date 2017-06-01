@@ -98,6 +98,11 @@ $a[] = array('ean', 'COM_PHOCACART_FIELD_EAN_LABEL');
 $a[] = array('price', 'COM_PHOCACART_FIELD_PRICE_LABEL');
 $a[] = array('price_original', 'COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL');
 
+$a[] = array('price_groups', 'COM_PHOCACART_FIELD_PRICE_GROUPS_LABEL');
+
+$a[] = array('price_histories', 'COM_PHOCACART_FIELD_PRICE_HISTORY_LABEL');
+
+
 // TAX***
 //$a[] = array('tax_id', 'COM_PHOCACART_FIELD_TAX_LABEL');
 $a[] = array('tax', 'COM_PHOCACART_FIELD_TAX_LABEL');
@@ -124,6 +129,8 @@ $a[] = array('external_text', 'COM_PHOCACART_FIELD_EXTERNAL_TEXT_LABEL');
 
 
 $a[] = array('access', 'JFIELD_ACCESS_LABEL');
+$a[] = array('groups', 'COM_PHOCACART_FIELD_GROUPS_LABEL');
+
 $a[] = array('featured', 'COM_PHOCACART_FIELD_FEATURED_LABEL');
 
 $a[] = array('video', 'COM_PHOCACART_FIELD_VIDEO_URL_LABEL');
@@ -189,6 +196,9 @@ $a[] = array('volume', 'COM_PHOCACART_FIELD_VOLUME_LABEL');
 $a[] = array('unit_amount', 'COM_PHOCACART_FIELD_UNIT_AMOUNT_LABEL');
 $a[] = array('unit_unit', 'COM_PHOCACART_FIELD_UNIT_UNIT_LABEL');
 
+$a[] = array('points_needed', 'COM_PHOCACART_FIELD_POINTS_NEEDED_LABEL');
+$a[] = array('points_received', 'COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL');
+$a[] = array('point_groups', 'COM_PHOCACART_FIELD_POINT_GROUPS_LABEL');
 
 $a[] = array('published', 'COM_PHOCACART_FIELD_PUBLISHED_LABEL');
 $a[] = array('language', 'JFIELD_LANGUAGE_LABEL');
@@ -259,6 +269,11 @@ if (!empty($d['products'])){
 							if ($xml) {
 								$l = '<![CDATA[';
 								$r = ']]>';
+							} else {
+								// CSV
+								$v[$col] = str_replace("\n", '', $v[$col]);
+								$v[$col] = str_replace("\r", '', $v[$col]);
+								
 							}
 						break;
 					
@@ -283,6 +298,8 @@ if (!empty($d['products'])){
 					}
 					
 				} else {
+					
+					
 					// COLUMNS DYNAMICALLY CREATED BY OTHER TABLES
 					switch($col) { // we select col, so here we don't need to check: if (isset($v[$col])) {
 						
@@ -487,6 +504,10 @@ if (!empty($d['products'])){
 									$x = array();
 								
 									foreach($items as $kX => $vX) {
+										
+										$groups = PhocacartGroup::getGroupsById((int)$vX['id'], 4, 2, (int)$v['id']);
+										
+										
 										if ($xml) {
 											$iP[] = $t2 . '<discount>';
 											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
@@ -498,9 +519,33 @@ if (!empty($d['products'])){
 											$iP[] = $t3 . '<quantity_from>'.$vX['quantity_from'].'</quantity_from>';
 											$iP[] = $t3 . '<valid_from>'.$vX['valid_from'].'</valid_from>';
 											$iP[] = $t3 . '<valid_to>'.$vX['valid_to'].'</valid_to>';
+											
+											
+											
+											if (!empty($groups)) {
+												$iP[] = $t3 . '<groups>';
+										
+												foreach($groups as $kY => $vY) {
+													$iP[] = $t4 . '<group>';
+													$iP[] = $t5 . '<id>'.$vY['id'].'</id>';
+													$iP[] = $t5 . '<title>'.$vY['title'].'</title>';
+													$iP[] = $t4 . '</group>';
+												}
+											
+												$iP[] = $t3 . '</groups>';
+	
+											}
+											
 											$iP[] = $t2 . '</discount>';
 										} else {
 											//$x[] = $vX['image'];
+											if (!empty($groups)) {
+												foreach($groups as $kY => $vY) {
+													unset($groups[$kY]['alias']);
+													unset($groups[$kY]['type']);
+												}
+											}
+											$items[$kX]['groups'] = $groups;// set it for CSV
 										}
 									}
 									
@@ -620,6 +665,185 @@ if (!empty($d['products'])){
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
 										$iP[] = implode('|', $x);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+						
+						case 'groups':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+								$items = PhocacartGroup::getGroupsById((int)$v['id'], 3, 2);
+								
+								if (!empty($items)) {
+									
+									if ($xml) {
+										$title = '';
+										if ($export_add_title == 1) {
+											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+										}
+										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+									} 
+									
+									$x = array();
+								
+									foreach($items as $kX => $vX) {
+										if ($xml) {
+											$iP[] = $t2 . '<group>';
+											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
+											$iP[] = $t3 . '<title>'.$vX['title'].'</title>';
+											$iP[] = $t2 . '</group>';
+										} else {
+											//$x[] = $vX['image'];
+											unset($items[$kX]['alias']);
+											unset($items[$kX]['type']);
+										}
+									}
+									
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										//$iP[] = implode('|', $x);
+										
+										$iP[] = json_encode($items);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+						
+						case 'price_groups':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+								$items = PhocacartGroup::getProductPriceGroupsById((int)$v['id']);
+								
+								
+								if (!empty($items)) {
+									
+									if ($xml) {
+										$title = '';
+										if ($export_add_title == 1) {
+											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+										}
+										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+									} 
+									
+									$x = array();
+								
+									foreach($items as $kX => $vX) {
+										if ($xml) {
+											$iP[] = $t2 . '<price_group>';
+											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
+											$iP[] = $t3 . '<product_id>'.$vX['product_id'].'</product_id>';
+											$iP[] = $t3 . '<group_id>'.$vX['group_id'].'</group_id>';
+											$iP[] = $t3 . '<price>'.$vX['price'].'</price>';
+											$iP[] = $t2 . '</price_group>';
+										} else {
+											//$x[] = $vX['image'];
+											
+										}
+									}
+									
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										//$iP[] = implode('|', $x);
+										
+										$iP[] = json_encode($items);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+						
+						case 'point_groups':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+								$items = PhocacartGroup::getProductPointGroupsById((int)$v['id']);
+								
+							
+								if (!empty($items)) {
+									
+									if ($xml) {
+										$title = '';
+										if ($export_add_title == 1) {
+											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+										}
+										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+									} 
+									
+									$x = array();
+								
+									foreach($items as $kX => $vX) {
+										if ($xml) {
+											$iP[] = $t2 . '<point_group>';
+											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
+											$iP[] = $t3 . '<product_id>'.$vX['product_id'].'</product_id>';
+											$iP[] = $t3 . '<group_id>'.$vX['group_id'].'</group_id>';
+											$iP[] = $t3 . '<points_received>'.$vX['points_received'].'</points_received>';
+											$iP[] = $t2 . '</point_group>';
+										} else {
+											//$x[] = $vX['image'];
+											
+										}
+									}
+									
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										//$iP[] = implode('|', $x);
+										
+										$iP[] = json_encode($items);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+						
+						// Price history
+						case 'price_histories':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+								$items = PhocacartPriceHistory::getPriceHistoryById((int)$v['id'], 0, 1);
+								
+								
+								if (!empty($items)) {
+									
+									if ($xml) {
+										$title = '';
+										if ($export_add_title == 1) {
+											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+										}
+										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+									} 
+									
+									$x = array();
+								
+									foreach($items as $kX => $vX) {
+										if ($xml) {
+											$iP[] = $t2 . '<price_history>';
+											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
+											$iP[] = $t3 . '<product_id>'.$vX['product_id'].'</product_id>';
+											$iP[] = $t3 . '<date>'.$vX['date'].'</date>';
+											$iP[] = $t3 . '<price>'.$vX['price'].'</price>';
+											$iP[] = $t2 . '</price_history>';
+										} else {
+											//$x[] = $vX['image'];
+											
+										}
+									}
+									
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										//$iP[] = implode('|', $x);
+										
+										$iP[] = json_encode($items);
 									}
 								} else {
 									if ($csv) {$iP[] = '';}// CSV set right column count

@@ -55,11 +55,20 @@ class PhocacartFormUser
 						$fS[] = '<field name="'.htmlspecialchars($v->title).$shippingSuffix.'"';
 						
 						
-						if(isset($v->validate) && $v->validate == 'email') {
-								$v->type = 'email';
+						
+						
+						
+						$tA 	= explode(":", $v->type);
+						$type 	= 'text';
+						if (isset($tA[0]) && $tA[0] != '') {
+							$type = $tA[0];
 						}
 						
-						$fB[] = $fS[] = ' type="'.htmlspecialchars($v->type).'"'
+						if(isset($v->validate) && $v->validate == 'email') {
+								$type = 'email';
+						}
+						
+						$fB[] = $fS[] = ' type="'.htmlspecialchars($type).'"'
 						. ' label="'.htmlspecialchars($v->label).'"';
 						
 						

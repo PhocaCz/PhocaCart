@@ -72,10 +72,9 @@
 
 
 
-
+.ph-item-reward-box,
 .ph-category-bottom-box,
 .ph-category-add-to-cart-box,
-
 .ph-item-bottom-box,
 .ph-item-add-to-cart-box,
 .ph-item-min-qty-box,
@@ -97,6 +96,7 @@
 	text-decoration:none;
 }
 
+.ph-item-reward-box .ph-reward,
 .ph-category-price-box .ph-price-brutto,
 .ph-category-price-box .ph-price-netto,
 .ph-category-price-box .ph-price-original,
@@ -126,6 +126,7 @@
 	margin-top: 20px;
 }
 
+.ph-item-reward-box .ph-reward-txt,
 .ph-category-price-box .ph-price-txt,
 .ph-category-price-box .ph-tax-txt,
 .ph-category-stock-box .ph-stock-txt,
@@ -476,7 +477,7 @@ table tr th.ph-checkout-cart-image {
 .ph-download-item-box-row-line {
 	border-bottom: 1px solid #ddd;
 	padding-top: 0px;
-	background: red;
+	
 }
 .ph-orders-item-box-row {
 	border-bottom: 1px solid #ddd;
@@ -569,6 +570,10 @@ table.ph-idnr-box-in tr td {
 	text-align: right;
 }
 
+.ph-category-item-addtocart {
+	float: right;
+	margin: 2px;
+}
 
 .ph-category-item-compare {
 	float: right;
@@ -583,6 +588,10 @@ table.ph-idnr-box-in tr td {
 .ph-category-item-quickview {
 	float: right;
 	margin: 2px;
+}
+
+.ph-category-item-addtocart .glyphicon-shopping-cart {
+	 color: #333333;
 }
 
 .ph-category-item-compare  .glyphicon-stats {
@@ -1492,6 +1501,28 @@ h3.gridlist {
 	align-items: stretch;
 }
 
+.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemWishListBoxForm,
+.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemCompareBoxForm,
+.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemCartBoxForm,
+.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemQuickViewBoxForm{
+}
+
+.ph-item-action{
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-end;
+}
+
+
+
+.ph-item-box.grid {
+    position: relative;
+    margin-bottom: 20px;
+    clear: both;
+}
+
+
+
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .ph-item-action-box {
 	
 }
@@ -1508,3 +1539,22 @@ h3.gridlist {
 	padding: 10px;
 }
 
+/* Select Box required */
+select:invalid,
+select:invalid  + .chosen-container .chosen-single {
+    border: 1px solid #fc0000 !important;
+	box-shadow: 0 0px 4px #FF9494 !important;
+}
+
+.ph-shipping-info-box {
+	padding: 5px;
+	border: 1px solid #f0f0f0;
+	background: #fdfdfd;
+}
+
+.ph-shipping-info-box a{
+	text-decoration: underline;
+}
+.ph-shipping-info-header {
+	font-weight: bold;
+}

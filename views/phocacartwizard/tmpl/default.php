@@ -142,7 +142,7 @@ if ($this->page == 0) { ?>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
-		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="http://www.phoca.cz/download/category/100-phoca-cart-component"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
+		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="http://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkModules);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_MODULES'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardModule"></div></div>
 	</div>

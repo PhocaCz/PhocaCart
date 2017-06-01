@@ -218,6 +218,14 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 		//$cart	= new PhocacartCart();
 		$cart	= new PhocacartCartRendercart(1);// is subclass of PhocacartCart, so we can use only subclass
+		
+		// Get Phoca Cart Cart Module Parameters
+		$module		= JModuleHelper::getModule('mod_phocacart_cart');
+		$paramsM	= new JRegistry($module->params);
+		$cart->params['display_image'] 			= $paramsM->get( 'display_image', 0 );
+		$cart->params['display_checkout_link'] 	= $paramsM->get( 'display_checkout_link', 1 );
+		
+		
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
 	
 		if (!$added) {
@@ -245,7 +253,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 		
 		// Render the layout
-		$d = '';
+		$d = array();
 		$layoutP	= new JLayoutFile('popup_add_to_cart', null, array('component' => 'com_phocacart'));
 		
 		$d['link_checkout'] = JRoute::_(PhocacartRoute::getCheckoutRoute((int)$item['id'], (int)$item['catid']));

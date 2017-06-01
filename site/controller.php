@@ -20,7 +20,7 @@ class PhocaCartController extends JControllerLegacy
 		}
 		/*if (JFactory::getApplication()->input->get('view') && JFactory::getApplication()->input->get('view') == 'feed') {
 			// Default view for Feed is XML
-			// Don't forget, this settings needs to have set router.php too - in method PhocaCartParseRoute()
+			// Don't forget, this settings needs to have set router.php too - in method PhocacartParseRoute()
 			$this->getView('feed', 'xml');
 		}*/
 		

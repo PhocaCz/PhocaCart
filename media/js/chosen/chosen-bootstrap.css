@@ -147,9 +147,3 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
     background-color: white;
 }
 
-
-select:invalid  + .chosen-container .chosen-single {
-    border: 1px solid #fc0000 !important;
-	box-shadow: 0 0px 4px #FF9494 !important;
-}
-

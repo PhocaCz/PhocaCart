@@ -12,6 +12,14 @@
 
 <field name="order_token" type="phocacarttoken" readonly="true" manager="folder" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC" />
 
+<field name="comment" type="textarea" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COMMENT_LABEL" description="COM_PHOCACART_FIELD_COMMENT_DESC" />
+
+<field name="tracking_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL" description="COM_PHOCACART_FIELD_TRACKING_NUMBER_DESC" />
+<field name="tracking_link_custom" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_DESC" />
+<field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC" />
+
+<field name="tracking_date_shipped" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" filter="JComponentHelper::filterText" />
+
 	</fieldset>	
 	
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >

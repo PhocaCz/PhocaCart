@@ -16,6 +16,8 @@ class PhocacartCategoryMultiple
 		
 		if ($select == 1) {
 			$query = 'SELECT c.category_id';
+		} else if ($select == 2) {
+			$query = 'SELECT a.id AS value, a.title AS text';
 		} else {
 			$query = 'SELECT a.*';
 		}

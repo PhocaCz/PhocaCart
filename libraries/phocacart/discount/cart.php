@@ -32,10 +32,13 @@ class PhocacartDiscountCart
 			$db 			= JFactory::getDBO();
 			$user 			= JFactory::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
-			$where 			= array();
-			$where[] 		= "a.access IN (".$userLevels.")";
-			$where[]		= 'a.published = 1';
-			$where 			= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
+			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+			
+			$wheres 		= array();
+			$wheres[] 		= "a.access IN (".$userLevels.")";
+			$wheres[] 		= " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+			$wheres[]		= 'a.published = 1';
+			$where 			= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 			
 			
 			$query = 'SELECT a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to,'
@@ -44,13 +47,13 @@ class PhocacartDiscountCart
 					.' FROM #__phocacart_discounts AS a'
 					.' LEFT JOIN #__phocacart_discount_products AS dp ON dp.discount_id = a.id'
 					.' LEFT JOIN #__phocacart_discount_categories AS dc ON dc.discount_id = a.id'
+					.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 5'// type 5 is discount
 					. $where
 					.' GROUP BY a.id';
 					// SQL92 SQL99 ???
 					/* , a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to' */
 					$query .= ' ORDER BY a.id';
-					
-		
+	
 			PhocacartUtils::setConcatCharCount();
 			$db->setQuery($query);
 			if ($returnArray) {
@@ -71,9 +74,9 @@ class PhocacartDiscountCart
 	
 	public static function getCartDiscount($id = 0, $catid = 0, $quantity, $amount) {
 		
-		/*$app									= JFactory::getApplication();
+		$app									= JFactory::getApplication();
 		$paramsC 								= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
-		*/
+		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
 		
 		// Cart discount applies to all cart, so we don't need to load it for each product
 		// 1 mean id of cart, not id of product
@@ -83,11 +86,11 @@ class PhocacartDiscountCart
 
 		
 		if (!empty($discounts)) {
-			$maxQuantityKey = 0;// get the discount key with the maximal quantity
-			$maxQuantity	= 0;
+			$bestKey 		= 0;// get the discount key which best meet the rules
+			$maxDiscount	= 0;
 			foreach($discounts as $k => $v) {
 				
-				// 1. ACCESS, PUBLISH CHECK 
+				// 1. ACCESS, PUBLISH CHECK, GROUP CHECK
 				// Checked in SQL
 				
 				// 2. VALID DATE FROM TO CHECK
@@ -158,35 +161,31 @@ class PhocacartDiscountCart
 				}
 				
 				
-			//$ids	= explode(',', $this->coupon['product']);
-			/*$catids	= explode(',', $this->coupon['category']);
-			
-			// Products
-			if(!empty($ids)) {
-				if (in_array($id, $ids)) {
+				//$ids	= explode(',', $this->coupon['product']);
+				/*$catids	= explode(',', $this->coupon['category']);
+				
+				// Products
+				if(!empty($ids)) {
+					if (in_array($id, $ids)) {
+						return true;
+					}
+				}
+				
+				// Categories
+				if(!empty($catids)) {
+					if (in_array($catid, $catids)) {
+						return true;
+					}
+				}
+				
+				// No condition regarding ids or catids was set, coupon is valid for every item
+				if (empty($ids) && empty($catids)) {
 					return true;
 				}
-			}
-			
-			// Categories
-			if(!empty($catids)) {
-				if (in_array($catid, $catids)) {
+				
+				if (isset($ids[0]) && $ids[0] == '' && isset($catids[0]) && $catids[0] == '') {
 					return true;
-				}
-			}
-			
-			// No condition regarding ids or catids was set, coupon is valid for every item
-			if (empty($ids) && empty($catids)) {
-				return true;
-			}
-			
-			if (isset($ids[0]) && $ids[0] == '' && isset($catids[0]) && $catids[0] == '') {
-				return true;
-			}*/
-				
-				
-				
-				
+				}*/
 				
 				
 				// 4. SELECT THE HIGHEST QUANTITY
@@ -196,19 +195,35 @@ class PhocacartDiscountCart
 				// minimum quantity = 20 -> discount 10%
 				// minimum quantity = 30 -> discount 20%
 				// If customer buys 50 items, we need to select 20% so both 5% and 10% should be unset
-				if ((int)$v['quantity_from'] == 0) {
-					$maxQuantity 	= (int)$v['quantity_from'];
-					$maxQuantityKey	= $k;
-				} else if (isset($v['quantity_from']) && (int)$v['quantity_from'] > $maxQuantity) {
-					$maxQuantity 	= (int)$v['quantity_from'];
-					$maxQuantityKey	= $k;
-				}
-
-			}
-
-			if (isset($discounts[$maxQuantityKey])) {
+				// But if we have quantity_from == 0, this rule does not have quantity rule, it is first used.
+				//4.1 if more discountes meet rule select the one with maxDiscount
+				//4.2.if quantity is 0 for all select the largest discount (BUT be aware because of possible conflict)
 				
-				return $discounts[$maxQuantityKey];
+				if ($discount_priority	== 2) {
+					if ((int)$v['quantity_from'] == 0) {
+						$maxDiscount 	= (int)$v['quantity_from'];
+						$bestKey		= $k;
+					} else if (isset($v['quantity_from']) && (int)$v['quantity_from'] > $maxDiscount) {
+						$maxDiscount 	= (int)$v['quantity_from'];
+						$bestKey		= $k;
+					}
+				} else {
+					if ((int)$v['discount'] == 0) {
+						$maxDiscount 	= (int)$v['discount'];
+						$bestKey		= $k;
+					} else if (isset($v['discount']) && (int)$v['discount'] > $maxDiscount) {
+						$maxDiscount 	= (int)$v['discount'];
+						$bestKey		= $k;
+					}
+				}
+			}
+			
+			// POSSIBLE CONFLICT discount vs. quantity - solved by parameter
+			// POSSIBLE CONFLICT percentage vs. fixed amount
+
+			if (isset($discounts[$bestKey])) {
+				
+				return $discounts[$bestKey];
 			} else {
 				return false;
 			}

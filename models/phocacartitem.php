@@ -131,6 +131,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 		$app		= JFactory::getApplication();
 		
+		
 		// TO DO remove
 		/*$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
 		$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
@@ -204,7 +205,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		if ($table->image != '') {
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
 		}
-					
+						
 		if ((int)$table->id > 0) {
 			
 			if (!isset($data['catid_multiple'])) {
@@ -215,7 +216,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			if (isset($data['featured'])) {
 				$this->featured((int)$table->id, $data['featured']);
 			}
-			
+		
 			$dataRelated = '';
 			if (!isset($data['related'])) {
 				$dataRelated = '';
@@ -232,7 +233,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$data['attributes'] = array();
 			}
 			
-			
+				
 			$pFormImg = $app->input->post->get('pformimg', array(), 'array');
 			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
 			$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
@@ -242,11 +243,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
 			
+			PhocacartGroup::storeGroupsById((int)$table->id, 3, $data['group']);
 			
+	
+			PhocacartPriceHistory::storePriceHistoryById((int)$table->id, $data['price']);
 			
 			if (!isset($data['tags'])) {
 				$data['tags'] = array();
 			}
+			
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
 
 		}
@@ -359,6 +364,26 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 			// 9. DELETE PRODUCT DISCOUNTS
 			$query = 'DELETE FROM #__phocacart_product_discounts'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 9. DELETE PRODUCT CUSTOMER GROUPS
+			$query = 'DELETE FROM #__phocacart_item_groups'
+				. ' WHERE item_id IN ( '.$cids.' )'
+				. ' AND type = 3';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 10. DELETE PRODUCT PRICE CUSTOMER GROUPS
+			$query = 'DELETE FROM #__phocacart_product_price_groups'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			
+			// 11. DELETE PRODUCT POINT CUSTOMER GROUPS
+			$query = 'DELETE FROM #__phocacart_product_point_groups'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
@@ -904,6 +929,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 			// Attributes
 			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
+			
+			
 			if (!empty($aA)) {
 				foreach ($aA as $k => $v) {
 					if (isset($v['id']) && $v['id'] > 0) {
@@ -923,7 +950,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				foreach($cid as $k => $v) {
 					
 					if ((int)$v != $idSource) { // Do not copy to itself
-						PhocacartAttribute::storeAttributesById((int)$v, $aA);
+						
+						PhocacartAttribute::storeAttributesById((int)$v, $aA, 1);
 						$cA++;
 					}
 				}

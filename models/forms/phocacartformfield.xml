@@ -5,7 +5,7 @@
 
 <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
 
-<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" required="true" />
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_FORMFIELD_NAME_DESC" required="true" />
 
 <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
@@ -15,7 +15,18 @@
 
 <field name="id_input" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ID_LABEL" description="COM_PHOCACART_FIELD_ID_DESC" />
 
-<field name="type" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" required="true" />
+<field name="type" type="list" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" required="true">
+<option value="text:varchar(10)">text - varchar(10)</option>
+<option value="text:varchar(20)">text - varchar(20)</option>
+<option value="text:varchar(25)">text - varchar(25)</option>
+<option value="text:varchar(100)">text - varchar(100)</option>
+<option value="text:varchar(255)">text - varchar(255)</option>
+<option value="textarea:text">textarea - text</option>
+<option value="calendar:datetime">calendar - datetime</option>
+<option value="phocaformcountry:int(11)">country int(11)</option>
+<option value="phocaformregion:int(11)">region int(11)</option>
+</field>
+
 <field name="default" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" />
 <field name="size" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" />
 <field name="cols" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COLS_LABEL" description="COM_PHOCACART_FIELD_COLS_DESC" />
@@ -23,7 +34,12 @@
 <field name="class" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CLASS_LABEL" description="COM_PHOCACART_FIELD_CLASS_DESC" />
 <field name="filter" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FILTER_LABEL" description="COM_PHOCACART_FIELD_FILTER_DESC" />
 
-<field name="read_only" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_READ_ONLY_LABEL" description="COM_PHOCACART_FIELD_READ_ONLY_DESC" >
+<field name="required" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_REQUIRED_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_DESC" >
+<option value="0">COM_PHOCACART_NO</option>
+<option value="1">COM_PHOCACART_YES</option>
+</field>
+
+<field name="read_only" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_READ_ONLY_LABEL" description="COM_PHOCACART_FIELD_READ_ONLY_DESC" >
 <option value="0">COM_PHOCACART_NO</option>
 <option value="1">COM_PHOCACART_YES</option>
 <option value="2">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS</option>
@@ -43,6 +59,8 @@
 <field name="ordering" type="PhocacartOrdering" table="formfield" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+
+<field name="group" type="PhocacartGroups" table="9" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
 	</fieldset>
 

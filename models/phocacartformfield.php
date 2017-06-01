@@ -60,6 +60,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
+		$table->title		= JApplication::stringURLSafe($table->title);
 		$table->alias		= JApplication::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
@@ -109,8 +110,171 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 		return true;
 	}
 	
+	
+	public function save($data) {
+	
+		$save = parent::save($data);
+		if ($save) {
+			$savedId = $this->getState($this->getName().'.id');
+			if ((int)$savedId > 0) {
+				
+				if (!isset($data['id']) || (isset($data['id']) && $data['id'] == 0)) {
+			
+					$type				= PhocacartFormItems::getColumnType($data['type']);
+					$data['title']		= JApplication::stringURLSafe($data['title']);
+					$data['title']		= strip_tags($data['title']);
+					$db 				= JFactory::getDBO();
+					$config				= JFactory::getConfig();
+					$dbName 			= $config->get('db', '');
+					
+					
+					if ($dbName != '' && $data['title'] != '' && $type != '') {
+						/*$query = 'SELECT * FROM information_schema.COLUMNS'
+						.' WHERE TABLE_SCHEMA = '.$db->quote($dbName)
+						.' AND TABLE_NAME = '.$db->quote('#__phocacart_users')
+						.' AND COLUMN_NAME = '.$db->quote($data['title']);*/
+						
+						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$db->quote($data['title']);
+						$db->setQuery($query10);
+						$column1 = $db->loadResult();
+						
+						if (empty($column1)) {
+							$query11 = 'ALTER TABLE #__phocacart_users ADD '.$db->quoteName($data['title']).' '.$type.';';
+							$db->setQuery($query11);
+						
+							if (!$db->execute()){
+								$this->setError($db->getErrorMsg());
+								return false;
+							}
+							
+						}
+						
+						$query20 = 'SHOW COLUMNS FROM #__phocacart_order_users LIKE '.$db->quote($data['title']);
+						$db->setQuery($query20);
+						$column2 = $db->loadResult();
+						
+						if (empty($column2)) {
+							$query21 = 'ALTER TABLE #__phocacart_order_users ADD '.$db->quoteName($data['title']).' '.$type.'';
+							$db->setQuery($query21);
+							if (!$db->execute()){
+								$this->setError($db->getErrorMsg());
+								return false;
+							}
+						}
+					}
+				}
+				
+				PhocacartGroup::storeGroupsById((int)$savedId, 9, $data['group']);
+			}
+		}
+		return $save;
+	}
+	
+	
+	
 	public function delete(&$cid = array()) {
-		return false;
+		
+		$app	= JFactory::getApplication();
+		$db 	= JFactory::getDBO();
+		
+		$result = false;
+		if (count( $cid )) {
+			JArrayHelper::toInteger($cid);
+			$cids = implode( ',', $cid );
+			
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					JLog::add($error, JLog::WARNING);
+					return false;
+				} else {
+					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					return false;
+				}
+			}
+			
+			// Select id's from product table, if there are some items, don't delete it.
+			$query = 'SELECT a.id, a.title, a.type_default'
+			. ' FROM #__phocacart_form_fields AS a'
+			. ' WHERE a.id IN ( '.$cids.' )'
+			. ' GROUP BY a.id';
+		
+			$db->setQuery( $query );
+
+			if (!($rows = $db->loadObjectList())) {
+				throw new Exception( $db->stderr('Load Data Problem'), 500 );
+				return false;
+			}
+			
+			
+			$cidOK 			= array();
+			$cidOKTitle		= array();
+			$cidError 		= array();
+			foreach ($rows as $row) {
+				if ($row->type_default == 0) {
+					$cidOK[] 		= (int)$row->id;
+					$cidOKTitle[] 	= $row->title;
+				} else {
+					$cidError[] = $row->title;
+				}
+			}
+			
+			if (count( $cidOK )) {
+				$cidsOK = implode( ',', $cidOK );
+				$query2 = 'DELETE FROM #__phocacart_form_fields'
+				. ' WHERE id IN ( '.$cidsOK.' )';
+				$db->setQuery( $query2 );
+				if (!$db->query()) {
+					$this->setError($this->_db->getErrorMsg());
+					return false;
+				};
+				
+				if (!empty($cidOKTitle)) {
+					foreach($cidOKTitle as $k => $v) {
+						$v		= JApplication::stringURLSafe($v);
+						$v		= strip_tags($v);
+						
+						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$db->quote($v);
+						$db->setQuery($query10);
+						$column1 = $db->loadResult();
+						
+						if (!empty($column1)) {
+							$query11 = 'ALTER TABLE #__phocacart_users DROP COLUMN '.$db->quoteName($v).';';
+							$db->setQuery($query11);
+							$db->execute();
+						}
+						
+						$query20 = 'SHOW COLUMNS FROM #__phocacart_order_users LIKE '.$db->quote($v);
+						$db->setQuery($query20);
+						$column2 = $db->loadResult();
+						
+						if (!empty($column2)) {
+							$query21 = 'ALTER TABLE #__phocacart_order_users DROP COLUMN '.$db->quoteName($v).';';
+							$db->setQuery($query21);
+							$db->execute();
+						}
+					}
+					
+				}
+			}
+			
+			$msg = '';
+			if (!empty($cidError)) {
+				$cidErrorString = implode( ", ", $cidError );
+				$msg .= JText::plural( 'COM_PHOCACART_ERROR_DELETE_DEFAULT_FORM_FIELDS', $cidErrorString );
+			}
+			if (!empty($cidOKTitle)) {
+				$cidOKTitleString = implode( ", ", $cidOKTitle );
+				if ($msg != '') { $msg .= "<br />";}
+				$msg .= JText::plural( 'COM_PHOCACART_SUCCESS_FORM_FIELDS_DELETED', $cidOKTitleString );
+			}
+			
+			$link = 'index.php?option=com_phocacart&view=phocacartformfields';
+			$app->enqueueMessage($msg, 'error');
+			$app->redirect($link);
+		}
+		return true;
 	}
 }
 ?>

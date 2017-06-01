@@ -11,7 +11,7 @@ if (!defined('DS')) {define('DS', DIRECTORY_SEPARATOR);}
 
 spl_autoload_register(array('JLoader','load'));
 
-class PhocaCartLoader extends JLoader
+class PhocacartLoader extends JLoader
 {
 	private static $paths 	= array();
 	protected static $classes = array();
@@ -66,13 +66,13 @@ class PhocaCartLoader extends JLoader
 				}
 			}
 
-			PhocaCartLoader::$paths[$keyPath] = $rs;
+			PhocacartLoader::$paths[$keyPath] = $rs;
 		}
 		
-		return PhocaCartLoader::$paths[$keyPath];
+		return PhocacartLoader::$paths[$keyPath];
 	}
 }
 
 function phocacartimport($path) {
-	return PhocaCartLoader::import($path);
+	return PhocacartLoader::import($path);
 }

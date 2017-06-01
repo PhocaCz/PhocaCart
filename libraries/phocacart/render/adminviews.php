@@ -137,12 +137,44 @@ class PhocacartRenderAdminviews
 		.'</div>'. "\n";
 	}
 	
+	public function inputFilterUser($txtSl, $txtSd, $state, $userName) {
+		$o = '<div class="filter-user btn-group pull-left">'. "\n";
+		
+		$d = array();
+		$d['readonly'] = 0;
+		$d['required'] = 0;
+		$d['userName'] = $userName;
+		$d['name'] = 'filter_user';
+		$d['value'] = (int)$state;
+		$d['id'] = (int)$state;
+		$d['class'] = '';
+		$d['size'] = '';
+		$d['onchange'] = '';
+
+		$layoutU 	= new JLayoutFile('joomla.form.field.user', null);
+		$o .= $layoutU->render($d);
+		
+		
+		$o .= '</div>'. "\n";
+		
+		return $o;
+	}
+	
 
 	
-	public function inputFilterSearchClear($txtFs, $txtFc) {
+	public function inputFilterSearchClear($txtFs, $txtFc, $clearClass = array()) {
+		
+		$clearString = '';
+		if (!empty($clearClass)) {
+			foreach($clearClass as $k => $v) {
+				//$clearString .= 'document.getElementsByName(\''.$v.'\').value=\'\';';
+				$clearString .= 'jQuery(\'.'.$v.'\').val(\'\');';
+			}
+		}
+
 		return '<div class="btn-group pull-left ">'. "\n"
 		.'<button class="btn tip hasTooltip" type="submit" title="'.JText::_($txtFs).'"><i class="icon-search"></i></button>'. "\n"
-		.'<button class="btn tip hasTooltip" type="button" onclick="document.getElementById(\'filter_search\').value=\'\';this.form.submit();"'
+		.'<button class="btn tip hasTooltip" type="button" id="phOnClickClear" onclick="document.getElementById(\'filter_search\').value=\'\'; '.$clearString.'this.form.submit();"'
 		.' title="'.JText::_($txtFc).'"><i class="icon-remove"></i></button>'. "\n"
 		.'</div>'. "\n";
 	}
@@ -176,6 +208,7 @@ class PhocacartRenderAdminviews
 		.'</select>'. "\n"
 		.'</div>'. "\n";
 	}
+	
 	
 	public function startTable($id) {
 		return '<table class="table table-striped" id="'.$id.'">'. "\n";

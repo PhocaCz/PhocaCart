@@ -51,13 +51,30 @@ class PhocacartUtilsBatchhelper
 			// Advanced Stock Options
 			$aSOA = PhocacartAttribute::storeCombinationsById($idSource, 1);
 			PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOA, 1);
-		
+			
+			// Customer groups
+			$cA = PhocacartGroup::getGroupsById($idSource, 3, 1);
+			PhocacartGroup::storeGroupsById((int)$idDest, 3, $cA);
+			
 			// Tags
 			$tA = PhocacartTag::getTags($idSource, 1);
 			if (!isset($tA)) {
 				$tA = array();
 			}
 			PhocacartTag::storeTags($tA, (int)$idDest);
+		}
+		return true;
+	}
+	
+	
+	public static function storeCategoryItems($idSource, $idDest) {
+		
+		if ($idSource > 0 && $idDest > 0) {
+
+			// Customer groups
+			$cA = PhocacartGroup::getGroupsById($idSource, 2, 1);
+			PhocacartGroup::storeGroupsById((int)$idDest, 2, $cA);
+			
 		}
 		return true;
 	}

@@ -25,6 +25,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 		//$checkin = property_exists($table, 'checked_out');
 		$context = "$this->option.edit.$this->context";
 		$task = $this->getTask();
+		
 
 		// Determine the name of the primary key for the data.
 		if (empty($key))
@@ -277,6 +278,8 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 			return false;
 		}*/
 
+		
+		
 		$this->setMessage(
 			JText::_(
 				($lang->hasKey($this->text_prefix . ($recordId == 0 && $app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')

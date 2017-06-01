@@ -13,16 +13,22 @@ echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_CHECKOUT')
 
 if ( isset($this->t['checkout_desc']) && $this->t['checkout_desc'] != '') {
 	// Checkout description
-	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['checkout_desc']). '</div>';
+	echo '<div class="ph-desc">'. $this->t['checkout_desc']. '</div>';
 }
 
 
 echo $this->loadTemplate('cart');
+echo $this->t['event']->onCheckoutAfterCart;
 echo $this->loadTemplate('login');
+echo $this->t['event']->onCheckoutAfterLogin;
 echo $this->loadTemplate('address');
+echo $this->t['event']->onCheckoutAfterAddress;
 echo $this->loadTemplate('shipping');
+echo $this->t['event']->onCheckoutAfterShipping;
 echo $this->loadTemplate('payment');
+echo $this->t['event']->onCheckoutAfterPayment;
 echo $this->loadTemplate('confirm');
+echo $this->t['event']->onCheckoutAfterConfirm;
 
 
 

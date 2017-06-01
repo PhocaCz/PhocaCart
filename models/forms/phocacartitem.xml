@@ -47,7 +47,9 @@
 
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 		
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="group" type="PhocacartGroups" table="3" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
+
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 <field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC" />
 
 <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC" />
@@ -105,6 +107,9 @@
 
 <field name="volume" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_VOLUME_LABEL" description="COM_PHOCACART_FIELD_VOLUME_DESC" />
 
+<field name="points_needed" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_POINTS_NEEDED_LABEL" description="COM_PHOCACART_FIELD_POINTS_NEEDED_DESC" />
+
+<field name="points_received" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_POINTS_RECEIVED_DESC" />
 
 
 <field name="metakey" type="textarea"
@@ -130,6 +135,10 @@
 <field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
 
 <field name="tags" type="phocatags" multiple="1" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="inputbox" size="1" />
+
+
+
+
 <!--
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->

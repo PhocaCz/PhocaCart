@@ -41,9 +41,7 @@ class PhocaCartViewAccount extends JViewLegacy
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
 		$this->t['linkaccount']				= JRoute::_(PhocacartRoute::getAccountRoute());
 		$this->t['linkcheckout']			= JRoute::_(PhocacartRoute::getCheckoutRoute());
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['display_edit_profile']	= $this->p->get( 'display_edit_profile', 1 );
-		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		
 		
 		$lang = JFactory::getLanguage();
@@ -86,8 +84,8 @@ class PhocaCartViewAccount extends JViewLegacy
 		}
 		
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		$media->loadChosen($this->t['load_chosen']);
+		$media->loadBootstrap();
+		$media->loadChosen();
 		PhocacartRenderJs::renderBillingAndShippingSame();
 		
 		$this->_prepareDocument();

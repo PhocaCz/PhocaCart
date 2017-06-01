@@ -23,5 +23,17 @@ class TablePhocacartPayment extends JTable
 
 		return true;
 	}
+	
+	public function store($updateNulls = false){
+		if ($this->default != '0') {
+			$query = $this->_db->getQuery(true)
+				->update('#__phocacart_payment_methods')
+				->set($this->_db->quoteName('default').' = \'0\'')
+				->where($this->_db->quoteName('default').' = ' . $this->_db->quote($this->default));
+			$this->_db->setQuery($query);
+			$this->_db->execute();
+		}
+		return parent::store($updateNulls);
+	}
 }
 ?>

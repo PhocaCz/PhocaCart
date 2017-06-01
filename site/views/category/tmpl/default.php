@@ -38,7 +38,7 @@ if (!empty($this->items)) {
 	
 	
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
-	echo '<div class="row '.$this->t['row-flex'].' '.$lt.'">';
+	echo '<div class="row '.$this->t['class-row-flex'].' '.$lt.'">';
 	
 	foreach ($this->items as $v) {
 		
@@ -110,7 +110,7 @@ if (!empty($this->items)) {
 		// :L: PRICE
 		$dP = array();
 		if ($this->t['hide_price'] != 1) {
-			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1);
+			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 			$dP['priceitemsorig']= array();
 			if ($v->price_original != '' && $v->price_original > 0) {
 				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype);
@@ -127,6 +127,8 @@ if (!empty($this->items)) {
 		
 		// :L: ADD TO CART
 		$dA = $dA2 = $dA3 = array();
+		$icon['addtocart'] = '';
+		
 		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4 ) {
 			
 			$dA['link']			= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
@@ -135,17 +137,27 @@ if (!empty($this->items)) {
 			$dA['catid']		= $this->t['categoryid'];
 			$dA['return']		= $this->t['actionbase64'];
 			$dA['attrrequired']	= 0;
-			$dA['addtocart']		= $this->t['category_addtocart'];
+			$dA['addtocart']	= $this->t['category_addtocart'];
+			$dA['method']		= $this->t['add_cart_method'];
 			if (isset($v->attribute_required) && $v->attribute_required == 1) {
 				$dA['attrrequired']	= 1;
 			}
+			
+			// Add To Cart as Icon
+			if ($this->t['display_addtocart_icon'] == 1) {
+				$dA['icon']			= 1;// Display as Icon
+				$icon['addtocart'] 	= $layoutA->render($dA);
+			}
+			$dA['icon']			= 0;// Set back to display as button
 			
 		} else if ((int)$this->t['category_addtocart'] == 2 && (int)$v->external_id != '') {
 			// e.g. paddle
 			$dA2['external_id']	= (int)$v->external_id;
 			$dA2['return']		= $this->t['actionbase64'];
 			
+			
 		} else if ((int)$this->t['category_addtocart'] == 3 && $v->external_link != '') {
+		
 			$dA3['external_link']	= $v->external_link;
 			$dA3['external_text']	= $v->external_text;
 			$dA3['return']			= $this->t['actionbase64'];
@@ -191,9 +203,12 @@ if (!empty($this->items)) {
 			echo '</div>';// end desc
 			
 			if ($this->t['fade_in_action_icons'] == 0) {
+				echo '<div class="ph-item-action '.$lt.'">';
 				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				echo $icon['addtocart'];
+				echo '</div>';
 			}
 			
 			echo '</div>';// end caption
@@ -210,6 +225,7 @@ if (!empty($this->items)) {
 				echo $icon['compare'];
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				echo $icon['addtocart'];
 				echo '</div>';
 			}
 			
@@ -233,6 +249,10 @@ if (!empty($this->items)) {
 			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
 			
 			echo '</div>';// end add to cart box 
+			
+			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+			echo trim(implode("\n", $results));
+			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 	
 			echo '</div>';// end row-item 3/3
@@ -268,9 +288,12 @@ if (!empty($this->items)) {
 			echo '</div>';// end desc
 			
 			if ($this->t['fade_in_action_icons'] == 0) {
+				echo '<div class="ph-item-action '.$lt.'">';
 				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				echo $icon['addtocart'];
+				echo '</div>';
 			}
 			
 			echo '</div>';// end caption
@@ -287,6 +310,7 @@ if (!empty($this->items)) {
 				echo $icon['compare'];
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				echo $icon['addtocart'];
 				echo '</div>';
 			}
 			
@@ -307,6 +331,10 @@ if (!empty($this->items)) {
 			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
 			
 			echo '</div>';// end add to cart box 
+			
+			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+			echo trim(implode("\n", $results));
+			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 	
 			echo '</div>';// end row-item 3/3
@@ -326,9 +354,12 @@ if (!empty($this->items)) {
 			
 
 			if ($this->t['fade_in_action_icons'] == 0) {
+				echo '<div class="ph-item-action '.$lt.'">';
 				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				echo $icon['addtocart'];
+				echo '</div>';
 			}
 			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
@@ -368,6 +399,10 @@ if (!empty($this->items)) {
 			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
 			
 			echo '</div>';// end add to cart box
+			
+			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+			echo trim(implode("\n", $results));
+			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 			
 			
@@ -377,6 +412,7 @@ if (!empty($this->items)) {
 				echo $icon['compare'];
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				echo $icon['addtocart'];
 				echo '</div>';
 				echo '</div>';// end action box
 			}

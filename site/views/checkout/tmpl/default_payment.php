@@ -82,8 +82,9 @@ if ($this->a->paymentnotused == 1) {
 	
 	foreach($this->t['paymentmethods'] as $k => $v) {
 		
+	
 		$checked = '';
-		if (isset($this->t['cartitems']['payment']) && (int)$this->t['cartitems']['payment'] == (int)$v->id) {
+		if (isset($v->selected) && $v->selected == 1 ) {
 			$checked = 'checked="checked"';
 		}
 		
@@ -137,17 +138,25 @@ if ($this->a->paymentnotused == 1) {
 	
 	echo '<div class="ph-cb">&nbsp;</div>';
 	
-	echo '<div class="col-sm-12 col-md-12 ">';
-	//echo '<div class="radio">';
-	echo '<label>'.JText::_('COM_PHOCACART_COUPON_CODE').' <input type="text" name="phcoupon" id="phcoupon" value="" ></label>';
-	//echo '</div>';
-	echo '</div><div class="ph-cb"></div>';
+	// COUPON CODE
+	if ($this->t['enable_coupons'] == 1) {
+		echo '<div class="col-sm-12 col-md-12 ">';
+		echo '<label>'.JText::_('COM_PHOCACART_COUPON_CODE'). ' <small>('.JText::_('COM_PHOCACART_APPLY_COUPON_CODE').')</small><br /><input type="text" name="phcoupon" id="phcoupon" value="'.$this->t['couponcodevalue'].'" ></label>';
+		echo '</div><div class="ph-cb"></div>';
+	}
+	
+	// REWARD POINTS
+	if ($this->t['rewards']['apply']) {
+		echo '<div class="col-sm-12 col-md-12 ">';
+		echo '<label>'.JText::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" ></label>';
+		echo '</div><div class="ph-cb"></div>';
+	}
 	
 	echo '</div>';// end payment cost box
 	echo '</div>';// end payment row	
 	echo '<div class="ph-cb"></div>';
 	
-	echo '<div class="pull-right ph-checkout-shipping-save">';
+	echo '<div class="pull-right ph-checkout-payment-save">';
 	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	echo '</div>';
 		

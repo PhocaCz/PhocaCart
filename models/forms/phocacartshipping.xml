@@ -13,10 +13,12 @@
 
 <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 <field name="ordering" type="PhocacartOrdering" table="shipping" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+
+<field name="group" type="PhocacartGroups" table="7" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
 <field name="cost" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COST_LABEL" description="COM_PHOCACART_FIELD_COST_DESC" />
 
@@ -27,10 +29,52 @@
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>
 
+<field name="default" type="list" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" class="inputbox" size="1" default="0">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option	value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="tracking_link" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_TRACKING_LINK_DESC" />
+
+<field name="tracking_description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" />
+
 <!-- Height -->
 <field name="lowest_weight" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LOWEST_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_LOWEST_WEIGHT_DESC" />
 <field name="highest_weight" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_HIGHEST_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_HIGHEST_WEIGHT_DESC" />
 <field name="active_weight" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_WEIGHT_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+
+<!-- Size -->
+<!--
+COM_PHOCACART_FIELD_LOWEST_WIDTH_LABEL="Lowest Width"
+COM_PHOCACART_FIELD_LOWEST_WIDTH_DESC="Set lowest width"
+COM_PHOCACART_FIELD_LARGEST_WIDTH_LABEL="Largest Width"
+COM_PHOCACART_FIELD_LARGEST_WIDTH_DESC="Set largest width"
+COM_PHOCACART_FIELD_LOWEST_HEIGHT_LABEL="Lowest Height"
+COM_PHOCACART_FIELD_LOWEST_HEIGHT_DESC="Set lowest height"
+COM_PHOCACART_FIELD_HIGHEST_HEIGHT_LABEL="Highest Height"
+COM_PHOCACART_FIELD_HIGHEST_HEIGHT_DESC="Set highest height"
+COM_PHOCACART_FIELD_LONGEST_LENGTH_LABEL="Longest Length"
+COM_PHOCACART_FIELD_LONGEST_LENGTH_DESC="Set longest length"
+COM_PHOCACART_FIELD_SHORTEST_LENGTH_LABEL="Shortest Length"
+COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
+
+<field name="lowest_width" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LOWEST_WIDTH_LABEL" description="COM_PHOCACART_FIELD_LOWEST_WIDTH_DESC" />
+<field name="largest_width" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LARGEST_WIDTH_LABEL" description="COM_PHOCACART_FIELD_LARGEST_WIDTH_DESC" />
+
+<field name="lowest_height" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LOWEST_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_LOWEST_HEIGHT_DESC" />
+<field name="highest_height" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_HIGHEST_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_HIGHEST_HEIGHT_DESC" />
+
+<field name="shortest_length" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SHORTEST_LENGTH_LABEL" description="COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC" />
+<field name="longest_length" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LONGEST_LENGTH_LABEL" description="COM_PHOCACART_FIELD_LONGEST_LENGTH_DESC" />
+-->
+<field name="maximal_width" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMAL_WIDTH_LABEL" description="COM_PHOCACART_FIELD_MAXIMAL_WIDTH_DESC" />
+<field name="maximal_height" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMAL_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_MAXIMAL_HEIGHT_DESC" />
+<field name="maximal_length" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMAL_LENGTH_LABEL" description="COM_PHOCACART_FIELD_MAXIMAL_LENGTH_DESC" />
+<field name="active_size" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_SIZE_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_SIZE_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
@@ -89,7 +133,7 @@
 <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
 	<option value="*">JALL</option>
 </field>
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->

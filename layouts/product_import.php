@@ -33,13 +33,18 @@ if (isset($d['file_type']) && $d['file_type'] == 1) {
 $productIdChange = array();// Neded for related table, when the product changes its ID (autoincrement), recreat related table
 
 
+
+
 if($xml) {
 	// --------
 	// XML
 	if (!empty($d['products'])){
 		foreach($d['products'] as $k => $v) {
+			
+			$data = array();
 		
 			if (isset($v['item']) && $v['item'] != '') {
+				
 				
 				$item = simplexml_load_string($v['item'], null, LIBXML_NOCDATA);
 				
@@ -254,11 +259,153 @@ if($xml) {
 					$data['discounts'] = array();
 				}
 				
+				// GROUPS IN DISCOUNT
+				if (!empty($data['discounts'])) {
+					foreach ($data['discounts'] as $kD => $vD) {
+				
+						if (!empty($data['discounts'][$kD]['groups']['group'])) {
+							
+							if (is_array($data['discounts'][$kD]['groups']['group']) && isset($data['discounts'][$kD]['groups']['group'][0])) {
+							
+								$groups 						= $data['discounts'][$kD]['groups']['group'];
+								$data['discounts'][$kD]['groups'] 	= array();
+								
+								foreach($groups as $kG => $vG) {
+									if (isset($vG['id'])) {
+										$data['discounts'][$kD]['groups'][] = (int)PhocacartUtils::getIntFromString($vG['id']);
+									}
+								}
+							} else {
+								$group 						= $data['discounts'][$kD]['groups']['group'];
+								
+								$data['discounts'][$kD]['groups'] 			= array();
+								$data['discounts'][$kD]['groups'][0] 		= (int)PhocacartUtils::getIntFromString($group['id']);
+							}
+							
+						} else {
+							$data['discounts'][$kD]['groups'] = array();
+						}
+					}
+				}
+				
+				
+				// GROUPS (USER)
+				if (!empty($data['groups']['group'])) {
+					
+					if (is_array($data['groups']['group']) && isset($data['groups']['group'][0])) {
+						$groups 					= $data['groups']['group'];		
+						$data['groups'] 			= array();
+						
+						foreach($groups as $kG => $vG) {
+							
+							if (isset($vG['id'])) {
+								$data['groups'][] = (int)PhocacartUtils::getIntFromString($vG['id']);
+								
+							}
+						}
+						
+					} else {
+						$group 						= $data['groups']['group'];
+						
+						$data['groups'] 			= array();
+						$data['groups'][0] 			= (int)PhocacartUtils::getIntFromString($group['id']);
+					}
+					
+				} else {
+					$data['groups'] = array();
+				}
+			
+				
+				// PRICE GROUPS
+				if (!empty($data['price_groups']['price_group'])) {
+					
+					if (is_array($data['price_groups']['price_group']) && isset($data['price_groups']['price_group'][0])) {
+						
+						$groups 					= $data['price_groups']['price_group'];
+						$data['price_groups'] 		= array();
+						foreach($groups as $kG => $vG) {
+					
+							$data['price_groups'][$kG]['id'] 			= (int)PhocacartUtils::getIntFromString($vG['id']);
+							$data['price_groups'][$kG]['product_id'] 	= (int)PhocacartUtils::getIntFromString($vG['product_id']);
+							$data['price_groups'][$kG]['group_id'] 		= (int)PhocacartUtils::getIntFromString($vG['group_id']);
+							$data['price_groups'][$kG]['price'] 		= $vG['price'];
+						}
+					} else {
+						$group 						= $data['price_groups']['price_group'];
+						
+						$data['price_groups'] 			= array();
+						$data['price_groups'][0]['id'] 			= (int)PhocacartUtils::getIntFromString($group['id']);
+						$data['price_groups'][0]['product_id'] 	= (int)PhocacartUtils::getIntFromString($group['product_id']);
+						$data['price_groups'][0]['group_id'] 	= (int)PhocacartUtils::getIntFromString($group['group_id']);
+						$data['price_groups'][0]['price'] 		= $group['price'];
+					}
+				
+					
+				} else {
+					$data['price_groups'] = array();
+				}
+		
+				// POINT GROUPS
+				if (!empty($data['point_groups']['point_group'])) {
+					
+					if (is_array($data['point_groups']['point_group']) && isset($data['point_groups']['point_group'][0])) {
+						$groups 					= $data['point_groups']['point_group'];
+						$data['point_groups'] 		= array();
+						foreach($groups as $kG => $vG) {
+							$data['point_groups'][$kG]['id'] 			= (int)PhocacartUtils::getIntFromString($vG['id']);
+							$data['point_groups'][$kG]['product_id'] 	= (int)PhocacartUtils::getIntFromString($vG['product_id']);
+							$data['point_groups'][$kG]['group_id'] 		= (int)PhocacartUtils::getIntFromString($vG['group_id']);
+							$data['point_groups'][$kG]['points_received'] = $vG['points_received'];
+						}
+					} else {
+						$group 						= $data['point_groups']['point_group'];
+						
+						$data['point_groups'] 			= array();
+						$data['point_groups'][0]['id'] 			= (int)PhocacartUtils::getIntFromString($group['id']);
+						$data['point_groups'][0]['product_id'] 	= (int)PhocacartUtils::getIntFromString($group['product_id']);
+						$data['point_groups'][0]['group_id'] 	= (int)PhocacartUtils::getIntFromString($group['group_id']);
+						$data['point_groups'][0]['points_received'] = $group['points_received'];
+					}
+					
+				} else {
+					$data['point_groups'] = array();
+				}
+				
+				
+				// PRICE HISTORIES
+				if (!empty($data['price_histories']['price_history'])) {
+					
+					if (is_array($data['price_histories']['price_history']) && isset($data['price_histories']['price_history'][0])) {
+						
+						$histories 					= $data['price_histories']['price_history'];
+						$data['price_histories'] 		= array();
+						foreach($histories as $kG => $vG) {
+					
+							$data['price_histories'][$kG]['id'] 			= (int)PhocacartUtils::getIntFromString($vG['id']);
+							$data['price_histories'][$kG]['product_id'] 	= (int)PhocacartUtils::getIntFromString($vG['product_id']);
+							$data['price_histories'][$kG]['date'] 			= $vG['date'];
+							$data['price_histories'][$kG]['price'] 			= $vG['price'];
+						}
+					} else {
+						$group 						= $data['price_histories']['price_history'];
+						
+						$data['price_histories'] 			= array();
+						$data['price_histories'][0]['id'] 			= (int)PhocacartUtils::getIntFromString($group['id']);
+						$data['price_histories'][0]['product_id'] 	= (int)PhocacartUtils::getIntFromString($group['product_id']);
+						$data['price_histories'][0]['date'] 		= $group['date'];
+						$data['price_histories'][0]['price'] 		= $group['price'];
+					}
+				
+					
+				} else {
+					$data['price_histories'] = array();
+				}
+				
 				
 				// RELATED
 				if (!empty($data['related']['related_product'])) {
 					
-					if (is_array($data['related']['related_product'])) {
+					if (is_array($data['related']['related_product']) && isset($data['related']['related_product'][0])) {
 						$relateds 					= $data['related']['related_product'];
 						$data['related'] 			= array();
 						foreach($relateds as $kR => $vR) {
@@ -303,14 +450,14 @@ if($xml) {
 						$data[$k] = '';
 					}
 				}
-				
+				$a[] = $data;
 				$newId = PhocacartProduct::storeProduct($data, $import_column);
 				if ($newId > 0) {
 					$productIdChange[$newId] = $data['id'];
 				}
 			}
 		}
-		
+
 		PhocacartRelated::correctProductId($productIdChange);// needed for related when new IDs are created by auto increment
 	}
 } else {
@@ -393,9 +540,93 @@ if($xml) {
 							$data['advanced_stock_options'] = json_decode($data['advanced_stock_options'], true);
 						}
 						
+						
+						// DISCOUNT GROUPS
 						if (isset($data['discounts'])) {
 							$data['discounts'] = json_decode($data['discounts'], true);
+							
+							
+							$groupsD = array();
+							if (!empty($data['discounts'])) {
+								foreach($data['discounts'] as $kDG => $vDG) {
+									$groupsD = $vDG['groups'];
+							
+									if (!empty($groupsD)) {
+										foreach($groupsD as $kR => $vR) {
+											$groupsD[$kR] = PhocacartUtils::getIntFromString($vR['id']);
+										}
+									}
+									$data['discounts'][$kDG]['groups'] = $groupsD;
+									
+								}
+								
+							}
+			
 						}
+						
+						if (isset($data['groups'])) {
+							$data['groups'] = json_decode($data['groups'], true);
+							$groups = array();
+							$groups = $data['groups'];
+							
+							if (!empty($groups)) {
+								foreach($groups as $kR => $vR) {
+									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
+								}
+							}
+							$data['groups'] = $groups;
+						}
+						
+						// Price Groups
+						if (isset($data['price_groups'])) {
+							$data['price_groups'] = json_decode($data['price_groups'], true);
+							/*$groups = array();
+							$groups = $data['price_groups'];
+							
+							if (!empty($groups)) {
+								foreach($groups as $kR => $vR) {
+									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
+								}
+							}
+							$data['price_groups'] = $groups;*/
+							
+						} else {
+							$data['price_groups'] = array();
+						}
+						
+						// Point Groups
+						if (isset($data['point_groups'])) {
+							$data['point_groups'] = json_decode($data['point_groups'], true);
+							/*$groups = array();
+							$groups = $data['point_groups'];
+							
+							if (!empty($groups)) {
+								foreach($groups as $kR => $vR) {
+									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
+								}
+							}
+							$data['point_groups'] = $groups;*/
+						} else {
+							$data['point_groups'] = array();
+						}
+						
+						// Price Groups
+						if (isset($data['price_histories'])) {
+							$data['price_histories'] = json_decode($data['price_histories'], true);
+							/*$groups = array();
+							$groups = $data['price_groups'];
+							
+							if (!empty($groups)) {
+								foreach($groups as $kR => $vR) {
+									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
+								}
+							}
+							$data['price_groups'] = $groups;*/
+							
+						} else {
+							$data['price_histories'] = array();
+						}
+						
 						
 						if (isset($data['related'])) {
 							$related = array();

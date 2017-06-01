@@ -15,23 +15,39 @@ class PhocacartShipping
 		
 	}
 	
-	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $country, $region, $weight, $id = 0) {
+	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
 		
 		$app			= JFactory::getApplication();
 		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
 		$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 		
-		$user 					= JFactory::getUser();
-		$userLevels				= implode (',', $user->getAuthorisedViewLevels());
+		$user 			= JFactory::getUser();
+		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
+		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		
-		$db = JFactory::getDBO();
+		$db 			= JFactory::getDBO();
 		
+		$wheres	  		= array();
 		// ACCESS
-		$accessWhere = " AND s.access IN (".$userLevels.")";
+		$wheres[] = " s.published = 1";
+		$wheres[] = " s.access IN (".$userLevels.")";
+		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+		
+		if ((int)$id > 0) {
+			$wheres[] =  's.id = '.(int)$id;
+			$limit = ' LIMIT 1';
+			$group = '';
+		} else {
+			$limit = '';
+			$group = ' GROUP BY s.id';
+		}
+		
+		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
-				.' s.active_amount, s.active_zone, s.active_country, s.active_region, s.active_weight,'
-				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight,'
+				.' s.active_amount, s.active_zone, s.active_country, s.active_region, s.active_weight, s.active_size,'
+				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight, s.default,'
+				.' s.maximal_length, s.maximal_width, s.maximal_height,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
 				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
@@ -41,17 +57,14 @@ class PhocacartShipping
 				.' LEFT JOIN #__phocacart_shipping_method_countries AS c ON c.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_zones AS z ON z.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
-				.' WHERE s.published = 1'
-				. $accessWhere;
-		if ((int)$id > 0) {
-			$query .= ' AND s.id = '.(int)$id
-			       .= ' LIMIT 1';
-		} else {
-			$query .= ' GROUP BY s.id';
-		}
+				.' LEFT JOIN #__phocacart_item_groups AS ga ON s.id = ga.item_id AND ga.type = 7'// type 8 is payment
+				. $where
+				. $group
+				. $limit;
 		
 		PhocacartUtils::setConcatCharCount();
 		$db->setQuery($query);
+		
 		$shippings = $db->loadObjectList();
 		
 		
@@ -59,18 +72,20 @@ class PhocacartShipping
 			return false;
 		}
 
-		
+
 		$i = 0;
 		if (!empty($shippings)) {
 			foreach($shippings as $k => $v) {
 				
 				
 				$v->active = 0;
+				$v->selected = 0;
 				$a = 0;
 				$z = 0;
 				$c = 0;
 				$r = 0;
 				$w = 0;
+				$s = 0;
 				// Amount Rule
 				if($v->active_amount == 1) {
 				
@@ -141,14 +156,34 @@ class PhocacartShipping
 				} else {
 					$w = 1;
 				}
-			
+				
+				// Size Rule
+				if($v->active_size == 1) {
+					$sP = 0;
+					if ($maxLength < $v->maximal_length || $maxLength == $v->maximal_length) {
+						$sP++;
+					}
+					if ($maxWidth < $v->maximal_width || $maxWidth == $v->maximal_width) {
+						$sP++;
+					}
+					if ($maxHeight < $v->maximal_height || $maxHeight == $v->maximal_height) {
+						$sP++;
+					}
+					if ($sP == 3) {
+						$s = 1;
+					}
+				} else {
+					$s = 1;
+				}
+				
+				
 				// No rule was set for shipping, it will be displayed at all events
 				if($v->active_amount == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_weight == 0) {
 					$v->active = 1;
 				}
 				
 				// if some of the rules is not valid, all the payment is NOT valid
-				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $w == 0) {
+				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $w == 0 || $s == 0) {
 					$v->active = 0;
 				} else {
 					$v->active = 1;
@@ -159,6 +194,19 @@ class PhocacartShipping
 						unset($shippings[$i]);
 					}
 				}
+				
+				// Try to set default for frontend form
+				// If user selected some shipping, such will be set as default
+				// If not they the default will be set
+				if ((int)$selected > 0) {
+					if ((int)$v->id == (int)$selected) {
+						$v->selected = 1;
+					}
+				} else {
+					$v->selected = $v->default;
+				}
+				
+				
 				$i++;
 			}
 		

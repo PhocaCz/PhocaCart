@@ -34,10 +34,12 @@ echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm'
 echo '<div class="span10 form-horizontal">';
 $tabs = array (
 'billing' 		=> JText::_($this->t['l'].'_BILLING_OPTIONS'),
-'shipping' 	=> JText::_($this->t['l'].'_SHIPPING_OPTIONS'));
+'shipping' 	=> JText::_($this->t['l'].'_SHIPPING_OPTIONS'),
+'groups' 	=> JText::_($this->t['l'].'_GROUP_OPTIONS'));
 echo $r->navigation($tabs);
 
-$data = PhocacartUser::getAddressDataForm($this->form, $this->fields['array'], $this->u);
+$data = PhocacartUser::getAddressDataForm($this->formspecific, $this->fields['array'], $this->u);
+
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="billing">'."\n"; 
@@ -46,6 +48,12 @@ echo '</div>';
 
 echo '<div class="tab-pane" id="shipping">'."\n"; 
 echo $data['s'];
+echo '</div>';
+
+echo '<div class="tab-pane" id="groups">'."\n"; 
+
+$formArray = array ('group');
+echo $r->group($this->form, $formArray);
 echo '</div>';
 
 echo '<input type="hidden" name="jform[user_id]" id="jform_user_id" value="'.(int)$this->u->id.'" />'; 

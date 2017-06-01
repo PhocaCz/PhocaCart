@@ -26,6 +26,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 	
 		$cart	= new PhocacartCart();
+		
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
 		
 		if ($added) {
@@ -247,14 +248,20 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
 		$item['phpaymentopt']		= $this->input->get( 'phpaymentopt', array(), 'array'  );
 		$item['phcoupon']			= $this->input->get( 'phcoupon', '', 'string'  );
+		$item['phreward']			= $this->input->get( 'phreward', '', 'int'  );
 		$guest						= PhocacartUserGuestuser::getGuestUser();
+		$params 					= $app->getParams();
 		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
+	
+		$this->t['enable_coupons']			= $params->get( 'enable_coupons', 1 );
+		$this->t['enable_rewards']			= $params->get( 'enable_rewards', 1 );
+	
 	
 		if(!empty($item['phpaymentopt']) && isset($item['phpaymentopt'][0]) && (int)$item['phpaymentopt'][0] > 0) {
 			
 			// Coupon
 			$couponId = 0;
-			if (isset($item['phcoupon']) && $item['phcoupon'] != '') {
+			if (isset($item['phcoupon']) && $item['phcoupon'] != '' && $this->t['enable_coupons']) {
 				
 				$coupon = new PhocacartCoupon();
 				$coupon->setCoupon(0, $item['phcoupon']);
@@ -276,6 +283,25 @@ class PhocaCartControllerCheckout extends JControllerForm
 				}
 			}
 			
+			$rewards 			= array();
+			$rewards['used'] 	= 0;
+			if (isset($item['phreward']) && $item['phreward'] != '' && $this->t['enable_rewards']) {
+				
+				$reward 			= new PhocacartReward();
+				$rewards['used']	= $reward->checkReward((int)$item['phreward'], 1);
+				
+				
+				if($rewards['used'] === false) {
+					$msg = JText::_('COM_PHOCACART_REWARD_POINTS_NOT_ADDED');
+					$app->enqueueMessage($msg.$msgSuffix, 'error');
+				} else {
+					$msg = JText::_('COM_PHOCACART_REWARD_POINTS_ADDED');
+					$app->enqueueMessage($msg, 'message');
+				}
+				
+				
+			}
+			
 			$model 	= $this->getModel('checkout');
 			
 			if ($guest) {
@@ -287,7 +313,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$app->enqueueMessage($msg, 'message');
 				}
 			} else {
-				if(!$model->savePaymentAndCoupon((int)$item['phpaymentopt'][0], $couponId)) {
+				if(!$model->savePaymentAndCouponAndReward((int)$item['phpaymentopt'][0], $couponId, $rewards['used'])) {
 					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 					$app->enqueueMessage($msg.$msgSuffix, 'error');
 				} else {
@@ -397,10 +423,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$orderMade = $order->saveOrderMain($item['phcomment']);
 		
 		if(!$orderMade) {
-			$msg = JText::_('COM_PHOCACART_ORDER_ERROR_PROCESSING');
-			$mO = PhocacartRenderFront::renderMessageQueue($msg);
-			$app->enqueueMessage($mO.$msgSuffix, 'error');
+			$msg = '';
+			if (!PhocacartUtils::issetMessage()){
+				$msg = JText::_('COM_PHOCACART_ORDER_ERROR_PROCESSING');
+			}
+			$app->enqueueMessage($msg.$msgSuffix, 'error');
 			$app->redirect(base64_decode($item['return']));
+			return true;
 		} else {
 			
 			$cart = new PhocacartCart();

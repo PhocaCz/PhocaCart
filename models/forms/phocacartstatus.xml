@@ -16,6 +16,23 @@
 	<option	value="-">COM_PHOCACART_ITEMS_SUBTRACTED</option>
 </field>
 
+<field name="change_user_group" type="list" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_DESC" class="inputbox" size="1" default="0">
+	<option value="0">COM_PHOCACART_USER_GROUP_UNCHANGED</option>
+	<option	value="1">COM_PHOCACART_USER_GROUP_CHANGED</option>
+</field>
+
+<field name="change_points_needed" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC" class="inputbox" size="1" default="1">
+	<option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
+	<option	value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
+	<option	value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
+</field>
+
+<field name="change_points_received" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC" class="inputbox" size="1" default="0">
+	<option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
+	<option	value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
+	<option	value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
+</field>
+
 <field name="download" type="list" label="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_DESC" class="inputbox" size="1" default="0">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>
@@ -25,12 +42,12 @@
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>
 </field>
-<field name="email_others" type="textarea" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC" />
+<field name="email_others" type="textarea" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC" />
 
 
 <field name="email_subject" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
 
-<field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC" />
+<field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC" />
 
 <field name="email_send" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC" class="inputbox" size="1" default="0">
 	<option	value="0">COM_PHOCACART_NOTHING</option>
@@ -41,7 +58,7 @@
 
 <field name="ordering" type="PhocacartOrdering" table="status" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 		
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 </fieldset>	
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
@@ -55,7 +72,7 @@
 	<option value="*">JALL</option>
 </field>
 <!--
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->

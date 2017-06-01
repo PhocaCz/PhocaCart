@@ -25,6 +25,13 @@ class PhocaCartCpViewPhocaCartFormfield extends JViewLegacy
 		$this->item		= $this->get('Item');
 		
 		$media = new PhocacartRenderAdminmedia();
+		
+		if (isset($this->item->id) && (int)$this->item->id > 0) {
+			$this->form->setFieldAttribute( 'title', 'readonly', 'true' );
+			$this->form->setFieldAttribute( 'type', 'readonly', 'true' );
+			
+		}
+		
 
 		$this->addToolbar();
 		parent::display($tpl);	

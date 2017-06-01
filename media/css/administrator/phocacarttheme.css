@@ -187,7 +187,7 @@
 
 #phAdminEdit .input-append .btn.button-clear {
 	border-radius: 0px 3px 3px 0px !important;
-	height: 28px;
+	height: 28px !important;
 	padding-top: 3px;
 }
 
@@ -426,7 +426,26 @@
     margin-right: 5px;
     margin-top: 2px;
 }
+
 .nav.nav-list li:nth-child(17):before {
+	font-family: 'Glyphicons Halflings';
+	color: #aa7faa;
+    content: "\e008";
+    float:left;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+
+.nav.nav-list li:nth-child(18):before {
+	font-family: 'Glyphicons Halflings';
+	color: #7faaaa;
+    content: "\e124";
+    float:left;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+
+.nav.nav-list li:nth-child(19):before {
 	font-family: 'Glyphicons Halflings';
 	color: #ffde00;
     content: "\e032";
@@ -435,7 +454,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(18):before {
+.nav.nav-list li:nth-child(20):before {
 	font-family: 'Glyphicons Halflings';
 	color: #399ed0;
     content: "\e111";
@@ -443,7 +462,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(19):before {
+.nav.nav-list li:nth-child(21):before {
 	font-family: 'Glyphicons Halflings';
 	color: #FF6685;
     content: "\e102";
@@ -451,7 +470,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(20):before {
+.nav.nav-list li:nth-child(22):before {
 	font-family: 'Glyphicons Halflings';
 	color: #aa56fe;
     content: "\e225";
@@ -461,7 +480,7 @@
 	font-weight: bold;
 }
 
-.nav.nav-list li:nth-child(21):before {
+.nav.nav-list li:nth-child(23):before {
 	font-family: 'Glyphicons Halflings';
 	color: #33af49;
     content: "\e025";
@@ -470,7 +489,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(22):before {
+.nav.nav-list li:nth-child(24):before {
 	font-family: 'Glyphicons Halflings';
 	color: #CC0033;
     content: "\e041";
@@ -478,7 +497,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(23):before {
+.nav.nav-list li:nth-child(25):before {
 	font-family: 'Glyphicons Halflings';
 	color: #ffb300;
     content: "\e122";
@@ -486,7 +505,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(24):before {
+.nav.nav-list li:nth-child(26):before {
 	font-family: 'Glyphicons Halflings';
 	color: #EA7C7C;
     content: "\e005";
@@ -494,7 +513,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(25):before {
+.nav.nav-list li:nth-child(27):before {
 	font-family: 'Glyphicons Halflings';
 	color: #9900CC;
     content: "\e085";
@@ -502,7 +521,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(26):before {
+.nav.nav-list li:nth-child(28):before {
 	font-family: 'Glyphicons Halflings';
 	color: #c1756d;
     content: "\e185";
@@ -510,7 +529,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(27):before {
+.nav.nav-list li:nth-child(29):before {
 	font-family: 'Glyphicons Halflings';
 	color: #fb1000;
     content: "\e210";
@@ -519,7 +538,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(28):before {
+.nav.nav-list li:nth-child(30):before {
 	font-family: 'Glyphicons Halflings';
 	color: #668099;
     content: "\e169";
@@ -527,7 +546,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(29):before { 
+.nav.nav-list li:nth-child(31):before { 
 	font-family: 'Glyphicons Halflings';
 	color: #669999;
     content: "\e170";
@@ -536,7 +555,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(30):before {
+.nav.nav-list li:nth-child(32):before {
 	font-family: 'Glyphicons Halflings';
 	color: #c0c0c0;
     content: "\e056";
@@ -545,7 +564,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(31):before {
+.nav.nav-list li:nth-child(33):before {
 	font-family: 'Glyphicons Halflings';
 	color: #3378cc;
     content: "\e086";
@@ -612,6 +631,8 @@
 	margin-bottom: 10px;
 }
 
+.ph-product-price-history-box,
+.ph-product-customer-group-box,
 .ph-discount-box,
 .ph-specification-box,
 .ph-attribute-box {
@@ -712,6 +733,53 @@
 
 .col-sm-6, .col-sm-2 {
 	/*border: 1px solid red;*/
+}
+
+/* Multiple Upload */
+
+
+ul.plupload_filelist li  {
+	padding-top: 15px;
+}
+
+ul.plupload_filelist li.plupload_file_name {
+	width: 35%;
+}
+ul.plupload_filelist li .plupload_file_name:before {
+	font-family: 'Glyphicons Halflings';
+	color: #d0d0d0;
+    content: "\e022";
+	float: left;
+	margin: 0px 5px 5px 0px;
+	padding-bottom: 2px;
+}
+
+.plupload_filelist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 5px dashed #d0d0d0;
+	background: #f5f5f5;
+    border-radius: 0px;
+}
+
+li.plupload_droptext {
+    font-size: 200%;
+	color: #d0d0d0;
+	text-transform: uppercase;
+	font-weight: bold;
+
+}
+
+li.plupload_droptext:before {
+	font-family: 'Glyphicons Halflings';
+	color: #d0d0d0;
+    content: "\e022 ";
+	font-size: 200%;
+	text-align: center;
+	margin: 0px auto;
+	/*display: block-inline;*/
+	float:none;
 }
 
 

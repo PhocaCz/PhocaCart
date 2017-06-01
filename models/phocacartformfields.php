@@ -25,6 +25,8 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 				'display_account', 'a.display_account',
 				'description', 'a.description',
 				'label', 'a.label',
+				'type', 'a.type',
+				'type_default', 'a.type_default',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'access', 'a.access', 'access_level',

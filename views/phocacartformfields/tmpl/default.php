@@ -59,8 +59,10 @@ echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title-small">'.JHTML::_('grid.sort',  	$this->t['l'].'_NAME', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-required">'.JHTML::_('grid.sort',  $this->t['l'].'_REQUIRED', 'a.required', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-label">'.JHTML::_('grid.sort',  	$this->t['l'].'_LABEL', 'a.label', $listDirn, $listOrder ).'</th>'."\n";	
 echo '<th class="ph-type">'.JHTML::_('grid.sort',  	$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type ph-center">'.JHTML::_('grid.sort',  $this->t['l'].'_DEFAULT', 'a.type_default', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHTML::_('grid.sort',  	$this->t['l'].'_FORM_DISPLAY_BILLING', 'a.display_billing', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHTML::_('grid.sort',  	$this->t['l'].'_FORM_DISPLAY_SHIPPING', 'a.display_shipping', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHTML::_('grid.sort',  	$this->t['l'].'_FORM_DISPLAY_ACCOUNT', 'a.display_account', $listDirn, $listOrder ).'</th>'."\n";	
@@ -113,9 +115,17 @@ echo $r->td($checkO, "small");
 
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
+echo $r->td(PhocacartHtmlJgrid::displayRequired( $item->required, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($item->label . '<br /><small>('.JText::_($this->escape($item->label)).')</small>', "small");
 echo $r->td($item->type, "small");
+
+if ($item->type_default == 1) {
+	$default = '<a data-original-title="'.JText::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip" title="'.JText::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
+	echo $r->td($default, "small ph-center");
+} else {
+	echo $r->td('', "small");
+}
 
 
 echo $r->td(PhocacartHtmlJgrid::displayBilling( $item->display_billing, $i, $this->t['tasks'].'.', $canChange), "small");
@@ -133,7 +143,7 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 12);
+echo $r->tblFoot($this->pagination->getListFooter(), 13);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);

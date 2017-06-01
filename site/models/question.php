@@ -128,7 +128,7 @@ class PhocaCartModelQuestion extends JModelForm
 			}
 			
 			
-			$send = PhocaCartEmail::sendQuestionMail($params->get('send_email_question'), $data, JFactory::getURI()->toString(), $params);
+			$send = PhocacartEmail::sendQuestionMail($params->get('send_email_question'), $data, JFactory::getURI()->toString(), $params);
 		
 			if (!$send) {
 				$user 	= JFactory::getUser();

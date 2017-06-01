@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocacartUsers extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.user_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_USERS' ), 'user' );
+		JToolbarHelper::title( JText::_( $this->t['l'].'_CUSTOMERS' ), 'user' );
 	
 		if ($canDo->get('core.create')) {
 			//JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
@@ -66,7 +66,7 @@ class PhocaCartCpViewPhocacartUsers extends JViewLegacy
 		}
 	
 		if ($canDo->get('core.delete')) {
-			//JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacarttags.delete', $this->t['l'].'_DELETE');
+			//JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartusers.delete', $this->t['l'].'_DELETE');
 		}
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );

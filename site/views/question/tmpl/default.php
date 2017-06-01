@@ -52,7 +52,7 @@ $hiddenfield =	' 		<div class="control-group '.$this->p->get('hidden_field_class
 				'		</div>';
 				
 if ( isset($this->t['question_description']) && $this->t['question_description'] != '') {
-	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['question_description']). '</div>';
+	echo '<div class="ph-desc">'. $this->t['question_description']. '</div>';
 }
 ?>
 <div>&nbsp;</div>

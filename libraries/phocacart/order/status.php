@@ -22,22 +22,25 @@ class PhocacartOrderStatus
 		if( !array_key_exists( $id, self::$status ) ) {
 			
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.title, a.stock_movements, a.email_customer, a.email_others, a.email_subject, a.email_text, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
+			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_text, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
 			$db->setQuery($query);
 			$s = $db->loadObject();
 	
 			if (!empty($s) && isset($s->title) && $s->title != '') {
-				self::$status[$id]['title']				= JText::_($s->title);
-				self::$status[$id]['id']				= (int)$id;
-				self::$status[$id]['stock_movements']	= $s->stock_movements;
-				self::$status[$id]['email_customer']	= $s->email_customer;
-				self::$status[$id]['email_others']		= $s->email_others;
-				self::$status[$id]['email_subject']		= $s->email_subject;
-				self::$status[$id]['email_text']		= $s->email_text;
-				self::$status[$id]['email_send']		= $s->email_send;
-				self::$status[$id]['download']			= $s->download;
+				self::$status[$id]['title']						= JText::_($s->title);
+				self::$status[$id]['id']						= (int)$id;
+				self::$status[$id]['stock_movements']			= $s->stock_movements;
+				self::$status[$id]['change_user_group']			= $s->change_user_group;
+				self::$status[$id]['change_points_needed']		= $s->change_points_needed;
+				self::$status[$id]['change_points_received']	= $s->change_points_received;
+				self::$status[$id]['email_customer']			= $s->email_customer;
+				self::$status[$id]['email_others']				= $s->email_others;
+				self::$status[$id]['email_subject']				= $s->email_subject;
+				self::$status[$id]['email_text']				= $s->email_text;
+				self::$status[$id]['email_send']				= $s->email_send;
+				self::$status[$id]['download']					= $s->download;
 				$query = 'SELECT a.title AS text, a.id AS value'
 				. ' FROM #__phocacart_order_statuses AS a'
 				. ' WHERE a.published = 1'
@@ -75,7 +78,7 @@ class PhocacartOrderStatus
 	 * $stockMovements  = ... no  + ... plus - ... minus 99 ... defined in order status settings
 	 */
 	
-	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99') {
+	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99', $changeUserGroup = '99', $changePointsNeeded = '99', $changePointsReceived = '99') {
 	
 	
 		
@@ -164,6 +167,53 @@ class PhocacartOrderStatus
 			}
 		}
 		
+		// 5) User Group Change
+		if ($changeUserGroup == 0) {
+			$changeUserGroupV = 0;
+		} else if ($changeUserGroup == 1) {
+			$changeUserGroupV = 1;
+		} else if ($changeUserGroup == '99') {
+			if (isset($status['change_user_group']) && $status['change_user_group'] == 0) {
+				$changeUserGroupV = 0;
+			} else if (isset($status['change_user_group']) && $status['change_user_group'] == 1) {
+				$changeUserGroupV = 1;
+			}
+		}
+		
+		// 6) Reward Points Needed
+		if ($changePointsNeeded == 0) {
+			$changePointsNeededV = 0;
+		} else if ($changePointsNeeded == 1) {
+			$changePointsNeededV = 1;
+		} else if ($changePointsNeeded == 2) {
+			$changePointsNeededV = 2;
+		} else if ($changePointsNeeded == '99') {
+			if (isset($status['change_points_needed']) && $status['change_points_needed'] == 0) {
+				$changePointsNeededV = 0;
+			} else if (isset($status['change_points_needed']) && $status['change_points_needed'] == 1) {
+				$changePointsNeededV = 1;
+			} else if (isset($status['change_points_needed']) && $status['change_points_needed'] == 2) {
+				$changePointsNeededV = 2;
+			}
+		}
+		
+		// 7) Reward Points Received
+		if ($changePointsReceived == 0) {
+			$changePointsReceivedV = 0;
+		} else if ($changePointsReceived == 1) {
+			$changePointsReceivedV = 1;
+		} else if ($changePointsReceived == 2) {
+			$changePointsReceivedV = 2;
+		} else if ($changePointsReceived == '99') {
+			if (isset($status['change_points_received']) && $status['change_points_received'] == 0) {
+				$changePointsReceivedV = 0;
+			} else if (isset($status['change_points_received']) && $status['change_points_received'] == 1) {
+				$changePointsReceivedV = 1;
+			} else if (isset($status['change_points_received']) && $status['change_points_received'] == 2) {
+				$changePointsReceivedV = 2;
+			}
+		}
+		
 		
 		
 		// EMAIL
@@ -210,7 +260,7 @@ class PhocacartOrderStatus
 		// STOCK MOVEMENTS
 		if ($stockMovementsV == '+' || $stockMovementsV == '-') {
 		
-			//PhocaCart
+			//Phocacart
 			$orderV 		= new PhocacartOrderView();
 			$products		= $orderV->getItemProducts($orderId);
 		
@@ -268,6 +318,66 @@ class PhocacartOrderStatus
 			}
 
 		}
+		
+		if ($changeUserGroupV == 0 || $changeUserGroupV == 1) {
+			
+			
+			PhocacartGroup::changeUserGroupByRule($common->user_id);
+		}
+		
+		
+		
+		// POINTS NEEDED
+		if ($changePointsNeededV == 1 || $changePointsNeededV == 2) {
+	
+			$published 	= $changePointsNeededV == 1 ? 1 : 0;
+			$db			= JFactory::getDBO();
+			
+			$q = ' SELECT id '
+				.' FROM #__phocacart_reward_points'
+				.' WHERE order_id = '. (int)$orderId
+				.' AND type = -1'
+				.' ORDER BY id';
+			
+			$db->setQuery($q);
+			
+			$idExists = $db->loadResult();
+			
+			
+							
+			if ((int)$idExists > 0) {
+				$query = 'UPDATE #__phocacart_reward_points SET'
+					.' published = '.(int)$published
+					.' WHERE id = '.(int)$idExists;
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+		
+		// POINTS RECEIVED
+		if ($changePointsReceivedV == 1 || $changePointsReceivedV == 2) {
+	
+			$published 	= $changePointsReceivedV == 1 ? 1 : 0;
+			$db			= JFactory::getDBO();
+			$q = ' SELECT id '
+				.' FROM #__phocacart_reward_points'
+				.' WHERE order_id = '. (int)$orderId
+				.' AND type = 1'
+				.' ORDER BY id';
+			$db->setQuery($q);
+			$idExists = $db->loadResult();
+			
+			
+							
+			if ((int)$idExists > 0) {
+				$query = 'UPDATE #__phocacart_reward_points SET'
+					.' published = '.(int)$published
+					.' WHERE id = '.(int)$idExists;
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+		
 		
 		// DOWNLOAD
 		if (isset($status['download'])) {
@@ -335,9 +445,15 @@ class PhocacartOrderStatus
 					$r['downloadlink'] = $downloadO;
 				}
 				
-			
 				
-				$body 	= PhocaCartEmail::completeMail($body, $r);
+				$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
+				$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
+				$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
+				$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
+
+				$r['customercomment'] 		= $common->comment;
+				
+				$body 	= PhocacartEmail::completeMail($body, $r);
 			
 				
 				// PDF
@@ -457,7 +573,7 @@ class PhocacartOrderStatus
 			// 1 ... sent
 			// 0 ... not sent
 			// -1 ... not sent (error)
-			$notify = PhocaCartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, $bcc, $attachmentContent, $attachmentName);
+			$notify = PhocacartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, $bcc, $attachmentContent, $attachmentName);
 			if ($notify) {
 				if ($app->isAdmin()){
 					$app->enqueueMessage(JText::_('COM_PHOCACART_EMAIL_IF_NO_ERROR_EMAIL_SENT'));
@@ -540,6 +656,53 @@ class PhocacartOrderStatus
 		}
 	
 		return JHTML::_('select.genericlist',  $data,  'jform[stock_movements]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+	}
+	
+	public static function getChangeUserGroupSelectBox($value) {
+		
+		// see: administrator/components/com_phocacart/models/forms/phocacartstatus.xml
+		$data = array(
+			'0' => JText::_('COM_PHOCACART_USER_GROUP_UNCHANGED'),
+			'1' => JText::_('COM_PHOCACART_USER_GROUP_CHANGED')
+		);
+		
+		if ($value == '') {
+			$value = 0;
+		}
+	
+		return JHTML::_('select.genericlist',  $data,  'jform[change_user_group]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+	}
+	
+	public static function getChangeChangePointsNeededSelectBox($value) {
+		
+		// see: administrator/components/com_phocacart/models/forms/phocacartstatus.xml
+		$data = array(
+			'0' => JText::_('COM_PHOCACART_REWARD_POINTS_UNCHANGED'),
+			'1' => JText::_('COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED'),
+			'2' => JText::_('COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED')
+		);
+		
+		if ($value == '') {
+			$value = 0;
+		}
+	
+		return JHTML::_('select.genericlist',  $data,  'jform[change_points_needed]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+	}
+	
+	public static function getChangePointsReceivedSelectBox($value) {
+		
+		// see: administrator/components/com_phocacart/models/forms/phocacartstatus.xml
+		$data = array(
+			'0' => JText::_('COM_PHOCACART_REWARD_POINTS_UNCHANGED'),
+			'1' => JText::_('COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED'),
+			'2' => JText::_('COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED')
+		);
+		
+		if ($value == '') {
+			$value = 0;
+		}
+	
+		return JHTML::_('select.genericlist',  $data,  'jform[change_points_received]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 }
 ?>

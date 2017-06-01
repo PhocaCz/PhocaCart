@@ -79,10 +79,12 @@ class PhocaCartModelOrders extends JModelLegacy
 		$ordering = $this->getOrderOrdering();
 		$query = ' SELECT o.*,'
 		.' os.title AS status_title,'
-		.' t.amount AS total_amount'
+		.' t.amount AS total_amount,'
+		.' s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription'
 		.' FROM #__phocacart_orders AS o'
 		.' LEFT JOIN #__phocacart_order_statuses AS os ON os.id = o.status_id'
 		.' LEFT JOIN #__phocacart_order_total AS t ON o.id = t.order_id'
+		.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
 		.' WHERE ' . implode( ' AND ', $wheres )
 		.' ORDER BY '.$ordering;
 	

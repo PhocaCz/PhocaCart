@@ -75,6 +75,7 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 			
 				$row = 1;
 				if (($handle = fopen($file['tmp_name'], "r")) !== false) {
+					
 					while (($data = fgets($handle, (int)$fgets_line_length)) !== false) {
 						
 						$dataC = PhocacartUtils::convertEncoding($data);
@@ -147,7 +148,7 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 		
 		$model = $this->getModel(); 
 		
-		$d = '';
+		$d = array();
 		$d['file_type']			= $model->getFileType();
 		$d['products'] 			= $model->getUploadedProducts($limitOffset, $limitCount);
 		$d['productcolumns'] 	= $model->getUploadedProductColumns();// 1 and 2 line - Header - Filtering of columns Set in layout

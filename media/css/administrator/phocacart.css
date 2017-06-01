@@ -37,6 +37,7 @@
 	width: auto;
 }
 
+.ph-min-purchase,
 .ph-title-short {
 	width: 30%;
 }
@@ -228,16 +229,36 @@ a img, img {border:0px;text-decoration:none;}
 }
 
 /*form*/
+#phAdminEdit .chzn-container-single.chzn-disabled .chzn-single,
+#phAdminEdit select[readonly] {
+	background: #D9D9D3 !important;
+	color: #000 !important;
+	border: 1px solid #aaa !important;
+}
+#phAdminEditPopup  input[readonly],
+#phAdminEdit input[readonly],
 input.pmreadonly {
-	background: #f0f0ee;
-	color: #777;
+	background: #ecece9 !important;
+	color: #777 !important;
 }
 
+#phAdminEdit .chzn-container-single.chzn-disabled .chzn-single:focus,
+#phAdminEdit .chzn-container-single.chzn-disabled .chzn-single:hover,
+#phAdminEdit select[readonly]:focus,
+#phAdminEdit select[readonly]:hover {
+	background: #D9D9D3 !important;
+	color: #000 !important;
+	border: 1px solid #aaa !important;
+}
+
+#phAdminEditPopup  input[readonly]:focus,
+#phAdminEditPopup  input[readonly]:hover,
+#phAdminEdit input[readonly]:focus,
+#phAdminEdit input[readonly]:hover,
 input.pmreadonly:focus,
-input.pmreadonly:hover
-	{
-	background: #f0f0ee;
-	color: #777;
+input.pmreadonly:hover {
+	background: #ecece9 !important;
+	color: #777 !important;
 }
 
 
@@ -639,8 +660,14 @@ border-radius: 2px;
 .ph-float-right {
 	float: right;
 }
+.ph-clear-right {
+	clear:right;
+}
 .ph-float-icon {
 	float: right;
+}
+.ph-float-icon-l {
+	float: left;
 }
 .ph-float-default {
 	float:right;
@@ -851,14 +878,16 @@ border-radius: 2px;
 .ph-option-box input{
 	border: 1px solid #fff !important;
 }
-
+*/
+/*
 table tr td,
 tr td,
 td,
-.span1, .span2 {
-	border: 1px solid red;
-} */
-
+.span1, .span2,
+.col-xs-12 {
+	border: 1px solid red !important;
+} 
+*/
 .ph-vertical-align {
 	align-items: center;
 	justify-content: center;
@@ -869,6 +898,10 @@ td,
 	margin-top: 5%;
 }
 
+
+#phAdminView .modal-body {
+	padding: 10px;
+}
 /*
 #phWizardStatusModal .modal-header,
 #phWizardStatusModal .modal-footer,*/
@@ -999,6 +1032,8 @@ td,
 .ph-footer-table {
 	border-bottom: 1px solid #f7f7f7;
 }
+
+.ph-edit-price-history-box,
 .ph-edit-stock-advanced-box {
 	padding: 10px;
 }
@@ -1031,4 +1066,12 @@ td,
 .ph-attribute-option-box tr td,
 .ph-attribute-option-box tr th {
 	padding: 5px;
+}
+
+
+#phAdminView .approved {
+	opacity: 1;
+}
+#phAdminView .not-approved {
+	opacity: 0.5;
 }

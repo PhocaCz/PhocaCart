@@ -103,6 +103,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$app		= JFactory::getApplication();
 		$user 		= JFactory::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$params 	= $app->getParams();
 		
 		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
@@ -120,15 +121,26 @@ class PhocaCartModelCategory extends JModelLegacy
 		}
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
+		
+		
+		
 		if ($this->getState('filter.language')) {
 			$wheres[] =  ' a.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
 		$itemOrdering = $this->getItemOrdering();
 		
+		// BE AWARE
+		// g.item_id is in this case product_id: phocacart_item_groups table is used for more instances: user, product, category
+		// so item_id in case type = 3 is product_id, items_id in case type = 2 is category_id
+		// see types: administrator\components\com_phocacart\libraries\phocacart\group\group.php
 		
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " a.access IN (".$userLevels.")";
+		
+		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		
 		
 		if ($count == 1) {
 			$q = ' SELECT a.id'
@@ -137,11 +149,13 @@ class PhocaCartModelCategory extends JModelLegacy
 			. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id"
 			. " LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id"
 			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
+			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id';
 			
 		} else {
-			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
+			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, min(ppg.price) as group_price, max(pptg.points_received) as group_points_received, a.points_received, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required'
 			. ' FROM #__phocacart_products AS a'
@@ -151,6 +165,14 @@ class PhocaCartModelCategory extends JModelLegacy
 			. ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
 			. ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0'
 			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
+			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+			
+			// user is in more groups, select lowest price by best group
+			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			// user is in more groups, select highest points by best group
+			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			
 			. $leftImages
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id'
@@ -169,6 +191,8 @@ class PhocaCartModelCategory extends JModelLegacy
 		$user 		= JFactory::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		
+		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+		
 		// Get the current category or get parent categories of the current category
 		if ($subcategories) {
 			$wheres[]			= " c.parent_id = ".(int)$categoryId;
@@ -177,8 +201,9 @@ class PhocaCartModelCategory extends JModelLegacy
 			$wheres[]			= " c.id= ".(int)$categoryId;
 		}
 
-		$wheres[] 		= " c.published = 1";
-		$wheres[] 		= " c.access IN (".$userLevels.")";
+		$wheres[] = " c.published = 1";
+		$wheres[] = " c.access IN (".$userLevels.")";
+		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		
 		if ($this->getState('filter.language')) {
 			$wheres[] 	=  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
@@ -190,6 +215,7 @@ class PhocaCartModelCategory extends JModelLegacy
 				. " FROM #__phocacart_categories AS c"
 				//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
 				//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1 AND a.access IN (".$userLevels.")"
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 				. " WHERE " . implode( " AND ", $wheres )
 				. " GROUP BY c.id"
 				. " ORDER BY ".$categoryOrdering;
@@ -197,6 +223,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.description, c.metakey, c.metadesc, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
 				. " FROM #__phocacart_categories AS c"
 				. " LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id"
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 				. " WHERE " . implode( " AND ", $wheres )
 				. " ORDER BY c.ordering";
 		}

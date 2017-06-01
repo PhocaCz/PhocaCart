@@ -142,6 +142,112 @@ options: {
 	}
 	
 	
+	public function renderChartJsLine2($id, $dataA, $dataALabel, $dataX) {
+
+		$bC 	= 'rgba(52,140,212,1)';
+		$baC	= 'rgba(52,140,212,0.3)';
+		$pbC	= 'rgba(255,255,255,1)';
+		$pbaC 	= 'rgba(52,140,212,1)';
+		
+		
+		$o = "
+var config".$id." = {
+type: 'line',
+data: {
+	datasets: [{
+		data: [".$dataA."],
+		yAxisID: 'y-axis-2',
+		pointRadius : 4,
+		borderColor : '".$bC."',
+		backgroundColor : '".$baC."',
+		pointBorderColor : '".$pbC."',
+		pointBackgroundColor :'".$pbaC."',
+		pointBorderWidth : 1,
+		radius: 4,
+		pointHoverRadius: 5,
+		 
+		label: '".htmlspecialchars($dataALabel)."',
+		/*fillColor: '#fff',
+		strokeColor: '#fff',
+		pointColor: '#fff',
+		pointStrokeColor: '#fff',
+		pointHighlightFill: '#000',
+		pointHighlightStroke: '#fff'*/
+
+	}],
+	labels: [".htmlspecialchars($dataX)."
+	],
+},
+scaleIntegersOnly: true,
+options: {  
+		responsive: true,
+		hoverMode: 'label',
+		stacked: false,
+		scales: {
+			xAxes: [{
+				display: true,
+				gridLines: {
+					drawOnChartArea: true,
+					offsetGridLines: false,
+					show: true,
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
+					lineWidth: 1,
+					/*drawOnChartArea: true,
+					drawTicks: true,
+					zeroLineWidth: 10,
+					zeroLineColor: '#fff300'*/					
+				}
+			}],
+			yAxes: [{
+				type: 'linear',
+				display: false,
+				position: 'left',
+				id: 'y-axis-1',
+				gridLines: {
+					drawOnChartArea: true,
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
+					lineWidth: 1,
+				},
+				label: 'text',
+				ticks: {
+					callback: function(value) {
+						if (value % 1 === 0) {
+							return Math.floor(value);
+						} else {
+							return '';
+						}
+					}
+				}
+			}, {
+				type: 'linear',
+				display: true,
+				position: 'right',
+				id: 'y-axis-2',
+				gridLines: {
+					drawOnChartArea: false,
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
+				},
+				label: 'text',
+				ticks: {
+					callback: function(value) {
+						if (value % 1 === 0) {
+							return Math.floor(value);
+						} else {
+							return '';
+						}
+					}
+				}
+			}],
+		},
+	}
+};";
+		JFactory::getDocument()->addScriptDeclaration($o);
+	}
+	
+	
 	public function renderChartJsPie($id, $data) {
 
 		$colors = array('#FFCC33', '#FF6633', '#FF3366', '#FF33CC', '#CC33FF');

@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartCommon
 {
+	
+
 	public function batch($model = null) {
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		$model	= $this->getModel('phocacartitem', '', array());
@@ -58,6 +60,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 
 		$app->redirect('index.php?option=com_phocacart&view=phocacartitems');
 	}
+	
 	
 	/*
 	function removeduplicates() {

@@ -61,6 +61,7 @@ $tabs = array (
 'discount' 		=> JText::_($this->t['l'].'_DISCOUNT_OPTIONS'),
 'download' 		=> JText::_($this->t['l'].'_DOWNLOAD_OPTIONS'),
 'size' 			=> JText::_($this->t['l'].'_SIZE_OPTIONS'),
+'reward' 		=> JText::_($this->t['l'].'_REWARD_POINTS'),
 'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'),
 'metadata'		=> JText::_($this->t['l'].'_METADATA_OPTIONS')
 );
@@ -70,9 +71,30 @@ echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
 
+// Customer Group Price
+$idMd = 'phEditProductPriceGroupModal';
+$textButton = 'COM_PHOCACART_CUSTOMER_GROUP_PRICES';
+$w = 500;
+$h = 400;
+
+$linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricegroup&tmpl=component&id='.(int)$this->item->id  );
+echo '<div class="ph-float-right"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
+echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
+
+// Product Price History
+$idMd = 'phEditProductPriceHistoryModal';
+$textButton = 'COM_PHOCACART_PRODUCT_PRICE_HISTORY';
+$w = 500;
+$h = 400;
+
+$linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricehistory&tmpl=component&id='.(int)$this->item->id  );
+echo '<br /><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></div>';
+echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
+
+
 
 // ORDERING cannot be used
-$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'featured', 'video', 'public_download_file', 'public_download_text');
+$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text');
 echo $r->group($this->form, $formArray);
 $formArray = array('description' );
 echo $r->group($this->form, $formArray, 1);
@@ -212,17 +234,28 @@ echo '<div class="tab-pane" id="discount">'. "\n";
 echo '<h3>'.JText::_($this->t['l'].'_PRODUCT_DISCOUNT').'</h3>';
 $i = 0; //
 if (!empty($this->discounts)) {
+
 	foreach ($this->discounts as $k => $v) {
 		//if ($i == 0) {
 		//	echo $r->headerSpecification();
 		//}
 		$v->discount = PhocacartPrice::cleanPrice($v->discount);
-		echo $r->additionalDiscountsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->access, $v->discount, $v->calculation_type, $v->quantity_from, /*$v->quantity_to*/ 0, $v->valid_from, $v->valid_to, 0);
+		
+		if ((int)$v->id > 0) {
+			$activeGroups	= PhocacartGroup::getGroupsById((int)$v->id, 4, 1);
+		}
+		
+		if (empty($activeGroups)) {
+			$activeGroups	= PhocacartGroup::getDefaultGroup(1);
+		}
+		
+		
+		echo $r->additionalDiscountsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->access, $activeGroups, $v->discount, $v->calculation_type, $v->quantity_from, /*$v->quantity_to*/ 0, $v->valid_from, $v->valid_to, 0);
 		$i++;
 	} 
 }
 	
-$newRow = $r->additionalDiscountsRow('\' + phRowCountDiscount +  \'', '', '', '', '', '', '', '', '', '', '', 1);
+$newRow = $r->additionalDiscountsRow('\' + phRowCountDiscount +  \'', '', '', '', '', PhocacartGroup::getDefaultGroup(1), '', '', '', '', '', '', 1);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 
 $newHeader	= '';
@@ -306,6 +339,22 @@ echo '</div>'. "\n";
 
 echo '<div class="tab-pane" id="size">'. "\n";
 $formArray = array ('length', 'width', 'height', 'weight', 'volume', 'unit_amount', 'unit_unit',);
+echo $r->group($this->form, $formArray);
+echo '</div>'. "\n";
+
+// REWARD POINTS
+echo '<div class="tab-pane" id="reward">'. "\n";
+
+$idMd = 'phEditProductPointGroupModal';
+$textButton = 'COM_PHOCACART_CUSTOMER_GROUP_RECEIVED_POINTS';
+$w = 500;
+$h = 400;
+
+$linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpointgroup&tmpl=component&id='.(int)$this->item->id  );
+echo '<div class="ph-float-right"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></div>';
+echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
+
+$formArray = array ('points_needed', 'points_received');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 

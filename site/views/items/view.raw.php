@@ -35,8 +35,6 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
 		//$this->t['description']			= $this->p->get( 'description', '' );
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
-		$this->t['equal_height']			= $this->p->get( 'equal_height', 0 );
 		$this->t['image_width_cat']			= $this->p->get( 'image_width_cat', '' );
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
@@ -50,7 +48,6 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['fade_in_action_icons']	= $this->p->get( 'fade_in_action_icons', 0 );
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
-		$this->t['load_chosen']				= $this->p->get( 'load_chosen', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
@@ -58,7 +55,8 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
 		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
-		
+		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
+		$this->t['display_addtocart_icon']	= $this->p->get( 'display_addtocart_icon', 0 );
 		
 		if ($this->t['hide_addtocart'] == 1) {
 			$this->t['category_addtocart']		= 0;
@@ -84,14 +82,25 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute(0));
 		$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute(0));
 		$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
-		$this->t['class_thumbnail'] = $this->t['fade_in_action_icons'] ? '' : 'thumbnail';
-		$this->t['row-flex'] 		= $this->t['equal_height'] ? 'row-flex' : '';
+		$this->t['pathcat'] 		= PhocacartPath::getPath('categoryimage');
+		$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');
+		
+		$media 						= new PhocacartRenderMedia();
+		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
+		$this->t['class_thumbnail'] = $media->loadProductHover();
 		
 		
-		$this->t['pathcat'] = PhocacartPath::getPath('categoryimage');
-		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
+	
 		
 		//$model->hit((int)$this->t['categoryid']);
+		
+		// Plugins ------------------------------------------
+		JPluginHelper::importPlugin('pcv');
+		$this->t['dispatcher']	= JEventDispatcher::getInstance();
+		$this->t['event']		= new stdClass;
+			
+		// Foreach values are rendered in default foreaches
+		// END Plugins --------------------------------------
 		
 		parent::display($tpl);
 		

@@ -67,7 +67,7 @@ if (!empty($this->t['items'])) {
 		$c['title'] .= '</td>';
 		
 		if ($this->t['hide_price'] != 1) {
-			$c['price'] .= '<td class="ph-right">'.$price->getPriceFormat($v['price']).'</td>';
+			$c['price'] .= '<td class="ph-right">'.$price->getPriceItem($v['price'], $v['group_price']).'</td>';
 		}
 	
 		$c['remove'] .= '<td>';
@@ -78,7 +78,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<input type="hidden" name="option" value="com_phocacart" />';
 		$c['remove'] .= '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		$c['remove'] .= '<div class="ph-center">';
-		$c['remove'] .= '<button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-remove"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
+		$c['remove'] .= '<button type="submit" class="btn btn-danger ph-btn"><span class="glyphicon glyphicon-remove"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
 		$c['remove'] .= '</div>';
 		$c['remove'] .= JHtml::_('form.token');
 		$c['remove'] .= '</form>';

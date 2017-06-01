@@ -51,6 +51,23 @@ if ($this->a->confirm == 1) {
 		
 		echo '<div class="ph-cb">&nbsp;</div>';
 		
+		if ($this->t['enable_captcha_checkout']) {
+			echo '<div class="col-sm-12 col-md-12 ">';
+			
+			echo '<div class="control-group">';
+			echo '<div class="control-label">';
+			echo '<label id="jform_question_captcha-lbl" for="jform_question_captcha" class="hasPopover required" title="" data-content="Please prove that you are human" data-original-title="Security Check">Security Check<span class="star">&nbsp;*</span></label>';
+			echo '</div>';
+			
+			echo '<div class="controls">'.PhocacartCaptchaRecaptcha::render().'</div>';
+			
+			echo '</div>';// end group
+			
+			echo '</div>';// end col
+			
+			echo '<div class="ph-cb">&nbsp;</div>';
+		}
+		
 		
 		echo '<div class="col-sm-12 col-md-12 ">';
 		

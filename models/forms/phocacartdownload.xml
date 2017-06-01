@@ -14,7 +14,7 @@
 
 <field name="download_hits" type="text" default="" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC"   />
 
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
 
 

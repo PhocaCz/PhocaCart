@@ -12,10 +12,11 @@ $layoutV	= new JLayoutFile('button_category_view', null, array('component' => 'c
 
 echo '<div id="ph-pc-categories-box" class="pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
+echo $this->t['event']->onCategoriesBeforeHeader;
 echo PhocacartRenderFront::renderHeader();
 
 if ( $this->t['main_description'] != '') {
-	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->t['main_description']). '</div>';
+	echo '<div class="ph-desc">'. $this->t['main_description']. '</div>';
 }
 if (!empty($this->t['categories'])) {
 	echo '<div class="ph-categories">';

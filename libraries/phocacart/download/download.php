@@ -178,7 +178,7 @@ class PhocacartDownload
 		self::hit($id);
 		
 		/*if ((int)$params->get('send_mail_download', 0) > 0) {
-			PhocaCartMail::sendMail((int)$params->get('send_mail_download', 0), $fileWithoutPath, 1);
+			PhocacartMail::sendMail((int)$params->get('send_mail_download', 0), $fileWithoutPath, 1);
 		}*/
 		
 		

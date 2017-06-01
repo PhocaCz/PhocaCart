@@ -68,7 +68,7 @@ class PhocacartRegion
 		} else {
 			$items = $db->loadObjectList();
 		}	
-	
+
 		return $items;
 	}
 	

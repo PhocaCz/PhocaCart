@@ -30,11 +30,14 @@ class com_phocacartInstallerScript
 		$folder[3][0]	=	'phocacartdownloadpublic' ;
 		$folder[3][1]	= 	JPATH_ROOT . '/' . $folder[3][0];
 		
-		$folder[4][0]	=	'plugins/pcp' ;
+		$folder[4][0]	=	'plugins/pcs' ; // Shipping
 		$folder[4][1]	= 	JPATH_ROOT . '/' . $folder[4][0];
 		
-		$folder[5][0]	=	'plugins/pcp' ;
+		$folder[5][0]	=	'plugins/pcp' ; // Payment 
 		$folder[5][1]	= 	JPATH_ROOT . '/' . $folder[5][0];
+		
+		$folder[6][0]	=	'plugins/pcv' ; // View 
+		$folder[6][1]	= 	JPATH_ROOT . '/' . $folder[6][0];
 		
 		$message = '';
 		$error	 = array();
@@ -107,11 +110,14 @@ class com_phocacartInstallerScript
 		$folder[3][0]	=	'phocacartdownloadpublic' ;
 		$folder[3][1]	= 	JPATH_ROOT . '/' . $folder[3][0];
 		
-		$folder[4][0]	=	'plugins/pcp' ;
+		$folder[4][0]	=	'plugins/pcs' ;
 		$folder[4][1]	= 	JPATH_ROOT . '/' . $folder[4][0];
 		
 		$folder[5][0]	=	'plugins/pcp' ;
 		$folder[5][1]	= 	JPATH_ROOT . '/' . $folder[5][0];
+		
+		$folder[6][0]	=	'plugins/pcv' ;
+		$folder[6][1]	= 	JPATH_ROOT . '/' . $folder[6][0];
 		
 		$message = '';
 		$error	 = array();

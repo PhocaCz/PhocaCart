@@ -67,15 +67,33 @@ if ($this->a->addressedit == 1) {
 	echo '<div class="ph-checkout-box-action">';
 	echo '<div id="ph-request-message" style="display:none"></div>';
 	
-	echo '<div class="col-sm-6 col-md-6 ph-checkout-billing-row"  >';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_BILLING_ADDRESS').'</div>';
-	echo $this->t['dataaddressoutput']['b'];
-	echo '</div>';// end row
 	
-	echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" >';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
-	echo $this->t['dataaddressoutput']['s'];
-	echo '</div><div class="ph-cb"></div>';// end row
+	
+	if (isset($this->t['dataaddressoutput']['bsch']) && $this->t['dataaddressoutput']['bsch'] == 1) {
+		
+		echo '<div class="col-sm-12 col-md-12 ph-checkout-billing-row"  >';
+		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</div>';
+		echo $this->t['dataaddressoutput']['b'];
+		echo '</div>';// end row
+	
+		//echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" >';
+		//echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
+		//echo JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME');
+		//echo '</div>';
+		
+	} else {
+		
+		echo '<div class="col-sm-6 col-md-6 ph-checkout-billing-row"  >';
+		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_BILLING_ADDRESS').'</div>';
+		echo $this->t['dataaddressoutput']['b'];
+		echo '</div>';// end row
+	
+		echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" >';
+		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
+		echo $this->t['dataaddressoutput']['s'];
+		echo '</div>';
+	}
+	echo '<div class="ph-cb"></div>';// end row
 	
 	
 	echo '<div class="ph-cb"></div>';

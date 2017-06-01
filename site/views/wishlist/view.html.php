@@ -27,7 +27,6 @@ class PhocaCartViewWishList extends JViewLegacy
 
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
 		//$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
 		//$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
@@ -77,9 +76,8 @@ class PhocaCartViewWishList extends JViewLegacy
 		}
 		
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		//$media->loadChosen($this->t['load_chosen']);
-		//$media->loadEqualHeights($this->t['equal_height']);
+		$media->loadBootstrap();
+
 		
 		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		$this->_prepareDocument();

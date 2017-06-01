@@ -50,7 +50,7 @@ class PhocaCartCpViewPhocaCartFormfields extends JViewLegacy
 		JToolbarHelper::title( JText::_( $this->t['l'].'_FORM_FIELDS' ), 'list-alt' );
 	
 		if ($canDo->get('core.create')) {
-			//JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 	
 		if ($canDo->get('core.edit')) {
@@ -64,7 +64,7 @@ class PhocaCartCpViewPhocaCartFormfields extends JViewLegacy
 		}
 	
 		if ($canDo->get('core.delete')) {
-			//JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartformfields.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS_MAY_MEAN_DELETING_USER_DATA', 'phocacartformfields.delete', $this->t['l'].'_DELETE');
 		}
 		
 		
@@ -82,6 +82,7 @@ class PhocaCartCpViewPhocaCartFormfields extends JViewLegacy
 			'a.display_shipping' 			=> JText::_($this->t['l'] . '_FORM_DISPLAY_SHIPPING'),
 			'a.display_account' 			=> JText::_($this->t['l'] . '_FORM_DISPLAY_ACCOUNT'),
 			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
+			'a.required' 		=> JText::_($this->t['l'] . '_REQUIRED'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);
 	}

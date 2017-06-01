@@ -29,6 +29,7 @@ class PhocacartOrderRender
 		$store_title			= $paramsC->get( 'store_title', '' );
 		$store_logo				= $paramsC->get( 'store_logo', '' );
 		$store_info				= $paramsC->get( 'store_info', '' );
+		$store_info				= PhocacartRenderFront::renderArticle($store_info);
 		$invoice_prefix			= $paramsC->get( 'invoice_prefix', '');
 		$invoice_number_format	= $paramsC->get( 'invoice_number_format', '{prefix}{orderdate}{orderid}');
 		$invoice_number_chars	= $paramsC->get( 'invoice_number_chars', 12);
@@ -60,6 +61,7 @@ class PhocacartOrderRender
 		}
 		
 		$bas		= $order->getItemBaS($id, 1);
+		
 		
 		$products 	= $order->getItemProducts($id);
 		$discounts	= $order->getItemProductDiscounts($id, 1);
@@ -271,64 +273,72 @@ class PhocacartOrderRender
 		
 		// --------
 		// BILLING
-		$o[] = '<tr><td colspan="5" '.$bBox.' ><div '.$bBoxIn.'>';
-		
+		$ob = array();
 		if (!empty($bas['b'])) {
 			$v = $bas['b'];
-			if ($v['company'] != '') { $o[] = '<b>'.$v['company'].'</b><br />';}
+			if ($v['company'] != '') { $ob[] = '<b>'.$v['company'].'</b><br />';}
 			$name = array();
 			if ($v['name_degree'] != '') { $name[] = $v['name_degree'];}
 			if ($v['name_first'] != '') { $name[] = $v['name_first'];}
 			if ($v['name_first'] != '') { $name[] = $v['name_middle'];}
 			if ($v['name_first'] != '') { $name[] = $v['name_last'];}
-			if (!empty($name)) {$o[] = '<b>' . implode("\n", $name).'</b><br />';}
-			if ($v['address_1'] != '') { $o[] = $v['address_1'].'<br />';}
-			if ($v['address_2'] != '') { $o[] = $v['address_2'].'<br />';}
+			if (!empty($name)) {$ob[] = '<b>' . implode("\n", $name).'</b><br />';}
+			if ($v['address_1'] != '') { $ob[] = $v['address_1'].'<br />';}
+			if ($v['address_2'] != '') { $ob[] = $v['address_2'].'<br />';}
 			$city = array();
 			if ($v['zip'] != '') { $city[] = $v['zip'];}
 			if ($v['city'] != '') { $city[] = $v['city'];}
-			if (!empty($city)) {$o[] = implode("\n", $city).'<br />';}
+			if (!empty($city)) {$ob[] = implode("\n", $city).'<br />';}
 			//echo '<br />';
-			if (!empty($v['regiontitle'])) {$o[] = $v['regiontitle'].'<br />';}
-			if (!empty($v['countrytitle'])) {$o[] = $v['countrytitle'].'<br />';}
+			if (!empty($v['regiontitle'])) {$ob[] = $v['regiontitle'].'<br />';}
+			if (!empty($v['countrytitle'])) {$ob[] = $v['countrytitle'].'<br />';}
 			//echo '<br />';
-			if ($v['vat_1'] != '') { $o[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
-			if ($v['vat_2'] != '') { $o[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
+			if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
+			if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
 		}
-			
-		$o[] = '</div></td>';
-		
-		$o[] = '<td colspan="2"></td>';
 		
 		// --------
 		// SHIPPING
-		$o[] = '<td colspan="5" '.$sBox.'><div '.$sBoxIn.'>';
-		
+		$os = array();
 		if (!empty($bas['s'])) {
 			$v = $bas['s'];
-			if ($v['company'] != '') { $o[] = '<b>'.$v['company'].'</b><br />';}
+			if ($v['company'] != '') { $os[] = '<b>'.$v['company'].'</b><br />';}
 			$name = array();
 			if ($v['name_degree'] != '') { $name[] = $v['name_degree'];}
 			if ($v['name_first'] != '') { $name[] = $v['name_first'];}
 			if ($v['name_first'] != '') { $name[] = $v['name_middle'];}
 			if ($v['name_first'] != '') { $name[] = $v['name_last'];}
-			if (!empty($name)) {$o[] = '<b>' . implode("\n", $name).'</b><br />';}
-			if ($v['address_1'] != '') { $o[] = $v['address_1'].'<br />';}
-			if ($v['address_2'] != '') { $o[] = $v['address_2'].'<br />';}
+			if (!empty($name)) {$os[] = '<b>' . implode("\n", $name).'</b><br />';}
+			if ($v['address_1'] != '') { $os[] = $v['address_1'].'<br />';}
+			if ($v['address_2'] != '') { $os[] = $v['address_2'].'<br />';}
 			$city = array();
 			if ($v['zip'] != '') { $city[] = $v['zip'];}
 			if ($v['city'] != '') { $city[] = $v['city'];}
-			if (!empty($city)) {$o[] = implode("\n", $city).'<br />';}
+			if (!empty($city)) {$os[] = implode("\n", $city).'<br />';}
 			//echo '<br />';
-			if (!empty($v['regiontitle'])) {$o[] = $v['regiontitle'].'<br />';}
-			if (!empty($v['countrytitle'])) {$o[] = $v['countrytitle'].'<br />';}
+			if (!empty($v['regiontitle'])) {$os[] = $v['regiontitle'].'<br />';}
+			if (!empty($v['countrytitle'])) {$os[] = $v['countrytitle'].'<br />';}
 			//echo '<br />';
-			if ($v['vat_1'] != '') { $o[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
-			if ($v['vat_2'] != '') { $o[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
+			if ($v['vat_1'] != '') { $os[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
+			if ($v['vat_2'] != '') { $os[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
 		}
-			
-		$o[] = '</div></td></tr>';
 		
+		
+		
+		// BILLING OUTPUT
+		$o[] = '<tr><td colspan="5" '.$bBox.' ><div '.$bBoxIn.'>';
+		$o[] = implode("\n", $ob);
+		$o[] = '</div></td>';
+		$o[] = '<td colspan="2"></td>';
+		
+		// SHIPPING OUTPUT
+		$o[] = '<td colspan="5" '.$sBox.'><div '.$sBoxIn.'>';
+		if ((isset($bas['b']['ba_sa']) && $bas['b']['ba_sa'] == 1) || (isset($bas['s']['ba_sa']) && $bas['s']['ba_sa'] == 1)) {
+			$o[] = implode("\n", $ob);
+		} else {
+			$o[] = implode("\n", $os);
+		}
+		$o[] = '</div></td></tr>';
 		$o[] = '<tr><td colspan="12">&nbsp;</td></tr>';
 		
 		
@@ -473,13 +483,14 @@ class PhocacartOrderRender
 
 		$t = array();
 		$toPay = 0;
+		
 		if (!empty($total)) {
 			foreach($total as $k => $v) {
 				
 				
 				
 				
-				if($v->amount == 0) {
+				if($v->amount == 0 && $v->type != 'brutto') {
 					// Don't display coupon if null
 					
 				} else if ($v->type == 'netto' || $v->type == 'brutto') {

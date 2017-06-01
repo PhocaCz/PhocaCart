@@ -123,8 +123,7 @@ echo $r->td($download, "small ph-center");
 if ($item->type == 1) {
 	$default = '<a data-original-title="'.JText::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip" title="'.JText::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
 	echo $r->td($default, "small ph-center");
-}
-else {
+} else {
 	echo $r->td('', "small");
 }
 echo $r->td($item->id, "small ph-center");

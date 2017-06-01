@@ -40,7 +40,7 @@ class PhocaCartControllerComparison extends JControllerForm
 		ob_end_clean();
 		
 		// Render the layout
-		$d = '';
+		$d = array();
 		$layoutC	= new JLayoutFile('popup_add_to_compare', null, array('component' => 'com_phocacart'));
 		
 		$d['link_comparison'] = JRoute::_(PhocacartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
@@ -106,7 +106,7 @@ class PhocaCartControllerComparison extends JControllerForm
 		ob_end_clean();
 		
 		// Render the layout
-		$d = '';
+		$d = array();
 		$layoutC	= new JLayoutFile('popup_remove_from_compare', null, array('component' => 'com_phocacart'));
 		
 		$d['link_comparison'] = JRoute::_(PhocacartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);

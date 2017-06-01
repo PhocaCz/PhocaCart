@@ -2,12 +2,12 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>28/04/2017</creationDate>
+	<creationDate>01/06/2017</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.0.0 RC6</version>
+	<version>3.0.0 RC8</version>
 	<description>Phoca Cart</description>
 	<scriptfile>install/script.php</scriptfile>
 
@@ -71,7 +71,9 @@
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-payment.png" alt="COM_PHOCACART_PAYMENT" view="phocacartpayments" link="option=com_phocacart&amp;view=phocacartpayments">COM_PHOCACART_PAYMENT</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-currency.png" alt="COM_PHOCACART_CURRENCIES" view="phocacartcurrencies" link="option=com_phocacart&amp;view=phocacartcurrencies">COM_PHOCACART_CURRENCIES</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-tax.png" alt="COM_PHOCACART_TAXES" view="phocacarttaxes" link="option=com_phocacart&amp;view=phocacarttaxes">COM_PHOCACART_TAXES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-user.png" alt="COM_PHOCACART_USERS" view="phocacartusers" link="option=com_phocacart&amp;view=phocacartusers">COM_PHOCACART_USERS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-user.png" alt="COM_PHOCACART_CUSTOMERS" view="phocacartusers" link="option=com_phocacart&amp;view=phocacartusers">COM_PHOCACART_CUSTOMERS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-group.png" alt="COM_PHOCACART_CUSTOMER_GROUPS" view="phocacartgroups" link="option=com_phocacart&amp;view=phocacartgroups">COM_PHOCACART_CUSTOMER_GROUPS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-reward.png" alt="COM_PHOCACART_REWARD_POINTS" view="phocacartrewards" link="option=com_phocacart&amp;view=phocacartrewards">COM_PHOCACART_REWARD_POINTS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-user.png" alt="COM_PHOCACART_FORM_FIELDS" view="phocacartformfields" link="option=com_phocacart&amp;view=phocacartformfields">COM_PHOCACART_FORM_FIELDS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-review.png" alt="COM_PHOCACART_REVIEWS" view="phocacartreviews" link="option=com_phocacart&amp;view=phocacartreviews">COM_PHOCACART_REVIEWS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-coupon.png" alt="COM_PHOCACART_COUPONS" view="phocacartcoupons" link="option=com_phocacart&amp;view=phocacartcoupons">COM_PHOCACART_COUPONS</menu>

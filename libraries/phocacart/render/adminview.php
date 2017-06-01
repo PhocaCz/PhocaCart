@@ -73,7 +73,7 @@ class PhocacartRenderAdminview
 	
 	public function item($form, $item, $suffix = '', $realSuffix = 0) {
 		$value = $o = '';
-		if ($suffix != '') {
+		if ($suffix != '' && $suffix != '<small>()</small>') {
 			if ($realSuffix) {
 				$value = $form->getInput($item) .' '. $suffix;
 			} else {
@@ -81,6 +81,7 @@ class PhocacartRenderAdminview
 			}
 		} else {
 			$value = $form->getInput($item);
+			
 		}
 		$o .= '<div class="control-group">'."\n";
 		$o .= '<div class="control-label">'. $form->getLabel($item) . '</div>'."\n"
@@ -98,11 +99,11 @@ class PhocacartRenderAdminview
 		return $o;
 	}
 	
-	public function itemText($item, $label) {
+	public function itemText($item, $label, $class = '') {
 		$o = '';
 		$o .= '<div class="control-group ph-control-group-text">'."\n";
 		$o .= '<div class="control-label">'. $label . '</div>'."\n"
-		. '<div class="controls">' . $item.'</div>'."\n"
+		. '<div class="controls '.$class.'">' . $item.'</div>'."\n"
 		. '</div>' . "\n";
 		return $o;
 	}
@@ -610,15 +611,39 @@ class PhocacartRenderAdminview
 	}
 	
 	
-	
-	
-	public function additionalDiscountsRow($id, $idDb, $title, $alias, $access, $discount, $calculation_type, $quantity_from, $quantity_to, $valid_from, $valid_to, $js = 0) {
-		
+	public static function getCalendarAttributes($js = 0, $initialize = 0) {
 		
 		// Calendar
 		// Initialized only for php, not javascript
 		// we have inintialized calender in publishing options so there is no need to render it
 		// when no item loaded from php, when only javascript rows will be added
+		if ($initialize == 1) {
+			$tag       = JFactory::getLanguage()->getTag();
+			$calendar  = JFactory::getLanguage()->getCalendar();
+			$direction = strtolower(JFactory::getDocument()->getDirection());
+
+			// Get the appropriate file for the current language date helper
+			$helperPath = 'system/fields/calendar-locales/date/gregorian/date-helper.min.js';
+
+			if (!empty($calendar) && is_dir(JPATH_ROOT . '/media/system/js/fields/calendar-locales/date/' . strtolower($calendar)))
+			{
+				$helperPath = 'system/fields/calendar-locales/date/' . strtolower($calendar) . '/date-helper.min.js';
+			}
+
+			// Get the appropriate locale file for the current language
+			$localesPath = 'system/fields/calendar-locales/en.js';
+
+			if (is_file(JPATH_ROOT . '/media/system/js/fields/calendar-locales/' . strtolower($tag) . '.js'))
+			{
+				$localesPath = 'system/fields/calendar-locales/' . strtolower($tag) . '.js';
+			}
+			elseif (is_file(JPATH_ROOT . '/media/system/js/fields/calendar-locales/' . strtolower(substr($tag, 0, -3)) . '.js'))
+			{
+				$localesPath = 'system/fields/calendar-locales/' . strtolower(substr($tag, 0, -3)) . '.js';
+			}
+			JFactory::getDocument()->addScript(JURI::root(true).'/',$helperPath);
+			JFactory::getDocument()->addScript(JURI::root(true).'/',$localesPath);
+		}
 		if ($js == 0) {
 			JHtml::_('jquery.framework');
 			JHtml::_('script', 'system/html5fallback.js', false, true);
@@ -627,41 +652,44 @@ class PhocacartRenderAdminview
 		$attributes['maxlength'] 	= 30;
 		$attributes['class'] 		= "input-mini";
 		
+		return $attributes;
+	}
+	
+	public static function getCalendarDate($dateCustom) {
+		
 		$config = JFactory::getConfig();
 		$user 	= JFactory::getUser();
 		$filter = 'USER_UTC';//'SERVER_UTC'
 		
 		switch (strtoupper($filter)){
 			case 'SERVER_UTC':
-				if ($valid_from && $valid_from != JFactory::getDbo()->getNullDate()) {
-					$date = JFactory::getDate($valid_from, 'UTC');
+				if ($dateCustom && $dateCustom != JFactory::getDbo()->getNullDate()) {
+					$date = JFactory::getDate($dateCustom, 'UTC');
 					$date->setTimezone(new DateTimeZone($config->get('offset')));
-					$valid_from = $date->format('Y-m-d H:i:s', true, false);
-				}
-				
-				if ($valid_to && $valid_to != JFactory::getDbo()->getNullDate()) {
-					$date = JFactory::getDate($valid_to, 'UTC');
-					$date->setTimezone(new DateTimeZone($config->get('offset')));
-					$valid_to = $date->format('Y-m-d H:i:s', true, false);
+					$dateCustom = $date->format('Y-m-d H:i:s', true, false);
 				}
 			break;
 
 			case 'USER_UTC':
-				if ($valid_from && $valid_from != JFactory::getDbo()->getNullDate()) {
-					$date = JFactory::getDate($valid_from, 'UTC');
+				if ($dateCustom && $dateCustom != JFactory::getDbo()->getNullDate()) {
+					$date = JFactory::getDate($dateCustom, 'UTC');
 					$date->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
-					$valid_from = $date->format('Y-m-d H:i:s', true, false);
-				}
-				if ($valid_to && $valid_to != JFactory::getDbo()->getNullDate()) {
-					$date = JFactory::getDate($valid_to, 'UTC');
-					$date->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
-					$valid_to = $date->format('Y-m-d H:i:s', true, false);
+					$dateCustom = $date->format('Y-m-d H:i:s', true, false);
 				}
 			break;
 		}
-		// End calendar
-		
+		return $dateCustom;
+	}
 	
+	
+	public function additionalDiscountsRow($id, $idDb, $title, $alias, $access, $group, $discount, $calculation_type, $quantity_from, $quantity_to, $valid_from, $valid_to, $js = 0) {
+		
+		
+		// Calendar
+		$attributes = self::getCalendarAttributes($js);
+		$valid_from = self::getCalendarDate($valid_from);
+		$valid_to	= self::getCalendarDate($valid_to);
+		
 
 		$calcTypeArray	= PhocacartUtilsSettings::getDiscountCalculationTypeArray();
 		if ($calculation_type == '') {
@@ -698,12 +726,16 @@ class PhocacartRenderAdminview
 		. JHtml::_('access.level', 'pformdisc['.$id.'][access]', (int)$access, 'class="input input-small"', array(), 'jform_discaccess'.$id)
 		.'</div>'
 		
+		.'<div class="col-xs-12 col-sm-1 col-md-1">'	
+		. PhocacartGroup::getAllGroupsSelectBox('pformdisc['.$id.'][groups][]', 'jform_discaccess'.$id, $group, NULL, 'id', 'class="input input-small" size="4" multiple="multiple"' )
+		.'</div>'
+		
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
 		.'<input id="jform_discdiscount'.$id.'" name="pformdisc['.$id.'][discount]" value="'.htmlspecialchars($discount).'" class="inputbox input-mini"  type="text">'
 		.'</div>'
 		
-		.'<div class="col-xs-12 col-sm-2 col-md-2">'
-		. JHtml::_('select.genericlist', $calcTypeArray, 'pformdisc['.$id.'][calculation_type]', 'class="input input-medium"', 'value', 'text', (int)$calculation_type, 'jform_disccalculation_type'.$id)
+		.'<div class="col-xs-12 col-sm-1 col-md-1">'
+		. JHtml::_('select.genericlist', $calcTypeArray, 'pformdisc['.$id.'][calculation_type]', 'class="input input-small"', 'value', 'text', (int)$calculation_type, 'jform_disccalculation_type'.$id)
 		.'</div>'
 		
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
@@ -792,8 +824,9 @@ class PhocacartRenderAdminview
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_TITLE') . '</div>'
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_ALIAS') . '</div>'
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_ACCESS') . '</div>'
+		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_GROUP') . '</div>'
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_DISCOUNT') . '</div>'
-		. '<div class="col-xs-12 col-sm-2 col-md-2">'. JText::_('COM_PHOCACART_CALCULATION_TYPE') . '</div>';
+		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_CALCULATION_TYPE') . '</div>';
 		
 		/*. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_QUANTITY_FROM') . '</div>'
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_QUANTITY_TO') . '</div>'*/
@@ -802,6 +835,61 @@ class PhocacartRenderAdminview
 		. '<div class="col-xs-12 col-sm-2 col-md-2">'. JText::_('COM_PHOCACART_VALID_TO') . '</div>'
 		. '<div class="col-xs-12 col-sm-1 col-md-1">&nbsp;</div>'
 		.'</div><div class="ph-cb"></div>'."\n";
+		return $o;
+	}
+	
+	
+	public function additionalPricehistoryRow($id, $idDb, $price, $date, $productId, $js = 0) {
+		
+		
+		// Calendar
+		$date 					= self::getCalendarDate($date);
+		$attributes 			= self::getCalendarAttributes($js);
+		$attributes['class'] 	= "input";
+		
+		$o				= '';
+
+		// Will be displayed inside Javascript
+		$o .= '<div class="ph-pricehistory-box" id="phPricehistoryBox'.$id.'">';
+
+		$o .= '<div class="ph-row-pricehistory'.$id.' ph-row-pricehistory" id="phrowpricehistory'.$id.'" >';
+		
+		
+		
+		$o .= '<div class="col-xs-12 col-sm-3 col-md-3">';
+		$o .= JHtml::_('calendar', $date, 'jform['.$id.'][date]', 'jform_date'.$id, '%Y-%m-%d', $attributes);
+		$o .= '</div>';
+
+		// Set value from database
+		$priceN = '';
+		if (isset($price)) {
+			$priceN = $price;
+			if ($priceN > 0 || $priceN == 0) {
+				$priceN = PhocacartPrice::cleanPrice($priceN);
+			}
+		}
+		$o .= '<div class="col-xs-12 col-sm-2 col-md-2">';
+		$o .= '<input type="text" class="input-small" name="jform['.$id.'][price]" value="'.$priceN.'" />';
+		$o .= '<input type="hidden" name="jform['.$id.'][product_id]" value="'.$productId.'" />';
+		$o .= '</div>';
+		
+		
+		
+
+		$o .= '<div class="col-xs-12 col-sm-1 col-md-1">'
+		.'<div class="ph-float-icon-l"><a class="btn btn-transparent" href="#" onclick="phRemoveRowPricehistory('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_PRICE').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
+		.'<div class="ph-cb ph-pad-b"></div>';
+		$o .= '</div>';
+		
+		$o .= '<div class="col-xs-12 col-sm-6 col-md-6">';
+		$o .= '</div>';
+		
+		$o .= '</div>';
+		$o .= '</div>';
+		
+		$o .= '<div class="ph-cb"></div>'."\n";
+		
+		
 		return $o;
 	}
 	
@@ -934,6 +1022,7 @@ class PhocacartRenderAdminview
 		
 		$paramsC 		= JComponentHelper::getParams('com_phocacart');
 		$enable_wizard	= $paramsC->get( 'enable_wizard', 1 );
+
 		
 		
 		// We have two evens when clicking on start wizard button

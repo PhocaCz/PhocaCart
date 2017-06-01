@@ -69,6 +69,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		$wheres				= array();
 		$user 				= JFactory::getUser();
 		$userLevels			= implode (',', $user->getAuthorisedViewLevels());
+		$userGroups 		= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$app				= JFactory::getApplication();
 		$params 			= $app->getParams();
 		
@@ -104,6 +105,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		}
 		
 		$wheres[] = " c.access IN (".$userLevels.")";
+		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		
 		/*$query =  " SELECT c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc"
 		. " FROM #__phocacart_categories AS c"
@@ -119,7 +121,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
 		//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1"
 		//. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
-		
+		. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 		. " WHERE " . implode( " AND ", $wheres )
 		. " GROUP BY c.id"
 		. " ORDER BY ".$categoriesOrdering;
@@ -129,7 +131,8 @@ class PhocaCartModelCategories extends JModelLegacy
 						 #__phocacart_categories as s
 						 on s.parent_id = c.id
 					group by c.id";*/
-					
+			
+	
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}

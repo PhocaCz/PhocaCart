@@ -31,6 +31,8 @@ if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $th
 	}
 }
 
+echo $this->t['event']->onItemsBeforeHeader;
+
 $title = '';
 if (isset($this->category[0]->title) && $this->category[0]->title != '') {
 	$title = $this->category[0]->title;

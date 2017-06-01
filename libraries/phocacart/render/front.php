@@ -241,13 +241,20 @@ class PhocacartRenderFront
 		return false;
 	}
 	
-	public static function renderMessageQueue($msg = '') {
+	/*
+	 * if the message type is "order" then display this error message only in case there is no other message
+	 */
+	
+	public static function renderMessageQueue($msg = '', $type = '') {
 		$app	= JFactory::getApplication();
 		$m 		= $app->getMessageQueue();
 		$mO = '';
-		 if (!empty($m)) {
+		
+		
+		
+		if (!empty($m)) {
 			$mO .= '<ul id="system-messages">';
-			if ($msg != '') {
+			if ($msg != '' && $type != 'order') {
 				$mO .=  '<li class="ph-msg-error">' . $msg . '</li>';  
 			}
 			
@@ -255,6 +262,10 @@ class PhocacartRenderFront
 				$mO .=  '<li class="' . $v['type'] . ' ph-msg-error">' . $v['message'] . '</li>';      
 		   }
 		   $mO .=  '</ul>';
+		} else {
+			$mO .= '<ul id="system-messages">';
+			$mO .= '<li class="ph-msg-error">' . $msg . '</li>';  
+			$mO .= '</ul>';
 		}
 		
 		return $mO;
@@ -380,6 +391,19 @@ class PhocacartRenderFront
 			return $item->title;
 		}
 		return '';
+	}
+	
+	public static function renderArticle($id) {
+		$o = '';
+		if ((int)$id > 0) {
+			$db		= JFactory::getDBO();
+			$query	= 'SELECT a.introtext, a.fulltext FROM #__content AS a WHERE id = '.(int)$id;
+			$db->setQuery((string)$query);
+			$a = $db->loadObject();
+			$o = $a->introtext . $a->fulltext;
+			$o = JHTML::_('content.prepare', $o);
+		}
+		return $o;
 	}
 	
 }

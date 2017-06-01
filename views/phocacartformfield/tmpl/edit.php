@@ -43,7 +43,7 @@ echo $r->item($this->form, 'label', '<small>('.JText::_($this->form->getValue('l
 
 echo $r->item($this->form, 'description', '<small>('.JText::_($this->form->getValue('description')).')</small>', 1);
 
-$formArray = array ('type', 'default', 'class', 'read_only', 'additional', 'validate', 'unique', 'ordering', 'access');
+$formArray = array ('type', 'default', 'class', 'required', 'read_only', 'additional', 'validate', 'unique', 'ordering', 'access', 'group');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 

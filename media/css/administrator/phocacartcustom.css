@@ -58,6 +58,14 @@
 	text-shadow: none !important;
 }
 
+.btn-toolbar .btn.btn-primary {
+	color: #fff !important;
+	background-color: #3BAFDA !important;
+	
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
 .btn {
 	border: 1px solid #DEDEDE !important;
 	background: #fff !important;
@@ -90,7 +98,7 @@
 .btn-success:hover, .btn-success:focus {
 	 background-color: #00B19D !important;
 	 border-color: #00B19D !important;
-	 border: 1px solid #00B19D  !important;
+	 border: 0px solid #00B19D  !important;
 }
 
 /*
@@ -170,7 +178,7 @@
 
 .controls .btn-group > .btn:first-child {
 	border-radius: 3px 0px 0px 3px !important;
-	background: red !important;
+	
 }
 
 .controls .btn-group > .btn:nth-child(4) {

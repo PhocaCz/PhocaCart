@@ -17,6 +17,7 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 		$this->registerTask('hidebilling',	'displaybilling');
 		$this->registerTask('hideshipping',	'displayshipping');
 		$this->registerTask('hideaccount',	'displayaccount');
+		$this->registerTask('disablerequired',	'enablerequired');
 	
 	}
 
@@ -83,15 +84,44 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 	}
 	
-	function displayaccount() {
+	function enablerequired() {
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
+		$app	= JFactory::getApplication();
+		$cid	= $app->input->get('cid', array(), '', 'array');
+		$data	= array('enablerequired' => 1, 'disablerequired' => 0);
+		$task 	= $this->getTask();
+		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
+
+		if (empty($cid)) {
+			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
+		} else {
+			$model = $this->getModel();
+			JArrayHelper::toInteger($cid);
+			if (!$model->displayItem($cid, $value, 'required')) {
+				$app->enqueueMessage($model->getError(), 'error');
+			} else {
+				if ($value == 1) {
+					$ntext = $this->text_prefix.'_N_ITEMS_MADE_REQUIRED';
+				} else if ($value == 0) {
+					$ntext = $this->text_prefix.'_N_ITEMS_MADE_NOT_REQUIRED';
+				} 
+				$this->setMessage(JText::plural($ntext, count($cid)));
+			}
+		}
+		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
+	}
+	
+	function displayaccount() {
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		
 		$app	= JFactory::getApplication();
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayaccount' => 1, 'hideaccount' => 0);
 		$task 	= $this->getTask();
 		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
 
+	
 		if (empty($cid)) {
 			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {

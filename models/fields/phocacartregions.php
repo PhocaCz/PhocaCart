@@ -39,7 +39,7 @@ class JFormFieldPhocacartRegions extends JFormField
 		if ((int)$id > 0) {
 			$activeRegions	= PhocacartRegion::getRegions($id, 1, $table);
 		}
-			
+	
 		return PhocacartRegion::getAllRegionsSelectBox($this->name.'[]', $this->id, $activeRegions, NULL,'id' );
 	}
 }

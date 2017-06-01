@@ -39,6 +39,9 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
+		
+		$user = $app->getUserStateFromRequest($this->context.'.filter.user', 'filter_user');
+		$this->setState('filter.user', $user);
 
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
@@ -56,13 +59,14 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.title', 'asc');
+		parent::populateState('u.name', 'asc');
 	}
 	
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
+		$id	.= ':'.$this->getState('filter.user');
 		//$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.user_id');
@@ -103,6 +107,15 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
+		
+		
+		
+		$query->select('GROUP_CONCAT(DISTINCT g.title) AS groups');
+		$query->join('LEFT', '#__phocacart_item_groups AS ug ON ug.item_id=u.id AND ug.type = 1');
+		$query->join('LEFT', '#__phocacart_groups AS g ON g.id=ug.group_id');
+		
+		
+	
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = '.(int) $access);
@@ -137,10 +150,17 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		// We have two rows for one customer - for billing and shipping address, but we need to list only one
 		//$query->where('a.type = 0');
 		
-		$query->where('u.name <> '.$db->quote('Super User'));
+		//$query->where('u.name <> '.$db->quote('Super User'));
 		$query->group('u.id');
+		
+		$user = $this->getState('filter.user');
+		if (!empty($user)){
+			$query->select('u2.name AS user_name_selected');
+			$query->join('LEFT', '#__users AS u2 ON u2.id=a.user_id');
+			$query->where('( u.id = '.(int)$user.')');
+		}
 	
-		$orderCol	= $this->state->get('list.ordering', 'title');
+		$orderCol	= $this->state->get('list.ordering', 'u.name');
 		$orderDirn	= $this->state->get('list.direction', 'u.name');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 

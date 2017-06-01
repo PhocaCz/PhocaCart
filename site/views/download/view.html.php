@@ -33,14 +33,8 @@ class PhocaCartViewDownload extends JViewLegacy
 
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
-		$this->t['load_bootstrap']			= $this->p->get( 'load_bootstrap', 0 );
 		$this->t['download_days']			= $this->p->get( 'download_days', 0 );
 		$this->t['download_count']			= $this->p->get( 'download_count', 0 );
-		/*$this->t['main_description']		= $this->p->get( 'main_description', '' );
-		$this->t['equal_height']			= $this->p->get( 'equal_height', 1 );
-		$this->t['columns_cats']			= $this->p->get( 'columns_cats', 3 );
-		$this->t['image_width_cat']			= $this->p->get( 'image_width_cat', '' );
-		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );*/
 		
 		$uri 						= JFactory::getURI();
 		$this->t['action']			= $uri->toString();
@@ -48,10 +42,8 @@ class PhocaCartViewDownload extends JViewLegacy
 		$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute());
 		
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap($this->t['load_bootstrap']);
-		//$media->loadChosen($this->t['load_chosen']);
-		//$media->loadEqualHeights($this->t['equal_height']);
-		
+		$media->loadBootstrap();
+
 		$this->t['pathfile'] = PhocacartPath::getPath('productfile');
 		$this->_prepareDocument();
 		parent::display($tpl);

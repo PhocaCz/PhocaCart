@@ -64,7 +64,7 @@ class PhocaCartCpModelPhocacartDiscounts extends JModelList
 		$id	.= ':'.$this->getState('filter.search');
 		//$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.state');
-		$id	.= ':'.$this->getState('filter.status_id');
+		$id	.= ':'.$this->getState('filter.discount_id');
 		return parent::getStoreId($id);
 	}
 	

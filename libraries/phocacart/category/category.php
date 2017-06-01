@@ -286,7 +286,9 @@ final class PhocacartCategory
 			$wheres			= array();
 			$user 			= JFactory::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
+			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres[] 		= " c.access IN (".$userLevels.")";
+			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
 			
 			if ($display != '') {
@@ -298,6 +300,7 @@ final class PhocacartCategory
 			
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
@@ -320,7 +323,9 @@ final class PhocacartCategory
 			$wheres			= array();
 			$user 			= JFactory::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
+			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres[] 		= " c.access IN (".$userLevels.")";
+			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
 			
 			if ($display != '') {
@@ -332,6 +337,7 @@ final class PhocacartCategory
 			
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );

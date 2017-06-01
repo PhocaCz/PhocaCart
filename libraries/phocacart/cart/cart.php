@@ -36,6 +36,7 @@ class PhocacartCart
 	protected $couponvalid 			= 0;// is the coupon valid - all three tests - basic, advanced, total*/
 	
 	protected $coupon				= array();
+	protected $reward				= array();
 	protected $cartdiscount			= array();
 	protected $shipping				= array();
 	protected $payment				= array();
@@ -56,6 +57,9 @@ class PhocacartCart
 		$this->coupon['id']			= 0;
 		$this->coupon['title']		= '';
 		$this->coupon['valid']		= 0;
+		$this->coupon['code']		= '';
+		
+		$this->reward['used']		= '';
 		
 		$this->cartdiscount['id']	= 0;
 		$this->cartdiscount['title']= '';
@@ -69,7 +73,7 @@ class PhocacartCart
 		$this->payment['costs']				= 0;
 		$this->payment['calculation_type']	= 0;
 		
-		// TODO set to zero
+		
 		$this->stock['valid']			= 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
 		$this->minqty['valid']			= 1;// check minimum order quantity
 		$this->minmultipleqty['valid']	= 1;// check minimum multiple order quantity
@@ -93,11 +97,12 @@ class PhocacartCart
 			$this->items 			= $cartDb['cart'];
 			$this->coupon['id']		= $cartDb['coupon'];
 			$this->coupon['title']	= $cartDb['coupontitle'];
+			$this->coupon['code']	= $cartDb['couponcode'];
 			$this->shipping['id']	= $cartDb['shipping'];
 			$this->payment['id']	= $cartDb['payment'];
 			$this->payment['title']	= $cartDb['paymenttitle'];
 			$this->payment['method']= $cartDb['paymentmethod'];
-			
+			$this->reward['used']	= $cartDb['reward'];
 			$sessionItems = $session->get('cart', array(), 'phocaCart');
 			
 			if(empty($this->items)) {
@@ -142,6 +147,7 @@ class PhocacartCart
 			///$k = (int)$id . ':';
 			
 			$checkP = PhocacartProduct::checkIfAccessPossible($id, $catid);
+			
 			if (!$checkP) {	
 				$uri 			= JFactory::getURI();
 				$action			= $uri->toString();
@@ -279,7 +285,7 @@ class PhocacartCart
 	 */
 	public function setFullItems() {
 		
-		// posible todo fullitems[1];
+		// posible to do fullitems[1];
 		if (empty($this->fullitems)) {
 			if(!empty($this->items)) {
 			
@@ -289,28 +295,72 @@ class PhocacartCart
 				
 				$price	= new PhocacartPrice();
 				$calc 	= new PhocacartCartCalculation();
-
+				
+				
+				// CHECK ACCESS OF ALL ITEMS IN CART
+				foreach($this->items as $k => $v) {
+					$item 	= explode(':', $k);
+					$itemId = $item[0];
+					$checkP = PhocacartProduct::checkIfAccessPossible((int)$itemId, (int)$v['catid']);
+			
+					if (!$checkP){
+						unset($this->items[$k]);
+					}
+				}
+				if(empty($this->items)) {
+					return false;
+				}
+				// END ACCESS
 				
 				// --------------------
 				// 1) Basic Calculation
+				// --------------------
 				$calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
 				
 				//$calc->round($this->total[1]);
 				
-				$this->fullitems[0] 		= $this->fullitems[4] 		= $this->fullitems[3] 		= $this->fullitems[2] 		= $this->fullitems[1];
-				$this->fullitemsgroup[0]	= $this->fullitemsgroup[4] 	= $this->fullitemsgroup[3] 	= $this->fullitemsgroup[2] 	= $this->fullitemsgroup[1];
-				$this->total[0] 			= $this->total[4] 			= $this->total[3] 			= $this->total[2] 			= $this->total[1];
+				$this->fullitems[0] 		= $this->fullitems[4] 		= $this->fullitems[3] 		= $this->fullitems[2] 		
+											= $this->fullitems[5]		= $this->fullitems[1];
+				
+				$this->fullitemsgroup[0]	= $this->fullitemsgroup[4] 	= $this->fullitemsgroup[3] 	= $this->fullitemsgroup[2] 	
+											= $this->fullitemsgroup[5]	= $this->fullitemsgroup[1];
+											
+				$this->total[0] 			= $this->total[4] 			= $this->total[3] 			= $this->total[2]
+											= $this->total[5]			= $this->total[1];
+
+											
+											
+											
+				// --------------------
+				// 5) Reward Points
+				// --------------------
+				$calc->calculateRewardDiscounts($this->fullitems[5], $this->fullitemsgroup[5], $this->total[5], $this->reward);
 				
 				
-				
+				$this->fullitems[0] 		= $this->fullitems[4]		= $this->fullitems[3] 		= $this->fullitems[2]
+											= $this->fullitems[5];
+											
+				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4]	= $this->fullitemsgroup[3] 	= $this->fullitemsgroup[2]
+											= $this->fullitemsgroup[5];
+											
+				$this->total[0] 			= $this->total[4]			= $this->total[3] 			= $this->total[2]
+											= $this->total[5];
+											
+				// Subtotal after 2) Discount
+				$this->total[5]['dnetto']	= $this->total[1]['netto'] - $this->total[5]['netto'];
+				$this->total[5]['dbrutto']	= $this->total[1]['brutto'] - $this->total[5]['brutto'];
 		
-				// -------------------
+		
+		
+		
+				// --------------------
 				// 2) Product Discount
+				// --------------------
 				$calc->calculateProductDiscounts($this->fullitems[2], $this->fullitemsgroup[2], $this->total[2]);
 				
 				//$calc->round($this->total[2]);
 				
-				$this->fullitems[0] 		= $this->fullitems[4]		= $this->fullitems[3] 		= $this->fullitems[2];
+				$this->fullitems[0] 		= $this->fullitems[4]		= $this->fullitems[3] 		= $this->fullitems[2];				
 				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4]	= $this->fullitemsgroup[3] 	= $this->fullitemsgroup[2];
 				$this->total[0] 			= $this->total[4]			= $this->total[3] 			= $this->total[2];
 
@@ -318,12 +368,14 @@ class PhocacartCart
 				
 				
 				// Subtotal after 2) Discount
-				$this->total[2]['dnetto']	= $this->total[1]['netto'] - $this->total[2]['netto'];
-				$this->total[2]['dbrutto']	= $this->total[1]['brutto'] - $this->total[2]['brutto'];
+				$this->total[2]['dnetto']	= $this->total[5]['netto'] - $this->total[2]['netto'];
+				$this->total[2]['dbrutto']	= $this->total[5]['brutto'] - $this->total[2]['brutto'];
 				
 				
-				// ----------------
+				
+				// --------------------
 				// 3) Cart Discount
+				// --------------------
 				$calc->calculateCartDiscounts($this->fullitems[3], $this->fullitemsgroup[3], $this->total[3], $this->cartdiscount);
 				
 				// 3b) Cart Discount - we need to divide fixed amount discount into products which meets the rules to get each discount
@@ -345,8 +397,9 @@ class PhocacartCart
 				
 				
 				
-				// ----------------
+				// --------------------
 				// 4) Cart Coupon
+				// --------------------
 					
 				$calc->calculateCartCoupons($this->fullitems[4], $this->fullitemsgroup[4], $this->total[4], $this->coupon);
 				
@@ -358,12 +411,7 @@ class PhocacartCart
 				
 				//$calc->round($this->total[4], 4);
 				
-				
-				
-				
-				
-				
-			
+
 				
 				// Subtotal after 4) Coupon
 				$this->total[4]['dnetto']	= $this->total[3]['netto'] - $this->total[4]['netto'];
@@ -371,13 +419,15 @@ class PhocacartCart
 				
 				$calc->roundFixedAmountCoupon($this->total[4]);
 				
+				
 				$this->fullitems[0] 		= $this->fullitems[4];
 				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4];
 				$this->total[0] 			= $this->total[4];
 				
 				
 				$calc->round($this->total[0], 0);
-					
+				
+
 					
 				/*foreach($this->fullitems[0] as $k => $v) {
 					$item 	= explode(':', $k);
@@ -455,6 +505,10 @@ class PhocacartCart
 		return $this->coupon['title'];
 	}
 	
+	public function getCouponCode() {
+		return $this->coupon['code'];
+	}
+	
 	public function getCartDiscountTitle() {
 		return $this->cartdiscount['title'];
 	}
@@ -486,6 +540,17 @@ class PhocacartCart
 	
 	public function getMinimumMultipleQuantityValid() {
 		return $this->minmultipleqty['valid'];
+	}
+	
+	public function getRewardPointsNeeded() {
+		return $this->total[0]['points_needed'];
+	}
+	
+	public function getRewardPointsReceived() {
+		return $this->total[0]['points_received'];
+	}
+	public function getRewardPointsUsed() {
+		return $this->reward['used'];
 	}
 	
 	
@@ -536,7 +601,7 @@ class PhocacartCart
 			
 			$pI->freepayment = 0;
 			
-			if ($this->total[0]['free_payment'] == 1) {
+			if (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] == 1) {
 				$pI->freepayment = 1;
 			}
 		
@@ -548,7 +613,7 @@ class PhocacartCart
 			$calc 						= new PhocacartCartCalculation();
 			$this->payment['costs'] 	= $priceI;
 			
-			if ($this->total[0]['free_payment'] != 1) {
+			if (!isset($this->total[0]['free_payment']) || (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] != 1)) {
 				$this->payment['costs']['title'] 		= $pI->title;
 				$this->payment['costs']['description'] 	= $pI->description;
 			}

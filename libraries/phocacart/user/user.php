@@ -126,7 +126,13 @@ class PhocacartUser
 			
 			return $o;
 		}
-
+		
+		
+		// Billing the same like shipping
+		if ($data[0]->ba_sa == 1 || $data[0]->ba_sa == 1){
+			$o['bsch'] = 1;
+		}
+		
 		if (!empty($fields)) {
 			foreach($fields as $k => $v) {
 				
@@ -279,6 +285,28 @@ class PhocacartUser
 		return $u;
 	}
 	
+	
+	public static function getUserOrderSum($userId) {
+		
+		$total = 0;
+		if ($userId > 0) {
+			$db = JFactory::getDBO();
+		
+			$query = 'SELECT SUM(a.amount) FROM #__phocacart_order_total AS a'
+				.' LEFT JOIN #__phocacart_orders AS o ON a.order_id = o.id'
+				.' WHERE o.user_id = '.(int) $userId
+				.' AND a.type = '.$db->quote('brutto')
+				.' ORDER BY a.id';
+			$db->setQuery($query);
+			
+			
+			$total = $db->loadResult();
+			if (!$total) {
+				$total = 0;
+			}			
+		}
+		return $total;
+	}
 
 	
 	
