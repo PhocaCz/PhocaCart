@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -121,7 +123,8 @@ class PhocacartTax
 		$taxChangedA['taxtitle']	= $taxTitle;
 		
 		$app						= JFactory::getApplication();
-		$paramsC 					= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		//$paramsC 					= PhocacartUtils::getComponentParameters();
+		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate			= $paramsC->get( 'dynamic_tax_rate', 0 );
 		$dynamic_tax_rate_priority	= $paramsC->get( 'dynamic_tax_rate_priority', 1 );// country prioritized
 		
@@ -160,7 +163,7 @@ class PhocacartTax
 		
 		$user 				= JFactory::getUser();
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate	= $paramsC->get( 'dynamic_tax_rate', 0 );
 		
 		$type = 0;
@@ -194,7 +197,7 @@ class PhocacartTax
 		
 		$user 				= JFactory::getUser();
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate	= $paramsC->get( 'dynamic_tax_rate', 0 );
 		
 		$type = 0;

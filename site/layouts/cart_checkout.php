@@ -354,7 +354,7 @@ if (!empty($d['fullitems'][1])) {
 	if (!empty($d['total'][0]['tax'])) {
 		foreach($d['total'][0]['tax'] as $k3 => $v3) {
 			if($v3['tax'] !== 0 && $p['tax_calculation'] != 0) {
-				
+			
 				echo '<div class="'.$r.'">';
 				echo '<div class="'.$cTotE.'"></div>';
 				echo '<div class="'.$cTotT.'">'.$v3['title'].'</div>';
@@ -430,18 +430,29 @@ if (!empty($d['fullitems'][1])) {
 	}
 	
 	
-	// ROUNDING
-	if ($d['total'][0]['rounding'] != 0) {
+	// ROUNDING | ROUNDING CURRENCY
+	if ($d['total'][0]['rounding_currency'] != 0) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cTotE.'"></div>';
+		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_ROUNDING_CURRENCY').'</div>';
+		echo '<div class="'.$cTotB.' ph-right">'.$price->getPriceFormat($d['total'][0]['rounding_currency'], 0, 1).'</div>';
+		echo '</div>';// end row
+	} else if ($d['total'][0]['rounding'] != 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_ROUNDING').'</div>';
 		echo '<div class="'.$cTotB.' ph-right">'.$price->getPriceFormat($d['total'][0]['rounding']).'</div>';
 		echo '</div>';// end row
 	}
-	
-	// BRUTTO
-	
-	if ($d['total'][0]['brutto'] !== 0) {
+
+	// BRUTTO (Because of rounding currency we need to display brutto in currency which is set)
+	if ($d['total'][0]['brutto_currency'] !== 0) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cTotE.'"></div>';
+		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
+		echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-cart-total ph-right">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
+		echo '</div>';// end row
+	} else if ($d['total'][0]['brutto'] !== 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_TOTAL').'</div>';

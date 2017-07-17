@@ -72,6 +72,10 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}
+		
+	
+		$table->tax_rate 			= PhocacartUtils::replaceCommaWithPoint($table->tax_rate);
+		
 
 		if (empty($table->id)) {
 			// Set the values

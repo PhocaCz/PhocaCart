@@ -35,7 +35,8 @@ class PhocaCartViewQuestion extends JViewLegacy
 		
 		$this->t['enable_ask_question'] 	= $this->p->get('enable_ask_question', 0);
 		if ($this->t['enable_ask_question'] == 0) {
-			throw new Exception(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 500);
+			//throw new Exception(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 403);
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 'error');
 			return false;
 		}
 		

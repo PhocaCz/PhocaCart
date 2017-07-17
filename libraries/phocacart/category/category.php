@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
@@ -302,8 +304,10 @@ final class PhocacartCategory
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
+			. ' GROUP BY c.id, c.title, c.alias, c.parent_id'
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
+			
 			$items 						= $db->loadAssocList();
 			$tree 						= self::categoryTree($items);
 			$currentCatid				= self::getActiveCategoryId();
@@ -352,11 +356,19 @@ final class PhocacartCategory
 		$app			= JFactory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
+		$catid			= $app->input->get( 'catid', '', 'int' ); // ID in items view is category id
+		$id				= $app->input->get( 'id', '', 'int' );
 		
-		if ($option == 'com_phocacart' && ($view == 'items' || $view = 'category')) {
-			$id		= $app->input->get( 'id', '', 'int' ); // ID in items view is category id
+		if ($option == 'com_phocacart' && ($view == 'items' || $view == 'category')) {
+
 			if ((int)$id > 0) {
 				return $id;
+			}
+		}
+		if ($option == 'com_phocacart' && $view == 'item') {
+
+			if ((int)$catid > 0) {
+				return $catid;
 			}
 		}
 		return 0;

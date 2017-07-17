@@ -38,7 +38,7 @@ class PhocaCartCpViewPhocaCartHits extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.hit_id'));
 		$user  	= JFactory::getUser();
-		$bar 	= JToolBar::getInstance('toolbar');
+		$bar 	= JToolbar::getInstance('toolbar');
 		
 		JToolbarHelper::title( JText::_($this->t['l'].'_HITS'), 'equalizer' );
 		/*if ($canDo->get('core.create')) {

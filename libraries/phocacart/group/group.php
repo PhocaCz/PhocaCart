@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -21,6 +23,13 @@ defined('_JEXEC') or die();
  * 9	... formfield			...	#__phocacart_form_fields_groups
  *
  * #__phocacart_item_groups replace all these tables
+ */
+ 
+ /* Example:
+ * To get some group price for customer:
+ * - user must be assigned to the group: 1 user - user id
+ * - product must be assigned to the group: 3 product - product id
+ * - category must be assigned to the group: 2 category - category id
  */
 
 class PhocacartGroup
@@ -58,10 +67,12 @@ class PhocacartGroup
 					.' WHERE g.item_id = '.(int) $id
 					.' AND g.type = '.(int)$type;
 			if ($productId > 0) {
-				$query .= ' AND product_id = '.(int)$productId;
+				$query .= ' AND g.product_id = '.(int)$productId;
 			}	
 			$query .= ' ORDER BY a.id';
+			
 			$db->setQuery($query);
+			
 			if ($returnArray == 1) {
 				$items = $db->loadColumn();
 				if (empty($items)) {
@@ -202,17 +213,18 @@ class PhocacartGroup
 	public static function changeUserGroupByRule($userId) {
 		
 		$app						= JFactory::getApplication();
-		$paramsC 					= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$user_group_change_rule		= $paramsC->get('user_group_change_rule', 0);
 		
 		if ($user_group_change_rule == 0) {
 			// User Group Change is not enabled
 			return true;
 		}
-		
+	
 		if ($userId > 0) {
 			
 			$total	= PhocacartUser::getUserOrderSum($userId);
+			
 			$groups = self::getGroupRules();
 			
 			$rulesActive = 0;
@@ -318,6 +330,7 @@ class PhocacartGroup
 	
 	public static function storeProductPriceGroupsById($data, $productId) {
 		
+		
 		if (!empty($data)) {
 			
 			$app	= JFactory::getApplication();
@@ -359,7 +372,7 @@ class PhocacartGroup
 					
 				} else {
 				
-					if ((int)$v['id'] > 0) {
+					if (isset($v['id']) && (int)$v['id'] > 0) {
 						// IMPORT
 						$values 	= '('.(int)$v['id'].', '.(int)$v['product_id'].', '.(int)$v['group_id'].', '.$db->quote($v['price']).')';
 						$query = ' INSERT INTO #__phocacart_product_price_groups (id, product_id, group_id, price) VALUES '.$values;
@@ -369,6 +382,7 @@ class PhocacartGroup
 						$newIdD = (int)$v['id'];
 					
 					} else {
+						
 						// NEW ITEM
 						$values 	= '('.(int)$v['product_id'].', '.(int)$v['group_id'].', '.$db->quote($v['price']).')';
 						$query = ' INSERT INTO #__phocacart_product_price_groups (product_id, group_id, price) VALUES '.$values;
@@ -495,6 +509,40 @@ class PhocacartGroup
 		}
 		
 		return true;
+	}
+	
+	
+	/* We store price for default group - because we need to compare group prices in one sql query
+	 * When customer is assigned to more groups select the lowest price - lowest group for this customer
+	 * Example: group A = 500, group B = 400 - customer is assigned to both groups so he gets the lowest price for group B
+	 * When we store the product, we need to update the default price in phocacart_product_price_groups table
+	 * because it cannot be manually set, it is set automatically by price of product
+	 * it is universal function but as default: group = 1 which is default group
+	 */
+	
+	public static function updateGroupProductPriceById($productId, $price, $groupId = 1) {
+		
+		$db 	= JFactory::getDBO();
+		
+		$query = 'UPDATE #__phocacart_product_price_groups SET'
+		.' price = '.$db->quote($price)
+		.' WHERE product_id = '.(int)$productId
+		.' AND group_id = '.(int)$groupId;
+		$db->setQuery($query);
+		$db->execute();
+	}
+	
+	public static function updateGroupProductRewardPointsById($productId, $pointsReceived, $groupId = 1) {
+		
+		$db 	= JFactory::getDBO();
+		
+		$query = 'UPDATE #__phocacart_product_point_groups SET'
+		.' points_received = '.(int)$pointsReceived
+		.' WHERE product_id = '.(int)$productId
+		.' AND group_id = '.(int)$groupId;
+		
+		$db->setQuery($query);
+		$db->execute();
 	}
 }
 ?>

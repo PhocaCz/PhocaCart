@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -15,13 +17,14 @@ class PhocacartProduct
 	
 	public static function getProduct($productId, $prioritizeCatid = 0) {
 		
-
-		
 		$db 	= JFactory::getDBO();
+		
 		$wheres		= array();
+		
 		$user 		= JFactory::getUser();
-		//$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+		
 		
 		// Access is check by checkIfAccessPossible
 		//$wheres[] 	= " a.access IN (".$userLevels.")";
@@ -30,28 +33,30 @@ class PhocacartProduct
 		//$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		//$wheres[] 	= " a.published = 1";
 		//$wheres[] 	= " c.published = 1";
-		$wheres[] 	= ' a.id = '.(int)$productId;
 		///$wheres[] 	= ' c.id = '.(int)$catid;
+		$wheres[] 	= ' i.id = '.(int)$productId;
 		
-		$query = ' SELECT a.id, c.id as catid, a.alias, a.title, a.sku, a.price, a.price_original, a.tax_id as taxid, a.image, a.weight, a.volume, a.unit_amount, a.unit_unit, a.length, a.width, a.height,'
-				.' a.download_token, a.download_folder, a.download_file, a.download_hits, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.min_quantity_calculation, a.points_needed, a.points_received,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
-				.' min(ppg.price) as group_price, max(pptg.points_received) as group_points_received'
-				.' FROM #__phocacart_products AS a'
-				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
+		$query = ' SELECT i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received'
+				.' FROM #__phocacart_products AS i' 
+				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = i.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
-				
-			//	. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-			//	. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id'
+				.' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id'
+				. ' LEFT JOIN #__phocacart_item_groups AS ga ON i.id = ga.item_id AND ga.type = 3'// type 3 is product
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 				
 				// user is in more groups, select lowest price by best group
-				. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
-				// user is in more groups, select highest points by best group
-				. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON i.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			// user is in more groups, select highest points by best group
+			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)'
 				
 				.' WHERE ' . implode( ' AND ', $wheres )
-				.' ORDER BY a.id'
+				
+				// STRICT MODE
+				.' GROUP BY i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.stock_calculation, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title'
+				
+				
+				.' ORDER BY i.id'
 				.' LIMIT 1';
 		$db->setQuery($query);
 		$product = $db->loadObject();
@@ -80,11 +85,14 @@ class PhocacartProduct
 		
 		// Change TAX based on country or region
 		if (!empty($product)) {
-			$taxChangedA = PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalctype, $product->taxtitle);
+			$taxChangedA = PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalculationtype, $product->taxtitle);
 			$product->taxrate 	= $taxChangedA['taxrate'];
 			$product->taxtitle	= $taxChangedA['taxtitle'];
 		}
-		
+		/*pr int_r($product);
+		echo "=======<br><br>";
+		pri nt_r($query);
+		echo "=======<br><br>";*/
 		return $product;
 	}
 	
@@ -170,7 +178,7 @@ class PhocacartProduct
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
 				.' WHERE a.id = '.(int)$id
-				.' GROUP BY a.id'
+				.' GROUP BY a.id, a.title'
 				.' ORDER BY a.id'
 				.' LIMIT 1';
 		$db->setQuery($query);
@@ -201,8 +209,8 @@ class PhocacartProduct
 		$q .= ' FROM #__phocacart_products AS a'
 			. ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
 			. ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id'
-			. $where
-			. ' GROUP BY a.id';
+			. $where;
+			//. ' GROUP BY a.id';
 			
 		if ($ordering != '') {
 			$q .= ' ORDER BY '.$ordering;
@@ -215,6 +223,7 @@ class PhocacartProduct
 		$db->setQuery($q);
 	
 		$products = $db->loadAssocList();
+	
 		return $products;
 	}	
 	
@@ -265,7 +274,7 @@ class PhocacartProduct
 			$wheres[]	= 'pc.category_id IN ('.$catIdsS.')';
 		}
 		
-		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, min(ppg.price) as group_price, max(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
+		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required';
 			
@@ -299,7 +308,7 @@ class PhocacartProduct
 			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			
 			. ' WHERE ' . implode( ' AND ', $wheres )
-			. ' GROUP BY a.id';
+			. ' GROUP BY a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required';
 			
 			if ($ordering != '') {
 				$q .= ' ORDER BY '.$ordering;
@@ -402,7 +411,7 @@ class PhocacartProduct
 		
 		} else {
 		
-			$q = 'SELECT a.id, a.title, a.alias, a.hits, c.id as catid, c.alias as catalias, c.title as cattitle'
+			$q = 'SELECT a.id, a.title, a.alias, SUM(a.hits) AS hits, GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle'
 			. ' FROM #__phocacart_products AS a'
 			. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 			. ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
@@ -412,7 +421,8 @@ class PhocacartProduct
 			}
 			
 			$q .=  $where
-			. ' GROUP BY a.id'
+			//. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.title, a.alias, a.hits'
 			. ' ORDER BY a.hits DESC';
 			if ((int)$limit > 0) {
 				$q .=  ' LIMIT '.(int)$limit;
@@ -442,7 +452,7 @@ class PhocacartProduct
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		if ($count) {
-			$q =  ' SELECT count(o.id)'
+			$q =  ' SELECT COUNT(o.id)'
 			. ' FROM #__phocacart_order_products AS o'
 			. ' LEFT JOIN #__phocacart_products AS a ON a.id = o.product_id';
 			if ($dateTo != '' && $dateFrom != '') {
@@ -465,11 +475,12 @@ class PhocacartProduct
 				$q .= ' LEFT JOIN #__phocacart_orders AS od ON od.id = o.order_id';
 			}
 			$q .= $where
-			. ' GROUP BY o.id'
+			. ' GROUP BY o.product_id, o.title, o.alias'
 			. ' ORDER BY count_products DESC';
 			if ((int)$limit > 0) {
 				$q .=  ' LIMIT '.(int)$limit;
 			}
+		
 		
 			$db->setQuery($q);
 			$products = $db->loadObjectList();
@@ -534,7 +545,7 @@ class PhocacartProduct
 		$a = array();
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$export_attributes		= $paramsC->get( 'export_attributes', 1 );
 		$export_specifications	= $paramsC->get( 'export_specifications', 1 );
 		$export_downloads		= $paramsC->get( 'export_downloads', 0 );
@@ -881,6 +892,9 @@ class PhocacartProduct
 			PhocacartGroup::storeGroupsById((int)$table->id, 3, $data['groups']);
 			
 			PhocacartPriceHistory::storePriceHistoryCustomById($data['price_histories'], (int)$table->id);
+			
+			PhocacartGroup::updateGroupProductPriceById((int)$table->id, $data['price']);
+			PhocacartGroup::updateGroupProductRewardPointsById((int)$table->id, $data['points_received']);
 
 			return $table->id;
 		}

@@ -56,8 +56,12 @@ class TablePhocaCartFormfield extends JTable
 		);
 		$this->_db->query();
 		
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
+		
+		try {
+			$this->_db->query();
+		} catch (RuntimeException $e) {
+			
+			throw new Exception($e->getMessage(), 500);
 			return false;
 		}
 

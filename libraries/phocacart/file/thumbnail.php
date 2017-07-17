@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.filesystem.folder' ); 
@@ -97,7 +99,7 @@ class PhocacartFileThumbnail
 		}
 		
 		$app		= JFactory::getApplication();
-		$paramsC 	= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 	= PhocacartUtils::getComponentParameters();
 		//$additional_thumbnails 					= $paramsC->get( 'additional_thumbnails',0 );
 		
 		$path 									= PhocacartPath::getPath($manager);
@@ -271,7 +273,7 @@ class PhocacartFileThumbnail
 	public static function createThumbnailFolder($folderOriginal, $folderThumbnail, &$errorMsg) {	
 		
 		$app		= JFactory::getApplication();
-		$paramsC 	= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$enable_thumb_creation = $paramsC->get( 'enable_thumb_creation', 1 );
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
 		//$folder_permissions = octdec((int)$folder_permissions);
@@ -327,7 +329,7 @@ class PhocacartFileThumbnail
 	public static function createFileThumbnail($fileOriginal, $fileThumbnail, $size, $frontUpload=0, $manager, &$errorMsg) {	
 		
 		$app		= JFactory::getApplication();
-		$paramsC 	= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$enable_thumb_creation 		= $paramsC->get( 'enable_thumb_creation', 1);
 		$watermarkParams['create']	= $paramsC->get( 'create_watermark', 0 );// Watermark
 		$watermarkParams['x'] 		= $paramsC->get( 'watermark_position_x', 'center' );
@@ -399,7 +401,7 @@ class PhocacartFileThumbnail
 	public static function getThumbnailResize($size = 'all') {	
 		
 		// Get width and height from Default settings
-		$params 			= JComponentHelper::getParams('com_phocacart') ;
+		$params 			= PhocacartUtils::getComponentParameters();
 		$large_image_width 	= $params->get( 'large_image_width', 640 );
 		$large_image_height = $params->get( 'large_image_height', 480 );
 		$medium_image_width = $params->get( 'medium_image_width', 300 );

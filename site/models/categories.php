@@ -115,6 +115,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		. " ORDER BY c.".$categoriesOrdering;*/
 		
 		$query =  " SELECT c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat"
+		
 		. " FROM #__phocacart_categories AS c"
 		//. " LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id AND s.published = 1"
 		
@@ -123,7 +124,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		//. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
 		. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 		. " WHERE " . implode( " AND ", $wheres )
-		. " GROUP BY c.id"
+		. " GROUP BY c.id, c.title, c.alias, c.image, c.description, c.image, c.parent_id"
 		. " ORDER BY ".$categoriesOrdering;
 		/*
 		$query =  "SELECT c.id, c.title, group_concat(s.title) as subtitle, group_concat(s.id, ':', s.title, ':', s.alias) as subalias
@@ -134,6 +135,7 @@ class PhocaCartModelCategories extends JModelLegacy
 			
 	
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
+		
 		return $query;
 	}
 	

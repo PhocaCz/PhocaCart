@@ -105,6 +105,7 @@ if ($item->checked_out) {
 }
 
 // Product
+$item->productname = !isset($item->productname) ? JText::_('COM_PHOCACART_NO_PRODUCT') : $item->productname;
 if ($canCreate || $canEdit) {
 	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->productname).'</a>';
 } else {
@@ -114,6 +115,7 @@ if ($canCreate || $canEdit) {
 echo $r->td($checkO, "small");
 
 // Category
+$item->cattitle = !isset($item->cattitle) ? JText::_('COM_PHOCACART_NO_PRODUCT') : $item->cattitle;
 echo $r->td($this->escape($item->cattitle), "small");
 
 // Name

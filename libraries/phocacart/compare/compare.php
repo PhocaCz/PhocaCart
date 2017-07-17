@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -96,11 +98,11 @@ class PhocacartCompare
 		if ($full == 1) {
 			$query = 
 			 ' SELECT a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
-			.' c.id as catid, c.alias as catalias, c.title as cattitle, count(pc.category_id) AS count_categories,'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
 			.' a.length, a.width, a.height, a.weight, a.volume,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' m.title as manufacturer_title,'
-			.' min(ppg.price) as group_price, max(pptg.points_received) as group_points_received'
+			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received'
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
@@ -114,21 +116,28 @@ class PhocacartCompare
 			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			
 			.  $where
-			. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.title, a.alias, a.description, a.price, a.image,'
+			.' '
+			.' a.length, a.width, a.height, a.weight, a.volume,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' m.title,'
+			.' ppg.price, pptg.points_received'
 			. ' ORDER BY a.id';
 		} else {
 			$query = 
 			 ' SELECT a.id as id, a.title as title, a.alias as alias,'
-			.' c.id as catid, c.alias as catalias, c.title as cattitle, count(pc.category_id) AS count_categories'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories'
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
 			.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			.  $where
-			. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.title, a.alias'
 			. ' ORDER BY a.id';
 		}	
+		
+		
 		return $query;
 	}
 	
@@ -157,7 +166,7 @@ class PhocacartCompare
 		$uri 				= JFactory::getURI();
 		$action				= $uri->toString();
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
 		$query				= $this->getQueryList($this->items);
 		
@@ -167,7 +176,6 @@ class PhocacartCompare
 			//echo nl2br(str_replace('#__', 'jos_', $query));
 			$db->setQuery($query);
 			$d['compare'] 			= $db->loadObjectList();
-			
 			PhocacartCategoryMultiple::setBestMatchCategory($d['compare'], $this->items, 1);// returned by reference
 			
 		}	

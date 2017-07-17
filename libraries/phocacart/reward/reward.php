@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
  
  /*
@@ -37,10 +39,12 @@ class PhocacartReward
 				$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
 					.' WHERE a.user_id = '.(int) $userId
 					.' AND a.published = 1'
+					.' GROUP BY a.user_id'
 					.' ORDER BY a.id';
 				$db->setQuery($query);
 				
 				$total = $db->loadResult();
+			
 				if (!$total) {
 					$total = 0;
 				}
@@ -57,7 +61,7 @@ class PhocacartReward
 		
 		
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
 		
 		$rewards['usertotal'] 	= 0;
@@ -129,7 +133,7 @@ class PhocacartReward
 		
 		$pointsO 			= null;
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
 		
 		if ($enable_rewards == 0) {

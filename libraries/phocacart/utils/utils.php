@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartUtils
@@ -63,7 +65,7 @@ class PhocacartUtils
 		{
 			foreach ($xmlFilesInDir as $xmlfile)
 			{
-				if ($data = JApplicationHelper::parseXMLInstallFile($folder.'/'.$xmlfile)) {
+				if ($data = \JInstaller::parseXMLInstallFile($folder.'/'.$xmlfile)) {
 					foreach($data as $key => $value) {
 						$xml_items[$key] = $value;
 					}
@@ -101,9 +103,9 @@ class PhocacartUtils
 	public static function getInfo($mode = 1) {
 		
 		if ($mode == 0) {
-			return "\n\n" . 'Powered by Phoca Cart' . "\n" . 'http://www.phoca.cz/phocacart';
+			return "\n\n" . 'Powered by Phoca Cart' . "\n" . 'https://www.phoca.cz/phocacart';
 		} else {
-			return '<div style="text-align:right;color:#ccc;display:block">Powered by <a href="http://www.phoca.cz/phocacart">Phoca Cart</a></div>';
+			return '<div style="text-align:right;color:#ccc;display:block">Powered by <a href="https://www.phoca.cz/phocacart">Phoca Cart</a></div>';
 		}
 	}
 	
@@ -236,19 +238,7 @@ class PhocacartUtils
 		
 		return $ip;
 	}
-	
-	public static function getIntFromString($string) {
-		
-		if (empty($string)) {
-			return '';
-		}
-		$int	= '';//$int = 0
-		$parts 	= explode(':', $string);
-		if (isset($parts[0])) {
-			$int = (int)$parts[0];
-		}
-		return $int;
-	}
+
 	
 	public static function StripHiddenChars($str) {
 		$chars = array("\r\n", "\n", "\r", "\t", "\0", "\x0B", "\xEF", "\xBB", "\xBF");
@@ -389,5 +379,81 @@ class PhocacartUtils
 		$dateN = JHtml::_('date', $date, $format);
 		return $dateN;
 	}
+	
+	public static function getComponentParameters() {
+		
+		$app = JFactory::getApplication();
+		if ($app->isAdmin()) {
+			return JComponentHelper::getParams('com_phocacart');
+		} else {
+			$option	= $app->input->get('option');
+			if ($option == 'com_phocacart') {
+				return $app->getParams();
+			} else {
+				return JComponentHelper::getParams('com_phocacart');
+			}
+			
+		}
+		
+		return JComponentHelper::getParams('com_phocacart');
+		
+	}
+	
+	public static function replaceCommaWithPoint($item) {
+		
+		$paramsC 			= PhocacartUtils::getComponentParameters();
+		$comma_point		= $paramsC->get( 'comma_point', 0 );
+		
+		$item = PhocacartUtils::getDecimalFromString($item);
+		if ($comma_point == 1) {
+			return str_replace(',', '.', $item);
+		} else {
+			return $item;
+		}
+	}
+	
+	public static function getIntFromString($string) {
+		
+		if (empty($string)) {
+			return 0;
+		}
+		$int	= '';//$int = 0
+		$parts 	= explode(':', $string);
+		if (isset($parts[0])) {
+			$int = (int)$parts[0];
+		}
+		return $int;
+	}
+	
+	public static function getDateFromString($string) {
+		
+	
+		if (empty($string)) {
+			return '0000-00-00';
+		}
+		
+		return $string;
+	}
+	
+	public static function getDecimalFromString($string) {
+		
+	
+		if (empty($string)) {
+			return '0.0';
+		}
+		
+		return $string;
+	}
+	
+	public static function getStringFromItem($item) {
+		
+	
+		if (empty($item)) {
+			return '';
+		}
+		
+		return $item;
+	}
+	
 }
 ?>

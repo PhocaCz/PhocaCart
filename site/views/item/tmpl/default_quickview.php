@@ -27,7 +27,7 @@ $x = $this->item[0];
         <div class="modal-body"><?php
 		
 
-echo '<h1>'.$x->title.'</h1>';
+//echo '<h1>'.$x->title.'</h1>';
 echo '<div class="row">';
 
 // === IMAGE PANEL
@@ -36,15 +36,18 @@ echo '<div id="phImageBox" class="col-xs-12 col-sm-6 col-md-6">';
 $label 	= PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
 
 // IMAGE
-echo '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
 
-echo $label['new'] . $label['hot'] . $label['feat'];
 
 $image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
 $imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
 $link 	= JURI::base(true).'/'.$imageL->rel;
 	
 if (isset($image->rel) && $image->rel != '') {
+	
+	echo '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
+
+	echo $label['new'] . $label['hot'] . $label['feat'];
+
 	//echo '<a href="'.$link.'" '.$this->t['image_rel'].'>';
 	// In Quic View there is no linking of image
 	// 1) but we use A TAG in javascript jquery.phocaswapimage.js se we need A TAG HERE but we make it inactive
@@ -58,8 +61,10 @@ if (isset($image->rel) && $image->rel != '') {
 	}
 	echo ' />';
 	echo '</a>';
+	
+	echo '</div>'. "\n";
 }
-echo '</div>'. "\n";
+
 
 echo '</div>';// end image panel
 
@@ -80,6 +85,7 @@ if ($this->t['hide_price'] != 1) {
 		$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype);
 	}
 	$d['class']	= 'ph-item-price-box';
+	echo '<h1>'.$x->title.'</h1>';
 	echo '<div id="phItemPriceBox">';
 	echo$layoutP->render($d);
 	echo '</div>';

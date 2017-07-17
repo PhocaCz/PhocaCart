@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -18,7 +20,7 @@ class PhocacartShipping
 	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 		
 		$user 			= JFactory::getUser();
@@ -36,11 +38,17 @@ class PhocacartShipping
 		if ((int)$id > 0) {
 			$wheres[] =  's.id = '.(int)$id;
 			$limit = ' LIMIT 1';
-			$group = '';
+			//$group = '';
 		} else {
 			$limit = '';
-			$group = ' GROUP BY s.id';
+			
 		}
+		
+		$group = ' GROUP BY s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
+				.' s.active_amount, s.active_zone, s.active_country, s.active_region, s.active_weight, s.active_size,'
+				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight, s.default,'
+				.' s.maximal_length, s.maximal_width, s.maximal_height,'
+				.' t.id, t.title, t.tax_rate, t.calculation_type';
 		
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
@@ -48,7 +56,7 @@ class PhocacartShipping
 				.' s.active_amount, s.active_zone, s.active_country, s.active_region, s.active_weight, s.active_size,'
 				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight, s.default,'
 				.' s.maximal_length, s.maximal_width, s.maximal_height,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
 				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 				.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone'
@@ -219,13 +227,13 @@ class PhocacartShipping
 	public function getShippingMethod($shippingId) {
 		
 		//$app			= JFactory::getApplication();
-		//$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		//$paramsC 		= PhocacartUtils::getComponentParameters();
 		//$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 		
 		$db = JFactory::getDBO();
 		
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
 				.' WHERE s.id = '.(int)$shippingId

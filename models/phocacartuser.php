@@ -151,6 +151,8 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		
 		$app	= JFactory::getApplication();
 		$data['type']		= (int)$type;
+		$data['country']	= PhocacartUtils::getIntFromString($data['country']);
+		$data['region']		= PhocacartUtils::getIntFromString($data['region']);
 		$row = $this->getTable('PhocacartUser', 'Table');
 
 		if(isset($data['user_id']) && $data['user_id'] > 0) {

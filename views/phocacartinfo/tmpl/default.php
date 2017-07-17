@@ -23,9 +23,9 @@ echo '<div style="float:right;margin:10px;">'
 echo '<h3>'.  JText::_($this->t['l'].'_HELP').'</h3>';
 
 echo '<p>'
-.'<a href="http://www.phoca.cz/phocacart/" target="_blank">Phoca Cart Main Site</a><br />'
-.'<a href="http://www.phoca.cz/documentation/" target="_blank">Phoca Cart User Manual</a><br />'
-.'<a href="http://www.phoca.cz/forum/" target="_blank">Phoca Cart Forum</a><br />'
+.'<a href="https://www.phoca.cz/phocacart/" target="_blank">Phoca Cart Main Site</a><br />'
+.'<a href="https://www.phoca.cz/documentation/" target="_blank">Phoca Cart User Manual</a><br />'
+.'<a href="https://www.phoca.cz/forum/" target="_blank">Phoca Cart Forum</a><br />'
 .'</p>';
 
 echo '<h3>'.  JText::_($this->t['l'] . '_VERSION').'</h3>'
@@ -33,7 +33,7 @@ echo '<h3>'.  JText::_($this->t['l'] . '_VERSION').'</h3>'
 
 echo '<h3>'.  JText::_($this->t['l'] . '_COPYRIGHT').'</h3>'
 .'<p>© 2007 - '.  date("Y"). ' Jan Pavelka</p>'
-.'<p><a href="http://www.phoca.cz/" target="_blank">www.phoca.cz</a></p>';
+.'<p><a href="https://www.phoca.cz/" target="_blank">www.phoca.cz</a></p>';
 
 echo '<h3>'.  JText::_($this->t['l'] . '_LICENSE').'</h3>'
 .'<p><a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPLv2</a></p>';
@@ -51,7 +51,7 @@ echo '<p>&nbsp;</p>';
 
 echo '<div style="border-top:1px solid #eee"></div><p>&nbsp;</p>'
 .'<div>
-<a class="btn btn-large btn-primary" href="http://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'].'_CHECK_FOR_UPDATE') .'</a></div>';
+<a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'].'_CHECK_FOR_UPDATE') .'</a></div>';
 
 echo '<div style="margin-top:30px;height:39px;background: url(\''.JURI::root(true).'/media/com_'.$this->t['c'].'/images/administrator/line.png\') 100% 0 no-repeat;">&nbsp;</div>';
 

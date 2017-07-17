@@ -37,7 +37,7 @@ class PhocaCartCpViewPhocacartFeed extends JViewLegacy
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		
-		$bar 		= JToolBar::getInstance('toolbar');
+		$bar 		= JToolbar::getInstance('toolbar');
 		$user		= JFactory::getUser();
 		$isNew		= ($this->item->id == 0);
 	

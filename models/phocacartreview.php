@@ -66,6 +66,8 @@ class PhocaCartCpModelPhocacartReview extends JModelAdmin
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}
 
+		$table->date 		= PhocacartUtils::getDateFromString($table->date);
+		
 		if (empty($table->id)) {
 			// Set the values
 			//$table->created	= $date->toSql();

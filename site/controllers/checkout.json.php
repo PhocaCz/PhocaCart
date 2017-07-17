@@ -102,7 +102,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			
 			if (!empty($item)) {
 				
-				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalctype, $item->taxtitle);
+				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 0, 1, $item->group_price);
 				
 				// Main price of the product
 				$priceO['netto']	= $priceP['netto'];
@@ -121,7 +121,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 									$attrib = PhocacartAttribute::getAttributeValue((int)$v2, (int)$k);
 									
 									if (isset($attrib->title) && isset($attrib->amount) && isset($attrib->operator)) {
-										$priceA = $price->getPriceItems($attrib->amount, $item->taxid, $item->taxrate, $item->taxcalctype, $item->taxtitle);
+										$priceA = $price->getPriceItems($attrib->amount, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle);
 										
 										if ($attrib->operator == '-') {
 											$priceP['netto']	-= $priceA['netto'];

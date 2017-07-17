@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -29,7 +31,7 @@ class PhocacartPayment
 	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $id = 0, $selected = 0) {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$payment_amount_rule	= $paramsC->get( 'payment_amount_rule', 0 );
 		
 		$user 			= JFactory::getUser();
@@ -47,11 +49,15 @@ class PhocacartPayment
 		if ((int)$id > 0) {
 			$wheres[] =  'p.id = '.(int)$id;
 			$limit = ' LIMIT 1';
-			$group = '';
+			//$group = '';
 		} else {
 			$limit = '';
-			$group = ' GROUP BY p.id';
+			
 		}
+		$group = ' GROUP BY p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
+				.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
+				.' p.lowest_amount, p.highest_amount, p.default,'
+				.' t.id, t.title, t.tax_rate, t.calculation_type';
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		/*$query = ' SELECT p.id, p.title, p.image'
@@ -63,7 +69,7 @@ class PhocacartPayment
 		$query = ' SELECT p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
 				.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 				.' p.lowest_amount, p.highest_amount, p.default,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype,'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
 				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 				.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
@@ -216,7 +222,7 @@ class PhocacartPayment
 	
 	public function getPaymentMethod($paymentId) {
 		
-		//$paramsC 				= JComponentHelper::getParams('com_phocacart');
+		//$paramsC 				= PhocacartUtils::getComponentParameters();
 		//$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 		
 		$db = JFactory::getDBO();
@@ -228,7 +234,7 @@ class PhocacartPayment
 		$db->setQuery($query);*/
 		
 		$query = ' SELECT p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalctype'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId

@@ -29,7 +29,7 @@ class PhocaCartCpViewPhocaCartInfo extends JViewLegacy
 		JToolbarHelper::title( JText::_($this->t['l'].'_PM_INFO' ), 'info-sign' );
 		
 		// This button is unnecessary but it is displayed because Joomla! design bug
-		$bar = JToolBar::getInstance( 'toolbar' );
+		$bar = JToolbar::getInstance( 'toolbar' );
 		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.JText::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.JText::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
 		

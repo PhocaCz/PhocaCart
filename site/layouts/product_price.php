@@ -42,5 +42,7 @@ if ($d['priceitemsorig']['brutto'] > $d['priceitems']['brutto']) {
 	<div class="ph-price-txt"><?php echo JText::_('COM_PHOCACART_UNIT_PRICE') ?></div>
 	<div class="ph-price-base"><?php echo $d['priceitems']['baseformat'] ?></div>
 <?php } ?>
+
+	<div class="ph-cb"></div>
 </div>
 <div class="ph-cb"></div>

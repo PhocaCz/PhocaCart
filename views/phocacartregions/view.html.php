@@ -68,7 +68,7 @@ class PhocaCartCpViewPhocacartRegions extends JViewLegacy
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartregions.delete', $this->t['l'].'_DELETE');
 		}
 		
-		JToolbarHelper::custom($this->t['task'].'.importregions', 'a glyphicon glyphicon-globe ph-icon-earth', 'a glyphicon glyphicon-globe ph-icon-earth', $this->t['l'].'_IMPORT_REGIONS', false);
+		JToolbarHelper::custom($this->t['task'].'.importregions', 'earth', 'earth', $this->t['l'].'_IMPORT_REGIONS', false);
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 		

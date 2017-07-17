@@ -47,7 +47,7 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 				$query->where('( a.id <> '.(int)$id.')');
 			}
 			$query->where('( a.title LIKE '.$search.')');
-			$query->group($db->escape('a.id'));
+			$query->group($db->escape('a.id, a.title, a.image'));
 			$query->order($db->escape('a.ordering'));
 			
 			$db->setQuery($query);

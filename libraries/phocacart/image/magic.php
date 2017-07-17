@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.filesystem.folder' ); 
@@ -32,7 +34,7 @@ class PhocacartImageMagic
 	*/
 	public static function imageMagic($fileIn, $fileOut = null, $width = null, $height = null, $crop = null, $typeOut = null, $watermarkParams = array(), $frontUpload = 0, $manager, &$errorMsg) {
 
-		$params 		= JComponentHelper::getParams('com_phocacart') ;
+		$params 		= PhocacartUtils::getComponentParameters();
 		$jfile_thumbs	= $params->get( 'jfile_thumbs', 1 );
 		$jpeg_quality	= $params->get( 'jpeg_quality', 85 );
 		$jpeg_quality	= PhocacartImage::getJpegQuality($jpeg_quality);

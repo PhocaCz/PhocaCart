@@ -38,6 +38,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
 		//$this->t['description']			= $this->p->get( 'description', '' );
+		$this->t['cv_display_description']	= $this->p->get( 'cv_display_description', 1 );
 		$this->t['image_width_cat']			= $this->p->get( 'image_width_cat', '' );
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']				= $this->p->get( 'image_link', 0 );

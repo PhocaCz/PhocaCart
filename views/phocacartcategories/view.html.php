@@ -70,7 +70,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$canDo	= $class::getActions($this->t, $state->get('filter.category_id'));
 		JToolbarHelper::title( JText::_( $this->t['l'].'_CATEGORIES' ), 'folder-open' );
 		$user  = JFactory::getUser();
-		$bar = JToolBar::getInstance('toolbar');
+		$bar = JToolbar::getInstance('toolbar');
 		
 		if ($canDo->get('core.create')) {
 			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
@@ -92,7 +92,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JHtml::_('bootstrap.modal', 'collapseModal');
+			JHtml::_('bootstrap.renderModal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>

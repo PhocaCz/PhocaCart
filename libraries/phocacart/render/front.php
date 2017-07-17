@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 class PhocacartRenderFront
@@ -111,6 +113,14 @@ class PhocacartRenderFront
 			$title = JText::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->getCfg('sitename')));
 		}
 		
+		if ($type == 'category' && isset($category->metatitle) && $category->metatitle != '') {
+			$title = $category->metatitle;
+		}
+		if ($type == 'item' && isset($item->metatitle) && $item->metatitle != '') {
+			$title = $item->metatitle;
+		}
+		
+		
 		$document->setTitle($title);
 
 		
@@ -137,6 +147,31 @@ class PhocacartRenderFront
 
 		if ($app->getCfg('MetaTitle') == '1' && $params->get('menupage_title', '')) {
 			$document->setMetaData('title', $params->get('page_title', ''));
+		}
+		
+		
+		
+		if (isset($category->metadata)) {
+			$registry = new JRegistry;
+			$registry->loadString($category->metadata);
+			$category->metadata = $registry->toArray();
+		}
+		
+		if (isset($item->metadata)) {
+			$registry = new JRegistry;
+			$registry->loadString($item->metadata);
+			$category->metadata = $registry->toArray();
+		}
+		
+		if ($type == 'category' && isset($category->metadata['robots']) && $category->metadata['robots'] != '') {
+			$document->setMetadata('robots', $category->metadata['robots']);
+		}
+		if ($type == 'item' && isset($item->metadata['robots']) && $item->metadata['robots'] != '') {
+			$document->setMetadata('robots', $item->metadata['robots']);
+		}
+		
+		if ($params->get('robots')){
+			$document->setMetadata('robots', $params->get('robots'));
 		}
 		
 		// Breadcrumbs TO DO (Add the whole tree)
@@ -211,7 +246,7 @@ class PhocacartRenderFront
 	
 	
 	
-	public static function renderHeader($headers = array(), $tag = 'h1') {
+	public static function renderHeader($headers = array(), $tag = '') {
 		
 		$app			= JFactory::getApplication();
 		//$menus		= $app->getMenu();
@@ -219,6 +254,16 @@ class PhocacartRenderFront
 		$p 				= $app->getParams();
 		$showPageHeading= $p->get('show_page_heading');
 		$pageHeading	= $p->get('page_heading');
+		$displayHeader	= $p->get('display_header', 'h1');
+		
+		if ($displayHeader == '-1') {
+			return '';
+		}
+		
+		if ($tag == '') {
+			$tag = $displayHeader;
+		}
+		
 		
 		$h = array();
 		if ($showPageHeading && $pageHeading != '') { 
@@ -236,7 +281,7 @@ class PhocacartRenderFront
 		}
 		
 		if (!empty($h)) {
-			return '<' . strip_tags($tag) . '>' . implode(" - ", $h) . '</' . strip_tags($tag) . '>';
+			return '<' . strip_tags($tag) . ' class="ph-header">' . implode(" - ", $h) . '</' . strip_tags($tag) . '>';
 		}
 		return false;
 	}
@@ -276,7 +321,7 @@ class PhocacartRenderFront
 		$o = '';
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$width		= $paramsC->get( 'video_width', 0 );
 		$height		= $paramsC->get( 'video_height', 0 );
 				
@@ -391,6 +436,28 @@ class PhocacartRenderFront
 			return $item->title;
 		}
 		return '';
+	}
+	
+	public static function renderProductHeader($link, $v, $route = 'item', $tag = '', $additionalClass = '') {
+		
+		$app			= JFactory::getApplication();
+		$p 				= $app->getParams();
+		
+		$displayHeader	= $p->get('display_product_header', 'h3');
+
+		
+		if ($displayHeader == '-1') {
+			return '';
+		}
+		
+		if ($tag == '') {
+			$tag = $displayHeader;
+		}
+		
+		
+		$header = PhocacartRenderFront::getLinkedTitle($link, $v, $route);
+		
+		return '<' . strip_tags($tag) . ' class="ph-product-header '.strip_tags($additionalClass).'">' . $header . '</' . strip_tags($tag) . '>';
 	}
 	
 	public static function renderArticle($id) {

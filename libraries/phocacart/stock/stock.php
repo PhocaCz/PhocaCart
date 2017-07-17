@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -36,7 +38,7 @@ class PhocacartStock
 		// A > 0 OR Not checking
 		// N = 0
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$stock_checking			= $paramsC->get( 'stock_checking', 0 );
 		$display_stock_status	= $paramsC->get( 'display_stock_status', 0 );
 		$stock_checkout			= $paramsC->get( 'stock_checkout', 0 );
@@ -135,7 +137,7 @@ class PhocacartStock
 	public static function handleStockProduct($productId, $orderStatusId, $quantity, $stockMovement = '') {
 		
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$negative_stocks	= $paramsC->get( 'negative_stocks', 1 );
 		
 		// We know the stock movement, ignore the status
@@ -171,7 +173,7 @@ class PhocacartStock
 	public static function handleStockAttributeOption($optionId, $orderStatusId, $quantity, $stockMovement = '') {
 
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$negative_stocks		= $paramsC->get( 'negative_stocks', 1 );
 		
 		// We know the stock movement, ignore the status
@@ -206,7 +208,7 @@ class PhocacartStock
 	public static function handleStockProductKey($productKey, $orderStatusId, $quantity, $stockMovement = '') {
 		
 		$app				= JFactory::getApplication();
-		$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$negative_stocks	= $paramsC->get( 'negative_stocks', 1 );
 		
 		// We know the stock movement, ignore the status

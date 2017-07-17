@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -70,7 +72,7 @@ class PhocacartDiscountProduct
 	public static function getProductDiscount($id = 0, $groupQuantity = 0, $productQuantity = 0) {
 		
 		$app									= JFactory::getApplication();
-		$paramsC 								= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 								= PhocacartUtils::getComponentParameters();
 		$discount_product_variations_quantity	= $paramsC->get( 'discount_product_variations_quantity', 1 );
 		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
 		
@@ -254,8 +256,8 @@ class PhocacartDiscountProduct
 					if (empty($v['calculation_type'])) 	{$v['calculation_type'] = '';}
 					if (empty($v['quantity_from'])) 	{$v['quantity_from'] 	= '';}
 					if (empty($v['quantity_to'])) 		{$v['quantity_to'] 		= '';}
-					if (empty($v['valid_from'])) 		{$v['valid_from'] 		= '';}
-					if (empty($v['valid_to'])) 			{$v['valid_to'] 		= '';}
+					if (empty($v['valid_from'])) 		{$v['valid_from'] 		= '0000-00-00';}
+					if (empty($v['valid_to'])) 			{$v['valid_to'] 		= '0000-00-00';}
 					
 					if ($v['discount'] == '') {
 						continue;
@@ -278,6 +280,9 @@ class PhocacartDiscountProduct
 					}
 					
 					if ((int)$idExists > 0) {
+						
+						$v['discount'] 		= PhocacartUtils::replaceCommaWithPoint($v['discount']);
+						
 									
 						$query = 'UPDATE #__phocacart_product_discounts SET'
 						.' product_id = '.(int)$productId.','
@@ -285,7 +290,7 @@ class PhocacartDiscountProduct
 						.' alias = '.$db->quote($v['alias']).','
 						.' access = '.(int)$v['access'].','
 						.' discount = '.$db->quote($v['discount']).','
-						.' calculation_type = '.$db->quote($v['calculation_type']).','
+						.' calculation_type = '.(int)$v['calculation_type'].','
 						.' quantity_from = '.(int)$v['quantity_from'].','
 						.' quantity_to = '.(int)$v['quantity_to'].','
 						.' valid_from = '.$db->quote($v['valid_from']).','
@@ -299,6 +304,8 @@ class PhocacartDiscountProduct
 						
 					} else {
 					
+						$v['discount'] 		= PhocacartUtils::replaceCommaWithPoint($v['discount']);
+						
 						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.(int)$v['access'].', '.$db->quote($v['discount']).', '.(int)$v['calculation_type'].', '.(int)$v['quantity_from'].', '.(int)$v['quantity_to'].', '.$db->quote($v['valid_from']).', '.$db->quote($v['valid_to']).', '.(int)$k.')';
 					
 

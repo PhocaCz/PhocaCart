@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -25,7 +27,7 @@ class PhocacartOrderRender
 		// Type 1 ... order/receipt, 2 ... invoice, 3 ... delivery note
 		// Format 1 ... html site / html email 2 ... pdf 3 ... rss
 		$app					= JFactory::getApplication();
-		$paramsC 				= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$store_title			= $paramsC->get( 'store_title', '' );
 		$store_logo				= $paramsC->get( 'store_logo', '' );
 		$store_info				= $paramsC->get( 'store_info', '' );
@@ -490,14 +492,34 @@ class PhocacartOrderRender
 				
 				
 				
-				if($v->amount == 0 && $v->type != 'brutto') {
+				if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto') {
 					// Don't display coupon if null
 					
-				} else if ($v->type == 'netto' || $v->type == 'brutto') {
+				} else if ($v->type == 'netto') {
 					$t[] = '<tr '.$totalF.'>';
 					$t[] = '<td colspan="7"></td>';
 					$t[] = '<td colspan="3"><b>'.$v->title.'</b></td>';
 					$t[] = '<td style="text-align:right" colspan="2"><b>'.$price->getPriceFormat($v->amount).'</b></td>';
+					$t[] = '</tr>';
+				} else if ($v->type == 'brutto') {
+					
+					// Brutto or Brutto currency
+					$amount = (isset($v->amount_currency) && $v->amount_currency > 0) ? $price->getPriceFormat($v->amount_currency, 0, 1) : $price->getPriceFormat($v->amount);
+					
+					$t[] = '<tr '.$totalF.'>';
+					$t[] = '<td colspan="7"></td>';
+					$t[] = '<td colspan="3"><b>'.$v->title.'</b></td>';
+					$t[] = '<td style="text-align:right" colspan="2"><b>'.$amount.'</b></td>';
+					$t[] = '</tr>';
+				} else if ($v->type == 'rounding') {
+					
+					// Rounding or rounding currency
+					$amount = (isset($v->amount_currency) && $v->amount_currency > 0) ? $price->getPriceFormat($v->amount_currency, 0, 1) : $price->getPriceFormat($v->amount);
+					
+					$t[] = '<tr '.$totalF.'>';
+					$t[] = '<td colspan="7"></td>';
+					$t[] = '<td colspan="3">'.$v->title.'</td>';
+					$t[] = '<td style="text-align:right" colspan="2">'.$amount.'</td>';
 					$t[] = '</tr>';
 				} else {
 					$t[] = '<tr '.$totalF.'>';

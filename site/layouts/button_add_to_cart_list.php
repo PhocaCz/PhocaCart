@@ -16,13 +16,13 @@ $d = $displayData;
 
 if ($d['attrrequired'] == 1) {
 	// ATTRIBUTE REQUIRED - One of the attributes is required, cannot add to cart
-	echo '<div class="pull-right">';
+	echo '<div class="ph-pull-right">';
 	
 	if ($d['icon'] == 1) {
 		
 		// ICON - ATTRIBUTE REQUIRED
 		echo '<div class="ph-category-item-addtocart">';
-		echo '<a href="'.$d['link'].'" title="'. JText::_('COM_PHOCACART_ADD_TO_CART').'">';
+		echo '<a href="'.$d['link'].'" title="'. JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top">';
 		echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
 		echo '</a>';
 		echo '</div>';
@@ -31,14 +31,14 @@ if ($d['attrrequired'] == 1) {
 		// BUTTON - ATTRIBUTE REQUIRED
 		if ($d['addtocart'] == 1) {
 			
-			echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn" role="button">';
+			echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn btn-small" role="button">';
 			echo '<span class="glyphicon glyphicon-shopping-cart"></span> ';
 			echo JText::_('COM_PHOCACART_ADD_TO_CART');
 			echo '</a>';
 			
 		} else if ($d['addtocart'] == 4) {
 			
-			echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn" role="button" title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'">';
+			echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn btn-small" role="button" title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top">';
 			echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
 			echo '</a>';
 		} 
@@ -50,12 +50,10 @@ if ($d['attrrequired'] == 1) {
 	// ATTRIBUTE NOT REQUIRED
 	if ($d['icon'] == 1) {
 		// If icon then we need ID of form to run it per jquery
-		echo '<form class="phItemCartBoxForm" id="phCartAddToCart'.(int)$d['id'].'" action="'.$d['linkch'].'" method="post">';
+		echo '<form class="phItemCartBoxForm" id="phCartAddToCartIcon'.(int)$d['id'].'" action="'.$d['linkch'].'" method="post">';
 	} else {
-		// If not icon then we don't need ID form and we don't display ID because of not conflict with icon
-		// On one page there can be BUTTON and ICON Add to Cart together so don't display ID for buttons to not conflict
-		// with the same ID of icon ()
-		echo '<form class="phItemCartBoxForm" action="'.$d['linkch'].'" method="post">';
+		// If button then we need ID of form to run it per jquery like by icon - because of loaded items per ajax
+		echo '<form class="phItemCartBoxForm" id="phCartAddToCartButton'.(int)$d['id'].'" action="'.$d['linkch'].'" method="post">';
 	}
 	
 	?><input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>">
@@ -66,36 +64,41 @@ if ($d['attrrequired'] == 1) {
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" /><?php
 	
-	echo '<div class="pull-right">';
+	echo '<div class="pull-right ph-pull-right">';
 	
 	if ($d['icon'] == 1) {
 		// ICON ATTRIBUTE NOT REQUIRED
 		if ($d['method'] == 0) {
 			// STANDARD (add to cart method)
-			echo '<div class="ph-category-item-addtocart"><a href="javascript:void(0);" onclick="document.getElementById(\'phCartAddToCart'.(int)$d['id'].'\').submit();"  title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'">';
-			echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
-			echo '</a>';
-			echo '</div>';
-			
+			$onClick = 'onclick="document.getElementById(\'phCartAddToCartIcon'.(int)$d['id'].'\').submit();"';
 		} else {
 			// AJAX (add to cart method)
-			echo '<div class="ph-category-item-addtocart"><a href="javascript:void(0);" onclick="phEventClickFormAddToCart(\'phCartAddToCart'.(int)$d['id'].'\');"  title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'">';
-			echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
-			echo '</a>';
-			echo '</div>';
-			
+			$onClick = 'onclick="phEventClickFormAddToCart(\'phCartAddToCartIcon'.(int)$d['id'].'\');"';
 		}
+		
+		echo '<div class="ph-category-item-addtocart"><a href="javascript:void(0);" '.$onClick.' title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top">';
+		echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
+		echo '</a>';
+		echo '</div>';
 		
 	} else {
 		// BUTTON ATTRIBUTE NOT REQUIRED
+		if ($d['method'] == 0) {
+			// STANDARD (add to cart method)
+			$onClick = '';
+		} else {
+			// AJAX (add to cart method)
+			$onClick = 'onclick="phEventClickFormAddToCart(\'phCartAddToCartButton'.(int)$d['id'].'\');event.preventDefault();return false;"';
+		}
+		
 		if ($d['addtocart'] == 1) {
-			echo '<button class="btn btn-primary btn-sm ph-btn">';
+			echo '<button class="btn btn-primary btn-sm ph-btn btn-small" '.$onClick.'>';
 			echo '<span class="glyphicon glyphicon-shopping-cart"></span> ';
 			echo JText::_('COM_PHOCACART_ADD_TO_CART');
 			echo '</button>';
 			
 		} else if ($d['addtocart'] == 4) {
-			echo '<button class="btn btn-primary btn-sm ph-btn" title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'">';
+			echo '<button class="btn btn-primary btn-sm ph-btn btn-small" title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top" '.$onClick.'>';
 			echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
 			echo '</button>';
 		}

@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 /*
@@ -58,10 +60,15 @@ class PhocacartCartRendercart extends PhocacartCart
 		$d['params']			= $this->params;
 		$d['fullitems']			= $this->fullitems;
 		$d['total']				= $this->total;
+		$d['fullitemsgroup']	= $this->fullitemsgroup;
 		$d['coupontitle']		= $this->coupon['title'];
 		$d['couponvalid']		= $this->coupon['valid'];
 		$d['shippingcosts']		= $this->shipping['costs'];
 		$d['paymentcosts']		= $this->payment['costs'];
+		$d['countitems']		= $this->getCartCountItems();
+		//$d['action']			= $url['action'];
+		//$d['actionbase64']		= $url['actionbase64'];
+		//$d['linkcheckout']		= $url['linkcheckout'];
 
 		return $layout->render($d);
 	}
@@ -73,7 +80,16 @@ class PhocacartCartRendercart extends PhocacartCart
 		if (empty($this->fullitems)) {
 			$this->fullitems = $this->getFullItems();// get them from parent
 		}
-		return count($this->fullitems[0]);
+		
+		$count = 0;
+		if (!empty($this->fullitems[0])) {
+			foreach($this->fullitems[0] as $k => $v) {
+				if (isset($v['quantity']) && (int)$v['quantity'] > 0) {
+					$count += (int)$v['quantity'];
+				}
+			}
+		}
+		return $count;
 	}
 	
 	

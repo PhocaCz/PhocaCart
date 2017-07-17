@@ -82,6 +82,7 @@ echo '<div style="clear:both"></div>';
 
 // Chart
 $s = new PhocacartStatistics();
+
 $s->renderChartJsLine('phChartAreaLine', $this->d['amount'], JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $this->d['orders'], JText::_('COM_PHOCACART_TOTAL_ORDERS'), $this->d['ticks']);
 $s->setFunction('phChartAreaLine', 'Line');
 

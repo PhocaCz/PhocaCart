@@ -1408,10 +1408,10 @@ table.ph-cart-small-box {
 	
 }
 .ph-pagination-top .btn span {
-	color: #fff;
+	color: #d0d0d0;
 }
 .ph-pagination-top .btn.active span{
-	color: #FFCC00;
+	color: #000;
 }
 .ph-pagination-top .btn,
 .ph-pagination-top .btn:focus,
@@ -1424,12 +1424,7 @@ table.ph-cart-small-box {
 	outline-offset: 0px;
 }
 
-.ph-pagination-top .btn span {
-	color: #fff;
-}
-.ph-pagination-top .btn span {
-	color: 
-}
+
 
 
 .ph-item-clearfix {
@@ -1449,6 +1444,9 @@ table.ph-cart-small-box {
 	
 }
 
+h3.grid {
+	text-align: center;
+}
 h3.list,
 h3.gridlist {
 	margin: 0px;
@@ -1457,8 +1455,9 @@ h3.gridlist {
 }
 
 
-.ph-stars-box {
- margin-top: 10px;
+.ph-item-content.grid .ph-stars-box {
+	margin-top: 10px;
+	margin-bottom: 10px
 }
 
 /*
@@ -1510,7 +1509,7 @@ h3.gridlist {
 .ph-item-action{
    display: flex;
    flex-direction: row;
-   justify-content: flex-end;
+   justify-content: flex-start;
 }
 
 
@@ -1519,19 +1518,28 @@ h3.gridlist {
     position: relative;
     margin-bottom: 20px;
     clear: both;
+	
+}
+
+.ph-category-price-box.list,
+.ph-category-price-box.list,
+.ph-category-price-box.gridlist,
+.ph-items-price-box.gridlist {
+	padding-bottom: 10px;
 }
 
 
 
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .ph-item-action-box {
+ 
+}
+.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .ph-category-price-box {
 	
 }
-
-.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .ph-category-add-to-cart-box {
+.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .ph-item-action-box{
 	width: 100%;
 	margin-top: auto;
 }
-
 
 
 
@@ -1557,4 +1565,22 @@ select:invalid  + .chosen-container .chosen-single {
 }
 .ph-shipping-info-header {
 	font-weight: bold;
+}
+
+.ph-clear-both {
+	clear:both;
+}
+
+/* Uncomment in Protostar */
+/*
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    height: 28px !important; 
+}
+*/
+
+
+.ph-item-price-panel form {
+	margin: 0;
+	padding: 0;
+	display: inline;
 }

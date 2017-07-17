@@ -36,7 +36,7 @@ if ($this->a->shippingnotused == 1) {
 		// Display the current one selected
 		if (isset($this->t['cartitems']['shipping']) && (int)$this->t['cartitems']['shipping'] == (int)$v->id) {
 			
-			//$priceI = $price->getPriceItems($v->cost, $v->taxid, $v->taxrate, $v->taxcalctype, $v->taxtitle, 1, 1);
+			//$priceI = $price->getPriceItems($v->cost, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 1, 1);
 
 			echo '<div class="col-sm-8 col-md-8 ">'.$v->title.'</div>';
 		
@@ -125,7 +125,7 @@ if ($this->a->shippingnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItemsShipping($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalctype, $v->taxtitle, 0, 1, '');
+		$priceI = $price->getPriceItemsShipping($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
 		
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';

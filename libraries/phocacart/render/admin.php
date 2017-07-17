@@ -1,12 +1,12 @@
 <?php
-/*
- * @package Joomla 1.5
- * @copyright Copyright (C) 2005 Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- *
- * @component Phoca Component
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 class PhocacartRenderAdmin
@@ -37,15 +37,15 @@ class PhocacartRenderAdmin
 			
 			
 			case 'com_phocacart':
-				$links[]	= array('Phoca Cart site', 'http://www.phoca.cz/phocacart');
-				$links[]	= array('Phoca Cart documentation site', 'http://www.phoca.cz/documentation/category/116-phoca-cart-component');
-				$links[]	= array('Phoca Cart download site', 'http://www.phoca.cz/download/category/100-phoca-cart-component');
+				$links[]	= array('Phoca Cart site', 'https://www.phoca.cz/phocacart');
+				$links[]	= array('Phoca Cart documentation site', 'https://www.phoca.cz/documentation/category/116-phoca-cart-component');
+				$links[]	= array('Phoca Cart download site', 'https://www.phoca.cz/download/category/100-phoca-cart-component');
 			break;
 		
 		}
 		
-		$links[]	= array('Phoca News', 'http://www.phoca.cz/news');
-		$links[]	= array('Phoca Forum', 'http://www.phoca.cz/forum');
+		$links[]	= array('Phoca News', 'https://www.phoca.cz/news');
+		$links[]	= array('Phoca Forum', 'https://www.phoca.cz/forum');
 		
 		$components 	= array();
 		$components[]	= array('Phoca Gallery','phocagallery', 'pg');
@@ -91,8 +91,8 @@ class PhocacartRenderAdmin
 			for ($i = 0; $i<3; $i++) {
 				$numO = $num[$i];
 				$o .= '<div style="float:left;width:33%;margin:0 auto;">';
-				$o .= '<div><a style="text-decoration:underline;" href="http://www.phoca.cz/'.$components[$numO][1].'" target="_blank">'.JHTML::_('image',  'media/'.$option.'/images/administrator/icon-box-'.$components[$numO][2].'.png', ''). '</a></div>';
-				$o .= '<div style="margin-top:-10px;"><small><a style="text-decoration:underline;" href="http://www.phoca.cz/'.$components[$numO][1].'" target="_blank">'.$components[$numO][0].'</a></small></div>';
+				$o .= '<div><a style="text-decoration:underline;" href="https://www.phoca.cz/'.$components[$numO][1].'" target="_blank">'.JHTML::_('image',  'media/'.$option.'/images/administrator/icon-box-'.$components[$numO][2].'.png', ''). '</a></div>';
+				$o .= '<div style="margin-top:-10px;"><small><a style="text-decoration:underline;" href="https://www.phoca.cz/'.$components[$numO][1].'" target="_blank">'.$components[$numO][0].'</a></small></div>';
 				$o .= '</div>';
 			}
 			$o .= '<div style="clear:both"></div>';
@@ -101,13 +101,13 @@ class PhocacartRenderAdmin
 			$num = range(0,(count($banners) - 1 )); 
 			shuffle($num);
 			$numO = $num[0];
-			$o .= '<div><a href="http://www.phoca.cz/'.$banners[$numO][1].'" target="_blank">'.JHTML::_('image',  'media/'.$option.'/images/administrator/b-'.$banners[$numO][2].'.png', ''). '</a></div>';
+			$o .= '<div><a href="https://www.phoca.cz/'.$banners[$numO][1].'" target="_blank">'.JHTML::_('image',  'media/'.$option.'/images/administrator/b-'.$banners[$numO][2].'.png', ''). '</a></div>';
 
 		}
 		
 		$o .= '<p>&nbsp;</p>';
 		$o .= '<h4 style="margin-bottom:5px;">'.JText::_($oT.'_PLEASE_READ'). '</h4>';
-		$o .= '<div><a style="text-decoration:underline" href="http://www.phoca.cz/phoca-needs-your-help/" target="_blank">'.JText::_($oT.'_PHOCA_NEEDS_YOUR_HELP'). '</a></div>';
+		$o .= '<div><a style="text-decoration:underline" href="https://www.phoca.cz/phoca-needs-your-help/" target="_blank">'.JText::_($oT.'_PHOCA_NEEDS_YOUR_HELP'). '</a></div>';
 		
 		$o .= '</div>';
 		return $o;

@@ -65,7 +65,11 @@ class PhocaCartCpModelPhocaCartQuestion extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}
-
+		
+		$table->params 	= PhocacartUtils::getStringFromItem($table->params);
+		$table->date	= PhocacartUtils::getDateFromString($table->date);
+		
+		
 		if (empty($table->id)) {
 			// Set the values
 			//$table->created	= $date->toSql();

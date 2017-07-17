@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -49,9 +51,7 @@ class PhocacartDiscountCart
 					.' LEFT JOIN #__phocacart_discount_categories AS dc ON dc.discount_id = a.id'
 					.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 5'// type 5 is discount
 					. $where
-					.' GROUP BY a.id';
-					// SQL92 SQL99 ???
-					/* , a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to' */
+					.' GROUP BY a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to';
 					$query .= ' ORDER BY a.id';
 	
 			PhocacartUtils::setConcatCharCount();
@@ -75,7 +75,7 @@ class PhocacartDiscountCart
 	public static function getCartDiscount($id = 0, $catid = 0, $quantity, $amount) {
 		
 		$app									= JFactory::getApplication();
-		$paramsC 								= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 								= PhocacartUtils::getComponentParameters();
 		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
 		
 		// Cart discount applies to all cart, so we don't need to load it for each product
@@ -315,8 +315,12 @@ class PhocacartDiscountCart
 		//.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
 		.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 		.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-		.' WHERE di.discount_id = '.(int) $discounId
-		.' GROUP BY a.id';
+		.' WHERE di.discount_id = '.(int) $discounId;
+		if ($select == 1) {
+			$query .= ' GROUP BY di.discount_id';
+		} else {
+			$query .= ' GROUP BY di.discount_id, a.id, a.title';
+		}
 		$db->setQuery($query);
 		
 		if ($select == 1) {

@@ -76,7 +76,7 @@ class PhocaCartCpModelPhocacartZones extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.*'
+				'a.id, a.image, uc.name, a.checked_out, a.title, a.published, a.code2, a.code3'
 			)
 		);
 		$query->from('`#__phocacart_zones` AS a');
@@ -117,7 +117,7 @@ class PhocaCartCpModelPhocacartZones extends JModelList
 			}
 		}
 		
-		$query->group('a.id');
+		$query->group('a.id, a.image, uc.name, a.checked_out, a.title, a.published, a.code2, a.code3');
 	
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');

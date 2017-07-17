@@ -48,7 +48,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 			$app->setUserState('com_phocacart.question.data', '');
 			$session->clear('time', 'phccrt'.$params->get('session_suffix'));
 			
-			PhocacartLog::add(1, 'Ask a Question - Not valid session', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
+			PhocacartLog::add(1, 'Ask a Question - Not valid session', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
 			//jexit(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'));
 			throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 			return false;

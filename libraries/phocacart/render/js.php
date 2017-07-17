@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 final class PhocacartRenderJs
@@ -84,7 +86,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxAddToCart() {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$add_cart_method= $paramsC->get( 'add_cart_method', 0 );
 		
 		// We need to refresh checkout site when AJAX used for removing or adding products to cart
@@ -127,6 +129,7 @@ final class PhocacartRenderJs
 			$s[] = '            jQuery(".phItemCartBoxCount").html(data.count);';
 			$s[] = '            jQuery(".phItemCartBoxTotal").html(data.total);';
 			if ($add_cart_method == 2) {
+				$s[] = ' 			jQuery("body").append(jQuery("#phContainer"));';												
 				$s[] = '            jQuery("#phContainer").html(data.popup);';
 				$s[] = '            jQuery("#phAddToCartPopup").modal();';
 			}
@@ -149,7 +152,7 @@ final class PhocacartRenderJs
 			
 			$s[] = ' ';
 			
-			// :: EVENT (CLICK)
+			// :: EVENT (CLICK) Category/Items View (icon/button - ajax/standard)
 			$s[] = 'function phEventClickFormAddToCart(phFormId) {';
 			$s[] = '   var phForm = \'#\' + phFormId;';
 			//$s[] = '   var sForm 	= jQuery(this).closest("form");';// Find in which form the right button was clicked
@@ -159,7 +162,9 @@ final class PhocacartRenderJs
 			
 			$s[] = ' ';
 			
-			// :: EVENT (SUBMIT)
+			
+			
+			// :: EVENT (SUBMIT) Item View
 			$s[] = 'jQuery(document).ready(function(){';
 			$s[] = '	jQuery(".phItemCartBoxForm").on(\'submit\', function (e) {';
 			$s[] = '		e.preventDefault();';
@@ -177,7 +182,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxAddToCompare() {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
 		
 		// We need to refresh comparison site when AJAX used for removing or adding products to comparison list
@@ -219,6 +224,7 @@ final class PhocacartRenderJs
 			$s[] = '					jQuery(".phItemCompareBox").html(data.item);';
 			$s[] = '					jQuery(".phItemCompareBoxCount").html(data.count);';
 			if ($add_compare_method == 2) {
+				$s[] = ' 					jQuery("body").append(jQuery("#phContainer"));';												  
 				$s[] = ' 					jQuery("#phContainer").html(data.popup);';
 				$s[] = ' 					jQuery("#phAddToComparePopup").modal();';
 			}
@@ -246,7 +252,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxRemoveFromCompare() {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
 		
 		// We need to refresh comparison site when AJAX used for removing or adding products to comparison list
@@ -319,7 +325,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxAddToWishList() {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
 		
 		// We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
@@ -361,6 +367,7 @@ final class PhocacartRenderJs
 			$s[] = '					jQuery(".phItemWishListBox").html(data.item);';
 			$s[] = '					jQuery(".phItemWishListBoxCount").html(data.count);';
 			if ($add_wishlist_method == 2) {
+				$s[] = ' 					jQuery("body").append(jQuery("#phContainer"));';												  
 				$s[] = ' 					jQuery("#phContainer").html(data.popup);';
 				$s[] = ' 					jQuery("#phAddToWishListPopup").modal();';
 			}
@@ -388,7 +395,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxRemoveFromWishList() {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
 		
 		// We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
@@ -461,7 +468,7 @@ final class PhocacartRenderJs
 		
 		
 		$app					= JFactory::getApplication();
-		$paramsC 				= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$dynamic_change_price 	= $paramsC->get( 'dynamic_change_price', 1 );
 		$load_chosen 			= $paramsC->get( 'load_chosen', 1 );
 		
@@ -502,11 +509,11 @@ final class PhocacartRenderJs
 		//$s[] = '					jQuery("#phItemCompareBox").html(data.item);';
 		
 		//$s[] = ' 					jQuery("#phQuickViewPopupBody").html(data.popup);'; added in ajax
-		///$s[] = ' 				jQuery("#phContainer").html(data.popup); ';
+		/////$s[] = ' 				jQuery("#phContainer").html(data.popup); ';
 		$s[] = ' 					jQuery("body").append(jQuery("#phContainer"));';
 		$s[] = ' 					jQuery("#phContainer").html(data.popup); ';
 		
-		///$s[] = ' 				jQuery("#phQuickViewPopup").modal();';
+		/////$s[] = ' 				jQuery("#phQuickViewPopup").modal();';
 		$s[] = ' 					jQuery("body").append(jQuery("#phQuickViewPopup"));';
 		$s[] = ' 					jQuery("#phQuickViewPopup").modal();';
 		if ($load_chosen == 1) {
@@ -545,7 +552,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxChangeProductPriceByOptions($id = 0, $class = '') {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$attribute_change_price = $paramsC->get( 'attribute_change_price', 1 );
 		
 		$app			= JFactory::getApplication();
@@ -633,7 +640,7 @@ final class PhocacartRenderJs
 	public static function renderSubmitPaginationTopForm($urlAjax, $outputDiv) {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$equal_height	= $paramsC ->get( 'equal_height', 0 );// reload equal height
 		$load_chosen	= $paramsC ->get( 'load_chosen', 1 );// reload choosen
 		// loading.gif
@@ -710,8 +717,7 @@ final class PhocacartRenderJs
 		public static function renderBillingAndShippingSame() {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
-		//$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$load_chosen 		= $paramsC->get( 'load_chosen', 1 );
 		
 

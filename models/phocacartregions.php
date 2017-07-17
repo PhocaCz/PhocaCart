@@ -80,7 +80,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.*'
+				'a.id, a.country_id, a.checked_out, a.title, a.published, a.code2, a.code3'
 			)
 		);
 		$query->from('`#__phocacart_regions` AS a');
@@ -137,7 +137,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 			$query->where('a.country_id = ' . (int) $countryId);
 		}
 		
-		$query->group('a.id');
+		$query->group('a.id, a.country_id, uc.name, c.title, c.id, a.checked_out, a.title, a.published, a.code2, a.code3');
 	
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');

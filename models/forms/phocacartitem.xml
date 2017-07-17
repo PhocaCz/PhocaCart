@@ -9,14 +9,15 @@
 
 <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
-<field name="sku" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC" />
-<field name="upc" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC" />
-<field name="ean" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC" />
-<field name="jan" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_JAN_LABEL" description="COM_PHOCACART_FIELD_JAN_DESC" />
-<field name="mpn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MPN_LABEL" description="COM_PHOCACART_FIELD_MPN_DESC" />
-<field name="isbn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ISBN_LABEL" description="COM_PHOCACART_FIELD_ISBN_DESC" />
-<field name="serial_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SERIAL_NUMBER_LABEL" description="COM_PHOCACART_FIELD_SERIAL_NUMBER_DESC" />
-<field name="registration_key" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_REGISTRATION_KEY_LABEL" description="COM_PHOCACART_FIELD_REGISTRATION_KEY_DESC" />
+<field name="sku" type="text" class="inputbox" size="255" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC" />
+<field name="upc" type="text" class="inputbox" size="15" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC" />
+<field name="ean" type="text" class="inputbox" size="15" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC" />
+<field name="jan" type="text" class="inputbox" size="15" label="COM_PHOCACART_FIELD_JAN_LABEL" description="COM_PHOCACART_FIELD_JAN_DESC" />
+<field name="isbn" type="text" class="inputbox" size="15" label="COM_PHOCACART_FIELD_ISBN_LABEL" description="COM_PHOCACART_FIELD_ISBN_DESC" />
+<field name="mpn" type="text" class="inputbox" size="255" label="COM_PHOCACART_FIELD_MPN_LABEL" description="COM_PHOCACART_FIELD_MPN_DESC" />
+
+<field name="serial_number" type="text" class="inputbox" size="255" label="COM_PHOCACART_FIELD_SERIAL_NUMBER_LABEL" description="COM_PHOCACART_FIELD_SERIAL_NUMBER_DESC" />
+<field name="registration_key" type="text" class="inputbox" size="255" label="COM_PHOCACART_FIELD_REGISTRATION_KEY_LABEL" description="COM_PHOCACART_FIELD_REGISTRATION_KEY_DESC" />
 
 <field name="external_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_ID_DESC" />
 <field name="external_key" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_DESC" />
@@ -50,7 +51,7 @@
 <field name="group" type="PhocacartGroups" table="3" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
-<field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="safehtml" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC" />
+<field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC" />
 
 <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC" />
 <field name="stock_calculation" type="list" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_DESC" class="inputbox" size="1" default="0">
@@ -112,6 +113,10 @@
 <field name="points_received" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_POINTS_RECEIVED_DESC" />
 
 
+<field name="metatitle" type="text"
+			label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"
+			class="inputbox"/>
+			
 <field name="metakey" type="textarea"
 			label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
 			class="inputbox" rows="3" cols="30" />
@@ -120,7 +125,7 @@
 	label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
 	class="inputbox" rows="3" cols="30" />
 	</fieldset>
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
@@ -132,7 +137,7 @@
 	<option value="*">JALL</option>
 </field>
 
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="safehtml" />
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
 <field name="tags" type="phocatags" multiple="1" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="inputbox" size="1" />
 
@@ -146,18 +151,19 @@
 	
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-<!--
-	<field name="robots" type="list"
-		label="JField_Metadata_Robots_Label" description="JField_Metadata_Robots_Desc"
-	>
-		<option value="">JGLOBAL_USE_GLOBAL</option>
-		<option value="0">JGLOBAL_INDEX_FOLLOW</option>
-		<option value="1">JGLOBAL_NOINDEX_FOLLOW</option>
-		<option value="2">JGLOBAL_INDEX_NOFOLLOW</option>
-		<option value="3">JGLOBAL_NOINDEX_NOFOLLOW</option>
-		<option value="4">JGLOBAL_NO_ROBOTS_TAG</option>
-	</field>
 
+			<field name="robots"
+				type="list"
+				label="JFIELD_METADATA_ROBOTS_LABEL"
+				description="JFIELD_METADATA_ROBOTS_DESC"
+				>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+<!--
 	<field name="author" type="text" label="JAUTHOR"
 		description="JField_Metadata_Author_Desc" size="20" />
 

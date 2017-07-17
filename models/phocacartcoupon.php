@@ -62,6 +62,15 @@ class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}
+		
+		$table->total_amount	= PhocacartUtils::replaceCommaWithPoint($table->total_amount);
+		$table->discount		= PhocacartUtils::replaceCommaWithPoint($table->discount);
+		
+		$table->quantity_from			= PhocacartUtils::getIntFromString($table->quantity_from);
+		$table->available_quantity		= PhocacartUtils::getIntFromString($table->available_quantity);
+		$table->available_quantity_user	= PhocacartUtils::getIntFromString($table->available_quantity_user);
+		$table->valid_from 				= PhocacartUtils::getDateFromString($table->valid_from);
+		$table->valid_to 				= PhocacartUtils::getDateFromString($table->valid_to);
 
 		if (empty($table->id)) {
 			// Set the values

@@ -54,17 +54,24 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 		$dataGraph 	= '';
 		$amount		= array();
 		$orders		= array();
+		
+		
 		if (!empty($this->items) && !empty($dateDays)) {
 			foreach($dateDays as $date) {
 				$amount[ $date->format('Y-m-d') ] = 0;
 				$orders[ $date->format('Y-m-d') ] = 0;
 			}
+			
+		
 			foreach($this->items as $k => $v) {
 			
+		
 				if (isset($amount[$v->date_only])) {
+					///// -- $amount[$v->date_only] += $v->order_amount;
 					$amount[$v->date_only] = $v->order_amount;
 				}
 				if (isset($orders[$v->date_only])) {
+					///// -- $orders[$v->date_only] += $v->count_orders;
 					$orders[$v->date_only] = $v->count_orders;
 				}
 			}
@@ -133,7 +140,7 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 		JToolbarHelper::title( JText::_( $this->t['l'].'_STATISTICS' ), 'stats' );
 		
 		// This button is unnecessary but it is displayed because Joomla! design bug
-		$bar = JToolBar::getInstance( 'toolbar' );
+		$bar = JToolbar::getInstance( 'toolbar' );
 		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.JText::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.JText::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
 		

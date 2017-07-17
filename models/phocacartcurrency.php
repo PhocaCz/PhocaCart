@@ -62,6 +62,10 @@ class PhocaCartCpModelPhocacartCurrency extends JModelAdmin
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplication::stringURLSafe($table->alias);
 
+		
+		$table->exchange_rate 			= PhocacartUtils::replaceCommaWithPoint($table->exchange_rate);
+		
+		
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}

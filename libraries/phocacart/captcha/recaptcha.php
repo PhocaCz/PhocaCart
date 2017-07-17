@@ -1,9 +1,12 @@
 <?php
 /**
- * @package    phocaguestbook
- * @subpackage Models
- * @copyright  Copyright (C) 2012 Jan Pavelka www.phoca.cz
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('JPATH_BASE') or die;
 
@@ -12,7 +15,7 @@ class PhocacartCaptchaRecaptcha
 	public static function render() {
 		
 		$document	= JFactory::getDocument();
-		$pC 		= JComponentHelper::getParams('com_phocacart') ;
+		$pC 		= PhocacartUtils::getComponentParameters();
 		$siteKey	= strip_tags(trim($pC->get( 'recaptcha_sitekey', '' )));
 		
 		$document->addScript('https://www.google.com/recaptcha/api.js');
@@ -21,7 +24,7 @@ class PhocacartCaptchaRecaptcha
 	public static function isValid() {
 		
 		$app 		= JFactory::getApplication();
-		$pC 		= JComponentHelper::getParams('com_phocacart') ;
+		$pC 		= PhocacartUtils::getComponentParameters();
 		$secretKey	= strip_tags(trim($pC->get( 'recaptcha_privatekey', '' )));
 		//$response 	= $app->input->post->get('g-recaptcha-response', '', 'string');
 		//$response	= $ POST['g-recaptcha-response'];
@@ -46,7 +49,7 @@ class PhocacartCaptchaRecaptcha
 			$context  = stream_context_create($options);
 			$result = file_get_contents($url, false, $context);
 			
-			//$resultString = print_r($result, true);
+			//$resultString = print r($result, true);
 			//PhocacartLog::add(1, 'Ask a Question - Captcha Result', 0, $resultString);
 			return json_decode($result)->success;
 		}

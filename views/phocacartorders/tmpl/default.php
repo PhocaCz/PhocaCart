@@ -171,8 +171,9 @@ echo $r->td($view, "small");
 
 
 $price->setCurrency($item->currency_id, $item->id);
-$total = $price->getPriceFormat($item->total_amount);
-echo $r->td($total, "small ph-right ph-p-r-med");
+
+$amount = (isset($item->total_amount_currency) && $item->total_amount_currency > 0) ? $price->getPriceFormat($item->total_amount_currency, 0, 1) : $price->getPriceFormat($item->total_amount);
+echo $r->td($amount, "small ph-right ph-p-r-med");
 
 echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small");
 echo $r->td(JHtml::date($item->modified, 'd. m. Y h:s'), "small");

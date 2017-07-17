@@ -44,35 +44,43 @@ if (!empty($this->t['product'])) {
 		echo '</tr>';
 	
 	
-		// Default is the main price
+	/*	// Default is the main price
 		echo '<tr>';
 		echo '<td>'.JText::_('COM_PHOCACART_DEFAULT').'</td>';
 		echo '<td><input type="text" class="input-small" name="jformdefault[]" value="'.$this->t['product']->points_received.'" readonly />';
 		echo '</td>';
-		echo '</tr>';
+		echo '</tr>';*/
 	
 		foreach($this->t['groups'] as $k => $v) {
 			
-			if ($v['type'] == 1) {
-				continue;
-				// Default 
-				// Possible TO DO - disable price for default and let only the price in product
-			}
-			
 			echo '<tr>';
 			echo '<td>'.JText::_($v['title']).'</td>';
+			
+			if ($v['type'] == 1) {
+				//continue;
+				// Default 
+			
+				
+				echo '<td><input type="text" class="input-small" name="jform['.$v['id'].'][points_received]" value="'.$this->t['product']->points_received.'" readonly  />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
+				
+			} else {
+			
+			
 
 			
-			// Set value from database
-			$points = '';
-			if (isset($this->t['product_groups'][$v['id']]['points_received'])) {
-				$points = $this->t['product_groups'][$v['id']]['points_received'];
+				// Set value from database
+				$points = '';
+				if (isset($this->t['product_groups'][$v['id']]['points_received'])) {
+					$points = $this->t['product_groups'][$v['id']]['points_received'];
+				}
+				echo '<td><input type="text" class="input-small" name="jform['.$v['id'].'][points_received]" value="'.$points.'" />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
+				//echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$v['product_id'].'" />';
+				//echo '<input type="hidden" name="jform['.$v['id'].'][attributes]" value="'.serialize($v['attributes']).'" />';
 			}
-			echo '<td><input type="text" class="input-small" name="jform['.$v['id'].'][points_received]" value="'.$points.'" />';
-			echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
-			echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
-			//echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$v['product_id'].'" />';
-			//echo '<input type="hidden" name="jform['.$v['id'].'][attributes]" value="'.serialize($v['attributes']).'" />';
 			echo '</td>';
 			echo '</tr>';
 			

@@ -1,9 +1,12 @@
 <?php
 /**
- * @package    phocaguestbook
- * @subpackage Models
- * @copyright  Copyright (C) 2012 Jan Pavelka www.phoca.cz
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('JPATH_BASE') or die;
 
@@ -12,7 +15,7 @@ class PhocacartCaptcha
 	public static function enableCaptchaCheckout() {
 		
 		$document					= JFactory::getDocument();
-		$pC 						= JComponentHelper::getParams('com_phocacart') ;
+		$pC 						= PhocacartUtils::getComponentParameters();
 		$enable_captcha_checkout	= $pC->get( 'enable_captcha_checkout', 0 );
 		
 		//$user						= JFactory::getUser();

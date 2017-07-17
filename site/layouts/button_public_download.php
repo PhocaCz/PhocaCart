@@ -15,7 +15,7 @@ $d = $displayData;
 	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
-	<div class="pull-right">
+	<div class="pull-right ph-pull-right">
 		<div class="ph-category-item-wishlist">
 		<button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-download"></span><?php
 		if ($d['title'] != '') {

@@ -16,7 +16,7 @@ $d = $displayData;
 	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
-	<div class="pull-right">
+	<div class="pull-right ph-pull-right">
 		<div class="ph-category-item-wishlist">
 		<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
 			<a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="glyphicon glyphicon-heart"></span></a>

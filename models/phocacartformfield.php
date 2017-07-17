@@ -198,7 +198,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			$query = 'SELECT a.id, a.title, a.type_default'
 			. ' FROM #__phocacart_form_fields AS a'
 			. ' WHERE a.id IN ( '.$cids.' )'
-			. ' GROUP BY a.id';
+			. ' GROUP BY a.id, a.title, a.type_default';
 		
 			$db->setQuery( $query );
 

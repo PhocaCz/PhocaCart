@@ -33,7 +33,7 @@ if (!empty($this->items)) {
 	$price	= new PhocacartPrice;
 	$col 	= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat']);
 	$lt		= $this->t['layouttype'];
-	$i		= 1; // Not equal Heights						  
+	$i		= 1; // Not equal Heights
 
 	
 	
@@ -54,9 +54,12 @@ if (!empty($this->items)) {
 		$image2 	= false;
 		$phIL 		= 'phIL-not-active';
 		if ($this->t['switch_image_category_items'] == 1) {
-			$image2 = PhocacartImage::getThumbnailName($this->t['pathitem'], $v->additional_image, $imageSize);
-			if (isset($image2->rel) && $image2->rel != '') {
-				$phIL = 'phIL';
+			$iAI = explode(',',$v->additional_image);
+			if (isset($iAI[0]) && $iAI[0] != '') {
+				$image2 = PhocacartImage::getThumbnailName($this->t['pathitem'], $iAI[0], $imageSize);
+				if (isset($image2->rel) && $image2->rel != '') {
+					$phIL = 'phIL';
+				}
 			}
 		}
 		$imgStyle = '';
@@ -130,7 +133,7 @@ if (!empty($this->items)) {
 		
 		// :L: ADD TO CART
 		$dA = $dA2 = $dA3 = array();
-		$icon['addtocart'] = '';				  
+		$icon['addtocart'] = '';
 		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4 ) {
 			
 			$dA['link']			= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
@@ -139,8 +142,8 @@ if (!empty($this->items)) {
 			$dA['catid']		= $this->t['categoryid'];
 			$dA['return']		= $this->t['actionbase64'];
 			$dA['attrrequired']	= 0;
-			$dA['addtocart']		= $this->t['category_addtocart'];
-			$dA['method']		= $this->t['add_cart_method'];															
+			$dA['addtocart']	= $this->t['category_addtocart'];
+			$dA['method']		= $this->t['add_cart_method'];
 			if (isset($v->attribute_required) && $v->attribute_required == 1) {
 				$dA['attrrequired']	= 1;
 			}
@@ -163,7 +166,7 @@ if (!empty($this->items)) {
 			$dA3['return']			= $this->t['actionbase64'];
 			
 		}
-		
+
 		// ======
 		// RENDER
 		// ======
@@ -171,7 +174,7 @@ if (!empty($this->items)) {
 		echo '<div class="ph-item-box '.$lt.'">';
 		echo $label['new'] . $label['hot'] . $label['feat'];
 		echo '<div class="'.$this->t['class_thumbnail'].' ph-thumbnail ph-thumbnail-c ph-item '.$lt.'">';
-		echo '<div class="ph-item-content">';
+		echo '<div class="ph-item-content '.$lt.'">';
 
 		
 		if ($lt == 'list') {
@@ -179,7 +182,7 @@ if (!empty($this->items)) {
 			// RENDER LIST
 			// -----------
 			
-			echo '<div class="row ph-item-content-row">';
+			echo '<div class="row ph-item-content-row jf_ph_cat_list">';
 			
 			// 1/3
 			echo '<div class="row-item col-sx-12 col-sm-2 col-md-2">';
@@ -193,41 +196,17 @@ if (!empty($this->items)) {
 			echo '<div class="row-item col-sx-12 col-sm-6 col-md-6">';
 
 			// CAPTION, DESCRIPTION BOX
-			echo '<div class="caption ph-item-action-box '.$lt.'">';
+			echo '<div class="ph-item-action-box ph-caption '.$lt.'">';
 
-			echo '<h3 class="'.$lt.'">'. PhocacartRenderFront::getLinkedTitle($this->t['product_name_link'], $v) . '</h3>';
+			echo PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
 
-			// Description box will be displayed even no description is set - to set height and have all columns same height
-			echo '<div class="ph-item-desc">';
-			if ($v->description != '') { echo JHTML::_('content.prepare', $v->description); }
-			echo '</div>';// end desc
-			
-			if ($this->t['fade_in_action_icons'] == 0) {
-				echo '<div class="ph-item-action '.$lt.'">';
-				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
-				echo $icon['wishlist'];
-				echo $icon['quickview'];
-				echo $icon['addtocart'];
-				echo '</div>';
+			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
+				echo '<div class="ph-item-desc">';
+				echo JHTML::_('content.prepare', $v->description);
+				echo '</div>';// end desc
 			}
 			
 			echo '</div>';// end caption
-			
-			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
-			
-			// REVIEW - STAR RATING
-			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
-				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
-			}
-			
-			if ($this->t['fade_in_action_icons'] == 1) {
-				echo '<div class="ph-item-action-fade '.$lt.'">';
-				echo $icon['compare'];
-				echo $icon['wishlist'];
-				echo $icon['quickview'];
-				echo $icon['addtocart'];			
-				echo '</div>';
-			}
 			
 			echo '</div>';// end row-item 2/3
 			
@@ -235,7 +214,19 @@ if (!empty($this->items)) {
 			echo '<div class="row-item col-sx-12 col-sm-4 col-md-4">';
 			
 			// :L: PRICE
-			if (!empty($dP)) { echo $layoutP->render($dP);};
+			if (!empty($dP)) { echo $layoutP->render($dP);}
+			
+			if ($this->t['fade_in_action_icons'] == 0) {
+				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
+				echo $icon['wishlist'];
+				echo $icon['quickview'];
+				echo $icon['addtocart'];
+			}
+			
+			// REVIEW - STAR RATING
+			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
+				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
+			}
 			
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
@@ -251,16 +242,28 @@ if (!empty($this->items)) {
 			echo '</div>';// end add to cart box 
 			
 			$results = $this->t['dispatcher']->trigger('onItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
-			echo trim(implode("\n", $results));
-			
+			echo trim(implode("\n", $results));																												   
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
+			
+			
+			
+			
+			if ($this->t['fade_in_action_icons'] == 1) {
+				echo '<div class="ph-item-action-fade '.$lt.'">';
+				echo $icon['compare'];
+				echo $icon['wishlist'];
+				echo $icon['quickview'];
+				echo $icon['addtocart'];
+				echo '</div>';
+			}
 	
 			echo '</div>';// end row-item 3/3
 			
 			echo '</div>';// end row list
 			
 			
-		} else if ( $lt == 'gridlist') {
+		} 
+		else if ( $lt == 'gridlist') {
 			// ----------------
 			// RENDER GRID LIST
 			// ----------------
@@ -278,63 +281,59 @@ if (!empty($this->items)) {
 			echo '<div class="row-item col-sx-12 col-sm-6 col-md-6">';
 
 			// CAPTION, DESCRIPTION BOX
-			echo '<div class="caption ph-item-action-box '.$lt.'">';
+			echo '<div class="ph-item-action-box ph-caption '.$lt.'">';
 
-			echo '<h3 class="'.$lt.'">'. PhocacartRenderFront::getLinkedTitle($this->t['product_name_link'], $v) . '</h3>';
+			echo PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
+			
+			// :L: PRICE
+			if (!empty($dP)) { echo $layoutP->render($dP);};
 
-			// Description box will be displayed even no description is set - to set height and have all columns same height
-			echo '<div class="ph-item-desc">';
-			if ($v->description != '') { echo JHTML::_('content.prepare', $v->description); }
-			echo '</div>';// end desc
 			
 			if ($this->t['fade_in_action_icons'] == 0) {
-				echo '<div class="ph-item-action '.$lt.'">';
 				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
 				echo $icon['addtocart'];
-				echo '</div>';
 			}
 			
-			echo '</div>';// end caption
-			
-			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
+			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
+				echo '<div class="ph-item-desc">';
+				echo JHTML::_('content.prepare', $v->description);
+				echo '</div>';// end desc
+			}
 			
 			// REVIEW - STAR RATING
 			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
 				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
 			}
 			
+			// VIEW PRODUCT BUTTON
+			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
+				// :L: LINK TO PRODUCT VIEW
+				if (!empty($dV)) { echo $layoutV->render($dV);}
+				// :L: ADD TO CART
+				if (!empty($dA)) { echo $layoutA->render($dA);}
+				if (!empty($dA2)) { echo $layoutA2->render($dA2);}
+				if (!empty($dA3)) { echo $layoutA3->render($dA3);}
+			echo '</div>';// end add to cart box 
+			
+			$results = $this->t['dispatcher']->trigger('onItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
+			echo trim(implode("\n", $results));						  
+			
+			echo '</div>';// end caption
+			
+			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
+			
 			if ($this->t['fade_in_action_icons'] == 1) {
 				echo '<div class="ph-item-action-fade '.$lt.'">';
 				echo $icon['compare'];
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
-				echo $icon['addtocart'];			
+				echo $icon['addtocart'];
 				echo '</div>';
 			}
 			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
-			
-			// :L: PRICE
-			if (!empty($dP)) { echo $layoutP->render($dP);};
-			
-			// VIEW PRODUCT BUTTON
-			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
-			
-			// :L: LINK TO PRODUCT VIEW
-			if (!empty($dV)) { echo $layoutV->render($dV);}
-			
-			// :L: ADD TO CART
-			if (!empty($dA)) { echo $layoutA->render($dA);}
-			if (!empty($dA2)) { echo $layoutA2->render($dA2);}
-			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
-			
-			echo '</div>';// end add to cart box 
-			
-			$results = $this->t['dispatcher']->trigger('onItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
-			echo trim(implode("\n", $results));
-			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 	
 			echo '</div>';// end row-item 3/3
@@ -342,98 +341,108 @@ if (!empty($this->items)) {
 			echo '</div>';// end row list
 			
 			
-		} else  {
+		} 
+		else  {
 			// -----------
 			// RENDER GRID
 			// -----------
-		
+			echo '<div class="jf_ph_cat_item_grid">';
 			// :L: IMAGE
 			echo '<a href="'.$link.'">';
 			if (!empty($dI)) { echo $layoutI->render($dI);}
 			echo '</a>';
 			
-
+			echo '<div class="jf_ph_cat_item_btns_wrap">';
+			
 			if ($this->t['fade_in_action_icons'] == 0) {
-				echo '<div class="ph-item-action '.$lt.'">';
 				echo $icon['compare']; // if set in options, it will be displayed on other place, so this is why it is printed this way
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
+				
 				echo $icon['addtocart'];
-				echo '</div>';
 			}
+				
+			$results = $this->t['dispatcher']->trigger('onItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
+			echo trim(implode("\n", $results));	
+			
+			
+			echo '</div>';
+			echo '</div>';
 			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 			
 			// CAPTION, DESCRIPTION BOX
-			echo '<div class="caption  '.$lt.'">';
-			echo '<h3 class="'.$lt.'">'. PhocacartRenderFront::getLinkedTitle($this->t['product_name_link'], $v) . '</h3>';
-			echo '</div>';// end caption
 			
-			// Description box will be displayed even no description is set - to set height and have all columns same height
-			echo '<div class="ph-item-desc">';
-			if ($v->description != '') { echo JHTML::_('content.prepare', $v->description); }
-			echo '</div>';// end desc
 			
-		
+			//echo '<div class="ph-caption  '.$lt.'">';
+			echo PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
+			//echo '</div>';// end caption
 			
-			// :L: PRICE
-			if (!empty($dP)) { echo $layoutP->render($dP);}
+			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
+				echo '<div class="ph-item-desc">';
+				echo JHTML::_('content.prepare', $v->description);
+				echo '</div>';// end desc
+			}
 			
 			// REVIEW - STAR RATING
 			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
 				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
 			}
 			
+			echo '<div class="ph-item-action-box '.$lt.'">';																	
+			// :L: PRICE
+			if (!empty($dP)) { echo $layoutP->render($dP);}
+			
+			
+			
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
 			
-			// :L: LINK TO PRODUCT VIEW
-			if (!empty($dV)) { echo $layoutV->render($dV);}
-			
-			// :L: ADD TO CART
-			if (!empty($dA)) { echo $layoutA->render($dA);}
-			if (!empty($dA2)) { echo $layoutA2->render($dA2);}
-			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
-			
+				// :L: LINK TO PRODUCT VIEW
+				if (!empty($dV)) { echo $layoutV->render($dV);}
+				
+				// :L: ADD TO CART
+				if (!empty($dA)) { echo $layoutA->render($dA);}
+				if (!empty($dA2)) { echo $layoutA2->render($dA2);}
+				if (!empty($dA3)) { echo $layoutA3->render($dA3);}
+				
 			echo '</div>';// end add to cart box
-			
-			$results = $this->t['dispatcher']->trigger('onItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
-			echo trim(implode("\n", $results));
-			
-			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 			
 			
 			if ($this->t['fade_in_action_icons'] == 1) {
-				echo '<div class="ph-item-action-box '.$lt.'">';
+				
 				echo '<div class="ph-item-action-fade '.$lt.'">';
 				echo $icon['compare'];
 				echo $icon['wishlist'];
 				echo $icon['quickview'];
-				echo $icon['addtocart'];			
+				echo $icon['addtocart'];
 				echo '</div>';
-				echo '</div>';// end action box
+				
 			}
+			
+			echo '</div>';// end action box					  
+			
 		}
 		
 		
 		
 		echo '<div class="clearfix"></div>';
+		
+		
 		echo '</div>';// end ph-item-content
 		echo '</div>';// end thumbnail ph-item
 		echo '</div>';// end ph-item-box
 		echo '</div>'. "\n"; // end row item - columns
 		
-
-		
 		if ($i%(int)$this->t['columns_cat'] == 0) {
 			echo '<div class="clearfix"></div>';
 		}
-		$i++;									 
+		$i++;
 	}
-	
+
+			
 	echo '</div>';// end row (row-flex)
 	echo '<div class="clearfix"></div>';
-	
 	
 	echo $this->loadTemplate('pagination');
 	

@@ -89,7 +89,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.*'
+				'a.id, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.language, a.hits'
+				
 			)
 		);
 		$query->from('`#__phocacart_products` AS a');
@@ -109,7 +110,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
 		// Join over the categories.
-		$query->select('c.title AS category_title, c.id AS category_id');
+		$query->select('GROUP_CONCAT(c.title) AS category_title, GROUP_CONCAT(c.id) AS category_id');
 		$query->join('LEFT', '#__phocacart_product_categories AS pc ON a.id = pc.product_id');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
 	
@@ -159,7 +160,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 			}
 		}
 		
-		$query->group('a.id');
+		$query->group('a.id, a.tax_id, a.manufacturer_id, a.description, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.language, a.hits, l.title, uc.name, ag.title');
+		//$query->group('a.id');
 
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'title');

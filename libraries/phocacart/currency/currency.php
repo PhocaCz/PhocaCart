@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -48,9 +50,16 @@ class PhocacartCurrency
 		
 		$session 	= JFactory::getSession();
 		if( $id == 0 ) {
-			$id		= $session->get('currency', 0, 'phocaCart');
+			$id			= $session->get('currency', 0, 'phocaCart');
 			
+			// check only session currencies, not database - as they can be order currencies
+			$isValid	= self::isCurrencyValid($id);
+			if (!$isValid) {
+				$id = 0;
+			}
 		}
+		
+		
 		
 		if ((int)$id < 1) {
 			$id = self::getDefaultCurrency();
@@ -78,6 +87,24 @@ class PhocacartCurrency
 		
 		return self::$currency[$id];
 		
+	}
+	
+	public static function isCurrencyValid($id) {
+		
+		$isValid = false;
+		if ($id > 0) {
+			$db = JFactory::getDBO();
+			$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
+					.' WHERE a.id = '.(int)$id
+					.' AND a.published = 1'
+					.' ORDER BY a.id';
+			$db->setQuery($query);
+			$c = $db->loadResult();
+			if (isset($c) && (int)$c > 0) {
+				$isValid = true;
+			}
+		}
+		return $isValid;
 	}
 	
 	public static function getDefaultCurrency() {
@@ -210,13 +237,24 @@ class PhocacartCurrency
 				if ($currentCurrency['exchange_rate'] > 0) {
 					$o .= '<div>1 '.$defaultCurrency['code'] . ' = '. PhocacartPrice::cleanPrice($currentCurrency['exchange_rate']). ' '. $currentCurrency['code'].'</div>';
 				}
-				$o .= '<div>1 '.$currentCurrency['code'] . ' = '. PhocacartPrice::cleanPrice(round((1 / $currentCurrency['exchange_rate']), 8))  . ' '. $defaultCurrency['code'].'</div>';
+				if ($currentCurrency['exchange_rate'] > 0) {
+					$o .= '<div>1 '.$currentCurrency['code'] . ' = '. PhocacartPrice::cleanPrice(round((1 / $currentCurrency['exchange_rate']), 8))  . ' '. $defaultCurrency['code'].'</div>';
+				}
 				return $o;
 			}
 		}
 		
 		return;
 		
+	}
+	
+	public static function getCurrentCurrencyRateIfNotDefault() {
+		$currency = self::getCurrency();
+		if (isset($currency->id) && (int)$currency->id > 0 && isset($currency->exchange_rate) && $currency->exchange_rate != 1) {
+			return $currency->exchange_rate;
+		} else {
+			return 0;
+		}
 	}
 	
 	

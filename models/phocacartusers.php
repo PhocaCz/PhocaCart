@@ -82,7 +82,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.*'
+				'a.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city'
 			)
 		);
 		$query->from('`#__users` AS u');
@@ -133,6 +133,10 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		}*/
 
 
+		// List only payment or shipping data - to not duplicity the list
+		$query->where('a.type = 0');
+		
+		
 		// Filter by search in title
 		$search = $this->getState('filter.search');
 		if (!empty($search))
@@ -151,7 +155,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		//$query->where('a.type = 0');
 		
 		//$query->where('u.name <> '.$db->quote('Super User'));
-		$query->group('u.id');
+		$query->group('a.id, a.checked_out, u.id, u.name, u.username, ou.user_id, c.date, c.user_id, uc.name, a.name_last, a.name_first, a.address_1, a.city');
 		
 		$user = $this->getState('filter.user');
 		if (!empty($user)){

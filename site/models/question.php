@@ -88,10 +88,14 @@ class PhocaCartModelQuestion extends JModelForm
 		$params = JComponentHelper::getParams('com_phocacart') ;
 		
 		// Maximum of character, they will be saved in database
-		$data['message']	= substr($data['message'], 0, $params->get('max_char_question', 3000));
-		$data['date'] 		= gmdate('Y-m-d H:i:s');   // Create the timestamp for the date
+		$data['message']		= substr($data['message'], 0, $params->get('max_char_question', 3000));
+		$data['date'] 			= gmdate('Y-m-d H:i:s');   // Create the timestamp for the date
 		
+		$data['params']			= '';
+		$data['category_id']	= PhocacartUtils::getIntFromString($data['category_id']);
+		$data['product_id']	= PhocacartUtils::getIntFromString($data['product_id']);
 		$row = $this->getTable('PhocaCartQuestion');
+
 
 		// Bind the form fields to the table
 		if (!$row->bind($data)) {

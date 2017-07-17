@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -51,12 +53,9 @@ class PhocacartCoupon
 			.' LEFT JOIN #__phocacart_coupon_count_user AS cu ON cu.coupon_id = c.id AND cu.user_id = '.(int)$user->id // limit c for user
 			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 6'// type 6 is coupon
 			. $where
-			.' GROUP BY c.id';
-			// SQL92 SQL99 ???
-			
-			/*.', c.code, c.title, c.valid_from, c.valid_to, c.discount,'
+			.' GROUP BY c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
 			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
-			.' c.calculation_type, c.free_shipping, c.free_payment';*/
+			.' c.calculation_type, c.free_shipping, c.free_payment, co.count, cu.count';
 			//.' co.count AS count, cu.count AS countuser';
 			
 			$query .= ' ORDER BY c.id'
@@ -332,8 +331,12 @@ class PhocacartCoupon
 		//.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
 		.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 		.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-		.' WHERE co.coupon_id = '.(int) $couponId
-		.' GROUP BY a.id';
+		.' WHERE co.coupon_id = '.(int) $couponId;
+		if ($select == 1) {
+			$query .= ' GROUP BY co.coupon_id';
+		} else {
+			$query .= ' GROUP BY co.coupon_id, a.id, a.title';
+		}
 		$db->setQuery($query);
 		
 		if ($select == 1) {

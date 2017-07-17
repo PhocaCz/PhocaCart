@@ -24,13 +24,15 @@ if (!empty($this->t['categories'])) {
 	$c = count($this->t['categories']);
 	$nc= (int)$this->t['columns_cats'];
 	$nw= 12/$nc;//1,2,3,4,6,12
-	echo '<div class="row">';
+	echo '<div class="row '.$this->t['class-row-flex'].' grid ph-row-cats">';
 	foreach ($this->t['categories'] as $v) {
 		
 		//if ($i%$nc==0) { echo '<div class="row">';}
 		
-		echo '<div class="col-sm-6 col-md-'.$nw.'">';
+		echo '<div class="row-item col-sm-6 col-md-'.$nw.'">';
+		echo '<div class="ph-item-box grid">';
 		echo '<div class="thumbnail ph-thumbnail ph-thumbnail-c">';
+		echo '<div class="ph-item-content">';
 		
 		$image 	= PhocacartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
 		$link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
@@ -51,7 +53,7 @@ if (!empty($this->t['categories'])) {
 			echo '</div>';
 			//echo '</a>';
 		}
-		echo '<div class="caption">';
+		//echo '<div class="caption">';
 		
 		echo '<h3>';
 		if ($this->t['category_name_link'] == 1)
@@ -85,16 +87,21 @@ if (!empty($this->t['categories'])) {
 		
 		
 		if ((int)$this->t['display_view_category_button'] > 0) {
+			
 			$d									= array();
 			$d['link']							= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 			$d['display_view_category_button']	= $this->t['display_view_category_button'];
+			echo '<div class="ph-item-action-box">';
 			echo $layoutV->render($d);
+			echo '</div>';
 		}
 		
 		echo '<div class="clearfix"></div>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>'. "\n";
+		//echo '</div>';// end ph-caption
+		echo '</div>';// end ph-item-content
+		echo '</div>';// end thumbnails
+		echo '</div>';// end ph-item-box
+		echo '</div>'. "\n";// end row item
 		
 		$i++;
 		// if ($i%$nc==0 || $c==$i) { echo '</div>';}

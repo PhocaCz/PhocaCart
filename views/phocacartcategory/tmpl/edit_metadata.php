@@ -8,12 +8,16 @@
  */
 defined('_JEXEC') or die();
 
-$fieldSets = $this->form->getFieldsets('metadata');
+$fieldSets = $this->form->getFieldsets('metadata'); 
+
 foreach ($fieldSets as $name => $fieldSet) :
 	?>
 	<fieldset class="panelform">
 	<div class="adminform">
 		<?php if ($name == 'metadata') : // Include the real fields in this panel. ?>
+			<div class="control-group">
+			<div class="control-label"><?php echo $this->form->getLabel('metatitle'); ?></div>
+			<div class="controls"><?php echo $this->form->getInput('metatitle'); ?></div></div>
 			<div class="control-group">
 			<div class="control-label"><?php echo $this->form->getLabel('metadesc'); ?></div>
 			<div class="controls"><?php echo $this->form->getInput('metadesc'); ?></div></div>
@@ -23,7 +27,7 @@ foreach ($fieldSets as $name => $fieldSet) :
 		<?php endif; ?>
 		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 			<div class="control-group">
-			<div class="control-label"><?php echo $field->label; ?>
+			<div class="control-label"><?php echo $field->label; ?></div>
 			<div class="controls"><?php echo $field->input; ?></div></div>
 		<?php endforeach; ?>
 		</div>

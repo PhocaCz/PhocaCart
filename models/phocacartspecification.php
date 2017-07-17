@@ -66,6 +66,10 @@ class PhocaCartCpModelPhocacartSpecification extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}
+		
+		$table->date = PhocacartUtils::getDateFromString($table->date);
+		
+		
 
 		if (empty($table->id)) {
 			// Set the values
@@ -85,6 +89,8 @@ class PhocaCartCpModelPhocacartSpecification extends JModelAdmin
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
+		
+		
 	}
 }
 ?>

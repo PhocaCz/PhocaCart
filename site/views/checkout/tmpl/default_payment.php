@@ -88,7 +88,7 @@ if ($this->a->paymentnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItemsPayment($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalctype, $v->taxtitle, 0, 1, '');
+		$priceI = $price->getPriceItemsPayment($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
 
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';

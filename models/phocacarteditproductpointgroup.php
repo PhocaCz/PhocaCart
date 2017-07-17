@@ -17,7 +17,7 @@ class PhocaCartCpModelPhocaCartEditProductPointGroup extends JModelList
 	public function save($data, $productId) {
 		
 		if (!empty($data)) {
-			return PhocacartGroup::storeProductPriceGroupsById($data, $productId);
+			return PhocacartGroup::storeProductPointGroupsById($data, $productId);
 		}
 	}
 }

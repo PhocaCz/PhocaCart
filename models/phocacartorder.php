@@ -80,7 +80,9 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		return $data;
 	}
 	
-	protected function prepareTable($table) {}
+	protected function prepareTable($table) {
+		$table->currency_exchange_rate 			= PhocacartUtils::replaceCommaWithPoint($table->currency_exchange_rate);
+	}
 	
 	
 	public function save($data) {
@@ -228,6 +230,11 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	public function storeOrderProducts($d) {
 		$row = JTable::getInstance('PhocacartOrderProducts', 'Table', array());
 
+		
+		$d['netto'] 			= PhocacartUtils::replaceCommaWithPoint($d['netto']);
+		$d['tax'] 				= PhocacartUtils::replaceCommaWithPoint($d['tax']);
+		$d['brutto'] 			= PhocacartUtils::replaceCommaWithPoint($d['brutto']);
+		
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
 			return false;
@@ -247,6 +254,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	public function storeOrderAttributes($d) {
 		$row = JTable::getInstance('PhocacartOrderAttributes', 'Table', array());
 
+		
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
 			return false;
@@ -266,6 +274,9 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	public function storeOrderTotal($d) {
 		$row = JTable::getInstance('PhocacartOrderTotal', 'Table', array());
 
+		
+		$d['amount'] 			= PhocacartUtils::replaceCommaWithPoint($d['amount']);
+		
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
 			return false;
@@ -303,6 +314,10 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	
 	public function storeOrderProductDiscounts($d) {
 		$row = JTable::getInstance('PhocacartOrderProductDiscounts', 'Table', array());
+		
+		$d['netto'] 			= PhocacartUtils::replaceCommaWithPoint($d['netto']);
+		$d['tax'] 			= PhocacartUtils::replaceCommaWithPoint($d['tax']);
+		$d['brutto'] 			= PhocacartUtils::replaceCommaWithPoint($d['brutto']);
 
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());

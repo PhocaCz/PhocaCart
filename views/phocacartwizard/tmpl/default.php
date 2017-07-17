@@ -53,18 +53,18 @@ if ($this->page == 0) { ?>
 				
 				<div><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_DEMO_DATA'); ?>:</div>
 				
-				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="http://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="glyphicon glyphicon-download icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="glyphicon glyphicon-download icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
 				
 				<ol>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_INSTALL_BOTH_PACKAGES'); ?></li>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_CREATE_OR_IMPORT_COUNTRIES'); ?></li>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_CREATE_MENU_LINK'); ?></li>
 					
-					<li><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="http://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</li>
+					<li><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="https://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</li>
 				</ol>
 			
 	
-				<div><?php echo JText::_('COM_PHOCACART_FOR_MORE_INFORMATION_FOLLOW_THIS_GUIDE'); ?>: <a href="http://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data-demo-data-in-phoca-cart" target="_blank"><?php echo JText::_('COM_PHOCACART_INSTALLING_SAMPLE_DATA_IN_PHOCA_CART'); ?></a>.</div>
+				<div><?php echo JText::_('COM_PHOCACART_FOR_MORE_INFORMATION_FOLLOW_THIS_GUIDE'); ?>: <a href="https://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data-demo-data-in-phoca-cart" target="_blank"><?php echo JText::_('COM_PHOCACART_INSTALLING_SAMPLE_DATA_IN_PHOCA_CART'); ?></a>.</div>
 	
 			</div>
 		</div>
@@ -142,7 +142,7 @@ if ($this->page == 0) { ?>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
-		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="http://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
+		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkModules);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_MODULES'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardModule"></div></div>
 	</div>
@@ -154,7 +154,7 @@ if ($this->page == 0) { ?>
 	</div>
 	
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
-		<div class="span12 col-sm-12 col-md-12"><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="http://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</div>
+		<div class="span12 col-sm-12 col-md-12"><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="https://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</div>
 	</div>
 	
 </div><?php

@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 final class PhocacartStatistics
@@ -249,6 +251,7 @@ options: {
 	
 	
 	public function renderChartJsPie($id, $data) {
+		
 
 		$colors = array('#FFCC33', '#FF6633', '#FF3366', '#FF33CC', '#CC33FF');
 		$dS = $lS = $bS = '';
@@ -312,7 +315,8 @@ var config".$id." = {
 		$db	= JFactory::getDbo();
 		$q	= $db->getQuery(true);
 
-		$q->select('a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
+		///// -- $q->select('a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
+		$q->select('DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
 		$q->from('`#__phocacart_orders` AS a');
 		
 		$q->select('SUM(t.amount) AS order_amount');
@@ -330,16 +334,18 @@ var config".$id." = {
 		}
 		$dateDays = PhocacartDate::getDateDays($dateFrom, $dateTo);
 
+		
 
 		if ($dateTo != '' && $dateFrom != '') {
 			$dateFrom 	= $db->Quote($dateFrom);
 			$dateTo 	= $db->Quote($dateTo);
 			$q->where('DATE(a.date) >= '.$dateFrom.' AND DATE(a.date) <= '.$dateTo );
 		}
+		///// -- $q->group('DATE(a.date), a.id');
 		$q->group('DATE(a.date)');
-
+		
 		$q->order($db->escape('a.date ASC'));
-		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
+		echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
 		$db->setQuery($q);
 
 		$items = $db->loadObjectList();
@@ -348,16 +354,21 @@ var config".$id." = {
 		$amount		= array();
 		$orders		= array();
 		if (!empty($items) && !empty($dateDays)) {
+			
 			foreach($dateDays as $date) {
 				$amount[ $date->format('Y-m-d') ] = 0;
 				$orders[ $date->format('Y-m-d') ] = 0;
 			}
+			
 			foreach($items as $k => $v) {
 			
 				if (isset($amount[$v->date_only])) {
+					
+					///// -- $amount[$v->date_only] += $v->order_amount;
 					$amount[$v->date_only] = $v->order_amount;
 				}
 				if (isset($orders[$v->date_only])) {
+					///// -- $orders[$v->date_only] += $v->count_orders;
 					$orders[$v->date_only] = $v->count_orders;
 				}
 			}

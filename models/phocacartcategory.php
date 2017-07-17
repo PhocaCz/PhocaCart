@@ -81,6 +81,9 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
 		}
+		
+		$table->parent_id 	= PhocacartUtils::getIntFromString($table->parent_id);
+		$table->date 		= PhocacartUtils::getDateFromString($table->date);
 
 		if (empty($table->id)) {
 			// Set the values
@@ -111,6 +114,8 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	}
 	
 	public function save($data) {
+		
+		
 		// Test thumbnail of category image
 		if(isset($data['image']) && $data['image'] != '') {
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
@@ -152,7 +157,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id'
 			. ' WHERE c.id IN ( '.$cids.' )'
-			. ' GROUP BY c.id'
+			. ' GROUP BY c.id, c.title, s.parent_id'
 			;
 			$db->setQuery( $query );
 				
@@ -183,7 +188,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				. ' FROM #__phocacart_categories AS c'
 				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
 				. ' WHERE c.id IN ( '.$cids.' )'
-				. ' GROUP BY c.id';
+				. ' GROUP BY c.id, c.title, s.category_id';
 			
 				$db->setQuery( $query );
 
@@ -296,7 +301,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			return false;
 		}
 		
-		$i		= 0;
+		//$i		= 0;
 
 		// Parent exists so we let's proceed
 		while (!empty($pks))
@@ -352,12 +357,12 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$newId = $table->get('id');
 
 			// Add the new ID to the array
-			$newIds[$i]	= $newId;
+			$newIds[$pk]	= $newId;
 			// Store other new information
 			PhocacartUtilsBatchhelper::storeCategoryItems($pk, (int)$newId);
 			
 			
-			$i++;
+			//$i++;
 		}
 
 		// Clean the cache

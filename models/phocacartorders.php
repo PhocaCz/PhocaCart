@@ -95,7 +95,7 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		$query->select('os.title AS status_title');
 		$query->join('LEFT', '#__phocacart_order_statuses AS os ON os.id = a.status_id');
 
-		$query->select('t.amount AS total_amount');
+		$query->select('t.amount AS total_amount, t.amount_currency AS total_amount_currency');
 		$query->join('LEFT', '#__phocacart_order_total AS t ON a.id = t.order_id');
 		$query->where('t.type = '.$db->quote('brutto'));
 		

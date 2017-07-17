@@ -66,7 +66,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.item_id'));
 		$user  	= JFactory::getUser();
-		$bar 	= JToolBar::getInstance('toolbar');
+		$bar 	= JToolbar::getInstance('toolbar');
 		
 		JToolbarHelper::title( JText::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
 		if ($canDo->get('core.create')) {
@@ -91,14 +91,14 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JHtml::_('bootstrap.modal', 'collapseModal');
+			JHtml::_('bootstrap.renderModal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 			
-			JHtml::_('bootstrap.modal', 'collapseModalCA');
+			JHtml::_('bootstrap.renderModal', 'collapseModalCA');
 			$title = JText::_('COM_PHOCACART_COPY_ATTRIBUTES');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModalCA\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>

@@ -24,8 +24,9 @@ class PhocaCartCpModelPhocaCartImports extends JModelList
 		$q 		= 'SELECT COUNT(id)'
 				.' FROM #__phocacart_import'
 			    .' WHERE user_id = '.(int) $user->id
-				.' AND type = 0'
-				.' ORDER BY id';
+				.' AND type = 0';
+				//.' GROUP by id'
+				//.' ORDER BY id';
 		$db->setQuery($q);
 		$count = $db->loadResult();
 		

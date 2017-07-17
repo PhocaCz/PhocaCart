@@ -180,11 +180,14 @@ if (!empty($this->itemproducts)) {
 }
 
 
+$warningCurrency = 0;
 if (!empty($this->itemtotal)) {
 echo '<tr><td class="ph-order-products-hr" colspan="7">&nbsp;</td></tr>';
 echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 	foreach($this->itemtotal as $k => $v) {
-		echo '<tr>';
+		
+		
+		echo '<tr class="'.$class.'">';
 		echo '<td></td>';
 		echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title, 'tform', 2). '</td>';
 		
@@ -203,13 +206,49 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 		echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
 		echo '<td>'.$r->itemCalc($v->id, 'amount', PhocacartPrice::cleanPrice($v->amount), 'tform').'</td>';
 		echo '<td align="center">'.$r->itemCalcCheckBox($v->id, 'published', $v->published, 'tform').'</td>';
-		echo '<td class="ph-col-add-cur">( '.$this->pr->getPriceFormat($v->amount).' )</td>';
+		
 		echo '</tr>';
+		
+		
+		// ROUNDING CURRENCY
+		if ($v->type == 'rounding' && $v->amount_currency > 0 && $v->amount_currency != $v->amount) {
+			$warningCurrency = 1;
+			echo '<tr class="ph-currency-row">';
+			echo '<td></td>';
+			echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title . ' ('.JText::_('COM_PHOCACART_CURRENCY').')', 'tform', 2). '</td>';
+			echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'amount', PhocacartPrice::cleanPrice($v->amount_currency), 'tform').'</td>';
+			echo '<td align="center"></td>';
+			echo '<td class="ph-col-add-cur"></td>';
+			echo '</tr>';
+		}
+		
+		// BRUTTO CURRENCY
+		if ($v->type == 'brutto' && $v->amount_currency > 0 && $v->amount_currency != $v->amount) {
+			$warningCurrency = 1;
+			echo '<tr class="ph-currency-row">';
+			echo '<td></td>';
+			echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title . ' ('.JText::_('COM_PHOCACART_CURRENCY').')', 'tform', 2). '</td>';
+			echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'amount', PhocacartPrice::cleanPrice($v->amount_currency), 'tform').'</td>';
+			echo '<td align="center"></td>';
+			echo '<td class="ph-col-add-cur"></td>';
+			echo '</tr>';
+		}
 	}
 }
 
 
 echo '</table>';
+
+if ($warningCurrency == 1) {
+	echo '<div>&nbsp;</div>';
+	echo '<div class="alert alert-warning">';
+	
+	echo '<span class="ph-currency-row">&nbsp;&nbsp;&nbsp;</span> '.JText::_('COM_PHOCACART_ROUNDING_CURRENCY_NOT_STORED_IN_DEFAULT_CURRENCY_BUT_ORDER_CURRENCY');
+	echo '</div>';
+
+}
 
 echo '</div>';
 

@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -232,8 +234,10 @@ class PhocacartCategoryMultiple
 				foreach ($items as $k => &$v) {
 					if (isset($v->count_categories) && (int)$v->count_categories > 1) {
 						
+						
+						$catid	= explode(',', $v->catid);
 						$id 	= (int)$v->id;
-						$catid	= (int)$v->catid;
+						$catid	= (int)$catid[0];
 						if (isset($categories[$id]['catid']) && isset($catid) && (int)$categories[$id]['catid'] == $catid){
 							continue;
 							
@@ -242,6 +246,8 @@ class PhocacartCategoryMultiple
 						if (isset($categories[$id]['catid']) && isset($id)){
 							$newItems = self::getCategoryByProduct($id, $categories[$id]['catid']);
 							if (isset($newItems['catid']) && isset($newItems['cattitle']) && isset($newItems['catalias'])) {	
+								
+								
 								$v->catid 		= $newItems['catid'];
 								$v->cattitle 	= $newItems['cattitle'];
 								$v->catalias 	= $newItems['catalias'];

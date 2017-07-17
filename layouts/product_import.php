@@ -657,7 +657,7 @@ if($xml) {
 							
 						}
 						
-						
+					
 						$newId = PhocacartProduct::storeProduct($data, $import_column);
 						if ($newId > 0) {
 							$productIdChange[$newId] = $data['id'];

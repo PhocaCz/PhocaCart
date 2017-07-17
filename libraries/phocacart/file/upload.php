@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.filesystem.folder' ); 
@@ -16,13 +18,13 @@ class PhocacartFileUpload
 		
 				
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
 		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 4 );
 		
 		$overwriteExistingFiles 	= $paramsC->get( 'overwrite_existing_files', 0 );
 		
-		JResponse::allowCache(false);
+		$app->allowCache(false);
 		
 		// Chunk Files
 		header('Content-type: text/plain; charset=UTF-8');
@@ -335,7 +337,7 @@ class PhocacartFileUpload
 	public static function realSingleUpload( $frontEnd = 0 ) {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 	//	$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
 	//	$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 1 );
 	
@@ -343,7 +345,7 @@ class PhocacartFileUpload
 		
 		
 		JSession::checkToken('request') or jexit( 'ERROR: '. JTEXT::_('COM_PHOCACART_INVALID_TOKEN'));
-		JResponse::allowCache(false);
+		$app->allowCache(false);
 		
 		
 		$file 			= JFactory::getApplication()->input->files->get( 'Filedata', null, 'raw');
@@ -484,7 +486,7 @@ class PhocacartFileUpload
 	public static function canUpload( $file, &$err, $manager = '', $frontEnd = 0, $chunkEnabled = 0, $realSize = 0) {
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		
 		if ($frontEnd == 1) {
 			$aft = $paramsC->get( 'allowed_file_types_upload', PhocacartUtilsSettings::getDefaultAllowedMimeTypesUpload() );

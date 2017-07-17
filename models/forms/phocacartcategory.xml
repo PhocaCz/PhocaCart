@@ -25,6 +25,10 @@
 
 <field name="title_feed" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC" />
 
+<field name="metatitle" type="text"
+			label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"
+			class="inputbox"/>
+			
 <field name="metakey" type="textarea"
 			label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
 			class="inputbox" rows="3" cols="30" />
@@ -53,18 +57,19 @@
 	
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-<!--
-	<field name="robots" type="list"
-		label="JField_Metadata_Robots_Label" description="JField_Metadata_Robots_Desc"
-	>
-		<option value="">JGLOBAL_USE_GLOBAL</option>
-		<option value="0">JGLOBAL_INDEX_FOLLOW</option>
-		<option value="1">JGLOBAL_NOINDEX_FOLLOW</option>
-		<option value="2">JGLOBAL_INDEX_NOFOLLOW</option>
-		<option value="3">JGLOBAL_NOINDEX_NOFOLLOW</option>
-		<option value="4">JGLOBAL_NO_ROBOTS_TAG</option>
-	</field>
 
+	<field name="robots"
+				type="list"
+				label="JFIELD_METADATA_ROBOTS_LABEL"
+				description="JFIELD_METADATA_ROBOTS_DESC"
+				>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+<!--
 	<field name="author" type="text" label="JAUTHOR"
 		description="JField_Metadata_Author_Desc" size="20" />
 

@@ -44,40 +44,41 @@ if (!empty($this->t['product'])) {
 		echo '</tr>';
 	
 	
-		// Default is the main price
-		echo '<tr>';
-		echo '<td>'.JText::_('COM_PHOCACART_DEFAULT').'</td>';
-		echo '<td><input type="text" class="input-small" name="jformdefault[]" value="'.PhocacartPrice::cleanPrice($this->t['product']->price).'" readonly />';
-		echo '</td>';
-		echo '</tr>';
+
 	
 		foreach($this->t['groups'] as $k => $v) {
 			
-			if ($v['type'] == 1) {
-				continue;
-				// Default 
-				// Possible TO DO - disable price for default and let only the price in product
-			}
 			
 			echo '<tr>';
 			echo '<td>'.JText::_($v['title']).'</td>';
-
 			
-			
-			
-			// Set value from database
-			$price = '';
-			if (isset($this->t['product_groups'][$v['id']]['price'])) {
-				$price = $this->t['product_groups'][$v['id']]['price'];
-				if ($price > 0 || $price == 0) {
-					$price = PhocacartPrice::cleanPrice($price);
+			if ($v['type'] == 1) {
+				
+				// Default 
+				echo '<td><input type="text" class="input-small" name="jform['.$v['id'].'][price]" value="'.PhocacartPrice::cleanPrice($this->t['product']->price).'" readonly />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
+				
+			} else {
+				
+				// Set value from database
+				$price = '';
+				if (isset($this->t['product_groups'][$v['id']]['price'])) {
+					$price = $this->t['product_groups'][$v['id']]['price'];
+					if ($price > 0 || $price == 0) {
+						$price = PhocacartPrice::cleanPrice($price);
+					}
 				}
+				echo '<td><input type="text" class="input-small" name="jform['.$v['id'].'][price]" value="'.$price.'" />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
+				echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
+				//echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$v['product_id'].'" />';
+				//echo '<input type="hidden" name="jform['.$v['id'].'][attributes]" value="'.serialize($v['attributes']).'" />';
+				
+				
+				
 			}
-			echo '<td><input type="text" class="input-small" name="jform['.$v['id'].'][price]" value="'.$price.'" />';
-			echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
-			echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
-			//echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$v['product_id'].'" />';
-			//echo '<input type="hidden" name="jform['.$v['id'].'][attributes]" value="'.serialize($v['attributes']).'" />';
+			
 			echo '</td>';
 			echo '</tr>';
 			

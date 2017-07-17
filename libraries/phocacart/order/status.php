@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 /*
@@ -92,7 +94,7 @@ class PhocacartOrderStatus
 		$config		= JFactory::getConfig();
 		
 		$app			= JFactory::getApplication();
-		$paramsC 		= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$invoice_prefix		= $paramsC->get('invoice_prefix', '');
 		$attachment_format	= $paramsC->get('attachment_format', 0 );
 		
@@ -268,7 +270,7 @@ class PhocacartOrderStatus
 			if (!empty($products)) {
 				foreach ($products as $k => $v) {
 					
-					// See: http://www.phoca.cz/documents/116-phoca-cart-component/932-stock-handling or
+					// See: https://www.phoca.cz/documents/116-phoca-cart-component/932-stock-handling or
 					//		https://www.phoca.cz/documents/116-phoca-cart-component/932-stock-handling
 					if ((int)$v->stock_calculation == 1) {
 						// =====================
@@ -318,6 +320,7 @@ class PhocacartOrderStatus
 			}
 
 		}
+		
 		
 		if ($changeUserGroupV == 0 || $changeUserGroupV == 1) {
 			

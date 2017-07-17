@@ -28,7 +28,7 @@ if (!empty($d['wishlist'])) {
 			<input type="hidden" name="tmpl" value="component" />
 			<input type="hidden" name="option" value="com_phocacart" />
 			<input type="hidden" name="return" value="<?php echo $d['actionbase64']; ?>" />
-			<div class="pull-right">
+			<div class="pull-right ph-pull-right">
 			<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
 				<div class="ph-category-item-wishlist"><a href="javascript:void(0)" onclick="phItemRemoveWishListFormAjax('phWishListRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_WISH_LIST'); ?>"><span class="glyphicon glyphicon-remove"></span></a></div>
 			<?php } else { ?>

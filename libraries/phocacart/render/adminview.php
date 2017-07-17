@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
@@ -933,12 +935,12 @@ class PhocacartRenderAdminview
 		}
 		
 		// Global Close
-		if ($autoOpen == 1) {
+		//if ($autoOpen == 1) {
 			$s[] = 'window.phCloseModal = function(){';
 			$s[] = '   jQuery("#'.$id.'").modal(\'hide\');';
 			$s[] = '}';
 			$s[] = ' ';
-		}
+		//}
 		
 		$s[] = 'jQuery(document).ready(function() {';
 		
@@ -1020,7 +1022,7 @@ class PhocacartRenderAdminview
 	
 	public static function renderWizardButton($type = 'enable', $idMd = '', $url = '', $w = '', $h = '') {
 		
-		$paramsC 		= JComponentHelper::getParams('com_phocacart');
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$enable_wizard	= $paramsC->get( 'enable_wizard', 1 );
 
 		
@@ -1032,7 +1034,7 @@ class PhocacartRenderAdminview
 		
 		if ($type == 'back' && $enable_wizard > 0) {
 			// BACK TO WIZARD (can be called everywhere)
-			$bar = JToolBar::getInstance( 'toolbar' );		
+			$bar = JToolbar::getInstance( 'toolbar' );		
 			$dhtml = '<button onclick="Joomla.submitbutton(\'phocacartwizard.backtowizard\');" class="btn btn-small btn-warning">
 	<span id="ph-icon-wizard" class="icon-dummy glyphicon glyphicon-edit ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_BACK_TO_WIZARD').'</button>';
 		
@@ -1040,7 +1042,7 @@ class PhocacartRenderAdminview
 		} else if ($type == 'start') {
 			// START WIZARD (can be called only in control panel) - to start in ohter place, back to wizard format needs to be copied
 			// this button is starded by javascript in function modalWindowDynamic libraries\phocacart\render\adminview.php
-			$bar = JToolBar::getInstance( 'toolbar' );		
+			$bar = JToolbar::getInstance( 'toolbar' );		
 			$dhtml = '<button id="'.$id.'" class="'.$class.'" data-target="#'.$idMd.'" data-toggle="modal" data-src="'.$url.'" data-width="'.$w.'" data-heigth="'.$h.'">
 	<span id="ph-icon-wizard" class="icon-dummy glyphicon glyphicon-edit ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_START_WIZARD').'</button>';
 			$bar->appendButton('Custom', $dhtml, 'wizard');

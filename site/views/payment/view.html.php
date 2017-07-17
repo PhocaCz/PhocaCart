@@ -40,8 +40,7 @@ class PhocaCartViewPayment extends JViewLegacy
 			$o['bas']		= $order->getItemBaS($id, 1);
 			$o['products'] 	= $order->getItemProducts($id);
 			$o['total'] 	= $order->getItemTotal($id);
-			
-			
+		
 			if (isset($o['common']->payment_id) && (int)$o['common']->payment_id > 0) {
 				$paymentO = $payment->getPaymentMethod((int)$o['common']->payment_id );
 				

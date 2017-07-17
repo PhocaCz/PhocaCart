@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 /*
@@ -290,7 +292,7 @@ class PhocacartCart
 			if(!empty($this->items)) {
 			
 				$app				= JFactory::getApplication();
-				$paramsC 			= $app->isAdmin() ? JComponentHelper::getParams('com_phocacart') : $app->getParams();
+				$paramsC 			= PhocacartUtils::getComponentParameters();
 				$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
 				
 				$price	= new PhocacartPrice();
@@ -318,7 +320,7 @@ class PhocacartCart
 				$calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
 				
 				//$calc->round($this->total[1]);
-				
+			
 				$this->fullitems[0] 		= $this->fullitems[4] 		= $this->fullitems[3] 		= $this->fullitems[2] 		
 											= $this->fullitems[5]		= $this->fullitems[1];
 				
@@ -330,7 +332,7 @@ class PhocacartCart
 
 											
 											
-											
+										
 				// --------------------
 				// 5) Reward Points
 				// --------------------
@@ -425,10 +427,11 @@ class PhocacartCart
 				$this->total[0] 			= $this->total[4];
 				
 				
-				$calc->round($this->total[0], 0);
-				
+				//$calc->round($this->total[0], 0);
+				$calc->roundFixedAmountCoupon($this->total[4]);
 
-					
+				
+				
 				/*foreach($this->fullitems[0] as $k => $v) {
 					$item 	= explode(':', $k);
 					$attribs = unserialize(base64_decode($item[1]));
@@ -443,6 +446,74 @@ class PhocacartCart
 					
 			}
 		}
+	}
+	
+	public function roundTotalAmount() {
+		
+		$price		= new PhocacartPrice();
+		$calc 		= new PhocacartCartCalculation();
+		$currency 	= PhocacartCurrency::getCurrency();
+		$cr			= $currency->exchange_rate;
+		$total 		= 0; // total in default currency
+		$totalC		= 0; // total in order currency
+		
+	
+		
+		// Subtotal
+		if (isset($this->total[1]['netto'])) {
+			$total += $price->roundPrice($this->total[1]['netto']);
+			$totalC += $price->roundPrice($this->total[1]['netto'] * $cr);
+			
+		}
+		
+		// - Reward points
+		if (isset($this->total[5]['dnetto'])) {
+			$total -= $price->roundPrice($this->total[5]['dnetto']);
+			$totalC -= $price->roundPrice($this->total[5]['dnetto'] * $cr);
+			
+		}
+		
+		// - Product Discount
+		if (isset($this->total[2]['dnetto'])) {
+			$total -= $price->roundPrice($this->total[2]['dnetto']);
+			$totalC -= $price->roundPrice($this->total[2]['dnetto'] * $cr);
+			
+		}
+		
+		// - Discount cart
+		if (isset($this->total[3]['dnetto'])) {
+			$total -= $price->roundPrice($this->total[3]['dnetto']);
+			$totalC -= $price->roundPrice($this->total[3]['dnetto'] * $cr);
+		}
+		
+		// - Coupon cart
+		if (isset($this->total[4]['dnetto'])) {
+			$total -= $price->roundPrice($this->total[4]['dnetto']);
+			$totalC -= $price->roundPrice($this->total[4]['dnetto'] * $cr);
+		}
+		
+		// + VAT
+		if (!empty($this->total[0]['tax'])) {
+			foreach ($this->total[0]['tax'] as $k => $v) {
+				$total += $price->roundPrice($v['tax']);
+				$totalC += $price->roundPrice($v['tax'] * $cr);
+			}
+		}
+		
+		// + Shipping Costs
+		if (isset($this->shipping['costs']['brutto'])) {
+			$total += $price->roundPrice($this->shipping['costs']['brutto']);
+			$totalC += $price->roundPrice($this->shipping['costs']['brutto'] * $cr);
+		}
+		
+		// + Payment Costs
+		if (isset($this->payment['costs']['brutto'])) {
+			$total += $price->roundPrice($this->payment['costs']['brutto']);
+			$totalC += $price->roundPrice($this->payment['costs']['brutto'] * $cr);
+		}
+		
+	
+		$calc->roundTotalAmount($this->total[0], $total, $totalC);
 	}
 	
 	public function getTotal() {
@@ -572,7 +643,7 @@ class PhocacartCart
 			}
 		
 			$price	= new PhocacartPrice();
-			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->calculation_type, $this->total[0], $sI->taxid, $sI->taxrate, $sI->taxcalctype, $sI->taxtitle, $sI->freeshipping);
+			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->calculation_type, $this->total[0], $sI->taxid, $sI->taxrate, $sI->taxcalculationtype, $sI->taxtitle, $sI->freeshipping);
 			
 			// CALCULATION
 			$calc 						= new PhocacartCartCalculation();
@@ -583,7 +654,7 @@ class PhocacartCart
 				$this->shipping['costs']['description'] = $sI->description;
 			}
 			$calc->calculateShipping($priceI, $this->total[0]);
-			$calc->round($this->total[0], 0);
+			//$calc->round($this->total[0], 0);
 
 		}
 	}
@@ -606,7 +677,7 @@ class PhocacartCart
 			}
 		
 			$price	= new PhocacartPrice();
-			$priceI = $price->getPriceItemsPayment($pI->cost, $pI->calculation_type, $this->total[0], $pI->taxid, $pI->taxrate, $pI->taxcalctype, $pI->taxtitle, $pI->freepayment);
+			$priceI = $price->getPriceItemsPayment($pI->cost, $pI->calculation_type, $this->total[0], $pI->taxid, $pI->taxrate, $pI->taxcalculationtype, $pI->taxtitle, $pI->freepayment);
 			
 			
 			// CALCULATION
@@ -618,7 +689,7 @@ class PhocacartCart
 				$this->payment['costs']['description'] 	= $pI->description;
 			}
 			$calc->calculatePayment($priceI, $this->total[0]);
-			$calc->round($this->total[0], 0);
+			//$calc->round($this->total[0], 0);
 			
 		}
 	}

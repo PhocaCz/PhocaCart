@@ -97,6 +97,24 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$table->alias		= JApplication::stringURLSafe($table->alias);
 		
 
+		
+		$table->price 			= PhocacartUtils::replaceCommaWithPoint($table->price);
+		$table->price_original 	= PhocacartUtils::replaceCommaWithPoint($table->price_original);
+		$table->length 			= PhocacartUtils::replaceCommaWithPoint($table->length);
+		$table->width 			= PhocacartUtils::replaceCommaWithPoint($table->width);
+		$table->height 			= PhocacartUtils::replaceCommaWithPoint($table->height);
+		$table->weight 			= PhocacartUtils::replaceCommaWithPoint($table->weight);
+		$table->volume 			= PhocacartUtils::replaceCommaWithPoint($table->volume);
+		
+
+		$table->tax_id 					= PhocacartUtils::getIntFromString($table->tax_id);
+		$table->manufacturer_id			= PhocacartUtils::getIntFromString($table->manufacturer_id);
+		$table->stock					= PhocacartUtils::getIntFromString($table->stock);
+		$table->min_quantity			= PhocacartUtils::getIntFromString($table->min_quantity);
+		$table->min_multiple_quantity	= PhocacartUtils::getIntFromString($table->min_multiple_quantity);
+		$table->download_hits			= PhocacartUtils::getIntFromString($table->download_hits);
+		$table->points_received			= PhocacartUtils::getIntFromString($table->points_received);
+		$table->points_needed			= PhocacartUtils::getIntFromString($table->points_needed);
 
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);
@@ -247,6 +265,14 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 	
 			PhocacartPriceHistory::storePriceHistoryById((int)$table->id, $data['price']);
+			
+			
+			PhocacartGroup::updateGroupProductPriceById((int)$table->id, $data['price']);
+			PhocacartGroup::updateGroupProductRewardPointsById((int)$table->id, $data['points_received']);
+			
+			
+			// UPDATE this file too:
+			// administrator\components\com_phocacart\libraries\phocacart\product\product.php storeProduct() function
 			
 			if (!isset($data['tags'])) {
 				$data['tags'] = array();
@@ -433,7 +459,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			return false;
 		}
 		
-		$i		= 0;
+		//$i		= 0;
 
 		// Parent exists so we let's proceed
 		while (!empty($pks))
@@ -489,7 +515,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$newId = $table->get('id');
 
 			// Add the new ID to the array
-			$newIds[$i]	= $newId;
+			$newIds[$pk]	= $newId;
 			
 			// Store other new information
 			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId);
@@ -507,7 +533,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	
 			PhocacartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
 			
-			$i++;
+			//$i++;
 		}
 
 		// Clean the cache

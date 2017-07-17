@@ -28,8 +28,8 @@ class PhocaCartCpControllerPhocaCartCommons extends JControllerAdmin
 		// TEST per URL
 		//$pks = $this->input->get->get('cid', array(), 'array');
 		//$order = $this->input->get->get('order', array(), 'array');
-		//print_r($pks);
-		//print_r($order);
+		//print r($pks);
+		//print r($order);
 		
 		
 		JArrayHelper::toInteger($pks);

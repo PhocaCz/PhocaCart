@@ -104,8 +104,8 @@ class PhocaCartModelItem extends JModelLegacy
 	}
 	private function getItemQuery( $itemId, $catId ) {
 		
-		//$app		= JFactory::getApplication();
-		//$params 	= $app->getParams();
+		
+		$wheres		= array();
 		
 		$user 		= JFactory::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -113,10 +113,11 @@ class PhocaCartModelItem extends JModelLegacy
 
 		$categoryId	= 0;
 		$category	= $this->getCategory($itemId, $catId);
+		
 		if (isset($category[0]->id)) {
 			$categoryId = $category[0]->id;
 		}
-		
+	
 		$wheres[]	= " pc.category_id= ".(int) $categoryId;
 		$wheres[]	= " pc.category_id= c.id";
 		$wheres[] 	= " i.published = 1";
@@ -134,7 +135,7 @@ class PhocaCartModelItem extends JModelLegacy
 			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
 		
-		$query = ' SELECT i.id, i.title, i.alias, i.description, pc.ordering, i.metadesc, i.metakey, i.image, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, min(ppg.price) as group_price, max(pptg.points_received) as group_points_received'
+		$query = ' SELECT i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received'
 				.' FROM #__phocacart_products AS i' 
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = i.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
@@ -149,9 +150,14 @@ class PhocaCartModelItem extends JModelLegacy
 			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)'
 				
 				.' WHERE ' . implode( ' AND ', $wheres )
+				
+				// STRICT MODE
+				.' GROUP BY i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title'
+				
 				.' ORDER BY pc.ordering';		
 		
 		//echo nl2br(str_replace('#__', 'jos_', $query));
+
 		return $query;
 		
 	}
@@ -201,7 +207,8 @@ class PhocaCartModelItem extends JModelLegacy
 				. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 				. " WHERE " . implode( " AND ", $wheres )
-				. " ORDER BY c.ordering";		
+				. " ORDER BY c.ordering";	
+			
 		return $query;
 	}
 	

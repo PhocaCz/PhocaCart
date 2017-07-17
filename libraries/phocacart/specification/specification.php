@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -248,7 +250,7 @@ class PhocacartSpecification
 		
 		$query = 'SELECT s.id, s.title, s.alias, s.value, s.alias_value'
 				.' FROM  #__phocacart_specifications AS s'
-				.' GROUP BY s.alias, s.alias_value'
+				.' GROUP BY s.alias, s.alias_value, s.id, s.title, s.value'
 				.' ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$specifications = $db->loadObjectList();

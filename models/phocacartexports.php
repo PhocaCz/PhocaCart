@@ -23,8 +23,9 @@ class PhocaCartCpModelPhocaCartExports extends JModelList
 		$db		= $this->getDbo();
 		$user	= JFactory::getUser();
 		$q 		= 'SELECT COUNT(id)'
-				.' FROM #__phocacart_products'
-				.' ORDER BY id';
+				.' FROM #__phocacart_products';
+				//.' GROUP BY id'
+				//.' ORDER BY id';
 		$db->setQuery($q);
 		$count = $db->loadResult();
 		
@@ -33,16 +34,17 @@ class PhocaCartCpModelPhocaCartExports extends JModelList
 	}
 	
 	public function getItemsCountExport() {
-		
+
 		$db		= $this->getDbo();
 		$user	= JFactory::getUser();
 		$q 		= 'SELECT COUNT(id)'
 				.' FROM #__phocacart_export'
 			    .' WHERE user_id = '.(int) $user->id
-				.' ORDER BY id';
+				.' AND type = 0';
+				//.' GROUP BY id'
+				//.' ORDER BY id';
 		$db->setQuery($q);
 		$count = $db->loadResult();
-		
 		return $count;
 		
 	}

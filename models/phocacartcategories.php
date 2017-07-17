@@ -98,15 +98,13 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		}
 
 		// Load the list items.
-		$query	= $this->getListQuery();
-		//$items	= $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
-
-		$items	= $this->_getList($query);
-		
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
+		try {
+			$query	= $this->getListQuery();
+			//$items	= $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
+			$items	= $this->_getList($query);
+		} catch (RuntimeException $e) {
+			
+			throw new Exception($e->getMessage(), 500);
 		}
 
 		// Add the items to the internal cache.
@@ -140,7 +138,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.*'
+				'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language'
 			)
 		);
 		$query->from('`#__phocacart_categories` AS a');
@@ -171,7 +169,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		
 		
 		$query->select('cc.countid AS countid');
-		$query->join('LEFT', '(SELECT cc.parent_id, count(*) AS countid'
+		$query->join('LEFT', '(SELECT cc.parent_id, COUNT(*) AS countid'
 		. ' FROM #__phocacart_categories AS cc'
 		.' GROUP BY cc.parent_id ) AS cc'
 		.' ON a.parent_id = cc.parent_id');
@@ -216,7 +214,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 			}
 		}
 		
-		$query->group('a.id');
+		$query->group('a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language, l.title, uc.name, ag.title, c.title, c.id, cc.countid');
 
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'title');

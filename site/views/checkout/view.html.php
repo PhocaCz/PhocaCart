@@ -70,6 +70,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->a->shippingnotused 	= PhocacartShipping::isShippingNotUsed();
 		$this->a->paymentnotused	= PhocacartPayment::isPaymentNotUsed();
 		
+		
+		
 		// Numbers
 		$this->t['nl'] = 1;// Login
 		$this->t['na'] = 2;// Address
@@ -247,6 +249,22 @@ class PhocaCartViewCheckout extends JViewLegacy
 			PhocacartRenderJs::renderBillingAndShippingSame();
 		}
 		
+		$this->cart->roundTotalAmount();
+		
+
+		
+		// VIEW - CONFIRM - all items added 
+		if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
+			$this->a->confirm = 1;
+		}
+		
+		// CART IS EMPTY
+		// Don't allow to add or edit payment or shipping method, don't allow to confirm the order
+		if (empty($this->cart->getItems())) {
+			$this->a->shippingnotused 	= 1;
+			$this->a->paymentnotused	= 1;
+			$this->a->confirm 			= 0;
+		}
 		
 		if ($this->a->shippingnotused == 1) {
 			$this->a->shippingview = 1;
@@ -259,11 +277,6 @@ class PhocaCartViewCheckout extends JViewLegacy
 			if ($scrollTo == 'phcheckoutpaymentedit') {
 				$scrollTo = '';
 			}
-		}
-		
-		// VIEW - CONFIRM - all items added 
-		if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
-			$this->a->confirm = 1;
 		}
 
 		$media = new PhocacartRenderMedia();

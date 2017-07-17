@@ -67,8 +67,8 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		if ($canDo->get('core.delete')) {
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartcountries.delete', $this->t['l'].'_DELETE');
 		}
-		
-		JToolbarHelper::custom($this->t['task'].'.importcountries', 'dummy glyphicon glyphicon-globe ph-icon-earth', 'dummy glyphicon glyphicon-globe ph-icon-earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
+		//dummy glyphicon glyphicon-globe ph-icon-earth
+		JToolbarHelper::custom($this->t['task'].'.importcountries', 'earth', 'earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 		

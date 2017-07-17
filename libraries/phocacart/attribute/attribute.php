@@ -1,10 +1,12 @@
 <?php
-/* @package Joomla
+/**
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
 
@@ -214,7 +216,7 @@ class PhocacartAttribute
 							if (empty($v2['amount'])) 			{$v2['amount'] 			= '';}
 							if (empty($v2['stock'])) 			{$v2['stock'] 			= '';}
 							if (empty($v2['operator_weight'])) 	{$v2['operator_weight'] = '';}
-							if (empty($v2['weight'])) 			{$v2['weight'] 			= '';}
+							if (empty($v2['weight'])) 			{$v2['weight'] 			= '0.0';}
 							if (empty($v2['image'])) 			{$v2['image'] 			= '';}
 							if (empty($v2['image_small']))		{$v2['image_small'] 	= '';}
 							if (empty($v2['color'])) 			{$v2['color'] 			= '';}
@@ -237,7 +239,11 @@ class PhocacartAttribute
 							}
 
 							if ((int)$idExists > 0) {
-									
+								
+								
+								$v2['amount'] 			= PhocacartUtils::replaceCommaWithPoint($v2['amount']);
+								$v2['weight'] 			= PhocacartUtils::replaceCommaWithPoint($v2['weight']);
+								
 								$query = 'UPDATE #__phocacart_attribute_values SET'
 								.' attribute_id = '.(int)$newIdA.','
 								.' title = '.$db->quote($v2['title']).','
@@ -252,13 +258,17 @@ class PhocacartAttribute
 								.' color = '.$db->quote($v2['color']).','
 								.' default_value = '.(int)$defaultValue
 								.' WHERE id = '.(int)$idExists;
+								
+							
 								$db->setQuery($query);
 								$db->execute();
 								
 								$newIdO 				= $idExists;
 								
 							} else {
-							
+								
+								$v2['amount'] 			= PhocacartUtils::replaceCommaWithPoint($v2['amount']);
+								$v2['weight'] 			= PhocacartUtils::replaceCommaWithPoint($v2['weight']);
 	
 								$options 	= '('.(int)$newIdA.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
 								
@@ -497,7 +507,7 @@ class PhocacartAttribute
 		$query = 'SELECT v.id, v.title, v.alias, v.image, v.image_small, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype'
 				.' FROM  #__phocacart_attribute_values AS v'
 				.' LEFT JOIN  #__phocacart_attributes AS at ON at.id = v.attribute_id'
-				.' GROUP BY v.alias, attralias'
+				.' GROUP BY v.alias, attralias, v.id, v.title, v.image, v.image_small, v.color, v.default_value, at.id, at.title, at.alias, at.type'
 				.' ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$attributes = $db->loadObjectList();

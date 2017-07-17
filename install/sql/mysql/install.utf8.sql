@@ -1,13 +1,13 @@
 -- -------------------------------------------------------------------- --
 -- Phoca Cart manual installation                                       --
 -- -------------------------------------------------------------------- --
--- See documentation on http://www.phoca.cz/                            --
+-- See documentation on https://www.phoca.cz/                            --
 --                                                                      --
 -- Change all prefixes #__ to prefix which is set in your Joomla! site  --
 -- (e.g. from #__phocacart to #__phocacart)                            --
 -- Run this SQL queries in your database tool, e.g. in phpMyAdmin       --
 -- If you have questions, just ask in Phoca Forum                       --
--- http://www.phoca.cz/forum/                                           --
+-- https://www.phoca.cz/forum/                                           --
 -- -------------------------------------------------------------------- --
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_categories` (
@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_categories` (
   `count` int(11) NOT NULL DEFAULT '0',
   `hits` int(11) NOT NULL DEFAULT '0',
   `params` text,
+  `metatitle` varchar(255) NOT NULL DEFAULT '',
   `metakey` text,
   `metadesc` text,
   `metadata` text,
@@ -104,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `points_received` int(11) NOT NULL DEFAULT '0',
   `points_needed` int(11) NOT NULL DEFAULT '0',
   `params` text,
+  `metatitle` varchar(255) NOT NULL DEFAULT '',
   `metakey` text,
   `metadesc` text,
   `metadata` text,
@@ -871,7 +873,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`currency_id` int(11) NOT NULL DEFAULT '0',
 	`tax_calculation` int(11) NOT NULL DEFAULT '0',
 	`currency_code` varchar(5) NOT NULL DEFAULT '',
-	`currency_exchange_rate` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
+	`currency_exchange_rate` DECIMAL( 15, 8 ) NOT NULL DEFAULT '0',
 	`unit_weight` varchar(50) NOT NULL DEFAULT '',
 	`unit_volume` varchar(50) NOT NULL DEFAULT '',
 	`title` varchar(255) NOT NULL DEFAULT '',
@@ -954,6 +956,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_products` (
   `points_needed` int(11) NOT NULL DEFAULT '0',
   `default_price` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `default_tax_rate` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
+  `default_tax_id` int(11) NOT NULL DEFAULT '0',
   `default_calculation_type` tinyint(1) NOT NULL DEFAULT '0',
   `default_points_received` int(11) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -1030,9 +1033,11 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_product_discounts` (
 CREATE TABLE IF NOT EXISTS `#__phocacart_order_total` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`order_id` int(11) NOT NULL DEFAULT '0',
+	`item_id` int(11) NOT NULL DEFAULT '0',
 	`title` varchar(255) NOT NULL DEFAULT '',
 	`type` varchar(50) NOT NULL DEFAULT '',
 	`amount` DECIMAL( 15, 4 ) NOT NULL DEFAULT  '0',
+	`amount_currency` DECIMAL( 15, 4 ) NOT NULL DEFAULT  '0',
 	`text` varchar(255) NOT NULL DEFAULT '',
 	`checked_out` int(11) unsigned NOT NULL DEFAULT '0',
 	`checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -2001,5 +2006,24 @@ INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, 
 -- ALTER TABLE `#__phocacart_shipping_methods`		ADD `maximal_height` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';
 -- ALTER TABLE `#__phocacart_shipping_methods`		ADD `maximal_length` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';
 -- ALTER TABLE `#__phocacart_shipping_methods`		ADD `active_size` tinyint(1) NOT NULL DEFAULT '0';
+
+
+-- ---------
+-- RC8 -> RC9
+-- ---------
+
+-- ALTER TABLE  `#__phocacart_currencies` 		CHANGE `exchange_rate` `exchange_rate` DECIMAL( 15, 8 ) NOT NULL DEFAULT '0';
+-- ALTER TABLE  `#__phocacart_orders` 			CHANGE `currency_exchange_rate` `currency_exchange_rate` DECIMAL( 15, 8 ) NOT NULL DEFAULT '0';
+
+-- ALTER TABLE  `#__phocacart_order_total` 		ADD `amount_currency` DECIMAL( 15, 4 ) NOT NULL DEFAULT  '0';
+-- ALTER TABLE  `#__phocacart_order_products` 	ADD `default_tax_id` int(11) NOT NULL DEFAULT '0';
+
+-- ALTER TABLE  `#__phocacart_categories` 		ADD `metatitle` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_products` 		ADD `metatitle` varchar(255) NOT NULL DEFAULT '';
+
+-- ALTER TABLE  `#__phocacart_order_total` 		ADD `item_id` int(11) NOT NULL DEFAULT '0';
+
+
+
 
 

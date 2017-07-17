@@ -1,13 +1,13 @@
 -- -------------------------------------------------------------------- --
 -- Phoca Cart Regions                                                   --
 -- -------------------------------------------------------------------- --
--- See documentation on http://www.phoca.cz/                            --
+-- See documentation on https://www.phoca.cz/                            --
 --                                                                      --
 -- Change all prefixes #__ to prefix which is set in your Joomla! site  --
 -- (e.g. from #__phocacart to jos_phocacart)                            --
 -- Run this SQL queries in your database tool, e.g. in phpMyAdmin       --
 -- If you have questions, just ask in Phoca Forum                       --
--- http://www.phoca.cz/forum/                                           --
+-- https://www.phoca.cz/forum/                                           --
 -- -------------------------------------------------------------------- --
 
 

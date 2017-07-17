@@ -11,7 +11,6 @@ $d 		= $displayData;
 $price	= new PhocacartPrice();
 $app 	= JFactory::getApplication();
 	
-
 if (!empty($d['fullitems'])) {
 	
 
@@ -53,9 +52,11 @@ if (!empty($d['fullitems'])) {
 	///echo '<tr>';
 	///echo '<td colspan="'.$c2.'" class="ph-small">'. count($d['fullitems']).' '.JText::_('COM_PHOCACART_ITEM_S').'</td>';
 	///echo '<td class="ph-small ph-right">';
-	echo '<div class="'.$r.'">';
-	echo '<div class="'.$cT.' ph-small">'. count($d['fullitems']).' '.JText::_('COM_PHOCACART_ITEM_S').'</div>';
-	echo '<div class="'.$cP.' ph-small ph-right">';
+	if (isset($d['countitems'])) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cT.' ph-small">'. $d['countitems'].' '.JText::_('COM_PHOCACART_ITEM_S').'</div>';
+		echo '<div class="'.$cP.' ph-small ph-right">';
+	}
 	
 	if (isset($d['total']['brutto'])) {
 		echo $price->getPriceFormat($d['total']['brutto']);
@@ -295,20 +296,32 @@ if (!empty($d['fullitems'])) {
 		}
 	}
 	
-	if ($d['total'][0]['rounding'] != 0) {
+	// ROUNDING | ROUNDING CURRENCY
+	if ($d['total'][0]['rounding_currency'] != 0) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cT.'">'.JText::_('COM_PHOCACART_ROUNDING_CURRENCY').'</div>';
+		echo '<div class="'.$cP.' ph-small ph-right">'.$price->getPriceFormat($d['total'][0]['rounding_currency'], 0, 1).'</div>';
+		echo '</div>';// end row
+	} else if ($d['total'][0]['rounding'] != 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.'">'.JText::_('COM_PHOCACART_ROUNDING').'</div>';
 		echo '<div class="'.$cP.' ph-small ph-right">'.$price->getPriceFormat($d['total'][0]['rounding']).'</div>';
 		echo '</div>';// end row
 	}
 	
-	// BRUTTO
-	if ($d['total'][0]['brutto'] !== 0) {
+	// BRUTTO (Because of rounding currency we need to display brutto in currency which is set)
+	if ($d['total'][0]['brutto_currency'] !== 0) {
+		echo '<div class="'.$r.'">';
+		echo '<div class="'.$cT.'">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
+		echo '<div class="'.$cP.' ph-small ph-right ph-b">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
+		echo '</div>';// end row
+	} else if ($d['total'][0]['brutto'] !== 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.'">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cP.' ph-small ph-right ph-b">'.$price->getPriceFormat($d['total'][0]['brutto']).'</div>';
 		echo '</div>';// end row
 	}
+
 	
 	
 	///echo '</table>'. "\n";

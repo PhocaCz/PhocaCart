@@ -16,11 +16,11 @@ $d = $displayData;
 	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
-	<div class="form-group">
+	<div class="form-group ph-form-quantity">
 	<label><?php echo JText::_('COM_PHOCACART_QTY'); ?>: </label> 
 	<input class="form-control ph-input-quantity" type="text" name="quantity" value="1" />
 	</div>
-	 <div class="form-group"><?php 
+	 <div class="form-group ph-form-button"><?php 
 	if ($d['addtocart'] == 1) {
 		?><button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?></button><?php
 	} else if ($d['addtocart'] == 4) {

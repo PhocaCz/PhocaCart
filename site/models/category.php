@@ -111,7 +111,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$selImages = '';
 		if ($p['switch_image_category_items'] == 1) {
 			$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON a.id = im.product_id';
-			$selImages	= ' im.image as additional_image,';
+			$selImages	= ' GROUP_CONCAT(im.image) as additional_image,';
 		}
 		
 		
@@ -155,7 +155,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			. ' GROUP BY a.id';
 			
 		} else {
-			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, c.id AS catid, c.title AS cattitle, c.alias AS catalias, a.price, min(ppg.price) as group_price, max(pptg.points_received) as group_points_received, a.points_received, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
+			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, GROUP_CONCAT(c.id) AS catid, GROUP_CONCAT(c.title) AS cattitle, GROUP_CONCAT(c.alias) AS catalias, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 			. ' AVG(r.rating) AS rating,'
 			. ' at.required AS attribute_required'
 			. ' FROM #__phocacart_products AS a'
@@ -175,11 +175,13 @@ class PhocaCartModelCategory extends JModelLegacy
 			
 			. $leftImages
 			. ' WHERE ' . implode( ' AND ', $wheres )
-			. ' GROUP BY a.id'
+			//. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.title, a.image, a.alias, a.description, a.price, a.points_received, a.price_original, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required'
 			. ' ORDER BY '.$itemOrdering;
 		}
 		
 		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
+	
 		return $q;
 	}
 	
@@ -217,10 +219,10 @@ class PhocaCartModelCategory extends JModelLegacy
 				//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1 AND a.access IN (".$userLevels.")"
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 				. " WHERE " . implode( " AND ", $wheres )
-				. " GROUP BY c.id"
+				. " GROUP BY c.id, c.parent_id, c.title, c.alias"
 				. " ORDER BY ".$categoryOrdering;
 		} else {
-			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.description, c.metakey, c.metadesc, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
+			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
 				. " FROM #__phocacart_categories AS c"
 				. " LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id"
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
