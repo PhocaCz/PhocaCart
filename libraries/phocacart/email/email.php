@@ -265,14 +265,15 @@ class PhocacartEmail
 		$sendMail = $mail->sendMailA($from, $fromName, $recipient, $subject, $body, $mode, $cc, $bcc, $attachmentString, $attachmentFilename, $replyTo, $replyToName);
 		
 
-		if (isset($sendMail->message)) {
-			PhocacartLog::add(1, 'Error sending email', 0, $sendMail->message . ', Mail From: '.$from );
+		
+		if (is_object($sendMail) && $sendMail->getMessage()) {
+			PhocacartLog::add(1, 'Error sending email', 0, $sendMail->getMessage() . ', Mail From: '.$from );
 			return false;
-		} else if ($sendMail == 1) {
-			return true;
-		} else {
+		} else if (!$sendMail) {
 			PhocacartLog::add(1, 'Error sending email', 0,  'No error data set, Mail From: '.$from );
 			return false;
+		} else {
+			return true;
 		}
 		
 	}
@@ -322,7 +323,7 @@ class PhocacartEmail
 		
 		$app			= JFactory::getApplication();
 		$db 			= JFactory::getDBO();
-		$sitename 		= $app->getCfg( 'sitename' );
+		$sitename 		= $app->get( 'sitename' );
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$numCharEmail	= $paramsC->get( 'max_char_question_email', 1000 );
 		

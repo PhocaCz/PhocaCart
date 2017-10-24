@@ -28,6 +28,8 @@ class PhocacartCartRendercart extends PhocacartCart
 	
 	public function render() {
 		
+		$pC 					= PhocacartUtils::getComponentParameters();
+		
 		if (empty($this->fullitems)) {
 			$this->fullitems = $this->getFullItems();// get them from parent
 		}
@@ -53,11 +55,11 @@ class PhocacartCartRendercart extends PhocacartCart
 			}
 		}*/
 		
-
 		
 		$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
 		$d						= array();
-		$d['params']			= $this->params;
+		$d['paramsmodule']		= $this->params; // Module Parameters
+		$d['params']			= $pC; // Component Parameters
 		$d['fullitems']			= $this->fullitems;
 		$d['total']				= $this->total;
 		$d['fullitemsgroup']	= $this->fullitemsgroup;
@@ -69,6 +71,7 @@ class PhocacartCartRendercart extends PhocacartCart
 		//$d['action']			= $url['action'];
 		//$d['actionbase64']		= $url['actionbase64'];
 		//$d['linkcheckout']		= $url['linkcheckout'];
+		$d['pathitem'] 			= PhocacartPath::getPath('productimage');
 
 		return $layout->render($d);
 	}

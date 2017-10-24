@@ -43,7 +43,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 	}
 	
-	// Change pricebox
+	// Change stockbox
 	function changepricebox($tpl = null){
 			
 		if (!JSession::checkToken('request')) {
@@ -54,38 +54,16 @@ class PhocaCartControllerCheckout extends JControllerForm
 			return;
 		}
 		
-		$priceO 			= array();
-		//$paramsC 			= JComponentHelper::getParams('com_phocacart');
+
 		$app		= JFactory::getApplication();
-		$paramsC 	= $app->getParams();
-		//$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
-		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
-		
 		$attribute	= $app->input->get( 'attribute', '', 'array'  );
 		$id			= $app->input->get( 'id', 0, 'int'  );
-		$class		= $app->input->get( 'class', 0, 'string'  );
-		
-		
+		$class		= $app->input->get( 'class', '', 'string'  );
+		$typeView	= $app->input->get( 'typeview', '', 'string'  );
 		
 		// Sanitanize data and do the same level for all attributes:
-		// select attribute = 1
-		// checkbox attribute = array(0 => 1, 1 => 1) attribute[]
-		$aA = array();
-		if (!empty($attribute)) {
-			foreach($attribute as $k => $v) {
-				if (is_array($v) && !empty($v)) {
-					foreach($v as $k2 => $v2) {
-						if ((int)$v2 > 0) {
-							$aA[(int)$k][] = (int)$v2;
-						}
-					}
-				} else {
-					if ((int)$v > 0) {
-						$aA[(int)$k][] = $v;
-					}
-				}
-			}
-		}
+		$aA = PhocacartAttribute::sanitizeAttributeArray($attribute);
+
 
 		/* TEST */
 		/*$aA[30] = 59;
@@ -98,50 +76,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 		if ((int)$id > 0) {
 			$price	= new PhocacartPrice();
 			$item 	= PhocacartProduct::getProduct((int)$id);// We don't need catid
-			$priceO = array();
+			//$priceO = array();
 			
 			if (!empty($item)) {
 				
 				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 0, 1, $item->group_price);
 				
-				// Main price of the product
-				$priceO['netto']	= $priceP['netto'];
-				$priceO['brutto']	= $priceP['brutto'];
-				$priceO['tax']		= $priceP['tax'];
-				
-				// ATTRIBUTES
-				if (!empty($aA)) {
-					foreach ($aA as $k => $v) {
-						if(!empty($v)) {
-							// Be aware the k2 is not the key of attribute
-							// this is the k
-							foreach ($v as $k2 => $v2) {
-								if ((int)$k > 0 && (int)$v2 > 0) {
-									
-									$attrib = PhocacartAttribute::getAttributeValue((int)$v2, (int)$k);
-									
-									if (isset($attrib->title) && isset($attrib->amount) && isset($attrib->operator)) {
-										$priceA = $price->getPriceItems($attrib->amount, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle);
-										
-										if ($attrib->operator == '-') {
-											$priceP['netto']	-= $priceA['netto'];
-											$priceP['brutto']	-= $priceA['brutto'];
-											$priceP['tax']		-= $priceA['tax'];
-											
-										} else if ($attrib->operator == '+') {
-											$priceP['netto']	+= $priceA['netto'] ;
-											$priceP['brutto']	+= $priceA['brutto'] ;
-											$priceP['tax']		+= $priceA['tax'] ;
-											
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
-				
+				$price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 				
 				$d = array();
 				$d['class']			= $class;
@@ -151,21 +92,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$d['priceitemsorig']['bruttoformat'] = $price->getPriceFormat($item->price_original);
 				}
 				
-				// Standard Price - changed 
-				$priceP['nettoformat'] 		= $price->getPriceFormat($priceP['netto']);
-				$priceP['bruttoformat'] 	= $price->getPriceFormat($priceP['brutto']);
-				$priceP['taxformat'] 		= $price->getPriceFormat($priceP['tax']);
-				
-			
-				// Unit price
-				$priceP['base'] 		= '';
-				$priceP['baseformat'] 	= '';
-				if (isset($item->unit_amount) && $item->unit_amount > 0 && isset($item->unit_unit) && (int)$display_unit_price > 0) {
-					$priceP['base'] 		= $priceP['brutto'] / $item->unit_amount;
-					$priceP['baseformat'] 	= $price->getPriceFormat($priceP['base']).'/'.$item->unit_unit;
-				}
-				
 				$d['priceitems']		= $priceP;
+				$d['product_id']		= (int)$item->id;
+				$d['typeview']			= $typeView;
+				
+				// Display discount price
+				$d['priceitemsdiscount']	= $d['priceitems'];
+				$d['discount'] 				= PhocacartDiscountProduct::getProductDiscountPrice($item->id, $d['priceitemsdiscount']);
 				
 				// Render the layout
 				$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
@@ -173,6 +106,8 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$o = $layoutP->render($d);
 				//$o = ob_get_contents();
 				//ob_end_clean();
+				
+	
 	
 				$response = array(
 					'status' => '1',
@@ -189,6 +124,65 @@ class PhocaCartControllerCheckout extends JControllerForm
 		return;
 		
 		
+	}
+	
+	// Change stockbox
+	function changestockbox($tpl = null){
+			
+			
+		if (!JSession::checkToken('request')) {
+			$response = array(
+				'status' => '0',
+				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+			echo json_encode($response);
+			return;
+		}
+
+		$app		= JFactory::getApplication();
+		$attribute	= $app->input->get( 'attribute', '', 'array'  );
+		$id			= $app->input->get( 'id', 0, 'int'  );
+		$class		= $app->input->get( 'class', '', 'string'  );
+		$typeView	= $app->input->get( 'typeview', '', 'string'  );
+		
+		// Sanitanize data and do the same level for all attributes:
+		$aA = PhocacartAttribute::sanitizeAttributeArray($attribute);
+
+
+		if ((int)$id > 0) {
+			
+			$item 	= PhocacartProduct::getProduct((int)$id);// We don't need catid
+			
+			$stockStatus = array();
+			PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $item, 1);
+		
+			
+			if($stockStatus['stock_status'] || $stockStatus['stock_count']) {
+				$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
+				$d							= array();
+				$d['class']					= $class;
+				$d['product_id']			= (int)$id;
+				$d['typeview']				= $typeView;
+				$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($stockStatus);
+				
+				$o 							= $layoutS->render($d);
+			
+			
+				$response = array(
+					'status' => '1',
+					'item' => $o);
+				echo json_encode($response);
+				return;
+		
+			}
+		}
+
+		
+		$response = array(
+		'status'	=> '0',
+		'items'		=> '');	
+		echo json_encode($response);
+		return;
+
 	}
 	
 	// Add item to cart
@@ -230,10 +224,14 @@ class PhocaCartControllerCheckout extends JControllerForm
 	
 		if (!$added) {
 			
-			$mO = PhocacartRenderFront::renderMessageQueue();
+			$d 				= array();
+			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
+			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+			$oE 			= $layoutPE->render($d);
 			$response = array(
 				'status' => '0',
-				'error' => $mO);
+				'popup'	=> $oE,
+				'error' => $d['info_msg']);
 			echo json_encode($response);
 			return;
 		}

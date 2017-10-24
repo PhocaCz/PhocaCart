@@ -141,7 +141,7 @@ class PhocacartCart
 	 * When making order, this will be recheck
 	 */
 	public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
-		
+	
 		if ($idKey != '') {
 			// we get idkey as string - from checkout update or remove -  used in CHECKOUT
 		} else {
@@ -432,6 +432,7 @@ class PhocacartCart
 
 				
 				
+				
 				/*foreach($this->fullitems[0] as $k => $v) {
 					$item 	= explode(':', $k);
 					$attribs = unserialize(base64_decode($item[1]));
@@ -565,6 +566,7 @@ class PhocacartCart
 				$payment['method'] 	= $pI->method;
 			}
 		}
+		
 		return $payment;
 	}
 	
@@ -643,7 +645,7 @@ class PhocacartCart
 			}
 		
 			$price	= new PhocacartPrice();
-			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->calculation_type, $this->total[0], $sI->taxid, $sI->taxrate, $sI->taxcalculationtype, $sI->taxtitle, $sI->freeshipping);
+			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->calculation_type, $this->total[0], $sI->taxid, $sI->taxrate, $sI->taxcalculationtype, $sI->taxtitle, $sI->freeshipping, 1, '');
 			
 			// CALCULATION
 			$calc 						= new PhocacartCartCalculation();
@@ -652,6 +654,7 @@ class PhocacartCart
 			if ($this->total[0]['free_shipping'] != 1) {
 				$this->shipping['costs']['title'] 		= $sI->title;
 				$this->shipping['costs']['description'] = $sI->description;
+				$this->shipping['costs']['image'] 		= $sI->image;
 			}
 			$calc->calculateShipping($priceI, $this->total[0]);
 			//$calc->round($this->total[0], 0);
@@ -677,7 +680,7 @@ class PhocacartCart
 			}
 		
 			$price	= new PhocacartPrice();
-			$priceI = $price->getPriceItemsPayment($pI->cost, $pI->calculation_type, $this->total[0], $pI->taxid, $pI->taxrate, $pI->taxcalculationtype, $pI->taxtitle, $pI->freepayment);
+			$priceI = $price->getPriceItemsPayment($pI->cost, $pI->calculation_type, $this->total[0], $pI->taxid, $pI->taxrate, $pI->taxcalculationtype, $pI->taxtitle, $pI->freepayment, 1, '');
 			
 			
 			// CALCULATION
@@ -687,6 +690,7 @@ class PhocacartCart
 			if (!isset($this->total[0]['free_payment']) || (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] != 1)) {
 				$this->payment['costs']['title'] 		= $pI->title;
 				$this->payment['costs']['description'] 	= $pI->description;
+				$this->payment['costs']['image'] 		= $pI->image;
 			}
 			$calc->calculatePayment($priceI, $this->total[0]);
 			//$calc->round($this->total[0], 0);

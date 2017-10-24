@@ -47,7 +47,8 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.country_id'));
-
+		$bar 	= JToolbar::getInstance('toolbar');
+		
 		JToolbarHelper::title( JText::_( $this->t['l'].'_COUNTRIES' ), 'globe' );
 	
 		if ($canDo->get('core.create')) {
@@ -68,7 +69,11 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartcountries.delete', $this->t['l'].'_DELETE');
 		}
 		//dummy glyphicon glyphicon-globe ph-icon-earth
-		JToolbarHelper::custom($this->t['task'].'.importcountries', 'earth', 'earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
+		//JToolbarHelper::custom($this->t['task'].'.importcountries', 'earth', 'earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
+		
+		$dhtml = '<button onclick="if (confirm(\''.JText::_('COM_PHOCACART_WARNING_IMPORT_COUNTRIES').'\')) { Joomla.submitbutton(\'phocacartcountry.importcountries\'); }" class="btn btn-small button-earth"><i class="icon-earth" title="'.JText::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'"></i> '.JText::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'</button>';
+		$bar->appendButton('Custom', $dhtml, 'importcountries');
+		
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 		

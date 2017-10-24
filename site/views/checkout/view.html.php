@@ -47,9 +47,11 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['display_payment_desc']	= $this->p->get( 'display_payment_desc', 0 );
 		$this->t['zero_shipping_price']		= $this->p->get( 'zero_shipping_price', 1 );
 		$this->t['zero_payment_price']		= $this->p->get( 'zero_payment_price', 1 );
-		
+		$this->t['checkout_scroll']			= $this->p->get( 'checkout_scroll', 1 );
 		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 1 );
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
+		$this->t['checkout_icon_status']	= $this->p->get( 'checkout_icon_status', 1 );
+		
 		
 		$this->t['enable_captcha_checkout']	= PhocacartCaptcha::enableCaptchaCheckout();
 		
@@ -256,6 +258,11 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// VIEW - CONFIRM - all items added 
 		if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
 			$this->a->confirm = 1;
+			
+			// Custom "Confirm Order" Text
+			$total							= $this->cart->getTotal();
+			
+			$this->t['confirm_order_text']	= PhocacartRenderFront::getConfirmOrderText($total[0]['brutto']);
 		}
 		
 		// CART IS EMPTY
@@ -286,6 +293,9 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 
 		//Scroll to 
+		if ($this->t['checkout_scroll'] == 0) {
+			$scrollTo = '';
+		}
 		if ($scrollTo == '') {
 		} else if ($scrollTo == 'phcheckoutaddressedit' || $scrollTo == 'phcheckoutshippingedit' || $scrollTo == 'phcheckoutpaymentedit') {
 			PhocacartRenderJs::renderJsScrollTo($scrollTo, 0);

@@ -10,7 +10,13 @@ defined('_JEXEC') or die();
 
 // ORDER PROCESSED - DOWNLOADABLE ITEMS (No payment made, display only information about possible downloads) (ORDER/DOWNLOAD)
 echo '<div class="alert alert-success">';
-echo JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
-echo '</br>' . JText::_('COM_PHOCACART_ORDER_PROCESSED_DOWNLOADABLE_ITEMS_ADDITIONAL_INFO');
+
+if (isset($this->t['infomessage']['order_download']) && $this->t['infomessage']['order_download'] != '') {
+	echo $this->t['infomessage']['order_download'];
+} else {
+	echo JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
+	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PROCESSED_DOWNLOADABLE_ITEMS_ADDITIONAL_INFO');
+}
+
 echo '</div>';
 ?>

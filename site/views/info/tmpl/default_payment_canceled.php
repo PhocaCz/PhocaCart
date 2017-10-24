@@ -10,7 +10,13 @@ defined('_JEXEC') or die();
 
 // PAYMENT CANCELED
 echo '<div class="alert alert-error">';
-echo JText::_('COM_PHOCACART_PAYMENT_CANCELED');
-echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_CANCELED_ADDITIONAL_INFO');
+
+if (isset($this->t['infomessage']['payment_canceled']) && $this->t['infomessage']['payment_canceled'] != '') {
+	echo $this->t['infomessage']['payment_canceled'];
+} else {
+	echo JText::_('COM_PHOCACART_PAYMENT_CANCELED');
+	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_CANCELED_ADDITIONAL_INFO');
+}
+
 echo '</div>';
 ?>

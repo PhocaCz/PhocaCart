@@ -140,6 +140,12 @@ class PhocacartRenderMedia
 		}
 	}
 	
+	public function loadPhocaAttributeRequired($load = 0) {
+		if ($load == 1) {
+			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattributerequired.js');
+		}
+	}
+	
 	public function loadRating() {
 		JHTML::stylesheet( 'media/com_phocacart/js/barrating/css/rating.css' );
 		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/barrating/jquery.barrating.js');

@@ -8,7 +8,6 @@
  */
 defined('_JEXEC') or die();
 
-
 if ($this->a->confirm == 1) {
 	
 	
@@ -72,7 +71,7 @@ if ($this->a->confirm == 1) {
 		echo '<div class="col-sm-12 col-md-12 ">';
 		
 		echo ' <div class="pull-right ph-checkout-confirm">';	
-		echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-ok"></span> '.JText::_('COM_PHOCACART_CONFIRM_ORDER').'</button>';
+		echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-ok"></span> '.$this->t['confirm_order_text'].'</button>';
 		echo '</div><div class="ph-cb"></div>';
 		
 		

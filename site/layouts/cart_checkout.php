@@ -11,10 +11,12 @@ $app 	= JFactory::getApplication();
 $d 		= $displayData;
 $price	= new PhocacartPrice();
 
-$p['tax_calculation']			= $d['params']->get( 'tax_calculation', 0 );
-$p['stock_checkout']			= $d['params']->get( 'stock_checkout', 0 );
-$p['stock_checking']			= $d['params']->get( 'stock_checking', 0 );
-$p['display_discount_product']	= $d['params']->get( 'display_discount_product', 1 );
+$p['tax_calculation']					= $d['params']->get( 'tax_calculation', 0 );
+$p['stock_checkout']					= $d['params']->get( 'stock_checkout', 0 );
+$p['stock_checking']					= $d['params']->get( 'stock_checking', 0 );
+$p['display_discount_product']			= $d['params']->get( 'display_discount_product', 1 );
+$p['zero_shipping_price_calculation']	= $d['params']->get( 'zero_shipping_price_calculation', 0 );
+$p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_calculation', 0 );
 //$p['min_quantity_calculation']	= $d['params']->get( 'min_quantity_calculation', 0 ); set in product xml - product options, not in global
 
 
@@ -95,18 +97,21 @@ if (!empty($d['fullitems'][1])) {
 			$lineThroughClass	= ' ph-line-through';
 		}
 
-		$image 		= '';
+		
 		if (isset($v['image']) && $v['image'] != '') {
-			$thumbnail 	= PhocacartFileThumbnail::getThumbnailName($v['image'], 'small', 'productimage');
-			if (isset($thumbnail->rel)) {
-				$image = '<img src="'.JURI::base(true).'/'.$thumbnail->rel.'" alt="'.strip_tags($v['title']).'" />';
+
+			if (empty($v['attributes'])){ $v['attributes'] = array();}
+			$image = PhocacartImage::getImageDisplay($v['image'], '', $d['pathitem'], '', '', '', 'small', '', $v['attributes'], 2);
+
+			if (isset($image['image']->rel)) {
+				$imageOutput = '<img src="'.JURI::base(true).'/'.$image['image']->rel.'" alt="'.strip_tags($v['title']).'" />';
 			}
 		} else {
-			$image = '<div class="ph-no-image"><span class="glyphicon glyphicon-ban-circle"</span></div>';
+			$imageOutput = '<div class="ph-no-image"><span class="glyphicon glyphicon-ban-circle"</span></div>';
 		}
 
 		echo '<div class="'.$r.$cV.'">';
-		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image">'.$image.'</div>';
+		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image">'.$imageOutput.'</div>';
 		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title"><a href="'.$link.'">'.$v['title'].'</a>';
 		echo '</div>';
 		
@@ -237,7 +242,7 @@ if (!empty($d['fullitems'][1])) {
 			}
 			
 			// CART COUPON
-			if($d['couponvalid']) {
+			if($d['couponvalid'] && $d['fullitems'][4][$k]['couponcart']) {
 
 				$couponTitle = JText::_('COM_PHOCACART_COUPON');
 				if (isset($d['coupontitle']) && $d['coupontitle'] != '') {
@@ -353,8 +358,7 @@ if (!empty($d['fullitems'][1])) {
 	// TAX
 	if (!empty($d['total'][0]['tax'])) {
 		foreach($d['total'][0]['tax'] as $k3 => $v3) {
-			if($v3['tax'] !== 0 && $p['tax_calculation'] != 0) {
-			
+			if($v3['tax'] !== 0 && $v3['tax'] != 0 && $p['tax_calculation'] != 0) {
 				echo '<div class="'.$r.'">';
 				echo '<div class="'.$cTotE.'"></div>';
 				echo '<div class="'.$cTotT.'">'.$v3['title'].'</div>';
@@ -371,30 +375,52 @@ if (!empty($d['fullitems'][1])) {
 	// Add Shipping costs if there are some
 	if (!empty($d['shippingcosts'])) {
 		$sC = $d['shippingcosts'];
-
-		if (isset($sC['nettoformat']) && $sC['nettoformat'] != '' && isset($sC['nettotxt']) && $sC['nettotxt'] != '') {
-			echo '<div class="'.$r.'">';
-			echo '<div class="'.$cTotE.'"></div>';
-			echo '<div class="'.$cTotT.'">'.$sC['nettotxt'].'</div>';
-			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$sC['nettoformat'].'</div>';
-			echo '</div>';// end row
-		}
 		
-		if (isset($sC['taxformat']) && $sC['taxformat'] != '' && isset($sC['taxtxt']) && $sC['taxtxt'] != '') {
+		if ($p['zero_shipping_price_calculation'] == -1 && $sC['zero'] == 1) {
+			// Hide completely
+		} else 	if ($p['zero_shipping_price_calculation'] == 0 && $sC['zero'] == 1) {
+			// Display blank price field
 			echo '<div class="'.$r.'">';
 			echo '<div class="'.$cTotE.'"></div>';
-			echo '<div class="'.$cTotT.'">'.$sC['taxtxt'].'</div>';
-			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$sC['taxformat'].'</div>';
+			echo '<div class="'.$cTotT.'">'.$sC['title'].'</div>';
+			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right"></div>';
 			echo '</div>';// end row
-		}
+		} else if ($p['zero_shipping_price_calculation'] == 2 && $sC['zero'] == 1) {
+			// Display free text
+			echo '<div class="'.$r.'">';
+			echo '<div class="'.$cTotE.'"></div>';
+			echo '<div class="'.$cTotT.'">'.$sC['title'].'</div>';
+			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.JText::_('COM_PHOCACART_FREE').'</div>';
+			echo '</div>';// end row
+		} else {
 		
-		if ((isset($sC['bruttoformat']) && $sC['bruttoformat'] != '' && isset($sC['bruttotxt']) && $sC['bruttotxt'] != '') || $sC['freeshipping'] == 1) {
+			if ($sC['title'] != '') {
+				$sC['title'] = $sC['title']. ' - ';
+			}
+			if (isset($sC['nettoformat']) && $sC['nettoformat'] != '' && isset($sC['nettotxt']) && $sC['nettotxt'] != '') {
+				echo '<div class="'.$r.'">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.'">'.$sC['title'].$sC['nettotxt'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$sC['nettoformat'].'</div>';
+				echo '</div>';// end row
+			}
+			
+			if (isset($sC['taxformat']) && $sC['taxformat'] != '' && isset($sC['taxtxt']) && $sC['taxtxt'] != '') {
+				echo '<div class="'.$r.'">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.'">'.$sC['title'].$sC['taxtxt'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$sC['taxformat'].'</div>';
+				echo '</div>';// end row
+			}
+			
+			if ((isset($sC['bruttoformat']) && $sC['bruttoformat'] != '' && isset($sC['bruttotxt']) && $sC['bruttotxt'] != '') || $sC['freeshipping'] == 1) {
 
-			echo '<div class="'.$r.'">';
-			echo '<div class="'.$cTotE.'"></div>';
-			echo '<div class="'.$cTotT.'">'.$sC['bruttotxt'].'</div>';
-			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$sC['bruttoformat'].'</div>';
-			echo '</div>';// end row
+				echo '<div class="'.$r.'">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.'">'.$sC['title'].$sC['bruttotxt'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$sC['bruttoformat'].'</div>';
+				echo '</div>';// end row
+			}
 		}
 	}
 	
@@ -402,42 +428,68 @@ if (!empty($d['fullitems'][1])) {
 	// Add Payment costs if there are some
 	if (!empty($d['paymentcosts'])) {
 		$pC = $d['paymentcosts'];
-
-		if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt']) && $pC['nettotxt'] != '') {
-			echo '<div class="'.$r.'">';
-			echo '<div class="'.$cTotE.'"></div>';
-			echo '<div class="'.$cTotT.'">'.$pC['nettotxt'].'</div>';
-			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$pC['nettoformat'].'</div>';
-			echo '</div>';// end row
-		}
 		
-		if (isset($pC['taxformat']) && $pC['taxformat'] != '' && isset($pC['taxtxt']) && $pC['taxtxt'] != '') {
-			echo '<div class="'.$r.'">';
-			echo '<div class="'.$cTotE.'"></div>';
-			echo '<div class="'.$cTotT.'">'.$pC['taxtxt'].'</div>';
-			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$pC['taxformat'].'</div>';
-			echo '</div>';// end row
-		}
 		
-		if ((isset($pC['bruttoformat']) && $pC['bruttoformat'] != '' && isset($pC['bruttotxt']) && $pC['bruttotxt'] != '') || $pC['freepayment'] == 1) {
-
+		if ($p['zero_payment_price_calculation'] == -1 && $pC['zero'] == 1) {
+			// Hide completely
+		} else 	if ($p['zero_payment_price_calculation'] == 0 && $pC['zero'] == 1) {
+			// Display blank price field
 			echo '<div class="'.$r.'">';
 			echo '<div class="'.$cTotE.'"></div>';
-			echo '<div class="'.$cTotT.'">'.$pC['bruttotxt'].'</div>';
-			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$pC['bruttoformat'].'</div>';
+			echo '<div class="'.$cTotT.'">'.$pC['title'].'</div>';
+			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right"></div>';
 			echo '</div>';// end row
+		} else if ($p['zero_payment_price_calculation'] == 2 && $pC['zero'] == 1) {
+			// Display free text
+			echo '<div class="'.$r.'">';
+			echo '<div class="'.$cTotE.'"></div>';
+			echo '<div class="'.$cTotT.'">'.$pC['title'].'</div>';
+			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.JText::_('COM_PHOCACART_FREE').'</div>';
+			echo '</div>';// end row
+		} else {
+		
+			if ($pC['title'] != '') {
+				$pC['title'] = $pC['title']. ' - ';
+			}
+		
+			if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt']) && $pC['nettotxt'] != '') {
+				echo '<div class="'.$r.'">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.'">'.$pC['title']. $pC['nettotxt'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$pC['nettoformat'].'</div>';
+				echo '</div>';// end row
+			}
+			
+			if (isset($pC['taxformat']) && $pC['taxformat'] != '' && isset($pC['taxtxt']) && $pC['taxtxt'] != '') {
+				echo '<div class="'.$r.'">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.'">'.$pC['title']. $pC['taxtxt'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$pC['taxformat'].'</div>';
+				echo '</div>';// end row
+			}
+			
+			if ((isset($pC['bruttoformat']) && $pC['bruttoformat'] != '' && isset($pC['bruttotxt']) && $pC['bruttotxt'] != '') || $pC['freepayment'] == 1) {
+
+				echo '<div class="'.$r.'">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.'">'.$pC['title']. $pC['bruttotxt'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right">'.$pC['bruttoformat'].'</div>';
+				echo '</div>';// end row
+			}
 		}
 	}
 	
 	
 	// ROUNDING | ROUNDING CURRENCY
 	if ($d['total'][0]['rounding_currency'] != 0) {
+		
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_ROUNDING_CURRENCY').'</div>';
 		echo '<div class="'.$cTotB.' ph-right">'.$price->getPriceFormat($d['total'][0]['rounding_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
 	} else if ($d['total'][0]['rounding'] != 0) {
+		
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.'">'.JText::_('COM_PHOCACART_ROUNDING').'</div>';

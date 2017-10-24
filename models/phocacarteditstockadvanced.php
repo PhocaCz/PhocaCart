@@ -28,6 +28,9 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 						// No data yet
 					}
 				}
+				
+				$v['stock'] = PhocacartUtils::getIntFromString($v['stock']);
+				
 				if (!$row->bind($v)) {
 					$this->setError($this->_db->getErrorMsg());
 					return false;

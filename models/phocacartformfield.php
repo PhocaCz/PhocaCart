@@ -60,11 +60,11 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->title		= JApplication::stringURLSafe($table->title);
-		$table->alias		= JApplication::stringURLSafe($table->alias);
+		$table->title		= JApplicationHelper::stringURLSafe($table->title);
+		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
+			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -121,7 +121,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 				if (!isset($data['id']) || (isset($data['id']) && $data['id'] == 0)) {
 			
 					$type				= PhocacartFormItems::getColumnType($data['type']);
-					$data['title']		= JApplication::stringURLSafe($data['title']);
+					$data['title']		= JApplicationHelper::stringURLSafe($data['title']);
 					$data['title']		= strip_tags($data['title']);
 					$db 				= JFactory::getDBO();
 					$config				= JFactory::getConfig();
@@ -203,7 +203,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			$db->setQuery( $query );
 
 			if (!($rows = $db->loadObjectList())) {
-				throw new Exception( $db->stderr('Load Data Problem'), 500 );
+				throw new Exception( JText::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
 				return false;
 			}
 			
@@ -232,7 +232,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 				
 				if (!empty($cidOKTitle)) {
 					foreach($cidOKTitle as $k => $v) {
-						$v		= JApplication::stringURLSafe($v);
+						$v		= JApplicationHelper::stringURLSafe($v);
 						$v		= strip_tags($v);
 						
 						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$db->quote($v);

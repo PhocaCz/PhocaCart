@@ -47,7 +47,8 @@ class PhocaCartCpViewPhocacartRegions extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.region_id'));
-
+		$bar 	= JToolbar::getInstance('toolbar');
+		
 		JToolbarHelper::title( JText::_( $this->t['l'].'_REGIONS' ), 'globe' );
 	
 		if ($canDo->get('core.create')) {
@@ -68,7 +69,10 @@ class PhocaCartCpViewPhocacartRegions extends JViewLegacy
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartregions.delete', $this->t['l'].'_DELETE');
 		}
 		
-		JToolbarHelper::custom($this->t['task'].'.importregions', 'earth', 'earth', $this->t['l'].'_IMPORT_REGIONS', false);
+		//JToolbarHelper::custom($this->t['task'].'.importregions', 'earth', 'earth', $this->t['l'].'_IMPORT_REGIONS', false);
+		$dhtml = '<button onclick="if (confirm(\''.JText::_('COM_PHOCACART_WARNING_IMPORT_REGIONS').'\')) { Joomla.submitbutton(\'phocacartregion.importregions\'); }" class="btn btn-small button-earth"><i class="icon-earth" title="'.JText::_($this->t['l'].'_IMPORT_REGIONS').'"></i> '.JText::_($this->t['l'].'_IMPORT_REGIONS').'</button>';
+		$bar->appendButton('Custom', $dhtml, 'importregions');
+		
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 		

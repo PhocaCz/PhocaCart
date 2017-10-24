@@ -7,6 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */ 
 defined('_JEXEC') or die();
+
+$layoutI 		= new JLayoutFile('icon_checkout_status', null, array('component' => 'com_phocacart'));
+$d				= array();
+$d['suffix']	= $this->t['icon_suffix'];
+$d['number']	= $this->t['np'];
+$d['type']		= $this->t['checkout_icon_status'];
+
 if ($this->a->paymentnotused == 1) {
 	
 	// Payment not used
@@ -14,13 +21,14 @@ if ($this->a->paymentnotused == 1) {
 // PAYMENT ADDED
 } else if ($this->a->paymentview == 1) {
 	
+	$d['status']	= 'finished';
 	// Payment is added and goes to confirm
 	// ONLY DISPLAY - pamyent method was added and user don't want to edit it
 	
 
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentview">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
@@ -32,7 +40,13 @@ if ($this->a->paymentnotused == 1) {
 	
 	if (isset($this->t['paymentmethod']) && $this->t['paymentmethod']['title'] != '') {
 	
-		echo '<div class="col-sm-8 col-md-8 ">'.$this->t['paymentmethod']['title'];
+		echo '<div class="col-sm-8 col-md-8 ">';
+		
+		if ($this->t['paymentmethod']['image'] != '') {
+			echo '<div class="ph-payment-image"><img src="'.JURI::base(true) .'/'. $this->t['paymentmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['paymentmethod']['title'])).'" /></div>';
+		}
+		
+		echo '<div class="ph-payment-title">'.$this->t['paymentmethod']['title'].'</div>';
 		
 		if ($this->t['display_payment_desc'] && $this->t['paymentmethod']['description'] != '') {
 			echo '<div class="ph-checkout-payment-desc">'.JHTML::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
@@ -63,13 +77,16 @@ if ($this->a->paymentnotused == 1) {
 // PAYMENT EDIT
 } else if ($this->a->paymentedit == 1) {
 	
+	$d['status']	= 'pending';
+	
+	
 	$total	= $this->cart->getTotal();
 	$price	= new PhocacartPrice();
 	
 	// Paymnet is not added or we edit it but payment is added, we can edit
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutpaymentedit">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutPayment">';
@@ -92,7 +109,17 @@ if ($this->a->paymentnotused == 1) {
 
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
-		echo '<label><input type="radio" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >'.$v->title.'</label>';
+		echo '<label><input type="radio" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
+		
+		
+		if ($v->image != '') {
+			echo '<span class="ph-payment-image"><img src="'.JURI::base(true) .'/'. $v->image.'" alt="'.htmlspecialchars(strip_tags($v->title)).'" /></span>';
+		}
+		
+		echo '<span class="ph-payment-title">'.$v->title.'</span>';
+		
+		echo '</label>';
+		
 		echo '</div>';
 		
 		if ($this->t['display_payment_desc'] && $v->description != '') {
@@ -104,7 +131,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="col-sm-6 col-md-6"><div class="radio">';
 		
 		if ($this->t['zero_payment_price'] == 0 && $priceI['zero'] == 1) {
-			// Display nothing
+			// Display blank price field
 		} else if ($this->t['zero_payment_price'] == 2 && $priceI['zero'] == 1) {
 			// Display free text
 			echo '<div class="col-sm-8 col-md-8"></div>';
@@ -172,8 +199,11 @@ if ($this->a->paymentnotused == 1) {
 
 // PAYMENT NOT ADDED OR SHIPPING IS EDITED OR ADDRESS IS EDITED
 } else {
+	
+	$d['status']	= 'pending';
+	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 }
 ?>

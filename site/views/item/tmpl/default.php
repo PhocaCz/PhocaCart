@@ -11,14 +11,14 @@ defined('_JEXEC') or die();
 $layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new JLayoutFile('button_wishlist', null, array('component' => 'com_phocacart'));
 $layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
 $layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
 $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
 $layoutQ	= new JLayoutFile('button_ask_question', null, array('component' => 'com_phocacart'));
-$layoutAtOS	= new JLayoutFile('attribute_options_select', null, array('component' => 'com_phocacart'));
-$layoutAtOC	= new JLayoutFile('attribute_options_checkbox', null, array('component' => 'com_phocacart'));
 $layoutPD	= new JLayoutFile('button_public_download', null, array('component' => 'com_phocacart'));
 $layoutEL	= new JLayoutFile('link_external_link', null, array('component' => 'com_phocacart'));
+$layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
 
 echo '<div id="ph-pc-item-box" class="pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
@@ -43,6 +43,10 @@ echo $this->t['event']->onItemBeforeHeader;
 
 $x = $this->item[0];
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
+	
+	
+	
+	$idName			= 'VItemP'.(int)$x->id;
 	echo '<div class="row">';
 	
 	// === IMAGE PANEL
@@ -50,12 +54,19 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	
 	$label 	= PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
 	
-	
+
 	// IMAGE
+	$image 		= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image
+	$imageL 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image Link to enlarge
+	$dataImage	= 'data-image="'.JURI::base(true).'/'.$image->rel.'"';// Default image - when changed by javascript back to default
 	
+	// Some of the attribute is selected - this attribute include image so the image should be displayed instead of default
+	$imageA = PhocaCartImage::getImageChangedByAttributes($this->t['attr_options'], 'large');
+	if ($imageA != '') { 
+		$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
+		$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
+	}
 	
-	$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
-	$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');
 	$link 	= JURI::base(true).'/'.$imageL->rel;
 		
 		
@@ -65,8 +76,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	
 		echo $label['new'] . $label['hot'] . $label['feat'];
 	
-		echo '<a href="'.$link.'" '.$this->t['image_rel'].'>';
-		echo '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full"';
+		echo '<a href="'.$link.'" '.$this->t['image_rel'].' class="phjProductHref'.$idName.'" data-href="'.$link.'">';
+		echo '<img src="'.JURI::base(true).'/'.$image->rel.'" '.$dataImage.' alt="" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full phjProductImage'.$idName.'"';
 		if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
 			echo ' style="width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px"';
 		}
@@ -84,7 +95,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		
 		
 		foreach ($this->t['add_images'] as $v2) {
-			echo '<div class="col-xs-12 col-sm-3 col-md-3 ph-item-image-box">';
+			echo '<div class="col-xs-12 col-sm-4 col-md-4 ph-item-image-box">';
 			$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'small');
 			$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');
 			$link 	= JURI::base(true).'/'.$imageL->rel;
@@ -116,15 +127,20 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		
 		$d					= array();
 		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
+		$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
 		
 		$d['priceitemsorig']= array();
 		if ($x->price_original != '' && $x->price_original > 0) {
 			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype);
 		}
 		$d['class']			= 'ph-item-price-box';
-		echo '<div id="phItemPriceBox">';
+		$d['product_id']	= (int)$x->id;
+		$d['typeview']		= 'Item';
+		
+		// Display discount price
+		$d['priceitemsdiscount']	= $d['priceitems'];
+		$d['discount'] 				= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $d['priceitemsdiscount']);
 		echo $layoutP->render($d);
-		echo '</div>';
 	}
 	
 	// REWARD POINTS - NEEDED
@@ -156,20 +172,27 @@ if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
 	if (isset($x->manufacturertitle) && $x->manufacturertitle != '') {
 		echo '<div class="ph-item-manufacturer-box">';
 		echo '<div class="ph-manufacturer-txt">'.JText::_('COM_PHOCACART_MANUFACTURER').':</div>';
-		echo '<div class="ph-manufacturer">'.$x->manufacturertitle.'</div>';
+		echo '<div class="ph-manufacturer">';
+		echo PhocacartRenderFront::displayLink($x->manufacturertitle, $x->manufacturerlink);
+		echo '</div>';
 		echo '</div>';
 		echo '<div class="ph-cb"></div>';
 	}
 
 	// STOCK
+	// Set stock: product, variations, or advanced stock status
+	PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
+	
 	if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count']) {
 		
-		echo '<div class="ph-item-stock-box">';
-		echo '<div class="ph-stock-txt">'.JText::_('COM_PHOCACART_AVAILABILITY').'</div>';
 		
-		echo '<div class="ph-stock">'.JText::_($this->t['stock_status_output']).'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
+		$d							= array();
+		$d['class']					= 'ph-item-stock-box';
+		$d['product_id']			= (int)$x->id;
+		$d['typeview']				= 'Item';
+		$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
+		echo $layoutS->render($d);
+		
 	}
 	
 	if($this->t['stock_status']['min_quantity']) {
@@ -197,56 +220,26 @@ if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
 	// when ajax cart is active and submit button is clicked class=phItemCartBoxForm
 	//
 	
-	echo '<form id="phItemPriceBoxForm" action="'.$this->t['linkcheckout'].'" method="post" class="phItemCartBoxForm form-inline">';
+
+	echo '<form 
+	id="phCartAddToCartButton'.(int)$x->id.'"
+	class="phItemCartBoxForm phjAddToCart phjItem phjAddToCartVItemP'.(int)$x->id.' form-inline" 
+	action="'.$this->t['linkcheckout'].'" method="post">';
 	
 	// ATTRIBUTES, OPTIONS
-	if (!empty($this->t['attr_options']) && $this->t['hide_attributes'] != 1) {
-		
-		PhocacartRenderJs::renderPhSwapImageInitialize(1, $this->t['dynamic_change_image']);
-		
-		echo '<div class="ph-item-attributes-box" id="phItemAttributesBox">';
-		echo '<h4>'.JText::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';
-		
-		foreach ($this->t['attr_options'] as $k => $v) {
-			
-			
-			// SELECTBOX COLOR, SELECTBOX IMAGE
-			if ($v->type == 2 || $v->type == 3) {
-				PhocacartRenderJs::renderPhAttributeSelectBoxInitialize((int)$v->id, (int)$v->type);
-			}
-			
-			// If the attribute is required, return different required parts (attribute - html5, class - jquery, span - heading)
-			// Set jquery required validation, which should help to html 5 in case of checkboxes (see more info in the funtion)
-			// TYPES SET for JQUERY require control: 4 5 6
-			$req = PhocacartRenderJs::renderRequiredParts((int)$v->id, (int)$v->required );
-			
-			// HTML5 does not know to check checkboxes - if some value is set
-			// CHECKBOX, CHECKBOX COLOR, CHECKBOX IMAGE
-			if($v->type == 4 || $v->type == 5 || $v->type == 6) {
-				PhocacartRenderJs::renderCheckBoxRequired((int)$v->id);	
-			}
 
-			echo '<div class="ph-attribute-title">'.$v->title.$req['span'].'</div>';
-			if(!empty($v->options)) {
-				
-				$d							= array();
-				$d['attribute']				= $v;
-				$d['required']				= $req;
-				$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
-				$d['pathitem']				= $this->t['pathitem'];
-				$d['price']					= $price;
+	$d							= array();
+	$d['attr_options']			= $this->t['attr_options'];
+	$d['hide_attributes']		= $this->t['hide_attributes_item'];
+	$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+	$d['pathitem']				= $this->t['pathitem'];
+	$d['init_type']				= 0;
+	$d['price']					= $price;
+	$d['product_id']			= (int)$x->id;
+	$d['image_size']			= 'large';
+	$d['typeview']				= 'Item';
+	echo $layoutAB->render($d);
 
-				if ($v->type == 1 || $v->type == 2 || $v->type == 3) {
-					echo $layoutAtOS->render($d);// SELECTBOX, SELECTBOX COLOR, SELECTBOX IMAGE
-				} else if ($v->type == 4 || $v->type == 5 || $v->type == 6) {
-					echo $layoutAtOC->render($d);// CHECKBOX, CHECKBOX COLOR, CHECKBOX COLOR
-				}
-			}
-			
-		}
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
 	
 	// :L: ADD TO CART
 	if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {

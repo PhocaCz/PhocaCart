@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `upc` varchar(15) NOT NULL DEFAULT '',
   `ean` varchar(15) NOT NULL DEFAULT '',
   `jan` varchar(15) NOT NULL DEFAULT '',
-  `isbn` varchar(15) NOT NULL DEFAULT '',
+  `isbn` varchar(20) NOT NULL DEFAULT '',
   `mpn` varchar(255) NOT NULL DEFAULT '',
   `serial_number` varchar(255) NOT NULL DEFAULT '',
   `registration_key` varchar(255) NOT NULL DEFAULT '',
@@ -196,6 +196,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_stock` (
   `product_key` text,
   `attributes` text,
   `stock` int(11) NOT NULL DEFAULT '0',
+  `image` varchar(255) NOT NULL DEFAULT '',
+  `image_small` varchar(255) NOT NULL DEFAULT '',
+  `image_medium` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=utf8;
 
@@ -452,6 +455,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_manufacturers` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `image` varchar(255) NOT NULL DEFAULT '',
+  `link` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
@@ -589,6 +593,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_coupons` (
   `quantity_to` int(11) NOT NULL DEFAULT '0',
   `available_quantity` int(11) NOT NULL DEFAULT '0',
   `available_quantity_user` int(11) NOT NULL DEFAULT '0',
+  `category_filter` tinyint(1) NOT NULL DEFAULT '1',
+  `product_filter` tinyint(1) NOT NULL DEFAULT '1',
   `description` text,
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -644,6 +650,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_discounts` (
   `quantity_to` int(11) NOT NULL DEFAULT '0',
   `available_quantity` int(11) NOT NULL DEFAULT '0',
   `available_quantity_user` int(11) NOT NULL DEFAULT '0',
+  `category_filter` tinyint(1) NOT NULL DEFAULT '1',
+  `product_filter` tinyint(1) NOT NULL DEFAULT '1',
   `description` text,
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -2023,6 +2031,26 @@ INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, 
 
 -- ALTER TABLE  `#__phocacart_order_total` 		ADD `item_id` int(11) NOT NULL DEFAULT '0';
 
+
+-- ---------
+-- RC9 -> RC9.1
+-- ---------
+-- ALTER TABLE  `#__phocacart_product_stock` 		ADD `image` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_product_stock` 		ADD `image_small` varchar(255) NOT NULL DEFAULT '';
+-- ALTER TABLE  `#__phocacart_product_stock` 		ADD `image_medium` varchar(255) NOT NULL DEFAULT '';
+
+-- ALTER TABLE  `#__phocacart_products` 		CHANGE `isbn` `isbn` varchar(20) NOT NULL DEFAULT '';
+
+-- ---------
+-- RC9.1 -> STABLE
+-- ---------
+
+-- ALTER TABLE  `#__phocacart_manufacturers` 		ADD `link` varchar(255) NOT NULL DEFAULT '';
+
+-- ALTER TABLE  `#__phocacart_coupons` 		ADD `category_filter` tinyint(1) NOT NULL DEFAULT '1';
+-- ALTER TABLE  `#__phocacart_coupons` 		ADD `product_filter` tinyint(1) NOT NULL DEFAULT '1';
+-- ALTER TABLE  `#__phocacart_discounts` 	ADD `category_filter` tinyint(1) NOT NULL DEFAULT '1';
+-- ALTER TABLE  `#__phocacart_discounts` 	ADD `product_filter` tinyint(1) NOT NULL DEFAULT '1';
 
 
 

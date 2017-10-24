@@ -43,7 +43,7 @@ class PhocacartDiscountCart
 			$where 			= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 			
 			
-			$query = 'SELECT a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to,'
+			$query = 'SELECT a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter,'
 					.' GROUP_CONCAT(DISTINCT dp.product_id) AS product,' // line of selected products
 					.' GROUP_CONCAT(DISTINCT dc.category_id) AS category' // line of selected categories
 					.' FROM #__phocacart_discounts AS a'
@@ -51,7 +51,7 @@ class PhocacartDiscountCart
 					.' LEFT JOIN #__phocacart_discount_categories AS dc ON dc.discount_id = a.id'
 					.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 5'// type 5 is discount
 					. $where
-					.' GROUP BY a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to';
+					.' GROUP BY a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter';
 					$query .= ' ORDER BY a.id';
 	
 			PhocacartUtils::setConcatCharCount();
@@ -135,31 +135,47 @@ class PhocacartDiscountCart
 				if (!empty($v['product'])) {
 					$ids	= explode(',', $v['product']);
 					if (empty($ids)) {
-						// OK we don't check the quantity as zero means, no quantity limit 
+						// OK we don't check the quantity as zero means, no product limit 
 					} else {
-						if (!in_array($id, $ids)) {
-							
-							unset($discounts[$k]);
-							continue;
+						if ($v['product_filter'] == 0) {
+							// All except the selected
+							if (in_array($id, $ids)) {
+								unset($discounts[$k]);
+								continue;
+							}
+						} else {
+							// All selected
+							if (!in_array($id, $ids)) {
+								unset($discounts[$k]);
+								continue;
+							}
 						}
-						
 					}
 				}
-				
+			
 				// 6. VALID CATEGORY
 				if (!empty($v['category'])) {
 					$catids	= explode(',', $v['category']);
 					
 					if (empty($catids)) {
-						// OK we don't check the quantity as zero means, no quantity limit 
+						// OK we don't check the quantity as zero means, no category limit 
 					} else {
-						if (!in_array($catid, $catids)) {
-							unset($discounts[$k]);
-							continue;
+						if ($v['category_filter'] == 0) {
+							// All except the selected
+							if (in_array($catid, $catids)) {
+								unset($discounts[$k]);
+								continue;
+							}
+						} else {
+							// All selected
+							if (!in_array($catid, $catids)) {
+								unset($discounts[$k]);
+								continue;
+							}
 						}
 					}
 				}
-				
+			
 				
 				//$ids	= explode(',', $this->coupon['product']);
 				/*$catids	= explode(',', $this->coupon['category']);
@@ -216,7 +232,9 @@ class PhocacartDiscountCart
 						$bestKey		= $k;
 					}
 				}
+				
 			}
+			
 			
 			// POSSIBLE CONFLICT discount vs. quantity - solved by parameter
 			// POSSIBLE CONFLICT percentage vs. fixed amount

@@ -76,10 +76,10 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplication::stringURLSafe($table->alias);
+		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
+			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 		
 		$table->parent_id 	= PhocacartUtils::getIntFromString($table->parent_id);
@@ -162,7 +162,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$db->setQuery( $query );
 				
 			if (!($rows2 = $db->loadObjectList())) {
-				throw new Exception( $db->stderr('Load Data Problem'), 500 );
+				throw new Exception( JText::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
 				return false;
 			}
 
@@ -193,7 +193,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				$db->setQuery( $query );
 
 				if (!($rows = $db->loadObjectList())) {
-					throw new Exception( $db->stderr('Load Data Problem'), 500 );
+					throw new Exception( JText::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
 					return false;
 				}
 				
@@ -213,16 +213,16 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 					$query = 'DELETE FROM #__phocacart_categories'
 					. ' WHERE id IN ( '.$cids.' )';
 					$db->setQuery( $query );
-					if (!$db->query()) {
-						$this->setError($this->_db->getErrorMsg());
+					if (!$db->execute()) {
+						$this->setError($db->getErrorMsg());
 						return false;
 					}
 					
 					// 7. DELETE CATEGORY RELATIONSHIP (should not happen as this should be deleted when products are deleted)
 					$query = 'DELETE FROM #__phocacart_product_categories'
 						. ' WHERE category_id IN ( '.$cids.' )';
-					$this->_db->setQuery( $query );
-					$this->_db->execute();
+					$db->setQuery( $query );
+					$db->execute();
 					
 					// Delete items in phocadownload_user_category
 				/*	$query = 'DELETE FROM #__phocadownload_user_category'
@@ -237,8 +237,8 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 					$query = 'DELETE FROM #__phocacart_item_groups'
 						. ' WHERE item_id IN ( '.$cids.' )'
 						. ' AND type = 2';
-					$this->_db->setQuery( $query );
-					$this->_db->execute();
+					$db->setQuery( $query );
+					$db->execute();
 				}
 			}
 			
@@ -377,6 +377,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 		$table	= $this->getTable();
 		//$db		= $this->getDbo();
+		$app	= JFactory::getApplication();
 
 		// Check that the category exists
 		if ($categoryId) {
@@ -436,8 +437,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			
 			// Cannot move the node to be a child of itself.
 			if ((int)$table->id == (int)$categoryId) {
-				$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_INVALID_NODE_RECURSION', get_class($pk)));
-				$this->setError($e);
+				$app->enqueueMessage(JText::sprintf('JLIB_DATABASE_ERROR_INVALID_NODE_RECURSION', get_class($pk)));
 				return false;
 			}
 
@@ -560,8 +560,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		$table = $this->getTable();
 		while ($table->load(array('alias' => $alias, 'parent_id' => $category_id)))
 		{
-			//$title = JString::increment($title);
-			//$alias = JString::increment($alias, 'dash');
+			
 			$title = StringHelper::increment($title);
 			$alias = StringHelper::increment($alias, 'dash');
 		}

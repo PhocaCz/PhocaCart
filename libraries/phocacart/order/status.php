@@ -182,6 +182,8 @@ class PhocacartOrderStatus
 			}
 		}
 		
+		
+		
 		// 6) Reward Points Needed
 		if ($changePointsNeeded == 0) {
 			$changePointsNeededV = 0;
@@ -228,7 +230,7 @@ class PhocacartOrderStatus
 		
 		if ($notifyUserV) {
 			
-			if (!$app->isAdmin()){
+			if (!$app->isClient('administrator')){
 				$user 			= JFactory::getUser();
 				$guest			= PhocacartUserGuestuser::getGuestUser();
 				if (!$guest && $user->id != $common->user_id) {
@@ -578,7 +580,7 @@ class PhocacartOrderStatus
 			// -1 ... not sent (error)
 			$notify = PhocacartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, $bcc, $attachmentContent, $attachmentName);
 			if ($notify) {
-				if ($app->isAdmin()){
+				if ($app->isClient('administrator')){
 					$app->enqueueMessage(JText::_('COM_PHOCACART_EMAIL_IF_NO_ERROR_EMAIL_SENT'));
 				}
 				return $notify;// 1

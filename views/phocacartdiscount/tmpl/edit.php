@@ -46,7 +46,7 @@ echo $r->group($this->form, $formArray, 1);
 echo '</div>';
 
 echo '<div class="tab-pane" id="rules">'."\n"; 
-$formArray = array ('total_amount', 'quantity_from', 'product_ids', 'cat_ids', 'free_shipping', 'free_payment');
+$formArray = array ('total_amount', 'quantity_from', 'product_ids', 'product_filter', 'cat_ids', 'category_filter', 'free_shipping', 'free_payment');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 

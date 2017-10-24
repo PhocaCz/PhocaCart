@@ -81,7 +81,7 @@ class PhocacartUtils
 	}
 	
 	public static function getAliasName($alias) {	
-		$alias = JApplication::stringURLSafe($alias);
+		$alias = JApplicationHelper::stringURLSafe($alias);
 		if (trim(str_replace('-', '', $alias)) == '') {
 			$alias = JFactory::getDate()->format("Y-m-d-H-i-s");
 		}
@@ -112,7 +112,7 @@ class PhocacartUtils
 	public static function getToken($type = 'token') {
 		
 		$app		= JFactory::getApplication();
-		$secret		= $app->getCfg('secret');
+		$secret		= $app->get('secret');
 		$secretPartA= substr($secret, mt_rand(4,15), mt_rand(0,10));
 		$secretPartB= substr($secret, mt_rand(4,15), mt_rand(0,10));
 
@@ -383,7 +383,7 @@ class PhocacartUtils
 	public static function getComponentParameters() {
 		
 		$app = JFactory::getApplication();
-		if ($app->isAdmin()) {
+		if ($app->isClient('administrator')) {
 			return JComponentHelper::getParams('com_phocacart');
 		} else {
 			$option	= $app->input->get('option');
@@ -453,6 +453,17 @@ class PhocacartUtils
 		}
 		
 		return $item;
+	}
+	
+	public static function getDefaultTemplate() {
+	
+	
+		$db = JFactory::getDBO();
+		$q = 'SELECT template FROM #__template_styles WHERE client_id = 0 AND home = 1;';
+		$db->setQuery($q);
+		$item = $db->loadResult();
+		return $item;
+	
 	}
 	
 }

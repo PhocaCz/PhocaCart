@@ -36,7 +36,7 @@ class PhocacartProduct
 		///$wheres[] 	= ' c.id = '.(int)$catid;
 		$wheres[] 	= ' i.id = '.(int)$productId;
 		
-		$query = ' SELECT i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received'
+		$query = ' SELECT i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.download_file, i.download_token, i.download_folder, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received'
 				.' FROM #__phocacart_products AS i' 
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = i.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
@@ -53,7 +53,7 @@ class PhocacartProduct
 				.' WHERE ' . implode( ' AND ', $wheres )
 				
 				// STRICT MODE
-				.' GROUP BY i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.stock_calculation, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title'
+				.' GROUP BY i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.stock_calculation, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, i.download_file, i.download_token, i.download_folder, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title'
 				
 				
 				.' ORDER BY i.id'
@@ -89,10 +89,7 @@ class PhocacartProduct
 			$product->taxrate 	= $taxChangedA['taxrate'];
 			$product->taxtitle	= $taxChangedA['taxtitle'];
 		}
-		/*pr int_r($product);
-		echo "=======<br><br>";
-		pri nt_r($query);
-		echo "=======<br><br>";*/
+
 		return $product;
 	}
 	
@@ -236,13 +233,14 @@ class PhocacartProduct
 	* checkPrice - check if the product has price or not ( > 0 )
 	*/
 	
-	public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array()) {
+	public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0) {
 	
 	
 
 		/*phocacart import('phocacart.ordering.ordering');*/
 		
 		$ordering 	= PhocacartOrdering::getOrderingCombination($orderingItem, $orderingCat);
+	
 	
 	
 		$db 			= JFactory::getDBO();
@@ -272,6 +270,17 @@ class PhocacartProduct
 			
 			$catIdsS = implode (',', $categoryIds);
 			$wheres[]	= 'pc.category_id IN ('.$catIdsS.')';
+		}
+		
+		if ($featuredOnly) {
+			$wheres[]	= 'a.featured = 1';
+		}
+		
+		// Additional Hits
+		if ($orderingItem == 17 || $orderingItem == 18) {
+			$wheres[]	= 'ah.product_id = a.id';
+			$wheres[]	= 'ah.user_id = '.(int)$user->id;
+			$wheres[]	= 'ah.user_id > 0';
 		}
 		
 		$q = ' SELECT a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
@@ -305,9 +314,14 @@ class PhocacartProduct
 			// user is in more groups, select lowest price by best group
 			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			// user is in more groups, select highest points by best group
-			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
-			
-			. ' WHERE ' . implode( ' AND ', $wheres )
+			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
+		
+		// Additional Hits
+		if ($orderingItem == 17 || $orderingItem == 18) {
+			$q .= ' LEFT JOIN #__phocacart_hits AS ah ON a.id = ah.product_id';
+		}
+		
+		$q .= ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required';
 			
 			if ($ordering != '') {
@@ -902,25 +916,27 @@ class PhocacartProduct
 		return false;
 	}
 	
-	public static function getProductKey($id, $attributes = array()) {
-		
+	public static function getProductKey($id, $attributes = array(), $encode = 1) {
 		
 		
 		$key = (int)$id . ':';
 		if (!empty($attributes)) {
 			
 			
-			// Sort attributes (becasue of right key generation)
+			// Sort attributes (because of right key generation)
 			ksort($attributes);
 			// Remove empty values, so items with empty values (add to cart item view) is the same
 			// like item without any values (add to cart category view)
+			
 			foreach($attributes as $k => $v) {
 				
 				// Transform all attribute values to array (when they get string instead of array from html)
-				if (!is_array($v)) {
-					$attributes[$k] = array($v => $v);
-				}
 				
+			
+				if (!is_array($v)) {
+					$attributes[$k] = array((int)$v => (int)$v);
+				}
+
 				// Unset when string is empty or zero
 				if ($v == 0 || $v == '') {
 					unset($attributes[$k]);
@@ -929,6 +945,14 @@ class PhocacartProduct
 				// Unset when we have transformed it to array but it is empty
 				if (empty($v)) {
 					unset($attributes[$k]);
+				}
+				
+				if (!empty($v) && is_array($v)) {
+					
+					foreach($v as $k2 => $v2) {
+						$attributes[$k][$k2] = (int)$v2;
+					}
+					
 				}
 			}
 			
@@ -939,12 +963,18 @@ class PhocacartProduct
 				}
 			}
 			
+			
 			if (!empty($attributes)) {
+				
+				if ($encode == 0) {
+					return serialize($attributes);
+				}
+
 				$key .= base64_encode(serialize($attributes));
 			}
 		}
 		$key .= ':';
-		
+
 		return $key;
 			
 		/*$key = 'ID:'.(int)$id .'{';

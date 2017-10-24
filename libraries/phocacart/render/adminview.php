@@ -297,7 +297,7 @@ class PhocacartRenderAdminview
 		return $o;
 	}
 	
-	public function additionalOptionsRow($id, $attrId, $idDb, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image, $image_small, $color, $defaultValue, $url, $url2, $w = 700, $h = 400) {
+	public function additionalOptionsRow($id, $attrId, $idDb, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image, $image_medium, $image_small, $color, $defaultValue, $url, $url2, $url3, $w = 700, $h = 400) {
 		
 	
 
@@ -390,6 +390,30 @@ class PhocacartRenderAdminview
 		
 		$o .= '<div class="ph-br-small"></div>';
 		
+		
+		// IMAGE MEDIUM
+		// -----------
+		
+		$attr			= '';
+		$idA			= 'phFileImageNameModalO';
+		$textButton2	= 'COM_PHOCACART_MEDIUM';
+		
+		$html	= array();
+	/*	$html[] = '<span class="input-append">';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage_medium'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_medium]" value="'. htmlspecialchars($image_medium).'"' .' '.$attr.' />';
+		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url2 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
+			. '<span class="icon-list icon-white"></span>'
+			. JText::_($textButton2). '</a></span>';
+			
+		$html[] = '</span>'. "\n";
+		
+		*/
+		// We use only small image for icon and large image which have thumbnails (small, medium, large), so we don't need medium
+		$html[] = '<input type="hidden" id="jform_optionimage_medium'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_medium]" value=""' .' '.$attr.' />';
+		$o .= implode("\n", $html);
+		/*
+		$o .= '<div class="ph-br-small"></div>';
+		*/
 		// IMAGE SMALL
 		// -----------
 		
@@ -400,7 +424,7 @@ class PhocacartRenderAdminview
 		$html	= array();
 		$html[] = '<span class="input-append">';
 		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage_small'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_small]" value="'. htmlspecialchars($image_small).'"' .' '.$attr.' />';
-		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url2 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
+		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url3 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
 			. '<span class="icon-list icon-white"></span>'
 			. JText::_($textButton2). '</a></span>';
 			
@@ -1050,7 +1074,7 @@ class PhocacartRenderAdminview
 			// We have displayed the modal with wizard
 			// but we need to enable it in system so if we go from wizad to each task, it is enabled
 			$urlAjaxEnableWizard 	= 'index.php?option=com_phocacart&task=phocacartwizard.enablewizard&format=json&'. JSession::getFormToken().'=1';
-			PhocacartRenderJs::renderAjaxDoRequestWizardController($urlAjaxEnableWizard, $id, false);
+			PhocacartRenderAdminjs::renderAjaxDoRequestWizardController($urlAjaxEnableWizard, $id, false);
 		}
 	}
 	

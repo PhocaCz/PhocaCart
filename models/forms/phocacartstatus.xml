@@ -27,7 +27,7 @@
 	<option	value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
 </field>
 
-<field name="change_points_received" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC" class="inputbox" size="1" default="0">
+<field name="change_points_received" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_DESC" class="inputbox" size="1" default="0">
 	<option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
 	<option	value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
 	<option	value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>

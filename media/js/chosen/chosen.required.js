@@ -3,8 +3,8 @@ jQuery.fn.chosen = function(options) {
   var select = jQuery(this)
     , is_creating_chosen = !!options
 
-    var style = 'display:visible; position:absolute; clip:rect(0,0,0,0);'
-
+   var style = 'display:visible; position:absolute; clip:rect(0,0,0,0);';
+ 
 	if (is_creating_chosen && select.css('position') === 'absolute' && select.attr('style') != style) {
 		// if we are creating a chosen and the select already has the appropriate styles added
 		// we remove those (so that the select hasn't got a crazy width), then create the chosen

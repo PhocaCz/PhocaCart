@@ -127,7 +127,7 @@ $w = 700;// modal window width
 $h = 400;// modal widnow height
 $newRow = $r->additionalImagesRow('\' + phRowCountImage +  \'', $url, '', 1, $w, $h);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-PhocacartRenderJs::renderJsManageRowImage($i, $newRow);
+PhocacartRenderAdminjs::renderJsManageRowImage($i, $newRow);
 echo $r->modalWindowDynamic('phFileImageNameModalAT', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_IMAGE'), 'image');
 
@@ -140,8 +140,8 @@ echo '</div>'. "\n";
 $w = 700;
 $h = 400;
 $urlO 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage';
-$urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_small';
-
+$urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_medium';
+$urlO3 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_small';
 echo '<div class="tab-pane" id="attributes">'. "\n";
 
 
@@ -166,7 +166,7 @@ if (!empty($this->attributes)) {
 					// it has no influence on saving it to db
 					$v2->amount	= PhocacartPrice::cleanPrice($v2->amount);
 					$v2->weight	= PhocacartPrice::cleanPrice($v2->weight);
-					echo $r->additionalOptionsRow((int)$j, (int)$i, (int)$v2->id, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image, $v2->image_small, $v2->color, $v2->default_value, $urlO, $urlO2, $w, $h);
+					echo $r->additionalOptionsRow((int)$j, (int)$i, (int)$v2->id, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image, $v2->image_medium, $v2->image_small, $v2->color, $v2->default_value, $urlO, $urlO2, $urlO3, $w, $h);
 					$j++;
 					$m++;
 				}
@@ -181,18 +181,18 @@ if (!empty($this->attributes)) {
 // Attribute	
 $newRow = $r->additionalAttributesRow('\' + phRowCountAttribute +  \'', '', '', '', '', '', 1);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-PhocacartRenderJs::renderJsManageRowAttribute($i, $newRow);
+PhocacartRenderAdminjs::renderJsManageRowAttribute($i, $newRow);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_ATTRIBUTE'), 'attribute');
 
 // Option
 //echo $r->modalWindow('phFileImageNameModalO', $urlO . '\'+ (phRowImgOption) +\'', 'COM_PHOCACART_FORM_SELECT_IMAGE');
 echo $r->modalWindowDynamic('phFileImageNameModalO', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
-$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '', '', '', '', '', $urlO, $urlO2, $w, $h);
+$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '', '', '', '', '', '', $urlO, $urlO2, $urlO3, $w, $h);
 $newRow 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 $newHeader	= '';
 $newHeader	= $r->headerOption();
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
-PhocacartRenderJs::renderJsManageRowOption($j, $newRow, $newHeader);
+PhocacartRenderAdminjs::renderJsManageRowOption($j, $newRow, $newHeader);
 
 echo '<div>&nbsp;</div>';
 //echo '</div>'. "\n";
@@ -220,7 +220,7 @@ $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 //$newHeader	= $r->headerSpecification();
 $newHeader	= '';
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
-PhocacartRenderJs::renderJsManageRowSpecification($i, $newRow, $newHeader);
+PhocacartRenderAdminjs::renderJsManageRowSpecification($i, $newRow, $newHeader);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_PARAMETER'), 'specification');//phrowboxspecification in button
 
 echo '<div>&nbsp;</div>';
@@ -261,7 +261,7 @@ $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 $newHeader	= '';
 $newHeader	= $r->headerDiscount();
 $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
-PhocacartRenderJs::renderJsManageRowDiscount($i, $newRow, $newHeader);
+PhocacartRenderAdminjs::renderJsManageRowDiscount($i, $newRow, $newHeader);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_DISCOUNT'), 'discount');//phrowboxspecification in button
 
 echo '<div>&nbsp;</div>';
@@ -296,7 +296,7 @@ if (!empty($this->attributeoption)) {
 $suffix  = 'addAttributes';	
 $newRowA = $r->additionalAttributesRow('\' + phRowCount'.$suffix.' +  \'', '', $suffix, '', '');
 $newRowA = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRowA);
-PhocacartRenderJs::renderJsManageRow($i, $newRowA, '', $suffix);
+PhocacartRenderAdminjs::renderJsManageRow($i, $newRowA, '', $suffix);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_OPTION'), $suffix);
 
 echo '<div>&nbsp;</div>';

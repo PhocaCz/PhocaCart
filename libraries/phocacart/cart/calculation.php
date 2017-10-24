@@ -333,6 +333,7 @@ class PhocacartCartCalculation
 										$fullItems[$k]['attributes'][$attrib->aid][$k3]['atitle'] 	= $attrib->atitle;
 										$fullItems[$k]['attributes'][$attrib->aid][$k3]['oid'] 		= $attrib->id;// Option Id
 										$fullItems[$k]['attributes'][$attrib->aid][$k3]['otitle'] 	= $attrib->title;
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['oimage'] 	= $attrib->image;
 									}
 								}
 							}
@@ -414,7 +415,7 @@ class PhocacartCartCalculation
 				// b) STOCK-0 - There is only one main product even it is divided into more product variations
 				//         - so we count only main product - group
 				// a) STOCK-1 - Each product variation is one product but this means that product without any variation
-				//         - is in one one of the product varitation:
+				//         - is in one one of the product variation:
 				// Product 1 Option A - one product
 				// Product 1 Option B - one product
 				// Product 1 (no options) - one product - as sum there are 3 products
@@ -945,11 +946,18 @@ class PhocacartCartCalculation
 						$total['tax'][$taxId]['tax']	-= $tCt == 2 ? 0 : $dT * $fQ;
 						
 						$total['couponcarttxtsuffix'] = ' ('.$price->cleanPrice($couponDb['discount']).' %)';
+						
 					}
 				}
 			}
 			
-			$coupon['valid'] 		= $validCoupon;
+			// !!! VALID COUPON
+			// In case the coupon is valid at least for one product or one category it is then valid
+			// and will be divided into valid products/categories
+			// As global we mark it as valid - so change the valid coupon variable only in case it is valid
+			if ($validCoupon == 1) {
+				$coupon['valid'] 		= $validCoupon;
+			}
 			$fullItems[$k]['final']	= $fullItems[$k]['netto'] ? $fullItems[$k]['netto'] * $fQ : $fullItems[$k]['brutto'] * $fQ;
 			
 			if ($this->correctsubtotal) {
@@ -1270,6 +1278,20 @@ class PhocacartCartCalculation
 				$total['rounding_currency']	= 0;
 				
 			}	
+			
+			// Correct float, so we can compare to zero
+			if (isset($total['rounding'])) {
+				if ($total['rounding'] > -0.01 && $total['rounding'] < 0.01) {
+					$total['rounding'] = 0;
+				}
+			}
+			
+			// Correct float, so we can compare to zero
+			if (isset($total['rounding_currency'])) {
+				if ($total['rounding_currency'] > -0.01 && $total['rounding_currency'] < 0.01) {
+					$total['rounding_currency'] = 0;
+				}
+			}
 		}
 		
 		

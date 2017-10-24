@@ -39,8 +39,9 @@ class PhocacartDownload
 				.' WHERE ' . implode( ' AND ', $wheres )
 				.' ORDER BY d.date';
 		$db->setQuery($query);
-	
+
 		$files = $db->loadObjectList();
+		
 		return $files;
 	}
 	

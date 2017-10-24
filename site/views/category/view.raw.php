@@ -46,8 +46,8 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['display_compare']			= $this->p->get( 'display_compare', 0 );
 		$this->t['display_wishlist']		= $this->p->get( 'display_wishlist', 0 );
 		$this->t['display_quickview']		= $this->p->get( 'display_quickview', 0 );
+		$this->t['display_addtocart_icon']	= $this->p->get( 'display_addtocart_icon', 0 );
 		$this->t['fade_in_action_icons']	= $this->p->get( 'fade_in_action_icons', 0 );
-		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
@@ -57,11 +57,19 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
 		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
-		$this->t['display_addtocart_icon']	= $this->p->get( 'display_addtocart_icon', 0 );
+		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
+		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
 		
+		// Catalogue function
 		if ($this->t['hide_addtocart'] == 1) {
 			$this->t['category_addtocart']		= 0;
+			$this->t['display_addtocart_icon'] 	= 0;
+			//$this->t['hide_attributes_category']= 1; Should be displayed or not?
 		}
+		if ($this->t['hide_attributes'] == 1) {
+			$this->t['hide_attributes_category'] = 1;
+		}
+		
 		$this->t['display_view_product_button']	= $this->p->get( 'display_view_product_button', 1 );
 		$this->t['product_name_link']			= $this->p->get( 'product_name_link', 0 );
 		$this->t['switch_image_category_items']	= $this->p->get( 'switch_image_category_items', 0 );

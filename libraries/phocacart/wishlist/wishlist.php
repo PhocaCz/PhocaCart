@@ -74,7 +74,7 @@ class PhocacartWishlist
 	public function updateWishListItems() {
 		if ($this->user->id > 0) {
 			$db 	= JFactory::getDBO();
-			//$items	= serialize($this->items);
+			//$items	= se rialize($this->items);
 			$date 	= JFactory::getDate();
 			$now	= $date->toSql();
 			

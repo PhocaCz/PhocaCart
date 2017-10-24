@@ -40,6 +40,7 @@ class PhocacartRenderAdmin
 				$links[]	= array('Phoca Cart site', 'https://www.phoca.cz/phocacart');
 				$links[]	= array('Phoca Cart documentation site', 'https://www.phoca.cz/documentation/category/116-phoca-cart-component');
 				$links[]	= array('Phoca Cart download site', 'https://www.phoca.cz/download/category/100-phoca-cart-component');
+				$links[]	= array('Phoca Cart extensions', 'https://www.phoca.cz/phocacart-extensions');
 			break;
 		
 		}

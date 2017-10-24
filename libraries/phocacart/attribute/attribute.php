@@ -34,7 +34,7 @@ class PhocacartAttribute
 	
 		$db =JFactory::getDBO();
 		
-		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_small, a.color, a.default_value';
+		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.color, a.default_value';
 		$query .= ' FROM #__phocacart_attribute_values AS a'
 			    .' WHERE a.attribute_id = '.(int) $attributeId
 				.' ORDER BY a.id';
@@ -218,6 +218,7 @@ class PhocacartAttribute
 							if (empty($v2['operator_weight'])) 	{$v2['operator_weight'] = '';}
 							if (empty($v2['weight'])) 			{$v2['weight'] 			= '0.0';}
 							if (empty($v2['image'])) 			{$v2['image'] 			= '';}
+							if (empty($v2['image_medium']))		{$v2['image_medium'] 	= '';}
 							if (empty($v2['image_small']))		{$v2['image_small'] 	= '';}
 							if (empty($v2['color'])) 			{$v2['color'] 			= '';}
 							
@@ -254,6 +255,7 @@ class PhocacartAttribute
 								.' operator_weight = '.$db->quote($v2['operator_weight']).','
 								.' weight = '.$db->quote($v2['weight']).','
 								.' image = '.$db->quote($v2['image']).','
+								.' image_medium = '.$db->quote($v2['image_medium']).','
 								.' image_small = '.$db->quote($v2['image_small']).','
 								.' color = '.$db->quote($v2['color']).','
 								.' default_value = '.(int)$defaultValue
@@ -270,10 +272,10 @@ class PhocacartAttribute
 								$v2['amount'] 			= PhocacartUtils::replaceCommaWithPoint($v2['amount']);
 								$v2['weight'] 			= PhocacartUtils::replaceCommaWithPoint($v2['weight']);
 	
-								$options 	= '('.(int)$newIdA.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
+								$options 	= '('.(int)$newIdA.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_medium']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
 								
 							
-								$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_small, color, default_value)'
+								$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, color, default_value)'
 											.' VALUES '.$options;
 										
 								$db->setQuery($query);
@@ -497,17 +499,20 @@ class PhocacartAttribute
 				}	
 			}
 		}
+		
 		return $attributesKey;
 	}
+	
+	
 
 	public static function getAllAttributesAndOptions($ordering = 1) {
 			
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 5);
-		$query = 'SELECT v.id, v.title, v.alias, v.image, v.image_small, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype'
+		$query = 'SELECT v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype'
 				.' FROM  #__phocacart_attribute_values AS v'
 				.' LEFT JOIN  #__phocacart_attributes AS at ON at.id = v.attribute_id'
-				.' GROUP BY v.alias, attralias, v.id, v.title, v.image, v.image_small, v.color, v.default_value, at.id, at.title, at.alias, at.type'
+				.' GROUP BY v.alias, attralias, v.id, v.title, v.image, v.image_medium, v.image_small, v.color, v.default_value, at.id, at.title, at.alias, at.type'
 				.' ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$attributes = $db->loadObjectList();
@@ -546,7 +551,7 @@ class PhocacartAttribute
 	
 	public static function getAttributeValue($id, $attributeId) {
 		$db =JFactory::getDBO();
-		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_small, a.color, a.default_value,'
+		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.color, a.default_value,'
 		.' aa.id as aid, aa.title as atitle'
 		.' FROM #__phocacart_attribute_values AS a'
 		.' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
@@ -558,6 +563,28 @@ class PhocacartAttribute
 		return $attrib;
 	
 	}
+	
+	public static function getAttributeFullValues($attributes) {
+		
+		$fullAttributes = array();
+		if (!empty($attributes)) {
+			foreach ($attributes as $k => $v) {
+				$fullAttributes[$k] = new stdClass();
+				// Could be set a function to get info about the attribute, for now not needed
+				if(!empty($v)) {
+					foreach ($v as $k2 => $v2) {
+						if ((int)$k > 0 && (int)$v2 > 0) {
+							$attrib = PhocacartAttribute::getAttributeValue((int)$v2, (int)$k);
+							$fullAttributes[$k]->options[$k2] = $attrib;
+						}
+					}
+				}
+			}
+		}
+		return $fullAttributes;
+	}
+	
+
 	
 	
 	/*
@@ -770,6 +797,57 @@ class PhocacartAttribute
 		}
 	}
 	
+	
+	/* When product is displayed, it has selected the default values
+	 * We need to filter all attributes assigned to product so the product only includes selected attributes and otpions
+	 * and we can make by this selection productKey
+	 */
+	
+	public static function getAttributesSelectedOnly($attributes) {
+		
+		$sAttributes = array();
+		if (!empty($attributes)) {
+			foreach ($attributes as $k => $v) {
+				if (!empty($v->options)) {
+					foreach($v->options as $k2 => $v2) {
+						if (isset($v2->default_value) && $v2->default_value == 1) {
+							$sAttributes[$k][$v2->id] = $v2->id; 
+						}
+					}
+				}
+			}
+		}
+		return $sAttributes;
+	}
+	
+	
+	
+	
+	public static function sanitizeAttributeArray($attribute) {
+		
+		// Sanitanize data and do the same level for all attributes:
+		// select attribute = 1
+		// checkbox attribute = array(0 => 1, 1 => 1) attribute[]
+		$aA = array();
+		if (!empty($attribute)) {
+			foreach($attribute as $k => $v) {
+				if (is_array($v) && !empty($v)) {
+					foreach($v as $k2 => $v2) {
+						if ((int)$v2 > 0) {
+							$aA[(int)$k][(int)$v2] = (int)$v2;
+						}
+					}
+				} else {
+					if ((int)$v > 0) {
+						$aA[(int)$k][(int)$v] = $v;
+					}
+				}
+			}
+		}
+		return $aA;
+		
+	}
+	
 
 	/*
 	 * based on: stackoverflow.com/questions/1256117/algorithm-that-will-take-numbers-or-words-and-find-all-possible-combinations
@@ -813,7 +891,7 @@ class PhocacartAttribute
 					}
 					
 					
-					$current['attributes'][$aid][$oid] = $oid;
+					$current['attributes'][$aid][$oid] = (int)$oid;
 	
 					
 					// Options inside one select cannot be combinated togeter
@@ -835,7 +913,8 @@ class PhocacartAttribute
 		
 			
 			// Define
-			$key 						= $current['product_id'] .':'. base64_encode(serialize($current['attributes'])) . ':';
+			
+			$key 						= PhocacartProduct::getProductKey($current['product_id'], $current['attributes']);
 			$current['product_id'] 		= $current['product_id'];
 			$current['product_key'] 	= $key;
 			$current['product_title'] 	= $current['product_title'];
@@ -966,11 +1045,14 @@ class PhocacartAttribute
 				.' LIMIT 1';
 		$db->setQuery($query);
 		$stock = $db->loadResult();
+		
 		if (isset($stock) && $stock > 0) {
 			return $stock;
-		}
+		} 
+	
 		return 0;
 	}
+
 	
 	public static function getCombinationsStockById($productId, $returnArray = 0) {
 	
@@ -1072,6 +1154,8 @@ class PhocacartAttribute
 			$db->execute();
 		}
 	}
+	
+	
 	
 	
 	/*

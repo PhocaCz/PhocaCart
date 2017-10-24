@@ -60,10 +60,10 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplication::stringURLSafe($table->alias);
+		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
+			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -118,8 +118,8 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 				if ($query != '' && $query{0} != '#'){
 					$db->setQuery($query);
 					if (!$db->execute()){
-						$app->enqueueMessage(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), 'error');
-						JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING);
+						$app->enqueueMessage(JText::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), 'error');
+						JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), JLog::WARNING);
 						return false;
 					}
 				}

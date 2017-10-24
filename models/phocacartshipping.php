@@ -51,7 +51,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplication::stringURLSafe($table->alias);
+		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
 		$table->cost 			= PhocacartUtils::replaceCommaWithPoint($table->cost);
 		$table->lowest_weight 	= PhocacartUtils::replaceCommaWithPoint($table->lowest_weight);
@@ -66,7 +66,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 
 
 		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
+			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 		
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);
@@ -169,24 +169,16 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			
 			if ((int)$table->id > 0) {
 				
-				if (!isset($data['zone'])) {
-					$data['zone'] = array();
-				}
-				
+				if (!isset($data['zone'])) { $data['zone'] = array();}
 				PhocacartZone::storeZones($data['zone'], (int)$table->id);
 				
-				if (!isset($data['country'])) {
-					$data['country'] = array();
-				}
-				
+				if (!isset($data['country'])) {$data['country'] = array();}
 				PhocacartCountry::storeCountries($data['country'], (int)$table->id);
 				
-				if (!isset($data['region'])) {
-					$data['region'] = array();
-				}
-				
+				if (!isset($data['region'])) {$data['region'] = array();}
 				PhocacartRegion::storeRegions($data['region'], (int)$table->id);
 				
+				if (!isset($data['group'])) {$data['group'] = array();}
 				PhocacartGroup::storeGroupsById((int)$table->id, 7, $data['group']);
 				
 			

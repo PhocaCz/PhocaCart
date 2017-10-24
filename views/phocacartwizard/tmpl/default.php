@@ -32,9 +32,9 @@ $linkOptions		= 'index.php?option=com_config&view=component&component=com_phocac
 $urlAjax 			= 'index.php?option=com_phocacart&task=phocacartwizard.updatestatus&format=json&'. JSession::getFormToken().'=1';
 $urlAjaxSkipWizard 	= 'index.php?option=com_phocacart&task=phocacartwizard.skipwizard&format=json&'. JSession::getFormToken().'=1';
 
-PhocacartRenderJs::renderAjaxDoRequestWizard(); // Event what must happen to run renderAjaxDoRequestWizardAfterChange
-PhocacartRenderJs::renderAjaxDoRequestWizardAfterChange($urlAjax, 'phClickBtn');// Ajax to render changes
-PhocacartRenderJs::renderAjaxDoRequestWizardController($urlAjaxSkipWizard, 'phCloseWizard');
+PhocacartRenderAdminjs::renderAjaxDoRequestWizard(); // Event what must happen to run renderAjaxDoRequestWizardAfterChange
+PhocacartRenderAdminjs::renderAjaxDoRequestWizardAfterChange($urlAjax, 'phClickBtn');// Ajax to render changes
+PhocacartRenderAdminjs::renderAjaxDoRequestWizardController($urlAjaxSkipWizard, 'phCloseWizard');
 
 
 

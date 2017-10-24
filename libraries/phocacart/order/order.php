@@ -14,11 +14,13 @@ class PhocacartOrder
 {
 	public $downloadable_product;
 	public $action_after_order;
+	public $message_after_order;
 
 	public function __construct() {
 		$this->downloadable_product = 0;// if there will be at least one downloadable file in order, we will mark it to display 
 										// right thank you message
 		$this->action_after_order	= 1;// which action will be done after order - end, procceed to payment, ...
+		$this->message_after_order	= array();// custom message array made by plugin
 		
 	}
 	public function saveOrderMain($comment) {
@@ -81,7 +83,7 @@ class PhocacartOrder
 				// What happens when the CAPTCHA was entered incorrectly
 				//$info = array();
 				//$info['field'] = 'question_captcha';
-				//return new JException(JText::_('COM_PHOCACART_WRONG_CAPTCHA' ), "105", E_USER_ERROR, $info, false);
+				
 			}
 		}
 		
@@ -352,7 +354,6 @@ class PhocacartOrder
 			// TOTAL
 			if (!empty($total[0])) {
 				$this->cleanTable('phocacart_order_total', $row->id);
-				
 				$ordering 				= 1;
 				$d2						= array();
 				$d2['order_id']			= $row->id;
@@ -372,7 +373,7 @@ class PhocacartOrder
 				
 				// Reward Discount
 				if (isset($total[5]['dnetto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT');
+					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT').$total[5]['rewardproducttxtsuffix'];
 					$d2['type']		= 'dnetto';
 					$d2['amount']	= '-'.$total[5]['dnetto'];
 					$d2['ordering']	= $ordering;
@@ -382,7 +383,7 @@ class PhocacartOrder
 					$ordering++;
 				}
 				if (isset($total[5]['dbrutto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT');
+					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT').$total[5]['rewardproducttxtsuffix'];
 					$d2['type']		= 'dbrutto';
 					$d2['amount']	= '-'.$total[5]['dbrutto'];
 					$d2['ordering']	= $ordering;
@@ -429,7 +430,7 @@ class PhocacartOrder
 				
 				// Cart Discount
 				if (isset($total[3]['dnetto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_CART_DISCOUNT');
+					$d2['title']	= JText::_('COM_PHOCACART_CART_DISCOUNT').$total[3]['discountcarttxtsuffix'];
 					$d2['type']		= 'dnetto';
 					$d2['amount']	= '-'.$total[3]['dnetto'];
 					$d2['ordering']	= $ordering;
@@ -439,7 +440,7 @@ class PhocacartOrder
 					$ordering++;
 				}
 				if (isset($total[3]['dbrutto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_CART_DISCOUNT');
+					$d2['title']	= JText::_('COM_PHOCACART_CART_DISCOUNT').$total[3]['discountcarttxtsuffix'];
 					$d2['type']		= 'dbrutto';
 					$d2['amount']	= '-'.$total[3]['dbrutto'];
 					$d2['ordering']	= $ordering;
@@ -466,7 +467,7 @@ class PhocacartOrder
 				if (isset($total[4]['dnetto'])) {
 					$d2['title']	= JText::_('COM_PHOCACART_COUPON');
 					if (isset($coupon['title']) && $coupon['title'] != '') {
-						$d2['title'] = $coupon['title'];
+						$d2['title'] = $coupon['title'].$total[4]['couponcarttxtsuffix'];
 					}
 					$d2['type']		= 'dnetto';
 					$d2['amount']	= '-'.$total[4]['dnetto'];
@@ -479,7 +480,7 @@ class PhocacartOrder
 				if (isset($total[4]['dbrutto'])) {
 					$d2['title']	= JText::_('COM_PHOCACART_COUPON');
 					if (isset($coupon['title']) && $coupon['title'] != '') {
-						$d2['title'] = $coupon['title'];
+						$d2['title'] = $coupon['title'].$total[4]['couponcarttxtsuffix'];
 					}
 					$d2['type']		= 'dbrutto';
 					$d2['amount']	= '-'.$total[4]['dbrutto'];
@@ -525,7 +526,7 @@ class PhocacartOrder
 			
 				if (!empty($shippingC)) {
 					if (isset($shippingC['nettotxt']) && isset($shippingC['netto'])) {
-						$d2['title']	= $shippingC['nettotxt'];
+						$d2['title']	= $shippingC['title'] . ' - ' . $shippingC['nettotxt'];
 						$d2['type']		= 'snetto';
 						$d2['amount']	= $shippingC['netto'];
 						$d2['ordering']	= $ordering;
@@ -535,7 +536,7 @@ class PhocacartOrder
 					}
 					
 					if (isset($shippingC['taxtxt']) && isset($shippingC['tax']) && $shippingC['tax'] > 0) {
-						$d2['title']	= $shippingC['taxtxt'];
+						$d2['title']	= $shippingC['title'] . ' - ' . $shippingC['taxtxt'];
 						$d2['type']		= 'stax';
 						$d2['item_id']	= (int)$shippingC['taxid'];
 						$d2['amount']	= $shippingC['tax'];
@@ -545,7 +546,7 @@ class PhocacartOrder
 					}
 					
 					if (isset($shippingC['bruttotxt']) && isset($shippingC['brutto'])) {
-						$d2['title']	= $shippingC['bruttotxt'];
+						$d2['title']	= $shippingC['title'] . ' - ' . $shippingC['bruttotxt'];
 						$d2['type']		= 'sbrutto';
 						$d2['amount']	= $shippingC['brutto'];
 						$d2['ordering']	= $ordering;
@@ -558,7 +559,7 @@ class PhocacartOrder
 				// Payment
 				if (!empty($paymentC)) {
 					if (isset($paymentC['nettotxt']) && isset($paymentC['netto'])) {
-						$d2['title']	= $paymentC['nettotxt'];
+						$d2['title']	= $paymentC['title'] . ' - ' . $paymentC['nettotxt'];
 						$d2['type']		= 'pnetto';
 						$d2['amount']	= $paymentC['netto'];
 						$d2['ordering']	= $ordering;
@@ -568,7 +569,7 @@ class PhocacartOrder
 					}
 					
 					if (isset($paymentC['taxtxt']) && isset($paymentC['tax']) && $paymentC['tax']) {
-						$d2['title']	= $paymentC['taxtxt'];
+						$d2['title']	= $paymentC['title'] . ' - ' . $paymentC['taxtxt'];
 						$d2['type']		= 'ptax';
 						$d2['item_id']	= (int)$paymentC['taxid'];
 						$d2['amount']	= $paymentC['tax'];
@@ -578,7 +579,7 @@ class PhocacartOrder
 					}
 					
 					if (isset($paymentC['bruttotxt']) && isset($paymentC['brutto'])) {
-						$d2['title']	= $paymentC['bruttotxt'];
+						$d2['title']	= $paymentC['title'] . ' - ' . $paymentC['bruttotxt'];
 						$d2['type']		= 'pbrutto';
 						$d2['amount']	= $paymentC['brutto'];
 						$d2['ordering']	= $ordering;
@@ -624,7 +625,9 @@ class PhocacartOrder
 			$session 		= JFactory::getSession();
 			$session->set('proceedpayment', array(), 'phocaCart');
 			
-			$proceed = PhocacartPayment::proceedToPaymentGateway($payment);
+			$response 					= PhocacartPayment::proceedToPaymentGateway($payment);
+			$proceed					= $response['proceed'];
+			$this->message_after_order	= $response['message'];
 			
 			if ($proceed) {
 
@@ -938,6 +941,7 @@ class PhocacartOrder
 		
 		$productItem 	= new PhocacartProduct();
 		$product		= $productItem->getProduct((int)$productId);
+		
 		if (!isset($product->download_file) || (isset($product->download_file) && $product->download_file == '' )) {
 			return true;// No defined file, no item in download order
 		}
@@ -1114,6 +1118,10 @@ class PhocacartOrder
 	
 	public function getActionAfterOrder() {
 		return $this->action_after_order;
+	}
+	
+	public function getMessageAfterOrder() {
+		return $this->message_after_order;
 	}
 	
 	

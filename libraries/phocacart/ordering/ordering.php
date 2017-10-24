@@ -95,6 +95,12 @@ class PhocacartOrdering
 					
 					case 11:$orderingOutput = 'a.id ASC';break;
 					case 12:$orderingOutput = 'a.id DESC';break;
+					case 13:$orderingOutput = 'a.sales ASC';break;
+					case 14:$orderingOutput = 'a.sales DESC';break;
+					case 15:$orderingOutput = 'a.hits ASC';break;
+					case 16:$orderingOutput = 'a.hits DESC';break;
+					case 17:$orderingOutput = 'ah.hits ASC';break;
+					case 18:$orderingOutput = 'ah.hits DESC';break;
 					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
 				}
 			break;

@@ -170,8 +170,90 @@ class PhocacartDiscountProduct
 
 	}
 	
-	
+	/*
+	 * Display the discount price in category, items or product view
+	 */
+	public static function getProductDiscountPrice($productId, &$priceItems) {
+		
+		
+		$paramsC 						= PhocacartUtils::getComponentParameters();
+		$display_discount_product_views	= $paramsC->get( 'display_discount_product_views', 0 );
+		
+		if ($display_discount_product_views == 0) {
+			return false;
+		}
+		
+		$discount = self::getProductDiscount($productId, 1, 1);
 
+		if (isset($discount['discount']) && isset($discount['calculation_type'])) {
+			
+			$price 						= new PhocacartPrice();
+			$priceItems['bruttotxt'] 	= $discount['title'];
+			$priceItems['nettotxt'] 	= $discount['title'];
+			$fQ 						= 1;//Quality for displaying the price in items,category and product view is always 1
+			$tCt						= $priceItems['taxcalc'];
+			
+			if ($discount['calculation_type'] == 0) {
+				// ------------
+				// FIXED AMOUNT
+				// ------------
+				
+				if (isset($priceItems['netto']) && $priceItems['netto'] > 0) {
+					$r = $discount['discount'] * 100 / $priceItems['netto'];
+				} else {
+					$r = 0;
+				}
+				
+				$dB = $price->roundPrice($priceItems['brutto'] * $r/100);
+				$dN = $price->roundPrice($priceItems['netto'] * $r/100);
+				$dT = $price->roundPrice($priceItems['tax'] * $r/100);
+				
+				
+				if ($priceItems['brutto'] < $dB) {
+					$priceItems['brutto'] = 0;
+				} else {
+					$priceItems['brutto'] 	-= $tCt == 2 ? $dN : $dB;
+				}
+				
+				if ($priceItems['netto'] < $dN) {
+					$priceItems['netto'] = 0;
+				} else {
+					$priceItems['netto'] 	-= $dN;
+				}
+				
+				if ($priceItems['tax'] < $dT) {
+					$priceItems['tax'] = 0;
+				} else {
+					$priceItems['tax'] 		-= $tCt == 2 ? 0 : $dT;
+				}
+
+			} else {
+				// ------------
+				// PERCENTAGE
+				// ------------
+				$dB = $price->roundPrice($priceItems['brutto'] * $discount['discount'] / 100);
+				$dN = $price->roundPrice($priceItems['netto'] * $discount['discount'] / 100);
+				$dT = $price->roundPrice($priceItems['tax'] * $discount['discount'] / 100);
+				
+				$priceItems['brutto'] 		-= $tCt == 2 ? $dN : $dB;
+				$priceItems['netto'] 		-= $dN;
+				$priceItems['tax'] 			-= $tCt == 2 ? 0 : $dT;	
+			}
+			
+			if ($priceItems['netto'] < 0 || $priceItems['netto'] == 0) {
+				$priceItems['brutto'] 	= 0;
+				$priceItems['tax'] 		= 0;
+			}
+			
+			$priceItems['bruttoformat'] = $price->getPriceFormat($priceItems['brutto']);
+			$priceItems['nettoformat'] = $price->getPriceFormat($priceItems['netto']);
+			$priceItems['taxformat'] = $price->getPriceFormat($priceItems['tax']);
+			
+			return true;
+		}
+		
+		return false;
+	}
 	
 	
 	
@@ -416,6 +498,8 @@ class PhocacartDiscountProduct
 		}
 	}
 	*/
+	
+	
 	
 	
 	public final function __clone() {

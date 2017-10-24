@@ -23,8 +23,8 @@ class PhocaCartControllerResponse extends JControllerForm
 		//JSession::checkToken() or jexit( 'Invalid Token' );
 		$return = PhocacartRoute::getInfoRoute();
 		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECIEVED'), 'message');
-		//$session->set('infomessage', 3, 'phocaCart');
-		//$session->set('infomessage', 4, 'phocaCart');
+		//$session->set('infoaction', 3, 'phocaCart');
+		//$session->set('infoaction', 4, 'phocaCart');
 		// NO message here, we have set the message during order and it stays unchanged as it is in session
 		// the message will be deleted after it will be displayed in view
 		$app->redirect($return);
@@ -37,8 +37,19 @@ class PhocaCartControllerResponse extends JControllerForm
 		$session 	= JFactory::getSession();
 		$session->set('proceedpayment', array(), 'phocaCart');
 		//JSession::checkToken() or jexit( 'Invalid Token' );
+		
+		$type 		= $app->input->get('type', '', 'string');
+		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
+		$message	= array();
+		$dispatcher = JEventDispatcher::getInstance();
+		$plugin 	= JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
+		if ($plugin) {
+			$dispatcher->trigger('PCPafterCancelPayment', array($mid, &$message));
+		}
+		
 		$return = PhocacartRoute::getInfoRoute();
-		$session->set('infomessage', 5, 'phocaCart');
+		$session->set('infoaction', 5, 'phocaCart');
+		$session->set('infomessage', $message, 'phocaCart');
 		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_CANCELED'), 'info');
 		$app->redirect($return);
 	}

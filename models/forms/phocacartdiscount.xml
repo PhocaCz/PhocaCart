@@ -41,7 +41,18 @@
 
 
 <field name="cat_ids" type="phocadiscountcategory" label="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_DESC" multiple="1" class="inputbox" />
+
+<field name="category_filter" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
+	<option value="1">COM_PHOCACART_INCLUDE</option>
+	<option	value="0">COM_PHOCACART_EXCLUDE</option>
+</field>
+
 <field name="product_ids" type="phocadiscountproduct" label="COM_PHOCACART_FIELD_DISCOUNT_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_PRODUCT_DESC" class="inputbox" />
+
+<field name="product_filter" type="radio"  class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_PRODUCT_FILTER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FILTER_DESC" size="1" default="1">
+	<option value="1">COM_PHOCACART_INCLUDE</option>
+	<option	value="0">COM_PHOCACART_EXCLUDE</option>
+</field>
 
 <field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 

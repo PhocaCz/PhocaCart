@@ -51,14 +51,14 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplication::stringURLSafe($table->alias);
+		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 		
 		$table->cost 			= PhocacartUtils::replaceCommaWithPoint($table->cost);
 		$table->lowest_amount 	= PhocacartUtils::replaceCommaWithPoint($table->lowest_amount);
 		$table->highest_amount 	= PhocacartUtils::replaceCommaWithPoint($table->highest_amount);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
+			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 		
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);

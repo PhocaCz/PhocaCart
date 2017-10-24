@@ -12,9 +12,16 @@ defined('_JEXEC') or die();
 // if user is a guest - because of security reason we will not display the download link (by security token),
 // user should get it per email
 echo '<div class="alert alert-success">';
-echo JText::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
-echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_DOWNLOADABLE_ITEMS_ADDITIONAL_INFO');
+
+if (isset($this->t['infomessage']['payment_download']) && $this->t['infomessage']['payment_download'] != '') {
+	echo $this->t['infomessage']['payment_download'];
+} else {
+	echo JText::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
+	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_DOWNLOADABLE_ITEMS_ADDITIONAL_INFO');
+}
+
 echo '</div>';
+
 if ($this->u->id > 0) {
 	echo '<div><a href="'.PhocacartRoute::getDownloadRoute().'">'.JText::_('COM_PHOCACART_DOWNLOAD_LINK').'</a></div>';
 }

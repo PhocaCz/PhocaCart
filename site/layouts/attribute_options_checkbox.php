@@ -7,13 +7,25 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$d 				= $displayData;
-$displayData 	= null;
-$v 				= $d['attribute'];
-?>
+$d 					= $displayData;
+$displayData 		= null;
+$v 					= $d['attribute'];
+$attributeIdName	= 'V'.$d['typeview'].'P'.(int)$d['product_id'].'A'.(int)$v->id;
+$productIdName		= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
 
-<div id="phItemBoxAttribute<?php echo (int)$v->id; ?>">
-	<div id="phItemAttribute<?php echo (int)$v->id; ?>" class="ph-checkbox-attribute ph-item-input-set-attributes <?php echo $d['required']['class']; ?>" ><?php
+$attr				= array();
+$attr[]				= 'id="phItemAttribute'.$attributeIdName.'"';// ID
+$attr[]				= 'class="ph-checkbox-attribute ph-item-input-set-attributes phj'. $d['typeview'].' phjProductAttribute '.$d['required']['class'].'"';// CLASS
+$attr[]				= 'data-product-id="'. $d['product_id'].'"';// Product ID
+$attr[]				= 'data-product-id-name="'. $productIdName.'"';// Product ID - Unique name between different views
+$attr[]				= 'data-attribute-type="'. $v->type.'"';// Type of attribute (select, checkbox, color, image)
+$attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - Unique name between different views and products
+$attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item	
+
+
+echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
+echo '<div '.implode(' ', $attr).'>';
+
 
 // CHECKBOX COLOR CHECKBOX IMAGE
 if ($v->type == 5 || $v->type == 6) {
@@ -34,7 +46,7 @@ foreach ($v->options as $k2 => $v2) {
 	$attrO		= '';
 	if ($d['dynamic_change_image'] == 1) {
 		if (isset($v2->image) && $v2->image != '') {
-			$imageO 	= PhocacartImage::getThumbnailName($d['pathitem'], $v2->image, 'large');
+			$imageO 	= PhocacartImage::getThumbnailName($d['pathitem'], $v2->image, $d['image_size']);
 			$linkO 		= JURI::base(true).'/'.$imageO->rel;
 			if (JFile::exists($imageO->abs)) {
 				$attrO		.= 'data-image-option="'.htmlspecialchars($linkO).'"';
@@ -71,7 +83,7 @@ if ($v->type == 5 || $v->type == 6) {
 	echo '</div>';// end button group toggle buttons ph-item-input-checkbox-color
 }
 
+echo '</div>';// end attribute box
+echo '</div>';// end attribute
+echo '<div id="phItemHiddenAttribute'.$attributeIdName.'" style="display:none;"></div>';
 ?>
-	</div>
-</div>
-<div id="phItemHiddenAttribute<?php echo (int)$v->id; ?>" style="display:none;"></div>

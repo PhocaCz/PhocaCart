@@ -132,7 +132,7 @@ class JFormFieldPhocaSelectFilename extends JFormField
 		/*JHtml::_('behavior.modal', 'a.modal_'.$this->id);
 		
 		if ($this->element['manager'] == 'productfile') {
-			PhocacartRenderJs::renderJsAppendValueToUrl(/* TO DO*//*);
+			PhocacartRenderAdminjs::renderJsAppendValueToUrl(/* TO DO*//*);
 			$s = array();
 			$s[] = '	function phocaSelectFileName_'.$this->id.'(title) {';
 			$s[] = '		document.getElementById("'.$this->id.'").value = title;';

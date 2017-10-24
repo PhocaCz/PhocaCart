@@ -184,24 +184,32 @@ class PhocaCartControllerQuestion extends JControllerForm
 		$validate 			= $model->validate($form, $data);	
 		
 		if ($validate === false) {
-			$errors	= $model->getErrors();
+		//	$errors	= $model->getErrors();
 
 
 			// Get (possible) attack issues
-			for ($i = 0, $n = count($errors); $i < $n && $i < 5; $i++) {
-				if (($errors[$i] instanceof JException) && ($errors[$i]->get('Level') == E_ERROR)) {
+		//	for ($i = 0, $n = count($errors); $i < $n && $i < 5; $i++) {
+				
+				
+			/*	if (($errors[$i] instanceof \Exception) && ($errors[$i]->getCode() == E_ERROR)) {
 					$app->setUserState('com_phocacart.question.data', '');
 					$session->clear('time', 'phccrt'.$params->get('session_suffix'));
 					
-					PhocacartLog::add(1, 'Ask a Question - Validate errors', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
-					throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
+					PhocacartLog::add(1, 'Ask a Question - Validate errors', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
+					
+					$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 'error');
+					$app->redirect(JRoute::_($uri));
 					return false;
 				} else {
 					
 					$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
 					$continueValidate = false;
-				}
-			}
+				}*/
+				
+		//	}
+			// Validate error message are now in stack, so no more render
+			// just redirect back to the form with information about problems and fill the form field
+			$continueValidate = false;
 		}
 		
 		// *** SECURITY

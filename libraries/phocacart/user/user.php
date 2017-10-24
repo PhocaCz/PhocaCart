@@ -39,7 +39,7 @@ class PhocacartUser
 		if (!empty($fields)) {
 			foreach($fields as $k => $v) {
 				
-				if ($v->display_billing == 1 || ($app->isAdmin() && $v->title == 'id')){
+				if ($v->display_billing == 1 || ($app->isClient('administrator') && $v->title == 'id')){
 					
 					$value = $form->getValue($v->title);// If form input is required but it is empty, this is wrong
 					
@@ -51,7 +51,7 @@ class PhocacartUser
 						$form->setValue($v->title, null, $user->email );
 					}
 					
-					if (!$app->isAdmin()) {
+					if (!$app->isClient('administrator')) {
 						$o['b'] .= '<div class="form-group">';
 						$o['b'] .= '<div class="col-sm-5 control-label">'.$form->getLabel($v->title . $billingSuffix).'</div>';
 						$o['b'] .= '<div class="col-sm-7">'.$form->getInput($v->title . $billingSuffix).'</div>';
@@ -67,7 +67,7 @@ class PhocacartUser
 						
 				}
 				
-				if ($v->display_shipping == 1 || ($app->isAdmin() && $v->title == 'id')) {
+				if ($v->display_shipping == 1 || ($app->isClient('administrator') && $v->title == 'id')) {
 				
 					$value = $form->getValue($v->title);				    // Form input value is required but it is empty 
 					if ($v->required == 1 && $value == '' && $baSa == 0) {  // and we have set that the shipping address
@@ -78,7 +78,7 @@ class PhocacartUser
 						$form->setValue($v->title, null, $user->email );
 					}
 					
-					if (!$app->isAdmin()) {
+					if (!$app->isClient('administrator')) {
 						$o['s'] .= '<div class="form-group">';
 						$o['s'] .= '<div class="col-sm-5 control-label">'.$form->getLabel($v->title . $shippingSuffix).'</div>';
 						$o['s'] .= '<div class="col-sm-7">'.$form->getInput($v->title . $shippingSuffix).'</div>';

@@ -40,6 +40,7 @@ class PhocaCartCpViewPhocaCartEditStockAdvanced extends JViewLegacy
 			PhocacartAttribute::getCombinations( $this->t['product']->id, $this->t['product']->title,  $this->t['attr_options'], $this->t['combinations']);
 			// Load data from database
 			$this->t['combinations_stock'] = PhocacartAttribute::getCombinationsStockByProductId($this->t['product']->id);
+			
 		}
 	
 

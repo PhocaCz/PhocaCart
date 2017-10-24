@@ -69,13 +69,20 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );*/
 		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
 		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
-		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );/*
-		$this->t['item_askquestion']		= $this->p->get( 'item_askquestion', 0 );
+		$this->t['hide_attributes_item']	= $this->p->get( 'hide_attributes_item', 0 );
+		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
+	/*	$this->t['item_askquestion']		= $this->p->get( 'item_askquestion', 0 );
 		$this->t['popup_askquestion']		= $this->p->get( 'popup_askquestion', 1 );*/
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 		
+			// Catalogue function
 		if ($this->t['hide_addtocart'] == 1) {
 			$this->t['item_addtocart']		= 0;
+			//$this->t['display_addtocart_icon'] 	= 0;
+			//$this->t['hide_attributes_category']= 1; Should be displayed or not?
+		}
+		if ($this->t['hide_attributes'] == 1) {
+			$this->t['hide_attributes_item'] = 1;
 		}
 		
 		
@@ -98,7 +105,7 @@ class PhocaCartViewItem extends JViewLegacy
 			//$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
 			$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
 			$this->t['stock_status_output'] = PhocacartStock::getStockStatusOutput($this->t['stock_status']);
-			$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$id);
+			$this->t['attr_options']		= $this->t['hide_attributes_item'] == 0 ? PhocacartAttribute::getAttributesAndOptions((int)$id) : array();
 			$this->t['specifications']		= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
 			//$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
 		

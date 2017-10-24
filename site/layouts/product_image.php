@@ -8,14 +8,14 @@
  */
 defined('_JEXEC') or die();
 $d = $displayData;
-?>
+$productIdName			= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
 
-<div class="phIBoxOH <?php echo $d['layouttype']; ?>">
+?><div class="phIBoxOH <?php echo $d['layouttype']; ?>">
 	<div class="phIBox"><?php
-		echo '<img src="'. JURI::base(true).'/'.$d['image']->rel.'" alt="" class="img-responsive ph-image '. $d['phil'].'" '.$d['imagestyle'].' />';
+		echo '<img src="'. JURI::base(true).'/'.$d['image']->rel.'" alt="" class="img-responsive ph-image '. $d['phil'].' phjProductImage'.$productIdName.'" '.$d['imagestyle'].' data-image="'. JURI::base(true).'/'.$d['default_image']->rel.'" />';
 
 if (isset($d['image2']->rel) && $d['image2']->rel != '') { 
-	echo '<span class="phIRBox"><img src="'. JURI::base(true).'/'.$d['image2']->rel.'" alt="" class="img-responsive ph-image phIR" '. $d['imagestyle'].' /></span>';
+	echo '<span class="phIRBox"><img src="'. JURI::base(true).'/'.$d['image2']->rel.'" alt="" class="img-responsive ph-image phIR phjProductImageNoChange'.$productIdName.'" '. $d['imagestyle'].' /></span>';
 }?>
 	</div>
 </div>

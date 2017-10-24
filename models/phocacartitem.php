@@ -94,7 +94,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplication::stringURLSafe($table->alias);
+		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 		
 
 		
@@ -117,7 +117,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$table->points_needed			= PhocacartUtils::getIntFromString($table->points_needed);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
+			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -249,6 +249,9 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
+			}
+			if (!isset($data['group'])) {
+				$data['group'] = array();
 			}
 			
 				
@@ -936,8 +939,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name 
 		// not like standard new name for each category
 		while ($table->load(array('alias' => $alias))) {
-			//$title = JString::increment($title);
-			//$alias = JString::increment($alias, 'dash');
+			
 			$title = StringHelper::increment($title);
 			$alias = StringHelper::increment($alias, 'dash');
 		}

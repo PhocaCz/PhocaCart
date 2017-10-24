@@ -354,12 +354,20 @@ class PhocacartPayment
 	public static function proceedToPaymentGateway($payment) {
 	
 		$proceed = 0;
+		$message = array();
+		
 		if (isset($payment['method'])) {
 			$dispatcher = JEventDispatcher::getInstance();
 			JPluginHelper::importPlugin('pcp', htmlspecialchars($payment['method']));
-			$dispatcher->trigger('PCPbeforeProceedToPayment', array(&$proceed));
+			
+			$dispatcher->trigger('PCPbeforeProceedToPayment', array(&$proceed, &$message));
 		}
-		return $proceed;
+		
+		// Response is not a part of event parameter because of backward compatibility
+		$response['proceed'] = $proceed;
+		$response['message'] = $message;
+		
+		return $response;
 	
 	}
 }

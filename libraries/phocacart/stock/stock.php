@@ -14,6 +14,8 @@ class PhocacartStock
 {
 	public static function getStockStatusData($stockStatusId, $available = 1) {
 	
+	
+
 		$db = JFactory::getDBO();
 		
 		if ($available == 1) {
@@ -25,11 +27,12 @@ class PhocacartStock
 		$query = 'SELECT s.id, s.title, s.title_feed, s.image FROM #__phocacart_stock_statuses AS s'
 				.' LEFT JOIN #__phocacart_products AS p ON s.id = '.$statusMethod
 			    .' WHERE s.id = '.(int) $stockStatusId
+				.' GROUP BY s.id, s.title, s.title_feed, s.image'
 				.' ORDER BY s.id';
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
-			
-		
+	
+
 		return $data;
 	}
 	
@@ -239,5 +242,85 @@ class PhocacartStock
 			$db->execute();
 		}
 		return true;
+	}
+	
+	
+	
+	
+	public static function getStockItemsChangedByAttributes(&$stockStatus, $attributes, $item, $ajax = 0) {
+	
+		//$paramsC 			= PhocacartUtils::getComponentParameters();
+		//$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
+		
+		$stock				= 0;// main stock count - rendered output of stock item (by product, attribute or mix of attributes ASM)
+		$stockProduct		= isset($item->stock) ? $item->stock : 0;// stock stored by product
+		$stockAttribute		= 0;// stock stored by each attribute
+		
+		$fullAttributes		= array();// Array of integers only
+		$thinAttributes		= array();// Array of full objects (full options object)
+		if ($ajax == 1) {
+			$fullAttributes = PhocacartAttribute::getAttributeFullValues($attributes);
+			$thinAttributes	= $attributes;//select only default value attributes (selected options) to create product key
+		} else {
+			$fullAttributes = $attributes;
+			$thinAttributes = PhocacartAttribute::getAttributesSelectedOnly($attributes);//select only default v a to create product key
+		}
+		
+		// Stock Calculation
+		// 0 ... Main Product
+		// 1 ... Product Variations
+		// 2 ... Advanced Stock Management
+		if ($item->stock_calculation == 1) {
+			
+			// Product Variations - Be aware can be wrong count of stock when mixing attributes - works only one attribute
+			$i = 0;
+			if (!empty($fullAttributes)) {
+				foreach ($fullAttributes as $k => $v) {
+					
+					$attributeSelected	= 0;
+					$stockAttribute		= 0;
+					if (!empty($v->options)) {
+						$i++;
+						foreach($v->options as $k2 => $v2) {
+							// Is the options set as default
+							// See: administrator\components\com_phocacart\libraries\phocacart\price\price.php
+							// function getPriceItemsChangedByAttributes - similar behaviour
+							if ($ajax == 1 || ($ajax == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
+								$attributeSelected	= 1;
+								if (isset($v2->stock) && $v2->stock > 0) {
+									$stockAttribute += (int)$v2->stock;
+								}
+							}
+						}
+						
+					}
+					if ($attributeSelected == 1) {
+						$stock += $stockAttribute;
+					} else {
+						$stock += $stockProduct;
+					}
+				}
+			}
+			
+			if ($i > 1 && $ajax != 1) {
+				PhocacartLog::add(1, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
+			}
+			
+		} else if ($item->stock_calculation == 2) {
+			// Advanced Stock Management
+			$k		= PhocacartProduct::getProductKey((int)$item->id, $thinAttributes);
+			$stock	= PhocacartAttribute::getCombinationsStockByKey($k);
+		} else {
+			// Main Product
+			$stock = $item->stock;
+		}
+		
+		
+		
+
+		// Get all stock status information: count, status, image, ...
+		$stockStatus		= PhocacartStock::getStockStatus((int)$stock, (int)$item->min_quantity, (int)$item->min_multiple_quantity, (int)$item->stockstatus_a_id,  (int)$item->stockstatus_n_id);
+				
+		//return $stockStatus;
 	}
 }

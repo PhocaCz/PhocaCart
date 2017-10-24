@@ -110,7 +110,7 @@ class PhocacartRenderAdminviews
 		//return '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10">'. "\n";
 		$o = '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content ph-admin-manage">'. "\n";
 		$o .= '<div id="ph-system-message-container"></div>'. "\n";// specific container for moving messages from joomla to phoca
-		PhocacartRenderJs::moveSystemMessageFromJoomlaToPhoca();
+		PhocacartRenderAdminjs::moveSystemMessageFromJoomlaToPhoca();
 		return $o;
 	}
 	

@@ -90,7 +90,7 @@ class PhocacartFormUser
 						// 2 read only for registered users but not read only for guests
 						
 						if (isset($v->read_only)) {
-							//if ($app->isAdmin()) {
+							//if ($app->isClient('administrator')) {
 								// in admin allow to change the readonly input forms
 							//} else {
 								if($v->read_only == 1) {
@@ -105,7 +105,7 @@ class PhocacartFormUser
 						}
 						
 						// No required in admin
-						if (!$app->isAdmin()) {
+						if (!$app->isClient('administrator')) {
 							if (isset($v->required) && $v->required == 1) {
 								$fB[] = $fS[] =  ' required="true"';
 							}

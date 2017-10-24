@@ -45,7 +45,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 				$this->coupon['title'] = $this->getCouponTitle();
 			}
 		}
-
+		
 		$layout 				= new JLayoutFile('cart_checkout', null, array('component' => 'com_phocacart'));
 		$d						= array();
 		$d['params']			= $pC;
@@ -59,6 +59,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		$d['action']			= $url['action'];
 		$d['actionbase64']		= $url['actionbase64'];
 		$d['linkcheckout']		= $url['linkcheckout'];
+		$d['pathitem'] 			= PhocacartPath::getPath('productimage');
 		
 		
 

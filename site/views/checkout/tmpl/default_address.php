@@ -8,11 +8,19 @@
  */
 defined('_JEXEC') or die();
 
+$layoutI 		= new JLayoutFile('icon_checkout_status', null, array('component' => 'com_phocacart'));
+$d				= array();
+$d['suffix']	= $this->t['icon_suffix'];
+$d['number']	= $this->t['na'];
+$d['type']		= $this->t['checkout_icon_status'];
+
 if ($this->a->addressedit == 1) {
-		
+	
+	$d['status']	= 'pending';
+	
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutaddressedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutaddressedit">'.$layoutI->render($d).'<h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
@@ -57,10 +65,12 @@ if ($this->a->addressedit == 1) {
 	echo '</form>'. "\n";
 
 } else if ($this->a->addressview == 1){
+	
+	$d['status']	= 'finished';
 	// User completed all items in the form
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header"  id="phcheckoutaddressview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header"  id="phcheckoutaddressview">'.$layoutI->render($d).'<h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddress">';
@@ -115,8 +125,11 @@ if ($this->a->addressedit == 1) {
 	echo '</form>'. "\n";
 		
 } else {
+	
+	$d['status']	= 'pending';
+	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['na'].'. '.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 }
 ?>

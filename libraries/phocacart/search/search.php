@@ -181,6 +181,11 @@ class PhocacartSearch
 							$words	= explode(' ', $in);
 							$wheres = array();
 							foreach ($words as $word) {
+								
+								if (!$word = trim($word)) {
+									continue;
+								}
+								
 								$word		= $db->quote('%'.$db->escape($word, true).'%', false);
 								$wheres	= array();
 								$wheres[]	= 'a.title LIKE '.$word;

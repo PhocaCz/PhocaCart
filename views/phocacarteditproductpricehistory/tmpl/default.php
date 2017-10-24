@@ -55,11 +55,11 @@ if (!empty($this->t['history'])) {
 
 	$newRow = $r->additionalPricehistoryRow('\' + phRowCountPricehistory +  \'', '', '', '', $this->id, 1);
 	$newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-	PhocacartRenderJs::renderJsManageRowPricehistory($i, $newRow);
+	PhocacartRenderAdminjs::renderJsManageRowPricehistory($i, $newRow);
 } else {
 	$newRow = $r->additionalPricehistoryRow('\' + phRowCountPricehistory +  \'', '', '', '', $this->id, 1);
 	$newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-	PhocacartRenderJs::renderJsManageRowPricehistory(0, $newRow);
+	PhocacartRenderAdminjs::renderJsManageRowPricehistory(0, $newRow);
 	
 }
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_PRICE'), 'pricehistory');

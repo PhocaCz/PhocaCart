@@ -10,7 +10,13 @@ defined('_JEXEC') or die();
 
 // ORDER PROCESSED - STANDARD PRODUCTS - PAYMENT MADE (PAYMENT/NO DOWNLOAD)
 echo '<div class="alert alert-success">';
-echo JText::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
-echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_ADDITIONAL_INFO');
+
+if (isset($this->t['infomessage']['payment_nodownload']) && $this->t['infomessage']['payment_nodownload'] != '') {
+	echo $this->t['infomessage']['payment_nodownload'];
+} else {
+	echo JText::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
+	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_ADDITIONAL_INFO');
+}
+
 echo '</div>';
 ?>

@@ -42,7 +42,7 @@ class PhocacartCoupon
 		if((isset($user->id) && $user->id > 0) || $guest) {
 			$query = 'SELECT c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
 			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
-			.' c.calculation_type, c.free_shipping, c.free_payment,'
+			.' c.calculation_type, c.free_shipping, c.free_payment, c.category_filter, c.product_filter,'
 			.' co.count AS count, cu.count AS countuser,'
 			.' GROUP_CONCAT(DISTINCT cp.product_id) AS product,' // line of selected products
 			.' GROUP_CONCAT(DISTINCT cc.category_id) AS category' // line of selected categories
@@ -54,7 +54,7 @@ class PhocacartCoupon
 			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 6'// type 6 is coupon
 			. $where
 			.' GROUP BY c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
-			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
+			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,c.category_filter, c.product_filter,'
 			.' c.calculation_type, c.free_shipping, c.free_payment, co.count, cu.count';
 			//.' co.count AS count, cu.count AS countuser';
 			
@@ -170,13 +170,23 @@ class PhocacartCoupon
 			// 7. VALID PRODUCT
 			if (!empty($this->coupon['product'])) {
 				$ids	= explode(',', $this->coupon['product']);
+				
 				if (empty($ids)) {
 					// OK we don't check the quantity as zero means, no quantity limit 
 				} else {
-					if (!in_array($id, $ids)) {
-						return false;
+					if ($this->coupon['product_filter'] == 0) {
+						// All except the selected
+						
+						if (in_array($id, $ids)) {
+							return false;
+						}
+					} else {
+						// All selected
+						
+						if (!in_array($id, $ids)) {
+							return false;
+						}
 					}
-					
 				}
 			}
 			
@@ -187,8 +197,17 @@ class PhocacartCoupon
 				if (empty($catids)) {
 					// OK we don't check the quantity as zero means, no quantity limit 
 				} else {
-					if (!in_array($catid, $catids)) {
-						return false;
+					if ($this->coupon['category_filter'] == 0) {
+						// All except the selected
+						if (in_array($catid, $catids)) {
+							return false;
+						}
+					} else {
+						// All selected
+						
+						if (!in_array($catid, $catids)) {
+							return false;
+						}
 					}
 				}
 			}

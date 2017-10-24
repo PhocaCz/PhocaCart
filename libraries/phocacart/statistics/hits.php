@@ -21,7 +21,7 @@ final class PhocacartStatisticsHits
 		if ($productId == 0) {
 			return false;
 		}
-		
+
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$additional_hits	= $paramsC->get( 'additional_hits', array() );

@@ -15,6 +15,8 @@ class JFormRulePhocaCartEmail extends JFormRuleEmail
 
 	public function test(SimpleXMLElement $element, $value, $group = null, JRegistry $input = null, JForm $form = null)
 	{
+		
+		$app = JFactory::getApplication();
 		//E_ERROR, E_WARNING, E_NOTICE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE.
 		$info = array();
 		$info['field'] = 'phocacart_email';
@@ -22,18 +24,23 @@ class JFormRulePhocaCartEmail extends JFormRuleEmail
 		
 		//EMAIL FORMAT
 		if(!parent::test($element, $value, $group, $input, $form)){
-			return new JException(JText::_('COM_PHOCACART_BAD_EMAIL' ), "105", E_USER_ERROR, $info, false);
+			
+			$app->enqueueMessage(JText::_('COM_PHOCACART_BAD_EMAIL' ), 'warning');
+			return false;
 		}
 
 		//BANNED EMAIL
 		$banned = $params->get('banned_email');
 		foreach(explode(';', $banned) as $item){
-			if (trim($item) != '')
-			if (JString::stristr($item, $value) !== false){
-					return new JException(JText::_('COM_PHOCACART_BAD_EMAIL' ), "105", E_USER_ERROR, $info, false);
+			if (trim($item) != '') {
+				if (\Joomla\String\StringHelper::stristr($item, $value) !== false){
+					
+					$app->enqueueMessage(JText::_('COM_PHOCACART_BAD_EMAIL' ), 'warning');
+					return false;
+				}
 			}
-		}
 
-		return true;
+			return true;
+		}
 	}
 }

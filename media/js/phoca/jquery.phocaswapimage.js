@@ -6,76 +6,58 @@
  *
  * Licensed under the MIT license
  */
- var phSwapImage = function() {
 
-	var phO = {
+jQuery(document).ready(function() {
+
+	jQuery(document).on('change', '.phjProductAttribute', function(){
 		
-		phDefaultA		: '',
-		phDefaultImg	: '',
-		phDefaultHref	: '',
-		phDefaultSrc	: '',
-		phAttributesBox	: '',
-		phCustomHref	: 0,
-
-
-		Init: 		function(imgBox, form, select, customHref) {
-			
-			phO.phDefaultA		= jQuery(imgBox +' a');
-			phO.phDefaultImg	= jQuery(imgBox +' a img');
-			phO.phDefaultHref	= phO.phDefaultA.attr('href');
-			phO.phDefaultSrc	= phO.phDefaultImg.attr('src');
-			phO.phAttributesBox	= jQuery(form +' '+ select);
-			phO.phCustomHref	= customHref;
-			
-			
-		},
+	
+		var phProductIdName	= jQuery(this).data('product-id-name');
+		var phProductImg	= '.phjProductImage' + phProductIdName;
+		var phProductHref	= '.phjProductHref' + phProductIdName;
 		
-		Display: 	function() {
-			
-			
-			//jQuery(document).on('change', phO.phAttributesBox, function(){
-			phO.phAttributesBox.on('change', function(){
-			
-				
-				// Set image from current selectbox (selectbox which was changed)
-				var phNewSrc		= jQuery(this).find(':selected,:checked').data('image-option');
+		var phDefaultSrc 	= jQuery(phProductImg).data('image');// image includes data-image attribute
+		var phDefaultHref 	= jQuery(phProductHref).data('href');// image includes data-image attribute
+		
+		var phNewSrc		= jQuery(this).find(':selected,:checked').data('image-option');// Set image from current selectbox (selectbox which was changed)
 
-				// Find selected image from all attributes select boxes 
-				var phSelectedSrc 	= false;
-				phO.phAttributesBox.each(function( index ) {
-				  var phFoundSrc	= jQuery(this).find(':selected,:checked').data('image-option');
-				  if(phFoundSrc) {
-					  phSelectedSrc = phFoundSrc;
-				  }
-				});
-
-				var phNewHref 		= phNewSrc;
-				var phSelectedHref 	= phSelectedSrc;
-				var phDefaultHref	= phO.phDefaultSrc;
-				
-				if (phO.phCustomHref) {
-					phNewHref 		= phO.phDefaultHref;
-					phSelectedHref 	= phO.phDefaultHref;
-					phDefaultHref	= phO.phDefaultHref;
-				}
-					
-				if (phNewSrc) {
-					// New image found - change to new image
-					phO.phDefaultA.attr('href', phNewHref);
-					phO.phDefaultImg.attr('src', phNewSrc);
-				} else if (!phNewSrc && phSelectedSrc) {
-					// New image not found but there is some selected image yet (e.g. selected previously in other select box)
-					phO.phDefaultA.attr('href', phSelectedHref);
-					phO.phDefaultImg.attr('src', phSelectedSrc);
-				} else {
-					// Return back to default image (no new image, no selected image by other select box)
-					phO.phDefaultA.attr('href', phO.phDefaultHref);
-					phO.phDefaultImg.attr('src', phO.phDefaultSrc);
-				}
-			});
+		var phSelectedSrc 	= false; // Find selected image from all attributes of all select boxes in the form
+		
 
 		
+		/* jQuery(this).each(function( index ) {
+			var phFoundSrc	= jQuery(this).find(':selected,:checked').data('image-option');
+			if(phFoundSrc) {
+				phSelectedSrc = phFoundSrc;
+			}
+		}); */
+		
+	
+		jQuery(this).closest("form").find('.phjProductAttribute').each(function() {
+			var phFoundSrc	= jQuery(this).find(':selected,:checked').data('image-option');
+			if(phFoundSrc) {
+				phSelectedSrc = phFoundSrc;
+			}
+		})
+		
+		var phNewHref		= phNewSrc;
+		var phSelectedHref	= phSelectedSrc;
+		
+		
+		if (phNewSrc) {
+			// New image found - change to new image
+			jQuery(phProductHref).attr('href', phNewHref);
+			jQuery(phProductImg).attr('src', phNewSrc);
+		} else if (!phNewSrc && phSelectedSrc) {
+			// New image not found but there is some selected image yet (e.g. selected previously in other select box)
+			jQuery(phProductHref).attr('href', phSelectedHref);
+			jQuery(phProductImg).attr('src', phSelectedSrc);
+		} else {
+			// Return back to default image (no new image, no selected image by other select box)
+			jQuery(phProductHref).attr('href', phDefaultHref);
+			jQuery(phProductImg).attr('src', phDefaultSrc);
 		}
-	}
-	return phO;
-}
+
+	})
+
+})

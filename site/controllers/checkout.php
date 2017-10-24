@@ -436,12 +436,14 @@ class PhocaCartControllerCheckout extends JControllerForm
 			$cart->emptyCart();
 			PhocacartUserGuestuser::cancelGuestUser();
 			
-			$action = $order->getActionAfterOrder();
+			$action 	= $order->getActionAfterOrder();// Which action should be done
+			$message	= $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
 			
 			$session 	= JFactory::getSession();
 			if ($action == 4 || $action == 3) {
 				// Ordered OK, but now we proceed to payment
-				$session->set('infomessage', $action, 'phocaCart');
+				$session->set('infoaction', $action, 'phocaCart');
+				$session->set('infomessage', $message, 'phocaCart');
 				$app->redirect(JRoute::_(PhocacartRoute::getPaymentRoute(), false));
 				return true;
 				// This message should stay 
@@ -455,7 +457,8 @@ class PhocaCartControllerCheckout extends JControllerForm
 				// We produce not message but we redirect to specific view with message and additional instructions
 				//$app->enqueueMessage($msg, 'message');
 				
-				$session->set('infomessage', $action, 'phocaCart');
+				$session->set('infoaction', $action, 'phocaCart');
+				$session->set('infomessage', $message, 'phocaCart');
 				$app->redirect(JRoute::_(PhocacartRoute::getInfoRoute(), false));
 				return true;
 			}

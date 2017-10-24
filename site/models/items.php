@@ -196,7 +196,11 @@ class PhocaCartModelItems extends JModelLegacy
 			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'));
 			$wheres[]	= '('.$s['where'].')';
 			$lefts[]	= $s['left'];
-			PhocacartStatisticsHits::searchHit($this->getState('search'));
+			
+			// Hit only one time
+			if ($count == 0) {
+				PhocacartStatisticsHits::searchHit($this->getState('search'));
+			}
 		}
 		
 		// Additional Images

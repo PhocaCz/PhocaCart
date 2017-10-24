@@ -96,21 +96,31 @@ class PhocacartRenderFront
 		}
 		
 		$title 			= $params->get('page_title', '');
+		
+		if (isset($name->title) && $name->title != '') {
+			/*if ($title != '') {
+				$title = $title .' - ' .  $name->title;
+			} else {
+				$title = $name->title;
+			}*/
+			
+			$title = $name->title;
+		}
 	
 		if ($viewLink != $viewCurrent && $header != '') {
 			$title = $header;
 		} else if (empty($title)) {
-			$title = htmlspecialchars_decode($app->getCfg('sitename'));
-		} else if ($app->getCfg('sitename_pagetitles', 0) == 1) {
-			$title = JText::sprintf('JPAGETITLE', htmlspecialchars_decode($app->getCfg('sitename')), $title);
+			$title = htmlspecialchars_decode($app->get('sitename'));
+		} else if ($app->get('sitename_pagetitles', 0) == 1) {
+			$title = JText::sprintf('JPAGETITLE', htmlspecialchars_decode($app->get('sitename')), $title);
 			if ($nameInTitle == 1 && isset($name->title) && $name->title != '') {
 				$title = $title .' - ' .  $name->title;
 			}
-		} else if ($app->getCfg('sitename_pagetitles', 0) == 2) {
+		} else if ($app->get('sitename_pagetitles', 0) == 2) {
 			if ($nameInTitle == 1 && isset($name->title) && $name->title != '') {
 				$title = $title .' - ' .  $name->title;
 			}
-			$title = JText::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->getCfg('sitename')));
+			$title = JText::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->get('sitename')));
 		}
 		
 		if ($type == 'category' && isset($category->metatitle) && $category->metatitle != '') {
@@ -126,9 +136,9 @@ class PhocacartRenderFront
 		
 		
 		if (isset($item->metadesc) && $item->metadesc != '') {
-			$document->setMetadata('menu-meta_description', $item->metadesc );
+			$document->setMetadata('description', $item->metadesc );
 		} else if (isset($category->metadesc) && $category->metadesc != '') {
-			$document->setMetadata('menu-meta_description', $category->metadesc );
+			$document->setMetadata('description', $category->metadesc );
 		} else if ($metadesc != '') {
 			$document->setDescription($metadesc);
 		} else if ($params->get('menu-meta_description', '')) {
@@ -145,7 +155,7 @@ class PhocacartRenderFront
 			$document->setMetadata('keywords', $params->get('menu-meta_keywords', ''));
 		}
 
-		if ($app->getCfg('MetaTitle') == '1' && $params->get('menupage_title', '')) {
+		if ($app->get('MetaTitle') == '1' && $params->get('menupage_title', '')) {
 			$document->setMetaData('title', $params->get('page_title', ''));
 		}
 		
@@ -316,6 +326,20 @@ class PhocacartRenderFront
 		return $mO;
 	}
 	
+	public static function displayLink($title = '', $url = '', $target = "_blank") {
+		
+		$o = '';
+		if ($url != '' && PhocacartUtils::isURLAddress($url) && $title != '') {
+			
+			$targetO 	= $target != '' ? 'target="'.$target.'"' : '';
+			$o 			= '<a href="'.$url.'" '.$targetO.'>' . $title . '</a>';
+		
+		} else if ($title != '') {
+			$o = $title;
+		}
+		return $o;
+	}
+	
 	public static function displayVideo($url, $view = 0, $ywidth = 0, $yheight = 0) {
 	
 		$o = '';
@@ -471,6 +495,25 @@ class PhocacartRenderFront
 			$o = JHTML::_('content.prepare', $o);
 		}
 		return $o;
+	}
+	
+	public static function getConfirmOrderText($orderValue) {
+		
+		$cFT 						= JText::_('COM_PHOCACART_CONFIRM_ORDER');
+		
+		$app						= JFactory::getApplication();
+		$p 							= $app->getParams();	
+		$confirm_order_text			= $p->get('cofirm_order_text', '');
+		$confirm_order_text_zero	= $p->get('cofirm_order_text_zero', '');
+		
+		if ($confirm_order_text != '' && $orderValue > 0) {
+			$cFT 						= JText::_($confirm_order_text);
+		}
+		if ($confirm_order_text_zero != '' && $orderValue == 0) {
+			$cFT 						= JText::_($confirm_order_text_zero);
+		}
+		
+		return $cFT;
 	}
 	
 }

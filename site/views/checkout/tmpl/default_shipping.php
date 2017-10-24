@@ -7,18 +7,28 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+$layoutI 		= new JLayoutFile('icon_checkout_status', null, array('component' => 'com_phocacart'));
+$d				= array();
+$d['suffix']	= $this->t['icon_suffix'];
+$d['number']	= $this->t['ns'];
+$d['type']		= $this->t['checkout_icon_status'];
+
+
 $price	= new PhocacartPrice();
 	
 if ($this->a->shippingnotused == 1) {
+	
 	
 	// Shipping not used
 	
 // ONLY DISPLAY - shipping method was added and user don't want to edit it
 } else if ($this->a->shippingview) {
 
+	$d['status']	= 'finished';
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingview"><div class="pull-right"><span class="glyphicon glyphicon-ok'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingview">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	
@@ -69,7 +79,13 @@ if ($this->a->shippingnotused == 1) {
 	
 	if (isset($this->t['shippingmethod']) && $this->t['shippingmethod']['title'] != '') {
 	
-		echo '<div class="col-sm-8 col-md-8 ">'.$this->t['shippingmethod']['title'];
+		echo '<div class="col-sm-8 col-md-8 ">';
+		
+		if ($this->t['shippingmethod']['image'] != '') {
+			echo '<div class="ph-shipping-image"><img src="'.JURI::base(true) .'/'. $this->t['shippingmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['shippingmethod']['title'])).'" /></div>';
+		}
+		
+		echo '<div class="ph-shipping-title">'.$this->t['shippingmethod']['title'].'</div>';
 		
 		if ($this->t['display_shipping_desc'] && $this->t['shippingmethod']['description'] != '') {
 			echo '<div class="ph-checkout-shipping-desc">'.JHTML::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
@@ -98,12 +114,14 @@ if ($this->a->shippingnotused == 1) {
 // ADD OR EDIT - user didn't add the shipping yet or user wants to edit it now
 } else if ($this->a->shippingedit)  {
 
+	$d['status']	= 'pending';
+	
 	$total	= $this->cart->getTotal();
 	$price	= new PhocacartPrice();
 	
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingedit"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header" id="phcheckoutshippingedit">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 	
 	
@@ -129,7 +147,18 @@ if ($this->a->shippingnotused == 1) {
 		
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
-		echo '<label><input type="radio" name="phshippingopt" id="phshippingopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >'.$v->title.'</label>';
+		echo '<label><input type="radio" name="phshippingopt" id="phshippingopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
+		
+		
+		if ($v->image != '') {
+			echo '<span class="ph-shipping-image"><img src="'.JURI::base(true) .'/'. $v->image.'" alt="'.htmlspecialchars(strip_tags($v->title)).'" /></span>';
+		}
+		
+		echo '<span class="ph-shipping-title">'.$v->title.'</span>';
+		
+		echo '</label>';
+		
+		
 		echo '</div>';
 		if ($this->t['display_shipping_desc'] && $v->description != '') {
 			echo '<div class="ph-checkout-shipping-desc">'.JHTML::_('content.prepare', $v->description).'</div>';
@@ -140,7 +169,7 @@ if ($this->a->shippingnotused == 1) {
 		
 	
 		if ($this->t['zero_shipping_price'] == 0 && $priceI['zero'] == 1) {
-			// Display nothing
+			// Display blank price field
 		} else if ($this->t['zero_shipping_price'] == 2 && $priceI['zero'] == 1) {
 			// Display free text
 			echo '<div class="col-sm-8 col-md-8"></div>';
@@ -189,8 +218,11 @@ if ($this->a->shippingnotused == 1) {
 	echo '</div>';// end checkout box row
 	
 }  else {
+	
+	$d['status']	= 'pending';
+	
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
-	echo '<div class="ph-checkout-box-header-pas"><div class="pull-right"><span class="glyphicon glyphicon-remove'.strip_tags($this->t['icon_suffix']).' ph-checkout-icon-not-ok"></span></div><h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
 }
 	

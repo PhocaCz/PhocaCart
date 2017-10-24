@@ -33,7 +33,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
 		
 
-		if (!$app->isAdmin()) {
+		if (!$app->isClient('administrator')) {
 			$paramsC 	= $app->getParams();
 			$load_chosen= $paramsC->get( 'load_chosen', 1 );
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. JSession::getFormToken().'=1\';';
@@ -53,7 +53,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$s[] 	= '      success:function(data){';
 		$s[] 	= '         if ( data.status == 1 ){';
 		$s[] 	= '            jQuery(\'#'.$regionId.'\').empty().append(data.content);';
-		if (!$app->isAdmin()) {
+		if (!$app->isClient('administrator')) {
 			if ($load_chosen == 1) {
 				$s[] 	= '	           jQuery(\'#'.$regionId.'\').trigger("chosen:updated");';//Reload Chosen
 			}

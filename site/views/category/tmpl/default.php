@@ -11,12 +11,17 @@ defined('_JEXEC') or die();
 $layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new JLayoutFile('button_wishlist', null, array('component' => 'com_phocacart'));
 $layoutQVB 	= new JLayoutFile('button_quickview', null, array('component' => 'com_phocacart'));
+$layoutAI	= new JLayoutFile('button_add_to_cart_icon', null, array('component' => 'com_phocacart'));
 $layoutA	= new JLayoutFile('button_add_to_cart_list', null, array('component' => 'com_phocacart'));
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
 $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
-$layoutV	= new JLayoutFile('button_product_view', null, array('component' => 'com_phocacart'));
 $layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
 $layoutI	= new JLayoutFile('product_image', null, array('component' => 'com_phocacart'));
+$layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
+$layoutV	= new JLayoutFile('button_product_view', null, array('component' => 'com_phocacart'));
+$layoutPFS	= new JLayoutFile('form_part_start_add_to_cart_list', null, array('component' => 'com_phocacart'));
+$layoutPFE	= new JLayoutFile('form_part_end', null, array('component' => 'com_phocacart'));
+$layoutBSH	= new JLayoutFile('button_submit_hidden', null, array('component' => 'com_phocacart'));
 
 // HEADER - NOT AJAX
 if (!$this->t['ajax']) { 
@@ -42,36 +47,29 @@ if (!empty($this->items)) {
 	
 	foreach ($this->items as $v) {
 		
-		$label 		= PhocacartRenderFront::getLabel($v->date, $v->sales, $v->featured);
-		$link 		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 		
-		// Image
-		$imageSize	= $lt == 'gridlist' ? 'large' : 'medium';
-		$image 		= PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, $imageSize);
-		$image2 	= false;
-		$phIL 		= 'phIL-not-active';
-		if ($this->t['switch_image_category_items'] == 1) {
-			$iAI = explode(',',$v->additional_image);
-			if (isset($iAI[0]) && $iAI[0] != '') {
-				$image2 = PhocacartImage::getThumbnailName($this->t['pathitem'], $iAI[0], $imageSize);
-				if (isset($image2->rel) && $image2->rel != '') {
-					$phIL = 'phIL';
-				}
-			}
-		}
-		$imgStyle = '';
-		if (isset($this->t['image_width_cat']) && $this->t['image_width_cat'] != '' && isset($this->t['image_height_cat']) && $this->t['image_height_cat'] != '') {
-			$imgStyle = 'style="width:'.$this->t['image_width_cat'].';height:'.$this->t['image_height_cat'].'"';
-		}
+		
+		$label 				= PhocacartRenderFront::getLabel($v->date, $v->sales, $v->featured);
+		$link 				= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+		
+		
+		// Image data
+		$attributesOptions 	= $this->t['hide_attributes_category'] == 0 ? PhocacartAttribute::getAttributesAndOptions((int)$v->id) : array();
+		
+		if (!isset($v->additional_image)) { $v->additional_image = '';}
+		$image = PhocacartImage::getImageDisplay($v->image, $v->additional_image, $this->t['pathitem'], $this->t['switch_image_category_items'], $this->t['image_width_cat'], $this->t['image_height_cat'], '', $lt, $attributesOptions);
 		
 		// :L: IMAGE
 		$dI	= array();
-		if (isset($image->rel) && $image->rel != '') {
+		if (isset($image['image']->rel) && $image['image']->rel != '') {
+			$dI['product_id']		= (int)$v->id;
 			$dI['layouttype']		= $lt;
-			$dI['image']			= $image;
-			$dI['image2']			= $image2;
-			$dI['imagestyle']		= $imgStyle;
-			$dI['phil']				= $phIL;
+			$dI['image']			= $image['image'];
+			$dI['default_image']	= $image['default'];
+			$dI['image2']			= $image['second'];
+			$dI['imagestyle']		= $image['style'];
+			$dI['phil']				= $image['phil'];
+			$dI['typeview']			= 'Category';
 		}
 		
 		// :L: COMPARE
@@ -114,12 +112,23 @@ if (!empty($this->items)) {
 		$dP = array();
 		if ($this->t['hide_price'] != 1) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
+			
+			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();
 			if ($v->price_original != '' && $v->price_original > 0) {
 				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype);
 			}
-			$dP['class']			= 'ph-category-price-box '.$lt;
+			//$dP['class']		= 'ph-category-price-box '.$lt;
+			$dP['class']		= 'ph-category-price-box';// Cannot be dynamic as can change per ajax - this can cause jumping of boxes
+			$dP['product_id']	= (int)$v->id;
+			$dP['typeview']		= 'Category';
+			
+			// Display discount price
+			$dP['priceitemsdiscount']	= $dP['priceitems'];
+			$dP['discount'] 			= PhocacartDiscountProduct::getProductDiscountPrice($v->id, $dP['priceitemsdiscount']);
+			
 		}
+
 		
 		// :L: LINK TO PRODUCT VIEW
 		$dV = array();
@@ -129,44 +138,94 @@ if (!empty($this->items)) {
 		}
 		
 		// :L: ADD TO CART
-		$dA = $dA2 = $dA3 = array();
+		$dA = $dA2 = $dA3 = $dAb = $dF = array();
 		$icon['addtocart'] = '';
 		
-		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4 ) {
+		
+		// ------------------------------------
+		// BUTTONS + ICONS
+		// ------------------------------------
+		// Prepare data for Add to cart button
+		// - Add To Cart Standard Button
+		// - Add to Cart Icon Button
+		// - Add to Cart Icon Only
+		
+		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4 || $this->t['display_addtocart_icon'] == 1) {
+		
+			// FORM DATA
+			$dF['linkch']				= $this->t['linkcheckout'];// link to checkout (add to cart)
+			$dF['id']					= (int)$v->id;
+			$dF['catid']				= $this->t['categoryid'];
+			$dF['return']				= $this->t['actionbase64'];
+			$dF['typeview']				= 'Category';
+			$dF['addtocart']			= $this->t['category_addtocart'];
+			$dF['addtocart_icon']		= $this->t['display_addtocart_icon'];
 			
-			$dA['link']			= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
-			$dA['linkch']		= $this->t['linkcheckout'];// link to checkout (add to cart)
-			$dA['id']			= (int)$v->id;
-			$dA['catid']		= $this->t['categoryid'];
-			$dA['return']		= $this->t['actionbase64'];
-			$dA['attrrequired']	= 0;
-			$dA['addtocart']	= $this->t['category_addtocart'];
-			$dA['method']		= $this->t['add_cart_method'];
-			if (isset($v->attribute_required) && $v->attribute_required == 1) {
-				$dA['attrrequired']	= 1;
+
+			// Both buttons + icon
+			$dA['id']					= (int)$v->id;
+			$dA['link']					= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
+			$dA['addtocart']			= $this->t['category_addtocart'];
+			$dA['method']				= $this->t['add_cart_method'];
+			
+			// ATTRIBUTES, OPTIONS
+			$dAb['attr_options']			= $attributesOptions;
+			$dAb['hide_attributes']			= $this->t['hide_attributes_category'];
+			$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+			$dAb['pathitem']				= $this->t['pathitem'];
+			$dAb['product_id']				= (int)$v->id;
+			$dAb['image_size']				= $image['size'];
+			$dAb['typeview']				= 'Category';
+			$dAb['price']					= $price;
+			
+			// Attribute is required and we don't display it in category/items view, se we need to redirect to detail view
+			$dA['selectoptions']	= 0;
+			if (isset($v->attribute_required) && $v->attribute_required == 1 && $this->t['hide_attributes_category'] == 1) {
+				$dA['selectoptions']	= 1;
 			}
 			
 			// Add To Cart as Icon
 			if ($this->t['display_addtocart_icon'] == 1) {
-				$dA['icon']			= 1;// Display as Icon
-				$icon['addtocart'] 	= $layoutA->render($dA);
+				$icon['addtocart'] 	= $layoutAI->render($dA);
 			}
-			$dA['icon']			= 0;// Set back to display as button
+		}	
+		
+		// Different button or icons
+		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4) {
+			// ADD TO CART BUTTONS - we have data yet
+		} else if ((int)$this->t['category_addtocart'] == 102 && (int)$v->external_id != '') {
+			// EXTERNAL LINK PADDLE
+			$dA2['external_id']		= (int)$v->external_id;
+			$dA2['return']			= $this->t['actionbase64'];
 			
-		} else if ((int)$this->t['category_addtocart'] == 2 && (int)$v->external_id != '') {
-			// e.g. paddle
-			$dA2['external_id']	= (int)$v->external_id;
-			$dA2['return']		= $this->t['actionbase64'];
+			$dA = array(); // Skip Standard Add to cart button
+			$icon['addtocart'] = '';// Skip Add to cart icon
+			$dF = array();// Skip form
 			
-			
-		} else if ((int)$this->t['category_addtocart'] == 3 && $v->external_link != '') {
-			
+		} else if ((int)$this->t['category_addtocart'] == 103 && $v->external_link != '') {
+			// EXTERNAL LINK
 			$dA3['external_link']	= $v->external_link;
 			$dA3['external_text']	= $v->external_text;
 			$dA3['return']			= $this->t['actionbase64'];
 			
+			$dA = array(); // Skip Standard Add to cart button
+			$icon['addtocart'] = '';// Skip Add to cart icon
+			$dF = array();// Skip form
+			
+		} else {
+			// ADD TO CART ICON ONLY (NO BUTTONS)
+			$dA = array(); // Skip Standard Add to cart button
+			// We remove the $dA completely, even for the icon, but the icon has the data already stored in $icon['addtocart']
+			// so no problem with removing the data completely
+			// $dA for button will be rendered
+			// $dA for icon was rendered already
+			// Do not skip the form here
 		}
+		// ---------------------------- END BUTTONS
 
+		
+		
+		
 		// ======
 		// RENDER
 		// ======
@@ -193,7 +252,7 @@ if (!empty($this->items)) {
 			echo '</div>';// end row-item 1/3
 			
 			// 2/3
-			echo '<div class="row-item col-sx-12 col-sm-6 col-md-6">';
+			echo '<div class="row-item col-sx-12 col-sm-5 col-md-5">';
 
 			// CAPTION, DESCRIPTION BOX
 			echo '<div class="ph-item-action-box ph-caption '.$lt.'">';
@@ -211,7 +270,7 @@ if (!empty($this->items)) {
 			echo '</div>';// end row-item 2/3
 			
 			// 3/3
-			echo '<div class="row-item col-sx-12 col-sm-4 col-md-4">';
+			echo '<div class="row-item col-sx-12 col-sm-5 col-md-5">';
 			
 			// :L: PRICE
 			if (!empty($dP)) { echo $layoutP->render($dP);}
@@ -231,11 +290,26 @@ if (!empty($this->items)) {
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
 			
+			
+			
+			
+			// Start Form
+			if (!empty($dF)) { echo $layoutPFS->render($dF);}
+			
+			// :L: ATTRIBUTES AND OPTIONS
+			if (!empty($dAb)) { echo $layoutAB->render($dAb);}
+			
 			// :L: LINK TO PRODUCT VIEW
 			if (!empty($dV)) { echo $layoutV->render($dV);}
 			
 			// :L: ADD TO CART
-			if (!empty($dA)) { echo $layoutA->render($dA);}
+			if (!empty($dA)) { echo $layoutA->render($dA);} else if ($icon['addtocart'] != '') { echo $layoutBSH->render();}
+			
+			// End Form
+			if (!empty($dF)) { echo $layoutPFE->render();}
+
+			
+			// :L: External link buttons
 			if (!empty($dA2)) { echo $layoutA2->render($dA2);}
 			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
 			
@@ -261,8 +335,7 @@ if (!empty($this->items)) {
 			echo '</div>';// end row list
 			
 			
-		} 
-		else if ( $lt == 'gridlist') {
+		} else if ( $lt == 'gridlist') {
 			// ----------------
 			// RENDER GRID LIST
 			// ----------------
@@ -308,12 +381,25 @@ if (!empty($this->items)) {
 			
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
-				// :L: LINK TO PRODUCT VIEW
-				if (!empty($dV)) { echo $layoutV->render($dV);}
-				// :L: ADD TO CART
-				if (!empty($dA)) { echo $layoutA->render($dA);}
-				if (!empty($dA2)) { echo $layoutA2->render($dA2);}
-				if (!empty($dA3)) { echo $layoutA3->render($dA3);}
+				
+			// Start Form
+			if (!empty($dF)) { echo $layoutPFS->render($dF);}
+			
+			// :L: ATTRIBUTES AND OPTIONS
+			if (!empty($dAb)) { echo $layoutAB->render($dAb);}
+			
+			// :L: LINK TO PRODUCT VIEW
+			if (!empty($dV)) { echo $layoutV->render($dV);}	
+				
+			// :L: ADD TO CART
+			if (!empty($dA)) { echo $layoutA->render($dA);} else if ($icon['addtocart'] != '') { echo $layoutBSH->render();}
+			
+			// End Form
+			if (!empty($dF)) { echo $layoutPFE->render();}	
+				
+			if (!empty($dA2)) { echo $layoutA2->render($dA2);}
+			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
+			
 			echo '</div>';// end add to cart box 
 			
 			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
@@ -341,8 +427,7 @@ if (!empty($this->items)) {
 			echo '</div>';// end row list
 			
 			
-		} 
-		else  {
+		} else  {
 			// -----------
 			// RENDER GRID
 			// -----------
@@ -399,11 +484,26 @@ if (!empty($this->items)) {
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
 			
+			
+			
+			// Start Form
+			if (!empty($dF)) { echo $layoutPFS->render($dF);}
+			
+			// :L: ATTRIBUTES AND OPTIONS
+			if (!empty($dAb)) { echo $layoutAB->render($dAb);}
+			
 			// :L: LINK TO PRODUCT VIEW
 			if (!empty($dV)) { echo $layoutV->render($dV);}
 			
 			// :L: ADD TO CART
-			if (!empty($dA)) { echo $layoutA->render($dA);}
+			if (!empty($dA)) { echo $layoutA->render($dA);} else if ($icon['addtocart'] != '') { echo $layoutBSH->render();}
+			
+			// End Form
+			if (!empty($dF)) { echo $layoutPFE->render();}
+			
+			
+			
+			
 			if (!empty($dA2)) { echo $layoutA2->render($dA2);}
 			if (!empty($dA3)) { echo $layoutA3->render($dA3);}
 				
@@ -424,7 +524,9 @@ if (!empty($this->items)) {
 			
 			echo '</div>';// end action box
 			
-		}
+			
+		} 
+		// --------------- END RENDER
 		
 		
 		

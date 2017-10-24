@@ -30,7 +30,7 @@ class PhocacartPagination extends JPagination
 		$selected = $this->viewall ? 0 : $this->limit;
 
 		// Build the select list
-		if ($app->isAdmin()) {
+		if ($app->isClient('administrator')) {
 			$html = JHTML::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="submitform();"', 'value', 'text', $selected);
 		} else {
 			$html = JHTML::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form)"', 'value', 'text', $selected);

@@ -58,7 +58,7 @@ if (!empty($this->t['product'])) {
 			echo '<td><input type="text" class="input-mini" name="jform['.$v['product_key'].'][stock]" value="'.$stock.'" />';
 			echo '<input type="hidden" name="jform['.$v['product_key'].'][product_key]" value="'.$v['product_key'].'" />';
 			echo '<input type="hidden" name="jform['.$v['product_key'].'][product_id]" value="'.$v['product_id'].'" />';
-			echo '<input type="hidden" name="jform['.$v['product_key'].'][attributes]" value="'.serialize($v['attributes']).'" />';
+			echo '<input type="hidden" name="jform['.$v['product_key'].'][attributes]" value="'.PhocacartProduct::getProductKey($v['product_id'], $v['attributes'], 0).'" />';
 			echo '</td>';
 			echo '</tr>';
 			

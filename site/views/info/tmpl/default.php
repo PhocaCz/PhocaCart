@@ -11,7 +11,7 @@ echo '<div id="ph-pc-info-box" class="pc-info-view'.$this->p->get( 'pageclass_sf
 
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_INFO')));
 
-switch($this->t['infomessage']) {
+switch($this->t['infoaction']) {
 
 	case 1:
 		// ORDER PROCESSED - STANDARD PRODUCTS (ORDER/NO DOWNLOAD)

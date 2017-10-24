@@ -40,7 +40,7 @@ $msg	= '';
 if ((int)$this->t['count'] > 0) {
 
 	$url2 	= 'index.php?option=com_phocacart&task=phocacartexport.export&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-	PhocacartRenderJs::renderImportExportItems($url2, 'phMessageBox', 'phFormExport', (int)$this->t['count_pagination'], JText::_('COM_PHOCACART_ALL_PRODUCTS_EXPORTED'), 1);
+	PhocacartRenderAdminjs::renderImportExportItems($url2, 'phMessageBox', 'phFormExport', (int)$this->t['count_pagination'], JText::_('COM_PHOCACART_ALL_PRODUCTS_EXPORTED'), 1);
 }
 
 // Products were exported to export table

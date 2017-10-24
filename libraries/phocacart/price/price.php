@@ -655,7 +655,81 @@ class PhocacartPrice
 		
 			return false;
 		}
+	}
+	
+	
+	public function getPriceItemsChangedByAttributes(&$priceP, $attributes, $price, $item, $ajax = 0) {
 		
+		
+		$paramsC 					= PhocacartUtils::getComponentParameters();
+		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
+		
+		$fullAttributes		= array();// Array of integers only
+		$thinAttributes		= array();// Array of full objects (full options object)
+		if ($ajax == 1) {
+			$fullAttributes = PhocacartAttribute::getAttributeFullValues($attributes);
+			//$thinAttributes	= $attributes;
+		} else {
+			$fullAttributes = $attributes;
+			//$thinAttributes = PhocacartAttribute::getAttributesSelectedOnly($attributes);
+		}
+		
+		
+		if (!empty($fullAttributes)) {
+			foreach ($fullAttributes as $k => $v) {
+				if (!empty($v->options)) {
+					foreach($v->options as $k2 => $v2) {
+						
+						// Options:
+						// a) STANDARD LOAD - we search for default values only to count them
+						// b) AJAX LOAD - we search for selected values only (in this case attribute array only includes selected)
+						// so if standard load - at start - we count only default values but when ajax reloads - e.g. some 
+						// options were selected/deselected - we get only array with selected value so we count them all
+						// EXAMPLE
+						// Product A has option 1 and it is set as default at standard load - se we count only default_value
+						// But when user add some new option, e.g. option 2 - we get this array (option1, option2) per ajax
+						// and we count all the items in this array
+						// STANDARD LOAD happens at rendering the page (including default values)
+						// AJAX LOAD happens when user select or deselect attributes of options and ajax will be called
+						// See: administrator\components\com_phocacart\libraries\phocacart\stock\stock.php
+						// function getStockItemsChangedByAttributes - similar behaviour
+						if ($ajax == 1 || ($ajax == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
+							if (isset($v2->title) && isset($v2->amount) && isset($v2->operator)) {
+								$priceA = $price->getPriceItems($v2->amount, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle);
+								
+								if ($v2->operator == '-') {
+									$priceP['netto']	-= $priceA['netto'];
+									$priceP['brutto']	-= $priceA['brutto'];
+									$priceP['tax']		-= $priceA['tax'];
+									
+								} else if ($v2->operator == '+') {
+									$priceP['netto']	+= $priceA['netto'] ;
+									$priceP['brutto']	+= $priceA['brutto'] ;
+									$priceP['tax']		+= $priceA['tax'] ;
+									
+								}
+							}
+						}
+					}
+					
+				}
+			}
+		}
+
+		
+		// Standard Price - changed 
+		$priceP['nettoformat'] 		= $price->getPriceFormat($priceP['netto']);
+		$priceP['bruttoformat'] 	= $price->getPriceFormat($priceP['brutto']);
+		$priceP['taxformat'] 		= $price->getPriceFormat($priceP['tax']);
+		
+	
+		// Unit price
+		$priceP['base'] 		= '';
+		$priceP['baseformat'] 	= '';
+		if (isset($item->unit_amount) && $item->unit_amount > 0 && isset($item->unit_unit) && (int)$display_unit_price > 0) {
+			$priceP['base'] 		= $priceP['brutto'] / $item->unit_amount;
+			$priceP['baseformat'] 	= $price->getPriceFormat($priceP['base']).'/'.$item->unit_unit;
+		}
 	}
 	
 	/* E.g. for payment methods, we need raw price converted by exchange rate

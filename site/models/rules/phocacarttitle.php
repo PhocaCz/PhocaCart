@@ -13,13 +13,19 @@ class JFormRulePhocaCartTitle extends JFormRule
 
 	public function test(&$element, $value, $group = null, &$input = null, &$form = null)
 	{
+		
+		$app = JFactory::getApplication();
 		//E_ERROR, E_WARNING, E_NOTICE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE.
 		//$info = array();
 		//$info['field'] = 'guestbook_title';
 		
 		//if (preg_match("~[<|>]~",$value)) {
-			return new JException(JText::_('COM_PHOCAGUESTBOOK_BAD_SUBJECT' ), "105", E_USER_ERROR, $info, false);
+		
 		//}
+	
+		$app->enqueueMessage(JText::_('COM_PHOCACART_BAD_SUBJECT' ), 'warning');
+		return false;
+		
 
 		return true;
 	}

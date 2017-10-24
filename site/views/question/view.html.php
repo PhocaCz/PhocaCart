@@ -49,7 +49,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 			$session->set('time', $sesstime, $namespace);
 		}	
 
-		// Securitry Hidden Field
+		// Security Hidden Field
 		if ($this->p->get('enable_hidden_field_question', 0) == 1) {
 			$this->p->set('hidden_field_position', PhocacartSecurity::setHiddenFieldPos($this->p->get('display_name_form'), $this->p->get('display_email_form'), $this->p->get('display_phone_form'), $this->p->get('display_message_form')));
 			

@@ -345,7 +345,7 @@ var config".$id." = {
 		$q->group('DATE(a.date)');
 		
 		$q->order($db->escape('a.date ASC'));
-		echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
+		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
 		$db->setQuery($q);
 
 		$items = $db->loadObjectList();
