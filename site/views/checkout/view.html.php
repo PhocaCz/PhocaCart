@@ -179,7 +179,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					}
 					
 					
-					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);
+					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);
 					
 				}
 			}

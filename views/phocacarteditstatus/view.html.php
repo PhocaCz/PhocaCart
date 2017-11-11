@@ -33,6 +33,7 @@ class PhocaCartCpViewPhocaCartEditStatus extends JViewLegacy
 		
 
 		$media = new PhocacartRenderAdminmedia();
+		PhocacartRenderAdminjs::renderHtmlAfterChange('#jform_status_id', '#phWarningNotify');
 	
 		parent::display($tpl);
 	}

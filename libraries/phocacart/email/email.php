@@ -278,16 +278,35 @@ class PhocacartEmail
 		
 	}
 	
-	public static function completeMail($body, $replace) {
+	/*
+	 * type ... 1 customers - email sent to customer
+	 * type ... 2 others - email sent to all others
+	 */
+	
+	public static function completeMail($body, $replace, $type = 1) {
 	
 	
+		if ($type == 2) {
+			if (isset($replace['name_others'])) {
+				$body = str_replace('{name}', $replace['name_others'], $body);
+			}
+		} else {
+			if (isset($replace['name'])) {
+				$body = str_replace('{name}', $replace['name'], $body);
+			}
+		}
 		
-		if (isset($replace['name'])) {
-			$body = str_replace('{name}', $replace['name'], $body);
+		if ($type == 2) {
+			if (isset($replace['email_others'])) {
+				$body = str_replace('{email}', $replace['email_others'], $body);
+			}
+		} else {
+			if (isset($replace['email'])) {
+				$body = str_replace('{email}', $replace['email'], $body);
+			}
 		}
-		if (isset($replace['email'])) {
-			$body = str_replace('{email}', $replace['email'], $body);
-		}
+		
+
 		if (isset($replace['downloadlink'])) {
 			$body = str_replace('{downloadlink}', $replace['downloadlink'], $body);
 		}

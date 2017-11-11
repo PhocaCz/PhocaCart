@@ -821,7 +821,10 @@
 
 <field name="upload_maxsize" type="phocatext" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>	
 
-
+<field name="load_extension_list" type="list" default="1" label="COM_PHOCACART_FIELD_LOAD_EXTENSION_LIST_LABEL" description="COM_PHOCACART_FIELD_LOAD_EXTENSION_LIST_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
 
 <field name="phocahead15" type="phocahead" default="COM_PHOCACART_CATALOG_OPTIONS_LABEL" label="" description=""/>
 

@@ -17,7 +17,7 @@ class PhocacartShipping
 		
 	}
 	
-	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
+	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
 		
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
@@ -45,17 +45,19 @@ class PhocacartShipping
 		}
 		
 		$group = ' GROUP BY s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
-				.' s.active_amount, s.active_zone, s.active_country, s.active_region, s.active_weight, s.active_size,'
-				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight, s.default,'
-				.' s.maximal_length, s.maximal_width, s.maximal_height,'
+				.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
+				.' s.active_weight, s.active_size,'
+				.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
+				.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
 				.' t.id, t.title, t.tax_rate, t.calculation_type';
 		
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
-				.' s.active_amount, s.active_zone, s.active_country, s.active_region, s.active_weight, s.active_size,'
-				.' s.lowest_amount, s.highest_amount, s.lowest_weight, s.highest_weight, s.default,'
-				.' s.maximal_length, s.maximal_width, s.maximal_height,'
+				.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
+				.' s.active_weight, s.active_size,'
+				.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
+				.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
 				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
@@ -89,6 +91,7 @@ class PhocacartShipping
 				$v->active = 0;
 				$v->selected = 0;
 				$a = 0;
+				$q = 0;
 				$z = 0;
 				$c = 0;
 				$r = 0;
@@ -114,6 +117,15 @@ class PhocacartShipping
 				
 				} else {
 					$a = 1;
+				}
+				
+				// Quantity Rule
+				if($v->active_quantity == 1) {
+					if ($quantity > $v->minimal_quantity && $quantity < $v->maximal_quantity) {
+						$q = 1;
+					}
+				} else {
+					$q = 1;
 				}
 				
 				// Zone Rule
@@ -186,12 +198,12 @@ class PhocacartShipping
 				
 				
 				// No rule was set for shipping, it will be displayed at all events
-				if($v->active_amount == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_weight == 0) {
+				if($v->active_amount == 0 && $v->active_quantity == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_weight == 0) {
 					$v->active = 1;
 				}
 				
 				// if some of the rules is not valid, all the payment is NOT valid
-				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $w == 0 || $s == 0) {
+				if ($a == 0 || $q == 0 || $z == 0 || $c == 0 || $r == 0 || $w == 0 || $s == 0) {
 					$v->active = 0;
 				} else {
 					$v->active = 1;

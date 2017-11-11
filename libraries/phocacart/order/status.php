@@ -24,7 +24,7 @@ class PhocacartOrderStatus
 		if( !array_key_exists( $id, self::$status ) ) {
 			
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_text, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
+			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_text_others, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -40,7 +40,9 @@ class PhocacartOrderStatus
 				self::$status[$id]['email_customer']			= $s->email_customer;
 				self::$status[$id]['email_others']				= $s->email_others;
 				self::$status[$id]['email_subject']				= $s->email_subject;
+				self::$status[$id]['email_subject_others']		= $s->email_subject_others;
 				self::$status[$id]['email_text']				= $s->email_text;
+				self::$status[$id]['email_text_others']			= $s->email_text_others;
 				self::$status[$id]['email_send']				= $s->email_send;
 				self::$status[$id]['download']					= $s->download;
 				$query = 'SELECT a.title AS text, a.id AS value'
@@ -221,7 +223,8 @@ class PhocacartOrderStatus
 		
 		
 		// EMAIL
-		$recipient 	= '';
+		$recipient 			= '';
+		$recipientOthers	= '';
 		$bcc 		= '';
 		$subject 	= '';
 		$body 		= '';
@@ -252,14 +255,14 @@ class PhocacartOrderStatus
 		if ($notifyOthersV) {
 			if (isset($status['email_others']) && $status['email_others'] != '') {
 				$bcc = explode(',', $status['email_others'] );
-				if ($recipient == '') {
+				//if ($recipient == '') {
 					if (isset($bcc[0]) && JMailHelper::isEmailAddress($bcc[0])) {
-						$recipient = $bcc[0];
+						$recipientOthers = $bcc[0];
 					}
-				} 
+				//} 
 			}
 		}
-		
+	
 		
 		// STOCK MOVEMENTS
 		if ($stockMovementsV == '+' || $stockMovementsV == '-') {
@@ -390,167 +393,190 @@ class PhocacartOrderStatus
 		}
 
 		
-		if ($recipient != '' && JMailHelper::isEmailAddress($recipient)) {
+		// ------------------------
+		// BUILD EMAIL for customer or others
+		// ------------------------
+		
+		if (($recipient != '' && JMailHelper::isEmailAddress($recipient)) || ($recipientOthers != '' && JMailHelper::isEmailAddress($recipientOthers))) {
 			
 			$sitename 		= $config->get('sitename');
 			
 			$orderNr = PhocacartOrder::getOrderNumber($orderId);
+			
+			// EMAIL CUSTOMER
 			if ($status['email_subject'] != '') {
 				$subject = $status['email_subject'] .' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr;
 			} else if ($status['title'] != '') {
 				$subject = $sitename. ' - ' .$status['title'].' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr;
 			}
+			// EMAIL OTHERS
+			if ($status['email_subject_others'] != '') {
+				$subjectOthers = $status['email_subject_others'] .' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr;
+			} else if ($status['title'] != '') {
+				$subjectOthers = $sitename. ' - ' .$status['title'].' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr;
+			}
 			
 			
 			//if ($status['email_text'] != '') {
-				$emptyBody = 0;
-				if ($status['email_text'] == '') {
-					$emptyBody = 1;
-				}
-				$body = $status['email_text'];
-				
-				// REPLACE
-				$r = array();
-				$r['email'] = $recipient;
-				$name = '';
-				if (isset($bas['b']['name_first']) && $bas['b']['name_first']) {
-					$name = $bas['b']['name_first'];
-				}
-				if (isset($bas['b']['name_last']) && $bas['b']['name_last']) {
-					if ($name != '') {
-						$name = $name . ' '. $bas['b']['name_last'];
-					} else {
-						$name = $bas['b']['name_last'];
-					}
-				} 
-				$r['name'] = $name;
-				
-				// Standard User get standard download page and order page
-				if ($common->user_id > 0) {
-					$r['orderlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute());
-					$r['downloadlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
-				} else {
-					if (isset($common->order_token) && $common->order_token != '') {
-						$r['orderlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
-					}
-					$products 	= $order->getItemProducts($orderId);
-					
-					$downloadO 	= '';
-					if(!empty($products) && isset($common->order_token) && $common->order_token != '') {
-						$downloadO	= '<p>&nbsp;</p><h4>'.JText::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
-						foreach ($products as $k => $v) {
-							if ($v->download_published == 1) {
-								$downloadO .= '<div><strong>'.$v->title.'</strong></div>';
-								$downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v->download_token);
-								$downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
-							}
-						}
-						$downloadO .= '<p>&nbsp;</p>';
-					}
-					$r['downloadlink'] = $downloadO;
-				}
-				
-				
-				$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
-				$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
-				$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
-				$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
-
-				$r['customercomment'] 		= $common->comment;
-				
-				$body 	= PhocacartEmail::completeMail($body, $r);
 			
+			// EMAIL CUSTOMER
+			$emptyBody = 0;
+			if ($status['email_text'] == '') {
+				$emptyBody = 1;
+			}
+			$body = $status['email_text'];
+			// EMAIL OTHERS
+			$emptyBodyOthers = 0;
+			if ($status['email_text_others'] == '') {
+				$emptyBodyOthers = 1;
+			}
+			$bodyOthers = $status['email_text_others'];
+			
+			// REPLACE
+			$r = array();
+			$r['email'] = $recipient;
+			$r['email_others'] = $recipientOthers;
+			$name = '';
+			if (isset($bas['b']['name_first']) && $bas['b']['name_first']) {
+				$name = $bas['b']['name_first'];
+			}
+			if (isset($bas['b']['name_last']) && $bas['b']['name_last']) {
+				if ($name != '') {
+					$name = $name . ' '. $bas['b']['name_last'];
+				} else {
+					$name = $bas['b']['name_last'];
+				}
+			} 
+			$r['name'] = $name;
+			$r['name_others'] = '';
+			
+			// Standard User get standard download page and order page
+			if ($common->user_id > 0) {
+				$r['orderlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute());
+				$r['downloadlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
+			} else {
+				if (isset($common->order_token) && $common->order_token != '') {
+					$r['orderlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
+				}
+				$products 	= $order->getItemProducts($orderId);
 				
-				// PDF
-				$pdfV					= array();
-				$attachmentContent		= '';
-				$attachmentName			= '';
-				$pdfV['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
-				$pdfV['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
-				$pdfV['pdf']			= 0;
-				
-				if ($pdfV['plugin-pdf'] == 1 && $pdfV['component-pdf'] == 1) {
-					if (JFile::exists(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php')) {
-						require_once(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php');
-					} else {
-						throw new Exception('Error - Phoca PDF Helper - Render PDF file could not be found in system', 500);
-						return false;
+				$downloadO 	= '';
+				if(!empty($products) && isset($common->order_token) && $common->order_token != '') {
+					$downloadO	= '<p>&nbsp;</p><h4>'.JText::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
+					foreach ($products as $k => $v) {
+						if ($v->download_published == 1) {
+							$downloadO .= '<div><strong>'.$v->title.'</strong></div>';
+							$downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v->download_token);
+							$downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
+						}
 					}
-					$pdfV['pdf'] = 1;
+					$downloadO .= '<p>&nbsp;</p>';
 				}
+				$r['downloadlink'] = $downloadO;
+			}
+			
+			
+			$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
+			$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
+			$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
+			$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
 
-				switch ($emailSendV) {
-					case 1:
-						$orderRender = new PhocacartOrderRender();
-						
-						if ($attachment_format == 0 || $attachment_format == 2) {
-							$body .= "<br><br>";
-							$body .= $orderRender->render($orderId, 1, 'mail', $orderToken);
-						}
-						
-						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
-							$staticData					= array();
-							$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
-							$staticData['option']		= 'com_phocacart';
-							$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
-							$staticData['file']			= '';// Must be empty to not save the pdf to server
-							$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_ORDER'). '_'. $orderNumber).'.pdf';
-							$staticData['subject']		= '';
-							$staticData['keywords']		= '';
-							$staticData['output']		= $orderRender->render($orderId, 1, 'pdf', $orderToken);
-							$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
-							$attachmentName 			= $staticData['filename'];
-						}
-						
-					break;
-					case 2:
-						$orderRender = new PhocacartOrderRender();
-						
-						if ($attachment_format == 0 || $attachment_format == 2) {
-							$body .= "<br><br>";
-							$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
-						}
-						
-						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
-							$staticData					= array();
-							$invoiceNumber				= PhocacartOrder::getInvoiceNumber($orderId, $invoice_prefix);
-							$staticData['option']		= 'com_phocacart';
-							$staticData['title']		= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
-							$staticData['file']			= '';// Must be empty to not save the pdf to server
-							$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_INVOICE'). '_'. $invoiceNumber).'.pdf';
-							$staticData['subject']		= '';
-							$staticData['keywords']		= '';
-							$staticData['output']		= $orderRender->render($orderId, 2, 'pdf', $orderToken);
-							$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
-							$attachmentName 			= $staticData['filename'];
-						}
-						
-					break;
-					case 3:
-						$orderRender = new PhocacartOrderRender();
-						
-						if ($attachment_format == 0 || $attachment_format == 2) {
-							$body .= "<br><br>";
-							$body .= $orderRender->render($orderId, 3, 'mail', $orderToken);
-						}
-						
-						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
-							$staticData					= array();
-							$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
-							$staticData['option']		= 'com_phocacart';
-							$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
-							$staticData['file']			= '';// Must be empty to not save the pdf to server
-							$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_ORDER'). '_'. $orderNumber).'.pdf';
-							$staticData['subject']		= '';
-							$staticData['keywords']		= '';
-							$staticData['output']		= $orderRender->render($orderId, 3, 'pdf', $orderToken);
-							$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
-							$attachmentName 			= $staticData['filename'];
-						}
-						
-					break;
-				
+			$r['customercomment'] 		= $common->comment;
+			
+			$body 			= PhocacartEmail::completeMail($body, $r, 1);
+			$bodyOthers 	= PhocacartEmail::completeMail($bodyOthers, $r, 2);
+		
+			
+			// PDF
+			$pdfV					= array();
+			$attachmentContent		= '';
+			$attachmentName			= '';
+			$pdfV['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+			$pdfV['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
+			$pdfV['pdf']			= 0;
+			
+			if ($pdfV['plugin-pdf'] == 1 && $pdfV['component-pdf'] == 1) {
+				if (JFile::exists(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php')) {
+					require_once(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php');
+				} else {
+					throw new Exception('Error - Phoca PDF Helper - Render PDF file could not be found in system', 500);
+					return false;
 				}
+				$pdfV['pdf'] = 1;
+			}
+
+			switch ($emailSendV) {
+				case 1:
+					$orderRender = new PhocacartOrderRender();
+					
+					if ($attachment_format == 0 || $attachment_format == 2) {
+						$body .= "<br><br>";
+						$body .= $orderRender->render($orderId, 1, 'mail', $orderToken);
+					}
+					
+					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+						$staticData					= array();
+						$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
+						$staticData['option']		= 'com_phocacart';
+						$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
+						$staticData['file']			= '';// Must be empty to not save the pdf to server
+						$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_ORDER'). '_'. $orderNumber).'.pdf';
+						$staticData['subject']		= '';
+						$staticData['keywords']		= '';
+						$staticData['output']		= $orderRender->render($orderId, 1, 'pdf', $orderToken);
+						$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
+						$attachmentName 			= $staticData['filename'];
+					}
+					
+				break;
+				case 2:
+					$orderRender = new PhocacartOrderRender();
+					
+					if ($attachment_format == 0 || $attachment_format == 2) {
+						$body .= "<br><br>";
+						$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
+					}
+					
+					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+						$staticData					= array();
+						$invoiceNumber				= PhocacartOrder::getInvoiceNumber($orderId, $invoice_prefix);
+						$staticData['option']		= 'com_phocacart';
+						$staticData['title']		= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
+						$staticData['file']			= '';// Must be empty to not save the pdf to server
+						$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_INVOICE'). '_'. $invoiceNumber).'.pdf';
+						$staticData['subject']		= '';
+						$staticData['keywords']		= '';
+						$staticData['output']		= $orderRender->render($orderId, 2, 'pdf', $orderToken);
+						$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
+						$attachmentName 			= $staticData['filename'];
+					}
+					
+				break;
+				case 3:
+					$orderRender = new PhocacartOrderRender();
+					
+					if ($attachment_format == 0 || $attachment_format == 2) {
+						$body .= "<br><br>";
+						$body .= $orderRender->render($orderId, 3, 'mail', $orderToken);
+					}
+					
+					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+						$staticData					= array();
+						$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
+						$staticData['option']		= 'com_phocacart';
+						$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
+						$staticData['file']			= '';// Must be empty to not save the pdf to server
+						$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_ORDER'). '_'. $orderNumber).'.pdf';
+						$staticData['subject']		= '';
+						$staticData['keywords']		= '';
+						$staticData['output']		= $orderRender->render($orderId, 3, 'pdf', $orderToken);
+						$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
+						$attachmentName 			= $staticData['filename'];
+					}
+					
+				break;
+			
+			}
 				
 			//}
 
@@ -568,24 +594,41 @@ class PhocacartOrderStatus
 				$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'];
 			}*/
 			
-			if ($emptyBody == 1) {
-				$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $body;
+			
+			// ---------
+			// CUSTOMERS
+			if ($recipient != '' && JMailHelper::isEmailAddress($recipient)) {
+				if ($emptyBody == 1) {
+					$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $body;
+				}
+				
+				// Notify
+				// 1 ... sent
+				// 0 ... not sent
+				// -1 ... not sent (error)
+				$notify = PhocacartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, null, $attachmentContent, $attachmentName);
 			}
 			
-			
-			
-			// Notify
-			// 1 ... sent
-			// 0 ... not sent
-			// -1 ... not sent (error)
-			$notify = PhocacartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, $bcc, $attachmentContent, $attachmentName);
-			if ($notify) {
-				if ($app->isClient('administrator')){
-					$app->enqueueMessage(JText::_('COM_PHOCACART_EMAIL_IF_NO_ERROR_EMAIL_SENT'));
+			// ------
+			// OTHERS
+			if ($recipientOthers != '' && JMailHelper::isEmailAddress($recipientOthers)) {
+				if ($emptyBodyOthers == 1) {
+					$bodyOthers = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $bodyOthers;
 				}
-				return $notify;// 1
-			} else {
-				return -1;
+				
+				$notifyOthers = PhocacartEmail::sendEmail('', '', $recipientOthers, $subjectOthers, $bodyOthers, true, null, $bcc, $attachmentContent, $attachmentName);
+			}
+			
+			// Notify is based only on customer email
+			if ($recipient != '' && JMailHelper::isEmailAddress($recipient)) {
+				if ($notify) {
+					if ($app->isClient('administrator')){
+						$app->enqueueMessage(JText::_('COM_PHOCACART_EMAIL_IF_NO_ERROR_EMAIL_SENT'));
+					}
+					return $notify;// 1
+				} else {
+					return -1;
+				}
 			}
 			
 		}

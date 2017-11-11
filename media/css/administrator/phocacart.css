@@ -2,13 +2,24 @@
 	margin: 0 0 0 0 !important;
 }
 
+
+
 /* Columns*/
 .ph-image {
 	text-align:center;
 	width: 10%;
 }
+.ph-description {
+	width: 50%;
+}
+.ph-action {
+	width: 15%;
+}
 .ph-title {
 	width: 60%;
+}
+.ph-title-small {
+	width: 10%;
 }
 
 .ph-title-stat {

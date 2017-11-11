@@ -105,7 +105,7 @@ $cAmountD	= $s->getAmountOfOrders(1);
 					foreach ($this->views as $k => $v) {
 						$linkV	= $link . $this->t['c'] . $k;
 						//echo $class::quickIconButton( $linkV, 'icon-48-'.$k.'.png', JText::_($v[0]), $this->t['i']);
-						echo '<div class="col-xs-6 col-sm-6 col-md-3">';
+						echo '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">';
 						echo $class::quickIconButton( $linkV, JText::_($v[0]), $v[1], $v[2]);
 						echo '</div>';
 					}	

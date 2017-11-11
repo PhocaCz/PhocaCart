@@ -32,6 +32,7 @@ echo '<div class="span12 form-horizontal">';
 $tabs = array (
 'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
 'amount' 		=> JText::_($this->t['l'].'_AMOUNT_RULE'),
+'quantity' 		=> JText::_($this->t['l'].'_QUANTITY_RULE'),
 'zone' 			=> JText::_($this->t['l'].'_ZONE_RULE'),
 'country' 		=> JText::_($this->t['l'].'_COUNTRY_RULE'),
 'region' 		=> JText::_($this->t['l'].'_REGION_RULE'),
@@ -57,6 +58,11 @@ echo $r->group($this->form, $formArray);
 
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
+echo '</div>';
+
+echo '<div class="tab-pane" id="quantity">'."\n";
+$formArray = array ('minimal_quantity', 'maximal_quantity', 'active_quantity');
+echo $r->group($this->form, $formArray);
 echo '</div>';
 
 echo '<div class="tab-pane" id="amount">'."\n"; 

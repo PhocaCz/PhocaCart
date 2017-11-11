@@ -26,11 +26,11 @@ class PhocacartRenderAdminmedia
 		JHTML::stylesheet( 'media/com_phocacart/css/administrator/phocacarttheme.css' );
 		JHTML::stylesheet( 'media/com_phocacart/css/administrator/phocacartcustom.css' );
 		JHTML::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css' );
-		
 
 		if(PhocacartUtils::isJCompatible('3.7')) {
 			JHTML::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
 		}
+		
 	}
 	
 	public function loadOptions($load = 0) {

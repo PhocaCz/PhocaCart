@@ -123,6 +123,7 @@ echo $r->td($default, "small");
 
 $rules = array();
 if($item->active_amount) {$rules[] = '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_AMOUNT_RULE'). '</span>';}
+if($item->active_quantity) {$rules[] = '<span class="label label-default label-default">'.JText::_('COM_PHOCACART_QUANTITY_RULE'). '</span>';}
 if($item->active_country) {$rules[] = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_COUNTRY_RULE'). '</span>';}
 if($item->active_region) {$rules[] = '<span class="label label-info label-info">'.JText::_('COM_PHOCACART_REGION_RULE'). '</span>';}
 if($item->active_weight) {$rules[] = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_WEIGHT_RULE'). '</span>';}

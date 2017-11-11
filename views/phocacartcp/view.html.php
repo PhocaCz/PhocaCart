@@ -50,7 +50,8 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'imports'		=> array($this->t['l'] . '_IMPORT', 'import', '#668099'),
 		'exports'		=> array($this->t['l'] . '_EXPORT', 'export', '#669999'),
 		'logs'			=> array($this->t['l'] . '_SYSTEM_LOG', 'list', '#c0c0c0'),
-		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#3378cc')
+		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#3378cc'),
+		'extensions'	=> array($this->t['l'] . '_EXTENSIONS', 'th-large', '#2693ff')
 		);
 		
 	/*	
@@ -90,6 +91,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 	
 		
 		$media = new PhocacartRenderAdminmedia();
+		
 
 		$this->addToolbar();
 		parent::display($tpl);

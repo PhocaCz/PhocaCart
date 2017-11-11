@@ -46,6 +46,7 @@ $l['im']	= array('COM_PHOCACART_IMPORT', 'phocacartimports');
 $l['ex']	= array('COM_PHOCACART_EXPORT', 'phocacartexports');
 $l['lo']	= array('COM_PHOCACART_SYSTEM_LOG', 'phocacartlogs');
 $l['in']	= array('COM_PHOCACART_INFO', 'phocacartinfo');
+$l['et']	= array('COM_PHOCACART_EXTENSIONS', 'phocacartextensions');
 
 // Submenu view
 

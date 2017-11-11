@@ -157,6 +157,10 @@ if ($this->page == 0) { ?>
 		<div class="span12 col-sm-12 col-md-12"><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="https://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</div>
 	</div>
 	
+	<div class="row-fluid ph-vertical-align ph-wizard-row">
+		<div class="span12 col-sm-12 col-md-12"><?php echo JText::_('COM_PHOCACART_DISCOVER'); ?> <a href="https://www.phoca.cz/phocacart-extensions" target="_blank"><?php echo JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS'); ?></a>.</div>
+	</div>
+	
 </div><?php
 
 }

@@ -549,5 +549,17 @@ final class PhocacartRenderAdminjs
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
 	}
+	
+	
+	
+	public static function renderHtmlAfterChange($changeElement, $targetElement) {
+		$s 	= array();
+		$s[] = 'jQuery(document).ready(function() {';
+		$s[] = '   jQuery("'.$changeElement.'").on("change", function(e) {';
+		$s[] = '      jQuery("'.$targetElement.'").show();';
+		$s[] = '   })';
+		$s[] = '})';
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+	}
 }
 ?>

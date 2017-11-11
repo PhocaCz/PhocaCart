@@ -13,6 +13,8 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
+
+
 if (!empty($this->itemhistory)) {
 	//echo '<table class="ph-order-status-edit">';
 	echo '<div class="row-fluid ph-order-status-edit-header">';
@@ -90,6 +92,10 @@ if (isset($this->item['email_others']) && $this->item['email_others'] != '') {
 }
 echo '<div class="span3 col-sm-3 col-md-3"><input type="checkbox" name="jform[notify_others]" '.$checked.' /></div>';
 echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
+
+echo '<div class="row-fluid">';
+echo '<div class="span12 col-sm-12 col-md-12"><div class="alert alter-warning" style="display:none" id="phWarningNotify">'.JText::_('COM_PHOCACART_WARNING_ORDER_STATUS_CHANGED_CHECK_NOTIFY_CUSTOMER_NOTIFY_OTHERS_FIELDS_AGAIN').'</div></div>';
 echo '</div>';
 
 

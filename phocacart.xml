@@ -2,12 +2,12 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>24/10/2017</creationDate>
+	<creationDate>11/11/2017</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 	<description>Phoca Cart</description>
 	<scriptfile>install/script.php</scriptfile>
 
@@ -24,7 +24,9 @@
 	</uninstall>
 
 	<update>
-		<schemas/>
+		<schemas>
+			<schemapath type="mysql">update/sql/mysql</schemapath>
+		</schemas>
 	</update>
 
 	<files folder="site">
@@ -89,6 +91,7 @@
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-export.png" alt="COM_PHOCACART_EXPORT" view="phocacartexports" link="option=com_phocacart&amp;view=phocacartexports">COM_PHOCACART_EXPORT</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-log.png" alt="COM_PHOCACART_SYSTEM_LOG" view="phocacartlogs" link="option=com_phocacart&amp;view=phocacartlogs">COM_PHOCACART_SYSTEM_LOG</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-info.png" alt="COM_PHOCACART_INFO" view="phocacartinfo" link="option=com_phocacart&amp;view=phocacartinfo">COM_PHOCACART_INFO</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-extension.png" alt="COM_PHOCACART_EXTENSIONS" view="phocacartextensions" link="option=com_phocacart&amp;view=phocacartextensions">COM_PHOCACART_EXTENSIONS</menu>
 		</submenu>
 
 		<files folder="admin">
@@ -106,6 +109,7 @@
 			<folder>libraries</folder>
 			<folder>models</folder>
 			<folder>tables</folder>
+			<folder>update</folder>
 			<folder>views</folder>
 		</files>
 
@@ -116,7 +120,7 @@
 
 	</administration>
 	<updateservers>
-		<server type="extension" priority="1" name="updates"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml]]></server>
+		<server type="extension" name="Phoca Cart">https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml</server>
 	</updateservers>
 
 </extension>

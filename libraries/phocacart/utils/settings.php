@@ -165,6 +165,60 @@ class PhocacartUtilsSettings
 		return $calcTypeArray;
 	}
 	
+	public static function getExtenstionsArray() {
+		
+		$a = array();
+		$a['components'] 	= JText::_('COM_PHOCACART_COMPONENTS');
+		$a['modules'] 		= JText::_('COM_PHOCACART_MODULES');
+		$a['plugins'] 		= JText::_('COM_PHOCACART_PLUGINS');
+		$a['templates'] 	= JText::_('COM_PHOCACART_TEMPLATES');
+		$a['languages'] 	= JText::_('COM_PHOCACART_LANGUAGES');
+		
+		return $a;
+	}
+	
+	public static function getExtenstionsJSONLinks($type) {
+		
+		
+		$dir = 'https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/extensions/';
+		
+		$a = array();
+		$a['components'] 	= 'components/components.json';
+		$a['modules'] 		= 'modules/modules.json';
+		$a['plugins'] 		= 'plugins/plugins.json';
+		$a['templates'] 	= 'templates/templates.json';
+		$a['languages'] 	= 'languages/languages.json';
+		
+		if (isset($a[$type])) {
+			return $dir . $a[$type];
+		}
+		
+		return false;
+	}
+	
+	public static function getExtensionsJSONObtainTypeText($type) {
+		
+		
+		switch($type){
+			case 0:
+				return JText::_('COM_PHOCACART_PAID');// Paid
+			break;
+			case 1: 
+				return JText::_('COM_PHOCACART_FREE');// Free Install
+			break;
+			case 2:
+				return JText::_('COM_PHOCACART_FREE');// Free Download
+			break;
+			case 3:
+				return JText::_('COM_PHOCACART_FREE_REGISTER');// Free Downlload but register
+			break;
+			default:
+				return '';
+			break;
+		}
+	}
+	
+	
 	public static function getAdditionalHitsType($type) {
 		switch($type) {
 			case 2:

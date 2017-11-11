@@ -81,12 +81,19 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function selectFilterCategory($categoryList, $txtLng, $state) {
-		return '<div class="btn-group pull-right ">'. "\n"
-		.'<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">'."\n"
-		. '<option value="">'.JText::_($txtLng).'</option>'
-		. JHtml::_('select.options', $categoryList, 'value', 'text', $state)
+		
+		$o = '<div class="btn-group pull-right ">'. "\n"
+		.'<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">'."\n";
+		
+		if ($txtLng != '') {
+			$o .= '<option value="">'.JText::_($txtLng).'</option>';
+		}
+		$o .= JHtml::_('select.options', $categoryList, 'value', 'text', $state)
 		. '</select></div>'. "\n";
+		return $o;
 	}
+	
+	
 	
 	public function selectFilterLevels($txtLng, $state) {
 		$levelList = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5);

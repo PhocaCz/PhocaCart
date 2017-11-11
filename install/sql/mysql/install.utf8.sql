@@ -413,6 +413,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods` (
   `maximal_height` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `maximal_length` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   
+  `active_quantity` tinyint(1) NOT NULL DEFAULT '0',
+  `minimal_quantity` int(11) NOT NULL DEFAULT '0',
+  `maximal_quantity` int(11) NOT NULL DEFAULT '0',
   
   `active_amount` tinyint(1) NOT NULL DEFAULT '0',
   `active_country` tinyint(1) NOT NULL DEFAULT '0',
@@ -851,7 +854,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `email_customer` tinyint(1) NOT NULL DEFAULT '0',
   `email_others` text,
   `email_text` text,
+  `email_text_others` text,
   `email_subject` varchar(255) NOT NULL DEFAULT '',
+  `email_subject_others` varchar(255) NOT NULL DEFAULT '',
   `email_send` int(2) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
@@ -2053,5 +2058,9 @@ INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, 
 -- ALTER TABLE  `#__phocacart_discounts` 	ADD `product_filter` tinyint(1) NOT NULL DEFAULT '1';
 
 
+-- ---------
+-- 3.0.0 - 3.0.1 and newer versions
+-- ---------
 
+-- SEE: administrator/components/com_phocacart/update/ - SQL should be updated automatically by Joomla! extension manager rules
 
