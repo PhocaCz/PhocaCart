@@ -7,7 +7,7 @@
 		<version>3.0.2</version>
 		<infourl title="Phoca Cart 3.0.2">http://www.phoca.cz/version/index.php?phocacart=3.0.2</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/3.0.2/com_phocacart_v3.0.2.zip
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/3.0.2/com_phocacart_v3.0.2.zip</downloadurl>
 		</downloads>
 		<tags>
 			<tag>stable</tag>
