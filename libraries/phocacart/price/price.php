@@ -21,7 +21,7 @@ class PhocacartPrice
 	protected $price_prefix			= '';
 	protected $price_suffix			= '';
 	protected $exchange_rate		= 1;
-	protected $currency;
+	private static $currency		= array();
 
 	public function __construct() {
 	
@@ -30,47 +30,55 @@ class PhocacartPrice
 	
 	public function setCurrency( $id = 0, $orderId = 0) {
 	
-		// We can set the exchange rate by:
-		// a) the currency exchange rate set in currency (can change in time)
-		// b) the currency exchange reat set in order (the order exchange rate should not change in time)
 		
-		$app			= JFactory::getApplication();
-		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$exchange_rate_order= $paramsC->get( 'exchange_rate_order', 0 );
+		// Price can be different for each currency and order
+		// So there is a key which identifies default currency, other currency, default currency in order, other currency in order
+		// one currency can have different exchange rates in order history, so two orders can have same currency but different exchange rate
+		$key = base64_encode(serialize((int)$id . ':' . (int)$orderId));
 		
-		$currencyOrder = false;
-		if ((int)$orderId > 0) {
-			$currencyOrder = self::getCurrencyAndRateByOrder($orderId);
+		if( !array_key_exists( (string)$key, self::$currency )) {
+			$app			= JFactory::getApplication();
+			$paramsC 		= PhocacartUtils::getComponentParameters();
+			$exchange_rate_order= $paramsC->get( 'exchange_rate_order', 0 );
+			
+			$currencyOrder = false;
+			if ((int)$orderId > 0) {
+				$currencyOrder = self::getCurrencyAndRateByOrder($orderId);
+			}
+			
+			// 1) change the currency ID by order
+			if (isset($currencyOrder->currency_id)) {
+				$id 	= $currencyOrder->currency_id;
+				$key 	= base64_encode(serialize((int)$id . ':' . (int)$orderId));
+			}
+			
+			
+			
+			if ((int)$id > 0) {
+				self::$currency[$key]	= PhocacartCurrency::getCurrency((int)$id, (int)$orderId);
+			} else {
+				self::$currency[$key]	= PhocacartCurrency::getCurrency(0, (int)$orderId);
+			}
+			
+			// 1) change the currency exchange rate by order
+			if (isset($currencyOrder->currency_exchange_rate) && $exchange_rate_order == 0) {
+				
+				self::$currency[$key]->exchange_rate = $currencyOrder->currency_exchange_rate;
+			}
 		}
 		
-		// 1) change the currency ID by order
-		if (isset($currencyOrder->currency_id)) {
-			$id = $currencyOrder->currency_id;
+
+		if (!empty(self::$currency[$key])) {
+			$this->price_decimals 		= self::$currency[$key]->price_decimals;
+			$this->price_dec_symbol		= self::$currency[$key]->price_dec_symbol;
+			$this->price_thousands_sep	= self::$currency[$key]->price_thousands_sep;
+			$this->price_format			= self::$currency[$key]->price_format;
+			$this->price_currency_symbol= self::$currency[$key]->price_currency_symbol;
+			$this->price_prefix			= self::$currency[$key]->price_prefix;
+			$this->price_suffix			= self::$currency[$key]->price_suffix;
+			$this->exchange_rate		= self::$currency[$key]->exchange_rate;
 		}
-	
-		if ((int)$id > 0) {
-			$currency	= PhocacartCurrency::getCurrency((int)$id);
-		} else {
-			$currency	= PhocacartCurrency::getCurrency();
-		}
-		
-		// 1) change the currency exchange rate by order
-		if (isset($currencyOrder->currency_exchange_rate) && $exchange_rate_order == 0) {
-			$currency->exchange_rate = $currencyOrder->currency_exchange_rate;
-		}
-		
-		
-		if (!empty($currency)) {
-			$this->price_decimals 		= $currency->price_decimals;
-			$this->price_dec_symbol		= $currency->price_dec_symbol;
-			$this->price_thousands_sep	= $currency->price_thousands_sep;
-			$this->price_format			= $currency->price_format;
-			$this->price_currency_symbol= $currency->price_currency_symbol;
-			$this->price_prefix			= $currency->price_prefix;
-			$this->price_suffix			= $currency->price_suffix;
-			$this->exchange_rate		= $currency->exchange_rate;
-		}
-	
+
 	}
 	
 	/*
@@ -191,7 +199,8 @@ class PhocacartPrice
 
 
 		$priceO['taxtxt']			= $taxTitle;
-		$priceO['taxcalc'] 			= $tax_calculation;
+		$priceO['taxcalc'] 			= $tax_calculation;// Set in Options: Brutto, Netto, None
+		$priceO['taxcalctype'] 		= $taxCalculationType;// Set in Tax edit: Percentate, Fixed Amount
 		$priceO['zero']				= 0;
 		
 		// NO TAX

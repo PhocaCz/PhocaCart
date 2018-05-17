@@ -111,7 +111,7 @@ $s[] = ' ';
 $s[] = ' phSearchItemsMultiple("#'.$this->id.'", "'.$url.'");';
 //$s[] = ' ';
 //$s[] = ' jQuery(\'#save\').click(function() {';
-//$s[] = '  alert(jQuery(\'#jform_related\').val());';
+//$s[] = '  console log(jQuery(\'#jform_related\').val());';
 //$s[] = ' });';
 $s[] = '});';
 

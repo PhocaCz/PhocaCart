@@ -36,7 +36,7 @@ abstract class PhocacartHtmlBatch
 		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
 		
 		if ($category == 1) {
-			array_unshift($tree, JHTML::_('select.option', 0, JText::_('JLIB_HTML_ADD_TO_ROOT'), 'value', 'text'));
+			array_unshift($tree, JHtml::_('select.option', 0, JText::_('JLIB_HTML_ADD_TO_ROOT'), 'value', 'text'));
 		}
 
 		
@@ -49,9 +49,9 @@ abstract class PhocacartHtmlBatch
 				'<select name="batch[category_id]" class="inputbox" id="batch-category-id">',
 					'<option value="">'.JText::_('JSELECT').'</option>',
 					/*JHtml::_('select.options',	JHtml::_('category.options', $extension, array('published' => (int) $published))),*/
-					JHTML::_('select.options',  $tree ),
+					JHtml::_('select.options',  $tree ),
 				'</select>',
-				JHTML::_( 'select.radiolist', $options, 'batch[move_copy]', '', 'value', 'text', 'm'),
+				JHtml::_( 'select.radiolist', $options, 'batch[move_copy]', '', 'value', 'text', 'm'),
 			'</fieldset>'
 		);
 

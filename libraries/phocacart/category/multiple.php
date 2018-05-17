@@ -37,15 +37,57 @@ class PhocacartCategoryMultiple
 		return $tags;
 	}
 	
-	public static function getAllCategories() {
+	public static function getAllCategories($filter = 0, $type = array(0,1)) {
 	
-		$db = JFactory::getDBO();
+		$db 			= JFactory::getDBO();
+		$user			= PhocacartUser::getUser();
+		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
+		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		
-		$query = 'SELECT a.id, a.title, a.alias FROM #__phocacart_categories AS a WHERE a.published = 1 ORDER BY a.id';
-		$db->setQuery($query);
-		$tags = $db->loadObjectList();	
+		$wheres			= array();
+		if ($filter == 1) {
+			// POS FILTER
+			$paramsC					= PhocacartUtils::getComponentParameters();
+			$pos_categories	= $paramsC->get( 'pos_categories', array(-1) );
+			
+			if (in_array(-1, $pos_categories)) {
+				// All categories selected
+				$whereCat = '';
+			} else if (in_array(0, $pos_categories)) {
+				// No category selected
+				return false;
+			} else {
+				// Only some selected
+				$wheres[] = ' c.id IN ('.implode($pos_categories, ',').')';
+				
+			}
+		}
 	
-		return $tags;
+		$wheres[] = " c.access IN (".$userLevels.")";
+		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		$wheres[] = " c.published = 1";
+		
+		
+		if (!empty($type) && is_array($type)) {
+			$wheres[] = " c.type IN (".implode(',', $type).")";
+		}
+
+
+		$columns		= 'c.id, c.title, c.alias, c.parent_id';
+		$groupsFull		= $columns;
+		$groupsFast		= 'c.id';
+		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+		$query = 'SELECT c.id, c.title, c.alias'
+		. ' FROM #__phocacart_categories AS c'
+		. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+		. ' WHERE ' . implode( ' AND ', $wheres )
+		. ' GROUP BY '.$groups;
+		
+		$db->setQuery($query);
+		$categories = $db->loadObjectList();	
+
+		return $categories;
 	}
 	
 	public static function storeCategories($storeArray, $productId, $categoryOrdering = array()) {

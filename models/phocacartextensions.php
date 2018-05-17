@@ -56,6 +56,10 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 			if ($url) {
 				$content = @file_get_contents($url);
 				
+				if (!$content || $content == '') {
+					$content = PhocacartUtils::curl_get_contents($url);
+				}
+				
 				if ($content) {
 					$contentJSON = json_decode($content, true);
 					if ($contentJSON && json_last_error() == JSON_ERROR_NONE && !empty($contentJSON['extensions'])) {
@@ -74,6 +78,47 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 		}
 		
 		return $items;
+	}
+	
+	public function getNews() {
+		
+		$app = JFactory::getApplication('administrator');
+		
+		$news	= null;
+		$type	= 'news';
+		$url	= PhocacartUtilsSettings::getExtenstionsJSONLinks($type);
+		
+		$news  = $app->getUserState('com_phocacart.getNews.'.$type, null);
+		
+		if ($news === null) {
+			$news = array();
+			
+			if ($url) {
+				$content = @file_get_contents($url);
+				
+				if (!$content || $content == '') {
+					$content = PhocacartUtils::curl_get_contents($url);
+				}
+				
+				if ($content) {
+					$contentJSON = json_decode($content, true);
+				
+					if ($contentJSON && json_last_error() == JSON_ERROR_NONE && !empty($contentJSON['content'])) {
+						$news = $contentJSON['content'];
+					}
+				} else {
+					//$msg = JText::_('COM_PHOCACART_ERROR_NEWS_CHANNEL_NOT_FOUND'). ' ('.ucfirst($type).')';
+					//$app->enqueueMessage($msg, 'error');
+				}
+			}
+			
+			$app->setUserState('com_phocacart.getNews.'.$type, $news);
+		} else if (empty($news)) {
+			//$msg = JText::_('COM_PHOCACART_ERROR_NO_NEWS_ENTRY_FOUND'). ' ('.ucfirst($type).')';
+			//$app->enqueueMessage($msg, 'error');
+		}
+		
+		return $news;
 	}
 }
 ?>

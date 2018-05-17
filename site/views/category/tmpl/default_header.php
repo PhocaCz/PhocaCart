@@ -39,7 +39,7 @@ if (isset($this->category[0]->title) && $this->category[0]->title != '') {
 echo PhocacartRenderFront::renderHeader(array($title));
 
 if ( isset($this->category[0]->description) && $this->category[0]->description != '') {
-	echo '<div class="ph-desc">'. JHTML::_('content.prepare', $this->category[0]->description). '</div>';
+	echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->category[0]->description). '</div>';
 }
 
 if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 0) {
@@ -47,6 +47,13 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 	echo '<ul>';
 	$j = 0;
 	foreach($this->subcategories as $v) {
+		
+	
+	/*	$image = PhocacartImage::getThumbnailName($this->t['pathcat'], $v->image, 'small');
+		if (isset($image->rel)) {
+			echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'"><img src="'. JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive ph-image" /></a>';
+		}*/
+		
 		if ($j == (int)$this->t['cv_display_subcategories']) {
 			break;
 		}

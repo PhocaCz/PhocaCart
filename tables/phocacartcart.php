@@ -11,10 +11,19 @@ jimport('joomla.filter.input');
 
 class TablePhocacartCart extends JTable
 {
-	function __construct(& $db) {
+	// NOT USED
+/*	function __construct(& $db) {
 		parent::__construct('#__phocacart_cart', 'user_id', $db);
 	}
 	
+	function __construct(& $db) {
+		parent::__construct('#__phocacart_cart_multiple', 'id', $db);
+	}
+	*/
+	
+	function __construct(& $db) {
+		parent::__construct('#__phocacart_cart_multiple', array('user_id', 'vendor_id', 'ticket_id', 'unit_id', 'section_id'), $db);
+	}
 
 }
 ?>

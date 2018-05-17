@@ -54,7 +54,8 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 			$message = PhocacartUtils::setMessage($message, JText::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
 			$app->enqueueMessage($message, 'error');
 		} else {
-			$message = JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' );
+			//$message = JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' );
+			$message = PhocacartUtils::setMessage($message, JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' ));
 			$app->enqueueMessage($message, 'message');
 		}
 

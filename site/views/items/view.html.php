@@ -54,6 +54,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
+		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
 		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
@@ -62,6 +63,9 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
 		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
+		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
+		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
+		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		
 		// Catalogue function
 		if ($this->t['hide_addtocart'] == 1) {
@@ -105,6 +109,8 @@ class PhocaCartViewItems extends JViewLegacy
 		PhocacartRenderJs::renderAjaxAddToWishList();
 		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phItemsBox');
 		
+		$media->loadTouchSpin('quantity');// only css, js will be loaded in ajax success
+		
 		if ($this->t['hide_attributes_category'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 		}
@@ -114,7 +120,9 @@ class PhocaCartViewItems extends JViewLegacy
 			// items == category -> this is why items has class: ph-category-price-box (to have the same styling)
 			PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'Items', 'ph-category-price-box');// We need to load it here
 		}
-	
+		if ($this->t['dynamic_change_stock'] == 1) {
+			PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'Items', 'ph-item-stock-box');
+		}
 		// CHANGE PRICE FOR ITEM QUICK VIEW
 		if ($this->t['display_quickview'] == 1) {
 			PhocacartRenderJs::renderAjaxQuickViewBox();
@@ -122,6 +130,9 @@ class PhocaCartViewItems extends JViewLegacy
 			// CHANGE PRICE FOR ITEM QUICK VIEW
 			if ($this->t['dynamic_change_price'] == 1) {
 				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ItemQuick', 'ph-item-price-box');// We need to load it here
+			}
+			if ($this->t['dynamic_change_stock'] == 1) {
+				PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'ItemQuick', 'ph-item-stock-box');
 			}
 			$media->loadPhocaAttribute(1);// We need to load it here
 			$media->loadPhocaSwapImage($this->t['dynamic_change_image']);// We need to load it here in ITEM (QUICK VIEW) VIEW

@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 
+echo '<div class="phCheckoutCartBox" id="phCheckoutCartBox">';
 echo $this->t['cartoutput'];
-
+echo '</div>';
 ?>

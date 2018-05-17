@@ -22,6 +22,9 @@ $layoutV	= new JLayoutFile('button_product_view', null, array('component' => 'co
 $layoutPFS	= new JLayoutFile('form_part_start_add_to_cart_list', null, array('component' => 'com_phocacart'));
 $layoutPFE	= new JLayoutFile('form_part_end', null, array('component' => 'com_phocacart'));
 $layoutBSH	= new JLayoutFile('button_submit_hidden', null, array('component' => 'com_phocacart'));																								  
+$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
+$layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
+$layoutR	= new JLayoutFile('product_rating', null, array('component' => 'com_phocacart'));
 
 // HEADER - NOT AJAX
 if (!$this->t['ajax']) { 
@@ -40,8 +43,6 @@ if (!empty($this->items)) {
 	$lt		= $this->t['layouttype'];
 	$i		= 1; // Not equal Heights
 
-	
-	
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
 	echo '<div class="row '.$this->t['class-row-flex'].' '.$lt.'">';
 	
@@ -124,8 +125,14 @@ if (!empty($this->items)) {
 			$dP['typeview']		= 'Items';
 			
 			// Display discount price
-			$dP['priceitemsdiscount']	= $dP['priceitems'];
-			$dP['discount'] 			= PhocacartDiscountProduct::getProductDiscountPrice($v->id, $dP['priceitemsdiscount']);
+			// Move standard prices to new variable (product price -> product discount)
+			$dP['priceitemsdiscount']		= $dP['priceitems'];
+			$dP['discount'] 				= PhocacartDiscountProduct::getProductDiscountPrice($v->id, $dP['priceitemsdiscount']);
+			
+			// Display cart discount (global discount) in product views - under specific conditions only
+			// Move product discount prices to new variable (product price -> product discount -> product discount cart)
+			$dP['priceitemsdiscountcart']	= $dP['priceitemsdiscount'];
+			$dP['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($v->id, $v->catid, $dP['priceitemsdiscountcart']);
 		}
 		
 		// :L: LINK TO PRODUCT VIEW
@@ -138,7 +145,48 @@ if (!empty($this->items)) {
 		// :L: ADD TO CART
 		$dA = $dA2 = $dA3 = $dAb = $dF = array();
 		$icon['addtocart'] = '';
+		
+		// STOCK ===================================================
+		// Set stock: product, variations, or advanced stock status
+		$dSO 				= '';
+		$dA['class_btn']	= '';
+		$dA['class_icon']	= '';
+		if ($this->t['display_stock_status'] == 2 || $this->t['display_stock_status'] == 3) {
+		
+			$stockStatus 				= array();
+			$stock 						= PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $attributesOptions, $v);
+			
+			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
+				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
+				$dA['class_icon']		= 'ph-display-none';// hide icon
+			}
+			
+			if($stockStatus['stock_status'] || $stockStatus['stock_count']) {
+				$dS							= array();
+				$dS['class']				= 'ph-item-stock-box';
+				$dS['product_id']			= (int)$v->id;
+				$dS['typeview']				= 'Category';
+				$dS['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($stockStatus);
+				$dSO = $layoutS->render($dS);
+			}
+			
+			if($stockStatus['min_quantity']) {
+				$dPOQ						= array();
+				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
+				$dPOQ['status']				= $stockStatus['min_quantity'];
+				$dSO .= $layoutPOQ->render($dPOQ);
+			}
+			
+			if($stockStatus['min_multiple_quantity']) {
+				$dPOQ						= array();
+				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
+				$dPOQ['status']				= $stockStatus['min_multiple_quantity'];
+				$dSO .= $layoutPOQ->render($dPOQ);
+			}
+		}
+		// END STOCK ================================================
   
+		
 		// ------------------------------------
 		// BUTTONS + ICONS
 		// ------------------------------------
@@ -162,11 +210,13 @@ if (!empty($this->items)) {
 			$dA['link']					= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
 			$dA['addtocart']			= $this->t['category_addtocart'];
 			$dA['method']				= $this->t['add_cart_method'];
+			$dA['typeview']				= 'Items';
 			
 			// ATTRIBUTES, OPTIONS
 			$dAb['attr_options']			= $attributesOptions;
 			$dAb['hide_attributes']			= $this->t['hide_attributes_category'];
 			$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+			$dAb['zero_attribute_price']	= $this->t['zero_attribute_price'];
 			$dAb['pathitem']				= $this->t['pathitem'];
 																		
 			$dAb['product_id']				= (int)$v->id;
@@ -220,6 +270,8 @@ if (!empty($this->items)) {
 			// Do not skip the form here
 		}
 		// ---------------------------- END BUTTONS
+		
+		
 		// ======
 		// RENDER
 		// ======
@@ -255,7 +307,7 @@ if (!empty($this->items)) {
 
 			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
 				echo '<div class="ph-item-desc">';
-				echo JHTML::_('content.prepare', $v->description);
+				echo JHtml::_('content.prepare', $v->description);
 				echo '</div>';// end desc
 			}
 			
@@ -277,12 +329,19 @@ if (!empty($this->items)) {
 			}
 			
 			// REVIEW - STAR RATING
-			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
-				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
+			if ((int)$this->t['display_star_rating'] > 0) {
+				$d							= array();
+				$d['rating']				= isset($v->rating) && (int)$v->rating > 0 ? (int)$v->rating : 0;
+				$d['size']					= 16;
+				$d['display_star_rating']	= (int)$this->t['display_star_rating'];
+				echo $layoutR->render($d);
 			}
 			
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
+			
+			// :L: Stock status
+			if (!empty($dSO)) { echo $dSO;}
 			
 			// Start Form
 			if (!empty($dF)) { echo $layoutPFS->render($dF);}
@@ -359,17 +418,25 @@ if (!empty($this->items)) {
 			
 			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
 				echo '<div class="ph-item-desc">';
-				echo JHTML::_('content.prepare', $v->description);
+				echo JHtml::_('content.prepare', $v->description);
 				echo '</div>';// end desc
 			}
 			
 			// REVIEW - STAR RATING
-			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
-				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
+			if ((int)$this->t['display_star_rating'] > 0) {
+				$d							= array();
+				$d['rating']				= isset($v->rating) && (int)$v->rating > 0 ? (int)$v->rating : 0;
+				$d['size']					= 16;
+				$d['display_star_rating']	= (int)$this->t['display_star_rating'];
+				echo $layoutR->render($d);
 			}
 			
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
+			
+			// :L: Stock status
+			if (!empty($dSO)) { echo $dSO;}
+				
 			// Start Form
 			if (!empty($dF)) { echo $layoutPFS->render($dF);}
 			
@@ -403,15 +470,13 @@ if (!empty($this->items)) {
 			}
 			
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
-			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 	
 			echo '</div>';// end row-item 3/3
 			
 			echo '</div>';// end row list
 			
 			
-		} 
-		else  {
+		} else  {
 			// -----------
 			// RENDER GRID
 			// -----------
@@ -449,13 +514,17 @@ if (!empty($this->items)) {
 			
 			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
 				echo '<div class="ph-item-desc">';
-				echo JHTML::_('content.prepare', $v->description);
+				echo JHtml::_('content.prepare', $v->description);
 				echo '</div>';// end desc
 			}
 			
 			// REVIEW - STAR RATING
-			if ((int)$this->t['display_star_rating'] > 0 && isset($v->rating) && (int)$v->rating > 0) {
-				echo '<div class="ph-stars-box"><span class="ph-stars"><span style="width:'.((int)$v->rating * 16) .'px;"></span></span></div>';
+			if ((int)$this->t['display_star_rating'] > 0) {
+				$d							= array();
+				$d['rating']				= isset($v->rating) && (int)$v->rating > 0 ? (int)$v->rating : 0;
+				$d['size']					= 16;
+				$d['display_star_rating']	= (int)$this->t['display_star_rating'];
+				echo $layoutR->render($d);
 			}
 			
 			echo '<div class="ph-item-action-box '.$lt.'">';
@@ -467,7 +536,10 @@ if (!empty($this->items)) {
 			// VIEW PRODUCT BUTTON
 			echo '<div class="ph-category-add-to-cart-box '.$lt.'">';
 			
-		// Start Form
+			// :L: Stock status
+			if (!empty($dSO)) { echo $dSO;}
+			
+			// Start Form
 			if (!empty($dF)) { echo $layoutPFS->render($dF);}	
 			
 			// :L: ATTRIBUTES AND OPTIONS
@@ -538,6 +610,6 @@ if (!$this->t['ajax']) {
 
 	echo '<div id="phContainer"></div>';
 	echo '<div>&nbsp;</div>';
-	echo PhocacartUtils::getInfo();
+	echo PhocacartUtilsInfo::getInfo();
 }
 ?>

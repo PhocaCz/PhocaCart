@@ -18,7 +18,7 @@ class PhocacartFormItems
 	
 	public function getFormItems($billing = 1, $shipping = 1, $account = 0) {
 		$db 					= JFactory::getDBO();
-		$user 					= JFactory::getUser();
+		$user 					= PhocacartUser::getUser();
 		$userLevels				= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		

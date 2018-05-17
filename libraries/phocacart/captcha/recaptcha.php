@@ -30,32 +30,57 @@ class PhocacartCaptchaRecaptcha
 		//$response	= $ POST['g-recaptcha-response'];
 		$response 	= $app->input->post->get('g-recaptcha-response', '', 'string');
 		$remoteIp	= $_SERVER['REMOTE_ADDR'];
+		$urlVerify	= 'https://www.google.com/recaptcha/api/siteverify';
+		
+		$recaptchaMethod = $pC->get( 'recaptcha_request_method', 2 );//1 file_get_contents, 2 curl
 		
 		try {
 
-			$url = 'https://www.google.com/recaptcha/api/siteverify';
-			$data = ['secret'   => $secretKey,
-					 'response' => $response,
-					 'remoteip' => $remoteIp];
+			
+			if ($recaptchaMethod == 1) {
+				// FILE GET CONTENTS
+				$data = ['secret'   => $secretKey,
+						 'response' => $response,
+						 'remoteip' => $remoteIp];
 
-			$options = [
-				'http' => [
-					'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-					'method'  => 'POST',
-					'content' => http_build_query($data) 
-				]
-			];
+				$options = [
+					'http' => [
+						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+						'method'  => 'POST',
+						'content' => http_build_query($data) 
+					]
+				];
 
-			$context  = stream_context_create($options);
-			$result = file_get_contents($url, false, $context);
+				$context  = stream_context_create($options);
+				$result = file_get_contents($urlVerify, false, $context);
+			} else {
+			// CURL
+				$ch = curl_init();
+
+				curl_setopt_array($ch, [
+					CURLOPT_URL => $urlVerify,
+					CURLOPT_POST => true,
+				//	CURLOPT_SSL_VERIFYPEER => false,
+				//	CURLOPT_SSL_VERIFYHOST => false,
+					CURLOPT_POSTFIELDS => [
+						'secret' => $secretKey,
+						'response' => $response,
+						'remoteip' => $remoteIp],
+					CURLOPT_RETURNTRANSFER => true
+				]);
+				
+				$result = curl_exec($ch);
+				curl_close($ch);
+			}
 			
 			//$resultString = print r($result, true);
 			//PhocacartLog::add(1, 'Ask a Question - Captcha Result', 0, $resultString);
+			
 			return json_decode($result)->success;
+				
 		}
 		catch (Exception $e) {
 			return null;
 		}
 	}
 }
-?>

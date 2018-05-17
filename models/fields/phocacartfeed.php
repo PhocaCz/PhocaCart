@@ -34,8 +34,8 @@ class JFormFieldPhocacartFeed extends JFormField
 		$attr .= $this->required ? ' required aria-required="true"' : '';
 		$attr .= ' class="inputbox"';
 
-		array_unshift($data, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_XML_FEED').' -', 'value', 'text'));
-		return JHTML::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_XML_FEED').' -', 'value', 'text'));
+		return JHtml::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

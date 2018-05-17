@@ -30,7 +30,13 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 			$query	= $db->getQuery(true);
 			$path	= PhocacartPath::getPath('productimage');
 			
-			$query->select('a.id as id, a.title as title, a.image as image');
+			
+			$columns	= 'a.id as id, a.title as title, a.image as image';
+			$groupsFull	= 'a.id, a.title, a.image';
+			$groupsFast	= 'a.id';
+			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
+			$query->select($columns);
 			$query->from('`#__phocacart_products` AS a');
 			//$query->select('c.title AS category_title, c.id AS category_id');
 			//$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.catid');
@@ -47,7 +53,7 @@ class PhocaCartCpViewPhocaCartItemA extends JViewLegacy
 				$query->where('( a.id <> '.(int)$id.')');
 			}
 			$query->where('( a.title LIKE '.$search.')');
-			$query->group($db->escape('a.id, a.title, a.image'));
+			$query->group($db->escape($groups));
 			$query->order($db->escape('a.ordering'));
 			
 			$db->setQuery($query);

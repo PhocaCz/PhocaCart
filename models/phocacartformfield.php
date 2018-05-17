@@ -60,7 +60,10 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
+		
+		$table->title 		= str_replace('_', 'ph-u-ph', $table->title);// only alphabetical characters possible
 		$table->title		= JApplicationHelper::stringURLSafe($table->title);
+		$table->title		= str_replace('ph-u-ph', '_', $table->title);// only alphabetical characters possible
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {

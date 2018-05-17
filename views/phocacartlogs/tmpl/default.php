@@ -37,6 +37,16 @@ echo $r->startFilter();
 echo $r->endFilter();
 
 echo $r->startMainContainer();
+
+if($this->t['enable_logging'] == 0) {
+	echo '<div class="alert alert-info">';
+	echo '<button type="button" class="close" data-dismiss="alert">×</button>';
+	//echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
+	echo '<div class="alert-message">'.JText::_('COM_PHOCACART_LOGGING_IS_DISABLED_AT_THE_MOMENT').'</div>';
+	echo '</div>';	
+}
+
+
 echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
 							$this->escape($this->state->get('filter.search')));
@@ -57,13 +67,13 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-date">'.JHTML::_('grid.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-user">'.JHTML::_('grid.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-ip">'.JHTML::_('grid.sort',  		$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-incoming-page">'.JHTML::_('grid.sort',  $this->t['l'].'_INCOMING_PAGE', 'a.incoming_page', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-description">'.JHTML::_('grid.sort',  $this->t['l'].'_MESSAGE', 'a.description', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-user">'.JHtml::_('grid.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-ip">'.JHtml::_('grid.sort',  		$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-incoming-page">'.JHtml::_('grid.sort',  $this->t['l'].'_INCOMING_PAGE', 'a.incoming_page', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-description">'.JHtml::_('grid.sort',  $this->t['l'].'_MESSAGE', 'a.description', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 			
@@ -94,7 +104,7 @@ $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
-echo $r->tdOrder($canChange, $saveOrder, $orderkey);
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 //echo $r->tdOrder(0, $saveOrder, $orderkey);// ORDERING DISABLED
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
@@ -111,7 +121,7 @@ if ($canCreate || $canEdit) {
 $checkO = $this->escape($item->title);
 echo $r->td('<b>'.$checkO.'</b>', "small");
 
-//echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small");
+//echo $r->td(JHtml::date($v->date, JText::_('DATE_FORMAT_LC5')), "small");
 //echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($item->user_username, "small");

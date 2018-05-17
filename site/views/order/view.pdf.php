@@ -22,27 +22,30 @@ class PhocaCartViewOrder extends JViewLegacy
 		$type				= $app->input->get('type', 0, 'int');
 		$format				= $app->input->get('format', '', 'string');
 		$token				= $app->input->get('o', '', 'string');
-
-		$invoice_prefix		= $this->p->get( 'invoice_prefix', '');		
+		$pos				= $app->input->get('pos', '', '0');
+		
+		$orderBillingData	= PhocacartOrder::getOrderBillingData($id);
+		
+		//$invoice_prefix		= $this->p->get( 'invoice_prefix', '');		
 		$orderGuestAccess	= $this->p->get( 'order_guest_access', 0 );
 		
 		if ($orderGuestAccess == 0) {
 			$token = '';
 		}
 		$order	= new PhocacartOrderRender();
-		$o = $order->render($id, $type, $format, $token);
+		$o = $order->render($id, $type, $format, $token, $pos);
 		
 		//$media = new PhocacartRenderMedia();
 		
 		switch($type) {
 			case 2:
-				$invoiceNumber	= PhocacartOrder::getInvoiceNumber($id, $invoice_prefix);
+				$invoiceNumber	= PhocacartOrder::getInvoiceNumber($id, $orderBillingData['data'], $orderBillingData['invoice_number']);
 				$title			= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
 			break;
 			case 1:
 			case 3:
 			default:
-				$orderNumber	= PhocacartOrder::getOrderNumber($id);
+				$orderNumber	= PhocacartOrder::getOrderNumber($id, $orderBillingData['data'], $orderBillingData['order_number']);
 				$title			= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 			break;
 		}

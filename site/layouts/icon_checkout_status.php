@@ -18,13 +18,13 @@ $d['class']	= 'glyphicon glyphicon-'.$d['icon']. strip_tags($d['suffix']).' ph-c
 
 if ($d['type'] == 1) { 
 
-?><div class="pull-right">
+?><div class="ph-pull-right">
 	<span class="ph-checkout-icon-spec-<?php echo $d['status'];?>"><?php echo $d['number'];?></span>
 </div><?php
 
 } else { 
 
-?><div class="pull-right">
+?><div class="ph-pull-right">
 	<span class="<?php echo $d['class']; ?>"></span>
 </div><?php
 

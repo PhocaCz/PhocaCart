@@ -27,7 +27,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$document							= JFactory::getDocument();		
 		$app								= JFactory::getApplication();
 		$uri 								= JFactory::getURI();
-		$this->u							= JFactory::getUser();
+		$this->u							= PhocacartUser::getUser();
 		$this->p							= $app->getParams();
 		$this->a							= new PhocacartAccess();
 		$guest								= PhocacartUserGuestuser::getGuestUser();
@@ -52,16 +52,34 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 		$this->t['checkout_icon_status']	= $this->p->get( 'checkout_icon_status', 1 );
 		
+		// Terms and Conditions
+		$this->t['display_checkout_toc_checkbox']		= $this->p->get( 'display_checkout_toc_checkbox', 2 );
+		if ($this->t['display_checkout_toc_checkbox'] > 0) {
+			$this->t['terms_conditions_custom_label_text']	= $this->p->get( 'terms_conditions_custom_label_text', 0 );
+			$linkTerms 		= JRoute::_( PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));
+			$defaultText 	= JText::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE'). ' <a href="'.$linkTerms.'" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS') . '</a>';
+			$this->t['terms_conditions_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['terms_conditions_custom_label_text'], 'html', $defaultText);
+		}
+		
+		// Checkout Privacy checkbox
+		$this->t['display_checkout_privacy_checkbox']	= $this->p->get( 'display_checkout_privacy_checkbox', 0 );
+		if ($this->t['display_checkout_privacy_checkbox'] > 0) {
+			$this->t['checkout_privacy_checkbox_label_text']	= $this->p->get( 'checkout_privacy_checkbox_label_text', 0 );
+			$this->t['checkout_privacy_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_privacy_checkbox_label_text'], 'html', '');
+		}
 		
 		$this->t['enable_captcha_checkout']	= PhocacartCaptcha::enableCaptchaCheckout();
 		
 		$scrollTo							= '';
+		
+		//PhocacartRenderJs::renderAjaxUpdateCart();
 		
 		
 		// Cart
 		$this->cart	= new PhocacartCartRendercheckout();
 		$this->cart->setFullItems();
 
+		
 		if ((int)$this->u->id > 0) {
 			$this->a->login = 1;
 		} else if ($guest) {
@@ -166,6 +184,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->shippingedit		= 1;
 					$scrollTo 					= 'phcheckoutshippingedit';
 					$shipping					= new PhocacartShipping();
+					//$shipping->setType();
 					$total						= $this->cart->getTotal();
 					
 					$country = 0;
@@ -253,19 +272,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		$this->cart->roundTotalAmount();
 		
-
 		
-		// VIEW - CONFIRM - all items added 
-		if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
-			$this->a->confirm = 1;
-			
-			// Custom "Confirm Order" Text
-			$total							= $this->cart->getTotal();
-			
-			$this->t['confirm_order_text']	= PhocacartRenderFront::getConfirmOrderText($total[0]['brutto']);
-		}
-		
-		// CART IS EMPTY
+		// CART IS EMPTY - MUST BE CHECKED BEFOR CONFIRM
 		// Don't allow to add or edit payment or shipping method, don't allow to confirm the order
 		if (empty($this->cart->getItems())) {
 			$this->a->shippingnotused 	= 1;
@@ -286,12 +294,27 @@ class PhocaCartViewCheckout extends JViewLegacy
 			}
 		}
 
+
+		// VIEW - CONFIRM - all items added 
+		if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
+			$this->a->confirm = 1;
+			
+			// Custom "Confirm Order" Text
+			$total							= $this->cart->getTotal();
+			
+			$this->t['confirm_order_text']	= PhocacartRenderFront::getConfirmOrderText($total[0]['brutto']);
+		}
+		
+		
+	
+
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
 		$media->loadChosen();
 		$media->loadWindowPopup();
 		
-
+		$media->loadTouchSpin('quantity');
+		
 		//Scroll to 
 		if ($this->t['checkout_scroll'] == 0) {
 			$scrollTo = '';

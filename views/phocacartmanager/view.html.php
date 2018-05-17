@@ -142,7 +142,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		
 		
 		parent::display($tpl);
-		echo JHTML::_('behavior.keepalive');
+		echo JHtml::_('behavior.keepalive');
 	}
 
 	function setFolder($index = 0) {

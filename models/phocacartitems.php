@@ -31,7 +31,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 				'language', 'a.language',
 				'hits', 'a.hits',
 				'published','a.published',
-				'image', 'a.image'
+				'image', 'a.image',
+				'sku', 'a.sku'
 			);
 		}
 
@@ -82,17 +83,20 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 	
 	protected function getListQuery()
 	{
+		
+		
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.language, a.hits'
-				
-			)
-		);
+		
+		$columns	= 'DISTINCT a.id, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.language, a.hits, a.sku';
+		// GROUP BY not used
+		//$groupsFull	= $columns . ', ' .'a.tax_id, a.manufacturer_id, a.description, l.title, uc.name, ag.title';
+		//$groupsFast	= 'a.id';
+		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+		
+		$query->select($this->getState('list.select', $columns));
+		
 		$query->from('`#__phocacart_products` AS a');
 
 		// Join over the language
@@ -110,10 +114,33 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
 		// Join over the categories.
+		// They are more ways to get the info about categories
+		// 1) GROUP BY + GROUP_CONCAT - slow, when only_full_group_by rule is used - much more slower than slow
+		// 2) SUBQUERIES - faster even they look complicated
+		// 3) SPECIFIC QUERY used in view: PhocacartCategoryMultiple::getCategoriesByProducts($idItems) (no loop used) DISTINCT needs to be used
+		
+		/*
+		 * GROUP BY
 		$query->select('GROUP_CONCAT(c.title) AS category_title, GROUP_CONCAT(c.id) AS category_id');
 		$query->join('LEFT', '#__phocacart_product_categories AS pc ON a.id = pc.product_id');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
 	
+		* SUBQUERIES
+		$query->select('(SELECT GROUP_CONCAT(c.id) FROM jos_phocacart_product_categories AS pc
+		 				LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id
+						WHERE a.id = pc.product_id) AS category_id');
+		
+		$query->select('(SELECT GROUP_CONCAT(c.title) FROM jos_phocacart_product_categories AS pc
+		 				LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id
+						WHERE a.id = pc.product_id) AS category_title');
+		
+		$query->select('(SELECT GROUP_CONCAT(c.id, ":", c.title) FROM jos_phocacart_product_categories AS pc
+		 				LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id
+						WHERE a.id = pc.product_id) AS category_title');
+	*/
+		
+		
+		
 		// Not used
 		//$query->select("group_concat(c.id, '|^|', c.alias, '|^|', c.title SEPARATOR '|~|') as categories");
 		
@@ -134,12 +161,30 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 			$query->where('(a.published IN (0, 1))');
 		}
 
-		// Filter by category.
+		
+		// When category is selected, we need to get info about selected category
+		// When it is not selected, don't ask for it to make the query faster
+		// pc.ordering is set as default ordering and it can be set (even igonered) even whey category not selected
+		// is complicated but loads much faster
+		$orderCol	= $this->state->get('list.ordering', 'title');
+		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$categoryId = $this->getState('filter.category_id');
+		
+		// Filter by category.
+		if ($orderCol == 'pc.ordering' || is_numeric($categoryId)) {
+			// Ask only when really needed
+			$query->select('pc.ordering');
+			$query->join('LEFT', '#__phocacart_product_categories AS pc ON a.id = pc.product_id');
+			$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
+		}
+		
+		
 		if (is_numeric($categoryId)) {
 			//$query->where('a.catid = ' . (int) $categoryId);
 			$query->where('pc.category_id = ' . (int) $categoryId);
 		}
+		
+		
 		
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
@@ -156,19 +201,20 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 			else
 			{
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
+				//$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
+				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.' OR a.sku LIKE '.$search.')');
 			}
 		}
 		
-		$query->group('a.id, a.tax_id, a.manufacturer_id, a.description, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.language, a.hits, l.title, uc.name, ag.title');
-		//$query->group('a.id');
+	///	$query->group($groups);
 
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering', 'title');
-		$orderDirn	= $this->state->get('list.direction', 'asc');
-		if ($orderCol == 'pc.ordering' || $orderCol == 'category_title') {
-			$orderCol = 'category_title '.$orderDirn.', pc.ordering';
-		}
+		//$orderCol	= $this->state->get('list.ordering', 'title');
+		//$orderDirn	= $this->state->get('list.direction', 'asc');
+		
+		//if ($orderCol == 'pc.ordering' || $orderCol == 'category_title') {
+			//$orderCol = 'category_title '.$orderDirn.', pc.ordering';
+		//}
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));

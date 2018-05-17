@@ -61,7 +61,7 @@ class PhocaCartModelOrders extends JModelLegacy
 	
 		$app				= JFactory::getApplication();
 		$params 			= $app->getParams();
-		$u					= JFactory::getUser();
+		$u					= PhocacartUser::getUser();
 		$token				= $app->input->get('o', '', 'string');
 		$orderGuestAccess	= $params->get( 'order_guest_access', 0 );
 		if ($orderGuestAccess == 0) {

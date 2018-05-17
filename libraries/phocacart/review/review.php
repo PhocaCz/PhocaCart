@@ -15,10 +15,18 @@ class PhocacartReview
 	public static function getReviewsByProduct($productId) {
 		$db = JFactory::getDBO();
 		if ((int)$productId > 0) {
-			$query = 'SELECT a.id, a.product_id, a.user_id, a.name, a.rating, a.review FROM #__phocacart_reviews AS a'
+			
+			$columns		= 'a.id, a.product_id, a.user_id, a.name, a.rating, a.review';
+			$groupsFull		= $columns;
+			$groupsFast		= 'a.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
+			
+			$query = 'SELECT '.$columns
+					   .' FROM #__phocacart_reviews AS a'
 					   .' WHERE a.product_id = '.(int) $productId
 					   .' AND a.published = 1'
-					   .' GROUP BY a.user_id, a.id, a.product_id, a.user_id, a.name, a.rating, a.review';
+					   .' GROUP BY '.$groups;
 			$db->setQuery($query);
 
 			$reviews = $db->loadObjectList();

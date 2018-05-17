@@ -20,7 +20,7 @@ class PhocacartRouter extends JComponentRouterBase
 {
 	public function build(&$query) {
 		
-		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist');
+		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
 		$viewsAll	= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
@@ -385,7 +385,7 @@ class PhocacartRouter extends JComponentRouterBase
 	public function parse(&$segments) {
 		
 
-		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist');
+		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
 		$viewsAll		= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
@@ -472,6 +472,7 @@ class PhocacartRouter extends JComponentRouterBase
 			// First we check if it is a category
 			///$category = JCategories::getInstance('Content')->get($id);
 			$category = PhocacartCategory::getCategoryById($id);
+			
 			
 			if ($category && $category->alias == $alias)
 			{

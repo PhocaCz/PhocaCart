@@ -76,7 +76,7 @@ class PhocacartDownload
 			// NO LIMIT
 			return false;
 		} else {
-			return JHTML::date($expireDate, JText::_('DATE_FORMAT_LC2'));
+			return JHtml::date($expireDate, JText::_('DATE_FORMAT_LC2'));
 		}
 		
 	
@@ -109,7 +109,7 @@ class PhocacartDownload
 	public static function download($id) {
 	
 		$file 	= self::getDownloadFile((int)$id);
-		$user	= JFactory::getUser();
+		$user	= PhocacartUser::getUser();
 		$app	= JFactory::getApplication();
 		
 		

@@ -49,13 +49,13 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="ph-payment-title">'.$this->t['paymentmethod']['title'].'</div>';
 		
 		if ($this->t['display_payment_desc'] && $this->t['paymentmethod']['description'] != '') {
-			echo '<div class="ph-checkout-payment-desc">'.JHTML::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.JHtml::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
 		}
 		
 		echo '</div>';
 		
 		echo '<div class="col-sm-4 col-md-4 ">';
-		echo '<div class="pull-right ph-checkout-payment-edit">';
+		echo '<div class="ph-pull-right ph-checkout-payment-edit">';
 		echo '<button class="btn btn-success btn-sm ph-btn"><span class="glyphicon glyphicon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_PAYMENT').'</button>';
 		echo '</div>';
 		echo '</div>';
@@ -123,7 +123,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';
 		
 		if ($this->t['display_payment_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-payment-desc">'.JHTML::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.JHtml::_('content.prepare', $v->description).'</div>';
 		}
 		
 		echo '</div>';
@@ -183,7 +183,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '</div>';// end payment row	
 	echo '<div class="ph-cb"></div>';
 	
-	echo '<div class="pull-right ph-checkout-payment-save">';
+	echo '<div class="ph-pull-right ph-checkout-payment-save">';
 	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	echo '</div>';
 		

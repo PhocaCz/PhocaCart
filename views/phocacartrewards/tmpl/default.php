@@ -63,13 +63,13 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-title-small">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_APPROVED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-title-small">'.JHTML::_('grid.sort',  $this->t['l'].'_USER', 'u.name', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-points">'.JHTML::_('grid.sort',  $this->t['l'].'_REWARD_POINTS', 'a.points', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title-small">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_APPROVED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title-small">'.JHtml::_('grid.sort',  $this->t['l'].'_USER', 'u.name', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-points">'.JHtml::_('grid.sort',  $this->t['l'].'_REWARD_POINTS', 'a.points', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-points">'.JText::_($this->t['l'].'_TOTAL_POINTS').'</th>'."\n";
-echo '<th class="ph-date">'.JHTML::_('grid.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 			
@@ -103,7 +103,7 @@ $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 
-echo $r->tdOrder($canChange, $saveOrder, $orderkey);
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 
 				

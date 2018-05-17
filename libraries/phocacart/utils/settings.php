@@ -188,6 +188,7 @@ class PhocacartUtilsSettings
 		$a['plugins'] 		= 'plugins/plugins.json';
 		$a['templates'] 	= 'templates/templates.json';
 		$a['languages'] 	= 'languages/languages.json';
+		$a['news'] 			= 'news/news.json';
 		
 		if (isset($a[$type])) {
 			return $dir . $a[$type];
@@ -210,7 +211,10 @@ class PhocacartUtilsSettings
 				return JText::_('COM_PHOCACART_FREE');// Free Download
 			break;
 			case 3:
-				return JText::_('COM_PHOCACART_FREE_REGISTER');// Free Downlload but register
+				return JText::_('COM_PHOCACART_FREE_REGISTER');// Free Download but register
+			break;
+			case 4:
+				return JText::_('COM_PHOCACART_PAID_SUBSCRIPTION');// Paid - Subscription
 			break;
 			default:
 				return '';
@@ -246,6 +250,32 @@ class PhocacartUtilsSettings
 	
 	public static function getHTMLTagsUpload() {
 		return array('abbr','acronym','address','applet','area','audioscope','base','basefont','bdo','bgsound','big','blackface','blink','blockquote','body','bq','br','button','caption','center','cite','code','col','colgroup','comment','custom','dd','del','dfn','dir','div','dl','dt','em','embed','fieldset','fn','font','form','frame','frameset','h1','h2','h3','h4','h5','h6','head','hr','html','iframe','ilayer','img','input','ins','isindex','keygen','kbd','label','layer','legend','li','limittext','link','listing','map','marquee','menu','meta','multicol','nobr','noembed','noframes','noscript','nosmartquotes','object','ol','optgroup','option','param','plaintext','pre','rt','ruby','s','samp','script','select','server','shadow','sidebar','small','spacer','span','strike','strong','style','sub','sup','table','tbody','td','textarea','tfoot','th','thead','title','tr','tt','ul','var','wbr','xml','xmp','!DOCTYPE', '!--');
+	}
+	
+	public static function getHTMLTagsExternalSource() {
+		
+		return array('a', 'b', 'blockquote', 'br', 'caption', 'center', 'cite', 'code', 'dd', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'ol', 'p', 'pre', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table', 'td', 'th', 'tr', 'ul');
+	}
+	
+	public static function isFullGroupBy() {
+		
+		$pC							= JComponentHelper::getParams( 'com_phocacart' );
+		$sql_only_full_group_by		= $pC->get( 'sql_only_full_group_by', 0 );
+		return (bool)$sql_only_full_group_by;
+	}
+	
+	public static function getShopType() {
+		
+		$type = array();
+		$type[0] = 0;// common
+		if (PhocacartPos::isPos()) {
+			// POS
+			$type[1] = 2;
+		} else {
+			// ONLINE SHOP
+			$type[1] = 1;
+		}
+		return $type;
 	}
 	
 }

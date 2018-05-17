@@ -8,6 +8,8 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die();
 
 /*
@@ -24,27 +26,37 @@ defined('_JEXEC') or die();
 
 class PhocacartPayment
 {
+	protected $type = array(0,1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
+	
 	public function __construct() {
 		
 	}
 	
+	public function setType($type = array(0,1)) {
+		$this->type = $type;
+	}
+									
 	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $id = 0, $selected = 0) {
 		
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$payment_amount_rule	= $paramsC->get( 'payment_amount_rule', 0 );
 		
-		$user 			= JFactory::getUser();
+		$user 			= PhocacartUser::getUser();
 		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		
 		$db 			= JFactory::getDBO();
+		
 		
 		$wheres	  = array();
 		// ACCESS
 		$wheres[] = " p.published = 1";
 		$wheres[] = " p.access IN (".$userLevels.")";
 		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+		
+		$wheres[] = " p.type IN (". implode(',', $this->type). ')';
+		
 		
 		if ((int)$id > 0) {
 			$wheres[] =  'p.id = '.(int)$id;
@@ -54,10 +66,22 @@ class PhocacartPayment
 			$limit = '';
 			
 		}
-		$group = ' GROUP BY p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
-				.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
-				.' p.lowest_amount, p.highest_amount, p.default,'
-				.' t.id, t.title, t.tax_rate, t.calculation_type';
+				
+		$columns		= 'p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
+		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
+		.' p.lowest_amount, p.highest_amount, p.default,'
+		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
+		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
+		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
+		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
+		.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping';
+		$groupsFull		= 'p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
+		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
+		.' p.lowest_amount, p.highest_amount, p.default,'
+		.' t.id, t.title, t.tax_rate, t.calculation_type';
+		$groupsFast		= 'p.id';
+		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+				
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		/*$query = ' SELECT p.id, p.title, p.image'
@@ -66,14 +90,7 @@ class PhocacartPayment
 				.' ORDER BY p.ordering';
 		$db->setQuery($query);*/
 		
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
-				.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
-				.' p.lowest_amount, p.highest_amount, p.default,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
-				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
-				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
-				.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
-				.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping'
+		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_payment_method_regions AS r ON r.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_countries AS c ON c.payment_id = p.id'
@@ -82,10 +99,10 @@ class PhocacartPayment
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'	
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON p.id = ga.item_id AND ga.type = 8'// type 8 is payment
 				. $where
-				. $group
+				. ' GROUP BY '.$groups
 				. $limit;
 		
-		
+	
 		PhocacartUtils::setConcatCharCount();
 		$db->setQuery($query);
 		$payments = $db->loadObjectList();
@@ -202,7 +219,7 @@ class PhocacartPayment
 				
 				// Try to set default for frontend form
 				// If user selected some payment, such will be set as default
-				// If not they the default will be set
+				// If not then the default will be set
 				if ((int)$selected > 0) {
 					if ((int)$v->id == (int)$selected) {
 						$v->selected = 1;
@@ -217,6 +234,44 @@ class PhocacartPayment
 		}
 		
 		return $payments;
+		
+	}
+	
+	public function checkAndGetPaymentMethods($selectedPaymentId = 0, $selected = 0) {
+	
+		
+		$cart					= new PhocacartCartRendercheckout();
+		$cart->setType($this->type);
+		$cart->setFullItems();
+		$total					= $cart->getTotal();
+		$currentShippingId 		= $cart->getShippingId();
+		$currentPaymentId 		= $cart->getPaymentId();
+		
+		$user					= PhocacartUser::getUser();
+		$data					= PhocacartUser::getUserData((int)$user->id);
+		$fields 				= PhocacartFormUser::getFormXml('', '_phs', 1,1,0);
+		
+		if (!empty($data)) {
+			$dataAddress	= PhocacartUser::getAddressDataOutput($data, $fields['array'], $user);
+		}
+		
+		$country = 0;
+		if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+			$country = (int)$dataAddress['bcountry'];
+		}
+		
+		$region = 0;
+		if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+			$region = (int)$dataAddress['bregion'];
+		}
+			
+		$paymentMethods	= $this->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected);
+		
+
+		if (!empty($paymentMethods)) {
+			return $paymentMethods;
+		}
+		return false;
 		
 	}
 	
@@ -261,17 +316,30 @@ class PhocacartPayment
 	 */
 	
 	public static function removePayment() {
-		$db 	= JFactory::getDBO();
-		$user	= JFactory::getUser();
+		$db 			= JFactory::getDBO();
+		$user			= $vendor = $ticket = $unit	= $section = array();
+		$dUser			= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 		
-		$query = 'UPDATE #__phocacart_cart SET payment = 0 WHERE user_id = '.(int)$user->id;
+		$pos_payment_force = 0;
+		if (PhocacartPos::isPos()) {
+			$app					= JFactory::getApplication();
+			$paramsC 				= PhocacartUtils::getComponentParameters();
+			$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
+		}
+		
+		$query = 'UPDATE #__phocacart_cart_multiple SET payment = '.(int)$pos_payment_force
+			.' WHERE user_id = '.(int)$user->id 
+			.' AND vendor_id = '.(int)$vendor->id 
+			.' AND ticket_id = '.(int)$ticket->id 
+			.' AND unit_id = '.(int)$unit->id
+			.' AND section_id = '.(int)$section->id;
 		$db->setQuery($query);
 		
 		$db->execute();
 		return true;
 	}
 	
-	/* Checkout - is there even some payment NOT is used reverse */
+	/* Checkout - is there even some payment NOT is used reverse - used only in online shop type*/
 	public static function isPaymentNotUsed() {
 	
 		$db =JFactory::getDBO();
@@ -279,6 +347,7 @@ class PhocacartPayment
 		$query = 'SELECT a.id'
 				.' FROM #__phocacart_payment_methods AS a'
 				.' WHERE a.published = 1'
+				.' AND a.type IN (0,1)'
 				.' ORDER BY id LIMIT 1';
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();

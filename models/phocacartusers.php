@@ -26,7 +26,8 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
 				'published','a.published',
-				'user_id', 'a.user_id'
+				'user_id', 'a.user_id',
+				'email', 'a.email'
 			);
 		}
 		parent::__construct($config);
@@ -77,14 +78,14 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
+		
+		$columns	= 'a.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city, a.ordering, a.email';
+		$groupsFull	= $columns . ', ' . 'u.id, u.name, u.username, u.email, ou.user_id, c.date, c.user_id, c.vendor_id, c.ticket_id, c.unit_id, c.section_id, uc.name';
+		$groupsFast	= 'a.id';
+		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
 
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city'
-			)
-		);
+		$query->select($this->getState('list.select', 'DISTINCT' . ' ' .$columns));
 		$query->from('`#__users` AS u');
 
 		// Join over the language
@@ -94,23 +95,23 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		// Join over the users for the checked out user.
 		
 		
-		$query->select('u.name AS user_name, u.username AS user_username, u.id as user_id');
+		$query->select('u.name AS user_name, u.username AS user_username, u.id as user_id, u.email AS user_email');
 		$query->join('LEFT', '#__phocacart_users AS a ON a.user_id=u.id');
 		
 		$query->select('ou.user_id AS orderuserid');
 		$query->join('LEFT', '#__phocacart_orders AS ou ON a.user_id=ou.user_id');
 		
 	
-		
-		$query->select('c.date AS cartdate, c.user_id as cartuserid');
-		$query->join('LEFT', '#__phocacart_cart AS c ON c.user_id = u.id');
+		// GROUP_CONCAT(c.date ORDER BY c.date) AS cartdate,
+		$query->select('c.date AS cartdate, c.user_id as cartuserid, c.vendor_id as cartvendorid, c.ticket_id as cartticketid, c.unit_id as cartunitid, c.section_id as cartsectionid');
+		$query->join('LEFT', '#__phocacart_cart_multiple AS c ON c.user_id = u.id');
 
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 		
 		
 		
-		$query->select('GROUP_CONCAT(DISTINCT g.title) AS groups');
+		$query->select('GROUP_CONCAT(DISTINCT g.title ORDER BY g.title) AS groups');
 		$query->join('LEFT', '#__phocacart_item_groups AS ug ON ug.item_id=u.id AND ug.type = 1');
 		$query->join('LEFT', '#__phocacart_groups AS g ON g.id=ug.group_id');
 		
@@ -134,7 +135,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 
 		// List only payment or shipping data - to not duplicity the list
-		$query->where('a.type = 0');
+		//$query->where('a.type = 0');
 		
 		
 		// Filter by search in title
@@ -152,10 +153,15 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		}
 		
 		// We have two rows for one customer - for billing and shipping address, but we need to list only one
-		//$query->where('a.type = 0');
+		// is type zero (not one) or type does not exists (for users who are not stored in phoca user table yet)
+		$query->where('(a.type = 0 OR a.type IS NULL)');
+		
+		
+		// ONLY AS CUSTOMERS
+	//	$query->where('c.vendor_id = 0');
 		
 		//$query->where('u.name <> '.$db->quote('Super User'));
-		$query->group('a.id, a.checked_out, u.id, u.name, u.username, ou.user_id, c.date, c.user_id, uc.name, a.name_last, a.name_first, a.address_1, a.city');
+		$query->group($groups);
 		
 		$user = $this->getState('filter.user');
 		if (!empty($user)){

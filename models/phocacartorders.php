@@ -92,6 +92,17 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		$query->select('u.name AS user_name, u.username AS user_username');
 		$query->join('LEFT', '#__users AS u ON u.id=a.user_id');
 		
+		$query->select('uv.name AS vendor_name, uv.username AS vendor_username');
+		$query->join('LEFT', '#__users AS uv ON uv.id=a.vendor_id');
+		
+		
+		$query->select('sc.title AS section_name');
+		$query->join('LEFT', '#__phocacart_sections AS sc ON sc.id=a.section_id');
+		
+		$query->select('un.title AS unit_name');
+		$query->join('LEFT', '#__phocacart_units AS un ON un.id=a.unit_id');
+		
+		
 		$query->select('os.title AS status_title');
 		$query->join('LEFT', '#__phocacart_order_statuses AS os ON os.id = a.status_id');
 

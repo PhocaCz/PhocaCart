@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 $d = $displayData;
 ?>
-<div class="pull-right ph-pull-right">
+<div class="ph-pull-right">
 	<div class="ph-external-link"><?php
 	if ($d['title'] != '') {
 		echo '<a href="'.$d['linkexternal'].'" target="_blank">'.$d['title'].'</a>';

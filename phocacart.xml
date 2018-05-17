@@ -2,12 +2,12 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>11/11/2017</creationDate>
+	<creationDate>17/05/2018</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.0.1</version>
+	<version>3.1.0</version>
 	<description>Phoca Cart</description>
 	<scriptfile>install/script.php</scriptfile>
 
@@ -92,6 +92,9 @@
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-log.png" alt="COM_PHOCACART_SYSTEM_LOG" view="phocacartlogs" link="option=com_phocacart&amp;view=phocacartlogs">COM_PHOCACART_SYSTEM_LOG</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-info.png" alt="COM_PHOCACART_INFO" view="phocacartinfo" link="option=com_phocacart&amp;view=phocacartinfo">COM_PHOCACART_INFO</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-extension.png" alt="COM_PHOCACART_EXTENSIONS" view="phocacartextensions" link="option=com_phocacart&amp;view=phocacartextensions">COM_PHOCACART_EXTENSIONS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-vendor.png" alt="COM_PHOCACART_VENDORS" view="phocacartvendors" link="option=com_phocacart&amp;view=phocacartvendors">COM_PHOCACART_VENDORS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-section.png" alt="COM_PHOCACART_SECTIONS" view="phocacartsections" link="option=com_phocacart&amp;view=phocacartsections">COM_PHOCACART_SECTIONS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-unit.png" alt="COM_PHOCACART_UNITS" view="phocacartextunits" link="option=com_phocacart&amp;view=phocacartextunits">COM_PHOCACART_UNITS</menu>
 		</submenu>
 
 		<files folder="admin">

@@ -80,6 +80,43 @@ class PhocacartOrdering
 				}
 			break;
 			
+			case 7:// CUSTOMERS (POS)
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'a.name DESC';break;
+					case 1:default:$orderingOutput = 'a.name ASC';break;
+				}
+			break;
+			
+			case 8:// UNITS (POS)
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'a.title DESC';break;
+					case 1:default:$orderingOutput = 'a.title ASC';break;
+				}
+			break;
+			
+			case 9:// SHIPPING METHODS (POS)
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'a.title DESC';break;
+					case 1:default:$orderingOutput = 'a.title ASC';break;
+				}
+			break;
+			
+			case 10:// PAYMENT METHODS (POS)
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'a.title DESC';break;
+					case 1:default:$orderingOutput = 'a.title ASC';break;
+				}
+			break;
+			
+			case 11:// PAYMENT METHODS (POS)
+				switch ((int)$ordering) {
+					case 3:$orderingOutput	= 'a.id ASC';break;
+					case 3:$orderingOutput	= 'a.id DESC';break;
+					case 1:$orderingOutput	= 'a.date ASC';break;
+					case 2:default:$orderingOutput = 'a.date DESC';break;
+				}
+			break;
+			
 			default://PRODUCTS
 				switch ((int)$ordering) {
 					case 2:$orderingOutput	= 'pc.ordering DESC';break;
@@ -108,12 +145,42 @@ class PhocacartOrdering
 		return $orderingOutput;
 	}
 	
-	public static function renderOrderingFront( $selected, $type = 1) {
+	public static function renderOrderingFront( $selected, $type = 0) {
 		
 		switch($type) {
-			case 2:
+			case 1:
 				$typeOrdering 	= self::getOrderingCategoryArray();
 				$ordering		= 'catordering';
+			break;
+			
+			// POS Customers
+			case 7:
+				$typeOrdering 	= self::getOrderingUserArray();
+				$ordering		= 'itemordering';// we use one view for items,customers,shipping,payment, ...
+			break;
+			
+			// POS Units
+		/*	case 8:
+				$typeOrdering 	= self::getOrderingUserArray();
+				$ordering		= 'itemordering';// we use one view for items,customers,shipping,payment, ...
+			break; */
+			
+			// POS Shipping methods
+			case 9:
+				$typeOrdering 	= self::getOrderingShippingMethodArray();
+				$ordering		= 'itemordering';// we use one view for items,customers,shipping,payment, ...
+			break;
+			
+			// POS Payment methods
+			case 10:
+				$typeOrdering 	= self::getOrderingPaymentMethodArray();
+				$ordering		= 'itemordering';// we use one view for items,customers,shipping,payment, ...
+			break;
+			
+			// POS Orders
+			case 11:
+				$typeOrdering 	= self::getOrderingOrdersArray();
+				$ordering		= 'itemordering';// we use one view for items,customers,shipping,payment, ...
 			break;
 			
 			default:
@@ -122,7 +189,7 @@ class PhocacartOrdering
 			break;
 		}
 
-		$html 	= JHTML::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form)"', 'value', 'text', $selected);
+		$html 	= JHtml::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected, $ordering);
 		
 		return $html;
 	}
@@ -139,6 +206,36 @@ class PhocacartOrdering
 				8 => JText::_('COM_PHOCACART_DATE_DESC'),
 				9 => JText::_('COM_PHOCACART_RATING_ASC'),
 				10 => JText::_('COM_PHOCACART_RATING_DESC'));
+		return $itemOrdering;
+	}
+	
+	public static function getOrderingUserArray() {
+		$itemOrdering	= array(
+				1 => JText::_('COM_PHOCACART_NAME_ASC'),
+				2 => JText::_('COM_PHOCACART_NAME_DESC'));
+		return $itemOrdering;
+	}
+	
+	public static function getOrderingShippingMethodArray() {
+		$itemOrdering	= array(
+				1 => JText::_('COM_PHOCACART_TITLE_ASC'),
+				2 => JText::_('COM_PHOCACART_TITLE_DESC'));
+		return $itemOrdering;
+	}
+	
+	public static function getOrderingPaymentMethodArray() {
+		$itemOrdering	= array(
+				1 => JText::_('COM_PHOCACART_TITLE_ASC'),
+				2 => JText::_('COM_PHOCACART_TITLE_DESC'));
+		return $itemOrdering;
+	}
+	
+	public static function getOrderingOrdersArray() {
+		$itemOrdering	= array(
+				1 => JText::_('COM_PHOCACART_DATE_ASC'),
+				2 => JText::_('COM_PHOCACART_DATE_DESC'),
+				3 => JText::_('COM_PHOCACART_ID_ASC'),
+				4 => JText::_('COM_PHOCACART_ID_DESC'));
 		return $itemOrdering;
 	}
 	

@@ -133,14 +133,14 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
+		
+		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language';
+		//$groupsFull	= $columns . ', ' .'l.title, uc.name, ag.title, c.title, c.id, cc.countid';
+		//$groupsFast	= 'a.id';
+		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language'
-			)
-		);
+		$query->select($this->getState('list.select', $columns));
 		$query->from('`#__phocacart_categories` AS a');
 
 		// Join over the language
@@ -214,7 +214,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 			}
 		}
 		
-		$query->group('a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language, l.title, uc.name, ag.title, c.title, c.id, cc.countid');
+		///$query->group($groups);
 
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'title');

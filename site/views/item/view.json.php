@@ -38,7 +38,7 @@ class PhocaCartViewItem extends JViewLegacy
 		
 		$app					= JFactory::getApplication();
 		$this->p 				= $app->getParams();
-		$this->u				= JFactory::getUser();
+		$this->u				= PhocacartUser::getUser();
 		$uri 					= JFactory::getURI();
 		$model					= $this->getModel();
 		$document				= JFactory::getDocument();
@@ -62,6 +62,7 @@ class PhocaCartViewItem extends JViewLegacy
 	//	$this->t['enable_review']			= $this->p->get( 'enable_review', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
+		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 	/*	$this->t['image_popup_method']		= $this->p->get( 'image_popup_method', 1 );
 		$this->t['display_compare']			= $this->p->get( 'display_compare', 0 );
 		$this->t['display_wishlist']		= $this->p->get( 'display_wishlist', 0 );
@@ -74,6 +75,9 @@ class PhocaCartViewItem extends JViewLegacy
 	/*	$this->t['item_askquestion']		= $this->p->get( 'item_askquestion', 0 );
 		$this->t['popup_askquestion']		= $this->p->get( 'popup_askquestion', 1 );*/
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
+		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
+		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
+		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		
 			// Catalogue function
 		if ($this->t['hide_addtocart'] == 1) {
@@ -102,7 +106,7 @@ class PhocaCartViewItem extends JViewLegacy
 		
 			//$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			//$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
-			//$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
+			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
 			$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
 			$this->t['stock_status_output'] = PhocacartStock::getStockStatusOutput($this->t['stock_status']);
 			$this->t['attr_options']		= $this->t['hide_attributes_item'] == 0 ? PhocacartAttribute::getAttributesAndOptions((int)$id) : array();

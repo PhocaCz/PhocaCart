@@ -47,7 +47,9 @@ if (isset($d['discount']) && $d['discount']) {
 	
 	
 	
-	<?php if (isset ($d['discount']) && $d['discount']) { ?>
+	<?php
+	// PRODUCT DISCOUNT
+	if (isset ($d['discount']) && $d['discount']) { ?>
 		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0) { ?>
 			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['nettotxt'] ?></div>
 			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscount']['nettoformat'] ?></div>
@@ -60,7 +62,26 @@ if (isset($d['discount']) && $d['discount']) {
 	
 		<?php if ($d['priceitemsdiscount']['brutto']) { ?>
 			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['bruttotxt'] ?></div>
-			<div class="ph-price-brutto ph-price-discount"><?php echo $d['priceitemsdiscount']['bruttoformat'] ?></div>
+			<div class="ph-price-brutto ph-price-discount ph-price-discount-product"><?php echo $d['priceitemsdiscount']['bruttoformat'] ?></div>
+		<?php } ?>
+	<?php }?>
+	
+	<?php
+	// CART DISCOUNT DISPLAYED IN PRODUCT VIEWS (under specific conditions only)
+	if (isset ($d['discountcart']) && $d['discountcart']) { ?>
+		<?php if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0) { ?>
+			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettotxt'] ?></div>
+			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettoformat'] ?></div>
+		<?php } ?>
+	
+		<?php if ($d['priceitemsdiscountcart']['tax'] && $d['priceitemsdiscountcart']['taxcalc'] > 0) { ?>
+			<div class="ph-tax-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['taxtxt'] ?></div>
+			<div class="ph-tax ph-price-discount"><?php echo $d['priceitemsdiscountcart']['taxformat'] ?></div>
+		<?php } ?>
+	
+		<?php if ($d['priceitemsdiscountcart']['brutto']) { ?>
+			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['bruttotxt'] ?></div>
+			<div class="ph-price-brutto ph-price-discount ph-price-discount-cart"><?php echo $d['priceitemsdiscountcart']['bruttoformat'] ?></div>
 		<?php } ?>
 	<?php }?>
 	

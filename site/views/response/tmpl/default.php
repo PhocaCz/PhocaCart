@@ -14,5 +14,5 @@ echo PhocacartRenderFront::renderHeader();
 
 echo '</div>';// end ph-pc-response-box
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

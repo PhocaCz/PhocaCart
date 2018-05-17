@@ -244,6 +244,7 @@ class PhocacartRoute
 		
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
 		return self::_buildLink($link, $needles);
+		//return self::_buildLink($link, $needles). '#'.$idAlias;
 	}
 	
 	public static function getCheckoutRoute($id = 0, $catid = 0) {
@@ -255,6 +256,34 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=checkout';
+		return self::_buildLink($link, $needles);
+	}
+	
+	public static function getPosRoute($ticketId = 1, $unitId = 0, $sectionId = 0, $page = '', $id = 0, $catid = 0) {
+		$needles = array(
+			'pos' => '',
+			'item'  => (int) $id,
+			'category' => (int) $catid,
+			'categories' => ''
+		);
+
+		$link = 'index.php?option=com_phocacart&view=pos';
+		
+		if ($page != '') {
+			$suffix = '';
+			if ((int)$id > 0) {
+				switch ($page) {
+					case 'section':
+					default:
+						$suffix = '&sectionid='.(int)$id;
+					break;
+				}
+			}
+			$link = $link . '&page='.htmlspecialchars($page). $suffix;
+		} else if ($ticketId > 0) {
+			$link = $link . '&ticketid='.(int)$ticketId .'&unitid='.(int)$unitId . '&sectionid='.(int)$sectionId;
+		}
+		
 		return self::_buildLink($link, $needles);
 	}
 	

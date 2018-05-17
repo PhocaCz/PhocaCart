@@ -21,7 +21,9 @@ if ($this->p->get('show_pagination_top', 1)) {
 		$s 	= 5;
 		$sN = $sN - $s;
 		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-pag-top-row">';
-		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select" style="width: 16em"', $this->t['ordering']);
+		$ordering = str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select" style="width: 16em"', $this->t['ordering']);
+		$ordering = str_replace( 'id="itemordering"', 'id="itemorderingtop"', $ordering);// possible two the same ID
+		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. $ordering;
 		echo '</div>';
 		
 	}
@@ -30,7 +32,9 @@ if ($this->p->get('show_pagination_top', 1)) {
 		$s = 3;
 		$sN = $sN - $s;
 		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-pag-top-row">';
-		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getLimitBox());
+		$limit = str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getLimitBox());
+		$limit = str_replace( 'id="limit"', 'id="limittop"', $limit);// possible two the same ID
+		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . $limit;
 		echo '</div>';
 	}
 	
@@ -49,6 +53,6 @@ if ($this->p->get('show_pagination_top', 1)) {
 }
 echo '</div>';
 echo '<input type="hidden" name="format" value="raw" />';
-echo JHTML::_( 'form.token' );
+echo JHtml::_( 'form.token' );
 echo '</form>';
 ?>

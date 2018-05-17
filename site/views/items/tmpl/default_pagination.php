@@ -40,7 +40,7 @@ if ($this->p->get('show_pagination')) {
 	
 	
 	echo '<div class="clearfix"></div>';
-	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination pagination">'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
+	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination pagination  phPaginationBox">'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
 	
 	echo '<div class="clearfix"></div>';
 	
@@ -51,6 +51,9 @@ if ($this->p->get('show_pagination')) {
 	echo '<div class="clearfix"></div>';
 }
 echo '</div>';
-echo JHTML::_( 'form.token' );
+if ($this->p->get('ajax_pagination_category', 0) == 1) {
+	echo '<input type="hidden" name="format" value="raw" />';
+}
+echo JHtml::_( 'form.token' );
 echo '</form>';
 ?>

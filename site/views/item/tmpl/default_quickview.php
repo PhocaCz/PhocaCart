@@ -9,10 +9,15 @@
 defined('_JEXEC') or die();
 
 $layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
 $layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
+$layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
+
 $layoutQV 	= new JLayoutFile('popup_quickview', null, array('component' => 'com_phocacart'));
 $layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
+$layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
+
 
 $x = $this->item[0];
 ?>
@@ -81,13 +86,18 @@ echo '</div>';// end image panel
 // === PRICE PANEL
 echo '<div class="col-xs-12 col-sm-6 col-md-6 ph-item-price-panel">';
 
+$title = '';
+if (isset($x->title) && $x->title != '') {
+	$title = $x->title;
+}
+echo PhocacartRenderFront::renderHeader(array($title));
 
 // :L: PRICE
 $price 	= new PhocacartPrice;// Can be used by options
 if ($this->t['hide_price'] != 1) {
 	
 	$d					= array();
-	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1);
+	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 	$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
 	
 	$d['priceitemsorig']= array();
@@ -97,39 +107,93 @@ if ($this->t['hide_price'] != 1) {
 	$d['class']			= 'ph-item-price-box';
 	$d['product_id']	= (int)$x->id;
 	$d['typeview']		= 'ItemQuick';
-	echo '<h1>'.$x->title.'</h1>';
+		
+	// Display discount price
+	// Move standard prices to new variable (product price -> product discount)
+	$d['priceitemsdiscount']		= $d['priceitems'];
+	$d['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $d['priceitemsdiscount']);
+	
+	// Display cart discount (global discount) in product views - under specific conditions only
+	// Move product discount prices to new variable (product price -> product discount -> product discount cart)
+	$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
+	$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
+		
+		
 	echo$layoutP->render($d);
 }
 
-// STOCK
-if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count']) {
+	if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
+		echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->item[0]->description). '</div>';
+	}
+	// REWARD POINTS - NEEDED
+	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
+	if ($pointsN) {
+		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
+		
+		echo '<div class="ph-reward">'.$pointsN.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
 	
-	echo '<div class="ph-item-stock-box">';
-	echo '<div class="ph-stock-txt">'.JText::_('COM_PHOCACART_AVAILABILITY').'</div>';
-	echo '<div class="ph-stock">'.JText::_($this->t['stock_status_output']).'</div>';
-	echo '</div>';
-	echo '<div class="ph-cb"></div>';
-}
+	// REWARD POINTS - RECEIVED
+	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
+	if ($pointsR) {
+		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_REWARD_POINTS').'</div>';
+		
+		echo '<div class="ph-reward">'.$pointsR.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	
+	
+	if (isset($x->manufacturertitle) && $x->manufacturertitle != '') {
+		echo '<div class="ph-item-manufacturer-box">';
+		echo '<div class="ph-manufacturer-txt">'.JText::_('COM_PHOCACART_MANUFACTURER').':</div>';
+		echo '<div class="ph-manufacturer">';
+		echo PhocacartRenderFront::displayLink($x->manufacturertitle, $x->manufacturerlink);
+		echo '</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
 
-if($this->t['stock_status']['min_quantity']) {
+	// STOCK ===================================================
+	// Set stock: product, variations, or advanced stock status
+	$class_btn	= '';
+	$class_icon	= '';
+	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
+		$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
 	
-	echo '<div class="ph-item-min-qty-box">';
-	echo '<div class="ph-min-qty-txt">'.JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY').'</div>';
-	echo '<div class="ph-min-qty">'.$this->t['stock_status']['min_quantity'].'</div>';
-	echo '</div>';
-	echo '<div class="ph-cb"></div>';
-	
-}
-
-if($this->t['stock_status']['min_multiple_quantity']) {
-	
-	echo '<div class="ph-item-min-qty-box">';
-	echo '<div class="ph-min-qty-txt">'.JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY').'</div>';
-	echo '<div class="ph-min-qty">'.$this->t['stock_status']['min_multiple_quantity'].'</div>';
-	echo '</div>';
-	echo '<div class="ph-cb"></div>';
-	
-}
+		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
+			$class_btn 					= 'ph-visibility-hidden';
+			$class_icon					= 'ph-display-none';
+		}
+		
+		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count']) {
+			$d							= array();
+			$d['class']					= 'ph-item-stock-box';
+			$d['product_id']			= (int)$x->id;
+			$d['typeview']				= 'Item';
+			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
+			echo $layoutS->render($d);
+		}
+		
+		if($this->t['stock_status']['min_quantity']) {
+			$dPOQ						= array();
+			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
+			$dPOQ['status']				= $this->t['stock_status']['min_quantity'];
+			echo $layoutPOQ->render($dPOQ);
+		}
+		
+		if($this->t['stock_status']['min_multiple_quantity']) {
+			$dPOQ						= array();
+			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
+			$dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
+			echo $layoutPOQ->render($dPOQ);
+		}
+	}
+	// END STOCK ================================================
 
 // This form can get two events:
 // when option selected - price or image is changed id=phItemPriceBoxForm
@@ -148,6 +212,7 @@ $d							= array();
 $d['attr_options']			= $this->t['attr_options'];
 $d['hide_attributes']		= $this->t['hide_attributes_item'];
 $d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+$d['zero_attribute_price']  = $this->t['zero_attribute_price'];
 $d['pathitem']				= $this->t['pathitem'];
 $d['init_type']				= 1;
 $d['product_id']			= (int)$x->id;
@@ -165,6 +230,9 @@ if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4
 	$d['catid']			= $this->t['catid'];
 	$d['return']		= $this->t['actionbase64'];
 	$d['addtocart']		= $this->t['item_addtocart'];
+	$d['typeview']		= 'ItemQuick';
+	$d['class_btn']		= $class_btn;
+	$d['class_icon']	= $class_icon;
 	echo$layoutA->render($d);
 
 } else if ((int)$this->t['item_addtocart'] == 2 && (int)$x->external_id != '') {
@@ -173,10 +241,25 @@ if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4
 	$d['return']		= $this->t['actionbase64'];
 	
 	echo$layoutA2->render($d);
+} else if ((int)$this->t['item_addtocart'] == 3 && $x->external_link != '') {
+	$d					= array();	
+	$d['external_link']	= $x->external_link;
+	$d['external_text']	= $x->external_text;
+	$d['return']		= $this->t['actionbase64'];
+	echo $layoutA3->render($d);
+			
 }
 
 echo '</form>';
 echo '<div class="ph-cb"></div>';
+
+// TAGS
+if ($this->t['tags_output'] != '') {
+	echo '<div class="ph-item-tag-box">';
+	echo $this->t['tags_output'];
+	echo '</div>';
+	echo '<div class="ph-cb"></div>';
+}
 
 
 echo '</div>';// end right side price panel

@@ -27,7 +27,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		$uri 								= JFactory::getURI();
 		$this->t['action']					= $uri->toString();
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
-		$this->u							= JFactory::getUser();
+		$this->u							= PhocacartUser::getUser();
 		
 		$this->p 							= $app->getParams();
 		$this->t['question_description']	= $this->p->get( 'question_description', '' );
@@ -38,6 +38,13 @@ class PhocaCartViewQuestion extends JViewLegacy
 			//throw new Exception(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 403);
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 'error');
 			return false;
+		}
+		
+		// Ask Question Privacy checkbox
+		$this->t['display_question_privacy_checkbox']	= $this->p->get( 'display_question_privacy_checkbox', 0 );
+		if ($this->t['display_question_privacy_checkbox'] > 0) {
+			$this->t['question_privacy_checkbox_label_text']	= $this->p->get( 'question_privacy_checkbox_label_text', 0 );
+			$this->t['question_privacy_checkbox_label_text'] 	= PhocacartRenderFront::renderArticle((int)$this->t['question_privacy_checkbox_label_text'], 'html', '');
 		}
 		
 		// Security

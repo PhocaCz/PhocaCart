@@ -179,8 +179,8 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 		
 		// Remove shipping because shipping methods can change while chaning address
-		PhocacartShipping::removeShipping($guest);
-		PhocacartPayment::removePayment($guest);
+		PhocacartShipping::removeShipping(0);
+		PhocacartPayment::removePayment(0);
 		$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 		if ($error != 1) {
 			$app->enqueueMessage($msg, 'message');
@@ -285,6 +285,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			
 			$rewards 			= array();
 			$rewards['used'] 	= 0;
+			
 			if (isset($item['phreward']) && $item['phreward'] != '' && $this->t['enable_rewards']) {
 				
 				$reward 			= new PhocacartReward();
@@ -402,14 +403,31 @@ class PhocaCartControllerCheckout extends JControllerForm
 	 public function order() {
 		
 		JSession::checkToken() or jexit( 'Invalid Token' );
+		$pC 								= PhocacartUtils::getComponentParameters();
+		$display_checkout_privacy_checkbox	= $pC->get( 'display_checkout_privacy_checkbox', 0 );
+		$display_checkout_toc_checkbox		= $pC->get( 'display_checkout_toc_checkbox', 2);
+		
 		$app						= JFactory::getApplication();
 		$item						= array();
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
 		$item['phcheckouttac']		= $this->input->get( 'phcheckouttac', false, 'string'  );
+		$item['privacy']			= $this->input->get( 'privacy', false, 'string'  );
 		$item['phcomment']			= $this->input->get( 'phcomment', '', 'string'  );
 		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
 		
-		if (!$item['phcheckouttac']) {
+		$item['privacy'] 			= $item['privacy'] ? 1 : 0;
+		$item['phcheckouttac']	 	= $item['phcheckouttac'] ? 1 : 0;
+
+		
+		if ($display_checkout_privacy_checkbox == 2 && $item['privacy'] == 0) {
+			$msg = JText::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_PRIVACY_TERMS_AND_CONDITIONS');
+			$app->enqueueMessage($msg.$msgSuffix, 'error');
+			$app->redirect(base64_decode($item['return']));
+			return false;
+			
+		}
+		
+		if ($display_checkout_toc_checkbox == 2 && $item['phcheckouttac'] == 0) {
 			$msg = JText::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_TERMS_AND_CONDITIONS');
 			$app->enqueueMessage($msg.$msgSuffix, 'error');
 			$app->redirect(base64_decode($item['return']));
@@ -420,7 +438,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		
 	
 		$order = new PhocacartOrder();		
-		$orderMade = $order->saveOrderMain($item['phcomment']);
+		$orderMade = $order->saveOrderMain($item);
 		
 		if(!$orderMade) {
 			$msg = '';

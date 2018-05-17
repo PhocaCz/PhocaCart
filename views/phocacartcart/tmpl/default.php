@@ -14,7 +14,11 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 
 	$link	= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartcart&tmpl=component&&id='.(int)$this->item->user_id);
 	$cart	= new PhocacartCartRendercart();
+	
+	$cart->setType(array());// all types
 	$cart->setFullItems();
+	$cart->roundTotalAmount();
+
 	echo '<div class="ph-cart-info-box">';
 	echo $cart->render();
 	echo '</div>';
@@ -28,6 +32,10 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 
 	echo '<form action="'.$link.'" method="post">';
 	echo '<input type="hidden" name="id" value="'.(int)$this->item->user_id.'">';
+	echo '<input type="hidden" name="vendorid" value="'.(int)$this->item->vendor_id.'">';
+	echo '<input type="hidden" name="ticketid" value="'.(int)$this->item->ticket_id.'">';
+	echo '<input type="hidden" name="unitid" value="'.(int)$this->item->unit_id.'">';
+	echo '<input type="hidden" name="sectionid" value="'.(int)$this->item->section_id.'">';
 	echo '<input type="hidden" name="task" value="phocacartcart.emptycart">';
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />';

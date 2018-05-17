@@ -305,6 +305,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 	if (wait == 1) {
 		// Don't reload, wait for other parameter
 		phFilterNewUrlSetPreviousParamWaiting = 1;
+		
 	} else {
 		
 		document.location = phFilterNewUrlSet;

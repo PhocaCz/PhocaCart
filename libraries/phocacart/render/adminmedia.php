@@ -18,24 +18,24 @@ class PhocacartRenderAdminmedia
 	public function __construct() {
 
 		$this->document	= JFactory::getDocument();
-		JHTML::_('behavior.tooltip');
+		JHtml::_('behavior.tooltip');
 		JHtml::_('jquery.framework', false);
-		//JHTML::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
-		JHTML::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css' );
-		JHTML::stylesheet( 'media/com_phocacart/css/administrator/phocacart.css' );
-		JHTML::stylesheet( 'media/com_phocacart/css/administrator/phocacarttheme.css' );
-		JHTML::stylesheet( 'media/com_phocacart/css/administrator/phocacartcustom.css' );
-		JHTML::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css' );
+		//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
+		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css' );
+		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacart.css' );
+		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacarttheme.css' );
+		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacartcustom.css' );
+		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css' );
 
 		if(PhocacartUtils::isJCompatible('3.7')) {
-			JHTML::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
+			JHtml::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
 		}
 		
 	}
 	
 	public function loadOptions($load = 0) {
 		if ($load == 1) {
-			JHTML::stylesheet('media/com_phocacart/css/administrator/phocacartoptions.css' );
+			JHtml::stylesheet('media/com_phocacart/css/administrator/phocacartoptions.css' );
 		}
 	}
 }

@@ -26,7 +26,7 @@ if (!empty($this->itemhistory)) {
 	echo '</div>';
 	foreach($this->itemhistory as $k => $v) {
 		echo '<div class="row-fluid ph-order-status-edit-item">';
-		echo '<div class="span4 col-sm-4 col-md-4">'.JHtml::date($v->date, 'd. m. Y. h:s').'</div>';
+		echo '<div class="span4 col-sm-4 col-md-4">'.JHtml::date($v->date, JText::_('DATE_FORMAT_LC5')).'</div>';
 		echo '<div class="span2 col-sm-2 col-md-2">'.JText::_($v->statustitle).'</div>';
 		$userO = $v->user_name;
 		if (isset($v->user_username)) {

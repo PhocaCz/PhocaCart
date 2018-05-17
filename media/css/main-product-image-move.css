@@ -6,6 +6,8 @@
 .phIBoxOH .phIBox {
     border-radius: 0;
     display: inline-block;
+	/*display:block;*/
+	
     overflow: hidden;
     position: relative;
     text-align: center;

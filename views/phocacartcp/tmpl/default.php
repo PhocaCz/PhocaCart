@@ -12,11 +12,11 @@ $class		= $this->t['n'] . 'RenderAdmin';
 $link		= 'index.php?option='.$this->t['o'].'&view=';
 
 $cOrdersW	= $s->getNumberOfOrders();
-$cOrdersD	= $s->getNumberOfOrders(1);
+$cOrdersD	= $s->getNumberOfOrders(0);
 $cUsersW	= $s->getNumberOfUsers();
-$cUsersD	= $s->getNumberOfUsers(1);
+$cUsersD	= $s->getNumberOfUsers(0);
 $cAmountW	= $s->getAmountOfOrders();
-$cAmountD	= $s->getAmountOfOrders(1);
+$cAmountD	= $s->getAmountOfOrders(0);
 		
 
 ?><form action="index.php" method="post" name="adminForm">
@@ -132,10 +132,13 @@ $cAmountD	= $s->getAmountOfOrders(1);
 					</div>
 				
 				
-					<div class="ph-cpanel-info-box">
-							<div style="float:right;margin:10px;"><?php 
+					<div class="ph-cpanel-info-box"><?php
 							
-			echo JHTML::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' );?></div><?php
+							echo '<div class="ph-cpanel-logo">'.JHtml::_('image', $this->t['i'] . 'logo-phoca-cart.png', 'Phoca.cz') . '</div>';
+							
+							?><div style="float:right;margin:10px;"><?php 
+							
+			echo JHtml::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' );?></div><?php
 			echo '<h3>'.  JText::_($this->t['l'] . '_VERSION').'</h3>'
 			.'<p>'.  $this->t['version'] .'</p>';
 			echo '<h3>'.  JText::_($this->t['l'] . '_COPYRIGHT').'</h3>'
@@ -147,7 +150,7 @@ $cAmountD	= $s->getAmountOfOrders(1);
 			.'<p>© 2007 - '.  date("Y"). ' '. JText::_($this->t['l'] . '_TRANSLATER'). '</p>'
 			.'<p>'.JText::_($this->t['l'] . '_TRANSLATION_SUPPORT_URL').'</p>';
 					echo '<div style="border-top:1px solid #c2c2c2"></div><p>&nbsp;</p>'
-			.'<div><a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'] . '_CHECK_FOR_UPDATE') .'</a>'.'<div style="float:right; margin: 0 10px"><a href="https://www.phoca.cz/" target="_blank">'.JHTML::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz' ).'</a></div></div>';
+			.'<div><a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'] . '_CHECK_FOR_UPDATE') .'</a>'.'<div style="float:right; margin: 0 10px"><a href="https://www.phoca.cz/" target="_blank">'.JHtml::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz' ).'</a></div></div>';
 
 					?></div>
 				</div>

@@ -18,6 +18,8 @@ class PhocacartCartRendercheckout extends PhocacartCart
 	
 	
 	public function __construct() {
+		
+		$this->setInstance(2);//checkout
 		parent::__construct();
 	}
 	
@@ -29,7 +31,13 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		$uri 					= JFactory::getURI();
 		$url['action']			= $uri->toString();
 		$url['actionbase64']	= base64_encode($url['action']);
-		$url['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute());
+		$pos					= PhocacartPos::isPos();
+	
+		if ($pos) {
+			$url['linkcheckout']	= JRoute::_(PhocacartRoute::getPosRoute());
+		} else {
+			$url['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute());
+		}
 		
 		
 		if (empty($this->fullitems)) {
@@ -60,6 +68,10 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		$d['actionbase64']		= $url['actionbase64'];
 		$d['linkcheckout']		= $url['linkcheckout'];
 		$d['pathitem'] 			= PhocacartPath::getPath('productimage');
+		$d['pos']				= $this->pos;
+		$d['ticketid']			= (int)$this->ticket->id;
+		$d['unitid']			= (int)$this->unit->id;
+		$d['sectionid']			= (int)$this->section->id;
 		
 		
 

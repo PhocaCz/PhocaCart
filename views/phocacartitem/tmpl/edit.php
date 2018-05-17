@@ -228,45 +228,13 @@ echo '<div>&nbsp;</div>';
 echo '</div>'. "\n";
 
 
-
-// PRODUCT DISCOUNTS
-echo '<div class="tab-pane" id="discount">'. "\n";
-echo '<h3>'.JText::_($this->t['l'].'_PRODUCT_DISCOUNT').'</h3>';
-$i = 0; //
-if (!empty($this->discounts)) {
-
-	foreach ($this->discounts as $k => $v) {
-		//if ($i == 0) {
-		//	echo $r->headerSpecification();
-		//}
-		$v->discount = PhocacartPrice::cleanPrice($v->discount);
-		
-		if ((int)$v->id > 0) {
-			$activeGroups	= PhocacartGroup::getGroupsById((int)$v->id, 4, 1);
-		}
-		
-		if (empty($activeGroups)) {
-			$activeGroups	= PhocacartGroup::getDefaultGroup(1);
-		}
-		
-		
-		echo $r->additionalDiscountsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->access, $activeGroups, $v->discount, $v->calculation_type, $v->quantity_from, /*$v->quantity_to*/ 0, $v->valid_from, $v->valid_to, 0);
-		$i++;
-	} 
-}
-	
-$newRow = $r->additionalDiscountsRow('\' + phRowCountDiscount +  \'', '', '', '', '', PhocacartGroup::getDefaultGroup(1), '', '', '', '', '', '', 1);
-$newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
-
-$newHeader	= '';
-$newHeader	= $r->headerDiscount();
-$newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
-PhocacartRenderAdminjs::renderJsManageRowDiscount($i, $newRow, $newHeader);
-echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_DISCOUNT'), 'discount');//phrowboxspecification in button
-
-echo '<div>&nbsp;</div>';
-//echo '</div>'. "\n";
+// RELATED
+echo '<div class="tab-pane" id="related">'. "\n";
+$formArray = array ('related');
+echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
+
+
 
 
 
@@ -309,11 +277,7 @@ echo '</div>'. "\n";
 
 
 
-// RELATED
-echo '<div class="tab-pane" id="related">'. "\n";
-$formArray = array ('related');
-echo $r->group($this->form, $formArray);
-echo '</div>'. "\n";
+
 
 // STOCK
 echo '<div class="tab-pane" id="stock">'. "\n";
@@ -330,6 +294,46 @@ echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 $formArray = array ('stock', 'stock_calculation', 'min_quantity', 'min_multiple_quantity', 'min_quantity_calculation', 'stockstatus_a_id', 'stockstatus_n_id');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
+
+// PRODUCT DISCOUNTS
+echo '<div class="tab-pane" id="discount">'. "\n";
+echo '<h3>'.JText::_($this->t['l'].'_PRODUCT_DISCOUNT').'</h3>';
+$i = 0; //
+if (!empty($this->discounts)) {
+
+	foreach ($this->discounts as $k => $v) {
+		//if ($i == 0) {
+		//	echo $r->headerSpecification();
+		//}
+		$v->discount = PhocacartPrice::cleanPrice($v->discount);
+		
+		if ((int)$v->id > 0) {
+			$activeGroups	= PhocacartGroup::getGroupsById((int)$v->id, 4, 1);
+		}
+		
+		if (empty($activeGroups)) {
+			$activeGroups	= PhocacartGroup::getDefaultGroup(1);
+		}
+		
+		
+		echo $r->additionalDiscountsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->access, $activeGroups, $v->discount, $v->calculation_type, $v->quantity_from, /*$v->quantity_to*/ 0, $v->valid_from, $v->valid_to, 0);
+		$i++;
+	} 
+}
+	
+$newRow = $r->additionalDiscountsRow('\' + phRowCountDiscount +  \'', '', '', '', '', PhocacartGroup::getDefaultGroup(1), '', '', '', '', '', '', 1);
+$newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
+
+$newHeader	= '';
+$newHeader	= $r->headerDiscount();
+$newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
+PhocacartRenderAdminjs::renderJsManageRowDiscount($i, $newRow, $newHeader);
+echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_DISCOUNT'), 'discount');//phrowboxspecification in button
+
+echo '<div>&nbsp;</div>';
+//echo '</div>'. "\n";
+echo '</div>'. "\n";
+
 
 // DOWNLOAD
 echo '<div class="tab-pane" id="download">'. "\n";

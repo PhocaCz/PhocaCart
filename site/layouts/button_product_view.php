@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 $d = $displayData;
 ?>
-<div class="pull-left">
+<div class="ph-pull-left">
 <?php
 if ($d['display_view_product_button'] == 1) {
 	
@@ -21,3 +21,9 @@ if ($d['display_view_product_button'] == 1) {
 
 } ?>
 </div>
+
+<?php
+
+
+
+

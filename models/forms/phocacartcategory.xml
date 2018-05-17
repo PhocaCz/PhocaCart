@@ -18,6 +18,11 @@
 		
 <field name="group" type="PhocacartGroups" table="2" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
+<field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" class="inputbox" size="1" default="0">
+	<option	value="0">COM_PHOCACART_COMMON</option>
+	<option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
+	<option value="2">COM_PHOCACART_POS_ONLY</option>
+</field>
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 

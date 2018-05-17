@@ -36,7 +36,7 @@ class PhocaCartCpViewPhocacartOrders extends JViewLegacy
 		}
 		
 		$media = new PhocacartRenderAdminmedia();
-		JHTML::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
+		JHtml::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 		
 		$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
 		$this->t['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');

@@ -13,7 +13,7 @@ $link = 'index.php?option='.$this->t['o'].'&amp;view='.$this->t['task'].'&amp;ma
 echo '<tr><td>&nbsp;</td>'
 .'<td class="ph-img-table">'
 .'<a href="'.$link.'" >'
-. JHTML::_( 'image', $this->t['i'].'icon-16-up.png', '').'</a>'
+. JHtml::_( 'image', $this->t['i'].'icon-16-up.png', '').'</a>'
 .'</td>'
 .'<td><a href="'.$link.'" >..</a></td>'
 .'</tr>';

@@ -28,6 +28,17 @@ body.preload *{
 }
 
 /* substitution for thumbnail */
+
+
+/* Chrome problem with box sizing */
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+	.row-flex.grid .row-item {
+		flex-direction: inherit;
+		margin-bottom: 30px;
+	}
+}
+
+
 .ph-item-box .ph-item{
 	transition: all 0.3s;
 	background-color: #fff;
@@ -52,9 +63,13 @@ body.preload *{
 	padding-bottom: 25px;
 	margin-bottom: -25px;
 	
-	display: relative;
+	display: inline-block;
 	z-index: 9;
 	clear:both;
+	-webkit-box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	box-sizing:content-box;
+	
 
 }
 

@@ -161,7 +161,7 @@ class PhocacartTax
 		// 1. We get information about country stored by user
 		// 2. Possible improvement get country by IP (but possible problem)
 		
-		$user 				= JFactory::getUser();
+		$user 				= PhocacartUser::getUser();
 		$app				= JFactory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate	= $paramsC->get( 'dynamic_tax_rate', 0 );
@@ -195,7 +195,7 @@ class PhocacartTax
 		// 1. We get information about country stored by user
 		// 2. Possible improvement get country by IP (but possible problem)
 		
-		$user 				= JFactory::getUser();
+		$user 				= PhocacartUser::getUser();
 		$app				= JFactory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate	= $paramsC->get( 'dynamic_tax_rate', 0 );

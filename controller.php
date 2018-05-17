@@ -48,6 +48,10 @@ $l['lo']	= array('COM_PHOCACART_SYSTEM_LOG', 'phocacartlogs');
 $l['in']	= array('COM_PHOCACART_INFO', 'phocacartinfo');
 $l['et']	= array('COM_PHOCACART_EXTENSIONS', 'phocacartextensions');
 
+$l['ve']	= array('COM_PHOCACART_VENDORS', 'phocacartvendors');
+$l['se']	= array('COM_PHOCACART_SECTIONS', 'phocacartsections');
+$l['un']	= array('COM_PHOCACART_UNITS', 'phocacartunits');
+
 // Submenu view
 
 

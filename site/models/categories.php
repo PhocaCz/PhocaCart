@@ -67,7 +67,7 @@ class PhocaCartModelCategories extends JModelLegacy
 	public function getCategoriesListQuery($id, $categoriesOrdering) {
 		
 		$wheres				= array();
-		$user 				= JFactory::getUser();
+		$user 				= PhocacartUser::getUser();
 		$userLevels			= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 		= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$app				= JFactory::getApplication();
@@ -92,6 +92,8 @@ class PhocaCartModelCategories extends JModelLegacy
 			$wheres[] = " c.id NOT IN (".$hide_categories.")";
 		}
 		
+		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		
 		if ($id == -1) {
 			// No limit for parent_id - load all categories include subcategories
 		} else {
@@ -114,7 +116,14 @@ class PhocaCartModelCategories extends JModelLegacy
 		. " GROUP BY c.id"
 		. " ORDER BY c.".$categoriesOrdering;*/
 		
-		$query =  " SELECT c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat"
+		
+		$columns	= 'c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat';
+		$groupsFull	= 'c.id, c.title, c.alias, c.image, c.description, c.image, c.parent_id';
+		$groupsFast	= 'c.id';
+		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+		
+		$query =  'SELECT '.$columns
 		
 		. " FROM #__phocacart_categories AS c"
 		//. " LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id AND s.published = 1"
@@ -124,7 +133,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		//. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
 		. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 		. " WHERE " . implode( " AND ", $wheres )
-		. " GROUP BY c.id, c.title, c.alias, c.image, c.description, c.image, c.parent_id"
+		. " GROUP BY ".$groups
 		. " ORDER BY ".$categoriesOrdering;
 		/*
 		$query =  "SELECT c.id, c.title, group_concat(s.title) as subtitle, group_concat(s.id, ':', s.title, ':', s.alias) as subalias

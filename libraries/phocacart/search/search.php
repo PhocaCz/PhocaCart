@@ -15,7 +15,7 @@ class PhocacartSearch
 	public function __construct() {}
 	
 	
-	public function renderSearch($searchOptions = 0) {
+	public function renderSearch($options = array()) {
 		
 		$o						= array();
 		$app					= JFactory::getApplication();
@@ -26,7 +26,12 @@ class PhocacartSearch
 		$category				= PhocacartRoute::getIdForItemsRoute();
 		//$data['getparams'][]	= $category['idalias'];
 		$data['activefilter']	= PhocacartRoute::isFilterActive();
-		$data['searchoptions']	= $searchOptions;
+		//$data['searchoptions']	= $searchOptions;
+		if (!empty($options)) {
+			foreach($options as $k => $v) {
+				$data[$k] = $v;
+			}
+		}
 		//$app		= JFactory::getApplication();
 		$layout 	= new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
 		$o[] = $layout->render($data);
@@ -42,7 +47,7 @@ class PhocacartSearch
 		$where 	= '';
 		$left	= '';
 		$db		= JFactory::getDBO();
-		
+	
 		switch($type) {
 			case 'int':
 				
@@ -67,6 +72,7 @@ class PhocacartSearch
 			case 'array':
 				$w	= $param;
 				$inA 	= array();
+				
 				if (!empty($w)) {
 					foreach ($w as $k => $v) {
 						$s		= '';
@@ -85,6 +91,7 @@ class PhocacartSearch
 					}
 				}
 				$in = $inA;
+				
 	
 			
 			break;
@@ -138,7 +145,9 @@ class PhocacartSearch
 						.' LEFT JOIN  #__phocacart_attribute_values AS v2 ON v2.attribute_id = at2.id'
 						.' WHERE ' . implode( ' OR ', $in )
 						.' GROUP BY at2.product_id'
-						.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';
+						//.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
+						.' HAVING COUNT(at2.alias) >= '.(int)$c
+						.')';
 					}
 					$left 	= '';
 				break;
@@ -146,12 +155,15 @@ class PhocacartSearch
 				case 's': // Specifications
 					
 					$where  = '';
+					
 					if (!empty($in)) {
 						$c = count($in);
 						$where 	= ' a.id IN (SELECT s2.product_id FROM #__phocacart_specifications AS s2'
 						.' WHERE ' . implode( ' OR ', $in )
 						.' GROUP BY s2.product_id'
-						.' HAVING COUNT(distinct s2.alias) >= '.(int)$c.')';
+						//.' HAVING COUNT(distinct s2.alias) >= '.(int)$c.')';// problematic on some servers
+						.' HAVING COUNT(s2.alias) >= '.(int)$c
+						.')';
 					}
 					
 					$left 	= '';
@@ -170,6 +182,7 @@ class PhocacartSearch
 							$wheres[]	= 'a.metakey LIKE '.$text;
 							$wheres[]	= 'a.metadesc LIKE '.$text;
 							$wheres[]	= 'a.description LIKE '.$text;
+							$wheres[]	= 'a.sku LIKE '.$text;
 							$where		= '(' . implode(') OR (', $wheres) . ')';
 							$left 		= '';
 						break;
@@ -193,6 +206,7 @@ class PhocacartSearch
 								$wheres[]	= 'a.metakey LIKE '.$word;
 								$wheres[]	= 'a.metadesc LIKE '.$word;
 								$wheres[]	= 'a.description LIKE '.$word;
+								$wheres[]	= 'a.sku LIKE '.$word;
 								$wheres[]	= implode(' OR ', $wheres);
 							}
 							$where	= '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';

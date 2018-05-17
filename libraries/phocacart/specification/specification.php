@@ -243,14 +243,34 @@ class PhocacartSpecification
 	
 	}
 	
-	public static function getAllSpecificationsAndValues($ordering = 1) {
+	public static function getAllSpecificationsAndValues($ordering = 1, $onlyAvailableProducts = 0) {
 			
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 6);
 		
-		$query = 'SELECT s.id, s.title, s.alias, s.value, s.alias_value'
+		$columns		= 's.id, s.title, s.alias, s.value, s.alias_value';
+		$groupsFull		= $columns;
+		$groupsFast		= 's.id';
+		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+		$wheres		= array();
+		$lefts		= array();
+		
+		$wheres[]	= ' sg.published = 1';
+		$lefts[] 	= ' #__phocacart_specification_groups AS sg ON s.group_id = sg.id';
+		
+		if ($onlyAvailableProducts == 1) {
+			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+			$rules = PhocacartProduct::getOnlyAvailableProductRules();
+			$wheres = array_merge($wheres, $rules['wheres']);
+			$lefts	= array_merge($lefts, $rules['lefts']);
+		}
+		
+		$query = 'SELECT '.$columns
 				.' FROM  #__phocacart_specifications AS s'
-				.' GROUP BY s.alias, s.alias_value, s.id, s.title, s.value'
+				. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+				. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
+				.' GROUP BY '.$groups
 				.' ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$specifications = $db->loadObjectList();

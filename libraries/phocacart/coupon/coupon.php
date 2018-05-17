@@ -18,8 +18,9 @@ class PhocacartCoupon
 	
 	public function setCoupon($couponId = 0, $couponCode = '') {
 		$db 		= JFactory::getDBO();
-		$user 		= JFactory::getUser();
+		$user 		= PhocacartUser::getUser();
 		$guest		= PhocacartUserGuestuser::getGuestUser();
+		$pos		= PhocacartPos::isPos();// In POS coupons can be set for not selected user (when user is not selected)
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$wheres 		= array();
@@ -31,7 +32,7 @@ class PhocacartCoupon
 		} else {
 			return false;
 		}
-		
+	
 		// ACCESS
 		$wheres[] 	= " c.access IN (".$userLevels.")";
 		$wheres[] 	= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
@@ -39,13 +40,27 @@ class PhocacartCoupon
  
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
-		if((isset($user->id) && $user->id > 0) || $guest) {
-			$query = 'SELECT c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
+		if((isset($user->id) && $user->id > 0) || $guest || $pos) {
+			
+			$columns		=
+			'c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
 			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
 			.' c.calculation_type, c.free_shipping, c.free_payment, c.category_filter, c.product_filter,'
 			.' co.count AS count, cu.count AS countuser,'
 			.' GROUP_CONCAT(DISTINCT cp.product_id) AS product,' // line of selected products
-			.' GROUP_CONCAT(DISTINCT cc.category_id) AS category' // line of selected categories
+			.' GROUP_CONCAT(DISTINCT cc.category_id) AS category'; // line of selected categories
+			$groupsFull		= 'c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
+			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,c.category_filter, c.product_filter,'
+			.' c.calculation_type, c.free_shipping, c.free_payment, co.count, cu.count';
+			//.' co.count AS count, cu.count AS countuser';
+			$groupsFast		= 'c.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
+			
+			
+			
+			
+			$query = 'SELECT '.$columns
 			.' FROM #__phocacart_coupons AS c'
 			.' LEFT JOIN #__phocacart_coupon_products AS cp ON cp.coupon_id = c.id'
 			.' LEFT JOIN #__phocacart_coupon_categories AS cc ON cc.coupon_id = c.id'
@@ -53,10 +68,7 @@ class PhocacartCoupon
 			.' LEFT JOIN #__phocacart_coupon_count_user AS cu ON cu.coupon_id = c.id AND cu.user_id = '.(int)$user->id // limit c for user
 			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 6'// type 6 is coupon
 			. $where
-			.' GROUP BY c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
-			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,c.category_filter, c.product_filter,'
-			.' c.calculation_type, c.free_shipping, c.free_payment, co.count, cu.count';
-			//.' co.count AS count, cu.count AS countuser';
+			.' GROUP BY '.$groups;
 			
 			$query .= ' ORDER BY c.id'
 			.' LIMIT 1';

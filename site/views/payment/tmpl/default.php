@@ -15,5 +15,5 @@ echo $this->t['o'];
 
 echo '</div>';// end ph-pc-payment-box
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

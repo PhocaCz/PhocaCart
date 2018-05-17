@@ -8,8 +8,9 @@
  */
 defined('_JEXEC') or die();
 
-echo '<div id="ph-pc-question-box" class="pc-question-view'.$this->p->get( 'pageclass_sfx' ).'">';
+$layoutPC 	= new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
 
+echo '<div id="ph-pc-question-box" class="pc-question-view'.$this->p->get( 'pageclass_sfx' ).'">';
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ASK_A_QUESTION')));
 
 
@@ -87,6 +88,19 @@ if ( isset($this->t['question_description']) && $this->t['question_description']
 	<div class="controls"><?php echo $this->form->getInput('phq_captcha'); ?></div>
 </div>
 
+<?php 
+if ($this->t['display_question_privacy_checkbox'] > 0) {	
+	$d					= array();
+	$d['label_text']	= $this->t['question_privacy_checkbox_label_text'];
+	$d['id']			= 'phAskQuestionPrivacyCheckbox';
+	$d['name']			= 'privacy';
+	$d['class']			= 'ph-pull-right checkbox ph-askquestion-checkbox-confirm';
+	$d['display']		= $this->t['display_question_privacy_checkbox'];
+	
+	echo '<div class="ph-cb"></div>';
+	echo $layoutPC->render($d);
+}
+?>
 
 
 <div class="btn-toolbar">

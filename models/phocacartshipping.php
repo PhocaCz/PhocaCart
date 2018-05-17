@@ -63,6 +63,8 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 		$table->maximal_width 	= PhocacartUtils::replaceCommaWithPoint($table->maximal_width);
 		$table->maximal_height 	= PhocacartUtils::replaceCommaWithPoint($table->maximal_height);
 		$table->maximal_length 	= PhocacartUtils::replaceCommaWithPoint($table->maximal_length);
+		$table->minimal_quantity= PhocacartUtils::replaceCommaWithPoint($table->minimal_quantity);
+		$table->maximal_quantity= PhocacartUtils::replaceCommaWithPoint($table->maximal_quantity);
 
 
 		if (empty($table->alias)) {

@@ -135,7 +135,7 @@ $s[] = '       id: item[0],';
 $s[] = '       title: item[1]';
 $s[] = '      });';
 $s[] = '    });';
-//$s[] = '    jQuery(element).val(\'\');';
+$s[] = '    jQuery(element).val(\'\');';
 if ($multiple == 'false') {
 	$s[] = '    callback(data[0]);';// NOT MULTIPLE
 } else {
@@ -174,7 +174,7 @@ $s[] = ' ';
 $s[] = ' phSearchItemsMultiple("#'.$this->id.'", "'.$url.'");';
 //$s[] = ' ';
 //$s[] = ' jQuery(\'#save\').click(function() {';
-//$s[] = '  alert(jQuery(\'#jform_related\').val());';
+//$s[] = '  console log(jQuery(\'#jform_related\').val());';
 //$s[] = ' });';
 $s[] = '});';
 

@@ -19,6 +19,8 @@ class PhocacartPath
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		// Folder where to stored files for download
+		$productImagePath		= $paramsC->get( 'product_image_path', 'images/phocacartproducts' );
+		$categoryImagePath		= $paramsC->get( 'category_image_path', 'images/phocacartcategories' );
 		$downloadFolder			= $paramsC->get( 'download_folder', 'phocacartdownload' );
 		$downloadFolderPublic	= $paramsC->get( 'public_download_folder', 'phocacartdownloadpublic' );
 		// Absolute path which can be outside public_html - if this will be set, download folder will be ignored
@@ -42,15 +44,15 @@ class PhocacartPath
 			
 		} else if ($group['f'] == 4) {
 			// Images Categories
-			$path['orig_abs'] 				= JPATH_ROOT . '/images/phocacartcategories' ;
+			$path['orig_abs'] 				= JPATH_ROOT . '/' . $categoryImagePath ;
 			$path['orig_abs_ds'] 			= $path['orig_abs'] .'/' ;
-			$path['orig_rel'] 				= 'images/phocacartcategories' ;
+			$path['orig_rel'] 				= $categoryImagePath ;
 			$path['orig_rel_ds'] 			= $path['orig_rel'] . '/' ;
 		} else if ($group['f'] == 5) {
 			// Images Products
-			$path['orig_abs'] 				= JPATH_ROOT . '/images/phocacartproducts' ;
+			$path['orig_abs'] 				= JPATH_ROOT . '/' . $productImagePath ;
 			$path['orig_abs_ds'] 			= $path['orig_abs'] . '/';
-			$path['orig_rel'] 				= 'images/phocacartproducts' ;
+			$path['orig_rel'] 				= $productImagePath ;
 			$path['orig_rel_ds'] 			= $path['orig_rel'] . '/' ;
 		} else if ($group['f'] == 3) {
 			// Standard Path - Download	

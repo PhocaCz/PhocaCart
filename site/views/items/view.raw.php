@@ -48,9 +48,10 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['display_quickview']		= $this->p->get( 'display_quickview', 0 );
 		$this->t['display_addtocart_icon']	= $this->p->get( 'display_addtocart_icon', 0 );
 		$this->t['fade_in_action_icons']	= $this->p->get( 'fade_in_action_icons', 0 );
-		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
+		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
+		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
 		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
@@ -59,7 +60,10 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
 		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
-	
+		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
+		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
+		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
+		
 		// Catalogue function
 		if ($this->t['hide_addtocart'] == 1) {
 			$this->t['category_addtocart']		= 0;
@@ -107,7 +111,8 @@ class PhocaCartViewItems extends JViewLegacy
 		JPluginHelper::importPlugin('pcv');
 		$this->t['dispatcher']	= JEventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
-			
+		$results = $this->t['dispatcher']->trigger('onItemsBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
+		$this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));	
 		// Foreach values are rendered in default foreaches
 		// END Plugins --------------------------------------
 		

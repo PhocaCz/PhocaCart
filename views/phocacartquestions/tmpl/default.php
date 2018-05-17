@@ -57,15 +57,15 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-product">'.JHTML::_('grid.sort',  	$this->t['l'].'_PRODUCT', 'productname', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-category">'.JHTML::_('grid.sort',  	$this->t['l'].'_CATEGORY', 'cattitle', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-name">'.JHTML::_('grid.sort',  	$this->t['l'].'_NAME', 'a.name', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-email">'.JHTML::_('grid.sort',  	$this->t['l'].'_EMAIL', 'a.email', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-ip">'.JHTML::_('grid.sort',  	$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
-//echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-message">'.JHTML::_('grid.sort',  	$this->t['l'].'_MESSAGE', 'a.message', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.JHTML::_('grid.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";		
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-product">'.JHtml::_('grid.sort',  	$this->t['l'].'_PRODUCT', 'productname', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-category">'.JHtml::_('grid.sort',  	$this->t['l'].'_CATEGORY', 'cattitle', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-name">'.JHtml::_('grid.sort',  	$this->t['l'].'_NAME', 'a.name', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-email">'.JHtml::_('grid.sort',  	$this->t['l'].'_EMAIL', 'a.email', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-ip">'.JHtml::_('grid.sort',  	$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
+//echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-message">'.JHtml::_('grid.sort',  	$this->t['l'].'_MESSAGE', 'a.message', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";		
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 			
@@ -96,7 +96,7 @@ $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
-echo $r->tdOrder($canChange, $saveOrder, $orderkey);
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 
 $checkO = '';
@@ -135,7 +135,7 @@ echo $r->td($this->escape($item->ip), "small");
 
 echo $r->td(PhocacartUtils::wordDeleteWhole($item->message, 50), "small");
 
-echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small");
+echo $r->td(JHtml::date($item->date, JText::_('DATE_FORMAT_LC5')), "small");
 
 echo $r->td($item->id, "small");
 

@@ -22,6 +22,7 @@ class PhocacartCartRendercart extends PhocacartCart
 
 	public function __construct() {
 		
+		$this->setInstance(1);//cart
 		parent::__construct();
 	}
 	
@@ -55,9 +56,18 @@ class PhocacartCartRendercart extends PhocacartCart
 			}
 		}*/
 		
+		$app	= JFactory::getApplication();
+		$d		= array();
+		if($app->isClient('administrator')) {
+			// client = 0, ask phoca cart frontend layouts
+			$d['client'] = 1;//admin
+			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
+			
+		} else {
+			$d['client'] = 0;//frontend
+			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
+		}
 		
-		$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
-		$d						= array();
 		$d['paramsmodule']		= $this->params; // Module Parameters
 		$d['params']			= $pC; // Component Parameters
 		$d['fullitems']			= $this->fullitems;
@@ -76,38 +86,5 @@ class PhocacartCartRendercart extends PhocacartCart
 		return $layout->render($d);
 	}
 	
-	
-	public function getCartCountItems() {
-		
-		
-		if (empty($this->fullitems)) {
-			$this->fullitems = $this->getFullItems();// get them from parent
-		}
-		
-		$count = 0;
-		if (!empty($this->fullitems[0])) {
-			foreach($this->fullitems[0] as $k => $v) {
-				if (isset($v['quantity']) && (int)$v['quantity'] > 0) {
-					$count += (int)$v['quantity'];
-				}
-			}
-		}
-		return $count;
-	}
-	
-	
-	public function getCartTotalItems() {
-		
-		// SUBTOTAL
-		if (empty($this->total)) {
-			$this->total = $this->getTotal();
-		}
-		
-		// COUPONTITLE
-		if (empty($this->coupontitle)) {
-			$this->coupon['title'] = $this->getCouponTitle();
-		}
-		return $this->total;
-	}
 }
 ?>

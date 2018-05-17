@@ -21,7 +21,7 @@ class PhocaCartViewWishList extends JViewLegacy
 		$model								= $this->getModel();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
-		$this->u							= JFactory::getUser();
+		$this->u							= PhocacartUser::getUser();
 		
 		//$this->t['categories']				= $model->getCategoriesList();
 

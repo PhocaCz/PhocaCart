@@ -9,6 +9,7 @@
 defined('_JEXEC') or die();
 $layoutAtOS	= new JLayoutFile('attribute_options_select', null, array('component' => 'com_phocacart'));
 $layoutAtOC	= new JLayoutFile('attribute_options_checkbox', null, array('component' => 'com_phocacart'));
+$layoutAtOT	= new JLayoutFile('attribute_options_text', null, array('component' => 'com_phocacart'));
 
 $d 				= $displayData;
 $displayData 	= null;
@@ -45,6 +46,7 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 			$d2['attribute']			= $v;
 			$d2['required']				= $req;
 			$d2['dynamic_change_image'] = $d['dynamic_change_image'];
+			$d2['zero_attribute_price'] = $d['zero_attribute_price'];
 			$d2['pathitem']				= $d['pathitem'];
 			$d2['price']				= $d['price'];
 			$d2['product_id']			= $d['product_id'];
@@ -56,6 +58,8 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 				echo $layoutAtOS->render($d2);// SELECTBOX, SELECTBOX COLOR, SELECTBOX IMAGE
 			} else if ($v->type == 4 || $v->type == 5 || $v->type == 6) {
 				echo $layoutAtOC->render($d2);// CHECKBOX, CHECKBOX COLOR, CHECKBOX COLOR
+			} else if ($v->type == 7 || $v->type == 8 || $v->type == 9) {
+				echo $layoutAtOT->render($d2);// TEXT
 			}
 		}
 		

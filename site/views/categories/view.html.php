@@ -34,9 +34,10 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['image_height_cats']			= $this->p->get( 'image_height_cats', '' );
 		$this->t['display_view_category_button']= $this->p->get( 'display_view_category_button', 1 );
 		$this->t['category_name_link']			= $this->p->get( 'category_name_link', 0 );
+		$this->t['categories_view_layout']		= $this->p->get( 'categories_view_layout', 1 );
 	
 
-		
+	
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
 		//$media->loadChosen();

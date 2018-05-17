@@ -25,7 +25,7 @@ class JFormFieldPhocaUnit extends JFormField
 		}
 		
 		
-		return JHTML::_('select.genericlist',  $unitsA,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return JHtml::_('select.genericlist',  $unitsA,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

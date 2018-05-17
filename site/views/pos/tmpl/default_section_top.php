@@ -1,0 +1,16 @@
+<?php
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Extension
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+defined('_JEXEC') or die();
+
+echo PhocacartSection::renderNavigation($this->t['section']->id);	
+echo '<div class="ph-link-sections">&nbsp;</div>';
+echo '<div class="ph-add-remove-tickets">&nbsp;</div>';
+echo $this->loadTemplate('vendor');
+echo $this->loadTemplate('logo');
+?>

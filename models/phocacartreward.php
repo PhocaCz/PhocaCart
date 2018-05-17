@@ -51,6 +51,7 @@ class PhocaCartCpModelPhocacartReward extends JModelAdmin
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
+		$table->points 					= PhocacartUtils::getIntFromString($table->points);
 		if (empty($table->alias)) {
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}

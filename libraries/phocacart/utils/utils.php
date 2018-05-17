@@ -370,12 +370,12 @@ class PhocacartUtils
 		if ($format == '') {
 			$format = JText::_('DATE_FORMAT_LC2');
 		}
-		/*$user	= JFactory::getUser();
+		/*$user	= PhocacartUser::getUser();
 		$config = JFactory::getConfig();
 		$dateF 	= JFactory::getDate($date, 'UTC');
 		$dateF->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
 		$dateN	= $dateF->format('Y-m-d h:i:s', true, false);
-		//$dateN = JHtml::date($v->date, 'd. m. Y h:s');*/
+		//$dateN = JHtml::date($v->date, JText::_('DATE_FORMAT_LC2'));*/
 		$dateN = JHtml::_('date', $date, $format);
 		return $dateN;
 	}
@@ -456,8 +456,7 @@ class PhocacartUtils
 	}
 	
 	public static function getDefaultTemplate() {
-	
-	
+
 		$db = JFactory::getDBO();
 		$q = 'SELECT template FROM #__template_styles WHERE client_id = 0 AND home = 1;';
 		$db->setQuery($q);
@@ -466,5 +465,69 @@ class PhocacartUtils
 	
 	}
 	
+	public static function cleanExternalHtml($html) {
+		$allowedTags = PhocacartUtilsSettings::getHTMLTagsExternalSource();
+		$allowedTagsString = '<' . implode('><', $allowedTags). '>';
+		
+		$html = strip_tags($html, $allowedTagsString);
+		
+		return $html;
+		
+	}
+	
+	public static function curl_get_contents($url) {
+		
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_URL, $url);
+
+		$data = curl_exec($ch);
+		curl_close($ch);
+
+		return $data;
+	}
+	
+	public static function addSeparator($string, $separator = ' - ') {
+		
+		$o = '';
+		if ($string != '') {
+			$o = $separator . $string;
+		}
+		return $o;
+	}
+	
+	public static function isView($viewToCheck = '') {
+	
+		if ($viewToCheck != '') {
+			$app 		= JFactory::getApplication();
+			$view 		= $app->input->get('view', '');
+			$option 	= $app->input->get('option', '');
+		
+			if ($option == 'com_phocacart' && $view == $viewToCheck) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static function isController($controllerToCheck = '') {
+	
+		if ($controllerToCheck != '') {
+			$app 		= JFactory::getApplication();
+			//$task 		= $app->input->get('task');
+			$controller = $app->input->get('controller', '');// Set in POS controllers
+			$option 	= $app->input->get('option', '');
+
+			//$taskA		= explode('.', $task);
+		
+			//if ($option == 'com_phocacart' && isset($taskA[0]) && $taskA[0] == $controllerToCheck) {
+			if ($option == 'com_phocacart' && $controller == $controllerToCheck) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 ?>

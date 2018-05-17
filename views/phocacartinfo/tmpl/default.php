@@ -14,11 +14,11 @@ echo '<div class="col-xs-12 col-sm-2 col-md-2 ph-admin-box-menu">'. JHtmlSidebar
 echo '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content">';
 
 echo '<div style="float:right;margin:10px;">'
-	. JHTML::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' )
+	. JHtml::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' )
 	.'</div>'
-	. JHTML::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz')
-	.'<h3>'.JText::_($this->t['l'].'_PHOCA_CART').' - '. JText::_($this->t['l'].'_INFORMATION').'</h3>'
-	.'<div style="clear:both;"></div>';
+	. JHtml::_('image', $this->t['i'] . 'logo-phoca-cart.png', 'Phoca.cz')
+	.'<div style="clear:both;"></div>'
+	.'<h3>'.JText::_($this->t['l'].'_PHOCA_CART').' - '. JText::_($this->t['l'].'_INFORMATION').'</h3>';
 
 echo '<h3>'.  JText::_($this->t['l'].'_HELP').'</h3>';
 
@@ -35,6 +35,8 @@ echo '<h3>'.  JText::_($this->t['l'] . '_COPYRIGHT').'</h3>'
 .'<p>© 2007 - '.  date("Y"). ' Jan Pavelka</p>'
 .'<p><a href="https://www.phoca.cz/" target="_blank">www.phoca.cz</a></p>';
 
+echo '<br />' . JHtml::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz') . '<br />';
+
 echo '<h3>'.  JText::_($this->t['l'] . '_LICENSE').'</h3>'
 .'<p><a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPLv2</a></p>';
 
@@ -48,6 +50,7 @@ echo '<input type="hidden" name="task" value="" />'
 .'<input type="hidden" name="controller" value="'.$this->t['c'].'info" />';
 
 echo '<p>&nbsp;</p>';
+
 
 echo '<div style="border-top:1px solid #eee"></div><p>&nbsp;</p>'
 .'<div>

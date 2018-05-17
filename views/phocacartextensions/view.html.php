@@ -27,6 +27,7 @@ class PhocaCartCpViewPhocacartExtensions extends JViewLegacy
 		
 		if ($this->t['load_extension_list'] == 1) {
 			$this->items		= $this->get('Items');
+			$this->news			= $this->get('News');
 			$this->state		= $this->get('State');
 		}
 		$media = new PhocacartRenderAdminmedia();

@@ -30,9 +30,9 @@ class JFormFieldPhocacartCountry extends JFormField
 		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		
 		
-		array_unshift($data, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_COUNTRY').' -', 'value', 'text'));
+		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_COUNTRY').' -', 'value', 'text'));
 
-		return JHTML::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return JHtml::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

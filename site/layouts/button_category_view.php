@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 $d = $displayData;
 
 ?>
-<div class="pull-right ph-pull-right">
+<div class="ph-pull-right">
 <?php
 if ($d['display_view_category_button'] == 1) {
 	

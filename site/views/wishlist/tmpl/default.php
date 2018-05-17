@@ -136,5 +136,5 @@ if (!empty($this->t['items'])) {
 
 echo '</div>';// end wishlist box
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

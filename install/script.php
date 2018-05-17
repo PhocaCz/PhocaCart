@@ -80,6 +80,8 @@ class com_phocacartInstallerScript
 		. $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_paypal_standard')
 		. ' OR '
 		. $db->quoteName('name') . ' = ' . $db->quote('plg_pcs_shipping_standard')
+		. ' OR '
+		. $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_pos_cash')
 		. ')');
 		$query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
 		$db->setQuery($query);

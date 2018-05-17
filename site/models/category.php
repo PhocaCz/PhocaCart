@@ -25,20 +25,21 @@ class PhocaCartModelCategory extends JModelLegacy
 	public function __construct() {	
 		parent::__construct();
 		
-		$app				= JFactory::getApplication();
-		$config 			= JFactory::getConfig();		
-		//$paramsC 			= JComponentHelper::getParams('com_phocacart') ;
-		$paramsC 			= $app->getParams();
-		$item_pagination	= $paramsC->get( 'item_pagination_default', '20' );
-		$item_ordering		= $paramsC->get( 'item_ordering', 1 );
-		$layout_type		= $paramsC->get( 'layout_type', 'grid' );
+		$app					= JFactory::getApplication();
+		$config 				= JFactory::getConfig();		
+		$paramsC 				= $app->getParams();
+		$item_pagination		= $paramsC->get( 'item_pagination_default', '20' );
+		$item_ordering			= $paramsC->get( 'item_ordering', 1 );
+		$layout_type			= $paramsC->get( 'layout_type', 'grid' );
 	
-		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
+		$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
+
+		$this->setState('limit', $limit);
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', JFactory::getApplication()->input->get('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', JFactory::getApplication()->input->get('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
 		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
 	
@@ -61,7 +62,7 @@ class PhocaCartModelCategory extends JModelLegacy
 	
 	function getOrdering() {
 		if(empty($this->ordering)) {
-			$this->ordering = PhocacartOrdering::renderOrderingFront($this->getState('itemordering'), 1);
+			$this->ordering = PhocacartOrdering::renderOrderingFront($this->getState('itemordering'), 0);
 		}
 		return $this->ordering;
 	}
@@ -101,11 +102,15 @@ class PhocaCartModelCategory extends JModelLegacy
 	protected function getItemListQuery($categoryId, $count = 0) {
 	
 		$app		= JFactory::getApplication();
-		$user 		= JFactory::getUser();
+		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$params 	= $app->getParams();
+		$wheres		= array();
+		$lefts		= array();
 		
+		
+		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
 		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
 		$leftImages = '';
 		$selImages = '';
@@ -122,7 +127,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
 		
-		
+		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
 		
 		if ($this->getState('filter.language')) {
 			$wheres[] =  ' a.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
@@ -142,41 +147,64 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		
 		
+		if ($p['hide_products_out_of_stock'] == 1) {
+			$wheres[] = " a.stock > 0";
+		}
+		
 		if ($count == 1) {
-			$q = ' SELECT a.id'
+			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
+			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
+			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
+			
+			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
+			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+			
+			//$query = ' SELECT COUNT(DISTINCT a.id) AS count'; // 2.85ms 0.12mb
+			$q = ' SELECT a.id' // 2.42ms 0.12mb
 			. ' FROM #__phocacart_products AS a'
-			//. ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid'
-			. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id"
-			. " LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id"
-			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
-			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+			. implode( ' ', $lefts )
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id';
 			
 		} else {
-			$q = ' SELECT a.id, a.title, a.image, a.alias, a.description, GROUP_CONCAT(c.id) AS catid, GROUP_CONCAT(c.title) AS cattitle, GROUP_CONCAT(c.alias) AS catalias, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
-			. ' AVG(r.rating) AS rating,'
-			. ' at.required AS attribute_required'
-			. ' FROM #__phocacart_products AS a'
-			//. ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid'
-			. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id AND pc.category_id = ".(int)$categoryId
-			. " LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id"
-			. ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
-			. ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0'
-			. ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
-			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			
+			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
+			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id AND pc.category_id = '.(int)$categoryId;
+			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+			$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
+			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
+			//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
+			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
+			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
+			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
 			// user is in more groups, select lowest price by best group
-			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			$lefts[] = ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
 			// user is in more groups, select highest points by best group
-			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
 			
+			
+			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit,  a.description,'
+						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,' 
+						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,' 
+						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,' 
+						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,' 
+						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
+						.' AVG(r.rating) AS rating, at.required AS attribute_required';
+			
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
+			$groupsFast	= 'a.id';
+			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
+			
+			
+			$q = ' SELECT '.$columns
+			. ' FROM #__phocacart_products AS a'
+			. implode( ' ', $lefts )
 			. $leftImages
 			. ' WHERE ' . implode( ' AND ', $wheres )
-			//. ' GROUP BY a.id'
-			. ' GROUP BY a.id, a.title, a.image, a.alias, a.description, a.price, a.points_received, a.price_original, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required'
+			. ' GROUP BY '.$groups
 			. ' ORDER BY '.$itemOrdering;
 		}
 		
@@ -190,7 +218,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres		= array();
 		$app		= JFactory::getApplication();
 		$params 	= $app->getParams();
-		$user 		= JFactory::getUser();
+		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -206,6 +234,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = " c.published = 1";
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
 		
 		if ($this->getState('filter.language')) {
 			$wheres[] 	=  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
@@ -213,13 +242,18 @@ class PhocaCartModelCategory extends JModelLegacy
 		
 		if ($subcategories) {
 			
-			$query = " SELECT  c.id, c.parent_id, c.title, c.alias, COUNT(c.id) AS numdoc"
+			$columns	= 'c.id, c.parent_id, c.title, c.alias, c.image, COUNT(c.id) AS numdoc';
+			$groupsFull	= 'c.id, c.parent_id, c.title, c.alias, c.image';
+			$groupsFast	= 'c.id';
+			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
+			$query = " SELECT ".$columns
 				. " FROM #__phocacart_categories AS c"
 				//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
 				//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1 AND a.access IN (".$userLevels.")"
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 				. " WHERE " . implode( " AND ", $wheres )
-				. " GROUP BY c.id, c.parent_id, c.title, c.alias"
+				. " GROUP BY ".$groups
 				. " ORDER BY ".$categoryOrdering;
 		} else {
 			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"

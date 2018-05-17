@@ -21,7 +21,7 @@ if ((int)$this->u->id > 0) {
 	
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
-	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><div class="pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><div class="ph-pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phcheckoutAddress">';
@@ -39,7 +39,7 @@ if ((int)$this->u->id > 0) {
 	
 	echo '<div class="ph-cb"></div>';
 	
-	echo '<div class="pull-right ph-account-check-box">';
+	echo '<div class="ph-pull-right ph-account-check-box">';
 	
 	echo '<div class="checkbox">';
 	echo '<label><input type="checkbox" id="phCheckoutBillingSameAsShipping" name="phcheckoutbsas" '.$this->t['dataaddressform']['bsch'].' > '.JText::_('COM_PHOCACART_DELIVERY_AND_BILLING_ADDRESSES_ARE_THE_SAME').'</label>';
@@ -49,7 +49,7 @@ if ((int)$this->u->id > 0) {
 	
 	echo '<div class="ph-cb"></div>';
 	
-	echo '<div class="pull-right ph-account-address-save">';
+	echo '<div class="ph-pull-right ph-account-address-save">';
 	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
@@ -81,8 +81,8 @@ if ((int)$this->u->id > 0) {
 	$lang->load('mod_login');
 	
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
-	//echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="pull-right"><span class="glyphicon glyphicon-remove-circle ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
-	echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+	//echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="glyphicon glyphicon-remove-circle ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+	echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div>';
 	
 	
@@ -155,5 +155,5 @@ if ((int)$this->u->id > 0) {
 echo '</div>';
 echo '<div>&nbsp;</div>';
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

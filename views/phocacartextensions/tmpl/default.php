@@ -40,6 +40,7 @@ if ($this->t['load_extension_list'] == 0) {
 	echo '<div class="alert-message">'.JText::_('COM_PHOCACART_DISCOVER').' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">'.JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS').'</a> '.$linkIcon .'</div>';
 	echo '</div>';
 	
+	
 	echo $r->startFilterBar();
 	echo $r->startFilterBar(2);
 	echo $r->endFilterBar();
@@ -83,6 +84,44 @@ echo '<button type="button" class="close" data-dismiss="alert">×</button>';
 echo '<div class="alert-message">'.JText::_('COM_PHOCACART_DISCOVER').' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">'.JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS').'</a> '.$linkIcon .'</div>';
 echo '</div>';
 
+
+if (is_array($this->news)) {
+	foreach ($this->news as $n => $m) {
+		if (isset($m['name']) && $m['name'] != '' && isset($m['description']) && $m['description'] != '') {
+			
+			$mClass 	= isset($m['class']) ? $this->escape(strip_tags($m['class'])) : '';
+			$mStyle 	= isset($m['style']) ? $this->escape(strip_tags($m['style'])) : '';
+			$mImage 	= isset($m['image']) ? $this->escape(strip_tags($m['image'])) : '';
+			$mImageLarge= isset($m['imagelarge']) ? $this->escape(strip_tags($m['imagelarge'])) : '';
+			$mLink		= isset($m['link']) ? $this->escape(strip_tags($m['link'])) : '';
+			$aStart		= '';
+			$aEnd		= '';
+			
+			if ($mLink != '') {
+				$aStart = '<a href="'.$mLink.'" target="_blank">';
+				$aEnd 	= '</a>';
+			}
+			
+			echo '<div class="ph-featured-box '.$mClass.'" style="'.$mStyle.'">';
+			echo '<div class="ph-featured-head">'.$aStart.$this->escape(strip_tags($m['name'])).$aEnd.'</div>';
+			
+			echo '<div class="ph-featured-image-large">'.$aStart.'<img src="'.$mImageLarge.'" alt="" />'.$aEnd.'</div>';
+			
+			echo '<div class="ph-featured-description">';
+			if ($mImage != '') {
+				echo '<div class="ph-featured-image">'.$aStart.'<img src="'.$mImage.'" alt="" />'.$aEnd.'</div>';
+			}
+			echo $aStart.$this->escape(strip_tags($m['description'])).$aEnd;
+			
+			echo '<div class="ph-cb"></div>';
+			echo '</div>';
+			
+			echo '</div>';
+			
+			
+		}
+	}
+}
 echo $r->startFilterBar();
 
 echo $r->startFilterBar(2);
@@ -155,9 +194,16 @@ $extension['versioncurrent']	= null;
 PhocacartUtilsExtension::getExtensionLoadInfo($extension, $element, $type, $folder);
 
 
+
+$trClass= '';
+if (isset($item['featured']) && $item['featured'] == 1) {
+	$trClass = 'ph-featured';
+}
+
+
 $iD = $i % 2;
 echo "\n\n";
-echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
+echo '<tr class="row'.$iD.' '.$trClass.'" sortable-group-id="0">'. "\n";
 
 $image 		= isset($item['image']) ? $item['image'] : '';
 

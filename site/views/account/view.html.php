@@ -31,7 +31,7 @@ class PhocaCartViewAccount extends JViewLegacy
 	function display($tpl = null)
 	{		
 		$app								= JFactory::getApplication();
-		$this->u							= JFactory::getUser();
+		$this->u							= PhocacartUser::getUser();
 		$uri 								= JFactory::getURI();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();

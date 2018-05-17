@@ -52,7 +52,7 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	public function getItem($pk = null) {
 		$app	= JFactory::getApplication();
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		$table 	= $this->getTable('PhocacartUser', 'Table');
 		$tableS 	= $this->getTable('PhocacartUser', 'Table');
 		
@@ -103,29 +103,13 @@ class PhocaCartModelCheckout extends JModelForm
 	}
 	
 	public function getData() {
-		
-		$db = JFactory::getDBO();
-		$u	= JFactory::getUser();
-		
-		if ((int)$u->id > 0) {
-		
-			$query = 'SELECT u.*, r.title as regiontitle, c.title as countrytitle FROM #__phocacart_users AS u'
-					.' LEFT JOIN #__phocacart_countries AS c ON c.id = u.country'
-					.' LEFT JOIN #__phocacart_regions AS r ON r.id = u.region'
-					.' WHERE u.user_id = '.(int)$u->id
-					.' ORDER BY u.type ASC';
-			$db->setQuery($query);
-			$data = $db->loadObjectList();
-			return $data;
-		}
-		return false;
-	
+		return PhocacartUser::getUserData();
 	}
 	
 	public function saveAddress($data, $type = 0) {
 		
 		$app	= JFactory::getApplication();
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		
 		
 		if ((int)$user->id < 1) {
@@ -150,7 +134,6 @@ class PhocaCartModelCheckout extends JModelForm
 
 		$row->date = gmdate('Y-m-d H:i:s');
 		
-
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -161,13 +144,13 @@ class PhocaCartModelCheckout extends JModelForm
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
 		return $row->id;
 	}
 	
 	public function saveShipping($shippingId) {
+		
 		$app	= JFactory::getApplication();
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		
 		if ((int)$user->id < 1) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
@@ -177,13 +160,18 @@ class PhocaCartModelCheckout extends JModelForm
 		$data['shipping']	= (int)$shippingId;
 		$data['user_id']	= (int)$user->id;
 		
+		$shipping 			= new PhocacartShipping();
+		//$shipping->setType();
+		$isValidShipping	= $shipping->checkAndGetShippingMethods($shippingId);
+		if (!$isValidShipping) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
+			return false;
+		}
 		
 		$row = $this->getTable('PhocacartCart', 'Table');
-		
-		
-		
+
 		if(isset($user->id) && $user->id > 0) {
-			if (!$row->load(array('user_id' => (int)$user->id))) {
+			if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
 				// No data yet
 			}
 		}
@@ -199,16 +187,12 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 
 		$row->date = gmdate('Y-m-d H:i:s');
-		
-		
 
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
 
-		
-		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -220,7 +204,7 @@ class PhocaCartModelCheckout extends JModelForm
 	
 	public function savePaymentAndCouponAndReward($paymentId, $couponId, $reward) {
 		$app	= JFactory::getApplication();
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		if ((int)$user->id < 1) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
 			return false;
@@ -231,12 +215,23 @@ class PhocaCartModelCheckout extends JModelForm
 		$data['user_id']	= (int)$user->id;
 		$data['reward'] 	= (int)$reward;
 		
+		$payment 			= new PhocacartPayment();
+		//$payment->setType();
+		$isValidPayment		= $payment->checkAndGetPaymentMethods($paymentId);
+		if (!$isValidPayment) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
+			return false;
+		}
+		
+		// Coupon has own rules in cart
+		// Reward points have own rules in cart
+		
 		
 		$row = $this->getTable('PhocacartCart', 'Table');
 		
 		
 		if(isset($user->id) && $user->id > 0) {
-			if (!$row->load(array('user_id' => (int)$user->id))) {
+			if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
 				// No data yet
 			}
 		}
@@ -253,8 +248,6 @@ class PhocaCartModelCheckout extends JModelForm
 
 		$row->date = gmdate('Y-m-d H:i:s');
 		
-		
-
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;

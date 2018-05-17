@@ -116,12 +116,52 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	public function save($data) {
 		
 		
+		$app		= JFactory::getApplication();
+		$input  	= JFactory::getApplication()->input;
+		//$dispatcher = JDispatcher::getInstance();
+		$table		= $this->getTable();
+		
 		// Test thumbnail of category image
 		if(isset($data['image']) && $data['image'] != '') {
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
 		}
+		
+		
+		
+		// ALIAS
+		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
+			if ($data['alias'] == null) {
+				if (JFactory::getConfig()->get('unicodeslugs') == 1) {
+					$data['alias'] = JFilterOutput::stringURLUnicodeSlug($data['title']);
+				} else {
+					$data['alias'] = JFilterOutput::stringURLSafe($data['title']);
+				}
+
+
+				if ($table->load(array('alias' => $data['alias']))){
+					$msg = JText::_('COM_PHOCACART_SAVE_WARNING');
+				}
+
+				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
+				$data['alias'] = $alias;
+
+				if (isset($msg)) {
+					JFactory::getApplication()->enqueueMessage($msg, 'warning');
+				}
+			}
+		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
+			$this->setError(\JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
+			return false;
+		}
+		
+		
 	
 		$save = parent::save($data);
+		
+		if (!isset($data['group'])) {
+			$data['group'] = array();
+		}
+		
 		if ($save) {
 			$savedId = $this->getState($this->getName().'.id');
 			if ((int)$savedId > 0) {
@@ -573,40 +613,55 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if (count( $cid )) {
 			JArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-			$query = 'SELECT a.image'.
+			$query = 'SELECT a.image, a.title'.
 					' FROM #__phocacart_categories AS a' .
 					' WHERE a.id IN ( '.$cids.' )';
 			$this->_db->setQuery($query);
 			$files = $this->_db->loadObjectList();
 			if (isset($files) && count($files)) {
+				
+				$msg = array();
 				foreach($files as $k => $v) {
 				
+					$title 	= isset($v->title) ? $v->title : '';
+					$title	= JText::_('COM_PHOCACART_CATEGORY') . ' ' . $v->title . ': ';
+					
 					if (isset($v->image) && $v->image != '') {
+						
+						
 						
 						$original	= PhocacartFile::existsFileOriginal($v->image, 'categoryimage');
 						if (!$original) {
 							// Original does not exist - cannot generate new thumbnail
-							$message = JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
-							return false;
+							$msg[$k] = $title . JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
+							//return false;
+							continue;
 						}
 						
 						// Delete old thumbnails
 						$deleteThubms = PhocacartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'categoryimage');
 						if (!$deleteThubms) {
-							$message = JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
-							return false;
+							$msg[$k] = $title. JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
+							//return false;
+							continue;
 						}
 						$createThubms = PhocacartFileThumbnail::getOrCreateThumbnail($v->image, 0, 1,1,1,0,'categoryimage');
 						if (!$createThubms) {
-							$message = JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
-							return false;
+							$msg[$k] = $title . JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
+							//return false;
+							continue;
 						}
 						
 					} else {
-						$message = JText::_('COM_PHOCACART_FILENAME_NOT_EXISTS');
-						return false;
+						//$msg[$k] = $title . JText::_('COM_PHOCACART_FILENAME_NOT_EXISTS');
+						$msg[$k] = $title . JText::_('COM_PHOCACART_CATEGORY_IMAGE_NOT_EXISTS');
+						//return false;
+						continue;
 					}
 				}
+				
+				$message = !empty($msg) ? implode('<br />', $msg) : '';
+				
 			} else {
 				$message = JText::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
 				return false;

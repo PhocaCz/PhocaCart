@@ -30,7 +30,7 @@ class PhocacartLog
 	
 		if ((int)$type > 0 && $title != '' ) {
 			$uri			= JFactory::getUri();
-			$user			= JFactory::getUser();
+			$user			= PhocacartUser::getUser();
 			$db				= JFactory::getDBO();
 			$ip 			= $_SERVER["REMOTE_ADDR"];
 			$incoming_page	= htmlspecialchars($uri->toString());

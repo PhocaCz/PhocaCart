@@ -258,11 +258,11 @@ options: {
 		if (!empty($data)) {
 			
 			foreach($data as $k => $v) {
-				$d[$k] = '\''. $v['items']. '\'';
-				$l[$k] = '\''. $v['title']. '\'';
+				$d[$k] = '\''. addslashes($v['items']). '\'';
+				$l[$k] = '\''. addslashes($v['title']). '\'';
 				$c = $k%5;
 			
-				$b[$k] = '\''. $colors[$k]. '\'';
+				$b[$k] = '\''. addslashes($colors[$k]). '\'';
 			}
 			
 			$dS = implode(',', $d);
@@ -322,6 +322,15 @@ var config".$id." = {
 		$q->select('SUM(t.amount) AS order_amount');
 		$q->join('LEFT', '#__phocacart_order_total AS t ON a.id=t.order_id');
 		$q->where('t.type = \'brutto\'' );
+		
+		// Filter by order status
+		$whereOrderStatus = '';
+		if (!PhocacartStatistics::setWhereByOrderStatus($whereOrderStatus)) {
+			return false;
+		}
+		if ($whereOrderStatus != '') {
+			$q->where( $whereOrderStatus );
+		}
 	
 		if ($numberOfDate == '') {
 			$numberOfDate = 6; //7 days
@@ -408,9 +417,9 @@ var config".$id." = {
 		return $rData;
 	}
 	
-	public function getNumberOfOrders($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	public function getNumberOfOrders($numberOfDate = -1, $dateFrom = '', $dateTo = '') {
 		
-		if ($numberOfDate == '') {
+		if ($numberOfDate == -1) {
 			$numberOfDate = 7;
 		}
 		
@@ -424,6 +433,15 @@ var config".$id." = {
 		$db		= JFactory::getDbo();
 		$q = 'SELECT COUNT(a.id) FROM #__phocacart_orders AS a WHERE a.published = 1';
 		$q .= ' AND DATE(a.date) >= '.$db->quote($dateFrom).' AND DATE(a.date) <= '.$db->quote($dateTo);
+		
+		$whereOrderStatus = '';
+		if (!PhocacartStatistics::setWhereByOrderStatus($whereOrderStatus)) {
+			return 0;
+		}
+		if ($whereOrderStatus != '') {
+			$q .= 'AND '.$whereOrderStatus;
+		}
+		
 		$db->setQuery($q);
 		$count = $db->loadRow();
 		if (isset($count[0]) && (int)$count[0] != 0) {
@@ -432,9 +450,9 @@ var config".$id." = {
 		return 0;
 	}
 	
-	public function getNumberOfUsers($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	public function getNumberOfUsers($numberOfDate = -1, $dateFrom = '', $dateTo = '') {
 		
-		if ($numberOfDate == '') {
+		if ($numberOfDate == -1) {
 			$numberOfDate = 7;
 		}
 		
@@ -449,6 +467,14 @@ var config".$id." = {
 		$q = 'SELECT COUNT(DISTINCT(a.user_id)) FROM #__phocacart_orders AS a WHERE a.published = 1';
 		$q .= ' AND DATE(a.date) >= '.$db->quote($dateFrom).' AND DATE(a.date) <= '.$db->quote($dateTo);
 		
+		$whereOrderStatus = '';
+		if (!PhocacartStatistics::setWhereByOrderStatus($whereOrderStatus)) {
+			return 0;
+		}
+		if ($whereOrderStatus != '') {
+			$q .= 'AND '.$whereOrderStatus;
+		}
+		
 		$db->setQuery($q);
 		$count = $db->loadRow();
 		
@@ -458,11 +484,14 @@ var config".$id." = {
 		return 0;
 	}
 	
-	public function getAmountOfOrders($numberOfDate = '', $dateFrom = '', $dateTo = '') {
+	public function getAmountOfOrders($numberOfDate = -1, $dateFrom = '', $dateTo = '') {
 		
-		if ($numberOfDate == '') {
+		
+		if ($numberOfDate == -1) {
 			$numberOfDate = 7;
 		}
+		
+
 		
 		if ($dateFrom == '') {
 			$dateFrom 	= PhocacartDate::getCurrentDate($numberOfDate);
@@ -470,13 +499,22 @@ var config".$id." = {
 		if ($dateTo == '') {
 			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
-		
+
 		$db		= JFactory::getDbo();
 		$q = ' SELECT SUM(t.amount) FROM #__phocacart_orders AS a';
 		$q .= ' LEFT JOIN #__phocacart_order_total AS t ON a.id = t.order_id';
 		$q .= ' WHERE a.published = 1';
 		$q .= ' AND t.type = '.$db->quote('brutto');
 		$q .= ' AND DATE(a.date) >= '.$db->quote($dateFrom).' AND DATE(a.date) <= '.$db->quote($dateTo);
+		
+		$whereOrderStatus = '';
+		if (!PhocacartStatistics::setWhereByOrderStatus($whereOrderStatus)) {
+			return 0;
+		}
+		if ($whereOrderStatus != '') {
+			$q .= 'AND '.$whereOrderStatus;
+		}
+		
 		$db->setQuery($q);
 		$count = $db->loadRow();
 		if (isset($count[0]) && (int)$count[0] != 0) {
@@ -498,6 +536,30 @@ var config".$id." = {
 				return round(floatval($value / pow(10, $exponent)),1).$abbreviation;
 			}
 		}
+	}
+	
+	
+	/*
+	 * changes the $whereStatus variable
+	 * return true or false, if false, this will influence whole sql query which will be completely ignored
+	 */
+	public static function setWhereByOrderStatus(&$whereStatus) {
+		
+		$paramsC					= PhocacartUtils::getComponentParameters();
+		$statistics_order_status	= $paramsC->get( 'statistics_order_status', array(-1) );
+
+		if (in_array(-1, $statistics_order_status)) {
+			// All order statuses are set in statistics, where clause not needed
+			return true;
+		} else if (in_array(0, $statistics_order_status)) {
+			// No status selected, no statistics, where clause not needed
+			return false;
+		} else {
+			// Only some statuses selected, so where clause changed
+			$whereStatus = 'a.status_id IN ('.implode($statistics_order_status, ',').')';
+			return true;
+		}
+		return false;
 	}
 }
 ?>

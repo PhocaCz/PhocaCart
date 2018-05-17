@@ -21,7 +21,7 @@ class PhocaCartViewDownload extends JViewLegacy
 		$model								= $this->getModel();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
-		$this->u							= JFactory::getUser();
+		$this->u							= PhocacartUser::getUser();
 		$this->t['token_download']			= $app->input->get('d', '', 'string');
 		$this->t['token_order']				= $app->input->get('o', '', 'string');
 		$this->t['download_guest_access']	= $this->p->get( 'download_guest_access', 0 );

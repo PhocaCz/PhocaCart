@@ -28,7 +28,7 @@ if ($d['selectoptions'] == 1) {
 
 	$onClick = 'onclick="jQuery(\'#phCartAddToCartButton'.(int)$d['id'].'\').find(\':submit\').click();return false;"';
 
-	echo '<div class="ph-category-item-addtocart"><a href="javascript:void(0);" '.$onClick.' title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top">';
+	echo '<div class="ph-category-item-addtocart phProductAddToCartIcon'.$d['typeview'].(int)$d['id'].' '.$d['class_icon'].'"><a href="javascript:void(0);" '.$onClick.' title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top">';
 	echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
 	echo '</a>';
 	echo '</div>';

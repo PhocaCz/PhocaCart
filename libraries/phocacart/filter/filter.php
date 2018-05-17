@@ -28,6 +28,8 @@ class PhocacartFilter
 	public $ordering_attribute			= 1;
 	public $ordering_specification		= 1;
 	
+	public $manufacturer_title			= '';
+	
 	
 	public function __construct() {}
 	
@@ -87,7 +89,7 @@ class PhocacartFilter
 			}
 		}
 	
-		// -PRICE-
+		// -PRICE- AVAILABLE PRODUCTS ONLY - Yes
 		$data['param'] 		= 'price_from';
 		$data['param2'] 	= 'price_to';
 		$data['id'] 		= 'phPriceFromTo';
@@ -100,8 +102,9 @@ class PhocacartFilter
 		$data['getparams2']	= $this->getArrayParamValues($data['param2'], 'string');
 		$data['formtype']	= 'text';
 		$data['uniquevalue']= 1;
+		$data['filterprice']= $this->price;
 		
-		if ($this->price) {
+		if ($this->price > 0) {
 			$o[] = $layout2->render($data);
 		}
 		
@@ -115,16 +118,16 @@ class PhocacartFilter
 		
 		if ($this->tag) {
 			/*phocacart import('phocacart.tag.tag');*/
-			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag);
+			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag, 1);
 		}
 		
 		if (!empty($data['items'])) {
 			$o[] = $layout->render($data);
 		}
 		
-		// -MANUFACTURER-
+		// -MANUFACTURER- AVAILABLE PRODUCTS ONLY - Yes
 		$data['param'] 		= 'manufacturer';
-		$data['title']		= JText::_('COM_PHOCACART_MANUFACTURERS');
+		$data['title']		= $this->manufacturer_title != '' ? JText::_($this->manufacturer_title) : JText::_('COM_PHOCACART_MANUFACTURERS');
 		$data['getparams']	= $this->getArrayParamValues($data['param'], 'string');
 		$data['nrinalias']	= 1;
 		$data['formtype']	= 'checked';
@@ -132,17 +135,17 @@ class PhocacartFilter
 		
 		if ($this->manufacturer) {
 			/*phocacart import('phocacart.manufacturer.manufacturer');*/
-			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer);
+			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer, 1);
 		}
 		
 		if (!empty($data['items'])) {
 			$o[] = $layout->render($data);
 		}
 		
-		// -ATTRIBUTES-
+		// -ATTRIBUTES- AVAILABLE PRODUCTS ONLY - Yes
 		if ($this->attributes) {
 			/*phocacart import('phocacart.attribute.attribute');*/
-			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute);
+			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, 1);
 			
 			if (!empty($attributes)) {
 				foreach($attributes as $k => $v) {
@@ -176,10 +179,10 @@ class PhocacartFilter
 			}	
 		}
 		
-		// -SPECIFICATIONS-
+		// -SPECIFICATIONS- AVAILABLE PRODUCTS ONLY - Yes
 		if ($this->specifications) {
 			/*phocacart import('phocacart.specification.specification');*/
-			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification);
+			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, 1);
 			if (!empty($specifications)) {
 				foreach($specifications as $k => $v) {
 					$data				= array();

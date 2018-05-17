@@ -1112,3 +1112,29 @@ td,
 #phAdminView .not-approved {
 	opacity: 0.5;
 }
+
+
+.ph-pull-left {
+	float: left;
+}
+.ph-pull-right {
+	float: right;
+}
+
+.ph-important-text {
+	color: #a94442;
+	font-weight: bold;
+}
+
+.ph-cpanel-logo img {
+	width: 70%;
+    height: auto;
+}
+
+.ph-order-info-box .label {
+	margin: 1px;
+}
+
+.ph-no-wrap {
+	white-space: nowrap;
+}

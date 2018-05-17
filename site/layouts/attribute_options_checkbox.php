@@ -6,6 +6,13 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+/* COLOR OR IMAGE CHECKBOXES
+ * BE AWARE BOOTSTRAP DATA TOGGLE BUTTONS ARE USED
+ * IF YOU LOAD OBSOLETE BOOTSTRAP Javascript (bootstrap.min.js)
+ * IT CAN BE IN CONFLICT AND THIS FEATURE WILL NOT WORK
+ * Use Phoca Upgrade System plugin and remove obsolete bootstrap.min.js with help of this plugin
+ */
 defined('_JEXEC') or die();
 $d 					= $displayData;
 $displayData 		= null;
@@ -61,19 +68,24 @@ foreach ($v->options as $k2 => $v2) {
 		$active	= ' active';
 	}
 	
+	$suffix =  ' ('.$operator.' '.$amount.')';
+	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $v2->amount < 0.01 && $v2->amount > -0.01) {
+		$suffix = '';
+	}	
+	
 	if ($v->type == 4) { // CHECKBOX STANDARD
 		
-		echo '<div class="checkbox ph-checkbox"><label><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' />'.htmlspecialchars($v2->title).' ('.$operator.' '.$amount.')</label></div><br />';
+		echo '<div class="checkbox ph-checkbox"><label><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' />'.htmlspecialchars($v2->title).$suffix.'</label></div><br />';
 		
 	} else if ($v->type == 5 && isset($v2->color) && $v2->color != '') { // CHECKBOX COLOR
 		
 		$attrO	.= ' data-color="'.strip_tags($v2->color).'"';
-		echo '<label class="btn phCheckBoxButton phCheckBoxColor '.$active.'" style="background-color: '.strip_tags($v2->color).'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' autocomplete="off"  /><span class="glyphicon glyphicon-ok" title="'.htmlspecialchars($v2->title).' ('.$operator.' '.$amount.')'.'"></span></label> ';
+		echo '<label class="btn phCheckBoxButton phCheckBoxColor '.$active.'" style="background-color: '.strip_tags($v2->color).'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' autocomplete="off"  /><span class="glyphicon glyphicon-ok" title="'.htmlspecialchars($v2->title). $suffix .'"></span></label> ';
 		
 	} else if ($v->type == 6 && isset($v2->image_small) && $v2->image_small != '') {// CHECKBOX IMAGE
 
 		$linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v2->image_small;
-		echo '<label class="btn phCheckBoxButton phCheckBoxImage '.$active.'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].'  autocomplete="off"  /><span class="glyphicon glyphicon-ok"></span><img src="'.strip_tags($linkI).'" title="'.htmlspecialchars($v2->title).' ('.$operator.' '.$amount.')'.'" alt="'.htmlspecialchars($v2->title).'" /></label>';
+		echo '<label class="btn phCheckBoxButton phCheckBoxImage '.$active.'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].'  autocomplete="off"  /><span class="glyphicon glyphicon-ok"></span><img src="'.strip_tags($linkI).'" title="'.htmlspecialchars($v2->title). $suffix.'" alt="'.htmlspecialchars($v2->title).'" /></label>';
 
 	}
 }

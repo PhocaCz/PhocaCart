@@ -128,16 +128,21 @@ class PhocacartOrderView
 		
 		$db = JFactory::getDBO();
 		$query = 'SELECT o.*,'
-				.' u.id AS user_id, u.name AS user_name, u.username AS user_username, p.title AS paymenttitle,'
+				.' u.id AS user_id, o.vendor_id AS vendor_id, u.name AS user_name, u.username AS user_username, p.title AS paymenttitle,'
 				.' s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription,'
-				.' c.title AS coupontitle, cu.title AS currencytitle, d.title AS discounttitle'
+				.' c.title AS coupontitle, cu.title AS currencytitle, d.title AS discounttitle,'
+				.' uv.username as vendor_username, uv.name as vendor_name,'
+				.' sc.title as section_name, un.title as unit_name'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__users AS u ON u.id = o.user_id'
+				.' LEFT JOIN #__users AS uv ON uv.id = o.user_id'
 				.' LEFT JOIN #__phocacart_payment_methods AS p ON p.id = o.payment_id'
 				.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
 				.' LEFT JOIN #__phocacart_coupons AS c ON c.id = o.coupon_id'
 				.' LEFT JOIN #__phocacart_discounts AS d ON d.id = o.discount_id'
 				.' LEFT JOIN #__phocacart_currencies AS cu ON cu.id = o.currency_id'
+				.' LEFT JOIN #__phocacart_sections AS sc ON sc.id = o.section_id'
+				.' LEFT JOIN #__phocacart_units AS un ON un.id = o.unit_id'
 			    .' WHERE o.id = '.(int)$orderId
 				.' ORDER BY o.id';
 		$db->setQuery($query);
@@ -195,7 +200,7 @@ class PhocacartOrderView
 		// Product 2 with attribute A ... is Product Ordered 3
 		// (Product 1 is divided to two ordered products)
 		$query = 'SELECT p.id AS productid, p.quantity as productquantity,'
-				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title'
+				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title, a.option_value'
 				.' FROM #__phocacart_order_products AS p'
 				.' LEFT JOIN #__phocacart_order_attributes AS a ON p.id = a.order_product_id'
 			    .' WHERE p.id = '.(int)$orderProductId . ' AND p.order_id = '.(int)$orderId
@@ -216,21 +221,49 @@ class PhocacartOrderView
 		if ($onlyPublished == 1) {
 			$q.= ' AND d.published = 1';
 		}
-		$q.= ' ORDER BY d.id, d.type';
+		$q.= ' ORDER BY d.id';
 		
 		$db->setQuery($q);
 		$items = $db->loadObjectList();
 		$itemsByKey = array();
+		
+		
 		if (!empty($items)) {
+			
+			$oPD = array();
+			$iS = 4;// specific ordering - start from 3 because 0 - 2 is taken for reward points, product discounts, cart discounts, coupon
+			
 			foreach($items as $k => $v) {
-				$itemsByKey[$v->product_id_key][$k] = $v;
+				
+				// SPECIFIC CASE - BACKWARD COMPATIBILITY
+				// Ordering 5 (reward points) -> 2 (product discount) -> 3 (cart discount) -> 4 (coupon)
+				if ($v->type == 5) {
+					$kS = 0;
+				} else if ($v->type == 2) { 
+					$kS = 1;
+				} else if ($v->type == 3) { 
+					$kS = 2;
+				} else if ($v->type == 4) { 
+					$kS = 3;
+				} else {
+					$kS = $iS;
+				}
+				
+				$itemsByKey[$v->product_id_key][$kS] = $v;
+				$iS++;
+			}
+			
+			if (!empty($itemsByKey)) {
+				foreach($itemsByKey as $k => $v) {
+					ksort($itemsByKey[$k]);
+				}
 			}
 		}
 		return $itemsByKey;
 		//return $items;
 	}
 	
-	public function getItemTotal($orderId, $onlyPublished = 0) {
+	public function getItemTotal($orderId, $onlyPublished = 0, $type = '') {
 		
 		$db = JFactory::getDBO();
 		$q = ' SELECT t.*'
@@ -239,7 +272,10 @@ class PhocacartOrderView
 			.' WHERE o.id = '.(int)$orderId;
 		if ($onlyPublished == 1) {
 			$q.= ' AND t.published = 1';
-		}		
+		}	
+		if ($type != '') {
+			$q.= ' AND t.type = '.$db->quote($type);
+		}	
 		$q.= ' ORDER BY t.ordering';
 		$db->setQuery($q);
 		$items = $db->loadObjectList();

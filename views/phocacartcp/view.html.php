@@ -51,7 +51,10 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'exports'		=> array($this->t['l'] . '_EXPORT', 'export', '#669999'),
 		'logs'			=> array($this->t['l'] . '_SYSTEM_LOG', 'list', '#c0c0c0'),
 		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#3378cc'),
-		'extensions'	=> array($this->t['l'] . '_EXTENSIONS', 'th-large', '#2693ff')
+		'extensions'	=> array($this->t['l'] . '_EXTENSIONS', 'th-large', '#2693ff'),
+		'vendors'		=> array($this->t['l'] . '_VENDORS', 'user', '#b30059'),
+		'sections'		=> array($this->t['l'] . '_SECTIONS', 'unchecked', '#b35900'),
+		'units'			=> array($this->t['l'] . '_UNITS', 'modal-window', '#ff9326'),
 		);
 		
 	/*	

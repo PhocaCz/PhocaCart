@@ -24,7 +24,6 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
 		
-		
 
 		// Multiple categories, ordering
 		$this->t['catid']	= $this->escape($this->state->get('filter.category_id'));
@@ -33,11 +32,12 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 			$this->t['ordering']= true;
 		} 
 		
-		// Multiple categories: Orderinga and list all ids on the site ($idItems)
+		// Multiple categories: Ordering and list all ids on the site ($idItems)
 		$idItems			= array();
 		foreach ($this->items as &$item) {
 			if (isset($this->t['catid']) && (int)$this->t['catid'] > 0) {
-				$this->ordering[(int)$this->t['catid']][] = $item->id;
+				
+				$this->ordering[(int)$this->t['catid']][$item->ordering] = $item->id;
 			}
 			$idItems[] = $item->id;
 		}
@@ -127,6 +127,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 			'category_id' 	=> JText::_($this->t['l'] . '_CATEGORY'),
 			'language' 		=> JText::_('JGRID_HEADING_LANGUAGE'),
 			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
+			'a.sku' 		=> JText::_($this->t['l'] . '_SKU'),
 			'a.id' 			=> JText::_('JGRID_HEADING_ID')
 		);
 	}

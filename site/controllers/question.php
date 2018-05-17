@@ -18,18 +18,30 @@ class PhocaCartControllerQuestion extends JControllerForm
 		
 		$app    = JFactory::getApplication();
 		$uri 	= JFactory::getURI();
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 	
-		$params 				= JComponentHelper::getParams('com_phocacart') ;
-		$enable_ask_question 	= $params->get('enable_ask_question', 0);
+		$params 							= JComponentHelper::getParams('com_phocacart') ;
+		$enable_ask_question 				= $params->get('enable_ask_question', 0);
+		$display_question_privacy_checkbox	= $params->get( 'display_question_privacy_checkbox', 0 );
 		
 		if ($enable_ask_question == 0) {
 			throw new Exception(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 500);
 			return false;
 		}
 		
-		$namespace  = 'phccrt' . $params->get('session_suffix');
-		$data  		= $this->input->post->get('jform', array(), 'array');
+		$namespace  		= 'phccrt' . $params->get('session_suffix');
+		$data  				= $this->input->post->get('jform', array(), 'array');
+		$item['privacy']	= $this->input->get( 'privacy', false, 'string'  );
+		
+		$data['privacy'] 			= $item['privacy'] ? 1 : 0;
+		
+		if ($display_question_privacy_checkbox == 2 && $data['privacy'] == 0) {
+			$msg = JText::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_PRIVACY_TERMS_AND_CONDITIONS');
+			$app->enqueueMessage($msg, 'error');
+			$app->redirect(JRoute::_($uri));
+			return false;
+			
+		}
 		
 		// Additional data
 		$data['ip'] = PhocacartUtils::getIp();

@@ -99,6 +99,10 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 		{
 			$table->newTags = $data['tags'];
 		}
+		
+		if (empty($data['group'])) {
+			$data['group'] = array();
+		}
 
 		$key = $table->getKeyName();
 		$pk = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');

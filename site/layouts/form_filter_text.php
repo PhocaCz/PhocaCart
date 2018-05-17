@@ -11,7 +11,7 @@ $d 				= $displayData;
 
 $d['paramname']	= str_replace('_', '', $d['param']);
 if (isset($d['param2']) && $d['param2'] != '') {
-	$d['param2name']	= str_replace('-', '', $d['param2']);
+	$d['param2name']	= str_replace('_', '', $d['param2']);
 }
 
 if (isset($d['param2']) && $d['param2'] != '') {
@@ -28,6 +28,18 @@ if (isset($d['param2']) && $d['param2'] != '') {
 	$jsClear= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1);';
 }
 
+
+// Display Price input text or Price input range or both
+$styleFormGroup = '';
+if (isset($d['filterprice']) && $d['filterprice'] == 2) {
+	// Hide form input text of price from and price to in case
+	// only range (graphic output) should be displayed
+	// 1 ... display only input text
+	// 3 ... display input text and input range
+	// 2 ... display only input range (the input text will be hidden because they values we need to manage the form)
+	$styleFormGroup = 'style="display:none"';
+}
+
 $displayData 	= null;
 ?>
 <div class="panel panel-default">
@@ -41,24 +53,33 @@ $displayData 	= null;
 	<div id="collapse<?php echo $d['param']; ?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading<?php echo $d['param']; ?>">
 		<div class="panel-body form-horizontal" id="<?php echo $d['id']; ?>">
 		
-			<div class="form-group">
+			<div class="form-group" <?php echo $styleFormGroup ?>>
 				<label class="col-sm-5" for="<?php echo $d['paramname']; ?>"><?php echo $d['title1']; ?></label>
 				<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['paramname']; ?>" value="<?php echo $d['getparams'][0]; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" /></div>
 			</div>
 			<?php
 			if (isset($d['param2']) && $d['param2'] != '') { ?>
-				<div class="form-group">
+				<div class="form-group" <?php echo $styleFormGroup ?>>
 					<label class="col-sm-5" for="<?php echo $d['param2name']; ?>"><?php echo $d['title2']; ?></label>
 					<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['param2name']; ?>" value="<?php echo $d['getparams2'][0]; ?>" id="<?php echo $d['id'].$d['param2name']; ?>" /></div>
 				</div>
 			<?php } ?>
 			
 			
+			<?php
+			// Display filter price range (graphic range)
+			if (isset($d['filterprice']) && ($d['filterprice'] == 2 || $d['filterprice'] == 3)) { ?>
+			<div class="col-sm-12 ph-price-filter-box">
+				<div id="phPriceFilterRange"></div>
+				<div id="phPriceFilterPrice"></div>
+			</div>
+			<?php } ?>
+			
 			<div class="col-sm-5"></div>
 			<div class="col-sm-7">
-				<div class="pull-right btn-group ph-zero ph-right-zero">
+				<div class="ph-pull-right btn-group ph-zero ph-right-zero">
 					<button class="btn btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="glyphicon glyphicon-ok"></span></button>
-					<button class="btn btn-danger tip hasTooltip pull-right ph-pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="glyphicon glyphicon-remove"></span></button> 
+					<button class="btn btn-danger tip hasTooltip ph-pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="glyphicon glyphicon-remove"></span></button> 
 				</div>
 			</div>
 			<?php

@@ -23,6 +23,9 @@ class PhocaCartCpViewPhocacartLogs extends JViewLegacy
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
 		
+		$paramsC 					= JComponentHelper::getParams('com_phocacart');
+		$this->t['enable_logging']	= $paramsC->get( 'enable_logging', 0 );
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);

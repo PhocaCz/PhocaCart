@@ -116,5 +116,5 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 echo '</div>';// end comparison box
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

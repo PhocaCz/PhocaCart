@@ -70,12 +70,32 @@ class PhocaCartControllerResponse extends JControllerForm
 			$dispatcher->trigger('PCPbeforeCheckPayment', array($pid));
 		} else {
 			
-			JLog::add('Paypal Standard: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
+			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
             header('Allow: POST', true, 405);
             throw new Exception("Invalid HTTP request method.");
 		}
 				
 		exit;	
+	}
+	
+	
+	public function paymentwebhook() {
+		$app 	= JFactory::getApplication();
+		$type 	= $app->input->get('type', '', 'string');
+		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
+		$uri	= JFactory::getUri();
+	
+		$dispatcher = JEventDispatcher::getInstance();
+		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
+		if ($plugin) {
+			$dispatcher->trigger('PCPonPaymentWebhook', array($pid));
+		} else {
+			
+			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
+			header('Allow: POST', true, 405);
+			throw new Exception("Invalid HTTP request method.");
+		}
+		exit;
 	}
 	
 }

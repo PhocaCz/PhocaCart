@@ -67,16 +67,17 @@ echo $r->startTblHeader();
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder, 'pc');
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-image">'.JText::_($this->t['l'].'_IMAGE').'</th>'."\n";
-echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
-//echo '<th class="ph-parentcattitle">'.JHTML::_('grid.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-sku">'.JHtml::_('grid.sort',  	$this->t['l'].'_SKU', 'a.sku', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
+//echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JTEXT::_($this->t['l'].'_CATEGORY').'</th>'."\n";
-echo '<th class="ph-price">'.JHTML::_('grid.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
-//echo '<th class="ph-hits">'.JHTML::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
+//echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
-echo '<th class="ph-language">'.JHTML::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-hits">'.JHTML::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-language">'.JHtml::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 		
@@ -97,8 +98,10 @@ $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&i
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
 //$orderkey   	= array_search($item->id, $this->ordering[$item->catid]);
 $orderkey		= 0;
+$orderingItem	= 0;
 if ($this->t['ordering'] && !empty($this->ordering)) {
 	$orderkey   	= array_search($item->id, $this->ordering[$this->t['catid']]);
+	$orderingItem	= $orderkey; 
 }	
 $ordering		= ($listOrder == 'pc.ordering');			
 $canCreate		= $user->authorise('core.create', $this->t['o']);
@@ -114,12 +117,16 @@ $canEditCat	= $user->authorise('core.edit', $this->t['o']);
 $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->category_id.'" item-id="'.$item->id.'" parents="'.$item->category_id.'" level="0">'. "\n";
-echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->category_id.'" >'. "\n";
+echo '<tr class="row'.$iD.'" sortable-group-id="'.$this->t['catid'].'" >'. "\n";
 
 //echo '<td>'.$item->category_id. '/'.$orderkey.'</td>';
-echo $r->tdOrder($canChange, $saveOrder, $orderkey, $this->t['ordering']);
+
+
+
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $orderingItem, false);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
-echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');				
+echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');	
+echo $r->td($this->escape($item->sku), 'small');	
 $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -176,7 +183,7 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 16);
+echo $r->tblFoot($this->pagination->getListFooter(), 17);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');

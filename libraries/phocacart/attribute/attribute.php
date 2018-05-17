@@ -53,13 +53,17 @@ class PhocacartAttribute
 		// 0 ... Title
 		// 1 ... Default Value Type (1 ... multiple default values (checkbox), 2 ... single default value (select box))
 		
+		// EDIT PHOCACARTATTRIBUTE (attribute class, attribute layouts)
 		$o = array(
 		'1' => array(JText::_('COM_PHOCACART_ATTR_TYPE_SELECT'), 0),
 		'2' => array(JText::_('COM_PHOCACART_ATTR_TYPE_COLOR_SELECT'), 0),
 		'3' => array(JText::_('COM_PHOCACART_ATTR_TYPE_IMAGE_SELECT'), 0),
 		'4' => array(JText::_('COM_PHOCACART_ATTR_TYPE_CHECKBOX'), 1),
 		'5' => array(JText::_('COM_PHOCACART_ATTR_TYPE_COLOR_CHECKBOX'), 1),
-		'6' => array(JText::_('COM_PHOCACART_ATTR_TYPE_IMAGE_CHECKBOX'), 1)
+		'6' => array(JText::_('COM_PHOCACART_ATTR_TYPE_IMAGE_CHECKBOX'), 1),
+		'7' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_64'), ''),
+		'8' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_128'), ''),
+		'9' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_256'), ''),
 		);
 		
 		if ((int)$returnValue > 0 && (int)$returnValue > 0) {
@@ -77,6 +81,62 @@ class PhocacartAttribute
 			return $o2; // text and value for select box
 		}
 		return $o;
+	}
+	
+	public static function getAttributeLength($type) {
+		switch($type){
+			case 7:
+				return 64;
+			break;
+			
+			case 8:
+				return 128;
+			break;
+			
+			case 9:
+				return 256;
+			break;
+			
+			default:
+				return 0;
+			break;
+		}
+		return 0;
+	}
+	
+	/*
+	 * type of attribute
+	 * value of attribute
+	 * encoded - is urlencoded yet
+	 * display - are we asking it for display (we only want to display text attributes value not checkbox or selectboxes which include
+	 *           numbers (their values are displayed other way
+	 */
+	
+	public static function setAttributeValue($type, $value, $encoded = false, $display = false) {
+		
+		
+		switch($type){
+			case 7:
+			case 8:
+			case 9:
+				if ($encoded || $display) {
+					$value = urldecode($value);
+				}
+				
+				$value = strip_tags($value);
+				return urlencode(substr($value, 0, self::getAttributeLength($type)));
+			break;
+			
+			default:
+				if ($display) {
+					return '';
+				} else {
+					return (int)$value;
+				}
+				
+			break;
+		}
+		return false;
 	}
 	
 	public static function getRequiredArray() {
@@ -196,14 +256,21 @@ class PhocacartAttribute
 							if (isset($v2['default_value']) && $v2['default_value'] != '0') {
 								$defaultValue = 1;
 								
-								if ($dTV == 0) {
+								
+								//  SELECTBOX OR TEXT
+								if ($dTV == 0 || $dTV == '') {
 									$dI++;
 								}
 								
 								// Example: we are in loop of options of select box
 								// User has selected two default values (checked)
 								// But select box can have only one default value, so we need to skip it and inform user
-								if ((int)$dI > 1) {
+								if ($dTV == 0 && (int)$dI > 1) {
+									// SELECT - only one default value
+									$defaultValue = 0;
+									$dVR = 1;
+								} else if ($dTV == '' && (int)$dI > 0) {
+									// TEXT - no default value
 									$defaultValue = 0;
 									$dVR = 1;
 								}
@@ -290,7 +357,7 @@ class PhocacartAttribute
 						// One or more default values removed
 						if ($dVR == 1) {
 							$msg = JText::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
-							$msg .= JText::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_MULTIPLE_DEFAULT_VALUES');
+							$msg .= JText::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_DEFAULT_VALUES_OR_MULTIPLE_DEFAULT_VALUES');
 							$app->enqueueMessage($msg, 'error');
 						}
 					}
@@ -505,16 +572,37 @@ class PhocacartAttribute
 	
 	
 
-	public static function getAllAttributesAndOptions($ordering = 1) {
+	public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0) {
 			
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 5);
-		$query = 'SELECT v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype'
-				.' FROM  #__phocacart_attribute_values AS v'
-				.' LEFT JOIN  #__phocacart_attributes AS at ON at.id = v.attribute_id'
-				.' GROUP BY v.alias, attralias, v.id, v.title, v.image, v.image_medium, v.image_small, v.color, v.default_value, at.id, at.title, at.alias, at.type'
-				.' ORDER BY '.$orderingText;
-		$db->setQuery($query);
+		
+		
+		$columns		= 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
+		$groupsFull		= 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.color, v.default_value, attralias, at.id, at.title, at.alias, at.type';
+		$groupsFast		= 'v.id';
+		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+		$wheres		= array();
+		$lefts		= array();
+		
+		$lefts[] = ' #__phocacart_attributes AS at ON at.id = v.attribute_id';
+		
+		if ($onlyAvailableProducts == 1) {
+			$lefts[] = ' #__phocacart_products AS p ON at.product_id = p.id';
+			$rules = PhocacartProduct::getOnlyAvailableProductRules();
+			$wheres = array_merge($wheres, $rules['wheres']);
+			$lefts	= array_merge($lefts, $rules['lefts']);
+		}
+	
+		$q = ' SELECT '.$columns
+			.' FROM  #__phocacart_attribute_values AS v'
+			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
+			.' GROUP BY '.$groups
+			.' ORDER BY '.$orderingText;
+
+		$db->setQuery($q);
 		$attributes = $db->loadObjectList();
 
 		$a	= array();
@@ -552,7 +640,7 @@ class PhocacartAttribute
 	public static function getAttributeValue($id, $attributeId) {
 		$db =JFactory::getDBO();
 		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.color, a.default_value,'
-		.' aa.id as aid, aa.title as atitle'
+		.' aa.id as aid, aa.title as atitle, aa.type as atype'
 		.' FROM #__phocacart_attribute_values AS a'
 		.' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
 		.' WHERE a.id = '.(int)$id . ' AND a.attribute_id = '.(int)$attributeId
@@ -573,8 +661,8 @@ class PhocacartAttribute
 				// Could be set a function to get info about the attribute, for now not needed
 				if(!empty($v)) {
 					foreach ($v as $k2 => $v2) {
-						if ((int)$k > 0 && (int)$v2 > 0) {
-							$attrib = PhocacartAttribute::getAttributeValue((int)$v2, (int)$k);
+						if ((int)$k > 0 && (int)$k2 > 0) {
+							$attrib = PhocacartAttribute::getAttributeValue((int)$k2, (int)$k);
 							$fullAttributes[$k]->options[$k2] = $attrib;
 						}
 					}
@@ -703,6 +791,7 @@ class PhocacartAttribute
 	
 	public static function checkRequiredAttributes($id, $attributes) {
 	
+		// PHOCARTATTRIBUTE
 		
 		// Covert all attribute values from strings to array
 		if(!empty($attributes)) {
@@ -725,6 +814,7 @@ class PhocacartAttribute
 		$passAttribute		= array();
 		
 		
+		
 		if (!empty($requiredAttributes)) {
 			foreach($requiredAttributes as $k2 => $v2) {
 				
@@ -743,14 +833,41 @@ class PhocacartAttribute
 									
 									foreach($v3 as $k4 => $v4) {	
 									
-										if (isset($v4['oid']) && $v4['oid'] > 0) {
-											// Order product - we found value in order of products - OK
-											$passAttribute[$k3] = 1;
-											break 2;
-										} else if (!is_array($v4) && (int)$v4 > 0) {
-											// Add to cart - we found value when adding product to cart - OK
-											$passAttribute[$k3] = 1;
-											break 2;
+										// EDIT PHOCACARTATTRIBUTE
+										if (isset($v2['type']) && ($v2['type'] == 7 || $v2['type'] == 8 || $v2['type'] == 9)) {
+											
+											// ATTRIBUTE TYPE = TEXT
+											
+											// There is reverse testing to select or checkbox
+											// In select or checkbox we can wait for some of the option will be selected
+											// but by text all input text fields in one attribute must be required
+											if (isset($v4['ovalue']) && urldecode($v4['ovalue'] != '')) {
+												// Order product - we found value in order of products - OK
+												$passAttribute[$k3] = 1;
+												//break 2;
+											}else if (!is_array($v4) && urldecode($v4 != '')) {
+												// Order product - we found value in order of products - OK
+												$passAttribute[$k3] = 1;
+												//break 2;
+											} else {
+												$passAll = false;
+												break 2;
+											}
+									
+										} else {
+											
+											// ATTRIBUTE TYPE = CHECKBOX, SELECT
+											
+											if (isset($v4['oid']) && $v4['oid'] > 0) {
+												// Order product - we found value in order of products - OK
+												$passAttribute[$k3] = 1;
+												break 2;
+											} else if (!is_array($v4) && (int)$v4 > 0) {
+												// Add to cart - we found value when adding product to cart - OK
+												$passAttribute[$k3] = 1;
+												break 2;
+											}
+											
 										}
 										// possible break 3;
 									}
@@ -770,11 +887,12 @@ class PhocacartAttribute
 					// this required attribute is OK
 				} else {
 					// we didn't found any information - any passed information about this required attribute
+					
 					$passAll = false;
 				}
 			}
 		}
-		
+
 		
 		if (!empty($msgA)) {
 			//$u = PhocacartUser::getUserInfo();
@@ -1156,7 +1274,20 @@ class PhocacartAttribute
 	}
 	
 	
-	
+	public static function getAttributeType($id) {
+		
+		$wheres		= array(); 
+		$wheres[] 	= ' id = '.(int)$id;
+		$db 		= JFactory::getDBO();
+		$query = ' SELECT type'
+		.' FROM #__phocacart_attributes'
+		. ' WHERE ' . implode( ' AND ', $wheres )
+		. ' ORDER BY id LIMIT 1';
+		$db->setQuery($query);
+		$type = $db->loadResult();
+		
+		return $type;
+	}
 	
 	/*
 	 * Done in PhocacartProduct::getProductKey();
@@ -1215,7 +1346,7 @@ class PhocacartAttribute
 
 		$attributes = $db->loadObjectList();
 		
-		$attributesO = JHTML::_('select.genericlist', $attributes, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$attributesO = JHtml::_('select.genericlist', $attributes, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		
 		return $attributesO;
 	}

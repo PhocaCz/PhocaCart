@@ -35,7 +35,7 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		}
 		
 		$media = new PhocacartRenderAdminmedia();
-		JHTML::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
+		JHtml::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 		
 		$this->addToolbar();
 		parent::display($tpl);

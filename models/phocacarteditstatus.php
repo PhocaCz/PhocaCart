@@ -28,7 +28,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		if (isset($item->status_id) && (int)$item->status_id > 0) {
 			$status = PhocacartOrderStatus::getStatus($item->status_id);
 			
-			$status['select'] = JHTML::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
+			$status['select'] = JHtml::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
 		}
 		return array();	

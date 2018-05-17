@@ -684,7 +684,7 @@ class PhocacartRenderAdminview
 	public static function getCalendarDate($dateCustom) {
 		
 		$config = JFactory::getConfig();
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		$filter = 'USER_UTC';//'SERVER_UTC'
 		
 		switch (strtoupper($filter)){

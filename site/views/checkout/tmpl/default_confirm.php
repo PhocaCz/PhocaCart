@@ -8,6 +8,8 @@
  */
 defined('_JEXEC') or die();
 
+$layoutPC 	= new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
+
 if ($this->a->confirm == 1) {
 	
 	
@@ -55,7 +57,7 @@ if ($this->a->confirm == 1) {
 			
 			echo '<div class="control-group">';
 			echo '<div class="control-label">';
-			echo '<label id="jform_question_captcha-lbl" for="jform_question_captcha" class="hasPopover required" title="" data-content="Please prove that you are human" data-original-title="Security Check">Security Check<span class="star">&nbsp;*</span></label>';
+			echo '<label id="jform_question_captcha-lbl" for="jform_question_captcha" class="hasPopover required" title="" data-content="'.JText::_('COM_PHOCACART_PLEASE_PROVE_THAT_YOU_ARE_HUMAN').'" data-original-title="'.JText::_('COM_PHOCACART_SECURITY_CHECK').'">'.JText::_('COM_PHOCACART_SECURITY_CHECK').'<span class="star">&nbsp;*</span></label>';
 			echo '</div>';
 			
 			echo '<div class="controls">'.PhocacartCaptchaRecaptcha::render().'</div>';
@@ -70,21 +72,42 @@ if ($this->a->confirm == 1) {
 		
 		echo '<div class="col-sm-12 col-md-12 ">';
 		
-		echo ' <div class="pull-right ph-checkout-confirm">';	
+
+
+		
+		if ($this->t['display_checkout_toc_checkbox'] > 0) {
+			
+			$d					= array();
+			$d['label_text']	= $this->t['terms_conditions_label_text'];
+			$d['id']			= 'phCheckoutConfirmTermsConditions';
+			$d['name']			= 'phcheckouttac';
+			$d['class']			= 'ph-pull-right checkbox ph-checkout-checkbox-confirm';
+			$d['display']		= $this->t['display_checkout_toc_checkbox'];
+			
+			echo '<div class="ph-cb"></div>';
+			echo $layoutPC->render($d);
+		}
+		
+		
+		if ($this->t['display_checkout_privacy_checkbox'] > 0) {
+			
+			$d					= array();
+			$d['label_text']	= $this->t['checkout_privacy_checkbox_label_text'];
+			$d['id']			= 'phCheckoutPrivacyCheckbox';
+			$d['name']			= 'privacy';
+			$d['class']			= 'ph-pull-right checkbox ph-checkout-privacy-checkbox';
+			$d['display']		= $this->t['display_checkout_privacy_checkbox'];
+			
+			echo '<div class="ph-cb"></div>';
+			echo $layoutPC->render($d);
+		}
+		
+		echo '<div class="ph-cb"></div>';
+		
+		echo ' <div class="ph-pull-right ph-checkout-confirm">';	
 		echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-ok"></span> '.$this->t['confirm_order_text'].'</button>';
 		echo '</div><div class="ph-cb"></div>';
 		
-		
-		$linkTerms 	= JRoute::_( PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));	
-
-		echo '<div class="pull-right checkbox ph-checkout-checkbox-confirm">';
-		echo '<label><input type="checkbox" id="phCheckoutConfirmTermsConditions" name="phcheckouttac" required="" aria-required="true"> '.JText::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE'). ' <a href="'.$linkTerms.'" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS').'</a>';
-		echo '</label>';
-		echo '</div> ';
-		
-		
-		
-		echo '<div class="ph-cb"></div>';
 		
 		echo '</div>';
 		

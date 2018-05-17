@@ -16,18 +16,23 @@ class PhocaCartCpControllerPhocacartCart extends PhocaCartCpControllerPhocaCartC
 	}
 
 	function emptycart() {
+		
+		$app	= JFactory::getApplication();
 		if (!JSession::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
 		
-		$app	= JFactory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id				= $app->input->get('id', 0, 'int');
+		$vendorid		= $app->input->get('vendorid', 0, 'int');
+		$ticketid		= $app->input->get('ticketid', 0, 'int');
+		$unitid			= $app->input->get('unitid', 0, 'int');
+		$sectionid		= $app->input->get('sectionid', 0, 'int');
 		
 		if ((int)$id > 0) {
 			$model = $this->getModel( 'phocacartcart' );
 			
-			if(!$model->emptycart($id)) {
+			if(!$model->emptycart($id, $vendorid, $ticketid, $unitid, $sectionid)) {
 				$message = JText::_( 'COM_PHOCACART_ERROR_EMPTY_CART' );
 				$app->enqueueMessage($message, 'error');
 			} else {

@@ -75,14 +75,14 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.country_id, a.checked_out, a.title, a.published, a.code2, a.code3'
-			)
-		);
+		
+		$columns	= 'a.id, a.country_id, uc.name, c.title, a.checked_out, a.title, a.published, a.code2, a.code3, a.ordering';
+		$groupsFull	= $columns . ', c.id';
+		$groupsFast	= 'a.id';
+		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+	
+		$query->select($this->getState('list.select', $columns));
 		$query->from('`#__phocacart_regions` AS a');
 
 		// Join over the language
@@ -137,7 +137,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 			$query->where('a.country_id = ' . (int) $countryId);
 		}
 		
-		$query->group('a.id, a.country_id, uc.name, c.title, c.id, a.checked_out, a.title, a.published, a.code2, a.code3');
+		$query->group($groups);
 	
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');

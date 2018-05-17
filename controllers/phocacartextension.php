@@ -14,6 +14,7 @@ class PhocaCartCpControllerPhocacartExtension extends PhocaCartCpControllerPhoca
 		$app 	= JFactory::getApplication('administrator');
 		$type 	= $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', 'modules');
 		$app->setUserState('com_phocacart.getExtensions.'.$type, null);
+		$app->setUserState('com_phocacart.getNews.news', null);
 		$msg 	= JText::_('COM_PHOCACART_EXTENSION_LIST_REFRESHED');
 		$app->enqueueMessage($msg, 'message');
 		$app->redirect('index.php?option=com_phocacart&view=phocacartextensions');
@@ -28,6 +29,7 @@ class PhocaCartCpControllerPhocacartExtension extends PhocaCartCpControllerPhoca
 		}
 		
 		$app = JFactory::getApplication('administrator');
+		$msg = '';
 		
 		try {
 			

@@ -59,14 +59,14 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', '', '', '', true);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-product">'.JHTML::_('grid.sort',  	$this->t['l'].'_PRODUCT', 'a.product_id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-item">'.JHTML::_('grid.sort',  	$this->t['l'].'_ITEM', 'a.item', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-user">'.JHTML::_('grid.sort',  $this->t['l'].'_USER', 'a.user_id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-ip">'.JHTML::_('grid.sort',  $this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-date">'.JHTML::_('grid.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-hits">'.JHTML::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-type">'.JHTML::_('grid.sort',  		$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-product">'.JHtml::_('grid.sort',  	$this->t['l'].'_PRODUCT', 'a.product_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-item">'.JHtml::_('grid.sort',  	$this->t['l'].'_ITEM', 'a.item', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-user">'.JHtml::_('grid.sort',  $this->t['l'].'_USER', 'a.user_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-ip">'.JHtml::_('grid.sort',  $this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type">'.JHtml::_('grid.sort',  		$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 		

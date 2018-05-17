@@ -1,0 +1,71 @@
+/* This CSS file is unnecessary if you are not using vertical buttons functionality */
+
+
+.bootstrap-touchspin-injected {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+#phQuickViewPopup .bootstrap-touchspin .input-group-btn-vertical,
+#ph-pc-checkout-box .bootstrap-touchspin .input-group-btn-vertical,
+#ph-pc-item-box .bootstrap-touchspin .input-group-btn-vertical {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  z-index: 11;
+}
+
+#phQuickViewPopup .bootstrap-touchspin .input-group-btn-vertical > .btn, 
+#ph-pc-checkout-box .bootstrap-touchspin .input-group-btn-vertical > .btn, 
+#ph-pc-item-box .bootstrap-touchspin .input-group-btn-vertical > .btn {
+  position: absolute;
+  right: 0;
+  height: 50%;
+  padding: 0;
+  width: 1.6em;
+  text-align: center;
+  line-height: 1;
+}
+
+#phQuickViewPopup .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-up,
+#ph-pc-checkout-box .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-up,
+#ph-pc-item-box .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-up {
+  border-radius: 0 4px 0 0;
+  top: 0;
+  margin: 0;
+}
+
+#phQuickViewPopup .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down,
+#ph-pc-checkout-box .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down,
+#ph-pc-item-box .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
+  border-radius: 0 0 4px 0;
+  bottom: 0;
+  margin: 0;
+  
+}
+#ph-pc-checkout-box .form-inline .form-group .ph-input-quantity {
+	width: 30px;
+}
+
+#phQuickViewPopup .form-inline .form-group .ph-input-quantity,
+#ph-pc-item-box .form-inline .form-group .ph-input-quantity {
+    width: 60px;
+}
+@media screen and (max-width: 768px) {
+	#ph-pc-checkout-box .form-inline .form-group .ph-input-quantity {
+		width: 30px;
+	}
+
+	#phQuickViewPopup .form-inline .form-group .ph-input-quantity ,
+	#ph-pc-item-box .form-inline .form-group .ph-input-quantity {
+		min-width: 80px;
+	}
+}
+
+.bootstrap-touchspin-down span.glyphicon,
+.bootstrap-touchspin-up span.glyphicon {
+	font-size: 0.7em;
+}
+
+

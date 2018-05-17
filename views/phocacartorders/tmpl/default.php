@@ -8,6 +8,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+$d = new PhocacartPrice();
+$d->setCurrency(1,6);
+//dump($d);
+$b = new PhocacartPrice();
+//dump($b);
+$b->setCurrency(1,0);
+//dump($b);
+
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
@@ -68,15 +78,16 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-order">'.JHTML::_('grid.sort',  	$this->t['l'].'_ORDER_NUMBER', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-user">'.JHTML::_('grid.sort',  $this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-status">'.JHTML::_('grid.sort',  $this->t['l'].'_STATUS', 'a.status', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-order">'.JHtml::_('grid.sort',  	$this->t['l'].'_ORDER_NUMBER', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-user">'.JHtml::_('grid.sort',  $this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-status">'.JHtml::_('grid.sort',  $this->t['l'].'_STATUS', 'a.status', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-action">'.JText::_($this->t['l'].'_INFO').'</th>'."\n";
 echo '<th class="ph-action">'.JText::_($this->t['l'].'_ACTION').'</th>'."\n";
-echo '<th class="ph-total-center">'.JHTML::_('grid.sort',  $this->t['l'].'_TOTAL', 'total', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.JHTML::_('grid.sort',  $this->t['l'].'_DATE_ADDED', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.JHTML::_('grid.sort',  $this->t['l'].'_DATE_MODIFIED', 'a.modified', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-total-center">'.JHtml::_('grid.sort',  $this->t['l'].'_TOTAL', 'total', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE_ADDED', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE_MODIFIED', 'a.modified', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 			
@@ -120,7 +131,7 @@ $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
-echo $r->tdOrder($canChange, $saveOrder, $orderkey);
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';
@@ -128,7 +139,7 @@ if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape(PhocacartOrder::getOrderNumber($item->id)).'</a>';
+	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape(PhocacartOrder::getOrderNumber($item->id, $item->date, $item->order_number)).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }
@@ -140,19 +151,54 @@ if ($item->user_id > 0) {
 		$userO .= ' <small>('.$item->user_username.')</small>';
 	}
 } else {
+	
 	$userO = '<span class="label label-info">'.JText::_('COM_PHOCACART_GUEST').'</span>';
+	$userData = PhocacartOrder::getOrderCusomerData($item->id);
+	
+	if (isset($userData[0]['name_first']) && isset($userData[0]['name_last'])) {
+		$userO .= '<br /><span>'. $userData[0]['name_first'] .' ' . $userData[0]['name_last'].'</span>';
+	}
 }
 echo $r->td($userO, "small");
 
 //$status			= PhocacartOrderStatus::getStatus((int)$item->status_id, $item->id);
-//$statusSelect	= JHTML::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="inputbox"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
+//$statusSelect	= JHtml::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="inputbox"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
 $status = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
 //$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.JText::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
 
-$status .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
+$status .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u ph-no-wrap '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 
 echo $r->td($status, "small");
 
+
+// INFO
+$info = '<div class="ph-order-info-box">';
+if ($item->type == 2) {
+	
+	// POS
+	if (isset($item->vendor_username) && isset($item->vendor_name)) {
+		$vendorO = $this->escape($item->vendor_name);
+		$vendorO .= ' <small>('.$item->vendor_username.')</small>';
+		$info .= '<span class="label label-success">'.JText::_('COM_PHOCACART_VENDOR').': '.$vendorO.'</span>';
+	}
+	
+	if (isset($item->section_name)) {
+		$section = $this->escape($item->section_name);
+		$info .= '<span class="label label-primary">'.JText::_('COM_PHOCACART_SECTION').': '.$section.'</span>';
+	}
+	if (isset($item->unit_name)) {
+		$unit = $this->escape($item->unit_name);
+		$info .= '<span class="label label-info">'.JText::_('COM_PHOCACART_UNIT').': '.$unit.'</span>';
+	}
+	if (isset($item->ticket_id) && (int)$item->ticket_id > 0) {
+		
+		$info .= '<span class="label label-warning">'.JText::_('COM_PHOCACART_TICKET').': '.$item->ticket_id.'</span>';
+	}
+}
+$info .= '</div>';
+
+echo $r->td($info, "small");
+// ACTION
 $view = '<a href="'.$linkOrderView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="glyphicon glyphicon-search ph-icon-success"></span></a>';
 $view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="glyphicon glyphicon-list-alt ph-icon-danger"></span></a>';
 $view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="glyphicon glyphicon-barcode ph-icon-warning"></span></a>';
@@ -173,10 +219,10 @@ echo $r->td($view, "small");
 $price->setCurrency($item->currency_id, $item->id);
 
 $amount = (isset($item->total_amount_currency) && $item->total_amount_currency > 0) ? $price->getPriceFormat($item->total_amount_currency, 0, 1) : $price->getPriceFormat($item->total_amount);
-echo $r->td($amount, "small ph-right ph-p-r-med");
+echo $r->td($amount, "small ph-right ph-p-r-med ph-no-wrap");
 
-echo $r->td(JHtml::date($item->date, 'd. m. Y h:s'), "small");
-echo $r->td(JHtml::date($item->modified, 'd. m. Y h:s'), "small");
+echo $r->td(JHtml::date($item->date, JText::_('DATE_FORMAT_LC5')), "small");
+echo $r->td(JHtml::date($item->modified, JText::_('DATE_FORMAT_LC5')), "small");
 
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
@@ -189,7 +235,7 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 11);
+echo $r->tblFoot($this->pagination->getListFooter(), 12);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);

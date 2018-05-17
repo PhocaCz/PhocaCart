@@ -33,7 +33,7 @@ final class PhocacartStatisticsHits
 		}
 		
 		
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		$db		= JFactory::getDbo();
 		$ip		= PhocacartUtils::getIp();
 		$date 	= JFactory::getDate();
@@ -102,7 +102,7 @@ final class PhocacartStatisticsHits
 		}
 			
 		
-		$user 	= JFactory::getUser();
+		$user 	= PhocacartUser::getUser();
 		$db		= JFactory::getDbo();
 		$ip		= PhocacartUtils::getIp();
 		$date 	= JFactory::getDate();

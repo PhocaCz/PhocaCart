@@ -20,6 +20,20 @@
 
 <field name="tracking_date_shipped" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" filter="JComponentHelper::filterText" />
 
+
+
+<field name="order_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_DESC" />
+<field name="receipt_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_DESC" />
+<field name="invoice_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_DESC" />
+<field name="invoice_prn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_DESC" />
+<field name="invoice_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DATE_DESC" />
+<field name="invoice_due_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_DESC" />
+
+<field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC" />
+<field name="invoice_spec_middle_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC" />
+<field name="invoice_spec_bottom_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC" />
+
+
 	</fieldset>	
 	
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >

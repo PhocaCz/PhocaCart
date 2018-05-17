@@ -47,7 +47,7 @@ class JFormFieldPhocaSelectFilename extends JFormField
 			//$s[] = '   var phDownloadFolder = jQuery(\'#jform_download_folder\').val();';
 			//$s[] = '   phDownloadFolderModal'.$this->id.' = "&folder=" + phDownloadFolder + "&downloadfolder=" + phDownloadFolder;';
 			//$s[] 	= '   stringToSend = "&folder=" + phDownloadFolder + "&downloadfolder=" + phDownloadFolder;';
-			//$s[] 	= '   alert(stringToSend);var newUri = jQuery(\'.modal_jform_download_file\').attr(\'href\') + stringToSend;';
+			//$s[] 	= '   var newUri = jQuery(\'.modal_jform_download_file\').attr(\'href\') + stringToSend;';
 			//$s[] 	= '   jQuery(\'.modal_jform_download_file\').attr("href", newUri);';
 
 			$s[] = '   jQuery(\'a.'.$idA.'ModalButton\').on(\'click\', function(e) {';

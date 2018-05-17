@@ -255,6 +255,8 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		$row = JTable::getInstance('PhocacartOrderAttributes', 'Table', array());
 
 		
+		$d['option_value'] = urlencode($d['option_value']);
+		
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
 			return false;

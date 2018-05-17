@@ -188,15 +188,33 @@ class PhocacartRenderFront
 		if ($type == 'category') {
 			
 			$path = PhocacartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
-			$curpath = $pathway->getPathwayNames();
+			//$curpath = $pathway->getPathwayNames();
+			$pathWayIdA = $pathway->getPathway();
+			$pIdA 		= array();
+			if (!empty($pathWayIdA)) {
+				foreach($pathWayIdA as $k => $v) {
+					if (isset($v->link)) {
+						$parts = parse_url($v->link);
+						parse_str($parts['query'], $query);
+						if (isset($query['id'])){
+							$pIdA[] = (int)$query['id'];
+						}
+					}
+				}
+			}
 			
 			if (!empty($path)) {
 				$path = array_reverse($path);
 				foreach ($path as $k => $v) {
-					$pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
-					
+					if (!in_array((int)$v['id'], $pIdA)) {
+						// Don't duplicate breadcrumbs
+						$pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
+						//$pathway->addItem($v['title'], PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
+					}
 				}
 			}
+			
+			
 			/*if (isset($category->parentid)) {
 				if ($category->parentid == 0) {
 					// $pathway->addItem( JText::_('COM_PHOCACART_CATEGORIES'), JRoute::_(PhocacartRoute::getCategoriesRoute()));
@@ -220,7 +238,35 @@ class PhocacartRenderFront
 		} else if ($type == 'item' || $type == 'question') {
 			
 			$path = PhocacartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
-			$curpath = $pathway->getPathwayNames();
+			
+			
+			$pathWayIdA = $pathway->getPathway();
+			$pIdA 		= array();
+			
+			if (!empty($pathWayIdA)) {
+				foreach($pathWayIdA as $k => $v) {
+					if (isset($v->link)) {
+						$parts = parse_url($v->link);
+						parse_str($parts['query'], $query);
+						if (isset($query['id'])){
+							$pIdA[] = (int)$query['id'];
+						}
+					}
+				}
+			}
+			
+			if (!empty($path)) { 
+				$path = array_reverse($path);
+				foreach ($path as $k => $v) {
+					if (!in_array((int)$v['id'], $pIdA)) {
+						// Don't duplicate breadcrumbs
+						$pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
+						//$pathway->addItem($v['title'], PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
+					}
+				}
+			}
+			
+			/*$curpath = $pathway->getPathwayNames();
 			
 			if (!empty($path)) {
 				$path = array_reverse($path);
@@ -228,7 +274,7 @@ class PhocacartRenderFront
 					$pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
 					
 				}
-			}
+			}*/
 			
 		/*	if (isset($category->id) && isset($category->title) && isset($category->alias)) {
 				if ($category->id > 0) {
@@ -274,7 +320,6 @@ class PhocacartRenderFront
 			$tag = $displayHeader;
 		}
 		
-		
 		$h = array();
 		if ($showPageHeading && $pageHeading != '') { 
 			$h[] = htmlspecialchars($pageHeading); 
@@ -310,11 +355,11 @@ class PhocacartRenderFront
 		if (!empty($m)) {
 			$mO .= '<ul id="system-messages">';
 			if ($msg != '' && $type != 'order') {
-				$mO .=  '<li class="ph-msg-error">' . $msg . '</li>';  
+				$mO .=  '<li class=" ">' . $msg . '</li>';  
 			}
 			
 			foreach($m as $k => $v) {
-				$mO .=  '<li class="' . $v['type'] . ' ph-msg-error">' . $v['message'] . '</li>';      
+				$mO .=  '<li class="' . $v['type'] . ' ">' . $v['message'] . '</li>';      
 		   }
 		   $mO .=  '</ul>';
 		} else {
@@ -443,7 +488,7 @@ class PhocacartRenderFront
 		$label['cssthumbnail'] = '';
 		$label['cssthumbnail2'] = 'img-thumbnail';
 		if ($c > 1) {
-			$label['cssthumbnail'] = 'thumbnail';
+			$label['cssthumbnail'] = 'b-thumbnail';
 			$label['cssthumbnail2'] = '';
 		}
 		
@@ -484,7 +529,7 @@ class PhocacartRenderFront
 		return '<' . strip_tags($tag) . ' class="ph-product-header '.strip_tags($additionalClass).'">' . $header . '</' . strip_tags($tag) . '>';
 	}
 	
-	public static function renderArticle($id) {
+	public static function renderArticle($id, $format = 'html', $default = '') {
 		$o = '';
 		if ((int)$id > 0) {
 			$db		= JFactory::getDBO();
@@ -492,7 +537,27 @@ class PhocacartRenderFront
 			$db->setQuery((string)$query);
 			$a = $db->loadObject();
 			$o = $a->introtext . $a->fulltext;
-			$o = JHTML::_('content.prepare', $o);
+			
+			// Disable emailclock for PDF | MAIL
+			if ($format == 'pdf' || $format == 'mail') {
+				$o = '{emailcloak=off}' . $o;
+			}
+			
+			$o = JHtml::_('content.prepare', $o );
+			
+			if ($format == 'pdf') {
+				// Remove Javascript for PDF
+				$o = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $o);
+				// Remove mailto - problematic for TCPDF
+				$o = preg_replace("~<a\s+href=[\'|\"]mailto:(.*?)[\'|\"].*?>.*?</a>~", "$1", $o);
+				
+			}
+			
+		}
+		
+		// If no text is set by article and there is default value
+		if ($o == '' && $default != '') {
+			return $default;
 		}
 		return $o;
 	}

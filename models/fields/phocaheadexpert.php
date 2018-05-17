@@ -20,13 +20,13 @@ class JFormFieldPhocaHeadExpert extends JFormField
 		$tc = 'phocacart';
 		$ts = 'media/com_'.$tc.'/css/administrator/';
 		$ti = 'media/com_'.$tc.'/images/administrator/';
-		JHTML::stylesheet( $ts.'/'.$tc.'options.css' );
+		JHtml::stylesheet( $ts.'/'.$tc.'options.css' );
 		echo '<div style="clear:both;"></div>';
 		$phocaImage	= ( (string)$this->element['phocaimage'] ? $this->element['phocaimage'] : '' );
 		$image 		= '';
 		
 		if ($phocaImage != ''){
-			$image 	= JHTML::_('image', $ti . $phocaImage, '' );
+			$image 	= JHtml::_('image', $ti . $phocaImage, '' );
 		}
 		
 		if ($this->element['default']) {

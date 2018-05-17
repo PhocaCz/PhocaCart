@@ -29,6 +29,7 @@ $sortFields = $this->getSortFields();
 echo $r->jsJorderTable($listOrder);
 
 
+
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
 echo $r->startFilter();
 //echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
@@ -57,12 +58,12 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-code">'.JHTML::_('grid.sort',  $this->t['l'].'_CODE', 'a.code', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-currency-symbol">'.JHTML::_('grid.sort',  $this->t['l'].'_CURRENCY_SYMBOL', 'a.price_currency_symbol', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-exchange-rate">'.JHTML::_('grid.sort',  $this->t['l'].'_EXCHANGE_RATE', 'a.exchange_rate', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-id">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-code">'.JHtml::_('grid.sort',  $this->t['l'].'_CODE', 'a.code', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-currency-symbol">'.JHtml::_('grid.sort',  $this->t['l'].'_CURRENCY_SYMBOL', 'a.price_currency_symbol', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-exchange-rate">'.JHtml::_('grid.sort',  $this->t['l'].'_EXCHANGE_RATE', 'a.exchange_rate', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 			
@@ -93,7 +94,7 @@ $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
-echo $r->tdOrder($canChange, $saveOrder, $orderkey);
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';

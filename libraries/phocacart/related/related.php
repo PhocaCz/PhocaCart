@@ -59,7 +59,7 @@ class PhocacartRelated
 		$catid		= 0;
 		
 		if ($frontend) {
-			$user 		= JFactory::getUser();
+			$user 		= PhocacartUser::getUser();
 			$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			
@@ -69,6 +69,7 @@ class PhocacartRelated
 			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] = " c.published = 1";
 			$wheres[] = " a.published = 1";
+			$wheres[] = " c.type IN (0,1)";// Related are displayed only in online shop (0 - all, 1 - online shop, 2 - pos)
 			
 			$catid	= PhocacartCategoryMultiple::getCurrentCategoryId();
 
@@ -79,8 +80,21 @@ class PhocacartRelated
 		} else if ($select == 2) {
 			$query = ' SELECT a.id, a.alias';
 		}else {
-			$query = ' SELECT a.id as id, a.title as title, a.image as image, a.alias as alias,'
-					.' c.id as catid, c.alias as catalias, c.title as cattitle';
+			// FULL GROUP BY ISSUE
+			//$query = ' SELECT a.id as id, a.title as title, a.image as image, a.alias as alias,'
+			//		.' c.id as catid, c.alias as catalias, c.title as cattitle';
+			$query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long,'
+					.' SUBSTRING_INDEX(GROUP_CONCAT(c.id ORDER BY c.parent_id), \',\', 1) as catid,'
+					.' SUBSTRING_INDEX(GROUP_CONCAT(c.title ORDER BY c.parent_id), \',\', 1) as cattitle,'
+					.' SUBSTRING_INDEX(GROUP_CONCAT(c.alias ORDER BY c.parent_id), \',\', 1) as catalias';
+	
+					/*.' (SELECT c.id FROM jos_phocacart_product_categories AS pc'
+		 			.' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catid, '
+					.' (SELECT c.title FROM jos_phocacart_product_categories AS pc'
+					.' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS cattitle, '
+					.' (SELECT c.alias FROM jos_phocacart_product_categories AS pc'
+					.' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catalias';*/
+					
 		}
 		if ((int)$catid > 0) {
 			$query .= ', ';
@@ -109,10 +123,11 @@ class PhocacartRelated
 		} else if ($select == 2) {
 			$query .= ' GROUP BY a.id, a.alias';
 		}else {
-			$query .= ' GROUP BY a.id, a.title, a.image, a.alias, c.id, c.alias, c.title';
+			// FULL GROUP BY ISSUE
+			//$query .= ' GROUP BY a.id, a.title, a.image, a.alias, c.id, c.alias, c.title';
+			$query .= ' GROUP BY a.id, a.title, a.alias, a.image, a.description, a.description_long';
 		}
-				
-				
+
 		$db->setQuery($query);
 		
 		if ($select == 1) {
@@ -120,7 +135,7 @@ class PhocacartRelated
 		} else {
 			$related = $db->loadObjectList();
 		}
-
+	
 		return $related;
 	}
 	

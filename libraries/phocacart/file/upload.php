@@ -592,7 +592,7 @@ class PhocacartFileUpload
 		
 		// User (only in ucp) - Check the size of all files by users
 		if ($frontEnd == 2) {
-			$user 				= JFactory::getUser();
+			$user 				= PhocacartUser::getUser();
 			$maxUserUploadSize 	= (int)$paramsC->get( 'user_files_max_size', 20971520 );
 			$maxUserUploadCount	= (int)$paramsC->get( 'user_files_max_count', 5 );
 			$allFile	= PhocacartUser:: getUserFileInfo($file, $user->id);
@@ -701,7 +701,7 @@ class PhocacartFileUpload
 		.'<input class="update-folder" type="hidden" name="folderbase" id="folderbase" value="'.$currentFolder.'" />'
 		.' <button type="submit" class="btn btn-success">'. JText::_( 'COM_PHOCACART_CREATE_FOLDER' ).'</button>'
 		.'</div>'."\n"
-		.JHTML::_( 'form.token' )
+		.JHtml::_( 'form.token' )
 		.'</form>';
 		return $folderOutput;
 	}

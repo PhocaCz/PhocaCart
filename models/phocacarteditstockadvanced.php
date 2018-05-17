@@ -88,7 +88,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 		if (isset($item->status_id) && (int)$item->status_id > 0) {
 			$status = PhocacartOrderStatus::getStatus($item->status_id);
 			
-			$status['select'] = JHTML::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
+			$status['select'] = JHtml::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
 		}
 		return array();	
@@ -126,7 +126,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 		$data['status_id']	= (int)$data['status_id'];
 		$data['email_send']	= (int)$data['email_send'];
 		$row 				= $this->getTable('PhocacartOrder', 'Table');
-		$user 				= JFactory::getUser();
+		$user 				= PhocacartUser::getUser();
 
 		if(isset($data['id']) && $data['id'] > 0) {
 			if (!$row->load(array('id' => (int)$data['id']))) {

@@ -42,5 +42,5 @@ switch($this->t['infoaction']) {
 
 echo '</div>';// end ph-pc-checkout-box
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

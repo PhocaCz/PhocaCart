@@ -61,7 +61,7 @@ echo '<div style="border-bottom:1px solid #cccccc;margin-bottom: 10px">&nbsp;</d
 
 echo '<ul class="nav nav-tabs" id="configTabs">';
 
-$label = JHTML::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
+$label = JHtml::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
 echo '<li><a href="#upload" data-toggle="tab">'.$label.'</a></li>';
 
 if((int)$this->t['enablemultiple']  >= 0) {

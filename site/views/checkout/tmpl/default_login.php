@@ -143,7 +143,7 @@ if($this->a->login == 0) {
 	echo '<div>'.JText::_('COM_PHOCACART_GUEST_CHECKOUT');
 	echo '</div>';
 	
-	echo '<div class="pull-right"><button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="glyphicon glyphicon-user"></span> '. JText::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button></div>'. "\n";
+	echo '<div class="ph-pull-right"><button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="glyphicon glyphicon-user"></span> '. JText::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button></div>'. "\n";
 	
 	
 	echo '<div class="ph-cb"></div>';

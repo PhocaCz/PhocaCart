@@ -17,7 +17,7 @@ class PhocacartWishlist
 
 	public function __construct() {
 		$session 		= JFactory::getSession();
-		$this->user		= JFactory::getUser();
+		$this->user		= PhocacartUser::getUser();
 		$app 			= JFactory::getApplication();
 		
 		
@@ -190,7 +190,7 @@ class PhocacartWishlist
 	
 	public function getQueryList($items, $full = 0){
 		
-		$user 		= JFactory::getUser();
+		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$itemsS		= $this->getItemsIdString($items);
@@ -203,6 +203,7 @@ class PhocacartWishlist
 		
 		$wheres[] = 'a.id IN ('.(string)$itemsS.')';	
 		$wheres[] = " c.access IN (".$userLevels.")";
+		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos - not used outside online shop
 		$wheres[] = " a.access IN (".$userLevels.")";
 		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
@@ -212,13 +213,21 @@ class PhocacartWishlist
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
 		if ($full == 1) {
-			$query = 
-			 ' SELECT a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
+			
+			$columns		= 'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
 			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
 			//.' a.length, a.width, a.height, a.weight, a.volume,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			//.' m.title as manufacturer_title'
-			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received'
+			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+			$groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' ppg.price, pptg.points_received';
+			$groupsFast		= 'a.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
+			$query = 
+			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
@@ -232,22 +241,25 @@ class PhocacartWishlist
 			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			
 			.  $where
-			. ' GROUP BY a.id, a.title, a.alias, a.description, a.price, a.image,'
-			.' '
-			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
-			.' ppg.price, pptg.points_received'
+			. ' GROUP BY '.$groups
 			. ' ORDER BY a.id';
 		} else {
+			
+			$columns		= 'a.id as id, a.title as title, a.alias as alias,'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories';
+			$groupsFull		= 'a.id, a.title, a.alias';
+			$groupsFast		= 'a.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+									
 			$query = 
-			 ' SELECT a.id as id, a.title as title, a.alias as alias,'
-			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories'
+			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
 			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			.  $where
-			. ' GROUP BY a.id, a.title, a.alias'
+			. ' GROUP BY '.$groups
 			. ' ORDER BY a.id';
 		}	
 		return $query;

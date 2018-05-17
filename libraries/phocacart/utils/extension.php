@@ -116,7 +116,7 @@ class PhocacartUtilsExtension
 		$classTxt 	= '';
 		$textTxt 	= '';
 		
-		if ($type == 0 && $extension['installed'] == false) {
+		if (($type == 0 || $type == 4) && $extension['installed'] == false) {
 			
 			$link  	= $download;
 			$icon 	= 'shopping-cart';
@@ -130,6 +130,18 @@ class PhocacartUtilsExtension
 					if ($extension['versioncurrent']) {
 						
 						if ($type == 0) {
+							// 0 - Paid but update - installed but updated paid version found
+							$link = $download;
+							$icon 	= 'shopping-cart';
+							$class	= 'btn-buy';
+							$text	= JText::_('COM_PHOCACART_REQUEST') . ' ('.$extension['version'].')';
+							$target = 'target="_blank"';
+							
+							$iconTxt 	= 'ok';
+							$classTxt 	= 'ph-success-txt';
+							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
+							
+						} else if ($type == 4) {
 							// 0 - Paid but update - installed but updated paid version found
 							$link = $download;
 							$icon 	= 'shopping-cart';

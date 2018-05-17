@@ -75,7 +75,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 	}
 	
 	protected function getListQuery() {
-		
+				
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
@@ -91,6 +91,16 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 		$query->select('SUM(t.amount) AS order_amount');
 		$query->join('LEFT', '#__phocacart_order_total AS t ON a.id=t.order_id');
 		$query->where('t.type = \'brutto\'' );
+		
+		// Filter by order status
+		$whereOrderStatus = '';
+		if (!PhocacartStatistics::setWhereByOrderStatus($whereOrderStatus)) {
+			$dummyQuery = 'SELECT "" AS date_only, 0 AS count_orders FROM `#__phocacart_orders`';	
+			return $dummyQuery;
+		}
+		if ($whereOrderStatus != '') {
+			$query->where( $whereOrderStatus );
+		}
 	
 
 		// Filter by search in title
@@ -108,7 +118,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 		
 		$query->order($db->escape('a.date ASC'));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
+		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));exit;
 		return $query;
 	}
 }

@@ -96,13 +96,13 @@ class PhocacartImage
 		
 		if (JFile::exists(JPATH_ROOT.'/'.$image)) {
 			$style = ' style="';
-			if ($width = '') {
+			if ($width != '') {
 				$style .= 'width: '.$width.';'; 
 			}
-			if ($width = '') {
-				$style .= 'height: '.$width.';'; 
+			if ($height != '') {
+				$style .= 'height: '.$height.';'; 
 			}
-			$style = '" ';
+			$style .= '" ';
 			
 			if ($path != '') {
 				$path = $path . '/';

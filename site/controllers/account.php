@@ -18,7 +18,7 @@ class PhocaCartControllerAccount extends JControllerForm
 
 		$app	= JFactory::getApplication();
 		$model	= $this->getModel('Profile', 'UsersModel');
-		$user	= JFactory::getUser();
+		$user	= PhocacartUser::getUser();
 		$userId	= (int) $user->get('id');
 
 		// Get the user data.

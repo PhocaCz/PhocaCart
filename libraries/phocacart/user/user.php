@@ -13,10 +13,130 @@ defined('_JEXEC') or die();
 class PhocacartUser
 {
 
-	protected $guest = array();
+	/*protected $guest = array();
 	
-	public function __construct() {
+	protected $user 	= array();
+	protected $vendor	= array();
+	protected $ticket	= array();
+	protected $pos		= false;*/
 	
+	
+	/*public function __construct($pos) {
+		
+		
+		$this->user		= JFactory::getUser();
+		$this->pos		= $pos;
+	}*/
+	
+	
+	public static function getUser($id = 0) {
+		
+		$pUser		= $vendor = $ticket = $unit	= $section = array();
+		$isVendor	= false;
+		
+		if ((int)$id > 0) {
+			$jUser = JFactory::getUser($id);
+			return $jUser;
+		} else {
+			if (PhocacartPos::isPos()) {
+				$isVendor = self::defineUser($pUser, $vendor, $ticket, $unit, $section);
+				if ($isVendor) {
+					// Current Joomla! User is Vendor (in POS)
+					// Check if this vendor has selected some customer
+					// If yes: switch the selected user as current Joomla! user
+					//         for example to check access rights: Vendor selected User A
+					//         so we must check the rights of User A and not of Vendor
+					if (!empty($pUser)) {
+						// ======= LOGGED JOOMLA! USER IS VENDOR - CUSTOMER SELECTED
+						return $pUser;
+					} else {
+						// ======= LOGGED JOOMLA! USER IS VENDOR - NO CUSTOMER SELECTED
+						return false;// Joomla! User is vendor and he/she didn't select any customer
+					}
+				} else {
+					// ======= LOGGED JOOMLA! USER IS NOT VENDOR - BUT IN POS WE NEED VENDOR
+					return false;
+				}
+			} else {
+				// ======= LOGGED JOOMLA! USER IS CUSTOMER
+				// No POS, return standard Joomla! User
+				$jUser = JFactory::getUser();
+				return $jUser;
+			}
+		}
+		// ======= NO LOGGED JOOMLA! USER
+		return false;	
+	}
+	
+	public static function defineUser(&$user, &$vendor, &$ticket, &$unit, &$section, $forcePos = 0) {
+		
+		$pos		= PhocacartPos::isPos($forcePos);
+		
+		$user		= JFactory::getUser();
+		$vendor 	= array();
+		$vendor		= new stdClass();
+		$vendor->id = 0;
+		
+		$ticket 	= array();
+		$ticket		= new stdClass();
+		$ticket->id = 0;
+		
+		$unit 	= array();
+		$unit		= new stdClass();
+		$unit->id = 0;
+		
+		$section 	= array();
+		$section	= new stdClass();
+		$section->id = 0;
+
+		if ($pos == 1) {
+			
+			// Is logged in user a vendor?
+			if (!empty($user) && (int)$user->id > 0) {
+
+				$vendor 	= clone $user;
+				$isVendor	= PhocacartVendor::isVendor($vendor);
+				
+				if ($isVendor) {
+					//unset($user); cannot unset $user as we lost it for reference
+					$user 			= array();
+					$user 			= new stdClass();
+					$ticketA		= PhocacartTicket::getTicket($vendor->id);
+					$ticket->id 	= $ticketA['ticketid'];
+					$unit->id 		= $ticketA['unitid'];
+					$section->id 	= $ticketA['sectionid'];
+					$userId 		= PhocacartPos::getUserIdByVendorAndTicket($vendor->id, $ticket->id, $unit->id, $section->id);
+					$user			= JFactory::getUser($userId);
+					return true;
+				} else {
+					$vendor = array();
+					$vendor	= new stdClass();
+					$vendor->id = 0;
+					return false;
+				}
+				return false;
+			}
+			return false;
+		}
+		return false;
+	}
+	
+	
+	public static function getUserIdByCard($card) {
+		
+		$db = JFactory::getDBO();
+		
+		$query = ' SELECT a.user_id FROM #__phocacart_users AS a'
+			    .' WHERE a.loyalty_card_number = '.$db->quote($card)
+				.' AND a.type = 0'
+				.' LIMIT 1';
+				
+				
+		$db->setQuery($query);
+		$id = $db->loadResult();
+		return $id;
+		
+		
 	}
 	
 
@@ -131,7 +251,7 @@ class PhocacartUser
 		
 		
 		// Billing the same like shipping
-		if ($data[0]->ba_sa == 1 || $data[0]->ba_sa == 1){
+		if (isset($data[0]->ba_sa) && $data[0]->ba_sa == 1){
 			$o['bsch'] = 1;
 		}
 		
@@ -198,8 +318,12 @@ class PhocacartUser
 				}
 			}
 			
-			$o['b'] = '<div class="col-sm-12">'.$bNameO.'</div>' . $o['b'];
-			$o['s'] = '<div class="col-sm-12">'.$sNameO.'</div>' . $o['s'];
+			if ($bNameO != '' && $o['b'] != '') {
+				$o['b'] = '<div class="col-sm-12">'.$bNameO.'</div>' . $o['b'];
+			}
+			if ($sNameO != '' && $o['s'] != '') {
+				$o['s'] = '<div class="col-sm-12">'.$sNameO.'</div>' . $o['s'];
+			}
 		}
 		
 		return $o;
@@ -269,7 +393,7 @@ class PhocacartUser
 	public static function getUserInfo() {
 		
 		$u				= array();
-		$user 			= JFactory::getUser();
+		$user 			= PhocacartUser::getUser();
 		$u['username']	= '';
 		$u['id']		= 0;
 		$u['ip']		= '';
@@ -310,6 +434,28 @@ class PhocacartUser
 		return $total;
 	}
 
+	public static function getUserData($userId = 0) {
+		
+		$db = JFactory::getDBO();
+		
+		if ((int)$userId == 0) {
+			$user 	= PhocacartUser::getUser();
+			$userId = (int)$user->id;
+		}
+
+		if ((int)$userId > 0) {
+		
+			$query = 'SELECT u.*, r.title as regiontitle, c.title as countrytitle FROM #__phocacart_users AS u'
+					.' LEFT JOIN #__phocacart_countries AS c ON c.id = u.country'
+					.' LEFT JOIN #__phocacart_regions AS r ON r.id = u.region'
+					.' WHERE u.user_id = '.(int)$userId
+					.' ORDER BY u.type ASC';
+			$db->setQuery($query);
+			$data = $db->loadObjectList();
+			return $data;
+		}
+		return false;
+	}
 	
 	
 	/*

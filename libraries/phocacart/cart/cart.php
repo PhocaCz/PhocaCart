@@ -21,6 +21,11 @@ class PhocacartCart
 	protected $fullitems			= array();
 	protected $fullitemsgroup		= array();// Group of one product: Product A (Option A) + Product A (Option B)
 	protected $user					= array();
+	protected $vendor				= array();
+	protected $ticket				= array();
+	protected $unit					= array();
+	protected $section				= array();
+	protected $loyalty_card_number	= '';
 	protected $total				= array();
 	
 	
@@ -46,16 +51,22 @@ class PhocacartCart
 	protected $stock				= array();
 	protected $minqty				= array();
 	protected $minmultipleqty		= array();
-
+	protected $pos					= false;
+	protected $type					= array(0,1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
 	
+	protected $removedproducts		= array(); // Products which not more exit (or their attributes/options) are removed
+											   // if they were not removed previously - so e.g. when making an order
+											   // the order will be not placed by user will get error message
 	
+	protected $instance				= 1; // 1.cart 2.checkout 3.order
 	public function __construct() {
 		
 		$app 			= JFactory::getApplication();
 		$session 		= JFactory::getSession();
-		$this->user		= JFactory::getUser();
+		$dUser			= PhocacartUser::defineUser($this->user, $this->vendor, $this->ticket, $this->unit, $this->section);
 		$guest			= PhocacartUserGuestuser::getGuestUser();
 		
+		$this->pos		= PhocacartPos::isPos();
 		$this->coupon['id']			= 0;
 		$this->coupon['title']		= '';
 		$this->coupon['valid']		= 0;
@@ -67,6 +78,8 @@ class PhocacartCart
 		$this->cartdiscount['title']= '';
 		
 		$this->shipping['id']		= 0;
+		$this->shipping['title']	= '';
+		$this->shipping['method']	= '';
 		$this->shipping['costs']	= 0;
 		
 		$this->payment['id']				= 0;
@@ -82,35 +95,68 @@ class PhocacartCart
 		
 
 		
-		// Admin info
+		// Admin info - Administrator asks for information about user's cart
 		if ($app->getName() == 'administrator') {
 			$id				= $app->input->get('id', 0, 'int');
 			$cartDb 		= PhocacartCartDb::getCartDb($id);
 			$this->items	= $cartDb['cart'];
+			return;
 		}
 		
-		if((int)$this->user->id > 0) {
+		// POS
+		
+		if ($this->pos &&(int)$this->vendor->id > 0) {
+			
+			$cartDb = PhocacartCartDb::getCartDb((int)$this->user->id, (int)$this->vendor->id, (int)$this->ticket->id, (int)$this->unit->id, (int)$this->section->id);
+			
+			$this->items 				= $cartDb['cart'];
+			$this->coupon['id']			= $cartDb['coupon'];
+			$this->coupon['title']		= $cartDb['coupontitle'];
+			$this->coupon['code']		= $cartDb['couponcode'];
+			$this->shipping['id']		= $cartDb['shipping'];
+			$this->payment['id']		= $cartDb['payment'];
+			$this->payment['title']		= $cartDb['paymenttitle'];
+			$this->payment['method']	= $cartDb['paymentmethod'];
+			$this->reward['used']		= $cartDb['reward'];
+			$this->loyalty_card_number	= $cartDb['loyalty_card_number'];
+			
+			// Don't care about session (use in session is customer, user in pos in db is vendor)
+			
+			
+			
+		} else if((int)$this->user->id > 0) {
 			// DATABASE - logged in user - Singleton because of not load data from database every time cart instance is loaded
 			// 1. Not found in DATABASE - maybe user logged in now, so:
 			// 2. We try to find the data in SESSION, if they are still in SESSION - load them to our cart class and then
 			// 3. Store them to DATABASE as all loged in users have cart in database and:
 			// 4. Remove them from SESSION as they are stored in DATABASE
-			$cartDb = PhocacartCartDb::getCartDb($this->user->id);// user logged in - try to get cart from db
-			$this->items 			= $cartDb['cart'];
-			$this->coupon['id']		= $cartDb['coupon'];
-			$this->coupon['title']	= $cartDb['coupontitle'];
-			$this->coupon['code']	= $cartDb['couponcode'];
-			$this->shipping['id']	= $cartDb['shipping'];
-			$this->payment['id']	= $cartDb['payment'];
-			$this->payment['title']	= $cartDb['paymenttitle'];
-			$this->payment['method']= $cartDb['paymentmethod'];
-			$this->reward['used']	= $cartDb['reward'];
+			$cartDb = PhocacartCartDb::getCartDb((int)$this->user->id);// user logged in - try to get cart from db
+			$this->items 				= $cartDb['cart'];
+		
+			$this->coupon['id']			= $cartDb['coupon'];
+			$this->coupon['title']		= $cartDb['coupontitle'];
+			$this->coupon['code']		= $cartDb['couponcode'];
+			$this->shipping['id']		= $cartDb['shipping'];
+			$this->payment['id']		= $cartDb['payment'];
+			$this->payment['title']		= $cartDb['paymenttitle'];
+			$this->payment['method']	= $cartDb['paymentmethod'];
+			$this->reward['used']		= $cartDb['reward'];
+			$this->loyalty_card_number	= $cartDb['loyalty_card_number'];
 			$sessionItems = $session->get('cart', array(), 'phocaCart');
-			
+
 			if(empty($this->items)) {
 				$this->items	= $session->get('cart', array(), 'phocaCart');
 				if(!empty($this->items)) {
 					$this->updateItemsDb();
+					// Very important - clean the static variable
+					// because more instances of cart are loading the static variable once
+					// So if the FIRST instance loaded empty cart
+					// and then has filled this empty cart with data from session
+					// SECOND instance must load the static variables newly because if it does not do
+					// then it get the same data like FIRST instance (empty cart) But the cart
+					// was filled in with data from session so there will be contradiction
+					// between instances (FIRST INSTANCE - EMPTY CART BUT REFILLED BY SESSION = FULL CART, SECOND INSTANCE EMPTY CART SET BY FIRST INSTANCE)
+					PhocacartCartDb::clearCartDbVariable((int)$this->user->id);
 					$session->set('cart', array(), 'phocaCart');
 				}
 			} else {
@@ -125,16 +171,34 @@ class PhocacartCart
 				
 			}
 		} else if ($guest) {
-			$this->items 			= $session->get('cart', array(), 'phocaCart');
-			$this->shipping['id']	= $session->get('guestshipping', false, 'phocaCart');
-			$this->payment['id']	= $session->get('guestpayment', false, 'phocaCart');
-			$this->coupon['id']		= $session->get('guestcoupon', false, 'phocaCart');
+			$this->items 				= $session->get('cart', array(), 'phocaCart');
+			$this->shipping['id']		= $session->get('guestshipping', false, 'phocaCart');
+			$this->payment['id']		= $session->get('guestpayment', false, 'phocaCart');
+			$this->coupon['id']			= $session->get('guestcoupon', false, 'phocaCart');
+			$this->loyalty_card_number	= $session->get('guestloyaltycardnumber', false, 'phocaCart');
 		} else {
 			// SESSION - not logged in user
 			$this->items	= $session->get('cart', array(), 'phocaCart');
 		}
+		
+	
 	}
 	
+	/*
+	 * 1. cart
+	 * 2. checkout
+	 * 3. order
+	 */
+	public function setInstance($type) {
+		$this->instance = (int)$type;
+	}
+	
+	/*
+	 * 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
+	 */
+	public function setType ($type = array(0,1)) {
+		$this->type = $type;
+	}
 	
 	/*
 	 * Catid is only for information from which place the product was added to the cart
@@ -142,13 +206,15 @@ class PhocacartCart
 	 */
 	public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
 	
+		
 		if ($idKey != '') {
 			// we get idkey as string - from checkout update or remove -  used in CHECKOUT
 		} else {
 			// we get id as int standard id of product - attributes can be listed in form - used in CATEGORY, ITEM, ITEMS
 			///$k = (int)$id . ':';
 			
-			$checkP = PhocacartProduct::checkIfAccessPossible($id, $catid);
+			
+			$checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 			
 			if (!$checkP) {	
 				$uri 			= JFactory::getURI();
@@ -169,6 +235,8 @@ class PhocacartCart
 				$action			= $uri->toString();
 				$app			= JFactory::getApplication();
 				$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
+		
+		
 				return false;
 			}
 			
@@ -236,7 +304,14 @@ class PhocacartCart
 	protected function updateItems() {
 	
 		$session 		= JFactory::getSession();
-		if((int)$this->user->id > 0) {
+		if($this->pos && (int)$this->vendor->id > 0) {
+		
+			$this->updateItemsDb();
+			// if user changes the cart shipping method needs to be removed because it can be based on amount or region, etc.
+			// payment is for now without dependency to address or to amount, don't update it
+			PhocacartShipping::removeShipping();
+			PhocacartPayment::removePayment();
+		} else if((int)$this->user->id > 0) {
 			$this->updateItemsDb();
 			// if user changes the cart shipping method needs to be removed because it can be based on amount or region, etc.
 			// payment is for now without dependency to address or to amount, don't update it
@@ -259,12 +334,53 @@ class PhocacartCart
 		$date 	= JFactory::getDate();
 		$now	= $date->toSql();
 		
-		$query = 'INSERT INTO #__phocacart_cart (user_id, cart, date)'
+		// Update multiple cart (include vendor, ticket)
+		$query = ' SELECT user_id, vendor_id, ticket_id, unit_id, section_id FROM #__phocacart_cart_multiple'
+				.' WHERE user_id = '.(int)$this->user->id
+				.' AND vendor_id = '.(int)$this->vendor->id
+				.' AND ticket_id = '.(int)$this->ticket->id
+				.' AND unit_id = '.(int)$this->unit->id
+				.' AND section_id = '.(int)$this->section->id
+				.' ORDER BY user_id LIMIT 1';
+		$db->setQuery($query);
+		$result = $db->loadRow();
+		if (!empty($result)) {
+			
+			$query = 'UPDATE #__phocacart_cart_multiple'
+			.' SET cart = '.$db->quote($items).','
+			.' date = '.$db->quote($now)		
+			.' WHERE user_id = '.(int)$this->user->id
+			.' AND vendor_id = '.(int)$this->vendor->id
+			.' AND ticket_id = '.(int)$this->ticket->id
+			.' AND unit_id = '.(int)$this->unit->id
+			.' AND section_id = '.(int)$this->section->id;
+			
+			$db->setQuery($query);
+			$db->execute();
+		} else {
+			if ((int)$this->user->id == 0 && (int)$this->vendor->id == 0) {
+				// Not possible now
+				// guests do not store cart to database
+				// if userid == 0: 1) guest (not possible) 2) vendor uses pos (vendor must be > 0)
+				// if vendorid == 0: 1) standard eshop - userid must be > 0)
+				// ticket can be always zero
+			} else {
+				
+				$query = 'INSERT INTO #__phocacart_cart_multiple (user_id, vendor_id, ticket_id, unit_id, section_id, cart, date)'
+				.' VALUES ('.(int)$this->user->id.', '.(int)$this->vendor->id.', '.(int)$this->ticket->id.', '.(int)$this->unit->id.', '.(int)$this->section->id.', '.$db->quote($items).', '.$db->quote($now).');';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			
+		}
+		
+		// Update single cart (no vendor, no ticket)
+		/*$query = 'INSERT INTO #__phocacart_cart (user_id, cart, date)'
 				.' VALUES ('.(int)$this->user->id.', '.$db->quote($items).', '.$db->quote($now).')'
 				.' ON DUPLICATE KEY UPDATE cart = VALUES (cart), date = VALUES (date)';
 				
 		$db->setQuery($query);
-		$db->execute();
+		$db->execute();*/
 		return true;
 	}
 	
@@ -291,23 +407,68 @@ class PhocacartCart
 		if (empty($this->fullitems)) {
 			if(!empty($this->items)) {
 			
-				$app				= JFactory::getApplication();
-				$paramsC 			= PhocacartUtils::getComponentParameters();
-				$tax_calculation	= $paramsC->get( 'tax_calculation', 0 );
+				$app							= JFactory::getApplication();
+				$paramsC 						= PhocacartUtils::getComponentParameters();
+				$tax_calculation				= $paramsC->get( 'tax_calculation', 0 );
+				$check_product_attributes		= $paramsC->get( 'check_product_attributes', array(3) );
+			
 				
 				$price	= new PhocacartPrice();
 				$calc 	= new PhocacartCartCalculation();
+				$calc->setType($this->type);
 				
 				
-				// CHECK ACCESS OF ALL ITEMS IN CART
+				// CHECK ACCESS OF ALL ITEMS IN CART, CHECK IF ATTRIBUTES STILL EXIST 
+				// (e.g. when someone open his/her cart after product changes were made
 				foreach($this->items as $k => $v) {
 					$item 	= explode(':', $k);
 					$itemId = $item[0];
-					$checkP = PhocacartProduct::checkIfAccessPossible((int)$itemId, (int)$v['catid']);
+					
+					// CHECK PRODUCT
+					$checkP = PhocacartProduct::checkIfAccessPossible((int)$itemId, (int)$v['catid'], $this->type);
 			
 					if (!$checkP){
+						$app->enqueueMessage(
+							JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CART_NOT_EXISTS'). ' '
+							. JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART'). ' '
+							. JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
 						unset($this->items[$k]);
+						$this->updateItemsFromCheckout($k, 0);
+						// In case this all happens when order is made - stop the order and inform user
+						$this->updateProductsRemoved($k);
+					
+					} else {
+						// Product access is OK - product still in cart, check the attributes and options
+						
+						// ATTRIBUTE AND OPTIONS CHECK
+						// Check if attributes and options of stored products in cart are available (no change between ordering)
+						// Takes a lot of resources, so it will be checked when making an order as default ($check_product_attributes = 3)
+						// ATTRIBUTES	
+						if (in_array($this->instance, $check_product_attributes)) {
+							
+							$attribs = array();
+							if (!empty($item[1])) {
+								$attribs = unserialize(base64_decode($item[1]));
+							}
+							$checkA = PhocacartProduct::checkIfProductAttributesOptionsExist((int)$itemId, $k, (int)$v['catid'], $this->type, $attribs);
+							if (!$checkA){
+								$app->enqueueMessage(
+									JText::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS'). ' '
+									. JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART'). ' '
+									. JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+								unset($this->items[$k]);
+								$this->updateItemsFromCheckout($k, 0);
+								// In case this all happens when order is made - stop the order and inform user
+								$this->updateProductsRemoved($k);
+						
+							}
+						}
 					}
+					
+					
+					
+					
+					
 				}
 				if(empty($this->items)) {
 					return false;
@@ -453,6 +614,7 @@ class PhocacartCart
 		
 		$price		= new PhocacartPrice();
 		$calc 		= new PhocacartCartCalculation();
+		$calc->setType($this->type);
 		$currency 	= PhocacartCurrency::getCurrency();
 		$cr			= $currency->exchange_rate;
 		$total 		= 0; // total in default currency
@@ -558,6 +720,7 @@ class PhocacartCart
 		// E.g. guest checkout
 		if (isset($payment['id']) && (int)$payment['id'] > 0 && $payment['title'] == '' && $payment['method'] == '') {
 			$paymentNew	= new PhocacartPayment();
+			$paymentNew->setType($this->type);
 			$pI	= $paymentNew->getPaymentMethod((int)$payment['id']);
 			if (isset($pI->title)) {
 				$payment['title'] 	= $pI->title;
@@ -570,8 +733,35 @@ class PhocacartCart
 		return $payment;
 	}
 	
+	public function getShippingMethod() {
+		
+		$shipping = array();
+		$shipping['title'] 	= $this->shipping['title'];
+		$shipping['method'] = $this->shipping['method'];
+		$shipping['id']		= $this->shipping['id'];
+		
+		// E.g. guest checkout
+		if (isset($shipping['id']) && (int)$shipping['id'] > 0 && $shipping['title'] == '' && $shipping['method'] == '') {
+			$shippingNew	= new PhocacartShipping();
+			$shippingNew->setType($this->type);
+			$pI	= $shippingNew->getShippingMethod((int)$shipping['id']);
+			if (isset($pI->title)) {
+				$shipping['title'] 	= $pI->title;
+			}
+			if (isset($pI->method)) {
+				$shipping['method'] = $pI->method;
+			}
+		}
+		
+		return $shipping;
+	}
+	
 	public function getShippingId() {
 		return $this->shipping['id'];
+	}
+	
+	public function getPaymentId() {
+		return $this->payment['id'];
 	}
 
 	public function getCouponTitle() {
@@ -596,6 +786,7 @@ class PhocacartCart
 	}
 	
 	public function getShippingCosts() {
+		
 		return $this->shipping['costs'];
 	}
 	
@@ -626,6 +817,46 @@ class PhocacartCart
 		return $this->reward['used'];
 	}
 	
+	public function getProductsRemoved() {
+		return $this->removedproducts;
+	}
+	
+	public function updateProductsRemoved($k) {
+		$this->removedproducts[] = $k;
+	}
+	
+	public function getVendorId() {
+		if (isset($this->vendor->id) && (int)$this->vendor->id > 0) {
+			return $this->vendor->id;
+		} else {
+			return 0;
+		}
+	}
+	public function getTicketId() {
+		if (isset($this->ticket->id) && (int)$this->ticket->id > 0) {
+			return $this->ticket->id;
+		} else {
+			return 0;
+		}
+	}
+	public function getUnitId() {
+		if (isset($this->unit->id) && (int)$this->unit->id > 0) {
+			return $this->unit->id;
+		} else {
+			return 0;
+		}
+	}
+	public function getSectionId() {
+		if (isset($this->section->id) && (int)$this->section->id > 0) {
+			return $this->section->id;
+		} else {
+			return 0;
+		}
+	}
+	
+	public function getLoyaltyCartNumber() {
+		return $this->loyalty_card_number;
+	}
 	
 	public function addShippingCosts($shippingId = 0) {
 		
@@ -634,6 +865,7 @@ class PhocacartCart
 		}
 
 		$shipping	= new PhocacartShipping();
+		$shipping->setType($this->type);
 		$sI	= $shipping->getShippingMethod((int)$shippingId);
 
 		if(!empty($sI)) {
@@ -649,6 +881,7 @@ class PhocacartCart
 			
 			// CALCULATION
 			$calc 						= new PhocacartCartCalculation();
+			$calc->setType($this->type);
 			$this->shipping['costs'] 	= $priceI;
 			
 			if ($this->total[0]['free_shipping'] != 1) {
@@ -658,7 +891,7 @@ class PhocacartCart
 			}
 			$calc->calculateShipping($priceI, $this->total[0]);
 			//$calc->round($this->total[0], 0);
-
+			
 		}
 	}
 	
@@ -669,6 +902,7 @@ class PhocacartCart
 		}
 		
 		$payment	= new PhocacartPayment();
+		$payment->setType($this->type);
 		$pI	= $payment->getPaymentMethod((int)$paymentId);
 
 		if(!empty($pI)) {
@@ -685,6 +919,7 @@ class PhocacartCart
 			
 			// CALCULATION
 			$calc 						= new PhocacartCartCalculation();
+			$calc->setType($this->type);
 			$this->payment['costs'] 	= $priceI;
 			
 			if (!isset($this->total[0]['free_payment']) || (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] != 1)) {
@@ -701,9 +936,47 @@ class PhocacartCart
 	public function emptyCart() {
 		$session 		= JFactory::getSession();
 		$session->set('cart', array(), 'phocaCart');
-		if((int)$this->user->id > 0) {
-			PhocacartCartDb::emptyCartDb((int)$this->user->id);
-		}
+		//if((int)$this->user->id > 0) {
+			// this function to empty cart database is not use in POS, so always set ticketid, unitid and sectionid to 1
+			//PhocacartCartDb::emptyCartDb((int)$this->user->id);
+		//}
+		
+		PhocacartCartDb::emptyCartDb((int)$this->user->id, (int)$this->vendor->id, (int)$this->ticket->id, (int)$this->unit->id, (int)$this->section->id);
 	}
+	
+	public function getCartCountItems() {
+		
+		
+		if (empty($this->fullitems)) {
+			$this->fullitems = $this->getFullItems();// get them from parent
+		}
+		
+		$count = 0;
+		if (!empty($this->fullitems[0])) {
+			foreach($this->fullitems[0] as $k => $v) {
+				if (isset($v['quantity']) && (int)$v['quantity'] > 0) {
+					$count += (int)$v['quantity'];
+				}
+			}
+		}
+		return $count;
+	}
+	
+	
+	public function getCartTotalItems() {
+		
+		// SUBTOTAL
+		if (empty($this->total)) {
+			$this->total = $this->getTotal();
+		}
+		
+		// COUPONTITLE
+		if (empty($this->coupontitle)) {
+			$this->coupon['title'] = $this->getCouponTitle();
+		}
+		return $this->total;
+	}
+	
+
 }
 ?>

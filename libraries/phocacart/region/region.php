@@ -136,7 +136,7 @@ class PhocacartRegion
 		$regions = $db->loadObjectList();
 		
 		
-		//$regionsO = JHTML::_('select.genericlist', $regions, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		//$regionsO = JHtml::_('select.genericlist', $regions, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		
 		
 		// Try to do 1 SQL Query and 1 Foreach

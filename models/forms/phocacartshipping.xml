@@ -29,6 +29,12 @@
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>
 
+<field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" class="inputbox" size="1" default="0">
+	<option	value="0">COM_PHOCACART_COMMON</option>
+	<option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
+	<option value="2">COM_PHOCACART_POS_ONLY</option>
+</field>
+
 <field name="default" type="list" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" class="inputbox" size="1" default="0">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>

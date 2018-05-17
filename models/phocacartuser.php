@@ -165,6 +165,7 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 				}
 			}
 		}
+	
 
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -179,6 +180,11 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 			return false;
 		}
 
+		if ($row->id == '') {
+			// fix the type by new items
+			$row->id = null;
+		}
+		
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());

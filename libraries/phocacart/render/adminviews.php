@@ -57,7 +57,7 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function selectFilterPublished($txtSp, $state) {
-		return '<div class="btn-group pull-right ph-select-status">'. "\n"
+		return '<div class="btn-group ph-pull-right ph-select-status">'. "\n"
 		.'<select name="filter_published" class="inputbox" onchange="this.form.submit()">'."\n"
 		. '<option value="">'.JText::_($txtSp).'</option>'
 		. JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('archived' => 0, 'trash' => 0)), 'value', 'text', $state, true)
@@ -65,7 +65,7 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function selectFilterType($txtSp, $type, $typeList) {
-		return '<div class="btn-group pull-right">'. "\n"
+		return '<div class="btn-group ph-pull-right">'. "\n"
 		.'<select name="filter_type" class="inputbox" onchange="this.form.submit()">'."\n"
 		. '<option value="">'.JText::_($txtSp).'</option>'
 		. JHtml::_('select.options', $typeList, 'value', 'text', $type, true)
@@ -73,7 +73,7 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function selectFilterLanguage($txtLng, $state) {
-		return '<div class="btn-group pull-right">'. "\n"
+		return '<div class="btn-group ph-pull-right">'. "\n"
 		.'<select name="filter_language" class="inputbox" onchange="this.form.submit()">'."\n"
 		. '<option value="">'.JText::_($txtLng).'</option>'
 		. JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $state)
@@ -82,7 +82,7 @@ class PhocacartRenderAdminviews
 	
 	public function selectFilterCategory($categoryList, $txtLng, $state) {
 		
-		$o = '<div class="btn-group pull-right ">'. "\n"
+		$o = '<div class="btn-group ph-pull-right ">'. "\n"
 		.'<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">'."\n";
 		
 		if ($txtLng != '') {
@@ -98,7 +98,7 @@ class PhocacartRenderAdminviews
 	public function selectFilterLevels($txtLng, $state) {
 		$levelList = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5);
 		return 
-		'<div class="btn-group pull-right">'. "\n"
+		'<div class="btn-group ph-pull-right">'. "\n"
 		.'<select name="filter_level" class="inputbox" onchange="this.form.submit()">'."\n"
 		. '<option value="">'.JText::_($txtLng).'</option>'
 		. JHtml::_('select.options', $levelList, 'value', 'text', $state)
@@ -106,10 +106,19 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function selectFilterCountry($countryList, $txtLng, $state) {
-		return '<div class="btn-group pull-right ">'. "\n"
+		return '<div class="btn-group ph-pull-right ">'. "\n"
 		.'<select name="filter_country_id" class="inputbox" onchange="this.form.submit()">'."\n"
 		. '<option value="">'.JText::_($txtLng).'</option>'
 		. JHtml::_('select.options', $countryList, 'value', 'text', $state)
+		. '</select></div>'. "\n";
+	}
+	
+	public function selectFilterSection($sectionList, $txtLng, $state) {
+		
+		return '<div class="btn-group ph-pull-right ">'. "\n"
+		.'<select name="filter_section_id" class="inputbox" onchange="this.form.submit()">'."\n"
+		. '<option value="">'.JText::_($txtLng).'</option>'
+		. JHtml::_('select.options', $sectionList, 'value', 'text', $state)
 		. '</select></div>'. "\n";
 	}
 	
@@ -139,7 +148,7 @@ class PhocacartRenderAdminviews
 	}
 
 	public function inputFilterSearch($txtSl, $txtSd, $state) {
-		return '<div class="filter-search btn-group pull-left">'. "\n"
+		return '<div class="filter-search btn-group ph-pull-left">'. "\n"
 		.'<label for="filter_search" class="element-invisible">'.JText::_($txtSl).'</label>'. "\n"
 		.'<input type="text" name="filter_search" placeholder="'.JText::_($txtSd).'" id="filter_search"'
 		.' value="'.$state.'" title="'.JText::_($txtSd).'" />'. "\n"
@@ -147,7 +156,7 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function inputFilterUser($txtSl, $txtSd, $state, $userName) {
-		$o = '<div class="filter-user btn-group pull-left">'. "\n";
+		$o = '<div class="filter-user btn-group ph-pull-left">'. "\n";
 		
 		$d = array();
 		$d['readonly'] = 0;
@@ -181,7 +190,7 @@ class PhocacartRenderAdminviews
 			}
 		}
 
-		return '<div class="btn-group pull-left ">'. "\n"
+		return '<div class="btn-group ph-pull-left ">'. "\n"
 		.'<button class="btn tip hasTooltip" type="submit" title="'.JText::_($txtFs).'"><i class="icon-search"></i></button>'. "\n"
 		.'<button class="btn tip hasTooltip" type="button" id="phOnClickClear" onclick="document.getElementById(\'filter_search\').value=\'\'; '.$clearString.'this.form.submit();"'
 		.' title="'.JText::_($txtFc).'"><i class="icon-remove"></i></button>'. "\n"
@@ -189,7 +198,7 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function inputFilterSearchLimit($txtSl, $paginationLimitBox) {			
-		return '<div class="btn-group pull-right ">'. "\n"
+		return '<div class="btn-group ph-pull-right ">'. "\n"
 		.'<label for="limit" class="element-invisible">'.JText::_($txtSl).'</label>'. "\n"
 		.$paginationLimitBox ."\n" . '</div>'. "\n";
 	}
@@ -198,7 +207,7 @@ class PhocacartRenderAdminviews
 		$ascDir = $descDir = '';
 		if ($listDirn == 'asc') {$ascDir = 'selected="selected"';}
 		if ($listDirn == 'desc') {$descDir = 'selected="selected"';}
-		return '<div class="btn-group pull-right ">'. "\n"
+		return '<div class="btn-group ph-pull-right ">'. "\n"
 		.'<label for="directionTable" class="element-invisible">' .JText::_('JFIELD_ORDERING_DESC').'</label>'. "\n"
 		.'<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">'. "\n"
 		.'<option value="">' .JText::_('JFIELD_ORDERING_DESC').'</option>'. "\n"
@@ -209,7 +218,7 @@ class PhocacartRenderAdminviews
 	}
 	
 	public function selectFilterSortBy($txtSb, $sortFields, $listOrder) {
-		return '<div class="btn-group pull-right">'. "\n"
+		return '<div class="btn-group ph-pull-right">'. "\n"
 		.'<label for="sortTable" class="element-invisible">'.JText::_($txtSb).'</label>'. "\n"
 		.'<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">'. "\n"
 		.'<option value="">'.JText::_($txtSb).'</option>'. "\n"
@@ -255,7 +264,7 @@ class PhocacartRenderAdminviews
 		.'</th>'. "\n";
 	}
 	
-	public function tdOrder($canChange, $saveOrder, $orderkey, $catOrderingEnabled = true){
+	public function tdOrder($canChange, $saveOrder, $orderkey, $ordering = 0, $catOrderingEnabled = true){
 	
 		$o = '<td class="order nowrap center ">'. "\n";
 		if ($canChange) {
@@ -272,7 +281,7 @@ class PhocacartRenderAdminviews
 		} else {
 			$o .= '<span class="sortable-handler inactive"><i class="icon-menu"></i></span>'."\n";
 		}
-		$orderkeyPlus = $orderkey + 1;
+		$orderkeyPlus = $ordering; //$orderkey + 1;
 		$o .= '<input type="text" style="display:none" name="order[]" size="5" value="'.$orderkeyPlus.'" />'. "\n"
 		.'</td>'. "\n"; 
 		return $o;
@@ -353,7 +362,7 @@ class PhocacartRenderAdminviews
 				.'<img src="'.JURI::root().$avatarRel.$item->avatar.'?imagesid='.md5(uniqid(time())).'" alt="'.JText::_($txtE).'" />'
 				.'</a>';
 			} else {
-				$o .= JHTML::_( 'image', '/media/com_phocagallery/images/administrator/phoca_thumb_s_no_image.gif', '');
+				$o .= JHtml::_( 'image', '/media/com_phocagallery/images/administrator/phoca_thumb_s_no_image.gif', '');
 			}
 		} else {	
 			// PICASA
@@ -377,7 +386,7 @@ class PhocacartRenderAdminviews
 				. '<img src="'.JURI::root().$item->linkthumbnailpath.'?imagesid='.md5(uniqid(time())).'" width="'.$correctImageRes['width'].'" height="'.$correctImageRes['height'].'" alt="'.JText::_($txtE).'" />'
 				.'</a>'. "\n";
 			} else {
-				$o .= JHTML::_( 'image', 'media/com_phocagallery/images/administrator/phoca_thumb_s_no_image.gif', '');
+				$o .= JHtml::_( 'image', 'media/com_phocagallery/images/administrator/phoca_thumb_s_no_image.gif', '');
 			}
 		}
 		$o .= '     </center>'. "\n"
@@ -452,7 +461,7 @@ class PhocacartRenderAdminviews
 			$o = '<td>';
 		}
 		if (JFile::exists($thumbnail->abs)) {
-			//$o .= JHTML::_( 'image', $thumbnail->rel . '?imagesid='.md5(uniqid(time())), '');
+			//$o .= JHtml::_( 'image', $thumbnail->rel . '?imagesid='.md5(uniqid(time())), '');
 			$o .= '<img src="'.JURI::root().$thumbnail->rel . '?imagesid='.md5(uniqid(time())).'" />';
 		} 
 		$o .= '</td>';

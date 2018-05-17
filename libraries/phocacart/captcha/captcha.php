@@ -18,7 +18,7 @@ class PhocacartCaptcha
 		$pC 						= PhocacartUtils::getComponentParameters();
 		$enable_captcha_checkout	= $pC->get( 'enable_captcha_checkout', 0 );
 		
-		//$user						= JFactory::getUser();
+		
 		$guest						= PhocacartUserGuestuser::getGuestUser();
 		
 		if ($enable_captcha_checkout == 1) {

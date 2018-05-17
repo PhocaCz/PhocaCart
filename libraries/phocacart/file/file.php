@@ -69,7 +69,7 @@ class PhocacartFile
 				break;
 			}
 			
-			$fileTime = JHTML::Date($fileTime, $format);
+			$fileTime = JHtml::Date($fileTime, $format);
 		} else {
 			$fileTime = '';
 		}

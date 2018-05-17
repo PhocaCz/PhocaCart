@@ -26,9 +26,11 @@ class JFormFieldPhocacartCategory extends JFormField
 		
 		$db = JFactory::getDBO();
 		
-		$javascript	= '';
-		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
-		$multiple	= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$javascript		= '';
+		$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
+		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$typeMethod		= $this->element['typemethod'];
+		$categoryType	= $this->element['categorytype'];// 0 all, 1 ... online shop, 2 ... pos
 		$attr		= '';
 		$attr		.= 'class="inputbox" ';
 		if ($multiple) {
@@ -43,21 +45,43 @@ class JFormFieldPhocacartCategory extends JFormField
 		// Multiple load more values
 		$activeCats = array();
 		$id 		= 0;
-		if ($multiple) {
-			$id = (int) $this->form->getValue('id');
+		// Active cats can be selected in administration item view
+		// but this function is even called in module so ignore this part for module administration
+		if ($multiple && $this->form->getName() == 'com_phocacart.phocacartitem') {
+			$id = (int) $this->form->getValue('id');// Product ID
 			if ((int)$id > 0) {
 				$activeCats	= PhocacartCategoryMultiple::getCategories($id, 1);
+				
 			}
 		}
-
+		
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocacart_categories AS a'
-		. ' WHERE a.published = 1'
-		. ' ORDER BY a.ordering';
+		. ' WHERE a.published = 1';
+		switch($categoryType) {
+			
+			case 1:
+				$query .= ' AND a.type IN (0,1)';
+			break;
+			
+			case 2:
+				$query .= ' AND a.type IN (0,2)';
+			break;
+			
+			
+			case 0: 
+			default:
+				
+			break;
+			
+		}
+		
+		
+		$query .= ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
-	
+
 		// TO DO - check for other views than category edit
 		$view 	= JFactory::getApplication()->input->get( 'view' );
 		$catId	= -1;
@@ -76,16 +100,19 @@ class JFormFieldPhocacartCategory extends JFormField
 		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
 		
 		if ($multiple) {
-		
+			if ($typeMethod == 'allnone') {
+				array_unshift($tree, JHtml::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
+				array_unshift($tree, JHtml::_('select.option', '-1', JText::_('COM_PHOCACART_ALL'), 'value', 'text'));
+			}
 		} else {
-			array_unshift($tree, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
+			array_unshift($tree, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
 		}
 
 		if (!empty($activeCats)) {
-			return JHTML::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
+			return JHtml::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
 		
 		} else {
-			return JHTML::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+			return JHtml::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		}
 		
 	}

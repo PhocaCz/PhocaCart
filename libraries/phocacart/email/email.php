@@ -259,7 +259,7 @@ class PhocacartEmail
 		$mail 		= PhocacartEmailFactory::getMailer();
 		
 		
-		$body 		= $body . PhocacartUtils::getInfo($mode);
+		$body 		= $body . PhocacartUtilsInfo::getInfo($mode);
 	
 
 		$sendMail = $mail->sendMailA($from, $fromName, $recipient, $subject, $body, $mode, $cc, $bcc, $attachmentString, $attachmentFilename, $replyTo, $replyToName);
@@ -278,65 +278,7 @@ class PhocacartEmail
 		
 	}
 	
-	/*
-	 * type ... 1 customers - email sent to customer
-	 * type ... 2 others - email sent to all others
-	 */
 	
-	public static function completeMail($body, $replace, $type = 1) {
-	
-	
-		if ($type == 2) {
-			if (isset($replace['name_others'])) {
-				$body = str_replace('{name}', $replace['name_others'], $body);
-			}
-		} else {
-			if (isset($replace['name'])) {
-				$body = str_replace('{name}', $replace['name'], $body);
-			}
-		}
-		
-		if ($type == 2) {
-			if (isset($replace['email_others'])) {
-				$body = str_replace('{email}', $replace['email_others'], $body);
-			}
-		} else {
-			if (isset($replace['email'])) {
-				$body = str_replace('{email}', $replace['email'], $body);
-			}
-		}
-		
-
-		if (isset($replace['downloadlink'])) {
-			$body = str_replace('{downloadlink}', $replace['downloadlink'], $body);
-		}
-		
-		if (isset($replace['orderlink'])) {
-			$body = str_replace('{orderlink}', $replace['orderlink'], $body);
-		}
-		
-		if (isset($replace['trackinglink'])) {
-			$body = str_replace('{trackinglink}', $replace['trackinglink'], $body);
-		}
-	
-		if (isset($replace['shippingtitle'])) {
-			$body = str_replace('{shippingtitle}', $replace['shippingtitle'], $body);
-		}
-		
-		if (isset($replace['dateshipped'])) {
-			$body = str_replace('{dateshipped}', $replace['dateshipped'], $body);
-		}
-		
-		if (isset($replace['trackingdescription'])) {
-			$body = str_replace('{trackingdescription}', $replace['trackingdescription'], $body);
-		}
-		
-		if (isset($replace['customercomment'])) {
-			$body = str_replace('{customercomment}', $replace['customercomment'], $body);
-		}
-
-		return $body;
-	}
 	
 	public static function sendQuestionMail ($id, $data, $url, $tmpl) {
 		
@@ -388,7 +330,7 @@ class PhocacartEmail
 		
 		$message = JText::_( 'COM_PHOCACART_NEW_POST_ADDED' ) . "\n\n"
 							. JText::_( 'COM_PHOCACART_FROM' ) . ': '. $fromname . "\n"
-							. JText::_( 'COM_PHOCACART_DATE' ) . ': '. JHTML::_('date',  gmdate('Y-m-d H:i:s'), JText::_( 'DATE_FORMAT_LC2' )) . "\n\n"
+							. JText::_( 'COM_PHOCACART_DATE' ) . ': '. JHtml::_('date',  gmdate('Y-m-d H:i:s'), JText::_( 'DATE_FORMAT_LC2' )) . "\n\n"
 							. JText::_( 'COM_PHOCACART_SUBJECT' ) . ': '.$subject."\n"
 							. JText::_( 'COM_PHOCACART_MESSAGE' ) . ': '."\n"
 							. "\n\n"

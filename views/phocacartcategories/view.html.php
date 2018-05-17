@@ -26,6 +26,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		
 		// Preprocess the list of items to find ordering divisions.
 		foreach ($this->items as &$item) {
+			
 			$this->ordering[$item->parent_id][] = $item->id;
 		}
 		

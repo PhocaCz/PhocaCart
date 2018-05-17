@@ -45,7 +45,7 @@ class JFormFieldPhocaCouponCategory extends JFormField
 		}
 		
 		
-		return JHTML::_('select.genericlist', $tree, $this->name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $relatedOption, $id);
+		return JHtml::_('select.genericlist', $tree, $this->name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $relatedOption, $id);
 	}
 }
 ?>

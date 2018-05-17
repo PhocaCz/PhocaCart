@@ -38,16 +38,51 @@ class PhocacartTag
 		return $tags;
 	}
 	
-	public static function getAllTags($ordering = 1) {
+	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0) {
 	
-		$db 			= JFactory::getDBO();
+	/*	$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
 		
 		$query = 'SELECT t.id, t.title, t.alias FROM #__phocacart_tags AS t WHERE t.published = 1 ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();	
 	
-		return $tags;
+		return $tags;*/
+		
+		
+		$db 			= JFactory::getDBO();
+		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
+		
+		$wheres		= array();
+		$lefts		= array();
+		
+		$columns		= 't.id, t.title, t.alias';
+		/*$groupsFull		= $columns;
+		$groupsFast		= 'm.id';
+		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
+		
+		$wheres[]	= ' t.published = 1';
+		
+		if ($onlyAvailableProducts == 1) {
+			$lefts[] = ' #__phocacart_tags_related AS tr ON tr.tag_id = t.id';
+			$lefts[] = ' #__phocacart_products AS p ON tr.item_id = p.id';
+			$rules = PhocacartProduct::getOnlyAvailableProductRules();
+			$wheres = array_merge($wheres, $rules['wheres']);
+			$lefts	= array_merge($lefts, $rules['lefts']);
+		}
+		
+		$q = ' SELECT DISTINCT '.$columns
+			.' FROM  #__phocacart_tags AS t'
+			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
+			//.' GROUP BY '.$groups
+			.' ORDER BY '.$orderingText;
+
+		$db->setQuery($q);
+		
+		$items = $db->loadObjectList();	
+	
+		return $items;
 	}
 	
 	public static function storeTags($tagsArray, $itemId) {
@@ -92,7 +127,7 @@ class PhocacartTag
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();
 		
-		$tagsO = JHTML::_('select.genericlist', $tags, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$tagsO = JHtml::_('select.genericlist', $tags, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		
 		return $tagsO;
 	}

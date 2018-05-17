@@ -34,6 +34,9 @@ defined('_JEXEC') or die();
 
 class PhocacartGroup
 {
+	
+	private static $group			= array();
+	
 	public static function getAllGroupsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $attributes = 'class="inputbox" size="4" multiple="multiple"' ) {
 	
 		$db = JFactory::getDBO();
@@ -49,61 +52,74 @@ class PhocacartGroup
 		}
 
 		
-		$groupsO = JHTML::_('select.genericlist', $groups, $name, $attributes . ' '. $javascript, 'value', 'text', $activeArray, $id);
+		$groupsO = JHtml::_('select.genericlist', $groups, $name, $attributes . ' '. $javascript, 'value', 'text', $activeArray, $id);
 		
 		return $groupsO;
 	}
 	
+	/*
+	 * id ... user id
+	 * type ... see header comment in this class
+	 * 
+	 */
 
 	
 	public static function getGroupsById($id, $type , $returnArray = 0, $productId = 0) {
 		
-		if ((int)$id > 0) {
-			$db = JFactory::getDBO();
-			
-			$query = 'SELECT a.id, a.title, a.alias, a.type'
-					.' FROM #__phocacart_groups AS a'
-					.' LEFT JOIN #__phocacart_item_groups AS g ON g.group_id = a.id'
-					.' WHERE g.item_id = '.(int) $id
-					.' AND g.type = '.(int)$type;
-			if ($productId > 0) {
-				$query .= ' AND g.product_id = '.(int)$productId;
-			}	
-			$query .= ' ORDER BY a.id';
-			
-			$db->setQuery($query);
-			
-			if ($returnArray == 1) {
-				$items = $db->loadColumn();
-				if (empty($items)) {
-					$items = array(0 => 1);// Default is default for all
-				}
-			} else if ($returnArray == 2) {
-				$items = $db->loadAssocList();
-				if (empty($items)) {
-					$items[0]['id'] 	= 1;
-					$items[0]['title'] 	= 'COM_PHOCACART_DEFAULT';
-					$items[0]['alias'] 	= 'com-phocacart-default';
-					$items[0]['type'] 	= 1;
-				}
-			} else {
-				$items = $db->loadObjectList();
-				if (empty($items)) {
-					$items[0]->id 		= 1;
-					$items[0]->title 	= 'COM_PHOCACART_DEFAULT';
-					$items[0]->alias 	= 'com-phocacart-default';
-					$items[0]->type 	= 1;
-				}
-			}
+		$key = base64_encode(serialize((int)$id . ':' . (int)$type . (int)$returnArray . ':' . (int)$productId ));
 		
+		if( !array_key_exists( (string)$key, self::$group )) {
+			if ((int)$id > 0) {
+				$db = JFactory::getDBO();
+				
+				$query = 'SELECT a.id, a.title, a.alias, a.type'
+						.' FROM #__phocacart_groups AS a'
+						.' LEFT JOIN #__phocacart_item_groups AS g ON g.group_id = a.id'
+						.' WHERE g.item_id = '.(int) $id
+						.' AND g.type = '.(int)$type;
+				if ($productId > 0) {
+					$query .= ' AND g.product_id = '.(int)$productId;
+				}	
+				$query .= ' ORDER BY a.id';
+				
+				$db->setQuery($query);
+				
+				if ($returnArray == 1) {
+					$items = $db->loadColumn();
+					if (empty($items)) {
+						$items = array(0 => 1);// Default is default for all
+					}
+				} else if ($returnArray == 2) {
+					$items = $db->loadAssocList();
+					if (empty($items)) {
+						$items[0]['id'] 	= 1;
+						$items[0]['title'] 	= 'COM_PHOCACART_DEFAULT';
+						$items[0]['alias'] 	= 'com-phocacart-default';
+						$items[0]['type'] 	= 1;
+					}
+				} else {
+					$items = $db->loadObjectList();
+					if (empty($items)) {
+						$items[0]->id 		= 1;
+						$items[0]->title 	= 'COM_PHOCACART_DEFAULT';
+						$items[0]->alias 	= 'com-phocacart-default';
+						$items[0]->type 	= 1;
+					}
+				}
 			
+				self::$group[$key] = $items;
 			
-			return $items;
+			} else {
+				self::$group[$key] = array(0 => 1);
+			}
 		}
 		
-		$items = array(0 => 1);
-		return $items;
-		
+	
+		if (!empty(self::$group[$key])) {
+			return self::$group[$key];
+		} else {
+			return array(0 => 1);
+		}
 	}
 	
 	
@@ -543,6 +559,11 @@ class PhocacartGroup
 		
 		$db->setQuery($query);
 		$db->execute();
+	}
+	
+	public final function __clone() {
+		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
+		return false;
 	}
 }
 ?>

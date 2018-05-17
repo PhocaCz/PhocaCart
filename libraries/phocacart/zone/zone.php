@@ -54,7 +54,7 @@ class PhocacartZone
 		$db->setQuery($query);
 		$zones = $db->loadObjectList();
 		
-		$zonesO = JHTML::_('select.genericlist', $zones, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$zonesO = JHtml::_('select.genericlist', $zones, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		
 		return $zonesO;
 	}

@@ -36,7 +36,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 		foreach($this->t['orders'] as $k => $v) {
 			echo '<div class="col-sm-12 col-md-12 ph-orders-item-box-row" >';
 
-			echo '<div class="col-sm-2 col-md-2 ">'.PhocacartOrder::getOrderNumber($v->id).'</div>';
+			echo '<div class="col-sm-2 col-md-2 ">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $v->order_number).'</div>';
 			$status = '<span class="label label-default">'.JText::_($v->status_title).'</span>';
 			echo '<div class="col-sm-2 col-md-2 ">'.$status.'</div>';
 			
@@ -137,7 +137,7 @@ if (!empty($this->t['categories'])) {
 		//if ($i%$nc==0) { echo '<div class="row">';}
 		
 		echo '<div class="col-sm-6 col-md-'.$nw.'">';
-		echo '<div class="thumbnail ph-thumbnail ph-thumbnail-c">';
+		echo '<div class="b-thumbnail ph-thumbnail ph-thumbnail-c">';
 		
 		$image 	= PhocacartImage::getThumbnailName($this->t['path'], $v->image, 'medium');
 		$link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
@@ -174,7 +174,7 @@ if (!empty($this->t['categories'])) {
 		}
 		echo '</div>';
 		
-		echo '<p class="pull-right"><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'" class="btn btn-primary" role="button">'.JText::_('COM_PHOCACART_VIEW_CATEGORY').'</a></p>';
+		echo '<p class="ph-pull-right"><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'" class="btn btn-primary" role="button">'.JText::_('COM_PHOCACART_VIEW_CATEGORY').'</a></p>';
 		echo '<div class="clearfix"></div>';
 		echo '</div>';
 		echo '</div>';
@@ -188,5 +188,5 @@ if (!empty($this->t['categories'])) {
 echo '</div>';
 echo '<div>&nbsp;</div>';
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

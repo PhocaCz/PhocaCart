@@ -72,13 +72,13 @@ class PhocaCartCpModelPhocaCartHits extends JModelList
 		
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
+		
+		$columns	= 'a.id, a.user_id, a.product_id, a.item, a.ip, a.type, a.hits, a.date';
+		//$groupsFull	= $columns;
+		//$groupsFast	= 'a.id';
+		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.user_id, a.product_id, a.item, a.ip, a.type, a.hits, a.date'
-			)
-		);
+		$query->select($this->getState('list.select', $columns));
 		$query->from('`#__phocacart_hits` AS a');
 		
 		$query->select('uc.name AS editor');

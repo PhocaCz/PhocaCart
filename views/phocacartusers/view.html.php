@@ -81,6 +81,7 @@ class PhocaCartCpViewPhocacartUsers extends JViewLegacy
 			'a.name_last' 			=> JText::_($this->t['l'] . '_LAST_NAME_LABEL'),
 			'a.address_1' 			=> JText::_($this->t['l'] . '_ADDRESS_1_LABEL'),
 			//'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
+			'u.email' 				=> JText::_($this->t['l'] . 'COM_PHOCACART_EMAIL_LABEL'),
 			'u.id' 				=> JText::_('JGRID_HEADING_ID')
 			
 		);

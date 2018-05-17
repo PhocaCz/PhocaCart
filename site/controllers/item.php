@@ -17,7 +17,7 @@ class PhocaCartControllerItem extends JControllerForm
 		$app				= JFactory::getApplication();
 		$paramsC 			= $app->getParams();
 		$approve_review 	= $paramsC->get( 'approve_review',0 );
-		$u					= JFactory::getUser();
+		$u					= PhocacartUser::getUser();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['catid']		= $this->input->get( 'catid', 0, 'int' );

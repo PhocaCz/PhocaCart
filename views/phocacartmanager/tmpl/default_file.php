@@ -22,7 +22,7 @@ if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
 }
 
 if ($this->manager == 'filemultiple') {
-	$checked 	= JHTML::_('grid.id', $this->filei + count($this->folders), $this->files[$this->filei]->path_with_name_relative_no );
+	$checked 	= JHtml::_('grid.id', $this->filei + count($this->folders), $this->files[$this->filei]->path_with_name_relative_no );
 	
 	$icon		= PhocacartFile::getMimeTypeIcon($this->_tmp_file->name);
 	echo '<tr>'
@@ -40,7 +40,7 @@ if ($this->manager == 'filemultiple') {
 		.'<td></td>'
 		.'<td>'
 		.'<a href="#" onclick="'.$onclick.'">'
-		. JHTML::_( 'image', str_replace( '../', '', $this->_tmp_file->path_without_name_relative), JText::_('COM_PHOCACART_INSERT'), array('title' => JText::_('COM_PHOCACART_INSERT_IMAGE'), 'width' => '16', 'height' => '16'))
+		. JHtml::_( 'image', str_replace( '../', '', $this->_tmp_file->path_without_name_relative), JText::_('COM_PHOCACART_INSERT'), array('title' => JText::_('COM_PHOCACART_INSERT_IMAGE'), 'width' => '16', 'height' => '16'))
 		.'</a>'
 		.' <td>'
 		.'<a href="#" onclick="'.$onclick.'">'
@@ -55,7 +55,7 @@ if ($this->manager == 'filemultiple') {
 		.'<td></td>'
 		.'<td>'
 		.'<a href="#" onclick="'.$onclick.'">'
-		. JHTML::_( 'image', $this->t['i'].'icon-16-file-insert.png', '', JText::_('COM_PHOCACART_INSERT_FILENAME'))
+		. JHtml::_( 'image', $this->t['i'].'icon-16-file-insert.png', '', JText::_('COM_PHOCACART_INSERT_FILENAME'))
 		.'</a>'
 		.' <td>'
 		.'<a href="#" onclick="'.$onclick.'">'

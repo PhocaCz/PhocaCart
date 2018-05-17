@@ -33,7 +33,7 @@ class PhocacartDiscountProduct
 		if( !array_key_exists( $id, self::$product ) ) {
 
 			$db 			= JFactory::getDBO();
-			$user 			= JFactory::getUser();
+			$user 			= PhocacartUser::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres 		= array();
@@ -49,6 +49,7 @@ class PhocacartDiscountProduct
 					. $where
 					.' ORDER BY a.id';
 			$db->setQuery($query);
+			
 			if ($returnArray) {
 				$discounts = $db->loadAssocList();
 			} else {
@@ -84,7 +85,7 @@ class PhocacartDiscountProduct
 		
 		$discounts 	= self::getProductDiscountsById($id, 1);
 		
-		
+	
 		
 		if (!empty($discounts)) {
 			$bestKey 		= 0;// get the discount key which best meet the rules
@@ -176,6 +177,7 @@ class PhocacartDiscountProduct
 	public static function getProductDiscountPrice($productId, &$priceItems) {
 		
 		
+		
 		$paramsC 						= PhocacartUtils::getComponentParameters();
 		$display_discount_product_views	= $paramsC->get( 'display_discount_product_views', 0 );
 		
@@ -184,71 +186,35 @@ class PhocacartDiscountProduct
 		}
 		
 		$discount = self::getProductDiscount($productId, 1, 1);
-
+		
 		if (isset($discount['discount']) && isset($discount['calculation_type'])) {
 			
 			$price 						= new PhocacartPrice();
 			$priceItems['bruttotxt'] 	= $discount['title'];
 			$priceItems['nettotxt'] 	= $discount['title'];
-			$fQ 						= 1;//Quality for displaying the price in items,category and product view is always 1
-			$tCt						= $priceItems['taxcalc'];
+			$quantity					= 1;//Quantity for displaying the price in items,category and product view is always 1
+			$total						= array();// not used in product view
 			
 			if ($discount['calculation_type'] == 0) {
-				// ------------
 				// FIXED AMOUNT
-				// ------------
-				
 				if (isset($priceItems['netto']) && $priceItems['netto'] > 0) {
 					$r = $discount['discount'] * 100 / $priceItems['netto'];
 				} else {
 					$r = 0;
 				}
-				
-				$dB = $price->roundPrice($priceItems['brutto'] * $r/100);
-				$dN = $price->roundPrice($priceItems['netto'] * $r/100);
-				$dT = $price->roundPrice($priceItems['tax'] * $r/100);
-				
-				
-				if ($priceItems['brutto'] < $dB) {
-					$priceItems['brutto'] = 0;
-				} else {
-					$priceItems['brutto'] 	-= $tCt == 2 ? $dN : $dB;
-				}
-				
-				if ($priceItems['netto'] < $dN) {
-					$priceItems['netto'] = 0;
-				} else {
-					$priceItems['netto'] 	-= $dN;
-				}
-				
-				if ($priceItems['tax'] < $dT) {
-					$priceItems['tax'] = 0;
-				} else {
-					$priceItems['tax'] 		-= $tCt == 2 ? 0 : $dT;
-				}
+				// The function works with ratio, so we need to recalculate fixed amount to ratio even in this case
+				// the amount will be not divided into more items like it is in checkout
+				// so only because of compatibility to the function used in checkout we use ratio instead of fixed amount
+				PhocacartCalculation::calculateDiscountFixedAmount($r, $quantity, $priceItems, $total);
 
 			} else {
-				// ------------
 				// PERCENTAGE
-				// ------------
-				$dB = $price->roundPrice($priceItems['brutto'] * $discount['discount'] / 100);
-				$dN = $price->roundPrice($priceItems['netto'] * $discount['discount'] / 100);
-				$dT = $price->roundPrice($priceItems['tax'] * $discount['discount'] / 100);
 				
-				$priceItems['brutto'] 		-= $tCt == 2 ? $dN : $dB;
-				$priceItems['netto'] 		-= $dN;
-				$priceItems['tax'] 			-= $tCt == 2 ? 0 : $dT;	
+				PhocacartCalculation::calculateDiscountPercentage($discount['discount'], $quantity, $priceItems, $total);
 			}
 			
-			if ($priceItems['netto'] < 0 || $priceItems['netto'] == 0) {
-				$priceItems['brutto'] 	= 0;
-				$priceItems['tax'] 		= 0;
-			}
-			
-			$priceItems['bruttoformat'] = $price->getPriceFormat($priceItems['brutto']);
-			$priceItems['nettoformat'] = $price->getPriceFormat($priceItems['netto']);
-			$priceItems['taxformat'] = $price->getPriceFormat($priceItems['tax']);
-			
+			PhocacartCalculation::correctItemsIfNull($priceItems);
+			PhocacartCalculation::formatItems($priceItems);
 			return true;
 		}
 		
@@ -340,6 +306,8 @@ class PhocacartDiscountProduct
 					if (empty($v['quantity_to'])) 		{$v['quantity_to'] 		= '';}
 					if (empty($v['valid_from'])) 		{$v['valid_from'] 		= '0000-00-00';}
 					if (empty($v['valid_to'])) 			{$v['valid_to'] 		= '0000-00-00';}
+					if (empty($v['groups'])) 			{$v['groups'] 			= array();}
+					
 					
 					if ($v['discount'] == '') {
 						continue;

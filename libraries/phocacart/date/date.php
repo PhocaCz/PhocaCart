@@ -70,5 +70,29 @@ class PhocacartDate
 	
 		return $date;
 	}
+	
+	public static function splitDate($date = false) {
+		
+		$o = array();
+		if (!$date) {
+			$date = date('Y-m-d H:i:s');
+		}
+		
+		$splitDate 		= explode(' ', $date);
+		$dateDate 		= $splitDate[0];
+		$dateTime 		= $splitDate[1];
+		
+		$splitDate2 	= explode('-', $dateDate);
+		$o['year'] 		= $splitDate2[0];
+		$o['month'] 	= $splitDate2[1];
+		$o['day'] 		= $splitDate2[2];
+		
+		$splitDate3 	= explode(':', $dateTime);
+		$o['hour'] 		= $splitDate3[0];
+		$o['minute'] 	= $splitDate3[1];
+		$o['second'] 	= $splitDate3[2];
+		
+		return $o;
+	}
 }
 ?>

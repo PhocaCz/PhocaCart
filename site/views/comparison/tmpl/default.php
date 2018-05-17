@@ -8,6 +8,8 @@
  */
 defined('_JEXEC') or die();
 
+$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+
 echo '<div id="ph-pc-comparison-box" class="pc-comparison-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 
@@ -67,7 +69,32 @@ if (!empty($this->t['items'])) {
 		$c['title'] .= '</td>';
 		
 		if ($this->t['hide_price'] != 1) {
-			$c['price'] .= '<td class="ph-right">'.$price->getPriceItem($v['price'], $v['group_price']).'</td>';
+			
+			
+			$price 				= new PhocacartPrice;
+			$d					= array();
+			
+			$d['priceitems']	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, $v['group_price']);
+			$d['priceitemsorig']= array();
+			if ($v['price_original'] != '' && $v['price_original'] > 0) {
+				$d['priceitemsorig'] = $price->getPriceItems($v['price_original'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype']);
+			}
+			$d['class']			= 'ph-category-price-box';// we need the same class as category or items view
+			$d['product_id']	= (int)$v['id'];
+			$d['typeview']		= 'Module';
+			
+			// Display discount price
+			// Move standard prices to new variable (product price -> product discount)
+			$d['priceitemsdiscount']		= $d['priceitems'];
+			$d['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($v['id'], $d['priceitemsdiscount']);
+			
+			// Display cart discount (global discount) in product views - under specific conditions only
+			// Move product discount prices to new variable (product price -> product discount -> product discount cart)
+			$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
+			$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($v['id'], $v['catid'], $d['priceitemsdiscountcart']);
+			$priceOutput = $layoutP->render($d);
+			
+			$c['price'] .= '<td class="ph-right">'.$priceOutput.'</td>';
 		}
 	
 		$c['remove'] .= '<td>';
@@ -84,7 +111,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '</form>';
 		$c['remove'] .= '</td>';
 		
-		$c['desc'] .= '<td>'.JHTML::_('content.prepare', $v['description']).'</td>';
+		$c['desc'] .= '<td>'.JHtml::_('content.prepare', $v['description']).'</td>';
 		$c['man'] .= '<td class="ph-center">'.$v['manufacturer_title'].'</td>';
 		
 		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.JText::_($v['stock']).'</td>';}
@@ -183,5 +210,5 @@ if (!empty($this->t['items'])) {
 
 echo '</div>';// end comparison box
 echo '<div>&nbsp;</div>';
-echo PhocacartUtils::getInfo();
+echo PhocacartUtilsInfo::getInfo();
 ?>

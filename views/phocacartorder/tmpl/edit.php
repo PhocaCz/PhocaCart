@@ -30,20 +30,22 @@ echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm'
 // First Column
 echo '<div  class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
 $tabs = array (
-'order' 		=> JText::_($this->t['l'].'_ORDER_OPTIONS'),
-'billing' 		=> JText::_($this->t['l'].'_BILLING_OPTIONS'),
-'shipping' 		=> JText::_($this->t['l'].'_SHIPPING_OPTIONS'),
-'tracking' 		=> JText::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
-'products' 		=> JText::_($this->t['l'].'_ORDERED_PRODUCTS'),
-'download' 		=> JText::_($this->t['l'].'_DOWNLOAD_LINKS'),
-'orderlink' 	=> JText::_($this->t['l'].'_ORDER_LINK'));
+'order' 			=> JText::_($this->t['l'].'_ORDER_OPTIONS'),
+'billingaddress' 	=> JText::_($this->t['l'].'_BILLING_ADDRESS'),
+'shippingaddress' 	=> JText::_($this->t['l'].'_SHIPPING_ADDRESS'),
+'tracking' 			=> JText::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
+'products' 			=> JText::_($this->t['l'].'_ORDERED_PRODUCTS'),
+'download' 			=> JText::_($this->t['l'].'_DOWNLOAD_LINKS'),
+'orderlink' 		=> JText::_($this->t['l'].'_ORDER_LINK'),
+'billing' 			=> JText::_($this->t['l'].'_BILLING'));
+
 echo $r->navigation($tabs);
 
 echo '<div id="phAdminEdit" class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="order">'."\n"; 
 
-echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id), JText::_('COM_PHOCACART_ORDER_NUMBER'));
+echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id, $this->itemcommon->date, $this->itemcommon->order_number), JText::_('COM_PHOCACART_ORDER_NUMBER'));
 
 
 $user = $this->itemcommon->user_name;
@@ -55,9 +57,28 @@ if ($user != '') {
 } else {
 	echo $r->itemText('<span class="label label-info">'.JText::_('COM_PHOCACART_GUEST').'</span>', JText::_('COM_PHOCACART_USER'));
 }
+
+if (isset($this->itemcommon->vendor_name) && $this->itemcommon->vendor_name != '') {
+	$vendor = $this->itemcommon->vendor_name;
+	if ($this->itemcommon->vendor_username != '') {
+		$vendor .= ' <small>('.$this->itemcommon->vendor_username.')</small>';
+	}
+	echo $r->itemText($vendor, JText::_('COM_PHOCACART_VENDOR'));
+}
+if (isset($this->itemcommon->section_name) && $this->itemcommon->section_name != '') {
+	echo $r->itemText($this->itemcommon->section_name, JText::_('COM_PHOCACART_SECTION'));
+}
+if (isset($this->itemcommon->unit_name) && $this->itemcommon->unit_name != '') {
+	echo $r->itemText($this->itemcommon->unit_name, JText::_('COM_PHOCACART_UNIT'));
+}
+if (isset($this->itemcommon->ticket_id) && $this->itemcommon->ticket_id != '') {
+	echo $r->itemText($this->itemcommon->ticket_id, JText::_('COM_PHOCACART_TICKET'));
+}
+
+
 echo $r->itemText($this->itemcommon->ip, JText::_('COM_PHOCACART_USER_IP'));
 echo $r->itemText($this->itemcommon->user_agent, JText::_('COM_PHOCACART_USER_AGENT'));
-echo $r->itemText(JHTML::date($this->itemcommon->date, JText::_('DATE_FORMAT_LC2')), JText::_('COM_PHOCACART_DATE'));
+echo $r->itemText(JHtml::date($this->itemcommon->date, JText::_('DATE_FORMAT_LC2')), JText::_('COM_PHOCACART_DATE'));
 if ($this->itemcommon->currencytitle != '') {
 	echo $r->itemText($this->itemcommon->currencytitle, JText::_('COM_PHOCACART_CURRENCY'));
 }
@@ -81,11 +102,11 @@ echo '</div>';
 
 $data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['array'], $this->u, '_phb', '_phs');
 
-echo '<div class="tab-pane" id="billing">'."\n"; 
+echo '<div class="tab-pane" id="billingaddress">'."\n"; 
 echo $data['b'];
 echo '</div>';
 
-echo '<div class="tab-pane" id="shipping">'."\n"; 
+echo '<div class="tab-pane" id="shippingaddress">'."\n"; 
 echo $data['s'];
 echo '</div>';
 
@@ -133,8 +154,10 @@ if (!empty($this->itemproducts)) {
 		echo '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->brutto).' )</td>';
 		echo '</tr>';
 		
+
 		if (!empty($this->itemproductdiscounts[$v->product_id_key])) {
 			foreach($this->itemproductdiscounts[$v->product_id_key] as $k3 => $v3) {
+
 				
 				echo '<tr>';
 				//echo '<td></td>';
@@ -145,8 +168,9 @@ if (!empty($this->itemproducts)) {
 				echo '<td align="center">'.$r->itemCalcCheckBox($v3->id, 'published', $v3->published, 'dform').'</td>';
 				echo '<td class="ph-col-add-cur">( '.$this->pr->getPriceFormat($v3->brutto).' )</td>';
 				echo '</tr>';
-				
+
 			}
+
 		}
 		
 		/*if ($v->dnetto != '' || $v->dbrutto != '' || $v->dtax != '') {
@@ -164,8 +188,16 @@ if (!empty($this->itemproducts)) {
 		if (!empty($v->attributes)) {
 			foreach ($v->attributes as $k2 => $v2) {
 				echo '<tr>';
-				echo '<td align="left">'.JText::_('COM_PHOCACART_ATTRIBUTES').': <br />'.$r->itemCalc($v2->id, 'attribute_title', $v2->attribute_title, 'aform', 1).' ';
-				echo ''.$r->itemCalc($v2->id, 'option_title', $v2->option_title, 'aform', 1).'</td>';
+				echo '<td align="left">';
+				
+				echo JText::_('COM_PHOCACART_ATTRIBUTES').': <br />';
+				echo $r->itemCalc($v2->id, 'attribute_title', $v2->attribute_title, 'aform', 1).' ';
+				echo ''.$r->itemCalc($v2->id, 'option_title', $v2->option_title, 'aform', 1);
+				
+				echo ''.$r->itemCalc($v2->id, 'option_value', htmlspecialchars(urldecode($v2->option_value)), 'aform', 1);
+				
+				echo '</td>';
+				
 				echo '<td></td>';
 				echo '<td></td>';
 				echo '<td></td>';
@@ -206,7 +238,7 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 		echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
 		echo '<td>'.$r->itemCalc($v->id, 'amount', PhocacartPrice::cleanPrice($v->amount), 'tform').'</td>';
 		echo '<td align="center">'.$r->itemCalcCheckBox($v->id, 'published', $v->published, 'tform').'</td>';
-		
+		echo '<td class="ph-col-add-cur">( '.$this->pr->getPriceFormat($v->amount).' )</td>';
 		echo '</tr>';
 		
 		
@@ -298,6 +330,19 @@ if (isset($this->itemcommon->order_token)) {
 	}
 }
 echo '</div>';
+
+
+
+
+
+
+
+
+echo '<div class="tab-pane" id="billing">'."\n"; 
+$formArray = array ('order_number', 'receipt_number', 'invoice_number', 'invoice_prn', 'invoice_date', 'invoice_due_date', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc');
+echo $r->group($this->form, $formArray);
+echo '</div>';
+
 
 /*
 echo '<div class="tab-pane" id="publishing">'."\n"; 

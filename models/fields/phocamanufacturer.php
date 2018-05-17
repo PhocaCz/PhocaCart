@@ -23,8 +23,8 @@ class JFormFieldPhocaManufacturer extends JFormField
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 		
-		array_unshift($data, JHTML::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
-		return JHTML::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
+		return JHtml::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

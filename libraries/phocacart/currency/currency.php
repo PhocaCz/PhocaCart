@@ -18,6 +18,7 @@ class PhocacartCurrency
 	private static $defaultcurrencyarray	= false;
 	private static $allcurrencies			= false;
 	private static $currency				= array();
+	private static $currencyvalid			= array();
 	
 	private function __construct(){}
 	
@@ -46,8 +47,10 @@ class PhocacartCurrency
 		return self::$currency;
 	}*/
 	
-	public static function getCurrency( $id = 0 ) {
+	public static function getCurrency( $id = 0, $orderId = 0 ) {
 		
+		// Order currency is never stored in session
+		// so we use id instead of key
 		$session 	= JFactory::getSession();
 		if( $id == 0 ) {
 			$id			= $session->get('currency', 0, 'phocaCart');
@@ -58,17 +61,19 @@ class PhocacartCurrency
 				$id = 0;
 			}
 		}
-		
-		
-		
+
 		if ((int)$id < 1) {
 			$id = self::getDefaultCurrency();
 			$session->set('currency', (int)$id, 'phocaCart');
 		}
 		
-		$id = (int)$id;
+		$id 	= (int)$id;
+		// Price can be different for each currency and order
+		// So there is a key which identifies default currency, other currency, default currency in order, other currency in order
+		// one currency can have different exchange rates in order history, so two orders can have same currency but different exchange rate
+		$key 	= base64_encode(serialize((int)$id . ':' . (int)$orderId));
 		
-		if( !array_key_exists( (int)$id, self::$currency ) ) {
+		if( !array_key_exists( (string)$key, self::$currency ) ) {
 		
 			
 			$db = JFactory::getDBO();
@@ -79,32 +84,41 @@ class PhocacartCurrency
 			$c = $db->loadObject();
 			
 			if (!empty($c)) {
-				self::$currency[$id] = $c;
+				self::$currency[$key] = $c;
 			} else {
-				self::$currency[$id] = false;
+				self::$currency[$key] = false;
 			}
 		}
 		
-		return self::$currency[$id];
+		return self::$currency[$key];
 		
 	}
 	
 	public static function isCurrencyValid($id) {
 		
-		$isValid = false;
-		if ($id > 0) {
-			$db = JFactory::getDBO();
-			$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
+		if ((int)$id > 0) {
+			
+			if(!array_key_exists((int)$id, self::$currencyvalid)) {
+				
+				$db = JFactory::getDBO();
+				$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
 					.' WHERE a.id = '.(int)$id
 					.' AND a.published = 1'
 					.' ORDER BY a.id';
-			$db->setQuery($query);
-			$c = $db->loadResult();
-			if (isset($c) && (int)$c > 0) {
-				$isValid = true;
+				$db->setQuery($query);
+				$c = $db->loadResult();
+				
+				if (isset($c) && (int)$c > 0) {
+					self::$currencyvalid[$id] = true;
+				} else {
+					self::$currencyvalid[$id] = false;
+				}
 			}
+			
+			return self::$currencyvalid[$id];
+
 		}
-		return $isValid;
+		return false;
 	}
 	
 	public static function getDefaultCurrency() {
@@ -168,7 +182,7 @@ class PhocacartCurrency
 		
 		if(self::$allcurrencies === false){
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.id as value, CONCAT_WS(\'\', a.title, \' (\', a.code, \')\') as text FROM #__phocacart_currencies AS a'
+			$query = ' SELECT a.id, a.id as value, CONCAT_WS(\'\', a.title, \' (\', a.code, \')\') as text, a.title, a.alias, a.code, a.image FROM #__phocacart_currencies AS a'
 				.' WHERE a.published = 1'
 				.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -195,8 +209,29 @@ class PhocacartCurrency
 			$active = self::getDefaultCurrency();
 		}
 		$currencies = self::getAllCurrencies();
-		$o = JHTML::_('select.genericlist',  $currencies, 'id', 'class="form-control chosen-select ph-input-select-currencies"', 'value', 'text', $active);
+		$o = JHtml::_('select.genericlist',  $currencies, 'id', 'class="form-control chosen-select ph-input-select-currencies"', 'value', 'text', $active);
 		return $o;
+	}
+	
+	public static function getCurrenciesArray() {
+		$session 	= JFactory::getSession();
+		$active		= $session->get('currency', 0, 'phocaCart');
+		if ((int)$active < 1) {
+			$active = self::getDefaultCurrency();
+		}
+		$currencies = self::getAllCurrencies();
+		
+		if (!empty($currencies)) {
+			foreach($currencies as $k => $v) {
+				if ($v->value == $active) {
+					$v->active = 1;
+				} else {
+					$v->active = 0;
+				}
+			}
+		}
+		
+		return $currencies;
 	}
 	
 	public static function getCurrenciesListBox() {

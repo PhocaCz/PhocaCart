@@ -72,10 +72,16 @@ foreach ($v->options as $k2 => $v2) {
 		$attrO		.= ' selected="seleced"';
 	}
 	
-	echo '<option '.$attrO.' value="'.$v2->id.'">'.htmlspecialchars($v2->title).' ('.$operator.' '.$amount.')</option>';
+	$suffix =  ' ('.$operator.' '.$amount.')';
+	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $v2->amount < 0.01 && $v2->amount > -0.01) {
+		$suffix = '';
+	}	
+	
+	echo '<option '.$attrO.' value="'.$v2->id.'">'.htmlspecialchars($v2->title).$suffix.'</option>';
 }
 
 echo '</select>';// end select box
 echo '</div>';// end attribute
 echo '<div id="phItemHiddenAttribute'.$attributeIdName.'" style="display:none;"></div>';
+
 ?>

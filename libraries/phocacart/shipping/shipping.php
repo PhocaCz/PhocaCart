@@ -8,13 +8,21 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die();
 
 class PhocacartShipping
 {
 
+	protected $type = array(0,1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
+	
 	public function __construct() {
 		
+	}
+	
+	public function setType($type = array(0,1)) {
+		$this->type = $type;
 	}
 	
 	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
@@ -23,7 +31,7 @@ class PhocacartShipping
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 		
-		$user 			= JFactory::getUser();
+		$user 			= PhocacartUser::getUser();
 		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		
@@ -34,6 +42,8 @@ class PhocacartShipping
 		$wheres[] = " s.published = 1";
 		$wheres[] = " s.access IN (".$userLevels.")";
 		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+
+		$wheres[] = " s.type IN (". implode(',', $this->type). ')';
 		
 		if ((int)$id > 0) {
 			$wheres[] =  's.id = '.(int)$id;
@@ -44,24 +54,29 @@ class PhocacartShipping
 			
 		}
 		
-		$group = ' GROUP BY s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
-				.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
-				.' s.active_weight, s.active_size,'
-				.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-				.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
-				.' t.id, t.title, t.tax_rate, t.calculation_type';
+		$columns		= 's.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
+		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
+		.' s.active_weight, s.active_size,'
+		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
+		.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
+		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
+		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
+		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
+		$groupsFull		= 's.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
+		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
+		.' s.active_weight, s.active_size,'
+		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
+		.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' t.id, t.title, t.tax_rate, t.calculation_type';
+		$groupsFast		= 's.id';
+		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		
+		
 		
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
-				.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
-				.' s.active_weight, s.active_size,'
-				.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-				.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
-				.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
-				.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
-				.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone'
+		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_shipping_method_regions AS r ON r.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_countries AS c ON c.shipping_id = s.id'
@@ -69,7 +84,7 @@ class PhocacartShipping
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON s.id = ga.item_id AND ga.type = 7'// type 8 is payment
 				. $where
-				. $group
+				. ' GROUP BY '.$groups
 				. $limit;
 		
 		PhocacartUtils::setConcatCharCount();
@@ -236,6 +251,43 @@ class PhocacartShipping
 		
 	}
 	
+	public function checkAndGetShippingMethods($selectedShippingId = 0, $selected = 0) {
+	
+		
+		$cart					= new PhocacartCartRendercheckout();
+		$cart->setType($this->type);
+		$cart->setFullItems();
+		$total					= $cart->getTotal();
+		$currentShippingId 		= $cart->getShippingId();
+		
+		$user					= PhocacartUser::getUser();
+		$data					= PhocacartUser::getUserData((int)$user->id);
+		$fields 				= PhocacartFormUser::getFormXml('', '_phs', 1,1,0);
+		
+		if (!empty($data)) {
+			$dataAddress	= PhocacartUser::getAddressDataOutput($data, $fields['array'], $user);
+		}
+		
+		$country = 0;
+		if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+			$country = (int)$dataAddress['bcountry'];
+		}
+		
+		$region = 0;
+		if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+			$region = (int)$dataAddress['bregion'];
+		}
+			
+		$shippingMethods	= $this->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], $selectedShippingId, $selected);
+		
+		
+		if (!empty($shippingMethods)) {
+			return $shippingMethods;
+		}
+		return false;
+		
+	}
+	
 	public function getShippingMethod($shippingId) {
 		
 		//$app			= JFactory::getApplication();
@@ -285,19 +337,24 @@ class PhocacartShipping
 		return $items;
 	}
 	
-	/* Used as payment rule */
-	public static function getAllShippingMethodsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
+	/* Used as payment rule too 
+	 * Used in administration (this is why $type = array();
+	 */
+	public static function getAllShippingMethodsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = array() ) {
 	
 		$db =JFactory::getDBO();
 
 		$query = 'SELECT a.id AS value, a.title AS text'
-				.' FROM #__phocacart_shipping_methods AS a'
-				.' ORDER BY a.'. $order;
+				.' FROM #__phocacart_shipping_methods AS a';
+		
+		$query .= !empty($type) && is_array($type) ? ' WHERE a.type IN ('. implode(',', $type). ')' : '';
+		$query .= ' ORDER BY a.'. $order;
+		
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();
 		
 		
-		$methodsO = JHTML::_('select.genericlist', $methods, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$methodsO = JHtml::_('select.genericlist', $methods, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		return $methodsO;
 	}
 	
@@ -346,10 +403,27 @@ class PhocacartShipping
 	 */
 	
 	public static function removeShipping() {
-		$db 	= JFactory::getDBO();
-		$user	= JFactory::getUser();
+		$db 			= JFactory::getDBO();
+		$user			= array();
+		$vendor			= array();
+		$ticket			= array();
+		$unit			= array();
+		$section		= array();
+		$dUser			= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 		
-		$query = 'UPDATE #__phocacart_cart SET shipping = 0 WHERE user_id = '.(int)$user->id;
+		$pos_shipping_force = 0;
+		if (PhocacartPos::isPos()) {
+			$app					= JFactory::getApplication();
+			$paramsC 				= PhocacartUtils::getComponentParameters();
+			$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
+		}
+		
+		$query = 'UPDATE #__phocacart_cart_multiple SET shipping = '.(int)$pos_shipping_force
+			.' WHERE user_id = '.(int)$user->id 
+			.' AND vendor_id = '.(int)$vendor->id 
+			.' AND ticket_id = '.(int)$ticket->id 
+			.' AND unit_id = '.(int)$unit->id
+			.' AND section_id = '.(int)$section->id;
 		$db->setQuery($query);
 		
 		$db->execute();
@@ -364,6 +438,7 @@ class PhocacartShipping
 		$query = 'SELECT a.id'
 				.' FROM #__phocacart_shipping_methods AS a'
 				.' WHERE a.published = 1'
+				.' AND a.type IN (0, 1)'
 				.' ORDER BY id LIMIT 1';
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();

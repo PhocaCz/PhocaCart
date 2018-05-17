@@ -22,6 +22,7 @@ class PhocaCartViewOrder extends JViewLegacy
 		$type				= $app->input->get('type', 0, 'int');
 		$format				= $app->input->get('format', '', 'string');
 		$token				= $app->input->get('o', '', 'string');
+		$pos				= $app->input->get('pos', '', '0');
 		
 		$orderGuestAccess	= $this->p->get( 'order_guest_access', 0 );
 		
@@ -29,7 +30,7 @@ class PhocaCartViewOrder extends JViewLegacy
 			$token = '';
 		}
 		$order	= new PhocacartOrderRender();
-		$o = $order->render($id, $type, $format, $token);
+		$o = $order->render($id, $type, $format, $token, $pos);
 		
 		$media = new PhocacartRenderMedia();
 		

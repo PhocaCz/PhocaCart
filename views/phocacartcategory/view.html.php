@@ -26,7 +26,7 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 		$user 			= JFactory::getUser();
 		$model			= $this->getModel();
 
-		JHTML::_('behavior.calendar');
+		JHtml::_('behavior.calendar');
 		$media = new PhocacartRenderAdminmedia();
 		
 		//Data from model

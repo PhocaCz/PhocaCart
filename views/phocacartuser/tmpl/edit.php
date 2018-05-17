@@ -35,6 +35,7 @@ echo '<div class="span10 form-horizontal">';
 $tabs = array (
 'billing' 		=> JText::_($this->t['l'].'_BILLING_OPTIONS'),
 'shipping' 	=> JText::_($this->t['l'].'_SHIPPING_OPTIONS'),
+'main' 	=> JText::_($this->t['l'].'_MAIN_OPTIONS'),
 'groups' 	=> JText::_($this->t['l'].'_GROUP_OPTIONS'));
 echo $r->navigation($tabs);
 
@@ -48,6 +49,11 @@ echo '</div>';
 
 echo '<div class="tab-pane" id="shipping">'."\n"; 
 echo $data['s'];
+echo '</div>';
+
+echo '<div class="tab-pane" id="main">'."\n"; 
+$formArray = array ('loyalty_card_number');
+echo $r->group($this->form, $formArray);
 echo '</div>';
 
 echo '<div class="tab-pane" id="groups">'."\n"; 

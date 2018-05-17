@@ -37,9 +37,9 @@ class JFormFieldPhocaFormRegion extends JFormField
 		$attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
 		
 		
-		array_unshift($data, JHTML::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-', 'value', 'text'));
+		array_unshift($data, JHtml::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-', 'value', 'text'));
 
-		return JHTML::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		return JHtml::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

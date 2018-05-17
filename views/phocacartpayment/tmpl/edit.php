@@ -44,7 +44,7 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'cost', 'tax_id', 'calculation_type', 'default');
+$formArray = array ('title', 'cost', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');

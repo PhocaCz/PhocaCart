@@ -16,6 +16,7 @@ final class PhocacartCategory
 	private static $categoryA = array();
 	private static $categoryF = array();
 	private static $categoryP = array();
+	private static $categoryI = array();
 	
 	public function __construct() {}
 	
@@ -50,7 +51,7 @@ final class PhocacartCategory
 			$onChO = 'class="inputbox" size="1"';
 		}
 		
-		$categories[] = JHTML::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -');
+		$categories[] = JHtml::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -');
 		$db->setQuery($query);
 		$catData = $db->loadObjectList();
 		
@@ -104,7 +105,7 @@ final class PhocacartCategory
 	
 		$categories = array_merge($categories, $catDataTree );
 
-		$category = JHTML::_('select.genericlist',  $categories, 'catid', $onChO, 'value', 'text', $active);
+		$category = JHtml::_('select.genericlist',  $categories, 'catid', $onChO, 'value', 'text', $active);
 
 		return $category;
 	}
@@ -136,15 +137,20 @@ final class PhocacartCategory
 	}
 	
 	public static function getCategoryById($id) {
-		$db = JFactory::getDBO();
-		$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
-		. ' FROM #__phocacart_categories AS a'
-		. ' WHERE a.id = '.(int)$id
-		. ' ORDER BY a.ordering'
-		. ' LIMIT 1';
-		$db->setQuery( $query );
-		$category = $db->loadObject();
-		return $category;
+		
+		$id = (int)$id;
+		if( empty(self::$categoryI[$id])) {
+			
+			$db = JFactory::getDBO();
+			$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
+			. ' FROM #__phocacart_categories AS a'
+			. ' WHERE a.id = '.(int)$id
+			. ' ORDER BY a.ordering'
+			. ' LIMIT 1';
+			$db->setQuery( $query );
+			self::$categoryI[$id] = $db->loadObject();
+		}
+		return self::$categoryI[$id];
 	}
 	
 	public static function getChildren($id) {
@@ -278,7 +284,7 @@ final class PhocacartCategory
 		return implode($result);
 	}
 	
-	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '') {
+	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1)) {
 		
 		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide);
 		if( empty(self::$categoryF[$cis])) {
@@ -286,12 +292,16 @@ final class PhocacartCategory
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
 			$db 			= JFactory::getDBO();
 			$wheres			= array();
-			$user 			= JFactory::getUser();
+			$user 			= PhocacartUser::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
+			
+			if (!empty($type) && is_array($type)) {
+				$wheres[] = " c.type IN (".implode(',', $type).")";
+			}
 			
 			if ($display != '') {
 				$wheres[] = " c.id IN (".$display.")";
@@ -300,11 +310,16 @@ final class PhocacartCategory
 				$wheres[] = " c.id NOT IN (".$hide.")";
 			}
 			
+			$columns		= 'c.id, c.title, c.alias, c.parent_id';
+			$groupsFull		= $columns;
+			$groupsFast		= 'c.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
-			. ' GROUP BY c.id, c.title, c.alias, c.parent_id'
+			. ' GROUP BY '.$groups
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
 			
@@ -317,7 +332,7 @@ final class PhocacartCategory
 		return self::$categoryF[$cis];
 	}
 	
-	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '') {
+	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1)) {
 		
 		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide);
 		if( empty(self::$categoryA[$cis])) {
@@ -325,12 +340,17 @@ final class PhocacartCategory
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
 			$db 			= JFactory::getDBO();
 			$wheres			= array();
-			$user 			= JFactory::getUser();
+			$user 			= PhocacartUser::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
+			
+			
+			if (!empty($type) && is_array($type)) {
+				$wheres[] = " c.type IN (".implode(',', $type).")";
+			}
 			
 			if ($display != '') {
 				$wheres[] = " c.id IN (".$display.")";

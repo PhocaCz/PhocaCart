@@ -57,12 +57,12 @@ echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-title">'.JHTML::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHTML::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-movements ph-center">'.JHTML::_('grid.sort',  $this->t['l'].'_STOCK_MOVEMENTS', 'a.stock_movements', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-download ph-center">'.JHTML::_('grid.sort',  $this->t['l'].'_DOWNLOAD', 'a.download', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-type ph-center">'.JHTML::_('grid.sort',  $this->t['l'].'_DEFAULT', 'a.type', $listDirn, $listOrder ).'</th>'."\n";	
-echo '<th class="ph-id ph-center">'.JHTML::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-movements ph-center">'.JHtml::_('grid.sort',  $this->t['l'].'_STOCK_MOVEMENTS', 'a.stock_movements', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-download ph-center">'.JHtml::_('grid.sort',  $this->t['l'].'_DOWNLOAD', 'a.download', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type ph-center">'.JHtml::_('grid.sort',  $this->t['l'].'_DEFAULT', 'a.type', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-id ph-center">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 			
@@ -93,7 +93,7 @@ $iD = $i % 2;
 echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
-echo $r->tdOrder($canChange, $saveOrder, $orderkey);
+echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 					
 $checkO = '';

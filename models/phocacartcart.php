@@ -15,15 +15,23 @@ class PhocaCartCpModelPhocacartCart extends JModelList
 	
 	public function getData() {
 	
-		$app	= JFactory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$app			= JFactory::getApplication();
+		$id				= $app->input->get('id', 0, 'int');
+		$vendorid		= $app->input->get('vendorid', 0, 'int');
+		$ticketid		= $app->input->get('ticketid', 0, 'int');
+		$unitid			= $app->input->get('unitid', 0, 'int');
+		$sectionid		= $app->input->get('sectionid', 0, 'int');
 		
 		if ((int)$id > 0) {
 			$db = JFactory::getDBO();
-			$query = 'SELECT a.cart, a.user_id, u.name as user_name, u.username as user_username, a.date'
-			. ' FROM #__phocacart_cart AS a'
+			$query = 'SELECT a.cart, a.user_id, a.vendor_id, a.ticket_id, a.unit_id, a.section_id, u.name as user_name, u.username as user_username, a.date'
+			. ' FROM #__phocacart_cart_multiple AS a'
 			. ' LEFT JOIN #__users AS u ON u.id = a.user_id'
 			. ' WHERE a.user_id = '.(int)$id
+			. ' AND a.vendor_id = '.(int)$vendorid
+			. ' AND a.ticket_id = '.(int)$ticketid
+			. ' AND a.unit_id = '.(int)$unitid
+			. ' AND a.section_id = '.(int)$sectionid
 			. ' LIMIT 1';
 			$db->setQuery( $query );
 			$item = $db->loadObject();
@@ -31,12 +39,17 @@ class PhocaCartCpModelPhocacartCart extends JModelList
 		}
 	}
 	
-	public function emptycart($id) {
+	public function emptycart($id, $vendorid = 0, $ticketid = 0, $unitid = 0, $sectionid = 0) {
 		
 		if ((int)$id > 0) {
 		
 			$db = JFactory::getDBO();
-			$query = 'DELETE FROM #__phocacart_cart WHERE user_id = '.(int)$id;
+			$query = 'DELETE FROM #__phocacart_cart_multiple'
+				. ' WHERE user_id = '.(int)$id
+				. ' AND vendor_id = '.(int)$vendorid
+				. ' AND ticket_id = '.(int)$ticketid
+				. ' AND unit_id = '.(int)$unitid
+				. ' AND section_id = '.(int)$sectionid;
 			$db->setQuery( $query );
 
 			if ($db->execute()) {

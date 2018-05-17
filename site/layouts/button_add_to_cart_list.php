@@ -20,19 +20,19 @@ $d = $displayData;
 
 if ($d['selectoptions'] == 1) {
 	// ATTRIBUTE REQUIRED - One of the attributes is required, cannot add to cart when we don't display attributes in category/items view
-	echo '<div class="pull-right ph-pull-right">';
+	echo '<div class="ph-pull-right">';
 	
 
 	if ($d['addtocart'] == 1) {
 		
-		echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn btn-small" role="button">';
+		echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn btn-small phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" role="button">';
 		echo '<span class="glyphicon glyphicon-shopping-cart"></span> ';
 		echo JText::_('COM_PHOCACART_CHOOSE_VARIANT'); // JText::_('COM_PHOCACART_SELECT_OPTIONS');
 		echo '</a>';
 		
 	} else if ($d['addtocart'] == 4) {
 		
-		echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn btn-small" role="button" title="'.JText::_('COM_PHOCACART_CHOOSE_VARIANT') /* JText::_('COM_PHOCACART_SELECT_OPTIONS') */.'" data-toggle="tooltip" data-placement="top">';
+		echo '<a href="'.$d['link'].'" class="btn btn-primary btn-sm ph-btn btn-small phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" role="button" title="'.JText::_('COM_PHOCACART_CHOOSE_VARIANT') /* JText::_('COM_PHOCACART_SELECT_OPTIONS') */.'" data-toggle="tooltip" data-placement="top">';
 		echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
 		echo '</a>';
 	} 
@@ -44,18 +44,19 @@ if ($d['selectoptions'] == 1) {
 
 } else {
 
-	echo '<div class="pull-right ph-pull-right">';
+	echo '<div class="ph-pull-right">';
 		
 	// BUTTON ATTRIBUTE NOT REQUIRED OR REQUIRED BUT we list the attributes in category/items view so we can submit
 	$onClick = '';
 	if ($d['addtocart'] == 1) { // Standard 
-		echo '<button type="submit" class="btn btn-primary btn-sm ph-btn btn-small" '.$onClick.'>';
+	
+		echo '<button type="submit" class="btn btn-primary btn-sm ph-btn btn-small phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" '.$onClick.'>';
 		echo '<span class="glyphicon glyphicon-shopping-cart"></span> ';
 		echo JText::_('COM_PHOCACART_ADD_TO_CART');
 		echo '</button>';
 		
 	} else if ($d['addtocart'] == 4) { // Icon Only
-		echo '<button type="submit" class="btn btn-primary btn-sm ph-btn btn-small" title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top" '.$onClick.'>';
+		echo '<button type="submit" class="btn btn-primary btn-sm ph-btn btn-small phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" title="'.JText::_('COM_PHOCACART_ADD_TO_CART').'" data-toggle="tooltip" data-placement="top" '.$onClick.'>';
 		echo '<span class="glyphicon glyphicon-shopping-cart"></span>';
 		echo '</button>';
 	}
@@ -132,7 +133,7 @@ if ($d['attrrequired'] == 1) {
 	
 	
 	
-/*	echo '<div class="pull-right ph-pull-right">';
+/*	echo '<div class="ph-pull-right">';
 	
 	if ($d['icon'] == 1) {
 		// ICON ATTRIBUTE NOT REQUIRED

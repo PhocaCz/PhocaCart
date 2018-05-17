@@ -78,9 +78,7 @@ class JFormFieldPhocaPluginMethod extends JFormField
 		
 		$s[] 	= ' ';
 		//$s[] 	= 'jQuery(document).ready(function() {';
-		//$s[]	= 'jQuery("select").on("change", function() {
-  //alert( this.value );
-//});';
+		//$s[]	= 'jQuery("select").on("change", function() {});';
 		//$s[] 	= '})';
 		$s[] 	= ' ';
 		
@@ -98,7 +96,7 @@ class JFormFieldPhocaPluginMethod extends JFormField
 		} else {
 			$methods = PhocacartPayment::getPaymentPluginMethods();
 		}
-		return JHTML::_('select.genericlist',  $methods,  $this->name, 'class="inputbox" onchange="phLoadParams(this.value);"', 'value', 'text', $this->value, $this->id );
+		return JHtml::_('select.genericlist',  $methods,  $this->name, 'class="inputbox" onchange="phLoadParams(this.value);"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

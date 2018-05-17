@@ -16,9 +16,10 @@ class PhocacartUserGuestuser
 		$p 				= PhocacartUtils::getComponentParameters();
 		$guestCheckout	= $p->get( 'guest_checkout', 0 );
 		$session 		= JFactory::getSession();
-		$user			= JFactory::getUser();
+		$user			= PhocacartUser::getUser();
 		if ((int)$user->id > 0 || $guestCheckout == 0) {
 			self::cancelGuestUser();
+			return false;
 		} else {
 			return $session->get('guest', false, 'phocaCart');
 		}
@@ -81,6 +82,22 @@ class PhocacartUserGuestuser
 		$payment = $session->get('guestpayment', false, 'phocaCart');
 		return $payment;
 	}
+	
+	public static function storeLoyaltyCardNumber($number) {
+		$session = JFactory::getSession();
+	
+		if ($number != '') {
+			$session->set('guestloyaltycardnumber', $number, 'phocaCart');
+			return true;
+		}
+		return false;
+	}
+	
+	public static function getLoyaltyCardNumber() {
+		$session = JFactory::getSession();
+		$loyaltyCardNumber = $session->get('guestloyaltycardnumber', false, 'phocaCart');
+		return $loyaltyCardNumber;
+	}
 	public static function storeCoupon($couponId) {
 		$session = JFactory::getSession();
 		if ((int)$couponId > 0) {
@@ -114,6 +131,7 @@ class PhocacartUserGuestuser
 		$session->set('guestshipping', false, 'phocaCart');
 		$session->set('guestpayment', false, 'phocaCart');
 		$session->set('guestcoupon', false, 'phocaCart');
+		$session->set('guestloyaltycardnumber', false, 'phocaCart');
 	}
 }	
 ?>

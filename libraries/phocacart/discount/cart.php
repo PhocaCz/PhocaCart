@@ -29,10 +29,10 @@ class PhocacartDiscountCart
 		
 		$id = (int)$id;
 		
-		if( !array_key_exists( $id, self::$cart ) ) {
+	///	if( !array_key_exists( $id, self::$cart ) ) {
 
 			$db 			= JFactory::getDBO();
-			$user 			= JFactory::getUser();
+			$user 			= PhocacartUser::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 			
@@ -41,17 +41,21 @@ class PhocacartDiscountCart
 			$wheres[] 		= " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
 			$wheres[]		= 'a.published = 1';
 			$where 			= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
+		
+			$columns		= 'a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter,'
+			.' GROUP_CONCAT(DISTINCT dp.product_id) AS product,' // line of selected products
+			.' GROUP_CONCAT(DISTINCT dc.category_id) AS category'; // line of selected categories
+			$groupsFull		= 'a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter';
+			$groupsFast		= 'a.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 			
-			
-			$query = 'SELECT a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter,'
-					.' GROUP_CONCAT(DISTINCT dp.product_id) AS product,' // line of selected products
-					.' GROUP_CONCAT(DISTINCT dc.category_id) AS category' // line of selected categories
+			$query = 'SELECT '.$columns
 					.' FROM #__phocacart_discounts AS a'
 					.' LEFT JOIN #__phocacart_discount_products AS dp ON dp.discount_id = a.id'
 					.' LEFT JOIN #__phocacart_discount_categories AS dc ON dc.discount_id = a.id'
 					.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 5'// type 5 is discount
 					. $where
-					.' GROUP BY a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter';
+					.' GROUP BY '.$groups;
 					$query .= ' ORDER BY a.id';
 	
 			PhocacartUtils::setConcatCharCount();
@@ -62,7 +66,7 @@ class PhocacartDiscountCart
 				$discounts = $db->loadObjectList();
 			}
 			self::$cart[$id] = $discounts;
-		}
+	///	}
 		return self::$cart[$id];
 	}
 	
@@ -371,6 +375,59 @@ class PhocacartDiscountCart
 			$coupon = $db->loadObjectList();
 		}
 		return $coupon;
+	}
+	
+	
+	
+	/*
+	 * Specific case: global cart discount will be displayed in category, item or items view
+	 * but under specific rules like: only percentage, no total amount, no minimum quantity rule !!!
+	 * Display the cart discount price in category, items or product view
+	 */
+	public static function getCartDiscountPriceForProduct($productId, $categoryId, &$priceItems) {
+		
+		
+		$paramsC 								= PhocacartUtils::getComponentParameters();
+		$display_discount_cart_product_views	= $paramsC->get( 'display_discount_cart_product_views', 0 );
+		
+		if ($display_discount_cart_product_views == 0) {
+			return false;
+		}
+		
+		// DISABLED FOR
+		// when calculation is fixed amount (we cannot divide the discount into products which are not in checkout cart)
+		// when rule TOTAL AMOUNT is active (displaying products is not checkout to check the total amount)
+		// when rule MINIMUM QUANTITY is active (displaying products is not checkout to check the minimum quantity)
+		
+		$discount = self::getCartDiscount($productId, $categoryId, 0, 0);
+			
+		if (isset($discount['discount']) && isset($discount['calculation_type'])) {
+			
+			$priceItems['bruttotxt'] 	= $discount['title'];
+			$priceItems['nettotxt'] 	= $discount['title'];
+			
+			$quantity					= 1;//Quantity for displaying the price in items,category and product view is always 1
+			$total						= array();// not used in product view
+			
+			if ($discount['calculation_type'] == 0) {
+				// FIXED AMOUNT
+				// Fixed amount cannot be divided into product in views (category, items, item)
+				// this is the opposite to checkout where we can divide fixed amount to all products added to cart
+				$priceItems = array();
+				return false;
+				
+			} else {
+				// PERCENTAGE
+				PhocacartCalculation::calculateDiscountPercentage($discount['discount'], $quantity, $priceItems, $total);
+			}
+			
+			PhocacartCalculation::correctItemsIfNull($priceItems);
+			PhocacartCalculation::formatItems($priceItems);
+			return true;
+		}
+		
+		$priceItems = array();
+		return false;
 	}
 
 	

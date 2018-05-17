@@ -18,7 +18,7 @@ class PhocaCartViewOrders extends JViewLegacy
 	function display($tpl = null)
 	{		
 		$app								= JFactory::getApplication();
-		$this->u							= JFactory::getUser();
+		$this->u							= PhocacartUser::getUser();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
 		$model								= $this->getModel();

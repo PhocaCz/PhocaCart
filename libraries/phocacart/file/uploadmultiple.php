@@ -71,7 +71,7 @@ class PhocacartFileUploadmultiple
 			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.html5.js');
 		}
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
-		JHTML::stylesheet( 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css' );
+		JHtml::stylesheet( 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css' );
 	}
 	
 	static public function getMultipleUploadSizeFormat($size) {
