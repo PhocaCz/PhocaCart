@@ -36,6 +36,8 @@ $store_info							= PhocacartRenderFront::renderArticle($store_info, $d['format'
 $invoice_tp							= $d['params']->get( 'invoice_terms_payment', '');
 $display_discount_price_product		= $d['params']->get( 'display_discount_price_product', 1);
 
+$tax_calculation                    = $d['params']->get( 'tax_calculation', 0 );
+
 $store_title_pos						= $d['params']->get( 'store_title_pos', '' );
 $store_logo_pos							= $d['params']->get( 'store_logo_pos', '' );
 $store_info_pos							= $d['params']->get( 'store_info_pos', '' );
@@ -93,8 +95,8 @@ if ($d['format'] == 'raw' && $d['type'] == 4) {
 	$pR 	= true;
 	$oPr	= array();
 	$pP 	= new PhocacartPosPrint(0);
-	
-	
+
+
 }
 
 if ($d['format'] == 'pdf') {
@@ -116,7 +118,7 @@ if ($d['format'] == 'pdf') {
 	$pho11 		= 'style="width: 8.3333%;"';
 	$pho12 		= 'style="width: 8.3333%;"';
 	$sep		= 'style="width: 3%;"';
-	
+
 	$pho12 		= 'style="width: 9%;"';
 	$pho22 		= 'style="width: 9%;"';
 	$pho32 		= 'style="width: 9%;"';
@@ -132,8 +134,8 @@ if ($d['format'] == 'pdf') {
 	$pho112 	= 'style="width: 9%;"';
 	$pho122 	= 'style="width: 9%;"';
 	$seps2		= 'style="width: 10%;"';
-	
-	
+
+
 	$bBox		= 'style="border: 1pt solid #dddddd;"';
 	$bBoxIn		= 'style=""';
 	$sBox		= 'style="border: 1pt solid #dddddd;"';
@@ -147,13 +149,13 @@ if ($d['format'] == 'pdf') {
 	$toPayS		= 'style="background-color: #eeeeee;padding: 20px;"';
 	$toPaySV	= 'style="background-color: #eeeeee;padding: 20px;text-align:right;"';
 	$firstRow	= 'style="font-size:0pt;"';
-	
+
 	$bDesc		= 'style="padding: 2px 0px 0px 0px;margin:0;font-size:60%;"';
 	$hrSmall	= 'style="font-size:30%;"';
 	$bQrInfo	= 'style="font-size: 70%"';
-	
+
 } else if ($d['format'] == 'mail') {
-	
+
 	// FORMAT EMAIL
 	$box		= '';
 	//$table 		= 'style="width: 100%; font-family: sans-serif, arial; font-size: 90%;"';
@@ -173,7 +175,7 @@ if ($d['format'] == 'pdf') {
 	$pho11 		= 'style="width: 8.3333%;"';
 	$pho12 		= 'style="width: 8.3333%;"';
 	$sep		= 'style="width: 3%;"';
-	
+
 	$pho12 		= 'style="width: 9%;"';
 	$pho22 		= 'style="width: 9%;"';
 	$pho32 		= 'style="width: 9%;"';
@@ -189,7 +191,7 @@ if ($d['format'] == 'pdf') {
 	$pho112 	= 'style="width: 9%;"';
 	$pho122 	= 'style="width: 9%;"';
 	$seps2		= 'style="width: 10%;"';
-	
+
 	$bBox		= 'style="border: 1px solid #ddd;padding: 10px;"';
 	$bBoxIn		= 'style=""';
 	$sBox		= 'style="border: 1px solid #ddd;padding: 10px;"';
@@ -203,7 +205,7 @@ if ($d['format'] == 'pdf') {
 	$toPayS		= 'style="background-color: #eeeeee;padding: 20px;"';
 	$toPaySV	= 'style="background-color: #eeeeee;padding: 20px;text-align:right;"';
 	$firstRow	= '';
-	
+
 }
 
 
@@ -253,18 +255,18 @@ if ($d['type'] == 1) {
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC4').'</div>';
 } else if ($d['type'] == 2) {
-	
+
 	$o[] = '<div><h1>'.JText::_('COM_PHOCACART_INVOICE').'</h1></div>';
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_NR').'</b>: '.PhocacartOrder::getInvoiceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_number).'</div>';
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_DATE').'</b>: '.JHtml::date($d['common']->invoice_date, 'DATE_FORMAT_LC4').'</div>';
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_DUE_DATE').'</b>: '.PhocacartOrder::getInvoiceDueDate($d['common']->id, $d['common']->date, $d['common']->invoice_due_date, 'DATE_FORMAT_LC4').'</div>';
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_PAYMENT_REFERENCE_NUMBER').'</b>: '.PhocacartOrder::getPaymentReferenceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_prn).'</div>';
-	
+
 } else if ($d['type'] == 3) {
 	$o[] = '<div><h1>'.JText::_('COM_PHOCACART_DELIVERY_NOTE').'</h1></div>';
 	$o[] = '<div style="margin:0;"><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
 	$o[] = '<div style="margin:0"><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC4').'</div>';
-	
+
 }
 
 $o[] = '<div>&nbsp;</div>';
@@ -287,15 +289,15 @@ $o[] = '<tr><td colspan="12">&nbsp;</td></tr>';
 
 // POS HEADER
 if ($pR) {
-	$oPr[] = $pP->printImage($store_logo_pos); 
+	$oPr[] = $pP->printImage($store_logo_pos);
 }
 if ($pR) {
 	$storeTitlePos = array();
 	if ($store_title_pos != '') {
 		$storeTitlePos = explode("\n", $store_title_pos);
 	}
-	$oPr[] = $pP->printFeed(1); 
-	$oPr[] = $pP->printLine($storeTitlePos, 'pDoubleSizeCenter'); 
+	$oPr[] = $pP->printFeed(1);
+	$oPr[] = $pP->printLine($storeTitlePos, 'pDoubleSizeCenter');
 	$oPr[] = $pP->printFeed(1);
 }
 if ($pR) {
@@ -303,7 +305,7 @@ if ($pR) {
 	if ($store_info_pos != '') {
 		$storeInfoPos = explode("\n", $store_info_pos);
 	}
-	$oPr[] = $pP->printLine($storeInfoPos, 'pCenter'); 
+	$oPr[] = $pP->printLine($storeInfoPos, 'pCenter');
 }
 
 
@@ -343,8 +345,8 @@ if (!empty($d['bas']['b'])) {
 	//echo '<br />';
 	if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
 	if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
-	
-	
+
+
 }
 
 
@@ -426,7 +428,10 @@ $o[] = '<table '.$boxIn.'>';
 $o[] = '<tr>';
 $o[] = '<td '.$pho1.'>&nbsp;</td><td '.$pho2.'>&nbsp;</td><td '.$pho3.'>&nbsp;</td><td '.$pho4.'>&nbsp;</td>';
 $o[] = '<td '.$pho5.'>&nbsp;</td><td '.$pho6.'>&nbsp;</td><td '.$pho7.'>&nbsp;</td><td '.$pho8.'>&nbsp;</td>';
-$o[] = '<td '.$pho9.'>&nbsp;</td><td '.$pho10.'>&nbsp;</td><td '.$pho11.'>&nbsp;</td><td '.$pho12.'>&nbsp;</td>';
+$o[] = '<td '.$pho9.'>&nbsp;</td>';
+if ($tax_calculation > 0) {
+	$o[] = '<td '.$pho10.'>&nbsp;</td><td '.$pho11.'>&nbsp;</td><td '.$pho12.'>&nbsp;</td>';
+}
 $o[] = '</tr>';
 
 
@@ -436,7 +441,7 @@ $cTitle		= 3; // Colspan Title
 
 $p = array();
 if (!empty($d['products'])) {
-	
+
 	// Prepare header and body
 	foreach ($d['products'] as $k => $v) {
 		if ($v->damount > 0) {
@@ -444,164 +449,138 @@ if (!empty($d['products'])) {
 			$cTitle 	= 2;
 		}
 	}
-	
+
 	if ($d['type'] == 3) {
 		$cTitle	= 10;
 	}
-	
+
 	$p[] = '<tr '.$hProduct.'>';
 	$p[] = '<td>'.JText::_('COM_PHOCACART_SKU').'</td>';
 	$p[] = '<td colspan="'.$cTitle.'">'.JText::_('COM_PHOCACART_ITEM').'</td>';
 	$p[] = '<td style="text-align:center">'.JText::_('COM_PHOCACART_QTY').'</td>';
-	
+
 	if ($d['type'] != 3) {
 		$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_UNIT').'</td>';
 		if ($dDiscount == 1) {
 			$p[] = '<td style="text-align:center"">'.JText::_('COM_PHOCACART_DISCOUNT').'</td>';
 		}
-		$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_EXCL_TAX').'</td>';
-		$p[] = '<td style="text-align:right">'.JText::_('COM_PHOCACART_TAX').'</td>';
-		$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_INCL_TAX').'</td>';
+		if ($tax_calculation > 0) {
+			$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_EXCL_TAX').'</td>';
+			$p[] = '<td style="text-align:right">'.JText::_('COM_PHOCACART_TAX').'</td>';
+			$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_INCL_TAX').'</td>';
+		} else {
+			$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE').'</td>';
+		}
+
 	}
 	$p[] = '</tr>';
-	
+
 	if ($pR) { $oPr[] = $pP->printSeparator(); }
-	
+
 	foreach($d['products'] as $k => $v) {
-		
+
 		// $codes = PhocacartProduct::getProductCodes((int)$v->product_id);
 		// echo $codes['isbn']; getting codes like isbn, ean, jpn, serial_number from product
 		// codes are the latest stored in database not codes which were valid in date of order
 		$p[] = '<tr '.$bProduct.'>';
 		$p[] = '<td>'.$v->sku.'</td>';
 		$p[] = '<td colspan="'.$cTitle.'">'.$v->title.'</td>';
-		
+
 		if ($pR) { $oPr[] = $pP->printLineColumns(array($v->sku, $v->title), 1); }
-		
+
 		$p[] = '<td style="text-align:center">'.$v->quantity.'</td>';
-		
-		
+
+
 		$netto 		= (int)$v->quantity * $v->netto;
 		$nettoUnit	= $v->netto;
 		$tax 		= (int)$v->quantity * $v->tax;
 		$brutto 	= (int)$v->quantity * $v->brutto;
 		if ($d['type'] != 3) {
-			$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($v->netto).'</td>';
-			
-			/*if ($dDiscount == 1) {
-			 if ($v->dtype == 0) {
-			 $dAmount = $v->netto - $v->dnetto;
-			 if ($dAmount > 0 && $v->dnetto > 0) {
-			 $dAmount = '- '. $d['price']->getPriceFormat($dAmount);
-			 } else {
-			 $dAmount = '';
-			 }
-			 } else if ($v->dtype == 1) {
-			 if ($v->damount > 0) {
-			 $dAmount = $v->damount . ' %';
-			 } else {
-			 $dAmount = '';
-			 }
-			 }
-			 $p[] = '<td style="text-align:center">'.$dAmount.'</td>';
-			 }
-			 
-			 if ($v->dnetto > 0 ) {
-			 $netto = (int)$v->quantity * $v->dnetto;
-			 } else {
-			 $netto = (int)$v->quantity * $v->netto;
-			 }*/
-			
-			$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($netto).'</td>';
-			/*
-			 if ($v->dtax > 0) {
-			 $tax = (int)$v->quantity * $v->dtax;
-			 } else {
-			 $tax = (int)$v->quantity * $v->tax;
-			 }*/
-			
-			$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($tax).'</td>';
-			/*
-			 if ($v->dbrutto > 0) {
-			 $brutto = (int)$v->quantity * $v->dbrutto;
-			 } else {
-			 $brutto = (int)$v->quantity * $v->brutto;
-			 }*/
-			
-			$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto).'</td>';
-			
+			if ($tax_calculation > 0) {
+				$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($v->netto).'</td>';
+				$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($netto).'</td>';
+				$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($tax).'</td>';
+				$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto).'</td>';
+			} else {
+				$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($v->netto).'</td>';
+				$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto).'</td>';
+			}
+
 		}
 		$p[] = '</tr>';
-		
-		
-		
-		
+
 		if (!empty($v->attributes)) {
 			$p[] = '<tr>';
 			$p[] = '<td></td>';
 			$p[] = '<td colspan="3" align="left"><ul class="ph-idnr-ul">';
 			foreach ($v->attributes as $k2 => $v2) {
 				$p[] = '<li><span class="ph-small ph-cart-small-attribute ph-idnr-li">'.$v2->attribute_title .' '.$v2->option_title.'</span></li>';
-				
+
 				if ($pR) { $oPr[] = $pP->printLineColumns(array(' - ' .$v2->attribute_title .' '.$v2->option_title)); }
-				
+
 			}
 			$p[] = '</ul></td>';
 			$p[] = '<td colspan="8"></td>';
 			$p[] = '</tr>';
 		}
-		
-		if ($pR) { 
+
+		if ($pR) {
 			$brutto = (int)$v->quantity * $v->brutto;
-			$oPr[] = $pP->printLineColumns(array((int)$v->quantity . ' x ' . $d['price']->getPriceFormat($v->brutto), $d['price']->getPriceFormat($brutto))); 
+			$oPr[] = $pP->printLineColumns(array((int)$v->quantity . ' x ' . $d['price']->getPriceFormat($v->brutto), $d['price']->getPriceFormat($brutto)));
 		}
-	
+
 		$lastSaleNettoUnit 	= array();
 		$lastSaleNetto 		= array();
 		$lastSaleTax 		= array();
 		$lastSaleBrutto 	= array();
 		if (!empty($d['discounts'][$v->product_id_key]) && $d['type'] != 3) {
-			
+
 			$lastSaleNettoUnit[$v->product_id_key] 	= $nettoUnit;
 			$lastSaleNetto[$v->product_id_key] 		= $netto;
 			$lastSaleTax[$v->product_id_key] 		= $tax;
 			$lastSaleBrutto[$v->product_id_key] 	= $brutto;
-			
-			
+
+
 			foreach($d['discounts'][$v->product_id_key] as $k3 => $v3) {
-				
+
 				$nettoUnit3 							= $v3->netto;
 				$netto3									= (int)$v->quantity * $v3->netto;
 				$tax3 									= (int)$v->quantity * $v3->tax;
 				$brutto3 								= (int)$v->quantity * $v3->brutto;
-				
+
 				$saleNettoUnit							= $lastSaleNettoUnit[$v->product_id_key] 	- $nettoUnit3;
 				$saleNetto								= $lastSaleNetto[$v->product_id_key] 		- $netto3;
 				$saleTax								= $lastSaleTax[$v->product_id_key] 			- $tax3;
 				$saleBrutto								= $lastSaleBrutto[$v->product_id_key] 		- $brutto3;
-				
+
 				$lastSaleNettoUnit[$v->product_id_key] 	= $nettoUnit3;
 				$lastSaleNetto[$v->product_id_key] 		= $netto3;
 				$lastSaleTax[$v->product_id_key] 		= $tax3;
 				$lastSaleBrutto[$v->product_id_key] 	= $brutto3;
-				
+
 				if ($display_discount_price_product == 2) {
-					
+
 					$p[] = '<tr '.$bProduct.'>';
 					$p[] = '<td></td>';
 					$p[] = '<td colspan="'.$cTitle.'">'.$v3->title.'</td>';
 					$p[] = '<td style="text-align:center"></td>';
-					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleNettoUnit, 1).'</td>';
-					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleNetto, 1).'</td>';
-					$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($saleTax, 1).'</td>';
-					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleBrutto, 1).'</td>';
+					if ($tax_calculation > 0) {
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleNettoUnit, 1).'</td>';
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleNetto, 1).'</td>';
+						$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($saleTax, 1).'</td>';
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleBrutto, 1).'</td>';
+					} else {
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleNettoUnit, 1).'</td>';
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($saleBrutto, 1).'</td>';
+					}
+
 					$p[] = '</tr>';
-					
+
 					if ($pR) {
-						$oPr[] = $pP->printLineColumns(array($v3->title, $d['price']->getPriceFormat($saleBrutto, 1))); 
+						$oPr[] = $pP->printLineColumns(array($v3->title, $d['price']->getPriceFormat($saleBrutto, 1)));
 					}
 				} else if ($display_discount_price_product == 1) {
-					
+
 					$p[] = '<tr '.$bProduct.'>';
 					$p[] = '<td></td>';
 					$p[] = '<td colspan="'.$cTitle.'">'.$v3->title.'</td>';
@@ -611,26 +590,29 @@ if (!empty($d['products'])) {
 					$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($tax3).'</td>';
 					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto3).'</td>';
 					$p[] = '</tr>';
-					
+
 					if ($pR) {
-						$oPr[] = $pP->printLineColumns(array($v3->title, $d['price']->getPriceFormat($brutto3))); 
+						$oPr[] = $pP->printLineColumns(array($v3->title, $d['price']->getPriceFormat($brutto3)));
 					}
 				}
 
 			}
 		}
-		
+
 	}
-	
+
 	if ($pR) { $oPr[] = $pP->printSeparator(); }
-	
+
 }
 
 $o[] = implode("\n", $p);
 
 
-
-$o[] = '<tr><td colspan="12" '.$sepH.'>&nbsp;</td></tr>';
+if ($tax_calculation > 0) {
+	$o[] = '<tr><td colspan="12" '.$sepH.'>&nbsp;</td></tr>';
+} else {
+	$o[] = '<tr><td colspan="9" '.$sepH.'>&nbsp;</td></tr>';
+}
 
 
 // -----------
@@ -639,63 +621,73 @@ $o[] = '<tr><td colspan="12" '.$sepH.'>&nbsp;</td></tr>';
 $t = array();
 $toPay = 0;
 
+$tColspanLeft = 5;
+$tColspanMid = 2;
+$tColspanRight = 2;
+
+if ($tax_calculation > 0) {
+	$tColspanLeft = 7;
+	$tColspanMid = 3;
+	$tColspanRight = 2;
+}
+
 if (!empty($d['total'])) {
 	foreach($d['total'] as $k => $v) {
-		
+
 		if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto') {
 			// Don't display coupon if null
-			
+
 		} else if ($v->type == 'netto') {
 			$t[] = '<tr '.$totalF.'>';
-			$t[] = '<td colspan="7"></td>';
-			$t[] = '<td colspan="3"><b>'.$v->title.'</b></td>';
-			$t[] = '<td style="text-align:right" colspan="2"><b>'.$d['price']->getPriceFormat($v->amount).'</b></td>';
+			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
+			$t[] = '<td colspan="'.$tColspanMid.'"><b>'.$v->title.'</b></td>';
+			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$d['price']->getPriceFormat($v->amount).'</b></td>';
 			$t[] = '</tr>';
-			
+
 			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $d['price']->getPriceFormat($v->amount))); }
-			
+
 		} else if ($v->type == 'brutto') {
-			
+
 			// Brutto or Brutto currency
 			$amount = (isset($v->amount_currency) && $v->amount_currency > 0) ? $d['price']->getPriceFormat($v->amount_currency, 0, 1) : $d['price']->getPriceFormat($v->amount);
-			
+
 			$t[] = '<tr '.$totalF.'>';
-			$t[] = '<td colspan="7"></td>';
-			$t[] = '<td colspan="3"><b>'.$v->title.'</b></td>';
-			$t[] = '<td style="text-align:right" colspan="2"><b>'.$amount.'</b></td>';
+			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
+			$t[] = '<td colspan="'.$tColspanMid.'"><b>'.$v->title.'</b></td>';
+			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$amount.'</b></td>';
 			$t[] = '</tr>';
-			
-			
-			if ($pR) { 
+
+
+			if ($pR) {
 				$oPr[] = $pP->printSeparator();
-				$oPr[] = $pP->printLineColumns(array($v->title, $amount), 0, 'pDoubleSize'); 
+				$oPr[] = $pP->printLineColumns(array($v->title, $amount), 0, 'pDoubleSize');
 				$oPr[] = $pP->printFeed(2);
 			}
-			
+
 		} else if ($v->type == 'rounding') {
-			
+
 			// Rounding or rounding currency
 			$amount = (isset($v->amount_currency) && $v->amount_currency > 0) ? $d['price']->getPriceFormat($v->amount_currency, 0, 1) : $d['price']->getPriceFormat($v->amount);
-			
+
 			$t[] = '<tr '.$totalF.'>';
-			$t[] = '<td colspan="7"></td>';
-			$t[] = '<td colspan="3">'.$v->title.'</td>';
-			$t[] = '<td style="text-align:right" colspan="2">'.$amount.'</td>';
+			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
+			$t[] = '<td colspan="'.$tColspanMid.'">'.$v->title.'</td>';
+			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'">'.$amount.'</td>';
 			$t[] = '</tr>';
-			
+
 			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $amount)); }
-			
-			
+
+
 		} else {
 			$t[] = '<tr '.$totalF.'>';
-			$t[] = '<td colspan="7"></td>';
-			$t[] = '<td colspan="3">'.$v->title.'</td>';
-			$t[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($v->amount).'</td>';
+			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
+			$t[] = '<td colspan="'.$tColspanMid.'">'.$v->title.'</td>';
+			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'">'.$d['price']->getPriceFormat($v->amount).'</td>';
 			$t[] = '</tr>';
-			
+
 			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $d['price']->getPriceFormat($v->amount))); }
 		}
-		
+
 		if ($v->type == 'brutto' && $d['type'] == 2) {
 			$toPay = $v->amount;
 		}
@@ -706,17 +698,22 @@ if ($d['type'] != 3) {
 	$o[] = implode("\n", $t);
 }
 
+if ($tax_calculation > 0) {
+	$o[] = '<tr><td colspan="12">&nbsp;</td></tr>';
+} else {
+	$o[] = '<tr><td colspan="9">&nbsp;</td></tr>';
+}
 
-$o[] = '<tr><td colspan="12">&nbsp;</td></tr>';
+
 
 // -----------
 // TO PAY
 // -----------
 if ($toPay > 0) {
 	$o[] = '<tr class="ph-idnr-to-pay-box">';
-	$o[] = '<td colspan="7">&nbsp;</td>';
-	$o[] = '<td colspan="3" '.$toPayS.'><b>'.JText::_('COM_PHOCACART_TO_PAY').'</b></td>';
-	$o[] = '<td colspan="2" '.$toPaySV.'><b>'.$d['price']->getPriceFormat($toPay).'</b></td>';
+	$o[] = '<td colspan="'.$tColspanLeft.'">&nbsp;</td>';
+	$o[] = '<td colspan="'.$tColspanMid.'" '.$toPayS.'><b>'.JText::_('COM_PHOCACART_TO_PAY').'</b></td>';
+	$o[] = '<td colspan="'.$tColspanRight.'" '.$toPaySV.'><b>'.$d['price']->getPriceFormat($toPay).'</b></td>';
 	$o[] = '</tr>';
 }
 
@@ -751,15 +748,15 @@ if ($d['type'] == 2) {
 // -----------------------
 // INVOICE QR CODE, STAMP IMAGE
 // -----------------------
-if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invoice_signature_image = '')) {
+if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invoice_signature_image != '')) {
 	$o[] = '<div>&nbsp;</div><div>&nbsp;</div>';
 	$o[] = '<table>';// End box in
 	$o[] = '<tr><td>';
-	
+
 	if ($pdf_invoice_qr_information != '') {
 		$o[] = '<span '.$bQrInfo.'>'.$pdf_invoice_qr_information . '</span><br />';
 	}
-	
+
 	if ($d['qrcode'] != '') {
 		$o[] = '{phocapdfqrcode|'.urlencode($d['qrcode']).'}';
 	}
@@ -801,17 +798,17 @@ $o[] = '</div>';// End box
 
 // POS FOOTER
 if ($pR) {
-	
-	
+
+
 	$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_NR').': '.PhocacartOrder::getReceiptNumber($d['common']->id, $d['common']->date, $d['common']->receipt_number)), 'pLeft');
 	$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_PURCHASE_DATE').': '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC5')), 'pLeft');
 	$oPr[] = $pP->printFeed(1);
-	
+
 	$storeInfoFooterPos = array();
 	if ($store_info_footer_pos != '') {
 		$storeInfoFooterPos = explode("\n", $store_info_footer_pos);
 	}
-	$oPr[] = $pP->printLine($storeInfoFooterPos, 'pCenter'); 
+	$oPr[] = $pP->printLine($storeInfoFooterPos, 'pCenter');
 }
 
 if ($pR) {
