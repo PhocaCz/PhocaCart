@@ -81,7 +81,7 @@ if ($this->a->shippingnotused == 1) {
 	
 		echo '<div class="col-sm-8 col-md-8 ">';
 		
-		if ($this->t['shippingmethod']['image'] != '') {
+		if (isset($this->t['shippingmethod']['image']) && $this->t['shippingmethod']['image'] != '') {
 			echo '<div class="ph-shipping-image"><img src="'.JURI::base(true) .'/'. $this->t['shippingmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['shippingmethod']['title'])).'" /></div>';
 		}
 		
@@ -143,7 +143,7 @@ if ($this->a->shippingnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItemsShipping($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
+		$priceI = $price->getPriceItemsShipping($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
 		
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
@@ -190,6 +190,12 @@ if ($this->a->shippingnotused == 1) {
 			if ($priceI['bruttoformat'] != '') {
 				echo '<div class="col-sm-8 col-md-8">'.$priceI['bruttotxt'].'</div>';
 				echo '<div class="col-sm-4 col-md-4 ph-checkout-shipping-brutto">'.$priceI['bruttoformat'].'</div>';
+			}
+			
+			if ($priceI['costinfo'] != '') {
+				echo '<div class="col-sm-4 col-md-4"></div>';
+				echo '<div class="col-sm-8 col-md-8 ph-right ph-checkout-payment-cost-info">'.$priceI['costinfo'].'</div>';
+			
 			}
 		}
 		

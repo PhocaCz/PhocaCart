@@ -31,7 +31,7 @@ $store_logo							= $d['params']->get( 'store_logo', '' );
 $store_info							= $d['params']->get( 'store_info', '' );
 $store_info							= PhocacartRenderFront::renderArticle($store_info, $d['format']);
 //$invoice_prefix					= $d['params']->get( 'invoice_prefix', '');
-//$invoice_number_format			= $d['params']->get( 'invoice_number_format', '{prefix}{orderdate}{orderid}');
+//$invoice_number_format			= $d['params']->get( 'invoice_number_format', '');
 //$invoice_number_chars				= $d['params']->get( 'invoice_number_chars', 12);
 $invoice_tp							= $d['params']->get( 'invoice_terms_payment', '');
 $display_discount_price_product		= $d['params']->get( 'display_discount_price_product', 1);
@@ -402,7 +402,14 @@ $o[] = '</table>';
 // -----------------------
 $hrSmallTop = 0;
 if ($d['type'] == 2) {
-	if ((int)$invoice_global_top_desc > 0) {
+	
+	
+	if ($d['common']->invoice_spec_top_desc != '') {
+		$o[] = $hrSmallTop == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
+		$invoice_spec_top_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_top_desc, 'p');
+		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_top_desc_article.'</div>';
+		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_top_desc_article.'</td></tr></table>';
+	} else if ((int)$invoice_global_top_desc > 0) {
 		$invoice_global_top_desc_article = PhocacartRenderFront::renderArticle((int)$invoice_global_top_desc);
 		if ($invoice_global_top_desc_article != '') {
 			$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -411,12 +418,6 @@ if ($d['type'] == 2) {
 			//$o[] = '<div '.$bDesc.'>'.$invoice_global_top_desc_article.'</div>';
 			$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_global_top_desc_article.'</td></tr></table>';
 		}
-	}
-	if ($d['common']->invoice_spec_top_desc != '') {
-		$o[] = $hrSmallTop == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
-		$invoice_spec_top_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_top_desc, 'p');
-		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_top_desc_article.'</div>';
-		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_top_desc_article.'</td></tr></table>';
 	}
 }
 
@@ -726,7 +727,13 @@ $o[] = '</table>';// End box in
 // -----------------------
 $hrSmallMiddle = 0;
 if ($d['type'] == 2) {
-	if ((int)$invoice_global_middle_desc > 0) {
+	
+	if ($d['common']->invoice_spec_middle_desc != '') {
+		$o[] = $hrSmallMiddle == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
+		$invoice_spec_middle_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_middle_desc, 'p');
+		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_middle_desc_article.'</div>';
+		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_middle_desc_article.'</td></tr></table>';
+	} else if ((int)$invoice_global_middle_desc > 0) {
 		$invoice_global_middle_desc_article = PhocacartRenderFront::renderArticle((int)$invoice_global_middle_desc);
 		if ($invoice_global_middle_desc_article != '') {
 			$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -735,12 +742,6 @@ if ($d['type'] == 2) {
 			//$o[] = '<div '.$bDesc.'>'.$invoice_global_middle_desc_article.'</div>';
 			$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_global_middle_desc_article.'</td></tr></table>';
 		}
-	}
-	if ($d['common']->invoice_spec_middle_desc != '') {
-		$o[] = $hrSmallMiddle == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
-		$invoice_spec_middle_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_middle_desc, 'p');
-		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_middle_desc_article.'</div>';
-		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_middle_desc_article.'</td></tr></table>';
 	}
 }
 
@@ -773,7 +774,13 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 // -----------------------
 $hrSmallBottom = 0;
 if ($d['type'] == 2) {
-	if ((int)$invoice_global_bottom_desc > 0) {
+	
+	if ($d['common']->invoice_spec_bottom_desc != '') {
+		$o[] = $hrSmallBottom == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
+		$invoice_spec_bottom_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_bottom_desc, 'p');
+		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_bottom_desc_article.'</div>';
+		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_bottom_desc_article.'</td></tr></table>';
+	} else if ((int)$invoice_global_bottom_desc > 0) {
 		$invoice_global_bottom_desc_article = PhocacartRenderFront::renderArticle((int)$invoice_global_bottom_desc);
 		if ($invoice_global_bottom_desc_article != '') {
 			$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -782,12 +789,6 @@ if ($d['type'] == 2) {
 			//$o[] = '<div '.$bDesc.'>'.$invoice_global_bottom_desc_article.'</div>';
 			$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_global_bottom_desc_article.'</td></tr></table>';
 		}
-	}
-	if ($d['common']->invoice_spec_bottom_desc != '') {
-		$o[] = $hrSmallBottom == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
-		$invoice_spec_bottom_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_bottom_desc, 'p');
-		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_bottom_desc_article.'</div>';
-		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_bottom_desc_article.'</td></tr></table>';
 	}
 }
 
@@ -799,6 +800,16 @@ $o[] = '</div>';// End box
 // POS FOOTER
 if ($pR) {
 
+	
+	
+	if (isset($d['common']->amount_tendered) && $d['common']->amount_tendered > 0 && isset($d['common']->amount_change) && ($d['common']->amount_change > 0 || $d['common']->amount_change == 0)) {
+		//$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': '.$d['price']->getPriceFormat($d['common']->amount_tendered)), 'pLeft');
+		//$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': '.$d['price']->getPriceFormat($d['common']->amount_change)), 'pLeft');
+		$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': ', $d['price']->getPriceFormat($d['common']->amount_tendered)));
+		$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': ', $d['price']->getPriceFormat($d['common']->amount_change)));
+		$oPr[] = $pP->printFeed(1);
+	}
+	
 
 	$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_NR').': '.PhocacartOrder::getReceiptNumber($d['common']->id, $d['common']->date, $d['common']->receipt_number)), 'pLeft');
 	$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_PURCHASE_DATE').': '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC5')), 'pLeft');

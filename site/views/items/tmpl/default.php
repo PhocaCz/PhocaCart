@@ -416,11 +416,7 @@ if (!empty($this->items)) {
 				echo $icon['addtocart'];
 			}
 			
-			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
-				echo '<div class="ph-item-desc">';
-				echo JHtml::_('content.prepare', $v->description);
-				echo '</div>';// end desc
-			}
+			
 			
 			// REVIEW - STAR RATING
 			if ((int)$this->t['display_star_rating'] > 0) {
@@ -429,6 +425,12 @@ if (!empty($this->items)) {
 				$d['size']					= 16;
 				$d['display_star_rating']	= (int)$this->t['display_star_rating'];
 				echo $layoutR->render($d);
+			}
+			
+			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
+				echo '<div class="ph-item-desc">';
+				echo JHtml::_('content.prepare', $v->description);
+				echo '</div>';// end desc
 			}
 			
 			// VIEW PRODUCT BUTTON
@@ -512,11 +514,7 @@ if (!empty($this->items)) {
 			echo PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
 			//echo '</div>';// end caption
 			
-			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
-				echo '<div class="ph-item-desc">';
-				echo JHtml::_('content.prepare', $v->description);
-				echo '</div>';// end desc
-			}
+			
 			
 			// REVIEW - STAR RATING
 			if ((int)$this->t['display_star_rating'] > 0) {
@@ -525,6 +523,12 @@ if (!empty($this->items)) {
 				$d['size']					= 16;
 				$d['display_star_rating']	= (int)$this->t['display_star_rating'];
 				echo $layoutR->render($d);
+			}
+			
+			if ($this->t['cv_display_description'] == 1 && $v->description != '') {
+				echo '<div class="ph-item-desc">';
+				echo JHtml::_('content.prepare', $v->description);
+				echo '</div>';// end desc
 			}
 			
 			echo '<div class="ph-item-action-box '.$lt.'">';

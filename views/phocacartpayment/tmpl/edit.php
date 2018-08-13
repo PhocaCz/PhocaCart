@@ -18,7 +18,7 @@ $r 			=  new $class();
 ?>
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.id('adminForm'))) {
+	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
 		<?php echo $this->form->getField('description')->save(); ?>
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
@@ -44,7 +44,7 @@ echo $r->navigation($tabs);
 echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n"; 
-$formArray = array ('title', 'cost', 'tax_id', 'calculation_type', 'default', 'type');
+$formArray = array ('title', 'cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');

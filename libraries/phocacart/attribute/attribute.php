@@ -572,7 +572,7 @@ class PhocacartAttribute
 	
 	
 
-	public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0) {
+	public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '') {
 			
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 5);
@@ -589,10 +589,21 @@ class PhocacartAttribute
 		$lefts[] = ' #__phocacart_attributes AS at ON at.id = v.attribute_id';
 		
 		if ($onlyAvailableProducts == 1) {
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
+			}
+			
 			$lefts[] = ' #__phocacart_products AS p ON at.product_id = p.id';
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
+		} else {
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
+				$lefts[] = ' #__phocacart_products AS p ON at.product_id = p.id';
+			}
 		}
 	
 		$q = ' SELECT '.$columns
@@ -1182,12 +1193,12 @@ class PhocacartAttribute
 				.' ORDER BY a.id';
 		$db->setQuery($query);
 		if ($returnArray) {
-			$discounts = $db->loadAssocList();
+			$items = $db->loadAssocList();
 		} else {
-			$discounts = $db->loadObjectList();
+			$items = $db->loadObjectList();
 		}
 		
-		return $discounts;
+		return $items;
 	}
 	
 	public static function storeCombinationsById($productId, $aosArray, $new = 0) {
@@ -1197,6 +1208,7 @@ class PhocacartAttribute
 
 			
 			$notDeleteItems = array();
+			
 			
 			if (!empty($aosArray)) {
 				$values 	= array();

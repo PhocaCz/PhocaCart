@@ -37,8 +37,11 @@ echo '</div>';
 echo '<div class="row-item col-sm-3 col-md-3">';
 echo '</div>';
 
-echo '</div>'; // end row
+echo '</div>'; // end row-vac
 
+
+
+echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
 
 // PLUGIN
 $output 	= '';
@@ -57,7 +60,7 @@ echo '<div class="row-item col-sm-3 col-md-3">';
 echo '</div>';
 
 echo '<div class="row-item col-sm-6 col-md-6 ph-pos-payment-confirm-box">';
-echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
+
 echo '<input type="hidden" name="task" value="pos.order">';
 echo '<input type="hidden" name="page" value="main.content.payment">';
 echo '<input type="hidden" name="tmpl" value="component" />';
@@ -69,11 +72,15 @@ echo '<input type="hidden" name="redirectsuccess" value="main.content.order" />'
 echo '<input type="hidden" name="redirecterror" value="main.content.payment" />';
 echo JHtml::_('form.token');
 echo '<button class="btn btn-success btn-lg editMainContent btn-extra-lg">'.JText::_('COM_PHOCACART_CONFIRM').'</button>';
-echo '</form>';
+
 echo '</div>';
 	
 echo '<div class="row-item col-sm-3 col-md-3">';
 echo '</div>';
+
+echo '</div>';// end row-vac
+
+echo '</form>';
 
 
 echo '</div>';// end ph-pos-payment-box

@@ -51,7 +51,7 @@ class PhocacartUtilsBatchhelper
 			PhocacartDiscountProduct::storeDiscountsById((int)$idDest, $dA, 1);
 			
 			// Advanced Stock Options
-			$aSOA = PhocacartAttribute::storeCombinationsById($idSource, 1);
+			$aSOA = PhocacartAttribute::getCombinationsStockById($idSource, 1);
 			PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOA, 1);
 			
 			// Customer groups

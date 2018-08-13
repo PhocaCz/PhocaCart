@@ -622,7 +622,7 @@
 	<option value="2">COM_PHOCACART_YES_2_DIGITS</option>
 </field>
 -->
-<field name="rounding_calculation_total" type="list" default="2" label="COM_PHOCACART_FIELD_ROUNDING_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_ROUNDING_TOTAL_AMOUNT_LABEL">
+<field name="rounding_calculation_total" type="list" default="2" label="COM_PHOCACART_FIELD_ROUNDING_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_ROUNDING_TOTAL_AMOUNT_DESC">
 	<option value="-1">COM_PHOCACART_NO</option>
 	<option value="0">COM_PHOCACART_YES_0_DIGITS</option>
 	<option value="1">COM_PHOCACART_YES_1_DIGITS</option>
@@ -690,6 +690,10 @@
 	<option value="1">COM_PHOCACART_IN_CART</option>
 	<option value="2">COM_PHOCACART_IN_CHECKOUT</option>
 	<option value="3">COM_PHOCACART_IN_ORDER</option>
+</field>
+
+
+<field name="default_order_status" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_DESC" >
 </field>
 
 <field name="phocahead11" type="phocahead" default="COM_PHOCACART_CONFIG_UNITS" label="" description=""/>
@@ -843,7 +847,7 @@
 <!--
 <field name="invoice_prefix" default="" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_PREFIX_LABEL" description="COM_PHOCACART_FIELD_INVOICE_PREFIX_DESC"/>
 
-<field name="invoice_number_format" default="{prefix}{orderdate}{orderid}" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_DESC"/>
+<field name="invoice_number_format" default="" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_DESC"/>
 
 <field name="invoice_number_chars" default="12" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LENGTH_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_LENGTH_DESC"/>-->
 
@@ -980,7 +984,7 @@
 	<option value="1">file_get_contents</option>
 	<option value="2">cUrl</option>
 </field>
-recaptcha_request_method
+
 
 <field name="phocahead24" type="phocaheadexpert" default="COM_PHOCACART_ADVANCED_OPTIONS_EXPERTS_ONLY_LABEL" label="" description=""/>
 
@@ -1067,7 +1071,24 @@ recaptcha_request_method
 <field name="statistics_order_status"  type="PhocacartOrderstatus" default="-1" label="COM_PHOCACART_FIELD_STATISTICS_ORDER_STATUS_LABEL" description="COM_PHOCACART_FIELD_STATISTICS_ORDER_STATUS_DESC" multiple="true"  />
 
 
+<field name="phocahead27" type="phocahead" default="COM_PHOCACART_REPORT_OPTIONS_LABEL" label="" description=""/>
+
+<field name="report_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_REPORT_HEADER_LABEL"  description="COM_PHOCACART_FIELD_REPORT_HEADER_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
+
+<field name="report_display_tax" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_LABEL" description="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_DESC">
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
+<field name="report_display_rounding" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_LABEL" description="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_DESC">
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
 		</fieldset>
+		
+		
+		
 		
 		<fieldset name="store" label="COM_PHOCACART_CONFIG_HEAD_STORE_LABEL">
 		
@@ -1125,6 +1146,12 @@ recaptcha_request_method
 		
 		
 		<fieldset name="billing" label="COM_PHOCACART_CONFIG_HEAD_BILLING_LABEL">
+
+<field name="bank_account_number" default="" size="18" type="text" label="COM_PHOCACART_FIELD_BANK_ACCOUNT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_BANK_ACCOUNT_NUMBER_DESC"/>
+
+<field name="iban" default="" size="18" type="text" label="COM_PHOCACART_FIELD_IBAN_LABEL" description="COM_PHOCACART_FIELD_IBAN_DESC"/>
+<field name="bic_swift" default="" size="18" type="text" label="COM_PHOCACART_FIELD_BIC_SWIFT_LABEL" description="COM_PHOCACART_FIELD_BIC_SWIFT_DESC"/>
+
 		
 <field name="order_number_format" default="{prefix}{year}{orderid}{suffix}" size="18" type="text" label="COM_PHOCACART_FIELD_ORDER_NUMBER_FORMAT_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_FORMAT_DESC"/>
 <field name="order_number_prefix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_ORDER_NUMBER_PREFIX_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_PREFIX_DESC"/>
@@ -1156,9 +1183,9 @@ recaptcha_request_method
 <field name="pdf_invoice_qr_code" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_DESC" />
 <field name="pdf_invoice_signature_image" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_PDF_INVOICE_SIGNATURE_IMAGE_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_SIGNATURE_IMAGE_DESC" />
 
-<field name="invoice_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_LABEL" addfieldpath="/administrator/components/com_content/models/fields" />
-<field name="invoice_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_LABEL" addfieldpath="/administrator/components/com_content/models/fields" />
-<field name="invoice_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL" addfieldpath="/administrator/components/com_content/models/fields" />
+<field name="invoice_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
+<field name="invoice_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
+<field name="invoice_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 		
 		</fieldset>
 		

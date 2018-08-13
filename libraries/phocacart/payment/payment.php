@@ -67,7 +67,7 @@ class PhocacartPayment
 			
 		}
 				
-		$columns		= 'p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
+		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 		.' p.lowest_amount, p.highest_amount, p.default,'
 		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
@@ -75,7 +75,7 @@ class PhocacartPayment
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
 		.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping';
-		$groupsFull		= 'p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.access, p.description,'
+		$groupsFull		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 		.' p.lowest_amount, p.highest_amount, p.default,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type';
@@ -288,7 +288,7 @@ class PhocacartPayment
 				.' LIMIT 1';
 		$db->setQuery($query);*/
 		
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
+		$query = ' SELECT p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'

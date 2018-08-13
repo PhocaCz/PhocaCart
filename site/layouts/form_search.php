@@ -15,13 +15,15 @@ $displayData 	= null;
 $checkedAll 	= '';
 $checkedFilter	= '';
 
-$js  = 'jQuery(document).ready(function(){'."\n";
+$js = ' '. "\n";
+$js .= 'jQuery(document).ready(function(){'."\n";
 $js .= '   jQuery("#'.$d['id'].$d['paramname'].'").keyup(function(event){'."\n";
 $js .= '      if(event.keyCode == 13){'."\n";
 $js .= '         jQuery("#'.$d['id'].$d['paramname'].'Btn'.'").click();'."\n";
 $js .= '      }'."\n";
 $js .= '   });'."\n";
 $js .= '});'."\n";
+$js .= ' '. "\n";
 $document = JFactory::getDocument();
 $document->addScriptDeclaration($js);
 

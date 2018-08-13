@@ -90,6 +90,7 @@ class PhocacartOrderStatus
 		$app 		= JFactory::getApplication();
 		$order 		= new PhocacartOrderView();
 		$common		= $order->getItemCommon($orderId);
+		$orderNumber= PhocacartOrder::getOrderNumber($orderId, $common->date);
 		$bas		= $order->getItemBaS($orderId, 1);
 		//$totalBrutto= $order->getItemTotal($orderId, 0, 'brutto');
 		$status 	= self::getStatus($statusId);
@@ -442,10 +443,12 @@ class PhocacartOrderStatus
 			$r['name'] = $name;
 			$r['name_others'] = '';
 			
+		
+			
 			// EMAIL CUSTOMER
 			if ($status['email_subject'] != '') {
 				
-				$emailSubject = PhocacartEmail::completeMail($status['email_subject'], $r, 1);
+				$emailSubject = PhocacartText::completeText($status['email_subject'], $r, 1);
 				$subject = $emailSubject;// .' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$r['ordernumber'];
 			} else if ($status['title'] != '') {
 				
@@ -453,7 +456,7 @@ class PhocacartOrderStatus
 			}
 			// EMAIL OTHERS
 			if ($status['email_subject_others'] != '') {
-				$emailSubjectO = PhocacartEmail::completeMail($status['email_subject_others'], $r, 2);
+				$emailSubjectO = PhocacartText::completeText($status['email_subject_others'], $r, 2);
 				$subjectOthers = $emailSubjectO;// .' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$r['ordernumber'];
 			} else if ($status['title'] != '') {
 				$subjectOthers = $sitename. ' - ' .$status['title'].' ' . JText::_('COM_PHOCACART_ORDER_NR'). ': '.$r['ordernumber'];
@@ -471,9 +474,10 @@ class PhocacartOrderStatus
 			$body 			= PhocacartText::completeTextFormFields($body, $bas['s'], 2);
 			$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['s'], 2);
 		
-			
 		
+		 	
 			
+
 			// PDF
 			$pdfV					= array();
 			$attachmentContent		= '';
@@ -506,7 +510,7 @@ class PhocacartOrderStatus
 					
 					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
 						$staticData					= array();
-						$orderNumber				= PhocacartOrder::getOrderNumber($orderId, $common->date);
+						//$orderNumber				= PhocacartOrder::getOrderNumber($orderId, $common->date);
 						$staticData['option']		= 'com_phocacart';
 						$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 						$staticData['file']			= '';// Must be empty to not save the pdf to server
@@ -573,6 +577,15 @@ class PhocacartOrderStatus
 				break;
 			
 			}
+			
+			
+			JPluginHelper::importPlugin( 'system' );
+			$dispatcher = JEventDispatcher::getInstance();
+			JPluginHelper::importPlugin('plgSystemMultilanguagesck'); 
+			$dispatcher->trigger('onChangeText', array(&$subject));
+			$dispatcher->trigger('onChangeText', array(&$subjectOthers));
+			$dispatcher->trigger('onChangeText', array(&$body));
+			$dispatcher->trigger('onChangeText', array(&$bodyOthers));
 				
 			//}
 
@@ -587,7 +600,7 @@ class PhocacartOrderStatus
 			// body (custom text) --> don't add status message
 			
 			/*if ($body == '') {
-				$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'];
+				$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNumber .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'];
 			}*/
 			
 			$notify = 0;
@@ -595,7 +608,7 @@ class PhocacartOrderStatus
 			// CUSTOMERS
 			if ($recipient != '' && JMailHelper::isEmailAddress($recipient)) {
 				if ($emptyBody == 1) {
-					$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $body;
+					$body = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNumber .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $body;
 				}
 				
 				// Notify
@@ -611,7 +624,7 @@ class PhocacartOrderStatus
 			// OTHERS
 			if ($recipientOthers != '' && JMailHelper::isEmailAddress($recipientOthers)) {
 				if ($emptyBodyOthers == 1) {
-					$bodyOthers = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNr .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $bodyOthers;
+					$bodyOthers = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNumber .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $bodyOthers;
 				}
 				
 				$notifyOthers = PhocacartEmail::sendEmail('', '', $recipientOthers, $subjectOthers, $bodyOthers, true, null, $bcc, $attachmentContent, $attachmentName);

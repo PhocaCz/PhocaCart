@@ -30,11 +30,14 @@ body.com_phocacart #toolbar [class*=" icon-new"] {
 	margin: 0 0px 0 -6px;
 }
 
-body.com_phocacart #toolbar .ph-icon-wizard  {
+body.com_phocacart #toolbar .ph-icon-wizard ,
+body.com_phocacart #toolbar .ph-icon-text,
+body.com_phocacart #toolbar .ph-icon-pdf  {
 	border-right: 0px;
 	background: transparent;
 	margin: 0 4px 0 -2px;
 }
+
 
 
 body.com_phocacart .chzn-container-single .chzn-single div {

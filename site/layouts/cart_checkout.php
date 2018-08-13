@@ -546,7 +546,6 @@ if (!empty($d['fullitems'][1])) {
 			if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt'])/* && $pC['nettotxt'] != '' can be empty */) {
 				
 				
-				$pC['nettotxt'] = $pC['nettotxt'] != '' ? ' - ' : '';
 				echo '<div class="'.$r.' ph-cart-payment-box">';
 				echo '<div class="'.$cTotE.'"></div>';
 				echo '<div class="'.$cTotT.' ph-cart-payment-netto-txt">'.$pC['title']. PhocacartUtils::addSeparator($pC['nettotxt']).'</div>';

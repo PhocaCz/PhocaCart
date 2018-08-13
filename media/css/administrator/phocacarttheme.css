@@ -1,5 +1,5 @@
 .admin.com_phocacart {
-	/*font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;*/
+	font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 
 #j-main-container {
@@ -592,6 +592,14 @@
 }
 .nav.nav-list li:nth-child(29):before {
 	font-family: 'Glyphicons Halflings';
+	color: #8c0069;
+    content: "\e032";
+    float:left;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+.nav.nav-list li:nth-child(30):before {
+	font-family: 'Glyphicons Halflings';
 	color: #fb1000;
     content: "\e210";
     float:left;
@@ -599,7 +607,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(30):before {
+.nav.nav-list li:nth-child(31):before {
 	font-family: 'Glyphicons Halflings';
 	color: #668099;
     content: "\e169";
@@ -607,7 +615,7 @@
     margin-right: 5px;
     margin-top: 2px;
 }
-.nav.nav-list li:nth-child(31):before { 
+.nav.nav-list li:nth-child(32):before { 
 	font-family: 'Glyphicons Halflings';
 	color: #669999;
     content: "\e170";
@@ -616,7 +624,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(32):before {
+.nav.nav-list li:nth-child(33):before {
 	font-family: 'Glyphicons Halflings';
 	color: #c0c0c0;
     content: "\e056";
@@ -625,7 +633,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(33):before {
+.nav.nav-list li:nth-child(34):before {
 	font-family: 'Glyphicons Halflings';
 	color: #3378cc;
     content: "\e086";
@@ -634,7 +642,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(34):before {
+.nav.nav-list li:nth-child(35):before {
 	font-family: 'Glyphicons Halflings';
 	color: #2693ff;
     content: "\e010";
@@ -643,7 +651,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(35):before {
+.nav.nav-list li:nth-child(36):before {
 	font-family: 'Glyphicons Halflings';
 	color: #b30059;
     content: "\e008";
@@ -652,7 +660,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(36):before {
+.nav.nav-list li:nth-child(37):before {
 	font-family: 'Glyphicons Halflings';
 	color: #b35900;
     content: "\e157";
@@ -661,7 +669,7 @@
     margin-top: 2px;
 }
 
-.nav.nav-list li:nth-child(37):before {
+.nav.nav-list li:nth-child(38):before {
 	font-family: 'Glyphicons Halflings';
 	color: #ff9326;
     content: "\e237";

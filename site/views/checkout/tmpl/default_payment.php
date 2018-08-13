@@ -105,7 +105,7 @@ if ($this->a->paymentnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItemsPayment($v->cost, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
+		$priceI = $price->getPriceItemsPayment($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
 
 		echo '<div class="col-sm-6 col-md-6 ">';
 		echo '<div class="radio">';
@@ -121,6 +121,8 @@ if ($this->a->paymentnotused == 1) {
 		echo '</label>';
 		
 		echo '</div>';
+		
+		
 		
 		if ($this->t['display_payment_desc'] && $v->description != '') {
 			echo '<div class="ph-checkout-payment-desc">'.JHtml::_('content.prepare', $v->description).'</div>';
@@ -153,6 +155,12 @@ if ($this->a->paymentnotused == 1) {
 			if ($priceI['bruttoformat'] != '') {
 				echo '<div class="col-sm-8 col-md-8">'.$priceI['bruttotxt'].'</div>';
 				echo '<div class="col-sm-4 col-md-4 ph-checkout-payment-brutto">'.$priceI['bruttoformat'].'</div>';
+			}
+			
+			if ($priceI['costinfo'] != '') {
+				echo '<div class="col-sm-4 col-md-4"></div>';
+				echo '<div class="col-sm-8 col-md-8 ph-right ph-checkout-payment-cost-info">'.$priceI['costinfo'].'</div>';
+			
 			}
 		}
 		

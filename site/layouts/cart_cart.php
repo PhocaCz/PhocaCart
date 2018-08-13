@@ -13,6 +13,7 @@ $app 	= JFactory::getApplication();
 
 // Component parameters params
 // Module parameters paramsmodule
+$p = array();
 $p['tax_calculation']					= $d['params']->get( 'tax_calculation', 0 );
 $p['stock_checkout']					= $d['params']->get( 'stock_checkout', 0 );
 $p['stock_checking']					= $d['params']->get( 'stock_checking', 0 );

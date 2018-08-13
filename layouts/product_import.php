@@ -471,6 +471,14 @@ if($xml) {
 				if (isset($v['item']) && $v['item'] != '') {
 					$pcAP = str_getcsv($v['item'], ';', '"');
 					if (!empty($pcAH) && !empty($pcAP)) {
+						
+						$cPcAH = count($pcAH);
+						$cPcAP = count($pcAP);
+						if ($cPcAH > $cPcAP) {
+							$pcAP = array_pad($pcAP, $cPcAH, '');
+						} else if ($cPcAH < $cPcAP) {
+							$pcAH = array_pad($pcAH, $cPcAP, '');
+						}
 						$data = array_combine($pcAH, $pcAP);
 						
 						$data['tax_id'] 				= array();

@@ -46,6 +46,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', 'heart', '#EA7C7C'),
 		'questions'		=> array($this->t['l'] . '_QUESTIONS', 'question-sign', '#9900CC'),
 		'statistics'	=> array($this->t['l'] . '_STATISTICS', 'stats', '#c1756d'),
+		'reports'		=> array($this->t['l'] . '_REPORTS', 'list-alt', '#8c0069'),
 		'hits'			=> array($this->t['l'] . '_HITS', 'equalizer', '#fb1000'),
 		'imports'		=> array($this->t['l'] . '_IMPORT', 'import', '#668099'),
 		'exports'		=> array($this->t['l'] . '_EXPORT', 'export', '#669999'),

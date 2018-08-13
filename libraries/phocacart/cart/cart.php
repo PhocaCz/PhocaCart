@@ -877,7 +877,7 @@ class PhocacartCart
 			}
 		
 			$price	= new PhocacartPrice();
-			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->calculation_type, $this->total[0], $sI->taxid, $sI->taxrate, $sI->taxcalculationtype, $sI->taxtitle, $sI->freeshipping, 1, '');
+			$priceI = $price->getPriceItemsShipping($sI->cost, $sI->cost_additional, $sI->calculation_type, $this->total[0], $sI->taxid, $sI->taxrate, $sI->taxcalculationtype, $sI->taxtitle, $sI->freeshipping, 1, '');
 			
 			// CALCULATION
 			$calc 						= new PhocacartCartCalculation();
@@ -914,7 +914,7 @@ class PhocacartCart
 			}
 		
 			$price	= new PhocacartPrice();
-			$priceI = $price->getPriceItemsPayment($pI->cost, $pI->calculation_type, $this->total[0], $pI->taxid, $pI->taxrate, $pI->taxcalculationtype, $pI->taxtitle, $pI->freepayment, 1, '');
+			$priceI = $price->getPriceItemsPayment($pI->cost, $pI->cost_additional, $pI->calculation_type, $this->total[0], $pI->taxid, $pI->taxrate, $pI->taxcalculationtype, $pI->taxtitle, $pI->freepayment, 1, '');
 			
 			
 			// CALCULATION

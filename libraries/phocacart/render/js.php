@@ -19,9 +19,11 @@ final class PhocacartRenderJs
 	
 	public static function renderAjaxDoRequest($text) {
 	
-		$s 	= array();	 
+		$s 	= array();
+		$s[] = ' ';
+		$s[] = '/* Function phDoRequest */ ';
 		$s[] = 'function phDoRequest(url, manager, value) {';
-		$s[] = 'var phAjaxTop = \'<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> \' + \''. htmlspecialchars($text).'\' + \'</div>\';';
+		$s[] = '   var phAjaxTop = \'<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> \' + \''. htmlspecialchars($text).'\' + \'</div>\';';
 		$s[] = '   jQuery("#ph-ajaxtop").html(phAjaxTop);';
 		$s[] = '   jQuery("#ph-ajaxtop").show();';
 		$s[] = '   var dataPost = {};';
@@ -51,6 +53,7 @@ final class PhocacartRenderJs
 		$s[] = '      }';
 		$s[] = '   });';
 		$s[] = '}';
+		$s[] = ' ';
 	
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
@@ -58,24 +61,28 @@ final class PhocacartRenderJs
 	public static function renderAjaxDoRequestAfterChange($url, $manager = 'product', $value = 'imageCreateThumbs') {
 		//$s[] = '       phDoRequest(\''.$url.'\', \''.$manager.'\', jQuery(this).val());';
 		$s 	= array();
+		$s[] = ' ';
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   jQuery( \'.'.$value.'\' ).on("change", function() {';
 		$s[] = '       phDoRequest(\''.$url.'\', \''.$manager.'\', jQuery(this).val());';
 		$s[] = '   })';
 		$s[] = '})';
+		$s[] = ' ';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	
 	
 	public static function renderAjaxDoRequestAfterPaste($url, $manager = 'product') {
 		$s 	= array();
+		$s[] = ' ';
+		$s[] = '/* Function phAddValue */ ';
 		$s[] = 'function phAddValue(id, title, titleModal) {';
 		$s[] = '   document.getElementById(id).value = title;';
 		//$s[] = '   SqueezeBox.close();';// close
 		$s[] = '   jQuery(\'.modal\').modal(\'hide\');';
 		$s[] = '   phDoRequest(\''.$url.'\', \''.$manager.'\', title );';
 		$s[] = '}';
-
+		$s[] = ' ';
 		//jQuery('.modal').on('hidden', function () {
 		//  // Do something after close
 		//});
@@ -124,6 +131,8 @@ final class PhocacartRenderJs
 			
 			
 			// ::ACTION - Ajax the form
+			$s[] = ' ';
+			$s[] = '/* Function phDoSubmitFormAddToCart */ ';
 			$s[] = 'function phDoSubmitFormAddToCart(sFormData) {';
 			$s[] = '   var phUrl 	= "'. $urlAjax.'";';
 			$s[] = '   var phCheckoutView = '.(int)$cView.'';
@@ -233,6 +242,7 @@ final class PhocacartRenderJs
 			$s[] = '	    phDoSubmitFormAddToCart(sFormData);';
 			$s[] = '    })';
 			$s[] = '})';
+			$s[] = ' ';
 			
 			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		}
@@ -267,6 +277,8 @@ final class PhocacartRenderJs
 		
 		
 		// ::ACTION - Ajax the form
+		$s[] = ' ';
+		$s[] = '/* Function phDoSubmitFormUpdateCart */ ';
 		$s[] = 'function phDoSubmitFormUpdateCart(sFormData) {';
 		$s[] = '   var phUrl 	= "'. $urlAjax.'";';
 		$s[] = '   var phCheckoutView = '.(int)$cView.'';
@@ -335,6 +347,7 @@ final class PhocacartRenderJs
 		$s[] = '	    phDoSubmitFormUpdateCart(sFormData);';	
 		$s[] = '	})';
 		$s[] = '})';
+		$s[] = ' ';
 		
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	
@@ -368,45 +381,48 @@ final class PhocacartRenderJs
 			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=comparison.add&format=json&'. JSession::getFormToken().'=1&comparisonview='.(int)$cView;
 			//$s[] = 'jQuery(document).ready(function(){';
 			//$s[] = '	jQuery(".phItemCompareBoxForm").on(\'submit\', function (e) {';
-			$s[] = '	function phItemCompareBoxFormAjax(phItemId) {';
-			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
-			$s[] = '		var phItem = \'#\' + phItemId;';
-			$s[] = '		var phComparisonView = '.(int)$cView.'';
-			$s[] = '		var phData = jQuery(phItem).serialize();';
+			$s[] = ' ';
+			$s[] = '/* Function phItemCompareBoxFormAjax */ ';
+			$s[] = 'function phItemCompareBoxFormAjax(phItemId) {';
+			$s[] = '	var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '	var phItem = \'#\' + phItemId;';
+			$s[] = '	var phComparisonView = '.(int)$cView.'';
+			$s[] = '	var phData = jQuery(phItem).serialize();';
 			$s[] = ' ';		
-			$s[] = '		phRequest = jQuery.ajax({';
-			$s[] = '			type: "POST",';
-			$s[] = '			url: phUrl,';
-			$s[] = '			async: "false",';
-			$s[] = '			cache: "false",';
-			$s[] = '			data: phData,';
-			$s[] = '			dataType:"JSON",';
-			$s[] = '			success: function(data){';
-			$s[] = '				if (data.status == 1){';
-			$s[] = '					jQuery(".phItemCompareBox").html(data.item);';
-			$s[] = '					jQuery(".phItemCompareBoxCount").html(data.count);';
+			$s[] = '	phRequest = jQuery.ajax({';
+			$s[] = '		type: "POST",';
+			$s[] = '		url: phUrl,';
+			$s[] = '		async: "false",';
+			$s[] = '		cache: "false",';
+			$s[] = '		data: phData,';
+			$s[] = '		dataType:"JSON",';
+			$s[] = '		success: function(data){';
+			$s[] = '			if (data.status == 1){';
+			$s[] = '				jQuery(".phItemCompareBox").html(data.item);';
+			$s[] = '				jQuery(".phItemCompareBoxCount").html(data.count);';
 			if ($add_compare_method == 2) {
-				$s[] = ' 					jQuery("body").append(jQuery("#phContainer"));';												  
-				$s[] = ' 					jQuery("#phContainer").html(data.popup);';
-				$s[] = ' 					jQuery("#phAddToComparePopup").modal();';
+				$s[] = ' 				jQuery("body").append(jQuery("#phContainer"));';												  
+				$s[] = ' 				jQuery("#phContainer").html(data.popup);';
+				$s[] = ' 				jQuery("#phAddToComparePopup").modal();';
 			}
 			if ($add_compare_method == 1) {
 				// If no popup is displayed we can relaod the page when we are in comparison page
 				// If popup, this will be done when clicking continue or comparison list
-				$s[] = '						if (phComparisonView == 1) {';
+				$s[] = '					if (phComparisonView == 1) {';
 				$s[] = self::renderOverlay();
-				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
-				$s[] = '			   			}';
+				$s[] = '						setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			  			}';
 			}
-			$s[] = '			   } else {';
+			$s[] = '		   } else {';
 			//$s[] = '					// Don\'t change the price box';
-			$s[] = '			   }';
-			$s[] = '			}';
-			$s[] = '		})';
+			$s[] = '		   }';
+			$s[] = '		}';
+			$s[] = '	})';
 			//$s[] = '		e.preventDefault();';
 			//$s[] = '       return false;';	
-			$s[] = '	}';
+			$s[] = '}';
 			//$s[] = '})';
+			$s[] = ' ';
 			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		}
 	}
@@ -439,45 +455,48 @@ final class PhocacartRenderJs
 			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=comparison.remove&format=json&'. JSession::getFormToken().'=1&comparisonview='.(int)$cView;
 			//$s[] = 'jQuery(document).ready(function(){';
 			//$s[] = '	jQuery(".phItemCompareBoxForm").on(\'submit\', function (e) {';
-			$s[] = '	function phItemRemoveCompareFormAjax(phItemId) {';
-			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
-			$s[] = '		var phItem = \'#\' + phItemId;';
-			$s[] = '		var phComparisonView = '.(int)$cView.'';
-			$s[] = '		var phData = jQuery(phItem).serialize();';
+			$s[] = ' ';
+			$s[] = '/* Function phItemRemoveCompareFormAjax */ ';
+			$s[] = 'function phItemRemoveCompareFormAjax(phItemId) {';
+			$s[] = '	var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '	var phItem = \'#\' + phItemId;';
+			$s[] = '	var phComparisonView = '.(int)$cView.'';
+			$s[] = '	var phData = jQuery(phItem).serialize();';
 			$s[] = ' ';		
-			$s[] = '		phRequest = jQuery.ajax({';
-			$s[] = '			type: "POST",';
-			$s[] = '			url: phUrl,';
-			$s[] = '			async: "false",';
-			$s[] = '			cache: "false",';
-			$s[] = '			data: phData,';
-			$s[] = '			dataType:"JSON",';
-			$s[] = '			success: function(data){';
-			$s[] = '				if (data.status == 1){';
-			$s[] = '					jQuery(".phItemCompareBox").html(data.item);';
-			$s[] = '					jQuery(".phItemCompareBoxCount").html(data.count);';
+			$s[] = '	phRequest = jQuery.ajax({';
+			$s[] = '		type: "POST",';
+			$s[] = '		url: phUrl,';
+			$s[] = '		async: "false",';
+			$s[] = '		cache: "false",';
+			$s[] = '		data: phData,';
+			$s[] = '		dataType:"JSON",';
+			$s[] = '		success: function(data){';
+			$s[] = '			if (data.status == 1){';
+			$s[] = '				jQuery(".phItemCompareBox").html(data.item);';
+			$s[] = '				jQuery(".phItemCompareBoxCount").html(data.count);';
 			if ($add_compare_method == 2) {
 				// Display the popup
-				$s[] = ' 					jQuery("#phContainerModuleCompare").html(data.popup);';
-				$s[] = ' 					jQuery("#phRemoveFromComparePopup").modal();';
+				$s[] = ' 				jQuery("#phContainerModuleCompare").html(data.popup);';
+				$s[] = ' 				jQuery("#phRemoveFromComparePopup").modal();';
 			}
 			if ($add_compare_method == 1) {
 				// If no popup is displayed we can relaod the page when we are in comparison page
 				// If popup, this will be done when clicking continue or comparison list
-				$s[] = '						if (phComparisonView == 1) {';
+				$s[] = '					if (phComparisonView == 1) {';
 				$s[] = self::renderOverlay();
-				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
-				$s[] = '			   			}';
+				$s[] = '						setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			  			}';
 			}	
-			$s[] = '			   } else {';
+			$s[] = '			  } else {';
 			//$s[] = '					// Don\'t change the price box';
-			$s[] = '			   }';
-			$s[] = '			}';
-			$s[] = '		})';
+			$s[] = '			  }';
+			$s[] = '		}';
+			$s[] = '	})';
 			//$s[] = '		e.preventDefault();';
 			//$s[] = '       return false;';	
-			$s[] = '	}';
+			$s[] = '}';
 			//$s[] = '})';
+			$s[] = ' ';
 			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		}
 	}
@@ -511,45 +530,48 @@ final class PhocacartRenderJs
 			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=wishlist.add&format=json&'. JSession::getFormToken().'=1&wishlistview='.(int)$wView;
 			//$s[] = 'jQuery(document).ready(function(){';
 			//$s[] = '	jQuery(".phItemWishListBoxForm").on(\'submit\', function (e) {';
-			$s[] = '	function phItemWishListBoxFormAjax(phItemId) {';
-			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
-			$s[] = '		var phItem = \'#\' + phItemId;';
-			$s[] = '		var phWishListView = '.(int)$wView.'';
-			$s[] = '		var phData = jQuery(phItem).serialize();';
+			$s[] = ' ';
+			$s[] = '/* Function phItemWishListBoxFormAjax */ ';
+			$s[] = 'function phItemWishListBoxFormAjax(phItemId) {';
+			$s[] = '	var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '	var phItem = \'#\' + phItemId;';
+			$s[] = '	var phWishListView = '.(int)$wView.'';
+			$s[] = '	var phData = jQuery(phItem).serialize();';
 			$s[] = ' ';		
-			$s[] = '		phRequest = jQuery.ajax({';
-			$s[] = '			type: "POST",';
-			$s[] = '			url: phUrl,';
-			$s[] = '			async: "false",';
-			$s[] = '			cache: "false",';
-			$s[] = '			data: phData,';
-			$s[] = '			dataType:"JSON",';
-			$s[] = '			success: function(data){';
-			$s[] = '				if (data.status == 1){';
-			$s[] = '					jQuery(".phItemWishListBox").html(data.item);';
-			$s[] = '					jQuery(".phItemWishListBoxCount").html(data.count);';
+			$s[] = '	phRequest = jQuery.ajax({';
+			$s[] = '		type: "POST",';
+			$s[] = '		url: phUrl,';
+			$s[] = '		async: "false",';
+			$s[] = '		cache: "false",';
+			$s[] = '		data: phData,';
+			$s[] = '		dataType:"JSON",';
+			$s[] = '		success: function(data){';
+			$s[] = '			if (data.status == 1){';
+			$s[] = '				jQuery(".phItemWishListBox").html(data.item);';
+			$s[] = '				jQuery(".phItemWishListBoxCount").html(data.count);';
 			if ($add_wishlist_method == 2) {
-				$s[] = ' 					jQuery("body").append(jQuery("#phContainer"));';												  
-				$s[] = ' 					jQuery("#phContainer").html(data.popup);';
-				$s[] = ' 					jQuery("#phAddToWishListPopup").modal();';
+				$s[] = ' 				jQuery("body").append(jQuery("#phContainer"));';												  
+				$s[] = ' 				jQuery("#phContainer").html(data.popup);';
+				$s[] = ' 				jQuery("#phAddToWishListPopup").modal();';
 			}
 			if ($add_wishlist_method == 1) {
 				// If no popup is displayed we can relaod the page when we are in wishlist page
 				// If popup, this will be done when clicking continue or wishlist list
-				$s[] = '						if (phWishListView == 1) {';
+				$s[] = '					if (phWishListView == 1) {';
 				$s[] = self::renderOverlay();
-				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
-				$s[] = '			   			}';
+				$s[] = '						setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			  			}';
 			}
-			$s[] = '			   } else {';
+			$s[] = '			  } else {';
 			//$s[] = '					// Don\'t change the price box';
-			$s[] = '			   }';
-			$s[] = '			}';
-			$s[] = '		})';
+			$s[] = '			  }';
+			$s[] = '		}';
+			$s[] = '	})';
 			//$s[] = '		e.preventDefault();';
 			//$s[] = '       return false;';	
-			$s[] = '	}';
+			$s[] = '}';
 			//$s[] = '})';
+			$s[] = ' ';
 			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		}
 	}
@@ -583,45 +605,48 @@ final class PhocacartRenderJs
 			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=wishlist.remove&format=json&'. JSession::getFormToken().'=1&wishlistview='.(int)$wView;
 			//$s[] = 'jQuery(document).ready(function(){';
 			//$s[] = '	jQuery(".phItemWishListBoxForm").on(\'submit\', function (e) {';
-			$s[] = '	function phItemRemoveWishListFormAjax(phItemId) {';
-			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
-			$s[] = '		var phItem = \'#\' + phItemId;';
-			$s[] = '		var phWishListView = '.(int)$wView.'';
-			$s[] = '		var phData = jQuery(phItem).serialize();';
+			$s[] = ' ';
+			$s[] = '/* Function phItemRemoveWishListFormAjax */ ';
+			$s[] = 'function phItemRemoveWishListFormAjax(phItemId) {';
+			$s[] = '	var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '	var phItem = \'#\' + phItemId;';
+			$s[] = '	var phWishListView = '.(int)$wView.'';
+			$s[] = '	var phData = jQuery(phItem).serialize();';
 			$s[] = ' ';		
-			$s[] = '		phRequest = jQuery.ajax({';
-			$s[] = '			type: "POST",';
-			$s[] = '			url: phUrl,';
-			$s[] = '			async: "false",';
-			$s[] = '			cache: "false",';
-			$s[] = '			data: phData,';
-			$s[] = '			dataType:"JSON",';
-			$s[] = '			success: function(data){';
-			$s[] = '				if (data.status == 1){';
-			$s[] = '					jQuery(".phItemWishListBox").html(data.item);';
-			$s[] = '					jQuery(".phItemWishListBoxCount").html(data.count);';
+			$s[] = '	phRequest = jQuery.ajax({';
+			$s[] = '		type: "POST",';
+			$s[] = '		url: phUrl,';
+			$s[] = '		async: "false",';
+			$s[] = '		cache: "false",';
+			$s[] = '		data: phData,';
+			$s[] = '		dataType:"JSON",';
+			$s[] = '		success: function(data){';
+			$s[] = '			if (data.status == 1){';
+			$s[] = '				jQuery(".phItemWishListBox").html(data.item);';
+			$s[] = '				jQuery(".phItemWishListBoxCount").html(data.count);';
 			if ($add_wishlist_method == 2) {
 				// Display the popup
-				$s[] = ' 					jQuery("#phContainerModuleWishList").html(data.popup);';
-				$s[] = ' 					jQuery("#phRemoveFromWishListPopup").modal();';
+				$s[] = ' 				jQuery("#phContainerModuleWishList").html(data.popup);';
+				$s[] = ' 				jQuery("#phRemoveFromWishListPopup").modal();';
 			}
 			if ($add_wishlist_method == 1) {
 				// If no popup is displayed we can relaod the page when we are in wishlist page
 				// If popup, this will be done when clicking continue or wishlist list
-				$s[] = '						if (phWishListView == 1) {';
+				$s[] = '					if (phWishListView == 1) {';
 				$s[] = self::renderOverlay();
-				$s[] = '							setTimeout(function() {location.reload();}, 0001);';
-				$s[] = '			   			}';
+				$s[] = '						setTimeout(function() {location.reload();}, 0001);';
+				$s[] = '			  			}';
 			}	
-			$s[] = '			   } else {';
+			$s[] = '			  } else {';
 			//$s[] = '					// Don\'t change the price box';
-			$s[] = '			   }';
-			$s[] = '			}';
-			$s[] = '		})';
+			$s[] = '		   }';
+			$s[] = '		}';
+			$s[] = '	})';
 			//$s[] = '		e.preventDefault();';
 			//$s[] = '       return false;';	
-			$s[] = '	}';
+			$s[] = '}';
 			//$s[] = '})';
+			$s[] = ' ';
 			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		}
 	}
@@ -655,34 +680,36 @@ final class PhocacartRenderJs
 		$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&view=item&format=json&tmpl=component&'. JSession::getFormToken().'=1';
 		//$s[] = 'jQuery(document).ready(function(){';
 		//$s[] = '	jQuery(".phItemCompareBoxForm").on(\'submit\', function (e) {';
-		$s[] = '	function phItemQuickViewBoxFormAjax(phItemId) {';
-		$s[] = '		var phUrl 	= "'. $urlAjax.'";';
-		$s[] = '		var phItem = \'#\' + phItemId;';
-		//$s[] = '		var phComparisonView = '.(int)$cView.'';
-		$s[] = '		var phData = jQuery(phItem).serialize();';
+		$s[] = ' ';
+		$s[] = '/* Function phItemQuickViewBoxFormAjax */ ';
+		$s[] = 'function phItemQuickViewBoxFormAjax(phItemId) {';
+		$s[] = '	var phUrl 	= "'. $urlAjax.'";';
+		$s[] = '	var phItem = \'#\' + phItemId;';
+		//$s[] = '	var phComparisonView = '.(int)$cView.'';
+		$s[] = '	var phData = jQuery(phItem).serialize();';
 		$s[] = ' ';		
-		$s[] = '		phRequest = jQuery.ajax({';
-		$s[] = '			type: "POST",';
-		$s[] = '			url: phUrl,';
-		$s[] = '			async: "false",';
-		$s[] = '			cache: "false",';
-		$s[] = '			data: phData,';
-		$s[] = '			dataType:"JSON",';
-		$s[] = '			success: function(data){';
-		$s[] = '				if (data.status == 1){';
+		$s[] = '	phRequest = jQuery.ajax({';
+		$s[] = '		type: "POST",';
+		$s[] = '		url: phUrl,';
+		$s[] = '		async: "false",';
+		$s[] = '		cache: "false",';
+		$s[] = '		data: phData,';
+		$s[] = '		dataType:"JSON",';
+		$s[] = '		success: function(data){';
+		$s[] = '			if (data.status == 1){';
 		//$s[] = '					jQuery("#phItemCompareBox").html(data.item);';
 		
 		
 		
-		//$s[] = ' 					jQuery("#phQuickViewPopupBody").html(data.popup);'; added in ajax
-		/////$s[] = ' 				jQuery("#phContainer").html(data.popup); ';
-		$s[] = ' 					jQuery(".phjItemQuick.phjProductAttribute").remove(); ';// Clear attributes from dom when ajax reload
-		$s[] = ' 					jQuery("body").append(jQuery("#phContainer"));';
-		$s[] = ' 					jQuery("#phContainer").html(data.popup); ';
+		//$s[] = ' 				jQuery("#phQuickViewPopupBody").html(data.popup);'; added in ajax
+		/////$s[] = ' 			jQuery("#phContainer").html(data.popup); ';
+		$s[] = ' 				jQuery(".phjItemQuick.phjProductAttribute").remove(); ';// Clear attributes from dom when ajax reload
+		$s[] = ' 				jQuery("body").append(jQuery("#phContainer"));';
+		$s[] = ' 				jQuery("#phContainer").html(data.popup); ';
 		
-		/////$s[] = ' 				jQuery("#phQuickViewPopup").modal();';
-		$s[] = ' 					jQuery("body").append(jQuery("#phQuickViewPopup"));';
-		$s[] = ' 					jQuery("#phQuickViewPopup").modal();';
+		/////$s[] = ' 			jQuery("#phQuickViewPopup").modal();';
+		$s[] = ' 				jQuery("body").append(jQuery("#phQuickViewPopup"));';
+		$s[] = ' 				jQuery("#phQuickViewPopup").modal();';
 		if ($load_chosen == 1) {
 			
 			// TO DO 
@@ -692,8 +719,8 @@ final class PhocacartRenderJs
 			// we lost the select boxes on mobiles
 			//$s[] = '	  				jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';//Reload Chosen
 			// This seems to work
-			//$s[] = '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
-			$s[] = '	  jQuery(\'select\').chosen(\'destroy\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
+			//$s[] = '	 jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
+			$s[] = '	 jQuery(\'select\').chosen(\'destroy\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
 		}
 		
 		if ($dynamic_change_price == 1) {
@@ -702,17 +729,18 @@ final class PhocacartRenderJs
 		
 		$s[] = 'phChangeAttributeType(\'ItemQuick\');';// Recreate the select attribute (color, image) after AJAX
 		
-		$s[] = '			'. $media->loadTouchSpin('quantity');// Touch spin for input
+		$s[] = '		'. $media->loadTouchSpin('quantity');// Touch spin for input
 			
-		$s[] = '			   } else {';
+		$s[] = '			  } else {';
 		//$s[] = '					// Don\'t change the price box';
-		$s[] = '			   }';
-		$s[] = '			}';
-		$s[] = '		})';
+		$s[] = '			  }';
+		$s[] = '		}';
+		$s[] = '	})';
 		//$s[] = '		e.preventDefault();';
 		//$s[] = '       return false;';	
-		$s[] = '	}';
+		$s[] = '}';
 		//$s[] = '})';
+		$s[] = ' ';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	
@@ -748,31 +776,32 @@ final class PhocacartRenderJs
 		$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=checkout.changepricebox&format=json&'. JSession::getFormToken().'=1';
 		
 		
+		$s[] = ' ';
+		$s[] = '/* Function phAjaxChangePrice */ ';
+		$s[] = 'function phAjaxChangePrice'.$typeView.'(phProductId, phDataA1, phDataA2){';
+		$s[] = '	var phUrl 		= "'. $urlAjax.'";';
+		$s[] = '	var phId 		= phProductId;'. "\n";
+		$s[] = '	var phIdItem 	= "#phItemPriceBox'.$typeView.'" + phProductId;';
+		$s[] = '	var phClass 	= "'.$class.'";';
+		$s[] = '	var phTypeView 	= "'.$typeView.'";';
 		
-		$s[] = '	function phAjaxChangePrice'.$typeView.'(phProductId, phDataA1, phDataA2){';
-		$s[] = '		var phUrl 		= "'. $urlAjax.'";';
-		$s[] = '		var phId 		= phProductId;'. "\n";
-		$s[] = '		var phIdItem 	= "#phItemPriceBox'.$typeView.'" + phProductId;';
-		$s[] = '		var phClass 	= "'.$class.'";';
-		$s[] = '		var phTypeView 	= "'.$typeView.'";';
-		
-		$s[] = '		var phData 	= \'id=\'+phId+\'&\'+phDataA1+\'&\'+phDataA2+\'&\'+\'class=\'+phClass+\'&\'+\'typeview=\'+phTypeView;';
-		$s[] = '		jQuery.ajax({';
-		$s[] = '			type: "POST",';
-		$s[] = '			url: phUrl,';
-		$s[] = '			async: "false",';
-		$s[] = '			cache: "false",';
-		$s[] = '			data: phData,';
-		$s[] = '			dataType:"JSON",';
-		$s[] = '			success: function(data){';
-		$s[] = '				if (data.status == 1){';
-		$s[] = '					jQuery(phIdItem).html(data.item);';
-		$s[] = '			   } else {';
-		//$s[] = '					// Don\'t change the price box, don't render any error message
-		$s[] = '			   }';
-		$s[] = '			}';
-		$s[] = '		})';
-		$s[] = '	}';
+		$s[] = '	var phData 	= \'id=\'+phId+\'&\'+phDataA1+\'&\'+phDataA2+\'&\'+\'class=\'+phClass+\'&\'+\'typeview=\'+phTypeView;';
+		$s[] = '	jQuery.ajax({';
+		$s[] = '		type: "POST",';
+		$s[] = '		url: phUrl,';
+		$s[] = '		async: "false",';
+		$s[] = '		cache: "false",';
+		$s[] = '		data: phData,';
+		$s[] = '		dataType:"JSON",';
+		$s[] = '		success: function(data){';
+		$s[] = '			if (data.status == 1){';
+		$s[] = '				jQuery(phIdItem).html(data.item);';
+		$s[] = '		   } else {';
+		//$s[] = '				// Don\'t change the price box, don't render any error message
+		$s[] = '			  }';
+		$s[] = '		}';
+		$s[] = '	})';
+		$s[] = '}';
 		$s[] = ' ';
 		
 		$s[] = 'jQuery(document).ready(function(){';
@@ -827,6 +856,7 @@ final class PhocacartRenderJs
 		
 		
 		$s[] = '})';
+		$s[] = ' ';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	
@@ -855,46 +885,48 @@ final class PhocacartRenderJs
 
 		$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task=checkout.changestockbox&format=json&'. JSession::getFormToken().'=1';
 		
-		$s[] = '	function phAjaxChangeStock'.$typeView.'(phProductId, phDataA1, phDataA2){';
-		$s[] = '		var phUrl 					= "'. $urlAjax.'";';
-		$s[] = '		var phId 					= phProductId;'. "\n";
-		$s[] = '		var phIdItem 				= "#phItemStockBox'.$typeView.'" + phProductId;';
-		$s[] = '		var phProductAddToCart 		= ".phProductAddToCart'.$typeView.'" + phProductId;';// display or hide add to cart button
-		$s[] = '		var phProductAddToCartIcon 	= ".phProductAddToCartIcon'.$typeView.'" + phProductId;';// display or hide add to cart icon
-		$s[] = '		var phClass 				= "'.$class.'";';
-		$s[] = '		var phTypeView 				= "'.$typeView.'";';
+		$s[] = ' ';
+		$s[] = '/* Function phAjaxChangeStock */ ';
+		$s[] = 'function phAjaxChangeStock'.$typeView.'(phProductId, phDataA1, phDataA2){';
+		$s[] = '	var phUrl 					= "'. $urlAjax.'";';
+		$s[] = '	var phId 					= phProductId;'. "\n";
+		$s[] = '	var phIdItem 				= "#phItemStockBox'.$typeView.'" + phProductId;';
+		$s[] = '	var phProductAddToCart 		= ".phProductAddToCart'.$typeView.'" + phProductId;';// display or hide add to cart button
+		$s[] = '	var phProductAddToCartIcon 	= ".phProductAddToCartIcon'.$typeView.'" + phProductId;';// display or hide add to cart icon
+		$s[] = '	var phClass 				= "'.$class.'";';
+		$s[] = '	var phTypeView 				= "'.$typeView.'";';
 		
-		$s[] = '		var phData 	= \'id=\'+phId+\'&\'+phDataA1+\'&\'+phDataA2+\'&\'+\'class=\'+phClass+\'&\'+\'typeview=\'+phTypeView;';
-		$s[] = '		jQuery.ajax({';
-		$s[] = '			type: "POST",';
-		$s[] = '			url: phUrl,';
-		$s[] = '			async: "false",';
-		$s[] = '			cache: "false",';
-		$s[] = '			data: phData,';
-		$s[] = '			dataType:"JSON",';
-		$s[] = '			success: function(data){';
-		$s[] = '				if (data.status == 1){';
+		$s[] = '	var phData 	= \'id=\'+phId+\'&\'+phDataA1+\'&\'+phDataA2+\'&\'+\'class=\'+phClass+\'&\'+\'typeview=\'+phTypeView;';
+		$s[] = '	jQuery.ajax({';
+		$s[] = '		type: "POST",';
+		$s[] = '		url: phUrl,';
+		$s[] = '		async: "false",';
+		$s[] = '		cache: "false",';
+		$s[] = '		data: phData,';
+		$s[] = '		dataType:"JSON",';
+		$s[] = '		success: function(data){';
+		$s[] = '			if (data.status == 1){';
 		
 		if ($hide_add_to_cart_stock == 1) {
-			$s[] = '					if (data.stock < 1) {';
-			//$s[] = '						jQuery(phProductAddToCart).hide();';
-			$s[] = '						jQuery(phProductAddToCart).css(\'visibility\', \'hidden\');';
-			$s[] = '						jQuery(phProductAddToCartIcon).css(\'display\', \'none\');';
+			$s[] = '				if (data.stock < 1) {';
+			//$s[] = '					jQuery(phProductAddToCart).hide();';
+			$s[] = '					jQuery(phProductAddToCart).css(\'visibility\', \'hidden\');';
+			$s[] = '					jQuery(phProductAddToCartIcon).css(\'display\', \'none\');';
 			
-			$s[] = '					} else {';
-			//$s[] = '						jQuery(phProductAddToCart).show();';
-			$s[] = '						jQuery(phProductAddToCart).css(\'visibility\', \'visible\');';
-			$s[] = '						jQuery(phProductAddToCartIcon).css(\'display\', \'block\');';
-			$s[] = '					}';
+			$s[] = '				} else {';
+			//$s[] = '					jQuery(phProductAddToCart).show();';
+			$s[] = '					jQuery(phProductAddToCart).css(\'visibility\', \'visible\');';
+			$s[] = '					jQuery(phProductAddToCartIcon).css(\'display\', \'block\');';
+			$s[] = '				}';
 		}
 		
-		$s[] = '					jQuery(phIdItem).html(data.item);';
-		$s[] = '			   } else {';
+		$s[] = '				jQuery(phIdItem).html(data.item);';
+		$s[] = '			  } else {';
 		//$s[] = '					// Don\'t change the price box, don't render any error message
-		$s[] = '			   }';
-		$s[] = '			}';
-		$s[] = '		})';
-		$s[] = '	}';
+		$s[] = '			  }';
+		$s[] = '		}';
+		$s[] = '	})';
+		$s[] = '}';
 		$s[] = ' ';
 		
 		$s[] = 'jQuery(document).ready(function(){';
@@ -929,6 +961,7 @@ final class PhocacartRenderJs
 		$s[] = '	})';
 		
 		$s[] = '})';
+		$s[] = ' ';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
@@ -960,6 +993,8 @@ final class PhocacartRenderJs
 		self::renderPhocaAttribute();// needed because of phChangeAttributeType()
 		
 		// ::ACTION Ajax for top pagination: pagination/ordering/layouttype
+		$s[] = ' ';
+		$s[] = '/* Function phDoSubmitFormPaginationTop */ ';
 		$s[] = 'function phDoSubmitFormPaginationTop(sFormData, phUrlJs) {';
 		//$s[] = '    	e.preventDefault();';
 
@@ -968,38 +1003,38 @@ final class PhocacartRenderJs
 		//if (PhocacartUtils::isView('pos')) {
 		//	$s[] = '    var phUrl 	= phAddSuffixToUrl(window.location.href, \'format=raw\');';
 		//} else {
-			$s[] = '		var phUrl 	= "'. $urlAjax.'";';
+			$s[] = '	var phUrl 	= "'. $urlAjax.'";';
 		//}
-		$s[] = '		phUrl 		= typeof phUrlJs !== "undefined" ? phUrlJs : phUrl;';
-		$s[] = '		phRequest = jQuery.ajax({';
-		$s[] = '			type: "POST",';
-		$s[] = '			url: phUrl,';
-		//$s[] = '			async: false,';
-		$s[] = '			async: true,';
-		$s[] = '			cache: "false",';
-		$s[] = '			data: sFormData,';
-		$s[] = '			dataType:"HTML",';
-		$s[] = '			success: function(data){';
-		$s[] = '				jQuery("'.$outputDiv.'").html(data);';
+		$s[] = '	phUrl 		= typeof phUrlJs !== "undefined" ? phUrlJs : phUrl;';
+		$s[] = '	phRequest = jQuery.ajax({';
+		$s[] = '		type: "POST",';
+		$s[] = '		url: phUrl,';
+		//$s[] = '		async: false,';
+		$s[] = '		async: true,';
+		$s[] = '		cache: "false",';
+		$s[] = '		data: sFormData,';
+		$s[] = '		dataType:"HTML",';
+		$s[] = '		success: function(data){';
+		$s[] = '			jQuery("'.$outputDiv.'").html(data);';
 		
 		if (PhocacartUtils::isView('pos')) {
-			$s[] = '			phPosManagePage()';
+			$s[] = '		phPosManagePage()';
 		}
 		
 		if ($load_chosen) {
-			//$s[] = '	  jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
-			$s[] = '	  jQuery(\'select\').chosen(\'destroy\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
+			//$s[] = '	 jQuery(\'select\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
+			$s[] = '	 jQuery(\'select\').chosen(\'destroy\').chosen({disable_search_threshold : 10,allow_single_deselect : true});';
 		
 		}
 		
 		if ($equal_height) {
-			//$s[] = '	   jQuery(\'.ph-thumbnail-c.grid\').matchHeight();';// FLEXBOX USED
+			//$s[] = '	  jQuery(\'.ph-thumbnail-c.grid\').matchHeight();';// FLEXBOX USED
 		}
 		
 		$s[] = 'phChangeAttributeType();';// Recreate the select attribute (color, image) after AJAX
 		$s[] = $overlay1['end'];
-		$s[] = '			}';
-		$s[] = '		})';
+		$s[] = '		}';
+		$s[] = '	})';
 		//$s[] = '		e.preventDefault();';
 
 		$s[] = '       return false;';	
@@ -1019,6 +1054,7 @@ final class PhocacartRenderJs
 		$s[] = '		phDoSubmitFormPaginationTop(sFormData, phUrl);';	
 		$s[] = '	})';
 		$s[] = '})';
+		$s[] = ' ';
 		
 		
 		// ::EVENT (CLICK) Pagination - Clicking on Start Prev 1 2 3 Next End
@@ -1041,9 +1077,12 @@ final class PhocacartRenderJs
 			$s[] = '		e.preventDefault();';
 			$s[] = '	})';
 			$s[] = '})';
+			$s[] = ' ';
 		}
 		
 		// ::EVENT (CHANGE) Automatically reload of the pagination/ordering form Clicking on Ordering and Display Num
+		$s[] = ' ';
+		$s[] = '/* Function phEventChangeFormPagination */ ';
 		$s[] = 'function phEventChangeFormPagination(sForm, sItem) {';
 		$s[] = '   var phA = 1;';// Full Overlay Yes
 		
@@ -1077,6 +1116,7 @@ final class PhocacartRenderJs
 		}
 
 		$s[] = '}';
+		$s[] = ' ';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	
@@ -1610,6 +1650,7 @@ final class PhocacartRenderJs
 		$s[] = '})';*/
 		
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		
 	}
 	
 	
@@ -1822,7 +1863,9 @@ final class PhocacartRenderJs
 		JFactory::getDocument()->addScript(JURI::root(true).'/media/com_phocacart/js/number_format.js');
 	
 		$s 	= array();
-		$s[] = ' function phGetPriceFormat($price) {';
+		$s[] = ' ';
+		$s[] = '/* Function phGetPriceFormat*/ ';
+		$s[] = 'function phGetPriceFormat($price) {';
 		$s[] = '	var $negative = 0;';
 		$s[] = ' 	if ($price < 0) {';
 		$s[] = ' 		$negative = 1;';
@@ -1858,7 +1901,8 @@ final class PhocacartRenderJs
 		$s[] = '	} else {';
 		$s[] = '		return "'.$price_prefix.'" + $price + "'.$price_suffix.'";';
 		$s[] = '	}';
-		$s[] = ' }';
+		$s[] = '}';
+		$s[] = ' ';
 		
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
@@ -1868,7 +1912,8 @@ final class PhocacartRenderJs
 		
 		
 		$s 	= array();
-		$s[] = ' jQuery(document).ready(function(){';
+		$s[] = ' ';
+		$s[] = 'jQuery(document).ready(function(){';
 		$s[] = '   jQuery( "#phPriceFilterRange" ).slider({';
 		$s[] = '      range: true,';
 		$s[] = '      min: '.$min.',';
@@ -1902,7 +1947,8 @@ final class PhocacartRenderJs
 		$s[] = '		jQuery( "#phPriceFilterRange" ).slider({values: [from,to]});';
 		$s[] = '	})';
 		
-		$s[] = ' });';
+		$s[] = '});';
+		$s[] = ' ';
 		
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		

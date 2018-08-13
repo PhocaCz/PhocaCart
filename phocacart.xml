@@ -2,12 +2,12 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>17/05/2018</creationDate>
+	<creationDate>10/08/2018</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.1.0</version>
+	<version>3.1.1</version>
 	<description>Phoca Cart</description>
 	<scriptfile>install/script.php</scriptfile>
 
@@ -86,6 +86,7 @@
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-wishlists.png" alt="COM_PHOCACART_WISH_LISTS" view="phocacartwishlists" link="option=com_phocacart&amp;view=phocacartwishlists">COM_PHOCACART_WISH_LISTS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-questions.png" alt="COM_PHOCACART_QUESTIONS" view="phocacartquestions" link="option=com_phocacart&amp;view=phocacartquestions">COM_PHOCACART_QUESTIONS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-statistics.png" alt="COM_PHOCACART_STATISTICS" view="phocacartstatistics" link="option=com_phocacart&amp;view=phocacartstatistics">COM_PHOCACART_STATISTICS</menu>
+			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-reports.png" alt="COM_PHOCACART_REPORTS" view="phocacartreports" link="option=com_phocacart&amp;view=phocacartreports">COM_PHOCACART_REPORTS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-hits.png" alt="COM_PHOCACART_HITS" view="phocacarthits" link="option=com_phocacart&amp;view=phocacarthits">COM_PHOCACART_HITS</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-import.png" alt="COM_PHOCACART_IMPORT" view="phocacartimports" link="option=com_phocacart&amp;view=phocacartimports">COM_PHOCACART_IMPORT</menu>
 			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-export.png" alt="COM_PHOCACART_EXPORT" view="phocacartexports" link="option=com_phocacart&amp;view=phocacartexports">COM_PHOCACART_EXPORT</menu>

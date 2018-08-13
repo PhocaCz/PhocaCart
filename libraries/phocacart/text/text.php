@@ -53,13 +53,19 @@ class PhocacartText {
 		$body = isset($replace['invoicedate'])				? str_replace('{invoicedate}', $replace['invoicedate'], $body)						: $body;
 		$body = isset($replace['totaltopay'])				? str_replace('{totaltopay}', $replace['totaltopay'], $body)						: $body;
 		
+		
 		$body = isset($replace['orderyear'])				? str_replace('{orderyear}', $replace['orderyear'], $body)							: $body;
 		$body = isset($replace['ordermonth'])				? str_replace('{ordermonth}', $replace['ordermonth'], $body)						: $body;
 		$body = isset($replace['orderday'])					? str_replace('{orderday}', $replace['orderday'], $body)							: $body;
 		
 		$body = isset($replace['ordernumbertxt'])			? str_replace('{ordernumbertxt}', $replace['ordernumbertxt'], $body)				: $body;
 	
-
+		
+		$body = isset($replace['bankaccountnumber'])		? str_replace('{bankaccountnumber}', $replace['bankaccountnumber'], $body)			: $body;
+		$body = isset($replace['iban'])						? str_replace('{iban}', $replace['iban'], $body)									: $body;
+		$body = isset($replace['bicswift'])					? str_replace('{bicswift}', $replace['bicswift'], $body)							: $body;
+		$body = isset($replace['totaltopaynoformat'])		? str_replace('{totaltopaynoformat}', $replace['totaltopaynoformat'], $body)		: $body;
+		$body = isset($replace['currencycode'])				? str_replace('{currencycode}', $replace['currencycode'], $body)		: $body;
 		return $body;
 	}
 	
@@ -95,6 +101,9 @@ class PhocacartText {
 	
 	public static function prepareReplaceText($order, $orderId, $common, $bas){
 		
+		
+		
+		$pC				= JComponentHelper::getParams( 'com_phocacart' );
 		$config 		= JFactory::getConfig();
 		$price			= new PhocacartPrice();
 		$price->setCurrency($common->currency_code, $orderId);
@@ -131,6 +140,7 @@ class PhocacartText {
 		$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
 		$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
 		$r['customercomment'] 		= $common->comment;
+		$r['currencycode'] 			= $common->currency_code;
 		$r['websitename']			= $config->get( 'sitename' );
 		$r['websiteurl']			= JURI::root();
 		
@@ -139,9 +149,13 @@ class PhocacartText {
 		$r['invoicenumber']			= PhocacartOrder::getInvoiceNumber($orderId, $common->date, $common->invoice_number);
 		$r['receiptnumber']			= PhocacartOrder::getReceiptNumber($orderId, $common->date, $common->receipt_number);
 		$r['paymentreferencenumber']= PhocacartOrder::getPaymentReferenceNumber($orderId, $common->date, $common->invoice_prn);
-		$r['invoiceduedate']		= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date);
-		$r['invoicedate']			= $common->invoice_date;
+		$r['invoiceduedate']		= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'Y-m-d');
+		//$r['invoiceduedateyear']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'Y');
+		//$r['invoiceduedatemonth']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'm');
+		//$r['invoiceduedateday']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'd');
+		$r['invoicedate']			= PhocacartOrder::getInvoiceDate($orderId, $common->invoice_date, 'Y-m-d');
 		$totalToPay					= isset($totalBrutto[0]->amount) ? $totalBrutto[0]->amount : 0;
+		$r['totaltopaynoformat']	= number_format($totalToPay, 2, '.', '');
 		$r['totaltopay']			= $price->getPriceFormat($totalToPay, 0, 1);
 		$dateO 						= PhocacartDate::splitDate($common->date);
 		$r['orderyear']				= $dateO['year'];
@@ -150,6 +164,11 @@ class PhocacartText {
 		$r['ordernumbertxt']		= JText::_('COM_PHOCACART_ORDER_NR');
 		
 		
+		$r['bankaccountnumber']		= $pC->get( 'bank_account_number', '' );
+		$r['iban']					= $pC->get( 'iban', '' );
+		$r['bicswift']				= $pC->get( 'bic_swift', '' );
+		
+	
 		return $r;
 		
 	}

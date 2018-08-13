@@ -56,6 +56,9 @@ if ( isset($this->t['question_description']) && $this->t['question_description']
 	echo '<div class="ph-desc">'. $this->t['question_description']. '</div>';
 }
 ?>
+
+
+
 <div>&nbsp;</div>
 <div class="row">
 <div class="col-xs-12 col-sm-6 col-md-6">
@@ -126,3 +129,8 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 </div>
 </div>
 </div>
+<?php /*
+<script type='text/javascript'>
+setTimeout(function () { window.close();}, 1000);
+</script>
+*/ ?>

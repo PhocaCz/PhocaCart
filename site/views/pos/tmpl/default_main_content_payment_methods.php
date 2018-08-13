@@ -26,7 +26,7 @@ if (!empty($this->t['paymentmethods'])) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItemsPayment($v->cost, $v->calculation_type, $this->t['total'][0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
+		$priceI = $price->getPriceItemsPayment($v->cost, $v->cost_additional, $v->calculation_type, $this->t['total'][0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
 		
 		
 		echo '<div class="row-item col-sm-5 col-md-5 ">';

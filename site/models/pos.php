@@ -251,8 +251,11 @@ class PhocaCartModelPos extends JModelLegacy
 		$wheres[] = ' c.published = 1';
 		$wheres[] = ' c.type IN (0,2)';// default categories or pos categories only
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' a.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+
+			
+			$lang 		= JFactory::getLanguage()->getTag();
+			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
+			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 		$itemOrdering = $this->getItemOrdering();
 		
@@ -657,7 +660,9 @@ class PhocaCartModelPos extends JModelLegacy
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$lang 		= JFactory::getLanguage()->getTag();
+			
+			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 		
 		if ($subcategories) {

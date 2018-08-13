@@ -23,8 +23,10 @@ class PhocacartPdf
 		
 		$pattern = "=^<".$tag.">(.*)</".$tag.">$=i";
 		preg_match($pattern, $text, $matches);
-		return $matches[1];
-		
+		if (isset($matches[1])) {
+			return $matches[1];
+		}
+		return $text;
 	}
 }
 ?>

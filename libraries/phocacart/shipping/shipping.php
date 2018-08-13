@@ -54,7 +54,7 @@ class PhocacartShipping
 			
 		}
 		
-		$columns		= 's.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
+		$columns		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access,'
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
@@ -63,7 +63,7 @@ class PhocacartShipping
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
-		$groupsFull		= 's.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image, s.access,'
+		$groupsFull		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access,'
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
@@ -296,7 +296,7 @@ class PhocacartShipping
 		
 		$db = JFactory::getDBO();
 		
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.calculation_type, s.title, s.description, s.image,'
+		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'

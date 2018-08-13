@@ -243,7 +243,7 @@ class PhocacartSpecification
 	
 	}
 	
-	public static function getAllSpecificationsAndValues($ordering = 1, $onlyAvailableProducts = 0) {
+	public static function getAllSpecificationsAndValues($ordering = 1, $onlyAvailableProducts = 0, $lang = '') {
 			
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 6);
@@ -260,10 +260,21 @@ class PhocacartSpecification
 		$lefts[] 	= ' #__phocacart_specification_groups AS sg ON s.group_id = sg.id';
 		
 		if ($onlyAvailableProducts == 1) {
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
+			}
+			
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
+		} else {
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
+				$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+			}
 		}
 		
 		$query = 'SELECT '.$columns

@@ -49,7 +49,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		
 		// Security
 		$namespace  = 'phccrt' . $this->p->get('session_suffix');
-		$session->set('form_id', PhocacartUtils::getRandomString(mt_rand(6,10)), 'phocacart');
+		$session->set('form_id', PhocacartUtils::getRandomString(mt_rand(6,10)), $namespace);
 
 		if((int)$this->p->get('enable_time_check_question', 0) > 0) {
 			$sesstime = $session->get('time', time(), $namespace);

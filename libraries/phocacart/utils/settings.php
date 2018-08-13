@@ -278,5 +278,33 @@ class PhocacartUtilsSettings
 		return $type;
 	}
 	
+	public static function getShopTypes() {
+		
+		return array(
+			0 => JText::_('COM_PHOCACART_ALL'),
+			1 => JText::_('COM_PHOCACART_ONLINE_SHOP'),
+			2 => JText::_('COM_PHOCACART_POS')
+		);
+	}
+	
+	public static function getLangQuery($column, $lang) {
+		
+		$db 				= JFactory::getDbo();
+		// Possible settings
+		//$pC					= JComponentHelper::getParams( 'com_phocacart' );
+		//$filter_lang_type	= $pC->get( 'filter_lang_type', 2 );
+		//$type1 				= ' ' . $db->quoteName($column) . ' = '.$db->quote($lang);
+		$type2 				= ' ' . $db->quoteName($column) . ' IN ('.$db->quote($lang).','.$db->quote('*').')';
+		
+		/*if ($filter_lang_type == 1) {
+			return $type1;
+		} else {
+			return $type2;
+		}*/
+		
+		return $type2;
+	}
+	
+	
 }
 ?>

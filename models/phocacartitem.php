@@ -547,10 +547,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$dataCat2		= array_merge($dataCat, $currentDataCat);
 			// 2) Remove duplicates
 			$dataCat2		= array_unique($dataCat2);
-			// 3) Remove the source category - we copy product from source category and the product is included in source category
+			
+		
+		
+		/*	
+		 * 	Yes when copying - we duplicate the item intentionally
+		 * 	// 3) Remove the source category - we copy product from source category and the product is included in source category
 			//    so don't copy it again to not get duplicates in the same category
 			$currentCatidA 	= array(0 => (int)$currentCatid);
-			$dataCat2 		= array_diff($dataCat2, $currentCatidA);
+			$dataCat2 		= array_diff($dataCat2, $currentCatidA);*/
 	
 			PhocacartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
 			
@@ -569,7 +574,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	 * @param   integer  $value  The new category ID.
 	 * @param   array    $pks    An array of row IDs.
 	 *
-	 * @return  booelan  True if successful, false otherwise and internal error is set.
+	 * @return  bool  True if successful, false otherwise and internal error is set.
 	 *
 	 * @since	11.1
 	 */

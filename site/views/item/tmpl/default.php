@@ -192,6 +192,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	// Set stock: product, variations, or advanced stock status
 	$class_btn	= '';
 	$class_icon	= '';
+	
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
 		$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
 	

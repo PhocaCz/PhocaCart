@@ -12,6 +12,23 @@ defined('_JEXEC') or die();
 
 class PhocacartTax
 {
+	
+	public static function getAllTaxes() {
+	
+		
+		
+			$db = JFactory::getDBO();
+			$q = 'SELECT t.id, t.title, t.tax_rate'
+			. ' FROM #__phocacart_taxes as t'
+			//. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
+			//. ' WHERE tc.country_id = '.(int)$id
+			. ' ORDER BY t.ordering ASC';
+			$db->setQuery($q) ;
+			$items = $db->loadAssocList('id');
+			
+			return $items;
+		
+	}
 	// All taxes by country
 	public static function getTaxesByCountry($countryId) {
 	

@@ -103,8 +103,8 @@ class PhocacartRenderMedia
 			$js = '   jQuery("input[name=\''.$name.'\']:visible").TouchSpin({';
 			$js .= '   verticalbuttons: true,';
 			if ($this->p['quantity_input_spinner'] == 2) {
-				$js .= '   verticalup: \'<span class="glyphicon glyphicon-chevron-up">x</span>\',';
-				$js .= '   verticaldown: \'<span class="glyphicon glyphicon-chevron-down">x</span>\',';
+				$js .= '   verticalup: \'<span class="glyphicon glyphicon-chevron-up"></span>\',';
+				$js .= '   verticaldown: \'<span class="glyphicon glyphicon-chevron-down"></span>\',';
 			} else {
 				$js .= '   verticalup: \'<span class="glyphicon glyphicon-plus"></span>\',';
 				$js .= '   verticaldown: \'<span class="glyphicon glyphicon-minus"></span>\',';

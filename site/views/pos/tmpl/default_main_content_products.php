@@ -183,11 +183,12 @@ if (!empty($this->items)) {
 		$dAb['typeview']				= 'Pos';
 		$dAb['price']					= $price;
 		
-		// Attribute is required and we don't display it in category/items view, se we need to redirect to detail view
+		// Attribute is required and we don't display it in category/items view, so we need to redirect to detail view
+		// NOT IN POS
 		$dA['selectoptions']	= 0;
-		if (isset($v->attribute_required) && $v->attribute_required == 1 && $this->t['pos_hide_attributes'] == 1) {
+		/*if (isset($v->attribute_required) && $v->attribute_required == 1 && $this->t['pos_hide_attributes'] == 1) {
 			$dA['selectoptions']	= 1;
-		}
+		}*/
 			
 		
 		

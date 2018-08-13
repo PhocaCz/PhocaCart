@@ -1223,7 +1223,7 @@ class PhocacartProduct
 	}
 	
 	
-	public static function getProductPrice($type = 1, $onlyAvailableProducts = 0) {
+	public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '') {
 		
 		switch($type) {
 			
@@ -1244,6 +1244,10 @@ class PhocacartProduct
 		$lefts		= array();
 		
 		$wheres[]	= ' p.published = 1';
+		
+		if ($lang != '' && $lang != '*') {
+			$wheres[] 	= " p.language = ".$db->quote($lang);
+		}
 		
 		if ($onlyAvailableProducts == 1) {
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
@@ -1267,6 +1271,7 @@ class PhocacartProduct
 			
 		$db->setQuery( $q );
 		$price = $db->loadResult();
+		
 		
 		return $price;
 	}
@@ -1313,8 +1318,9 @@ class PhocacartProduct
 		$lefts[] = ' #__phocacart_item_groups AS ga ON p.id = ga.item_id AND ga.type = 3';// type 3 is product
 		$lefts[] = ' #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
 		
-		$rules['wheres'] = $wheres;
-		$rules['lefts']	= $lefts;
+		$rules				= array();
+		$rules['wheres'] 	= $wheres;
+		$rules['lefts']		= $lefts;
 		return $rules;
 		
 	}

@@ -68,7 +68,7 @@ echo '<input type="hidden" name="option" value="com_phocacart" />';
 //echo '<table class="ph-edit-status-box">';
 echo '<div class="row-fluid">';
 echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_COMMENT').'</div>';
-echo '<div class="span3 col-sm-3 col-md-3"><textarea name="jform[comment]"></textarea></div>';
+echo '<div class="span3 col-sm-3 col-md-3"><textarea name="jform[comment_history]"></textarea></div>';
 echo '<div class="span6 col-sm-6 col-md-6"></div>';
 echo '</div>';
 

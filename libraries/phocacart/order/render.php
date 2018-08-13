@@ -103,6 +103,7 @@ class PhocacartOrderRender
 		if ($type == 2 && $format == 'pdf') {
 			$r				= PhocacartText::prepareReplaceText($order, $id, $d['common'], $d['bas']);
 			$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $r, 1);
+			
 		
 		}
 		//if ($type == 4 && $format == 'raw') {

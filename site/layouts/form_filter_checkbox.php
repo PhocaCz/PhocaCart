@@ -10,8 +10,13 @@ defined('_JEXEC') or die();
 $d 				= $displayData;
 $displayData 	= null;
 $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
-?>
-<div class="panel panel-default">
+
+
+// to hide as default
+// class="glyphicon glyphicon-triangle-bottom" ==> class="glyphicon glyphicon-triangle-right"
+// class="panel-collapse collapse in" ==> class="panel-collapse collapse"
+
+?><div class="panel panel-default">
 	<div class="panel-heading" role="tab" id="heading<?php echo $dParamAttr; ?>">
 		<h4 class="panel-title">
 			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="glyphicon glyphicon-triangle-bottom"></span></a> 

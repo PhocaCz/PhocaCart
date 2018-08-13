@@ -263,7 +263,7 @@ class PhocacartPosPrint
 					
 					if (strpos($v, '<div') === 0) {
 						
-						$doc->loadHTML($v);
+						$doc->loadHTML($this->cleanOutput($v));
 						$xpath = new DOMXPath($doc);
 						$class = $xpath->evaluate("string(//div/@class)");
 						
@@ -324,7 +324,7 @@ class PhocacartPosPrint
 						}
 					} else if (strpos($v, '<img') === 0) {
 						
-						$doc->loadHTML($v);
+						$doc->loadHTML($this->cleanOutput($v));
 						$xpath = new DOMXPath($doc);
 						$src = $xpath->evaluate("string(//img/@data-src)");
 						$srcAbs = JPATH_ROOT . '/' . $src;
@@ -400,6 +400,12 @@ class PhocacartPosPrint
 		//$printer -> pulse();
 	///$printer -> close();
 		
+	}
+	
+	public function cleanOutput($text) {
+		
+		$text = str_replace('&', '&amp;', $text);
+		return $text;
 	}
 }
 ?>

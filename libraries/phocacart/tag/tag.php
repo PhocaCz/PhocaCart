@@ -38,7 +38,7 @@ class PhocacartTag
 		return $tags;
 	}
 	
-	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0) {
+	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $lang = '') {
 	
 	/*	$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
@@ -63,12 +63,27 @@ class PhocacartTag
 		
 		$wheres[]	= ' t.published = 1';
 		
+		
+		
 		if ($onlyAvailableProducts == 1) {
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
+			}
+			
 			$lefts[] = ' #__phocacart_tags_related AS tr ON tr.tag_id = t.id';
 			$lefts[] = ' #__phocacart_products AS p ON tr.item_id = p.id';
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
+			
+		} else {
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
+				$lefts[] 	= ' #__phocacart_tags_related AS tr ON tr.tag_id = t.id';
+				$lefts[] 	= ' #__phocacart_products AS p ON tr.item_id = p.id';
+			}
 		}
 		
 		$q = ' SELECT DISTINCT '.$columns

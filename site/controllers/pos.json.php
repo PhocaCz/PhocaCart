@@ -639,6 +639,25 @@ class PhocaCartControllerPos extends JControllerForm
 		
 		$app				= JFactory::getApplication();
 		$item				= array();
+		
+		$item									= array();
+		$item['amount_tendered']				= $this->input->get( 'phAmountTendered', '', 'string'  );
+		$item['amount_pay']						= $this->input->get( 'phTotalAmount', '', 'string'  );
+		//$item['amount_change']					= $this->input->get( 'phAmountChange', '', 'string'  );
+		
+		
+		if ($item['amount_pay'] > 0 && $item['amount_tendered'] > 0) {
+			$item['amount_change'] = $item['amount_tendered'] - $item['amount_pay'];
+		} else if ($item['amount_pay'] > 0) {
+			
+			$item['amount_tendered']= 0;
+			$item['amount_change']	= 0;
+		} else {
+			$item['amount_tendered']= 0;
+			$item['amount_pay']		= 0;
+			$item['amount_change']	= 0;
+		}
+		
 		$params 			= $app->getParams();
 		$pos_server_print	= $params->get( 'pos_server_print', 0 );
 		
@@ -670,7 +689,7 @@ class PhocaCartControllerPos extends JControllerForm
 	
 		$order = new PhocacartOrder();
 		$order->setType(array(0,2));
-		$orderMade = $order->saveOrderMain('');
+		$orderMade = $order->saveOrderMain($item);
 		
 		
 		if(!$orderMade) {

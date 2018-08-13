@@ -29,6 +29,7 @@ class PhocacartFilter
 	public $ordering_specification		= 1;
 	
 	public $manufacturer_title			= '';
+	public $filter_language				= 0;
 	
 	
 	public function __construct() {}
@@ -45,9 +46,16 @@ class PhocacartFilter
 		$layout5 	= new JLayoutFile('form_filter_image', null, array('component' => 'com_phocacart'));
 		
 		
+		$language = '';
+		if ($this->filter_language == 1) {
+			$lang 		= JFactory::getLanguage();
+			$language	= $lang->getTag();
+		}
+		
 		$pathProductImage = PhocacartPath::getPath('productimage');
 		
 		// =FILTER=
+		$data				= array();
 		$data['getparams']	= array();
 		
 		//-CATEGORY- ACTIVE CATEGORY
@@ -81,7 +89,7 @@ class PhocacartFilter
 		$data['uniquevalue']= 0;
 		
 		if ((int)$this->category == 2) {
-			$data['items'] 	= PhocacartCategory::getCategoryTreeArray();
+			$data['items'] 	= PhocacartCategory::getCategoryTreeArray(1, '', '', array(0,1), $language);
 			$data['output']	= PhocacartCategory::nestedToCheckBox($data['items'], $data);
 			
 			if (!empty($data['items'])) {
@@ -118,7 +126,7 @@ class PhocacartFilter
 		
 		if ($this->tag) {
 			/*phocacart import('phocacart.tag.tag');*/
-			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag, 1);
+			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag, 1, $language);
 		}
 		
 		if (!empty($data['items'])) {
@@ -135,7 +143,7 @@ class PhocacartFilter
 		
 		if ($this->manufacturer) {
 			/*phocacart import('phocacart.manufacturer.manufacturer');*/
-			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer, 1);
+			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer, 1, $language);
 		}
 		
 		if (!empty($data['items'])) {
@@ -145,7 +153,7 @@ class PhocacartFilter
 		// -ATTRIBUTES- AVAILABLE PRODUCTS ONLY - Yes
 		if ($this->attributes) {
 			/*phocacart import('phocacart.attribute.attribute');*/
-			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, 1);
+			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, 1, $language);
 			
 			if (!empty($attributes)) {
 				foreach($attributes as $k => $v) {
@@ -182,7 +190,7 @@ class PhocacartFilter
 		// -SPECIFICATIONS- AVAILABLE PRODUCTS ONLY - Yes
 		if ($this->specifications) {
 			/*phocacart import('phocacart.specification.specification');*/
-			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, 1);
+			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, 1, $language);
 			if (!empty($specifications)) {
 				foreach($specifications as $k => $v) {
 					$data				= array();

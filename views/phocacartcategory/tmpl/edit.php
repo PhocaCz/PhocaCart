@@ -30,7 +30,7 @@ function phCheckRequestStatus(i, task) {
 			phCheckRequestStatus(i, task);
 		}, 1000);
 	} else {
-		if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.id('adminForm'))) {
+		if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
 			<?php echo $this->form->getField('description')->save(); ?>
 			Joomla.submitform(task, document.getElementById('adminForm'));
 		} else {

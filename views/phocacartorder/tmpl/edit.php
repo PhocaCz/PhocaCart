@@ -18,7 +18,7 @@ $r 			=  new $class();
 ?>
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
 	else {
@@ -213,6 +213,7 @@ if (!empty($this->itemproducts)) {
 
 
 $warningCurrency = 0;
+
 if (!empty($this->itemtotal)) {
 echo '<tr><td class="ph-order-products-hr" colspan="7">&nbsp;</td></tr>';
 echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
@@ -249,7 +250,7 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 			echo '<td></td>';
 			echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title . ' ('.JText::_('COM_PHOCACART_CURRENCY').')', 'tform', 2). '</td>';
 			echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
-			echo '<td>'.$r->itemCalc($v->id, 'amount', PhocacartPrice::cleanPrice($v->amount_currency), 'tform').'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'amount_currency', PhocacartPrice::cleanPrice($v->amount_currency), 'tform').'</td>';
 			echo '<td align="center"></td>';
 			echo '<td class="ph-col-add-cur"></td>';
 			echo '</tr>';
@@ -262,7 +263,7 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 			echo '<td></td>';
 			echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title . ' ('.JText::_('COM_PHOCACART_CURRENCY').')', 'tform', 2). '</td>';
 			echo '<td class="ph-col-add-suffix">'.$typeTxt.'</td>';
-			echo '<td>'.$r->itemCalc($v->id, 'amount', PhocacartPrice::cleanPrice($v->amount_currency), 'tform').'</td>';
+			echo '<td>'.$r->itemCalc($v->id, 'amount_currency', PhocacartPrice::cleanPrice($v->amount_currency), 'tform').'</td>';
 			echo '<td align="center"></td>';
 			echo '<td class="ph-col-add-cur"></td>';
 			echo '</tr>';

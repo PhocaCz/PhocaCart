@@ -40,7 +40,8 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		if (empty($data)) {
 			$data = $this->getItem();
 			$price = new PhocacartPrice();
-			$data->cost = $price->cleanPrice($data->cost);
+			$data->cost 			= $price->cleanPrice($data->cost);
+			$data->cost_additional 	= $price->cleanPrice($data->cost_additional);
 		}
 		return $data;
 	}
@@ -54,6 +55,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 		
 		$table->cost 			= PhocacartUtils::replaceCommaWithPoint($table->cost);
+		$table->cost_additional	= PhocacartUtils::replaceCommaWithPoint($table->cost_additional);
 		$table->lowest_amount 	= PhocacartUtils::replaceCommaWithPoint($table->lowest_amount);
 		$table->highest_amount 	= PhocacartUtils::replaceCommaWithPoint($table->highest_amount);
 

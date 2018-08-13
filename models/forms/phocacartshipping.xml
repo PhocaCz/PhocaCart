@@ -22,6 +22,8 @@
 
 <field name="cost" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COST_LABEL" description="COM_PHOCACART_FIELD_COST_DESC" />
 
+<field name="cost_additional" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ADDITIONAL_COSTS_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_COSTS_SHIPPING_METHOD_DESC" />
+
 <field name="tax_id" type="phocatax" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
 
 <field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="0">

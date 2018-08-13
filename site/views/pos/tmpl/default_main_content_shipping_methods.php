@@ -26,7 +26,7 @@ if (!empty($this->t['shippingmethods'])) {
 			$checked = 'checked="checked"';
 		}
 		
-		$priceI = $price->getPriceItemsShipping($v->cost, $v->calculation_type, $this->t['total'][0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
+		$priceI = $price->getPriceItemsShipping($v->cost, $v->cost_additional, $v->calculation_type, $this->t['total'][0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, '');
 		
 		echo '<div class="row-item col-sm-5 col-md-5 ">';
 		if ($v->image != '') {

@@ -26,10 +26,13 @@ if (!empty($this->items)) {
 	echo '</div>';
 	
 	foreach ($this->items as $v) {
+		
+		$orderNumber = isset($v->order_number) && $v->order_number != '' ? $v->order_number : false;
+		
 		echo '<div class="row ph-pos-customer-row">';
 		
 		echo '<div class="row-item col-sx-12 col-sm-2 col-md-2">';
-		echo '<div class="ph-pos-customer-name">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $v->order_number).'</div>';
+		echo '<div class="ph-pos-customer-name">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $orderNumber).'</div>';
 		echo '</div>';
 		
 		echo '<div class="row-item col-sx-12 col-sm-1 col-md-1">';

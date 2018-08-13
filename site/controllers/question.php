@@ -54,11 +54,11 @@ class PhocaCartControllerQuestion extends JControllerForm
 		
 		// *** SECURITY
 		// Default session test always enabled!
-		$valid = $session->get('form_id', NULL, 'phocacart');
-		$session->clear('form_id', 'phocacart');
+		$valid = $session->get('form_id', NULL, $namespace);
+		$session->clear('form_id', $namespace);
 		if (!$valid){
 			$app->setUserState('com_phocacart.question.data', '');
-			$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+			$session->clear('time', $namespace);
 			
 			PhocacartLog::add(1, 'Ask a Question - Not valid session', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
 			//jexit(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'));
@@ -81,7 +81,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 		
 			if ($params->get('hidden_field_id') == 'fieldnotvalid') {
 				$app->setUserState('com_phocacart.question.data', '');
-				$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+				$session->clear('time', $namespace);
 				
 				PhocacartLog::add(1, 'Ask a Question - Hidden Field Error', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
 				throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
@@ -91,7 +91,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 			// Hidden field was filled
 			if (isset($data[$hiddenField]) && $data[$hiddenField] != '') {
 				$app->setUserState('com_phocacart.question.data', '');
-				$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+				$session->clear('time', $namespace);
 				
 				PhocacartLog::add(1, 'Ask a Question - Hidden Field Filled', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
 				throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
@@ -122,7 +122,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 		}
 		if (($this->input->get('view') != 'question') || ($this->input->get('option') != 'com_phocacart') || ($task != 'submit')) {
 			$app->setUserState('com_phocacart.question.data', '');
-			$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+			$session->clear('time', $namespace);
 			
 			PhocacartLog::add(1, 'Ask a Question - No Phoca Cart part', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
 			throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
@@ -132,7 +132,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 		// *** SECURITY
 		// Check Time
 	    if((int)$params->get('enable_time_check_question', 0) > 0) {
-            $time = $session->get('time', null, 'phccrt'.$params->get('session_suffix'));
+            $time = $session->get('time', null, $namespace);
             $delta = time() - $time;
 			
 			if($params->get('enable_time_check_question', 0) && $delta <= (int)$params->get('enable_time_check_question', 0)) {
@@ -160,7 +160,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 				//$app->redirect(JRoute::_($uri));
 				
 				$app->setUserState('com_phocacart.question.data', '');
-				$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+				$session->clear('time', $namespace);
 				
 				PhocacartLog::add(1, 'Ask a Question - IP Ban', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
 				throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
@@ -173,7 +173,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 		$form = $model->getForm();
 		if (!$form) {
 			$app->setUserState('com_phocacart.question.data', '');
-			$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+			$session->clear('time', $namespace);
 			
 			PhocacartLog::add(1, 'Ask a Question - Model not loaded', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername.', Message: '.$model->getError());
 			throw new Exception($model->getError(), 500);
@@ -205,7 +205,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 				
 			/*	if (($errors[$i] instanceof \Exception) && ($errors[$i]->getCode() == E_ERROR)) {
 					$app->setUserState('com_phocacart.question.data', '');
-					$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+					$session->clear('time', $namespace);
 					
 					PhocacartLog::add(1, 'Ask a Question - Validate errors', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
 					
@@ -304,7 +304,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 			$msg = JText::_( 'COM_PHOCACART_THANK_YOU_FOR_LEAVING_INFORMATION_ASKING_QUESTION' );
 		} else {
 			$app->setUserState('com_phocacart.question.data', '');
-			$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+			$session->clear('time', $namespace);
 			
 			PhocacartLog::add(1, 'Ask a Question - Model store error', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername.', Message: '.$model->getError());
 			
@@ -316,7 +316,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 	
 		// Flush the data from the session
 		$app->setUserState('com_phocacart.question.data', '');
-		//$session->clear('time', 'phccrt'.$params->get('session_suffix'));
+		//$session->clear('time', $namespace);
 		$app->setUserState('com_phocacart.question.data', 'success_post_saved');
 		$app->enqueueMessage($msg, 'success');
 		$this->setRedirect($uri->toString());

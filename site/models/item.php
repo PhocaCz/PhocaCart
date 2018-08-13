@@ -91,8 +91,9 @@ class PhocaCartModelItem extends JModelLegacy
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' a.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$lang 		= JFactory::getLanguage()->getTag();
+			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
+			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 		
 		if ($p['hide_products_out_of_stock'] == 1) {
@@ -206,8 +207,9 @@ class PhocaCartModelItem extends JModelLegacy
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
 		
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$lang 		= JFactory::getLanguage()->getTag();
+			//$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
+			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 		
 		if ((int)$catId > 0) {

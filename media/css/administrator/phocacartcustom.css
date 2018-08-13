@@ -37,6 +37,14 @@
 	text-shadow: none !important;
 }
 
+.btn-toolbar .btn.btn-danger {
+	color: #fff !important;
+	background-color: #F76397 !important;
+	
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
 .btn {
 	border: 1px solid #DEDEDE !important;
 	background: #fff !important;

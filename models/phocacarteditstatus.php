@@ -107,7 +107,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		
 		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements'], $data['change_user_group'], $data['change_points_needed'], $data['change_points_received']); 
 		
-		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment']);
+		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment_history']);
 		
 		
 		return $row->id;

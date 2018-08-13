@@ -13,6 +13,7 @@ jimport('joomla.application.component.model');
 
 final class PhocacartCategory
 {
+	
 	private static $categoryA = array();
 	private static $categoryF = array();
 	private static $categoryP = array();
@@ -224,13 +225,16 @@ final class PhocacartCategory
 			$m[$e[$pk]][] = array_merge($e, array($c => &$m[$e[$k]]));
 		}
 		//return $m[$r][0]; // remove [0] if there could be more than one root nodes
-		return $m[$r];
+		if (isset($m[$r])) {
+			return $m[$r];
+		} 
+		return 0;
 	}
 
 	public static function nestedToUl($data, $currentCatid = 0) {
 		$result = array();
 
-		if (sizeof($data) > 0) {
+		if (!empty($data) && count($data) > 0) {
 			$result[] = '<ul>';
 			foreach ($data as $k => $v) {
 				$link 		= JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
@@ -258,8 +262,7 @@ final class PhocacartCategory
 	
 	public static function nestedToCheckBox($data, $d, $currentCatid = 0) {
 		$result = array();
-
-		if (sizeof($data) > 0) {
+		if (!empty($data) && count($data) > 0) {
 			$result[] = '<ul class="ph-filter-module-category-tree">';
 			foreach ($data as $k => $v) {
 				
@@ -284,9 +287,9 @@ final class PhocacartCategory
 		return implode($result);
 	}
 	
-	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1)) {
+	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {
 		
-		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide);
+		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide. 'l'. $lang);
 		if( empty(self::$categoryF[$cis])) {
 			/* phocacart import('phocacart.ordering.ordering');*/
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
@@ -298,6 +301,10 @@ final class PhocacartCategory
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
+			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
+			}
 			
 			if (!empty($type) && is_array($type)) {
 				$wheres[] = " c.type IN (".implode(',', $type).")";
@@ -332,9 +339,9 @@ final class PhocacartCategory
 		return self::$categoryF[$cis];
 	}
 	
-	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1)) {
+	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {
 		
-		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide);
+		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide . 'l'. $lang);
 		if( empty(self::$categoryA[$cis])) {
 			/*phocacart import('phocacart.ordering.ordering');*/
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
@@ -347,6 +354,9 @@ final class PhocacartCategory
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
 			
+			if ($lang != '' && $lang != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
+			}
 			
 			if (!empty($type) && is_array($type)) {
 				$wheres[] = " c.type IN (".implode(',', $type).")";

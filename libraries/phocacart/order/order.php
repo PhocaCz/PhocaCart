@@ -1,4 +1,6 @@
 <?php
+use Joomla\CMS\Form\Field\OrderingField;
+
 /**
  * @package   Phoca Cart
  * @author    Jan Pavelka - https://www.phoca.cz
@@ -79,7 +81,7 @@ class PhocacartOrder
 		
 		$total		= $cart->getTotal();
 		
-		
+	
 		// --------------------
 		// TERMS AND CONDITIONS, PRIVACY
 		// --------------------
@@ -88,7 +90,9 @@ class PhocacartOrder
 		// --------------------
 		// CHECK GUEST USER
 		// --------------------
-		if ((!isset($user->id) || (isset($user->id) && $user->id < 1)) && $guest == false) {
+		
+		if ((!isset($user->id) || (isset($user->id) && $user->id < 1)) && $guest == false && !PhocacartPos::isPos()) {
+			
 			$msg =JText::_('COM_PHOCACART_GUEST_CHECKOUT_DISABLED') . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -187,7 +191,7 @@ class PhocacartOrder
 		
 		
 		// SET STATUS
-		$statusId = 1;// Ordered (Pending)
+		$statusId = $pC->get( 'default_order_status', 1 );// Ordered (Pending) as default
 		$dispatcher = JEventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
 		if ($plugin) {
@@ -198,8 +202,17 @@ class PhocacartOrder
 			$d['status_id']				= $statusId;// no plugin or no event found
 		}
 		
-		
+	
 		$d['type'] 					= PhocacartType::getTypeByTypeArray($this->type);
+		
+		// Data order
+		$d['comment'] 				= isset($data['phcomment']) ? $data['phcomment'] : '';
+		$d['privacy']				= isset($data['privacy']) ? (int)$data['privacy'] : '';
+		
+		// Data POS
+		$d['amount_pay'] 			= isset($data['amount_pay']) ? $data['amount_pay'] : 0;
+		$d['amount_tendered'] 		= isset($data['amount_tendered']) ? $data['amount_tendered'] : 0;
+		$d['amount_change'] 		= isset($data['amount_change']) ? $data['amount_change'] : 0;
 		
 		$d['published']				= 1;
 		$d['shipping_id']			= (int)$shippingId;
@@ -208,8 +221,6 @@ class PhocacartOrder
 		$d['currency_id']			= (int)$currency->id;
 		$d['currency_code']			= $currency->code;
 		$d['currency_exchange_rate']= $currency->exchange_rate;	
-		$d['comment'] 				= $data['comment'];
-		$d['privacy']				= (int)$data['privacy'];
 		$d['ip']					= (!empty($_SERVER['REMOTE_ADDR'])) ? (string) $_SERVER['REMOTE_ADDR'] : '';
 		$user_agent 				= (!empty($_SERVER['HTTP_USER_AGENT'])) ? (string) $_SERVER['HTTP_USER_AGENT'] : '';
 		$d['user_agent']			= substr($user_agent, 0, 200);
@@ -601,7 +612,7 @@ class PhocacartOrder
 							$d2['amount']	= $v['tax'];
 							$d2['ordering']	= $ordering;
 							$d2['published']= 1;
-							$d2['item_id']	= 0;
+							$d2['item_id']	= (int)$k;// ID (Type) of VAT (10% or 20%)
 							$this->saveOrderTotal($d2);
 							$ordering++;
 						}
@@ -1469,7 +1480,7 @@ class PhocacartOrder
 		
 	/*	$order_date 			= $orderDate != ''				? $orderDate : self::getOrderDate($orderId);
 		$invoice_prefix			= $invoicePrefix != '' 			? $invoicePrefix : $paramsC->get('invoice_prefix', '');
-		$invoice_number_format	= $invoiceNumberFormat != ''	? $invoiceNumberFormat : $paramsC->get( 'invoice_number_format', '{prefix}{orderdate}{orderid}');
+		$invoice_number_format	= $invoiceNumberFormat != ''	? $invoiceNumberFormat : $paramsC->get( 'invoice_number_format', '');
 		$invoice_number_chars	= $invoiceNumberChars != '' 	? $invoiceNumberChars : $paramsC->get( 'invoice_number_chars', 12);
 		
 		
@@ -1565,7 +1576,7 @@ class PhocacartOrder
 		return $o;
 	}
 	
-	public static function getInvoiceDueDate($id, $date = false, $dueDate = false, $formatOutput = '') {
+	public static function getInvoiceDueDate($orderId, $date = false, $dueDate = false, $formatOutput = '') {
 		
 		if ($dueDate) {
 			if ($formatOutput != '') {
@@ -1589,6 +1600,49 @@ class PhocacartOrder
 		} else {
 			return $dateTime->format('Y-m-d h:m:s');
 		}
-	}	
+	}
+	
+	public static function getInvoiceDate($orderId, $date = false, $formatOutput = '') {
+		
+		$date 	= !$date ? self::getOrderDate($orderId) : $date;
+		
+		$dateTime = new DateTime($date);
+		
+		if ($formatOutput != '') {
+			return JHtml::date($dateTime->format('Y-m-d h:m:s'), $formatOutput);
+		} else {
+			return $dateTime->format('Y-m-d h:m:s');
+		}
+	}
+	
+	/**
+	 * 
+	 * @param string $oIdS - order IDs separated by comma
+	 * @return array
+	 * 
+	 * Get all total items by selected order Ids
+	 * e.g. Order 1 -> total 1 (netto), total 2 (vat), total 3(brutton), etc.
+	 */
+	
+	public static function getItemsTotal($oIdS = '') {
+		
+		$db 	= JFactory::getDBO();
+		$wheres	= array();
+		if ($oIdS != '') {
+			$wheres[] = 'a.order_id IN ('.$oIdS.')';
+		}
+		
+		$query 	= 'SELECT a.id, a.order_id, a.item_id, a.title, a.type, a.amount, a.amount_currency'
+				. ' FROM #__phocacart_order_total AS a';
+		if (!empty($wheres)) {
+			$query 	.= ' WHERE ' . implode( ' AND ', $wheres );
+		}
+		$db->setQuery($query);
+		
+		
+		$items 	= $db->loadAssocList();
+		return $items;
+		
+	}
 	
 }

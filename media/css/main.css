@@ -1593,7 +1593,8 @@ h3.gridlist {
 	/*height: 100%;*/
 	
 	display: flex;
-	flex: 1 1 100%;
+	/*flex: 1 1 100%;*/
+	flex: 1 1 auto;
 	flex-direction: column;
 }
 
@@ -1610,6 +1611,8 @@ h3.gridlist {
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemCartBoxForm,
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemQuickViewBoxForm{
 }
+
+
 
 .ph-item-action{
    display: flex;
