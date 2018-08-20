@@ -96,6 +96,7 @@ if (!empty($this->items)) {
 			// Move product discount prices to new variable (product price -> product discount -> product discount cart)
 			$dP['priceitemsdiscountcart']	= $dP['priceitemsdiscount'];
 			$dP['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($v->id, $v->catid, $dP['priceitemsdiscountcart']);
+			$dP['zero_price']		= 1;// Apply zero price if possible
 		}
 		
 
@@ -199,7 +200,7 @@ if (!empty($this->items)) {
 		// ======
 		echo '<div class="row-item col-sx-12 col-sm-'.$col.' col-md-'.$col.'">';
 		echo '<div class="ph-item-box '.$lt.'">';
-		//echo $label['new'] . $label['hot'] . $label['feat'];
+		//echo '<div class="ph-label-box">'.$label['new'] . $label['hot'] . $label['feat'].'</div>';
 		echo '<div class="'.$this->t['class_thumbnail'].' ph-thumbnail ph-thumbnail-c ph-item '.$lt.'">';
 		echo '<div class="ph-item-content '.$lt.'">';
 

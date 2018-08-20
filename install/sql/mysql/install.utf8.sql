@@ -505,6 +505,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_tags` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `image` varchar(255) NOT NULL DEFAULT '',
+  `type` tinyint(1) NOT NULL default '0',
+  `display_format` tinyint(1) NOT NULL default '0',
+  `icon_class` varchar(64) NOT NULL DEFAULT '',
   `link_ext` varchar(255) NOT NULL DEFAULT '',
   `link_cat` int(11) unsigned NOT NULL DEFAULT '0',
   `description` text NOT NULL DEFAULT '',
@@ -518,6 +521,14 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_tags` (
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_tags_related` (
+  `id` SERIAL,
+  `item_id` int(11) NOT NULL DEFAULT '0',
+  `tag_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `i_file_id` (`item_id`,`tag_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_taglabels_related` (
   `id` SERIAL,
   `item_id` int(11) NOT NULL DEFAULT '0',
   `tag_id` int(11) NOT NULL DEFAULT '0',

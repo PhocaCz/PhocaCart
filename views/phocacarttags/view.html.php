@@ -74,6 +74,7 @@ class PhocaCartCpViewPhocacartTags extends JViewLegacy
 		return array(
 			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
 			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
+			'a.type' 			=> JText::_($this->t['l'] . '_TYPE'),
 			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);

@@ -664,6 +664,19 @@ table.ph-idnr-box-in tr td {
 	text-align: right;
 }
 
+table.ph-idnr-tax-rec {
+	margin-top: 10px;
+	min-width: 40%;
+}
+table.ph-idnr-tax-rec,
+table.ph-idnr-tax-rec tr,
+table.ph-idnr-tax-rec tr td,
+table.ph-idnr-tax-rec tr th {
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+	padding: 3px;
+}
+
 .ph-category-item-addtocart {
 	float: right;
 	margin: 2px;
@@ -886,7 +899,7 @@ table.ph-comparison-table tr td.ph-middle {
 
 
 /* Icons Hot, New, Featured */
-
+/*
 .ph-corner-icon-wrapper {
 	overflow: hidden;
     position: absolute;
@@ -1014,8 +1027,56 @@ table.ph-comparison-table tr td.ph-middle {
   border: 0px;
   position:absolute;
   bottom: 0px;
-}*/
+}
 /* End alternative Icons Hot, New, Featured - circle */
+
+
+/* SINCE 3.1.2 - LABELS including HOT, NEW, FEATURED */
+
+.ph-label-box {
+	overflow: hidden;
+    position: absolute;
+	top: 0.3em;
+	right: 0.2em;
+	width: 100%;
+}
+
+#ph-pc-item-box .ph-label-box {
+	right: 1.2em;
+}
+
+.ph-corner-icon-wrapper {
+	float: right;
+	position:relative;
+	z-index: 1000;
+}
+
+.ph-corner-icon {
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #fff;
+	text-align: center;
+	padding: 0.1em 0.5em;
+	margin: 0.1em 0.1em;
+}
+
+.ph-corner-icon {
+	background-color: #d0d0d0;
+}
+.ph-corner-icon-hot {
+	background-color: #d9534f;
+}
+
+.ph-corner-icon-featured {
+	background-color: #f0ad4e;
+}
+
+.ph-corner-icon-new {
+	background-color: #337ab7;
+}
+
+
+/* END LABELS */
 
 /* Filter */
 .ph-filter-box {
@@ -1591,11 +1652,18 @@ h3.gridlist {
 .row-flex.grid .row-item .ph-item-box,
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c {
 	/*height: 100%;*/
-	
 	display: flex;
-	/*flex: 1 1 100%;*/
-	flex: 1 1 auto;
+	flex: 1 1 100%;
+	/* IE 11 flex: 1 1 auto;*/
 	flex-direction: column;
+}
+
+/* IE */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	.row-flex.grid .row-item .ph-item-box,
+	.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c {
+		flex: 1 1 auto;
+	}
 }
 
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content {
@@ -1908,6 +1976,15 @@ li.ph-currency-list {
 .left-addon input  { padding-left:  30px; width: 100% }
 .right-addon input { padding-right: 30px; width: 100% }
 
+
+.row-item-subcategory {
+
+	
+}
+.row-item-subcategory h3 {
+	margin: 0 auto;
+	text-align: center;
+}
 
 /*
 .ph-brands-module-box .ph-brand-name {

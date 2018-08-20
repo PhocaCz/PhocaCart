@@ -95,6 +95,8 @@ if (!empty($this->t['items'])) {
 			$priceOutput = $layoutP->render($d);
 			
 			$c['price'] .= '<td class="ph-right">'.$priceOutput.'</td>';
+			
+			$d['zero_price']		= 1;// Apply zero price if possible
 		}
 	
 		$c['remove'] .= '<td>';

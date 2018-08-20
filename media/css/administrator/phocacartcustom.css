@@ -69,7 +69,7 @@
     background-image: none !important;
     background-repeat: none !important;
     border-color: #00B19D !important;
-    border: 0px solid #00B19D  !important;
+    border: 1px solid #00B19D  !important;
     color: #fff !important;
 	box-shadow: none !important;
 }
@@ -77,6 +77,15 @@
 .btn-success:hover, .btn-success:focus {
 	 background-color: #00B19D !important;
 	 border-color: #00B19D !important;
+	 border: 1px solid #00B19D  !important;
+}
+
+.btn-toolbar .btn-success {
+    border: 0px solid #00B19D  !important;
+}
+
+.btn-toolbar .btn-success:hover,
+.btn-toolbar .btn-success:focus {
 	 border: 0px solid #00B19D  !important;
 }
 

@@ -44,19 +44,4 @@ echo PhocacartRenderFront::renderHeader(array($title, JText::_('COM_PHOCACART_IT
 if ( isset($this->category[0]->description) && $this->category[0]->description != '') {
 	echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->category[0]->description). '</div>';
 }
-
-if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 0) {
-	echo '<div class="ph-subcategories">'.JText::_('COM_PHOCACART_SUBCATEGORIES') . ':</div>';
-	echo '<ul>';
-	$j = 0;
-	foreach($this->subcategories as $v) {
-		if ($j == (int)$this->t['cv_display_subcategories']) {
-			break;
-		}
-		echo '<li><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a></li>';
-		$j++;
-	}
-	echo '</ul>';
-	echo '<hr />';
-}
 ?>

@@ -57,6 +57,8 @@ class PhocacartReward
 		return 0;
 	}
 	
+	
+	
 	public function checkReward($points, $msgOn = 0) {
 		
 		
@@ -64,6 +66,7 @@ class PhocacartReward
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
 		
+		$rewards				= array();
 		$rewards['usertotal'] 	= 0;
 		$rewards['wantstouse']	= (int)$points;
 		$rewards['used']		= false;
@@ -132,7 +135,7 @@ class PhocacartReward
 	public static function getPoints($points, $type = 'received', $groupPoints = null) {
 		
 		$pointsO 			= null;
-		$app				= JFactory::getApplication();
+		//$app				= JFactory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
 		
@@ -156,5 +159,57 @@ class PhocacartReward
 		
 		return $pointsO;
 		
+	}
+	
+	// STATIC PART
+	public static function getTotalPointsByUserIdExceptCurrentOrder($userId, $orderId) {
+	
+		if ((int)$userId > 0 && (int)$orderId > 0) {
+			
+			$db = JFactory::getDBO();
+			
+			$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
+				.' WHERE a.user_id = '.(int)$userId
+				.' AND a.order_id <> '.(int)$orderId
+				.' AND a.published = 1'
+				.' GROUP BY a.order_id'
+				.' ORDER BY a.id';
+			$db->setQuery($query);
+			
+			$total = $db->loadResult();
+		
+			if (!$total) {
+				$total = 0;
+			}
+			
+			return (int)$total;
+		}
+		
+		return 0;
+	}
+	
+	public static function getTotalPointsByOrderId($orderId) {
+	
+		if ((int)$orderId > 0) {
+			
+			$db = JFactory::getDBO();
+			
+			$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
+				.' WHERE a.order_id = '.(int)$orderId
+			//	.' AND a.published = 1' Get all points (+/-) even they are not authorized yet (add info to customer how much point he can get)
+				.' GROUP BY a.order_id'
+				.' ORDER BY a.id';
+			$db->setQuery($query);
+			
+			$total = $db->loadResult();
+		
+			if (!$total) {
+				$total = 0;
+			}
+			
+			return (int)$total;
+		}
+		
+		return 0;
 	}
 }

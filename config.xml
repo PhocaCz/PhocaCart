@@ -93,6 +93,21 @@
 
 <field name="cv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_DESC" />
 
+<field name="cv_subcategories_layout" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SUBCATEGORIES_LAYOUT_LABEL" description="COM_PHOCACART_FIELD_SUBCATEGORIES_LAYOUT_DESC">
+	<option value="1">COM_PHOCACART_LISTS</option>
+	<option value="2">COM_PHOCACART_IMAGE_BOXES</option>
+</field>
+
+<field name="columns_subcat_cat" type="list" default="3" label="COM_PHOCACART_FIELD_COLUMNS_SUBCATEGORIES_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_SUBCATEGORIES_CATEGORY_VIEW_DESC">
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+	<option value="6">6</option>
+	<option value="12">12</option>
+</field>
+
+
 <field name="cv_display_description" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DESCRIPTION_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DESCRIPTION_CATEGORY_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
@@ -430,9 +445,7 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-<field name="zero_price_text" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_DESC" />
 
-<field name="zero_price_label" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_DESC" />
 
 <field name="display_back" type="list" class="btn-group btn-group-yesno" default="3" label="COM_PHOCACART_FIELD_DISPLAY_BACK_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_BACK_BUTTON_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
@@ -516,6 +529,15 @@
 	<option value="0">COM_PHOCACART_NONE</option>
 	<option value="1">COM_PHOCACART_PLUS_MINUS</option>
 	<option value="2">COM_PHOCACART_UP_DOWN</option>
+</field>
+
+<field name="zero_price_text" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_DESC" />
+
+<field name="zero_price_label" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_DESC" />
+
+<field name="hide_add_to_cart_zero_price" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_LABEL" description="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
 <field name="zero_attribute_price" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ZERO_ATTRIBUTE_PRICE_LABEL" description="COM_PHOCACART_FIELD_ZERO_ATTRIBUTE_PRICE_DESC">
@@ -1186,7 +1208,17 @@
 <field name="invoice_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 <field name="invoice_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
 <field name="invoice_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL"  description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
-		
+	
+
+<field name="display_tax_recapitulation_invoice" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_INVOICE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_INVOICE_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_reward_points_invoice" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INVOICE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INVOICE_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
 		</fieldset>
 		
 		
@@ -1246,6 +1278,7 @@
 
 <field name="phocahead22" type="phocahead" default="COM_PHOCACART_POS_RECEIPT_SETTINGS_LABEL" label="" description=""/>
 
+
 <field name="store_logo_pos" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_POS_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_POS_DESC" />
 
 <field name="store_title_pos" default="" type="textarea" label="COM_PHOCACART_FIELD_STORE_TITLE_POS_LABEL" description="COM_PHOCACART_FIELD_STORE_TITLE_POS_DESC" />
@@ -1253,6 +1286,16 @@
 <field name="store_info_pos" default="" type="textarea" label="COM_PHOCACART_FIELD_STORE_INFORMATION_POS_LABEL" description="COM_PHOCACART_FIELD_STORE_INFORMATION_POS_DESC" />
 
 <field name="store_info_footer_pos" default="" type="textarea" label="COM_PHOCACART_FIELD_STORE_FOOTER_INFORMATION_POS_LABEL" description="COM_PHOCACART_FIELD_STORE_FOOTER_INFORMATION_POS_DESC" />
+
+<field name="display_tax_recapitulation_pos" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_POS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_POS_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+
+<field name="display_reward_points_pos" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_POS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_POS_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
 
 <field name="phocahead23" type="phocahead" default="COM_PHOCACART_POS_LAYOUT_SETTINGS_LABEL" label="" description=""/>
 

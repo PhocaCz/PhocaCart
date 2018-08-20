@@ -72,6 +72,10 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		$scrollTo							= '';
 		
+		
+		// Not ready yet
+		// Checkout cart can be changed by ajax
+		// But not module cart, no shipping, no payment is refreshed, no plus/minus (touchspin.js) refreshed
 		//PhocacartRenderJs::renderAjaxUpdateCart();
 		
 		

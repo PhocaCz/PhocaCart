@@ -42,6 +42,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['page']			= $app->input->get( 'page', 'main.content.products', 'string' );
 		$this->t['category']		= $app->input->get('category', '', 'string');// list of active categories
 		
+		
 		$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
 		$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
 		
@@ -135,17 +136,17 @@ class PhocaCartViewPos extends JViewLegacy
 		PhocacartRenderJs::renderAjaxUpdateCart();
 		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
 
-		PhocacartRenderJs::managePos($this->t['action']);
-		PhocacartRenderJs::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
-		PhocacartRenderJs::searchPosByType('#phPosSearch');
-		PhocacartRenderJs::searchPosByCategory();
+		PhocacartRenderJspos::managePos($this->t['action']);
+		PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
+		PhocacartRenderJspos::searchPosByType('#phPosSearch');
+		PhocacartRenderJspos::searchPosByCategory();
 		
 		// Tendered
 		$currency = PhocacartCurrency::getCurrency();
 		PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
 		
 		// UI
-		PhocacartRenderJS::renderJsUi();
+		PhocacartRenderJspos::renderJsUi();
 		
 		if ($this->t['pos_hide_attributes'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
@@ -262,7 +263,7 @@ class PhocaCartViewPos extends JViewLegacy
 				$this->items = $sortedItems;
 				
 				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
-				PhocacartRenderJs::changeUrlParameter( array(
+				PhocacartRenderJspos::changeUrlParameter( array(
 				"sectionid" => (int)$this->t['section']->id));
 				parent::display('section');
 			break;
@@ -270,9 +271,9 @@ class PhocaCartViewPos extends JViewLegacy
 			default:
 				
 				// Scroll cart to bottom
-				PhocacartRenderJs::renderJsScrollToPos();
+				PhocacartRenderJspos::renderJsScrollToPos();
 				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
-				PhocacartRenderJs::changeUrlParameter( array(
+				PhocacartRenderJspos::changeUrlParameter( array(
 				"ticketid" => (int)$this->t['ticket']->id,
 				"unitid" => (int)$this->t['unit']->id,
 				"sectionid" => (int)$this->t['section']->id));

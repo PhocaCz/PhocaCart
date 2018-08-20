@@ -1092,6 +1092,7 @@ class PhocacartProduct
 			PhocacartSpecification::storeSpecificationsById((int)$table->id, $data['specifications']);
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $data['discounts']);
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
+			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
 			
 		
 			PhocacartGroup::storeProductPriceGroupsById($data['price_groups'], (int)$table->id);
@@ -1259,6 +1260,7 @@ class PhocacartProduct
 			.' FROM  #__phocacart_products AS p'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
+			. ' GROUP BY p.price'
 			. ' ORDER BY p.id'
 			. ' LIMIT 1';
 		

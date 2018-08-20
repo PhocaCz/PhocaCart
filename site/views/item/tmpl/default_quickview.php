@@ -60,7 +60,12 @@ if (isset($image->rel) && $image->rel != '') {
 	
 	echo '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
 
+	echo '<div class="ph-label-box">';
 	echo $label['new'] . $label['hot'] . $label['feat'];
+	if ($this->t['taglabels_output'] != '') {
+		echo $this->t['taglabels_output'];
+	}
+	echo '</div>';
 
 	//echo '<a href="'.$link.'" '.$this->t['image_rel'].'>';
 	// In Quic View there is no linking of image
@@ -118,7 +123,7 @@ if ($this->t['hide_price'] != 1) {
 	$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
 	$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
 		
-		
+	$d['zero_price']		= 1;// Apply zero price if possible	
 	echo$layoutP->render($d);
 }
 
@@ -223,7 +228,11 @@ echo $layoutAB->render($d);
 
 
 // :L: ADD TO CART
-if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
+$addToCartHidden = 0;// Button can be hidden based on price
+if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
+	// Don't display Add to Cart in case the price is zero
+	$addToCartHidden = 1;
+} else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
 	
 	$d					= array();
 	$d['id']			= (int)$x->id;

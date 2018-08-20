@@ -42,6 +42,8 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['page']			= $app->input->get( 'page', 'main.content.products', 'string' );
 		$this->t['category']		= $app->input->get('category', '', 'string');// list of active categories
 		
+		
+		
 		$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
 		$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
 		

@@ -54,6 +54,7 @@ class PhocacartOrderCalculation
 		
 		if (!empty($items)) {
 			foreach($items as $k => $v) {
+				
 				$id 			= (int)$v->id;
 				$itemsIdA[] 	= $id;
 				$itemsId[$id] 	= $v;

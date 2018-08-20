@@ -12,6 +12,8 @@ $this->t['action'] = htmlspecialchars($this->t['action']);
 
 
 echo '<div class="clearfix"></div>';
+
+
 echo '<form action="'.$this->t['action'].'" method="post" name="adminForm" id="phPosPaginationBox">'. "\n";
 
 if (!empty($this->items)) {

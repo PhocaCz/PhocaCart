@@ -98,9 +98,13 @@ class PhocacartPrice
 		
 		if ($price < 0) {
 			$negative = 1;
+			
 		}
 		
-		
+		// If negative is forced by parameter but the price is 0 in real - skip the negative sign
+		if ($price == 0) {
+			$negative = 0;
+		}
 		
 	
 		
@@ -140,6 +144,7 @@ class PhocacartPrice
 		}
 		
 		if ($negative) {
+			
 			return '- ' . $this->price_prefix . $price . $this->price_suffix;
 		} else {
 			return $this->price_prefix . $price . $this->price_suffix;
@@ -173,6 +178,7 @@ class PhocacartPrice
 	
 	public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null) {
 		
+
 		// We need to round because if not
 		// BRUTTO          0.15  ... 0.15
 		// TAX             0.025 ... 0.03
@@ -200,8 +206,8 @@ class PhocacartPrice
 		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$tax_calculation			= $paramsC->get( 'tax_calculation', 0 );
 		$display_unit_price			= $paramsC->get( 'display_unit_price', 1 );
-		$zero_price_text			= $paramsC->get( 'zero_price_text', '' );
-		$zero_price_label			= $paramsC->get( 'zero_price_label', '' );
+		//$zero_price_text			= $paramsC->get( 'zero_price_text', '' );
+		//$zero_price_label			= $paramsC->get( 'zero_price_label', '' );
 
 
 		$priceO['taxtxt']			= $taxTitle;
@@ -288,9 +294,13 @@ class PhocacartPrice
 			$priceO['baseformat'] 	= $this->getPriceFormat($priceO['base']).'/'.$baseUnit;
 		}
 		
+		// MOVED TO TEMPLATE BECAUSE CAN BE INFLUENCED BY ATTRIBUTES
+		// Must be different in comparison to payment and shipping method because product price can be changed by attributes
+		/*
 		if ($price == 0 && $zeroPrice == 1) {
+			
 			if ($zero_price_text != '') {
-				$priceO['nettoformat'] = $priceO['bruttoformat'] = $priceO['taxformat'] = JText::_($zero_price_text);
+				$priceO['zeronettoformat'] = $priceO['bruttoformat'] = $priceO['taxformat'] = JText::_($zero_price_text);
 			}
 			
 			if ($zero_price_label == '0') {
@@ -299,10 +309,10 @@ class PhocacartPrice
 				$priceO['nettotxt'] = $priceO['bruttotxt'] = $priceO['taxtxt'] = JText::_($zero_price_label);
 			}
 			
-		}
+		}*/
 		
 		if ($priceO['brutto'] == 0 && $priceO['netto'] == 0) {
-			$priceO['zero'] = 1;
+			$priceO['zero'] = 1;// Zero for basic price but this can be changed by attribute price
 		}
 		
 		if ($round == 1) {
@@ -311,6 +321,7 @@ class PhocacartPrice
 			$priceO['tax']		= $this->roundPrice($priceO['tax']);
 		}
 		
+
 		return $priceO;
 	}
 	
@@ -704,6 +715,7 @@ class PhocacartPrice
 		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
 		
+
 		$fullAttributes		= array();// Array of integers only
 		$thinAttributes		= array();// Array of full objects (full options object)
 		if ($ajax == 1) {
@@ -757,7 +769,7 @@ class PhocacartPrice
 		}
 
 		
-		// Standard Price - changed 
+		// Standard Price - changed - we need to update it but only in case the price is not zero
 		$priceP['nettoformat'] 		= $price->getPriceFormat($priceP['netto']);
 		$priceP['bruttoformat'] 	= $price->getPriceFormat($priceP['brutto']);
 		$priceP['taxformat'] 		= $price->getPriceFormat($priceP['tax']);

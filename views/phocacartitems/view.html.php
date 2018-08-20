@@ -119,16 +119,19 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 	
 	protected function getSortFields() {
 		return array(
-			'pc.ordering'	=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 		=> JText::_($this->t['l'] . '_TITLE'),
-			'a.image' 		=> JText::_($this->t['l'] . '_IMAGE'),
-			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
-			'a.published' 	=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'category_id' 	=> JText::_($this->t['l'] . '_CATEGORY'),
-			'language' 		=> JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
-			'a.sku' 		=> JText::_($this->t['l'] . '_SKU'),
-			'a.id' 			=> JText::_('JGRID_HEADING_ID')
+			'pc.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
+			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
+			'a.image' 			=> JText::_($this->t['l'] . '_IMAGE'),
+			'a.hits' 			=> JText::_($this->t['l'] . '_HITS'),
+			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
+			'category_id' 		=> JText::_($this->t['l'] . '_CATEGORY'),
+			'language' 			=> JText::_('JGRID_HEADING_LANGUAGE'),
+			'a.hits' 			=> JText::_($this->t['l'] . '_HITS'),
+			'a.sku' 			=> JText::_($this->t['l'] . '_SKU'),
+			'a.price' 			=> JText::_($this->t['l'] . '_PRICE'),
+			'a.price_original'	=> JText::_($this->t['l'] . '_ORIGINAL_PRICE'),
+			'a.stock' 			=> JText::_($this->t['l'] . '_IN_STOCK'),
+			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

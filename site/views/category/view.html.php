@@ -43,6 +43,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
 		$this->t['columns_cat']				= $this->p->get( 'columns_cat', 3 );
+		$this->t['columns_subcat_cat']		= $this->p->get( 'columns_subcat_cat', 3 );
 		$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['cv_display_subcategories']= $this->p->get( 'cv_display_subcategories', 5 );
 		$this->t['display_back']			= $this->p->get( 'display_back', 3 );
@@ -68,8 +69,8 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
-
-		
+		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
+		$this->t['cv_subcategories_layout']	= $this->p->get( 'cv_subcategories_layout', 1 );
 		// Catalogue function
 		
 		if ($this->t['hide_addtocart'] == 1) {

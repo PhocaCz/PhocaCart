@@ -141,6 +141,8 @@
 
 <field name="tags" type="phocatags" multiple="1" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="inputbox" size="1" />
 
+<field name="taglabels" type="phocataglabels" multiple="1" label="COM_PHOCACART_FIELD_LABELS_LABEL" description="COM_PHOCACART_FIELD_LABELS_DESC" class="inputbox" size="1" />
+
 
 
 

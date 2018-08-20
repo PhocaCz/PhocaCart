@@ -109,7 +109,9 @@ echo $r->td($checkO, "small");
 
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->tax_rate)), "small");
+//echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->tax_rate)), "small");
+echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="taxes:tax_rate:'.(int)$item->id.'">'.$this->escape(PhocacartPrice::cleanPrice($item->tax_rate)).'</span>', "small");
+
 $calcType = PhocacartUtilsSettings::getTaxCalculationType($item->calculation_type);
 echo $r->td($this->escape($calcType), "small");
 echo $r->td($item->id, "small");

@@ -64,6 +64,13 @@ class PhocacartUtilsBatchhelper
 				$tA = array();
 			}
 			PhocacartTag::storeTags($tA, (int)$idDest);
+			
+			// Tag Labels
+			$tLA = PhocacartTag::getTagLabels($idSource, 1);
+			if (!isset($tLA)) {
+				$tLA = array();
+			}
+			PhocacartTag::storeTagLabels($tLA, (int)$idDest);
 		}
 		return true;
 	}

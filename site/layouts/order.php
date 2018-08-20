@@ -50,6 +50,12 @@ $pdf_invoice_qr_information				= $d['params']->get( 'pdf_invoice_qr_information'
 $invoice_global_top_desc				= $d['params']->get( 'invoice_global_top_desc', 0 );// Article ID
 $invoice_global_middle_desc				= $d['params']->get( 'invoice_global_middle_desc', 0 );
 $invoice_global_bottom_desc				= $d['params']->get( 'invoice_global_bottom_desc', 0 );
+$display_tax_recapitulation_invoice		= $d['params']->get( 'display_tax_recapitulation_invoice', 0 );
+$display_tax_recapitulation_pos			= $d['params']->get( 'display_tax_recapitulation_pos', 0 );
+
+$display_reward_points_invoice			= $d['params']->get( 'display_reward_points_invoice', 0 );
+$display_reward_points_pos				= $d['params']->get( 'display_reward_points_pos', 0 );
+
 /*
  * FORMAT
  */
@@ -84,6 +90,8 @@ $toPayS		= 'class="ph-idnr-to-pay"';
 $toPaySV	= 'class="ph-idnr-to-pay-value"';
 $bDesc		= 'class="ph-idnr-body-desc"';
 $hrSmall	= 'class="ph-idnr-hr-small"';
+$taxRecTable= 'class="ph-idnr-tax-rec"';
+$taxRecTd	= 'class="ph-idnr-tax-rec-td"';
 $bQrInfo	= '';
 $firstRow	= '';
 
@@ -152,6 +160,8 @@ if ($d['format'] == 'pdf') {
 
 	$bDesc		= 'style="padding: 2px 0px 0px 0px;margin:0;font-size:60%;"';
 	$hrSmall	= 'style="font-size:30%;"';
+	$taxRecTable= 'style="border: 1pt solid #dddddd; width: 50%"';
+	$taxRecTd	= 'style="border: 1pt solid #dddddd;"';
 	$bQrInfo	= 'style="font-size: 70%"';
 
 } else if ($d['format'] == 'mail') {
@@ -205,6 +215,8 @@ if ($d['format'] == 'pdf') {
 	$toPayS		= 'style="background-color: #eeeeee;padding: 20px;"';
 	$toPaySV	= 'style="background-color: #eeeeee;padding: 20px;text-align:right;"';
 	$firstRow	= '';
+	$taxRecTable= 'style="border: 1pt solid #dddddd; width: 50%;"';
+	$taxRecTd	= 'style="border: 1pt solid #dddddd;"';
 
 }
 
@@ -767,6 +779,77 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 	}
 	$o[] = '</td></tr>';
 	$o[] = '</table>';
+}
+
+// -----------------------
+// TAX RECAPITULATION
+// -----------------------
+if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display_tax_recapitulation_pos == 1 && $d['type'] == 4 )) {
+	$orderCalc 		= new PhocacartOrderCalculation();
+	$calcItems		= array();
+	$calcItems[0]	= $d['common'];
+	$orderCalc->calculateOrderItems($calcItems);
+	$calcTotal		= $orderCalc->getTotal();
+	$taxes 			= PhocacartTax::getAllTaxes();
+	if (!empty($calcTotal)) {
+		foreach ($calcTotal as $k => $v) {
+			
+
+			if (!empty($v)) {
+				$d['price']->setCurrency($k);
+				
+				
+				if ($pR) {
+					$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_TAX_RECAPITULATION')), 'pLeft');
+				}
+				
+				if (!empty($v['tax'])) {
+					
+					$o[] = '<table '.$taxRecTable.'>';
+					$o[] = '<tr><th colspan="2">'.JText::_('COM_PHOCACART_TAX_RECAPITULATION').'</th></tr>';
+					
+					foreach($v['tax'] as $kT => $vT) {
+						
+						$calcTitle = isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] : '';
+						
+						$o[] = '<tr><td '.$taxRecTd.'>'.$calcTitle.'</td>';
+						$o[] = '<td '.$taxRecTd.'>'.$d['price']->getPriceFormat($vT,0,1) . '</td></tr>';
+						
+						if ($pR) {
+							$oPr[] = $pP->printLineColumns(array($calcTitle, $d['price']->getPriceFormat($vT,0,1)));
+						}
+					}
+					
+					$o[] = '</table>';
+					if ($pR) {
+						$oPr[] = $pP->printFeed(1);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+// -----------------------
+// POINTS RECEIVED
+// -----------------------
+
+if (($display_reward_points_invoice == 1 && $d['type'] == 2 ) ||  ($display_reward_points_pos == 1 && $d['type'] == 4 )) {
+	if ((int)$d['common']->user_id > 0 && (int)$d['common']->id > 0) {
+		$pointsUser 	= PhocacartReward::getTotalPointsByUserIdExceptCurrentOrder($d['common']->user_id, $d['common']->id);
+		$pointsOrder 	= PhocacartReward::getTotalPointsByOrderId($d['common']->id);
+		
+		
+		$o[] = '<div>'.JText::_('COM_PHOCACART_YOUR_CURRENT_REWARD_POINTS_BALANCE').': '.$pointsUser.'</div>';
+		$o[] = '<div>'.JText::_('COM_PHOCACART_POINTS_RECEIVED_FOR_THIS_PURCHASE').': '.$pointsOrder.'</div>';
+		
+		if ($pR) {
+			$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_YOUR_CURRENT_REWARD_POINTS_BALANCE').': ', $pointsUser));
+			$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_POINTS_RECEIVED_FOR_THIS_PURCHASE'). ': ', $pointsOrder));
+			$oPr[] = $pP->printFeed(1);
+		}
+	}
 }
 
 // -----------------------

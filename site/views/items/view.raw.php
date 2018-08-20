@@ -63,6 +63,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
+		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
 		
 		// Catalogue function
 		if ($this->t['hide_addtocart'] == 1) {

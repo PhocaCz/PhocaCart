@@ -73,6 +73,8 @@ echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHE
 //echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JTEXT::_($this->t['l'].'_CATEGORY').'</th>'."\n";
 echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-stock">'.JHtml::_('grid.sort', $this->t['l'].'_IN_STOCK', 'a.stock', $listDirn, $listOrder ).'</th>'."\n";
 //echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
 echo '<th class="ph-language">'.JHtml::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
@@ -126,7 +128,10 @@ echo '<tr class="row'.$iD.'" sortable-group-id="'.$this->t['catid'].'" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $orderingItem, false);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');	
-echo $r->td($this->escape($item->sku), 'small');	
+//echo $r->td($this->escape($item->sku), 'small');
+
+echo $r->td('<span class="ph-editinplace-text ph-eip-sku" id="products:sku:'.(int)$item->id.'">'.$this->escape($item->sku).'</span>', "small");
+
 $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -165,16 +170,20 @@ echo $r->td(implode(' ', $catO), "small");
 //echo $r->td($this->escape($item->access_level), "small");	
 						
 
-echo $r->td(PhocacartPrice::cleanPrice($item->price), "small");
+echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price).'</span>', "small");
+echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price_original:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price_original).'</span>', "small");
 //echo $r->td($item->hits, "small");
-
+echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:stock:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->stock).'</span>', "small");
 
 
 echo $r->td($this->escape($item->access_level));
 
 echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
 echo $r->td($item->hits, "small");
+
 echo $r->td($item->id, "small");
+
+
 
 echo '</tr>'. "\n";
 						
@@ -183,7 +192,7 @@ echo '</tr>'. "\n";
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 17);
+echo $r->tblFoot($this->pagination->getListFooter(), 19);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');

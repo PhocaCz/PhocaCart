@@ -74,8 +74,15 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	
 	if (isset($image->rel) && $image->rel != '') {
 		echo '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
+		
+		
 	
+		echo '<div class="ph-label-box">';
 		echo $label['new'] . $label['hot'] . $label['feat'];
+		if ($this->t['taglabels_output'] != '') {
+			echo $this->t['taglabels_output'];
+		}
+		echo '</div>';
 	
 		echo '<a href="'.$link.'" '.$this->t['image_rel'].' class="'.$this->t['image_class'].' phjProductHref'.$idName.'" data-href="'.$link.'">';
 		echo '<img src="'.JURI::base(true).'/'.$image->rel.'" '.$dataImage.' alt="" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full phjProductImage'.$idName.'"';
@@ -128,6 +135,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		
 		$d					= array();
 		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
+	
 		$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
 		
 		$d['priceitemsorig']= array();
@@ -148,7 +156,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
 		$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
 		
-		
+		$d['zero_price']		= 1;// Apply zero price if possible
 		echo $layoutP->render($d);
 	}
 
@@ -252,7 +260,11 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 	
 	// :L: ADD TO CART
-	if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
+	$addToCartHidden = 0;// Button can be hidden based on price
+	if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
+		// Don't display Add to Cart in case the price is zero
+		$addToCartHidden = 1;
+	} else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
 		
 		$d					= array();
 		$d['id']			= (int)$x->id;
@@ -264,13 +276,13 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		$d['class_icon']	= $class_icon;
 		echo $layoutA->render($d);
 
-	} else if ((int)$this->t['item_addtocart'] == 2 && (int)$x->external_id != '') {
+	} else if ((int)$this->t['item_addtocart'] == 102 && (int)$x->external_id != '') {
 		$d					= array();
 		$d['external_id']	= (int)$x->external_id;
 		$d['return']		= $this->t['actionbase64'];
 		
 		echo $layoutA2->render($d);
-	} else if ((int)$this->t['item_addtocart'] == 3 && $x->external_link != '') {
+	} else if ((int)$this->t['item_addtocart'] == 103 && $x->external_link != '') {
 		$d					= array();	
 		$d['external_link']	= $x->external_link;
 		$d['external_text']	= $x->external_text;
@@ -334,8 +346,8 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		echo '</div>';
 		echo '<div class="ph-cb"></div>';
 	}
-	
-	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && (int)$this->t['item_addtocart'] == 0)) {
+
+	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] != 0 || $addToCartHidden != 0))) {
 			
 		$d					= array();
 		$d['id']			= (int)$x->id;

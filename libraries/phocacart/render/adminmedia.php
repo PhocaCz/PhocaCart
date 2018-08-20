@@ -31,6 +31,40 @@ class PhocacartRenderAdminmedia
 			JHtml::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
 		}
 		
+		
+		
+		// EDIT IN PLACE
+		$urlText = JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1';
+		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/jeditable/jquery.jeditable.min.js');
+		
+		$s 	= array();
+		$s[] = ' ';
+		$s[] = 'jQuery(document).ready(function() {';
+		$s[] = '   jQuery(".ph-editinplace-text").editable("'.$urlText.'", {';
+		$s[] = '      tooltip : "'.JText::_('COM_PHOCACART_CLICK_TO_EDIT').'",'; //submit : \'OK\',
+		$s[] = '      select : true,';
+		$s[] = '      cancel : "'.JText::_('COM_PHOCACART_CANCEL').'",';
+		$s[] = '      submit : "'.JText::_('COM_PHOCACART_SUBMIT').'",';
+		$s[] = '      cssclass : \'ph-edit-in-place-class\',';
+		$s[] = '      cancelcssclass : \'btn btn-danger\',';
+		$s[] = '      submitcssclass : \'btn btn-success\',';
+ 		$s[] = '      intercept : function(jsondata) {';
+		$s[] = '          json = JSON.parse(jsondata);';
+ 		$s[] = '          return json.result;';
+    	$s[] = '      },';
+		$s[] = '      placeholder: "",';
+		
+		// Possible information for parts on the site which will be not changed by chaning the value (for example currency view - currency rate)
+		$s[] = '      callback: function() {';
+		$s[] = '      	var chEIP = ".phChangeEditInPlace" + jQuery(this).attr("data-id");';
+		$s[] = '      	jQuery(chEIP).html("'.JText::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION').'")';
+		$s[] = '      },';
+		
+		$s[] = '   })';
+		$s[] = '})';
+		$s[] = ' ';
+	
+		$this->document->addScriptDeclaration(implode("\n", $s));
 	}
 	
 	public function loadOptions($load = 0) {

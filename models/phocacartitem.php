@@ -295,11 +295,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			// UPDATE this file too:
 			// administrator\components\com_phocacart\libraries\phocacart\product\product.php storeProduct() function
 			
+			// TAGS
 			if (!isset($data['tags'])) {
 				$data['tags'] = array();
 			}
 			
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
+			
+			
+			// TAG LABELS
+			if (!isset($data['taglabels'])) {
+				$data['taglabels'] = array();
+			}
+			
+			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
 
 		}
 

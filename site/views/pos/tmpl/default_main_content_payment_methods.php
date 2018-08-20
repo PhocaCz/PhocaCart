@@ -19,7 +19,9 @@ if (!empty($this->t['paymentmethods'])) {
 	foreach($this->t['paymentmethods'] as $k => $v) {
 		
 		echo '<div class="row ph-pos-payment-method-row">';
-		echo '<form action="'.$this->t['linkpos'].'" method="post" class="form-horizontal form-validate" role="form" id="phPosPaginationBox">';
+		//echo '<form action="'.$this->t['linkpos'].'" method="post" class="form-horizontal form-validate" role="form" id="phPosPaginationBox">';
+		
+		echo '<form action="'.$this->t['linkpos'].'" method="post" class="form-horizontal form-validate" role="form">';
 		
 		$checked = '';
 		if (isset($v->selected) && $v->selected == 1 ) {

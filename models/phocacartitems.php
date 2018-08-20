@@ -32,6 +32,9 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 				'hits', 'a.hits',
 				'published','a.published',
 				'image', 'a.image',
+				'price', 'a.price',
+				'price_original', 'a.price_original',
+				'stock', 'a.stock',
 				'sku', 'a.sku'
 			);
 		}
@@ -88,7 +91,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 		
-		$columns	= 'DISTINCT a.id, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.language, a.hits, a.sku';
+		$columns	= 'DISTINCT a.id, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.price_original, a.language, a.hits, a.sku, a.stock';
 		// GROUP BY not used
 		//$groupsFull	= $columns . ', ' .'a.tax_id, a.manufacturer_id, a.description, l.title, uc.name, ag.title';
 		//$groupsFast	= 'a.id';

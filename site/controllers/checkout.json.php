@@ -80,12 +80,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 			
 			if (!empty($item)) {
 				
-				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 0, 1, $item->group_price);
-				
+				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 1, 1, $item->group_price);
+				//print_r($priceP);
 				$price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 				
 				$d = array();
 				$d['class']			= $class;
+				$d['zero_price']		= 1;// Apply zero price if possible
 				// Original Price
 				$d['priceitemsorig']['bruttoformat'] = '';
 				if (isset($item->price_original) && $item->price_original != '' && (int)$item->price_original >0) {
@@ -236,6 +237,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			
 			$d 				= array();
 			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
+			
 			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
 			$oE 			= $layoutPE->render($d);
 			$response = array(
@@ -317,7 +319,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			return;
 		}
 		
-		
+		$msgSuffix			= '';
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -342,8 +344,8 @@ class PhocaCartControllerCheckout extends JControllerForm
 			$cart->params['display_checkout_link'] 	= $paramsM->get( 'display_checkout_link', 1 );
 			
 			if ($item['action'] == 'delete') {
-				$updated	= $cart->updateItemsFromCheckout($item['idkey'], 0);
-				// todo test if not updated (with popup, without popup)
+				$updated = $cart->updateItemsFromCheckout($item['idkey'], 0);
+				
 				if (!$updated) {
 			
 					$d 				= array();

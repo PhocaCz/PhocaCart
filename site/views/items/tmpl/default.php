@@ -114,6 +114,7 @@ if (!empty($this->items)) {
 		$dP = array();
 		if ($this->t['hide_price'] != 1) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
+		
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();
 			if ($v->price_original != '' && $v->price_original > 0) {
@@ -133,6 +134,8 @@ if (!empty($this->items)) {
 			// Move product discount prices to new variable (product price -> product discount -> product discount cart)
 			$dP['priceitemsdiscountcart']	= $dP['priceitemsdiscount'];
 			$dP['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($v->id, $v->catid, $dP['priceitemsdiscountcart']);
+			
+			$dP['zero_price']		= 1;// Apply zero price if possible
 		}
 		
 		// :L: LINK TO PRODUCT VIEW
@@ -238,7 +241,14 @@ if (!empty($this->items)) {
 		}	
 		
 		// Different button or icons
-		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4) {
+		//$addToCartHidden = 0;// Button can be hidden based on price
+		if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
+			// Don't display Add to Cart in case the price is zero
+			//$addToCartHidden = 1;
+			$dA = array(); // Skip Standard Add to cart button
+			$icon['addtocart'] = '';// Skip Add to cart icon
+			$dF = array();// Skip form
+		} else if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4) {
 			// ADD TO CART BUTTONS - we have data yet
 		} else if ((int)$this->t['category_addtocart'] == 102 && (int)$v->external_id != '') {
 			// EXTERNAL LINK PADDLE
@@ -277,7 +287,16 @@ if (!empty($this->items)) {
 		// ======
 		echo '<div class="row-item col-sx-12 col-sm-'.$col.' col-md-'.$col.'">';
 		echo '<div class="ph-item-box '.$lt.'">';
+		
+		// LABELS
+		echo '<div class="ph-label-box">';
 		echo $label['new'] . $label['hot'] . $label['feat'];
+		$tagLabelsOutput = PhocacartTag::getTagsRendered((int)$v->id, 1);
+		if ($tagLabelsOutput != '') {
+			echo $tagLabelsOutput;
+		}
+		echo '</div>';
+		
 		echo '<div class="'.$this->t['class_thumbnail'].' ph-thumbnail ph-thumbnail-c ph-item '.$lt.'">';
 		echo '<div class="ph-item-content '.$lt.'">';
 

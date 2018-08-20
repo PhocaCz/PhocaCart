@@ -10,9 +10,11 @@ defined('_JEXEC') or die();
 
 if (!empty($this->t['categories'])) {
 	
+
 	// this function is triggered in js.php (searchPosByCategory())
 	echo '<form class="form-inline ph-pos-checkbox-form" action="'.$this->t['linkpos'].'" id="phPosCategory" method="post">';
 	echo '<div class="ph-pos-checkbox-box" data-toggle="buttons"  >';// data-toggle="buttons" - changes the standard checkbox to graphical checkbox
+	
 	
 	foreach ($this->t['categories'] as $k => $v) {
 		$active	= '';
@@ -35,7 +37,7 @@ if (!empty($this->t['categories'])) {
 	echo JHtml::_('form.token');
 	
 	echo '</div>';
-	echo '</form>';
+	
 }
 
 ?>

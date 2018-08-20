@@ -122,7 +122,7 @@ class PhocacartRenderMedia
 	public function loadSwiper(){
 		$document					= JFactory::getDocument();
 		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/swiper/swiper.min.js');
-		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/ui/jquery-ui.min.js');
+		//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/ui/jquery-ui.min.js');
 		JHtml::stylesheet('media/com_phocacart/js/swiper/swiper.min.css' );
 		JHtml::stylesheet('media/com_phocacart/js/swiper/swiper-custom.css' );		
 	}

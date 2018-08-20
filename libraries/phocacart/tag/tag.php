@@ -12,6 +12,12 @@ defined('_JEXEC') or die();
 
 class PhocacartTag
 {
+	/**
+	 * Standard Tags - are displayed at the bottom
+	 * @param int $itemId
+	 * @param number $select
+	 * @return mixed|void|mixed[]
+	 */
 	public static function getTags($itemId, $select = 0) {
 	
 		$db = JFactory::getDBO();
@@ -26,7 +32,41 @@ class PhocacartTag
 		$query .= ' FROM #__phocacart_tags AS a'
 				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
 				.' LEFT JOIN #__phocacart_tags_related AS r ON a.id = r.tag_id'
-			    .' WHERE r.item_id = '.(int) $itemId;
+			    .' WHERE a.type = 0'
+				.' AND r.item_id = '.(int) $itemId;
+		$db->setQuery($query);
+
+		if ($select == 1) {
+			$tags = $db->loadColumn();
+		} else {
+			$tags = $db->loadObjectList();
+		}	
+	
+		return $tags;
+	}
+	
+	/**
+	 * Labels - are displayed at the top
+	 * @param int $itemId
+	 * @param number $select
+	 * @return mixed|void|mixed[]
+	 */
+	public static function getTagLabels($itemId, $select = 0) {
+	
+		$db = JFactory::getDBO();
+		
+		if ($select == 1) {
+			$query = 'SELECT r.tag_id';
+		} else if ($select == 2){
+			$query = 'SELECT a.id, a.alias ';
+		} else {
+			$query = 'SELECT a.*';
+		}
+		$query .= ' FROM #__phocacart_tags AS a'
+				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
+				.' LEFT JOIN #__phocacart_taglabels_related AS r ON a.id = r.tag_id'
+			    .' WHERE a.type = 1'
+				.' AND r.item_id = '.(int) $itemId;
 		$db->setQuery($query);
 
 		if ($select == 1) {
@@ -133,12 +173,46 @@ class PhocacartTag
 	
 	}
 	
-	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
+	public static function storeTagLabels($tagsArray, $itemId) {
+	
+	
+		if ((int)$itemId > 0) {
+			$db = JFactory::getDBO();
+			$query = ' DELETE '
+					.' FROM #__phocacart_taglabels_related'
+					. ' WHERE item_id = '. (int)$itemId;
+			$db->setQuery($query);
+			$db->execute();
+			if (!empty($tagsArray)) {
+				
+				$values 		= array();
+				$valuesString 	= '';
+				
+				foreach($tagsArray as $k => $v) {
+					$values[] = ' ('.(int)$itemId.', '.(int)$v.')';
+				}
+				
+				if (!empty($values)) {
+					$valuesString = implode($values, ',');
+				
+					$query = ' INSERT INTO #__phocacart_taglabels_related (item_id, tag_id)'
+								.' VALUES '.(string)$valuesString;
+
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}
+		}
+	
+	}
+	
+	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0 ) {
 	
 		$db = JFactory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_tags AS a'
-				. ' ORDER BY '. $order;
+				.' WHERE a.type ='.(int)$type
+				.' ORDER BY '. $order;
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();
 		
@@ -147,24 +221,58 @@ class PhocacartTag
 		return $tagsO;
 	}
 	
-	public static function getTagsRendered($itemId) {
+	/**
+	 * 
+	 * @param int $itemId
+	 * @param number $type 0 ... tag, 1 ... tag label
+	 * @return string
+	 */
+	
+	public static function getTagsRendered($itemId, $type = 0) {
 		
-		$tags 	= self::getTags($itemId);
+		
+		if ($type == 1) {
+			$tags 	= self::getTagLabels($itemId);
+		} else {
+			$tags 	= self::getTags($itemId);
+		}
 		$db 	= JFactory::getDBO();
 		$p 		= PhocacartUtils::getComponentParameters();
 		$tl		= $p->get( 'tags_links', 0 );
 		$o 	= '';
+		
 		if (!empty($tags)) {
 			foreach($tags as $k => $v) {
 				
-				$o .= '<span class="label label-info">';
+				if ($type == 1) {
+					$o .= '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-'.htmlspecialchars(strip_tags($v->alias)).'">';
+				} else {
+					$o .= '<span class="label label-info">';
+				}
+				
+				
+				$dO = htmlspecialchars(strip_tags($v->title));
+				
+				if ($v->display_format == 2) {
+					if ($v->icon_class != '') {
+						$dO = '<span class="'.htmlspecialchars(strip_tags($v->icon_class)).'"></span>';
+					} else {
+						$dO = $v->title;
+					}
+				} else if ($v->display_format == 3) {
+					if ($v->icon_class != '') {
+						$dO = '<span class="'.htmlspecialchars(strip_tags($v->icon_class)).'"></span> ';
+					}
+					$dO .= $v->title;
+				}
+				
 				if ($tl == 0) {
-					$o .= $v->title;
+					$o .= $dO;
 				} else if ($tl == 1) {
 					if ($v->link_ext != '') {
-						$o .= '<a href="'.$v->link_ext.'">'.$v->title.'</a>';
+						$o .= '<a href="'.$v->link_ext.'">'.$dO.'</a>';
 					} else {
-						$o .= $v->title;
+						$o .= $dO;
 					}
 				} else if ($tl == 2) {
 					
@@ -178,22 +286,42 @@ class PhocacartTag
 						
 						if (isset($category->id) && isset($category->alias)) {
 							$link = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
-							$o .= '<a href="'.$link.'">'.$v->title.'</a>';
+							$o .= '<a href="'.$link.'">'.$dO.'</a>';
 						} else {
-							$o .= $v->title;
+							$o .= $dO;
 						}
 					} else {
-						$o .= $v->title;
+						$o .= $dO;
 					}
 				} else if ($tl == 3) {
 					$link = PhocacartRoute::getItemsRoute();
 					$link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
-					$o .= '<a href="'.$link.'">'.$v->title.'</a>';
+					$o .= '<a href="'.$link.'">'.$dO.'</a>';
 				}
 				
-				$o .= '</span> ';
+				if ($type == 1) {
+					$o .= '</div></div>';
+				} else {
+					$o .= '</span>';
+				}
 			}
 		}		
 		return $o;
+	}
+	
+	
+	public static function getTagType($type = 0) {
+		
+		switch ($type) {
+			
+			case 1:
+				return JText::_('COM_PHOCACART_TAG_LABEL');
+			break;
+			
+			default:
+				return JText::_('COM_PHOCACART_TAG');
+			break;
+			
+		}
 	}
 }

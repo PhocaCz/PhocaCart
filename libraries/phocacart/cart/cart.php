@@ -206,6 +206,7 @@ class PhocacartCart
 	 */
 	public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
 	
+		$app			= JFactory::getApplication();
 		
 		if ($idKey != '') {
 			// we get idkey as string - from checkout update or remove -  used in CHECKOUT
@@ -217,9 +218,9 @@ class PhocacartCart
 			$checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 			
 			if (!$checkP) {	
-				$uri 			= JFactory::getURI();
-				$action			= $uri->toString();
-				$app			= JFactory::getApplication();
+				//$uri 			= JFactory::getURI();
+				//$action			= $uri->toString();
+				
 				$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
 				return false;
 			}
@@ -231,9 +232,9 @@ class PhocacartCart
 			$checkedA = PhocacartAttribute::checkRequiredAttributes($id, $attributes);
 
 			if (!$checkedA) {
-				$uri 			= JFactory::getURI();
-				$action			= $uri->toString();
-				$app			= JFactory::getApplication();
+				//$uri 			= JFactory::getURI();
+				//$action			= $uri->toString();
+				
 				$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
 		
 		
@@ -275,6 +276,8 @@ class PhocacartCart
 			$this->updateItems();
 			//$this->updateSubTotal();
 			return true;
+		} else {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_QUANTITY_WAS_NOT_SET'), 'error');
 		}
 		return false;
 	}

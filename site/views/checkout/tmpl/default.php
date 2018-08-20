@@ -33,6 +33,9 @@ echo $this->t['event']->onCheckoutAfterConfirm;
 
 
 echo '</div>';// end ph-pc-checkout-box
+
+echo '<div id="phContainer"></div>';
+
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
 ?>
