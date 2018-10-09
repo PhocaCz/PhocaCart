@@ -93,7 +93,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 		// Direct download
 		$linkTxtHandler	= 'onclick="window.open(this.href, \'orderview\', \'width=880,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';
 		//$linkTxtHandler = '';
-		$dhtml = '<a href="'.$linkTxt.'" class="btn btn-small btn-primary" '.$linkTxtHandler.'><i id="ph-icon-text" class="icon-dummy glyphicon glyphicon-list-alt ph-icon-text"></i>'.JText::_('COM_PHOCACART_VIEW_REPORT_HTML').'</a>';
+		$dhtml = '<a href="'.$linkTxt.'" class="btn btn-small btn-primary" '.$linkTxtHandler.'><i id="ph-icon-text" class="icon-dummy '.PhocacartRenderIcon::getClassAdmin('list-alt').' ph-icon-text"></i>'.JText::_('COM_PHOCACART_VIEW_REPORT_HTML').'</a>';
 		$bar->appendButton('Custom', $dhtml);
 		
 		$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
@@ -102,7 +102,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 			$linkPdf 		= JRoute::_( 'index.php?option=com_phocacart&view=phocacartreports&tmpl=component&format=pdf' );
 			$linkPdfHandler	= 'onclick="window.open(this.href, \'orderview\', \'width=880,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';
 			//$linkPdfHandler = '';
-			$dhtml = '<a href="'.$linkPdf.'" class="btn btn-small btn-danger" '.$linkPdfHandler.'><i id="ph-icon-pdf" class="icon-dummy glyphicon glyphicon-list-alt ph-icon-pdf"></i>'.JText::_('COM_PHOCACART_VIEW_REPORT_PDF').'</a>';
+			$dhtml = '<a href="'.$linkPdf.'" class="btn btn-small btn-danger" '.$linkPdfHandler.'><i id="ph-icon-pdf" class="icon-dummy '.PhocacartRenderIcon::getClassAdmin('list-alt').' ph-icon-pdf"></i>'.JText::_('COM_PHOCACART_VIEW_REPORT_PDF').'</a>';
 			$bar->appendButton('Custom', $dhtml);
 		
 		}

@@ -143,7 +143,7 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 		
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
 			$table = $this->getTable();

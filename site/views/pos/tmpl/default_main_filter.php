@@ -33,7 +33,12 @@ $attributes = array(
 );
 $valueFrom 	= $this->escape($this->state->get('filter.date', PhocacartDate::getCurrentDate()));
 
-echo '<div class="ph-inline-param">'. JHtml::_('calendar', $valueFrom, $name, $id, $format, $attributes).'</div>';
+
+$calendar = JHtml::_('calendar', $valueFrom, $name, $id, $format, $attributes);
+$calendarIcon = PhocacartRenderIcon::getClass('calendar');
+$calendar = str_replace('icon-calendar', $calendarIcon .' icon-calendar', $calendar);
+
+echo '<div class="ph-inline-param">'. $calendar.'</div>';
 	
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
@@ -51,7 +56,7 @@ echo '</div>';
 echo '<div class="ph-pos-sku-product-box" id="phPosSkuProductBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="glyphicon glyphicon-barcode"></i>';
+echo ' <i class="'.PhocacartRenderIcon::getClass('barcode').'"></i>';
 
 echo '<form id="phPosSkuProductForm" class="phItemCartBoxForm phjAddToCart phjPos phjAddToCartVPosPSku form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -77,7 +82,7 @@ echo '</div>';
 echo '<div class="ph-pos-card-user-box" id="phPosCartUserBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="glyphicon glyphicon-barcode"></i>';
+echo ' <i class="'.PhocacartRenderIcon::getClass('barcode').'"></i>';
 
 echo '<form id="phPosCardUserForm" class="phjAddToCartVPosPCard form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -102,7 +107,7 @@ echo '</div>';
 // SEARCH 
 echo '<div class="ph-pos-search-box" id="phPosSearchBox">';
 echo '<div class="inner-addon right-addon">';
-echo ' <i class="glyphicon glyphicon-search"></i>';
+echo ' <i class="'.PhocacartRenderIcon::getClass('search').'"></i>';
 echo '	<input type="text" name="phpossearch" id="phPosSearch" value="'.htmlspecialchars($this->t['search']).'" class="form-control ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_SEARCH').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 echo '</div>';
 echo '</div>';

@@ -19,9 +19,9 @@ $d = $displayData;
 	<div class="ph-pull-right">
 		<div class="ph-category-item-wishlist">
 		<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-			<a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="glyphicon glyphicon-heart"></span></a>
+			<a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('wish-list') ?>"></span></a>
 		<?php } else { ?>
-			<a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="glyphicon glyphicon-heart"></span></a>
+			<a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('wish-list') ?>"></span></a>
 		<?php } ?>
 		</div>
 	</div>

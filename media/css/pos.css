@@ -383,15 +383,26 @@ body#phocaPosSite {
     position: relative; 
 }
 /* style icon */
-.inner-addon .glyphicon {
+.inner-addon .glyphicon,
+.inner-addon .fa {
   position: absolute;
   padding: 10px;
   pointer-events: none;
   color: #e3e3e3;
 }
 /* align icon */
-.left-addon .glyphicon  { left:  0px;}
-.right-addon .glyphicon { right: 0px;}
+.left-addon .glyphicon {
+	left:  0px;
+}
+.left-addon .fa {
+	left:  10px;
+}
+.right-addon .glyphicon{ 
+	right: 0px;
+}
+.right-addon .fa { 
+	right: 10px;
+}
 /* add padding  */
 .left-addon input  { padding-left:  30px; }
 .right-addon input { padding-right: 30px; }
@@ -553,7 +564,8 @@ ph-pos-filter-box {
 	background: #00a3d9;
 	color: #fff;
 }
-#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory span.glyphicon{
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory span.glyphicon,
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory span.fa{
     display: inline-block;
     margin: 0px;
 	padding: 3px 6px 7px 6px;
@@ -567,7 +579,8 @@ ph-pos-filter-box {
 	box-shadow: none;
 	opacity: 0;	
 }
-#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory.active span.glyphicon {  
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory.active span.glyphicon,
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory.active span.fa {  
 	border: 0px solid #00a3d9;
 	margin: 0px;
 	padding: 3px 6px 7px 6px;
@@ -1022,12 +1035,9 @@ input[type="number"] {
 	
 }
 
-
-
-#ph-pc-pos-site .icon-calendar:before {
-	font-family: 'Glyphicons Halflings';
+#ph-pc-pos-site .icon-calendar {
 	color: #A6AAB1;
-    content: "\e109";
+	padding-top:5px;
 }
 #ph-pc-pos-site .ph-pos-customer-row-header div {
 	font-weight: bold;

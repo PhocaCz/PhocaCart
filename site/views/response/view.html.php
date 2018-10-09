@@ -18,7 +18,7 @@ class PhocaCartViewResponse extends JViewLegacy
 		
 		$document					= JFactory::getDocument();		
 		$app						= JFactory::getApplication();
-		$uri 						= JFactory::getURI();
+		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
 		

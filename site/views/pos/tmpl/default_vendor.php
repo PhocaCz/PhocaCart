@@ -40,14 +40,14 @@ echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.
 echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 echo JHtml::_('form.token');
-echo '<button class="btn btn-primary loadMainContent ph-pos-btn-dropdown"><span class="glyphicon glyphicon-shopping-cart icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_ORDERS').'</button>';
+echo '<button class="btn btn-primary loadMainContent ph-pos-btn-dropdown"><span class="'.PhocacartRenderIcon::getClass('shopping-cart').' icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_ORDERS').'</button>';
 echo '</form>';
 
 
 // LOGOUT
 echo '<div class="ph-dropdown-header">'.JText::_('COM_PHOCACART_LOGOUT').'</div>';
 echo '<form action="'. JRoute::_('index.php?option=com_users&task=user.logout').'" method="post">';
-echo '<button type="submit" class="btn btn-danger ph-pos-btn-dropdown"><span class="glyphicon glyphicon-arrow-left icon-white"></span> '.JText::_('JLOGOUT').'</button>';
+echo '<button type="submit" class="btn btn-danger ph-pos-btn-dropdown"><span class="'.PhocacartRenderIcon::getClass('log-out').' icon-white"></span> '.JText::_('JLOGOUT').'</button>';
 echo '<input type="hidden" name="return" value="'. base64_encode(PhocacartRoute::getPosRoute()).'" />';
 echo JHtml::_('form.token');
 echo '</form>';

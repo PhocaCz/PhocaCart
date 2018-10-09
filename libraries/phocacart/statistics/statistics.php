@@ -23,15 +23,15 @@ final class PhocacartStatistics
 
 	public function renderChartJsLine($id, $dataA, $dataALabel, $dataB, $dataBLabel, $dataX) {
 
-		$bC 	= 'rgba(52,140,212,1)';
-		$baC	= 'rgba(52,140,212,0.3)';
-		$pbC	= 'rgba(255,255,255,1)';
-		$pbaC 	= 'rgba(52,140,212,1)';
+		$bC 	= 'rgba(79,152,195,1)';
+		$baC	= 'rgba(79,152,195,0.5)';
+		$pbC	= 'rgba(79,152,195,1)';
+		$pbaC 	= 'rgba(255,255,255,1)';
 		
-		$bC2 	= 'rgba(30,166,154,1)';
-		$baC2	= 'rgba(30,166,154,0.3)';
-		$pbC2	= 'rgba(255,255,255,1)';
-		$pbaC2 	= 'rgba(30,166,154,1)';
+		$bC2 	= 'rgba(210,214,222,1)';
+		$baC2	= 'rgba(210,214,222,0.5)';
+		$pbC2	= 'rgba(210,214,222,1)';
+		$pbaC2 	= 'rgba(255,255,255,1)';
 		
 		$o = "
 var config".$id." = {

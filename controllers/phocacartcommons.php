@@ -32,8 +32,8 @@ class PhocaCartCpControllerPhocaCartCommons extends JControllerAdmin
 		//print r($order);
 		
 		
-		JArrayHelper::toInteger($pks);
-		JArrayHelper::toInteger($order);
+		\Joomla\Utilities\ArrayHelper::toInteger($pks);
+		\Joomla\Utilities\ArrayHelper::toInteger($order);
 		$model = $this->getModel();
 		$return = $model->saveorder($pks, $order);
 	

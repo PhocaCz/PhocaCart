@@ -288,7 +288,7 @@ class PhocacartWishlist
 	public function renderList() {
 		
 		$db 				= JFactory::getDBO();
-		$uri 				= JFactory::getURI();
+		$uri 				= \Joomla\CMS\Uri\Uri::getInstance();
 		$action				= $uri->toString();
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();

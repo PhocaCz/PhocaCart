@@ -1060,7 +1060,7 @@ class PhocacartRenderAdminview
 			// BACK TO WIZARD (can be called everywhere)
 			$bar = JToolbar::getInstance( 'toolbar' );		
 			$dhtml = '<button onclick="Joomla.submitbutton(\'phocacartwizard.backtowizard\');" class="btn btn-small btn-warning">
-	<span id="ph-icon-wizard" class="icon-dummy glyphicon glyphicon-edit ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_BACK_TO_WIZARD').'</button>';
+	<span id="ph-icon-wizard" class="icon-dummy '.PhocacartRenderIcon::getClassAdmin('edit').' ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_BACK_TO_WIZARD').'</button>';
 		
 			$bar->appendButton('Custom', $dhtml, 'wizard');
 		} else if ($type == 'start') {
@@ -1068,7 +1068,7 @@ class PhocacartRenderAdminview
 			// this button is starded by javascript in function modalWindowDynamic libraries\phocacart\render\adminview.php
 			$bar = JToolbar::getInstance( 'toolbar' );		
 			$dhtml = '<button id="'.$id.'" class="'.$class.'" data-target="#'.$idMd.'" data-toggle="modal" data-src="'.$url.'" data-width="'.$w.'" data-heigth="'.$h.'">
-	<span id="ph-icon-wizard" class="icon-dummy glyphicon glyphicon-edit ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_START_WIZARD').'</button>';
+	<span id="ph-icon-wizard" class="icon-dummy '.PhocacartRenderIcon::getClassAdmin('edit').' ph-icon-wizard"></span>'.JText::_('COM_PHOCACART_START_WIZARD').'</button>';
 			$bar->appendButton('Custom', $dhtml, 'wizard');
 			
 			// We have displayed the modal with wizard

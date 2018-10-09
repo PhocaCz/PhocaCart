@@ -17,7 +17,7 @@ $d = $displayData;
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 	<div class="ph-pull-right">
 		<div class="ph-category-item-wishlist">
-		<button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-download"></span><?php
+		<button type="submit" class="btn btn-primary ph-btn"><span class="<?php echo PhocacartRenderIcon::getClass('download') ?>"></span><?php
 		if ($d['title'] != '') {
 			echo ' '. $d['title'];
 		} else {

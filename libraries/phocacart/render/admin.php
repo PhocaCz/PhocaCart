@@ -23,7 +23,7 @@ class PhocacartRenderAdmin
 		
 		$o = '';
 		$o .= '<div class="thumbnails ph-icon">';
-		$o .= '   <div class="ph-icon-inside-box"><a class="thumbnail ph-icon-inside" href="'.$link.'"><span style="color: '.$color.';opacity: 0.6;" class="glyphicon glyphicon-'.$icon.' ph-icon-cp-large"></span></a></div>';
+		$o .= '   <div class="ph-icon-inside-box"><a class="thumbnail ph-icon-inside" href="'.$link.'"><span style="color: '.$color.';opacity: 0.6;" class="'.PhocacartRenderIcon::getClassAdmin($icon).' ph-icon-cp-large"></span></a></div>';
 		$o .= '   <div class="ph-text-inside-box"><a class="ph-text-inside" href="'.$link.'"><span class="ph-icon-cp-title">'.$text.'</span></a></div>';
 		
 		$o .= '</div>';

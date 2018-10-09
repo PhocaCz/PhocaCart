@@ -28,7 +28,7 @@ if (isset($d['param2']) && $d['param2'] != '') { ?>
 <div class="col-sm-5"></div>
 <div class="col-sm-7">
 	<div class="ph-pull-right btn-group ph-zero ph-right-zero">
-		<button class="btn btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="glyphicon glyphicon-ok"></span></button>
-		<button class="btn  btn-danger tip hasTooltip ph-pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="glyphicon glyphicon-remove"></span></button> 
+		<button class="btn btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="<?php echo PhocacartRenderIcon::getClass('ok') ?>"></span></button>
+		<button class="btn  btn-danger tip hasTooltip ph-pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="<?php echo PhocacartRenderIcon::getClass('clear') ?>"></span></button> 
 	</div>
 </div>

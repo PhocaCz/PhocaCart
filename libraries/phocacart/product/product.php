@@ -886,7 +886,7 @@ class PhocacartProduct
 	public static function featured($pks, $value = 0) {
 		// Sanitize the ids.
 		$pks = (array) $pks;
-		JArrayHelper::toInteger($pks);
+		\Joomla\Utilities\ArrayHelper::toInteger($pks);
 		$app = JFactory::getApplication();
 
 		if (empty($pks))
@@ -1256,11 +1256,13 @@ class PhocacartProduct
 			$lefts	= array_merge($lefts, $rules['lefts']);
 		}
 		
+		$group = PhocacartUtilsSettings::isFullGroupBy() ? ' GROUP BY p.published' : '';
+		
 		$q = ' SELECT '.$select
 			.' FROM  #__phocacart_products AS p'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
-			. ' GROUP BY p.price'
+			. $group
 			. ' ORDER BY p.id'
 			. ' LIMIT 1';
 		
@@ -1270,7 +1272,7 @@ class PhocacartProduct
 		. ' WHERE p.published = 1'
 		. ' ORDER BY p.id'
 		. ' LIMIT 1';*/
-			
+	
 		$db->setQuery( $q );
 		$price = $db->loadResult();
 		

@@ -12,6 +12,7 @@ $displayData 		= null;
 $v 					= $d['attribute'];
 $attributeIdName	= 'V'.$d['typeview'].'P'.(int)$d['product_id'].'A'.(int)$v->id;
 $productIdName		= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
+$iconType			= PhocacartRenderIcon::getIconType();
 
 $attr				= array();
 $attr[]				= 'id="phItemAttribute'.$attributeIdName.'"';// ID
@@ -23,6 +24,7 @@ $attr[]				= 'data-product-id-name="'. $productIdName.'"';// Product ID - Unique
 $attr[]				= 'data-attribute-type="'. $v->type.'"';// Type of attribute (select, checkbox, color, image)
 $attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - Unique name between different views and products
 $attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item
+$attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
 echo '<select '.implode(' ', $attr).'>';

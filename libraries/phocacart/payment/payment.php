@@ -426,10 +426,10 @@ class PhocacartPayment
 		$message = array();
 		
 		if (isset($payment['method'])) {
-			$dispatcher = JEventDispatcher::getInstance();
+			//$dispatcher = J EventDispatcher::getInstance();
 			JPluginHelper::importPlugin('pcp', htmlspecialchars($payment['method']));
 			
-			$dispatcher->trigger('PCPbeforeProceedToPayment', array(&$proceed, &$message));
+			\JFactory::getApplication()->triggerEvent('PCPbeforeProceedToPayment', array(&$proceed, &$message));
 		}
 		
 		// Response is not a part of event parameter because of backward compatibility

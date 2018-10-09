@@ -68,10 +68,11 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
-			$registry = new JRegistry;
-			$registry->loadString($item->metadata);
-			$item->metadata = $registry->toArray();
-			
+			if (isset($item->metadata)) {
+				$registry = new JRegistry;
+				$registry->loadString($item->metadata);
+				$item->metadata = $registry->toArray();
+			}
 			// Make the numbers more readable
 			// it has no influence on saving it to db
 			$item->price 			= PhocacartPrice::cleanPrice($item->price);
@@ -149,7 +150,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}*/
 		$app		= JFactory::getApplication();
 		$input  	= JFactory::getApplication()->input;
-		$dispatcher = JDispatcher::getInstance();
+		//$dispatcher = J Dispatcher::getInstance();
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
@@ -220,7 +221,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 		// Trigger the onContentBeforeSave event.
-		/* $result = $dispatcher->trigger($this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew));
+		/* $result = \JFactory::getApplication()->triggerEvent('$this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew));
 		if (in_array(false, $result, true)) {
 			$this->setError($table->getError());
 			return false;
@@ -317,7 +318,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$cache->clean();
 
 		// Trigger the onContentAfterSave event.
-		//$dispatcher->trigger($this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
+		//\JFactory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
@@ -334,7 +335,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
 			$table = $this->getTable();
@@ -456,6 +457,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		// Source Category (current category)
 		$app 			= JFactory::getApplication('administrator');
 		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
+		$batchP 		= $app->input->post->get('batch', array(), 'array');
 		
 		$table	= $this->getTable();
 		$db		= $this->getDbo();
@@ -517,6 +519,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
 			$table->title   = $data['0'];
 			$table->alias   = $data['1'];
+			$table->published = 0;// As default the copied new product is unpublished
 
 			// Reset the ID because we are making a copy
 			$table->id		= 0;
@@ -548,12 +551,23 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$newIds[$pk]	= $newId;
 			
 			// Store other new information
+			
 			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId);
 			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
-			$currentDataCat = PhocacartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
+			
+			
+		
+			// Copy all source categories
+			if (isset($batchP['copy_all_cats']) && $batchP['copy_all_cats'] == 1) {
+				$currentDataCat = PhocacartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
 																							 // will be copied too
-			// 1) Bind categories - destination category + all categories from source product (source product -> destination product)
-			$dataCat2		= array_merge($dataCat, $currentDataCat);
+				 // 1) Bind categories - destination category + all categories from source product (source product -> destination product)
+				$dataCat2		= array_merge($dataCat, $currentDataCat);
+			} else {
+				$dataCat2		= $dataCat;
+			}
+			
+			
 			// 2) Remove duplicates
 			$dataCat2		= array_unique($dataCat2);
 			
@@ -562,10 +576,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		/*	
 		 * 	Yes when copying - we duplicate the item intentionally
 		 * 	// 3) Remove the source category - we copy product from source category and the product is included in source category
-			//    so don't copy it again to not get duplicates in the same category
-			$currentCatidA 	= array(0 => (int)$currentCatid);
-			$dataCat2 		= array_diff($dataCat2, $currentCatidA);*/
+			//    so don't copy it again to not get duplicates in the same category*/
+			//
+			// 
+			// $currentCatidA 	= array(0 => (int)$currentCatid);
+			// $dataCat2 		= array_diff($dataCat2, $currentCatidA);
+			
+			// PhocacartCategoryMultiple::storeCategories function does not delete current category, so if we have removed it from array,
+			// we need to delete it from database too
+			// PhocacartCategoryMultiple::deleteCategoriesFromProduct($currentCatidA, (int)$newId);
+			// This is based on filtering in administration - if we display products from category A, the A is $currentCatidA
+			
+			
 	
+			// The following function does not delete source categories, it only adds new so source categories needs to be deleted
 			PhocacartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
 			
 			//$i++;
@@ -675,7 +699,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	function recreate($cid = array(), &$message) {
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			$query = 'SELECT a.id, a.image, a.title'.
 					' FROM #__phocacart_products AS a' .
@@ -774,7 +798,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	public function featured($pks, $value = 0) {
 		// Sanitize the ids.
 		$pks = (array) $pks;
-		JArrayHelper::toInteger($pks);
+		\Joomla\Utilities\ArrayHelper::toInteger($pks);
 
 		if (empty($pks))
 		{
@@ -982,13 +1006,23 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	}
 	
 	protected function generateNewTitle($category_id, $alias, $title) {
+		
+		$app 			= JFactory::getApplication('administrator');
+		$batchP 		= $app->input->post->get('batch', array(), 'array');
+		
+		
 		// Alter the title & alias
 		$table = $this->getTable();
 		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name 
 		// not like standard new name for each category
 		while ($table->load(array('alias' => $alias))) {
 			
-			$title = StringHelper::increment($title);
+			// Skip creating unique name
+			if (isset($batchP['skip_creating_unique_name']) && $batchP['skip_creating_unique_name'] == 1) {
+		
+			} else {
+				$title = StringHelper::increment($title);
+			}
 			$alias = StringHelper::increment($alias, 'dash');
 		}
 
@@ -1001,7 +1035,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$cA = 0;
 		
 		if (count( $cid ) && (int)$idSource > 0) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			
 			// Attributes
 			$aA = PhocacartAttribute::getAttributesById($idSource, 1);

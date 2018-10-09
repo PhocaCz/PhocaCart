@@ -342,7 +342,7 @@ class PhocacartRenderAdminviews
 	/* TO DO:
 	* CHANGE PATHS
 	* SET NEW PARAM IN PG: '/media/com_phocacart/images/administrator/'
-	*/
+	*//*
 	public function tdImage($item, $button, $txtE, $class = '', $avatarAbs = '', $avatarRel = '') {
 		$o = '<td class="'.$class.'">'. "\n";
 		$o .= '<div class="phocagallery-box-file">'. "\n"
@@ -397,7 +397,7 @@ class PhocacartRenderAdminviews
 			.'</div>'. "\n";
 		$o .=  '</td>'. "\n";
 		return $o;
-	}
+	}*/
 	
 	
 	public function tdPublishDownUp ($publishUp, $publishDown, $langPref) {

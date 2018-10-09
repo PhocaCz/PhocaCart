@@ -580,12 +580,12 @@ class PhocacartOrderStatus
 			
 			
 			JPluginHelper::importPlugin( 'system' );
-			$dispatcher = JEventDispatcher::getInstance();
+			//$dispatcher = J EventDispatcher::getInstance();
 			JPluginHelper::importPlugin('plgSystemMultilanguagesck'); 
-			$dispatcher->trigger('onChangeText', array(&$subject));
-			$dispatcher->trigger('onChangeText', array(&$subjectOthers));
-			$dispatcher->trigger('onChangeText', array(&$body));
-			$dispatcher->trigger('onChangeText', array(&$bodyOthers));
+			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$subject));
+			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$subjectOthers));
+			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$body));
+			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$bodyOthers));
 				
 			//}
 

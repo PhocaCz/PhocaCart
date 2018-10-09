@@ -105,7 +105,7 @@ if ($this->a->confirm == 1) {
 		echo '<div class="ph-cb"></div>';
 		
 		echo ' <div class="ph-pull-right ph-checkout-confirm">';	
-		echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-ok"></span> '.$this->t['confirm_order_text'].'</button>';
+		echo '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('ok').'"></span> '.$this->t['confirm_order_text'].'</button>';
 		echo '</div><div class="ph-cb"></div>';
 		
 		

@@ -32,7 +32,7 @@ class PhocaCartViewAccount extends JViewLegacy
 	{		
 		$app								= JFactory::getApplication();
 		$this->u							= PhocacartUser::getUser();
-		$uri 								= JFactory::getURI();
+		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
 		$model								= $this->getModel();

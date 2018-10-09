@@ -28,7 +28,7 @@ class TablePhocaCartFormfield extends JTable
 	public function displayItem($pks = null, $state = 1, $userId = 0, $column = 'display_billing') {
 		$k = $this->_tbl_key;
 
-		JArrayHelper::toInteger($pks);
+		\Joomla\Utilities\ArrayHelper::toInteger($pks);
 		$userId = (int) $userId;
 		$state  = (int) $state;
 

@@ -26,7 +26,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		$document							= JFactory::getDocument();		
 		$app								= JFactory::getApplication();
-		$uri 								= JFactory::getURI();
+		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->u							= PhocacartUser::getUser();
 		$this->p							= $app->getParams();
 		$this->a							= new PhocacartAccess();
@@ -346,25 +346,25 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		// Plugins ------------------------------------------
 		JPluginHelper::importPlugin('pcv');
-		$this->t['dispatcher']	= JEventDispatcher::getInstance();
+		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 		
-		$results = $this->t['dispatcher']->trigger('onCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p));
 		$this->t['event']->onCheckoutAfterCart = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p));
 		$this->t['event']->onCheckoutAfterLogin = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p));
 		$this->t['event']->onCheckoutAfterAddress = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p));
 		$this->t['event']->onCheckoutAfterShipping = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p));
 		$this->t['event']->onCheckoutAfterPayment = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p));
 		$this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
 		
 		// END Plugins --------------------------------------

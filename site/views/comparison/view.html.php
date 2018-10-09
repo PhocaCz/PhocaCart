@@ -32,7 +32,7 @@ class PhocaCartViewComparison extends JViewLegacy
 		
 		$this->t['hide_price']			= $this->p->get( 'hide_price', 0 );
 		
-		$uri 						= JFactory::getURI();
+		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
 		$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute());

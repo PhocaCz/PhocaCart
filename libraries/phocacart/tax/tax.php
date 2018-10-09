@@ -91,7 +91,8 @@ class PhocacartTax
 				$taxChangedA['taxtitle']	= $taxO->title;
 			}
 			
-			if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') {
+			//if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') { // the rate can be 0
+			if ($taxChangedA['taxtitle'] != '') {	
 				return $taxChangedA;
 			}
 
@@ -125,7 +126,8 @@ class PhocacartTax
 				$taxChangedA['taxtitle']	= $taxO->title;
 			}
 			
-			if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') {
+			//if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') { // the rate can be 0
+			if ($taxChangedA['taxtitle'] != '') {
 				return $taxChangedA;
 			}
 
@@ -139,7 +141,8 @@ class PhocacartTax
 		$taxChangedA['taxrate']		= $tax;
 		$taxChangedA['taxtitle']	= $taxTitle;
 		
-		$app						= JFactory::getApplication();
+		
+		//$app						= JFactory::getApplication();
 		//$paramsC 					= PhocacartUtils::getComponentParameters();
 		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate			= $paramsC->get( 'dynamic_tax_rate', 0 );

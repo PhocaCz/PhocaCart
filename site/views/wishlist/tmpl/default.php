@@ -89,14 +89,14 @@ if (!empty($this->t['items'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		//echo '<div class="ph-center">';
-		echo '<button type="submit" class="btn btn-danger ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="glyphicon glyphicon-remove"></span></button>';
+		echo '<button type="submit" class="btn btn-danger ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="'.PhocacartRenderIcon::getClass('remove').'"></span></button>';
 		//echo '</div>';
 		
 		
 		echo ' ';
 		
 		$link = JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
-		echo '<a href="'.$link.'" class="btn btn-primary ph-btn" role="button" title="'.JText::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="glyphicon glyphicon-search"></span></a>';
+		echo '<a href="'.$link.'" class="btn btn-primary ph-btn" role="button" title="'.JText::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.PhocacartRenderIcon::getClass('search').'"></span></a>';
 		
 		echo JHtml::_('form.token');
 		echo '</form>';

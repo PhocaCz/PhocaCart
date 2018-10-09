@@ -15,7 +15,7 @@ $d = $displayData;
       <div class="modal-content">
         <div class="modal-header">
           <a role="button" class="close" data-dismiss="modal" >&times;</a>
-		  <h4><span class="glyphicon glyphicon-info-sign"></span> <?php echo JText::_('COM_PHOCACART_ERROR'); ?></h4>
+		  <h4><span class="<?php echo PhocacartRenderIcon::getClass('info-sign') ?>"></span> <?php echo JText::_('COM_PHOCACART_ERROR'); ?></h4>
         </div>
         <div class="modal-body">
 			<?php echo $d['info_msg']; ?>

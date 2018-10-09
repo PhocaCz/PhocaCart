@@ -50,7 +50,7 @@ if ((int)$this->u->id > 0) {
 	echo '<div class="ph-cb"></div>';
 	
 	echo '<div class="ph-pull-right ph-account-address-save">';
-	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('save').'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
 	
@@ -81,7 +81,7 @@ if ((int)$this->u->id > 0) {
 	$lang->load('mod_login');
 	
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
-	//echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="glyphicon glyphicon-remove-circle ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+	//echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="'.PhocacartRenderIcon::getClass('remove-circle').' ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div>';
 	
@@ -136,7 +136,7 @@ if ((int)$this->u->id > 0) {
 	if ($usersConfig->get('allowUserRegistration')) {
 		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
 		
-		echo '<a class="btn btn-primary btn-sm ph-account-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="glyphicon glyphicon-user"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
+		echo '<a class="btn btn-primary btn-sm ph-account-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="'.PhocacartRenderIcon::getClass('user').'"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
 		
 	}
 	//echo '</ul>'. "\n";

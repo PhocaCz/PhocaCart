@@ -83,7 +83,7 @@ class PhocaCartModelQuestion extends JModelForm
 		
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		
-		$uri 	= JFactory::getURI();
+		$uri 	= \Joomla\CMS\Uri\Uri::getInstance();
 		$app    = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_phocacart') ;
 		

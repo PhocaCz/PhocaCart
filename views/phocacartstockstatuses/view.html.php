@@ -47,7 +47,7 @@ class PhocaCartCpViewPhocacartStockStatuses extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.stockstatus_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_STOCK_STATUSES' ), 'icon glyphicon glyphicon-tasks' );
+		JToolbarHelper::title( JText::_( $this->t['l'].'_STOCK_STATUSES' ), 'icon '.PhocacartRenderIcon::getClassAdmin('tasks') );
 	
 		if ($canDo->get('core.create')) {
 			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

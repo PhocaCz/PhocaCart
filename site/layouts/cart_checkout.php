@@ -47,23 +47,23 @@ if (!empty($d['fullitems'][1])) {
 	
 	$r		= 'row';
 	$cA 	= 'col-sm-12 col-md-12 col-xs-12';// whole row
-	$cI 	= 'col-sm-2 col-md-2 col-xs-2';// image
-	$cQ		= 'col-sm-2 col-md-2 col-xs-2';// quantity
-	$cN 	= 'col-sm-2 col-md-2 col-xs-2';// netto
-	$cT 	= 'col-sm-2 col-md-2 col-xs-2';// tax
-	$cB 	= 'col-sm-2 col-md-2 col-xs-2';// brutto
+	$cI 	= 'col-sm-2 col-md-2 col-xs-2 ';// image
+	$cQ		= 'col-sm-2 col-md-2 col-xs-2 ';// quantity
+	$cN 	= 'col-sm-2 col-md-2 col-xs-2 ';// netto
+	$cT 	= 'col-sm-2 col-md-2 col-xs-2 ';// tax
+	$cB 	= 'col-sm-2 col-md-2 col-xs-2 ';// brutto
 	$cV		= ' ph-vertical-align';
 	$cVRow	= ' ph-vertical-align-row';
 	$cAT	= 'col-sm-10 col-md-10 col-xs-10';// attributes
 	
 	// Total summarization
-	$cTotE = 'col-sm-6 col-md-6 col-xs-6'; // empty space
-	$cTotT = 'col-sm-4 col-md-4 col-xs-4'; // title
-	$cTotB = 'col-sm-2 col-md-2 col-xs-2'; // price
+	$cTotE = 'col-sm-6 col-md-6 col-xs-0'; // empty space
+	$cTotT = 'col-sm-4 col-md-4 col-xs-8'; // title
+	$cTotB = 'col-sm-2 col-md-2 col-xs-4'; // price
 	if ((int)$p['tax_calculation'] > 0) {
-		$cP 	= 'col-sm-2 col-md-2 col-xs-2';// - 4 (Tax, Netto)
+		$cP 	= 'col-sm-2 col-md-2 col-xs-2';// title - 4 (Tax, Netto)
 	} else {
-		$cP 	= 'col-sm-6 col-md-6 col-xs-6';// + 4 (Tax, Netto)
+		$cP 	= 'col-sm-6 col-md-6 col-xs-6';// title + 4 (Tax, Netto)
 	}
 	
 	if ($d['pos']) {
@@ -145,7 +145,7 @@ if (!empty($d['fullitems'][1])) {
 				$imageOutput = '<img src="'.JURI::base(true).'/'.$image['image']->rel.'" alt="'.strip_tags($v['title']).'" />';
 			}
 		} else {
-			$imageOutput = '<div class="ph-no-image"><span class="glyphicon glyphicon-ban-circle"</span></div>';
+			$imageOutput = '<div class="ph-no-image"><span class="'.PhocacartRenderIcon::getClass('ban').'"</span></div>';
 		}
 
 		echo '<div class="'.$r.$cV.'">';
@@ -174,9 +174,9 @@ if (!empty($d['fullitems'][1])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$d['actionbase64'].'" />';
 		//UPDATE
-		echo ' <button class="btn btn-success btn-xs ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="glyphicon glyphicon-refresh"></span></button>';
+		echo ' <button class="btn btn-success btn-xs ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.PhocacartRenderIcon::getClass('refresh').'"></span></button>';
 		//DELETE
-		echo ' <button class="btn btn-danger btn-xs ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="glyphicon glyphicon-trash"></span></button>';
+		echo ' <button class="btn btn-danger btn-xs ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.PhocacartRenderIcon::getClass('trash').'"></span></button>';
 		echo JHtml::_('form.token');
 		echo '</div>';
 		echo '</form>';
@@ -617,7 +617,7 @@ if (!empty($d['fullitems'][1])) {
 } else {
 	
 	if ($d['pos']) {
-		echo '<div class="ph-cart-icon"><span class="glyphicon glyphicon-shopping-cart"></span></div>';
+		echo '<div class="ph-cart-icon"><span class="'.PhocacartRenderIcon::getClass('shopping-cart').'"></span></div>';
 	}
 	echo '<div class="ph-cart-empty">'.JText::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY').'</div>';
 }

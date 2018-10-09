@@ -22,11 +22,11 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo JHtml::_('form.token');
 
 if ($this->t['userexists']) {
-	echo '<button class="btn btn-primary loadMainContent"><span class="glyphicon glyphicon-user icon-white"></span>  &nbsp;'.$this->t['user']->name.'</button>';
+	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('user').' icon-white"></span>  &nbsp;'.$this->t['user']->name.'</button>';
 } else if ($this->t['anonymoususerexists']) {
-	echo '<button class="btn btn-primary loadMainContent"><span class="glyphicon glyphicon-user icon-white"></span>  &nbsp;'.$this->t['loyalty_card_number'].'</button>';
+	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('user').' icon-white"></span>  &nbsp;'.$this->t['loyalty_card_number'].'</button>';
 } else {
-	echo '<button class="btn btn-primary loadMainContent"><span class="glyphicon glyphicon-user icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_SELECT_CUSTOMER').'</button>';
+	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('user').' icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_SELECT_CUSTOMER').'</button>';
 }
 
 echo '</form>';
@@ -52,10 +52,10 @@ if ($this->t['pos_shipping_force'] == 0) {
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 	echo JHtml::_('form.token');
-	echo '<button class="btn btn-primary loadMainContent"><span class="glyphicon glyphicon-barcode icon-white"></span> &nbsp;'.$title.'</button>';
+	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('shipping-method').' icon-white"></span> &nbsp;'.$title.'</button>';
 	echo '</form>';
 } else {
-	echo '<div><button class="btn btn-primary"><span class="glyphicon glyphicon-barcode icon-white"></span> &nbsp;'.$title.'</button></div>';
+	echo '<div><button class="btn btn-primary"><span class="'.PhocacartRenderIcon::getClass('shipping-method').' icon-white"></span> &nbsp;'.$title.'</button></div>';
 }
 	
 	
@@ -78,10 +78,10 @@ if ($this->t['pos_payment_force'] == 0) {
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 	echo JHtml::_('form.token');
-	echo '<button class="btn btn-primary loadMainContent"><span class="glyphicon glyphicon-credit-card icon-white"></span> &nbsp;'.$title.'</button>';
+	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('payment-method').' icon-white"></span> &nbsp;'.$title.'</button>';
 	echo '</form>';
 } else {
-	echo '<div><button class="btn btn-primary"><span class="glyphicon glyphicon-credit-card icon-white"></span> &nbsp;'.$title.'</button></div>';
+	echo '<div><button class="btn btn-primary"><span class="'.PhocacartRenderIcon::getClass('payment-method').' icon-white"></span> &nbsp;'.$title.'</button></div>';
 }
 	
 

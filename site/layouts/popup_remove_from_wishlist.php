@@ -19,7 +19,7 @@ if (isset($d['wishlist_view']) && $d['wishlist_view'] == 1) {
       <div class="modal-content">
         <div class="modal-header">
           <a role="button" class="close" <?php echo $d['wishlist_view_href']; ?> >&times;</a>
-		  <h4><span class="glyphicon glyphicon-info-sign"></span> <?php echo $d['info_msg'] ?></h4>
+		  <h4><span class="<?php echo PhocacartRenderIcon::getClass('info-sign') ?>"></span> <?php echo $d['info_msg'] ?></h4>
 		  <?php if (isset($d['info_msg_additional']) && $d['info_msg_additional'] != '') { ?>
 			<div><?php echo $d['info_msg_additional']; ?></div>
 		  <?php } ?>
@@ -28,11 +28,11 @@ if (isset($d['wishlist_view']) && $d['wishlist_view'] == 1) {
 
 		<div class="row">
 			<div class="col-xs-12 col-sm-6 col-md-6 ph-center">
-			<a class="btn btn-primary ph-btn" role="button" <?php echo $d['wishlist_view_href']; ?> ><span class="glyphicon glyphicon-shopping-cart"></span> <?php echo JText::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
+			<a class="btn btn-primary ph-btn" role="button" <?php echo $d['wishlist_view_href']; ?> ><span class="<?php echo PhocacartRenderIcon::getClass('shopping-cart') ?>"></span> <?php echo JText::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
 			</div>
 
 			<div class="col-xs-12 col-sm-6 col-md-6 ph-center">
-			<a class="btn btn-success ph-btn" role="button" href="<?php echo $d['link_wishlist']; ?>" ><span class="glyphicon glyphicon-share-alt"></span> <?php echo JText::_('COM_PHOCACART_PROCEED_TO_WISH_LIST'); ?></a>
+			<a class="btn btn-success ph-btn" role="button" href="<?php echo $d['link_wishlist']; ?>" ><span class="<?php echo PhocacartRenderIcon::getClass('int-link') ?>"></span> <?php echo JText::_('COM_PHOCACART_PROCEED_TO_WISH_LIST'); ?></a>
 			</div>
 		</div>
         </div>

@@ -218,7 +218,7 @@ class PhocacartCart
 			$checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 			
 			if (!$checkP) {	
-				//$uri 			= JFactory::getURI();
+				//$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
 				//$action			= $uri->toString();
 				
 				$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
@@ -232,7 +232,7 @@ class PhocacartCart
 			$checkedA = PhocacartAttribute::checkRequiredAttributes($id, $attributes);
 
 			if (!$checkedA) {
-				//$uri 			= JFactory::getURI();
+				//$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
 				//$action			= $uri->toString();
 				
 				$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');

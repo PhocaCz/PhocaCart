@@ -28,7 +28,7 @@ class PhocacartSection
 			
 			$o .= '<div class="btn-group" role="group">';
 			$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">';
-	        $o .= '<span class="glyphicon glyphicon-arrow-left icon-white" aria-hidden="true"></span></a>';
+	        $o .= '<span class="'.PhocacartRenderIcon::getClass('back-category').' icon-white" aria-hidden="true"></span></a>';
 	        $o .= '<a href="'.$linkSection.'" class="btn btn-primary active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else if (isset($section->title) && $section->title != '') {
@@ -39,7 +39,7 @@ class PhocacartSection
 			
 			$o .= '<div class="btn-group" role="group">';
 			$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">';
-	        $o .= '<span class="glyphicon glyphicon-arrow-left icon-white" aria-hidden="true"></span></a>';
+	        $o .= '<span class="'.PhocacartRenderIcon::getClass('back-category').' icon-white" aria-hidden="true"></span></a>';
 	        $o .= '<a href="'.$linkSection.'" class="btn btn-primary active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else {
@@ -51,7 +51,7 @@ class PhocacartSection
 					$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', (int)$v->id));
 					$o .= '<div class="btn-group" role="group">';
 					$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">';
-					$o .= '<span class="glyphicon glyphicon-arrow-left icon-white" aria-hidden="true"></span></a>';
+					$o .= '<span class="'.PhocacartRenderIcon::getClass('back-category').' icon-white" aria-hidden="true"></span></a>';
 					$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">'.JText::_('COM_PHOCACART_SECTIONS').'</a>';
 					$o .= '</div>';
 					break;

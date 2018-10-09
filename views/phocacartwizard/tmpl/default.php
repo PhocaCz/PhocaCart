@@ -53,7 +53,7 @@ if ($this->page == 0) { ?>
 				
 				<div><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_DEMO_DATA'); ?>:</div>
 				
-				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="glyphicon glyphicon-download icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="<?php PhocacartRenderIcon::getClassAdmin('download')?> icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
 				
 				<ol>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_INSTALL_BOTH_PACKAGES'); ?></li>
@@ -73,7 +73,7 @@ if ($this->page == 0) { ?>
 			<div class="ph-wizard-start-page-box">
 				<div><?php echo JText::_('COM_PHOCACART_WIZARD_START_QUICK_SETUP_WIZARD');?>.</div>
 				<div>&nbsp;</div>
-				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn" href="<?php echo JRoute::_($linkWizard.'&page=1'); ?>"><span class="glyphicon glyphicon-share-alt icon-share"></span> <?php echo JText::_('COM_PHOCACART_START_WIZARD'); ?></a></div>
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn" href="<?php echo JRoute::_($linkWizard.'&page=1'); ?>"><span class="<?php PhocacartRenderIcon::getClassAdmin('share-alt')?> icon-share"></span> <?php echo JText::_('COM_PHOCACART_START_WIZARD'); ?></a></div>
 			</div>
 		</div>
 	</div>

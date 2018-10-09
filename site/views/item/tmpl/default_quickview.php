@@ -26,7 +26,7 @@ $x = $this->item[0];
       <div class="modal-content">
         <div class="modal-header">
           <a role="button" class="close" data-dismiss="modal" >&times;</a>
-		  <h4><span class="glyphicon glyphicon-eye-open"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
+		  <h4><span class="<?php echo PhocacartRenderIcon::getClass('quick-view') ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
         </div>
         <div class="modal-body"><?php
 		

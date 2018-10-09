@@ -19,9 +19,9 @@ $d = $displayData;
 	<div class="ph-pull-right">
 		<div class="ph-category-item-compare">
 		<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-			<a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="glyphicon glyphicon-stats"></span></a>
+			<a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('compare') ?>"></span></a>
 		<?php } else { ?>
-			<a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="glyphicon glyphicon-stats"></span></a>
+			<a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('compare') ?>"></span></a>
 		<?php } ?>
 		</div>
 	</div>

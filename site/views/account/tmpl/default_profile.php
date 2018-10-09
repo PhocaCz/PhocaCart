@@ -148,7 +148,7 @@ echo '</div>';// end row
 echo '<div class="ph-cb"></div>';
 
 echo '<div class="ph-pull-right ph-account-address-save">';
-echo '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-floppy-disk"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+echo '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('save').'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 //echo '<input type="submit" value="submit" />';
 echo '</div>';
 

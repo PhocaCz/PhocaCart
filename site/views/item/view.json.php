@@ -39,7 +39,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$app					= JFactory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
-		$uri 					= JFactory::getURI();
+		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
 		$model					= $this->getModel();
 		$document				= JFactory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');

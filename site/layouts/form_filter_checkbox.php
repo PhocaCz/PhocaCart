@@ -13,13 +13,13 @@ $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
 
 
 // to hide as default
-// class="glyphicon glyphicon-triangle-bottom" ==> class="glyphicon glyphicon-triangle-right"
+// class="glyph icon glyph icon-triangle-bottom phTriangleBottom" ==> class="glyph icon glyph icon-triangle-right"
 // class="panel-collapse collapse in" ==> class="panel-collapse collapse"
 
 ?><div class="panel panel-default">
 	<div class="panel-heading" role="tab" id="heading<?php echo $dParamAttr; ?>">
 		<h4 class="panel-title">
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="glyphicon glyphicon-triangle-bottom"></span></a> 
+			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo PhocacartRenderIcon::getClass('triangle-bottom') ?>"></span></a> 
 			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $d['title'] ?></a>
 		</h4>
 	</div>

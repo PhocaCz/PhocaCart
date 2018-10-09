@@ -76,10 +76,10 @@ class PhocaCartModelCheckout extends JModelForm
 		
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = JArrayHelper::toObject($properties, 'JObject');
+		$item = \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
 		
 		$propertiesS = $tableS->getProperties(1);
-		//$itemS = JArrayHelper::toObject($propertiesS, 'JObject');
+		//$itemS = \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
 		
 		//Add shipping data to billing and do both data package
 		if(!empty($propertiesS) && is_object($item)) {
@@ -293,7 +293,7 @@ class PhocaCartModelCheckout extends JModelForm
 	protected function loadFormGuest($name, $source = null, $options = array(), $clear = false, $xpath = false)
 	{
 		// Handle the optional arguments.
-		$options['control'] = JArrayHelper::getValue($options, 'control', false);
+		$options['control'] = \Joomla\Utilities\ArrayHelper::getValue($options, 'control', false);
 
 		// Create a signature hash.
 		$hash = md5($source . serialize($options));

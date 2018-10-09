@@ -29,7 +29,7 @@ class PhocacartLog
 		}
 	
 		if ((int)$type > 0 && $title != '' ) {
-			$uri			= JFactory::getUri();
+			$uri			= \Joomla\CMS\Uri\Uri::getInstance();
 			$user			= PhocacartUser::getUser();
 			$db				= JFactory::getDBO();
 			$ip 			= $_SERVER["REMOTE_ADDR"];

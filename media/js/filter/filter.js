@@ -317,18 +317,12 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 jQuery(document).ready(function () {
 	jQuery('.collapse')
     .on('shown.bs.collapse', function() {
-		jQuery(this)
-			.parent()
-			.find(".glyphicon-triangle-right")
-			.removeClass("glyphicon-triangle-right")
-			.addClass("glyphicon-triangle-bottom");
+		jQuery(this).parent().find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+		jQuery(this).parent().find(".fa-caret-right").removeClass("fa-caret-right").addClass("fa-caret-down");
     })
     .on('hidden.bs.collapse', function() {
-        jQuery(this)
-			.parent()
-			.find(".glyphicon-triangle-bottom")
-			.removeClass("glyphicon-triangle-bottom")
-			.addClass("glyphicon-triangle-right");
+        jQuery(this).parent().find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+        jQuery(this).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
     });
 });
 

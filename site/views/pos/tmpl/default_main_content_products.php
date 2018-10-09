@@ -289,7 +289,7 @@ if (!empty($this->items)) {
 	echo '</div>'. "\n"; // end items
 } else {
 	echo '<div id="phItems" class="ph-items grid">';
-	echo '<div class="ph-pos-no-items-icon"><span class="glyphicon glyphicon-ban-circle"></span></div>';
+	echo '<div class="ph-pos-no-items-icon"><span class="'.PhocacartRenderIcon::getClass('ban').'"></span></div>';
 	echo '<div class="ph-pos-no-items">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
 	
 	echo $this->loadTemplate('pagination');// empty pagination only needed variables

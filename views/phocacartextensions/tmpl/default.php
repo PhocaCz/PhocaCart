@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$linkIcon	= '';//'<sup><span class="glyphicon glyphicon-link"></span></sup>';
+$linkIcon	= '';//'<sup><span class="glyph icon glyph icon-link"></span></sup>';
 
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');

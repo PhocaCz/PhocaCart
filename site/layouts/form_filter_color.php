@@ -10,11 +10,12 @@ defined('_JEXEC') or die();
 $d 				= $displayData;
 $displayData 	= null;
 $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
+$iconType		= PhocacartRenderIcon::getIconType();
 ?>
 <div class="panel panel-default">
 	<div class="panel-heading" role="tab" id="heading<?php echo $dParamAttr; ?>">
 		<h4 class="panel-title">
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="glyphicon glyphicon-triangle-bottom"></span></a> 
+			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo PhocacartRenderIcon::getClass('triangle-bottom') ?>"></span></a> 
 			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $d['title'] ?></a>
 		</h4>
 	</div>
@@ -40,9 +41,9 @@ $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
 					$checkedInt	= 1;
 				}
 				
-				$class = '';
+				$class = $iconType . ' ';
 				if ($checked) {
-					$class = 'on';
+					$class .= 'on';
 				}
 				
 				if (isset($v->color) && $v->color != '') {

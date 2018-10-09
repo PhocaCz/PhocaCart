@@ -103,10 +103,10 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = JArrayHelper::toObject($properties, 'JObject');
+		$item = \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
 		
 		$propertiesS = $tableS->getProperties(1);
-		//$itemS = JArrayHelper::toObject($propertiesS, 'JObject');
+		//$itemS = \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
 		
 		//Add shipping data to billing and do both data package
 		if(!empty($propertiesS) && is_object($item)) {

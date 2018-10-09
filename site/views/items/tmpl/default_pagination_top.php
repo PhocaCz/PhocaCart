@@ -43,9 +43,9 @@ if ($this->p->get('show_pagination_top', 1)) {
 		$s = $sN;
 	
 		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-pag-top-row">';
-		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType grid '.$this->t['layouttypeactive'][0].'" data-layouttype="grid"><span class="glyphicon glyphicon glyphicon-th-large"></span></button> ';
-		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType gridlist '.$this->t['layouttypeactive'][1].'" data-layouttype="gridlist"><span class="glyphicon glyphicon glyphicon-th-list"></span></button> ';
-		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType list '.$this->t['layouttypeactive'][2].'" data-layouttype="list"><span class="glyphicon glyphicon glyphicon-align-justify"></span></button>';
+		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType grid '.$this->t['layouttypeactive'][0].'" data-layouttype="grid"><span class="'.PhocacartRenderIcon::getClass('grid').'"></span></button> ';
+		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType gridlist '.$this->t['layouttypeactive'][1].'" data-layouttype="gridlist"><span class="'.PhocacartRenderIcon::getClass('gridlist').'"></span></button> ';
+		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType list '.$this->t['layouttypeactive'][2].'" data-layouttype="list"><span class="'.PhocacartRenderIcon::getClass('list').'"></span></button>';
 		echo '</div>';
 	}
 	

@@ -25,7 +25,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$app						= JFactory::getApplication();
 		$document					= JFactory::getDocument();
 		$this->p 					= $app->getParams();
-		$uri 						= JFactory::getURI();
+		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$model						= $this->getModel();
 		$this->state				= $this->get('State');
 		$this->t['action']			= $uri->toString();

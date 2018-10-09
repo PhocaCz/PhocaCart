@@ -92,6 +92,21 @@ class PhocacartCategoryMultiple
 		return $categories;
 	}
 	
+	public static function deleteCategoriesFromProduct($categoryArray, $productId) {
+		$db = JFactory::getDBO();
+		if (!empty($categoryArray)) {
+			foreach($categoryArray as $k => $v) {
+				$query = ' DELETE '
+				.' FROM #__phocacart_product_categories'
+				. ' WHERE product_id = '. (int)$productId
+				. ' AND category_id = '. (int)$v;
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+		return true;
+	}
+	
 	public static function storeCategories($storeArray, $productId, $categoryOrdering = array()) {
 	
 	

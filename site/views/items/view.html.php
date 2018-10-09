@@ -26,7 +26,7 @@ class PhocaCartViewItems extends JViewLegacy
 		
 		$app						= JFactory::getApplication();
 		$this->p 					= $app->getParams();
-		$uri 						= JFactory::getURI();
+		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$model						= $this->getModel();
 		$document					= JFactory::getDocument();
 		$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );// optional
@@ -148,9 +148,9 @@ class PhocaCartViewItems extends JViewLegacy
 		
 		// Plugins ------------------------------------------
 		JPluginHelper::importPlugin('pcv');
-		$this->t['dispatcher']	= JEventDispatcher::getInstance();
+		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
-		$results = $this->t['dispatcher']->trigger('onItemsBeforeHeader', array('com_phocacart.items', &$this->items, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemsBeforeHeader', array('com_phocacart.items', &$this->items, &$this->p));
 		$this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
 		// Foreach values are rendered in default foreaches
 		// END Plugins --------------------------------------

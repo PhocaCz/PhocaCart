@@ -137,7 +137,7 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 		$delete_regions		= $paramsC->get( 'delete_regions', 0 );
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
 			$table = $this->getTable();

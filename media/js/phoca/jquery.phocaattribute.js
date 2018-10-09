@@ -30,7 +30,7 @@ function phChangeAttributeType(typeView) {
 		var phSelectNameIdB	= '#phItemBoxAttribute' + jQuery(this).data('attribute-id-name');
 		var phType			= jQuery(this).data('attribute-type');// Type of attribute
 		var phTypeView		= jQuery(this).data('type-view');// Type of view, e.g. ItemQuickView is reloaded by ajax
-	
+		var phTypeIcon 		= jQuery(this).data('type-icon');// Type of used icon library
 
 		if (phType == 3) {
 			phClass			= 'phSelectBoxImage';// Image
@@ -65,10 +65,10 @@ function phChangeAttributeType(typeView) {
 					
 					if (phType == 3) {
 						// Image
-						var phSBtn = jQuery('<div class="'+ phClass	+'" data-value="'+ jQuery(this).val() +'" title="'+ jQuery(this).text() +'"><img src="'+ jQuery(this).data('image') +'" alt="'+ jQuery(this).text() +'" /></div>');
+						var phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" title="'+ jQuery(this).text() +'"><img src="'+ jQuery(this).data('image') +'" alt="'+ jQuery(this).text() +'" /></div>');
 					} else if (phType == 2) {
 						// Color
-						var phSBtn = jQuery('<div class="'+ phClass +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
+						var phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
 					}
 			
 				

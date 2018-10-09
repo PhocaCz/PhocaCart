@@ -902,6 +902,7 @@ if ($pR) {
 	if ($store_info_footer_pos != '') {
 		$storeInfoFooterPos = explode("\n", $store_info_footer_pos);
 	}
+
 	$oPr[] = $pP->printLine($storeInfoFooterPos, 'pCenter');
 }
 

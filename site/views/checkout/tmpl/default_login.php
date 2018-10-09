@@ -85,7 +85,7 @@ if($this->a->login == 0) {
 		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
 		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
 		
-		echo '<a class="btn btn-primary btn-sm ph-checkout-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="glyphicon glyphicon-user"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
+		echo '<a class="btn btn-primary btn-sm ph-checkout-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="'.PhocacartRenderIcon::getClass('user').'"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
 		
 	}
 	//echo '</ul>'. "\n";
@@ -94,7 +94,7 @@ if($this->a->login == 0) {
 		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_GUEST_CHECKOUT').'</div>'. "\n";
 	
 		echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddGuest">';
-		echo '<button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="glyphicon glyphicon-user"></span> '. JText::_('COM_PHOCACART_GUEST_CHECKOUT') .'</button>'. "\n";
+		echo '<button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="'.PhocacartRenderIcon::getClass('user').'"></span> '. JText::_('COM_PHOCACART_GUEST_CHECKOUT') .'</button>'. "\n";
 		
 		echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 		echo '<input type="hidden" name="task" value="checkout.setguest" />'. "\n";
@@ -143,7 +143,7 @@ if($this->a->login == 0) {
 	echo '<div>'.JText::_('COM_PHOCACART_GUEST_CHECKOUT');
 	echo '</div>';
 	
-	echo '<div class="ph-pull-right"><button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="glyphicon glyphicon-user"></span> '. JText::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button></div>'. "\n";
+	echo '<div class="ph-pull-right"><button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="'.PhocacartRenderIcon::getClass('user').'"></span> '. JText::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button></div>'. "\n";
 	
 	
 	echo '<div class="ph-cb"></div>';

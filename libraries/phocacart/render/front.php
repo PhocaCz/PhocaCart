@@ -114,13 +114,17 @@ class PhocacartRenderFront
 		} else if (empty($title)) {
 			$title = htmlspecialchars_decode($app->get('sitename'));
 		} else if ($app->get('sitename_pagetitles', 0) == 1) {
-			$title = JText::sprintf('JPAGETITLE', htmlspecialchars_decode($app->get('sitename')), $title);
-			if ($nameInTitle == 1 && isset($name->title) && $name->title != '') {
-				$title = $title .' - ' .  $name->title;
+			$titleInclSiteName = JText::sprintf('JPAGETITLE', htmlspecialchars_decode($app->get('sitename')), $title);
+			if ($nameInTitle == 1 && isset($name->title) && $name->title != '' && $title != $name->title) {
+				$title = $titleInclSiteName .' - ' .  $name->title;
+			} else {
+				$title = $titleInclSiteName;
 			}
 		} else if ($app->get('sitename_pagetitles', 0) == 2) {
 			if ($nameInTitle == 1 && isset($name->title) && $name->title != '') {
-				$title = $title .' - ' .  $name->title;
+				if ($title != $name->title) {
+					$title = $title .' - ' .  $name->title;
+				}
 			}
 			$title = JText::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->get('sitename')));
 		}

@@ -213,11 +213,11 @@ class PhocacartUtilsExtension
 		
 		$o .= '<div class="ph-center ph-extension-button">';
 		if ($textTxt != '' && $classTxt != '' && $iconTxt != '') {
-			$o .= '<div class="'.$classTxt.'"><span class="glyphicon glyphicon-'.$iconTxt.'"></span> '.$textTxt.'</div>';
+			$o .= '<div class="'.$classTxt.'"><span class="'.PhocacartRenderIcon::getClassAdmin($iconTxt).'"></span> '.$textTxt.'</div>';
 		}
 		if ($link != '' && $icon != '' && $text != '') {
 			$o .= '<a href="'.$link.'" '.$target.' class="btn btn-small '.$class.'">';
-			$o .= '<span class="glyphicon glyphicon-'.$icon.'"></span> ';
+			$o .= '<span class="'.PhocacartRenderIcon::getClassAdmin($icon).'"></span> ';
 			$o .= $text . '</a>';
 		}
 		$o .= '</div>';

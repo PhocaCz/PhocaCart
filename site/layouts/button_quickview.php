@@ -17,7 +17,7 @@ $d = $displayData;
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 	<div class="ph-pull-right">
 		<div class="ph-category-item-quickview">
-			<a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-eye-open"></span></a>
+			<a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo PhocacartRenderIcon::getClass('quick-view') ?>"></span></a>
 		</div>
 	</div>
 	<?php /*<div class="clearfix"></div> */ ?>

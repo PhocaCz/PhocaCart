@@ -30,7 +30,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$app					= JFactory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
-		$uri 					= JFactory::getURI();
+		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
 		$model					= $this->getModel();
 		$document				= JFactory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');
@@ -191,22 +191,22 @@ class PhocaCartViewItem extends JViewLegacy
 		
 		// Plugins ------------------------------------------
 		JPluginHelper::importPlugin('pcv');
-		$this->t['dispatcher']	= JEventDispatcher::getInstance();
+		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 		
-		$results = $this->t['dispatcher']->trigger('onItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemBeforeHeader = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemAfterAddToCart = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
 		
-		$results = $this->t['dispatcher']->trigger('onItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemInsideTabPanel = $results;
 		
-		$results = $this->t['dispatcher']->trigger('onItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
 		// END Plugins --------------------------------------
 			

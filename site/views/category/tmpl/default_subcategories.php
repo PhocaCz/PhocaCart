@@ -21,12 +21,13 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 		
 		foreach($this->subcategories as $v) {
 		
-			echo ' <div class="row-item-subcategory col-sx-12 col-sm-'.$col.' col-md-'.$col.'">';
-			echo '  <div class="ph-item-subcategory-box">';
-			
 			if ($j == (int)$this->t['cv_display_subcategories']) {
 				break;
 			}
+			echo ' <div class="row-item-subcategory col-sx-12 col-sm-'.$col.' col-md-'.$col.'">';
+			echo '  <div class="ph-item-subcategory-box">';
+			
+			
 			
 			$image = PhocacartImage::getThumbnailName($this->t['pathcat'], $v->image, 'small');
 			if (isset($image->rel)) {
@@ -50,15 +51,16 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 		echo '<ul>';
 		foreach($this->subcategories as $v) {
 			
+			if ($j == (int)$this->t['cv_display_subcategories']) {
+				break;
+			}
 		
 		/*	$image = PhocacartImage::getThumbnailName($this->t['pathcat'], $v->image, 'small');
 			if (isset($image->rel)) {
 				echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'"><img src="'. JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive ph-image" /></a>';
 			}*/
 			
-			if ($j == (int)$this->t['cv_display_subcategories']) {
-				break;
-			}
+			
 			echo '<li><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a></li>';
 			$j++;
 		}

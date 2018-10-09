@@ -27,7 +27,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	public function getFormBas($orderId) {
 		
 		$options			= array('control' => 'jform', 'load_data' => true);
-		$options['control'] = JArrayHelper::getValue($options, 'control', false);
+		$options['control'] = \Joomla\Utilities\ArrayHelper::getValue($options, 'control', false);
 		JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
 		JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
 		JForm::addFormPath(JPATH_COMPONENT . '/model/form');
@@ -343,7 +343,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
 		

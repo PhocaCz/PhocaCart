@@ -36,7 +36,7 @@ class PhocaCartCpModelPhocaCartHit extends JModelAdmin
 	public function delete(&$cid = array()) {
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$error 	= 0;
 			if (!empty($cid)) {
 				foreach ($cid as $k => $v) {

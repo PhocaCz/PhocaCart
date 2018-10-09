@@ -40,7 +40,7 @@ class PhocacartOrder
 		$unit_weight		= $pC->get( 'unit_weight', '' );
 		$unit_volume		= $pC->get( 'unit_volume', '' );
 		
-		$uri 			= JFactory::getURI();
+		$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
 		$action			= $uri->toString();
 		$app			= JFactory::getApplication();
 		
@@ -192,10 +192,10 @@ class PhocacartOrder
 		
 		// SET STATUS
 		$statusId = $pC->get( 'default_order_status', 1 );// Ordered (Pending) as default
-		$dispatcher = JEventDispatcher::getInstance();
+		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
 		if ($plugin) {
-			$dispatcher->trigger('PCPbeforeSaveOrder', array(&$statusId));
+			\JFactory::getApplication()->triggerEvent('PCPbeforeSaveOrder', array(&$statusId));
 			$d['status_id']				= (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
 		} else {
 			

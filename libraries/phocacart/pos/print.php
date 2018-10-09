@@ -50,7 +50,7 @@ class PhocacartPosPrint
 			$pos_print_connector			= $pC->get( 'pos_print_connector', 1 );
 			$pos_print_connector_file		= $pC->get( 'pos_print_connector_file', '' );
 			$pos_print_connector_dest		= $pC->get( 'pos_print_connector_dest', '' );
-			$pos_print_connector_ip			= $pC->get( 'pos_print_connector_ip	', '' );
+			$pos_print_connector_ip			= $pC->get( 'pos_print_connector_ip', '' );
 			$pos_print_connector_port		= $pC->get( 'pos_print_connector_port', "9100" );
 			$pos_print_connector_timeout	= $pC->get( 'pos_print_connector_timeout', 0 );
 			
@@ -60,6 +60,7 @@ class PhocacartPosPrint
 				
 	
 				case "2":
+				
 					if ($pos_print_connector_ip != '') {
 						$this->connector 	= new Mike42\Escpos\PrintConnectors\NetworkPrintConnector($pos_print_connector_ip, $pos_print_connector_port, $pos_print_connector_timeout);
 					} else {

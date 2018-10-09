@@ -13,8 +13,8 @@ $d = $displayData;
 // $d['status']; // 'finished' or 'pending'
 // $d['type']; // parameter checkout_icon_status
 
-$d['icon'] 	= $d['status'] == 'finished' ? 'ok' : 'remove';
-$d['class']	= 'glyphicon glyphicon-'.$d['icon']. strip_tags($d['suffix']).' ph-checkout-icon-'.$d['status'];
+$d['icon'] 	= $d['status'] == 'finished' ? 'ok' : 'not-ok';
+$d['class']	= PhocacartRenderIcon::getClass($d['icon']). strip_tags($d['suffix']).' ph-checkout-icon-'.$d['status'];
 
 if ($d['type'] == 1) { 
 

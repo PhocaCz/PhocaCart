@@ -20,7 +20,7 @@ class PhocaCartCpControllerPhocacartCategory extends PhocaCartCpControllerPhocaC
 	function recreate() {
 		$app	= JFactory::getApplication();
 		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
-		JArrayHelper::toInteger($cid);
+		\Joomla\Utilities\ArrayHelper::toInteger($cid);
 
 		$message = '';
 		

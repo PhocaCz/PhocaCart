@@ -391,7 +391,7 @@ if (!empty($this->items)) {
 			
 			echo '</div>';// end add to cart box 
 			
-			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+			$results = \JFactory::getApplication()->triggerEvent('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
 			echo trim(implode("\n", $results));
 			echo '<div class="ph-item-clearfix '.$lt.'"></div>';
 			
@@ -486,7 +486,7 @@ if (!empty($this->items)) {
 			
 			echo '</div>';// end add to cart box 
 			
-			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+			$results = \JFactory::getApplication()->triggerEvent('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
 			echo trim(implode("\n", $results));
 			
 			
@@ -530,7 +530,7 @@ if (!empty($this->items)) {
 				echo $icon['addtocart'];
 			}	
 					
-			$results = $this->t['dispatcher']->trigger('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+			$results = \JFactory::getApplication()->triggerEvent('onCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
 			echo trim(implode("\n", $results));
 			
 																														 

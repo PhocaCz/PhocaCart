@@ -72,8 +72,8 @@ class PhocacartOrderView
 			return $properties;
 		}
 		
-		//$itemS 	= JArrayHelper::toObject($propertiesS, 'JObject');
-		//$item 	= JArrayHelper::toObject($properties, 'JObject');
+		//$itemS 	= \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
+		//$item 	= \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
 		$item		= new JObject();//stdClass();
 		
 		if(!empty($properties['b']) && is_object($item)) {

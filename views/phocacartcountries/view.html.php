@@ -68,7 +68,7 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		if ($canDo->get('core.delete')) {
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartcountries.delete', $this->t['l'].'_DELETE');
 		}
-		//dummy glyphicon glyphicon-globe ph-icon-earth
+		//dummy gly phicon gly phicon-globe ph-icon-earth
 		//JToolbarHelper::custom($this->t['task'].'.importcountries', 'earth', 'earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
 		
 		$dhtml = '<button onclick="if (confirm(\''.JText::_('COM_PHOCACART_WARNING_IMPORT_COUNTRIES').'\')) { Joomla.submitbutton(\'phocacartcountry.importcountries\'); }" class="btn btn-small button-earth"><i class="icon-earth" title="'.JText::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'"></i> '.JText::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'</button>';

@@ -17,7 +17,7 @@ class PhocaCartControllerQuestion extends JControllerForm
 		$session = JFactory::getSession();
 		
 		$app    = JFactory::getApplication();
-		$uri 	= JFactory::getURI();
+		$uri 	= \Joomla\CMS\Uri\Uri::getInstance();
 		$user 	= PhocacartUser::getUser();
 	
 		$params 							= JComponentHelper::getParams('com_phocacart') ;

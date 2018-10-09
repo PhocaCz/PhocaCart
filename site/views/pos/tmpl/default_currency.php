@@ -16,7 +16,7 @@ if (!empty($this->t['currency_array'])) {
 		$image = '';
 		
 		if (isset($v->image) && $v->image != '') {
-			$image = '<img class="ph-currency-image-list" src="'.JURI::base(true). '/' . $v->image.'" ale="'.$v->code.'" />';
+			$image = '<img class="ph-currency-image-list" src="'.JURI::base(true). '/' . $v->image.'" alt="'.$v->code.'" />';
 		}
 		
 		if ($v->active == 1) {

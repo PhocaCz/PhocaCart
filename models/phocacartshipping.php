@@ -97,7 +97,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 	
 	public function save($data)
 	{
-		$dispatcher = JEventDispatcher::getInstance();
+		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
 
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
@@ -156,7 +156,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = $dispatcher->trigger($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
 
 			if (in_array(false, $result, true))
 			{
@@ -192,7 +192,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			$dispatcher->trigger($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			\JFactory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
 		}
 		catch (Exception $e)
 		{
@@ -218,7 +218,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			$delete = parent::delete($cid);
 			if ($delete) {
 				
-				JArrayHelper::toInteger($cid);
+				\Joomla\Utilities\ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 			
 				$query = 'DELETE FROM #__phocacart_item_groups'

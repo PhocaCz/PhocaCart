@@ -24,7 +24,7 @@ abstract class PhocacartHtmlFeatured
 			0	=> array('unfeatured',	'phocacartitems.featured',	'COM_PHOCACART_UNFEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_FEATURE'),
 			1	=> array('featured',	'phocacartitems.unfeatured',	'COM_PHOCACART_FEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_UNFEATURE'),
 		);
-		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
+		$state	= \Joomla\Utilities\ArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
 
 		if ($canChange)

@@ -48,10 +48,10 @@ class PhocaCartViewCategories extends JViewLegacy
 		
 		// Plugins ------------------------------------------
 		JPluginHelper::importPlugin('pcv');
-		$this->t['dispatcher'] 	= JEventDispatcher::getInstance();
+		//$this->t['dispatcher'] 	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 		
-		$results = $this->t['dispatcher']->trigger('onCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
 		$this->t['event']->onCategoriesBeforeHeader = trim(implode("\n", $results));
 		// END Plugins --------------------------------------
 		

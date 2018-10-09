@@ -28,7 +28,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		
 		$app					= JFactory::getApplication();
 		$pC 					= PhocacartUtils::getComponentParameters();
-		$uri 					= JFactory::getURI();
+		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
 		$url['action']			= $uri->toString();
 		$url['actionbase64']	= base64_encode($url['action']);
 		$pos					= PhocacartPos::isPos();

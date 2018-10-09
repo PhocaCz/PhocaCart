@@ -36,7 +36,7 @@ class PhocaCartViewDownload extends JViewLegacy
 		$this->t['download_days']			= $this->p->get( 'download_days', 0 );
 		$this->t['download_count']			= $this->p->get( 'download_count', 0 );
 		
-		$uri 						= JFactory::getURI();
+		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
 		$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute());

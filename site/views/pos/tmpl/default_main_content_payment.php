@@ -46,9 +46,9 @@ echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
 // PLUGIN
 $output 	= '';
 $payment	= $this->cart->getPaymentMethod();
-$dispatcher = JEventDispatcher::getInstance();
+//$dispatcher = J EventDispatcher::getInstance();
 JPluginHelper::importPlugin('pcp', htmlspecialchars($payment['method']));
-$dispatcher->trigger('PCPonDisplayPaymentPos', array(&$output, $this->t));
+\JFactory::getApplication()->triggerEvent('PCPonDisplayPaymentPos', array(&$output, $this->t));
 echo $output;
 // END PLUGIN
 

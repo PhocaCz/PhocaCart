@@ -63,9 +63,11 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
-			$registry = new JRegistry;
-			$registry->loadString($item->metadata);
-			$item->metadata = $registry->toArray();
+			if (isset($item->metadata)) {
+				$registry = new JRegistry;
+				$registry->loadString($item->metadata);
+				$item->metadata = $registry->toArray();
+			}
 		}
 		return $item;
 	}
@@ -177,7 +179,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		
 		$result = false;
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
 			$table = $this->getTable();
@@ -220,7 +222,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			
 			// Product with new cid - - - - -
 			if (count( $cid )) {
-				JArrayHelper::toInteger($cid);
+				\Joomla\Utilities\ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 			
 				// Select id's from product table, if there are some items, don't delete it.
@@ -369,6 +371,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
 			$table->title   = $data['0'];
 			$table->alias   = $data['1'];
+			$table->published = 0;// As default the copied new category is unpublished
 
 			// Reset the ID because we are making a copy
 			$table->id		= 0;
@@ -516,7 +519,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		JArrayHelper::toInteger($pks);
+		\Joomla\Utilities\ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true)) {
@@ -551,7 +554,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if ($comCat)
 		//if (isset($commands['category_id']))
 		{
-			$cmd = JArrayHelper::getValue($commands, 'move_copy', 'c');
+			$cmd = \Joomla\Utilities\ArrayHelper::getValue($commands, 'move_copy', 'c');
 
 			if ($cmd == 'c')
 			{
@@ -611,7 +614,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	function recreate($cid = array(), &$message) {
 		
 		if (count( $cid )) {
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			$query = 'SELECT a.image, a.title'.
 					' FROM #__phocacart_categories AS a' .

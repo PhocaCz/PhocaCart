@@ -33,7 +33,7 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displaybilling' => 1, 'hidebilling' => 0);
 		$task 	= $this->getTask();
-		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
 
 		
 		
@@ -41,7 +41,7 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_billing')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -63,13 +63,13 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayshipping' => 1, 'hideshipping' => 0);
 		$task 	= $this->getTask();
-		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid)) {
 			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_shipping')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -91,13 +91,13 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('enablerequired' => 1, 'disablerequired' => 0);
 		$task 	= $this->getTask();
-		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid)) {
 			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'required')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -119,14 +119,14 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayaccount' => 1, 'hideaccount' => 0);
 		$task 	= $this->getTask();
-		$value	= JArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
 
 	
 		if (empty($cid)) {
 			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			JArrayHelper::toInteger($cid);
+			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_account')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {

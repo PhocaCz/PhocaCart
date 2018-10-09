@@ -27,7 +27,7 @@ if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $th
 	
 	if ($linkUp && $linkUpText) {
 		echo '<div class="ph-top">'
-		.'<a class="btn btn-success" title="'.$linkUpText.'" href="'. $linkUp.'" ><span class="glyphicon glyphicon-arrow-left"></span> '.JText::_($linkUpText).'</a></div>';
+		.'<a class="btn btn-success" title="'.$linkUpText.'" href="'. $linkUp.'" ><span class="'.PhocacartRenderIcon::getClass('back-category').'"></span> '.JText::_($linkUpText).'</a></div>';
 	}
 }
 

@@ -24,7 +24,7 @@ if (!empty($this->t['categories'])) {
 			$attrO	= ' checked="checked"';
 		}
 		
-		echo '<label class="btn phCheckBoxButton phCheckBoxCategory '.$active.'" ><input type="checkbox" '.$attrO.' class="phPosCategoryCheckbox" name="c['.$v->id.']" value="'.$v->id.'" autocomplete="off"  /><span class="glyphicon glyphicon-ok" title="'.htmlspecialchars($v->title).''.'"></span> '.htmlspecialchars($v->title).'</label> ';
+		echo '<label class="btn phCheckBoxButton phCheckBoxCategory '.$active.'" ><input type="checkbox" '.$attrO.' class="phPosCategoryCheckbox" name="c['.$v->id.']" value="'.$v->id.'" autocomplete="off"  /><span class="'.PhocacartRenderIcon::getClass('ok').'" title="'.htmlspecialchars($v->title).''.'"></span> '.htmlspecialchars($v->title).'</label> ';
 		
 	}
 	
@@ -37,6 +37,7 @@ if (!empty($this->t['categories'])) {
 	echo JHtml::_('form.token');
 	
 	echo '</div>';
+	echo '</form>';
 	
 }
 

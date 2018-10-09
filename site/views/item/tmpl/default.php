@@ -35,7 +35,7 @@ if (isset($this->category[0]->id) && ($this->t['display_back'] == 2 || $this->t[
 
 	if ($linkUp && $linkUpText) {
 		echo '<div class="ph-top">'
-		.'<a class="btn btn-success" title="'.$linkUpText.'" href="'. $linkUp.'" ><span class="glyphicon glyphicon-arrow-left"></span> '.JText::_($linkUpText).'</a></div>';
+		.'<a class="btn btn-success" title="'.$linkUpText.'" href="'. $linkUp.'" ><span class="'.PhocacartRenderIcon::getClass('back-category').'"></span> '.JText::_($linkUpText).'</a></div>';
 	}
 }
 
@@ -575,7 +575,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			
 			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5">';
 			$tabO	.= '<div class="ph-pull-right">';
-			$tabO	.= '<button class="btn btn-primary btn-sm ph-btn"><span class="glyphicon glyphicon-edit"></span> '.JText::_('COM_PHOCACART_SUBMIT').'</button>';
+			$tabO	.= '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('edit').'"></span> '.JText::_('COM_PHOCACART_SUBMIT').'</button>';
 			$tabO	.= '</div>';
 			$tabO	.= '</div>';
 			
@@ -633,7 +633,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			$tabO	.= '<div class="caption"><h4><a href="'.$link.'">'.$v->title.'</a></h4></div>';
 			
 			$tabO	.= '<div>';
-			$tabO	.= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-search"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+			$tabO	.= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="'.PhocacartRenderIcon::getClass('view-product').'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 			$tabO	.= '</div>';
 			
 			$tabO	.= '</div>';
@@ -709,7 +709,7 @@ if ($this->itemnext[0] || $this->itemprev[0]) {
 			$title = JText::_('COM_PHOCACART_PREVIOUS_PRODUCT');
 		}
 		$linkPrev = JRoute::_(PhocacartRoute::getItemRoute($p->id, $p->categoryid, $p->alias, $p->categoryalias));
-		echo '<div class="ph-pull-left"><a href="'.$linkPrev.'" class="btn btn-default ph-item-navigation" role="button" title="'.$titleT.'"><span class="glyphicon glyphicon-arrow-left"></span> '.$title.'</a></div>';
+		echo '<div class="ph-pull-left"><a href="'.$linkPrev.'" class="btn btn-default ph-item-navigation" role="button" title="'.$titleT.'"><span class="'.PhocacartRenderIcon::getClass('prev').'"></span> '.$title.'</a></div>';
 	}
 	echo '</div>';
 	
@@ -730,7 +730,7 @@ if ($this->itemnext[0] || $this->itemprev[0]) {
 			$title = JText::_('COM_PHOCACART_NEXT_PRODUCT');
 		}
 		$linkNext = JRoute::_(PhocacartRoute::getItemRoute($n->id, $n->categoryid, $n->alias, $n->categoryalias));
-		echo '<div class="ph-pull-right"><a href="'.$linkNext.'" class="btn btn-default ph-item-navigation" role="button" title="'.$titleT.'">'.$title.' <span class="glyphicon glyphicon-arrow-right"></span></a></div>';
+		echo '<div class="ph-pull-right"><a href="'.$linkNext.'" class="btn btn-default ph-item-navigation" role="button" title="'.$titleT.'">'.$title.' <span class="'.PhocacartRenderIcon::getClass('next').'"></span></a></div>';
 	}
 	echo '</div></div>';
 }

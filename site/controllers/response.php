@@ -41,10 +41,10 @@ class PhocaCartControllerResponse extends JControllerForm
 		$type 		= $app->input->get('type', '', 'string');
 		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
 		$message	= array();
-		$dispatcher = JEventDispatcher::getInstance();
+		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin 	= JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			$dispatcher->trigger('PCPafterCancelPayment', array($mid, &$message));
+			\JFactory::getApplication()->triggerEvent('PCPafterCancelPayment', array($mid, &$message));
 		}
 		
 		$return = PhocacartRoute::getInfoRoute();
@@ -62,12 +62,12 @@ class PhocaCartControllerResponse extends JControllerForm
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
 		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
-		$uri	= JFactory::getUri();
+		$uri	= \Joomla\CMS\Uri\Uri::getInstance();
 		
-		$dispatcher = JEventDispatcher::getInstance();
+		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			$dispatcher->trigger('PCPbeforeCheckPayment', array($pid));
+			\JFactory::getApplication()->triggerEvent('PCPbeforeCheckPayment', array($pid));
 		} else {
 			
 			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
@@ -83,12 +83,12 @@ class PhocaCartControllerResponse extends JControllerForm
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
 		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
-		$uri	= JFactory::getUri();
+		$uri	= \Joomla\CMS\Uri\Uri::getInstance();
 	
-		$dispatcher = JEventDispatcher::getInstance();
+		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			$dispatcher->trigger('PCPonPaymentWebhook', array($pid));
+			\JFactory::getApplication()->triggerEvent('PCPonPaymentWebhook', array($pid));
 		} else {
 			
 			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');

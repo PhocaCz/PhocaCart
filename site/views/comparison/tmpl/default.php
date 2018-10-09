@@ -107,7 +107,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<input type="hidden" name="option" value="com_phocacart" />';
 		$c['remove'] .= '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		$c['remove'] .= '<div class="ph-center">';
-		$c['remove'] .= '<button type="submit" class="btn btn-danger ph-btn"><span class="glyphicon glyphicon-remove"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
+		$c['remove'] .= '<button type="submit" class="btn btn-danger ph-btn"><span class="'.PhocacartRenderIcon::getClass('remove').'"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
 		$c['remove'] .= '</div>';
 		$c['remove'] .= JHtml::_('form.token');
 		$c['remove'] .= '</form>';
@@ -143,7 +143,7 @@ if (!empty($this->t['items'])) {
 		} 
 		
 		$c2['link'] .= '<td class="ph-center">';
-		$c2['link'] .= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="glyphicon glyphicon-search"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+		$c2['link'] .= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="'.PhocacartRenderIcon::getClass('search').'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 		$c2['link'] .= '</td>';
 	
 	}

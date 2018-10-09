@@ -545,6 +545,11 @@
 	<option value="0">COM_PHOCACART_HIDE</option>
 </field>
 
+<field name="icon_type" type="radio" class="btn-group btn-group-yesno" default="bs" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
+	<option value="bs">Bootstrap</option>
+	<option value="fa">Font Awesome</option>
+</field>
+
 
 
 <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>

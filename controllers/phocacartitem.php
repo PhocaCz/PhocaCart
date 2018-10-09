@@ -26,7 +26,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		$app	= JFactory::getApplication();
 		$cid 		= JFactory::getApplication()->input->get( 'cid', array(),'array' );
 		$idSource 	= JFactory::getApplication()->input->get( 'copy_attributes', 0, 'int' );
-		JArrayHelper::toInteger($cid);
+		\Joomla\Utilities\ArrayHelper::toInteger($cid);
 		
 
 		if(!$model->copyattributes($cid, $idSource)) {
@@ -41,7 +41,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 	function recreate() {
 		$app	= JFactory::getApplication();
 		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
-		JArrayHelper::toInteger($cid);
+		\Joomla\Utilities\ArrayHelper::toInteger($cid);
 
 		if (count( $cid ) < 1) {
 			$message = JText::_( 'COM_PHOCACART_SELECT_ITEM_RECREATE' );

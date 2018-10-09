@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 $s			= new PhocacartStatistics();
-$class		= $this->t['n'] . 'RenderAdmin';
+$r 			= new PhocacartRenderAdminviews();
 $link		= 'index.php?option='.$this->t['o'].'&view=';
 
 $cOrdersW	= $s->getNumberOfOrders();
@@ -25,12 +25,13 @@ $cAmountD	= $s->getAmountOfOrders(0);
 	<div id="phAdminBox" class="row-fluid ph-admin-box">
 		<div class="col-xs-12 col-sm-2 col-md-2 ph-admin-box-menu"><?php echo JHtmlSidebar::render(); ?></div>
 
-		<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content">
-
+		<?php /* <div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content">*/
+		echo $r->startMainContainer();
+		?>
 			<div class="row-fluid ph-cpanel-top-stats">
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color1">
-						<div class="ph-cpanel-color-left"><span class="glyphicon glyphicon-user"></span></div>
+						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('user') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_TODAY'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cUsersD; ?></div>
@@ -41,7 +42,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 				
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color2">
-						<div class="ph-cpanel-color-left"><span class="glyphicon glyphicon-shopping-cart"></span></div>
+						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('shopping-cart') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_TODAY'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cOrdersD; ?></div>
@@ -52,7 +53,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 				
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color3">
-						<div class="ph-cpanel-color-left"><span class="glyphicon glyphicon-stats"></span></div>
+						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('stats') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_TODAY'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cAmountD; ?></div>
@@ -64,7 +65,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 				
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color4">
-						<div class="ph-cpanel-color-left"><span class="glyphicon glyphicon-user"></span></div>
+						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('user') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cUsersW; ?></div>
@@ -75,7 +76,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 				
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color5">
-						<div class="ph-cpanel-color-left"><span class="glyphicon glyphicon-shopping-cart"></span></div>
+						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('shopping-cart') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cOrdersW; ?></div>
@@ -86,7 +87,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 				
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color6">
-						<div class="ph-cpanel-color-left"><span class="glyphicon glyphicon-stats"></span></div>
+						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('stats') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cAmountW; ?></div>
@@ -104,9 +105,9 @@ $cAmountD	= $s->getAmountOfOrders(0);
 					<?php 
 					foreach ($this->views as $k => $v) {
 						$linkV	= $link . $this->t['c'] . $k;
-						//echo $class::quickIconButton( $linkV, 'icon-48-'.$k.'.png', JText::_($v[0]), $this->t['i']);
+						//echo PhocacartRenderAdmin::quickIconButton( $linkV, 'icon-48-'.$k.'.png', JText::_($v[0]), $this->t['i']);
 						echo '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">';
-						echo $class::quickIconButton( $linkV, JText::_($v[0]), $v[1], $v[2]);
+						echo PhocacartRenderAdmin::quickIconButton( $linkV, JText::_($v[0]), $v[1], $v[2]);
 						echo '</div>';
 					}	
 					?>
@@ -116,7 +117,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 							
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="ph-cpanel-chart-box">
-						<h3 class="ph-cpanel-color"><?php echo JText::_('COM_PHOCACART_CHART'); ?> (<?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?>)</h3>
+						<h3 class="ph-cpanel-color-header-block"><?php echo JText::_('COM_PHOCACART_CHART'); ?> (<?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?>)</h3>
 			<?php 
 				
 			$dataS = $s->getDataChart(); 
@@ -165,7 +166,8 @@ $cAmountD	= $s->getAmountOfOrders(0);
 			
 			
 			<p>&nbsp;</p>
-
+			
+			<?php echo $r->endMainContainer(); ?>
 
 		</div>		
 	</div>

@@ -22,9 +22,9 @@ $d = $displayData;
 	</div>
 	 <div class="form-group ph-form-button"><?php 
 	if ($d['addtocart'] == 1) {
-		?><button type="submit" class="btn btn-primary ph-btn phProductAddToCart<?php echo $d['typeview'] . (int)$d['id'] .' '.$d['class_btn']; ?>"><span class="glyphicon glyphicon-shopping-cart"></span> <?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?></button><?php
+		?><button type="submit" class="btn btn-primary ph-btn phProductAddToCart<?php echo $d['typeview'] . (int)$d['id'] .' '.$d['class_btn']; ?>"><span class="<?php echo PhocacartRenderIcon::getClass('shopping-cart') ?>"></span> <?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?></button><?php
 	} else if ($d['addtocart'] == 4) {
-		?><button type="submit" class="btn btn-primary ph-btn phProductAddToCart<?php echo $d['typeview']. (int)$d['id'] .' '.$d['class_btn']; ?>" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?>"><span class="glyphicon glyphicon-shopping-cart"></span></button><?php
+		?><button type="submit" class="btn btn-primary ph-btn phProductAddToCart<?php echo $d['typeview']. (int)$d['id'] .' '.$d['class_btn']; ?>" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_CART'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('shopping-cart') ?>"></span></button><?php
 	} ?>
 	<?php /* <input type="submit" value="submit" name="submit" role="button" /> */ ?>
 	</div>

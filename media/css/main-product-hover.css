@@ -64,7 +64,7 @@ body.preload *{
 	margin-bottom: -25px;
 	
 	display: inline-block;
-	z-index: 9;
+	z-index: 0;
 	clear:both;
 	-webkit-box-sizing:content-box;
 	-moz-box-sizing:content-box;
@@ -136,7 +136,8 @@ body.preload *{
 	visibility: visible;
 }
 
-.ph-item-box .ph-item-action-fade a .glyphicon {
+.ph-item-box .ph-item-action-fade a span.glyphicon,
+.ph-item-box .ph-item-action-fade a span.fa {
 	margin-left: -1px;
 	margin-top: 7px;
 }

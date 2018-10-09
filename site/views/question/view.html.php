@@ -24,7 +24,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		$document							= JFactory::getDocument();
 		$session 							= JFactory::getSession();
 		
-		$uri 								= JFactory::getURI();
+		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->t['action']					= $uri->toString();
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
 		$this->u							= PhocacartUser::getUser();

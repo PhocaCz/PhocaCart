@@ -89,14 +89,14 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 				echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 				echo '<input type="hidden" name="d" value="'.$this->t['token_download'].'" />';
 				echo '<input type="hidden" name="o" value="'.$this->t['token_order'].'" />';
-				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="glyphicon glyphicon-download"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
+				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="'.PhocacartRenderIcon::getClass('download').'"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
 				echo JHtml::_('form.token');
 				echo '</form>';
 				
 				echo '</div>';
 		
 			} else {
-				echo '<div class="col-sm-3 col-md-3 ph-center"><span class="glyphicon glyphicon-ban-circle ph-red"></span></div>';
+				echo '<div class="col-sm-3 col-md-3 ph-center"><span class="'.PhocacartRenderIcon::getClass('ban').' ph-red"></span></div>';
 			}
 			
 			echo '</div>';// end row

@@ -14,11 +14,11 @@ $d = $displayData;
 <?php
 if ($d['display_view_category_button'] == 1) {
 	
-	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-search"></span> <?php echo JText::_('COM_PHOCACART_VIEW_CATEGORY'); ?></a><?php
+	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary" role="button"><span class="<?php echo PhocacartRenderIcon::getClass('view-category') ?>"></span> <?php echo JText::_('COM_PHOCACART_VIEW_CATEGORY'); ?></a><?php
 
 } else if ($d['display_view_category_button'] == 2) {
 	
-	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary" role="button" title="<?php echo JText::_('COM_PHOCACART_VIEW_CATEGORY'); ?>"><span class="glyphicon glyphicon-search"></span></a><?php
+	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary" role="button" title="<?php echo JText::_('COM_PHOCACART_VIEW_CATEGORY'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('view-category') ?>"></span></a><?php
 
 } ?>
 </div>

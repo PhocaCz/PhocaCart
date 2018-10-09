@@ -109,7 +109,7 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 <div class="btn-toolbar">
 	<div class="btn-group">
 		<button type="submit" class="btn btn-primary">
-			<i class="glyphicon glyphicon-ok icon-ok"></i> <?php echo JText::_('COM_PHOCACART_SUBMIT');?></button>
+			<span class="<?php echo PhocacartRenderIcon::getClass('submit') ?> icon-ok"></span> <?php echo JText::_('COM_PHOCACART_SUBMIT');?></button>
 	</div>
 </div>	
 

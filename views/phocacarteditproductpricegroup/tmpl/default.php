@@ -21,7 +21,9 @@ $link		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproduc
 echo '<div id="phAdminEditPopup" class="ph-edit-stock-advanced-box">';
 
 echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>'
-	. '<ul><li>'.JText::_('COM_PHOCACART_TO_SEE_ALL_CUSTOMER_GROUPS_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
+	. '<ul>'
+		.'<li>'.JText::_('COM_PHOCACART_ONLY_GROUPS_WHICH_ARE_SET_IN_PARAMETER_CUSTOMER_GROUP_ARE_LISTED_HERE') . '</li>'
+	.'<li>'.JText::_('COM_PHOCACART_TO_SEE_ALL_CUSTOMER_GROUPS_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
 	. '<li>'. JText::_('COM_PHOCACART_CHECK_LIST_EVERY_TIME_CUSTOMER_GROUPS_CHANGE').'</li>'
 	. '<li>'.JText::_('COM_PHOCACART_IF_YOU_SET_ZERO_AS_PRICE_THEN_PRICE_WILL_BE_ZERO').'</li>'
 	.'</ul></div>';
@@ -45,7 +47,7 @@ if (!empty($this->t['product'])) {
 	
 	
 
-	
+
 		foreach($this->t['groups'] as $k => $v) {
 			
 			

@@ -326,6 +326,9 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
    box-shadow: none;
    border-radius: 3px;
    text-shadow: none;
+   
+ /* border: 1px solid #ccc;
+   box-shadow: 0 0 3px #fff inset, 0 1px 1px rgba(0, 0, 0, 0.1) !important;*/
 }
 
 

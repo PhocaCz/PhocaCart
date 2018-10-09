@@ -32,7 +32,7 @@ function phCheckRequestStatus(i, task) {
 			phCheckRequestStatus(i, task);
 		}, 1000);
 	} else {
-		<?php /*if (task != '<?php echo $this->t['task'] ?>.cancel' && document.id('jform_catid_multiple').value == '') {
+		<?php /*if (task != '<?php echo $this->t['task'] ?>.cancel' && document.getElementById('jform_catid_multiple').value == '') {
 		alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(JText::_($this->t['l'].'_ERROR_CATEGORY_NOT_SELECTED'));?>');
 		} else */ ?> if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
 			<?php echo $this->form->getField('description')->save(); ?>

@@ -27,6 +27,7 @@ class PhocacartRenderMedia
 		$this->p['fade_in_action_icons']	= $params->get( 'fade_in_action_icons', 0 );
 		$this->p['dynamic_change_image']	= $params->get( 'dynamic_change_image', 0);
 		$this->p['quantity_input_spinner']	= $params->get( 'quantity_input_spinner', 0);
+		$this->p['icon_type']				= $params->get( 'icon_type', 'bs');
 
 		
 		JHtml::stylesheet('media/com_phocacart/css/main.css' );
@@ -42,6 +43,8 @@ class PhocacartRenderMedia
 			JHtml::stylesheet('media/com_phocacart/js/ui/jquery-ui.min.css' );
 			JHtml::stylesheet('media/com_phocacart/js/ui/phoca-ui.css' );
 		}
+		
+		
 	}
 	
 	public function loadProductHover() {
@@ -60,11 +63,11 @@ class PhocacartRenderMedia
 	}
 	
 	public function loadBootstrap() {
-		if ($this->p['load_bootstrap'] == 1) {
+		//if ($this->p['load_bootstrap'] == 1) {
 
-			JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		}
+			//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
+		//}
 	}
 	
 	public function loadWindowPopup() {
@@ -103,14 +106,14 @@ class PhocacartRenderMedia
 			$js = '   jQuery("input[name=\''.$name.'\']:visible").TouchSpin({';
 			$js .= '   verticalbuttons: true,';
 			if ($this->p['quantity_input_spinner'] == 2) {
-				$js .= '   verticalup: \'<span class="glyphicon glyphicon-chevron-up"></span>\',';
-				$js .= '   verticaldown: \'<span class="glyphicon glyphicon-chevron-down"></span>\',';
+				$js .= '   verticalup: \'<span class="'.PhocacartRenderIcon::getClass('chevron-up').'"></span>\',';
+				$js .= '   verticaldown: \'<span class="'.PhocacartRenderIcon::getClass('chevron-down').'"></span>\',';
 			} else {
-				$js .= '   verticalup: \'<span class="glyphicon glyphicon-plus"></span>\',';
-				$js .= '   verticaldown: \'<span class="glyphicon glyphicon-minus"></span>\',';
+				$js .= '   verticalup: \'<span class="'.PhocacartRenderIcon::getClass('plus').'"></span>\',';
+				$js .= '   verticaldown: \'<span class="'.PhocacartRenderIcon::getClass('minus').'"></span>\',';
 			}
-			//$js .= '   verticalupclass: "glyphicon glyphicon-chevron-up",';
-			//$js .= '   verticaldownclass: "glyphicon glyphicon-chevron-down"';
+			//$js .= '   verticalupclass: "'.PhocacartRenderIcon::getClass('chevron-up').'",';
+			//$js .= '   verticaldownclass: "'.PhocacartRenderIcon::getClass('chevron-down').'"';
 			$js .= ' })';
 			$jsE = '});'."\n";
 			$this->document->addScriptDeclaration($jsS . $js . $jsE);

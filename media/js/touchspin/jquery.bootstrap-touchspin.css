@@ -64,7 +64,9 @@
 }
 
 .bootstrap-touchspin-down span.glyphicon,
-.bootstrap-touchspin-up span.glyphicon {
+.bootstrap-touchspin-up span.glyphicon,
+.bootstrap-touchspin-down span.fa,
+.bootstrap-touchspin-up span.fa {
 	font-size: 0.7em;
 }
 
