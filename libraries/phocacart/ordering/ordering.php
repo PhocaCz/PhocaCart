@@ -138,6 +138,9 @@ class PhocacartOrdering
 					case 16:$orderingOutput = 'a.hits DESC';break;
 					case 17:$orderingOutput = 'ah.hits ASC';break;
 					case 18:$orderingOutput = 'ah.hits DESC';break;
+					
+					case 19:$orderingOutput = 'a.sku ASC';break;
+					case 20:$orderingOutput = 'a.sku DESC';break;
 					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
 				}
 			break;
@@ -205,7 +208,10 @@ class PhocacartOrdering
 				7 => JText::_('COM_PHOCACART_DATE_ASC'),
 				8 => JText::_('COM_PHOCACART_DATE_DESC'),
 				9 => JText::_('COM_PHOCACART_RATING_ASC'),
-				10 => JText::_('COM_PHOCACART_RATING_DESC'));
+				10 => JText::_('COM_PHOCACART_RATING_DESC'),
+				19 => JText::_('COM_PHOCACART_SKU_ASC'),
+				20 => JText::_('COM_PHOCACART_SKU_DESC')
+		);
 		return $itemOrdering;
 	}
 	

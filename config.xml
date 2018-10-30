@@ -151,6 +151,8 @@
 	<option value="8">COM_PHOCACART_DATE_DESC</option>
 	<option value="9">COM_PHOCACART_RATING_ASC</option>
 	<option value="10">COM_PHOCACART_RATING_DESC</option>
+	<option value="19">COM_PHOCACART_SKU_ASC</option>
+	<option value="20">COM_PHOCACART_SKU_DESC</option>
 </field>
 
 <field name="show_pagination" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_CATEGORY_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_CATEGORY_ITEMS_VIEW_DESC">
@@ -1166,6 +1168,19 @@
 </field>
 
 <field name="question_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL"  description="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
+		
+		
+<field name="phocahead28" type="phocahead" default="COM_PHOCACART_OPENING_TIMES_OPTIONS_LABEL" label="" description=""/>
+
+<field name="checking_opening_times" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_CHECKING_OPENING_TIMES_LABEL" description="COM_PHOCACART_FIELD_CHECKING_OPENING_TIMES_DESC">
+	<option value="0">COM_PHOCACART_DISABLED</option>
+	<option value="1">COM_PHOCACART_ENABLED_ORDER_POSSIBLE</option>
+	<option value="2">COM_PHOCACART_ENABLED_ORDER_NOT_POSSIBLE</option>
+</field>
+		
+<field name="store_closed_checkout_message" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_STORE_CLOSED_CHECKOUT_MESSAGE_LABEL"  description="COM_PHOCACART_FIELD_STORE_CLOSED_CHECKOUT_MESSAGE_DESC" addfieldpath="/administrator/components/com_content/models/fields" />		
+		
+		
 		</fieldset>
 		
 		

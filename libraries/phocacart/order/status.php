@@ -75,7 +75,15 @@ class PhocacartOrderStatus
 	}
 	
 	/*
-	 * $orderToken ... token of order when there is no user (guest checkout)
+	 * $orderToken ... token of order when there is no user - means that the method will not check the user in such case
+	 * 1) guest checkout - token is active, user will be not checked when user calls this script (e.g. when ordering)
+	 * 2) or payment method server contacts server - token is active, user will be not checked (user is not the one who calls the script but payment method)
+	 * 
+	 * User will be not checked when:
+	 * 1) status is changed in administration (vendor in admin is the the shopper user)
+	 * 2) guest user makes the order (there is nothing to check)
+	 * 3) payment method contact server to change status (payment method does not identify as user - $user = JFactory::getUser())
+	 * 
 	 * $notifyUser 0 ... no  1 ... yes 99 ... defined in order status settings
 	 * $notifyOthers   0 ... no  1 ... yes 99 ... defined in order status settings
 	 * $emailSend  0 ... no  1 ... order, 2 ... invoice, 3 ... delivery_note,  99 ... defined in order status settings
@@ -84,8 +92,7 @@ class PhocacartOrderStatus
 	
 	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99', $changeUserGroup = '99', $changePointsNeeded = '99', $changePointsReceived = '99') {
 	
-	
-		
+
 		// ORDER INFO
 		$app 		= JFactory::getApplication();
 		$order 		= new PhocacartOrderView();
@@ -94,9 +101,7 @@ class PhocacartOrderStatus
 		$bas		= $order->getItemBaS($orderId, 1);
 		//$totalBrutto= $order->getItemTotal($orderId, 0, 'brutto');
 		$status 	= self::getStatus($statusId);
-		
-		
-		
+
 		$config		= JFactory::getConfig();
 		
 		$app			= JFactory::getApplication();
@@ -238,21 +243,47 @@ class PhocacartOrderStatus
 		if ($notifyUserV) {
 			
 			if (!$app->isClient('administrator')){
+				
+				// Frontend
+				// Check if we can send email to customer
+				$canSend		= 0;
 				$user 			= PhocacartUser::getUser();
 				$guest			= PhocacartUserGuestuser::getGuestUser();
-				if (!$guest && $user->id != $common->user_id) {
-					die ('COM_PHOCACART_NO_USER_ORDER_FOUND');
+				
+				// $orderToken is set in case we will not check the user:
+				// - in case of guest users
+				// - in case of payment method server contacts the server to change the status
+				if ($orderToken != '' && $orderToken == $common->order_token && $guest) {
+					$canSend = 1;// User is guest - not logged in user run this script
+					PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Guest User');
+				} else if ($orderToken != '' && $orderToken == $common->order_token ) {
+					$canSend = 1;// Payment method server returned status which will change order status - payment method runs this script
+					PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Payment method');
+				} else if ($user->id == $common->user_id) {
+					$canSend = 1;// User is the customer who made the order
+					PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Registered User');
+				} 
+				
+				
+				// Payment method returns status
+				if ($canSend == 0) {
+					PhocacartLog::add(1, 'Order Status - Notify - ERROR', (int)$orderId, JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
+					
+					// Don't die here because even if we cannot send email to customer we can send email to others
+					// $recipient == '' so no email will be sent to recipient
+					//die (JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
+				} else {
+					
+					if (isset($bas['b']['email_contact']) && $bas['b']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['b']['email_contact'])) {
+						$recipient = $bas['b']['email_contact'];
+					} else if (isset($bas['b']['email']) && $bas['b']['email'] != '' && JMailHelper::isEmailAddress($bas['b']['email'])) {
+						$recipient = $bas['b']['email'];
+					} else if (isset($bas['s']['email_contact']) && $bas['s']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['s']['email_contact'])) {
+						$recipient = $bas['s']['email_contact'];
+					} else if (isset($bas['s']['email']) && $bas['s']['email'] != '' && JMailHelper::isEmailAddress($bas['s']['email'])) {
+						$recipient = $bas['s']['email'];
+					}
 				}
-			}
-			
-			if (isset($bas['b']['email_contact']) && $bas['b']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['b']['email_contact'])) {
-				$recipient = $bas['b']['email_contact'];
-			} else if (isset($bas['b']['email']) && $bas['b']['email'] != '' && JMailHelper::isEmailAddress($bas['b']['email'])) {
-				$recipient = $bas['b']['email'];
-			} else if (isset($bas['s']['email_contact']) && $bas['s']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['s']['email_contact'])) {
-				$recipient = $bas['s']['email_contact'];
-			} else if (isset($bas['s']['email']) && $bas['s']['email'] != '' && JMailHelper::isEmailAddress($bas['s']['email'])) {
-				$recipient = $bas['s']['email'];
 			}
 		}
 		
@@ -330,13 +361,10 @@ class PhocacartOrderStatus
 
 		}
 		
-		
-		if ($changeUserGroupV == 0 || $changeUserGroupV == 1) {
-			
-			
+		// Change user group by changing of status
+		if (($changeUserGroupV == 0 || $changeUserGroupV == 1) && (int)$common->user_id > 0) {
 			PhocacartGroup::changeUserGroupByRule($common->user_id);
 		}
-		
 		
 		
 		// POINTS NEEDED
@@ -380,7 +408,6 @@ class PhocacartOrderStatus
 			$idExists = $db->loadResult();
 			
 			
-							
 			if ((int)$idExists > 0) {
 				$query = 'UPDATE #__phocacart_reward_points SET'
 					.' published = '.(int)$published
@@ -404,9 +431,6 @@ class PhocacartOrderStatus
 		if (($recipient != '' && JMailHelper::isEmailAddress($recipient)) || ($recipientOthers != '' && JMailHelper::isEmailAddress($recipientOthers))) {
 			
 			$sitename 		= $config->get('sitename');
-			
-			
-			
 			
 			
 			//if ($status['email_text'] != '') {
@@ -473,10 +497,6 @@ class PhocacartOrderStatus
 			
 			$body 			= PhocacartText::completeTextFormFields($body, $bas['s'], 2);
 			$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['s'], 2);
-		
-		
-		 	
-			
 
 			// PDF
 			$pdfV					= array();
@@ -490,14 +510,17 @@ class PhocacartOrderStatus
 				if (JFile::exists(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php')) {
 					require_once(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php');
 				} else {
+					PhocacartLog::add(1, 'Order Status - Notify - ERROR (PDF Class)', (int)$orderId, 'Render PDF file could not be found in system');
 					throw new Exception('Error - Phoca PDF Helper - Render PDF file could not be found in system', 500);
 					return false;
 				}
 				$pdfV['pdf'] = 1;
 			}
 
+
 			switch ($emailSendV) {
 				case 1:
+				
 					$orderRender = new PhocacartOrderRender();
 					
 					if ($attachment_format == 0 || $attachment_format == 2) {
@@ -574,6 +597,8 @@ class PhocacartOrderStatus
 						$attachmentName 			= $staticData['filename'];
 					}
 					
+					
+					
 				break;
 			
 			}
@@ -627,9 +652,13 @@ class PhocacartOrderStatus
 					$bodyOthers = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNumber .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $bodyOthers;
 				}
 				
+				
 				$notifyOthers = PhocacartEmail::sendEmail('', '', $recipientOthers, $subjectOthers, $bodyOthers, true, null, $bcc, $attachmentContent, $attachmentName);
 				
+				
 			}
+			
+			
 			
 			// Notify is based only on customer email
 			if ($recipient != '' && JMailHelper::isEmailAddress($recipient)) {
@@ -644,6 +673,7 @@ class PhocacartOrderStatus
 			}
 			
 		}
+		
 		return false;// 0
 	}
 	
@@ -656,8 +686,9 @@ class PhocacartOrderStatus
 	 * method changeStatusInOrderTable - changes the status directly in order table
 	 *
 	 * Mostly changeStatus is called when the status is changed in order table (saving order, changing status)
-	 * but sometimes e.g. when Payment method set the response, we need to change teh status with help of this function
+	 * but sometimes e.g. when Payment method set the response, we need to change the status with help of this function
 	 * in order table as in fact when making payment response nothing happen to order table - only status is changed
+	 * Payment method runs both scripts: changeStatus - to send notify emails, set stock, etc. and changeStatusInOrderTable to check the status in table
 	 */
 	 
 	public static function changeStatusInOrderTable($orderId, $statusId) {

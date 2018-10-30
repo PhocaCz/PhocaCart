@@ -120,6 +120,7 @@ echo '<tr '.$cRTRH.'>';
 echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_DATE').'</th>';
 echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ORDER_NUMBER').'</th>';
 echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_CUSTOMER').'</th>';
+echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_PAYMENT').'</th>';
 echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_CURRENCY').'</th>';
 if ($p['report_display_tax'] == 1) {
 	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>';
@@ -137,6 +138,7 @@ if ($p['report_display_tax'] == 1) {
 echo '</tr>';
 
 // ITEMS
+
 foreach($d['items'] as $k => $v) {
 	
 	echo '<tr '.$cRTRI.'>';
@@ -161,6 +163,10 @@ foreach($d['items'] as $k => $v) {
 	echo isset($v->user_city) && $v->user_city != '' ? ' ' . $v->user_city . '<br>' : '';
 	echo isset($v->user_country) && $v->user_country != '' ? ' ' . $v->user_country : '';
 	echo '</td>';
+	
+	
+	// Payment Title
+	echo '<td '.$cRCur.'>'.$v->payment_title.'</td>';
 	
 	// Currency
 	echo '<td '.$cRCur.'>'.$v->currency_code.'</td>';
@@ -221,7 +227,7 @@ if (!empty($d['total'])) {
 			$price->setCurrency($k);
 			echo '<tr '.$cRTotalR.' id="phReportTotalRow'.$i.'">';
 			
-			echo '<td '.$cRTotalC1.' colspan="4">';
+			echo '<td '.$cRTotalC1.' colspan="5">';
 			echo '' . JText::_('COM_PHOCACART_TOTAL'). ' ';
 			echo '('. $price->getPriceCurrencyTitle(). ')';
 			echo '</td>';

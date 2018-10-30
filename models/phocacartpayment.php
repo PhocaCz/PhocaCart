@@ -193,6 +193,10 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 				
 				PhocacartShipping::storeShippingMethods($data['shipping'], (int)$table->id, 'payment');
 				
+				if (!isset($data['group'])) {
+					$data['group'] = array();
+				}
+		
 				PhocacartGroup::storeGroupsById((int)$table->id, 8, $data['group']);
 			
 			}

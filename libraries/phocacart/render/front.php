@@ -56,7 +56,7 @@ class PhocacartRenderFront
 		$feat	= $params->get( 'display_featured', '' );
 		
 		$o = '';
-		if ($featured == 0) {
+		if ($featured == 0 || $feat == '') {
 			$o .= '';
 		} else {
 			$o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon'.$size.'-wrapper"><div class="ph-corner-icon ph-corner-icon'.$size.' ph-corner-icon-featured">'.JText::_($feat).'</div></div>';

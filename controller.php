@@ -40,6 +40,7 @@ $l['tg']	= array('COM_PHOCACART_TAGS', 'phocacarttags');
 $l['fd']	= array('COM_PHOCACART_XML_FEEDS', 'phocacartfeeds');
 $l['wl']	= array('COM_PHOCACART_WISH_LISTS', 'phocacartwishlists');
 $l['qu']	= array('COM_PHOCACART_QUESTIONS', 'phocacartquestions');
+$l['ot']	= array('COM_PHOCACART_OPENING_TIMES', 'phocacarttimes');
 $l['sc']	= array('COM_PHOCACART_STATISTICS', 'phocacartstatistics');
 $l['rt']	= array('COM_PHOCACART_REPORTS', 'phocacartreports');
 $l['hi']	= array('COM_PHOCACART_HITS', 'phocacarthits');

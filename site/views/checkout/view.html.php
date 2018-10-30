@@ -52,6 +52,9 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 		$this->t['checkout_icon_status']	= $this->p->get( 'checkout_icon_status', 1 );
 		
+		
+		PhocacartTime::checkOpeningTimes();
+		
 		// Terms and Conditions
 		$this->t['display_checkout_toc_checkbox']		= $this->p->get( 'display_checkout_toc_checkbox', 2 );
 		if ($this->t['display_checkout_toc_checkbox'] > 0) {

@@ -45,6 +45,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', 'bullhorn', '#ffb300'),
 		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', 'heart', '#EA7C7C'),
 		'questions'		=> array($this->t['l'] . '_QUESTIONS', 'question-sign', '#9900CC'),
+		'times'			=> array($this->t['l'] . '_OPENING_TIMES', 'time', '#73b9ff'),
 		'statistics'	=> array($this->t['l'] . '_STATISTICS', 'stats', '#c1756d'),
 		'reports'		=> array($this->t['l'] . '_REPORTS', 'list-alt', '#8c0069'),
 		'hits'			=> array($this->t['l'] . '_HITS', 'equalizer', '#fb1000'),

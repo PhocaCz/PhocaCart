@@ -87,6 +87,15 @@ class PhocacartOrder
 		// --------------------
 		// checked in controller
 		
+		
+		// --------------------
+		// CHECK OPENING TIMES
+		// --------------------
+		
+		if (PhocacartTime::checkOpeningTimes() == false) {
+			// Message set in checkOpeningTimes() method
+			return false;
+		}
 		// --------------------
 		// CHECK GUEST USER
 		// --------------------
@@ -720,7 +729,13 @@ class PhocacartOrder
 			// STOCK MOVEMENT (including a) Main Product, b) Product Variations method)
 			
 			// Change Status is not setting the status, it is about do getting info about status for sending emails, checking stock, 
-			PhocacartOrderStatus::changeStatus($row->id, $d['status_id'], $d['order_token']);// Notify user, notify others, emails send - will be decided in function
+			if ($guest) {
+				// Don't check the user (status.php, render.php)
+				PhocacartOrderStatus::changeStatus($row->id, $d['status_id'], $d['order_token']);// Notify user, notify others, emails send - will be decided in function
+			} else {
+				PhocacartOrderStatus::changeStatus($row->id, $d['status_id']);// Notify user, notify others, emails send - will be decided in function
+			}
+			
 		
 			// Proceed or not proceed to payment gateway - depends on payment method
 			// By every new order - clean the proceed payment session

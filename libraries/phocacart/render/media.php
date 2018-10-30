@@ -63,11 +63,11 @@ class PhocacartRenderMedia
 	}
 	
 	public function loadBootstrap() {
-		//if ($this->p['load_bootstrap'] == 1) {
+		if ($this->p['load_bootstrap'] == 1) {
 
-			//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
-		//}
+			JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
+			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
+		}
 	}
 	
 	public function loadWindowPopup() {
@@ -127,7 +127,7 @@ class PhocacartRenderMedia
 		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/swiper/swiper.min.js');
 		//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/ui/jquery-ui.min.js');
 		JHtml::stylesheet('media/com_phocacart/js/swiper/swiper.min.css' );
-		JHtml::stylesheet('media/com_phocacart/js/swiper/swiper-custom.css' );		
+		//JHtml::stylesheet('media/com_phocacart/js/swiper/swiper-custom.css' );		
 	}
 	
 	

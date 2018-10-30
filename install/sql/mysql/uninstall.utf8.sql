@@ -80,3 +80,4 @@ DROP TABLE IF EXISTS `#__phocacart_import`;
 DROP TABLE IF EXISTS `#__phocacart_vendors`;
 DROP TABLE IF EXISTS `#__phocacart_sections`;
 DROP TABLE IF EXISTS `#__phocacart_units`;
+DROP TABLE IF EXISTS `#__phocacart_opening_times`;

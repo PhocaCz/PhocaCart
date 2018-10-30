@@ -208,7 +208,7 @@ echo '<tr class="row'.$iD.' '.$trClass.'" sortable-group-id="0">'. "\n";
 $image 		= isset($item['image']) ? $item['image'] : '';
 
 if ($image != '') {
-	$image = '<img src="'.$this->escape($image).'" alt="" />';
+	$image = '<img src="'.$this->escape($image).'" alt="" style="width: 48px;height: 48px" />';
 }
 
 echo $r->td($image, "small");

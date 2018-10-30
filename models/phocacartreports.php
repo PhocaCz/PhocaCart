@@ -99,7 +99,7 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 				'list.select',
 				///// -- 'a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
 				//'DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
-				'a.id, a.date, a.order_number, a.currency_id, a.currency_code, a.currency_exchange_rate, a.type'
+				'a.id, a.date, a.order_number, a.currency_id, a.currency_code, a.currency_exchange_rate, a.type, a.payment_id'
 			)
 		);
 		$query->from('`#__phocacart_orders` AS a');
@@ -136,6 +136,12 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		.' ou.address_1 AS user_address_1, ou.city AS user_city, ou.zip AS user_zip, co.title AS user_country');
 		$query->join('LEFT', '#__phocacart_order_users AS ou ON a.id = ou.order_id');
 		$query->join('LEFT', '#__phocacart_countries AS co ON ou.country = co.id');
+		
+		
+		// PAYMENT
+		$query->select('p.title as payment_title');
+		$query->join('LEFT', '#__phocacart_payment_methods AS p ON a.payment_id = p.id');
+	
 	
 
 		// Filter by search in title

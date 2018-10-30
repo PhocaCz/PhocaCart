@@ -45,9 +45,10 @@ class PhocacartDate
 	}
 	
 	public static function getDateDays($fromDate, $toDate) {
+		
 		$fromDate	= \DateTime::createFromFormat('Y-m-d', $fromDate);
 		$toDate 	= \DateTime::createFromFormat('Y-m-d', $toDate);
-		
+
 		if ($fromDate == false || $toDate == false) {
 			return array();
 		}

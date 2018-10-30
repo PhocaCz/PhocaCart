@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"  />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+
+<field name="type" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_TYPE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_TYPE_DESC" class="inputbox" size="1" default="1">
+	<option value="1">COM_PHOCACART_OPENING_HOURS</option>
+	<option	value="2">COM_PHOCACART_CLOSING_HOURS</option>
+	<option	value="3">COM_PHOCACART_CLOSING_DAYS</option>
+</field>
+
+<field name="day" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_DESC" class="inputbox" size="1" default="-1">
+	<option value="-1">COM_PHOCACART_NOT_SET</option>
+	<option value="1">MONDAY</option>
+	<option value="2">TUESDAY</option>
+	<option	value="3">WEDNESDAY</option>
+	<option	value="4">THURSDAY</option>
+	<option	value="5">FRIDAY</option>
+	<option	value="6">SATURDAY</option>
+	<option	value="0">SUNDAY</option>
+</field>
+
+<field name="hour_from" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_FROM_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_FROM_DESC" class="inputbox" size="1" default="-1">
+<option value="-1">COM_PHOCACART_NOT_SET</option>
+	<option value="0">00</option>
+	<option value="1">01</option>
+	<option value="2">02</option>
+	<option	value="3">03</option>
+	<option	value="4">04</option>
+	<option	value="5">05</option>
+	<option	value="6">06</option>
+	<option	value="7">07</option>
+	<option value="8">08</option>
+	<option	value="9">09</option>
+	<option	value="10">10</option>
+	<option	value="11">11</option>
+	<option	value="12">12</option>
+	<option value="13">13</option>
+	<option value="14">14</option>
+	<option	value="15">15</option>
+	<option	value="16">16</option>
+	<option	value="17">17</option>
+	<option	value="18">18</option>
+	<option	value="19">19</option>
+	<option value="20">20</option>
+	<option	value="21">21</option>
+	<option	value="22">22</option>
+	<option	value="23">23</option>
+</field>
+<field name="minute_from" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_FROM_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_FROM_DESC" class="inputbox" size="1" default="-1">
+<option value="-1">COM_PHOCACART_NOT_SET</option>
+	<option value="0">00</option>
+	<option	value="5">05</option>
+	<option	value="10">10</option>
+	<option	value="15">15</option>
+	<option	value="20">20</option>
+	<option	value="25">25</option>
+	<option	value="30">30</option>
+	<option	value="35">35</option>
+	<option	value="40">40</option>
+	<option	value="45">45</option>
+	<option	value="50">50</option>
+	<option	value="55">55</option>
+	<option	value="59">59</option>
+</field>
+
+<field name="hour_to" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_TO_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_TO_DESC" class="inputbox" size="1" default="-1">
+<option value="-1">COM_PHOCACART_NOT_SET</option>
+	<option value="0">00</option>
+	<option value="1">01</option>
+	<option value="2">02</option>
+	<option	value="3">03</option>
+	<option	value="4">04</option>
+	<option	value="5">05</option>
+	<option	value="6">06</option>
+	<option	value="7">07</option>
+	<option value="8">08</option>
+	<option	value="9">09</option>
+	<option	value="10">10</option>
+	<option	value="11">11</option>
+	<option	value="12">12</option>
+	<option value="13">13</option>
+	<option value="14">14</option>
+	<option	value="15">15</option>
+	<option	value="16">16</option>
+	<option	value="17">17</option>
+	<option	value="18">18</option>
+	<option	value="19">19</option>
+	<option value="20">20</option>
+	<option	value="21">21</option>
+	<option	value="22">22</option>
+	<option	value="23">23</option>
+</field>
+<field name="minute_to" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_TO_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_TO_DESC" class="inputbox" size="1" default="-1">
+<option value="-1">COM_PHOCACART_NOT_SET</option>
+	<option value="0">00</option>
+	<option	value="5">05</option>
+	<option	value="10">10</option>
+	<option	value="15">15</option>
+	<option	value="20">20</option>
+	<option	value="25">25</option>
+	<option	value="30">30</option>
+	<option	value="35">35</option>
+	<option	value="40">40</option>
+	<option	value="45">45</option>
+	<option	value="50">50</option>
+	<option	value="55">55</option>
+	<option	value="59">59</option>
+</field>
+
+<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_DESC" filter="JComponentHelper::filterText" />
+
+
+<field name="ordering" type="phocacartOrdering" table="tag" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+
+	</fieldset>
+	
+	
+	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+	<option value="1">JPUBLISHED</option>
+	<option	value="0">JUNPUBLISHED</option>
+</field>
+
+
+
+
+	
+	</fieldset>
+
+	
+</form>

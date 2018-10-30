@@ -81,7 +81,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			if (!empty($item)) {
 				
 				$priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 1, 1, $item->group_price);
-				//print_r($priceP);
+				
 				$price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 				
 				$d = array();

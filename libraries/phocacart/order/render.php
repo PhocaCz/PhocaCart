@@ -32,7 +32,7 @@ class PhocacartOrderRender
 		if ($id < 1) {
 			return JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND');
 		}
-		
+	
 		$d 					= array();
 		$d['params'] 		= PhocacartUtils::getComponentParameters();
 		$d['type']			= $type;
@@ -64,12 +64,15 @@ class PhocacartOrderRender
 				$dUser 	= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section, 1);
 				
 				if ((int)$vendor->id < 1) {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor not found (1)');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if (!isset($d['common']->vendor_id)) {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor not found (2)');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if ($vendor->id != $d['common']->vendor_id) {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor doesn\'t match');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				
@@ -78,15 +81,19 @@ class PhocacartOrderRender
 				$user = PhocacartUser::getUser();
 			
 				if ((int)$user->id < 1 && $token == '') {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (1)');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if (!isset($d['common']->user_id) && $token == '') {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (2)');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if ($user->id != $d['common']->user_id && $token == '') {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User doesn\'t match');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if ((int)$user->id < 1 && $token != '' && ($token != $d['common']->order_token)) {
+					PhocacartLog::add(1, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Token doesn\'t match');
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 			}
