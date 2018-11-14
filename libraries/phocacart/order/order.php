@@ -201,6 +201,17 @@ class PhocacartOrder
 		
 		// SET STATUS
 		$statusId = $pC->get( 'default_order_status', 1 );// Ordered (Pending) as default
+		
+		// Free Download
+		// 1) All products are digital
+		// 2) Order is zero price
+		if (isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts'])
+			&& (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts']
+			&& $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ) {
+			$statusId = $pC->get( 'default_order_status_free_download', 1 );// Ordered (Pending) as default	
+				
+		}
+			
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
 		if ($plugin) {
@@ -270,27 +281,63 @@ class PhocacartOrder
 		}
 
 		
+		// Check Shipping method
+		if ($shippingId > 0) {
+			// 1) User selected some method
+			//    - check if this method even exists
+			//	  - and check if the selected method meets every criteria and rules to be selected
+			//$shippingMethods	= $shippingClass->checkAndGetShippingMethod($shippingId); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
+			$shippingMethods	= $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], $shippingId, 0 );
+			
+		} else {
+			// 2) No shipping method selected
+			$shippingMethods 	= false;
+		}
 		
-		$shippingMethods	= $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], $shippingId, 0 );
+		$sOCh							= array();// Shipping Options Checkout
+		$sOCh['all_digital_products']	= isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+		$shippingNotUsed 				= PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 		
-		$shippingNotUsed = PhocacartShipping::isShippingNotUsed();// REVERSE
 		
+	
 		
 		if (!empty($shippingMethods)) {
-			// IS OK
+			// IS OK - some shipping method was selected
 		} else if (empty($shippingMethods) && PhocacartPos::isPos()) {
-			// IS OK
+			// IS OK - shipping method was not selected but we are in POS
 		} else if (empty($shippingMethods) && $shippingNotUsed) {
-			// IS OK
+			// IS OK - shipping method was not selected but there is none for selecting (shipping methods intentionally not used in shop)
+			//         a) no shipping method is used
+			//         b) or e.g. all items in cart are downloadable products and in Phoca Cart options is set that in such case shipping need not to be selected
 		} else {
 			$msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_SHIPPING_METHOD');
 			$app->enqueueMessage($msg, 'error');
 			return false;
 		}
 		
-		$paymentMethods	= $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0, $this->type );
-		$paymentNotUsed = PhocacartPayment::isPaymentNotUsed();// REVERSE
+		
+		
+		// Check Payment method
+		if ($payment['id'] > 0) {
+			// 1) User selected some method
+			//    - check if this method even exists
+			//	  - and check if the selected method meets every criteria and rules to be selected
+			//$paymentMethods	= $paymentClass->checkAndGetPaymentMethod($payment['id']); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
+			$paymentMethods	= $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0, $this->type );
+			
+			
+		} else {
+			// 2) No shipping method selected
+			$paymentMethods = false;
+		}
+		
+		
+		$pOCh 							= array();// Payment Options Checkout
+		$pOCh['order_amount_zero']		= $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ? 1 : 0;
+		$paymentNotUsed 				= PhocacartPayment::isPaymentNotUsed($pOCh);// REVERSE
 
+		
+		
 		
 		if (!empty($paymentMethods)) {
 			// IS OK
@@ -430,6 +477,8 @@ class PhocacartOrder
 			if (!empty($coupon)) {
 				$this->cleanTable('phocacart_order_coupons', $row->id);
 				$this->saveOrderCoupons($coupon, $total[4], $row->id);
+				PhocacartCoupon::storeCouponCount((int)$coupon['id']);
+				PhocacartCoupon::storeCouponCountUser((int)$coupon['id'], $d['user_id'] );
 			}
 			
 			
@@ -1005,6 +1054,8 @@ class PhocacartOrder
 	
 	public function saveOrderCoupons($coupon, $totalC, $orderId) {
 	
+		
+		
 		$d = array();
 		$d['order_id'] 			= (int)$orderId;
 		$d['coupon_id']			= (int)$coupon['id'];
@@ -1015,6 +1066,7 @@ class PhocacartOrder
 		$d['amount']			= $totalC['dnetto'];// get the value from total
 		$d['netto']				= $totalC['dnetto'];
 		$d['brutto']			= $totalC['dbrutto'];
+		
 		$row = JTable::getInstance('PhocacartOrderCoupons', 'Table', array());	
 		
 		if (!$row->bind($d)) {

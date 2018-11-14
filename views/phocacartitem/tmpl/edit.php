@@ -337,7 +337,7 @@ echo '</div>'. "\n";
 
 // DOWNLOAD
 echo '<div class="tab-pane" id="download">'. "\n";
-$formArray = array ('download_folder', 'download_file', 'download_token', 'download_hits');
+$formArray = array ('download_folder', 'download_file', 'download_token', 'download_hits', 'type');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 

@@ -162,7 +162,7 @@ class PhocaCartModelCheckout extends JModelForm
 		
 		$shipping 			= new PhocacartShipping();
 		//$shipping->setType();
-		$isValidShipping	= $shipping->checkAndGetShippingMethods($shippingId);
+		$isValidShipping	= $shipping->checkAndGetShippingMethod($shippingId);
 		if (!$isValidShipping) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
 			return false;
@@ -217,7 +217,7 @@ class PhocaCartModelCheckout extends JModelForm
 		
 		$payment 			= new PhocacartPayment();
 		//$payment->setType();
-		$isValidPayment		= $payment->checkAndGetPaymentMethods($paymentId);
+		$isValidPayment		= $payment->checkAndGetPaymentMethod($paymentId);
 		if (!$isValidPayment) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
 			return false;

@@ -725,6 +725,21 @@
 <field name="default_order_status" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_DESC" >
 </field>
 
+<field name="skip_shipping_method" default="0" type="list" label="COM_PHOCACART_FIELD_SKIP_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_FIELD_SKIP_SHIPPING_METHOD_DESC" >
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES_ALL_PRODUCTS_ARE_DOWNLOADABLE</option>
+</field>
+
+<field name="skip_payment_method" default="0" type="list" label="COM_PHOCACART_FIELD_SKIP_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_FIELD_SKIP_PAYMENT_METHOD_DESC" >
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES_ORDER_AMOUNT_IS_ZERO</option>
+</field>
+
+<field name="default_order_status_free_download" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_DESC" >
+</field>
+
+
+
 <field name="phocahead11" type="phocahead" default="COM_PHOCACART_CONFIG_UNITS" label="" description=""/>
 
 
@@ -830,6 +845,12 @@
 <field name="download_days" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_DESC"/>
 
 <field name="download_count" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_MAX_COUNT_FILE_DOWNLOADS_LABEL" description="COM_PHOCACART_FIELD_MAX_COUNT_FILE_DOWNLOADS_DESC"/>
+
+
+<field name="phocahead29" type="phocaheadexpert"  default="COM_PHOCACART_DOWNLOAD_EXPERTS_ONLY_LABEL" label="" description=""/>
+
+
+<field name="absolute_path" default="" size="40" type="text" label="COM_PHOCACART_FIELD_ABSOLUTE_PATH_LABEL" description="COM_PHOCACART_FIELD_ABSOLUTE_PATH_DESC" />
 		
 		</fieldset>
 		

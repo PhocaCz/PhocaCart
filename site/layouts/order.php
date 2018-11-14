@@ -109,24 +109,34 @@ if ($d['format'] == 'raw' && $d['type'] == 4) {
 
 if ($d['format'] == 'pdf') {
 	// FORMAT PDF
+	
+	
+	// Products
+	if ($tax_calculation > 0) {
+		$colW = 8.3333;// 12 cols x 8.3333 = 100%
+	} else {
+		$colW = 11.11;// 9 cols x 11.11 = 100%
+	}
 	$box		= '';
 	$table 		= 'style="width: 100%; font-size: 80%;padding:3px;margin-top:-200px"';
-	$pho1 		= 'style="width: 8.3333%;"';
-	$pho2 		= 'style="width: 8.3333%;"';
-	$pho3 		= 'style="width: 8.3333%;"';
-	$pho4 		= 'style="width: 8.3333%;"';
-	$pho5 		= 'style="width: 8.3333%;"';
-	$pho6 		= 'style="width: 8.3333%;"';
-	$pho7 		= 'style="width: 8.3333%;"';
+	$pho1 		= 'style="width: '.$colW.'%;"';
+	$pho2 		= 'style="width: '.$colW.'%;"';
+	$pho3 		= 'style="width: '.$colW.'%;"';
+	$pho4 		= 'style="width: '.$colW.'%;"';
+	$pho5 		= 'style="width: '.$colW.'%;"';
+	$pho6 		= 'style="width: '.$colW.'%;"';
+	$pho7 		= 'style="width: '.$colW.'%;"';
 	$pho6Sep 	= 'style="width: 3%;"';
 	$pho7Sep 	= 'style="width: 3%;"';
-	$pho8 		= 'style="width: 8.3333%;"';
-	$pho9 		= 'style="width: 8.3333%;"';
-	$pho10 		= 'style="width: 8.3333%;"';
-	$pho11 		= 'style="width: 8.3333%;"';
-	$pho12 		= 'style="width: 8.3333%;"';
+	$pho8 		= 'style="width: '.$colW.'%;"';
+	$pho9 		= 'style="width: '.$colW.'%;"';
+	$pho10 		= 'style="width: '.$colW.'%;"';
+	$pho11 		= 'style="width: '.$colW.'%;"';
+	$pho12 		= 'style="width: '.$colW.'%;"';
 	$sep		= 'style="width: 3%;"';
 
+	
+	
 	$pho12 		= 'style="width: 9%;"';
 	$pho22 		= 'style="width: 9%;"';
 	$pho32 		= 'style="width: 9%;"';
@@ -443,7 +453,7 @@ $o[] = '<td '.$pho1.'>&nbsp;</td><td '.$pho2.'>&nbsp;</td><td '.$pho3.'>&nbsp;</
 $o[] = '<td '.$pho5.'>&nbsp;</td><td '.$pho6.'>&nbsp;</td><td '.$pho7.'>&nbsp;</td><td '.$pho8.'>&nbsp;</td>';
 $o[] = '<td '.$pho9.'>&nbsp;</td>';
 if ($tax_calculation > 0) {
-	$o[] = '<td '.$pho10.'>&nbsp;</td><td '.$pho11.'>&nbsp;</td><td '.$pho12.'>&nbsp;</td>';
+	$o[] = '<td '.$pho10.'>&nbsp;y</td><td '.$pho11.'>&nbsp;y</td><td '.$pho12.'>&nbsp;y</td>';
 }
 $o[] = '</tr>';
 
@@ -598,10 +608,21 @@ if (!empty($d['products'])) {
 					$p[] = '<td></td>';
 					$p[] = '<td colspan="'.$cTitle.'">'.$v3->title.'</td>';
 					$p[] = '<td style="text-align:center"></td>';
-					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($nettoUnit3).'</td>';
+					/*$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($nettoUnit3).'</td>';
 					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($netto3).'</td>';
 					$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($tax3).'</td>';
-					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto3).'</td>';
+					$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto3).'</td>';*/
+					
+					if ($tax_calculation > 0) {
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($nettoUnit3).'</td>';
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($netto3).'</td>';
+						$p[] = '<td style="text-align:right" colspan="1">'.$d['price']->getPriceFormat($tax3).'</td>';
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto3).'</td>';
+					} else {
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($nettoUnit3).'</td>';
+						$p[] = '<td style="text-align:right" colspan="2">'.$d['price']->getPriceFormat($brutto3).'</td>';
+					}
+					
 					$p[] = '</tr>';
 
 					if ($pR) {
@@ -914,6 +935,5 @@ if ($pR) {
 	$o2 = implode("\n", $o);
 	echo $o2;
 }
-
 
 ?>

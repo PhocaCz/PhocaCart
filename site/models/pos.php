@@ -758,7 +758,7 @@ class PhocaCartModelPos extends JModelLegacy
 		$data['user_id']	= (int)$user->id;
 		$shipping 			= new PhocacartShipping();
 		$shipping->setType(array(0,2));
-		$isValidShipping	= $shipping->checkAndGetShippingMethods($shippingId, 0);
+		$isValidShipping	= $shipping->checkAndGetShippingMethod($shippingId);
 		if (!$isValidShipping) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
 			return false;
@@ -805,7 +805,7 @@ class PhocaCartModelPos extends JModelLegacy
 		$data['reward'] 	= (int)$reward;
 		$payment 			= new PhocacartPayment();
 		$payment->setType(array(0,2));
-		$isValidPayment	= $payment->checkAndGetPaymentMethods($paymentId, 0);
+		$isValidPayment	= $payment->checkAndGetPaymentMethod($paymentId);
 		if (!$isValidPayment) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
 			return false;

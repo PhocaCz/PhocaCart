@@ -92,6 +92,12 @@
 
 <field name="download_hits" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC" />
 
+<field name="type" default="0" type="list"  label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC" >
+	<option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
+	<option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
+	<option value="2">COM_PHOCACART_MIXED_PRODUCT</option>
+</field>
+
 <field name="attributes" type="PhocaAttributes" multiple="1" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" class="inputbox" size="1" />
 
 <field name="unit_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_UNIT_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_UNIT_AMOUNT_DESC" />

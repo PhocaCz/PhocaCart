@@ -56,7 +56,8 @@ class PhocacartRenderAdminview
 				foreach ($formArray as $value) {
 					$o .= '<div>'. $form->getLabel($value) . '</div>'."\n"
 					. '<div class="clearfix"></div>'. "\n"
-					. '<div>' . $form->getInput($value). '</div>'."\n";
+					. '<div>' . $form->getInput($value). '</div>'."\n"
+					. '<div class="clearfix"></div>'. "\n";
 				} 
 			} else {
 				foreach ($formArray as $value) {

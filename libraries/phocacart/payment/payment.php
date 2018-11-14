@@ -35,6 +35,13 @@ class PhocacartPayment
 	public function setType($type = array(0,1)) {
 		$this->type = $type;
 	}
+	
+	/*
+	 * Be aware:
+	 * if id > 0 ... it can test if the payment method exists (order)
+	 * if id = 0 ... it lists all possible payment methods meeting the criteria (checkout)
+	 * Always test for the id before using this function
+	 */
 									
 	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $id = 0, $selected = 0) {
 		
@@ -127,7 +134,6 @@ class PhocacartPayment
 				// Amount Rule
 				if($v->active_amount == 1) {
 				
-					
 					if ($payment_amount_rule == 0 || $payment_amount_rule == 1) {
 						// No tax, brutto
 						if ($amountBrutto > $v->lowest_amount && $amountBrutto < $v->highest_amount) {
@@ -204,6 +210,7 @@ class PhocacartPayment
 					$v->active = 1;
 				}
 				
+				
 				// if some of the rules is not valid, all the payment is NOT valid
 				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $s == 0) {
 					$v->active = 0;
@@ -237,6 +244,28 @@ class PhocacartPayment
 		
 	}
 	
+	/**
+	 * Check current payment method
+	 * Payment method must be selected
+	 * @param number $id
+	 * @return boolean|array
+	 */
+	public function checkAndGetPaymentMethod($id = 0) {
+	
+		if ($id > 0) {
+			return $this->checkAndGetPaymentMethods($id);
+		}
+		return false;
+		
+	}
+	
+	/**
+	 * Check current payment method or all methods they meet criteria to be selected
+	 * @param number $selectedPaymentId
+	 * @param number $selected
+	 * @return boolean|array
+	 */
+	
 	public function checkAndGetPaymentMethods($selectedPaymentId = 0, $selected = 0) {
 	
 		
@@ -245,7 +274,7 @@ class PhocacartPayment
 		$cart->setFullItems();
 		$total					= $cart->getTotal();
 		$currentShippingId 		= $cart->getShippingId();
-		$currentPaymentId 		= $cart->getPaymentId();
+		//$currentPaymentId 		= $cart->getPaymentId();
 		
 		$user					= PhocacartUser::getUser();
 		$data					= PhocacartUser::getUserData((int)$user->id);
@@ -339,9 +368,17 @@ class PhocacartPayment
 		return true;
 	}
 	
-	/* Checkout - is there even some payment NOT is used reverse - used only in online shop type*/
-	public static function isPaymentNotUsed() {
+	/* Checkout - is there even some payment NOT is used reverse - used only in online shop type
+	 * This function is different to getPossiblePaymentMethods()
+	 * 
+	 * getPossiblePaymentMethods() - all methods they fit the criterias (e.g. amount rule, contry rule, etc.)
+	 * isPaymentNotUsed() - all existing methods in shop which are published 
+	 * 
+	 * */
+	public static function isPaymentNotUsed($options = array()) {
 	
+	
+		// 1) TEST IF ANY PAYMENT METHOD EXISTS
 		$db =JFactory::getDBO();
 
 		$query = 'SELECT a.id'
@@ -355,6 +392,14 @@ class PhocacartPayment
 		if (empty($methods)) {
 			return true;
 		}
+		
+		// 2) TEST IF PAYMENT METHOD IS NOT DISABLED FOR CART WITH EMPTY PRICE (CART SUM = 0)
+		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$skip_payment_method	= $paramsC->get( 'skip_payment_method', 0 );
+		if (isset($options['order_amount_zero']) &&  $options['order_amount_zero'] == 1 && $skip_payment_method == 1) {
+			return true;
+		}
+		
 		return false;
 	}
 	

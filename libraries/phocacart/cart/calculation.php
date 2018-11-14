@@ -76,6 +76,10 @@ class PhocacartCartCalculation
 		$total['rewardproductusedtotal']	= '';
 		$total['rewardproducttxtsuffix']	= '';
 		
+		$total['countallproducts']			= 0;
+		$total['countphysicalproducts']		= 0;
+		$total['countdigitalproducts']		= 0;
+		
 		// OPTIONS (VARIANTS) QUANTITY
 		// The same option can be in different items
 		$optionsQuantity					= array();
@@ -88,6 +92,8 @@ class PhocacartCartCalculation
 					
 			$item 	= explode(':', $k);
 			$itemId = $item[0];
+			
+			
 			
 			
 			// Define
@@ -252,7 +258,14 @@ class PhocacartCartCalculation
 				$total['tax'][$itemD->taxid]['type']	= $itemD->taxcalculationtype;
 				$total['tax'][$itemD->taxid]['rate']	= $itemD->taxrate;
 				
-
+				// Digital product
+				$total['countallproducts']++;
+				if ($itemD->type == 0) {
+					$total['countphysicalproducts']++;
+				} else if ($itemD->type == 1) {
+					$total['countdigitalproducts']++;
+				}
+			
 				// ==========
 				// ATTRIBUTES
 				// ==========

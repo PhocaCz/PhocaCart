@@ -67,31 +67,26 @@ class PhocacartCart
 		$guest			= PhocacartUserGuestuser::getGuestUser();
 		
 		$this->pos		= PhocacartPos::isPos();
-		$this->coupon['id']			= 0;
-		$this->coupon['title']		= '';
-		$this->coupon['valid']		= 0;
-		$this->coupon['code']		= '';
 		
-		$this->reward['used']		= '';
-		
-		$this->cartdiscount['id']	= 0;
-		$this->cartdiscount['title']= '';
-		
-		$this->shipping['id']		= 0;
-		$this->shipping['title']	= '';
-		$this->shipping['method']	= '';
-		$this->shipping['costs']	= 0;
-		
+		$this->coupon['id']					= 0;
+		$this->coupon['title']				= '';
+		$this->coupon['valid']				= 0;
+		$this->coupon['code']				= '';	
+		$this->reward['used']				= '';
+		$this->cartdiscount['id']			= 0;
+		$this->cartdiscount['title']		= '';
+		$this->shipping['id']				= 0;
+		$this->shipping['title']			= '';
+		$this->shipping['method']			= '';
+		$this->shipping['costs']			= 0;
 		$this->payment['id']				= 0;
 		$this->payment['title']				= '';
 		$this->payment['method']			= '';
 		$this->payment['costs']				= 0;
 		$this->payment['calculation_type']	= 0;
-		
-		
-		$this->stock['valid']			= 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
-		$this->minqty['valid']			= 1;// check minimum order quantity
-		$this->minmultipleqty['valid']	= 1;// check minimum multiple order quantity
+		$this->stock['valid']				= 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
+		$this->minqty['valid']				= 1;// check minimum order quantity
+		$this->minmultipleqty['valid']		= 1;// check minimum multiple order quantity
 		
 
 		

@@ -25,7 +25,7 @@ class PhocacartRenderFront
 			$dateExists = $dateToday - $dateAdded;
 			$dateNew	= (int)$new * 24 * 60 * 60;
 			if ($dateExists < $dateNew) {
-				$o .= '<div class="ph-corner-icon-wrapper ph-corner-icon'.$size.'-wrapper"><div class="ph-corner-icon ph-corner-icon'.$size.' ph-corner-icon-new">'.JText::_('COM_PHOCACART_NEW').'</div></div>';
+				$o .= '<div class="ph-corner-icon-wrapper ph-corner-icon'.$size.'-wrapper"><div class="ph-corner-icon ph-corner-icon'.$size.' ph-corner-icon-new">'.JText::_('COM_PHOCACART_LABEL_TXT_NEW').'</div></div>';
 				
 				
 				

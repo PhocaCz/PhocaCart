@@ -415,4 +415,59 @@ class PhocacartCoupon
 		$coupon = $db->loadObject();
 		return $coupon;
 	}
+	
+	
+	public static function storeCouponCount($couponId) {
+	
+		$idExists = 0;
+		if ((int)$couponId > 0) {
+			$db =JFactory::getDBO();
+			$query = ' SELECT id FROM #__phocacart_coupon_count WHERE coupon_id = '. (int)$couponId .' ORDER BY id LIMIT 1';
+			$db->setQuery($query);
+			$idExists = $db->loadResult();
+			
+			if ((int)$idExists > 0) {
+									
+				$query = 'UPDATE #__phocacart_coupon_count SET count = count + 1 WHERE id = '.(int)$idExists;
+				$db->setQuery($query);
+				$db->execute();
+			} else {
+						
+				$valuesString 	= '('.(int)$couponId.', 1)';
+				$query = ' INSERT INTO #__phocacart_coupon_count (coupon_id, count) VALUES '.(string)$valuesString;
+				$db->setQuery($query);
+				$db->execute();
+			}
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static function storeCouponCountUser($couponId, $userId) {
+	
+		$idExists = 0;
+		if ((int)$couponId > 0 && (int)$userId > 0) {
+			$db =JFactory::getDBO();
+			$query = ' SELECT coupon_id, user_id FROM #__phocacart_coupon_count_user WHERE coupon_id = '. (int)$couponId .' AND user_id = '.(int)$userId.' ORDER BY coupon_id LIMIT 1';
+			$db->setQuery($query);
+			$idExists = $db->loadResult();
+			
+			if ((int)$idExists['coupon_id'] > 0 && (int)$idExists['user_id'] > 0) {
+									
+				$query = 'UPDATE #__phocacart_coupon_count_user SET count = count + 1 WHERE coupon_id = '.(int)$idExists['coupon_id'] . ' AND user_id = '.(int)$idExists['user_id'];
+				$db->setQuery($query);
+				$db->execute();
+			} else {
+						
+				$valuesString 	= '('.(int)$couponId.', '.(int)$userId.', 1)';
+				$query = ' INSERT INTO #__phocacart_coupon_count_user (coupon_id, user_id, count) VALUES '.(string)$valuesString;
+				$db->setQuery($query);
+				$db->execute();
+			}
+			return true;
+		}
+		
+		return false;
+	}
 }

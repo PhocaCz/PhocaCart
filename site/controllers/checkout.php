@@ -265,7 +265,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				
 				$coupon = new PhocacartCoupon();
 				$coupon->setCoupon(0, $item['phcoupon']);
-				$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid
+				$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
 				$couponId 	= 0;
 				if ($couponTrue) {
 					$couponData = $coupon->getCoupon();

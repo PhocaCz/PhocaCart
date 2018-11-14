@@ -155,6 +155,8 @@ class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 			
 			
 			
+			
+			
 			if ((int)$table->id > 0) {
 			
 				if (!isset($data['product_ids'])) {
@@ -167,6 +169,9 @@ class PhocaCartCpModelPhocacartCoupon extends JModelAdmin
 				}
 				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->id);
 				
+				if (empty($data['group'])) {
+					$data['group'] = array();
+				}
 				
 				PhocacartGroup::storeGroupsById((int)$table->id, 6, $data['group']);
 			}

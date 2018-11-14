@@ -19,11 +19,12 @@ final class PhocacartRenderJs
 	
 	public static function renderAjaxDoRequest($text) {
 	
+		
 		$s 	= array();
 		$s[] = ' ';
-		$s[] = '/* Function phDoRequest */ ';
+		$s[] = '/* Function phDoRequest */';
 		$s[] = 'function phDoRequest(url, manager, value) {';
-		$s[] = '   var phAjaxTop = \'<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> \' + \''. htmlspecialchars($text).'\' + \'</div>\';';
+		$s[] = '   var phAjaxTop = \'<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> \' + \''. strip_tags(addslashes($text)).'\' + \'</div>\';';
 		$s[] = '   jQuery("#ph-ajaxtop").html(phAjaxTop);';
 		$s[] = '   jQuery("#ph-ajaxtop").show();';
 		$s[] = '   var dataPost = {};';
@@ -1313,7 +1314,7 @@ final class PhocacartRenderJs
 	public static function renderAjaxTopHtml($text = '') {
 		$o = '<div id="ph-ajaxtop">';
 		if ($text != '') {
-			$o .= '<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> '. htmlspecialchars($text) . '</div>';
+			$o .= '<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> '. strip_tags(addslashes($text)) . '</div>';
 		}
 		$o .= '</div>';
 		return $o;

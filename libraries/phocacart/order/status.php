@@ -255,34 +255,37 @@ class PhocacartOrderStatus
 				// - in case of payment method server contacts the server to change the status
 				if ($orderToken != '' && $orderToken == $common->order_token && $guest) {
 					$canSend = 1;// User is guest - not logged in user run this script
-					PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Guest User');
+					//PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Guest User');
 				} else if ($orderToken != '' && $orderToken == $common->order_token ) {
 					$canSend = 1;// Payment method server returned status which will change order status - payment method runs this script
-					PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Payment method');
+					//PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Payment method');
 				} else if ($user->id == $common->user_id) {
 					$canSend = 1;// User is the customer who made the order
-					PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Registered User');
+					//PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Registered User');
 				} 
 				
+			} else {
+				// Backend
+				$canSend = 1;
+			}
+			
+			// Payment method returns status
+			if ($canSend == 0) {
+				PhocacartLog::add(1, 'Order Status - Notify - ERROR', (int)$orderId, JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
 				
-				// Payment method returns status
-				if ($canSend == 0) {
-					PhocacartLog::add(1, 'Order Status - Notify - ERROR', (int)$orderId, JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
-					
-					// Don't die here because even if we cannot send email to customer we can send email to others
-					// $recipient == '' so no email will be sent to recipient
-					//die (JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
-				} else {
-					
-					if (isset($bas['b']['email_contact']) && $bas['b']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['b']['email_contact'])) {
-						$recipient = $bas['b']['email_contact'];
-					} else if (isset($bas['b']['email']) && $bas['b']['email'] != '' && JMailHelper::isEmailAddress($bas['b']['email'])) {
-						$recipient = $bas['b']['email'];
-					} else if (isset($bas['s']['email_contact']) && $bas['s']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['s']['email_contact'])) {
-						$recipient = $bas['s']['email_contact'];
-					} else if (isset($bas['s']['email']) && $bas['s']['email'] != '' && JMailHelper::isEmailAddress($bas['s']['email'])) {
-						$recipient = $bas['s']['email'];
-					}
+				// Don't die here because even if we cannot send email to customer we can send email to others
+				// $recipient == '' so no email will be sent to recipient
+				//die (JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
+			} else {
+				
+				if (isset($bas['b']['email_contact']) && $bas['b']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['b']['email_contact'])) {
+					$recipient = $bas['b']['email_contact'];
+				} else if (isset($bas['b']['email']) && $bas['b']['email'] != '' && JMailHelper::isEmailAddress($bas['b']['email'])) {
+					$recipient = $bas['b']['email'];
+				} else if (isset($bas['s']['email_contact']) && $bas['s']['email_contact'] != '' && JMailHelper::isEmailAddress($bas['s']['email_contact'])) {
+					$recipient = $bas['s']['email_contact'];
+				} else if (isset($bas['s']['email']) && $bas['s']['email'] != '' && JMailHelper::isEmailAddress($bas['s']['email'])) {
+					$recipient = $bas['s']['email'];
 				}
 			}
 		}

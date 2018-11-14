@@ -1278,5 +1278,5 @@ input[type="url"], input[type="search"], input[type="tel"], input[type="color"],
 }
 
 #adminForm .chzn-container {
-	height: 42px !important;
+	min-height: 42px !important;
 }

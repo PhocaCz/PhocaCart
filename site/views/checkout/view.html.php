@@ -93,9 +93,14 @@ class PhocaCartViewCheckout extends JViewLegacy
 			$this->a->login = 2;
 		}
 		
-		// Is there even a shipping or payment
-		$this->a->shippingnotused 	= PhocacartShipping::isShippingNotUsed();
-		$this->a->paymentnotused	= PhocacartPayment::isPaymentNotUsed();
+		// Is there even a shipping or payment (or is active based on criterias)
+		$total 							= $this->cart->getTotal();
+		$sOCh 							= array();// Shipping Options Checkout
+		$sOCh['all_digital_products']	= isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+		$pOCh 							= array();// Payment Options Checkout
+		$pOCh['order_amount_zero']		= $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ? 1 : 0;
+		$this->a->shippingnotused 		= PhocacartShipping::isShippingNotUsed($sOCh);
+		$this->a->paymentnotused		= PhocacartPayment::isPaymentNotUsed($pOCh);
 		
 		
 		
@@ -205,7 +210,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					}
 					
 					
-					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);
+					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 					
 				}
 			}

@@ -25,6 +25,13 @@ class PhocacartShipping
 		$this->type = $type;
 	}
 	
+	/*
+	 * Be aware:
+	 * if id > 0 ... it test the selected shipping method and return it if OK
+	 * if id = 0 ... it tests all shipping methods they meet the criteria and return all to list them (e.g. in checkout)
+	 * Always test for the id before using this function
+	 */
+	
 	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
 		
 		$app			= JFactory::getApplication();
@@ -147,6 +154,7 @@ class PhocacartShipping
 				if($v->active_zone == 1) {
 					if (isset($v->zone) && $v->zone != '')  {
 						$zones = explode(',', $v->zone);
+						
 						if (PhocacartZone::isCountryOrRegionIncluded($zones, (int)$country, (int)$region)) {
 							$z = 1;
 						}
@@ -216,7 +224,7 @@ class PhocacartShipping
 				if($v->active_amount == 0 && $v->active_quantity == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_weight == 0) {
 					$v->active = 1;
 				}
-				
+		
 				// if some of the rules is not valid, all the payment is NOT valid
 				if ($a == 0 || $q == 0 || $z == 0 || $c == 0 || $r == 0 || $w == 0 || $s == 0) {
 					$v->active = 0;
@@ -232,7 +240,7 @@ class PhocacartShipping
 				
 				// Try to set default for frontend form
 				// If user selected some shipping, such will be set as default
-				// If not they the default will be set
+				// If not then the default will be set
 				if ((int)$selected > 0) {
 					if ((int)$v->id == (int)$selected) {
 						$v->selected = 1;
@@ -251,6 +259,29 @@ class PhocacartShipping
 		
 	}
 	
+	
+	/**
+	 * Check current shipping method
+	 * Shipping method must be selected
+	 * @param number $id
+	 * @return boolean|array
+	 */
+	public function checkAndGetShippingMethod($id = 0) {
+	
+		if ((int)$id > 0) {
+			return $this->checkAndGetShippingMethods($id);
+		} 
+		return false;
+		
+	}
+	
+	/**
+	 * Check current shipping method or all methods they meet criteria to be selected
+	 * @param number $selectedShippingId
+	 * @param number $selected
+	 * @return boolean|array
+	 */
+	
 	public function checkAndGetShippingMethods($selectedShippingId = 0, $selected = 0) {
 	
 		
@@ -258,7 +289,7 @@ class PhocacartShipping
 		$cart->setType($this->type);
 		$cart->setFullItems();
 		$total					= $cart->getTotal();
-		$currentShippingId 		= $cart->getShippingId();
+		//$currentShippingId 		= $cart->getShippingId();
 		
 		$user					= PhocacartUser::getUser();
 		$data					= PhocacartUser::getUserData((int)$user->id);
@@ -430,11 +461,17 @@ class PhocacartShipping
 		return true;
 	}
 	
-	/* Checkout - is there even some shipping NOT is used reverse */
-	public static function isShippingNotUsed() {
+	/* Checkout - is there even some shipping NOT is used reverse 
+	 * This function is different to getPossibleShippingMethods()
+	 * 
+	 * getPossibleShippingMethods - all methods they fit the criterias (e.g. amount rule, contry rule, etc.)
+	 * isShippingNotUsed() - all existing methods in shop which are published 
+	 * 
+	 * */
+	public static function isShippingNotUsed($options = array()) {
 	
+		// 1) TEST IF ANY SHIPPING METHOD EXISTS
 		$db =JFactory::getDBO();
-
 		$query = 'SELECT a.id'
 				.' FROM #__phocacart_shipping_methods AS a'
 				.' WHERE a.published = 1'
@@ -446,6 +483,14 @@ class PhocacartShipping
 		if (empty($methods)) {
 			return true;
 		}
+		
+		// 2) TEST IF SHIPPING METHOD IS NOT DISABLED FOR ALL DOWNLOADABLE PRODUCTS
+		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$skip_shipping_method	= $paramsC->get( 'skip_shipping_method', 0 );
+		if (isset($options['all_digital_products']) &&  $options['all_digital_products'] == 1 && $skip_shipping_method == 1) {
+			return true;
+		}
+		
 		return false;
 	}
 	
