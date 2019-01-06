@@ -111,16 +111,16 @@ class PhocacartRenderAdminview
 		return $o;
 	}
 	
-	public function itemCalc($id, $name, $value, $form = 'pform', $size = 1) {
+	public function itemCalc($id, $name, $value, $form = 'pform', $size = 1, $class = '') {
 	
 		switch ($size){
-			case 3: $class = 'input-xxlarge';
+			case 3: $class = 'input-xxlarge'. ' ' . $class;
 			break;
-			case 2: $class = 'input-xlarge';
+			case 2: $class = 'input-xlarge'. ' ' . $class;
 			break;
-			case 0: $class = 'input-mini';
+			case 0: $class = 'input-mini'. ' ' . $class;
 			break;
-			default: $class= 'input-small';
+			default: $class= 'input-small'. ' ' . $class;
 			break;
 		}
 		$o = '';

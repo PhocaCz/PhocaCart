@@ -37,12 +37,12 @@ class PhocaCartViewAccount extends JViewLegacy
 		$this->p 							= $app->getParams();
 		$model								= $this->getModel();
 		
-		$this->t['action']					= $uri->toString();
-		$this->t['actionbase64']			= base64_encode($this->t['action']);
-		$this->t['linkaccount']				= JRoute::_(PhocacartRoute::getAccountRoute());
-		$this->t['linkcheckout']			= JRoute::_(PhocacartRoute::getCheckoutRoute());
-		$this->t['display_edit_profile']	= $this->p->get( 'display_edit_profile', 1 );
-		
+		$this->t['action']							= $uri->toString();
+		$this->t['actionbase64']					= base64_encode($this->t['action']);
+		$this->t['linkaccount']						= JRoute::_(PhocacartRoute::getAccountRoute());
+		$this->t['linkcheckout']					= JRoute::_(PhocacartRoute::getCheckoutRoute());
+		$this->t['display_edit_profile']			= $this->p->get( 'display_edit_profile', 1 );
+		$this->t['display_reward_points_total_info']= $this->p->get( 'display_reward_points_total_info', 0 );
 		
 		$lang = JFactory::getLanguage();
 		//$lang->load('com_users.sys');
@@ -80,6 +80,11 @@ class PhocaCartViewAccount extends JViewLegacy
 			$this->otpConfig        = $modelUsers->getOtpConfig();
 			$this->data->tags 		= new JHelperTags;
 			$this->data->tags->getItemTags('com_users.user.', $this->data->id);
+			
+			// REWARD POINTS
+			$reward = new PhocacartReward();
+			$this->t['rewardpointstotal'] = $reward->getTotalPointsByUserId((int)$this->u->id);
+			
 			
 		}
 		

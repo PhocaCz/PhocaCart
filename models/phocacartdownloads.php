@@ -90,7 +90,7 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 		
-		$query->select('o.id AS orderid, o.date AS order_date');
+		$query->select('o.id AS orderid, o.date AS order_date, o.order_number AS order_number');
 		$query->join('LEFT', '#__phocacart_orders AS o ON o.id=a.order_id');
 		
 		$query->select('u.name AS user_name, u.username AS user_username');

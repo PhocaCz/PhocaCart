@@ -92,6 +92,7 @@ $bDesc		= 'class="ph-idnr-body-desc"';
 $hrSmall	= 'class="ph-idnr-hr-small"';
 $taxRecTable= 'class="ph-idnr-tax-rec"';
 $taxRecTd	= 'class="ph-idnr-tax-rec-td"';
+$taxRecTdRight= 'class="ph-idnr-tax-rec-td ph-right"';
 $bQrInfo	= '';
 $firstRow	= '';
 
@@ -170,8 +171,9 @@ if ($d['format'] == 'pdf') {
 
 	$bDesc		= 'style="padding: 2px 0px 0px 0px;margin:0;font-size:60%;"';
 	$hrSmall	= 'style="font-size:30%;"';
-	$taxRecTable= 'style="border: 1pt solid #dddddd; width: 50%"';
+	$taxRecTable= 'style="border: 1pt solid #dddddd; width: 70%"';
 	$taxRecTd	= 'style="border: 1pt solid #dddddd;"';
+	$taxRecTdRight= 'style="border: 1pt solid #dddddd;text-align:right;"';
 	$bQrInfo	= 'style="font-size: 70%"';
 
 } else if ($d['format'] == 'mail') {
@@ -347,7 +349,10 @@ $o[] = '<td colspan="5"><b>'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</b></t
 $ob = array();
 
 if (!empty($d['bas']['b'])) {
+
 	$v = $d['bas']['b'];
+	
+
 	if ($v['company'] != '') { $ob[] = '<b>'.$v['company'].'</b><br />';}
 	$name = array();
 	if ($v['name_degree'] != '') { $name[] = $v['name_degree'];}
@@ -367,7 +372,6 @@ if (!empty($d['bas']['b'])) {
 	//echo '<br />';
 	if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
 	if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
-
 
 }
 
@@ -453,7 +457,7 @@ $o[] = '<td '.$pho1.'>&nbsp;</td><td '.$pho2.'>&nbsp;</td><td '.$pho3.'>&nbsp;</
 $o[] = '<td '.$pho5.'>&nbsp;</td><td '.$pho6.'>&nbsp;</td><td '.$pho7.'>&nbsp;</td><td '.$pho8.'>&nbsp;</td>';
 $o[] = '<td '.$pho9.'>&nbsp;</td>';
 if ($tax_calculation > 0) {
-	$o[] = '<td '.$pho10.'>&nbsp;y</td><td '.$pho11.'>&nbsp;y</td><td '.$pho12.'>&nbsp;y</td>';
+	$o[] = '<td '.$pho10.'>&nbsp;</td><td '.$pho11.'>&nbsp;</td><td '.$pho12.'>&nbsp;</td>';
 }
 $o[] = '</tr>';
 
@@ -653,7 +657,7 @@ if ($tax_calculation > 0) {
 // TOTAL
 // -----------
 $t = array();
-$toPay = 0;
+$toPay = '';
 
 $tColspanLeft = 5;
 $tColspanMid = 2;
@@ -697,6 +701,10 @@ if (!empty($d['total'])) {
 				$oPr[] = $pP->printLineColumns(array($v->title, $amount), 0, 'pDoubleSize');
 				$oPr[] = $pP->printFeed(2);
 			}
+			
+			if ($d['type'] == 2) {
+				$toPay = $amount;
+			}
 
 		} else if ($v->type == 'rounding') {
 
@@ -711,7 +719,6 @@ if (!empty($d['total'])) {
 
 			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $amount)); }
 
-
 		} else {
 			$t[] = '<tr '.$totalF.'>';
 			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
@@ -720,11 +727,10 @@ if (!empty($d['total'])) {
 			$t[] = '</tr>';
 
 			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $d['price']->getPriceFormat($v->amount))); }
+			
 		}
 
-		if ($v->type == 'brutto' && $d['type'] == 2) {
-			$toPay = $v->amount;
-		}
+		
 	}
 }
 
@@ -743,11 +749,12 @@ if ($tax_calculation > 0) {
 // -----------
 // TO PAY
 // -----------
-if ($toPay > 0) {
+if ($toPay != '') {
+
 	$o[] = '<tr class="ph-idnr-to-pay-box">';
 	$o[] = '<td colspan="'.$tColspanLeft.'">&nbsp;</td>';
 	$o[] = '<td colspan="'.$tColspanMid.'" '.$toPayS.'><b>'.JText::_('COM_PHOCACART_TO_PAY').'</b></td>';
-	$o[] = '<td colspan="'.$tColspanRight.'" '.$toPaySV.'><b>'.$d['price']->getPriceFormat($toPay).'</b></td>';
+	$o[] = '<td colspan="'.$tColspanRight.'" '.$toPaySV.'><b>'.$toPay.'</b></td>';
 	$o[] = '</tr>';
 }
 
@@ -790,6 +797,8 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 	if ($pdf_invoice_qr_information != '') {
 		$o[] = '<span '.$bQrInfo.'>'.$pdf_invoice_qr_information . '</span><br />';
 	}
+	
+
 
 	if ($d['qrcode'] != '') {
 		$o[] = '{phocapdfqrcode|'.urlencode($d['qrcode']).'}';
@@ -806,7 +815,83 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 // TAX RECAPITULATION
 // -----------------------
 if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display_tax_recapitulation_pos == 1 && $d['type'] == 4 )) {
-	$orderCalc 		= new PhocacartOrderCalculation();
+	
+	
+	
+	if (!empty($d['taxrecapitulation'])) {
+		
+		
+		$o[] = '<h3>'.JText::_('COM_PHOCACART_TAX_RECAPITULATION').'</h3>';
+		if ($pR) {
+			$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_TAX_RECAPITULATION')), 'pLeft');
+		}
+		
+		
+		$o[] = '<table '.$taxRecTable.'>';
+		$o[] = '<tr>';
+		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TITLE').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TAX_BASIS').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TAX').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TOTAL').'</th>';
+		//$o[] = '<th>'.JText::_('COM_PHOCACART_TOTAL').' '.JText::_('COM_PHOCACART_CURRENCY').'</td>';
+		$o[] = '</tr>';
+	
+	
+		foreach($d['taxrecapitulation'] as $k => $v) {
+			
+			
+			if (isset($v->amount_brutto_currency) && $v->amount_brutto_currency > 0) {
+				$amountBrutto		= $v->amount_brutto_currency;
+				$amountBruttoFormat = $d['price']->getPriceFormat($v->amount_brutto_currency, 0, 1);
+			} else {
+				$amountBrutto		= $v->amount_brutto;
+				$amountBruttoFormat = $d['price']->getPriceFormat($v->amount_brutto);
+			}
+			
+			$amountNettoFormat 	= $v->amount_netto > 0 ? $d['price']->getPriceFormat($v->amount_netto) : '';
+			$amountTaxFormat 	= $v->amount_tax > 0 ? $d['price']->getPriceFormat($v->amount_tax) : '';
+			$title				= $v->title;
+			
+		/*	if ($v->type == 'trcrounding') {
+				// In administration edit: Rounding (Incl. Tax Recapitulation Rounding)
+				// In documents (invoice): Rouning 
+				// Skip "(Incl. Tax Recapitulation Rounding)" in documents
+				$title = JText::_('COM_PHOCACART_ROUNDING');
+			}*/
+			
+			if ($v->type == 'brutto') {
+				$amountBruttoFormat = '<span class="ph-b">'.$amountBruttoFormat.'</span>';
+				$amountNettoFormat = '';
+				$amountTaxFormat = '';
+			}
+			
+			
+			if ($v->type == 'rounding') {
+				// Don't display rounding here, only trcrounding (calculation rounding + tax recapitulation rounding)
+			} else if ($amountBrutto > 0 || $amountBrutto < 0) {
+				
+				$o[] = '<tr>';
+				$o[] = '<td '.$taxRecTd.'>'.$title.'</td>';
+				$o[] = '<td '.$taxRecTdRight.'>'.$amountNettoFormat.'</td>';
+				$o[] = '<td '.$taxRecTdRight.'>'.$amountTaxFormat.'</td>';
+				$o[] = '<td '.$taxRecTdRight.'>'.$amountBruttoFormat.'</td>';
+				$o[] = '</tr>';
+				
+			}
+			
+			// POS Receipt - only tax information
+			if ($pR && $v->type == 'tax') {
+				$oPr[] = $pP->printLineColumns(array($title, $d['price']->getPriceFormat($v->amount_tax)));
+			}
+	
+		}
+		
+		$o[] = '</table>';
+		if ($pR) {
+			$oPr[] = $pP->printFeed(1);
+		}
+	}
+	/*$orderCalc 		= new PhocacartOrderCalculation();
 	$calcItems		= array();
 	$calcItems[0]	= $d['common'];
 	$orderCalc->calculateOrderItems($calcItems);
@@ -848,7 +933,7 @@ if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display
 				}
 			}
 		}
-	}
+	}*/
 }
 
 

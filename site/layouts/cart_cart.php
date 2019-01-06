@@ -395,12 +395,15 @@ if (!empty($d['fullitems'])) {
 		echo '</div>';// end row
 	}
 	
+
 	// BRUTTO (Because of rounding currency we need to display brutto in currency which is set)
+	//if (!($price->roundPrice($d['total'][0]['brutto_currency']) > -0.01 && $price->roundPrice($d['total'][0]['brutto_currency'] < 0.01)) == 1) {
 	if ($d['total'][0]['brutto_currency'] !== 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.' ph-small ph-cart-brutto-currency-txt">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cP.' ph-small ph-right ph-b ph-cart-brutton-currency">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
+	//} else if (!($price->roundPrice($d['total'][0]['brutto']) > -0.01 && $price->roundPrice($d['total'][0]['brutto'] < 0.01)) == 1) {
 	} else if ($d['total'][0]['brutto'] !== 0) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.' ph-small ph-cart-total-txt">'.JText::_('COM_PHOCACART_TOTAL').'</div>';

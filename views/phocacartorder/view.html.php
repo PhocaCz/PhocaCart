@@ -44,6 +44,7 @@ class PhocaCartCpViewPhocacartOrder extends JViewLegacy
 		$this->itemproductdiscounts 	= $order->getItemProductDiscounts($this->item->id);
 		
 		$this->itemtotal 				= $order->getItemTotal($this->item->id);
+		$this->itemtaxrecapitulation 	= $order->getItemTaxRecapitulation($this->item->id);
 		
 		
 		

@@ -94,7 +94,7 @@ echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 
 // ORDERING cannot be used
-$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text');
+$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description' );
 echo $r->group($this->form, $formArray, 1);
@@ -291,7 +291,7 @@ $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartedits
 echo '<div class="ph-float-right"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></div>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
-$formArray = array ('stock', 'stock_calculation', 'min_quantity', 'min_multiple_quantity', 'min_quantity_calculation', 'stockstatus_a_id', 'stockstatus_n_id');
+$formArray = array ('stock', 'stock_calculation', 'min_quantity', 'min_multiple_quantity', 'min_quantity_calculation', 'stockstatus_a_id', 'stockstatus_n_id', 'delivery_date');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 

@@ -25,7 +25,31 @@ class PhocacartTax
 			. ' ORDER BY t.ordering ASC';
 			$db->setQuery($q) ;
 			$items = $db->loadAssocList('id');
+			return $items;
+		
+	}
+	
+	public static function getAllTaxesIncludingCountryRegion() {
+	
+			// Tax key = IDTAX:IDCOUNTRYTAX:IDREGIONTAX
+			$db = JFactory::getDBO();
+			$q 	= 'SELECT CONCAT_WS(\':\', t.id, 0, 0) as tkey, t.id, t.title, t.tax_rate, t.calculation_type FROM #__phocacart_taxes AS t ORDER BY t.ordering ASC';
+			$db->setQuery($q) ;
+			$itemsT = $db->loadAssocList('tkey');
+		
+			$q 	= 'SELECT CONCAT_WS(\':\', tc.tax_id, tc.id, 0) as tkey, tc.id, tc.title, tc.tax_id, tc.tax_rate, t.calculation_type FROM #__phocacart_tax_countries AS tc'
+				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = tc.tax_id'	
+				.' ORDER BY t.ordering ASC';
+			$db->setQuery($q) ;
+			$itemsC = $db->loadAssocList('tkey');
 			
+			$q 	= 'SELECT CONCAT_WS(\':\', tr.tax_id, 0, tr.id) as tkey, tr.id, tr.title, tr.tax_id, tr.tax_rate, t.calculation_type FROM #__phocacart_tax_regions AS tr'
+				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = tr.tax_id'	
+				.' ORDER BY t.ordering ASC';
+			$db->setQuery($q) ;
+			$itemsR = $db->loadAssocList('tkey');
+		
+			$items = array_merge($itemsT, $itemsC, $itemsR);
 			return $items;
 		
 	}
@@ -39,6 +63,7 @@ class PhocacartTax
 			. ' FROM #__phocacart_taxes as t'
 			. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
 			//. ' WHERE tc.country_id = '.(int)$id
+			//. ' WHERE tc.tax_rate > -1'
 			. ' ORDER BY t.ordering ASC';
 			$db->setQuery($q) ;
 			$items = $db->loadObjectList();
@@ -57,6 +82,7 @@ class PhocacartTax
 			. ' FROM #__phocacart_taxes as t'
 			. ' LEFT JOIN #__phocacart_tax_regions AS tr ON tr.tax_id = t.id AND tr.region_id = '.(int)$regionId
 			//. ' WHERE tc.country_id = '.(int)$id
+			//. ' WHERE tr.tax_rate > -1'
 			. ' ORDER BY t.ordering ASC';
 			$db->setQuery($q) ;
 			$items = $db->loadObjectList();
@@ -70,8 +96,11 @@ class PhocacartTax
 		
 		$countryId 					= (int)self::getUserCountryId();
 		$taxChangedA				= array();
-		$taxChangedA['taxrate']		= 0;
+		$taxChangedA['taxrate']		= '';// the rate can be 0 and zero is OK
 		$taxChangedA['taxtitle']	= '';
+		$taxChangedA['taxcountryid']= 0;
+		$taxChangedA['taxregionid']= 0;
+		
 		
 		if ((int)$taxId > 0 && $countryId > 0) {
 			$db = JFactory::getDBO();
@@ -79,10 +108,11 @@ class PhocacartTax
 			. ' FROM #__phocacart_tax_countries as tc'
 			. ' WHERE tc.country_id = '.(int)$countryId
 			. ' AND tc.tax_id = '.(int)$taxId
+			. ' AND tc.tax_rate > -1'
 			. ' LIMIT 1';
 			$db->setQuery($q) ;
 			$taxO = $db->loadObject();
-			
+		
 			if (isset($taxO->tax_rate) && $taxO->tax_rate != '') {
 				$taxChangedA['taxrate']	= $taxO->tax_rate;
 			}
@@ -91,9 +121,17 @@ class PhocacartTax
 				$taxChangedA['taxtitle']	= $taxO->title;
 			}
 			
-			//if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') { // the rate can be 0
-			if ($taxChangedA['taxtitle'] != '') {	
-				return $taxChangedA;
+			if (isset($taxO->id) && $taxO->id != '') {
+				$taxChangedA['taxcountryid']	= $taxO->id;
+			}
+			
+			// CONDITIONS:
+			// $taxChangedA['taxrate'] > 0 ... not used - the rate can be 0
+			// $taxChangedA['taxtitle'] ... not used - the title can be empty
+			// if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') { // the rate can be 0
+			//
+			if ($taxChangedA['taxrate'] != '') {
+				return $taxChangedA;// if 0, it is valid
 			}
 
 		}
@@ -105,19 +143,26 @@ class PhocacartTax
 		
 		$regionId 					= (int)self::getUserRegionId();
 		$taxChangedA				= array();
-		$taxChangedA['taxrate']		= 0;
+		$taxChangedA['taxrate']		= '';// the rate can be 0 and zero is OK
 		$taxChangedA['taxtitle']	= '';
+		$taxChangedA['taxcountryid']= 0;
+		$taxChangedA['taxregionid']= 0;
 		
+		// tax rate -1 means that the tax is not used but it exists yet (will be not completely removed because of the used ID in system
+		// for example if the country tax is specific and has ID 10 and it will be deleted - then it still exists but with -1 as tax rate
+		// when such tax will be newly recreated it gets the same ID as it has previously - which will unique tax rates for country in history
+		// even if the tax rate changes it uniques the tax type for each country/region
 		if ((int)$taxId > 0 && $regionId > 0) {
 			$db = JFactory::getDBO();
 			$q = 'SELECT tr.id, tr.title, tr.tax_rate'
 			. ' FROM #__phocacart_tax_regions as tr'
 			. ' WHERE tr.region_id = '.(int)$regionId
 			. ' AND tr.tax_id = '.(int)$taxId
+			. ' AND tr.tax_rate > -1'
 			. ' LIMIT 1';
 			$db->setQuery($q) ;
 			$taxO = $db->loadObject();
-			
+		
 			if (isset($taxO->tax_rate) && $taxO->tax_rate != '') {
 				$taxChangedA['taxrate']	= $taxO->tax_rate;
 			}
@@ -126,9 +171,17 @@ class PhocacartTax
 				$taxChangedA['taxtitle']	= $taxO->title;
 			}
 			
-			//if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') { // the rate can be 0
-			if ($taxChangedA['taxtitle'] != '') {
-				return $taxChangedA;
+			if (isset($taxO->id) && $taxO->id != '') {
+				$taxChangedA['taxregionid']	= $taxO->id;
+			}
+		
+			// CONDITIONS:
+			// $taxChangedA['taxrate'] > 0 ... not used - the rate can be 0
+			// $taxChangedA['taxtitle'] ... not used - the title can be empty
+			// if ($taxChangedA['taxrate'] > 0 && $taxChangedA['taxtitle'] != '') { // the rate can be 0
+			//
+			if ($taxChangedA['taxrate'] != '') {
+				return $taxChangedA;// if 0, it is valid
 			}
 
 		}
@@ -137,9 +190,12 @@ class PhocacartTax
 	
 	public static function changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle) {
 		
-		$taxChangedA 				= array();
-		$taxChangedA['taxrate']		= $tax;
-		$taxChangedA['taxtitle']	= $taxTitle;
+		$taxChangedA 					= array();
+		$taxChangedA['taxrate']			= $tax;
+		$taxChangedA['taxtitle']		= $taxTitle;
+		$taxChangedA['taxcountryid']	= 0;
+		$taxChangedA['taxregionid']		= 0;
+		
 		
 		
 		//$app						= JFactory::getApplication();
@@ -155,10 +211,13 @@ class PhocacartTax
 		if ($dynamic_tax_rate_priority == 1) {
 			// Country prioritized
 			$taxChangedA = self::getTaxByCountry($taxId);
+			
 			//Not found - try to find region
 			if (!$taxChangedA) {
 				$taxChangedA = self::getTaxByRegion($taxId);
 			}
+			// If country or region based tax does not have title, set the default one
+			if ($taxChangedA && $taxChangedA['taxtitle'] == '') {$taxChangedA['taxtitle'] = $taxTitle;}
 		} else {
 			// Region prioritized
 			$taxChangedA = self::getTaxByRegion($taxId);
@@ -166,13 +225,19 @@ class PhocacartTax
 			if (!$taxChangedA) {
 				$taxChangedA = self::getTaxByCountry($taxId);
 			}
+			// If country or region based tax does not have title, set the default one
+			if ($taxChangedA && $taxChangedA['taxtitle'] == '') {$taxChangedA['taxtitle'] = $taxTitle;}
 		}
 
 		// Nothing found - back to default:
 		if (!$taxChangedA) {
 			$taxChangedA['taxrate']		= $tax;
 			$taxChangedA['taxtitle']	= $taxTitle;
+			$taxChangedA['taxcountryid']	= 0;
+			$taxChangedA['taxregionid']		= 0;
 		}
+		
+
 		return $taxChangedA;
 	}
 	
@@ -242,5 +307,41 @@ class PhocacartTax
 		}
 		
 		return 0;
+	}
+	
+	/**
+	 * In case that the tax is overriden by country or region we need to identify it, this is why we don't use tax id as key but whole key: tax id:country tax id:region tax id
+	 * @param unknown $id
+	 * @param number $countryId
+	 * @param number $regionId
+	 * @return string
+	 */
+	
+	public static function getTaxKey($id, $countryId = 0, $regionId = 0) {
+		
+		$key = (int)$id . ':';
+		$key .= (int)$countryId. ':';
+		$key .= (int)$regionId;
+
+		return $key;
+
+	}
+	
+	public static function getTaxIdsFromKey($taxKey) {
+		
+		$tax = array();
+		$tax['id'] 			= 0;
+		$tax['countryid']	= 0;
+		$tax['regionid']	= 0;
+		if ($taxKey != '') {
+			
+			$taxKeyA = explode(':', $taxKey);
+			if (isset($taxKeyA[0])) { $tax['id'] 		= (int)$taxKeyA[0];}
+			if (isset($taxKeyA[1])) { $tax['countryid'] = (int)$taxKeyA[1];}
+			if (isset($taxKeyA[2])) { $tax['regionid']	= (int)$taxKeyA[2];}
+		}
+
+		return $tax;
+
 	}
 }

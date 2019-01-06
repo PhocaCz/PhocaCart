@@ -87,6 +87,7 @@ $t5 = "\t\t\t\t\t\t";
 //
 
 
+
 $a = array();
 $a[] = array('id', 'JGLOBAL_FIELD_ID_LABEL');
 $a[] = array('title', 'COM_PHOCACART_FIELD_TITLE_LABEL');
@@ -137,6 +138,10 @@ $a[] = array('video', 'COM_PHOCACART_FIELD_VIDEO_URL_LABEL');
 $a[] = array('public_download_file', 'COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL');
 $a[] = array('public_download_text', 'COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL');
 
+$a[] = array('condition', 'COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL');
+$a[] = array('type_feed', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL');
+$a[] = array('type_category_feed', 'COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_LABEL');
+
 $a[] = array('description', 'COM_PHOCACART_FIELD_DESCRIPTION_LABEL');
 $a[] = array('description_long', 'COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL');
 
@@ -183,6 +188,8 @@ if ($export_downloads == 1) {
 	$a[] = array('download_file', 'COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL');
 	$a[] = array('download_hits', 'COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL');
 }
+$a[] = array('type', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL');
+$a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');
 
 $a[] = array('length', 'COM_PHOCACART_FIELD_LENGTH_LABEL');
 $a[] = array('width', 'COM_PHOCACART_FIELD_WIDTH_LABEL');
@@ -210,6 +217,7 @@ $a[] = array('tags', 'COM_PHOCACART_TAGS');
 
 $a[] = array('metakey', 'JFIELD_META_KEYWORDS_LABEL');
 $a[] = array('metadesc', 'JFIELD_META_DESCRIPTION_LABEL');
+
 
 //$a[] = array('allow_upload', 'COM_PHOCACART_FIELD_ALLOW_UPLOAD_LABEL');
 //$a[] = array('custom_text', 'COM_PHOCACART_FIELD_CUSTOM_TEXT_LABEL');
@@ -266,6 +274,8 @@ if (!empty($d['products'])){
 						
 						case 'description':
 						case 'description_long':
+						case 'type_feed':
+						case 'type_category_feed':
 							if ($xml) {
 								$l = '<![CDATA[';
 								$r = ']]>';

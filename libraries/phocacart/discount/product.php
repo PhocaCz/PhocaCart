@@ -55,6 +55,7 @@ class PhocacartDiscountProduct
 			} else {
 				$discounts = $db->loadObjectList();
 			}
+		
 			self::$product[$id] = $discounts;
 		}
 		return self::$product[$id];
@@ -84,8 +85,6 @@ class PhocacartDiscountProduct
 		}
 		
 		$discounts 	= self::getProductDiscountsById($id, 1);
-		
-	
 		
 		if (!empty($discounts)) {
 			$bestKey 		= 0;// get the discount key which best meet the rules

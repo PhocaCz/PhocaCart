@@ -114,6 +114,7 @@ class PhocacartPayment
 		$db->setQuery($query);
 		$payments = $db->loadObjectList();
 		
+	
 		if (!empty($payments) && !isset($payments[0]->id) || (isset($payments[0]->id) && (int)$payments[0]->id < 1)) {
 			return false;
 		}
@@ -134,15 +135,15 @@ class PhocacartPayment
 				// Amount Rule
 				if($v->active_amount == 1) {
 				
-					if ($payment_amount_rule == 0 || $payment_amount_rule == 1) {
+					if ($payment_amount_rule == 0 || $payment_amount_rule == 2) {
 						// No tax, brutto
-						if ($amountBrutto > $v->lowest_amount && $amountBrutto < $v->highest_amount) {
+						if ($amountBrutto >= $v->lowest_amount && $amountBrutto <= $v->highest_amount) {
 							$a = 1;
 						}
 					
 					} else if ($payment_amount_rule == 2) {
 						// Netto
-						if ($amountNetto > $v->lowest_amount && $amountNetto < $v->highest_amount) {
+						if ($amountNetto >= $v->lowest_amount && $amountNetto <= $v->highest_amount) {
 							$a = 1;
 						}
 					
@@ -244,6 +245,15 @@ class PhocacartPayment
 		
 	}
 	
+	public function checkAndGetPaymentMethodInsideCart($id, $total, $shippingId) {
+	
+		if ((int)$id > 0 && !empty($total)) {
+			return $this->checkAndGetPaymentMethods($id, 0, $total, $shippingId);
+		} 
+		return false;
+		
+	}
+	
 	/**
 	 * Check current payment method
 	 * Payment method must be selected
@@ -266,15 +276,22 @@ class PhocacartPayment
 	 * @return boolean|array
 	 */
 	
-	public function checkAndGetPaymentMethods($selectedPaymentId = 0, $selected = 0) {
+	public function checkAndGetPaymentMethods($selectedPaymentId = 0, $selected = 0, $total = array(), $shippingId = 0) {
 	
+
 		
-		$cart					= new PhocacartCartRendercheckout();
-		$cart->setType($this->type);
-		$cart->setFullItems();
-		$total					= $cart->getTotal();
-		$currentShippingId 		= $cart->getShippingId();
-		//$currentPaymentId 		= $cart->getPaymentId();
+		if (empty($total)) {
+			$cart					= new PhocacartCartRendercheckout();
+			$cart->setType($this->type);
+			$cart->setFullItems();
+			$total					= $cart->getTotal();
+			$totalFinal				= $total[0];
+			$currentShippingId 		= $cart->getShippingId();
+			//$currentPaymentId 		= $cart->getPaymentId();
+		} else {
+			$totalFinal				= $total;	
+			$currentShippingId 		= $shippingId;
+		}
 		
 		$user					= PhocacartUser::getUser();
 		$data					= PhocacartUser::getUserData((int)$user->id);
@@ -294,7 +311,7 @@ class PhocacartPayment
 			$region = (int)$dataAddress['bregion'];
 		}
 			
-		$paymentMethods	= $this->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected);
+		$paymentMethods	= $this->getPossiblePaymentMethods($totalFinal['netto'], $totalFinal['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected);
 		
 
 		if (!empty($paymentMethods)) {
@@ -374,9 +391,13 @@ class PhocacartPayment
 	 * getPossiblePaymentMethods() - all methods they fit the criterias (e.g. amount rule, contry rule, etc.)
 	 * isPaymentNotUsed() - all existing methods in shop which are published 
 	 * 
+	 * * IF NO PAYMENT METHOD EXIST - it is ignored when 1) skip_payment_method parameter is enabled 2) all products are digital and skip_payment_method is enabled
+	 * 
 	 * */
 	public static function isPaymentNotUsed($options = array()) {
 	
+		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$skip_payment_method	= $paramsC->get( 'skip_payment_method', 0 );
 	
 		// 1) TEST IF ANY PAYMENT METHOD EXISTS
 		$db =JFactory::getDBO();
@@ -389,13 +410,11 @@ class PhocacartPayment
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();
 		
-		if (empty($methods)) {
+		if (empty($methods) && $skip_payment_method == 2) {
 			return true;
 		}
 		
 		// 2) TEST IF PAYMENT METHOD IS NOT DISABLED FOR CART WITH EMPTY PRICE (CART SUM = 0)
-		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$skip_payment_method	= $paramsC->get( 'skip_payment_method', 0 );
 		if (isset($options['order_amount_zero']) &&  $options['order_amount_zero'] == 1 && $skip_payment_method == 1) {
 			return true;
 		}

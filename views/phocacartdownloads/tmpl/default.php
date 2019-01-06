@@ -123,6 +123,7 @@ if($item->active_weight) {$rules[] = '<span class="label label-success label-suc
 
 
 echo $r->td(implode(" ", $rules), "small");*/
+
 echo $r->td($this->escape(PhocacartOrder::getOrderNumber($item->order_id, $item->order_date, $item->order_number)), "small");
 
 $userO = $this->escape($item->user_name);

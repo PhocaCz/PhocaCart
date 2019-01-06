@@ -454,20 +454,8 @@ class PhocacartOrderStatus
 			// REPLACE
 			$r = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas);
 			
-			$r['email'] = $recipient;
-			$r['email_others'] = $recipientOthers;
-			$name = '';
-			if (isset($bas['b']['name_first']) && $bas['b']['name_first']) {
-				$name = $bas['b']['name_first'];
-			}
-			if (isset($bas['b']['name_last']) && $bas['b']['name_last']) {
-				if ($name != '') {
-					$name = $name . ' '. $bas['b']['name_last'];
-				} else {
-					$name = $bas['b']['name_last'];
-				}
-			} 
-			$r['name'] = $name;
+			$r['email'] 		= $recipient;// Overwrites the $r 
+			$r['email_others'] 	= $recipientOthers;
 			$r['name_others'] = '';
 			
 		

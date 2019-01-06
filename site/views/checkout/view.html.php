@@ -24,6 +24,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 	
 	function display($tpl = null) {
 		
+		
+		
 		$document							= JFactory::getDocument();		
 		$app								= JFactory::getApplication();
 		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
@@ -93,6 +95,10 @@ class PhocaCartViewCheckout extends JViewLegacy
 			$this->a->login = 2;
 		}
 		
+		
+		// Shipping and Payment rules will be checked including rounding
+		$this->cart->roundTotalAmount();
+		
 		// Is there even a shipping or payment (or is active based on criterias)
 		$total 							= $this->cart->getTotal();
 		$sOCh 							= array();// Shipping Options Checkout
@@ -101,6 +107,10 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$pOCh['order_amount_zero']		= $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ? 1 : 0;
 		$this->a->shippingnotused 		= PhocacartShipping::isShippingNotUsed($sOCh);
 		$this->a->paymentnotused		= PhocacartPayment::isPaymentNotUsed($pOCh);
+		
+		
+		
+		
 		
 		
 		
@@ -209,6 +219,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 						$region = (int)$this->t['dataaddressoutput']['bregion'];
 					}
 					
+				
 					
 					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 					
@@ -282,8 +293,9 @@ class PhocaCartViewCheckout extends JViewLegacy
 			PhocacartRenderJs::renderBillingAndShippingSame();
 		}
 		
-		$this->cart->roundTotalAmount();
-		
+	//  Rounding set before checking shipping and payment method		
+	//	$this->cart->roundTotalAmount();
+	
 		
 		// CART IS EMPTY - MUST BE CHECKED BEFOR CONFIRM
 		// Don't allow to add or edit payment or shipping method, don't allow to confirm the order
@@ -313,12 +325,11 @@ class PhocaCartViewCheckout extends JViewLegacy
 			
 			// Custom "Confirm Order" Text
 			$total							= $this->cart->getTotal();
-			
-			$this->t['confirm_order_text']	= PhocacartRenderFront::getConfirmOrderText($total[0]['brutto']);
+			$totalBrutto					= isset($total[0]['brutto']) ? $total[0]['brutto'] : 0;
+			$this->t['confirm_order_text']	= PhocacartRenderFront::getConfirmOrderText($totalBrutto);
 		}
 		
 		
-	
 
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
@@ -346,6 +357,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// Render the cart (here because it can be changed above - shipping can be added)
 		//$total				= $this->cart->getTotal();
 		$this->t['cartoutput']			= $this->cart->render();
+		
 		$this->t['stockvalid']			= $this->cart->getStockValid();
 		$this->t['minqtyvalid']			= $this->cart->getMinimumQuantityValid();
 		$this->t['minmultipleqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
@@ -377,6 +389,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		
 		// END Plugins --------------------------------------
 		parent::display($tpl);
+		
+		
 	}
 	
 	protected function _prepareDocument() {

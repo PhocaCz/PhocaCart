@@ -192,6 +192,10 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		}
 		
 		// We save shipping and billing after each other - twice, so don't delete the group and run only once
+		if (empty($data['group'])) {
+			$data['group'] = array();
+		}
+				
 		if ($type == 0) {
 			PhocacartGroup::storeGroupsById((int)$row->user_id, 1, $data['group']);
 		}

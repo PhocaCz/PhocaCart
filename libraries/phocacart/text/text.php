@@ -135,6 +135,24 @@ class PhocacartText {
 			$r['downloadlink'] = $downloadO;
 		}
 		
+		
+		// --- name and email as additional info here, all other user information can be accessed through: PhocacartText::completeTextFormFields ... b_name_first, b_name_middle
+		$r['name'] 			= '';
+		if (isset($bas['b']['name_first']) && isset($bas['b']['name_last'])) {
+			$r['name'] = PhocacartUser::buildName($bas['b']['name_first'], $bas['b']['name_last']);
+		}
+		
+		$r['email'] 		= '';
+		if (isset($bas['b']['email'])) {
+			$r['email'] = $bas['b']['email'];
+		}
+		
+		if ($r['email'] == '' && isset($bas['s']['email'])) {
+			$r['email'] = $bas['s']['email'];
+		}
+		// ---
+
+		
 		$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
 		$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
 		$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);

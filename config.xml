@@ -113,7 +113,7 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-<field name="display_product_header" type="list"  default="h3" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_HEADER_CAREGORY_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_HEADER_CAREGORY_DESC">
+<field name="display_product_header" type="list"  default="h3" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_HEADER_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_HEADER_CATEGORY_DESC">
 	<option value="h1">h1</option>
 	<option value="h2">h2</option>
 	<option value="h3">h3</option>
@@ -357,9 +357,6 @@
 </field>
 
 
-
-
-
 <field name="checkout_scroll" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SCROLL_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_SCROLL_CHECKOUT_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
@@ -372,6 +369,15 @@
 
 
 <field name="display_reward_points_receive_info" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_RECEIVED_POINTS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_RECEIVED_POINTS_DESC">
+	<option value="0">COM_PHOCACART_NO</option>
+	<option value="1">COM_PHOCACART_YES</option>
+</field>
+
+
+
+<field name="phocahead6" type="phocahead" default="COM_PHOCACART_USER_ACCOUNT_VIEW_LABEL" label="" description=""/>
+
+<field name="display_reward_points_total_info" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ACCOUNT_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ACCOUNT_VIEW_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
 </field>
@@ -632,6 +638,12 @@
 	<option value="2">COM_PHOCACART_ROUND_HALF_DOWN</option>
 </field>
 
+<field name="tax_recapitulation" type="list" default="1" label="COM_PHOCACART_FIELD_TAX_RECAPITULATION_LABEL" description="COM_PHOCACART_FIELD_TAX_RECAPITULATION_DESC">
+	<option value="0">COM_PHOCACART_DO_NOT_CHANGE_CALCULATION</option>
+	<option value="1">COM_PHOCACART_CHANGE_TOTAL_AMOUNT_AND_ROUNDING_CALCULATION</option>
+	<option value="2">COM_PHOCACART_CHANGE_TAXES_TOTAL_AMOUNT_AND_ROUNDING_CALCULATION</option>
+</field>
+
 <field name="enable_coupons" type="list" default="1" label="COM_PHOCACART_FIELD_ENABLE_COUPONS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COUPONS_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
@@ -728,11 +740,13 @@
 <field name="skip_shipping_method" default="0" type="list" label="COM_PHOCACART_FIELD_SKIP_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_FIELD_SKIP_SHIPPING_METHOD_DESC" >
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES_ALL_PRODUCTS_ARE_DOWNLOADABLE</option>
+	<option value="2">COM_PHOCACART_YES_OVERALL_NO_SHIPPING_METHOD_PUBLISHED</option>
 </field>
 
 <field name="skip_payment_method" default="0" type="list" label="COM_PHOCACART_FIELD_SKIP_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_FIELD_SKIP_PAYMENT_METHOD_DESC" >
 	<option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES_ORDER_AMOUNT_IS_ZERO</option>
+	<option value="2">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_PUBLISHED</option>
 </field>
 
 <field name="default_order_status_free_download" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_DESC" >
@@ -744,12 +758,10 @@
 
 
 <field name="unit_size" default="mm" type="list" label="COM_PHOCACART_FIELD_SIZE_UNIT_LABEL" description="COM_PHOCACART_FIELD_SIZE_UNIT_DESC" >
-<option value="mm">COM_PHOCACART_MILIMETER</option>
+<option value="mm">COM_PHOCACART_MILLIMETER</option>
 <option value="cm">COM_PHOCACART_CENTIMETER</option>
 <option value="in">COM_PHOCACART_INCH</option>
 <option value="ft">COM_PHOCACART_FOOT</option>
-<option value="mm">COM_PHOCACART_MILIMETER</option>
-<option value="cm">COM_PHOCACART_CENTIMETER</option>
 </field>
 
 <field name="unit_weight" default="g" type="list" label="COM_PHOCACART_FIELD_WEIGHT_UNIT_LABEL" description="COM_PHOCACART_FIELD_WEIGHT_UNIT_DESC" >
@@ -760,7 +772,7 @@
 </field>
 
 <field name="unit_volume" default="ml" type="list" label="COM_PHOCACART_FIELD_VOLUME_UNIT_LABEL" description="COM_PHOCACART_FIELD_VOLUME_UNIT_DESC" >
-<option value="ml">COM_PHOCACART_MILILITER</option>
+<option value="ml">COM_PHOCACART_MILLILITER</option>
 <option value="cl">COM_PHOCACART_CENTILITER</option>
 <option value="l">COM_PHOCACART_LITER</option>
 <option value="pt">COM_PHOCACART_PINT</option>
@@ -834,7 +846,7 @@
 
 <field name="user_group_change_rule" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_RULE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_RULE_DESC" >
 	<option value="0">COM_PHOCACART_NEVER_CHANGE_USER_GROUP</option>
-	<option value="1">COM_PHOCACART_ONE_GROUP_HIGHEST_MINIMAL_SUM_OF_PURCHACHES_INCLUDING_DEFAULT</option>
+	<option value="1">COM_PHOCACART_ONE_GROUP_HIGHEST_MINIMAL_SUM_OF_PURCHASES_INCLUDING_DEFAULT</option>
 	<option value="2">COM_PHOCACART_ALL_GROUPS_INCLUDING_DEFAULT</option>
 </field>
 
@@ -1124,6 +1136,13 @@
 <field name="phocahead27" type="phocahead" default="COM_PHOCACART_REPORT_OPTIONS_LABEL" label="" description=""/>
 
 <field name="report_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_REPORT_HEADER_LABEL"  description="COM_PHOCACART_FIELD_REPORT_HEADER_DESC" addfieldpath="/administrator/components/com_content/models/fields" />
+
+
+<field name="report_calculation" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_REPORT_CALCULATION_DESC">
+	<option value="1">COM_PHOCACART_CALCULATION</option>
+	<option value="2">COM_PHOCACART_TAX_RECAPITULATION</option>
+</field>
+
 
 <field name="report_display_tax" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_LABEL" description="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_DESC">
 	<option value="0">COM_PHOCACART_NO</option>
@@ -1422,8 +1441,8 @@
 </field>
 
 
-<field name="pos_print_line_length" default="42" size="40" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGHT_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGHT_DESC"/>
-<field name="pos_print_line_length_double" default="21" size="40" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGHT_DOUBLE_SIZE_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGHT_DOUBLE_SIZE_DESC"/>
+<field name="pos_print_line_length" default="42" size="40" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGTH_DESC"/>
+<field name="pos_print_line_length_double" default="21" size="40" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGTH_DOUBLE_SIZE_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_LINE_LENGTH_DOUBLE_SIZE_DESC"/>
 <field name="pos_print_line_sep" default="-" size="1" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_LINE_SEPARATOR_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_LINE_SEPARATOR_DESC"/>
 <!--<field name="pos_print_line_end" default="\n" size="40" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_LINE_END_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_LINE_END_DESC"/>-->
 		

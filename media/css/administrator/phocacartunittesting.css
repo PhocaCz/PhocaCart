@@ -1,0 +1,173 @@
+#phUnitTest {
+	border: 1px solid #f0f0f0;
+	height: 90vh;
+	overflow: auto;
+	width: 100%;
+}
+
+html, body {
+	padding: 0;
+	margin: 0;
+}
+
+#phUnitTest,
+#phut-box ,
+#phut-box table{
+background: #000;
+color: #fff;
+	margin: 0;
+	padding: 0;
+	font-family: "Consolas", sans-serif;
+}
+
+#phut-box {
+	font-size: 100%;
+}
+
+table.phut-calculation
+table.phut-calculation tr,
+table.phut-calculation tr td,
+table.phut-calculation tr td th  {
+
+	padding: 3px;
+	border: 1px dashed #f0f0f0;
+	border-collapse:collapse;
+}
+
+table.phut-calculation tr td {
+	white-space: nowrap;
+}
+
+
+
+
+
+
+/* *** */
+#phut-box table {
+	border-collapse:collapse;
+	font-size: 90%;
+}
+
+#phut-box.phut-box {
+	
+	padding: 30px;
+
+}
+
+.phut-row.row {
+
+}
+
+
+
+table.phut-calculation tr td:nth-child(2),
+table.phut-calculation tr td:nth-child(3) {
+	text-align: right;
+}
+
+
+table.phut-calculation tr.b {
+	font-weight: bold;
+	
+}
+
+table.phut-calculation tr td.b {
+	font-weight: bold;
+	
+}
+
+table.phut-calculation tr td.bb {
+	font-weight: bold;
+	
+	background: #ffff99;
+}
+
+table.phut-calculation tr td.bbt {
+	font-weight: bold;
+	
+	background: #ffd24c;
+}
+
+table.phut-calculation tr td.bbr {
+	font-weight: bold;
+	
+	background: #ffff4c;
+}
+
+.phut-total {
+	background: #00b3b2;
+	
+}
+.phut-totalc {
+	background: #59b300;
+	
+}
+.phut-subtotalc {
+	background: #666600;
+
+
+}
+
+.phut-rounding {
+	background: #006666;
+
+
+}
+.phut-roundingc {
+	background: #336600;
+	
+
+}
+
+.ok {
+	background: #2db300;
+	color: #fff;
+	
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+}
+.error {
+	background: #b32d00;
+	color: #fff;
+	padding: 3px;
+}
+.error-fixed {
+	background: #ffcfbf;
+	color: #fff;
+	padding: 3px;
+}
+
+.warning {
+	background: #ff8000;
+	color: #fff;
+	padding: 3px;
+}
+
+.rounding {
+	background: #4c79ff;
+	color: #fff;
+	padding: 3px;
+}
+
+.small {
+	font-size: 25%;
+}
+
+.phut-flr {
+	float: right;
+	marging: 5px;
+}
+
+.phut-fll {
+	float: left;
+	margin: 5px;
+}
+
+.phut-header {
+	margin: 5px;
+	font-weight: bold;
+}
+
+

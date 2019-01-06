@@ -22,7 +22,7 @@ class PhocaCartControllerResponse extends JControllerForm
 
 		//JSession::checkToken() or jexit( 'Invalid Token' );
 		$return = PhocacartRoute::getInfoRoute();
-		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECIEVED'), 'message');
+		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECEIVED'), 'message');
 		//$session->set('infoaction', 3, 'phocaCart');
 		//$session->set('infoaction', 4, 'phocaCart');
 		// NO message here, we have set the message during order and it stays unchanged as it is in session

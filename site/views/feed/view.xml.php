@@ -45,15 +45,20 @@ class PhocaCartViewFeed extends JViewLegacy
 			$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 			
 			// Feed Params
-			$p['export_published_only']	= $fP->get('export_published_only', 1);
-			$p['export_in_stock_only']	= $fP->get('export_in_stock_only', 0);
-			$p['export_price_only']		= $fP->get('export_price_only', 1);
-			$p['strip_html_tags_desc']	= $fP->get('strip_html_tags_desc', 1);
-			$p['item_limit']			= $fP->get('item_limit', 0);
-			$p['item_ordering']			= $fP->get('item_ordering', 1);
-			$p['category_ordering']		= $fP->get('category_ordering', 0);
-			$p['display_attributes']	= $fP->get('display_attributes', 0);
-			$p['category_separator']	= $fP->get('category_separator', '');
+			$p['export_published_only']		= $fP->get('export_published_only', 1);
+			$p['export_in_stock_only']		= $fP->get('export_in_stock_only', 0);
+			$p['export_price_only']			= $fP->get('export_price_only', 1);
+			$p['strip_html_tags_desc']		= $fP->get('strip_html_tags_desc', 1);
+			$p['item_limit']				= $fP->get('item_limit', 0);
+			$p['item_ordering']				= $fP->get('item_ordering', 1);
+			$p['category_ordering']			= $fP->get('category_ordering', 0);
+			$p['display_attributes']		= $fP->get('display_attributes', 0);
+			$p['category_separator']		= $fP->get('category_separator', '');
+			$p['load_all_categories']		= $fP->get('load_all_categories', 0);
+			
+			if ($p['category_separator'] == '\n') {$p['category_separator'] = "\n";}
+			if ($p['category_separator'] == '\r') {$p['category_separator'] = "\r";}
+			if ($p['category_separator'] == '\r\n') {$p['category_separator'] = "\r\n";}
 			
 			// Item Params (phocacartfeex.xml, language string, view.xml.php here defined and conditions below)
 			$p['item_id'] 							= $iP->get('item_id', '');
@@ -76,12 +81,20 @@ class PhocaCartViewFeed extends JViewLegacy
 			$p['feed_category'] 					= $iP->get('feed_category', '');
 			$p['item_manufacturer'] 				= $iP->get('item_manufacturer', '');
 			$p['item_stock'] 						= $iP->get('item_stock', '');
-			$p['item_delivery_date'] 				= $iP->get('item_delivery_date', '');
+			$p['item_delivery_date'] 				= $iP->get('item_delivery_date', '');// Stock Status
+			$p['item_delivery_date_date'] 			= $iP->get('item_delivery_date_date', '');// Real Date
 			$p['feed_delivery_date'] 				= $iP->get('feed_delivery_date', '');
 			$p['item_attribute'] 					= $iP->get('item_attribute', '');
 			$p['item_attribute_name'] 				= $iP->get('item_attribute_name', '');
 			$p['item_attribute_value'] 				= $iP->get('item_attribute_value', '');
 			$p['item_url'] 							= $iP->get('item_url', '');
+			$p['item_condition'] 					= $iP->get('item_condition', '');
+			$p['item_reward_points'] 				= $iP->get('item_reward_points', '');
+			$p['item_reward_points_name'] 			= $iP->get('item_reward_points_name', '');
+			$p['item_reward_points_value'] 			= $iP->get('item_reward_points_value', '');
+			$p['item_type_feed'] 					= $iP->get('item_type_feed', '');
+			$p['item_category_type_feed'] 			= $iP->get('item_category_type_feed', '');
+			
 			
 			/*
 			// We can find specific feed and customize it for specific needs
@@ -94,13 +107,22 @@ class PhocaCartViewFeed extends JViewLegacy
 			}
 			*/
 			
-			$products = PhocacartProduct::getProducts(0, (int)$p['item_limit'], $p['item_ordering'], $p['category_ordering'], $p['export_published_only'], $p['export_in_stock_only'], $p['export_price_only'], 2);
 			
+			// Load all categories for a product or only one
+			// This influences two parameters: Categories and Product Category Type
+			$categoriesList = 0;
+			if ($p['load_all_categories'] == 1) {
+				$categoriesList = 5;
+			}
+			
+			$products = PhocacartProduct::getProducts(0, (int)$p['item_limit'], $p['item_ordering'], $p['category_ordering'], $p['export_published_only'], $p['export_in_stock_only'], $p['export_price_only'], $categoriesList);
+			
+
 			// HEADER
 			if (isset($feed['header']) && $feed['header'] != '') {
 				$o[] = $feed['header'];
 			} else {
-				$o[] = '<?xml version=\"1.0\" encoding=\"utf-8\"?>';
+				$o[] = '<?xml version="1.0" encoding="utf-8"?>';
 			}
 			
 			// ROOT START
@@ -249,6 +271,32 @@ class PhocaCartViewFeed extends JViewLegacy
 						$o[] = $l.$p['feed_category'].$r.$v->cattitlefeed.$e.$p['feed_category'].$r;
 					}
 					
+					// CATEGORY TYPE OR PRODUCT CATEGORY TYPE
+					if ($p['item_category_type_feed'] != '') {
+						
+						if (isset($v->type_category_feed) && $v->type_category_feed != '') {	
+							
+							// 1) Product
+							$o[] = $l.$p['item_category_type_feed'].$r.htmlspecialchars($v->type_category_feed).$e.$p['item_category_type_feed'].$r;
+							
+						} else if (isset($v->feedcategories ) && $v->feedcategories  != '') {
+							
+							// 2) Categories - loaded by db
+							$feedcategories = str_replace('|', $p['category_separator'], htmlspecialchars($v->feedcategories));
+							$o[] = $l.$p['item_category_type_feed'].$r.$feedcategories.$e.$p['item_category_type_feed'].$r;	
+							
+							// Only one category possible e.g. in Google Products, so this can be customized
+							//$feedcategories = explode('|', $v->feedcategories);
+							//if (isset($feedcategories[0]) && $feedcategories[0] != '') {
+							//	$o[] = $l.$p['item_category_type_feed'].$r.htmlspecialchars($feedcategories[0]).$e.$p['item_category_type_feed'].$r;
+							//}
+							
+						} else if (isset($v->cattypefeed) && $v->cattypefeed != '') {
+							// 3) Category - if not 2) loaded
+							$o[] = $l.$p['item_category_type_feed'].$r.htmlspecialchars($v->cattypefeed).$e.$p['item_category_type_feed'].$r;
+						}
+					}
+					
 					// MANUFACTURER
 					if ($p['item_manufacturer'] != '' && isset($v->manufacturertitle) && $v->manufacturertitle != '') {
 						$o[] = $l.$p['item_manufacturer'].$r.$v->manufacturertitle.$e.$p['item_manufacturer'].$r;
@@ -261,11 +309,18 @@ class PhocaCartViewFeed extends JViewLegacy
 					
 					// STOCK DELIVERY_DATE
 					if ($p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
+						
+					
 						$stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
 						//$stockText		= PhocacartStock::getStockStatusOutput($stockStatus);
 						if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
 							$o[] = $l.$p['item_delivery_date'].$r.$stockStatus['stock_status'].$e.$p['item_delivery_date'].$r;
 						}
+					}
+					
+					// STOCK DELIVERY_DATE - REAL DATE
+					if ($p['item_delivery_date_date'] != '' && isset($v->delivery_date) && $v->delivery_date != '') {
+						$o[] = $l.$p['item_delivery_date_date'].$r.$v->delivery_date.$e.$p['item_delivery_date_date'].$r;
 					}
 					
 					// STOCK DELIVERY_DATE FEED
@@ -308,6 +363,37 @@ class PhocaCartViewFeed extends JViewLegacy
 						}
 					}
 					
+					// PRODUCT CONDITION
+					if ($p['item_condition'] != '' && isset($v->condition)) {
+						$condition = PhocacartUtilsSettings::getProductConditionValues($v->condition);
+						$o[] = $l.$p['item_condition'].$r.$condition.$e.$p['item_condition'].$r;
+					
+					}
+					
+					// PRODUCT REWARD POINTS
+					if ($p['item_reward_points'] != '' && isset($v->points_received) && (int)$v->points_received > 0) {
+						
+					
+						if ($p['item_reward_points_name'] != '' && $p['item_reward_points_value'] != '') {
+							$o[] = $l.$p['item_reward_points'].$r;
+							
+							$o[] = $l.$p['item_reward_points_name'].$r.JText::_('COM_PHOCACART_FEED_TXT_PRODUCT_REWARD_POINTS').$e.$p['item_reward_points_name'].$r;
+							$o[] = $l.$p['item_reward_points_value'].$r.(int)$v->points_received.$e.$p['item_reward_points_value'].$r;
+							// Possible RATION value
+							
+							$o[] = $e.$p['item_reward_points'].$r;
+						} else {
+							$o[] = $l.$p['item_reward_points'].$r.(int)$v->points_received.$e.$p['item_reward_points'].$r;
+						}
+					}
+					
+					// PRODUCT TYPE FEED
+					if ($p['item_type_feed'] != '' && isset($v->type_feed) && $v->type_feed != '') {	
+						$o[] = $l.$p['item_type_feed'].$r.htmlspecialchars($v->type_feed).$e.$p['item_type_feed'].$r;
+					}
+					
+					
+			
 					
 					// PRODUCT END
 					if (isset($feed['item']) && $feed['item'] != '') {
@@ -316,7 +402,7 @@ class PhocaCartViewFeed extends JViewLegacy
 				}
 				
 			}
-			
+	
 			
 			// ROOT END
 			if (isset($feed['root']) && $feed['root'] != '') {

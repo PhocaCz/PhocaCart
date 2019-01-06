@@ -25,4 +25,5 @@ phocacart import('phocacart.utils.settings');
 $controller = JControllerLegacy::getInstance('PhocaCart');
 $controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();
+
 ?>

@@ -75,7 +75,9 @@ class PhocacartCaptchaRecaptcha
 			
 			//$resultString = print r($result, true);
 			//PhocacartLog::add(1, 'Ask a Question - Captcha Result', 0, $resultString);
-			
+			if (!$result) {
+				return false;
+			}
 			return json_decode($result)->success;
 				
 		}

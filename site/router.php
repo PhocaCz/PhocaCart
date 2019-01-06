@@ -422,7 +422,7 @@ class PhocacartRouter extends JComponentRouterBase
 			// Called if no menu item created
 			$vars['id'] = $segments[$count - 1];
 
-	
+			unset($segments[0]);
 			return $vars;
 		}
 
@@ -430,7 +430,7 @@ class PhocacartRouter extends JComponentRouterBase
 		if ($count == 1) {
 			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
 					$vars['view']  = $segments[0];
-						
+				unset($segments[0]);		
 				return $vars;
 			}
 			
@@ -478,7 +478,7 @@ class PhocacartRouter extends JComponentRouterBase
 			{
 				$vars['view'] = 'category';
 				$vars['id'] = $id;
-
+				unset($segments[0]);
 				return $vars;
 			} else {
 				// TO DO specify catid - load from libraries
@@ -580,7 +580,8 @@ class PhocacartRouter extends JComponentRouterBase
 				}
 			}
 			
-			
+			unset($segments[0]);
+			unset($segments[1]);
 			return $vars;
 		}
 /*

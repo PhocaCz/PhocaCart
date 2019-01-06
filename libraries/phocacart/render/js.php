@@ -1214,17 +1214,19 @@ final class PhocacartRenderJs
 		$s[] = '		var to = jQuery("#phPriceFromTopriceto").val();';
 		$s[] = '		if (to == \'\') { to = '.$max.';}';
 		$s[] = '		if (from == \'\') { from = '.$min.';}';
-		$s[] = '		if (to < from) {to = from;}';
+		$s[] = '		if (Number(to) < Number(from)) {to = from;jQuery("#phPriceFromTopriceto").val(to);}';
 		$s[] = '		jQuery( "#phPriceFilterRange" ).slider({values: [from,to]});';
+		$s[] = '         jQuery("#phPriceFilterPrice").html("'.JText::_('COM_PHOCACART_PRICE').': " + phGetPriceFormat(from) + " - " + phGetPriceFormat(to));';
 		$s[] = '	})';
 		
 		$s[] = '	jQuery("#phPriceFromTopriceto").on("change", function (e) {';
 		$s[] = '		var from = jQuery("#phPriceFromTopricefrom").val();';
-		$s[] = '		var to = jQuery("#phPriceFromTopriceto").val();';
+		$s[] = '		var to = jQuery("#phPriceFromTopriceto").val(); ';
 		$s[] = '		if (to == \'\') { to = '.$max.';}';
 		$s[] = '		if (from == \'\') { from = '.$min.';}';
-		$s[] = '		if (to < from) {to = from;}';
+		$s[] = '		if (Number(to) < Number(from)) {to = from;jQuery("#phPriceFromTopriceto").val(to);}';
 		$s[] = '		jQuery( "#phPriceFilterRange" ).slider({values: [from,to]});';
+		$s[] = '         jQuery("#phPriceFilterPrice").html("'.JText::_('COM_PHOCACART_PRICE').': " + phGetPriceFormat(from) + " - " + phGetPriceFormat(to));';
 		$s[] = '	})';
 		
 		$s[] = '});';
@@ -1335,7 +1337,7 @@ final class PhocacartRenderJs
 	}*/
 	
 	// loading.gif - whole page
-	// Singleton - check if loaded - xxx No Singleton, it must be inside each javascript function
+	// Singleton - check if loaded - No Singleton, it must be inside each javascript function
 	public static function renderLoaderFullOverlay() {
 		//static $fullOverlay = 0;
 		//if( $fullOverlay == 0) {

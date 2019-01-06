@@ -30,7 +30,7 @@ class PhocaCartViewTerms extends JViewLegacy
 	}
 	
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS'));
 	}
 }
 ?>

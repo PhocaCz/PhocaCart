@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 $d 	= $displayData;
 // NOT USED
-$d['paramname'] = $d['title1'] = $d['param2name'] = $d['getparams'][0] = $jsSet = $jsClear = $d['titleclear'] = $d['titleset'] = 'xxx';
+$d['paramname'] = $d['title1'] = $d['param2name'] = $d['getparams'][0] = $jsSet = $jsClear = $d['titleclear'] = $d['titleset'] = '';
 
 ?>
 <div class="form-group">

@@ -1,4 +1,4 @@
-/*
+
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin-ext');
 
 
@@ -11,7 +11,7 @@
 .admin.com_phocacart {
 	font-family: "Roboto", -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 	font-size: 86% !important;
-}*/
+}
 .admin.com_phocacart .small{
 	font-size: 96% !important;
 }
@@ -1013,6 +1013,14 @@ li.plupload_droptext:before {
 	margin: 5px;
 	background: #FFD6D6;
 	border-radius: 3px;
+}
+
+.ph-currency-col  {
+	
+	margin: 5px;
+	background: #FFD6D6;
+	border-radius: 0px;
+	text-align: center;
 }
 
 .ph-success-txt {

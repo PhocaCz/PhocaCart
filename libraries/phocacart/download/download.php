@@ -218,7 +218,7 @@ class PhocacartDownload
 		$httpRange   = 0;
 		$newFileSize = $fileSize - 1;
 		// Default values! Will be overridden if a valid range header field was detected!
-		$resultLenght = (string)$fileSize;
+		$resultLength = (string)$fileSize;
 		$resultRange  = "0-".$newFileSize;
 		// We support requests for a single range only.
 		// So we check if we have a range field. If yes ensure that it is a valid one.
@@ -231,13 +231,13 @@ class PhocacartDownload
 			// Check if we have values! If not we have nothing to do!
 			if(!empty($httpRange[0]) || !empty($httpRange[1])) {
 				// We need the new content length ...
-				$resultLenght	= $fileSize - $httpRange[0] - $httpRange[1];
+				$resultLength	= $fileSize - $httpRange[0] - $httpRange[1];
 				// ... and we can add the 206 Status.
 				header("HTTP/1.1 206 Partial Content");
 				// Now we need the content-range, so we have to build it depending on the given range!
 				// ex.: -500 -> the last 500 bytes
 				if(empty($httpRange[0]))
-					$resultRange = $resultLenght.'-'.$newFileSize;
+					$resultRange = $resultLength.'-'.$newFileSize;
 				// ex.: 500- -> from 500 bytes to filesize
 				elseif(empty($httpRange[1]))
 					$resultRange = $httpRange[0].'-'.$newFileSize;
@@ -247,7 +247,7 @@ class PhocacartDownload
 				//header("Content-Range: bytes ".$httpRange . $newFileSize .'/'. $fileSize);
 			} 
 		}
-		header("Content-Length: ". $resultLenght);
+		header("Content-Length: ". $resultLength);
 		header("Content-Range: bytes " . $resultRange . '/' . $fileSize);
 		header("Content-Type: " . (string)$mimeType);
 		header('Content-Disposition: attachment; filename="'.$fileWithoutPath.'"');
@@ -417,7 +417,7 @@ class PhocacartDownload
 		$httpRange   = 0;
 		$newFileSize = $fileSize - 1;
 		// Default values! Will be overridden if a valid range header field was detected!
-		$resultLenght = (string)$fileSize;
+		$resultLength = (string)$fileSize;
 		$resultRange  = "0-".$newFileSize;
 		// We support requests for a single range only.
 		// So we check if we have a range field. If yes ensure that it is a valid one.
@@ -430,13 +430,13 @@ class PhocacartDownload
 			// Check if we have values! If not we have nothing to do!
 			if(!empty($httpRange[0]) || !empty($httpRange[1])) {
 				// We need the new content length ...
-				$resultLenght	= $fileSize - $httpRange[0] - $httpRange[1];
+				$resultLength	= $fileSize - $httpRange[0] - $httpRange[1];
 				// ... and we can add the 206 Status.
 				header("HTTP/1.1 206 Partial Content");
 				// Now we need the content-range, so we have to build it depending on the given range!
 				// ex.: -500 -> the last 500 bytes
 				if(empty($httpRange[0]))
-					$resultRange = $resultLenght.'-'.$newFileSize;
+					$resultRange = $resultLength.'-'.$newFileSize;
 				// ex.: 500- -> from 500 bytes to filesize
 				elseif(empty($httpRange[1]))
 					$resultRange = $httpRange[0].'-'.$newFileSize;
@@ -446,7 +446,7 @@ class PhocacartDownload
 				//header("Content-Range: bytes ".$httpRange . $newFileSize .'/'. $fileSize);
 			} 
 		}
-		header("Content-Length: ". $resultLenght);
+		header("Content-Length: ". $resultLength);
 		header("Content-Range: bytes " . $resultRange . '/' . $fileSize);
 		header("Content-Type: " . (string)$mimeType);
 		header('Content-Disposition: attachment; filename="'.$fileWithoutPath.'"');

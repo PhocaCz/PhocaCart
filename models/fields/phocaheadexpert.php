@@ -31,11 +31,11 @@ class JFormFieldPhocaHeadExpert extends JFormField
 		
 		if ($this->element['default']) {
 			if ($image != '') {
-				return '<div class="ph-options-head-expert">'
+				return '<div class="tab-header ph-options-head-expert">'
 				.'<div>'. $image.' <strong>'. JText::_($this->element['default']) . '</strong></div>'
 				.'</div>';
 			} else {
-				return '<div class="ph-options-head-expert">'
+				return '<div class="tab-header ph-options-head-expert">'
 				.'<strong>'. JText::_($this->element['default']) . '</strong>'
 				.'</div>';
 			}

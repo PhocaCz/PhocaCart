@@ -19,9 +19,25 @@ echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_MY_ACCOUNT
 
 if ((int)$this->u->id > 0) {
 	
+	// Reward Points
+	if ((int)$this->t['display_reward_points_total_info'] > 0) {
+		echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
+		echo '<div class="ph-account-box-header" id="phaccountrewardpoints"><h3>'.JText::_('COM_PHOCACART_REWARD_POINTS').'</h3></div>';
+		echo '</div>';
+		
+		echo '<div class="ph-account-box-action">';
+		
+		echo '<div class="col-sm-8 col-md-8">'. JText::_('COM_PHOCACART_TOTAL_AMOUNT_OF_YOUR_REWARD_POINTS') . ': </div>';
+		echo '<div class="col-sm-4 col-md-4">'.$this->t['rewardpointstotal'].'</div>';
+		
+		echo '<div class="ph-cb"></div>';
+		
+		echo '</div>'."\n";// end box action
+	}
+	
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
-	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><div class="ph-pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
+	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><h3>'.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phcheckoutAddress">';
@@ -82,7 +98,7 @@ if ((int)$this->u->id > 0) {
 	
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
 	//echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="'.PhocacartRenderIcon::getClass('remove-circle').' ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
-	echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+	echo '<div class="ph-account-box-header" id="phaccountloginedit"><h3>'.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div>';
 	
 	

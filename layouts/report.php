@@ -9,9 +9,10 @@
 defined('_JEXEC') or die();
 $d 		= $displayData;
 $price 	= new PhocacartPrice();
-$taxes 	= PhocacartTax::getAllTaxes();
+$taxes 	= PhocacartTax::getAllTaxesIncludingCountryRegion();
 
 $p = array();
+$p['report_calculation'] 		= $d['params']->get( 'report_calculation', 1);
 $p['report_display_tax'] 		= $d['params']->get( 'report_display_tax', 1);
 $p['report_display_rounding'] 	= $d['params']->get( 'report_display_rounding', 1);
 $p['report_header'] 			= $d['params']->get( 'report_header', '');
@@ -123,10 +124,13 @@ echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_CUSTOMER').'</th>';
 echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_PAYMENT').'</th>';
 echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_CURRENCY').'</th>';
 if ($p['report_display_tax'] == 1) {
+	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>'; // TRC
 	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>';
+	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_TAX').'</th>'; // TRC
 	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_TAX').'</th>';
 }
 if ($p['report_display_rounding'] == 1) {
+	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ROUNDING').'</th>'; // TRC
 	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ROUNDING').'</th>';
 }
 if ($p['report_display_tax'] == 1) {
@@ -138,7 +142,6 @@ if ($p['report_display_tax'] == 1) {
 echo '</tr>';
 
 // ITEMS
-
 foreach($d['items'] as $k => $v) {
 	
 	echo '<tr '.$cRTRI.'>';
@@ -177,32 +180,87 @@ foreach($d['items'] as $k => $v) {
 
 	// Netto
 	if ($p['report_display_tax'] == 1) {
-		echo '<td '.$cRNetto.'>';
-		if (isset($v->brutto)) {
-			$v->rouding = isset($v->rounding) ? $v->rounding : 0;
-			$v->taxsum = isset($v->taxsum) ? $v->taxsum : 0;
-			
-			$netto = $v->brutto - $v->rounding - $v->taxsum;
-			echo $price->getPriceFormat($netto, 0, 1);
-		}
-		echo '</td>';
 		
-		// Tax
-		echo '<td '.$cRTax.'>';
-		if (!empty($v->tax)) {
-			foreach($v->tax as $kT => $vT) {
-				echo isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ': ' : '';
-				echo $price->getPriceFormat($vT,0,1) . '<br>';
+		
+		if ($p['report_calculation'] == 1) {
+			
+			// C NETTO
+			echo '<td '.$cRNetto.'>';
+			if (isset($v->brutto)) {
+				$v->rouding = isset($v->rounding) ? $v->rounding : 0;
+				$v->taxsum = isset($v->taxsum) ? $v->taxsum : 0;
+				
+				$netto = $v->brutto - $v->rounding - $v->taxsum;
+				echo $price->getPriceFormat($netto, 0, 1);
 			}
+			echo '</td>';
+			
+		} else if ($p['report_calculation'] == 2) {
+			
+			// TRC NETTO
+			echo '<td '.$cRNetto.'>';
+			/*if (isset($v->trcnetto)) {
+				echo $price->getPriceFormat($v->trcnetto, 0, 1);
+			}*/
+			if (isset($v->trcbrutto)) {
+				$v->trcrounding = isset($v->trcrounding) ? $v->trcrounding : 0;
+				$v->trctaxsum = isset($v->trctaxsum) ? $v->trctaxsum : 0;
+				
+				// We use the brutto not TRCbrutto because Tax Recapitulation sum must not be the same like Calculation sum
+				//$netto = $price->roundPrice($v->trcbrutto) - $price->roundPrice($v->trcrounding) - $price->roundPrice($v->trctaxsum);
+				$netto = $price->roundPrice($v->brutto) - $price->roundPrice($v->trcrounding) - $price->roundPrice($v->trctaxsum);
+				
+				echo $price->getPriceFormat($netto, 0, 1);
+			}
+			echo '</td>';
+			
 		}
-		echo '</td>';
+		
+		if ($p['report_calculation'] == 1) {
+			
+			// Tax C
+			echo '<td '.$cRTax.'>';
+			if (!empty($v->tax)) {
+				foreach($v->tax as $kT => $vT) {
+					echo isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ' ' : '';
+					echo isset($taxes[$kT]['tax_rate']) && isset($taxes[$kT]['calculation_type']) ? '('.$price->getTaxFormat($taxes[$kT]['tax_rate'], (int)$taxes[$kT]['calculation_type']).') ' : '';
+					echo ': ';
+					echo $price->getPriceFormat($vT,0,1) . '<br>';
+				}
+			}
+			echo '</td>';
+		
+		} else if ($p['report_calculation'] == 2) {
+			
+			// TRC TAX
+			echo '<td '.$cRTax.'>';
+	
+			if (!empty($v->trctax)) {
+				foreach($v->trctax as $kT => $vT) {
+					echo isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ' ' : '';
+					echo isset($taxes[$kT]['tax_rate']) && isset($taxes[$kT]['calculation_type']) ? '('.$price->getTaxFormat($taxes[$kT]['tax_rate'], (int)$taxes[$kT]['calculation_type']).') ' : '';
+					echo ': ';
+					echo $price->getPriceFormat($vT,0,1) . '<br>';
+				}
+			}
+			echo '</td>';
+		}
 	}
 	
 	// Rounding
 	if ($p['report_display_rounding'] == 1) {
-		echo '<td '.$cRRounding.'>';
-		echo isset($v->rounding) ? $price->getPriceFormat($v->rounding, 0, 1): '';
-		echo '</td>';
+		
+		if ($p['report_calculation'] == 1) {
+			// C ROUNDING
+			echo '<td '.$cRRounding.'>';
+			echo isset($v->rounding) ? $price->getPriceFormat($v->rounding, 0, 1): '';
+			echo '</td>';
+		} else if ($p['report_calculation'] == 2) {
+			// TRC ROUNDING
+			echo '<td '.$cRRounding.'>';
+			echo isset($v->trcrounding) ? $price->getPriceFormat($v->trcrounding, 0, 1): '';
+			echo '</td>';
+		}
 	}
 	
 	
@@ -221,8 +279,11 @@ if (!empty($d['total'])) {
 	$i = 0;
 	foreach ($d['total'] as $k => $v) {
 		
-		$netto 		= $brutto 		= $rounding 	= $tax = 0;
-		$nettoTxt	= $bruttoTxt	= $roundingTxt	= $taxTxt = '';
+		$netto 		= $brutto 		= $rounding 		= $tax = 0;
+		$nettoTxt	= $bruttoTxt	= $roundingTxt		= $taxTxt = '';
+		
+		$nettoTRC 	= $bruttoTRC 	= $roundingTRC 		= $taxTRC = 0;
+		$nettoTRCTxt= $bruttoTRCTxt	= $roundingTRCTxt	= $taxTRCTxt = '';
 		if (!empty($v)) {
 			$price->setCurrency($k);
 			echo '<tr '.$cRTotalR.' id="phReportTotalRow'.$i.'">';
@@ -233,38 +294,85 @@ if (!empty($d['total'])) {
 			echo '</td>';
 			
 			if (isset($v['brutto'])) {
-				$brutto 	= $v['brutto'];
+				$brutto 	= $price->roundPrice($v['brutto']);
 				$bruttoTxt	= $price->getPriceFormat($v['brutto'], 0, 1);
 			}
+			
+			if (isset($v['trcbrutto'])) {
+				$bruttoTRC 		= $price->roundPrice($v['trcbrutto']);
+				$bruttoTRCTxt	= $price->getPriceFormat($v['trcbrutto'], 0, 1);
+			}
+			
+			
 			$rounding = isset($v['rounding']) ? $price->getPriceFormat($v['rounding'], 0, 1) : '';
 			if (isset($v['rounding'])) {
-				$rounding 	= $v['rounding'];
+				$rounding 	= $price->roundPrice($v['rounding']);
 				$roundingTxt = $price->getPriceFormat($v['rounding'], 0, 1);
+			}
+			
+			$roundingTRC = isset($v['trcrounding']) ? $price->getPriceFormat($v['trcrounding'], 0, 1) : '';
+			if (isset($v['trcrounding'])) {
+				$roundingTRC 	= $price->roundPrice($v['trcrounding']);
+				$roundingTRCTxt = $price->getPriceFormat($v['trcrounding'], 0, 1);
 			}
 			
 			if (!empty($v['tax'])) {
 				$taxTxt = '';
+				
 				foreach($v['tax'] as $kT => $vT) {
-					$tax	+= $vT;
-					$taxTxt .= isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ': ' : '';
+					$tax	+= $price->roundPrice($vT); 
+					$taxTxt .= isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ' ' : '';
+					$taxTxt .= isset($taxes[$kT]['tax_rate']) && isset($taxes[$kT]['calculation_type']) ? '('.$price->getTaxFormat($taxes[$kT]['tax_rate'], (int)$taxes[$kT]['calculation_type']).') ' : '';
+					$taxTxt .= ': ';
 					$taxTxt .= $price->getPriceFormat($vT,0,1) . '<br>';
 				}
 			}
 			
-
+			if (!empty($v['trctax'])) {
+				$taxTRCTxt = '';
+				foreach($v['trctax'] as $kT => $vT) {
+					$taxTRC	+= $price->roundPrice($vT);
+					$taxTRCTxt .= isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ' ' : '';
+					$taxTRCTxt .= isset($taxes[$kT]['tax_rate']) && isset($taxes[$kT]['calculation_type']) ? '('.$price->getTaxFormat($taxes[$kT]['tax_rate'], (int)$taxes[$kT]['calculation_type']).') ' : '';
+					$taxTRCTxt .= ': ';
+					$taxTRCTxt .= $price->getPriceFormat($vT,0,1) . '<br>';
+				}
+			}
+			
+			$netto 			= $price->roundPrice($brutto) - $price->roundPrice($rounding) - $price->roundPrice($tax);
+			$nettoTxt		= $price->getPriceFormat($netto, 0, 1);
 	
-			$netto 		= $brutto - $rounding - $tax;
-			$nettoTxt	= $price->getPriceFormat($netto, 0, 1);
+			// We use brutto not bruttoTRC - because Tax Recapitualtion sum can be different to tax calculation sum
+			// For example - products are with VAT, shipping and payment price without VAT
+			//               so the netto is the same but brutto is different (Calculation: Products + Shipping + Payment, Tax Recapitulation: Products only)
+			//$nettoTRC 		= $price->roundPrice($bruttoTRC) - $price->roundPrice($roundingTRC) - $price->roundPrice($taxTRC);
+			$nettoTRC 		= $price->roundPrice($brutto) - $price->roundPrice($roundingTRC) - $price->roundPrice($taxTRC);
+			$nettoTRCTxt	= $price->getPriceFormat($nettoTRC, 0, 1);
+			
+			
 			
 			if ($p['report_display_tax'] == 1) {
-				echo '<td '.$cRTotalC2.'>'.$nettoTxt.'</td>';
-				echo '<td '.$cRTotalC2.'>'.$taxTxt.'</td>';
+				
+				if ($p['report_calculation'] == 1) {
+					echo '<td '.$cRTotalC2.'>'.$nettoTxt.'</td>';// C
+					echo '<td '.$cRTotalC2.'>'.$taxTxt.'</td>';
+				} else if ($p['report_calculation'] == 2) {
+					echo '<td '.$cRTotalC2.'>'.$nettoTRCTxt.'</td>';// TRC
+					echo '<td '.$cRTotalC2.'>'.$taxTRCTxt.'</td>';
+				}
 			}
 			
 			if ($p['report_display_rounding'] == 1) {
-				echo '<td '.$cRTotalC2.'>'.$roundingTxt.'</td>';
+				
+				if ($p['report_calculation'] == 1) {
+					echo '<td '.$cRTotalC2.'>'.$roundingTxt.'</td>';// C
+				} else if ($p['report_calculation'] == 2) {
+					echo '<td '.$cRTotalC2.'>'.$roundingTRCTxt.'</td>';// TRC
+				}
 			}
+			
 			echo '<td '.$cRTotalC2.'>'.$bruttoTxt.'</td>';
+			//echo '<td '.$cRTotalC2.'>'.$bruttoTRCTxt.'</td>';// TRC
 			
 			
 			

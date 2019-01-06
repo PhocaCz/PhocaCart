@@ -109,7 +109,7 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 		$sum = $db->loadResult();
 		
 		if ((int)$sum < 240) {
-			$message = JText::_('COM_PHOCACART_FIRST_COUNTRIES_NEED_TO_BE_INPORTED');
+			$message = JText::_('COM_PHOCACART_FIRST_COUNTRIES_NEED_TO_BE_IMPORTED');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}

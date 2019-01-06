@@ -457,6 +457,53 @@ class PhocacartUser
 		return false;
 	}
 	
+	public static function buildName($nameFirst, $nameLast, $nameMiddle = '', $nameDegreePrefix = '', $nameDegreePostfix = '') {
+		
+		$name = '';
+		
+		if ($nameDegreePrefix != '') {
+			$name = $nameDegreePrefix;
+		}
+		
+		if ($nameFirst != '') {
+			
+			if ($name != '') {
+				$name = $name . ' '. $nameFirst;
+			} else {
+				$name = $nameFirst;
+			}
+		}
+		
+		if ($nameMiddle != '') {
+			
+			if ($name != '') {
+				$name = $name . ' '. $nameMiddle;
+			} else {
+				$name = $nameMiddle;
+			}
+		}
+		
+		if ($nameLast != '') {
+			
+			if ($name != '') {
+				$name = $name . ' '. $nameLast;
+			} else {
+				$name = $nameLast;
+			}
+		}
+		
+		if ($nameDegreePostfix != '') {
+			
+			if ($name != '') {
+				$name = $name . ' '. $nameDegreePostfix;
+			} else {
+				$name = $nameDegreePostfix;
+			}
+		}
+		
+		return $name;
+	}
+	
 	
 	/*
 	$billing		= '';// form

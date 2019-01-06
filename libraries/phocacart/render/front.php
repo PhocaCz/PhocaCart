@@ -568,7 +568,7 @@ class PhocacartRenderFront
 		return $o;
 	}
 	
-	public static function getConfirmOrderText($orderValue) {
+	public static function getConfirmOrderText($orderValue = 0) {
 		
 		$cFT 						= JText::_('COM_PHOCACART_CONFIRM_ORDER');
 		

@@ -46,7 +46,7 @@ $lang->load('plg_user_profile', JPATH_ADMINISTRATOR);
 
 // Header
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
-	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><div class="ph-pull-right"></span></div><h3>'.JText::_('COM_PHOCACART_EDIT_MY_PROFILE').'</h3></div>';
+	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><h3>'.JText::_('COM_PHOCACART_EDIT_MY_PROFILE').'</h3></div>';
 	echo '</div>';
 
 echo '<form action="'.$this->t['linkaccount'].'" method="post" class="form-horizontal form-validate" role="form" id="phcheckoutAddress">';

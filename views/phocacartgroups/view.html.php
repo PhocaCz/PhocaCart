@@ -77,7 +77,7 @@ class PhocaCartCpViewPhocacartGroups extends JViewLegacy
 			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
 			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
 			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'a.minimum_sum'		=> JText::_($this->t['l']. '_MINIMAL_SUM_OF_PURCHACHES'),
+			'a.minimum_sum'		=> JText::_($this->t['l']. '_MINIMAL_SUM_OF_PURCHASES'),
 			'a.type'			=> JText::_($this->t['l']. '_DEFAULT'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);

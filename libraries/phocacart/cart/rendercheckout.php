@@ -25,7 +25,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 	
 	
 	public function render() {
-		
+	
 		$app					= JFactory::getApplication();
 		$pC 					= PhocacartUtils::getComponentParameters();
 		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
@@ -46,6 +46,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 			// SUBTOTAL
 			if (empty($this->total)) {
 				$this->total = $this->getTotal();
+				
 			}
 		
 			// COUPONTITLE
@@ -53,7 +54,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 				$this->coupon['title'] = $this->getCouponTitle();
 			}
 		}
-		
+	
 		$layout 				= new JLayoutFile('cart_checkout', null, array('component' => 'com_phocacart'));
 		$d						= array();
 		$d['params']			= $pC;

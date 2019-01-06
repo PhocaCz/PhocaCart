@@ -14,7 +14,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 
 $class		= $this->t['n'] . 'RenderAdminview';
-$r 			=  new $class();
+$r 			=  new PhocacartRenderAdminview();
 ?>
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
@@ -274,7 +274,74 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 
 echo '</table>';
 
+
+echo '<div>&nbsp;</div>';
+echo '<div class="ph-order-products-hr"></div>';
+echo '<div>&nbsp;</div>';
+echo '<h3>'.JText::_('COM_PHOCACART_TAX_RECAPITULATION').'</h3>';
+
+
+// Tax Recapitulation
+
+if (!empty($this->itemtaxrecapitulation)) {
+	
+	
+	// First we render the body of the table to know if there is some currency value
+	// If yes then add specific column even add specific column to header
+	$oTr = array();
+	$totalCurrency = 0;
+	foreach($this->itemtaxrecapitulation as $k => $v) {
+		
+		// Tax recapitulation rounding included rounding (Tax recapitulation rounding = Tax recapitulation rounding + calculation rounding)
+		
+		$oTr[] = '<tr>';
+		$oTr[] = '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'tcform', 2).'</td>';
+		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_netto', PhocacartPrice::cleanPrice($v->amount_netto), 'tcform', 0, 'ph-right').'</td>';
+		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_tax', PhocacartPrice::cleanPrice($v->amount_tax), 'tcform', 0, 'ph-right').'</td>';
+		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_brutto', PhocacartPrice::cleanPrice($v->amount_brutto), 'tcform', 0, 'ph-right').'</td>';
+		if ($v->amount_brutto_currency > 0) {
+			$oTr[] = '<td class="ph-col-add-cur ph-currency-col">'.$r->itemCalc($v->id, 'amount_brutto_currency', PhocacartPrice::cleanPrice($v->amount_brutto_currency), 'tcform', 0, 'ph-right').'</td>';
+			$totalCurrency = 1;
+		} else {
+			$oTr[] = '<td class=""></td>';
+		}
+		$oTr[] = '</tr>';
+		
+		$oTr[] = '<tr>';
+		$oTr[] = '<td class="ph-col-add-cur"></td>';
+		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_netto).' )</td>';
+		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_tax).' )</td>';
+		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_brutto).' )</td>';
+		if ($v->amount_brutto_currency > 0) {
+			$oTr[] = '<td class="ph-col-add-cur ph-currency-col"></td>';
+		} else {
+			$oTr[] = '<td class=""></td>';
+		}
+		$oTr[] = '</tr>';
+	}
+	
+	
+	echo '<table class="ph-order-tax-recapitulation" id="phAdminEditTaxRecapitulation">';
+	
+	echo '<tr>';
+	echo '<th>'.JText::_('COM_PHOCACART_TITLE').'</th>';
+	echo '<th>'.JText::_('COM_PHOCACART_TAX_BASIS').'</th>';
+	echo '<th>'.JText::_('COM_PHOCACART_TAX').'</th>';
+	echo '<th>'.JText::_('COM_PHOCACART_TOTAL').'</th>';
+	if ($totalCurrency == 1) {
+		echo '<th class="ph-currency-col">'.JText::_('COM_PHOCACART_TOTAL').' '.JText::_('COM_PHOCACART_CURRENCY').'</td>';
+	}
+	echo '</tr>';
+	
+	echo implode("\n", $oTr);
+	
+	echo '</table>';
+}
+
 if ($warningCurrency == 1) {
+	
+	echo '<div>&nbsp;</div>';
+echo '<div class="ph-order-products-hr"></div>';
 	echo '<div>&nbsp;</div>';
 	echo '<div class="alert alert-warning">';
 	
@@ -282,6 +349,10 @@ if ($warningCurrency == 1) {
 	echo '</div>';
 
 }
+
+
+echo '<div>&nbsp;</div>';
+echo '<div class="ph-order-products-hr"></div>';
 
 echo '</div>';
 

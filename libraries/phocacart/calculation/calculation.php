@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 class PhocacartCalculation
 {
 	
-	public static function calculateDiscountPercentage($discount, $quantity, &$priceItems, &$total, $taxId = 0) {
+	public static function calculateDiscountPercentage($discount, $quantity, &$priceItems, &$total, $taxKey = '') {
 		
 		$price					= new PhocacartPrice();
 		// $taxCalcType 1 ... percentage, 2 ... fixed amount (be aware it is not the tax calculation set in options: brutto, netto, none)
@@ -24,9 +24,11 @@ class PhocacartCalculation
 		$dT 					= $price->roundPrice($priceItems['tax'] * $discount / 100);
 		
 		
+		
 		$priceItems['bruttodiscount'] 	= $taxCalcType == 2 ? $dN : $dB;
 		$priceItems['nettodiscount'] 	= $dN;
 		$priceItems['taxdiscount'] 		= $taxCalcType == 2 ? 0 : $dT;
+		
 		
 		$priceItems['brutto'] 	-= $priceItems['bruttodiscount'];
 		$priceItems['netto'] 	-= $priceItems['nettodiscount'];
@@ -36,31 +38,47 @@ class PhocacartCalculation
 		if (!empty($total)) {
 			$total['brutto']				-= $taxCalcType == 2 ? $dN * $quantity : $dB * $quantity;
 			$total['netto']					-= $dN * $quantity;
-			$total['tax'][$taxId]['tax']	-= $taxCalcType == 2 ? 0 : $dT * $quantity;
-			
-			
+			$total['tax'][$taxKey]['tax']	-= $taxCalcType == 2 ? 0 : $dT * $quantity;
+			$total['tax'][$taxKey]['netto']	-= $taxCalcType == 2 ? 0 : $dN * $quantity;
+			$total['tax'][$taxKey]['brutto']	-= $taxCalcType == 2 ? 0 : $dB * $quantity;
 		}
 		
 		return true;
 		
 	}
 	
-	public static function calculateDiscountFixedAmount($ratio, $quantity, &$priceItems, &$total, $taxId = 0) {
+	public static function calculateDiscountFixedAmount($ratio, $quantity, &$priceItems, &$total, $taxKey = '') {
 	
+		
+		
 		$price					= new PhocacartPrice();
 		
 		// $taxCalcType type 1 ... percentage, 2 ... fixed amount (be aware it is not the tax calculation set in options: brutto, netto, none)
 		$taxCalcType = $priceItems['taxcalctype'];
+		
+		
+		// Reset info about discount for each step (reward points, product discount, cart discount, coupon)
+		$priceItems['bruttodiscount'] 	= 0;
+		$priceItems['nettodiscount'] 	= 0;
+		$priceItems['taxdiscount'] 		= 0;
 		
 
 		$dB = $price->roundPrice($priceItems['brutto'] * $ratio/100);
 		$dN = $price->roundPrice($priceItems['netto'] * $ratio/100);
 		$dT = $price->roundPrice($priceItems['tax'] * $ratio/100);
 		
+		
+		// Price before discount
+		$pbD = array();
+		$pbD['brutto'] 	= $priceItems['brutto'];
+		$pbD['netto'] 	= $priceItems['netto'];
+		$pbD['tax'] 	= $priceItems['tax'];
+		
+		
 
 		// Brutto If fixed VAT ($taxCalcType  == 2) then we cannot reduce the VAT, so we cannot reduce BRUTTO
 		if ($priceItems['brutto'] < $dB) {
-			$priceItems['bruttodiscount'] 	= 0;
+			$priceItems['bruttodiscount'] 	= $priceItems['brutto'];
 			$priceItems['brutto']			= 0;
 		} else {
 			$priceItems['bruttodiscount'] 	= $taxCalcType == 2 ? $dN : $dB;
@@ -69,7 +87,7 @@ class PhocacartCalculation
 		
 		// Netto
 		if ($priceItems['netto'] < $dN) {
-			$priceItems['nettodiscount'] 	= 0;
+			$priceItems['nettodiscount'] 	= $priceItems['netto'];
 			$priceItems['netto'] 			= 0;
 		} else {
 			$priceItems['nettodiscount'] 	= $dN;
@@ -78,39 +96,63 @@ class PhocacartCalculation
 		
 		// Tax
 		if ($priceItems['tax'] < $dT) {
-			$priceItems['taxdiscount'] 		= 0;
+			$priceItems['taxdiscount'] 		= $priceItems['tax'];
+			
 			$priceItems['tax'] 				= 0;
 		} else {
 			$priceItems['taxdiscount'] 		= $taxCalcType == 2 ? 0 : $dT;
 			$priceItems['tax'] 				-= $priceItems['taxdiscount'];
+			
 		}
 		
 		
 		
 		if (!empty($total)) {
 
-			// Brutto
-			if ($priceItems['brutto'] < $dB) {
-				$total['brutto']		-= $taxCalcType == 2 ? $dN * $quantity : $priceItems['brutto'] * $quantity;
+			
+			// Possible TO DO - add different condition for netto and brutto
+			/*
+			 * if ($taxCalcType == 2) {
+				if ($pbD['netto'] < $dB) {
 			} else {
-				$total['brutto']		-= $taxCalcType == 2 ? $dN * $quantity : $dB * $quantity;
+				if ($pbD['brutto'] < $dB) {	
+			}
+			*/
+			
+			// Brutto
+			if ($pbD['brutto'] < $dB) {
+				$total['brutto']				-= $taxCalcType == 2 ? $pbD['netto'] * $quantity : $pbD['brutto'] * $quantity;
+				$total['tax'][$taxKey]['brutto']	-= $taxCalcType == 2 ? $pbD['netto'] * $quantity : $pbD['brutto'] * $quantity;
+			} else {
+				$total['brutto']				-= $taxCalcType == 2 ? $dN * $quantity : $dB * $quantity;
+				$total['tax'][$taxKey]['brutto']	-= $taxCalcType == 2 ? $dN * $quantity : $dB * $quantity;
 			}
 			
 			// Netto
-			if ($priceItems['netto'] < $dN) {
-				$total['netto']			-= $priceItems['netto'] * $quantity;
+			if ($pbD['netto'] < $dN) {
+				$total['netto']					-= $pbD['netto'] * $quantity;
+				$total['tax'][$taxKey]['netto']	-= $pbD['netto'] * $quantity;
+				
+				
 			} else {
-				$total['netto']			-= $dN * $quantity;
+				
+				
+				$total['netto']					-= $dN * $quantity;
+				$total['tax'][$taxKey]['netto']	-= $dN * $quantity;
+				
 			}
 			
+		
 			// Tax
-			if ($priceItems['tax'] < $dT) {
-				$total['tax'][$taxId]['tax']	-= $taxCalcType == 2 ? 0 : $priceItems['tax'] * $quantity;
+			if ($pbD['tax'] < $dT) {
+				$total['tax'][$taxKey]['tax']	-= $taxCalcType == 2 ? 0 : $pbD['tax'] * $quantity;
 			} else {
-				$total['tax'][$taxId]['tax']	-= $taxCalcType == 2 ? 0 : $dT * $quantity;
+				$total['tax'][$taxKey]['tax']	-= $taxCalcType == 2 ? 0 : $dT * $quantity;
 			}
 			
 		}
+		
+	
 		
 		return true;
 	}
@@ -131,11 +173,13 @@ class PhocacartCalculation
 		return true;
 	}
 	
-	public static function correctTotalIfNull(&$total, $taxId) {
+	public static function correctTotalIfNull(&$total, $taxKey) {
 		
 		if ($total['netto']	< 0 || $total['netto'] == 0) {
 			$total['brutto'] 				= 0;
-			$total['tax'][$taxId]['tax'] 	= 0;
+			$total['tax'][$taxKey]['tax'] 	= 0;
+			$total['tax'][$taxKey]['netto'] 	= 0;
+			$total['tax'][$taxKey]['brutto'] = 0;
 		}
 		return true;
 	}

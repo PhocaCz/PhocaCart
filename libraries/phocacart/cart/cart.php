@@ -61,6 +61,7 @@ class PhocacartCart
 	protected $instance				= 1; // 1.cart 2.checkout 3.order
 	public function __construct() {
 		
+	
 		$app 			= JFactory::getApplication();
 		$session 		= JFactory::getSession();
 		$dUser			= PhocacartUser::defineUser($this->user, $this->vendor, $this->ticket, $this->unit, $this->section);
@@ -89,13 +90,15 @@ class PhocacartCart
 		$this->minmultipleqty['valid']		= 1;// check minimum multiple order quantity
 		
 
+
 		
 		// Admin info - Administrator asks for information about user's cart
 		if ($app->getName() == 'administrator') {
 			$id				= $app->input->get('id', 0, 'int');
 			$cartDb 		= PhocacartCartDb::getCartDb($id);
 			$this->items	= $cartDb['cart'];
-			return;
+			return;	
+
 		}
 		
 		// POS
@@ -115,6 +118,7 @@ class PhocacartCart
 			$this->reward['used']		= $cartDb['reward'];
 			$this->loyalty_card_number	= $cartDb['loyalty_card_number'];
 			
+
 			// Don't care about session (use in session is customer, user in pos in db is vendor)
 			
 			
@@ -127,7 +131,7 @@ class PhocacartCart
 			// 4. Remove them from SESSION as they are stored in DATABASE
 			$cartDb = PhocacartCartDb::getCartDb((int)$this->user->id);// user logged in - try to get cart from db
 			$this->items 				= $cartDb['cart'];
-		
+	
 			$this->coupon['id']			= $cartDb['coupon'];
 			$this->coupon['title']		= $cartDb['coupontitle'];
 			$this->coupon['code']		= $cartDb['couponcode'];
@@ -138,6 +142,9 @@ class PhocacartCart
 			$this->reward['used']		= $cartDb['reward'];
 			$this->loyalty_card_number	= $cartDb['loyalty_card_number'];
 			$sessionItems = $session->get('cart', array(), 'phocaCart');
+			
+			
+		
 
 			if(empty($this->items)) {
 				$this->items	= $session->get('cart', array(), 'phocaCart');
@@ -252,6 +259,7 @@ class PhocacartCart
 				}
 			}
 			$k .= ':';*/
+			
 			$k = PhocacartProduct::getProductKey($id, $attributes);
 			
 			
@@ -491,10 +499,11 @@ class PhocacartCart
 
 											
 											
-										
+						
 				// --------------------
 				// 5) Reward Points
 				// --------------------
+			
 				$calc->calculateRewardDiscounts($this->fullitems[5], $this->fullitemsgroup[5], $this->total[5], $this->reward);
 				
 				
@@ -512,7 +521,7 @@ class PhocacartCart
 				$this->total[5]['dbrutto']	= $this->total[1]['brutto'] - $this->total[5]['brutto'];
 		
 		
-		
+	
 		
 				// --------------------
 				// 2) Product Discount
@@ -521,22 +530,18 @@ class PhocacartCart
 				
 				//$calc->round($this->total[2]);
 				
-				$this->fullitems[0] 		= $this->fullitems[4]		= $this->fullitems[3] 		= $this->fullitems[2];				
-				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4]	= $this->fullitemsgroup[3] 	= $this->fullitemsgroup[2];
-				$this->total[0] 			= $this->total[4]			= $this->total[3] 			= $this->total[2];
-
-				// Reset variables (after copying we need to clear some of them)
-				
-				
+				$this->fullitems[0] 		= $this->fullitems[4]		= $this->fullitems[3] 		= $this->fullitems[2];
+	
 				// Subtotal after 2) Discount
 				$this->total[2]['dnetto']	= $this->total[5]['netto'] - $this->total[2]['netto'];
 				$this->total[2]['dbrutto']	= $this->total[5]['brutto'] - $this->total[2]['brutto'];
 				
-				
+					
 				
 				// --------------------
 				// 3) Cart Discount
 				// --------------------
+			
 				$calc->calculateCartDiscounts($this->fullitems[3], $this->fullitemsgroup[3], $this->total[3], $this->cartdiscount);
 				
 				// 3b) Cart Discount - we need to divide fixed amount discount into products which meets the rules to get each discount
@@ -544,24 +549,25 @@ class PhocacartCart
 					$calc->recalculateCartDiscounts($this->fullitems[3], $this->fullitemsgroup[3], $this->total[3]);
 				}
 
-				//$calc->round($this->total[3]);
-				
-				// Subtotal after 3) Discount
-				$this->total[3]['dnetto']	= $this->total[2]['netto'] - $this->total[3]['netto'];
-				$this->total[3]['dbrutto']	= $this->total[2]['brutto'] - $this->total[3]['brutto'];
-				
-				$calc->roundFixedAmountDiscount($this->total[3]);
-				
 				$this->fullitems[0] 		= $this->fullitems[4] 		= $this->fullitems[3];
 				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4] 	= $this->fullitemsgroup[3];
 				$this->total[0] 			= $this->total[4]			= $this->total[3];
 				
 				
 				
+	
+				
+				// Subtotal after 3) Discount
+				$this->total[3]['dnetto']	= $this->total[2]['netto'] - $this->total[3]['netto'];
+				$this->total[3]['dbrutto']	= $this->total[2]['brutto'] - $this->total[3]['brutto'];
+				
+				$calc->roundFixedAmountDiscount($this->total[3]);// Last because now we know the dnetto
+				
+				
 				// --------------------
 				// 4) Cart Coupon
 				// --------------------
-					
+		
 				$calc->calculateCartCoupons($this->fullitems[4], $this->fullitemsgroup[4], $this->total[4], $this->coupon);
 				
 				// 4b) Cart Coupon - we need to divide fixed amount coupon into products which meets the rules to get each coupon
@@ -569,29 +575,25 @@ class PhocacartCart
 					$calc->recalculateCartCoupons($this->fullitems[4], $this->fullitemsgroup[4], $this->total[4]);
 				}
 
-				
-				//$calc->round($this->total[4], 4);
-				
-
+				$this->fullitems[0] 		= $this->fullitems[4];
+				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4];
+				$this->total[0] 			= $this->total[4];
 				
 				// Subtotal after 4) Coupon
 				$this->total[4]['dnetto']	= $this->total[3]['netto'] - $this->total[4]['netto'];
 				$this->total[4]['dbrutto']	= $this->total[3]['brutto'] - $this->total[4]['brutto'];
 				
 				$calc->roundFixedAmountCoupon($this->total[4]);
-				
-				
-				$this->fullitems[0] 		= $this->fullitems[4];
-				$this->fullitemsgroup[0] 	= $this->fullitemsgroup[4];
-				$this->total[0] 			= $this->total[4];
-				
-				
-				//$calc->round($this->total[0], 0);
-				$calc->roundFixedAmountCoupon($this->total[4]);
 
 				
 				
+				//Subtotal after all discounts
+				$this->total[0]['wdnetto'] = $this->total[1]['netto'] - $this->total[5]['dnetto'] - $this->total[2]['dnetto'] - $this->total[3]['dnetto'] - $this->total[4]['dnetto'];
+				//$this->total[0]['subtotalafterdiscounts'] = $this->total[0]['netto'] - $this->total[5]['dnetto'] - $this->total[2]['dnetto'] - $this->total[3]['dnetto'] - $this->total[4]['dnetto'];
 				
+				
+				//$calc->taxRecapitulation($this->total[0]);
+			
 				/*foreach($this->fullitems[0] as $k => $v) {
 					$item 	= explode(':', $k);
 					$attribs = unserialize(base64_decode($item[1]));
@@ -608,73 +610,53 @@ class PhocacartCart
 		}
 	}
 	
+	/**
+	 * This is a final cart function
+	 * It is called roundTotalAmount() because of backward compatibility
+	 * but is the place to do last checks in cart
+	 * 
+	 */
+	
 	public function roundTotalAmount() {
 		
-		$price		= new PhocacartPrice();
-		$calc 		= new PhocacartCartCalculation();
+		
+		$calc 						= new PhocacartCartCalculation();
 		$calc->setType($this->type);
-		$currency 	= PhocacartCurrency::getCurrency();
-		$cr			= $currency->exchange_rate;
-		$total 		= 0; // total in default currency
-		$totalC		= 0; // total in order currency
+		$this->shipping['costs'] 	= isset($this->shipping['costs']) ? $this->shipping['costs'] : 0;
+		$this->payment['costs'] 	= isset($this->payment['costs']) ? $this->payment['costs'] : 0;
 		
 	
-		
-		// Subtotal
-		if (isset($this->total[1]['netto'])) {
-			$total += $price->roundPrice($this->total[1]['netto']);
-			$totalC += $price->roundPrice($this->total[1]['netto'] * $cr);
-			
-		}
-		
-		// - Reward points
-		if (isset($this->total[5]['dnetto'])) {
-			$total -= $price->roundPrice($this->total[5]['dnetto']);
-			$totalC -= $price->roundPrice($this->total[5]['dnetto'] * $cr);
-			
-		}
-		
-		// - Product Discount
-		if (isset($this->total[2]['dnetto'])) {
-			$total -= $price->roundPrice($this->total[2]['dnetto']);
-			$totalC -= $price->roundPrice($this->total[2]['dnetto'] * $cr);
-			
-		}
-		
-		// - Discount cart
-		if (isset($this->total[3]['dnetto'])) {
-			$total -= $price->roundPrice($this->total[3]['dnetto']);
-			$totalC -= $price->roundPrice($this->total[3]['dnetto'] * $cr);
-		}
-		
-		// - Coupon cart
-		if (isset($this->total[4]['dnetto'])) {
-			$total -= $price->roundPrice($this->total[4]['dnetto']);
-			$totalC -= $price->roundPrice($this->total[4]['dnetto'] * $cr);
-		}
-		
-		// + VAT
-		if (!empty($this->total[0]['tax'])) {
-			foreach ($this->total[0]['tax'] as $k => $v) {
-				$total += $price->roundPrice($v['tax']);
-				$totalC += $price->roundPrice($v['tax'] * $cr);
-			}
-		}
-		
-		// + Shipping Costs
-		if (isset($this->shipping['costs']['brutto'])) {
-			$total += $price->roundPrice($this->shipping['costs']['brutto']);
-			$totalC += $price->roundPrice($this->shipping['costs']['brutto'] * $cr);
-		}
-		
-		// + Payment Costs
-		if (isset($this->payment['costs']['brutto'])) {
-			$total += $price->roundPrice($this->payment['costs']['brutto']);
-			$totalC += $price->roundPrice($this->payment['costs']['brutto'] * $cr);
-		}
+		// 1) CORRECT TOTAL ITEMS (Rounding), CORRECT CURRENCY TOTAL ITEMS (Rounding for each item)
+		$calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs']);
+		// 2) MAKE TAX RECAPITULATION and correct total by tax recapitulation if asked
+		$calc->taxRecapitulation($this->total[0], $this->shipping['costs'], $this->payment['costs']);	
+		// 3) CORRECT TOTAL ITEMS (Rounding), CORRECT CURRENCY TOTAL ITEMS (Rounding for each item) - AGAIN WHEN TOTAL CHANGED BY TAX RECAPITULATION
+		$options = array();
+	
+		$options['brutto_currency_set'] = 1; // Brutto currency exists yet, so don't create it again from "brutto * currencyRating"
+		$calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs'], $options);
+		// 4) ROUND TOTAL AMOUNT IF ASKED (e.g. 95.67 => 96)
 		
 	
-		$calc->roundTotalAmount($this->total[0], $total, $totalC);
+		$calc->roundTotalAmount($this->total[0]);
+
+
+		
+		// ROUNDING VS: TRCROUNDING
+		//          	NETTO		(Payment,Shipping incl. Tax)	Rounding	Brutto
+		// Rounding TC:	1370.79 + 	25.94 + 						0.14 = 		1396,87
+		// Rounding: 	1370.83 + 	25.94 + 						0.10 = 		1396,87
+		
+		// 0.14 - 0.10 = 0.04
+		//				1370.79 + 0.10 + 0.04 + 25.94 = 1396,87
+	}
+	
+	public function getTaxRecapitulation() {
+		
+		if(!empty($this->total[0]['taxrecapitulation'])) {
+			return $this->total[0]['taxrecapitulation'];
+		}
+		return false;
 	}
 	
 	public function getTotal() {
@@ -710,6 +692,7 @@ class PhocacartCart
 	
 	public function getPaymentMethod() {
 		
+	
 		$payment = array();
 		$payment['title'] 	= $this->payment['title'];
 		$payment['method'] 	= $this->payment['method'];
@@ -733,10 +716,14 @@ class PhocacartCart
 	
 	public function getShippingMethod() {
 		
+		
+		
 		$shipping = array();
 		$shipping['title'] 	= $this->shipping['title'];
 		$shipping['method'] = $this->shipping['method'];
 		$shipping['id']		= $this->shipping['id'];
+		
+		
 		
 		// E.g. guest checkout
 		if (isset($shipping['id']) && (int)$shipping['id'] > 0 && $shipping['title'] == '' && $shipping['method'] == '') {
@@ -785,11 +772,11 @@ class PhocacartCart
 	
 	public function getShippingCosts() {
 		
-		return $this->shipping['costs'];
+		return isset($this->shipping['costs']) ? $this->shipping['costs'] : false;
 	}
 	
 	public function getPaymentCosts() {
-		return $this->payment['costs'];
+		return isset($this->payment['costs']) ? $this->payment['costs'] : false;
 	}
 	
 	public function getStockValid() {
@@ -858,13 +845,27 @@ class PhocacartCart
 	
 	public function addShippingCosts($shippingId = 0) {
 		
+		
+	
+		//$app = JFactory::getApplication();
 		if ($shippingId == 0) {
 			$shippingId = $this->shipping['id'];
 		}
 
 		$shipping	= new PhocacartShipping();
+	
 		$shipping->setType($this->type);
 		$sI	= $shipping->getShippingMethod((int)$shippingId);
+		
+	
+		$shippingValid 	= $shipping->checkAndGetShippingMethodInsideCart((int)$shippingId, $this->total[0]);
+		if (!$shippingValid) {
+			PhocacartShipping::removeShipping();// In case user has in cart shipping method which does not exists
+			PhocacartPayment::removePayment();// It does not remove payment immediately (but after reload) or when ordering (order tests the conditions)
+			//$app->enqueueMessage(JText::_('COM_PHOCACART_NO_SHIPPING_METHOD_FOUND'));
+			unset($sI);
+		}
+		
 
 		if(!empty($sI)) {
 			
@@ -883,10 +884,13 @@ class PhocacartCart
 			$this->shipping['costs'] 	= $priceI;
 			
 			if ($this->total[0]['free_shipping'] != 1) {
+				
+				$this->shipping['costs']['id'] 		= $sI->id;
 				$this->shipping['costs']['title'] 		= $sI->title;
 				$this->shipping['costs']['description'] = $sI->description;
 				$this->shipping['costs']['image'] 		= $sI->image;
 			}
+			
 			$calc->calculateShipping($priceI, $this->total[0]);
 			//$calc->round($this->total[0], 0);
 			
@@ -895,6 +899,7 @@ class PhocacartCart
 	
 	public function addPaymentCosts($paymentId = 0) {
 		
+		
 		if ($paymentId == 0) {
 			$paymentId = $this->payment['id'];
 		}
@@ -902,6 +907,20 @@ class PhocacartCart
 		$payment	= new PhocacartPayment();
 		$payment->setType($this->type);
 		$pI	= $payment->getPaymentMethod((int)$paymentId);
+		
+		$shippingId		= 0;
+		if (isset($this->shipping['id']) && (int)$this->shipping['id'] > 0) {
+			$shippingId		= $this->shipping['id'];
+		} else if (isset($this->shipping['costs']['id']) && (int)$this->shipping['costs']['id'] > 0) {
+			$shippingId		= $this->shipping['costs']['id'];
+		}
+	
+		$paymentValid 	= $payment->checkAndGetPaymentMethodInsideCart((int)$paymentId, $this->total[0], $shippingId);
+		
+		if (!$paymentValid) {
+			PhocacartPayment::removePayment();// In case user has in cart payment method which does not exists
+			unset($pI);
+		}
 
 		if(!empty($pI)) {
 			
@@ -921,6 +940,7 @@ class PhocacartCart
 			$this->payment['costs'] 	= $priceI;
 			
 			if (!isset($this->total[0]['free_payment']) || (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] != 1)) {
+				$this->payment['costs']['id'] 			= $pI->id;
 				$this->payment['costs']['title'] 		= $pI->title;
 				$this->payment['costs']['description'] 	= $pI->description;
 				$this->payment['costs']['image'] 		= $pI->image;

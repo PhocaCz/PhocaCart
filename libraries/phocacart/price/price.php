@@ -83,6 +83,7 @@ class PhocacartPrice
 			$this->price_prefix			= self::$currency[$key]->price_prefix;
 			$this->price_suffix			= self::$currency[$key]->price_suffix;
 			$this->exchange_rate		= self::$currency[$key]->exchange_rate;
+			$this->currency_id			= self::$currency[$key]->id;
 		}
 
 	}
@@ -92,9 +93,13 @@ class PhocacartPrice
 	 * 2) or we can force the negative - e.g. for discount
 	 */
 	
-	public function getPriceFormat($price, $negative = 0, $skipCurrencyConverting = 0) {
+	public function getPriceFormat($price, $negative = 0, $skipCurrencyConverting = 0, $forceCurrency = 0) {
 	
-		
+		$currentCurrency = $this->currency_id;
+	
+		if ((int)$forceCurrency > 0) {
+			$this->setCurrency((int)$forceCurrency);
+		}
 		
 		if ($price < 0) {
 			$negative = 1;
@@ -106,10 +111,12 @@ class PhocacartPrice
 			$negative = 0;
 		}
 		
-	
+		if ($price == '') {
+			$price = 0;
+		}
 		
 		
-		if ($skipCurrencyConverting == 0) {
+		if ($skipCurrencyConverting == 0) {	
 			$price *= $this->exchange_rate;
 		}
 		
@@ -143,12 +150,20 @@ class PhocacartPrice
 			break;
 		}
 		
+		
+		$o = '';
 		if ($negative) {
 			
-			return '- ' . $this->price_prefix . $price . $this->price_suffix;
+			$o = '- ' . $this->price_prefix . $price . $this->price_suffix;
 		} else {
-			return $this->price_prefix . $price . $this->price_suffix;
+			$o =  $this->price_prefix . $price . $this->price_suffix;
 		}
+		
+		if ((int)$forceCurrency > 0) {
+			$this->setCurrency((int)$currentCurrency);
+		}
+		
+		return $o;
 		
 	}
 	
@@ -215,6 +230,10 @@ class PhocacartPrice
 		$priceO['taxcalctype'] 		= $taxCalculationType;// Set in Tax edit: Percentate, Fixed Amount
 		$priceO['zero']				= 0;
 		
+		$priceO['taxcountryid']		= $taxChangedA['taxcountryid'];
+		$priceO['taxregionid']		= $taxChangedA['taxregionid'];
+		$priceO['taxkey']			= PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
+		
 		// NO TAX
 		if ($tax_calculation == 0) {
 			$priceO['netto']		= $price;
@@ -255,6 +274,8 @@ class PhocacartPrice
 				$priceO['tax']		= $priceO['brutto'] - ($priceO['brutto'] / (($tax / 100) + 1));
 				if ($round == 1) 	{ $priceO['tax'] = $this->roundPrice($priceO['tax']);}
 				$priceO['netto']	= $priceO['brutto'] - $priceO['tax'];
+				
+			
 				//$priceO['netto']	= $priceO['brutto'] * 100 / ($tax + 100);
 				//$priceO['tax']	= $priceO['brutto'] - $priceO['netto'];
 				//$coefficient		= $tax / ($tax + 100);
@@ -423,6 +444,9 @@ class PhocacartPrice
 		$priceO['zero']				= 0;
 		$priceO['freeshipping'] 	= 0;
 		
+		$priceO['taxtype'] 			= $taxCalculationType;
+		$priceO['taxrate'] 			= $tax;
+		
 		//$app						= JFactory::getApplication();
 		//$paramsC 					= PhocacartUtils::getComponentParameters();
 		$paramsC 					= PhocacartUtils::getComponentParameters();
@@ -437,6 +461,7 @@ class PhocacartPrice
 			$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_FREE_SHIPPING');
 			$priceO['tax']				= 0;
 			$priceO['taxid']			= 0;
+			$priceO['taxkey']			= '';
 			$priceO['brutto'] 			= 0;
 			$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_FREE_SHIPPING');
 			$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
@@ -455,6 +480,7 @@ class PhocacartPrice
 			$priceO['netto']		= $price;
 			$priceO['tax']			= 0;
 			$priceO['taxid']		= 0;
+			$priceO['taxkey']		= '';
 			$priceO['brutto'] 		= $price;
 			
 		
@@ -474,6 +500,7 @@ class PhocacartPrice
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');
 			$priceO['taxid']		= $taxId;
+			$priceO['taxkey']		= PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
 	
 		// INCLUSIVE TAX
 		} else if ($tax_calculation_shipping == 2) {
@@ -492,6 +519,7 @@ class PhocacartPrice
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');	
 			$priceO['taxid']		= $taxId;
+			$priceO['taxkey']		= PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
 		}
 		
 		
@@ -583,12 +611,15 @@ class PhocacartPrice
 		$priceO['netto']			= 0;
 		$priceO['tax']				= 0;
 		$priceO['taxid']			= 0;
+		$priceO['taxkey']			= '';
 		$priceO['brutto']			= 0;
 		$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');
 		$priceO['taxtxt']			= '';
 		$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
 		$priceO['zero']				= 0;
 		$priceO['freepayment'] 		= 0;
+		$priceO['taxtype'] 			= $taxCalculationType;
+		$priceO['taxrate'] 			= $tax;
 
 		
 		// E.G. if coupon set the shipping costs to null - free shipping
@@ -597,6 +628,7 @@ class PhocacartPrice
 			$priceO['nettotxt'] 		= JText::_('COM_PHOCACART_FREE_PAYMENT');
 			$priceO['tax']				= 0;
 			$priceO['taxid']			= 0;
+			$priceO['taxkey']			= '';
 			$priceO['brutto'] 			= 0;
 			$priceO['bruttotxt'] 		= JText::_('COM_PHOCACART_FREE_PAYMENT');
 			$priceO['bruttoformat'] 	= $this->getPriceFormat($priceO['brutto']);
@@ -615,6 +647,7 @@ class PhocacartPrice
 			$priceO['netto']		= $price;
 			$priceO['tax']			= 0;
 			$priceO['taxid']		= 0;
+			$priceO['taxkey']		= '';
 			$priceO['brutto'] 		= $price;
 			
 		
@@ -634,7 +667,8 @@ class PhocacartPrice
 			}
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');	
-			$priceO['taxid']		= $taxId;			
+			$priceO['taxid']		= $taxId;
+			$priceO['taxkey']		= PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
 	
 		// INCLUSIVE TAX
 		} else if ($tax_calculation_payment == 2) {
@@ -652,6 +686,7 @@ class PhocacartPrice
 			$priceO['bruttotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_INCL_TAX');
 			$priceO['nettotxt'] 	= JText::_('COM_PHOCACART_'.$langPrefix.'PRICE_EXCL_TAX');	
 			$priceO['taxid']		= $taxId;
+			$priceO['taxkey']		= PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
 		}
 		
 		

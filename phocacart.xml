@@ -2,12 +2,12 @@
 <extension method="upgrade" type="component" version="3">
 	<name>Phoca Cart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>13/11/2018</creationDate>
+	<creationDate>06/01/2019</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.1.5</version>
+	<version>3.1.6</version>
 	<description>Phoca Cart</description>
 	<scriptfile>install/script.php</scriptfile>
 

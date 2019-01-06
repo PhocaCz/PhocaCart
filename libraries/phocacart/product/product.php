@@ -89,9 +89,11 @@ class PhocacartProduct
 		
 		// Change TAX based on country or region
 		if (!empty($product)) {
-			$taxChangedA = PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalculationtype, $product->taxtitle);
-			$product->taxrate 	= $taxChangedA['taxrate'];
-			$product->taxtitle	= $taxChangedA['taxtitle'];
+			$taxChangedA 			= PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalculationtype, $product->taxtitle);
+			$product->taxrate 		= $taxChangedA['taxrate'];
+			$product->taxtitle		= $taxChangedA['taxtitle'];
+			$product->taxcountryid	= $taxChangedA['taxcountryid'];
+			$product->taxregionid	= $taxChangedA['taxregionid'];
 		}
 
 		return $product;
@@ -468,10 +470,17 @@ class PhocacartProduct
 			$wheres[]	= 'ah.user_id > 0';
 		}
 		
-		$columns		= 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle,'
+		/*
+		 * type_feed - specific type of products used in XML feed (for example by Google products: g:product_type)
+		 * type_category_feed - specific type of product category used in XML feed (for example by Google products: g:google_product_category) 
+		 *                    - overrides category type_feed (type feed in category table)
+		 * type - digital (downloadable) product or physical product
+		 */
+		
+		$columns		= 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle, a.condition, a.points_received, a.points_needed, a.delivery_date, a.type, a.type_feed, type_category_feed,'
 		. ' AVG(r.rating) AS rating,'
 		. ' at.required AS attribute_required';
-		$groupsFull		= 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required';
+		$groupsFull		= 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, c.type_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required, a.condition, a.points_receiieved, a.points_needed, a.delivery_date, a.type, a.type_feed, type_category_feed';
 		$groupsFast		= 'a.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 		
@@ -485,6 +494,10 @@ class PhocacartProduct
 			$q .= ', GROUP_CONCAT(c.id, ":", c.alias SEPARATOR "|") AS categories';
 		} else if ($categoriesList == 4) {
 			$q .= ', GROUP_CONCAT(c.id, ":", c.title SEPARATOR "|") AS categories';
+		} else if ($categoriesList == 5) {
+			// add to 2 type_category_feed - used in XML FEED
+			$q .= ', GROUP_CONCAT(c.title SEPARATOR "|") AS categories';
+			$q .= ', GROUP_CONCAT(c.type_feed SEPARATOR "|") AS feedcategories';
 		}
 		
 		// Possible DISTINCT

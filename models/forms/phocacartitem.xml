@@ -118,6 +118,18 @@
 
 <field name="points_received" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_POINTS_RECEIVED_DESC" />
 
+<field name="condition" type="list" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC" class="inputbox" size="1" default="0">
+	<option value="0">COM_PHOCACART_CONDITION_NEW</option>
+	<option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
+	<option value="2">COM_PHOCACART_CONDITION_USED</option>
+</field>
+
+<field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_DESC" class="inputbox" rows="3" cols="30" />
+
+<field name="type_category_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_DESC" class="inputbox" rows="3" cols="30" />
+
+<field name="delivery_date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC" filter="JComponentHelper::filterText" showtime="true" format="%Y-%m-%d %H:%M:%S" />
+
 
 <field name="metatitle" type="text"
 			label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"

@@ -282,6 +282,23 @@ class PhocacartOrderView
 		return $items;
 	}
 	
+	public function getItemTaxRecapitulation($orderId, $type = '') {
+		
+		$db = JFactory::getDBO();
+		$q = ' SELECT t.*, o.currency_id AS currency_id, o.currency_exchange_rate AS currency_exchange_rate'
+			.' FROM #__phocacart_orders AS o'
+			.' LEFT JOIN #__phocacart_order_tax_recapitulation AS t ON o.id = t.order_id'
+			.' WHERE o.id = '.(int)$orderId;
+	
+		if ($type != '') {
+			$q.= ' AND t.type = '.$db->quote($type);
+		}	
+		$q.= ' ORDER BY t.ordering';
+		$db->setQuery($q);
+		$items = $db->loadObjectList();
+		return $items;
+	}
+	
 	
 	// Tracking
 	public static function getTrackingLink($common) {

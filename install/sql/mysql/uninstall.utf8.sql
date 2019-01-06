@@ -62,6 +62,7 @@ DROP TABLE IF EXISTS `#__phocacart_order_products`;
 DROP TABLE IF EXISTS `#__phocacart_order_attributes`;
 DROP TABLE IF EXISTS `#__phocacart_order_coupons`;
 DROP TABLE IF EXISTS `#__phocacart_order_total`;
+DROP TABLE IF EXISTS `#__phocacart_order_tax_recapitulation`;
 DROP TABLE IF EXISTS `#__phocacart_order_history`;
 DROP TABLE IF EXISTS `#__phocacart_order_downloads`;
 DROP TABLE IF EXISTS `#__phocacart_order_discounts`;

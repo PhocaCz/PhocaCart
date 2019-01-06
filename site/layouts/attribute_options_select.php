@@ -13,6 +13,7 @@ $v 					= $d['attribute'];
 $attributeIdName	= 'V'.$d['typeview'].'P'.(int)$d['product_id'].'A'.(int)$v->id;
 $productIdName		= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
 $iconType			= PhocacartRenderIcon::getIconType();
+$price				= new PhocacartPrice();
 
 $attr				= array();
 $attr[]				= 'id="phItemAttribute'.$attributeIdName.'"';// ID
@@ -75,7 +76,7 @@ foreach ($v->options as $k2 => $v2) {
 	}
 	
 	$suffix =  ' ('.$operator.' '.$amount.')';
-	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $v2->amount < 0.01 && $v2->amount > -0.01) {
+	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $price->roundPrice($v2->amount) < 0.01 && $price->roundPrice($v2->amount) > -0.01) {
 		$suffix = '';
 	}	
 	

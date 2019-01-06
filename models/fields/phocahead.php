@@ -31,11 +31,11 @@ class JFormFieldPhocaHead extends JFormField
 		
 		if ($this->element['default']) {
 			if ($image != '') {
-				return '<div class="ph-options-head">'
+				return '<div class="tab-header ph-options-head">'
 				.'<div>'. $image.' <strong>'. JText::_($this->element['default']) . '</strong></div>'
 				.'</div>';
 			} else {
-				return '<div class="ph-options-head">'
+				return '<div class="tab-header ph-options-head">'
 				.'<strong>'. JText::_($this->element['default']) . '</strong>'
 				.'</div>';
 			}

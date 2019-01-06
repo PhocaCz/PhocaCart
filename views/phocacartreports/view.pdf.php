@@ -14,7 +14,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 
 	protected $state;
 	protected $t;
-	
+	protected $params;	
 	protected $items 	= array();
 	protected $total	= array();
 	

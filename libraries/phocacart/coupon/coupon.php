@@ -451,9 +451,9 @@ class PhocacartCoupon
 			$db =JFactory::getDBO();
 			$query = ' SELECT coupon_id, user_id FROM #__phocacart_coupon_count_user WHERE coupon_id = '. (int)$couponId .' AND user_id = '.(int)$userId.' ORDER BY coupon_id LIMIT 1';
 			$db->setQuery($query);
-			$idExists = $db->loadResult();
-			
-			if ((int)$idExists['coupon_id'] > 0 && (int)$idExists['user_id'] > 0) {
+			$idExists = $db->loadAssoc();
+		
+			if (isset($idExists['coupon_id']) && isset($idExists['user_id']) && (int)$idExists['coupon_id'] > 0 && (int)$idExists['user_id'] > 0) {
 									
 				$query = 'UPDATE #__phocacart_coupon_count_user SET count = count + 1 WHERE coupon_id = '.(int)$idExists['coupon_id'] . ' AND user_id = '.(int)$idExists['user_id'];
 				$db->setQuery($query);

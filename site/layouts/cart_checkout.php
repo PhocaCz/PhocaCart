@@ -242,7 +242,7 @@ if (!empty($d['fullitems'][1])) {
 					$rewardTax 		= $price->getPriceFormat($d['fullitems'][5][$k]['taxdiscount'] * $v['quantity'], 1);
 					$rewardFinal 	= $price->getPriceFormat($d['fullitems'][5][$k]['finaldiscount'], 1);
 				}
-				
+		
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
 				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.' '.$d['fullitems'][5][$k]['rewardproducttxtsuffix'].'</div>';
@@ -253,13 +253,13 @@ if (!empty($d['fullitems'][1])) {
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
 					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$rewardTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$rewardNetto.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$rewardFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 			
 			// PRODUCT DISCOUNT
 			
-			if($d['fullitems'][2][$k]['discountproduct'] && $p['display_discount_price_product'] > 0) {
+			if($d['fullitems'][2][$k]['discountproduct'] && (($p['display_discount_price_product'] == 1 && $d['fullitems'][2][$k]['netto'] > 0) || $p['display_discount_price_product'] == 2)) {
 				
 				$discountTitle = JText::_('COM_PHOCACART_PRODUCT_DISCOUNT_PRICE');
 				if (isset($d['fullitems'][2][$k]['discountproducttitle']) && $d['fullitems'][2][$k]['discountproducttitle'] != '') {
@@ -269,6 +269,7 @@ if (!empty($d['fullitems'][1])) {
 				$productNetto 	= $price->getPriceFormat($d['fullitems'][2][$k]['netto']);
 				$productTax 	= $price->getPriceFormat($d['fullitems'][2][$k]['tax'] * $v['quantity']);
 				$productFinal 	= $price->getPriceFormat($d['fullitems'][2][$k]['final']);
+				
 				
 				if ($p['display_discount_price_product'] == 2 && isset($d['fullitems'][2][$k]['finaldiscount'])) {
 					$productNetto 	= $price->getPriceFormat($d['fullitems'][2][$k]['nettodiscount'], 1);
@@ -291,7 +292,7 @@ if (!empty($d['fullitems'][1])) {
 			}
 			
 			// CART DISCOUNT
-			if($d['fullitems'][3][$k]['discountcart'] && $p['display_discount_price_product'] > 0) {
+			if($d['fullitems'][3][$k]['discountcart'] && (($p['display_discount_price_product'] == 1 && $d['fullitems'][3][$k]['netto'] > 0) || $p['display_discount_price_product'] == 1)) {
 				
 				$discountTitle = JText::_('COM_PHOCACART_CART_DISCOUNT_PRICE');
 				if (isset($d['fullitems'][3][$k]['discountcarttitle']) && $d['fullitems'][3][$k]['discountcarttitle'] != '') {
@@ -307,7 +308,7 @@ if (!empty($d['fullitems'][1])) {
 					$cartTax 	= $price->getPriceFormat($d['fullitems'][3][$k]['taxdiscount'] * $v['quantity'], 1);
 					$cartFinal 	= $price->getPriceFormat($d['fullitems'][3][$k]['finaldiscount'], 1);
 				}
-				
+			
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
 				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.'</div>';
@@ -417,6 +418,7 @@ if (!empty($d['fullitems'][1])) {
 	}
 	
 	// PRODUCT DISCOUNT
+	
 	if ($d['total'][2]['dnetto']) {
 		echo '<div class="'.$r.' ph-cart-product-discount-box">';
 		echo '<div class="'.$cTotE.'"></div>';
@@ -448,7 +450,18 @@ if (!empty($d['fullitems'][1])) {
 		echo '</div>';// end row
 	}
 	
-	
+
+	/*
+	// SUBTOTAL AFTER DISCOUNTS
+	if ($d['total'][0]['wdnetto']) {
+
+		echo '<div class="'.$r.' ph-cart-subtotal-box">';
+		echo '<div class="'.$cTotE.'"></div>';
+		echo '<div class="'.$cTotT.' ph-cart-subtotal-netto-txt">'.JText::_('COM_PHOCACART_SUBTOTAL_AFTER_DISCOUNTS').'</div>';
+		echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($d['total'][0]['wdnetto']).'</div>';
+		echo '</div>';// end row
+	}
+	*/
 
 	// TAX
 	if (!empty($d['total'][0]['tax'])) {
@@ -574,14 +587,15 @@ if (!empty($d['fullitems'][1])) {
 	
 	
 	// ROUNDING | ROUNDING CURRENCY
-	if ($d['total'][0]['rounding_currency'] != 0) {
+	
+	if ($d['total'][0]['rounding_currency'] !== 0) {
 		
 		echo '<div class="'.$r.' ph-cart-currency-box">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-rounding-currency-txt">'.JText::_('COM_PHOCACART_ROUNDING_CURRENCY').'</div>';
 		echo '<div class="'.$cTotB.' ph-right ph-cart-rounding-currency">'.$price->getPriceFormat($d['total'][0]['rounding_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
-	} else if ($d['total'][0]['rounding'] != 0) {
+	} else if ($d['total'][0]['rounding'] !== 0) {
 		
 		echo '<div class="'.$r.' ph-cart-currency-box">';
 		echo '<div class="'.$cTotE.'"></div>';
@@ -591,19 +605,62 @@ if (!empty($d['fullitems'][1])) {
 	}
 
 	// BRUTTO (Because of rounding currency we need to display brutto in currency which is set)
+	//if (!($price->roundPrice($d['total'][0]['brutto_currency']) > -0.01 && $price->roundPrice($d['total'][0]['brutto_currency'] < 0.01)) == 1) {
 	if ($d['total'][0]['brutto_currency'] !== 0) {
 		echo '<div class="'.$r.' ph-cart-currency-box">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-brutto-currency-txt">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-cart-total ph-right ph-cart-brutto-currency">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
+	//} else if (!($price->roundPrice($d['total'][0]['brutto']) > -0.01 && $price->roundPrice($d['total'][0]['brutto'] < 0.01)) == 1) {
 	} else if ($d['total'][0]['brutto'] !== 0) {
 		echo '<div class="'.$r.' ph-cart-total-box">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-total-txt">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-cart-total ph-right">'.$price->getPriceFormat($d['total'][0]['brutto']).'</div>';
 		echo '</div>';// end row
+		
 	}
+	
+	
+	// Tax Recapitulation Possible part to display TC
+	/*if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
+		
+		echo '<table class="pc-tax-recapitulation">';
+		
+		echo '<tr><th>'.JText::_('COM_PHOCACART_TAX_TITLE').'</th><th>'.JText::_('COM_PHOCACART_TAX_BASIS').'</th><th>'.JText::_('COM_PHOCACART_TAX_TAX').'</th><th>'.JText::_('COM_PHOCACART_TAX_TOTAL').'</th></tr>';
+		
+		/*if ($d['total'][0]['brutto_currency'] !== 0) {
+			
+			foreach($d['total'][0]['taxrecapitulation']['items'] as $k => $v) {
+				echo '<tr><td>'.$v['title'].'</td><td>'.$price->getPriceFormat($v['netto']).'</td><td>'.$price->getPriceFormat($v['tax']).'</td><td>'.$price->getPriceFormat($v['brutto_currency'], 0, 1).' '.'</td></tr>';
+			}
+			if ($d['total'][0]['taxrecapitulation']['rounding_currency'] > 0 && $d['total'][0]['taxrecapitulation']['corrected_currency'] == 1) {
+				echo '<tr><td>'.JText::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).'</td></tr>';
+				echo '<tr><td>'.JText::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</td></tr>';
+			}
+			
+		} else {*//*
+		
+		
+		$b = 0; $c = 0;
+			foreach($d['total'][0]['taxrecapitulation']['items'] as $k => $v) {
+				echo '<tr><td>'.$v['title'].'</td><td>'.$price->getPriceFormat($v['netto']).'</td><td>'.$price->getPriceFormat($v['tax']).'</td><td>'.$price->getPriceFormat($v['brutto']).' '.'</td></tr>';
+				$b += $v['brutto'];
+			}
+			
+			if (!($price->roundPrice($d['total'][0]['taxrecapitulation']['rounding']) > -0.01 && $price->roundPrice($d['total'][0]['taxrecapitulation']['rounding'] < 0.01)) == 1) {
+			
+				echo '<tr><td>'.JText::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).' '.'</td></tr>';
+				///*$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
+				$c = $d['total'][0]['taxrecapitulation']['rounding'];
+			}
+			echo '<tr><td>'.JText::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
+			
+		//}
+		
+		echo '</table>';
+	} */
 	
 	// Possible points received
 	

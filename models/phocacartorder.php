@@ -99,6 +99,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		$aform 	= $app->input->get('aform', array(), 'array');
 		$tform 	= $app->input->get('tform', array(), 'array');
 		$dform 	= $app->input->get('dform', array(), 'array');
+		$tcform	= $app->input->get('tcform', array(), 'array');
 		
 		
 	
@@ -178,6 +179,16 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 				$total = $this->storeOrderTotal($v);
 			}
 		}
+		
+		// Tax Recapitulation
+		if (!empty($tcform)) {
+			foreach ($tcform as $k => $v) {
+				$v['id'] = $k;
+				$tc = $this->storeOrderTaxRecapitulation($v);
+			}
+		}
+		
+		
 		// Main table
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
@@ -280,6 +291,30 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 
 		
 		$d['amount'] 			= PhocacartUtils::replaceCommaWithPoint($d['amount']);
+		
+		if (!$row->bind($d)) {
+			throw new Exception($db->getErrorMsg());
+			return false;
+		}
+		
+		if (!$row->check()) {
+			throw new Exception($row->getError());
+			return false;
+		}
+		
+		if (!$row->store()) {
+			throw new Exception($row->getError());
+			return false;
+		}
+	}
+	
+	public function storeOrderTaxRecapitulation($d) {
+		$row = JTable::getInstance('PhocacartOrderTaxRecapitulation', 'Table', array());
+
+		$d['amount_netto'] 				= PhocacartUtils::replaceCommaWithPoint($d['amount_netto']);
+		$d['amount_tax'] 				= PhocacartUtils::replaceCommaWithPoint($d['amount_tax']);
+		$d['amount_brutto'] 			= PhocacartUtils::replaceCommaWithPoint($d['amount_brutto']);
+		$d['amount_brutto_currency'] 	= PhocacartUtils::replaceCommaWithPoint($d['amount_brutto_currency']);
 		
 		if (!$row->bind($d)) {
 			throw new Exception($db->getErrorMsg());
@@ -404,7 +439,13 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 			
-			// 10. DELETE USERS
+			// 10. DELETE RECAPITULATION
+			$query = 'DELETE FROM #__phocacart_order_tax_recapitulation'
+				. ' WHERE order_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			
+			// 11. DELETE USERS
 			$query = 'DELETE FROM #__phocacart_order_users'
 				. ' WHERE order_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );

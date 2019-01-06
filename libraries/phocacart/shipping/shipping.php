@@ -99,7 +99,9 @@ class PhocacartShipping
 		
 		$shippings = $db->loadObjectList();
 		
-		
+		/*if (empty($shippings)) {
+			return false;
+		}*/
 		if (!empty($shippings) && !isset($shippings[0]->id) || (isset($shippings[0]->id) && (int)$shippings[0]->id < 1)) {
 			return false;
 		}
@@ -122,16 +124,16 @@ class PhocacartShipping
 				// Amount Rule
 				if($v->active_amount == 1) {
 				
-					
-					if ($shipping_amount_rule == 0 || $shipping_amount_rule == 1) {
+				
+					if ($shipping_amount_rule == 0 || $shipping_amount_rule == 2) {
 						// No tax, brutto
-						if ($amountBrutto > $v->lowest_amount && $amountBrutto < $v->highest_amount) {
+						if ($amountBrutto >= $v->lowest_amount && $amountBrutto <= $v->highest_amount) {
 							$a = 1;
 						}
 					
-					} else if ($shipping_amount_rule == 2) {
+					} else if ($shipping_amount_rule == 1) {
 						// Netto
-						if ($amountNetto > $v->lowest_amount && $amountNetto < $v->highest_amount) {
+						if ($amountNetto >= $v->lowest_amount && $amountNetto <= $v->highest_amount) {
 							$a = 1;
 						}
 					
@@ -141,9 +143,10 @@ class PhocacartShipping
 					$a = 1;
 				}
 				
+			
 				// Quantity Rule
 				if($v->active_quantity == 1) {
-					if ($quantity > $v->minimal_quantity && $quantity < $v->maximal_quantity) {
+					if ($quantity >= $v->minimal_quantity && $quantity <= $v->maximal_quantity) {
 						$q = 1;
 					}
 				} else {
@@ -191,8 +194,8 @@ class PhocacartShipping
 				
 				// Weight Rule
 				if($v->active_weight == 1) {
-					if (($weight > $v->lowest_weight || $weight == $v->lowest_weight)
-						&& ($weight < $v->highest_weight || $weight == $v->highest_weight)) {
+					if (($weight >= $v->lowest_weight || $weight == $v->lowest_weight)
+						&& ($weight <= $v->highest_weight || $weight == $v->highest_weight)) {
 						$w = 1;
 					}
 				
@@ -203,13 +206,13 @@ class PhocacartShipping
 				// Size Rule
 				if($v->active_size == 1) {
 					$sP = 0;
-					if ($maxLength < $v->maximal_length || $maxLength == $v->maximal_length) {
+					if ($maxLength <= $v->maximal_length || $maxLength == $v->maximal_length) {
 						$sP++;
 					}
-					if ($maxWidth < $v->maximal_width || $maxWidth == $v->maximal_width) {
+					if ($maxWidth <= $v->maximal_width || $maxWidth == $v->maximal_width) {
 						$sP++;
 					}
-					if ($maxHeight < $v->maximal_height || $maxHeight == $v->maximal_height) {
+					if ($maxHeight <= $v->maximal_height || $maxHeight == $v->maximal_height) {
 						$sP++;
 					}
 					if ($sP == 3) {
@@ -259,6 +262,15 @@ class PhocacartShipping
 		
 	}
 	
+	public function checkAndGetShippingMethodInsideCart($id, $total) {
+	
+		if ((int)$id > 0 && !empty($total)) {
+			return $this->checkAndGetShippingMethods($id, 0, $total);
+		} 
+		return false;
+		
+	}
+	
 	
 	/**
 	 * Check current shipping method
@@ -282,14 +294,19 @@ class PhocacartShipping
 	 * @return boolean|array
 	 */
 	
-	public function checkAndGetShippingMethods($selectedShippingId = 0, $selected = 0) {
+	public function checkAndGetShippingMethods($selectedShippingId = 0, $selected = 0, $total = array()) {
 	
 		
-		$cart					= new PhocacartCartRendercheckout();
-		$cart->setType($this->type);
-		$cart->setFullItems();
-		$total					= $cart->getTotal();
-		//$currentShippingId 		= $cart->getShippingId();
+		if (empty($total)) {
+			$cart					= new PhocacartCartRendercheckout();
+			$cart->setType($this->type);
+			$cart->setFullItems();
+			$total					= $cart->getTotal();
+			$totalFinal				= $total[0];
+			//$currentShippingId 		= $cart->getShippingId();
+		} else {
+			$totalFinal				= $total;	
+		}
 		
 		$user					= PhocacartUser::getUser();
 		$data					= PhocacartUser::getUserData((int)$user->id);
@@ -309,7 +326,7 @@ class PhocacartShipping
 			$region = (int)$dataAddress['bregion'];
 		}
 			
-		$shippingMethods	= $this->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], $selectedShippingId, $selected);
+		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $totalFinal['weight'], $totalFinal['max_length'], $totalFinal['max_width'], $totalFinal['max_height'], $selectedShippingId, $selected);
 		
 		
 		if (!empty($shippingMethods)) {
@@ -467,9 +484,14 @@ class PhocacartShipping
 	 * getPossibleShippingMethods - all methods they fit the criterias (e.g. amount rule, contry rule, etc.)
 	 * isShippingNotUsed() - all existing methods in shop which are published 
 	 * 
+	 * IF NO SHIPPPING METHOD EXIST - it is ignored when 1) skip_shipping_method parameter is enabled 2) all products are digital and skip_shipping_method is enabled
+	 * 
 	 * */
 	public static function isShippingNotUsed($options = array()) {
 	
+		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$skip_shipping_method	= $paramsC->get( 'skip_shipping_method', 0 );
+		
 		// 1) TEST IF ANY SHIPPING METHOD EXISTS
 		$db =JFactory::getDBO();
 		$query = 'SELECT a.id'
@@ -480,13 +502,11 @@ class PhocacartShipping
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();
 		
-		if (empty($methods)) {
+		if (empty($methods) && $skip_shipping_method == 2) {
 			return true;
 		}
 		
 		// 2) TEST IF SHIPPING METHOD IS NOT DISABLED FOR ALL DOWNLOADABLE PRODUCTS
-		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$skip_shipping_method	= $paramsC->get( 'skip_shipping_method', 0 );
 		if (isset($options['all_digital_products']) &&  $options['all_digital_products'] == 1 && $skip_shipping_method == 1) {
 			return true;
 		}

@@ -59,7 +59,7 @@ echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-min-purchase">'.JHtml::_('grid.sort',  $this->t['l'].'_MINIMAL_SUM_OF_PURCHACHES', 'a.minimum_sum', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-min-purchase">'.JHtml::_('grid.sort',  $this->t['l'].'_MINIMAL_SUM_OF_PURCHASES', 'a.minimum_sum', $listDirn, $listOrder ).'</th>'."\n";	
 echo '<th class="ph-default">'.JHtml::_('grid.sort',  $this->t['l'].'_DEFAULT', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 

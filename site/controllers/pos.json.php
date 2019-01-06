@@ -2,7 +2,7 @@
 /* @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
+ * @extension Phoca Extension		
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
@@ -22,6 +22,8 @@ class PhocaCartControllerPos extends JControllerForm
 			return;
 		}
 
+
+		
 		$app					= JFactory::getApplication();
 		$item					= array();
 		$item['id']				= $this->input->get( 'id', 0, 'int' );
@@ -222,6 +224,7 @@ class PhocaCartControllerPos extends JControllerForm
 					echo json_encode($response);
 					return;
 				}
+			
 				
 				/*if ($updated) {
 					$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'message');
@@ -690,7 +693,9 @@ class PhocaCartControllerPos extends JControllerForm
 		$order = new PhocacartOrder();
 		$order->setType(array(0,2));
 		$orderMade = $order->saveOrderMain($item);
+	
 		
+
 		
 		if(!$orderMade) {
 			$msg = '';
@@ -730,7 +735,7 @@ class PhocaCartControllerPos extends JControllerForm
 					print r($v);
 				}
 			}*/
-			$msg = JText::_('COM_PHOCACART_ORDER_HAS_BEEN_SAVED_SUCCESFULLY');
+			$msg = JText::_('COM_PHOCACART_ORDER_HAS_BEEN_SAVED_SUCCESSFULLY');
 			
 			
 			// PRINT SERVER PRINT

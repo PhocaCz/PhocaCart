@@ -45,6 +45,8 @@ class PhocacartCartDb
 			
 			if (!empty($cartDb) && isset($cartDb['cart']) && $cartDb['cart'] != '') {
 				$cartDb['cart'] = unserialize($cartDb['cart']);
+				
+				
 				self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId] = $cartDb;
 			} else {
 				

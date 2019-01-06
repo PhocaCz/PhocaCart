@@ -60,6 +60,9 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 			if ($v->tcr_tax_rate != '') {
 				$tcTaxRate = PhocacartPrice::cleanPrice($v->tcr_tax_rate);
 			}
+			if ($v->tcr_tax_rate == -1) {
+				$tcTaxRate = '';// -1 means, it was not active but we still hold the ID of such tax for comparison in reports
+			}
 			echo '<div class="span2 col-sm-2 col-md-2"><input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][tax_rate]" value="'.htmlspecialchars($tcTaxRate).'"></div>';
 			echo '</div>';
 			

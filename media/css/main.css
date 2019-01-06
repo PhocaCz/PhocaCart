@@ -1607,8 +1607,10 @@ table.ph-cart-small-box {
 
 /* Discount row */
 .ph-checkout-discount-row {
+	
+	/* conflict with flex
 	margin-top: -20px;
-	margin-bottom: 20px;
+	margin-bottom: 20px;*/
 }
 
 .ph-price-discount,
@@ -2079,4 +2081,20 @@ li.ph-currency-list {
 
 .ph-checkbox {
 	display: block !important;
+}
+
+table.pc-tax-recapitulation,
+table.pc-tax-recapitulation tr,
+table.pc-tax-recapitulation tr th,
+table.pc-tax-recapitulation  tr td {
+	border: 1px solid #f0f0f0;
+	padding: 5px;
+	border-collapse: collapse;
+}
+
+table.pc-tax-recapitulation tr th {
+	text-align: center;
+}
+table.pc-tax-recapitulation tr td {
+	text-align: right;
 }

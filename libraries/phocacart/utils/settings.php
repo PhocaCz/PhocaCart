@@ -100,7 +100,7 @@ class PhocacartUtilsSettings
 		
 			case 'volume':
 				$a = array(
-					1 => array('COM_PHOCACART_MILILITER', 'ml'),
+					1 => array('COM_PHOCACART_MILLILITER', 'ml'),
 					2 => array('COM_PHOCACART_CENTILITER', 'cl'),
 					3 => array('COM_PHOCACART_LITER', 'l'),
 					4 => array('COM_PHOCACART_PINT', 'pt'),
@@ -122,7 +122,7 @@ class PhocacartUtilsSettings
 			case 'size':
 			default:
 				$a = array(
-					1 => array('COM_PHOCACART_MILIMETER', 'mm'),
+					1 => array('COM_PHOCACART_MILLIMETER', 'mm'),
 					2 => array('COM_PHOCACART_CENTIMETER', 'cm'),
 					3 => array('COM_PHOCACART_METER', 'm'),
 					4 => array('COM_PHOCACART_INCH', 'in'),
@@ -303,6 +303,17 @@ class PhocacartUtilsSettings
 		}*/
 		
 		return $type2;
+	}
+	
+	public static function getProductConditionValues($condition) {
+		
+		switch((int)$condition) {
+			
+			case 1: return 'refurbished';	break;
+			case 2: return 'used'; 			break;
+			case 0: default: return 'new';	break;
+		}
+		
 	}
 	
 	
