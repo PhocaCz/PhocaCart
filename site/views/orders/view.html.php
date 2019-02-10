@@ -16,23 +16,24 @@ class PhocaCartViewOrders extends JViewLegacy
 	protected $u;
 
 	function display($tpl = null)
-	{		
+	{
 		$app								= JFactory::getApplication();
 		$this->u							= PhocacartUser::getUser();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
 		$model								= $this->getModel();
 		$this->t['orders']					= $model->getOrderList();
-		
-		$this->t['token']					= $app->input->get('o', '', 'string');
-		$this->t['order_guest_access']		= $this->p->get( 'order_guest_access', 0 );
+
+		$this->t['token']					            = $app->input->get('o', '', 'string');
+		$this->t['order_guest_access']		            = $this->p->get( 'order_guest_access', 0 );
+        $this->t['display_reward_points_user_orders']	= $this->p->get( 'display_reward_points_user_orders', 0);
 		if ($this->t['order_guest_access'] == 0) {
 			$this->t['token'] = '';
 		}
-		
+
 		/*$app								= JFactory::getApplication();
 		$document							= JFactory::getDocument();
-		$this->p 							= $app->getParams();	
+		$this->p 							= $app->getParams();
 		$this->t['categories']				= $model->getCategoriesList();
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
@@ -44,10 +45,10 @@ class PhocaCartViewOrders extends JViewLegacy
 		$this->t['image_height_cats']		= $this->p->get( 'image_height_cats', '' );
 		$this->t['display_subcat_cats_view']= $this->p->get( 'display_subcat_cats_view', 3 );
 		*/
-		
+
 		$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
 		$this->t['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
-	
+
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
 		$media->loadWindowPopup();
@@ -55,12 +56,12 @@ class PhocaCartViewOrders extends JViewLegacy
 		//$this->t['path'] = PhocacartPath::getPath('categoryimage');
 		$this->_prepareDocument();
 		parent::display($tpl);
-		
+
 	}
-	
+
 	protected function _prepareDocument() {
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDERS'));
 	}
-	
+
 }
 ?>

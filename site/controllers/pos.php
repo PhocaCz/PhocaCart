@@ -8,11 +8,13 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Uri\Uri;
+
 class PhocaCartControllerPos extends JControllerForm
 {
-	
+
 	public function addticket() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app 				= JFactory::getApplication();
 		$session 			= JFactory::getSession();
@@ -22,25 +24,25 @@ class PhocaCartControllerPos extends JControllerForm
 		$item['sectionid']	= $this->input->get( 'sectionid', 0, 'int'  );
 		$user				= $vendor = $ticket = $unit	= $section = array();
 		$dUser				= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section, 1);
-		
+
 		if (isset($vendor->id) && (int)$vendor->id > 0) {
 			$lastTicket = PhocacartTicket::getLastVendorTicket((int)$vendor->id, (int)$item['unitid'], (int)$item['sectionid']);
-			
+
 			if (!isset($lastTicket) || (isset($lastTicket)&& (int)$lastTicket == 0)) {
 				// Create the default ticket: 1
 				$added = PhocaCartTicket::addNewVendorTicket((int)$vendor->id, 1, (int)$item['unitid'], (int)$item['sectionid']);
 				if ($added) {
 					$lastTicket = 1;
-					
+
 				}
 			}
 			if (isset($lastTicket) && (int)$lastTicket > 0) {
 				$ticket = $lastTicket + 1;
-				
+
 				$added = PhocaCartTicket::addNewVendorTicket((int)$vendor->id, (int)$ticket, (int)$item['unitid'], (int)$item['sectionid']);
 				if ($added) {
 					$url = base64_decode($item['return']);
-					$uri = JFactory::getURI(base64_decode($item['return']));
+					$uri = Uri::getInstance(base64_decode($item['return']));
 					//$oldTicketId = $uri->getVar('ticketid');
 					$uri->setVar('ticketid', $ticket);
 					$app->redirect($uri->toString());
@@ -50,9 +52,9 @@ class PhocaCartControllerPos extends JControllerForm
 		}
 		$app->redirect(base64_decode($item['return']));
 	}
-	
+
 	public function removeticket() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app 				= JFactory::getApplication();
 		$session 			= JFactory::getSession();
@@ -63,15 +65,15 @@ class PhocaCartControllerPos extends JControllerForm
 		$item['sectionid']	= $this->input->get( 'sectionid', 0, 'int'  );
 		$user				= $vendor = $ticket = $unit	= $section = array();
 		$dUser				= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section, 1);
-		
+
 		if (isset($vendor->id) && (int)$vendor->id > 0) {
-			
+
 			//if (isset($lastTicket) && (int)$lastTicket > 0) {
-			
+
 				$removed = PhocaCartTicket::removeVendorTicket((int)$vendor->id, (int)$item['ticketid'], (int)$item['unitid'], (int)$item['sectionid']);
 				if ($removed) {
 					$url = base64_decode($item['return']);
-					$uri = JFactory::getURI(base64_decode($item['return']));
+					$uri = Uri::getInstance(base64_decode($item['return']));
 					//$oldTicketId = $uri->getVar('ticketid');
 					$uri->setVar('ticketid', 1);
 					$app->redirect($uri->toString());
@@ -80,14 +82,14 @@ class PhocaCartControllerPos extends JControllerForm
 			//}
 		}
 		$app->redirect(base64_decode($item['return']));
-		
+
 	}
 
 	/*
-	 * Add product to cart 
+	 * Add product to cart
 	 */
 	public function add() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
@@ -96,12 +98,12 @@ class PhocaCartControllerPos extends JControllerForm
 		$item['quantity']	= $this->input->get( 'quantity', 0, 'int'  );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		$item['attribute']	= $this->input->get( 'attribute', array(), 'array'  );
-		
+
 		/*
 		$cart	= new PhocacartCart();
-		
+
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
-		
+
 		if ($added) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART'), 'message');
 		} else {
@@ -110,7 +112,7 @@ class PhocaCartControllerPos extends JControllerForm
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));*/
 		$app->redirect(base64_decode($item['return']));
 	}
-	
-	
+
+
 }
 ?>

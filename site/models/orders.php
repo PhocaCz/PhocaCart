@@ -16,11 +16,11 @@ class PhocaCartModelOrders extends JModelLegacy
 	protected $pagination			= null;
 	protected $total				= null;
 
-	public function __construct() {	
+	public function __construct() {
 		parent::__construct();
-		
+
 		$app		= JFactory::getApplication();
-		$config 	= JFactory::getConfig();		
+		$config 	= JFactory::getConfig();
 		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
 		$paramsC 	= $app->getParams();
 		$defaultP	= $paramsC->get( 'default_pagination', '20' );
@@ -30,9 +30,9 @@ class PhocaCartModelOrders extends JModelLegacy
 		$this->setState('filter.language',$app->getLanguageFilter());
 		$this->setState('filter_order', JFactory::getApplication()->input->get('filter_order', 'ordering'));
 		$this->setState('filter_order_dir', JFactory::getApplication()->input->get('filter_order_Dir', 'ASC'));
-		
+
 	}
-	
+
 	public function getPagination($userId) {
 		if (empty($this->pagination)) {
 			jimport('joomla.html.pagination');
@@ -40,7 +40,7 @@ class PhocaCartModelOrders extends JModelLegacy
 		}
 		return $this->pagination;
 	}
-	
+
 	public function getTotal() {
 		if (empty($this->total)) {
 			$query = $this->getOrderListQuery();
@@ -50,15 +50,15 @@ class PhocaCartModelOrders extends JModelLegacy
 	}
 
 	public function getOrderList() {
-		if (empty($this->orders)) {	
+		if (empty($this->orders)) {
 			$query			= $this->getOrderListQuery();
 			$this->orders	= $this->_getList( $query ,$this->getState('limitstart'), $this->getState('limit'));
 		}
 		return $this->orders;
 	}
-	
+
 	protected function getOrderListQuery() {
-	
+
 		$app				= JFactory::getApplication();
 		$params 			= $app->getParams();
 		$u					= PhocacartUser::getUser();
@@ -87,10 +87,10 @@ class PhocaCartModelOrders extends JModelLegacy
 		.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
 		.' WHERE ' . implode( ' AND ', $wheres )
 		.' ORDER BY '.$ordering;
-	
+
 		return $query;
 	}
-	
+
 	protected function getOrderOrdering() {
 		if (empty($this->orders_ordering)) {
 			$app						= JFactory::getApplication();

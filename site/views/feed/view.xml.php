@@ -319,7 +319,7 @@ class PhocaCartViewFeed extends JViewLegacy
 					}
 					
 					// STOCK DELIVERY_DATE - REAL DATE
-					if ($p['item_delivery_date_date'] != '' && isset($v->delivery_date) && $v->delivery_date != '') {
+					if ($p['item_delivery_date_date'] != '' && isset($v->delivery_date) && $v->delivery_date != '' && $v->delivery_date != '0000-00-00 00:00:00') {
 						$o[] = $l.$p['item_delivery_date_date'].$r.$v->delivery_date.$e.$p['item_delivery_date_date'].$r;
 					}
 					

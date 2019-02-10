@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
-jimport( 'joomla.filesystem.folder' );  
+jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
 class PhocaCartViewPos extends JViewLegacy
@@ -19,9 +19,9 @@ class PhocaCartViewPos extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $cart;
-	
-	function display($tpl = null) {		
-		
+
+	function display($tpl = null) {
+
 		$app						= JFactory::getApplication();
 		$document					= JFactory::getDocument();
 		$this->p 					= $app->getParams();
@@ -30,8 +30,8 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->state				= $this->get('State');
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		
-		
+
+
 		// INPUTS
 		$this->t['id']				= $app->input->get( 'id', 0, 'int' );
 		//$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );// optional
@@ -41,41 +41,41 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['card']			= $app->input->get( 'card', '', 'string' );// loyalty customer card
 		$this->t['page']			= $app->input->get( 'page', 'main.content.products', 'string' );
 		$this->t['category']		= $app->input->get('category', '', 'string');// list of active categories
-		
-		
+
+
 		$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
 		$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
-		
+
 		$this->t['currency_array']	= PhocacartCurrency::getCurrenciesArray();
 		$this->t['price'] 			= new PhocacartPrice();
 		$this->t['categoryarray']	= explode(',', $this->t['category']);
 		$this->t['ajax'] 			= 0;
 		$this->t['shippingedit'] 	= 0;
 		$this->t['paymentedit'] 	= 0;
-		
+
 		$preferredSku = PhocacartPos::getPreferredSku();
 		$this->t['skutype']		= $preferredSku['name'];
 		$this->t['skutypetxt']	= $preferredSku['title'];
-		
+
 		$this->t['user'] 	= array();
 		$this->t['vendor']	= array();
 		$this->t['ticket']	= array();
 		$this->t['unit']	= array();
 		$this->t['section']	= array();
 		$dUser 				= PhocacartUser::defineUser($this->t['user'], $this->t['vendor'], $this->t['ticket'], $this->t['unit'], $this->t['section']);
-		
+
 		// 1) CHECK - VENDOR LOGGED IN
 		if (!isset($this->t['vendor']->id) || (isset($this->t['vendor']->id) && (int)$this->t['vendor']->id < 1 )) {
 			//$this->t['infotext'] = JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS');
 			//$this->t['infotype'] = 'alert-error alert-danger';
 			//parent::display('info');
-			
+
 			$returnUrl  						= 'index.php?option=com_users&view=login&return='.$this->t['actionbase64'];
 			$app->redirect(JRoute::_($returnUrl, false), JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS'));
 			return;
-			
+
 		}
-		
+
 		// PARAMS
 		$this->t['display_new']				= $this->p->get( 'display_new', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
@@ -104,34 +104,35 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['display_payment_desc']	= $this->p->get( 'display_payment_desc', 0 );
 		$this->t['zero_shipping_price']		= $this->p->get( 'zero_shipping_price', 1 );
 		$this->t['zero_payment_price']		= $this->p->get( 'zero_payment_price', 1 );
+        $this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 1 );
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
-		
+
 		$this->t['display_view_product_button']				= $this->p->get( 'display_view_product_button', 1 );
 		$this->t['product_name_link']						= $this->p->get( 'product_name_link', 0 );
 		$this->t['switch_image_category_items']				= $this->p->get( 'switch_image_category_items', 0 );
 		$this->t['pos_loyalty_card_number_input_type']		= $this->p->get( 'pos_loyalty_card_number_input_type', 'text' );
-		
-		
+
+
 		$this->t['pos_input_autocomplete_output'] = '';
 		if ($this->t['pos_input_autocomplete'] == 0) {
 			$this->t['pos_input_autocomplete_output'] = ' autocomplete="off" ';
 		}
-		
-		
-		// CATEGORIES 
+
+
+		// CATEGORIES
 		$this->t['categories'] = PhocacartCategoryMultiple::getAllCategories(1, array(0,2));
-		
+
 		// LAYOUT
 		PhocacartPos::renderPosPage();// render the page (boxes)
-		
+
 		// MEDIA
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
 		$media->loadChosen();
 		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		$this->t['class_thumbnail'] = 'ph-pos-thumbnail';
-		
+
 		PhocacartRenderJs::renderAjaxAddToCart();
 		PhocacartRenderJs::renderAjaxUpdateCart();
 		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
@@ -140,18 +141,18 @@ class PhocaCartViewPos extends JViewLegacy
 		PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
 		PhocacartRenderJspos::searchPosByType('#phPosSearch');
 		PhocacartRenderJspos::searchPosByCategory();
-		
+
 		// Tendered
 		$currency = PhocacartCurrency::getCurrency();
 		PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
-		
+
 		// UI
 		PhocacartRenderJspos::renderJsUi();
-		
+
 		if ($this->t['pos_hide_attributes'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 		}
-		
+
 		if ($this->t['dynamic_change_price'] == 1) {
 			// items == category -> this is why items has class: ph-category-price-box (to have the same styling)
 			PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'Pos', 'ph-category-price-box');// We need to load it here
@@ -159,35 +160,35 @@ class PhocaCartViewPos extends JViewLegacy
 		if ($this->t['dynamic_change_stock'] == 1) {
 			PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'Pos', 'ph-item-stock-box');
 		}
-		
-		
-		
+
+
+
 		// 2) CHECK TICKET
 		if ((int)$this->t['ticket']->id < 1) {
 			$this->t['infotext'] = JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST');
 			$this->t['infotype'] = 'alert-error alert-danger';
 			parent::display('info');
 			return true;
-			
+
 		}
-		
+
 		// 3) CHECK - SECTION EXISTS (if the asked not found, set the first existing)
 		if (isset($this->t['section']->id)) {
 			// Set in PhocacartUser::defineUser() -> PhocacartTicket::getTicket()
 		} else {
 			$this->t['section']->id = 0;
 		}
-		
+
 		// 4) CHECK - UNIT EXISTS (if the asked not found, set the first existing but by the section
 		if (isset($this->t['unit']->id)) {
 			// Set in PhocacartUser::defineUser() -> PhocacartTicket::getTicket()
 		} else {
 			$this->t['unit']->id = 0;
 		}
-		
+
 		$this->t['linkpos']				= JRoute::_(PhocacartRoute::getPosRoute($this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id));
-			
-		
+
+
 		// 5) CHECK - USER
 		$this->t['userexists'] 			= false;
 		$this->t['anonymoususerexists'] = false;
@@ -201,16 +202,16 @@ class PhocaCartViewPos extends JViewLegacy
 				$this->t['anonymoususerexists'] = true;
 			}
 		}
-		
+
 		$this->t['shippingmethodexists'] 	= false;
 		$this->t['paymentmethodexists'] 	= false;
-		
+
 		// CART
 		$this->cart	= new PhocacartCartRendercheckout();
 		$this->cart->setType(array(0,2));
 		$this->cart->setFullItems();
 		$this->t['shippingid'] 	= $this->cart->getShippingId();
-		
+
 		if (isset($this->t['shippingid']) && (int)$this->t['shippingid'] > 0 && $this->t['shippingedit'] == 0) {
 			$this->cart->addShippingCosts($this->t['shippingid']);
 			$this->t['shippingmethodexists'] = true;
@@ -220,14 +221,14 @@ class PhocaCartViewPos extends JViewLegacy
 			$this->cart->addPaymentCosts($this->t['paymentid']);
 			$this->t['paymentmethodexists'] = true;
 		}
-		
+
 		$this->cart->roundTotalAmount();
 		$this->t['total']		= $this->cart->getTotal();
-		
+
 		//$this->t['paymentexists'] 	= false;
 		//$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
 		//$this->t['component-pdf']		= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
-		
+
 
 		$this->items						= $model->getItemList($this->t['user']->id, $this->t['vendor']->id, $this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id);
 		$this->t['pagination']				= $model->getPagination();
@@ -236,17 +237,17 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->_prepareDocument();
 		$this->t['pathcat'] = PhocacartPath::getPath('categoryimage');
 		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
-		
-		
+
+
 		switch ($this->t['page']) {
-			
+
 			case 'section':
-				
+
 				// Prepare units (in fact we asked for tickets because of ticket information
 				// and we need to sort them to units
 				$sortedItems = array();
 				if (!empty($this->items)) {
-					
+
 					foreach($this->items as $k => $v) {
 						$id = $v->id;
 						$sortedItems[$id]['id'] 				= $v->id;
@@ -254,22 +255,22 @@ class PhocaCartViewPos extends JViewLegacy
 						$sortedItems[$id]['vendor_id'] 			= $v->vendor_id;
 						//$sortedItems[$id]['ticket_id'] 			= $v->ticket_id;
 						$sortedItems[$id]['unit_id'] 			= $v->unit_id;
-						$sortedItems[$id]['section_id'] 		= $v->section_id;	
+						$sortedItems[$id]['section_id'] 		= $v->section_id;
 						$sortedItems[$id]['title'] 				= $v->title;
 						$sortedItems[$id]['tickets'][$k]['cart']= $v->cart;
 						$sortedItems[$id]['tickets'][$k]['id'] 	= $v->ticket_id;
 					}
 				}
 				$this->items = $sortedItems;
-				
+
 				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
 				PhocacartRenderJspos::changeUrlParameter( array(
 				"sectionid" => (int)$this->t['section']->id));
 				parent::display('section');
 			break;
-			
+
 			default:
-				
+
 				// Scroll cart to bottom
 				PhocacartRenderJspos::renderJsScrollToPos();
 				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
@@ -277,12 +278,12 @@ class PhocaCartViewPos extends JViewLegacy
 				"ticketid" => (int)$this->t['ticket']->id,
 				"unitid" => (int)$this->t['unit']->id,
 				"sectionid" => (int)$this->t['section']->id));
-				
+
 				parent::display($tpl);
 			break;
 		}
 	}
-	
+
 
 	protected function _prepareDocument() {
 		$category = false;

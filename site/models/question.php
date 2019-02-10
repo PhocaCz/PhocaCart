@@ -7,6 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+
+use Joomla\CMS\Uri\Uri;
+
 jimport('joomla.application.component.model');
 
 class PhocaCartModelQuestion extends JModelForm
@@ -27,7 +31,7 @@ class PhocaCartModelQuestion extends JModelForm
 
 		$app	= JFactory::getApplication();
 		$params = $app->getParams();
-		
+
 		// Set required or not && disable if not available
 		if(!$params->get('display_name_form', 2)){
 			$form->removeField('name');
@@ -52,17 +56,17 @@ class PhocaCartModelQuestion extends JModelForm
 		} else if ($params->get('display_message_form', 2) == 2){
 			$form->setFieldAttribute('message', 'required', 'true');
 		}
-		
+
 		if (!$params->get('enable_hidden_field_question', 0)){
 			$form->removeField('hidden_field');
 		} else {
-			
+
 			$form->setFieldAttribute('hidden_field', 'id', $params->get('hidden_field_id'));
 			$form->setFieldAttribute('hidden_field', 'class', $params->get('hidden_field_class'));
 			$form->setFieldAttribute('hidden_field', 'name', $params->get('hidden_field_name'));
-			
+
 		}
-		
+
 		if (!$params->get('enable_captcha_question', 2)) {
 			$form->removeField('phq_captcha');
 		} else {
@@ -70,27 +74,27 @@ class PhocaCartModelQuestion extends JModelForm
 			$form->setFieldAttribute('phq_captcha', 'captcha_id', $params->get('captcha_id'));
 			$form->setFieldAttribute('phq_captcha', 'validate', 'phocacartcaptcha');
 		}
-		
+
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = (array) JFactory::getApplication()->getUserState('com_phocacart.question.data', array());
 		return $data;
 	}
-	
+
 	function store(&$data) {
-		
+
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		
+
 		$uri 	= \Joomla\CMS\Uri\Uri::getInstance();
 		$app    = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_phocacart') ;
-		
+
 		// Maximum of character, they will be saved in database
 		$data['message']		= substr($data['message'], 0, $params->get('max_char_question', 3000));
 		$data['date'] 			= gmdate('Y-m-d H:i:s');   // Create the timestamp for the date
-		
+
 		$data['params']			= '';
 		$data['category_id']	= PhocacartUtils::getIntFromString($data['category_id']);
 		$data['product_id']	= PhocacartUtils::getIntFromString($data['product_id']);
@@ -101,23 +105,23 @@ class PhocaCartModelQuestion extends JModelForm
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
-		}	
-	
+		}
+
 		// Make sure the table is valid
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-			
+
 		// Store the Phoca guestbook table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Everything OK - send email
 		if ($params->get('send_email_question', 0) > 0) {
-			
+
 			$data['product'] 	= array();
 			$data['category']	= array();
 			$productId			= 0;
@@ -130,18 +134,18 @@ class PhocaCartModelQuestion extends JModelForm
 				}
 				$productId = $data['product'];
 			}
-			
-			
-			$send = PhocacartEmail::sendQuestionMail($params->get('send_email_question'), $data, JFactory::getURI()->toString(), $params);
-		
+
+
+			$send = PhocacartEmail::sendQuestionMail($params->get('send_email_question'), $data, Uri::getInstance()->toString(), $params);
+
 			if (!$send) {
 				$user 	= PhocacartUser::getUser();
 				PhocacartLog::add(1, 'Ask a Question - Problems with sending email', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id);
 			}
 		}
-		
+
 		$data['id'] = $row->id;
-			
+
 		return true;
 	}
 }

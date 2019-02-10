@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension method="upgrade" type="component" version="3">
-	<name>Phoca Cart</name>
+<extension type="component" method="upgrade" version="3">
+	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>06/01/2019</creationDate>
+	<creationDate>10/02/2019</creationDate>
 	<authorEmail></authorEmail>
-	<authorUrl>www.phoca.cz</authorUrl>
+	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.1.6</version>
-	<description>Phoca Cart</description>
-	<scriptfile>install/script.php</scriptfile>
+	<version>3.1.7</version>
+	<description>COM_PHOCACART_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<projectName>PhocaCart</projectName>
 
 	<install>
 		<sql>
@@ -30,82 +31,78 @@
 	</update>
 
 	<files folder="site">
-		<filename>controller.php</filename>
-		<filename>index.html</filename>
-		<filename>phocacart.php</filename>
-		<filename>router.php</filename>
 		<folder>assets</folder>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
 		<folder>layouts</folder>
 		<folder>models</folder>
 		<folder>views</folder>
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<filename>phocacart.php</filename>
+		<filename>router.php</filename>
 	</files>
 
 	<media destination="com_phocacart" folder="media">
-		<filename>index.html</filename>
 		<folder>bootstrap</folder>
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
+		<filename>index.html</filename>
 	</media>
 
-	<languages>
-		<language tag="en-GB" client="site">language/en-GB/en-GB.com_phocacart.ini</language>
-		<language tag="en-GB" client="site">language/en-GB/en-GB.com_phocacart.sys.ini</language>
+	<languages folder="admin/language">
+		<language tag="en-GB" client="site">en-GB/en-GB.com_phocacart.ini</language>
+		<language tag="en-GB" client="site">en-GB/en-GB.com_phocacart.sys.ini</language>
 	</languages>
 
 	<administration>
-		<menu img="media/com_phocacart/images/administrator/images/icon-16-cart-menu.png" link="option=com_phocacart">COM_PHOCACART</menu>
-		<submenu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-cp.png" alt="COM_PHOCACART_CONTROLPANEL" view="phocacartcp" link="option=com_phocacart">COM_PHOCACART_CONTROLPANEL</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-item.png" alt="COM_PHOCACART_PRODUCTS" view="phocacartitems" link="option=com_phocacart&amp;view=phocacartitems">COM_PHOCACART_PRODUCTS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-category.png" alt="COM_PHOCACART_CATEGORIES" view="phocacartcategories" link="option=com_phocacart&amp;view=phocacartcategories">COM_PHOCACART_CATEGORIES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-specification.png" alt="COM_PHOCACART_SPECIFICATIONS" view="phocacartspecifications" link="option=com_phocacart&amp;view=phocacartspecifications">COM_PHOCACART_SPECIFICATIONS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-manufacturer.png" alt="COM_PHOCACART_MANUFACTURERS" view="phocacartmanufacturers" link="option=com_phocacart&amp;view=phocacartmanufacturers">COM_PHOCACART_MANUFACTURERS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-order.png" alt="COM_PHOCACART_ORDERS" view="phocacartorders" link="option=com_phocacart&amp;view=phocacartorders">COM_PHOCACART_ORDERS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-orderstatus.png" alt="COM_PHOCACART_ORDER_STATUSES" view="phocacartstatuses" link="option=com_phocacart&amp;view=phocacartstatuses">COM_PHOCACART_ORDER_STATUSES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-stockstatus.png" alt="COM_PHOCACART_STOCK_STATUSES" view="phocacartstockstatuses" link="option=com_phocacart&amp;view=phocacartstockstatuses">COM_PHOCACART_STOCK_STATUSES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-shipping.png" alt="COM_PHOCACART_SHIPPING" view="phocacartshippings" link="option=com_phocacart&amp;view=phocacartshippings">COM_PHOCACART_SHIPPING</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-country.png" alt="COM_PHOCACART_COUNTRIES" view="phocacartcountries" link="option=com_phocacart&amp;view=phocacartcountries">COM_PHOCACART_COUNTRIES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-region.png" alt="COM_PHOCACART_REGIONS" view="phocacartregions" link="option=com_phocacart&amp;view=phocacartregions">COM_PHOCACART_REGIONS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-zone.png" alt="COM_PHOCACART_ZONES" view="phocacartzones" link="option=com_phocacart&amp;view=phocacartzones">COM_PHOCACART_ZONES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-payment.png" alt="COM_PHOCACART_PAYMENT" view="phocacartpayments" link="option=com_phocacart&amp;view=phocacartpayments">COM_PHOCACART_PAYMENT</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-currency.png" alt="COM_PHOCACART_CURRENCIES" view="phocacartcurrencies" link="option=com_phocacart&amp;view=phocacartcurrencies">COM_PHOCACART_CURRENCIES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-tax.png" alt="COM_PHOCACART_TAXES" view="phocacarttaxes" link="option=com_phocacart&amp;view=phocacarttaxes">COM_PHOCACART_TAXES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-user.png" alt="COM_PHOCACART_CUSTOMERS" view="phocacartusers" link="option=com_phocacart&amp;view=phocacartusers">COM_PHOCACART_CUSTOMERS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-group.png" alt="COM_PHOCACART_CUSTOMER_GROUPS" view="phocacartgroups" link="option=com_phocacart&amp;view=phocacartgroups">COM_PHOCACART_CUSTOMER_GROUPS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-reward.png" alt="COM_PHOCACART_REWARD_POINTS" view="phocacartrewards" link="option=com_phocacart&amp;view=phocacartrewards">COM_PHOCACART_REWARD_POINTS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-user.png" alt="COM_PHOCACART_FORM_FIELDS" view="phocacartformfields" link="option=com_phocacart&amp;view=phocacartformfields">COM_PHOCACART_FORM_FIELDS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-review.png" alt="COM_PHOCACART_REVIEWS" view="phocacartreviews" link="option=com_phocacart&amp;view=phocacartreviews">COM_PHOCACART_REVIEWS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-coupon.png" alt="COM_PHOCACART_COUPONS" view="phocacartcoupons" link="option=com_phocacart&amp;view=phocacartcoupons">COM_PHOCACART_COUPONS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-discount.png" alt="COM_PHOCACART_DISCOUNTS" view="phocacartdiscounts" link="option=com_phocacart&amp;view=phocacartdiscounts">COM_PHOCACART_DISCOUNTS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-download.png" alt="COM_PHOCACART_DOWNLOADS" view="phocacartdownloads" link="option=com_phocacart&amp;view=phocacartdownloads">COM_PHOCACART_DOWNLOADS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-tag.png" alt="COM_PHOCACART_TAGS" view="phocacarttags" link="option=com_phocacart&amp;view=phocacarttags">COM_PHOCACART_TAGS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-feeds.png" alt="COM_PHOCACART_XML_FEEDS" view="phocacartfeeds" link="option=com_phocacart&amp;view=phocacartfeeds">COM_PHOCACART_XML_FEEDS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-wishlists.png" alt="COM_PHOCACART_WISH_LISTS" view="phocacartwishlists" link="option=com_phocacart&amp;view=phocacartwishlists">COM_PHOCACART_WISH_LISTS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-questions.png" alt="COM_PHOCACART_QUESTIONS" view="phocacartquestions" link="option=com_phocacart&amp;view=phocacartquestions">COM_PHOCACART_QUESTIONS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-times.png" alt="COM_PHOCACART_OPENING_TIMES" view="phocacarttimes" link="option=com_phocacart&amp;view=phocacarttimes">COM_PHOCACART_OPENING_TIMES</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-statistics.png" alt="COM_PHOCACART_STATISTICS" view="phocacartstatistics" link="option=com_phocacart&amp;view=phocacartstatistics">COM_PHOCACART_STATISTICS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-reports.png" alt="COM_PHOCACART_REPORTS" view="phocacartreports" link="option=com_phocacart&amp;view=phocacartreports">COM_PHOCACART_REPORTS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-hits.png" alt="COM_PHOCACART_HITS" view="phocacarthits" link="option=com_phocacart&amp;view=phocacarthits">COM_PHOCACART_HITS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-import.png" alt="COM_PHOCACART_IMPORT" view="phocacartimports" link="option=com_phocacart&amp;view=phocacartimports">COM_PHOCACART_IMPORT</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-export.png" alt="COM_PHOCACART_EXPORT" view="phocacartexports" link="option=com_phocacart&amp;view=phocacartexports">COM_PHOCACART_EXPORT</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-log.png" alt="COM_PHOCACART_SYSTEM_LOG" view="phocacartlogs" link="option=com_phocacart&amp;view=phocacartlogs">COM_PHOCACART_SYSTEM_LOG</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-info.png" alt="COM_PHOCACART_INFO" view="phocacartinfo" link="option=com_phocacart&amp;view=phocacartinfo">COM_PHOCACART_INFO</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-extension.png" alt="COM_PHOCACART_EXTENSIONS" view="phocacartextensions" link="option=com_phocacart&amp;view=phocacartextensions">COM_PHOCACART_EXTENSIONS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-vendor.png" alt="COM_PHOCACART_VENDORS" view="phocacartvendors" link="option=com_phocacart&amp;view=phocacartvendors">COM_PHOCACART_VENDORS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-section.png" alt="COM_PHOCACART_SECTIONS" view="phocacartsections" link="option=com_phocacart&amp;view=phocacartsections">COM_PHOCACART_SECTIONS</menu>
-			<menu img="media/com_phocacart/images/administrator/images/icon-16-pc-menu-unit.png" alt="COM_PHOCACART_UNITS" view="phocacartextunits" link="option=com_phocacart&amp;view=phocacartextunits">COM_PHOCACART_UNITS</menu>
-		</submenu>
+
+		<menu img="media/com_phocacart/images/administrator/icon-16-cart-menu.png" alt="COM_PHOCACART" link="option=com_phocacart">COM_PHOCACART</menu>
+
+			<submenu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-cp.png" alt="COM_PHOCACART_CONTROLPANEL" view="phocacartcp" link="option=com_phocacart">COM_PHOCACART_CONTROLPANEL</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-item.png" alt="COM_PHOCACART_PRODUCTS" view="phocacartitems" link="option=com_phocacart&amp;view=phocacartitems">COM_PHOCACART_PRODUCTS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-category.png" alt="COM_PHOCACART_CATEGORIES" view="phocacartcategories" link="option=com_phocacart&amp;view=phocacartcategories">COM_PHOCACART_CATEGORIES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-specification.png" alt="COM_PHOCACART_SPECIFICATIONS" view="phocacartspecifications" link="option=com_phocacart&amp;view=phocacartspecifications">COM_PHOCACART_SPECIFICATIONS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-manufacturer.png" alt="COM_PHOCACART_MANUFACTURERS" view="phocacartmanufacturers" link="option=com_phocacart&amp;view=phocacartmanufacturers">COM_PHOCACART_MANUFACTURERS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-order.png" alt="COM_PHOCACART_ORDERS" view="phocacartorders" link="option=com_phocacart&amp;view=phocacartorders">COM_PHOCACART_ORDERS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-orderstatus.png" alt="COM_PHOCACART_ORDER_STATUSES" view="phocacartstatuses" link="option=com_phocacart&amp;view=phocacartstatuses">COM_PHOCACART_ORDER_STATUSES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-stockstatus.png" alt="COM_PHOCACART_STOCK_STATUSES" view="phocacartstockstatuses" link="option=com_phocacart&amp;view=phocacartstockstatuses">COM_PHOCACART_STOCK_STATUSES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-shipping.png" alt="COM_PHOCACART_SHIPPING" view="phocacartshippings" link="option=com_phocacart&amp;view=phocacartshippings">COM_PHOCACART_SHIPPING</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-country.png" alt="COM_PHOCACART_COUNTRIES" view="phocacartcountries" link="option=com_phocacart&amp;view=phocacartcountries">COM_PHOCACART_COUNTRIES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-region.png" alt="COM_PHOCACART_REGIONS" view="phocacartregions" link="option=com_phocacart&amp;view=phocacartregions">COM_PHOCACART_REGIONS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-zone.png" alt="COM_PHOCACART_ZONES" view="phocacartzones" link="option=com_phocacart&amp;view=phocacartzones">COM_PHOCACART_ZONES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-payment.png" alt="COM_PHOCACART_PAYMENT" view="phocacartpayments" link="option=com_phocacart&amp;view=phocacartpayments">COM_PHOCACART_PAYMENT</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-currency.png" alt="COM_PHOCACART_CURRENCIES" view="phocacartcurrencies" link="option=com_phocacart&amp;view=phocacartcurrencies">COM_PHOCACART_CURRENCIES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-tax.png" alt="COM_PHOCACART_TAXES" view="phocacarttaxes" link="option=com_phocacart&amp;view=phocacarttaxes">COM_PHOCACART_TAXES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-user.png" alt="COM_PHOCACART_CUSTOMERS" view="phocacartusers" link="option=com_phocacart&amp;view=phocacartusers">COM_PHOCACART_CUSTOMERS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-group.png" alt="COM_PHOCACART_CUSTOMER_GROUPS" view="phocacartgroups" link="option=com_phocacart&amp;view=phocacartgroups">COM_PHOCACART_CUSTOMER_GROUPS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-reward.png" alt="COM_PHOCACART_REWARD_POINTS" view="phocacartrewards" link="option=com_phocacart&amp;view=phocacartrewards">COM_PHOCACART_REWARD_POINTS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-formfields.png" alt="COM_PHOCACART_FORM_FIELDS" view="phocacartformfields" link="option=com_phocacart&amp;view=phocacartformfields">COM_PHOCACART_FORM_FIELDS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-review.png" alt="COM_PHOCACART_REVIEWS" view="phocacartreviews" link="option=com_phocacart&amp;view=phocacartreviews">COM_PHOCACART_REVIEWS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-coupon.png" alt="COM_PHOCACART_COUPONS" view="phocacartcoupons" link="option=com_phocacart&amp;view=phocacartcoupons">COM_PHOCACART_COUPONS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-discount.png" alt="COM_PHOCACART_DISCOUNTS" view="phocacartdiscounts" link="option=com_phocacart&amp;view=phocacartdiscounts">COM_PHOCACART_DISCOUNTS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-download.png" alt="COM_PHOCACART_DOWNLOADS" view="phocacartdownloads" link="option=com_phocacart&amp;view=phocacartdownloads">COM_PHOCACART_DOWNLOADS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-tag.png" alt="COM_PHOCACART_TAGS" view="phocacarttags" link="option=com_phocacart&amp;view=phocacarttags">COM_PHOCACART_TAGS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-feed.png" alt="COM_PHOCACART_XML_FEEDS" view="phocacartfeeds" link="option=com_phocacart&amp;view=phocacartfeeds">COM_PHOCACART_XML_FEEDS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-wishlist.png" alt="COM_PHOCACART_WISH_LISTS" view="phocacartwishlists" link="option=com_phocacart&amp;view=phocacartwishlists">COM_PHOCACART_WISH_LISTS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-question.png" alt="COM_PHOCACART_QUESTIONS" view="phocacartquestions" link="option=com_phocacart&amp;view=phocacartquestions">COM_PHOCACART_QUESTIONS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-time.png" alt="COM_PHOCACART_OPENING_TIMES" view="phocacarttimes" link="option=com_phocacart&amp;view=phocacarttimes">COM_PHOCACART_OPENING_TIMES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-statistics.png" alt="COM_PHOCACART_STATISTICS" view="phocacartstatistics" link="option=com_phocacart&amp;view=phocacartstatistics">COM_PHOCACART_STATISTICS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-report.png" alt="COM_PHOCACART_REPORTS" view="phocacartreports" link="option=com_phocacart&amp;view=phocacartreports">COM_PHOCACART_REPORTS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-hits.png" alt="COM_PHOCACART_HITS" view="phocacarthits" link="option=com_phocacart&amp;view=phocacarthits">COM_PHOCACART_HITS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-import.png" alt="COM_PHOCACART_IMPORT" view="phocacartimports" link="option=com_phocacart&amp;view=phocacartimports">COM_PHOCACART_IMPORT</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-export.png" alt="COM_PHOCACART_EXPORT" view="phocacartexports" link="option=com_phocacart&amp;view=phocacartexports">COM_PHOCACART_EXPORT</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-log.png" alt="COM_PHOCACART_SYSTEM_LOG" view="phocacartlogs" link="option=com_phocacart&amp;view=phocacartlogs">COM_PHOCACART_SYSTEM_LOG</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-info.png" alt="COM_PHOCACART_INFO" view="phocacartinfo" link="option=com_phocacart&amp;view=phocacartinfo">COM_PHOCACART_INFO</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-extension.png" alt="COM_PHOCACART_EXTENSIONS" view="phocacartextensions" link="option=com_phocacart&amp;view=phocacartextensions">COM_PHOCACART_EXTENSIONS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-vendor.png" alt="COM_PHOCACART_VENDORS" view="phocacartvendors" link="option=com_phocacart&amp;view=phocacartvendors">COM_PHOCACART_VENDORS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-section.png" alt="COM_PHOCACART_SECTIONS" view="phocacartsections" link="option=com_phocacart&amp;view=phocacartsections">COM_PHOCACART_SECTIONS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-unit.png" alt="COM_PHOCACART_UNITS" view="phocacartextunits" link="option=com_phocacart&amp;view=phocacartextunits">COM_PHOCACART_UNITS</menu>
+			</submenu>
 
 		<files folder="admin">
-			<filename>access.xml</filename>
-			<filename>config.xml</filename>
-			<filename>controller.php</filename>
-			<filename>index.html</filename>
-			<filename>phocacart.php</filename>
-			<filename>phocacart.xml</filename>
 			<folder>controllers</folder>
 			<folder>help</folder>
 			<folder>helpers</folder>
@@ -116,16 +113,22 @@
 			<folder>tables</folder>
 			<folder>update</folder>
 			<folder>views</folder>
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<filename>phocacart.php</filename>
 		</files>
 
-		<languages>
-			<language tag="en-GB">language/en-GB/en-GB.com_phocacart.ini</language>
-			<language tag="en-GB">language/en-GB/en-GB.com_phocacart.sys.ini</language>
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_phocacart.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_phocacart.sys.ini</language>
 		</languages>
-
 	</administration>
-	<updateservers>
-		<server type="extension" name="Phoca Cart">https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml</server>
-	</updateservers>
+	
+	
 
+	<updateservers>
+		<server type="extension" name="COM_PHOCACART" priority="1"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml]]></server>
+	</updateservers>
 </extension>

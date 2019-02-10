@@ -18,23 +18,23 @@ echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_MY_ACCOUNT
 }*/
 
 if ((int)$this->u->id > 0) {
-	
+
 	// Reward Points
 	if ((int)$this->t['display_reward_points_total_info'] > 0) {
 		echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
 		echo '<div class="ph-account-box-header" id="phaccountrewardpoints"><h3>'.JText::_('COM_PHOCACART_REWARD_POINTS').'</h3></div>';
 		echo '</div>';
-		
+
 		echo '<div class="ph-account-box-action">';
-		
+
 		echo '<div class="col-sm-8 col-md-8">'. JText::_('COM_PHOCACART_TOTAL_AMOUNT_OF_YOUR_REWARD_POINTS') . ': </div>';
 		echo '<div class="col-sm-4 col-md-4">'.$this->t['rewardpointstotal'].'</div>';
-		
+
 		echo '<div class="ph-cb"></div>';
-		
+
 		echo '</div>'."\n";// end box action
 	}
-	
+
 	// Header
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
 	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><h3>'.JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
@@ -47,67 +47,67 @@ if ((int)$this->u->id > 0) {
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_BILLING_ADDRESS').'</div>';
 	echo $this->t['dataaddressform']['b'];
 	echo '</div>';// end row
-	
+
 	echo '<div class="col-sm-6 col-md-6 ph-account-shipping-row" id="phShippingAddress" >';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
 	echo $this->t['dataaddressform']['s'];
 	echo '</div>';// end row
-	
+
 	echo '<div class="ph-cb"></div>';
-	
+
 	echo '<div class="ph-pull-right ph-account-check-box">';
-	
+
 	echo '<div class="checkbox">';
 	echo '<label><input type="checkbox" id="phCheckoutBillingSameAsShipping" name="phcheckoutbsas" '.$this->t['dataaddressform']['bsch'].' > '.JText::_('COM_PHOCACART_DELIVERY_AND_BILLING_ADDRESSES_ARE_THE_SAME').'</label>';
 	echo '</div>';
 
 	echo '</div>';
-	
+
 	echo '<div class="ph-cb"></div>';
-	
+
 	echo '<div class="ph-pull-right ph-account-address-save">';
 	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('save').'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
-	
+
 	echo '<div class="ph-cb"></div>';
 	echo '</div>'."\n";// end box action
-	
-	
+
+
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="task" value="checkout.saveaddress" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 	echo JHtml::_('form.token');
 	echo '</form>'. "\n";
-	
+
 	if ($this->t['display_edit_profile'] == 1) {
 		echo $this->loadTemplate('profile');
 	}
-	
+
 } else {
 
 	require_once JPATH_SITE.'/components/com_users/helpers/route.php';
-	jimport( 'joomla.application.module.helper' ); 
+	jimport( 'joomla.application.module.helper' );
 	$module = JModuleHelper::getModule('mod_login');
 	$mP 	= new JRegistry();
 	$mP->loadString($module->params);
 
 	$lang 	= JFactory::getLanguage();
 	$lang->load('mod_login');
-	
+
 	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
 	//echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="'.PhocacartRenderIcon::getClass('remove-circle').' ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '<div class="ph-account-box-header" id="phaccountloginedit"><h3>'.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div>';
-	
-	
+
+
 	echo '<div class="ph-account-box-action">';
 
 
 	echo '<div class="col-sm-8 col-md-8 ph-right-border">';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_LOGIN').'</div>'. "\n";
-	
+
 	echo '<form action="'.JRoute::_('index.php', true, $mP->get('usesecure')).'" method="post" id="ph-login-form" class="form-inline" role="form">';
 
 	echo '<div id="ph-form-login-username" class="control-group form-inline">'. "\n";
@@ -130,33 +130,33 @@ if ((int)$this->u->id > 0) {
 
 
 	echo '<ul class="unstyled ph-li-inline">'. "\n";
-	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=remind&Itemid='.UsersHelperRoute::getRemindRoute()).'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_USERNAME').'</a></li>'. "\n";
-	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=reset&Itemid='.UsersHelperRoute::getResetRoute()).'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_PASSWORD').'</a></li>'. "\n";
+	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=remind').'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_USERNAME').'</a></li>'. "\n";
+	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=reset').'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_PASSWORD').'</a></li>'. "\n";
 	echo '</ul>'. "\n";
 	echo '<div class="ph-cb"></div>';
-	
+
 	echo '<input type="hidden" name="option" value="com_users" />'. "\n";
 	echo '<input type="hidden" name="task" value="user.login" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 	echo JHtml::_('form.token');
 	echo '</form>';
-	
-	
+
+
 	echo '</div>'. "\n";// end columns
-	
+
 
 	echo '<div class="col-sm-4 col-md-4 ph-left-border">';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
 	$usersConfig = JComponentHelper::getParams('com_users');
 	//echo '<ul class="unstyled">'. "\n";
 	if ($usersConfig->get('allowUserRegistration')) {
-		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
-		
-		echo '<a class="btn btn-primary btn-sm ph-account-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="'.PhocacartRenderIcon::getClass('user').'"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
-		
+		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration').'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
+
+		echo '<a class="btn btn-primary btn-sm ph-account-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration').'"><span class="'.PhocacartRenderIcon::getClass('user').'"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
+
 	}
 	//echo '</ul>'. "\n";
-	
+
 
 
 	echo '</div>'. "\n";// end columns

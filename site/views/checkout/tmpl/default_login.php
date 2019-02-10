@@ -17,29 +17,29 @@ $d['number']	= $this->t['nl'];
 $d['type']		= $this->t['checkout_icon_status'];
 
 if($this->a->login == 0) {
-	
+
 	$d['status']	= 'pending';
-	
+
 	require_once JPATH_SITE.'/components/com_users/helpers/route.php';
-	jimport( 'joomla.application.module.helper' ); 
+	jimport( 'joomla.application.module.helper' );
 	$module = JModuleHelper::getModule('mod_login');
 	$mP 	= new JRegistry();
 	$mP->loadString($module->params);
 
 	$lang = JFactory::getLanguage();
 	$lang->load('mod_login');
-	
+
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutloginedit">'.$layoutI->render($d).'<h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
-	
-	
+
+
 	echo '<div class="ph-checkout-box-action">';
 
 
 	echo '<div class="col-sm-8 col-md-8 ph-right-border">';
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_LOGIN').'</div>'. "\n";
-	
+
 	echo '<form action="'.JRoute::_('index.php', true, $mP->get('usesecure')).'" method="post" id="ph-login-form" class="form-inline" role="form">';
 
 	echo '<div id="ph-form-login-username" class="control-group form-inline">'. "\n";
@@ -62,50 +62,50 @@ if($this->a->login == 0) {
 
 
 	echo '<ul class="unstyled ph-li-inline">'. "\n";
-	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=remind&Itemid='.UsersHelperRoute::getRemindRoute()).'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_USERNAME').'</a></li>'. "\n";
-	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=reset&Itemid='.UsersHelperRoute::getResetRoute()).'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_PASSWORD').'</a></li>'. "\n";
+	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=remind').'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_USERNAME').'</a></li>'. "\n";
+	echo '<li><a href="'.JRoute::_('index.php?option=com_users&view=reset').'">'.JText::_('MOD_LOGIN_FORGOT_YOUR_PASSWORD').'</a></li>'. "\n";
 	echo '</ul>'. "\n";
 	echo '<div class="ph-cb"></div>';
-	
+
 	echo '<input type="hidden" name="option" value="com_users" />'. "\n";
 	echo '<input type="hidden" name="task" value="user.login" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 	echo JHtml::_('form.token');
 	echo '</form>';
-	
-	
+
+
 	echo '</div>'. "\n";// end columns
-	
+
 
 	echo '<div class="col-sm-4 col-md-4 ph-left-border">';
-	
+
 	$usersConfig = JComponentHelper::getParams('com_users');
 	//echo '<ul class="unstyled">'. "\n";
 	if ($usersConfig->get('allowUserRegistration')) {
 		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
-		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
-		
-		echo '<a class="btn btn-primary btn-sm ph-checkout-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration&Itemid='.UsersHelperRoute::getRegistrationRoute()).'"><span class="'.PhocacartRenderIcon::getClass('user').'"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
-		
+		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration').'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
+
+		echo '<a class="btn btn-primary btn-sm ph-checkout-btn-login" href="'. JRoute::_('index.php?option=com_users&view=registration').'"><span class="'.PhocacartRenderIcon::getClass('user').'"></span>  '.JText::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
+
 	}
 	//echo '</ul>'. "\n";
-	
+
 	if ($this->t['guest_checkout'] == 1) {
 		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_GUEST_CHECKOUT').'</div>'. "\n";
-	
+
 		echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddGuest">';
 		echo '<button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="'.PhocacartRenderIcon::getClass('user').'"></span> '. JText::_('COM_PHOCACART_GUEST_CHECKOUT') .'</button>'. "\n";
-		
+
 		echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 		echo '<input type="hidden" name="task" value="checkout.setguest" />'. "\n";
 		echo '<input type="hidden" name="id" value="1" />'. "\n";
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 		echo JHtml::_('form.token');
 		echo '</form>';
-	
+
 	}
-			
-	
+
+
 
 
 	echo '</div>'. "\n";// end columns
@@ -113,15 +113,15 @@ if($this->a->login == 0) {
 	echo '</div>'. "\n";// end checkout box login
 
 	//echo '</form>'. "\n";
-	
+
 } else if($this->a->login == 1) {
 
 	$d['status']	= 'finished';
-	
+
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header" id="phcheckoutloginview">'.$layoutI->render($d).'<h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
-	
+
 	echo '<div class="ph-checkout-box-action">';
 	echo '<div class="col-sm-12 col-md-12">';
 	echo '<div>'.JText::_('COM_PHOCACART_YOU_ARE_LOGGED_IN_AS').' <b>'.$this->u->name.'</b></div>';
@@ -130,31 +130,31 @@ if($this->a->login == 0) {
 } else if($this->a->login == 2) {
 
 	$d['status']	= 'finished';
-	
+
 	echo '<div class="col-sm-12 col-md-12 ph-checkout-box-row" >';
 	echo '<div class="ph-checkout-box-header">'.$layoutI->render($d).'<h3>'.$this->t['nl'].'. '.JText::_('COM_PHOCACART_GUEST_CHECKOUT').'</h3></div>';
 	echo '</div><div class="ph-cb"></div>';
-	
+
 	echo '<div class="ph-checkout-box-action">';
 	echo '<div class="col-sm-12 col-md-12">';
-	
+
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="form-horizontal form-validate" role="form" id="phCheckoutAddGuest">';
-		
+
 	echo '<div>'.JText::_('COM_PHOCACART_GUEST_CHECKOUT');
 	echo '</div>';
-	
+
 	echo '<div class="ph-pull-right"><button type="submit" tabindex="0" name="Submit" class="btn btn-primary btn-sm ph-checkout-btn-login"><span class="'.PhocacartRenderIcon::getClass('user').'"></span> '. JText::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button></div>'. "\n";
-	
-	
+
+
 	echo '<div class="ph-cb"></div>';
-	
+
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="task" value="checkout.setguest" />'. "\n";
 	echo '<input type="hidden" name="id" value="0" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 	echo JHtml::_('form.token');
 	echo '</form>';
-	
+
 	echo '</div><div class="ph-cb"></div>';
 	echo '</div>';
 }
