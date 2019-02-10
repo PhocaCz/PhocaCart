@@ -652,11 +652,12 @@ if (!empty($d['products'])) {
 $o[] = implode("\n", $p);
 
 
-if ($tax_calculation > 0) {
+if ($tax_calculation > 0 || $d['type'] == 3) {
 	$o[] = '<tr><td colspan="12" '.$sepH.'>&nbsp;</td></tr>';
 } else {
 	$o[] = '<tr><td colspan="9" '.$sepH.'>&nbsp;</td></tr>';
 }
+
 
 
 // -----------
@@ -744,12 +745,12 @@ if ($d['type'] != 3) {
 	$o[] = implode("\n", $t);
 }
 
-if ($tax_calculation > 0) {
+
+if ($tax_calculation > 0 || $d['type'] == 3) {
 	$o[] = '<tr><td colspan="12">&nbsp;</td></tr>';
 } else {
 	$o[] = '<tr><td colspan="9">&nbsp;</td></tr>';
 }
-
 
 
 // -----------
