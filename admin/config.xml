@@ -1277,7 +1277,7 @@
 <field name="invoice_terms_payment" default="" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_TERMS_OF_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_INVOICE_TERMS_OF_PAYMENT_DESC"/>
 
 
-<field name="prn_number_id_basis" type="list" class="btn-group btn-group-yesno" default="A" label="COM_PHOCACART_BASIS_FOR_CREATING_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_BASIS_FOR_CREATING_REFERENCE_NUMBER_DESC">
+<field name="prn_number_id_basis" type="list" class="btn-group btn-group-yesno" default="A" label="COM_PHOCACART_FIELD_BASIS_FOR_CREATING_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_BASIS_FOR_CREATING_PAYMENT_REFERENCE_NUMBER_DESC">
 	<option value="A">COM_PHOCACART_STANDARD_AUTO_INCREMENT</option>
 	<option value="O">COM_PHOCACART_ORDER_NUMBER</option>
 	<option value="I">COM_PHOCACART_INVOICE_NUMBER</option>
