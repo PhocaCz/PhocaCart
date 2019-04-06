@@ -991,8 +991,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`invoice_spec_middle_desc` text,
 	`invoice_spec_bottom_desc` text,
 	
-	`oidn_spec_billing_desc` text;
-	`oidn_spec_shipping_desc` text;
+	`oidn_spec_billing_desc` text,
+	`oidn_spec_shipping_desc` text,
 	
 
 	`privacy` tinyint(1) NOT NULL default '0',
