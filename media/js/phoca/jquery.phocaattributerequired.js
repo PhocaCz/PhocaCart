@@ -1,6 +1,6 @@
 /*
  * jQuery Phoca Attribute Required
- * http://www.phoca.cz
+ * https://www.phoca.cz
  *
  * Copyright (C) 2016 Jan Pavelka www.phoca.cz
  *

@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
@@ -24,6 +27,13 @@ if ($saveOrder) {
 	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
 }
 $sortFields = $this->getSortFields();
+
+
+$nrColumns = 9;
+$assoc     = JLanguageAssociations::isEnabled();
+if ($assoc) {
+    $nrColumns = 10;
+}
 
 echo $r->jsJorderTable($listOrder);
 
@@ -56,7 +66,7 @@ echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filt
 echo $r->selectFilterLevels('COM_PHOCACART_SELECT_MAX_LEVELS', $this->state->get('filter.level'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();
 
 echo $r->startTable('categoryList');
 
@@ -65,19 +75,24 @@ echo $r->startTblHeader();
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_PARENT_CATEGORY', 'parentcat_title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
+
+if ($assoc) {
+    echo '<th class="ph-association">' . JHtml::_('grid.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
+}
+
 echo '<th class="ph-language">'.JHtml::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
-			
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 if (is_array($this->items)) {
@@ -86,8 +101,8 @@ if (is_array($this->items)) {
 			$j++;
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
-$orderkey   	= array_search($item->id, $this->ordering[$item->parent_id]);		
-$ordering		= ($listOrder == 'a.ordering');			
+$orderkey   	= array_search($item->id, $this->ordering[$item->parent_id]);
+$ordering		= ($listOrder == 'a.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -111,7 +126,7 @@ echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" item-id="'
 //echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" >'. "\n";
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");						
+echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -130,23 +145,30 @@ if ($canEditParent) {
 } else {
 	$parentO = $this->escape($item->parentcat_title);
 }
-echo $r->td($parentO, "small");	
-echo $r->td($this->escape($item->access_level), "small");	
+echo $r->td($parentO, "small");
+echo $r->td($this->escape($item->access_level), "small");
 
-						
+if ($assoc) {
+    if ($item->association) {
+        echo $r->td(JHtml::_('phocacartcategory.association', $item->id));
+    } else {
+        echo $r->td('');
+    }
+}
 
-echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
+//echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
+echo $r->td(JLayoutHelper::render('joomla.content.language', $item));
 echo $r->td($item->hits, "small");
 echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
-						
+
 		}
 	}
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 9);
+echo $r->tblFoot($this->pagination->getListFooter(), $nrColumns);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');

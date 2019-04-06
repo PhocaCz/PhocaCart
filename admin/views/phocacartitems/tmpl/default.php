@@ -8,12 +8,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminviews';
-$r 			=  new $class();
+//$class		= $this->t['n'] . 'RenderAdminviews';
+$r 			=  new PhocacartRenderAdminviews();
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -29,16 +32,24 @@ if ($this->t['ordering'] && !empty($this->ordering)) {
 	}
 }
 $sortFields = $this->getSortFields();
+
+$nrColumns = 19;
+$assoc     = JLanguageAssociations::isEnabled();
+if ($assoc) {
+	$nrColumns = 20;
+}
+
 echo $r->jsJorderTable($listOrder);
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
 echo $r->startFilter();
+
 //echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 //echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
 //echo $r->selectFilterCategory(PhocacartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
 echo $r->endFilter();
-
 echo $r->startMainContainer();
+
 echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
 							$this->escape($this->state->get('filter.search')));
@@ -58,7 +69,7 @@ echo $r->endFilterBar();
 
 
 
-	
+
 
 echo $r->startTable('categoryList');
 
@@ -69,7 +80,7 @@ echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-image">'.JText::_($this->t['l'].'_IMAGE').'</th>'."\n";
 echo '<th class="ph-sku">'.JHtml::_('grid.sort',  	$this->t['l'].'_SKU', 'a.sku', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 //echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JTEXT::_($this->t['l'].'_CATEGORY').'</th>'."\n";
 echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
@@ -77,16 +88,20 @@ echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_ORIGINAL_PRIC
 echo '<th class="ph-stock">'.JHtml::_('grid.sort', $this->t['l'].'_IN_STOCK', 'a.stock', $listDirn, $listOrder ).'</th>'."\n";
 //echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
+
+if ($assoc) {
+	echo '<th class="ph-association">' . JHtml::_('grid.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
+}
 echo '<th class="ph-language">'.JHtml::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
-		
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 $price			= new PhocacartPrice();
@@ -103,9 +118,9 @@ $orderkey		= 0;
 $orderingItem	= 0;
 if ($this->t['ordering'] && !empty($this->ordering)) {
 	$orderkey   	= array_search($item->id, $this->ordering[$this->t['catid']]);
-	$orderingItem	= $orderkey; 
-}	
-$ordering		= ($listOrder == 'pc.ordering');			
+	$orderingItem	= $orderkey;
+}
+$ordering		= ($listOrder == 'pc.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -127,7 +142,7 @@ echo '<tr class="row'.$iD.'" sortable-group-id="'.$this->t['catid'].'" >'. "\n";
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $orderingItem, false);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
-echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');	
+echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');
 //echo $r->td($this->escape($item->sku), 'small');
 
 echo $r->td('<span class="ph-editinplace-text ph-eip-sku" id="products:sku:'.(int)$item->id.'">'.$this->escape($item->sku).'</span>', "small");
@@ -166,9 +181,9 @@ if (isset($this->t['categories'][$item->id])) {
 	}
 }
 
-echo $r->td(implode(' ', $catO), "small");	
-//echo $r->td($this->escape($item->access_level), "small");	
-						
+echo $r->td(implode(' ', $catO), "small");
+//echo $r->td($this->escape($item->access_level), "small");
+
 
 echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price).'</span>', "small");
 echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price_original:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price_original).'</span>', "small");
@@ -178,7 +193,16 @@ echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:stock:'
 
 echo $r->td($this->escape($item->access_level));
 
-echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
+if ($assoc) {
+	if ($item->association) {
+		echo $r->td(JHtml::_('phocacartitem.association', $item->id));
+	} else {
+		echo $r->td('');
+	}
+}
+
+//echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
+echo $r->td(JLayoutHelper::render('joomla.content.language', $item));
 echo $r->td($item->hits, "small");
 
 echo $r->td($item->id, "small");
@@ -186,13 +210,13 @@ echo $r->td($item->id, "small");
 
 
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 19);
+echo $r->tblFoot($this->pagination->getListFooter(), $nrColumns);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');

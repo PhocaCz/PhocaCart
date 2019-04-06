@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-$layoutV	= new JLayoutFile('button_category_view', null, array('component' => 'com_phocacart'));	
+$layoutV	= new JLayoutFile('button_category_view', null, array('component' => 'com_phocacart'));
 
 $d 		= $displayData;
 $v		= $d['v'];
@@ -19,10 +19,13 @@ $link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 //echo '<div class="ph-image-box">';
 if (isset($image->rel) && $image->rel != '') {
 	echo '<a href="'.$link.'">';
-	echo '<img class="img-responsive ph-image" src="'.JURI::base(true).'/'.$image->rel.'" alt=""';
+	echo '<img class="img-responsive ph-image" src="'.JURI::base(true).'/'.$image->rel.'"';
 	if (isset($t['image_width_cats']) && $t['image_width_cats'] != '' && isset($t['image_height_cats']) && $t['image_height_cats'] != '') {
 		echo ' style="width:'.$t['image_width_cats'].';height:'.$t['image_height_cats'].'"';
 	}
+
+    $altValue = PhocaCartImage::getAltTitle($v->title, $v->image);
+	echo ' alt="'.$altValue.'"';
 	echo ' />';
 	echo '</a>';
 } else {
@@ -70,7 +73,7 @@ echo '</div>';
 
 
 if ((int)$t['display_view_category_button'] > 0) {
-	
+
 	$d2									= array();
 	$d2['link']							= $link;
 	$d2['display_view_category_button']	= $t['display_view_category_button'];

@@ -14,8 +14,8 @@ class PhocaCartViewCategories extends JViewLegacy
 	protected $t;
 	protected $p;
 
-	public function display($tpl = null) {		
-		
+	public function display($tpl = null) {
+
 		$app									= JFactory::getApplication();
 		$model									= $this->getModel();
 		$document								= JFactory::getDocument();
@@ -35,31 +35,32 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['display_view_category_button']= $this->p->get( 'display_view_category_button', 1 );
 		$this->t['category_name_link']			= $this->p->get( 'category_name_link', 0 );
 		$this->t['categories_view_layout']		= $this->p->get( 'categories_view_layout', 1 );
-	
 
-	
+
+
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
 		//$media->loadChosen();
 		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		//$this->t['class_thumbnail'] = $media->loadProductHover();
-		
+
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
-		
+
 		// Plugins ------------------------------------------
 		JPluginHelper::importPlugin('pcv');
 		//$this->t['dispatcher'] 	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
-		
+
 		$results = \JFactory::getApplication()->triggerEvent('PCVonCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
+
 		$this->t['event']->onCategoriesBeforeHeader = trim(implode("\n", $results));
 		// END Plugins --------------------------------------
-		
+
 		$this->_prepareDocument();
 		parent::display($tpl);
-		
+
 	}
-	
+
 	protected function _prepareDocument() {
 		PhocacartRenderFront::prepareDocument($this->document, $this->p);
 	}

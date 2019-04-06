@@ -25,7 +25,7 @@ $attr[]				= 'data-product-id-name="'. $productIdName.'"';// Product ID - Unique
 $attr[]				= 'data-attribute-type="'. $v->type.'"';// Type of attribute (select, checkbox, color, image)
 $attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - Unique name between different views and products
 $attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item
-$attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)	
+$attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)
 
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
@@ -36,7 +36,7 @@ echo '<div '.implode(' ', $attr).'>';
 /*if ($v->type == 5 || $v->type == 6) {
 	echo '<div class="ph-item-input-checkbox-color" data-toggle="buttons">';
 }*/
-		
+
 foreach ($v->options as $k2 => $v2) {
 	if($v2->operator == '=') {
 		$operator = '';
@@ -44,22 +44,37 @@ foreach ($v->options as $k2 => $v2) {
 		$operator = $v2->operator;
 	}
 	$amount = $d['price']->getPriceFormat($v2->amount);
-	
 
-	// SET SOME VALUE? 
+
+	// SET SOME VALUE?
 	$active = '';
 	if ($v2->default_value == 1) {
 		$active	= ' active';
 	}
-	
+
 	$suffix =  ' ('.$operator.' '.$amount.')';
 	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $price->roundPrice($v2->amount) < 0.01 && $price->roundPrice($v2->amount) > -0.01) {
 		$suffix = '';
-	}	
+	}
 
 	$maxLength = ' maxlength="'.PhocacartAttribute::getAttributeLength($v->type).'"';
-	
-	echo '<div><label class="btn phTextAttributeInput '.$active.'" style="background-color: '.strip_tags($v2->color).'">'.htmlspecialchars($v2->title). $suffix.'</label><br /><input type="text" name="attribute['.$v->id.']['.$v2->id.']" value="" '.$d['required']['attribute'].$maxLength.' /></div>';
+
+	echo '<div><label class="btn phTextAttributeInput '.$active.'" style="background-color: '.strip_tags($v2->color).'">'.htmlspecialchars($v2->title). $suffix.'</label><br />';
+	switch($v->type) {
+        case 10:
+        case 11:
+
+        echo '<textarea class="ph-attribute-textarea" name="attribute['.$v->id.']['.$v2->id.']" '.$d['required']['attribute'].$maxLength.'></textarea>';
+
+        break;
+
+        default:
+
+        echo '<input type="text" name="attribute['.$v->id.']['.$v2->id.']" value="" '.$d['required']['attribute'].$maxLength.' />';
+
+        break;
+    }
+	echo '</div>';
 }
 
 

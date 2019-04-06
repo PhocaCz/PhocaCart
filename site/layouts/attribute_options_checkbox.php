@@ -14,6 +14,7 @@
  * Use Phoca Upgrade System plugin and remove obsolete bootstrap.min.js with help of this plugin
  */
 defined('_JEXEC') or die();
+
 $d 					= $displayData;
 $displayData 		= null;
 $v 					= $d['attribute'];

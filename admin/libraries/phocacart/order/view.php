@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 class PhocacartOrderView
 {
 	public function __construct() {}
-	
+
 	public function getItemBaS($orderId, $returnArray = 0) {
 
 		/*$db				= JFactory::getDBO();
@@ -21,11 +21,11 @@ class PhocacartOrderView
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 		$table	= JTable::getInstance('PhocacartOrderUsers', 'Table', $config);
 		$tableS	= JTable::getInstance('PhocacartOrderUsers', 'Table', $config);*/
-		
-		
+
+
 		// Billing and Shipping
 		$userItems = $this->getItemUser($orderId);
-		
+
 		// Billing
 		/*if(isset($orderId) && (int)$orderId > 0) {
 			$return = $table->load(array('order_id' => (int)$orderId, 'type' => 0));
@@ -34,7 +34,7 @@ class PhocacartOrderView
 				return false;
 			}
 		}
-		
+
 		// Shipping
 		if(isset($orderId) && (int)$orderId > 0) {
 			$returnS = $tableS->load(array('order_id' => (int)$orderId, 'type' => 1));
@@ -43,7 +43,7 @@ class PhocacartOrderView
 				return false;
 			}
 		}*/
-		
+
 		// Convert to the JObject before adding other data.
 		$properties = array();
 		if (isset($userItems[0]['type']) && $userItems[0]['type'] == 0) {
@@ -52,13 +52,13 @@ class PhocacartOrderView
 		if (isset($userItems[1]['type']) && $userItems[1]['type'] == 1) {
 			$properties['s'] = $userItems[1];
 		}
-		
-		
+
+
 		/*$properties['b'] = $table->getProperties(1);
 		$properties['s'] = $tableS->getProperties(1);
 		*/
 		/*if ($returnArray == 1) {
-			
+
 			$region = $this->getRegion($properties['b']['country'], $properties['b']['region'] );
 			$properties['b']['countrytitle'] = $region['countrytitle'];
 			$properties['b']['regiontitle'] = $region['regiontitle'];
@@ -67,22 +67,22 @@ class PhocacartOrderView
 			$properties['s']['regiontitle'] = $region['regiontitle'];
 			return $properties;
 		}*/
-		
+
 		if ($returnArray == 1) {
 			return $properties;
 		}
-		
+
 		//$itemS 	= \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
 		//$item 	= \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
 		$item		= new JObject();//stdClass();
-		
+
 		if(!empty($properties['b']) && is_object($item)) {
 			foreach($properties['b'] as $k => $v) {
 				$newName = $k . '_phb';
 				$item->$newName = $v;
 			}
 		}
-		
+
 		//Add shipping data to billing and do both data package
 		if(!empty($properties['s']) && is_object($item)) {
 			foreach($properties['s'] as $k => $v) {
@@ -90,12 +90,12 @@ class PhocacartOrderView
 				$item->$newName = $v;
 			}
 		}
-		
+
 		return $item;
 	}
-	
+
 	/*public function getRegion($countryId, $regionId) {
-		
+
 		$db = JFactory::getDBO();
 		$query = 'SELECT u.id, c.title AS countrytitle, r.title AS regiontitle'
 				.' FROM #__phocacart_order_users AS u'
@@ -106,9 +106,9 @@ class PhocacartOrderView
 		$region = $db->loadAssoc();
 		return $region;
 	}*/
-	
+
 	public function getItemUser($orderId) {
-		
+
 		$db = JFactory::getDBO();
 		$query = 'SELECT u.*,'
 				.' c.title AS countrytitle, r.title AS regiontitle, c.code2 AS countrycode'
@@ -123,9 +123,9 @@ class PhocacartOrderView
 		return $userList;
 	}
 
-	
+
 	public function getItemCommon($orderId) {
-		
+
 		$db = JFactory::getDBO();
 		$query = 'SELECT o.*,'
 				.' u.id AS user_id, o.vendor_id AS vendor_id, u.name AS user_name, u.username AS user_username, p.title AS paymenttitle,'
@@ -149,9 +149,9 @@ class PhocacartOrderView
 		$order = $db->loadObject();
 		return $order;
 	}
-	
+
 	public function getItemProducts($orderId) {
-		
+
 		$db = JFactory::getDBO();
 		$query = 'SELECT p.*, pr.download_token, pd.published as download_published'
 				.' FROM #__phocacart_orders AS o'
@@ -162,57 +162,57 @@ class PhocacartOrderView
 				.' ORDER BY p.id';
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
-		
+
 		// BE AWARE
 		// Product ID ... is an ID of product
-		// OrderProduct ID ... is an ID of ordered product 
+		// OrderProduct ID ... is an ID of ordered product
 		// There is one product ID but more ordered variants of one product
 		// PRODUCT 1 (Product ID = 1) can have different Attributes when ordered
 		// PRODUCT 1 with attribute 1 (OrderProduct ID = 1)
 		// PRODUCT 2 with attribute 2 (OrderProduct ID = 2)
 		// If you order one product but you will select it with different attributes, you are ordering in fact more products
 		// derivated frome the one
-		
+
 		if (!empty($items)) {
 			foreach ($items as $k => $v) {
 				$attributes = $this->getItemAttributes($orderId, $v->id);
-				
+
 				if (!empty($attributes) && !empty($attributes[0]->id)) {
-					$v->attributes = new stdClass(); 
+					$v->attributes = new stdClass();
 					$v->attributes = $attributes;
 				}
 			}
 		}
 		return $items;
 	}
-	
-	
+
+
 	public function getItemAttributes($orderId, $orderProductId) {
-		
+
 		$db = JFactory::getDBO();
 		// BE AWARE
 		// productid is ID of Product Ordered not of product
 		// productquantity is QUANTITY of Product Ordered not of product
-		// 
+		//
 		// Product Ordered ID is different to product because one product can have more Product Ordered IDs
 		// Product 1 with attribute A ... is Product Ordered 1
 		// Porduct 1 with attribute B ... is Product Ordered 2
 		// Product 2 with attribute A ... is Product Ordered 3
 		// (Product 1 is divided to two ordered products)
 		$query = 'SELECT p.id AS productid, p.quantity as productquantity,'
-				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title, a.option_value'
+				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title, a.option_value, a.type'
 				.' FROM #__phocacart_order_products AS p'
 				.' LEFT JOIN #__phocacart_order_attributes AS a ON p.id = a.order_product_id'
 			    .' WHERE p.id = '.(int)$orderProductId . ' AND p.order_id = '.(int)$orderId
 				.' ORDER BY p.id';
 		$db->setQuery($query);
-		
+
 		$items = $db->loadObjectList();
 		return $items;
 	}
-	
+
 	public function getItemProductDiscounts($orderId, $onlyPublished = 0) {
-		
+
 		$db = JFactory::getDBO();
 		$q = 'SELECT d.*'
 			.' FROM #__phocacart_orders AS o'
@@ -222,37 +222,37 @@ class PhocacartOrderView
 			$q.= ' AND d.published = 1';
 		}
 		$q.= ' ORDER BY d.id';
-		
+
 		$db->setQuery($q);
 		$items = $db->loadObjectList();
 		$itemsByKey = array();
-		
-		
+
+
 		if (!empty($items)) {
-			
+
 			$oPD = array();
 			$iS = 4;// specific ordering - start from 3 because 0 - 2 is taken for reward points, product discounts, cart discounts, coupon
-			
+
 			foreach($items as $k => $v) {
-				
+
 				// SPECIFIC CASE - BACKWARD COMPATIBILITY
 				// Ordering 5 (reward points) -> 2 (product discount) -> 3 (cart discount) -> 4 (coupon)
 				if ($v->type == 5) {
 					$kS = 0;
-				} else if ($v->type == 2) { 
+				} else if ($v->type == 2) {
 					$kS = 1;
-				} else if ($v->type == 3) { 
+				} else if ($v->type == 3) {
 					$kS = 2;
-				} else if ($v->type == 4) { 
+				} else if ($v->type == 4) {
 					$kS = 3;
 				} else {
 					$kS = $iS;
 				}
-				
+
 				$itemsByKey[$v->product_id_key][$kS] = $v;
 				$iS++;
 			}
-			
+
 			if (!empty($itemsByKey)) {
 				foreach($itemsByKey as $k => $v) {
 					ksort($itemsByKey[$k]);
@@ -262,9 +262,9 @@ class PhocacartOrderView
 		return $itemsByKey;
 		//return $items;
 	}
-	
+
 	public function getItemTotal($orderId, $onlyPublished = 0, $type = '') {
-		
+
 		$db = JFactory::getDBO();
 		$q = ' SELECT t.*'
 			.' FROM #__phocacart_orders AS o'
@@ -272,38 +272,38 @@ class PhocacartOrderView
 			.' WHERE o.id = '.(int)$orderId;
 		if ($onlyPublished == 1) {
 			$q.= ' AND t.published = 1';
-		}	
+		}
 		if ($type != '') {
 			$q.= ' AND t.type = '.$db->quote($type);
-		}	
+		}
 		$q.= ' ORDER BY t.ordering';
 		$db->setQuery($q);
 		$items = $db->loadObjectList();
 		return $items;
 	}
-	
+
 	public function getItemTaxRecapitulation($orderId, $type = '') {
-		
+
 		$db = JFactory::getDBO();
 		$q = ' SELECT t.*, o.currency_id AS currency_id, o.currency_exchange_rate AS currency_exchange_rate'
 			.' FROM #__phocacart_orders AS o'
 			.' LEFT JOIN #__phocacart_order_tax_recapitulation AS t ON o.id = t.order_id'
 			.' WHERE o.id = '.(int)$orderId;
-	
+
 		if ($type != '') {
 			$q.= ' AND t.type = '.$db->quote($type);
-		}	
+		}
 		$q.= ' ORDER BY t.ordering';
 		$db->setQuery($q);
 		$items = $db->loadObjectList();
 		return $items;
 	}
-	
-	
+
+
 	// Tracking
 	public static function getTrackingLink($common) {
 		$trackingLink = '';
-		
+
 		if (isset($common->tracking_link_custom) && $common->tracking_link_custom != '') {
 			$trackingLink = '<a href="'.$common->tracking_link_custom.'">'.$common->tracking_link_custom.'</a>';
 		} else if (isset($common->shippingtrackinglink) && $common->shippingtrackinglink != '' && isset($common->tracking_number) && $common->tracking_number != '') {
@@ -311,7 +311,7 @@ class PhocacartOrderView
 		}
 		return $trackingLink;
 	}
-	
+
 	public static function getTrackingDescription($common) {
 		$trackingDescription = '';
 		if (isset($common->tracking_description_custom) && $common->tracking_description_custom != '') {
@@ -320,9 +320,9 @@ class PhocacartOrderView
 			$trackingDescription = $common->shippingtrackingdescription;
 		}
 		return $trackingDescription;
-		
+
 	}
-	
+
 	public static function getShippingTitle($common) {
 		$shippingTitle = '';
 		if (isset($common->shippingtitle) && $common->shippingtitle != '') {
@@ -330,11 +330,19 @@ class PhocacartOrderView
 		}
 		return $shippingTitle;
 	}
-	
+
+	public static function getPaymentTitle($common) {
+		$paymentTitle = '';
+		if (isset($common->paymenttitle) && $common->paymenttitle != '') {
+			$paymentTitle = $common->paymenttitle;
+		}
+		return $paymentTitle;
+	}
+
 	public static function getDateShipped($common) {
 		$dateShipped = '';
-		
-		if (isset($common->tracking_date_shipped) && $common->tracking_date_shipped != '' && $common->tracking_date_shipped != '0000-00-00 00:00:00') {	
+
+		if (isset($common->tracking_date_shipped) && $common->tracking_date_shipped != '' && $common->tracking_date_shipped != '0000-00-00 00:00:00') {
 			$date 	= PhocacartUtils::date($common->tracking_date_shipped);
 			$dateShipped = $date;
 		}

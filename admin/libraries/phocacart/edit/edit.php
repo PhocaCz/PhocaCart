@@ -12,9 +12,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartEdit
 {
 	public static function store($id, $value) {
-		
+
 		$idA = explode(':', $id);//table:column:id
-		
+
 		$table 	= '';// No direct access to table - this is why tables are listed here
 		$column = '';// No direct access to column - this is why columns are listed here
 		$allowedTables = array(
@@ -22,12 +22,14 @@ class PhocacartEdit
 			'#__phocacart_currencies',
 			'#__phocacart_taxes',
 			'#__phocacart_coupons',
-			'#__phocacart_discounts'
+			'#__phocacart_discounts',
+            '#__phocacart_payment_methods',
+            '#__phocacart_shipping_methods'
 		);
 		$allowedColumns = array(
-			'price', 'price_original', 'sku', 'stock', 'exchange_rate', 'tax_rate', 'discount'
+			'price', 'price_original', 'sku', 'stock', 'exchange_rate', 'tax_rate', 'discount', 'cost'
 		);
-		
+
 		if (isset($idA[0])) {
 			$tableTest = '#__phocacart_'.$idA[0];
 			if (in_array($tableTest, $allowedTables)) {
@@ -41,30 +43,31 @@ class PhocacartEdit
 				$column = $columnTest;
 			}
 		}
-		
+
 		switch($column) {
-			
+
 			case 'price':
 			case 'price_original':
 			case 'exchange_rate':
 			case 'tax_rate':
 			case 'discount':
+            case 'cost':
 				$value = PhocacartUtils::replaceCommaWithPoint($value);
 				$value = (float)$value;
 			break;
 			case 'stock':
 				$value = (int)$value;
 			break;
-			
+
 		}
-			
+
 		if ($table != '' && $column != '' && isset($idA[2]) && (int)$idA[2] > 0) {
-			
+
 			$idRow = (int)$idA[2];
-			
+
 			$db	= JFactory::getDBO();
 			$q	= 'UPDATE '.$table.' SET '.$db->quoteName($column).' = '.$db->quote($value).' WHERE id = '.(int)$idRow;
-	
+
 			$db->setQuery($q);
 			$db->execute();
 			return $value;

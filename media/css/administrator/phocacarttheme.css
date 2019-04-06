@@ -923,11 +923,21 @@
 #phAdminEdit input, #phAdminEdit textarea, #phAdminEdit .uneditable-input {
     width: 220px;
 }
+
+#phAdminEdit .ph-attribute-box .minicolors-input,
+#phAdminEdit .ph-attribute-box .input-small {
+	width: 90px;
+}
+
 #phAdminEditProducts input {
 	width: 150px;
 }
 #phAdminEditProducts input.input-xlarge {
 	width: 200px;
+}
+
+#phAdminEditProducts input.input-xxlarge {
+	width: 530px;
 }
 
 #phAdminEdit .chzn-search input {

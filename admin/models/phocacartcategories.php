@@ -30,14 +30,31 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 				'published','a.published',
 				'parentcat_title', 'parentcat_title'
 			);
+
+            // ASSOCIATION
+            $assoc = JLanguageAssociations::isEnabled();
+            if ($assoc){
+                $config['filter_fields'][] = 'association';
+            }
 		}
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
+
+        // ASSOCIATION
+        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout')) {
+            $this->context .= '.' . $layout;
+        }
+        // Adjust the context to support forced languages.
+        if ($forcedLanguage){
+            $this->context .= '.' . $forcedLanguage;
+        }
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
@@ -64,8 +81,13 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 
 		// List state information.
 		parent::populateState('a.title', 'asc');
+
+        // ASSOCIATION
+        if (!empty($forcedLanguage)) {
+            $this->setState('filter.language', $forcedLanguage);
+        }
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -73,11 +95,12 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.category_id');
-		$id	.= ':'.$this->getState('filter.product_id');
+        $id .= ':'.$this->getState('filter.language');
+		$id	.= ':'.$this->getState('filter.category_id');
 
 		return parent::getStoreId($id);
 	}
-	
+
 	/*
 	 * Because of tree we need to load all the items
 	 *
@@ -86,7 +109,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 	 * and will set displaying of categories for current pagination
 	 * E.g. pagination is limitstart 5, limit 5 - so only categories from 5 to 10 will be displayed (in Default.php)
 	 */
-		
+
 	public function getItems()
 	{
 		// Get a storage key.
@@ -103,7 +126,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 			//$items	= $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
 			$items	= $this->_getList($query);
 		} catch (RuntimeException $e) {
-			
+
 			throw new Exception($e->getMessage(), 500);
 		}
 
@@ -112,7 +135,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 
 		return $this->cache[$store];
 	}
-	
+
 	protected function getListQuery()
 	{
 		/*
@@ -133,7 +156,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-		
+
 		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language';
 		//$groupsFull	= $columns . ', ' .'l.title, uc.name, ag.title, c.title, c.id, cc.countid';
 		//$groupsFast	= 'a.id';
@@ -144,16 +167,16 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		$query->from('`#__phocacart_categories` AS a');
 
 		// Join over the language
-		$query->select('l.title AS language_title');
+        $query->select('l.title AS language_title, l.image AS language_image');
 		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
-		
-		
+
+
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		
-	
+
+
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
@@ -162,18 +185,54 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		// Join over the categories.
 		$query->select('c.title AS parentcat_title, c.id AS parentcat_id');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.parent_id');
-		
+
 		//$query->select('ua.id AS userid, ua.username AS username, ua.name AS usernameno');
 		//$query->join('LEFT', '#__users AS ua ON ua.id = a.owner_id');
-		
-		
-		
+
+
+
 		$query->select('cc.countid AS countid');
 		$query->join('LEFT', '(SELECT cc.parent_id, COUNT(*) AS countid'
 		. ' FROM #__phocacart_categories AS cc'
 		.' GROUP BY cc.parent_id ) AS cc'
 		.' ON a.parent_id = cc.parent_id');
-		
+
+
+        // ASSOCIATION
+        // Join over the associations.
+        $assoc = JLanguageAssociations::isEnabled();
+        if ($assoc) {
+            $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))
+                ->join(
+                    'LEFT',
+                    $db->quoteName('#__associations', 'asso') . ' ON ' . $db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id')
+                    . ' AND ' . $db->quoteName('asso.context') . ' = ' . $db->quote('com_phocacart.category')
+                )
+                ->join(
+                    'LEFT',
+                    $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key')
+                )
+                ->group(
+                    $db->quoteName(
+                        array(
+                            'a.id',
+                            'a.title',
+                            'a.alias',
+                            'a.checked_out',
+                            'a.checked_out_time',
+                            'a.published',
+                            'a.access',
+                            'a.ordering',
+                            'a.language',
+                            'l.title' ,
+                            'l.image' ,
+                            'uc.name' ,
+                            'ag.title'
+                        )
+                    )
+                );
+        }
+
 
 		// Filter by access level.
 		if ($access = $this->getState('filter.access')) {
@@ -194,7 +253,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		if (is_numeric($categoryId)) {
 			$query->where('a.parent_id = ' . (int) $categoryId);
 		}
-		
+
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = ' . $db->quote($language));
@@ -213,7 +272,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
-		
+
 		///$query->group($groups);
 
 		// Add the list ordering clause.
@@ -225,11 +284,11 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		
-		
+
+
 		return $query;
 	}
-	
+
 	public function getTotal() {
 		$store = $this->getStoreId('getTotal');
 		if (isset($this->cache[$store])) {
@@ -255,13 +314,13 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		$this->cache[$store] = $total;
 		return $this->cache[$store];
 	}
-	
+
 	public function setTotal($total) {
 		// When we use new total and new pagination, we need to clean their cache
 		$store1 = $this->getStoreId('getTotal');
 		$store2 = $this->getStoreId('getStart');
 		$store3 = $this->getStoreId('getPagination');
-		
+
 		unset($this->cache[$store1]);
 		unset($this->cache[$store2]);
 		unset($this->cache[$store3]);

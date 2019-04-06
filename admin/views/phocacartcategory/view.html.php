@@ -17,9 +17,9 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 	protected $t;
 
 	public function display($tpl = null) {
-	
+
 		$this->t		= PhocacartUtils::setVars('category');
-		
+
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
@@ -28,11 +28,11 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 
 		JHtml::_('behavior.calendar');
 		$media = new PhocacartRenderAdminmedia();
-		
+
 		//Data from model
 		//$this->item	=& $this->get('Data');
 
-		$lists 	= array();		
+		$lists 	= array();
 		$isNew	= ((int)$this->item->id == 0);
 
 		// Edit or Create?
@@ -44,19 +44,34 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 			$this->item->order 			= 0;
 			$this->item->access			= 0;
 		}
-		
+
 		$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
 		PhocacartRenderJs::renderAjaxDoRequest(JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'));
 		PhocacartRenderJs::renderAjaxDoRequestAfterChange($url, 'categoryimage', 'imageCreateThumbs');
 		PhocacartRenderJs::renderAjaxDoRequestAfterPaste($url, 'categoryimage');
 
+		// ASSOCIATION
+		// If we are forcing a language in modal (used for associations).
+		if ($this->getLayout() === 'modal' && $forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'cmd')) {
+			// Set the language field to the forcedLanguage and disable changing it.
+			$this->form->setValue('language', null, $forcedLanguage);
+			$this->form->setFieldAttribute('language', 'readonly', 'true');
+
+			// Only allow to select categories with All language or with the forced language.
+			$this->form->setFieldAttribute('parent_id', 'language', '*,' . $forcedLanguage);
+
+			// Possible FR - add tags (including modifying tag field - to filter language)
+			// Only allow to select tags with All language or with the forced language.
+			//$this->form->setFieldAttribute('tags', 'language', '*,' . $forcedLanguage);
+		}
+
 		$this->addToolbar();
 		parent::display($tpl);
 	}
-	
-	
+
+
 	protected function addToolbar() {
-		
+
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$bar 		= JToolbar::getInstance('toolbar');
@@ -74,25 +89,30 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
 			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
 			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
-			
+
 		}
 		// If an existing item, can save to a copy.
 		if (!$isNew && $canDo->get('core.create')) {
 			//JToolbarHelper::custom($this->t['c'].'cat.save2copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		}
+
+		if (!$isNew && JLanguageAssociations::isEnabled() && JComponentHelper::isEnabled('com_associations')) {
+			JToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
+		}
+
 		if (empty($this->item->id))  {
 			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
 			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
-		
-		
-	
-		
+
+
+
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
-		
+
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }

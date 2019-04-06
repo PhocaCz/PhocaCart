@@ -15,31 +15,35 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+    public $filterForm;
+    public $activeFilters;
+    protected $sidebar;
 
 	function display($tpl = null) {
-	
+
 		$this->t			= PhocacartUtils::setVars('category');
 		$model 				= $this->getModel();
 		$this->items		= $model->getItems();
 		$this->pagination	= $model->getPagination();
+        $this->filterForm   = $this->get('FilterForm');
 		$this->state		= $model->getState();
-		
+
 		// Preprocess the list of items to find ordering divisions.
 		foreach ($this->items as &$item) {
-			
+
 			$this->ordering[$item->parent_id][] = $item->id;
 		}
-		
+
 		// if search, don't do a tree, only display the searched items
 		$this->t['search'] = $this->state->get('filter.search');
 		// We need to load all items because of creating tree
 		// After creating tree we get info from pagination
 		// and will set displaying of categories for current pagination
 		//E.g. pagination is limitstart 5, limit 5 - so only categories from 5 to 10 will be displayed
-		
+
 		// the same for max levels
 		$this->t['level'] = $this->state->get('filter.level');
-		
+
 		if (!empty($this->items) && !$this->t['search']) {
 			$text = ''; // text is tree name e.g. Category >> Subcategory
 			$tree = array();
@@ -49,21 +53,43 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 			} else {
 				$maxLevel = false;
 			}
-			
+
 			$this->items = $this->processTree($this->items, $tree, 0, $text, -1, 0, '', $maxLevel);
-			
+
 			// Re count the pagination
 			$countTotal 		= count($this->items);
 			$model->setTotal($countTotal);
 			$this->pagination	= $model->getPagination();
 		}
-		
+
 		$media = new PhocacartRenderAdminmedia();
 
-		$this->addToolbar();
+        // ASSOCIATION
+        // We don't need toolbar in the modal window.
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+            //$this->sidebar = JHtmlSidebar::render();
+        } else {
+            // In article associations modal we need to remove language filter if forcing a language.
+            // We also need to change the category filter to show show categories with All or the forced language.
+            if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
+            {
+                // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
+                //$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
+                //$this->filterForm->setField($languageXml, 'filter', true);
+
+                // Also, unset the active language filter so the search tools is not open by default with this filter.
+                unset($this->activeFilters['language']);
+
+                // One last changes needed is to change the category filter to just show categories with All language or with the forced language.
+                // $this->filterForm->setFieldAttribute('category_id', 'language', '*,' . $forcedLanguage, 'filter');
+            }
+        }
+
+
 		parent::display($tpl);
 	}
-	
+
 	protected function addToolbar() {
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		$state	= $this->get('State');
@@ -72,7 +98,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		JToolbarHelper::title( JText::_( $this->t['l'].'_CATEGORIES' ), 'folder-open' );
 		$user  = JFactory::getUser();
 		$bar = JToolbar::getInstance('toolbar');
-		
+
 		if ($canDo->get('core.create')) {
 			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
@@ -89,7 +115,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		if ($canDo->get('core.delete')) {
 			JToolbarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
-		
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
@@ -100,43 +126,43 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		
+
 		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){submitbutton(\'phocacartcategory.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
 		$bar->appendButton('Custom', $dhtml);
-		
-		
+
+
 
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
-		
+
 		PhocacartRenderAdminview::renderWizardButton('back');
-		
+
 	}
-	
+
 	protected function processTree( $data, $tree, $id = 0, $text='', $currentId, $level, $parentsTreeString = '', $maxLevel = false) {
-	
-	
+
+
 		$countItemsInCat 	= 0;// Ordering
 		$level 				= $level + 1;
 		$parentsTreeString	= $id . ' '. $parentsTreeString;
-		
-		// Limit the level of tree		
+
+		// Limit the level of tree
 		if (!$maxLevel || ($maxLevel && $level < $maxLevel)) {
-			foreach ($data as $key) {	
+			foreach ($data as $key) {
 				$show_text 	= $text . $key->title;
-				
+
 				static $iCT = 0;// All displayed items
-				
-				if ($key->parent_id == $id && $currentId != $id && $currentId != $key->id ) {	
+
+				if ($key->parent_id == $id && $currentId != $id && $currentId != $key->id ) {
 					$tree[$iCT] 					= new JObject();
-		
+
 					// Ordering MUST be solved here
 					if ($countItemsInCat > 0) {
 						$tree[$iCT]->orderup				= 1;
 					} else {
 						$tree[$iCT]->orderup 				= 0;
 					}
-					
+
 					if ($countItemsInCat < ($key->countid - 1)) {
 						$tree[$iCT]->orderdown 				= 1;
 					} else {
@@ -144,8 +170,8 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 					}
 
 					$tree[$iCT] 					= new JObject();
-					
-					$tree[$iCT]->level				= $level;		
+
+					$tree[$iCT]->level				= $level;
 					$tree[$iCT]->parentstree		= $parentsTreeString;
 
 					$tree[$iCT]->id 				= $key->id;
@@ -173,8 +199,10 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 				//	$tree[$iCT]->ratingavg			= $key->ratingavg;
 				//	$tree[$iCT]->accessuserid		= $key->accessuserid;
 				//	$tree[$iCT]->uploaduserid		= $key->uploaduserid;
+					$tree[$iCT]->association		= $key->association;
 					$tree[$iCT]->language			= $key->language;
 					$tree[$iCT]->language_title		= $key->language_title;
+					$tree[$iCT]->language_image		= $key->language_image;
 				//	$tree[$iCT]->deleteuserid		= $key->deleteuserid;
 				//	$tree[$iCT]->userfolder			= $key->userfolder;
 				//	$tree[$iCT]->approved			= $key->approved;
@@ -185,12 +213,12 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 					$iCT++;
 					$tree = $this->processTree($data, $tree, $key->id, $show_text . " - ", $currentId, $level, $parentsTreeString, $maxLevel);
 					$countItemsInCat++;
-				}	
-			}	
+				}
+			}
 		}
 		return($tree);
 	}
-	
+
 	protected function getSortFields() {
 		return array(
 			'a.ordering'	=> JText::_('JGRID_HEADING_ORDERING'),

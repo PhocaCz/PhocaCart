@@ -11,7 +11,7 @@ jimport('joomla.application.component.model');
 
 class PhocaCartModelCategory extends JModelLegacy
 {
-	
+
 	protected $item 				= null;
 	protected $item_ordering		= null;
 	protected $layout_type			= null;
@@ -22,16 +22,16 @@ class PhocaCartModelCategory extends JModelLegacy
 	protected $total				= null;
 	protected $ordering				= null;
 
-	public function __construct() {	
+	public function __construct() {
 		parent::__construct();
-		
+
 		$app					= JFactory::getApplication();
-		$config 				= JFactory::getConfig();		
+		$config 				= JFactory::getConfig();
 		$paramsC 				= $app->getParams();
 		$item_pagination		= $paramsC->get( 'item_pagination_default', '20' );
 		$item_ordering			= $paramsC->get( 'item_ordering', 1 );
 		$layout_type			= $paramsC->get( 'layout_type', 'grid' );
-	
+
 		$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 
 		$this->setState('limit', $limit);
@@ -42,16 +42,16 @@ class PhocaCartModelCategory extends JModelLegacy
 		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
 		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
-	
-		
+
+
 	}
-	
+
 	public function getLayoutType() {
 		$layoutType 	= $this->getState('layouttype');
 		$layoutType		= PhocacartRenderFront::getLayoutType($layoutType);
 		return $layoutType;
 	}
-	
+
 	public function getPagination($categoryId) {
 		if (empty($this->pagination)) {
 			jimport('joomla.html.pagination');
@@ -59,14 +59,14 @@ class PhocaCartModelCategory extends JModelLegacy
 		}
 		return $this->pagination;
 	}
-	
+
 	function getOrdering() {
 		if(empty($this->ordering)) {
 			$this->ordering = PhocacartOrdering::renderOrderingFront($this->getState('itemordering'), 0);
 		}
 		return $this->ordering;
 	}
-	
+
 	public function getTotal($categoryId) {
 		if (empty($this->total)) {
 			$query = $this->getItemListQuery($categoryId, 1);
@@ -76,31 +76,31 @@ class PhocaCartModelCategory extends JModelLegacy
 	}
 
 	public function getItemList($categoryId) {
-		if (empty($this->item)) {	
+		if (empty($this->item)) {
 			$query			= $this->getItemListQuery( $categoryId);
 			$this->item		= $this->_getList( $query ,$this->getState('limitstart'), $this->getState('limit'));
 		}
 		return $this->item;
 	}
-	
-	public function getCategory($categoryId) {	
-		if (empty($this->category)) {			
+
+	public function getCategory($categoryId) {
+		if (empty($this->category)) {
 			$query					= $this->getCategoriesQuery( $categoryId, FALSE );
 			$this->category 		= $this->_getList( $query, 0, 1 );
 		}
 		return $this->category;
 	}
-	
-	public function getSubcategories($categoryId) {	
-		if (empty($this->subcategories)) {			
+
+	public function getSubcategories($categoryId) {
+		if (empty($this->subcategories)) {
 			$query					= $this->getCategoriesQuery( $categoryId, TRUE );
 			$this->subcategories 	= $this->_getList( $query );
 		}
 		return $this->subcategories;
 	}
-	
+
 	protected function getItemListQuery($categoryId, $count = 0) {
-	
+
 		$app		= JFactory::getApplication();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -108,8 +108,8 @@ class PhocaCartModelCategory extends JModelLegacy
 		$params 	= $app->getParams();
 		$wheres		= array();
 		$lefts		= array();
-		
-		
+
+
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
 		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
 		$leftImages = '';
@@ -118,58 +118,58 @@ class PhocaCartModelCategory extends JModelLegacy
 			$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON a.id = im.product_id';
 			$selImages	= ' GROUP_CONCAT(im.image) as additional_image,';
 		}
-		
-		
+
+
 		$wheres		= array();
 		if ((int)$categoryId > 0) {
 			$wheres[]			= " c.id = ".(int)$categoryId;
 		}
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
-		
+
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
-		
+
 		if ($this->getState('filter.language')) {
 			$lang 		= JFactory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 		$itemOrdering = $this->getItemOrdering();
-		
+
 		// BE AWARE
 		// g.item_id is in this case product_id: phocacart_item_groups table is used for more instances: user, product, category
 		// so item_id in case type = 3 is product_id, items_id in case type = 2 is category_id
 		// see types: administrator\components\com_phocacart\libraries\phocacart\group\group.php
-		
+
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " a.access IN (".$userLevels.")";
-		
+
 		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
-		
-		
+
+
 		if ($p['hide_products_out_of_stock'] == 1) {
 			$wheres[] = " a.stock > 0";
 		}
-		
+
 		if ($count == 1) {
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
-			
+
 			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
 			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
-			
+
 			//$query = ' SELECT COUNT(DISTINCT a.id) AS count'; // 2.85ms 0.12mb
 			$q = ' SELECT a.id' // 2.42ms 0.12mb
 			. ' FROM #__phocacart_products AS a'
 			. implode( ' ', $lefts )
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY a.id';
-			
+
 		} else {
-			
+
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id AND pc.category_id = '.(int)$categoryId;
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
@@ -183,23 +183,23 @@ class PhocaCartModelCategory extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
 			// user is in more groups, select highest points by best group
 			$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
-			
-			
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit,  a.description,'
+
+
+			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,' 
-						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,' 
-						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,' 
-						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,' 
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,'
+						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
+						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,'
+						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
 						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 						.' AVG(r.rating) AS rating, at.required AS attribute_required';
-			
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
+
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
 			$groupsFast	= 'a.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-			
-			
-			
+
+
+
 			$q = ' SELECT '.$columns
 			. ' FROM #__phocacart_products AS a'
 			. implode( ' ', $lefts )
@@ -208,22 +208,22 @@ class PhocaCartModelCategory extends JModelLegacy
 			. ' GROUP BY '.$groups
 			. ' ORDER BY '.$itemOrdering;
 		}
-		
+
 		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
-	
+
 		return $q;
 	}
-	
+
 	protected function getCategoriesQuery($categoryId, $subcategories = FALSE) {
-		
+
 		$wheres		= array();
 		$app		= JFactory::getApplication();
 		$params 	= $app->getParams();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
-		
+
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
-		
+
 		// Get the current category or get parent categories of the current category
 		if ($subcategories) {
 			$wheres[]			= " c.parent_id = ".(int)$categoryId;
@@ -236,19 +236,19 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
-		
+
 		if ($this->getState('filter.language')) {
 			$lang 		= JFactory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
-		
+
 		if ($subcategories) {
-			
+
 			$columns	= 'c.id, c.parent_id, c.title, c.alias, c.image, COUNT(c.id) AS numdoc';
 			$groupsFull	= 'c.id, c.parent_id, c.title, c.alias, c.image';
 			$groupsFast	= 'c.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-			
+
 			$query = " SELECT ".$columns
 				. " FROM #__phocacart_categories AS c"
 				//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
@@ -268,8 +268,8 @@ class PhocaCartModelCategory extends JModelLegacy
 		//echo nl2br(str_replace('#__', 'jos_', $query));
 		return $query;
 	}
-	
-	
+
+
 	protected function getItemOrdering() {
 		if (empty($this->item_ordering)) {
 			$app						= JFactory::getApplication();
@@ -280,7 +280,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		}
 		return $this->item_ordering;
 	}
-	
+
 	protected function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
 			$app						= JFactory::getApplication();
@@ -290,7 +290,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		}
 		return $this->category_ordering;
 	}
-	
+
 	public function hit($pk = 0) {
 		$input = JFactory::getApplication()->input;
 		$hitcount = $input->getInt('hitcount', 1);

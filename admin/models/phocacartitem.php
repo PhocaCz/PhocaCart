@@ -12,10 +12,11 @@ use Joomla\String\StringHelper;
 
 class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 {
-	protected	$option 		= 'com_phocacart';
-	protected 	$text_prefix	= 'com_phocacart';
-	public $typeAlias 			= 'com_phocacart.phocacartitem';
-	
+	protected	$option 		        = 'com_phocacart';
+	protected 	$text_prefix	        = 'com_phocacart';
+	public      $typeAlias 		        = 'com_phocacart.phocacartitem';
+	protected   $associationsContext    = 'com_phocacart.item';	// ASSOCIATION
+
 	protected function canDelete($record){
 		$user = JFactory::getUser();
 
@@ -26,7 +27,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			return parent::canDelete($record);
 		}
 	}
-	
+
 	protected function canEditState($record) {
 		$user = JFactory::getUser();
 
@@ -37,23 +38,23 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			return parent::canEditState($record);
 		}
 	}
-	
+
 	public function getTable($type = 'PhocaCartItem', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartitem', 'phocacartitem', array('control' => 'jform', 'load_data' => $loadData));
-		
+
 		if (empty($form)) {
 			return false;
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacart.data', array());
@@ -64,7 +65,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return $data;
 	}
-	
+
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
@@ -84,11 +85,25 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$item->volume			= PhocacartPrice::cleanPrice($item->volume);
 			$item->unit_amount 		= PhocacartPrice::cleanPrice($item->unit_amount);
 
+			// ASSOCIATION
+			// Load associated Phoca Cart items
+			$assoc = JLanguageAssociations::isEnabled();
+			if ($assoc) {
+				$item->associations = array();
+
+				if ($item->id != null){
+					$associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', $item->id, 'id', 'alias', false);
+
+					foreach ($associations as $tag => $association){
+						$item->associations[$tag] = $association->id;
+					}
+				}
+			}
 		}
 
 		return $item;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -96,9 +111,9 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
-		
 
-		
+
+
 		$table->price 			= PhocacartUtils::replaceCommaWithPoint($table->price);
 		$table->price_original 	= PhocacartUtils::replaceCommaWithPoint($table->price_original);
 		$table->length 			= PhocacartUtils::replaceCommaWithPoint($table->length);
@@ -106,7 +121,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$table->height 			= PhocacartUtils::replaceCommaWithPoint($table->height);
 		$table->weight 			= PhocacartUtils::replaceCommaWithPoint($table->weight);
 		$table->volume 			= PhocacartUtils::replaceCommaWithPoint($table->volume);
-		
+
 
 		$table->tax_id 					= PhocacartUtils::getIntFromString($table->tax_id);
 		$table->manufacturer_id			= PhocacartUtils::getIntFromString($table->manufacturer_id);
@@ -134,17 +149,16 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$max = $db->loadResult();
 				$table->ordering = $max+1;
 			}*/
-		}
-		else {
+		} else {
 			// Set the values
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
 	}
 
-	
+
 	function save($data) {
-		
+
 		/*if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
 		}*/
@@ -154,8 +168,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
-		
-		
+
+
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
 			if ($data['alias'] == null) {
@@ -181,9 +195,9 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->setError(\JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			return false;
 		}
-		
 
-	
+
+
 
 		// Include the content plugins for the on save events.
 		JPluginHelper::importPlugin('content');
@@ -226,34 +240,40 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->setError($table->getError());
 			return false;
 		} */
-		
-		
 
+
+		// Trigger the before event.
+		JPluginHelper::importPlugin('pca');
+		$result = \JFactory::getApplication()->triggerEvent('PCAonItemBeforeSave', array('com_phocacart.item', &$table, $isNew, $data));
 		// Store the data.
-		if (!$table->store()) {
+		if (in_array(false, $result, true) || !$table->store()) {
 			$this->setError($table->getError());
 			return false;
 		}
-		
+		// Trigger the after save event.
+		\JFactory::getApplication()->triggerEvent('PCAonItemAfterSave', array('com_phocacart.item', &$table, $isNew, $data));
 
-		
-		
+
+
+
+
 		// Test Thumbnails (Create if not exists)
 		if ($table->image != '') {
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
 		}
-						
+
 		if ((int)$table->id > 0) {
-			
+
+
 			if (!isset($data['catid_multiple'])) {
 				$data['catid_multiple'] = array();
 			}
 			PhocacartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->id);
-			
+
 			if (isset($data['featured'])) {
 				$this->featured((int)$table->id, $data['featured']);
 			}
-		
+
 			$dataRelated = '';
 			if (!isset($data['related'])) {
 				$dataRelated = '';
@@ -263,17 +283,17 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 					$dataRelated = $data['related'][0];
 				}
 			}
-			
+
 			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
-			
+
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
 			}
 			if (!isset($data['group'])) {
 				$data['group'] = array();
 			}
-			
-				
+
+
 			$pFormImg = $app->input->post->get('pformimg', array(), 'array');
 			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
 			$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
@@ -282,33 +302,33 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			PhocacartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
 			$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
-			
+
 			PhocacartGroup::storeGroupsById((int)$table->id, 3, $data['group']);
-			
-	
+
+
 			PhocacartPriceHistory::storePriceHistoryById((int)$table->id, $data['price']);
-			
-			
+
+
 			PhocacartGroup::updateGroupProductPriceById((int)$table->id, $data['price']);
 			PhocacartGroup::updateGroupProductRewardPointsById((int)$table->id, $data['points_received']);
-			
-			
+
+
 			// UPDATE this file too:
 			// administrator\components\com_phocacart\libraries\phocacart\product\product.php storeProduct() function
-			
+
 			// TAGS
 			if (!isset($data['tags'])) {
 				$data['tags'] = array();
 			}
-			
+
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
-			
-			
+
+
 			// TAG LABELS
 			if (!isset($data['taglabels'])) {
 				$data['taglabels'] = array();
 			}
-			
+
 			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
 
 		}
@@ -326,18 +346,84 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 		$this->setState($this->getName().'.new', $isNew);
 
+
+
+		// ASSOCIATION
+        if ($this->associationsContext && \JLanguageAssociations::isEnabled() && !empty($data['associations'])) {
+			$associations = $data['associations'];
+			// Unset any invalid associations
+			$associations = Joomla\Utilities\ArrayHelper::toInteger($associations);
+			// Unset any invalid associations
+			foreach ($associations as $tag => $id) {
+				if (!$id){
+					unset($associations[$tag]);
+				}
+			}
+
+			// Show a warning if the item isn't assigned to a language but we have associations.
+			if ($associations && $table->language === '*') {
+				\JFactory::getApplication()->enqueueMessage(
+					\JText::_(strtoupper($this->option) . '_ERROR_ALL_LANGUAGE_ASSOCIATED'),
+					'warning'
+				);
+			}
+
+			// Get associationskey for edited item
+			$db    = $this->getDbo();
+			$query = $db->getQuery(true)
+				->select($db->qn('key'))
+				->from($db->qn('#__associations'))
+				->where($db->qn('context') . ' = ' . $db->quote($this->associationsContext))
+				->where($db->qn('id') . ' = ' . (int) $table->$pkName);
+			$db->setQuery($query);
+			$old_key = $db->loadResult();
+
+			// Deleting old associations for the associated items
+			$query = $db->getQuery(true)
+				->delete($db->qn('#__associations'))
+				->where($db->qn('context') . ' = ' . $db->quote($this->associationsContext));
+
+			if ($associations) {
+				$query->where('(' . $db->qn('id') . ' IN (' . implode(',', $associations) . ') OR '
+					. $db->qn('key') . ' = ' . $db->q($old_key) . ')');
+			} else {
+				$query->where($db->qn('key') . ' = ' . $db->q($old_key));
+			}
+
+			$db->setQuery($query);
+			$db->execute();
+
+			// Adding self to the association
+			if ($table->language !== '*') {
+				$associations[$table->language] = (int) $table->$pkName;
+			}
+
+			if (count($associations) > 1) {
+				// Adding new association for these items
+				$key   = md5(json_encode($associations));
+				$query = $db->getQuery(true)
+					->insert('#__associations');
+
+				foreach ($associations as $id) {
+					$query->values(((int) $id) . ',' . $db->quote($this->associationsContext) . ',' . $db->quote($key));
+				}
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+
 		return true;
 	}
-	
-		
+
+
 
 	public function delete(&$cid = array()) {
-		
-		
+
+
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-			
+
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
@@ -349,13 +435,13 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 					return false;
 				}
 			}
-			
+
 			// 1. DELETE ITEMS
 			$query = 'DELETE FROM #__phocacart_products'
 				. ' WHERE id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 2. DELETE ATTRIBUTE OPTIONS
 			$query = 'SELECT id FROM #__phocacart_attributes WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery($query);
@@ -363,7 +449,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$attrArray = array();
 			if (!empty($attrOptions)) {
 				foreach($attrOptions as $k => $v) {
-					$attrArray[] = $v['id'];				
+					$attrArray[] = $v['id'];
 				}
 				if (!empty($attrArray)) {
 					$attrs = implode( ',', $attrArray );
@@ -373,20 +459,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 					$this->_db->execute();
 				}
 			}
-			
+
 			// 3. DELETE ATTRIBUTES
 			$query = 'DELETE FROM #__phocacart_attributes'
 					. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
-			
+
+
 			// 4. DELETE RELATED
 			$query = 'DELETE FROM #__phocacart_product_related'
 				. ' WHERE product_a IN ( '.$cids.' ) OR product_b IN ('.$cids.')';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 5. DELETE FEATURED
 			$query = 'DELETE FROM #__phocacart_product_featured'
 				. ' WHERE product_id IN ( '.$cids.' )';
@@ -394,71 +480,71 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->execute();
 			$tableF = $this->getTable('PhocacartFeatured', 'Table');
 			$tableF->reorder();
-			
+
 			// 6. DELETE IMAGES
 			$query = 'DELETE FROM #__phocacart_product_images'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 7. DELETE REVIEWS
 			$query = 'DELETE FROM #__phocacart_reviews'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 8. DELETE CATEGORY RELATIONSHIP
 			$query = 'DELETE FROM #__phocacart_product_categories'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 9. DELETE SPECIFICATIONS
 			$query = 'DELETE FROM #__phocacart_specifications'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 9. DELETE PRODUCT DISCOUNTS
 			$query = 'DELETE FROM #__phocacart_product_discounts'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 9. DELETE PRODUCT CUSTOMER GROUPS
 			$query = 'DELETE FROM #__phocacart_item_groups'
 				. ' WHERE item_id IN ( '.$cids.' )'
 				. ' AND type = 3';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 10. DELETE PRODUCT PRICE CUSTOMER GROUPS
 			$query = 'DELETE FROM #__phocacart_product_price_groups'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
-			
+
+
 			// 11. DELETE PRODUCT POINT CUSTOMER GROUPS
 			$query = 'DELETE FROM #__phocacart_product_point_groups'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 		}
 		return true;
 	}
 
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		
+
 		// Destination Category
 		$categoryId	= (int) $value;
 		// Source Category (current category)
 		$app 			= JFactory::getApplication('administrator');
 		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
 		$batchP 		= $app->input->post->get('batch', array(), 'array');
-		
+
 		$table	= $this->getTable();
 		$db		= $this->getDbo();
 
@@ -490,7 +576,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 			return false;
 		}
-		
+
 		//$i		= 0;
 
 		// Parent exists so we let's proceed
@@ -526,12 +612,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 			// New category ID
 		//	$table->catid	= $categoryId;
-			
+
 			// Ordering
 		//	$table->ordering = $this->increaseOrdering($categoryId);
 
 			$table->hits = 0;
-			
+
 
 			// Check the row.
 			if (!$table->check()) {
@@ -544,19 +630,19 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
-			
+
 			$newId = $table->get('id');
 
 			// Add the new ID to the array
 			$newIds[$pk]	= $newId;
-			
+
 			// Store other new information
-			
+
 			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId);
 			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
-			
-			
-		
+
+
+
 			// Copy all source categories
 			if (isset($batchP['copy_all_cats']) && $batchP['copy_all_cats'] == 1) {
 				$currentDataCat = PhocacartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
@@ -566,32 +652,32 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			} else {
 				$dataCat2		= $dataCat;
 			}
-			
-			
+
+
 			// 2) Remove duplicates
 			$dataCat2		= array_unique($dataCat2);
-			
-		
-		
-		/*	
+
+
+
+		/*
 		 * 	Yes when copying - we duplicate the item intentionally
 		 * 	// 3) Remove the source category - we copy product from source category and the product is included in source category
 			//    so don't copy it again to not get duplicates in the same category*/
 			//
-			// 
+			//
 			// $currentCatidA 	= array(0 => (int)$currentCatid);
 			// $dataCat2 		= array_diff($dataCat2, $currentCatidA);
-			
+
 			// PhocacartCategoryMultiple::storeCategories function does not delete current category, so if we have removed it from array,
 			// we need to delete it from database too
 			// PhocacartCategoryMultiple::deleteCategoriesFromProduct($currentCatidA, (int)$newId);
 			// This is based on filtering in administration - if we display products from category A, the A is $currentCatidA
-			
-			
-	
+
+
+
 			// The following function does not delete source categories, it only adds new so source categories needs to be deleted
 			PhocacartCategoryMultiple::storeCategories($dataCat2, (int)$newId);
-			
+
 			//$i++;
 		}
 
@@ -683,9 +769,9 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
-			
+
 			$dataCat[]	= (int)$categoryId;
-			
+
 			PhocacartCategoryMultiple::storeCategories($dataCat, (int)$table->id);
 		}
 
@@ -694,10 +780,10 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return true;
 	}
-	
-	
+
+
 	function recreate($cid = array(), &$message) {
-		
+
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
@@ -707,15 +793,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->setQuery($query);
 			$files = $this->_db->loadObjectList();
 			if (isset($files) && count($files)) {
-				
+
 				$msg = array();
 				foreach($files as $k => $v) {
-					
+
 					$title 	= isset($v->title) ? $v->title : '';
 					$title	= JText::_('COM_PHOCACART_PRODUCT') . ' ' . $v->title . ': ';
-				
+
 					if (isset($v->image) && $v->image != '') {
-						
+
 						$original	= PhocacartFile::existsFileOriginal($v->image, 'productimage');
 						if (!$original) {
 							// Original does not exist - cannot generate new thumbnail
@@ -723,7 +809,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 							//return false;
 							continue;
 						}
-						
+
 						// Delete old thumbnails
 						$deleteThubms = PhocacartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'productimage');
 						if (!$deleteThubms) {
@@ -737,7 +823,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 							//return false;
 							continue;
 						}
-						
+
 						// Additional images
 						if (isset($v->id) && (int)$v->id > 0) {
 							$query = 'SELECT a.image'.
@@ -747,7 +833,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 							$files2 = $this->_db->loadObjectList();
 							if (isset($files2) && count($files2)) {
 								foreach($files2 as $k2 => $v2) {
-								
+
 									$original2	= PhocacartFile::existsFileOriginal($v2->image, 'productimage');
 									if (!$original2) {
 										// Original does not exist - cannot generate new thumbnail
@@ -755,7 +841,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 										//return false;
 										continue;
 									}
-									
+
 									// Delete old thumbnails
 									$deleteThubms2 = PhocacartFileThumbnail::deleteFileThumbnail($v2->image, 1, 1, 1, 'productimage');
 									if (!$deleteThubms2) {
@@ -769,21 +855,21 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 										//return false;
 										continue;
 									}
-								
+
 								}
 							}
 						}
-						
+
 					} else {
 						$msg[$k] = $title . JText::_('COM_PHOCACART_FILENAME_NOT_EXISTS');
 						//return false;
 						continue;
 					}
 				}
-				
+
 				//$countMsg = count($msg);
 				$message = !empty($msg) ? implode('<br />', $msg) : '';
-				
+
 			} else {
 				$message = JText::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
 				return false;
@@ -794,7 +880,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 		return true;
 	}
-	
+
 	public function featured($pks, $value = 0) {
 		// Sanitize the ids.
 		$pks = (array) $pks;
@@ -807,8 +893,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 		$table = $this->getTable('PhocacartFeatured', 'Table');
-		
-		
+
+
 
 		try
 		{
@@ -876,40 +962,40 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return true;
 	}
-	
-	
+
+
 	/* Multiple categories */
-	
+
 	public function saveorder($pks = null, $order = null)
 	{
 		// PHOCAEDIT
 		//$table = $this->getTable();
 		$table 	= $this->getTable('PhocacartProductCategories', 'Table');
-		
+
 		// CURRENT CATEGORY
 		$app 			= JFactory::getApplication('administrator');
 		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
-		
+
 
 		$tableClassName = get_class($table);
 		$contentType = new JUcmType;
 		$type = $contentType->getTypeByTable($tableClassName);
 		$tagsObserver = $table->getObserverOfClass('JTableObserverTags');
 		$conditions = array();
-		
+
 
 		if (empty($pks))
 		{
 			return $app->enqueueMessage(JText::_($this->text_prefix.'_ERROR_NO_ITEMS_SELECTED'), 'error');
-			
+
 		}
 
 		// Update ordering values
 		foreach ($pks as $i => $pk)
 		{
 			$table->load(array('product_id' => (int) $pk, 'category_id' => (int)$currentCatid));
-			
-			
+
+
 
 			// Access checks.
 			if (!$this->canEditState($table))
@@ -922,7 +1008,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			{
 				$table->ordering = $order[$i];
 
-				
+
 				if ($type)
 				{
 					$this->createTagsHelper($tagsObserver, $type, $pk, $type->type_alias, $table);
@@ -937,7 +1023,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 				// Remember to reorder within position and client_id
 				$condition = $this->getReorderConditions($table);
-				
+
 				$found = false;
 
 				foreach ($conditions as $cond)
@@ -952,18 +1038,19 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				if (!$found)
 				{
 					$key = $table->getKeyName();
+                    //$conditions[] = array($table->$pkName, $condition);
 					$conditions[] = array($table->$key, $condition);
 				}
 			}
 		}
 
 		// Execute reorder for each category.
-		
+
 		foreach ($conditions as $cond)
 		{
-			
+
 			$table->load(array('product_id' => (int) $cond[0], 'category_id' => (int)$currentCatid));
-			
+
 			$table->reorder($cond[1]);
 		}
 
@@ -972,15 +1059,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return true;
 	}
-	
+
 	/*
 	protected function getReorderConditions($table = null) {
 		$condition = array();
 		$condition[] = 'catid = '. (int) $table->catid;
 		return $condition;
 	}
-	
-	
+
+
 	public function increaseOrdering($categoryId) {
 		$ordering = 1;
 		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_products WHERE catid='.(int)$categoryId);
@@ -988,15 +1075,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$ordering = $max + 1;
 		return $ordering;
 	}*/
-	
+
 	protected function getReorderConditions($table = null) {
 		$condition = array();
 		$condition[] = 'category_id = '. (int) $table->category_id ;
 		//$condition[] = 'product_id = '. (int) $table->product_id ;
 		return $condition;
 	}
-	
-	
+
+
 	public function increaseOrdering($categoryId) {
 		$ordering = 1;
 		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_product_categories WHERE category_id='.(int)$categoryId);
@@ -1004,22 +1091,22 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$ordering = $max + 1;
 		return $ordering;
 	}
-	
+
 	protected function generateNewTitle($category_id, $alias, $title) {
-		
+
 		$app 			= JFactory::getApplication('administrator');
 		$batchP 		= $app->input->post->get('batch', array(), 'array');
-		
-		
+
+
 		// Alter the title & alias
 		$table = $this->getTable();
-		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name 
+		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name
 		// not like standard new name for each category
 		while ($table->load(array('alias' => $alias))) {
-			
+
 			// Skip creating unique name
 			if (isset($batchP['skip_creating_unique_name']) && $batchP['skip_creating_unique_name'] == 1) {
-		
+
 			} else {
 				$title = StringHelper::increment($title);
 			}
@@ -1028,19 +1115,19 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return array($title, $alias);
 	}
-	
+
 	public function copyattributes(&$cid = array(), $idSource = 0) {
-		
+
 		$app	= JFactory::getApplication();
 		$cA = 0;
-		
+
 		if (count( $cid ) && (int)$idSource > 0) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
-			
+
 			// Attributes
 			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
-			
-			
+
+
 			if (!empty($aA)) {
 				foreach ($aA as $k => $v) {
 					if (isset($v['id']) && $v['id'] > 0) {
@@ -1050,31 +1137,71 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 						}
 					}
 				}
-				
+
 			} else {
 				$app->enqueueMessage(JText::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
 				return false;
 			}
-			
+
 			if (!empty($aA)) {
 				foreach($cid as $k => $v) {
-					
+
 					if ((int)$v != $idSource) { // Do not copy to itself
-						
+
 						PhocacartAttribute::storeAttributesById((int)$v, $aA, 1);
 						$cA++;
 					}
 				}
 			}
-			
+
 		}
-		
+
 		if ((int)$cA > 0) {
 			return true;
 		} else {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ATTRIBUTE_COPIED'), 'error');
 			return false;
 		}
+	}
+
+	// ASSOCIATION
+	protected function preprocessForm(JForm $form, $data, $group = 'content'){
+		/*if ($this->canCreateCategory())
+		{
+			$form->setFieldAttribute('catid', 'allowAdd', 'true');
+		}*/
+
+		// Association Phoca Cart items
+		if (JLanguageAssociations::isEnabled()){
+			$languages = JLanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
+
+			if (count($languages) > 1){
+				$addform = new SimpleXMLElement('<form />');
+				$fields = $addform->addChild('fields');
+				$fields->addAttribute('name', 'associations');
+				$fieldset = $fields->addChild('fieldset');
+				$fieldset->addAttribute('name', 'item_associations');
+
+				foreach ($languages as $language)
+				{
+
+					$field = $fieldset->addChild('field');
+					$field->addAttribute('name', $language->lang_code);
+					$field->addAttribute('type', 'Modal_Phocacartitem');
+					$field->addAttribute('language', $language->lang_code);
+					$field->addAttribute('label', $language->title);
+					$field->addAttribute('translate_label', 'false');
+					$field->addAttribute('select', 'true');
+					$field->addAttribute('new', 'true');
+					$field->addAttribute('edit', 'true');
+					$field->addAttribute('clear', 'true');
+					$field->addAttribute('propagate', 'true');
+				}
+
+				$form->load($addform, false);
+			}
+		}
+		parent::preprocessForm($form, $data, $group);
 	}
 }
 ?>

@@ -22,10 +22,14 @@ class PhocaCartCpViewPhocacartOrder extends JViewLegacy
 	protected $t;
 	protected $u;
 	protected $pr;
-	
+	protected $p;
+
 
 	public function display($tpl = null) {
-		
+
+		$paramsC 					    		= PhocacartUtils::getComponentParameters();
+		$this->p['order_language_variables']	= $paramsC->get( 'order_language_variables', 0 );
+
 		$this->t		= PhocacartUtils::setVars('order');
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
@@ -35,27 +39,27 @@ class PhocaCartCpViewPhocacartOrder extends JViewLegacy
 		$order			= new PhocacartOrderView();
 		$this->pr		= new PhocacartPrice();
 		$this->pr->setCurrency($this->item->currency_id, $this->item->id);
-		
-		
+
+
 		$this->fieldsbas				= $model->getFieldsBaS($this->item->id);
 		$this->formbas					= $model->getFormBaS($this->item->id);
 		$this->itemcommon				= $order->getItemCommon($this->item->id);
 		$this->itemproducts 			= $order->getItemProducts($this->item->id);
 		$this->itemproductdiscounts 	= $order->getItemProductDiscounts($this->item->id);
-		
+
 		$this->itemtotal 				= $order->getItemTotal($this->item->id);
 		$this->itemtaxrecapitulation 	= $order->getItemTaxRecapitulation($this->item->id);
-		
-		
-		
+
+
+
 		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
-		parent::display($tpl);	
+		parent::display($tpl);
 	}
-	
+
 	protected function addToolbar() {
-		
+
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$bar 		= JToolbar::getInstance('toolbar');
@@ -64,17 +68,17 @@ class PhocaCartCpViewPhocacartOrder extends JViewLegacy
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 		$class		= ucfirst($this->t['tasks']).'Helper';
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.order_id'));
-		
+
 		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
 		JToolbarHelper::title(   JText::_( $this->t['l'] . '_ORDER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'shopping-cart');
-		
+
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
 			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
 			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
 			//JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
-	
+
 		if (empty($this->item->id))  {
 			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}

@@ -90,8 +90,16 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->ali
 	$app    		= JApplicationCms::getInstance('site');
 	$router 		= $app->getRouter();
 	$uri 			= $router->build($xmlLink);
-	$frontendUrl 	= JURI::root(false). str_replace(JURI::root(true).'/administrator/', '',$uri->toString());
-	$frontendUrl2 	= JURI::root(false). str_replace(JURI::root(true).'/administrator/', '',$xmlLink2);
+
+
+	$frontendUrl 	= str_replace(JURI::root(true).'/administrator/', '',$uri->toString());
+    $frontendUrl 	= str_replace(JURI::root(true), '', $frontendUrl);
+    $frontendUrl 	= str_replace('\\', '/', $frontendUrl);
+    //$frontendUrl 	= JURI::root(false). str_replace('//', '/', $frontendUrl);
+    $frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', JURI::root(false). $frontendUrl);
+    $frontendUrl2 	= JURI::root(false). str_replace(JURI::root(true).'/administrator/', '',$xmlLink2);
+
+
 
 	echo '<div>'.JText::_('COM_PHOCACART_XML_FEED_URL').'</div>';
 	echo '<textarea rows="5">'.$frontendUrl.'</textarea>';

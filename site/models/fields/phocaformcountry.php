@@ -13,10 +13,10 @@ class JFormFieldPhocaFormCountry extends JFormField
 	protected $type 		= 'PhocaFormCountry';
 
 	protected function getInput() {
-		
+
 		$app	= JFactory::getApplication();
 		$db	 	= JFactory::getDBO();
-		
+
 		if ($this->id == 'jform_country') {
 			$regionId = 'jform_region';
 		} else if ($this->id == 'jform_country_phs') {
@@ -25,13 +25,13 @@ class JFormFieldPhocaFormCountry extends JFormField
 			$regionId = 'jform_region_phb';
 		}
 
-		$s 	= array();	 
+		$s 	= array();
 		$s[] 	= 'function phUpdateRegion'.$this->id.'(value) {';
-		
-		
+
+
 		$config 	= JComponentHelper::getParams('com_media');
 		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
-		
+
 
 		if (!$app->isClient('administrator')) {
 			$paramsC 	= $app->getParams();
@@ -42,9 +42,9 @@ class JFormFieldPhocaFormCountry extends JFormField
 			$load_chosen= $paramsC->get( 'load_chosen', 1 );
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=phocacartuser.setregion&format=json&'. JSession::getFormToken().'=1\';';
 		}
-		
+
 		$s[] 	= '   var dataPost = {};';
-		$s[] 	= '   dataPost[\'countryid\'] = encodeURIComponent(value);';	
+		$s[] 	= '   dataPost[\'countryid\'] = encodeURIComponent(value);';
 		$s[] 	= '   phRequestActive = jQuery.ajax({';
 		$s[] 	= '      url: url,';
 		$s[] 	= '      type:\'POST\',';
@@ -54,7 +54,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$s[] 	= '         if ( data.status == 1 ){';
 		$s[] 	= '            jQuery(\'#'.$regionId.'\').empty().append(data.content);';
 		if (!$app->isClient('administrator')) {
-			if ($load_chosen == 1) {
+			if ($load_chosen > 0) {
 				$s[] 	= '	           jQuery(\'#'.$regionId.'\').trigger("chosen:updated");';//Reload Chosen
 			}
 		} else {
@@ -67,13 +67,13 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$s[] 	= '         }';
 		$s[] 	= '      }';
 		$s[] 	= '   });';
-		
-		
-		
+
+
+
 		$s[] 	= '}';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-		
-		
+
+
 
 
 		$query = 'SELECT a.title AS text, a.id AS value'
@@ -82,7 +82,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
-	
+
 
 		$attr = '';
 		$attr .= !empty($this->class) ? ' class="' . $this->class . ' form-control chosen-select ph-input-select-countries"' : 'class="form-control chosen-select ph-input-select-countries"';
@@ -90,12 +90,12 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$attr .= $this->multiple ? ' multiple' : '';
 		$attr .= $this->required ? ' required aria-required="true"' : '';
 		$attr .= $this->autofocus ? ' autofocus' : '';
-		
+
 		if ((string) $this->readonly == '1' || (string) $this->readonly == 'true' || (string) $this->disabled == '1'|| (string) $this->disabled == 'true') {
 			$attr .= ' disabled="disabled"';
 		}
 		$attr .= $this->onchange ? ' onchange="phUpdateRegion'.$this->id.'(this.value);' . $this->onchange . '" ' : ' onchange="phUpdateRegion'.$this->id.'(this.value);" ';
-		
+
 		array_unshift($data, JHtml::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_COUNTRY').'&nbsp;-', 'value', 'text'));
 
 		return JHtml::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );

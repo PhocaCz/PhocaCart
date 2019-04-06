@@ -782,6 +782,7 @@ class PhocacartCart
 	}
 
 	public function getPaymentCosts() {
+
 		return isset($this->payment['costs']) ? $this->payment['costs'] : false;
 	}
 
@@ -893,6 +894,9 @@ class PhocacartCart
 
 				$this->shipping['costs']['id'] 		= $sI->id;
 				$this->shipping['costs']['title'] 		= $sI->title;
+				$this->shipping['costs']['title_lang'] 		= $sI->title;
+				$this->shipping['costs']['title_lang_suffix'] 		= '';
+				$this->shipping['costs']['title_lang_suffix2'] 		= '';
 				$this->shipping['costs']['description'] = $sI->description;
 				$this->shipping['costs']['image'] 		= $sI->image;
 			}
@@ -948,6 +952,9 @@ class PhocacartCart
 			if (!isset($this->total[0]['free_payment']) || (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] != 1)) {
 				$this->payment['costs']['id'] 			= $pI->id;
 				$this->payment['costs']['title'] 		= $pI->title;
+				$this->payment['costs']['title_lang'] 		= $pI->title;
+				$this->payment['costs']['title_lang_suffix'] 		= '';
+				$this->payment['costs']['title_lang_suffix2'] 		= '';
 				$this->payment['costs']['description'] 	= $pI->description;
 				$this->payment['costs']['image'] 		= $pI->image;
 			}

@@ -32,6 +32,9 @@ class PhocacartOrder
 	}
 	public function saveOrderMain($data) {
 
+
+
+
 		$msgSuffix			= '<span id="ph-msg-ns" class="ph-hidden"></span>';
 		$pC 				= PhocacartUtils::getComponentParameters();
 		$min_order_amount	= $pC->get( 'min_order_amount', 0 );
@@ -39,6 +42,21 @@ class PhocacartOrder
 		$stock_checking		= $pC->get( 'stock_checking', 0 );
 		$unit_weight		= $pC->get( 'unit_weight', '' );
 		$unit_volume		= $pC->get( 'unit_volume', '' );
+        $order_language		= $pC->get( 'order_language', 0 );
+
+
+        // LANGUAGES
+        $lang           = JFactory::getLanguage();
+        $userLang	    = $lang->getTag();// Get language user uses in frontend
+
+        $pLang          = new PhocacartLanguage();
+        $defaultLang    = $pLang->getDefaultLanguage(0);// Get default language of frontend
+
+        if ($order_language == 0) {
+            // If the order should be stored in default language force it and and the end change it back so user get right message
+            $pLang->setLanguage($defaultLang);
+        }
+
 
 		$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
 		$action			= $uri->toString();
@@ -55,6 +73,7 @@ class PhocacartOrder
 		$currency		= PhocacartCurrency::getCurrency();
 
 		if (empty($fullItems[0])) {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY');
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -77,6 +96,9 @@ class PhocacartOrder
 		}
 
 
+
+
+
 		$cart->roundTotalAmount();
 
 		$total		= $cart->getTotal();
@@ -91,7 +113,7 @@ class PhocacartOrder
 		// --------------------
 		// CHECK OPENING TIMES
 		// --------------------
-
+        // Possible parameter: display message on info page: PhocacartTime::checkOpeningTimes(), Hide message on info page: PhocacartTime::checkOpeningTimes(0)
 		if (PhocacartTime::checkOpeningTimes() == false) {
 			// Message set in checkOpeningTimes() method
 			return false;
@@ -102,6 +124,7 @@ class PhocacartOrder
 
 		if ((!isset($user->id) || (isset($user->id) && $user->id < 1)) && $guest == false && !PhocacartPos::isPos()) {
 
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg =JText::_('COM_PHOCACART_GUEST_CHECKOUT_DISABLED') . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -114,6 +137,7 @@ class PhocacartOrder
 		$enable_captcha_checkout	= PhocacartCaptcha::enableCaptchaCheckout();
 		if ($enable_captcha_checkout) {
 			if (!PhocacartCaptchaRecaptcha::isValid()) {
+                if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 				$msg =JText::_('COM_PHOCACART_WRONG_CAPTCHA') . $msgSuffix;
 				$app->enqueueMessage($msg, 'error');
 				return false;
@@ -132,6 +156,7 @@ class PhocacartOrder
 			$price->setCurrency($currency->id);
 			$priceFb = $price->getPriceFormat($total[0]['brutto']);
 			$priceFm = $price->getPriceFormat($min_order_amount);
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_NOT_MET_UPDATE_CART_BEFORE_ORDERING');
 			$msg .= '<br />';
 			$msg .=JText::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_IS') . ': '. $priceFm;
@@ -147,6 +172,7 @@ class PhocacartOrder
 		// --------------------
 		$stockValid		= $cart->getStockValid();
 		if($stock_checking == 1 && $stock_checkout == 1 && $stockValid == 0) {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -157,6 +183,7 @@ class PhocacartOrder
 		// --------------------
 		$minQuantityValid		= $cart->getMinimumQuantityValid();
 		if($minQuantityValid == 0) {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -167,6 +194,7 @@ class PhocacartOrder
 		// --------------------
 		$minMultipleQuantityValid		= $cart->getMinimumMultipleQuantityValid();
 		if($minMultipleQuantityValid == 0) {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -177,6 +205,7 @@ class PhocacartOrder
 		// --------------------
 		$productsRemoved = $cart->getProductsRemoved();
 		if(!empty($productsRemoved)) {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			// Message is set by cart class
 			//$msg = JText::_('') . $msgSuffix;
 			//$app->enqueueMessage($msg, 'error');
@@ -256,6 +285,9 @@ class PhocacartOrder
 		$d['section_id']			= $cart->getSectionId();
 		$d['loyalty_card_number']	= $cart->getLoyaltyCartNumber();
 
+		$d['user_lang']              = $userLang;
+        $d['default_lang']           = $defaultLang;
+
 
 
 		// --------------------
@@ -314,6 +346,7 @@ class PhocacartOrder
 			$shippingId = 0;// Needed for payment method check
 
 		} else {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_SHIPPING_METHOD');
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -350,6 +383,7 @@ class PhocacartOrder
 			// IS OK
 			$paymentId = 0;
 		} else {
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_PAYMENT_METHOD');
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -362,6 +396,7 @@ class PhocacartOrder
 
 		if (!$row->bind($d)) {
 			//throw new Exception($db->getErrorMsg());
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_($db->getErrorMsg()) . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -374,6 +409,7 @@ class PhocacartOrder
 
 		if (!$row->check()) {
 			//throw new Exception($row->getError());
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_($row->getErrorMsg()) . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -381,6 +417,7 @@ class PhocacartOrder
 
 		if (!$row->store()) {
 			//throw new Exception($row->getError());
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_($row->getErrorMsg()) . $msgSuffix;
 			$app->enqueueMessage($msg, 'error');
 			return false;
@@ -517,63 +554,81 @@ class PhocacartOrder
 			// TOTAL
 			if (!empty($total[0])) {
 				$this->cleanTable('phocacart_order_total', $row->id);
-				$ordering 				= 1;
-				$d2						= array();
-				$d2['order_id']			= $row->id;
-				$d2['amount_currency']	= 0;
+				$ordering 				    = 1;
+				$d2						    = array();
+				$d2['order_id']			    = $row->id;
+				$d2['amount_currency']	    = 0;
+                $d2['title_lang']           = '';
+				$d2['title_lang_suffix']    = '';
+                $d2['title_lang_suffix2']   = '';
 
 
 				if (isset($total[1]['netto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_SUBTOTAL');
-					$d2['type']		= 'netto';
-					$d2['amount']	= $total[1]['netto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 1;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_SUBTOTAL');
+                    $d2['title_lang']           = 'COM_PHOCACART_SUBTOTAL';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
+					$d2['type']		            = 'netto';
+					$d2['amount']	            = $total[1]['netto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 1;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 
 				// Reward Discount
 				if (isset($total[5]['dnetto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT').$total[5]['rewardproducttxtsuffix'];
-					$d2['type']		= 'dnetto';
-					$d2['amount']	= '-'.$total[5]['dnetto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 1;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_REWARD_DISCOUNT').$total[5]['rewardproducttxtsuffix'];
+                    $d2['title_lang']           = 'COM_PHOCACART_REWARD_DISCOUNT';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = $total[5]['rewardproducttxtsuffix'];
+					$d2['type']		            = 'dnetto';
+					$d2['amount']	            = '-'.$total[5]['dnetto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 1;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 				if (isset($total[5]['dbrutto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_REWARD_DISCOUNT').$total[5]['rewardproducttxtsuffix'];
-					$d2['type']		= 'dbrutto';
-					$d2['amount']	= '-'.$total[5]['dbrutto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 0;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_REWARD_DISCOUNT').$total[5]['rewardproducttxtsuffix'];
+                    $d2['title_lang']           = 'COM_PHOCACART_REWARD_DISCOUNT';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = $total[5]['rewardproducttxtsuffix'];
+					$d2['type']		            = 'dbrutto';
+					$d2['amount']	            = '-'.$total[5]['dbrutto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 0;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 
 				// Product Discount
 				if (isset($total[2]['dnetto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_PRODUCT_DISCOUNT');
-					$d2['type']		= 'dnetto';
-					$d2['amount']	= '-'.$total[2]['dnetto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 1;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_PRODUCT_DISCOUNT');
+                    $d2['title_lang']           = 'COM_PHOCACART_PRODUCT_DISCOUNT';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
+					$d2['type']		            = 'dnetto';
+					$d2['amount']	            = '-'.$total[2]['dnetto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 1;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 				if (isset($total[2]['dbrutto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_PRODUCT_DISCOUNT');
-					$d2['type']		= 'dbrutto';
-					$d2['amount']	= '-'.$total[2]['dbrutto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 0;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_PRODUCT_DISCOUNT');
+                    $d2['title_lang']           = 'COM_PHOCACART_PRODUCT_DISCOUNT';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
+					$d2['type']		            = 'dbrutto';
+					$d2['amount']	            = '-'.$total[2]['dbrutto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 0;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
@@ -593,22 +648,28 @@ class PhocacartOrder
 
 				// Cart Discount
 				if (isset($total[3]['dnetto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_CART_DISCOUNT').$total[3]['discountcarttxtsuffix'];
-					$d2['type']		= 'dnetto';
-					$d2['amount']	= '-'.$total[3]['dnetto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 1;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_CART_DISCOUNT').$total[3]['discountcarttxtsuffix'];
+                    $d2['title_lang']           = 'COM_PHOCACART_CART_DISCOUNT';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = $total[3]['discountcarttxtsuffix'];
+					$d2['type']		            = 'dnetto';
+					$d2['amount']	            = '-'.$total[3]['dnetto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 1;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
 				if (isset($total[3]['dbrutto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_CART_DISCOUNT').$total[3]['discountcarttxtsuffix'];
-					$d2['type']		= 'dbrutto';
-					$d2['amount']	= '-'.$total[3]['dbrutto'];
-					$d2['ordering']	= $ordering;
-					$d2['published']= 0;
-					$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']	            = JText::_('COM_PHOCACART_CART_DISCOUNT').$total[3]['discountcarttxtsuffix'];
+                    $d2['title_lang']           = 'COM_PHOCACART_CART_DISCOUNT';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = $total[3]['discountcarttxtsuffix'];
+					$d2['type']		            = 'dbrutto';
+					$d2['amount']	            = '-'.$total[3]['dbrutto'];
+					$d2['ordering']	            = $ordering;
+					$d2['published']            = 0;
+					$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
@@ -628,9 +689,15 @@ class PhocacartOrder
 
 				// Coupon Discount
 				if (isset($total[4]['dnetto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_COUPON');
+					$d2['title']	            = JText::_('COM_PHOCACART_COUPON');
+                    $d2['title_lang']           = 'COM_PHOCACART_COUPON';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
 					if (isset($coupon['title']) && $coupon['title'] != '') {
-						$d2['title'] = $coupon['title'].$total[4]['couponcarttxtsuffix'];
+						$d2['title']                = $coupon['title'].$total[4]['couponcarttxtsuffix'];
+                        $d2['title_lang']           = $coupon['title'];
+                        $d2['title_lang_suffix']    = '';
+                        $d2['title_lang_suffix2']   = $total[4]['couponcarttxtsuffix'];
 					}
 					$d2['type']		= 'dnetto';
 					$d2['amount']	= '-'.$total[4]['dnetto'];
@@ -641,9 +708,14 @@ class PhocacartOrder
 					$ordering++;
 				}
 				if (isset($total[4]['dbrutto'])) {
-					$d2['title']	= JText::_('COM_PHOCACART_COUPON');
+					$d2['title']	            = JText::_('COM_PHOCACART_COUPON');
+                    $d2['title_lang']           = 'COM_PHOCACART_COUPON';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
 					if (isset($coupon['title']) && $coupon['title'] != '') {
-						$d2['title'] = $coupon['title'].$total[4]['couponcarttxtsuffix'];
+						$d2['title']                = $coupon['title'].$total[4]['couponcarttxtsuffix'];
+                        $d2['title_lang']           = $coupon['title'];
+                        $d2['title_lang_suffix2']   = $total[4]['couponcarttxtsuffix'];
 					}
 					$d2['type']		= 'dbrutto';
 					$d2['amount']	= '-'.$total[4]['dbrutto'];
@@ -669,12 +741,15 @@ class PhocacartOrder
 				if (!empty($total[0]['tax'])) {
 					foreach($total[0]['tax'] as $k => $v) {
 						if ($v['tax'] > 0) {
-							$d2['title']	= $v['title'];
-							$d2['type']		= 'tax';
-							$d2['amount']	= $v['tax'];
-							$d2['ordering']	= $ordering;
-							$d2['published']= 1;
-							//$d2['item_id']	= (int)$k;// ID (Type) of VAT (10% or 20%)
+							$d2['title']	            = $v['title'];
+                            $d2['title_lang']           = $v['title'];
+                            $d2['title_lang_suffix']    = '';
+                            $d2['title_lang_suffix2']   = '';
+							$d2['type']		            = 'tax';
+							$d2['amount']	            = $v['tax'];
+							$d2['ordering']	            = $ordering;
+							$d2['published']            = 1;
+							//$d2['item_id']	        = (int)$k;// ID (Type) of VAT (10% or 20%)
 							$taxKeyA = PhocacartTax::getTaxIdsFromKey($k);
 							$d2['item_id']	= (int)$taxKeyA['id'];
 							$d2['item_id_c']= (int)$taxKeyA['countryid'];
@@ -692,36 +767,47 @@ class PhocacartOrder
 				// Shipping
 
 				if (!empty($shippingC)) {
+
 					if (isset($shippingC['nettotxt']) && isset($shippingC['netto'])) {
-						$d2['title']	= $shippingC['title'] . ' - ' . $shippingC['nettotxt'];
-						$d2['type']		= 'snetto';
-						$d2['amount']	= $shippingC['netto'];
-						$d2['ordering']	= $ordering;
-						$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+						$d2['title']	            = $shippingC['title'] . ' - ' . $shippingC['nettotxt'];
+                        $d2['title_lang']	        = $shippingC['title'];
+                        $d2['title_lang_suffix']	= $shippingC['netto_title_lang'];
+                        $d2['title_lang_suffix2']   = '';
+						$d2['type']		            = 'snetto';
+						$d2['amount']	            = $shippingC['netto'];
+						$d2['ordering']	            = $ordering;
+						$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 
 					if (isset($shippingC['taxtxt']) && isset($shippingC['tax']) && $shippingC['tax'] > 0) {
-						$d2['title']	= $shippingC['title'] . ' - ' . $shippingC['taxtxt'];
-						$d2['type']		= 'stax';
-						//$d2['item_id']	= (int)$shippingC['taxid'];
-						$taxKeyA = PhocacartTax::getTaxIdsFromKey($shippingC['taxkey']);
-						$d2['item_id']	= (int)$taxKeyA['id'];
-						$d2['item_id_c']= (int)$taxKeyA['countryid'];
-						$d2['item_id_r']= (int)$taxKeyA['regionid'];
-						$d2['amount']	= $shippingC['tax'];
-						$d2['ordering']	= $ordering;
+						$d2['title']	            = $shippingC['title'] . ' - ' . $shippingC['taxtxt'];
+                        $d2['title_lang']	        = isset($shippingC['title']) && $shippingC['title']  != '' ? $shippingC['title'] : $shippingC['tax_title_lang'];
+                        $d2['title_lang_suffix']	= $shippingC['tax_title_suffix'];
+                        $d2['title_lang_suffix2']	= '('.$shippingC['tax_title_suffix2'].')';
+						$d2['type']		            = 'stax';
+						//$d2['item_id']	        = (int)$shippingC['taxid'];
+						$taxKeyA                    = PhocacartTax::getTaxIdsFromKey($shippingC['taxkey']);
+						$d2['item_id']	            = (int)$taxKeyA['id'];
+						$d2['item_id_c']            = (int)$taxKeyA['countryid'];
+						$d2['item_id_r']            = (int)$taxKeyA['regionid'];
+						$d2['amount']	            = $shippingC['tax'];
+						$d2['ordering']	            = $ordering;
+
 						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 
 					if (isset($shippingC['bruttotxt']) && isset($shippingC['brutto'])) {
-						$d2['title']	= $shippingC['title'] . ' - ' . $shippingC['bruttotxt'];
-						$d2['type']		= 'sbrutto';
-						$d2['amount']	= $shippingC['brutto'];
-						$d2['ordering']	= $ordering;
-						$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+						$d2['title']	            = $shippingC['title'] . ' - ' . $shippingC['bruttotxt'];
+                        $d2['title_lang']	        = $shippingC['title'];
+                        $d2['title_lang_suffix']	= $shippingC['brutto_title_lang'];
+                        $d2['title_lang_suffix2']   = '';
+						$d2['type']		            = 'sbrutto';
+						$d2['amount']	            = $shippingC['brutto'];
+						$d2['ordering']	            = $ordering;
+						$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
@@ -730,35 +816,44 @@ class PhocacartOrder
 				// Payment
 				if (!empty($paymentC)) {
 					if (isset($paymentC['nettotxt']) && isset($paymentC['netto'])) {
-						$d2['title']	= $paymentC['title'] . ' - ' . $paymentC['nettotxt'];
-						$d2['type']		= 'pnetto';
-						$d2['amount']	= $paymentC['netto'];
-						$d2['ordering']	= $ordering;
-						$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+						$d2['title']	            = $paymentC['title'] . ' - ' . $paymentC['nettotxt'];
+                        $d2['title_lang']	        = $paymentC['title'];
+                        $d2['title_lang_suffix']	= $paymentC['netto_title_lang'];
+                        $d2['title_lang_suffix2']   = '';
+						$d2['type']		            = 'pnetto';
+						$d2['amount']	            = $paymentC['netto'];
+						$d2['ordering']	            = $ordering;
+						$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 
 					if (isset($paymentC['taxtxt']) && isset($paymentC['tax']) && $paymentC['tax']) {
-						$d2['title']	= $paymentC['title'] . ' - ' . $paymentC['taxtxt'];
-						$d2['type']		= 'ptax';
-						//$d2['item_id']	= (int)$paymentC['taxid'];
-						$taxKeyA = PhocacartTax::getTaxIdsFromKey($paymentC['taxkey']);
-						$d2['item_id']	= (int)$taxKeyA['id'];
-						$d2['item_id_c']= (int)$taxKeyA['countryid'];
-						$d2['item_id_r']= (int)$taxKeyA['regionid'];
-						$d2['amount']	= $paymentC['tax'];
-						$d2['ordering']	= $ordering;
+						$d2['title']	            = $paymentC['title'] . ' - ' . $paymentC['taxtxt'];
+                        $d2['title_lang']	        = isset($paymentC['title']) && $paymentC['title']  != '' ? $paymentC['title'] : $paymentC['tax_title_lang'];
+                        $d2['title_lang_suffix']	= $paymentC['tax_title_suffix'];
+                        $d2['title_lang_suffix2']	= '('.$paymentC['tax_title_suffix2'].')';
+						$d2['type']		            = 'ptax';
+						//$d2['item_id']	        = (int)$paymentC['taxid'];
+						$taxKeyA                    = PhocacartTax::getTaxIdsFromKey($paymentC['taxkey']);
+						$d2['item_id']	            = (int)$taxKeyA['id'];
+						$d2['item_id_c']            = (int)$taxKeyA['countryid'];
+						$d2['item_id_r']            = (int)$taxKeyA['regionid'];
+						$d2['amount']	            = $paymentC['tax'];
+						$d2['ordering']	            = $ordering;
 						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
 
 					if (isset($paymentC['bruttotxt']) && isset($paymentC['brutto'])) {
-						$d2['title']	= $paymentC['title'] . ' - ' . $paymentC['bruttotxt'];
-						$d2['type']		= 'pbrutto';
-						$d2['amount']	= $paymentC['brutto'];
-						$d2['ordering']	= $ordering;
-						$d2['item_id']	= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+						$d2['title']	            = $paymentC['title'] . ' - ' . $paymentC['bruttotxt'];
+                        $d2['title_lang']	        = $paymentC['title'];
+                        $d2['title_lang_suffix']	= $paymentC['brutto_title_lang'];
+                        $d2['title_lang_suffix2']   = '';
+						$d2['type']		            = 'pbrutto';
+						$d2['amount']	            = $paymentC['brutto'];
+						$d2['ordering']	            = $ordering;
+						$d2['item_id']	            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 						$this->saveOrderTotal($d2);
 						$ordering++;
 					}
@@ -767,12 +862,15 @@ class PhocacartOrder
 
 				// Rounding
 				if (isset($total[0]['rounding'])) {
-					$d2['title']			= JText::_('COM_PHOCACART_ROUNDING');
-					$d2['type']				= 'rounding';
-					$d2['amount']			= $total[0]['rounding'];
-					$d2['amount_currency']	= $total[0]['rounding_currency'];
-					$d2['ordering']			= $ordering;
-					$d2['item_id']			= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']			    = JText::_('COM_PHOCACART_ROUNDING');
+                    $d2['title_lang']		    = 'COM_PHOCACART_ROUNDING';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
+					$d2['type']				    = 'rounding';
+					$d2['amount']			    = $total[0]['rounding'];
+					$d2['amount_currency']	    = $total[0]['rounding_currency'];
+					$d2['ordering']			    = $ordering;
+					$d2['item_id']			    = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
@@ -780,12 +878,15 @@ class PhocacartOrder
 
 				// Brutto
 				if (isset($total[0]['brutto'])) {
-					$d2['title']			= JText::_('COM_PHOCACART_TOTAL');
-					$d2['type']				= 'brutto';
-					$d2['amount']			= $total[0]['brutto'];
-					$d2['amount_currency']	= $total[0]['brutto_currency'];
-					$d2['ordering']			= $ordering;
-					$d2['item_id']			= $d2['item_id_c'] = $d2['item_id_r'] = 0;
+					$d2['title']			    = JText::_('COM_PHOCACART_TOTAL');
+                    $d2['title_lang']		    = 'COM_PHOCACART_TOTAL';
+                    $d2['title_lang_suffix']    = '';
+                    $d2['title_lang_suffix2']   = '';
+					$d2['type']				    = 'brutto';
+					$d2['amount']			    = $total[0]['brutto'];
+					$d2['amount_currency']	    = $total[0]['brutto_currency'];
+					$d2['ordering']			    = $ordering;
+					$d2['item_id']			    = $d2['item_id_c'] = $d2['item_id_r'] = 0;
 					$this->saveOrderTotal($d2);
 					$ordering++;
 				}
@@ -809,6 +910,9 @@ class PhocacartOrder
 							$d3['item_id_c']				= (int)$taxKeyA['countryid'];
 							$d3['item_id_r']				= (int)$taxKeyA['regionid'];
 							$d3['title']					= $vTc['title'];
+                            $d3['title_lang']				= $vTc['title_lang'];
+                            $d3['title_lang_suffix']        = '';
+                            $d3['title_lang_suffix2']		= $vTc['title_lang_suffix2'];
 							$d3['type']						= 'tax';
 							$d3['amount_netto']				= $vTc['netto'];
 							$d3['amount_tax']				= $vTc['tax'];
@@ -831,6 +935,9 @@ class PhocacartOrder
 					$d3['amount_brutto_currency']	= 0;
 
 					$d3['title']					= JText::_('COM_PHOCACART_ROUNDING');
+                    $d3['title_lang']			    = 'COM_PHOCACART_ROUNDING';
+                    $d3['title_lang_suffix']        = '';
+                    $d3['title_lang_suffix2']       = '';
 					$d3['type']						= 'rounding';// Complete Rounding
 					$d3['amount_brutto']			= $total[0]['rounding'];
 					$d3['amount_brutto_currency']	= $total[0]['rounding_currency'];
@@ -840,6 +947,9 @@ class PhocacartOrder
 
 
 					$d3['title']					= JText::_('COM_PHOCACART_ROUNDING') . ' ('.JText::_('COM_PHOCACART_INCL_TAX_RECAPITULATION_ROUNDING').')';
+                    $d3['title_lang']				= 'COM_PHOCACART_ROUNDING';
+                    $d3['title_lang_suffix']		= 'COM_PHOCACART_INCL_TAX_RECAPITULATION_ROUNDING';
+                    $d3['title_lang_suffix2']       = '';
 					$d3['type']						= 'trcrounding';// Only Tax Recapitulation Rounding - tax recapitulation rounding is a part of whole rounding
 					$d3['amount_brutto']			= $total[0]['taxrecapitulation']['rounding'];
 					$d3['amount_brutto_currency']	= $total[0]['taxrecapitulation']['rounding_currency'];
@@ -848,6 +958,9 @@ class PhocacartOrder
 					$orderingTC++;
 
 					$d3['title']					= JText::_('COM_PHOCACART_TOTAL');
+                    $d3['title_lang']				= 'COM_PHOCACART_TOTAL';
+                    $d3['title_lang_suffix']        = '';
+                    $d3['title_lang_suffix2']       = '';
 					$d3['type']						= 'brutto';
 					$d3['amount_netto']				= $total[0]['taxrecapitulation']['netto_incl_sp'];
 					$d3['amount_tax']				= $total[0]['taxrecapitulation']['tax'];
@@ -906,6 +1019,7 @@ class PhocacartOrder
 			}
 
 			//return true;
+            if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			return $row->id;
 
 		} else {
@@ -916,6 +1030,9 @@ class PhocacartOrder
 	}
 
 	public function saveOrderBilling($id, $date) {
+
+	    $app    = JFactory::getApplication();
+	    $db     = JFactory::getDbo();
 
 		$d 						    = array();
 		$d['id'] 				    = $id;
@@ -975,6 +1092,9 @@ class PhocacartOrder
 	public function saveOrderUsers($d, $orderId) {
 
 
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
+
 		$d = (array)$d;
 		if (!isset($d['id'])){
 			$d['id'] = 0;// Guest Checkout
@@ -985,6 +1105,8 @@ class PhocacartOrder
 		$d['user_token']		= PhocacartUtils::getToken();
 		$userGroups				= PhocacartGroup::getGroupsById((int)$d['user_id'], 1, 1);
 		$d['user_groups']		= serialize($userGroups);
+
+
 
 
 		unset($d['id']);// we do new autoincrement
@@ -1020,7 +1142,11 @@ class PhocacartOrder
 
 
 	public function saveOrderProducts($d, $orderId) {
-		$row = JTable::getInstance('PhocacartOrderProducts', 'Table', array());
+
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
+
+	    $row = JTable::getInstance('PhocacartOrderProducts', 'Table', array());
 
 		$checkP = PhocacartProduct::checkIfAccessPossible($d['id'], $d['catid'], $this->type);
 
@@ -1114,8 +1240,11 @@ class PhocacartOrder
 						$d2['attribute_id']		= (int)$v2['aid'];
 						$d2['option_id']		= (int)$v2['oid'];
 						$d2['attribute_title']	= $v2['atitle'];
+                        $d2['type']	            = $v2['atype'];
 						$d2['option_title']		= $v2['otitle'];
 						$d2['option_value']		= $v2['ovalue'];
+
+
 
 						// Will be set order status
 						// administrator\components\com_phocacart\libraries\phocacart\order\status.php
@@ -1163,7 +1292,8 @@ class PhocacartOrder
 
 	public function saveOrderCoupons($coupon, $totalC, $orderId) {
 
-
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
 
 		$d = array();
 		$d['order_id'] 			= (int)$orderId;
@@ -1205,6 +1335,9 @@ class PhocacartOrder
 
 	public function saveOrderDiscounts($discountTitle, $totalD, $orderId, $type = 0) {
 
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
+
 		$d = array();
 		$d['order_id'] 			= (int)$orderId;
 		//$d['discount_id']		= (int)$discount['id'];
@@ -1240,7 +1373,10 @@ class PhocacartOrder
 
 	public function saveOrderTotal($d) {
 
-		$row = JTable::getInstance('PhocacartOrderTotal', 'Table', array());
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
+
+	    $row = JTable::getInstance('PhocacartOrderTotal', 'Table', array());
 
 		//$d['published']				= 1;
 		if (!$row->bind($d)) {
@@ -1269,6 +1405,9 @@ class PhocacartOrder
 	}
 
 	public function saveOrderTaxRecapitulation($d) {
+
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
 
 		$row = JTable::getInstance('PhocacartOrderTaxRecapitulation', 'Table', array());
 
@@ -1299,6 +1438,9 @@ class PhocacartOrder
 	}
 
 	public function saveOrderHistory($statusId, $notify, $userId, $orderId) {
+
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
 
 		$row = JTable::getInstance('PhocacartOrderHistory', 'Table', array());
 
@@ -1336,7 +1478,10 @@ class PhocacartOrder
 
 	public function saveOrderDownloads($orderProductId, $productId, $catId, $orderId) {
 
-		$row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
+
+	    $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
 
 
 		//$productItem 	= new PhocacartProduct();
@@ -1489,6 +1634,9 @@ class PhocacartOrder
 
 
 	public function saveRewardPoints($userId, $points, $orderBillingData, $published = 0, $type = 0) {
+
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
 
 		$row = JTable::getInstance('PhocacartRewardPoint', 'Table', array());
 
@@ -1928,7 +2076,7 @@ class PhocacartOrder
 			return $dueDate;// the due date is stored in database yet
 		}
 
-		$app					= JFactory::getApplication();
+
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$invoice_due_date_days	= $paramsC->get('invoice_due_date_days', 5);
 
@@ -1975,7 +2123,7 @@ class PhocacartOrder
 			$wheres[] = 'a.order_id IN ('.$oIdS.')';
 		}
 
-		$query 	= 'SELECT a.id, a.order_id, a.item_id, a.item_id_c, a.item_id_r, a.title, a.type, a.amount, a.amount_currency'
+		$query 	= 'SELECT a.id, a.order_id, a.item_id, a.item_id_c, a.item_id_r, a.title, a.title_lang, a.title_lang_suffix, a.title_lang_suffix, a.type, a.amount, a.amount_currency'
 				. ' FROM #__phocacart_order_total AS a';
 		if (!empty($wheres)) {
 			$query 	.= ' WHERE ' . implode( ' AND ', $wheres );

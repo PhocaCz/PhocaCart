@@ -194,7 +194,12 @@ if (!empty($this->itemproducts)) {
 				echo $r->itemCalc($v2->id, 'attribute_title', $v2->attribute_title, 'aform', 1).' ';
 				echo ''.$r->itemCalc($v2->id, 'option_title', $v2->option_title, 'aform', 1);
 
-				echo ''.$r->itemCalc($v2->id, 'option_value', htmlspecialchars(urldecode($v2->option_value)), 'aform', 1);
+				$size = 1;
+
+				if ($v2->type == 10 || $v2->type == 11) {
+				    $size  = 3;
+                }
+				echo ''.$r->itemCalc($v2->id, 'option_value', htmlspecialchars(urldecode($v2->option_value)), 'aform', $size);
 
 				echo '</td>';
 
@@ -221,8 +226,20 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 
 
 		echo '<tr class="'.$class.'">';
-		echo '<td></td>';
-		echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title, 'tform', 2). '</td>';
+
+		// Language Variables
+        if ($this->p['order_language_variables'] == 1) {
+            echo '<td colspan="3">'.$r->itemCalc($v->id, 'title_lang', $v->title_lang, 'tform', 1). '';
+            echo ''.$r->itemCalc($v->id, 'title_lang_suffix', $v->title_lang_suffix, 'tform', 1). '';
+            echo ''.$r->itemCalc($v->id, 'title_lang_suffix2', $v->title_lang_suffix2, 'tform', 0). '<br>';
+            echo '<span class="ph-col-title-small">'.PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</span></td>';
+
+        } else {
+            echo '<td></td>';
+            echo '<td colspan="2">'.$r->itemCalc($v->id, 'title', $v->title, 'tform', 2). '</td>';
+        }
+
+
 
 
 		$typeTxt 	= '';
@@ -295,7 +312,20 @@ if (!empty($this->itemtaxrecapitulation)) {
 		// Tax recapitulation rounding included rounding (Tax recapitulation rounding = Tax recapitulation rounding + calculation rounding)
 
 		$oTr[] = '<tr>';
-		$oTr[] = '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'tcform', 2).'</td>';
+
+		// Language Variables
+        if ($this->p['order_language_variables'] == 1) {
+            $oTr[] =  '<td>'.$r->itemCalc($v->id, 'title_lang', $v->title_lang, 'tcform', 1). '';
+            $oTr[] =  ''.$r->itemCalc($v->id, 'title_lang_suffix', $v->title_lang_suffix, 'tcform', 1). '';
+            $oTr[] =  ''.$r->itemCalc($v->id, 'title_lang_suffix2', $v->title_lang_suffix2, 'tcform', 0). '<br>';
+            $oTr[] =  '</td>';
+
+        } else {
+            $oTr[] = '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'tcform', 2).'</td>';
+        }
+
+
+
 		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_netto', PhocacartPrice::cleanPrice($v->amount_netto), 'tcform', 0, 'ph-right').'</td>';
 		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_tax', PhocacartPrice::cleanPrice($v->amount_tax), 'tcform', 0, 'ph-right').'</td>';
 		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_brutto', PhocacartPrice::cleanPrice($v->amount_brutto), 'tcform', 0, 'ph-right').'</td>';
@@ -308,7 +338,16 @@ if (!empty($this->itemtaxrecapitulation)) {
 		$oTr[] = '</tr>';
 
 		$oTr[] = '<tr>';
-		$oTr[] = '<td class="ph-col-add-cur"></td>';
+
+        // Language Variables
+        if ($this->p['order_language_variables'] == 1) {
+            $oTr[] = '<td class="ph-col-title-small">'.PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</td>';
+
+        } else {
+            $oTr[] = '<td class="ph-col-add-cur"></td>';
+        }
+
+
 		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_netto).' )</td>';
 		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_tax).' )</td>';
 		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_brutto).' )</td>';
@@ -411,7 +450,7 @@ echo '</div>';
 
 
 echo '<div class="tab-pane" id="billing">'."\n";
-$formArray = array ('order_number', 'receipt_number', 'invoice_number', 'invoice_prn', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc');
+$formArray = array ('order_number', 'receipt_number', 'invoice_number', 'invoice_prn', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 

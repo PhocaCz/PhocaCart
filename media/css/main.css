@@ -2098,3 +2098,18 @@ table.pc-tax-recapitulation tr th {
 table.pc-tax-recapitulation tr td {
 	text-align: right;
 }
+
+
+/* Plugings */
+.ph-plg-product-info {
+	margin: 5px 0 15px 0;
+	text-align: left;
+}
+
+.ph-plg-product-info-title {
+	font-weight: bold;
+}
+
+.ph-plg-product-attribute-item {
+	color: #c0c0c0;
+}

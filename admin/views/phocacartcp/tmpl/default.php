@@ -17,7 +17,7 @@ $cUsersW	= $s->getNumberOfUsers();
 $cUsersD	= $s->getNumberOfUsers(0);
 $cAmountW	= $s->getAmountOfOrders();
 $cAmountD	= $s->getAmountOfOrders(0);
-		
+
 
 ?><form action="index.php" method="post" name="adminForm">
 
@@ -35,22 +35,22 @@ $cAmountD	= $s->getAmountOfOrders(0);
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_TODAY'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cUsersD; ?></div>
-							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_CUSTOMERS'); ?></div>
+							<div class="ph-cpanel-color-header"><?php echo JText::plural( 'COM_PHOCACART_CUSTOMERS', $cUsersD); ?></div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color2">
 						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('shopping-cart') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_TODAY'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cOrdersD; ?></div>
-							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_ORDERS'); ?></div>
+							<div class="ph-cpanel-color-header"><?php echo JText::plural( 'COM_PHOCACART_ORDERS', $cOrdersD); ?></div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color3">
 						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('stats') ?>"></span></div>
@@ -61,30 +61,30 @@ $cAmountD	= $s->getAmountOfOrders(0);
 						</div>
 					</div>
 				</div>
-				
-				
+
+
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color4">
 						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('user') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cUsersW; ?></div>
-							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_CUSTOMERS'); ?></div>
+							<div class="ph-cpanel-color-header"><?php echo JText::plural( 'COM_PHOCACART_CUSTOMERS', $cUsersW); ?></div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color5">
 						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('shopping-cart') ?>"></span></div>
 						<div class="ph-cpanel-color-right">
 							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?></div>
 							<div class="ph-cpanel-stat-value"><?php echo $cOrdersW; ?></div>
-							<div class="ph-cpanel-color-header"><?php echo JText::_('COM_PHOCACART_ORDERS'); ?></div>
+							<div class="ph-cpanel-color-header"><?php echo JText::plural( 'COM_PHOCACART_ORDERS', $cOrdersW); ?></div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-xs-12 col-sm-6 col-md-2">
 					<div class="ph-cpanel-color ph-cpanel-color6">
 						<div class="ph-cpanel-color-left"><span class="<?php echo PhocacartRenderIcon::getClassAdmin('stats') ?>"></span></div>
@@ -102,43 +102,43 @@ $cAmountD	= $s->getAmountOfOrders(0);
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="ph-cpanel-icon-box">
 						<div class="row-fluid">
-					<?php 
+					<?php
 					foreach ($this->views as $k => $v) {
 						$linkV	= $link . $this->t['c'] . $k;
 						//echo PhocacartRenderAdmin::quickIconButton( $linkV, 'icon-48-'.$k.'.png', JText::_($v[0]), $this->t['i']);
 						echo '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">';
 						echo PhocacartRenderAdmin::quickIconButton( $linkV, JText::_($v[0]), $v[1], $v[2]);
 						echo '</div>';
-					}	
+					}
 					?>
 						</div>
 					</div>
 				</div>
-							
+
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="ph-cpanel-chart-box">
 						<h3 class="ph-cpanel-color-header-block"><?php echo JText::_('COM_PHOCACART_CHART'); ?> (<?php echo JText::_('COM_PHOCACART_THIS_WEEK'); ?>)</h3>
-			<?php 
-				
-			$dataS = $s->getDataChart(); 
-		
+			<?php
+
+			$dataS = $s->getDataChart();
+
 			$s->renderChartJsLine('phChartAreaLine', $dataS['amount'], JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $dataS['orders'], JText::_('COM_PHOCACART_TOTAL_ORDERS'), $dataS['ticks']);
 			$s->setFunction('phChartAreaLine', 'Line');
 			$s->renderFunctions();
-				
+
 				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
 						<div id="ph-canvas-holder2" class="phChartAreaLineholder" style="width: 97%;" >
 						<canvas id="phChartAreaLine" class="ph-chart-area"s />
 						</div>
 					</div>
-				
-				
+
+
 					<div class="ph-cpanel-info-box"><?php
-							
+
 							echo '<div class="ph-cpanel-logo">'.JHtml::_('image', $this->t['i'] . 'logo-phoca-cart.png', 'Phoca.cz') . '</div>';
-							
-							?><div style="float:right;margin:10px;"><?php 
-							
+
+							?><div style="float:right;margin:10px;"><?php
+
 			echo JHtml::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' );?></div><?php
 			echo '<h3>'.  JText::_($this->t['l'] . '_VERSION').'</h3>'
 			.'<p>'.  $this->t['version'] .'</p>';
@@ -155,23 +155,23 @@ $cAmountD	= $s->getAmountOfOrders(0);
 
 					?></div>
 				</div>
-				
+
 				<div class="col-xs-12 col-sm-6 col-md-6">
 					<div class="ph-cpanel-tips-box">
 						<?php echo PhocacartRenderAdmin::getLinks(); ?>
 					</div>
 				</div>
-				
+
 			</div>
-			
-			
+
+
 			<p>&nbsp;</p>
-			
+
 			<?php echo $r->endMainContainer(); ?>
 
-		</div>		
+		</div>
 	</div>
-		
+
 	<input type="hidden" name="option" value="<?php echo $this->t['c'] ?>" />
 	<input type="hidden" name="view" value="<?php echo $this->t['c'] ?>cp" />
 	<?php echo JHtml::_('form.token'); ?>

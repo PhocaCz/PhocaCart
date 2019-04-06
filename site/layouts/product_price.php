@@ -60,7 +60,8 @@ if ($zero_price_label == '0') {
 	} else {
 
 		// Standard price
-		if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0 ) { ?>
+		if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0
+            && ($d['priceitems']['netto'] != $d['priceitems']['brutto'])) { ?>
 		<div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['nettotxt'] ?></div>
 		<div class="ph-price-netto <?php echo $classPS; ?>"><?php echo $d['priceitems']['nettoformat'] ?></div>
 	<?php } ?>
@@ -83,9 +84,11 @@ if ($zero_price_label == '0') {
 
 
 	<?php
+   
 	// PRODUCT DISCOUNT
 	if (isset ($d['discount']) && $d['discount']) { ?>
-		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0) { ?>
+		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0
+                    && ($d['priceitemsdiscount']['brutto'] != $d['priceitemsdiscount']['netto'])) { ?>
 			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['nettotxt'] ?></div>
 			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscount']['nettoformat'] ?></div>
 		<?php } ?>
@@ -104,7 +107,8 @@ if ($zero_price_label == '0') {
 	<?php
 	// CART DISCOUNT DISPLAYED IN PRODUCT VIEWS (under specific conditions only)
 	if (isset ($d['discountcart']) && $d['discountcart']) { ?>
-		<?php if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0) { ?>
+		<?php if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0
+                && ($d['priceitemsdiscountcart']['brutto'] != $d['priceitemsdiscountcart']['netto'])) { ?>
 			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettotxt'] ?></div>
 			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettoformat'] ?></div>
 		<?php } ?>

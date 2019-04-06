@@ -22,6 +22,19 @@ if (isset($d['checkout_view']) && $d['checkout_view'] == 1) {
         </div>
         <div class="modal-body">
 
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 ph-center">
+                    <?php
+
+                    JPluginHelper::importPlugin('pcv');
+                    $results = \JFactory::getApplication()->triggerEvent('PCVonPopupAddToCartAfterHeader', array('com_phocacart.popupaddtocart', $d['product'], $d['products'], $d['total']));
+                    echo trim(implode("\n", $results));
+
+                    ?>
+                </div>
+            </div>
+
 		<div class="row">
 <div class="col-xs-12 col-sm-6 col-md-6 ph-center">
 <a class="btn btn-primary ph-btn" role="button" <?php echo $d['checkout_view_href']; ?> ><span class="<?php echo PhocacartRenderIcon::getClass('shopping-cart') ?>"></span> <?php echo JText::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
@@ -35,7 +48,6 @@ if (isset($d['checkout_view']) && $d['checkout_view'] == 1) {
 		<div class="modal-footer"></div>
 	   </div>
     </div>
-</div> 
+</div>
 
 
- 

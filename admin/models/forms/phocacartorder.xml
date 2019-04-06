@@ -1,47 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 
-<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+    <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
 
-<field name="id" type="text" default="0" label="COM_PHOCACART_ORDER_ID_LABEL" description="COM_PHOCACART_ORDER_ID_DESC" required="true" readonly="true" class="readonly" />
+        <field name="id" type="text" default="0" label="COM_PHOCACART_ORDER_ID_LABEL" description="COM_PHOCACART_ORDER_ID_DESC" required="true" readonly="true" class="readonly"/>
 
-<!--
-<field name="user_id" type="text" default="0" label="COM_PHOCACART_USER_ID_LABEL" description="COM_PHOCACART_USER_ID_DESC" required="true" readonly="true" class="readonly" />-->
+        <!--
+        <field name="user_id" type="text" default="0" label="COM_PHOCACART_USER_ID_LABEL" description="COM_PHOCACART_USER_ID_DESC" required="true" readonly="true" class="readonly" />-->
 
-<field name="status_id" type="PhocacartOrderStatus" default="0" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC" required="true" readonly="true" class="readonly" />
+        <field name="status_id" type="PhocacartOrderStatus" default="0" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC" required="true" readonly="true" class="readonly"/>
 
-<field name="order_token" type="phocacarttoken" readonly="true" manager="folder" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC" />
+        <field name="order_token" type="phocacarttoken" readonly="true" manager="folder" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC"/>
 
-<field name="comment" type="textarea" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COMMENT_LABEL" description="COM_PHOCACART_FIELD_COMMENT_DESC" />
+        <field name="comment" type="textarea" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COMMENT_LABEL" description="COM_PHOCACART_FIELD_COMMENT_DESC"/>
 
-<field name="tracking_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL" description="COM_PHOCACART_FIELD_TRACKING_NUMBER_DESC" />
-<field name="tracking_link_custom" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_DESC" />
-<field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC" />
+        <field name="tracking_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL" description="COM_PHOCACART_FIELD_TRACKING_NUMBER_DESC"/>
+        <field name="tracking_link_custom" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_DESC"/>
+        <field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL"
+               filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC"/>
 
-<field name="tracking_date_shipped" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" filter="JComponentHelper::filterText" />
-
-
-
-<field name="order_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_DESC" />
-<field name="receipt_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_DESC" />
-<field name="invoice_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_DESC" />
-<field name="invoice_prn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_DESC" />
-<field name="invoice_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DATE_DESC" />
-<field name="invoice_due_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_DESC" />
-	<field name="invoice_time_of_supply" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_LABEL" description="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_DESC" />
-
-<field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC" />
-<field name="invoice_spec_middle_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC" />
-<field name="invoice_spec_bottom_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC" />
+        <field name="tracking_date_shipped" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" filter="JComponentHelper::filterText"/>
 
 
-	</fieldset>
+        <field name="order_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_DESC"/>
+        <field name="receipt_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_DESC"/>
+        <field name="invoice_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_DESC"/>
+        <field name="invoice_prn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_DESC"/>
+        <field name="invoice_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DATE_DESC"/>
+        <field name="invoice_due_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_DESC"/>
+        <field name="invoice_time_of_supply" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_LABEL" description="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_DESC"/>
 
-	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+        <field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC"/>
+        <field name="invoice_spec_middle_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_LABEL"
+               filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC"/>
+        <field name="invoice_spec_bottom_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_LABEL"
+               filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC"/>
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
-	</fieldset>
+        <field name="oidn_spec_billing_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_LABEL"
+               filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_DESC"/>
+
+        <field name="oidn_spec_shipping_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"
+               filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"/>
+
+
+    </fieldset>
+
+    <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
+
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+    </fieldset>
 </form>

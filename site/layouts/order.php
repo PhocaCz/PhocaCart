@@ -50,6 +50,10 @@ $pdf_invoice_qr_information				= $d['params']->get( 'pdf_invoice_qr_information'
 $invoice_global_top_desc				= $d['params']->get( 'invoice_global_top_desc', 0 );// Article ID
 $invoice_global_middle_desc				= $d['params']->get( 'invoice_global_middle_desc', 0 );
 $invoice_global_bottom_desc				= $d['params']->get( 'invoice_global_bottom_desc', 0 );
+
+$oidn_global_billing_desc			    = $d['params']->get( 'oidn_global_billing_desc', 0 );
+$oidn_global_shipping_desc			    = $d['params']->get( 'oidn_global_shipping_desc', 0 );
+
 $display_tax_recapitulation_invoice		= $d['params']->get( 'display_tax_recapitulation_invoice', 0 );
 $display_tax_recapitulation_pos			= $d['params']->get( 'display_tax_recapitulation_pos', 0 );
 
@@ -233,7 +237,6 @@ if ($d['format'] == 'pdf') {
 
 }
 
-
 // -----------
 // R E N D E R
 // -----------
@@ -379,6 +382,28 @@ if (!empty($d['bas']['b'])) {
 	if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
 	if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
 
+	// -----------------------
+	// ORDER | INVOICE | DELIVERY NOTE BILLING ADDRESS DESCRIPTION
+	// -----------------------
+	if ($d['type'] == 1 || $d['type'] == 2 || $d['type'] == 3) {
+
+		$oidnBillingDescArticle = '';
+		if ($d['common']->oidn_spec_billing_desc != '') {
+			$oidnBillingDescArticle = $d['common']->oidn_spec_billing_desc;
+		} else if ((int)$oidn_global_billing_desc > 0) {
+			$oidnBillingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_billing_desc);
+		}
+
+		if ($oidnBillingDescArticle != '') {
+			//$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+			$oidnBillingDescArticle 	= PhocacartPdf::skipStartAndLastTag($oidnBillingDescArticle, 'p');
+			$oidnBillingDescArticle 	= PhocacartText::completeText($oidnBillingDescArticle, $d['preparereplace'], 1);
+			$oidnBillingDescArticle 	= PhocacartText::completeTextFormFields($oidnBillingDescArticle, $d['bas']['b'], 1);
+			$oidnBillingDescArticle 	= PhocacartText::completeTextFormFields($oidnBillingDescArticle, $d['bas']['s'], 2);
+			$ob[] = $oidnBillingDescArticle;
+		}
+	}
+
 }
 
 
@@ -407,6 +432,29 @@ if (!empty($d['bas']['s'])) {
 	//echo '<br />';
 	if ($v['vat_1'] != '') { $os[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
 	if ($v['vat_2'] != '') { $os[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
+
+
+	// -----------------------
+    // ORDER | INVOICE | DELIVERY NOTE SHIPPING ADDRESS DESCRIPTION
+    // -----------------------
+    if ($d['type'] == 1 || $d['type'] == 2 || $d['type'] == 3) {
+
+		$oidnShippingDescArticle = '';
+		if ($d['common']->oidn_spec_shipping_desc != '') {
+			$oidnShippingDescArticle = $d['common']->oidn_spec_shipping_desc;
+		} else if ((int)$oidn_global_shipping_desc > 0) {
+			$oidnShippingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_shipping_desc);
+		}
+
+		if ($oidnShippingDescArticle != '') {
+			//$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+			$oidnShippingDescArticle 	= PhocacartPdf::skipStartAndLastTag($oidnShippingDescArticle, 'p');
+			$oidnShippingDescArticle 	= PhocacartText::completeText($oidnShippingDescArticle, $d['preparereplace'], 1);
+			$oidnShippingDescArticle 	= PhocacartText::completeTextFormFields($oidnShippingDescArticle, $d['bas']['b'], 1);
+			$oidnShippingDescArticle 	= PhocacartText::completeTextFormFields($oidnShippingDescArticle, $d['bas']['s'], 2);
+			$os[] = $oidnShippingDescArticle;
+		}
+	}
 }
 
 
@@ -432,24 +480,22 @@ $o[] = '</table>';
 // -----------------------
 // INVOICE TOP DESCRIPTION
 // -----------------------
-$hrSmallTop = 0;
 if ($d['type'] == 2) {
 
-
+	$invoiceTopDescArticle = '';
 	if ($d['common']->invoice_spec_top_desc != '') {
-		$o[] = $hrSmallTop == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
-		$invoice_spec_top_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_top_desc, 'p');
-		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_top_desc_article.'</div>';
-		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_top_desc_article.'</td></tr></table>';
+		$invoiceTopDescArticle = $d['common']->invoice_spec_top_desc;
 	} else if ((int)$invoice_global_top_desc > 0) {
-		$invoice_global_top_desc_article = PhocacartRenderFront::renderArticle((int)$invoice_global_top_desc);
-		if ($invoice_global_top_desc_article != '') {
-			$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
-			$hrSmallTop = 1;
-			$invoice_global_top_desc_article = PhocacartPdf::skipStartAndLastTag($invoice_global_top_desc_article, 'p');
-			//$o[] = '<div '.$bDesc.'>'.$invoice_global_top_desc_article.'</div>';
-			$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_global_top_desc_article.'</td></tr></table>';
-		}
+		$invoiceTopDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_top_desc);
+	}
+
+	if ($invoiceTopDescArticle != '') {
+		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+		$invoiceTopDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceTopDescArticle, 'p');
+		$invoiceTopDescArticle 	= PhocacartText::completeText($invoiceTopDescArticle, $d['preparereplace'], 1);
+		$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['b'], 1);
+		$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['s'], 2);
+		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceTopDescArticle.'</td></tr></table>';
 	}
 }
 
@@ -685,11 +731,11 @@ if (!empty($d['total'])) {
 		} else if ($v->type == 'netto') {
 			$t[] = '<tr '.$totalF.'>';
 			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
-			$t[] = '<td colspan="'.$tColspanMid.'"><b>'.$v->title.'</b></td>';
+			$t[] = '<td colspan="'.$tColspanMid.'"><b>'. PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</b></td>';
 			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$d['price']->getPriceFormat($v->amount).'</b></td>';
 			$t[] = '</tr>';
 
-			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $d['price']->getPriceFormat($v->amount))); }
+			if ($pR) { $oPr[] = $pP->printLineColumns(array(PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))), $d['price']->getPriceFormat($v->amount))); }
 
 		} else if ($v->type == 'brutto') {
 
@@ -698,14 +744,14 @@ if (!empty($d['total'])) {
 
 			$t[] = '<tr '.$totalF.'>';
 			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
-			$t[] = '<td colspan="'.$tColspanMid.'"><b>'.$v->title.'</b></td>';
+			$t[] = '<td colspan="'.$tColspanMid.'"><b>'.PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</b></td>';
 			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$amount.'</b></td>';
 			$t[] = '</tr>';
 
 
 			if ($pR) {
 				$oPr[] = $pP->printSeparator();
-				$oPr[] = $pP->printLineColumns(array($v->title, $amount), 0, 'pDoubleSize');
+				$oPr[] = $pP->printLineColumns(array(PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))), $amount), 0, 'pDoubleSize');
 				$oPr[] = $pP->printFeed(2);
 			}
 
@@ -720,20 +766,20 @@ if (!empty($d['total'])) {
 
 			$t[] = '<tr '.$totalF.'>';
 			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
-			$t[] = '<td colspan="'.$tColspanMid.'">'.$v->title.'</td>';
+			$t[] = '<td colspan="'.$tColspanMid.'">'.PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</td>';
 			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'">'.$amount.'</td>';
 			$t[] = '</tr>';
 
-			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $amount)); }
+			if ($pR) { $oPr[] = $pP->printLineColumns(array(PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))), $amount)); }
 
 		} else {
 			$t[] = '<tr '.$totalF.'>';
 			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
-			$t[] = '<td colspan="'.$tColspanMid.'">'.$v->title.'</td>';
+			$t[] = '<td colspan="'.$tColspanMid.'">'.PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' - '), 1 => array($v->title_lang_suffix2, ' '))).'</td>';
 			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'">'.$d['price']->getPriceFormat($v->amount).'</td>';
 			$t[] = '</tr>';
 
-			if ($pR) { $oPr[] = $pP->printLineColumns(array($v->title, $d['price']->getPriceFormat($v->amount))); }
+			if ($pR) { $oPr[] = $pP->printLineColumns(array(PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' - '), 1 => array($v->title_lang_suffix2, ' '))), $d['price']->getPriceFormat($v->amount))); }
 
 		}
 
@@ -772,23 +818,22 @@ $o[] = '</table>';// End box in
 // -----------------------
 // INVOICE MIDDLE DESCRIPTION
 // -----------------------
-$hrSmallMiddle = 0;
 if ($d['type'] == 2) {
 
+	$invoiceMiddleDescArticle = '';
 	if ($d['common']->invoice_spec_middle_desc != '') {
-		$o[] = $hrSmallMiddle == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
-		$invoice_spec_middle_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_middle_desc, 'p');
-		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_middle_desc_article.'</div>';
-		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_middle_desc_article.'</td></tr></table>';
+		$invoiceMiddleDescArticle = $d['common']->invoice_spec_middle_desc;
 	} else if ((int)$invoice_global_middle_desc > 0) {
-		$invoice_global_middle_desc_article = PhocacartRenderFront::renderArticle((int)$invoice_global_middle_desc);
-		if ($invoice_global_middle_desc_article != '') {
-			$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
-			$hrSmallMiddle = 1;
-			$invoice_global_middle_desc_article = PhocacartPdf::skipStartAndLastTag($invoice_global_middle_desc_article, 'p');
-			//$o[] = '<div '.$bDesc.'>'.$invoice_global_middle_desc_article.'</div>';
-			$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_global_middle_desc_article.'</td></tr></table>';
-		}
+		$invoiceMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_middle_desc);
+	}
+
+	if ($invoiceMiddleDescArticle != '') {
+		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+		$invoiceMiddleDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceMiddleDescArticle, 'p');
+		$invoiceMiddleDescArticle 	= PhocacartText::completeText($invoiceMiddleDescArticle, $d['preparereplace'], 1);
+		$invoiceMiddleDescArticle 	= PhocacartText::completeTextFormFields($invoiceMiddleDescArticle, $d['bas']['b'], 1);
+		$invoiceMiddleDescArticle 	= PhocacartText::completeTextFormFields($invoiceMiddleDescArticle, $d['bas']['s'], 2);
+		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceMiddleDescArticle.'</td></tr></table>';
 	}
 }
 
@@ -968,23 +1013,22 @@ if (($display_reward_points_invoice == 1 && $d['type'] == 2 ) ||  ($display_rewa
 // -----------------------
 // INVOICE BOTTOM DESCRIPTION
 // -----------------------
-$hrSmallBottom = 0;
 if ($d['type'] == 2) {
 
+	$invoiceBottomDescArticle = '';
 	if ($d['common']->invoice_spec_bottom_desc != '') {
-		$o[] = $hrSmallBottom == 1 ? '' : '<div '.$hrSmall.'>&nbsp;</div>';
-		$invoice_spec_bottom_desc_article = PhocacartPdf::skipStartAndLastTag($d['common']->invoice_spec_bottom_desc, 'p');
-		//$o[] = '<div '.$bDesc.'>'.$invoice_spec_bottom_desc_article.'</div>';
-		$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_spec_bottom_desc_article.'</td></tr></table>';
+		$invoiceBottomDescArticle = $d['common']->invoice_spec_bottom_desc;
 	} else if ((int)$invoice_global_bottom_desc > 0) {
-		$invoice_global_bottom_desc_article = PhocacartRenderFront::renderArticle((int)$invoice_global_bottom_desc);
-		if ($invoice_global_bottom_desc_article != '') {
-			$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
-			$hrSmallBottom = 1;
-			$invoice_global_bottom_desc_article = PhocacartPdf::skipStartAndLastTag($invoice_global_bottom_desc_article, 'p');
-			//$o[] = '<div '.$bDesc.'>'.$invoice_global_bottom_desc_article.'</div>';
-			$o[] = '<table '.$bDesc.'><tr><td>'.$invoice_global_bottom_desc_article.'</td></tr></table>';
-		}
+		$invoiceBottomDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_bottom_desc);
+	}
+
+	if ($invoiceBottomDescArticle != '') {
+		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+		$invoiceBottomDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceBottomDescArticle, 'p');
+		$invoiceBottomDescArticle 	= PhocacartText::completeText($invoiceBottomDescArticle, $d['preparereplace'], 1);
+		$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['b'], 1);
+		$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['s'], 2);
+		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceBottomDescArticle.'</td></tr></table>';
 	}
 }
 
@@ -1019,12 +1063,22 @@ if ($pR) {
 	$oPr[] = $pP->printLine($storeInfoFooterPos, 'pCenter');
 }
 
+JPluginHelper::importPlugin( 'system' );
+JPluginHelper::importPlugin('plgSystemMultilanguagesck');
+
 if ($pR) {
 	//$oPr2 = implode("\n", $oPr);
 	$oPr2 = implode("", $oPr);// new rows set in print library
+
+
+	\JFactory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
+
 	echo $oPr2;
 } else {
+
 	$o2 = implode("\n", $o);
+
+	\JFactory::getApplication()->triggerEvent('onChangeText', array(&$o2));
 	echo $o2;
 }
 

@@ -29,7 +29,7 @@ $x = $this->item[0];
 		  <h4><span class="<?php echo PhocacartRenderIcon::getClass('quick-view') ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
         </div>
         <div class="modal-body"><?php
-		
+
 
 //echo '<h1>'.$x->title.'</h1>';
 echo '<div class="row">';
@@ -49,7 +49,7 @@ $dataImage	= 'data-image="'.JURI::base(true).'/'.$image->rel.'"';// Default imag
 
 // Some of the attribute is selected - this attribute include image so the image should be displayed instead of default
 $imageA = PhocaCartImage::getImageChangedByAttributes($this->t['attr_options'], 'large');
-if ($imageA != '') { 
+if ($imageA != '') {
 	$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
 	$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
 }
@@ -57,7 +57,7 @@ if ($imageA != '') {
 $link 	= JURI::base(true).'/'.$imageL->rel;
 
 if (isset($image->rel) && $image->rel != '') {
-	
+
 	echo '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
 
 	echo '<div class="ph-label-box">';
@@ -67,6 +67,9 @@ if (isset($image->rel) && $image->rel != '') {
 	}
 	echo '</div>';
 
+
+    $altValue   = PhocaCartImage::getAltTitle($x->title, $x->image);
+
 	//echo '<a href="'.$link.'" '.$this->t['image_rel'].'>';
 	// In Quic View there is no linking of image
 	// 1) but we use A TAG in javascript jquery.phocaswapimage.js se we need A TAG HERE but we make it inactive
@@ -74,13 +77,13 @@ if (isset($image->rel) && $image->rel != '') {
 	//    and this we will do per customHref in function Display: function(imgBox, form, select, customHref) {
 	//    custom href will be javascript:void(0); see this file, line cca 286 phSIO1'.(int)$formId.'.Init
 	echo '<a href="javascript:void(0);" '.$this->t['image_rel'].' class="phjProductHref'.$idName.'" data-href="'.$link.'">';
-	echo '<img src="'.JURI::base(true).'/'.$image->rel.'" '.$dataImage.' alt="" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full phjProductImage'.$idName.'"';
+	echo '<img src="'.JURI::base(true).'/'.$image->rel.'" '.$dataImage.' alt="'.$altValue.'" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full phjProductImage'.$idName.'"';
 	if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
 		echo ' style="width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px"';
 	}
 	echo ' />';
 	echo '</a>';
-	
+
 	echo '</div>'. "\n";
 }
 
@@ -100,11 +103,11 @@ echo PhocacartRenderFront::renderHeader(array($title));
 // :L: PRICE
 $price 	= new PhocacartPrice;// Can be used by options
 if ($this->t['hide_price'] != 1) {
-	
+
 	$d					= array();
 	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 	$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
-	
+
 	$d['priceitemsorig']= array();
 	if ($x->price_original != '' && $x->price_original > 0) {
 		$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype);
@@ -112,18 +115,18 @@ if ($this->t['hide_price'] != 1) {
 	$d['class']			= 'ph-item-price-box';
 	$d['product_id']	= (int)$x->id;
 	$d['typeview']		= 'ItemQuick';
-		
+
 	// Display discount price
 	// Move standard prices to new variable (product price -> product discount)
 	$d['priceitemsdiscount']		= $d['priceitems'];
 	$d['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $d['priceitemsdiscount']);
-	
+
 	// Display cart discount (global discount) in product views - under specific conditions only
 	// Move product discount prices to new variable (product price -> product discount -> product discount cart)
 	$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
 	$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
-		
-	$d['zero_price']		= 1;// Apply zero price if possible	
+
+	$d['zero_price']		= 1;// Apply zero price if possible
 	echo$layoutP->render($d);
 }
 
@@ -135,24 +138,24 @@ if ($this->t['hide_price'] != 1) {
 	if ($pointsN) {
 		echo '<div class="ph-item-reward-box">';
 		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
-		
+
 		echo '<div class="ph-reward">'.$pointsN.'</div>';
 		echo '</div>';
 		echo '<div class="ph-cb"></div>';
 	}
-	
+
 	// REWARD POINTS - RECEIVED
 	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
 	if ($pointsR) {
 		echo '<div class="ph-item-reward-box">';
 		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_REWARD_POINTS').'</div>';
-		
+
 		echo '<div class="ph-reward">'.$pointsR.'</div>';
 		echo '</div>';
 		echo '<div class="ph-cb"></div>';
 	}
-	
-	
+
+
 	if (isset($x->manufacturertitle) && $x->manufacturertitle != '') {
 		echo '<div class="ph-item-manufacturer-box">';
 		echo '<div class="ph-manufacturer-txt">'.JText::_('COM_PHOCACART_MANUFACTURER').':</div>';
@@ -169,12 +172,12 @@ if ($this->t['hide_price'] != 1) {
 	$class_icon	= '';
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
 		$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
-	
+
 		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 			$class_btn 					= 'ph-visibility-hidden';
 			$class_icon					= 'ph-display-none';
 		}
-		
+
 		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count']) {
 			$d							= array();
 			$d['class']					= 'ph-item-stock-box';
@@ -183,14 +186,14 @@ if ($this->t['hide_price'] != 1) {
 			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
 			echo $layoutS->render($d);
 		}
-		
+
 		if($this->t['stock_status']['min_quantity']) {
 			$dPOQ						= array();
 			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_quantity'];
 			echo $layoutPOQ->render($dPOQ);
 		}
-		
+
 		if($this->t['stock_status']['min_multiple_quantity']) {
 			$dPOQ						= array();
 			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
@@ -233,7 +236,7 @@ if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 	// Don't display Add to Cart in case the price is zero
 	$addToCartHidden = 1;
 } else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
-	
+
 	$d					= array();
 	$d['id']			= (int)$x->id;
 	$d['catid']			= $this->t['catid'];
@@ -248,15 +251,15 @@ if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 	$d					= array();
 	$d['external_id']	= (int)$x->external_id;
 	$d['return']		= $this->t['actionbase64'];
-	
+
 	echo$layoutA2->render($d);
 } else if ((int)$this->t['item_addtocart'] == 3 && $x->external_link != '') {
-	$d					= array();	
+	$d					= array();
 	$d['external_link']	= $x->external_link;
 	$d['external_text']	= $x->external_text;
 	$d['return']		= $this->t['actionbase64'];
 	echo $layoutA3->render($d);
-			
+
 }
 
 echo '</form>';
@@ -272,9 +275,9 @@ if ($this->t['tags_output'] != '') {
 
 
 echo '</div>';// end right side price panel
-echo '</div>';// end row	
-			
-		
+echo '</div>';// end row
+
+
         ?></div>
 		<div class="modal-footer"></div>
 	   </div>

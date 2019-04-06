@@ -596,6 +596,12 @@ table.ph-table-download-links tr th.link {
 	color: #555;
 	text-align: right;
 }
+
+.ph-col-title-small {
+    font-size: xx-small;
+    color: #555;
+    text-align: left;
+}
 .ph-inline-param {
 	margin: auto 10px;
 	float: left;

@@ -23,9 +23,9 @@ class JFormFieldPhocacartCategory extends JFormField
 	protected $type 		= 'PhocacartCategory';
 
 	protected function getInput() {
-		
+
 		$db = JFactory::getDBO();
-		
+
 		$javascript		= '';
 		$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
@@ -40,8 +40,8 @@ class JFormFieldPhocacartCategory extends JFormField
 			$attr		.= 'required aria-required="true" ';
 		}
 		$attr		.= $javascript . ' ';
-		
-		
+
+
 		// Multiple load more values
 		$activeCats = array();
 		$id 		= 0;
@@ -51,33 +51,51 @@ class JFormFieldPhocacartCategory extends JFormField
 			$id = (int) $this->form->getValue('id');// Product ID
 			if ((int)$id > 0) {
 				$activeCats	= PhocacartCategoryMultiple::getCategories($id, 1);
-				
+
 			}
 		}
-		
+
+
+		// Filter language
+        $whereLang = '';
+        if (!empty($this->element['language'])) {
+            if (strpos($this->element['language'], ',') !== false)
+            {
+                $language = implode(',', $db->quote(explode(',', $this->element['language'])));
+            }
+            else
+            {
+                $language = $db->quote($this->element['language']);
+            }
+
+            $whereLang = ' AND '.$db->quoteName('a.language') . ' IN (' . $language . ')';
+        }
+
+
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocacart_categories AS a'
 		. ' WHERE a.published = 1';
 		switch($categoryType) {
-			
+
 			case 1:
 				$query .= ' AND a.type IN (0,1)';
 			break;
-			
+
 			case 2:
 				$query .= ' AND a.type IN (0,2)';
 			break;
-			
-			
-			case 0: 
+
+
+			case 0:
 			default:
-				
+
 			break;
-			
+
 		}
-		
-		
+
+		$query .= $whereLang;
+
 		$query .= ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
@@ -91,14 +109,14 @@ class JFormFieldPhocacartCategory extends JFormField
 				$catId = $id;
 			}
 		}
-		
-		
-		
-		
+
+
+
+
 		$tree = array();
 		$text = '';
 		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
-		
+
 		if ($multiple) {
 			if ($typeMethod == 'allnone') {
 				array_unshift($tree, JHtml::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
@@ -110,11 +128,11 @@ class JFormFieldPhocacartCategory extends JFormField
 
 		if (!empty($activeCats)) {
 			return JHtml::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
-		
+
 		} else {
 			return JHtml::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		}
-		
+
 	}
 }
 ?>

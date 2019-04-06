@@ -11,8 +11,8 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartPayments extends JModelList
 {
-	protected $option 	= 'com_phocacart';	
-	
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array()) {
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
@@ -20,6 +20,7 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 				'title', 'a.title',
 				'alias', 'a.alias',
 				'method', 'a.method',
+                'cost', 'a.cost',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'access', 'a.access', 'access_level',
@@ -29,7 +30,7 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 		}
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null) {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -40,7 +41,7 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 
 		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);
-		
+
 
 
 		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
@@ -56,7 +57,7 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 		// List state information.
 		parent::populateState('a.title', 'asc');
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -66,7 +67,7 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 		$id	.= ':'.$this->getState('filter.payment_id');
 		return parent::getStoreId($id);
 	}
-	
+
 	protected function getListQuery() {
 
 		$db		= $this->getDbo();
@@ -88,17 +89,17 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		
+
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-		
+
 
 		// Filter by access level.
 	if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = '.(int) $access);
 		}
-		
+
 
 
 		// Filter by published state.
@@ -124,13 +125,13 @@ class PhocaCartCpModelPhocacartPayments extends JModelList
 				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
-	
+
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		return $query;	
+		return $query;
 	}
 }
 ?>

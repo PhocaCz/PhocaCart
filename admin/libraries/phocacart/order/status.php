@@ -13,6 +13,7 @@ defined('_JEXEC') or die();
 phocacart import('phocacart.path.route');
 */
 
+
 class PhocacartOrderStatus
 {
 	private static $status = array();
@@ -91,6 +92,9 @@ class PhocacartOrderStatus
 	 */
 
 	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99', $changeUserGroup = '99', $changePointsNeeded = '99', $changePointsReceived = '99') {
+
+
+
 
 
 		// ORDER INFO
@@ -431,6 +435,9 @@ class PhocacartOrderStatus
 		// BUILD EMAIL for customer or others
 		// ------------------------
 
+		// Set language of order for the customer
+		$pLang = new PhocacartLanguage();
+
 		if (($recipient != '' && JMailHelper::isEmailAddress($recipient)) || ($recipientOthers != '' && JMailHelper::isEmailAddress($recipientOthers))) {
 
 			$sitename 		= $config->get('sitename');
@@ -498,6 +505,10 @@ class PhocacartOrderStatus
 			$pdfV['pdf']			= 0;
 
 
+
+
+
+
 			if ($pdfV['plugin-pdf'] == 1 && $pdfV['component-pdf'] == 1) {
 				if (JFile::exists(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php')) {
 					require_once(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php');
@@ -508,6 +519,13 @@ class PhocacartOrderStatus
 				}
 				$pdfV['pdf'] = 1;
 			}
+
+
+			// All - users or others get the documents in user language - to save the memory when creating e.g. PDF documents. Even it is better that others see
+			// which language version the customer got
+			$pLang->setLanguage($common->user_lang);
+
+
 
 
 			switch ($emailSendV) {
@@ -595,15 +613,40 @@ class PhocacartOrderStatus
 				break;
 
 			}
+			$pLang->setLanguageBack();
+
+
 
 
 			JPluginHelper::importPlugin( 'system' );
 			//$dispatcher = J EventDispatcher::getInstance();
 			JPluginHelper::importPlugin('plgSystemMultilanguagesck');
-			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$subject));
+
+
+			// CUSTOMER
+			if (isset($common->user_lang) && $common->user_lang != '' && $common->user_lang != '*') {
+
+
+				$pLang->setLanguage($common->user_lang);
+
+				\JFactory::getApplication()->triggerEvent('onChangeText', array(&$subject));
+				\JFactory::getApplication()->triggerEvent('onChangeText', array(&$body));
+
+
+				// Set language back to default
+				$pLang->setLanguageBack();
+
+
+			} else {
+				\JFactory::getApplication()->triggerEvent('onChangeText', array(&$subject));
+				\JFactory::getApplication()->triggerEvent('onChangeText', array(&$body));
+			}
+
+			// OTHERS
 			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$subjectOthers));
-			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$body));
 			\JFactory::getApplication()->triggerEvent('onChangeText', array(&$bodyOthers));
+
+
 
 			//}
 

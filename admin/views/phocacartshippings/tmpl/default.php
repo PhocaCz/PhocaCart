@@ -20,6 +20,8 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', $this->t['o']);
 $saveOrder	= $listOrder == 'a.ordering';
+$adminDesc  = new PhocacartUtilsAdmindescription();
+$nrColumns  = $adminDesc->isActive() ? 11 : 10;
 if ($saveOrder) {
 	$saveOrderingUrl = 'index.php?option='.$this->t['o'].'&task='.$this->t['tasks'].'.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
@@ -49,7 +51,7 @@ echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();
 
 echo $r->startTable('categoryList');
 
@@ -60,16 +62,19 @@ echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title-small">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-default">'.JHtml::_('grid.sort',  $this->t['l'].'_DEFAULT', 'a.default', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-rule">'.JText::_(	$this->t['l'].'_ACTIVE_RULE_S').'</th>'."\n";	
+echo '<th class="ph-method">'.JHtml::_('grid.sort',  $this->t['l'].'_SHIPPING_METHOD', 'a.method', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_PRICE', 'a.cost', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-rule">'.JText::_(	$this->t['l'].'_ACTIVE_RULE_S').'</th>'."\n";
+echo $adminDesc->isActive() ? '<th class="ph-description-small">'.JText::_(	$this->t['l'].'_DESCRIPTION').'</th>'."\n" : '';
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
-			
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 if (is_array($this->items)) {
@@ -79,8 +84,8 @@ if (is_array($this->items)) {
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
-$orderkey   	= array_search($item->id, $this->ordering[0]);		
-$ordering		= ($listOrder == 'a.ordering');			
+$orderkey   	= array_search($item->id, $this->ordering[0]);
+$ordering		= ($listOrder == 'a.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -95,7 +100,7 @@ echo "\n\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
-					
+
 $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -117,9 +122,12 @@ if ($item->default == '0' || $item->default == '1') {
 } else if ($canChange)  {
 	$default = '<a href="'. JRoute::_('index.php?option=com_phocacart&task='.$this->t['tasks'].'.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1').'">';
 }
-echo $r->td($default, "small");							
-							
-							
+echo $r->td($default, "small");
+
+echo $r->td(JText::_($item->method), "small");
+
+echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="shipping_methods:cost:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->cost).'</span>', "small");
+
 
 $rules = array();
 if($item->active_amount) {$rules[] = '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_AMOUNT_RULE'). '</span>';}
@@ -128,21 +136,24 @@ if($item->active_country) {$rules[] = '<span class="label label-warning label-wa
 if($item->active_region) {$rules[] = '<span class="label label-info label-info">'.JText::_('COM_PHOCACART_REGION_RULE'). '</span>';}
 if($item->active_weight) {$rules[] = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_WEIGHT_RULE'). '</span>';}
 
-
 echo $r->td(implode(" ", $rules), "small");
+
+if ($adminDesc->isActive()) {
+	echo $r->td($this->escape($adminDesc->getAdminDescription($item->description)));
+}
 
 echo $r->td($this->escape($item->access_level));
 
 echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 8);
+echo $r->tblFoot($this->pagination->getListFooter(), $nrColumns);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);
