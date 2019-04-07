@@ -30,11 +30,15 @@ class PhocacartUtilsExtension
 	 */
 
 	public static function getExtensionInfo( $element = null, $type = 'component', $folder = '' ) {
+		
+		$elementFolder = $element . $folder;
+		
 		if( is_null( $element ) ) {
 			throw new Exception('Function Error: No element added', 500);
 			return false;
 		}
-		if( !array_key_exists( $element, self::$extension ) ) {
+		
+		if( !array_key_exists( $elementFolder, self::$extension ) ) {
 			
 			$db		= JFactory::getDbo();
 			$query	= $db->getQuery(true);
@@ -54,25 +58,28 @@ class PhocacartUtilsExtension
 			$cache 			= JFactory::getCache('_system','callback');
 			$extensionData	=  $cache->get(array($db, 'loadObject'), null, $element, false);
 			if (isset($extensionData->enabled) && $extensionData->enabled == 1) {
-				self::$extension[$element] = 1;
+				self::$extension[$elementFolder] = 1;
 			} else if(isset($extensionData->enabled) && $extensionData->enabled == 0) {
-				self::$extension[$element] = 2;
+				self::$extension[$elementFolder] = 2;
 			} else {
-				self::$extension[$element] = 0;
+				self::$extension[$elementFolder] = 0;
 			}
 		}
 		
-		return self::$extension[$element];
+		return self::$extension[$elementFolder];
 		
 	}
 	
 	public static function getExtensionLoadInfo( &$extension, $element = null, $type = 'component', $folder = '', $version = '') {
 		
+		$elementFolder = $element . $folder;
+		
 		if( is_null( $element ) ) {
 			return false;
 		}
 		
-		if( !array_key_exists( $element, self::$extensionLoad ) ) {
+		
+		if( !array_key_exists( $elementFolder, self::$extensionLoad ) ) {
 			
 			
 			$table 					= JTable::getInstance('Extension', 'JTable');
@@ -93,14 +100,17 @@ class PhocacartUtilsExtension
 					$extension['versioncurrent'] = $manifest->version;
 				}
 			}
-			self::$extensionLoad[$element] = $extension;
+			self::$extensionLoad[$elementFolder] = $extension;
 		}
 		
-		return self::$extensionLoad[$element];
+		return self::$extensionLoad[$elementFolder];
 	}
 	
 	
 	public static function getExtensionsObtainTypeButton($type, $download, $extension) {
+		
+		
+	
 		
 		$o 		= '';
 		
