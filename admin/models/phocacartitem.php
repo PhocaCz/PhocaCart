@@ -436,6 +436,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				}
 			}
 
+			// Find all downloadable files to remove them
+			$foldersP = PhocacartDownload::getProductDownloadFolderByProducts($cid);
+			$foldersA = PhocacartDownload::getAttributeOptionDownloadFolderByProducts($cid);
+			// Will be deleted at the bottom if everything is OK
+
+
 			// 1. DELETE ITEMS
 			$query = 'DELETE FROM #__phocacart_products'
 				. ' WHERE id IN ( '.$cids.' )';
@@ -530,6 +536,10 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
+
+			// Remove download folders
+			PhocacartFile::deleteDownloadFolders($foldersP, 'productfile');
+			PhocacartFile::deleteDownloadFolders($foldersA, 'attributefile');
 
 		}
 		return true;

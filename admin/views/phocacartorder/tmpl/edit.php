@@ -416,6 +416,21 @@ if (isset($this->itemcommon->order_token)) {
 				$dLink = PhocacartPath::getRightPathLink($link);
 
 				echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+
+                
+                // Product Attribute Option Download File
+                if (!empty($v->attributes)) {
+                    foreach ($v->attributes as $k2 => $v2) {
+
+                        if ($v2->download_token) {
+                            echo '<tr><td>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</td>';
+                            $link = PhocacartRoute::getDownloadRoute() . '&o='.$this->itemcommon->order_token.'&d='.htmlspecialchars($v2->download_token);
+                            $dLink = PhocacartPath::getRightPathLink($link);
+                            echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+
+                        }
+                    }
+                }
 			}
 		}
 		echo '</table>';

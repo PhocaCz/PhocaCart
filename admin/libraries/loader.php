@@ -7,7 +7,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-if (!defined('DS')) {define('DS', DIRECTORY_SEPARATOR);}
 
 spl_autoload_register(array('JLoader','load'));
 
@@ -19,7 +18,7 @@ class PhocacartLoader extends JLoader
 	public static function import($filePath, $base = null, $key = 'libraries.') {
 
 		$keyPath = $key ? $key . $filePath : $filePath;
-		
+
 		if (!isset($paths[$keyPath])) {
 			if ( !$base ) {
 				$base =  JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries';
@@ -28,8 +27,8 @@ class PhocacartLoader extends JLoader
 			$parts = explode( '.', $filePath );
 
 			$className = array_pop( $parts );
-			
-			
+
+
 			switch($className) {
 				case 'helper' :
 					$className = ucfirst(array_pop( $parts )).ucfirst($className);
@@ -41,7 +40,7 @@ class PhocacartLoader extends JLoader
 			}
 
 			$path  = str_replace( '.', '/', $filePath );
-			
+
 			if (strpos($filePath, 'phocacart') === 0) {
 				$className	= 'PhocaCart'.$className;
 				$classes	= JLoader::register($className, $base.'/'.$path.'.php');
@@ -68,7 +67,7 @@ class PhocacartLoader extends JLoader
 
 			PhocacartLoader::$paths[$keyPath] = $rs;
 		}
-		
+
 		return PhocacartLoader::$paths[$keyPath];
 	}
 }

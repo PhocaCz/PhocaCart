@@ -18,10 +18,10 @@ phocacart import('phocacart.file.file');
 class PhocacartDownload
 {
 	public static function getDownloadFiles($userId, $tokenDownload = '', $tokenOrder = '') {
-		
+
 		$db 	= JFactory::getDBO();
 		$wheres		= array();
-		
+
 		if ((int)$userId < 1 && $tokenDownload != '' && $tokenOrder != '') {
 			$wheres[]	= ' d.download_token = '.$db->quote($tokenDownload);
 			$wheres[]	= ' o.order_token = '.$db->quote($tokenOrder);
@@ -31,7 +31,7 @@ class PhocacartDownload
 			$leftJoin = ' LEFT JOIN #__users AS u ON u.id = o.user_id';
 		}
 		$wheres[]	= ' d.published = 1';
-		
+
 		$query = ' SELECT d.*'
 				.' FROM #__phocacart_order_downloads AS d'
 				.' LEFT JOIN #__phocacart_orders AS o ON o.id = d.order_id'
@@ -41,12 +41,13 @@ class PhocacartDownload
 		$db->setQuery($query);
 
 		$files = $db->loadObjectList();
-		
+
+
 		return $files;
 	}
-	
+
 	public static function getDownloadFile($id) {
-		
+
 		$db 	= JFactory::getDBO();
 		$query = ' SELECT d.*, u.id as userid, o.order_token'
 				.' FROM #__phocacart_order_downloads AS d'
@@ -59,17 +60,17 @@ class PhocacartDownload
 		$file = $db->loadObject();
 		return $file;
 	}
-	
+
 	public static function validUntil($date, $days) {
 		$db				= JFactory::getDBO();
-		
+
 		$nullDate 		= $db->getNullDate();
 		$now			= JFactory::getDate();
 		$config			= JFactory::getConfig();
 		$orderDate 		= JFactory::getDate($date);
 		$tz 			= new DateTimeZone($config->get('offset'));
 		$orderDate->setTimezone($tz);
-		
+
 		$daysTime 		= $days * 24 * 60 * 60;
 		$expireDate		= $orderDate->toUnix() + $daysTime;
 		if ($days == '0') {
@@ -78,26 +79,26 @@ class PhocacartDownload
 		} else {
 			return JHtml::date($expireDate, JText::_('DATE_FORMAT_LC2'));
 		}
-		
-	
+
+
 	}
-	
+
 	public static function isActive($date, $days) {
-		
+
 		$o				= '';
 		$db				= JFactory::getDBO();
-		
+
 		$nullDate 		= $db->getNullDate();
 		$now			= JFactory::getDate();
 		$config			= JFactory::getConfig();
 		$orderDate 		= JFactory::getDate($date);
 		$tz 			= new DateTimeZone($config->get('offset'));
 		$orderDate->setTimezone($tz);
-		
+
 		$daysTime 		= $days * 24 * 60 * 60;
 		$expireDate		= $orderDate->toUnix() + $daysTime;
-	
-		
+
+
 		if ( $now->toUnix() <= $expireDate ) {
 			return true;
 		} else {
@@ -105,17 +106,17 @@ class PhocacartDownload
 		}
 		return false;
 	}
-	
+
 	public static function download($id) {
-	
+
 		$file 	= self::getDownloadFile((int)$id);
 		$user	= PhocacartUser::getUser();
 		$app	= JFactory::getApplication();
-		
-		
+
+
 		$tokenDownload			= $app->input->post->get('d', '', 'string');
 		$tokenOrder				= $app->input->post->get('o', '', 'string');
-		
+
 		$pC 					= PhocacartUtils::getComponentParameters();
 		$download_days			= $pC->get( 'download_days', 0 );
 		$download_count			= $pC->get( 'download_count', 0 );
@@ -123,9 +124,9 @@ class PhocacartDownload
 		if ($download_guest_access == 0) {
 			$token = '';
 		}
-		
-		
-		
+
+
+
 		// CHECK USER AND TOKEN
 		if ((int)$user->id < 1 && ($tokenDownload == '' || $tokenOrder == '')) {
 			return false;
@@ -136,13 +137,13 @@ class PhocacartDownload
 		if ($user->id != $file->userid && ($tokenDownload == '' || $tokenOrder == '')) {
 			return false;
 		}
-		
+
 		if ((int)$user->id < 1 && ($tokenDownload == '' || $tokenOrder == '') && ($token != $file->download_token)) {
 			return false;
 		}
 
-		
-		
+
+
 		// CHECK COUNT
 		if($download_count > 0 && ((int)$download_count == (int)$file->download_hits || (int)$download_count < (int)$file->download_hits)) {
 			return false;
@@ -152,20 +153,20 @@ class PhocacartDownload
 		if((int)$download_days > 0 && !PhocacartDownload::isActive($file->date, $download_days)) {
 			return false;
 		}
-		
+
 		// Clears file status cache
 		clearstatcache();
 		$pathFile = PhocacartPath::getPath('productfile');
-		
+
 		$absOrRelFile = $pathFile['orig_abs_ds'] . $file->download_file;
-		
+
 		if (!JFile::exists($absOrRelFile)) {
 			return false;
 		}
-		
+
 		$fileWithoutPath	= basename($absOrRelFile);
 		$fileSize 			= filesize($absOrRelFile);
-		
+
 		if (function_exists('finfo_open') && function_exists('finfo_open') && function_exists('finfo_open')) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
 			$f = finfo_file($finfo, $absOrRelFile);
@@ -179,20 +180,20 @@ class PhocacartDownload
 
 		// HIT Statistics
 		self::hit($id);
-		
+
 		/*if ((int)$params->get('send_mail_download', 0) > 0) {
 			PhocacartMail::sendMail((int)$params->get('send_mail_download', 0), $fileWithoutPath, 1);
 		}*/
-		
-		
+
+
 		if ($fileSize == 0 ) {
 			die(JText::_('COM_PHOCACART_FILE_SIZE_EMPTY'));
 			exit;
 		}
-		
+
 		// Clean the output buffer
 		ob_end_clean();
-		
+
 		// test for protocol and set the appropriate headers
 		jimport( 'joomla.environment.uri' );
 		$_tmp_uri 		= JURI::getInstance( JURI::current() );
@@ -210,9 +211,9 @@ class PhocacartDownload
 		header("Expires: Sat, 30 Dec 1990 07:07:07 GMT");
 		header("Accept-Ranges: bytes");
 
-		
-	
-		
+
+
+
 		// Modified by Rene
 		// HTTP Range - see RFC2616 for more informations (http://www.ietf.org/rfc/rfc2616.txt)
 		$httpRange   = 0;
@@ -245,16 +246,16 @@ class PhocacartDownload
 				else
 					$resultRange = $httpRange[0] . '-' . $httpRange[1];
 				//header("Content-Range: bytes ".$httpRange . $newFileSize .'/'. $fileSize);
-			} 
+			}
 		}
 		header("Content-Length: ". $resultLength);
 		header("Content-Range: bytes " . $resultRange . '/' . $fileSize);
 		header("Content-Type: " . (string)$mimeType);
 		header('Content-Disposition: attachment; filename="'.$fileWithoutPath.'"');
 		header("Content-Transfer-Encoding: binary\n");
-		
+
 		//@readfile($absOrRelFile);
-		
+
 		// Try to deliver in chunks
 		@set_time_limit(0);
 		$fp = @fopen($absOrRelFile, 'rb');
@@ -268,9 +269,9 @@ class PhocacartDownload
 		}
 		flush();
 		exit;
-		
+
 	}
-	
+
 	protected static function hit($id) {
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true)
@@ -278,13 +279,13 @@ class PhocacartDownload
 			->set($db->quoteName('download_hits') . ' = (' . $db->quoteName('download_hits') . ' + 1)')
 			->where('id = ' . $db->quote((int)$id));
 		$db->setQuery($query);
-		
+
 		$db->execute();
 		return true;
 	}
-	
+
 	public static function setStatusByOrder($orderId, $status) {
-		
+
 		$db 	= JFactory::getDBO();
 		$query = ' UPDATE #__phocacart_order_downloads'
 				.' SET published = '.(int)$status
@@ -293,13 +294,13 @@ class PhocacartDownload
 		$db->execute();
 		return true;
 	}
-	
-	
+
+
 	public static function downloadContent($content, $prefix = '', $suffix = '') {
-	
+
 		$pC 				= PhocacartUtils::getComponentParameters();
 		$import_export_type	= $pC->get( 'import_export_type', 0 );
-		
+
 		if ($import_export_type == 0) {
 			$mimeType	= 'text/csv';
 			$name		= "phocacartproductexport.csv";
@@ -307,12 +308,12 @@ class PhocacartDownload
 			$mimeType	= 'application/xml';
 			$name		= "phocacartproductexport.xml";
 		}
-		
+
 		$content = $prefix . $content . $suffix;
 
 		// Clean the output buffer
 		ob_end_clean();
-		
+
 		// test for protocol and set the appropriate headers
 		jimport( 'joomla.environment.uri' );
 		$_tmp_uri 		= JURI::getInstance( JURI::current() );
@@ -329,7 +330,7 @@ class PhocacartDownload
 		header("Content-Description: File Transfer");
 		header("Expires: Sat, 30 Dec 1990 07:07:07 GMT");
 		header("Accept-Ranges: bytes");
-		
+
 		header('Content-Encoding: UTF-8');
 		header("Content-Type: " . (string)$mimeType.'; charset=UTF-8');
 		header('Content-Disposition: attachment; filename="'.($name).'"');
@@ -340,9 +341,9 @@ class PhocacartDownload
 		return true;
 		//exit;
 	}
-	
+
 	public static function getDownloadFilePublic($id) {
-		
+
 		$db 	= JFactory::getDBO();
 		$query = ' SELECT a.public_download_file'
 				.' FROM #__phocacart_products AS a'
@@ -353,28 +354,28 @@ class PhocacartDownload
 		$file = $db->loadObject();
 		return $file;
 	}
-	
+
 	public static function downloadPublic($id) {
-	
+
 		$file 	= self::getDownloadFilePublic((int)$id);
 		$app	= JFactory::getApplication();
-		
 
-		
+
+
 		// Clears file status cache
 		clearstatcache();
 		$pathFile = PhocacartPath::getPath('publicfile');
-		
-		
+
+
 		$absOrRelFile = $pathFile['orig_abs_ds'] . $file->public_download_file;
-		
+
 		if (!JFile::exists($absOrRelFile)) {
 			return false;
 		}
-		
+
 		$fileWithoutPath	= basename($absOrRelFile);
 		$fileSize 			= filesize($absOrRelFile);
-		
+
 		if (function_exists('finfo_open') && function_exists('finfo_open') && function_exists('finfo_open')) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
 			$f = finfo_file($finfo, $absOrRelFile);
@@ -385,16 +386,16 @@ class PhocacartDownload
 		} else {
 			$mimeType = '';
 		}
-		
-		
+
+
 		if ($fileSize == 0 ) {
 			die(JText::_('COM_PHOCACART_FILE_SIZE_EMPTY'));
 			exit;
 		}
-		
+
 		// Clean the output buffer
 		ob_end_clean();
-		
+
 		// test for protocol and set the appropriate headers
 		jimport( 'joomla.environment.uri' );
 		$_tmp_uri 		= JURI::getInstance( JURI::current() );
@@ -444,16 +445,16 @@ class PhocacartDownload
 				else
 					$resultRange = $httpRange[0] . '-' . $httpRange[1];
 				//header("Content-Range: bytes ".$httpRange . $newFileSize .'/'. $fileSize);
-			} 
+			}
 		}
 		header("Content-Length: ". $resultLength);
 		header("Content-Range: bytes " . $resultRange . '/' . $fileSize);
 		header("Content-Type: " . (string)$mimeType);
 		header('Content-Disposition: attachment; filename="'.$fileWithoutPath.'"');
 		header("Content-Transfer-Encoding: binary\n");
-		
+
 		//@readfile($absOrRelFile);
-		
+
 		// Try to deliver in chunks
 		@set_time_limit(0);
 		$fp = @fopen($absOrRelFile, 'rb');
@@ -466,8 +467,44 @@ class PhocacartDownload
 			@readfile($absOrRelFile);
 		}
 		flush();
-		exit;	
+		exit;
 	}
-	
-	
+
+
+    public static function getProductDownloadFolderByProducts($cid) {
+
+	    // Admin information for deleting folders when products are deleted
+        $db 	= JFactory::getDBO();
+
+        if (count( $cid )) {
+            \Joomla\Utilities\ArrayHelper::toInteger($cid);
+            $cids = implode( ',', $cid );
+
+            $query = ' SELECT download_folder FROM #__phocacart_products WHERE id IN ( '.$cids.' ) ORDER BY id';
+            $db->setQuery($query);
+            $folders = $db->loadColumn();
+            return $folders;
+        }
+    }
+
+    public static function getAttributeOptionDownloadFolderByProducts($cid) {
+
+        // Admin information for deleting folders when products are deleted
+        $db 	= JFactory::getDBO();
+
+        if (count( $cid )) {
+            \Joomla\Utilities\ArrayHelper::toInteger($cid);
+            $cids = implode( ',', $cid );
+
+            $query = ' SELECT av.download_folder FROM #__phocacart_attribute_values AS av'
+                .' LEFT JOIN #__phocacart_attributes AS a ON a.id = av.attribute_id'
+                .' LEFT JOIN #__phocacart_products AS p ON p.id = a.product_id'
+                .' WHERE p.id IN ( '.$cids.' ) ORDER BY p.id';
+            $db->setQuery($query);
+            $folders = $db->loadColumn();
+            return $folders;
+        }
+    }
+
+
 }

@@ -386,13 +386,14 @@ class PhocacartCartCalculation
 
 
 										// Attribute values
-										$fullItems[$k]['attributes'][$attrib->aid][$k3]['aid'] 		= $attrib->aid;// Attribute Id
-										$fullItems[$k]['attributes'][$attrib->aid][$k3]['atitle'] 	= $attrib->atitle;
-                                        $fullItems[$k]['attributes'][$attrib->aid][$k3]['atype'] 	= $attrib->atype;
-										$fullItems[$k]['attributes'][$attrib->aid][$k3]['oid'] 		= $attrib->id;// Option Id
-										$fullItems[$k]['attributes'][$attrib->aid][$k3]['otitle'] 	= $attrib->title;
-										$fullItems[$k]['attributes'][$attrib->aid][$k3]['oimage'] 	= $attrib->image;
-										$fullItems[$k]['attributes'][$attrib->aid][$k3]['ovalue'] 	= PhocacartAttribute::setAttributeValue($attrib->atype, $v3, false, true);
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['aid'] 			= $attrib->aid;// Attribute Id
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['atitle'] 		= $attrib->atitle;
+                                        $fullItems[$k]['attributes'][$attrib->aid][$k3]['atype'] 		= $attrib->atype;
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['oid'] 			= $attrib->id;// Option Id
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['otitle'] 		= $attrib->title;
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['oimage'] 		= $attrib->image;
+										$fullItems[$k]['attributes'][$attrib->aid][$k3]['ovalue'] 		= PhocacartAttribute::setAttributeValue($attrib->atype, $v3, false, true);
+										//$fullItems[$k]['attributes'][$attrib->aid][$k3]['odownloadfile']= $attrib->download_file;
 									}
 								}
 							}

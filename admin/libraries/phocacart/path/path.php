@@ -16,6 +16,8 @@ class PhocacartPath
 
 		$group 		= PhocacartUtilsSettings::getManagerGroup($manager);
 
+
+
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		// Folder where to stored files for download
@@ -72,6 +74,11 @@ class PhocacartPath
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel;
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel .'/';
 			}
+		} else {
+			$path['orig_abs'] 				= JPATH_ROOT . '/tmp';
+			$path['orig_abs_ds'] 			= JPATH_ROOT . '/tmp/';
+			$path['orig_rel'] 				= '';
+			$path['orig_rel_ds'] 			= '';
 		}
 		return $path;
 	}

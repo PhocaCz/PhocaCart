@@ -69,8 +69,22 @@ class PhocacartUtilsSettings
 				$group['c']	= '&amp;tmpl=component';
 			break;
 
+			case 'attributefile':
+				$group['f'] = 3;//File
+				$group['i'] = 0;//Image
+				$group['t'] = 'file';//Text
+				$group['c']	= '&amp;tmpl=component';
+			break;
+
 			case 'publicfile':
 				$group['f'] = 6;//File
+				$group['i'] = 0;//Image
+				$group['t'] = 'file';//Text
+				$group['c']	= '&amp;tmpl=component';
+			break;
+
+			default:
+				$group['f'] = 0;//File
 				$group['i'] = 0;//Image
 				$group['t'] = 'file';//Text
 				$group['c']	= '&amp;tmpl=component';

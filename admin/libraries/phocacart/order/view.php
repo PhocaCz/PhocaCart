@@ -153,7 +153,7 @@ class PhocacartOrderView
 	public function getItemProducts($orderId) {
 
 		$db = JFactory::getDBO();
-		$query = 'SELECT p.*, pr.download_token, pd.published as download_published'
+		$query = 'SELECT DISTINCT p.*, pr.download_token, pd.published as download_published'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__phocacart_order_products AS p ON o.id = p.order_id'
 				.' LEFT JOIN #__phocacart_products AS pr ON pr.id = p.product_id'
@@ -189,6 +189,7 @@ class PhocacartOrderView
 
 	public function getItemAttributes($orderId, $orderProductId) {
 
+
 		$db = JFactory::getDBO();
 		// BE AWARE
 		// productid is ID of Product Ordered not of product
@@ -199,15 +200,19 @@ class PhocacartOrderView
 		// Porduct 1 with attribute B ... is Product Ordered 2
 		// Product 2 with attribute A ... is Product Ordered 3
 		// (Product 1 is divided to two ordered products)
-		$query = 'SELECT p.id AS productid, p.quantity as productquantity,'
-				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title, a.option_value, a.type'
+		$query = 'SELECT DISTINCT p.id AS productid, p.quantity as productquantity,'
+				.' a.id, a.attribute_id, a.attribute_title, a.option_id, a.option_title, a.option_value, a.type, od.download_folder, od.download_file, od.download_token, od.published AS download_published'
 				.' FROM #__phocacart_order_products AS p'
 				.' LEFT JOIN #__phocacart_order_attributes AS a ON p.id = a.order_product_id'
+				.' LEFT JOIN #__phocacart_order_downloads AS od ON p.id = od.order_product_id AND a.option_id = od.option_id'
 			    .' WHERE p.id = '.(int)$orderProductId . ' AND p.order_id = '.(int)$orderId
 				.' ORDER BY p.id';
+
+
 		$db->setQuery($query);
 
 		$items = $db->loadObjectList();
+
 		return $items;
 	}
 

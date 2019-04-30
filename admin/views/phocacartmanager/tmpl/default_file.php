@@ -14,16 +14,25 @@ $ext 	= PhocacartFile::getExtension( $this->_tmp_file->path_without_name_relativ
 $group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 
 if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
-	/* Own function - this function is used for e.g. additional images, etc. for input forms which 
-	   are rendered by javascript - addtional images, attribute options (values), etc. */	   
-	$onclick= 'if (window.parent) window.parent.phAddValue(\''.$this->field.'\', \'' .$this->_tmp_file->path_with_name_relative_no.'\')';
+	/* 	Own function - this function is used for e.g. additional images, etc. for input forms which
+	   	are rendered by javascript - addtional images, attribute options (values), etc.
+		Do request - create thumbnails = yes
+		There are more form fields mostly made by javascript (e.g. add new attribute row)
+	*/
+	$onclick= 'if (window.parent) window.parent.phAddValue(\''.PhocacartText::filterValue($this->field, 'alphanumeric2').'\', \'' .PhocacartText::filterValue($this->_tmp_file->path_with_name_relative_no, 'folderpath').'\', 1)';
+
+} else if ($this->manager == 'attributefile'){
+	// Skip doing request - no thumbnails for downloadable files
+	// There are more form fields mostly made by javascript (e.g. add new attribute row)
+	$onclick= 'if (window.parent) window.parent.phAddValue(\''.PhocacartText::filterValue($this->field, 'alphanumeric2').'\', \'' .PhocacartText::filterValue($this->_tmp_file->path_with_name_relative_no, 'folderpath').'\', 0)';
 } else {
-	$onclick= 'if (window.parent) window.parent.'. $this->fce.'(\'' .$this->_tmp_file->path_with_name_relative_no.'\')';
+	// Form field is one and the function is set for this form field
+	$onclick= 'if (window.parent) window.parent.'. $this->fce.'(\'' .PhocacartText::filterValue($this->_tmp_file->path_with_name_relative_no, 'folderpath').'\')';
 }
 
 if ($this->manager == 'filemultiple') {
 	$checked 	= JHtml::_('grid.id', $this->filei + count($this->folders), $this->files[$this->filei]->path_with_name_relative_no );
-	
+
 	$icon		= PhocacartFile::getMimeTypeIcon($this->_tmp_file->name);
 	echo '<tr>'
 	.' <td>'. $checked .'</td>'
@@ -31,11 +40,11 @@ if ($this->manager == 'filemultiple') {
 	. $icon .'</a></td>'
 	.' <td>' . $this->_tmp_file->name . '</td>'
 	.'</tr>';
-	
-	
+
+
 } else {
 	if (($group['i'] == 1) && ($ext == 'png' || $ext == 'jpg' || $ext == 'gif' || $ext == 'jpeg') ) {
-		
+
 		echo '<tr>'
 		.'<td></td>'
 		.'<td>'
@@ -48,7 +57,7 @@ if ($this->manager == 'filemultiple') {
 		.'</a>'
 		.'</td>'
 		.'</tr>';
-	
+
 	} else {
 
 		echo '<tr>'

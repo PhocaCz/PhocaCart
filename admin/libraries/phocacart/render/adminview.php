@@ -310,7 +310,7 @@ class PhocacartRenderAdminview
 		return $o;
 	}
 
-	public function additionalOptionsRow($id, $attrId, $idDb, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image, $image_medium, $image_small, $color, $defaultValue, $url, $url2, $url3, $w = 700, $h = 400) {
+	public function additionalOptionsRow($id, $attrId, $idDb, $title, $alias, $operator, $amount, $stock, $operatorWeight, $weight, $image, $image_medium, $image_small, $download_folder, $download_file, $download_token, $color, $defaultValue, $url, $url2, $url3, $urlO4, $w = 700, $h = 400) {
 
 
 
@@ -531,8 +531,58 @@ class PhocacartRenderAdminview
 
 		$o .= '<div class="ph-cb"></div>';
 
-		$o .= '</div>'
-		.'</div>';
+
+		// Second Row
+
+		// DOWNLOAD FILE
+		// -----------
+
+		$group 			= PhocacartUtilsSettings::getManagerGroup('attributefile');
+		$managerOutput	= '&amp;manager=productfile';
+		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
+		$textButton2	= 'COM_PHOCACART_FILE';
+		//$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field=jform_optionimage'.$attrId.$id;
+		$attr			= '';
+		$idA			= 'phFileDownloadNameModalO';
+
+		$html	= array();
+		$html[] = '<span class="input-append">';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-medium" type="text" id="jform_optiondownload_file'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_file]" value="'. htmlspecialchars($download_file).'"' .' '.$attr.' />';
+
+
+		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$urlO4 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'" data-id-folder="jform_optiondownload_folder'.$attrId.$id.'">'
+			. '<span class="icon-list icon-white"></span>'
+			. JText::_($textButton2). '</a></span>';
+
+		$html[] = '</span>'. "\n";
+
+
+
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4"><div class="ph-product-attribute-download-title">'.JText::_('COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL'). '</div></div>';
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4"><div class="ph-product-attribute-download-title">'.JText::_('COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL'). '</div></div>';
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4"><div class="ph-product-attribute-download-title">'.JText::_('COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL'). '</div></div>';
+
+		$o .= '<div class="ph-cb"></div>';
+
+		// Folder
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4">';
+		$o .= '<input id="jform_optiondownload_folder'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_folder]" value="'.htmlspecialchars($download_folder).'" class="inputbox input-medium" size="40" type="text" readonly="readonly" data-attribute-id="'.$attrId.'" >';
+		$o .= '</div>';
+
+		// File
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4">';
+		$o .= implode("\n", $html);
+		$o .= '</div>';
+
+		// Token
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4">';
+		$o .= '<input id="jform_optiondownload_token'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_token]" value="'.htmlspecialchars($download_token).'" class="inputbox input-medium" size="40" type="text">';
+		$o .= '</div>';
+
+
+
+		$o .= '</div>'; // end row
+		$o .= '</div>';// end box
 
 		return $o;
 	}
@@ -987,6 +1037,14 @@ class PhocacartRenderAdminview
 		} else {
 			$s[] = '   jQuery(document.body).on(\'click\', \'.'.$id.'ModalButton\' ,function(e) {';
 			$s[] = '      var src = jQuery(this).attr(\'data-src\');';
+
+			// Specific case for downloadable files - they need to include token folder like product has (produt and attribute download files are stored in one folder)
+			if ($id == 'phFileDownloadNameModalO') {
+				// Get value from each row not from main
+                $s[] = '      var idFolder = \'#\' + jQuery(this).attr(\'data-id-folder\');';
+				$s[] = '      var phDownloadFolder = jQuery(idFolder).val();';
+				$s[] = '   	  src = src + "&folder=" + phDownloadFolder + "&downloadfolder=" + phDownloadFolder;';
+			}
 		}
 
 		if ($iframeLink != '') {

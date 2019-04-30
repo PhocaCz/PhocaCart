@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
-jimport( 'joomla.filesystem.folder' ); 
+jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
 class PhocaCartViewItem extends JViewLegacy
@@ -30,12 +30,12 @@ class PhocaCartViewItem extends JViewLegacy
 			echo json_encode($response);
 			return;
 		}
-		
-		
+
+
 		$app = JFactory::getApplication();
 		$menus	= $app->getMenu('site', array());
 		$items	= $menus->getItems('component', 'com_phocacart');
-		
+
 		$app					= JFactory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
@@ -50,7 +50,7 @@ class PhocaCartViewItem extends JViewLegacy
 		if (isset($this->category[0]->id)) {
 			$this->t['catid']	= (int)$this->category[0]->id;
 		}
-	
+
 		// PARAMS
 		$this->t['tax_calculation'] 		= $this->p->get( 'tax_calculation', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
@@ -74,6 +74,8 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
 	/*	$this->t['item_askquestion']		= $this->p->get( 'item_askquestion', 0 );
 		$this->t['popup_askquestion']		= $this->p->get( 'popup_askquestion', 1 );*/
+        $this->t['item_display_delivery_date']	= $this->p->get( 'item_display_delivery_date', 0 );
+        $this->t['item_display_size_options']	= $this->p->get( 'item_display_size_options', 0 );
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
@@ -88,22 +90,22 @@ class PhocaCartViewItem extends JViewLegacy
 		if ($this->t['hide_attributes'] == 1) {
 			$this->t['hide_attributes_item'] = 1;
 		}
-		
-		
+
+
 		$this->t['image_rel'] = '';
 		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
-		
+
 		if (!$this->item) {
-			
+
 
 			$response = array(
 				'status' => '0',
 				'error' => '<span class="ph-result-txt ph-error-txt">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</span>');
 			echo json_encode($response);
 			return;
-			
+
 		} else {
-		
+
 			//$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			//$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
 			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
@@ -113,7 +115,7 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['attr_options']		= $this->t['hide_attributes_item'] == 0 ? PhocacartAttribute::getAttributesAndOptions((int)$id) : array();
 			$this->t['specifications']		= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$id);
 			//$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
-		
+
 			//$this->t['action']				= $uri->toString();
 			$this->t['action']				= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
@@ -121,24 +123,24 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['linkcheckout']		= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			$this->t['linkitem']			= JRoute::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 
-		
+
 			$o2 = '';
-			if (!empty($this->item[0])) {		
+			if (!empty($this->item[0])) {
 				$o2 = $this->loadTemplate('quickview');
 				$model->hit((int)$id);
-				PhocacartStatisticsHits::productHit((int)$id);		
+				PhocacartStatisticsHits::productHit((int)$id);
 			}
 
 			$response = array(
 			'status'	=> '1',
 			'item'		=> '',
 			'popup'		=> $o2);
-		
+
 			echo json_encode($response);
 			return;
 		}
 	}
-		
+
 	protected function _prepareDocument() {}
 }
 ?>

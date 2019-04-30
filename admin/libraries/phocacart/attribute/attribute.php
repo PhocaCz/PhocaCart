@@ -34,7 +34,7 @@ class PhocacartAttribute
 
 		$db =JFactory::getDBO();
 
-		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.color, a.default_value';
+		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value';
 		$query .= ' FROM #__phocacart_attribute_values AS a'
 			    .' WHERE a.attribute_id = '.(int) $attributeId
 				.' ORDER BY a.id';
@@ -167,7 +167,7 @@ class PhocacartAttribute
 		if ((int)$productId > 0) {
 			$db 	= JFactory::getDBO();
 			$app	= JFactory::getApplication();
-
+			$pathAttributes = PhocacartPath::getPath('attributefile');// to check if attribute option download file exists
 
 
 
@@ -299,8 +299,27 @@ class PhocacartAttribute
 							if (empty($v2['image'])) 			{$v2['image'] 			= '';}
 							if (empty($v2['image_medium']))		{$v2['image_medium'] 	= '';}
 							if (empty($v2['image_small']))		{$v2['image_small'] 	= '';}
+							if (empty($v2['download_folder']))	{$v2['download_folder']	= '';}
+							if (empty($v2['download_file']))	{$v2['download_file'] 	= '';}
+							if (empty($v2['download_token']))	{$v2['download_token']	= '';}
 							if (empty($v2['color'])) 			{$v2['color'] 			= '';}
 
+
+							// CHECK DOWNLOAD FILE
+							if ($v2['download_file'] != '' && $v2['download_folder'] == '') {
+								$msg = JText::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
+								$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_DOES_NOT_INCLUDE_DOWNLOAD_FOLDER');
+								$app->enqueueMessage($msg, 'error');
+
+							}
+
+							// If download_file does not exist on the server, remove it
+							if ($v2['download_file'] != '' && !JFile::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
+								$v2['download_file'] = '';
+								$msg = JText::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
+								$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST');
+								$app->enqueueMessage($msg, 'error');
+							}
 
 							$idExists = 0;
 
@@ -336,6 +355,9 @@ class PhocacartAttribute
 								.' image = '.$db->quote($v2['image']).','
 								.' image_medium = '.$db->quote($v2['image_medium']).','
 								.' image_small = '.$db->quote($v2['image_small']).','
+								.' download_folder = '.$db->quote($v2['download_folder']).','
+								.' download_file = '.$db->quote($v2['download_file']).','
+								.' download_token = '.$db->quote($v2['download_token']).','
 								.' color = '.$db->quote($v2['color']).','
 								.' default_value = '.(int)$defaultValue
 								.' WHERE id = '.(int)$idExists;
@@ -351,10 +373,25 @@ class PhocacartAttribute
 								$v2['amount'] 			= PhocacartUtils::replaceCommaWithPoint($v2['amount']);
 								$v2['weight'] 			= PhocacartUtils::replaceCommaWithPoint($v2['weight']);
 
-								$options 	= '('.(int)$newIdA.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_medium']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
+								$options 	= '('.(int)$newIdA.', '
+									.$db->quote($v2['title']).', '
+									.$db->quote($v2['alias']).', '
+									.$db->quote($v2['operator']).', '
+									.$db->quote($v2['amount']).', '
+									.(int)$v2['stock'].', '
+									.$db->quote($v2['operator_weight']).', '
+									.$db->quote($v2['weight']).', '
+									.$db->quote($v2['image']).', '
+									.$db->quote($v2['image_medium']).', '
+									.$db->quote($v2['image_small']).', '
+									.$db->quote($v2['download_folder']).','
+									.$db->quote($v2['download_file']).','
+									.$db->quote($v2['download_token']).','
+									.$db->quote($v2['color']).', '
+									.(int)$defaultValue.')';
 
 
-								$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, color, default_value)'
+								$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value)'
 											.' VALUES '.$options;
 
 								$db->setQuery($query);
@@ -590,8 +627,8 @@ class PhocacartAttribute
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 5);
 
 
-		$columns		= 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
-		$groupsFull		= 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.color, v.default_value, attralias, at.id, at.title, at.alias, at.type';
+		$columns		= 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
+		$groupsFull		= 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, attralias, at.id, at.title, at.alias, at.type';
 		$groupsFast		= 'v.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -647,6 +684,9 @@ class PhocacartAttribute
 						$a[$v->attralias]['options'][$v->alias]->alias			= $v->alias;
 						$a[$v->attralias]['options'][$v->alias]->image			= $v->image;
 						$a[$v->attralias]['options'][$v->alias]->image_small	= $v->image_small;
+						$a[$v->attralias]['options'][$v->alias]->download_folder= $v->download_folder;
+						$a[$v->attralias]['options'][$v->alias]->download_file	= $v->download_file;
+						$a[$v->attralias]['options'][$v->alias]->download_token	= $v->download_token;
 						$a[$v->attralias]['options'][$v->alias]->color			= $v->color;
 						$a[$v->attralias]['options'][$v->alias]->default_value	= $v->default_value;
 					} else {
@@ -662,7 +702,7 @@ class PhocacartAttribute
 
 	public static function getAttributeValue($id, $attributeId) {
 		$db =JFactory::getDBO();
-		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.color, a.default_value,'
+		$query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value,'
 		.' aa.id as aid, aa.title as atitle, aa.type as atype'
 		.' FROM #__phocacart_attribute_values AS a'
 		.' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
@@ -1300,9 +1340,9 @@ class PhocacartAttribute
 
 	public static function getAttributeType($id) {
 
+		$db 		= JFactory::getDBO();
 		$wheres		= array();
 		$wheres[] 	= ' id = '.(int)$id;
-		$db 		= JFactory::getDBO();
 		$query = ' SELECT type'
 		.' FROM #__phocacart_attributes'
 		. ' WHERE ' . implode( ' AND ', $wheres )
@@ -1311,6 +1351,27 @@ class PhocacartAttribute
 		$type = $db->loadResult();
 
 		return $type;
+	}
+
+	public static function getAttributeOptionDownloadFilesByOrder($orderId, $productId, $orderProductId) {
+
+		$db 		= JFactory::getDBO();
+		$wheres		= array();
+		$wheres[] 	= ' oa.order_id = '.(int)$orderId;
+		$wheres[] 	= ' oa.product_id = '.(int)$productId;
+		$wheres[] 	= ' oa.order_product_id = '.(int)$orderProductId;
+
+		// only order_option_id not order_attribute_id - as stored is info about ordered option, not about ordered attribute
+		$q = ' SELECT av.download_folder, av.download_file, av.download_token, a.id AS attribute_id, av.id AS option_id, oa.id AS order_option_id, av.title AS option_title, a.title AS attribute_title'
+			.' FROM #__phocacart_attribute_values AS av'
+			.' LEFT JOIN #__phocacart_attributes AS a ON a.id = av.attribute_id'
+			.' LEFT JOIN #__phocacart_order_attributes AS oa ON oa.option_id = av.id'
+			.' WHERE ' . implode( ' AND ', $wheres )
+			.' ORDER BY av.id';
+		$db->setQuery($q);
+		$files = $db->loadAssocList();
+		return $files;
+
 	}
 
 	/*

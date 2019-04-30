@@ -23,9 +23,9 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 	protected $session;
 	protected $currentFolder;
 	protected $t;
-	
+
 	public function display($tpl = null) {
-		
+
 		$this->t				= PhocacartUtils::setVars('manager');
 		$this->field			= JFactory::getApplication()->input->get('field');
 		$this->fce 				= 'phocaSelectFileName_'.$this->field;
@@ -38,48 +38,48 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		$this->folders			= $this->get('Folders');
 		$this->session			= JFactory::getSession();
 		$params 				= JComponentHelper::getParams($this->t['o']);
-			
+
 		$this->t['multipleuploadchunk']		= $params->get( 'multiple_upload_chunk', 0 );
 		$this->t['uploadmaxsize'] 			= $params->get( 'upload_maxsize', 3145728 );
 		$this->t['uploadmaxsizeread'] 		= PhocacartFile::getFileSizeReadable($this->t['uploadmaxsize']);
 		$this->t['enablemultiple'] 			= $params->get( 'enable_multiple', 0 );
 		$this->t['multipleuploadmethod'] 	= $params->get( 'multiple_upload_method', 4 );
-		
-		
+
+
 		/*if ($this->manager == 'filemultiple') {
 			$this->form			= $this->get('Form');
 		}*/
 
-		
+
 		$this->currentFolder = '';
 		if (isset($this->folderstate->folder) && $this->folderstate->folder != '') {
 			$this->currentFolder = $this->folderstate->folder;
 		}
-		
+
 		// - - - - - - - - - -
 		//TABS
-		// - - - - - - - - - - 
+		// - - - - - - - - - -
 		$this->t['tab'] 					= JFactory::getApplication()->input->get('tab', '', '', 'string');
 		$this->t['currenttab']['upload'] 	= 1;
 		if((int)$this->t['enablemultiple']  >= 0) {
-			$this->t['currenttab']['multipleupload'] = 1;	
+			$this->t['currenttab']['multipleupload'] = 1;
 		}
-		
+
 		$group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 
 		// - - - - - - - - - - -
 		// Upload
 		// - - - - - - - - - - -
 		$sU							= new PhocacartFileUploadsingle();
-		$sU->returnUrl				= 'index.php?option=com_phocacart&view=phocacartmanager&tab=upload'.str_replace('&amp;', '&', $group['c']).'&manager='.$this->manager.'&field='.$this->field.'&folder='. $this->currentFolder;
+		$sU->returnUrl				= 'index.php?option=com_phocacart&view=phocacartmanager&tab=upload'.str_replace('&amp;', '&', $group['c']).'&manager='.PhocacartText::filterValue($this->manager, 'alphanumeric').'&field='.PhocacartText::filterValue($this->field, 'alphanumeric2').'&folder='. PhocacartText::filterValue($this->currentFolder, 'folderpath');
 		$sU->tab					= 'upload';
 		$this->t['su_output']	= $sU->getSingleUploadHTML();
 		$this->t['su_url']		= JURI::base().'index.php?option=com_phocacart&task=phocacartupload.upload&amp;'
 								  .$this->session->getName().'='.$this->session->getId().'&amp;'
-								  . JSession::getFormToken().'=1&amp;viewback=phocacartmanager&amp;manager='.$this->manager.'&amp;field='.$this->field.'&amp;'
-								  .'folder='. $this->currentFolder.'&amp;tab=upload';
-		
-		
+								  . JSession::getFormToken().'=1&amp;viewback=phocacartmanager&amp;manager='.PhocacartText::filterValue($this->manager, 'alphanumeric').'&amp;field='.PhocacartText::filterValue($this->field, 'alphanumeric2').'&amp;'
+								  .'folder='. PhocacartText::filterValue($this->currentFolder, 'folderpath').'&amp;tab=upload';
+
+
 		// - - - - - - - - - - -
 		// Multiple Upload
 		// - - - - - - - - - - -
@@ -87,7 +87,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		$muFailed						= JFactory::getApplication()->input->get( 'mufailed', '0', '', 'int' );
 		$muUploaded						= JFactory::getApplication()->input->get( 'muuploaded', '0', '', 'int' );
 		$this->t['mu_response_msg']	= $muUploadedMsg 	= '';
-		
+
 		if ($muUploaded > 0) {
 			$muUploadedMsg = JText::_('COM_PHOCACART_COUNT_UPLOADED_FILE'). ': ' . $muUploaded;
 		}
@@ -110,37 +110,37 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		} else {
 			$this->t['mu_response_msg'] = '';
 		}
-		
+
 		if((int)$this->t['enablemultiple']  >= 0) {
-		
+
 			PhocacartFileUploadmultiple::renderMultipleUploadLibraries();
 			$mU						= new PhocacartFileUploadmultiple();
 			$mU->frontEnd			= 0;
 			$mU->method				= $this->t['multipleuploadmethod'];
 			$mU->url				= JURI::base().'index.php?option=com_phocacart&task=phocacartupload.multipleupload&amp;'
 									 .$this->session->getName().'='.$this->session->getId().'&'
-									 . JSession::getFormToken().'=1&tab=multipleupload&manager='.$this->manager.'&field='.$this->field.'&folder='. $this->currentFolder;
+									 . JSession::getFormToken().'=1&tab=multipleupload&manager='.PhocacartText::filterValue($this->manager, 'alphanumeric').'&field='.PhocacartText::filterValue($this->field, 'alphanumeric2').'&folder='. PhocacartText::filterValue($this->currentFolder, 'folderpath');
 			$mU->reload				= JURI::base().'index.php?option=com_phocacart&view=phocacartmanager'
 									.str_replace('&amp;', '&', $group['c']).'&'
 									.$this->session->getName().'='.$this->session->getId().'&'
 									. JSession::getFormToken().'=1&tab=multipleupload&'
-									.'manager='.$this->manager.'&field='.$this->field.'&folder='. $this->currentFolder;
+									.'manager='.PhocacartText::filterValue($this->manager, 'alphanumeric').'&field='.PhocacartText::filterValue($this->field, 'alphanumeric2').'&folder='. PhocacartText::filterValue($this->currentFolder, 'folderpath');
 			$mU->maxFileSize		= PhocacartFileUploadmultiple::getMultipleUploadSizeFormat($this->t['uploadmaxsize']);
 			$mU->chunkSize			= '1mb';
-			
+
 			$mU->renderMultipleUploadJS(0, $this->t['multipleuploadchunk']);
 			$this->t['mu_output']= $mU->getMultipleUploadHTML();
 		}
-		
-					  
+
+
 		$this->t['ftp'] 			= !JClientHelper::hasCredentials('ftp');
 		$this->t['path']			= PhocacartPath::getPath($this->manager);
 
 		$this->addToolbar();
-		
+
 		$media = new PhocacartRenderAdminmedia();
-		
-		
+
+
 		parent::display($tpl);
 		echo JHtml::_('behavior.keepalive');
 	}
@@ -160,21 +160,21 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 			$this->_tmp_file = new JObject;
 		}
 	}
-	
+
 	protected function addToolbar() {
-	
+
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['task'].'.php';
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['task']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.multiple'));
-		
+
 		//JToolbarHelper::title( JText::_( $this->t['l'].'_MULTIPLE_ADD' ), 'multiple.png' );
 
 		if ($canDo->get('core.create')){
 			JToolbarHelper::save($this->t['c'].'m.save', 'JTOOLBAR_SAVE');
 		}
-		
+
 		JToolbarHelper::cancel($this->t['c'].'m.cancel', 'JTOOLBAR_CLOSE');
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );

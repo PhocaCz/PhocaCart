@@ -169,11 +169,13 @@ echo '</div>'. "\n";
 
 
 // ATTRIBUTES, OPTIONS
+$pathAttributes = PhocacartPath::getPath('attributefile');
 $w = 700;
 $h = 400;
 $urlO 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage';
 $urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_medium';
 $urlO3 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_small';
+$urlO4 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=attributefile&amp;field=jform_optiondownload_file';
 echo '<div class="tab-pane" id="attributes">'. "\n";
 
 
@@ -198,7 +200,12 @@ if (!empty($this->attributes)) {
 					// it has no influence on saving it to db
 					$v2->amount	= PhocacartPrice::cleanPrice($v2->amount);
 					$v2->weight	= PhocacartPrice::cleanPrice($v2->weight);
-					echo $r->additionalOptionsRow((int)$j, (int)$i, (int)$v2->id, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image, $v2->image_medium, $v2->image_small, $v2->color, $v2->default_value, $urlO, $urlO2, $urlO3, $w, $h);
+
+					// Check if the download_file exists on server, if not remove it
+					if (!JFile::exists($pathAttributes['orig_abs_ds'] . $v2->download_file)) {
+					    $v2->download_file = '';
+                    }
+					echo $r->additionalOptionsRow((int)$j, (int)$i, (int)$v2->id, $v2->title, $v2->alias, $v2->operator, $v2->amount, $v2->stock, $v2->operator_weight, $v2->weight, $v2->image, $v2->image_medium, $v2->image_small, $v2->download_folder, $v2->download_file, $v2->download_token, $v2->color, $v2->default_value, $urlO, $urlO2, $urlO3, $urlO4, $w, $h);
 					$j++;
 					$m++;
 				}
@@ -219,7 +226,8 @@ echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_ATTRIBUTE'), 'attribute');
 // Option
 //echo $r->modalWindow('phFileImageNameModalO', $urlO . '\'+ (phRowImgOption) +\'', 'COM_PHOCACART_FORM_SELECT_IMAGE');
 echo $r->modalWindowDynamic('phFileImageNameModalO', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
-$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '', '', '', '', '', '', $urlO, $urlO2, $urlO3, $w, $h);
+echo $r->modalWindowDynamic('phFileDownloadNameModalO', 'COM_PHOCACART_FORM_SELECT_FILE', $w, $h);
+$newRow 	= $r->additionalOptionsRow('\' + phRowCountOption +  \'', '\' + attrid +  \'', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $urlO, $urlO2, $urlO3, $urlO4, $w, $h);
 $newRow 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 $newHeader	= '';
 $newHeader	= $r->headerOption();
@@ -369,7 +377,7 @@ echo '</div>'. "\n";
 
 // DOWNLOAD
 echo '<div class="tab-pane" id="download">'. "\n";
-$formArray = array ('download_folder', 'download_file', 'download_token', 'download_hits', 'type');
+$formArray = array ('download_folder', 'download_file', 'download_token', 'type');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
 

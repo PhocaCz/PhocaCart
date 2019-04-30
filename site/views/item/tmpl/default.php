@@ -20,6 +20,7 @@ $layoutPD	= new JLayoutFile('button_public_download', null, array('component' =>
 $layoutEL	= new JLayoutFile('link_external_link', null, array('component' => 'com_phocacart'));
 $layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
 $layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
+$layoutSZ	= new JLayoutFile('product_size', null, array('component' => 'com_phocacart'));
 
 echo '<div id="ph-pc-item-box" class="pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
@@ -199,6 +200,8 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		echo '<div class="ph-cb"></div>';
 	}
 
+
+
 	// STOCK ===================================================
 	// Set stock: product, variations, or advanced stock status
 	$class_btn	= '';
@@ -235,7 +238,36 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			echo $layoutPOQ->render($dPOQ);
 		}
 	}
+
+	if ((int)$this->t['item_display_delivery_date'] > 0 && $x->delivery_date != '' && $x->delivery_date != '0000-00-00 00:00:00') {
+
+		echo '<div class="ph-item-delivery-date-box">';
+		echo '<div class="ph-delivery-date-txt">'.JText::_('COM_PHOCACART_DELIVERY_DATE').':</div>';
+		echo '<div class="ph-delivery-date">';
+		echo JHtml::date($x->delivery_date, 'DATE_FORMAT_LC3');
+		echo '</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+
 	// END STOCK ================================================
+
+
+
+	// SIZE OPTIONS =============================================
+	if ((int)$this->t['item_display_size_options'] > 0){
+
+		$dSZ						= array();
+		$dSZ['length']				= $x->length;
+		$dSZ['width']				= $x->width;
+		$dSZ['height']				= $x->height;
+		$dSZ['weight']				= $x->weight;
+		$dSZ['volume']				= $x->volume;
+		$dSZ['unit_amount']			= $x->unit_amount;
+		$dSZ['unit_unit']			= $x->unit_unit;
+		echo $layoutSZ->render($dSZ);
+	}
+	// END SIZE OPTIONS =========================================
 
 	// This form can get two events:
 	// when option selected - price or image is changed id=phItemPriceBoxForm

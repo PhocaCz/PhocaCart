@@ -122,6 +122,8 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($v);
 			$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($v);
 
+
+
 			if($r['shippingtitle'] != '' || $r['trackinglink'] != '') {
 				echo '<div class="ph-shipping-info-box">';
 				echo '<div class="ph-shipping-info-header">'.JText::_('COM_PHOCACART_SHIPPING_INFORMATION').'</div>';

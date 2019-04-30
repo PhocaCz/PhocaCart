@@ -62,6 +62,7 @@ if (!empty($this->items)) {
 			$dI['product_id']		= (int)$v->id;
 			$dI['layouttype']		= $lt;
 			$dI['image']			= $image['image'];
+			$dI['title']			= $v->title;
 			$dI['default_image']	= $image['default'];
 			$dI['image2']			= '';
 			$dI['imagestyle']		= $image['style'];

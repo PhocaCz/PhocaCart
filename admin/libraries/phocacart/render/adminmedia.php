@@ -14,12 +14,15 @@ class PhocacartRenderAdminmedia
 {
 	public $jquery			= 0;
 	protected $document		= false;
-	
+
 	public function __construct() {
 
 		$this->document	= JFactory::getDocument();
 		JHtml::_('behavior.tooltip');
 		JHtml::_('jquery.framework', false);
+
+        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/phocacart.js');
+
 		//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
 		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css' );
 		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacart.css' );
@@ -30,13 +33,13 @@ class PhocacartRenderAdminmedia
 		if(PhocacartUtils::isJCompatible('3.7')) {
 			JHtml::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
 		}
-		
-		
-		
+
+
+
 		// EDIT IN PLACE
 		$urlText = JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1';
 		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/jeditable/jquery.jeditable.min.js');
-		
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = 'jQuery(document).ready(function() {';
@@ -53,20 +56,20 @@ class PhocacartRenderAdminmedia
  		$s[] = '          return json.result;';
     	$s[] = '      },';
 		$s[] = '      placeholder: "",';
-		
+
 		// Possible information for parts on the site which will be not changed by chaning the value (for example currency view - currency rate)
 		$s[] = '      callback: function() {';
 		$s[] = '      	var chEIP = ".phChangeEditInPlace" + jQuery(this).attr("data-id");';
 		$s[] = '      	jQuery(chEIP).html("'.JText::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION').'")';
 		$s[] = '      },';
-		
+
 		$s[] = '   })';
 		$s[] = '})';
 		$s[] = ' ';
-	
+
 		$this->document->addScriptDeclaration(implode("\n", $s));
 	}
-	
+
 	public function loadOptions($load = 0) {
 		if ($load == 1) {
 			JHtml::stylesheet('media/com_phocacart/css/administrator/phocacartoptions.css' );

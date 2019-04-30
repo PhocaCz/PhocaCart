@@ -476,6 +476,10 @@ class PhocacartOrder
 
 					if ($orderProductId > 0) {
 						// DOWNLOAD - we are here because we need Product ID and Order Product ID - both are different ids
+
+                        if (!isset($v['attributes'])){
+                            $v['attributes'] = false;
+                        }
 						$this->saveOrderDownloads($orderProductId, $v['id'], $v['catid'], $row->id);
 					}
 
@@ -1234,15 +1238,16 @@ class PhocacartOrder
 
 						$row2 = JTable::getInstance('PhocacartOrderAttributes', 'Table', array());
 						$d2 = array();
-						$d2['order_id'] 		= (int)$orderId;
-						$d2['product_id'] 		= (int)$d['product_id'];
-						$d2['order_product_id']	= (int)$row->id;
-						$d2['attribute_id']		= (int)$v2['aid'];
-						$d2['option_id']		= (int)$v2['oid'];
-						$d2['attribute_title']	= $v2['atitle'];
-                        $d2['type']	            = $v2['atype'];
-						$d2['option_title']		= $v2['otitle'];
-						$d2['option_value']		= $v2['ovalue'];
+						$d2['order_id'] 		    = (int)$orderId;
+						$d2['product_id'] 		    = (int)$d['product_id'];
+						$d2['order_product_id']	    = (int)$row->id;
+						$d2['attribute_id']		    = (int)$v2['aid'];
+						$d2['option_id']		    = (int)$v2['oid'];
+						$d2['attribute_title']	    = $v2['atitle'];
+                        $d2['type']	                = $v2['atype'];
+						$d2['option_title']		    = $v2['otitle'];
+						$d2['option_value']		    = $v2['ovalue'];
+                       // $d2['option_download_file']	= $v2['odownloadfile'];
 
 
 
@@ -1478,8 +1483,14 @@ class PhocacartOrder
 
 	public function saveOrderDownloads($orderProductId, $productId, $catId, $orderId) {
 
-        $app    = JFactory::getApplication();
-        $db     = JFactory::getDbo();
+        $app                    = JFactory::getApplication();
+        $db                     = JFactory::getDbo();
+
+        $pC 				                    = PhocacartUtils::getComponentParameters();
+        $download_product_attribute_options	    = $pC->get( 'download_product_attribute_options', 0 );
+
+        $isDownloadableProduct              = 0;
+        $forceOnlyDownloadFileAttribute     = 0;
 
 	    $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
 
@@ -1487,54 +1498,136 @@ class PhocacartOrder
 		//$productItem 	= new PhocacartProduct();
 		$product		= PhocacartProduct::getProduct((int)$productId, (int)$catId, $this->type);
 
-		if (!isset($product->download_file) || (isset($product->download_file) && $product->download_file == '' )) {
-			return true;// No defined file, no item in download order
+		// Attribute Option Download Files
+        $attributeDownloadFiles = PhocacartAttribute::getAttributeOptionDownloadFilesByOrder($orderId, $productId, $orderProductId);
+
+
+        // 1) download_file for ordered product
+        // 2) download_file for ordered attribute option of each product
+        $d 						= array();
+        $d['order_id']			= (int)$orderId;
+        $d['product_id']		= (int)$productId;
+        $d['order_product_id']	= (int)$orderProductId;
+        $d['title']				= $product->title;
+        $d['download_hits']		= 0;
+        $d['published']			= 0;
+        $d['date']				= gmdate('Y-m-d H:i:s');
+        $d['ordering']			= 0;
+
+
+
+        // If Product includes attribute option download file, this means there can be two different products:
+        // a) produt without any attribute selected
+        // b) product with attribute selected
+        // So if set in options and there is a download file for attribute option - the main product download file will be skipped
+        if ($download_product_attribute_options == 1 && !empty($attributeDownloadFiles)) {
+            foreach ($attributeDownloadFiles as $k => $v) {
+
+                if (isset($v['download_file']) && $v['download_file'] != ''
+                    && isset($v['download_folder']) && $v['download_folder'] != ''
+                    && isset($v['download_token'])
+                    && isset($v['attribute_id']) && $v['attribute_id'] > 0
+                    && isset($v['option_id']) && $v['option_id'] > 0
+                    && isset($v['order_option_id']) && $v['order_option_id'] > 0) {
+
+
+                    // !!! Both conditions are OK
+                    // 1) we don't want provide a download file for main product in case that the product including attribute option is ordered (PARAMETER SET)
+                    // 2) and yes there is selected attribute option including download file ordered (CUSTOMER ORDERED PRODUCT WITH ATTRIBUTE OPTION)
+                    $forceOnlyDownloadFileAttribute = 1;
+                }
+            }
+        }
+
+        // 1)
+		if ($forceOnlyDownloadFileAttribute  == 0 && isset($product->download_file) && $product->download_file != '' ) {
+            $d['download_token']	= $product->download_token;
+            $d['download_folder']	= $product->download_folder;
+            $d['download_file']		= $product->download_file;
+
+            $db = JFactory::getDbo();
+            //$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads WHERE catid = '.(int)$orderId);
+            $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads');
+            $max = $db->loadResult();
+            $d['ordering'] = $max+1;
+
+            if (!$row->bind($d)) {
+                //throw new Exception($db->getErrorMsg());
+                $msg = JText::_($db->getErrorMsg());
+                $app->enqueueMessage($msg, 'error');
+                return false;
+            }
+
+            if (!$row->check()) {
+                //throw new Exception($row->getError());
+                $msg = JText::_($row->getErrorMsg());
+                $app->enqueueMessage($msg, 'error');
+                return false;
+            }
+
+            if (!$row->store()) {
+                //throw new Exception($row->getError());
+                $msg = JText::_($row->getErrorMsg());
+                $app->enqueueMessage($msg, 'error');
+                return false;
+            }
+            $isDownloadableProduct = 1;
 		}
 
-		$d 						= array();
-		$d['order_id']			= (int)$orderId;
-		$d['product_id']		= (int)$productId;
-		$d['order_product_id']	= (int)$orderProductId;
-		$d['title']				= $product->title;
-		$d['download_token']	= $product->download_token;
-		$d['download_folder']	= $product->download_folder;
-		$d['download_file']		= $product->download_file;
-		$d['download_hits']		= 0;
-		$d['published']			= 0;
-		$d['date']				= gmdate('Y-m-d H:i:s');
+		// 2)
+        if (!empty($attributeDownloadFiles)) {
 
-		$d['ordering']			= 0;
-		$db = JFactory::getDbo();
-		//$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads WHERE catid = '.(int)$orderId);
-		$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads');
-		$max = $db->loadResult();
-		$d['ordering'] = $max+1;
+            $d['ordering'] = $d['ordering'] + 1;
+
+            foreach ($attributeDownloadFiles as $k => $v) {
+
+                if (isset($v['download_file']) && $v['download_file'] != ''
+                    && isset($v['download_folder']) && $v['download_folder'] != ''
+                    && isset($v['download_token'])
+                    && isset($v['attribute_id']) && $v['attribute_id'] > 0
+                    && isset($v['option_id']) && $v['option_id'] > 0
+                    && isset($v['order_option_id']) && $v['order_option_id'] > 0) {
+
+                    $d['download_file']     = $v['download_file'];
+                    $d['download_folder']   = $v['download_folder'];
+                    $d['download_token']    = $v['download_token'];
+                    $d['attribute_id']      = $v['attribute_id'];
+                    $d['option_id']         = $v['option_id'];
+                    $d['order_option_id']   = $v['order_option_id'];
+                    $d['title']             = $product->title . ' ('.$v['attribute_title'].': '.$v['option_title'].')';
+
+                    $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
+
+                    if (!$row->bind($d)) {
+                        //throw new Exception($db->getErrorMsg());
+                        $msg = JText::_($db->getErrorMsg());
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
+                    }
+
+                    if (!$row->check()) {
+                        //throw new Exception($row->getError());
+                        $msg = JText::_($row->getErrorMsg());
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
+                    }
+
+                    if (!$row->store()) {
+                        //throw new Exception($row->getError());
+                        $msg = JText::_($row->getErrorMsg());
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
+                    }
+                    $isDownloadableProduct = 1;
+                    $d['ordering'] = $d['ordering'] + 1;
 
 
-
-		if (!$row->bind($d)) {
-			//throw new Exception($db->getErrorMsg());
-			$msg = JText::_($db->getErrorMsg());
-			$app->enqueueMessage($msg, 'error');
-			return false;
-		}
-
-		if (!$row->check()) {
-			//throw new Exception($row->getError());
-			$msg = JText::_($row->getErrorMsg());
-			$app->enqueueMessage($msg, 'error');
-			return false;
-		}
+                }
+            }
+        }
 
 
-		if (!$row->store()) {
-			//throw new Exception($row->getError());
-			$msg = JText::_($row->getErrorMsg());
-			$app->enqueueMessage($msg, 'error');
-			return false;
-		}
-
-		$this->downloadable_product = 1;
+		$this->downloadable_product = $isDownloadableProduct;
 		return true;
 	}
 

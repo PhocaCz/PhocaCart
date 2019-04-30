@@ -25,10 +25,10 @@ class PhocaCartCpViewPhocaCartItem extends JViewLegacy
 		$this->item		= $this->get('Item');
 		$media = new PhocacartRenderAdminmedia();
 
+
 		$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		PhocacartRenderJs::renderAjaxDoRequest(JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'));
-		PhocacartRenderJs::renderAjaxDoRequestAfterChange($url, 'productimage', 'imageCreateThumbs');
-		PhocacartRenderJs::renderAjaxDoRequestAfterPaste($url, 'productimage');
+		PhocacartRenderAdminjs::renderAjaxDoRequestAfterChange($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage', 'imageCreateThumbs');
+		PhocacartRenderAdminjs::renderAjaxDoRequestAfterPaste($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage');
 
 		// Attribute Option
 		if ((int)$this->item->id > 0) {

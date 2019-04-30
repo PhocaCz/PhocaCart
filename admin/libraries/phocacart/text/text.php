@@ -134,18 +134,34 @@ class PhocacartText {
 			}
 			$products 	= $order->getItemProducts($orderId);
 
+
 			$downloadO 	= '';
 			if(!empty($products) && isset($common->order_token) && $common->order_token != '') {
 				$downloadO	= '<p>&nbsp;</p><h4>'.JText::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
 				foreach ($products as $k => $v) {
-					if ($v->download_published == 1) {
+
+				    // Main Product Download File
+					if ($v->download_published == 1 && isset($v->download_file) && $v->download_file != '' && isset($v->download_folder) && $v->download_folder != '') {
 						$downloadO .= '<div><strong>'.$v->title.'</strong></div>';
 						$downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v->download_token);
 						$downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
 					}
+
+					// Product Attribute Option Download File
+                    if (!empty($v->attributes)) {
+                        foreach ($v->attributes as $k2 => $v2) {
+                            if ($v2->download_published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '') {
+                                $downloadO .= '<div><strong>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</strong></div>';
+                                $downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v2->download_token);
+                                $downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
+                            }
+                        }
+                    }
 				}
 				$downloadO .= '<p>&nbsp;</p>';
 			}
+
+
 			$r['downloadlink'] = $downloadO;
 		}
 
@@ -206,4 +222,63 @@ class PhocacartText {
 		return $r;
 
 	}
+
+    /**
+     * @param $string
+     * @param string $type html|url|number|number2|alphanumeric|alphanumeric2|alphanumeric3|folder|file|folderpath|filepath|text
+     * @return string|string[]|null
+     */
+    public static function filterValue($string, $type = 'html') {
+
+        switch ($type) {
+
+            case 'url':
+                return rawurlencode($string);
+            break;
+
+            case 'number':
+                return preg_replace( '/[^.0-9]/', '', $string );
+            break;
+
+            case 'number2':
+                //return preg_replace( '/[^0-9\.,+-]/', '', $string );
+                return preg_replace( '/[^0-9\.,-]/', '', $string );
+            break;
+
+            case 'alphanumeric':
+                return preg_replace("/[^a-zA-Z0-9]+/", '', $string);
+            break;
+
+            case 'alphanumeric2':
+                return preg_replace("/[^\\w-]/", '', $string);// Alphanumeric plus _  -
+            break;
+
+            case 'alphanumeric3':
+                return preg_replace("/[^\\w.-]/", '', $string);// Alphanumeric plus _ . -
+            break;
+
+            case 'folder':
+            case 'file':
+                $string =  preg_replace('/[\"\*\/\\\:\<\>\?\'\|]+/', '', $string);
+                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            break;
+
+            case 'folderpath':
+            case 'filepath':
+                $string = preg_replace('/[\"\*\:\<\>\?\'\|]+/', '', $string);
+                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            break;
+
+            case 'text':
+                return htmlspecialchars(strip_tags($string), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                break;
+
+            case 'html':
+            default:
+                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            break;
+
+        }
+
+    }
 }

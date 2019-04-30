@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 
 $group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
-$link = 'index.php?option='.$this->t['o'].'&amp;view='.$this->t['task'].'&amp;manager='.$this->manager . $group['c'] .'&amp;folder='.$this->folderstate->parent .'&amp;field='. $this->field;
+$link = 'index.php?option='.$this->t['o'].'&amp;view='. PhocacartText::filterValue($this->t['task'], 'alphanumeric').'&amp;manager='.PhocacartText::filterValue($this->manager, 'alphanumeric') . $group['c'] .'&amp;folder='.PhocacartText::filterValue($this->folderstate->parent, 'folderpath') .'&amp;field='. PhocacartText::filterValue($this->field, 'alphanumeric2');
 echo '<tr><td>&nbsp;</td>'
 .'<td class="ph-img-table">'
 .'<a href="'.$link.'" >'

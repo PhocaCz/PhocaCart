@@ -47,7 +47,7 @@
 <field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
-		
+
 <field name="group" type="PhocacartGroups" table="3" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
@@ -76,7 +76,7 @@
 
 <field name="related" type="PhocaSelectItem"  label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL"  description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
 
-<field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
+<field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox imageCreateThumbs" size="40" />
 
 <field name="public_download_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
 
@@ -134,7 +134,7 @@
 <field name="metatitle" type="text"
 			label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"
 			class="inputbox"/>
-			
+
 <field name="metakey" type="textarea"
 			label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
 			class="inputbox" rows="3" cols="30" />
@@ -168,7 +168,7 @@
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->
 	</fieldset>
-	
+
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 
@@ -193,5 +193,5 @@
 </fieldset>
 </fields>
 
-	
+
 </form>

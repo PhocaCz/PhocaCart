@@ -32,7 +32,7 @@ echo '<th width="20">&nbsp;</th>'
 echo '<tbody>';
 echo $this->loadTemplate('up');
 if (count($this->files) > 0 || count($this->folders) > 0) {
-	
+
 	echo '<div>';
 	for ($i=0,$n=count($this->folders); $i<$n; $i++) :
 		$this->setFolder($i);
@@ -47,12 +47,12 @@ if (count($this->files) > 0 || count($this->folders) > 0) {
 	endfor;
 	echo '</div>';
 
-} else { 
+} else {
 	echo '<tr>'
 	.'<td>&nbsp;</td>'
 	.'<td>&nbsp;</td>'
 	.'<td>'.JText::_( $this->t['l'].'_THERE_IS_NO_FILE' ).'</td>'
-	.'</tr>';			
+	.'</tr>';
 }
 echo '</tbody>'
 .'</table>';
@@ -93,7 +93,7 @@ echo '</div>'. "\n";
 echo '</div>';
 echo '</div>';
 
-if ($this->t['tab'] != '') {$jsCt = 'a[href=#'.$this->t['tab'] .']';} else {$jsCt = 'a:first';}
+if ($this->t['tab'] != '') {$jsCt = 'a[href=#'.PhocacartText::filterValue($this->t['tab'], 'alphanumeric') .']';} else {$jsCt = 'a:first';}
 echo '<script type="text/javascript">';
 echo '   jQuery(\'#configTabs '.$jsCt.'\').tab(\'show\');'; // Select first tab
 echo '</script>';

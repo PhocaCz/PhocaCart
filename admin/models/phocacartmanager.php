@@ -13,21 +13,21 @@ jimport('joomla.filesystem.file');
 
 class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 {
-	protected $option 			= 'com_phocacart';	
+	protected $option 			= 'com_phocacart';
 	protected $text_prefix 		= 'com_phocacart';
-	
+
 	public function getTable($type = 'PhocacartCategory', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-		
+
 	public function getForm($data = array(), $loadData = true) {
-		$form 	= $this->loadForm('com_phocacart.phocacartmanager', 'phocacartmanager', array('control' => 'jform', 'load_data' => $loadData));		
+		$form 	= $this->loadForm('com_phocacart.phocacartmanager', 'phocacartmanager', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_phocacartm.edit.phocacartmanager.data', array());
 
@@ -37,7 +37,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 
 		return $data;
 	}
-	
+
 	function getFolderState($property = null) {
 		static $set;
 
@@ -46,16 +46,16 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 			$folder		= $app->input->get( 'folder', '', 'path' );
 			$upload		= $app->input->get( 'upload', '', 'int' );
 			$manager	= $app->input->get( 'manager', '', 'path' );
-			
-		
-			
+
+
+
 			$this->setState('folder', $folder);
 			$this->setState('manager', $manager);
 
 			$parent = str_replace("\\", "/", dirname($folder));
 			$parent = ($parent == '.') ? null : $parent;
 			$this->setState('parent', $parent);
-			
+
 			$set = true;
 		}
 		return parent::getState($property);
@@ -87,7 +87,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		if ($current == 'undefined') {
 			$current = '';
 		}
-		
+
 		// File Manager, Icon Manager
 		$manager = $this->getState('manager');
 		if ($manager == 'undefined') {
@@ -95,7 +95,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		}
 		$path 	= PhocacartPath::getPath($manager);
 		$group	= PhocacartUtilsSettings::getManagerGroup($manager);
-		
+
 		// Initialize variables
 		if (strlen($current) > 0) {
 			$orig_path = $path['orig_abs_ds'].$current;
@@ -103,8 +103,8 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 			$orig_path = $path['orig_abs_ds'];
 		}
 		$orig_path_server 	= str_replace('\\', '/', $path['orig_abs'] .'/');
-		
-		
+
+
 		// Absolute Path defined by user
 		$absolutePath	= $params->get('absolute_path', '');
 		$absolutePath	= str_replace('\\', '/', $absolutePath);
@@ -123,23 +123,23 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		} else {
 			$folder_list 	= JFolder::folders($orig_path, '', false, false, array());
 		}
-		
+
 		// Iterate over the files if they exist
 		//file - abc.img, file_no - folder/abc.img
 		if ($file_list !== false) {
 			foreach ($file_list as $file) {
-				if (is_file($orig_path.'/'.$file) && substr($file, 0, 1) != '.' && strtolower($file) !== 'index.html') {			
+				if (is_file($orig_path.'/'.$file) && substr($file, 0, 1) != '.' && strtolower($file) !== 'index.html') {
 						$tmp 							= new JObject();
 						$tmp->name 						= basename($file);
 						$tmp->path_with_name 			= str_replace('\\', '/', JPath::clean($orig_path . '/' .  $file));
 						$tmp->path_without_name_relative= $path['orig_rel_ds'] . str_replace($orig_path_server, '', $tmp->path_with_name);
-						
+
 						$tmp->path_with_name 			= str_replace('\\', '/', JPath::clean($orig_path . '/' .  $file));
 						$tmp->path_with_name_relative_no= str_replace($orig_path_server, '', $tmp->path_with_name);
-						
+
 						$files[] = $tmp;
-						
-				}	
+
+				}
 			}
 		}
 
@@ -151,7 +151,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 				$tmp->name 						= basename($folder);
 				$tmp->path_with_name 			= str_replace('\\', '/', JPath::clean($orig_path . '/' .  $folder));
 				$tmp->path_without_name_relative= $path['orig_rel_ds'] . str_replace($orig_path_server, '', $tmp->path_with_name);
-				$tmp->path_with_name_relative_no= str_replace($orig_path_server, '', $tmp->path_with_name);	
+				$tmp->path_with_name_relative_no= str_replace($orig_path_server, '', $tmp->path_with_name);
 
 				$folders[] = $tmp;
 			}
