@@ -485,6 +485,13 @@ class PhocacartOrderStatus
 			}
 
 
+			if (!isset($bas['b'])) {
+				$bas['b'] = array();
+			}
+			if (!isset($bas['s'])) {
+				$bas['s'] = array();
+			}
+
 
 			// COMPLETE BODY
 			$body 			= PhocacartText::completeText($body, $r, 1);

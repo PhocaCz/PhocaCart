@@ -1,35 +1,20 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  com_newsfeeds
- *
- * @copyright   Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @package   Phoca Cart
+ * @author    Jan Pavelka - https://www.phoca.cz
+ * @copyright Copyright (C) Jan Pavelka https://www.phoca.cz
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 and later
+ * @cms       Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-//JLoader::register('NewsfeedsHelper', JPATH_ADMINISTRATOR . '/components/com_newsfeeds/helpers/newsfeeds.php');
-//JLoader::register('NewsfeedsHelperRoute', JPATH_SITE . '/components/com_newsfeeds/helpers/route.php');
-//JLoader::register('CategoryHelperAssociation', JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php');
 
-/**
- * Newsfeeds Component Association Helper
- *
- * @since  3.0
- */
 abstract class PhocacartHelperAssociation
 {
-	/**
-	 * Method to get the associations for a given item
-	 *
-	 * @param   integer  $id    Id of the item
-	 * @param   string   $view  Name of the view
-	 *
-	 * @return  array   Array of associations for the item
-	 *
-	 * @since  3.0
-	 */
+
 	public static function getAssociations($id = 0, $view = null)
 	{
 
@@ -63,7 +48,7 @@ abstract class PhocacartHelperAssociation
 					    $catidAlias = $catidA[0]->alias;
                     }
 
-					$return[$tag] = PhocacartRoute::getItemRoute((int)$id, (int)$catid, $idAlias, $catidAlias);
+					$return[$tag] = PhocacartRoute::getItemRoute((int)$id, (int)$catid, $idAlias, $catidAlias, array(0 => $tag));
 
 				}
 
@@ -83,7 +68,9 @@ abstract class PhocacartHelperAssociation
                     }
 				    $id = (int)$item->id;
 
-					$return[$tag] = PhocacartRoute::getCategoryRoute((int)$id, $idAlias);
+
+
+					$return[$tag] = PhocacartRoute::getCategoryRoute((int)$id, $idAlias, array(0 => $tag));// tag = lang
 
 				}
 

@@ -244,7 +244,7 @@ class PhocacartOrder
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
 		if ($plugin) {
-			\JFactory::getApplication()->triggerEvent('PCPbeforeSaveOrder', array(&$statusId));
+			\JFactory::getApplication()->triggerEvent('PCPbeforeSaveOrder', array(&$statusId, (int)$payment['id']));
 			$d['status_id']				= (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
 		} else {
 

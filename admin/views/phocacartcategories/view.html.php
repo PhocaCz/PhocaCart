@@ -199,7 +199,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 				//	$tree[$iCT]->ratingavg			= $key->ratingavg;
 				//	$tree[$iCT]->accessuserid		= $key->accessuserid;
 				//	$tree[$iCT]->uploaduserid		= $key->uploaduserid;
-					$tree[$iCT]->association		= $key->association;
+					$tree[$iCT]->association		= isset($key->association) ? $key->association : 0;
 					$tree[$iCT]->language			= $key->language;
 					$tree[$iCT]->language_title		= $key->language_title;
 					$tree[$iCT]->language_image		= $key->language_image;

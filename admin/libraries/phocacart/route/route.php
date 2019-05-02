@@ -8,25 +8,13 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
-/**
- * @version		$Id: route.php 11190 2008-10-20 00:49:55Z ian $
- * @package		Joomla
- * @subpackage	Content
- * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
- * @license		GNU/GPL, see LICENSE.php
- * Joomla! is free software. This version may have been modified pursuant to the
- * GNU General Public License, and as distributed it includes or is derivative
- * of works licensed under the GNU General Public License or other free or open
- * source software licenses. See COPYRIGHT.php for copyright notices and
- * details.
- */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.helper');
 
 
 class PhocacartRoute
 {
-	public static function getCategoriesRoute() {
+	public static function getCategoriesRoute($lang = array()) {
 
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
@@ -52,7 +40,7 @@ class PhocacartRoute
 		//Create the link
 		$link = 'index.php?option=com_phocacart&view=categories';
 
-		if($item = PhocacartRoute::_findItem($needles, 1)) {
+		if($item = PhocacartRoute::_findItem($needles, 1, $lang)) {
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
 			}
@@ -67,7 +55,7 @@ class PhocacartRoute
 		return $link;
 	}
 
-	public static function getCategoryRoute($catid, $catidAlias = '') {
+	public static function getCategoryRoute($catid, $catidAlias = '', $lang = array()) {
 
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
@@ -97,7 +85,7 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=category&id='.$catid;
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, $lang);
 	}
 
 
@@ -203,7 +191,7 @@ class PhocacartRoute
 		return self::_buildLink($link, $needles);
 	}
 
-	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '') {
+	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array()) {
 
 		$app 			= JFactory::getApplication();
 		$menu 			= $app->getMenu();
@@ -243,7 +231,7 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, $lang);
 		//return self::_buildLink($link, $needles). '#'.$idAlias;
 	}
 
@@ -461,9 +449,9 @@ class PhocacartRoute
 
 
 
-	protected static function _buildLink($link, $needles) {
+	protected static function _buildLink($link, $needles, $lang = array()) {
 
-		if($item = self::_findItem($needles)) {
+		if($item = self::_findItem($needles, 0, $lang)) {
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
 			}
@@ -476,11 +464,34 @@ class PhocacartRoute
 
 
 
-	protected static function _findItem($needles, $notCheckId = 0)
+	protected static function _findItem($needles, $notCheckId = 0, $lang = array())
 	{
 		$app = JFactory::getApplication();
 		$menus	= $app->getMenu('site', array());
-		$items	= $menus->getItems('component', 'com_phocacart');
+		//$items	= $menus->getItems('component', 'com_phocacart');
+
+		$component 		= JComponentHelper::getComponent('com_phocacart');
+		$attributes 	= array('component_id');
+		$values     	= array($component->id);
+
+		// Find menu items of current language
+		$items = $menus->getItems($attributes, $values);
+
+		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
+		if (!empty($lang)) {
+			$attributes[] 	= 'language';
+			$values[]     	= $lang;
+
+			// If multilanguage feature enabled and specific lang set then set menu item of such language
+			$itemsLang = $menus->getItems($attributes, $values);
+
+			// If no language items try to find items of current lang and if not found set the current Itemid
+			if ($itemsLang) {
+				$items = $itemsLang;
+			}
+		}
+
+
 
 
 		if(!$items) {
