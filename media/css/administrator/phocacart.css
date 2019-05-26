@@ -317,10 +317,10 @@ input.pmreadonly:hover {
 .ph-background-loading {
 	filter: Alpha(Opacity=40); -moz-opacity:0.4; opacity: 0.4;
 	width: 100%;
-	height: 100%; 
+	height: 100%;
 	background-color: #333;
 	position: fixed;
-	top: 0px; 
+	top: 0px;
 	left: 0px;
 	z-index: 9998;
 }
@@ -452,7 +452,7 @@ input.pmreadonly:hover {
 	font-weight: bold;
 	color: #fff;
 	padding: 0.2em 0.5em;
-	cursor: pointer; 
+	cursor: pointer;
 	border-radius: 2px;
 	background: rgba(255,255,255, 0.5);
 }
@@ -494,7 +494,7 @@ input.pmreadonly:hover {
 	font-size: 2em;
 	left: 0.4em;
 	/*margin-top: -0.3em;*/
-	
+
 }
 
 #ph-ajaxtop-message .ph-success-txt {
@@ -615,7 +615,7 @@ padding-right: 40px !important;
 .ph-total-center a,
 .ph-total-center {
 	text-align: center !important;
-	
+
 }
 
 .ph-tax-edit,
@@ -741,7 +741,7 @@ border-radius: 2px;
 }
 
 .ph-admin-stat-row {
-	
+
 }
 .ph-admin-stat-box h2 {
 	margin: 0;
@@ -1013,7 +1013,7 @@ td,
 .span1, .span2,
 .col-xs-12 {
 	border: 1px solid red !important;
-} 
+}
 */
 .ph-vertical-align {
 	align-items: center;
@@ -1033,7 +1033,7 @@ td,
 #phWizardStatusModal .modal-header,
 #phWizardStatusModal .modal-footer,*/
 #phWizardStatusModal .modal-body {
-	background: url('../../images/administrator/bg-wizard.jpg') no-repeat top center fixed; 
+	background: url('../../images/administrator/bg-wizard.jpg') no-repeat top center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -1048,7 +1048,7 @@ td,
 	text-align: center;
 	font-size: 30px;
 	text-shadow: 1px 1px 4px rgba(0, 0, 0, 1);
-} 
+}
 
 /*
 #phWizardStatusModal .modal-body{overflow: hidden !important;}
@@ -1057,7 +1057,7 @@ td,
 .ph-body-iframe-wizard { height: auto;}*/
 
 .ph-wizard-start-page-box {
-	background: rgba(0, 0, 0, 0.5); 
+	background: rgba(0, 0, 0, 0.5);
 	color: #fff;
 	border-radius: 5px;
 	padding: 10px;
@@ -1066,7 +1066,7 @@ td,
 	padding-top: 5px;
 }
 .ph-wizard-start-page-window.firstpage {
-	color: #fff; 
+	color: #fff;
 }
 .ph-wizard-start-page-window.nextpage {
 	color: #000;
@@ -1091,7 +1091,7 @@ td,
 .ph-wizard-start-page-window a.btn:hover,
 .ph-wizard-start-page-window a.btn:focus,
 .ph-wizard-start-page-window a.btn:visited {
-	text-decoration: none; 
+	text-decoration: none;
 	width: 13em;
 	color: #fff;
 }
@@ -1247,7 +1247,7 @@ table.ph-report-table tr th {
 	color: #129ED9;
 	border: 1px solid #f0f0f0;
 	border-bottom: 3px solid #129ED9;
-	
+
 }
 
 table.ph-report-table tr td {
@@ -1291,7 +1291,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 
 .ph-editinplace-text form {
 
-	
+
 	background-color: #fff;
 	border:1px solid #f0f0f0;
 	box-shadow: 2px 2px 0px 0px #d0d0d0;
@@ -1307,20 +1307,20 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	margin: 0 0 0 0.5em;
 }
 .ph-editinplace-text form input {
-	
+
 	width: 8em !important;
 	margin: -1px 0 0 0.5em !important;
-	
+
 }
 
 .ph-editinplace-text.ph-eip-price form input {
-	
-	
-} 
+
+
+}
 
 .ph-editinplace-text.ph-eip-sku form input {
-	
-} 
+
+}
 /*
 .ph-product-attribute-download-title {
 	text-align: right;
@@ -1329,3 +1329,53 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 .ph-product-attribute-new-row {
 	margin-top: 3px;
 }*/
+
+
+
+
+
+/* Tooltip container */
+.ph-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.ph-tooltip .ph-tooltiptext {
+  visibility: hidden;
+  width: 14em;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 0 5px 5px rgba(0,0,0,0.1);
+  color: #000;
+  text-align: center;
+  padding: 0.2em;
+
+  position: absolute;
+  z-index: 1;
+
+  bottom: 100%;
+  left: 50%;
+  /*margin-left: -7em; /* Use half of the width (120/2 = 60), to center the tooltip */
+  margin-left: -2em;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.ph-tooltip:hover .ph-tooltiptext {
+  visibility: visible;
+}
+
+#phAdminEdit .form-horizontal .tab-content {
+
+	position: relative;
+}
+.ph-admin-additional-box {
+
+	position: absolute;
+	top: 0.3em;
+	right: 0.3em;
+	padding: 1em;
+	background: #f0f0f0;
+
+
+}

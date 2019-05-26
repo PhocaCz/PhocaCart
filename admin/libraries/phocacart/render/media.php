@@ -15,6 +15,8 @@ class PhocacartRenderMedia
 	public $jquery			= 0;
 	protected $document		= false;
 	protected $p			= array();
+	protected $format		= '';
+	protected $view			= '';
 
 
 	public function __construct() {
@@ -30,17 +32,21 @@ class PhocacartRenderMedia
 		$this->p['quantity_input_spinner']	= $params->get( 'quantity_input_spinner', 0);
 		$this->p['icon_type']				= $params->get( 'icon_type', 'bs');
 
+		$this->p['lazy_load_category_items']= $params->get( 'lazy_load_category_items', 0 );
+		$this->p['lazy_load_categories']	= $params->get( 'lazy_load_categories', 0 );
 
-
-        if ($this->p['load_main_css'] == 1) {
-            JHtml::stylesheet('media/com_phocacart/css/main.css' );
-        }
-
+		$this->format 	= $app->input->get('format', '', 'string');
+		$this->view 	= $app->input->get('view', '', 'string');
 
 
 
 		JHtml::_('jquery.framework', false);
 		$this->document	= JFactory::getDocument();
+
+        if ($this->p['load_main_css'] == 1) {
+            JHtml::stylesheet('media/com_phocacart/css/main.css' );
+        }
+
 
 		if (PhocacartUtils::isView('pos')) {
 			JHtml::stylesheet('media/com_phocacart/css/pos.css' );
@@ -50,6 +56,47 @@ class PhocacartRenderMedia
 		}
 
 
+	}
+
+	public function loadLazyLoad() {
+
+		$s = array();
+		$s[] = '<script>';
+		$s[] = ' window.lazyLoadOptions = {	';
+		$s[] = '   elements_selector: ".ph-lazyload",';
+		$s[] = '   load_delay: 0,';
+		$s[] = ' };';
+
+		$s[] = ' window.addEventListener(\'LazyLoad::Initialized\', function (event) {';
+		$s[] = '   window.phLazyLoadInstance = event.detail.instance;';
+		$s[] = ' }, false);';
+		$s[] = '</script>';
+		$s[] = '<script async src="'.JURI::root(true).'/media/com_phocacart/js/lazyload/lazyload.min.js"></script>';
+
+		if ($this->p['lazy_load_category_items'] == 1 && ($this->view == 'category' || $this->view == 'items')) {
+
+			if ($this->format == 'raw') {
+				return 'ph-lazyload'; // return only class, don't load library in ajax
+
+			}
+
+			$this->document->addCustomTag(implode("\n", $s));
+
+			return 'ph-lazyload';
+		} else if ($this->p['lazy_load_categories'] == 1 && $this->view == 'categories') {
+
+			if ($this->format == 'raw') {
+				return 'ph-lazyload'; // return only class, don't load library in ajax
+
+			}
+
+			$this->document->addCustomTag(implode("\n", $s));
+
+			return 'ph-lazyload';
+		}
+
+
+		return '';
 	}
 
 	public function loadProductHover() {

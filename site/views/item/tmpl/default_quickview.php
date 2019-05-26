@@ -17,7 +17,7 @@ $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => '
 $layoutQV 	= new JLayoutFile('popup_quickview', null, array('component' => 'com_phocacart'));
 $layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
 $layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
-
+$layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
 
 $x = $this->item[0];
 ?>
@@ -45,7 +45,7 @@ $label 	= PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
 // IMAGE
 $image 		= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image
 $imageL 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image Link to enlarge
-$dataImage	= 'data-image="'.JURI::base(true).'/'.$image->rel.'"';// Default image - when changed by javascript back to default
+
 
 // Some of the attribute is selected - this attribute include image so the image should be displayed instead of default
 $imageA = PhocaCartImage::getImageChangedByAttributes($this->t['attr_options'], 'large');
@@ -77,11 +77,22 @@ if (isset($image->rel) && $image->rel != '') {
 	//    and this we will do per customHref in function Display: function(imgBox, form, select, customHref) {
 	//    custom href will be javascript:void(0); see this file, line cca 286 phSIO1'.(int)$formId.'.Init
 	echo '<a href="javascript:void(0);" '.$this->t['image_rel'].' class="phjProductHref'.$idName.'" data-href="'.$link.'">';
-	echo '<img src="'.JURI::base(true).'/'.$image->rel.'" '.$dataImage.' alt="'.$altValue.'" class="img-responsive '.$label['cssthumbnail2'].' ph-image-full phjProductImage'.$idName.'"';
-	if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
-		echo ' style="width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px"';
-	}
-	echo ' />';
+
+    $d						= array();
+    $d['t']					= $this->t;
+    $d['src']				= JURI::base(true).'/'.$image->rel;
+    $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
+    $d['data-image']		= JURI::base(true).'/'.$image->rel;// Default image - when changed by javascript back to default
+    $d['data-image-webp']	= JURI::base(true).'/'.$image->rel_webp;// Default image - when changed by javascript back to default
+    $d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $image->rel);
+    $d['class']				= PhocacartRenderFront::getClass(array('img-responsive', $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
+    $d['style']				= '';
+    if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
+        $d['style'] = 'width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px';
+    }
+    echo $layoutI->render($d);
+
+
 	echo '</a>';
 
 	echo '</div>'. "\n";
@@ -102,7 +113,8 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 // :L: PRICE
 $price 	= new PhocacartPrice;// Can be used by options
-if ($this->t['hide_price'] != 1) {
+
+if ($this->t['can_display_price']) {
 
 	$d					= array();
 	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);

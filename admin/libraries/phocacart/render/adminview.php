@@ -206,8 +206,27 @@ class PhocacartRenderAdminview
 		$o = '<div class="ph-row-image'.$id.' ph-row-image" id="phrowimage'.$id.'" >'
 		.'<div class="ph-add-item">';
 
-		$o .='<span class="input-append">'
-		.'<input class="imageCreateThumbs inputbox" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value).'" size="40" type="text">';
+		$o .= '<span class="input-prepend input-append">';
+
+
+		// Preview image - when changing the image dynamically the preview must be changed too
+		$path = PhocacartPath::getPath('productimage'); // we use it only in image, could be changed in future - extended to others view like category, etc.
+		if ($value && file_exists($path['orig_abs_ds'] . $value)) {
+			$src = JUri::root() . $path['orig_rel_ds'] . $value;
+		} else {
+			$src = '';
+		}
+
+
+		$imgPreview = $src != '' ? '<img src="'.$src.'" alt="" />' : '<span class="glyphicon glyphicon-ban-circle ban-circle"></span>';
+
+		$o .= '<span class="btn btn-primary btn-prepend ph-tooltip">'
+			. '<span class="icon-eye icon-white"></span>'
+			. '<span class="ph-tooltiptext" id=phTooltipImagePreview_jform_image'.$id.'>'.$imgPreview.'</span>'
+			. '</span>';
+
+
+		$o .='<input class="imageCreateThumbs inputbox" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value).'" size="40" type="text">';
 		//$o .= '<a class="modal_jform_image btn" title="'.JText::_('COM_PHOCACART_FORM_SELECT_IMAGE').'" href="'.$url.$id.'"';
 
 		//$o .= '<a href="#'.$idA.'" onclick="setPhRowImageId('.$id.')" role="button" class="btn btn-primary phbtnaddimages" data-toggle="modal" title="' . JText::_($textButton) . '">'
@@ -620,7 +639,7 @@ class PhocacartRenderAdminview
 	}
 
 
-	public function additionalSpecificationsRow($id, $idDb, $title, $alias, $value, $alias_value, $group, $js = 0) {
+	public function additionalSpecificationsRow($id, $idDb, $title, $alias, $value, $alias_value, $group, $image, $image_medium, $image_small, $color, $js = 0, $url, $url2, $url3, $w = 700, $h = 400) {
 
 		$groupArray	= PhocacartSpecification::getGroupArray();
 		$o				= '';
@@ -679,9 +698,112 @@ class PhocacartRenderAdminview
 		.'<div class="col-xs-12 col-sm-4 col-md-4"> </div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 
-		.'</div>'
+		.'</div>';
 
-		. '</div>'
+		// COLOR AND SMALL IMAGE
+		$o .= '<div class="ph-row-specification">';
+
+		// IMAGE SMALL
+		// -----------
+
+		$o .= '<div class="col-xs-12 col-sm-3 col-md-3">';
+
+
+		$group 			= PhocacartUtilsSettings::getManagerGroup('productimage');
+		$managerOutput	= '&amp;manager=productimage';
+		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
+		$attr			= '';
+		$idA			= 'phFileImageNameModalS';
+		$textButton2	= 'COM_PHOCACART_SMALL';
+
+		$html	= array();
+		$html[] = JText::_('COM_PHOCACART_IMAGES') . '<br />';
+		$html[] = '<span class="input-append">';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_specimage_small'.$id.'" name="pformspec['.$id.'][image_small]" value="'.htmlspecialchars($image_small).'"' .' '.$attr.' />';
+		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url3 . $id.'" data-height="'.$h.'" data-width="'.$w.'">'
+			. '<span class="icon-list icon-white"></span>'
+			. JText::_($textButton2). '</a></span>';
+
+	//	$html[] = '</span>'. "\n";
+
+		$o .= implode("\n", $html);
+
+
+		$o .= '</div>';
+
+
+		// COLOR
+		// -----
+		$o .= '<div class="col-xs-12 col-sm-3 col-md-3">';
+
+		$format 		= 'hex';
+		$keywords 		= '';
+		$validate 		= ' data-validate="hex"';
+		$class			= '';
+		$control		= '';
+		$readonly		= '';
+		$autocomplete 	= true;
+		$lang 			= JFactory::getLanguage();
+		$position		= '';
+		$disabled		= '';
+		$required		= '';
+		$onchange		= '';
+		//$autofocus		= 'autofocus';
+		$autofocus		= '';
+
+
+		if (in_array($format, array('rgb', 'rgba')) && $validate != 'color') {
+			$alpha = ($format == 'rgba') ? true : false;
+			$placeholder = $alpha ? 'rgba(0, 0, 0, 0.5)' : 'rgb(0, 0, 0)';
+		} else {
+			$placeholder = '#rrggbb';
+		}
+
+		$inputclass   = ($keywords && ! in_array($format, array('rgb', 'rgba'))) ? ' keywords' : ' ' . $format;
+		$class        = ' class="' . trim('minicolors ' . $class) . ($validate == 'color' ? '' : $inputclass) . '"';
+		$control      = $control ? ' data-control="' . $control . '"' : '';
+		$format       = $format ? ' data-format="' . $format . '"' : '';
+		$keywords     = $keywords ? ' data-keywords="' . $keywords . '"' : '';
+		$readonly     = $readonly ? ' readonly' : '';
+		$hint         = ' placeholder="' . $placeholder . '"';
+		$autocomplete = ! $autocomplete ? ' autocomplete="off"' : '';
+		$direction    = $lang->isRTL() ? ' dir="ltr" style="text-align:right"' : '';
+
+		JHtml::_('jquery.framework');
+		JHtml::_('script', 'system/html5fallback.js', false, true);
+		JHtml::_('behavior.colorpicker');
+
+		/*$jQ = "jQuery('INPUT[type=minicolors]').on('change', function() {
+					var hex = jQuery(this).val(),
+					opacity = jQuery(this).attr('data-opacity');
+					jQuery('BODY').css('backgroundColor', hex);
+
+				});";
+		JFactory::getDocument()->addScriptDeclaration($jQ);*/
+
+		$html 	= array();
+		$html[] = JText::_('COM_PHOCACART_COLOR') . '<br />';
+		$html[] =  '<input type="text" id="jform_speccolor'.$id.'" name="pformspec['.$id.'][color]" value="'.htmlspecialchars($color).'" '
+			. $hint . $class . $position . $control
+			. $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus
+			. $format . $keywords . $direction . $validate . '/>';
+
+
+		$o .= implode("\n", $html);
+		$o .= '</div>';
+
+
+
+		$o .= '<div class="col-xs-12 col-sm-2 col-md-2"> </div>';
+
+		$o .= '<div class="col-xs-12 col-sm-4 col-md-4"> </div>';
+		$o .= '<div class="ph-cb ph-pad-b"></div>';
+
+		$o .= '</div>';// END Colors and images
+
+
+
+		$o .= '</div>'
 		. '</div>';
 
 

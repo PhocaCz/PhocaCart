@@ -9,25 +9,27 @@
 defined('_JEXEC') or die();
 
 $layoutV	= new JLayoutFile('button_category_view', null, array('component' => 'com_phocacart'));
+$layoutI	= new JLayoutFile('category_image', null, array('component' => 'com_phocacart'));
 
 $d 		= $displayData;
 $v		= $d['v'];
 $t		= $d['t'];
+$p		= $d['p'];
 $image 	= PhocacartImage::getThumbnailName($t['path'], $v->image, $d['image_size']);
 $link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 
 //echo '<div class="ph-image-box">';
+$dI	= array();
 if (isset($image->rel) && $image->rel != '') {
-	echo '<a href="'.$link.'">';
-	echo '<img class="img-responsive ph-image" src="'.JURI::base(true).'/'.$image->rel.'"';
-	if (isset($t['image_width_cats']) && $t['image_width_cats'] != '' && isset($t['image_height_cats']) && $t['image_height_cats'] != '') {
-		echo ' style="width:'.$t['image_width_cats'].';height:'.$t['image_height_cats'].'"';
-	}
 
-    $altValue = PhocaCartImage::getAltTitle($v->title, $v->image);
-	echo ' alt="'.$altValue.'"';
-	echo ' />';
+    $dI['t']			    = $t;
+    $dI['image']['title']	= $v->title;
+    $dI['image']['image']	= $image;
+
+    echo '<a href="'.$link.'">';
+    echo $layoutI->render($dI);
 	echo '</a>';
+
 } else {
 	// No image, add possible image per CSS
 	//echo '<a href="'.$link.'">';

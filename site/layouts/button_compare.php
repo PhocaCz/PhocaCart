@@ -9,6 +9,8 @@
 defined('_JEXEC') or die();
 $d = $displayData;
 ?>
+<div class="ph-pull-right">
+    <div class="ph-category-item-compare">
 <form action="<?php echo $d['linkc']; ?>" method="post" id="phCompare<?php echo (int)$d['id']; ?>" class="phItemCompareBoxForm">
 	<input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />
 	<input type="hidden" name="catid" value="<?php echo (int)$d['catid']; ?>" />
@@ -16,15 +18,15 @@ $d = $displayData;
 	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
-	<div class="ph-pull-right">
-		<div class="ph-category-item-compare">
+
 		<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
 			<a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('compare') ?>"></span></a>
 		<?php } else { ?>
 			<a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('compare') ?>"></span></a>
 		<?php } ?>
-		</div>
-	</div>
+
 	<?php /*<div class="clearfix"></div> */ ?>
 	<?php echo JHtml::_('form.token'); ?>
 </form>
+    </div>
+</div>

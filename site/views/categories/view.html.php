@@ -36,6 +36,10 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['category_name_link']			= $this->p->get( 'category_name_link', 0 );
 		$this->t['categories_view_layout']		= $this->p->get( 'categories_view_layout', 1 );
 
+		$this->t['lazy_load_categories']		= $this->p->get( 'lazy_load_categories', 0 );
+		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
+		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
+		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 
 
 		$media = new PhocacartRenderMedia();
@@ -43,6 +47,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		//$media->loadChosen();
 		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		//$this->t['class_thumbnail'] = $media->loadProductHover();
+		$this->t['class_lazyload']  = $media->loadLazyLoad();
 
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
 

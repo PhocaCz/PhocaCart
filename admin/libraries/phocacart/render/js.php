@@ -960,6 +960,11 @@ final class PhocacartRenderJs
 		}
 
 		$s[] = '			phChangeAttributeType();';// Recreate the select attribute (color, image) after AJAX
+
+		// Lazy Load
+		$s[] = '			if (phLazyLoadInstance) {phLazyLoadInstance.update();}';// Lazy load - reload if enabled
+
+
 		$s[] = '			'.$overlay1['end'];
 		$s[] = '		}';
 		$s[] = '	})';

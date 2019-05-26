@@ -169,6 +169,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
 
+		$user = JFactory::getUser();
 
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
@@ -216,6 +217,14 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		if(intval($table->date) == 0) {
 			$table->date = JFactory::getDate()->toSql();
+		}
+
+		if ($isNew) {
+			$table->created = JFactory::getDate()->toSql();
+			$table->created_by = isset($user->id) ? (int)$user->id: 0;
+		} else {
+			$table->modified = JFactory::getDate()->toSql();
+			$table->modified_by = isset($user->id) ? (int)$user->id: 0;
 		}
 
 		// if new item, order last in appropriate group
@@ -553,7 +562,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		// Source Category (current category)
 		$app 			= JFactory::getApplication('administrator');
 		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
-		$batchP 		= $app->input->post->get('batch', array(), 'array');
+		$batchParams 		= $app->input->post->get('batch', array(), 'array');
+
 
 		$table	= $this->getTable();
 		$db		= $this->getDbo();
@@ -629,6 +639,46 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$table->hits = 0;
 
 
+
+			// COPY OR BATCH functions - we cannot do the same tokens so create new token and token folder and if set copy the files
+			// EACH DOWNLOAD FILE MUST HAVE UNIQUE DOWNLOAD TOKEN AND DOWNLOAD FOLDER
+			$copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
+			if (isset($batchParams['copy_download_files']) && $batchParams['copy_download_files'] == 1) {
+				$copy = 2;// The same like 1 but in this case we even copy the download files on the server
+			}
+			if ($copy > 0) {
+				// First create new token and token folder
+				$oldDownloadFolder		= $table->download_folder;
+				$table->download_token 	= PhocacartUtils::getToken();
+				$table->download_folder	= PhocacartUtils::getToken('folder');
+
+				$pathFile = PhocacartPath::getPath('productfile');
+
+				if($copy == 2 && $table->download_file != '' && \Joomla\CMS\Filesystem\File::exists($pathFile['orig_abs_ds'] . $table->download_file)) {
+
+					$newDownloadFile = str_replace($oldDownloadFolder, $table->download_folder, $table->download_file);
+					if (!\Joomla\CMS\Filesystem\Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
+						// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+
+						$msg = JText::_('COM_PHOCACART_DOWNLOAD_FOLDER'). ': '. $table->download_folder . "<br />";
+						$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
+						$app->enqueueMessage($msg, 'error');
+					}
+
+					if (!\Joomla\CMS\Filesystem\File::copy($pathFile['orig_abs_ds'] . $table->download_file, $pathFile['orig_abs_ds'] . $newDownloadFile)) {
+						$msg = JText::_('COM_PHOCACART_DOWNLOAD_FILE'). ': '. $table->download_file . "<br />";
+						$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
+						$app->enqueueMessage($msg, 'error');
+					}
+					$table->download_file = $newDownloadFile;
+				} else {
+					$table->download_file = '';
+				}
+
+
+			}
+
+
 			// Check the row.
 			if (!$table->check()) {
 				$this->setError($table->getError());
@@ -648,13 +698,13 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 			// Store other new information
 
-			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId);
+			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId, $batchParams);
 			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
 
 
 
 			// Copy all source categories
-			if (isset($batchP['copy_all_cats']) && $batchP['copy_all_cats'] == 1) {
+			if (isset($batchParams['copy_all_cats']) && $batchParams['copy_all_cats'] == 1) {
 				$currentDataCat = PhocacartCategoryMultiple::getAllCategoriesByProduct((int)$pk);// plus all other categories of this product
 																							 // will be copied too
 				 // 1) Bind categories - destination category + all categories from source product (source product -> destination product)
@@ -1105,7 +1155,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 	protected function generateNewTitle($category_id, $alias, $title) {
 
 		$app 			= JFactory::getApplication('administrator');
-		$batchP 		= $app->input->post->get('batch', array(), 'array');
+		$batchParams 	= $app->input->post->get('batch', array(), 'array');
 
 
 		// Alter the title & alias
@@ -1115,7 +1165,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		while ($table->load(array('alias' => $alias))) {
 
 			// Skip creating unique name
-			if (isset($batchP['skip_creating_unique_name']) && $batchP['skip_creating_unique_name'] == 1) {
+			if (isset($batchParams['skip_creating_unique_name']) && $batchParams['skip_creating_unique_name'] == 1) {
 
 			} else {
 				$title = StringHelper::increment($title);
@@ -1128,7 +1178,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 	public function copyattributes(&$cid = array(), $idSource = 0) {
 
-		$app	= JFactory::getApplication();
+
+		$app 							= JFactory::getApplication('administrator');
+		$copy_attributes_download_files 	= $app->input->post->get('copy_attributes_download_files', 0, 'int');
+
+
+		$copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
+		if ($copy_attributes_download_files == 1) {
+			$copy = 2;// The same like 1 but in this case we even copy the download files on the server, see: PhocacartAttribute::storeAttributesById() for more info
+		}
 		$cA = 0;
 
 		if (count( $cid ) && (int)$idSource > 0) {
@@ -1158,7 +1216,10 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 					if ((int)$v != $idSource) { // Do not copy to itself
 
-						PhocacartAttribute::storeAttributesById((int)$v, $aA, 1);
+
+
+
+						PhocacartAttribute::storeAttributesById((int)$v, $aA, 1, $copy);
 						$cA++;
 					}
 				}

@@ -161,7 +161,15 @@ class PhocacartAttribute
 		return $o;
 	}
 
-	public static function storeAttributesById($productId, $attributesArray, $new = 0) {
+	/**
+	 * @param $productId
+	 * @param $attributesArray
+	 * @param int $new
+	 * @param int $copy used by BATCH and COPY ATTRIBUTES - if copy == 1 then only create new tokens, if copy == 2 then create new tokens and create folder and copy the files from source
+	 * @throws Exception
+	 */
+
+	public static function storeAttributesById($productId, $attributesArray, $new = 0, $copy = 0) {
 
 
 		if ((int)$productId > 0) {
@@ -305,6 +313,34 @@ class PhocacartAttribute
 							if (empty($v2['color'])) 			{$v2['color'] 			= '';}
 
 
+							// COPY OR BATCH functions - we cannot do the same tokens so create new token and token folder and if set copy the files
+							// EACH ATTRIBUTE OPTION DOWNLOAD FILE MUST HAVE UNIQUE DOWNLOAD TOKEN AND DOWNLOAD FOLDER
+							if ($copy > 0) {
+								// First create new token and token folder
+								$oldDownloadFolder		= $v2['download_folder'];
+								$v2['download_token'] 	= PhocacartUtils::getToken();
+								$v2['download_folder'] 	= PhocacartUtils::getToken('folder');
+
+
+								if($copy == 2 && $v2['download_file'] != '' && \Joomla\CMS\Filesystem\File::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
+
+									$newDownloadFile = str_replace($oldDownloadFolder, $v2['download_folder'], $v2['download_file']);
+									if (!\Joomla\CMS\Filesystem\Folder::create($pathAttributes['orig_abs_ds'] . $v2['download_folder'])) {
+										// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+									}
+
+									if (!\Joomla\CMS\Filesystem\File::copy($pathAttributes['orig_abs_ds'] . $v2['download_file'], $pathAttributes['orig_abs_ds'] . $newDownloadFile)) {
+										// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+									}
+									$v2['download_file'] = $newDownloadFile;
+								} else {
+									$v2['download_file'] = '';
+								}
+
+
+							}
+
+
 							// CHECK DOWNLOAD FILE
 							if ($v2['download_file'] != '' && $v2['download_folder'] == '') {
 								$msg = JText::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
@@ -415,17 +451,34 @@ class PhocacartAttribute
 					// Remove all options except the active
 					if (!empty($notDeleteOptions)) {
 						$notDeleteOptionsString = implode($notDeleteOptions, ',');
+
+						// Remove all download files from not active attribute values:
+						$qS = ' SELECT download_folder, download_file'
+								.' FROM #__phocacart_attribute_values'
+								.' WHERE attribute_id = '. (int)$newIdA
+								.' AND id NOT IN ('.$notDeleteOptionsString.')';
+
 						$query = ' DELETE '
 								.' FROM #__phocacart_attribute_values'
 								.' WHERE attribute_id = '. (int)$newIdA
 								.' AND id NOT IN ('.$notDeleteOptionsString.')';
 
 					} else {
+
+						// Remove all download files from not active attribute values:
+						$qS = ' SELECT download_folder, download_file'
+							.' FROM #__phocacart_attribute_values'
+							.' WHERE attribute_id = '. (int)$newIdA;
+
 						$query = ' DELETE '
 								.' FROM #__phocacart_attribute_values'
 								.' WHERE attribute_id = '. (int)$newIdA;
 
 					}
+
+					$db->setQuery($qS);
+					$folderFiles = $db->loadAssocList();
+					self::removeDownloadFolderAndFiles($folderFiles, $pathAttributes);
 
 					$db->setQuery($query);
 					$db->execute();
@@ -435,21 +488,52 @@ class PhocacartAttribute
 			// Remove all attributes except the active
 			if (!empty($notDeleteAttribs)) {
 				$notDeleteAttribsString = implode($notDeleteAttribs, ',');
+
+				// Remove all download files from not active attributes:
+				$qS = ' SELECT v.download_folder, v.download_file'
+					.' FROM #__phocacart_attribute_values AS v'
+					.' LEFT JOIN #__phocacart_attributes AS a ON a.id = v.attribute_id'
+					.' WHERE a.product_id = '. (int)$productId
+					.' AND a.id NOT IN ('.$notDeleteAttribsString.')';
+
 				$query = ' DELETE '
 						.' FROM #__phocacart_attributes'
 						.' WHERE product_id = '. (int)$productId
 						.' AND id NOT IN ('.$notDeleteAttribsString.')';
 
 			} else {
+
+				// Remove all download files from not active attributes:
+				$qS = ' SELECT v.download_folder, v.download_file'
+					.' FROM #__phocacart_attribute_values AS v'
+					.' LEFT JOIN #__phocacart_attributes AS a ON a.id = v.attribute_id'
+					.' WHERE a.product_id = '. (int)$productId;
+
 				$query = ' DELETE '
 						.' FROM #__phocacart_attributes'
 						.' WHERE product_id = '. (int)$productId;
 			}
+
+			$db->setQuery($qS);
+			$folderFiles = $db->loadAssocList();
+			self::removeDownloadFolderAndFiles($folderFiles, $pathAttributes);
+
 			$db->setQuery($query);
 			$db->execute();
 
 		}
 
+	}
+
+	public static function removeDownloadFolderAndFiles($folderFiles, $pathAttributes) {
+		if (!empty($folderFiles)) {
+			foreach ($folderFiles as $kF => $vF) {
+				// Folder will remove the file(s) too
+				if (\Joomla\CMS\Filesystem\Folder::exists($pathAttributes['orig_abs_ds'] . $vF['download_folder'])) {
+					\Joomla\CMS\Filesystem\Folder::delete($pathAttributes['orig_abs_ds'] . $vF['download_folder']);
+				}
+			}
+		}
 	}
 
 	/*

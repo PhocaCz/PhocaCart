@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 
-	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+    <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
 
-<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
 
-<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"  />
+        <field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
 
-<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
-
-
-<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
-
-<field name="ordering" type="phocacartOrdering" table="payment" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+        <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
 
+        <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40"/>
 
-<field name="display_price" type="list" label="COM_PHOCACART_FIELD_DISPLAY_PRICE_GROUP_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRICE_GROUP_DESC" class="inputbox" size="1" default="1">
-	<option	value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
-</field>
+        <field name="ordering" type="phocacartOrdering" table="payment" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
-<!-- RULE -->
-<field name="minimum_sum" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMAL_SUM_OF_PURCHASES_LABEL" description="COM_PHOCACART_FIELD_MINIMAL_SUM_OF_PURCHASES_DESC" />
+        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1"/>
 
 
+        <field name="display_price" type="list" label="COM_PHOCACART_FIELD_DISPLAY_PRICE_GROUP_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRICE_GROUP_DESC" class="inputbox" size="1" default="1">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+        </field>
+
+        <field name="display_addtocart" type="list" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_GROUP_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_GROUP_DESC" class="inputbox" size="1" default="1">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+        </field>
+
+        <field name="display_attributes" type="list" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_GROUP_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_GROUP_DESC" class="inputbox" size="1" default="1">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+        </field>
+
+        <!-- RULE -->
+        <field name="minimum_sum" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMAL_SUM_OF_PURCHASES_LABEL" description="COM_PHOCACART_FIELD_MINIMAL_SUM_OF_PURCHASES_DESC"/>
 
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
-	</fieldset>
-	
-	
-	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-
-<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
+    </fieldset>
 
 
+    <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
+
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
 
 
-	
-	</fieldset>
+    </fieldset>
 
-	
+
 </form>

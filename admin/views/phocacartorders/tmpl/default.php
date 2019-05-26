@@ -195,6 +195,8 @@ if ($item->type == 2) {
 
 		$info .= '<span class="label label-warning">'.JText::_('COM_PHOCACART_TICKET').': '.$item->ticket_id.'</span>';
 	}
+} else if ($item->type == 1) {
+	$info = '<span class="label label-info">'.JText::_('COM_PHOCACART_ONLINE_SHOP').'</span>';
 }
 $info .= '</div>';
 

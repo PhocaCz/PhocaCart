@@ -15,36 +15,47 @@ class PhocacartRenderIcon
 	private static $iconType = '';
 	private static $i = 0;
 	private function __construct(){}
-	
+
 	public static function getClassAdmin($name = '') {
-		
+
 		if ($name != ''){
 			return 'glyphicon glyphicon-'.$name;
 		}
 		return '';
 	}
-	
+
 	public static function getIconType() {
 		if( self::$iconType == '' ) {
 			$pC 		= PhocacartUtils::getComponentParameters();
-			self::$iconType	= $pC->get( 'icon_type', 'bs' );
-			
+            $pos        = PhocacartPos::isPos();
+            if ($pos) {
+                self::$iconType	= 'bs';
+            } else {
+                self::$iconType	= $pC->get( 'icon_type', 'bs' );
+            }
+
+
 		}
 		return self::$iconType;
 	}
-	
+
 	public static function getClass( $name = '') {
 		self::$i++;
-		
-		
-		
+
+
+
 		if( self::$iconType == '' ) {
 			$pC 		= PhocacartUtils::getComponentParameters();
-			self::$iconType	= $pC->get( 'icon_type', 'bs' );
+            $pos        = PhocacartPos::isPos();
+            if ($pos) {
+                self::$iconType	= 'bs';
+            } else {
+                self::$iconType	= $pC->get( 'icon_type', 'bs' );
+            }
 		}
-		
+
 		switch (self::$iconType) {
-			
+
 			case 'fa':
 				$iconP = 'fa fa-';
 				$iconS = ' fa-fw';
@@ -72,16 +83,16 @@ class PhocacartRenderIcon
 'wish-list' 		=> 'heart',
 'ban' 				=> 'ban',
 'refresh' 			=> 'refresh',
-'trash'				=> 'trash',				
+'trash'				=> 'trash',
 'triangle-bottom'	=> 'caret-down',
 'triangle-right'	=> 'caret-right',
 'save'				=> 'save',
 'user'				=> 'user',
-'grid'				=> 'th-large',					
+'grid'				=> 'th-large',
 'gridlist'			=> 'th-list',
-'list'				=> 'align-justify',					
+'list'				=> 'align-justify',
 'next'				=> 'arrow-right',
-'prev'				=> 'arrow-left',				
+'prev'				=> 'arrow-left',
 'submit'			=> 'ok',
 'invoice'			=> 'list-alt fa-file-invoice-dollar',
 'del-note'			=> 'barcode fa-file-invoice',
@@ -93,10 +104,10 @@ class PhocacartRenderIcon
 'payment-method'	=> 'credit-card',
 'shipping-method'	=> 'barcode',
 'log-out'			=> 'sign-out-alt',
-'calendar'			=> 'calendar'		
+'calendar'			=> 'calendar'
 );
 			break;
-			
+
 			case 'bs':
 			default:
 				$iconP = 'glyphicon glyphicon-';
@@ -125,16 +136,16 @@ class PhocacartRenderIcon
 'wish-list' 		=> 'heart',
 'ban' 				=> 'ban-circle',
 'refresh' 			=> 'refresh',
-'trash'				=> 'trash',				
+'trash'				=> 'trash',
 'triangle-bottom'	=> 'triangle-bottom',
 'triangle-right'	=> 'triangle-right',
 'save'				=> 'floppy-disk',
 'user'				=> 'user',
-'grid'				=> 'th-large',					
+'grid'				=> 'th-large',
 'gridlist'			=> 'th-list',
-'list'				=> 'align-justify',					
+'list'				=> 'align-justify',
 'next'				=> 'arrow-right',
-'prev'				=> 'arrow-left',				
+'prev'				=> 'arrow-left',
 'submit'			=> 'ok',
 'invoice'			=> 'list-alt',
 'del-note'			=> 'barcode',
@@ -146,19 +157,19 @@ class PhocacartRenderIcon
 'payment-method'	=> 'credit-card',
 'shipping-method'	=> 'barcode',
 'log-out'			=> 'arrow-left',
-'calendar'			=> 'calendar'				
+'calendar'			=> 'calendar'
 );
 			break;
 		}
-		
+
 		if (isset($iconA[$name]) && $iconA[$name] != '') {
 			return $iconP . $iconA[$name] . $iconS;
 		} else {
 			return $iconP . htmlspecialchars(strip_tags($name)) . $iconS;
 		}
-		
-	}	
-	
+
+	}
+
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;

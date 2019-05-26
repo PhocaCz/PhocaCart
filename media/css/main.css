@@ -240,6 +240,8 @@ a.b-thumbnail.active {
 	text-align: center;
 	margin: 0 auto;
 }
+
+
 .ph-item-image-add-box {
 	text-align: center;
 	margin-top: 10px;
@@ -728,7 +730,12 @@ table.ph-idnr-tax-rec tr th {
 	color: #555555;
 }
 */
-.ph-comparison-table .img-responsive{width:100%;}
+.ph-comparison-table .img-responsive{
+	width: auto;
+	margin: 0 auto;
+	text-align: center;
+	/*width:100%;*/
+}
 
 .ph-comparison-table,
 .ph-comparison-table tr,
@@ -1062,6 +1069,7 @@ table.ph-comparison-table tr td.ph-middle {
 	left: 0.3em;
 }
 
+#phQuickViewPopup .ph-label-box,
 #ph-pc-item-box .ph-label-box {
 	right: 1.2em;
 }
@@ -1716,15 +1724,20 @@ h3.gridlist {
 .row-flex.grid {
 	display: flex;
 	flex-wrap: wrap;
-
 }
+
+@media screen and (max-width: 768px) {
+	.row-flex.grid{
+		display: block;
+	}
+}
+
 
 .row-flex.grid .row-item {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;
 	align-items: stretch;
-
 }
 
 .row-flex.grid .row-item .ph-item-box,
@@ -1737,6 +1750,7 @@ h3.gridlist {
 }
 
 /* IE */
+
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 	.row-flex.grid .row-item .ph-item-box,
 	.row-flex.grid .row-item .ph-item-box .ph-thumbnail-c {
@@ -1751,6 +1765,7 @@ h3.gridlist {
 	flex-direction: column;
 	align-items: stretch;
 }
+
 
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemWishListBoxForm,
 .row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content .phItemCompareBoxForm,
@@ -2122,4 +2137,59 @@ table.pc-tax-recapitulation tr td {
 
 .ph-plg-product-attribute-item {
 	color: #c0c0c0;
+}
+
+
+.phIBox.ph-lazyload {
+	margin: 0;
+	padding: 0;
+	background: #f0f0f0;
+	border-radius: 0;
+	width: 100%;
+}
+
+img.ph-lazyload {
+  display: block;
+  width: 100%;
+  height: auto;
+opacity: 0;
+  box-sizing: border-box;
+  position: relative;
+  clear:both;
+}
+
+img.ph-lazyload:not(.initial) {
+	transition: opacity 2s;
+}
+img.ph-lazyload.initial,
+img.ph-lazyload.loaded,
+img.ph-lazyload .error {
+	opacity: 1;
+}
+img.ph-lazyload:not([src]) {
+	visibility: hidden;
+}
+
+.row-flex.gridlist.ph-lazyload .row-item .phIBoxOH {
+	line-height: 0;
+}
+
+
+.row-flex.grid.ph-lazyload .row-item {
+	flex-wrap: nowrap;
+}
+.row-flex.grid.ph-lazyload .row-item .ph-item-box .ph-thumbnail-c .ph-item-content {
+	flex-wrap: nowrap;
+}
+
+#phImageBox .ph-item-image-full-box  > a > picture > source {
+	display: inline;
+}
+
+.ph-item-box.gridlist, .ph-item-box.list {
+    margin-bottom: 10px;
+}
+.ph-no-items-found {
+	text-align: center;
+	padding: 2em 1em;
 }

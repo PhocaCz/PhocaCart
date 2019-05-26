@@ -36,18 +36,18 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 ?>
 <div class="row">
   <div class="col-lg-12">
-	
+
 	<div class="input-group" id="<?php echo $d['id']; ?>" >
-		
+
 		<?php if ($d['display_inner_icon'] == 1) { ?>
 		<div class="inner-addon right-addon">
 			<i class="<?php echo PhocacartRenderIcon::getClass('search') ?>"></i>
-			<input type="text" class="form-control" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_('COM_PHOCACART_SEARCH_FOR'); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" />
+			<input type="text" class="form-control" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" />
 		</div>
 		<?php } else { ?>
-			<input type="text" class="form-control" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_('COM_PHOCACART_SEARCH_FOR'); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" />
+			<input type="text" class="form-control" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" />
 		<?php } ?>
-		
+
 	  <?php if ($d['hide_buttons'] == 1) { ?>
 		<div style="display:none">
 	  <?php } ?>
@@ -58,18 +58,18 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 	  <?php if ($d['hide_buttons'] == 1) { ?>
 		</div>
 	  <?php } ?>
-	  
+
     </div>
-	
-<?php if ($d['search_options'] == 1) { ?>	
+
+<?php if ($d['search_options'] == 1) { ?>
 	<div class="radio ph-search-radio"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo JText::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?></label>
 	</div>
-	
+
 	<div class="radio ph-search-radio"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo JText::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?></label>
 	</div>
 <?php } ?>
-	
+
   </div>
 </div>
-  
+
 

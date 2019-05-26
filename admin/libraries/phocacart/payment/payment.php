@@ -365,33 +365,98 @@ class PhocacartPayment
 		return $payment;
 	}
 
+
+	/**
+	 * Store payment id inside checkout - if enabled in parameters and there is only one valid payment, it can be directly stored
+	 * But then the cart needs to be reloaded to store the costs of the payment and make ready for payment (payment gets info about payment because of rules)
+	 * @param $paymentId
+	 * @param $userId
+	 */
+
+	public function storePaymentRegistered($paymentId, $userId)
+	{
+
+		$row = JTable::getInstance('PhocacartCart', 'Table');
+
+
+		if ((int)$userId > 0) {
+			if (!$row->load(array('user_id' => (int)$userId, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
+				return false;// there must be some info in cart yet
+			}
+		}
+
+		if (!empty($row->cart)) {
+
+			$data['payment'] = (int)$paymentId;
+			$data['user_id'] = (int)$userId;
+
+			$data['payment'] 	= (int)$paymentId;
+			//$data['coupon'] 	= // Not set when automatically adding;
+			//$data['reward'] 	= // Not set when automatically adding;
+
+			if (!$row->bind($data)) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
+
+			$row->date = gmdate('Y-m-d H:i:s');
+
+			if (!$row->check()) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
+
+
+			if (!$row->store()) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
+			return (int)$paymentId;
+		}
+
+		return false;
+	}
+
+
 	/*
 	 * Important function - when e.g. user changes the address or change the items in cart, the payment method
 	 * needs to be removed, because user can get payment advantage when he orders 10 items but after changing
 	 * cart to e.g. one item, payment cannot stay the same, the same happens with countries and region
 	 */
 
-	public static function removePayment() {
-		$db 			= JFactory::getDBO();
-		$user			= $vendor = $ticket = $unit	= $section = array();
-		$dUser			= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
+	public static function removePayment($type = 0) {
 
-		$pos_payment_force = 0;
-		if (PhocacartPos::isPos()) {
-			$app					= JFactory::getApplication();
-			$paramsC 				= PhocacartUtils::getComponentParameters();
-			$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
+		if ($type == 0 || $type == 1) {
+
+			$session 		= JFactory::getSession();
+			$session->set('guestpayment', false, 'phocaCart');
+			$session->set('guestcoupon', false, 'phocaCart');
+			$session->set('guestloyaltycardnumber', false, 'phocaCart');
 		}
 
-		$query = 'UPDATE #__phocacart_cart_multiple SET payment = '.(int)$pos_payment_force
-			.' WHERE user_id = '.(int)$user->id
-			.' AND vendor_id = '.(int)$vendor->id
-			.' AND ticket_id = '.(int)$ticket->id
-			.' AND unit_id = '.(int)$unit->id
-			.' AND section_id = '.(int)$section->id;
-		$db->setQuery($query);
+		if ($type == 0) {
+			$db 			= JFactory::getDBO();
+			$user			= $vendor = $ticket = $unit	= $section = array();
+			$dUser			= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 
-		$db->execute();
+			$pos_payment_force = 0;
+			if (PhocacartPos::isPos()) {
+				$app					= JFactory::getApplication();
+				$paramsC 				= PhocacartUtils::getComponentParameters();
+				$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
+			}
+
+			$query = 'UPDATE #__phocacart_cart_multiple SET payment = '.(int)$pos_payment_force
+				.' WHERE user_id = '.(int)$user->id
+				.' AND vendor_id = '.(int)$vendor->id
+				.' AND ticket_id = '.(int)$ticket->id
+				.' AND unit_id = '.(int)$unit->id
+				.' AND section_id = '.(int)$section->id;
+			$db->setQuery($query);
+
+			$db->execute();
+		}
+
 		return true;
 	}
 

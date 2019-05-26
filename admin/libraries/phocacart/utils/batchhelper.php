@@ -11,22 +11,23 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartUtilsBatchhelper
 {
-	public static function storeProductItems($idSource, $idDest) {
-		
+	public static function storeProductItems($idSource, $idDest, $batchParams) {
+
 		if ($idSource > 0 && $idDest > 0) {
-			
+
+
 			// Related products
 			$aR = PhocacartRelated::getRelatedItemsById($idSource, 1);
 			$aRS = '';
 			if ($aR != '') {
 				$aRS = implode(',', $aR);
 			}
-		
+
 			PhocacartRelated::storeRelatedItemsById($aRS, (int)$idDest );
 			// Additional Images
 			$iA = PhocacartImageAdditional::getImagesByProductId($idSource, 1);
 			PhocacartImageAdditional::storeImagesByProductId((int)$idDest, $iA);
-			
+
 			// Attributes
 			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
 			if (!empty($aA)) {
@@ -38,33 +39,40 @@ class PhocacartUtilsBatchhelper
 						}
 					}
 				}
-				
-			}	
-			PhocacartAttribute::storeAttributesById((int)$idDest, $aA, 1);
-			
+
+			}
+
+
+            $copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
+            if (isset($batchParams['copy_attributes_download_files']) && $batchParams['copy_attributes_download_files'] == 1) {
+                $copy = 2;// The same like 1 but in this case we even copy the download files on the server, see: PhocacartAttribute::storeAttributesById() for more info
+            }
+
+			PhocacartAttribute::storeAttributesById((int)$idDest, $aA, 1, $copy);
+
 			// Specifications
 			$sA = PhocacartSpecification::getSpecificationsById($idSource, 1);
 			PhocacartSpecification::storeSpecificationsById((int)$idDest, $sA, 1);
-			
+
 			// Discounts
 			$dA = PhocacartDiscountProduct::getDiscountsById($idSource, 1);
 			PhocacartDiscountProduct::storeDiscountsById((int)$idDest, $dA, 1);
-			
+
 			// Advanced Stock Options
 			$aSOA = PhocacartAttribute::getCombinationsStockById($idSource, 1);
 			PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOA, 1);
-			
+
 			// Customer groups
 			$cA = PhocacartGroup::getGroupsById($idSource, 3, 1);
 			PhocacartGroup::storeGroupsById((int)$idDest, 3, $cA);
-			
+
 			// Tags
 			$tA = PhocacartTag::getTags($idSource, 1);
 			if (!isset($tA)) {
 				$tA = array();
 			}
 			PhocacartTag::storeTags($tA, (int)$idDest);
-			
+
 			// Tag Labels
 			$tLA = PhocacartTag::getTagLabels($idSource, 1);
 			if (!isset($tLA)) {
@@ -74,16 +82,16 @@ class PhocacartUtilsBatchhelper
 		}
 		return true;
 	}
-	
-	
+
+
 	public static function storeCategoryItems($idSource, $idDest) {
-		
+
 		if ($idSource > 0 && $idDest > 0) {
 
 			// Customer groups
 			$cA = PhocacartGroup::getGroupsById($idSource, 2, 1);
 			PhocacartGroup::storeGroupsById((int)$idDest, 2, $cA);
-			
+
 		}
 		return true;
 	}

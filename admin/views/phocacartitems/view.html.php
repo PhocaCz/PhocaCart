@@ -160,6 +160,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 			'a.price' 			=> JText::_($this->t['l'] . '_PRICE'),
 			'a.price_original'	=> JText::_($this->t['l'] . '_ORIGINAL_PRICE'),
 			'a.stock' 			=> JText::_($this->t['l'] . '_IN_STOCK'),
+			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);
 	}

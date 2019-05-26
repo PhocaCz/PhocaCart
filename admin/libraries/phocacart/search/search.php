@@ -21,7 +21,7 @@ class PhocacartSearch
 		$app					= JFactory::getApplication();
 		$data['id'] 			= 'phSearch';
 		$data['param'] 			= 'search';
-		$data['getparams']		= htmlspecialchars($app->input->get('search', '', 'string'));
+		$data['getparams']		= PhocacartText::filterValue($app->input->get('search', '', 'string'), 'text');
 		$data['title']			= JText::_('COM_PHOCACART_SEARCH');
 		$category				= PhocacartRoute::getIdForItemsRoute();
 		//$data['getparams'][]	= $category['idalias'];
@@ -42,7 +42,7 @@ class PhocacartSearch
 
 	/* Static part */
 
-	public static function getSqlParts($type, $search, $param) {
+	public static function getSqlParts($type, $search, $param, $params = array()) {
 
 		$in 	= '';
 		$where 	= '';
@@ -110,6 +110,11 @@ class PhocacartSearch
 					$left 	= ' LEFT JOIN #__phocacart_tags_related AS tr ON a.id = tr.item_id';
 				break;
 
+                case 'label':
+                    $where 	= ' lr.tag_id IN ('.$in.')';
+                    $left 	= ' LEFT JOIN #__phocacart_taglabels_related AS lr ON a.id = lr.item_id';
+                break;
+
 				case 'manufacturer':
 					$where 	= ' m.id IN ('.$in.')';
 					$left 	= ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
@@ -172,7 +177,12 @@ class PhocacartSearch
 
 				case 'search': // Search
 
-					$phrase = 'any';// exact, any - different methods can be implemented in future
+                    $phrase = 'any';
+                    if (isset($params['search_matching_option'])) {
+                        $phrase = $params['search_matching_option'];
+                    }
+
+
 					$where	= '';
 					switch ($phrase) {
 						case 'exact':
@@ -201,7 +211,7 @@ class PhocacartSearch
 								}
 
 								$word		= $db->quote('%'.$db->escape($word, true).'%', false);
-								$wheres	= array();
+
 								$wheres[]	= 'a.title LIKE '.$word;
 								$wheres[]	= 'a.alias LIKE '.$word;
 								$wheres[]	= 'a.metakey LIKE '.$word;
@@ -212,6 +222,7 @@ class PhocacartSearch
 							}
 							$where	= '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
 							$left 	= '';
+
 						break;
 					}
 				break;

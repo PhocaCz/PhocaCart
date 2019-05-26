@@ -43,8 +43,8 @@ if (!empty($this->items)) {
 	$lt		= $this->t['layouttype'];
 	$i		= 1; // Not equal Heights
 
-	echo '<div id="phItems" class="ph-items '.$lt.'">';
-	echo '<div class="row '.$this->t['class-row-flex'].' '.$lt.'">';
+	echo '<div id="phItems" class="'.PhocacartRenderFront::getClass(array('ph-items', $lt)).'">';
+	echo '<div class="'.PhocacartRenderFront::getClass(array('row', $this->t['class-row-flex'], $lt, $this->t['class_lazyload'])).'">';
 
 	foreach ($this->items as $v) {
 
@@ -64,14 +64,11 @@ if (!empty($this->items)) {
 		// :L: IMAGE
 		$dI	= array();
 		if (isset($image['image']->rel) && $image['image']->rel != '') {
+			$dI['t']				= $this->t;
 			$dI['product_id']		= (int)$v->id;
 			$dI['layouttype']		= $lt;
             $dI['title']			= $v->title;
-			$dI['image']			= $image['image'];
-			$dI['default_image']	= $image['default'];
-			$dI['image2']			= $image['second'];
-			$dI['imagestyle']		= $image['style'];
-			$dI['phil']				= $image['phil'];
+			$dI['image']			= $image;
 			$dI['typeview']			= 'Items';
 		}
 
@@ -113,7 +110,7 @@ if (!empty($this->items)) {
 
 		// :L: PRICE
 		$dP = array();
-		if ($this->t['hide_price'] != 1) {
+		if ($this->t['can_display_price']) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
@@ -623,6 +620,9 @@ if (!empty($this->items)) {
 	echo $this->loadTemplate('pagination');
 
 	echo '</div>'. "\n"; // end items
+} else {
+
+	echo '<div class="ph-no-items-found">'.JText::_('COM_PHOCACART_NO_ITEMS_FOUND').'</div>';
 }
 
 

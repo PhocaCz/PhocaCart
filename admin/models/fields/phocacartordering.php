@@ -22,114 +22,121 @@ class JFormFieldPhocacartOrdering extends JFormField
 
 		// Get some field values from the form.
 		$id			= (int) $this->form->getValue('id');
-		
+
 		if ($this->element['table']) {
 			switch (strtolower($this->element['table'])) {
-			
+
 				case "payment":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_payment_methods';
 				break;
-				
+
 				case "status":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_order_statuses';
 				break;
-				
+
 				case "stockstatus":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_stock_statuses';
 				break;
-				
+
 				case "country":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_countries';
 				break;
-				
+
 				case "region":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_regions';
 				break;
-				
+
 				case "currency":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_currencies';
 				break;
-				
+
 				case "tag":
+                case "label":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_tags';
 				break;
-				
+
 				case "manufacturer":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_manufacturers';
 				break;
-				
+
 				case "shipping":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_shipping_methods';
 				break;
-				
+
 				case "attribute":
 				default:
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_attributes';
 				break;
-				
+
 				case "formfield":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_form_fields';
 				break;
-				
+
 				case "user":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_users';
 				break;
-				
+
 				case "order":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_orders';
 				break;
-				
+
 				case "review":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_reviews';
 				break;
-				
+
 				case "question":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_questions';
 				break;
-				
+
 				case "wishlist":
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_wishlists';
 				break;
-				
+
+                case "category":
+                    $whereLabel	=	'';
+                    $whereValue	=	'';
+                    $table		=	'#__phocacart_categories';
+                break;
+
 			}
 		} else {
 			$whereLabel	=	'catid';
 			$whereValue	=	(int) $this->form->getValue('catid');
 			$table		=	'#__phocacart';
 		}
-		
+
 		// Initialize some field attributes.
 		$attr .= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : '';
 		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';

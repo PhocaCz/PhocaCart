@@ -45,6 +45,12 @@
                 <option value="1">COM_PHOCACART_STANDARD</option>
                 <option value="2">COM_PHOCACART_COLSPAN</option>
             </field>
+			
+			<field name="lazy_load_categories" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_LABEL"
+                   description="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
 
 
             <!--
@@ -242,6 +248,18 @@
 
             <field name="switch_image_category_items" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			 <field name="lazy_load_category_items" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_LABEL"
+                   description="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			<field name="join_tag_label_filter" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_JOIN_TAG_LABEL_FILTER_LABEL"
+                   description="COM_PHOCACART_FIELD_JOIN_TAG_LABEL_FILTER_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
@@ -619,6 +637,11 @@
                 <option value="1">COM_PHOCACART_TITLE_CATEGORY_OR_PRODUCT_TITLE</option>
                 <option value="2">COM_PHOCACART_IMAGE_NAME</option>
             </field>
+			
+			<field name="display_webp_images" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
 
             <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
 
@@ -795,17 +818,30 @@
 
             <field name="default_order_status" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_DESC">
             </field>
+			
+			
+			<field name="automatic_shipping_method_setting" default="0" type="list" label="COM_PHOCACART_FIELD_AUTOMATIC_SHIPPING_METHOD_SETTING_LABEL" description="COM_PHOCACART_FIELD_AUTOMATIC_SHIPPING_METHOD_SETTING_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+			
+			<field name="automatic_payment_method_setting" default="0" type="list" label="COM_PHOCACART_FIELD_AUTOMATIC_PAYMENT_METHOD_SETTING_LABEL" description="COM_PHOCACART_FIELD_AUTOMATIC_PAYMENT_METHOD_SETTING_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
 
             <field name="skip_shipping_method" default="0" type="list" label="COM_PHOCACART_FIELD_SKIP_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_FIELD_SKIP_SHIPPING_METHOD_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES_ALL_PRODUCTS_ARE_DOWNLOADABLE</option>
                 <option value="2">COM_PHOCACART_YES_OVERALL_NO_SHIPPING_METHOD_PUBLISHED</option>
+				<option value="3">COM_PHOCACART_YES_OVERALL_NO_SHIPPING_METHOD_FOUND_DESPITE_CHECKING_RULES</option>
             </field>
 
             <field name="skip_payment_method" default="0" type="list" label="COM_PHOCACART_FIELD_SKIP_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_FIELD_SKIP_PAYMENT_METHOD_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES_ORDER_AMOUNT_IS_ZERO</option>
                 <option value="2">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_PUBLISHED</option>
+				<option value="3">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_FOUND_DESPITE_CHECKING_RULES</option>
             </field>
 
             <field name="default_order_status_free_download" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_LABEL"
@@ -911,7 +947,38 @@
                 <option value="1">COM_PHOCACART_ONE_GROUP_HIGHEST_MINIMAL_SUM_OF_PURCHASES_INCLUDING_DEFAULT</option>
                 <option value="2">COM_PHOCACART_ALL_GROUPS_INCLUDING_DEFAULT</option>
             </field>
+			
+			
+			<field name="phocahead15" type="phocahead" default="COM_PHOCACART_CATALOG_OPTIONS_LABEL" label="" description=""/>
 
+			
+			<field name="display_price" default="1" type="list" label="COM_PHOCACART_FIELD_DISPLAY_PRICE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRICE_DESC">
+                <option value="0">COM_PHOCACART_NO_ONE</option>
+				<option value="1">COM_PHOCACART_ALL</option>
+                <option value="2">COM_PHOCACART_BASED_ON_ACCESS_LEVELS</option>
+				<option value="3">COM_PHOCACART_BASED_ON_CUSTOMER_GROUP</option>
+            </field>
+			
+			<field name="display_price_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_PRICE_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRICE_ACCESS_LEVELS_DESC" class="inputbox" multiple="true" size="1" showon="display_price:2" />
+			
+			<field name="display_addtocart" default="1" type="list" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_DESC">
+                <option value="0">COM_PHOCACART_NO_ONE</option>
+				<option value="1">COM_PHOCACART_ALL</option>
+                <option value="2">COM_PHOCACART_BASED_ON_ACCESS_LEVELS</option>
+				<option value="3">COM_PHOCACART_BASED_ON_CUSTOMER_GROUP</option>
+            </field>
+			
+			<field name="display_addtocart_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ACCESS_LEVELS_DESC" class="inputbox" multiple="true" size="1" showon="display_addtocart:2" />
+			
+			<field name="display_attributes" default="1" type="list" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_DESC">
+                <option value="0">COM_PHOCACART_NO_ONE</option>
+				<option value="1">COM_PHOCACART_ALL</option>
+                <option value="2">COM_PHOCACART_BASED_ON_ACCESS_LEVELS</option>
+				<option value="3">COM_PHOCACART_BASED_ON_CUSTOMER_GROUP</option>
+            </field>
+			
+			<field name="display_attributes_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_ACCESS_LEVELS_DESC" class="inputbox" multiple="true" size="1" showon="display_attributes:2" />
+			
 
             <field name="phocahead12" type="phocahead" default="COM_PHOCACART_CONFIG_DOWNLOAD_LABEL" label="" description=""/>
 
@@ -968,7 +1035,11 @@
                 <option value="6">COM_PHOCACART_SMALL_AND_LARGE_THUMBNAIL</option>
                 <option value="7">COM_PHOCACART_ALL</option>
             </field>
-
+			
+			<field name="create_webp_copy" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_LABEL" description="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+				<option value="0">COM_PHOCACART_NO</option>
+            </field>
 
             <field name="phocahead14" type="phocahead" default="COM_PHOCACART_GENERAL_OPTIONS_LABEL" label="" description=""/>
 
@@ -1014,23 +1085,7 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="phocahead15" type="phocahead" default="COM_PHOCACART_CATALOG_OPTIONS_LABEL" label="" description=""/>
-
-
-            <field name="hide_price" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_PRICES_LABEL" description="COM_PHOCACART_FIELD_HIDE_PRICES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
-
-            <field name="hide_addtocart" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_LABEL" description="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
-
-            <field name="hide_attributes" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
+           
 
 
             <field name="phocahead16" type="phocahead" default="COM_PHOCACART_ASK_QUESTION_FEEDBACK_REPORT_OPTIONS_LABEL" label="" description=""/>
@@ -1113,6 +1168,16 @@
                    description="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_DESC">
                 <option value="1">file_get_contents</option>
                 <option value="2">cUrl</option>
+            </field>
+			
+			
+			<field name="phocahead34" type="phocahead" default="COM_PHOCACART_SEARCH_AND_FILTER_OPTIONS_LABEL" label="" description=""/>
+
+            <field name="search_matching_option" type="list" default="0" label="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_DESC">
+                <option value="any">COM_PHOCACART_SEARCH_ANY</option>
+                <option value="all">COM_PHOCACART_SEARCH_ALL</option>
+				<option value="exact">COM_PHOCACART_SEARCH_EXACT</option>
             </field>
 
 

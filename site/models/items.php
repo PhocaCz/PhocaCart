@@ -45,6 +45,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 		// =FILTER=
 		$this->setState('tag', $app->input->get('tag', '', 'string'));
+		$this->setState('label', $app->input->get('label', '', 'string'));
 		$this->setState('manufacturer', $app->input->get('manufacturer', '', 'string'));
 		$this->setState('price_from', $app->input->get('price_from', '', 'string'));
 		$this->setState('price_to', $app->input->get('price_to', '', 'string'));
@@ -123,8 +124,16 @@ class PhocaCartModelItems extends JModelLegacy
 		$wheres		= array();
 		$lefts		= array();
 
+
+		$skip			= array();
+		$skip['access']	= false;
+		$skip['group']	= false;
+
+		$p = array();
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
 		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
+		$p['join_tag_label_filter']			= $params->get( 'join_tag_label_filter', 0 );
+		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
 
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
@@ -140,23 +149,66 @@ class PhocaCartModelItems extends JModelLegacy
 		$itemOrdering = $this->getItemOrdering();
 
 
-		$wheres[] = " c.access IN (".$userLevels.")";
-		$wheres[] = " a.access IN (".$userLevels.")";
+		if (!$skip['access']) {
+			$wheres[] = " c.access IN (".$userLevels.")";
+			$wheres[] = " a.access IN (".$userLevels.")";
+		}
 
-		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		if (!$skip['group']) {
+			$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
+			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		}
+
 
 		if ($p['hide_products_out_of_stock'] == 1) {
 			$wheres[] = " a.stock > 0";
 		}
 
 		// =FILTER=
-		// -TAG-
-		if ($this->getState('tag')) {
-			$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+		// -TAG- -LABEL-
+		if ($p['join_tag_label_filter'] == 1) {
+
+			// -LABEL-
+			$wheresTL = array();
+			if ($this->getState('tag')) {
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+				$wheresTL[]	= $s['where'];
+				$lefts[]	= $s['left'];
+			}
+			// -LABEL-
+			if ($this->getState('label')) {
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'));
+				$wheresTL[]	= $s['where'];
+				$lefts[]	= $s['left'];
+			}
+
+			if ($this->getState('tag') || $this->getState('label')) {
+				$startP = '';
+				$endP 	= '';
+				if (count($wheresTL) > 1) {
+					$startP = '(';
+					$endP 	= ')';
+				}
+				$wheres[] = $startP . implode(' OR ', $wheresTL) . $endP;
+
+			}
+		} else {
+
+			// -LABEL-
+			if ($this->getState('tag')) {
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+				$wheres[]	= $s['where'];
+				$lefts[]	= $s['left'];
+			}
+			// -LABEL-
+			if ($this->getState('label')) {
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'));
+				$wheres[]	= $s['where'];
+				$lefts[]	= $s['left'];
+			}
+
 		}
+
 		// -MANUFACTURER-
 		if ($this->getState('manufacturer')) {
 			$s = PhocacartSearch::getSqlParts('int', 'manufacturer', $this->getState('manufacturer'));
@@ -205,7 +257,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 		// =SEARCH=
 		if ($this->getState('search')) {
-			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'));
+			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'), $p);
 			$wheres[]	= '('.$s['where'].')';
 			$lefts[]	= $s['left'];
 
@@ -236,8 +288,11 @@ class PhocaCartModelItems extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
 
-			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
-			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+
+			if (!$skip['group']) {
+				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
+				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+			}
 
 			//$query = ' SELECT COUNT(DISTINCT a.id) AS count'; // 2.85ms 0.12mb
 			$q = ' SELECT a.id' // 2.42ms 0.12mb
@@ -255,22 +310,34 @@ class PhocaCartModelItems extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
 			//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
 			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
-			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
-			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
-			// user is in more groups, select lowest price by best group
-			$lefts[] = ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
-			// user is in more groups, select highest points by best group
-			$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
+
+			if (!$skip['group']) {
+				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
+				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+				// user is in more groups, select lowest price by best group
+				$lefts[] = ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . $userGroups . ') AND type = 3)';
+				// user is in more groups, select highest points by best group
+				$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . $userGroups . ') AND type = 3)';
+			}
 
 
 			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,'
-						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price,';
+
+			if (!$skip['group']) {
+				$columns	.= ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received,';
+			} else {
+				$columns	.= ' NULL as group_price, NULL as group_points_received,';
+			}
+
+			$columns	.= ' a.points_received, a.price_original,'
 						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,'
 						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
 						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 						.' AVG(r.rating) AS rating, at.required AS attribute_required';
+
+
 
 			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
 			$groupsFast	= 'a.id';

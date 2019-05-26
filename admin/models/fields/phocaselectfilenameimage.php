@@ -16,12 +16,13 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 	protected function getInput() {
 
 		$html 			= array();
+        $manager	    = $this->element['manager'] ? $this->element['manager'] : 'productimage';
 		$managerOutput	= $this->element['manager'] ? '&amp;manager='.(string) $this->element['manager'] : '';
 		$group 			= PhocacartUtilsSettings::getManagerGroup((string) $this->element['manager']);
 		$textButton		= 'COM_PHOCACART_FORM_SELECT_'.strtoupper($group['t']);
-		
+
 		$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field='.$this->id;
-		
+
 		$onchange 		= (string) $this->element['onchange'];
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="text_area"';
@@ -29,12 +30,29 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 		$idA			= 'phFileImageNameModal';
 
 		JHtml::_('jquery.framework');
-		
-		$html[] = '<span class="input-append"><input type="text" ' . $required . ' id="' . $this->id . '" name="' . $this->name . '"'
+
+
+        $path = PhocacartPath::getPath($manager);
+        if ($this->value && file_exists($path['orig_abs_ds'] . $this->value)) {
+            $src = JUri::root() . $path['orig_rel_ds'] . $this->value;
+        } else {
+            $src = '';
+        }
+
+
+        $imgPreview = $src != '' ? '<img src="'.$src.'" alt="" />' : '<span class="glyphicon glyphicon-ban-circle ban-circle"></span>';
+        $html[] = '<div class="input-prepend input-append">';
+       // $html[] = '<span style="border: 1px solid red"><span class="icon-eye">xx</span></span>';
+        $html[] = '<span class="btn btn-primary btn-prepend ph-tooltip">'
+            . '<span class="icon-eye icon-white"></span>'
+            . '<span class="ph-tooltiptext" id=phTooltipImagePreview_'.$this->id.'>'.$imgPreview.'</span>'
+            . '</span>';
+
+		$html[] = '<input type="text" ' . $required . ' id="' . $this->id . '" name="' . $this->name . '"'
 			. ' value="' . $this->value . '"' . $size . $class . ' />';
 		$html[] = '<a href="#'.$idA.'" role="button" class="btn btn-primary" data-toggle="modal" title="' . JText::_($textButton) . '">'
 			. '<span class="icon-list icon-white"></span> '
-			. JText::_($textButton) . '</a></span>';
+			. JText::_($textButton) . '</a>';
 		$html[] = JHtml::_(
 			'bootstrap.renderModal',
 			$idA,
@@ -50,8 +68,12 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 			)
 		);
 
+        $html[] = '</div>';
+
 		return implode("\n", $html);
-		
+
+
+
 		// HIDDEN FIELDS
 		//readonly="readonly"
 		// We don't use hidden field name, we can edit it the filename form field, there are three ways of adding filename:
@@ -66,7 +88,7 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 
 		// MOOTOOLS
 		/*JHtml::_('behavior.modal', 'a.modal_'.$this->id);
-		
+
 		$html[] = '<div class="input-append">';
 		$html[] = '<input class="imageCreateThumbs" type="text" id="'.$this->id.'" name="'.$this->name.'" value="'. $this->value.'"' .' '.$attr.' />';
 		$html[] = '<a class="modal_'.$this->id.' btn" title="'.JText::_($textButton).'"'

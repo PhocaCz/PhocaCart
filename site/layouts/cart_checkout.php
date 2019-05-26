@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+$layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
+
 $app 		= JFactory::getApplication();
 $d 			= $displayData;
 $price		= new PhocacartPrice();
@@ -20,6 +23,9 @@ $p['display_discount_price_product']	= $d['params']->get( 'display_discount_pric
 $p['zero_shipping_price_calculation']	= $d['params']->get( 'zero_shipping_price_calculation', 0 );
 $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_calculation', 0 );
 $p['display_reward_points_receive_info']= $d['params']->get( 'display_reward_points_receive_info', 0 );
+$p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
+
+
 //$p['min_quantity_calculation']	= $d['params']->get( 'min_quantity_calculation', 0 ); set in product xml - product options, not in global
 
 // POS
@@ -142,7 +148,15 @@ if (!empty($d['fullitems'][1])) {
 			$image = PhocacartImage::getImageDisplay($v['image'], '', $d['pathitem'], '', '', '', 'small', '', $v['attributes'], 2);
 
 			if (isset($image['image']->rel)) {
-				$imageOutput = '<img src="'.JURI::base(true).'/'.$image['image']->rel.'" alt="'.strip_tags($v['title']).'" />';
+
+				$d2								= array();
+				$d2['t']['display_webp_images']	= $p['display_webp_images'];
+				$d2['src']						= JURI::base(true).'/'.$image['image']->rel;
+				$d2['srcset-webp']				= JURI::base(true).'/'.$image['image']->rel_webp;
+				$d2['alt-value']				= PhocaCartImage::getAltTitle($v['title'], $image['image']->rel);
+				$d2['class']					= PhocacartRenderFront::getClass(array('img-responsive', 'ph-img-cart-checkout'));
+
+				$imageOutput = $layoutI->render($d2);
 			}
 		} else {
 			$imageOutput = '<div class="ph-no-image"><span class="'.PhocacartRenderIcon::getClass('ban').'"</span></div>';
@@ -176,7 +190,7 @@ if (!empty($d['fullitems'][1])) {
 		//UPDATE
 		echo ' <button class="btn btn-success btn-xs ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.PhocacartRenderIcon::getClass('refresh').'"></span></button>';
 		//DELETE
-		echo ' <button class="btn btn-danger btn-xs ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.PhocacartRenderIcon::getClass('trash').'"></span></button>';
+		echo ' <button class="btn btn-danger btn-xs ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'" class="'.PhocacartRenderIcon::getClass('trash').'"></span></button>';
 		echo JHtml::_('form.token');
 		echo '</div>';
 		echo '</form>';

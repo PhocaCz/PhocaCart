@@ -593,4 +593,13 @@ class PhocacartRenderFront
 		return $cFT;
 	}
 
+	public static function getClass($items = array()) {
+
+	    if (!empty($items)) {
+	        return implode(' ', $items);
+        }
+	    return '';
+
+    }
+
 }

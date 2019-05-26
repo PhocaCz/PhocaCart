@@ -59,15 +59,13 @@ if (!empty($this->items)) {
 		// :L: IMAGE
 		$dI	= array();
 		if (isset($image['image']->rel) && $image['image']->rel != '') {
+			$dI['t']				= $this->t;
 			$dI['product_id']		= (int)$v->id;
 			$dI['layouttype']		= $lt;
-			$dI['image']			= $image['image'];
+			$dI['image']			= $image;
 			$dI['title']			= $v->title;
-			$dI['default_image']	= $image['default'];
-			$dI['image2']			= '';
-			$dI['imagestyle']		= $image['style'];
-			$dI['phil']				= $image['phil'];
 			$dI['typeview']			= 'Pos';
+
 		}
 
 
@@ -76,7 +74,7 @@ if (!empty($this->items)) {
 
 		// :L: PRICE
 		$dP = array();
-		if ($this->t['hide_price'] != 1) {
+		if ($this->t['can_display_price']) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();

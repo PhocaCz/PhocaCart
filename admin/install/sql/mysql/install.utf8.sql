@@ -23,6 +23,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_categories` (
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  
+  `created_by` int(11) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL DEFAULT '0',
+  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  
   `ordering` int(11) NOT NULL DEFAULT '0',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -107,6 +113,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
+  
+  `created_by` int(11) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL DEFAULT '0',
+  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `hits` int(11) NOT NULL DEFAULT '0',
   `sales` int(11) NOT NULL DEFAULT '0',
@@ -289,6 +301,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_specifications` (
   `alias` varchar(255) NOT NULL DEFAULT '',
   `value` text,
   `alias_value` varchar(255) NOT NULL DEFAULT '',
+  
+  `image` varchar(255) NOT NULL DEFAULT '',
+  `image_medium` varchar(255) NOT NULL DEFAULT '',
+  `image_small` varchar(255) NOT NULL DEFAULT '',
+  `color` varchar(50) NOT NULL DEFAULT '',
+  
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -1384,6 +1402,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_groups` (
   `description` text,
   `display_price` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `display_price_method` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `display_addtocart` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `display_attributes` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimum_sum` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `product_id` int(11) NOT NULL DEFAULT '0',
   `valid_from` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -1591,7 +1611,7 @@ INSERT INTO `#__phocacart_form_fields` ( `title`, `label`, `description`, `type`
 ('fax', 'COM_PHOCACART_FAX_LABEL', 'COM_PHOCACART_FAX_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 19, 1);
 
 
-INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, `ordering`, `type`) VALUES (1, 'COM_PHOCACART_DEFAULT', '1', '1', '1', '1');
+INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, `display_addtocart`, `display_attributes`, `ordering`, `type`) VALUES (1, 'COM_PHOCACART_DEFAULT', '1', '1', '1', '1', '1', '1');
 
 
 

@@ -13,7 +13,7 @@
   position: absolute;
   right: 0;
   height: 100%;
-  z-index: 11;
+  z-index: 1;
 }
 
 #phQuickViewPopup .bootstrap-touchspin .input-group-btn-vertical > .btn, 

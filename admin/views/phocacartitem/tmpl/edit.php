@@ -32,6 +32,7 @@ $r 			=  new PhocacartRenderAdminview();
         if (i > 30) {
             /* Stop Loop */
             phRequestActive = null;
+
         }
 
         if (phRequestActive) {
@@ -98,15 +99,26 @@ echo '<div class="tab-content">'. "\n";
 
 echo '<div class="tab-pane active" id="general">'."\n";
 
+
 // Customer Group Price
 $idMd = 'phEditProductPriceGroupModal';
 $textButton = 'COM_PHOCACART_CUSTOMER_GROUP_PRICES';
 $w = 500;
 $h = 400;
 
+echo '<div class="ph-float-right ph-admin-additional-box">';
+
+
+if ($this->item->image != '') {
+    $pathImage = PhocacartPath::getPath('productimage');
+    $image = PhocacartImage::getThumbnailName($pathImage, $this->item->image, 'small');
+    echo '<img src="'. Juri::root() . $image->rel.'" alt="" /><hr />';
+}
+
 $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricegroup&tmpl=component&id='.(int)$this->item->id  );
-echo '<div class="ph-float-right"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
+echo '<a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
+
 
 // Product Price History
 $idMd = 'phEditProductPriceHistoryModal';
@@ -115,9 +127,10 @@ $w = 500;
 $h = 400;
 
 $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricehistory&tmpl=component&id='.(int)$this->item->id  );
-echo '<br /><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></div>';
+echo '<br /><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
+echo '</div>';
 
 // ORDERING cannot be used
 $formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text', 'condition', 'type_feed', 'type_category_feed');
@@ -242,6 +255,12 @@ echo '</div>'. "\n";
 
 
 // SPECIFICATIONS
+$w = 700;
+$h = 400;
+$urlO 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage';
+$urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage_medium';
+$urlO3 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage_small';
+
 echo '<div class="tab-pane" id="specifications">'. "\n";
 echo '<h3>'.JText::_($this->t['l'].'_SPECIFICATIONS').'</h3>';
 $i = 0; //
@@ -250,12 +269,13 @@ if (!empty($this->specifications)) {
 		//if ($i == 0) {
 		//	echo $r->headerSpecification();
 		//}
-		echo $r->additionalSpecificationsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->value, $v->alias_value, $v->group_id, 0);
+		echo $r->additionalSpecificationsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->value, $v->alias_value, $v->group_id, $v->image, $v->image_medium, $v->image_small, $v->color, 0, $urlO, $urlO2, $urlO3, $w, $h);
 		$i++;
 	}
 }
 
-$newRow = $r->additionalSpecificationsRow('\' + phRowCountSpecification +  \'', '', '', '', '', '', '', 1);
+echo $r->modalWindowDynamic('phFileImageNameModalS', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
+$newRow = $r->additionalSpecificationsRow('\' + phRowCountSpecification +  \'', '', '', '', '', '', '', '', '', '', '', 1, $urlO, $urlO2, $urlO3, $w, $h);
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 //$newHeader	= $r->headerSpecification();
 $newHeader	= '';
@@ -328,8 +348,10 @@ $w = 500;
 $h = 400;
 
 $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditstockadvanced&tmpl=component&id='.(int)$this->item->id  );
-echo '<div class="ph-float-right"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></div>';
+echo '<div class="ph-float-right ph-admin-additional-box"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
+
+echo '</div>';
 
 $formArray = array ('stock', 'stock_calculation', 'min_quantity', 'min_multiple_quantity', 'min_quantity_calculation', 'stockstatus_a_id', 'stockstatus_n_id', 'delivery_date');
 echo $r->group($this->form, $formArray);
@@ -395,8 +417,11 @@ $w = 500;
 $h = 400;
 
 $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpointgroup&tmpl=component&id='.(int)$this->item->id  );
-echo '<div class="ph-float-right"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></div>';
+echo '<div class="ph-float-right ph-admin-additional-box"><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
+
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
+echo '</div>';
+
 
 $formArray = array ('points_needed', 'points_received');
 echo $r->group($this->form, $formArray);

@@ -53,6 +53,12 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 1 );
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 		$this->t['checkout_icon_status']	= $this->p->get( 'checkout_icon_status', 1 );
+		$this->t['display_webp_images']		= $this->p->get( 'display_webp_images', 0 );
+
+		$this->t['skip_shipping_method']	= $this->p->get( 'skip_shipping_method', 0 );
+		$this->t['skip_payment_method']		= $this->p->get( 'skip_payment_method', 0 );
+		$this->t['automatic_shipping_method_setting']	= $this->p->get( 'automatic_shipping_method_setting', 0 );
+		$this->t['automatic_payment_method_setting']	= $this->p->get( 'automatic_payment_method_setting', 0 );
 
 
 		// Message set in Openting Times class
@@ -201,6 +207,20 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->cart->addShippingCosts($shippingId);
 					$this->t['shippingmethod'] = $this->cart->getShippingCosts();
 
+
+					// If "automatic_shipping_method_setting" is set to yes, this means that the shipping method will be set automatically in case:
+					// - there is only one shipping method available or only one meets the criteria
+					// - and the parameter is set to yes
+					// It is not possible to edit the method because when switching to edit, the method will be set automatically as wished by enabling the parameter
+					// and redirect outside the editing mode
+					if ($this->t['automatic_shipping_method_setting'] == 1) {
+						$shipping					= new PhocacartShipping();
+						$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);
+						if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1) {
+							$this->a->shippingdisplayeditbutton = 0;
+						}
+					}
+
 				} else {
 					// Shipping cost is not stored in cart, display possible shipping methods
 					// We ask for total of cart because of amount rule
@@ -226,6 +246,53 @@ class PhocaCartViewCheckout extends JViewLegacy
 
 					$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 
+
+					// If there is only one valid shipping method and it is set in parameter we can directly store this method so user does not need to add it
+					// When setting the shipping method then the cart needs to be "refreshed", shipping costs needs to be added and info about shpping id
+					// must be updated because of payment rules (one of payment rule is shipping)
+					if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1 && $this->t['automatic_shipping_method_setting'] == 1) {
+						if (isset($this->t['shippingmethods'][0]->id) && (int)$this->t['shippingmethods'][0]->id > 0) {
+
+							$shippingStored = 0;
+							if($this->a->login == 1 && isset($this->u->id) && $this->u->id > 0) {
+								if ($shipping->storeShippingRegistered($this->t['shippingmethods'][0]->id, $this->u->id)) {
+									$shippingStored = 1;
+								}
+							} else if ($this->a->login == 2) {
+								if (PhocacartUserGuestuser::storeShipping((int)$this->t['shippingmethods'][0]->id)) {
+									$shippingStored = 1;
+								}
+							}
+
+							if ($shippingStored == 1) {
+								$shippingId = (int)$this->t['shippingmethods'][0]->id;// will be used for payment - updated now
+								$this->cart->addShippingCosts($shippingId);// add the costs to cart so it has updated information
+
+								$this->t['shippingmethod'] = $this->cart->getShippingCosts();
+
+								$this->a->shippingadded = 1;
+								$this->a->shippingview 	= 1;
+								$this->a->shippingedit 	= 0;
+								$this->a->shippingdisplayeditbutton = 0;
+								$scrollTo = 'phcheckoutpaymentedit';
+
+
+							}
+						}
+					}
+
+
+					// No shipping method found even all rules were applied and shipping methods were searched
+					// THIS CASE CAN BE VENDOR ERROR (wrong setting of shipping methods) OR PURPOSE - be aware when using $skip_shipping_method = 3
+					// Skip adding/selecting shipping method and allow customer proceeding the order? (depends on parameter: $this->t['skip_shipping_method'])
+					// Must be implemented here because now we know information about total, shipping and address we need for deciding about shipping method
+					// Must cooperate with administrator/components/com_phocacart/libraries/phocacart/order/order.php cca 402
+					// In this case $this->t['shippingmethod']['id'] is even null, so we don't need to ask $shipping->getPossibleShippingMethods for outcomes with not selected shipping method
+
+					if (empty($this->t['shippingmethods']) && $this->t['skip_shipping_method'] == 3) {
+						$this->a->shippingnotused = 1;
+					};
+
 				}
 			}
 
@@ -243,7 +310,24 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->paymentadded 		= 1;
 					$this->a->paymentview 		= 1;
 					$scrollTo 					= 'phcheckoutpaymentview';
+
+
+					// If "automatic_payment_method_setting" is set to yes, this means that the payment method will be set automatically in case:
+					// - there is only one payment method available or only one meets the criteria
+					// - and the parameter is set to yes
+					// It is not possible to edit the method because when switching to edit, the method will be set automatically as wished by enabling the parameter
+					// and redirect outside the editing mode
+					if ($this->t['automatic_payment_method_setting'] == 1) {
+						$payment					= new PhocacartPayment();
+						$shippingId 				= $this->cart->getShippingId();// Shipping stored in cart or not?
+						$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $this->t['paymentmethod']['id']);
+						if (!empty($this->t['paymentmethods']) && count($this->t['paymentmethods']) == 1) {
+							$this->a->paymentdisplayeditbutton = 0;
+						}
+					}
+
 				} else {
+
 					// Payment cost is not stored in cart, display possible payment methods
 					// We ask for total of cart because of amount rule
 					$this->a->paymentadded 		= 0;
@@ -252,6 +336,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$scrollTo 					= 'phcheckoutpaymentedit';
 					$payment					= new PhocacartPayment();
 					$shippingId 				= $this->cart->getShippingId();// Shipping stored in cart or not?
+
 					$total						= $this->cart->getTotal();
 
 					$country = 0;
@@ -265,6 +350,50 @@ class PhocaCartViewCheckout extends JViewLegacy
 					}
 
 					$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $this->t['paymentmethod']['id']);
+
+
+					// If there is only one valid payment method and it is set in parameter we can directly store this method so user does not need to add it
+					// When setting the payment method then the cart needs to be "refreshed", payment costs needs to be added and info about shpping id
+					// must be updated because of payment rules (one of payment rule is payment)
+					if (!empty($this->t['paymentmethods']) && count($this->t['paymentmethods']) == 1 && $this->t['automatic_payment_method_setting'] == 1) {
+						if (isset($this->t['paymentmethods'][0]->id) && (int)$this->t['paymentmethods'][0]->id > 0) {
+
+							$paymentStored = 0;
+							if($this->a->login == 1 && isset($this->u->id) && $this->u->id > 0) {
+								if ($payment->storePaymentRegistered($this->t['paymentmethods'][0]->id, $this->u->id)) {
+									$paymentStored = 1;
+								}
+							} else if ($this->a->login == 2) {
+								if (PhocacartUserGuestuser::storePayment((int)$this->t['paymentmethods'][0]->id)) {
+									$paymentStored = 1;
+								}
+							}
+
+							if ($paymentStored == 1) {
+								$paymentId = (int)$this->t['paymentmethods'][0]->id;// will be used for payment - updated now
+								$this->cart->addPaymentCosts($paymentId);// add the costs to cart so it has updated information
+								$this->t['paymentmethod'] = $this->cart->getPaymentCosts();
+
+								$this->a->paymentadded 	= 1;
+								$this->a->paymentview 	= 1;
+								$this->a->paymentedit 	= 0;
+								$this->a->paymentdisplayeditbutton = 0;
+								$scrollTo = 'phcheckoutpaymentview';
+							}
+						}
+					}
+
+					// No payment method found even all rules were applied and payment methods were searched
+					// THIS CASE CAN BE VENDOR ERROR (wrong setting of shipping methods) OR PURPOSE - be aware when using $skip_shipping_method = 3
+					// Skip adding/selecting payment method and allow customer proceeding the order? (depends on parameter: $this->t['skip_shipping_method'])
+					// Must be implemented here because now we know information about total, shipping and address we need for deciding about payment method
+					// Must cooperate with administrator/components/com_phocacart/libraries/phocacart/order/order.php cca 402
+					// In this case $this->t['paymentmethod']['id'] is even null, so we don't need to ask $payment->getPossiblePaymentMethods for outcomes with not selected payment method
+
+					if (empty($this->t['paymentmethods']) && $this->t['skip_payment_method'] == 3) {
+						$this->a->paymentnotused = true;
+					};
+
 
 					$this->t['couponcodevalue'] = '';
 					if ($this->cart->getCouponCode() != '') {

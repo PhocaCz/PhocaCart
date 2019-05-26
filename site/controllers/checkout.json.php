@@ -218,6 +218,27 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['checkoutview']	= $this->input->get( 'checkoutview', 0, 'int'  );
 
 
+		$rights								= new PhocacartAccessRights();
+		$this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+
+		if (!$this->t['can_display_addtocart']) {
+
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+
+
+			$d 				= array();
+			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
+			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+			$oE 			= $layoutPE->render($d);
+			$response = array(
+				'status' => '0',
+				'popup'	=> $oE,
+				'error' => $d['info_msg']);
+			echo json_encode($response);
+			return;
+		}
+
+
 
 		//$catid	= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 
@@ -236,7 +257,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		if (!$added) {
 
 			$d 				= array();
-			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
+			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
 
 			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
 			$oE 			= $layoutPE->render($d);
@@ -365,6 +386,27 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['attribute']	= $this->input->get( 'attribute', array(), 'array'  );
 		$item['checkoutview']	= $this->input->get( 'checkoutview', 0, 'int'  );
 		$item['action']		= $this->input->get( 'action', '', 'string'  );
+
+
+		$rights								= new PhocacartAccessRights();
+		$this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+
+		if (!$this->t['can_display_addtocart']) {
+
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+
+
+			$d 				= array();
+			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
+			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+			$oE 			= $layoutPE->render($d);
+			$response = array(
+				'status' => '0',
+				'popup'	=> $oE,
+				'error' => $d['info_msg']);
+			echo json_encode($response);
+			return;
+		}
 
 		if ((int)$item['idkey'] != '' && $item['action'] != '') {
 

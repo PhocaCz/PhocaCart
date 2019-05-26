@@ -28,6 +28,15 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 		$path		= PhocacartPath::getPath($manager);
 		$absPath	= $path['orig_abs_ds'] . $fileName;
 
+
+		if (trim($fileName) == '') {
+			$response = array(
+				'status' => '2');
+			echo json_encode($response);
+			return;
+
+		}
+
 		if (!JFile::exists($absPath)) {
 			$response = array(
 				'status' => '0',
@@ -63,6 +72,7 @@ class PhocaCartCpViewPhocaCartThumbA extends JViewLegacy
 			case 'png':
 			case 'gif':
 			case 'jpeg':
+			case 'webp':
 				$thumbnail = PhocacartFileThumbnail::getOrCreateThumbnail($fileName, '', 1, 1, 1, 0, $manager);
 
 				//DO THUMBNAILS and return if true or false

@@ -35,14 +35,16 @@ class PhocacartOrder
 
 
 
-		$msgSuffix			= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-		$pC 				= PhocacartUtils::getComponentParameters();
-		$min_order_amount	= $pC->get( 'min_order_amount', 0 );
-		$stock_checkout		= $pC->get( 'stock_checkout', 0 );
-		$stock_checking		= $pC->get( 'stock_checking', 0 );
-		$unit_weight		= $pC->get( 'unit_weight', '' );
-		$unit_volume		= $pC->get( 'unit_volume', '' );
-        $order_language		= $pC->get( 'order_language', 0 );
+		$msgSuffix			    = '<span id="ph-msg-ns" class="ph-hidden"></span>';
+		$pC 				    = PhocacartUtils::getComponentParameters();
+		$min_order_amount	    = $pC->get( 'min_order_amount', 0 );
+		$stock_checkout		    = $pC->get( 'stock_checkout', 0 );
+		$stock_checking		    = $pC->get( 'stock_checking', 0 );
+		$unit_weight		    = $pC->get( 'unit_weight', '' );
+		$unit_volume		    = $pC->get( 'unit_volume', '' );
+        $order_language		    = $pC->get( 'order_language', 0 );
+        $skip_shipping_method	= $pC->get( 'skip_shipping_method', 0 );
+        $skip_payment_method	= $pC->get( 'skip_payment_method', 0 );
 
 
         // LANGUAGES
@@ -213,6 +215,16 @@ class PhocacartOrder
 		}
 
 
+		// POSSIBLE FEATURE:
+        /*$rights								= new PhocacartAccessRights();
+        $this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+
+        if (!$this->t['can_display_addtocart']) {
+            // Can user make an oder whe he/she is not able to add items to cart
+            return false;
+        }*/
+
+
 
 
 		$db 		= JFactory::getDBO();
@@ -333,6 +345,18 @@ class PhocacartOrder
 		$shippingNotUsed 				= PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 
 
+        $shippingNotFoundAllowProceed  = false;
+        if (empty($shippingMethods) && $skip_shipping_method == 3) {
+            // In case no shipping method will be found for customer even all rules were applied - allow proceeding order without selecting shipping method
+            // THIS CASE CAN BE VENDOR ERROR (wrong setting of shipping methods) OR PURPOSE - be aware when using $skip_shipping_method = 3
+            // Cooperates with components/com_phocacart/views/checkout/view.html.php 230
+
+            // Find all possible shipping methods (without shipping method selected) to see if there is really no rule to display any method
+            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, 0 );
+            if (empty($shippingtMethodsAllPossible)) {
+                $shippingNotFoundAllowProceed = true;
+            }
+        }
 
 
 		if (!empty($shippingMethods)) {
@@ -345,7 +369,10 @@ class PhocacartOrder
 			//         b) or e.g. all items in cart are downloadable products and in Phoca Cart options is set that in such case shipping need not to be selected
 			$shippingId = 0;// Needed for payment method check
 
-		} else {
+		} else if ($shippingNotFoundAllowProceed){
+            // IS OK
+            $shippingId = 0;
+        } else {
             if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_SHIPPING_METHOD');
 			$app->enqueueMessage($msg, 'error');
@@ -359,11 +386,11 @@ class PhocacartOrder
 			//    - check if this method even exists
 			//	  - and check if the selected method meets every criteria and rules to be selected
 			//$paymentMethods	= $paymentClass->checkAndGetPaymentMethod($payment['id']); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-			$paymentMethods	= $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0, $this->type );
+			$paymentMethods	= $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0 );
 
 
 		} else {
-			// 2) No shipping method selected
+			// 2) No payment method selected
 			$paymentMethods = false;
 		}
 
@@ -372,8 +399,18 @@ class PhocacartOrder
 		$pOCh['order_amount_zero']		= $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ? 1 : 0;
 		$paymentNotUsed 				= PhocacartPayment::isPaymentNotUsed($pOCh);// REVERSE
 
+        $paymentNotFoundAllowProceed  = false;
+        if (empty($paymentMethods) && $skip_payment_method == 3) {
+            // In case no payment method will be found for customer even all rules were applied - allow proceed order without payment
+            // THIS CASE CAN BE VENDOR ERROR (wrong setting of shipping methods) OR PURPOSE - be aware when using $skip_shipping_method = 3
+            // Cooperates with components/com_phocacart/views/checkout/view.html.php 270
 
-
+            // Find all possible payments methods (without payment method selected) to see if there is really no rule to display any method
+            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, 0 );
+            if (empty($paymentMethodsAllPossible)) {
+                $paymentNotFoundAllowProceed = true;
+            }
+        }
 
 		if (!empty($paymentMethods)) {
 			// IS OK
@@ -382,7 +419,10 @@ class PhocacartOrder
 		} else if (empty($paymentMethods) && $paymentNotUsed) {
 			// IS OK
 			$paymentId = 0;
-		} else {
+		} else if ($paymentNotFoundAllowProceed){
+            // IS OK
+            $paymentId = 0;
+        } else {
             if ($order_language == 0) {$pLang->setLanguageBack($defaultLang);}
 			$msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_PAYMENT_METHOD');
 			$app->enqueueMessage($msg, 'error');

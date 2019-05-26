@@ -18,6 +18,10 @@ final class PhocacartRenderAdminjs
 	// AJAX
 	// =======
 	public static function renderAjaxDoRequestAfterChange($url, $msg, $manager = 'product', $value = 'imageCreateThumbs') {
+
+		$path = PhocacartPath::getPath($manager);
+		$pathImage = Juri::root() . $path['orig_rel_ds'];
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Event Create Thumbnails */ ';
@@ -27,6 +31,15 @@ final class PhocacartRenderAdminjs
 		$s[] = '   		var data = {};';
 		$s[] = '   		data[\'filename\'] = encodeURIComponent(jQuery(this).val());';
 		$s[] = '   		data[\'manager\'] = \''.$manager.'\';';
+
+		// Change Preview Image
+        $s[] = '        var image = "";';
+        $s[] = '        if (jQuery(this).val().trim() != "") {';
+		$s[] = '		    var image 	= \''.strip_tags(addslashes($pathImage)).'\' + jQuery(this).val();';
+        $s[] = '		}';
+		$s[] = '		var id 		= jQuery(this).attr(\'id\');';
+		$s[] = '		phChangePreviewImage(id, image);';
+
 
 		$s[] = '       	phDoRequest(\''.$url.'\', data, \''.strip_tags(addslashes($msg)).'\');';
 		$s[] = '   })';
@@ -41,6 +54,10 @@ final class PhocacartRenderAdminjs
 	 */
 
 	public static function renderAjaxDoRequestAfterPaste($url, $msg, $manager = 'productimage') {
+
+		$path = PhocacartPath::getPath($manager);
+		$pathImage = Juri::root() . $path['orig_rel_ds'];
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Function phAddValue */ ';
@@ -53,6 +70,14 @@ final class PhocacartRenderAdminjs
 		$s[] = '   		var data = {};';
 		$s[] = '   		data[\'filename\'] = encodeURIComponent(title);';
 		$s[] = '   		data[\'manager\'] = \''.$manager.'\';';
+
+		// Change Preview Image
+        $s[] = '        var image = "";';
+        $s[] = '        if (title.trim() != "") {';
+		$s[] = '		    image 	= \''.strip_tags(addslashes($pathImage)).'\' + title;';
+        $s[] = '		}';
+		$s[] = '		phChangePreviewImage(id, image);';
+
 
 		$s[] = '      	phDoRequest(\''.$url.'\', data, \''.strip_tags(addslashes($msg)).'\' );';
 		$s[] = '   }';

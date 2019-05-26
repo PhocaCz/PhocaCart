@@ -74,16 +74,18 @@ class JFormFieldPhocacartCategory extends JFormField
 
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
-		. ' FROM #__phocacart_categories AS a'
-		. ' WHERE a.published = 1';
+		. ' FROM #__phocacart_categories AS a';
+
+        // don't lose information about category when it will be unpublished - you should still be able to edit product with such category in administration
+		//. ' WHERE a.published = 1';
 		switch($categoryType) {
 
 			case 1:
-				$query .= ' AND a.type IN (0,1)';
+				$query .= ' WHERE a.type IN (0,1)';
 			break;
 
 			case 2:
-				$query .= ' AND a.type IN (0,2)';
+				$query .= ' WHERE a.type IN (0,2)';
 			break;
 
 

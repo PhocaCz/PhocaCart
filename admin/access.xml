@@ -2,6 +2,7 @@
 <access component="com_phocacart">
 	<section name="component">
 		<action name="core.admin" title="JAction_Admin" description="JAction_Admin_Component_Desc" />
+		<action name="core.admin" title="JAction_Admin" description="JAction_Admin_Component_Desc" />
 		<action name="core.manage" title="JAction_Manage" description="JAction_Manage_Component_Desc" />
 		<action name="core.create" title="JAction_Create" description="JAction_Create_Component_Desc" />
 		<action name="core.delete" title="JAction_Delete" description="JAction_Delete_Component_Desc" />

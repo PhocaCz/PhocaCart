@@ -16,30 +16,34 @@ class PhocacartImage
 
 		$thumbName	= new StdClass();
 		if ($filename == '') {
-			$thumbName->abs = false;
-			$thumbName->rel	= false;
+			$thumbName->abs 		= false;
+			$thumbName->rel			= false;
+			$thumbName->rel_webp	= false;
 			return $thumbName;
 		}
 
 		$title 		= self::getTitleFromFile($filename , 1);
 		switch ($size) {
 			case 'large':
-			$fileNameThumb 	= 'phoca_thumb_l_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
-			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			$fileNameThumb 			= 'phoca_thumb_l_'. $title;
+			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			$thumbName->rel_webp	= PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
 			break;
 
 			case 'medium':
-			$fileNameThumb 	= 'phoca_thumb_m_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
-			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			$fileNameThumb 			= 'phoca_thumb_m_'. $title;
+			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			$thumbName->rel_webp	= PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
 			break;
 
 			default:
 			case 'small':
-			$fileNameThumb 	= 'phoca_thumb_s_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
-			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			$fileNameThumb 			= 'phoca_thumb_s_'. $title;
+			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
+			$thumbName->rel_webp	= PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
 			break;
 		}
 		return $thumbName;
@@ -321,7 +325,6 @@ class PhocacartImage
 			$imageA['image']->original = $image;
 		}
 
-
 		return $imageA;
 
 	}
@@ -344,7 +347,7 @@ class PhocacartImage
 
 			case 1:
 			default:
-				return $title;
+				return strip_tags(htmlspecialchars($title));
 
 			break;
 		}

@@ -519,14 +519,14 @@ class PhocacartFileUpload
 		$paramsL = array();
 		$group = PhocacartUtilsSettings::getManagerGroup($manager);
 		if ($group['f'] == 4 || $group['f'] == 5) {
-			$paramsL['upload_extensions'] 	= 'gif,jpg,png,jpeg';
-			$paramsL['image_extensions'] 	= 'gif,jpg,png,jpeg';
-			$paramsL['upload_mime']			= 'image/jpeg,image/gif,image/png';
+			$paramsL['upload_extensions'] 	= 'gif,jpg,png,jpeg,webp';
+			$paramsL['image_extensions'] 	= 'gif,jpg,png,jpeg,webp';
+			$paramsL['upload_mime']			= 'image/jpeg,image/gif,image/png,image/webp';
 			$paramsL['upload_mime_illegal']	='application/x-shockwave-flash,application/msword,application/excel,application/pdf,application/powerpoint,text/plain,application/x-zip,text/html';
 			$paramsL['upload_ext_illegal']	= $disallowedMimeType['ext'];
 		} else {
 			$paramsL['upload_extensions'] 	= $allowedMimeType['ext'];
-			$paramsL['image_extensions'] 	= 'bmp,gif,jpg,png,jpeg';
+			$paramsL['image_extensions'] 	= 'bmp,gif,jpg,png,jpeg,webp';
 			$paramsL['upload_mime']			= $allowedMimeType['mime'];
 			$paramsL['upload_mime_illegal']	= $disallowedMimeType['mime'];
 			$paramsL['upload_ext_illegal']	= $disallowedMimeType['ext'];

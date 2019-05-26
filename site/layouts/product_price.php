@@ -7,19 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$d 			= $displayData;
-$classPS	= 'ph-standard';// class price suffix
-if (isset($d['discount']) && $d['discount']) {
-	$classPS	= 'ph-line-through';
-}
-
-// Set here in template because the price for product can be influenced by attributes
 $paramsC 					= PhocacartUtils::getComponentParameters();
 $zero_price_text			= $paramsC->get( 'zero_price_text', '' );
 $zero_price_label			= $paramsC->get( 'zero_price_label', '' );
 if ($zero_price_label == '0') {
 
 }
+
+$d 			= $displayData;
+$classPS	= 'ph-standard';// class price suffix
+if (isset($d['discount']) && $d['discount']) {
+	$classPS	= 'ph-line-through';
+}
+
 ?>
 <div id="phItemPriceBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">
@@ -45,7 +45,7 @@ if ($zero_price_label == '0') {
 		} else if ($zero_price_label != '') {
 			?><div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo JText::_($zero_price_label) ?></div><?php
 		} else {
-			?><div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php $d['priceitems']['bruttotxt'] ?></div><?php
+			?><div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['bruttotxt'] ?></div><?php
 		}
 
 		// Price - Custom Text | Standard Price (ONLY IN CASE THE PRICE IS ZERO)
@@ -84,7 +84,7 @@ if ($zero_price_label == '0') {
 
 
 	<?php
-   
+
 	// PRODUCT DISCOUNT
 	if (isset ($d['discount']) && $d['discount']) { ?>
 		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0

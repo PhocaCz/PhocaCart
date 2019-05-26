@@ -59,7 +59,7 @@ $published = $this->state->get('filter.state');
 
 				<div class="control-group">
 					<div class="controls">
-						<label id="batch-choose-action-lbl" for="batch-choose-action"><?php echo JText::_('COM_PHOCACART_SKIP_CREATING_UNIQUE_NAME') ?></label>
+                        <label id="batch-choose-action-lbl" for="batch-choose-action"><?php echo JText::_('COM_PHOCACART_SKIP_CREATING_UNIQUE_NAME') ?></label>
 
 						<select name="batch[skip_creating_unique_name]" class="inputbox" id="batch-category-batch[skip_creating_unique_name]">
 							<option value="1"><?php echo JText::_('COM_PHOCACART_YES'); ?></option>
@@ -67,6 +67,30 @@ $published = $this->state->get('filter.state');
 						</select>
 					</div>
 				</div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label id="batch-choose-action-lbl" for="batch-choose-action"><?php echo JText::_('COM_PHOCACART_COPY_DOWNLOAD_FILES') ?></label>
+
+                        <select name="batch[copy_download_files]" class="inputbox" id="batch[copy_download_files]">
+                            <option value="1"><?php echo JText::_('COM_PHOCACART_YES'); ?></option>
+                            <option value="0" selected><?php echo JText::_('COM_PHOCACART_NO'); ?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label id="batch-choose-action-lbl" for="batch-choose-action"><?php echo JText::_('COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES') ?></label>
+
+                        <select name="batch[copy_attributes_download_files]" class="inputbox" id="batch[copy_attributes_download_files]">
+                            <option value="1"><?php echo JText::_('COM_PHOCACART_YES'); ?></option>
+                            <option value="0" selected><?php echo JText::_('COM_PHOCACART_NO'); ?></option>
+                        </select>
+                    </div>
+                </div>
+
+
 			</div>
 		</div>
 

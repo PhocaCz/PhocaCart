@@ -9,24 +9,24 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 class PhocacartCartDb
 {
 	private static $cart = array();
-	
+
 	private function __construct(){}
-	
+
 	public static function clearCartDbVariable($userId, $vendorId = 0, $ticketId = 0, $unitId = 0, $sectionId = 0) {
 		unset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId]);
 	}
-	
+
 	public static function getCartDb($userId, $vendorId = 0, $ticketId = 0, $unitId = 0, $sectionId = 0) {
-		
+
 		if(!isset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId])){
-			
+
 			$db 	= JFactory::getDBO();
 			$query = ' SELECT c.cart, c.shipping, c.payment, c.coupon, c.reward, c.loyalty_card_number,'
-					.' s.title as shippingtitle, p.title as paymenttitle, p.method as paymentmethod,'
+					.' s.title as shippingtitle, s.method as shippingmethod, p.title as paymenttitle, p.method as paymentmethod,'
 					.' co.title as coupontitle, co.code as couponcode'
 					.' FROM #__phocacart_cart_multiple AS c'
 					.' LEFT JOIN #__phocacart_shipping_methods AS s ON c.shipping = s.id'
@@ -39,17 +39,17 @@ class PhocacartCartDb
 					.' AND c.section_id = '.(int)$sectionId
 					.' ORDER BY c.cart';
 			$db->setQuery($query);
-			
+
 			$cartDb = $db->loadAssoc();
-		
-			
+
+
 			if (!empty($cartDb) && isset($cartDb['cart']) && $cartDb['cart'] != '') {
 				$cartDb['cart'] = unserialize($cartDb['cart']);
-				
-				
+
+
 				self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId] = $cartDb;
 			} else {
-				
+
 				$pos_payment_force = 0;
 				$pos_shipping_force = 0;
 				if (PhocacartPos::isPos()) {
@@ -58,12 +58,14 @@ class PhocacartCartDb
 					$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
 					$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
 				}
-				
+
 				$cartDb['cart'] 				= array();
 				$cartDb['shipping'] 			= $pos_shipping_force;
 				$cartDb['payment'] 				= $pos_payment_force;
 				$cartDb['coupon'] 				= 0;
 				$cartDb['discount'] 			= array();
+                $cartDb['shippingtitle'] 		= '';
+                $cartDb['shippingmethod']		= '';
 				$cartDb['paymenttitle'] 		= '';
 				$cartDb['paymentmethod']		= '';
 				$cartDb['coupontitle'] 			= '';
@@ -72,11 +74,11 @@ class PhocacartCartDb
 				$cartDb['loyalty_card_number']	= '';
 				self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId] = $cartDb;
 			}
-			
+
 		}
 		return self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId];
 	}
-	
+
 	public static function emptyCartDb($userId, $vendorId = 0, $ticketId = 0, $unitId = 0, $sectionId = 0) {
 		self::$cart =  false;
 		$db 	= JFactory::getDBO();
@@ -90,7 +92,7 @@ class PhocacartCartDb
 		$db->execute();
 		return true;
 	}
-	
+
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;

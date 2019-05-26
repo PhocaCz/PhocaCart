@@ -334,10 +334,13 @@ if ($pR) {
 	$oPr[] = $pP->printFeed(1);
 }
 if ($pR) {
+
 	$storeInfoPos = array();
 	if ($store_info_pos != '') {
-		$storeInfoPos = explode("\n", $store_info_pos);
+		$store_info_pos 	= PhocacartText::completeText($store_info_pos, $d['preparereplace'], 1);
+		$storeInfoPos = explode("\n", strip_tags($store_info_pos));
 	}
+
 	$oPr[] = $pP->printLine($storeInfoPos, 'pCenter');
 }
 
@@ -1057,10 +1060,12 @@ if ($pR) {
 
 	$storeInfoFooterPos = array();
 	if ($store_info_footer_pos != '') {
-		$storeInfoFooterPos = explode("\n", $store_info_footer_pos);
+		$store_info_footer_pos 	= PhocacartText::completeText($store_info_footer_pos, $d['preparereplace'], 1);
+		$storeInfoFooterPos = explode("\n", strip_tags($store_info_footer_pos));
 	}
 
 	$oPr[] = $pP->printLine($storeInfoFooterPos, 'pCenter');
+
 }
 
 JPluginHelper::importPlugin( 'system' );

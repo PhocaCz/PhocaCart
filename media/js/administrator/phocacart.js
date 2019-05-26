@@ -10,7 +10,7 @@
 
 
 function phGetMsg(msg, defaultMsg) {
-	
+
 	if (defaultMsg == 1) {
 		return '<div id="ph-ajaxtop-message">'
 		+ '<div id="ph-ajaxtop-close">x</div>'
@@ -20,11 +20,11 @@ function phGetMsg(msg, defaultMsg) {
 	} else {
 		return '<div id="ph-ajaxtop-close">x</div>'  + msg + '<div class="ph-progressbar-bottom"></div>';
 	}
-	
+
 }
 
 function phCloseMsgBoxSuccess() {
-	
+
 	setTimeout(function(){
 		jQuery("#ph-ajaxtop").hide();
 		jQuery(".ph-result-txt").remove();
@@ -35,7 +35,7 @@ function phCloseMsgBoxSuccess() {
 }
 
 function phCloseMsgBoxError() {
-	
+
 	setTimeout(function(){
 		jQuery("#ph-ajaxtop").hide();
 		jQuery(".ph-result-txt").remove();
@@ -55,7 +55,7 @@ jQuery(document).ready(function() {
 
 /* Function phDoRequest (create thumbnails) */
 function phDoRequest(url, data, msg) {
-	
+
 	jQuery("#ph-ajaxtop").html(phGetMsg(msg, 1));
 	jQuery("#ph-ajaxtop").show();
 
@@ -65,11 +65,18 @@ function phDoRequest(url, data, msg) {
 	   	data:data,
 	   	dataType:'JSON',
 	   	success:function(response){
-		  	if ( response.status == 1 ){
+
+			if ( response.status == 2) {
+				// No message
+				jQuery("#ph-ajaxtop").hide();
+				jQuery(".ph-result-txt").remove();
+				phRequestActive = null;
+			} else if ( response.status == 1 ){
 			 	jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));
 			 	phRequestActive = null;
 			 	phCloseMsgBoxSuccess();
 		  	} else {
+
 				jQuery("#ph-ajaxtop-message").html(phGetMsg(response.error, 0));
 			 	phRequestActive = null;
 				phCloseMsgBoxError();
@@ -128,7 +135,7 @@ function phAddRowOptionParent(newRow, newHeader, attrid, url) {
 
 function phRemoveOptionFolder(data, url) {
 
-	
+
 
 	phRequestActiveToken = jQuery.ajax({
 		url: url,
@@ -184,7 +191,7 @@ function phAddRowAttributeParent(newRow) {
 }
 
 function phRemoveRowAttributeParent(id, url) {
-	
+
 	/* Remove all attribute option folders */
 	var attrOptions = jQuery("#phAttributeBox" + id).find("[data-attribute-id=\'" + id + "\']");
 	var foldersToDelete = [];
@@ -198,7 +205,7 @@ function phRemoveRowAttributeParent(id, url) {
 		data['folder'] 	= foldersToDelete;
 		phRemoveOptionFolder(data, url);
 	}
-	
+
 	jQuery('#phAttributeBox' + id).remove();
 	var phCountRowAttribute = jQuery('.ph-row-attribute').length;
 	if (phCountRowAttribute == 0) {
@@ -213,6 +220,16 @@ function phAddRowSpecificationParent(newRow, newHeader) {
 		jQuery('#phrowboxspecification').append(newHeader);
 	}
 	jQuery('#phrowboxspecification').append(newRow);
+
+	var phMiniColorsId =  '#jform_speccolor' + phRowCountSpecification;// Reload minicolors
+
+	jQuery(phMiniColorsId).minicolors({
+		control: 'hex',
+		format: 'hex',
+		position: 'default',
+		theme: 'bootstrap'
+	});
+
 	phRowCountSpecification++;
 	jQuery('select').chosen({disable_search_threshold : 10,allow_single_deselect : true});
 }
@@ -247,11 +264,11 @@ function phAddRowDiscountParent(newRow, newHeader, isCompatible) {
 	if(phCountRowDiscount == 0) {
 		jQuery('#phrowboxdiscount').append(newHeader);
 	}
-	
+
 	jQuery('#phrowboxdiscount').append(newRow);
 	phRowCountDiscount++;
 	jQuery('select').chosen({disable_search_threshold : 10,allow_single_deselect : true});
-	
+
 	if(isCompatible) {
 		var elements = document.querySelectorAll(".field-calendar");
 		for (i = 0; i < elements.length; i++) {
@@ -262,7 +279,7 @@ function phAddRowDiscountParent(newRow, newHeader, isCompatible) {
 	CALENDAR IS RELOADED DIRECTLY BELOW THE NEW ROW
 	administrator\components\com_phocacart\libraries\phocacart\render\adminview.php*/
 }
-		 
+
 function phRemoveRowDiscount(id) {
 	jQuery('#phDiscountBox' + id).remove();
 	var phCountRowDiscount = jQuery('.ph-row-discount').length;
@@ -286,7 +303,7 @@ function phAddRowPricehistoryParent(newRow, isCompatible) {
 	// CALENDAR IS RELOADED DIRECTLY BELOW THE NEW ROW
 	administrator\components\com_phocacart\libraries\phocacart\render\adminview.php*/
 }
-		 
+
 function phRemoveRowPricehistory(id) {
 	jQuery('#phPricehistoryBox' + id).remove();
 	var phRowCountPricehistory = jQuery('.ph-row-pricehistory').length;
@@ -373,4 +390,17 @@ function phDoRequestWizardParent(url, s) {
 			}
 		}
 	});
+}
+
+/* Image preview - product/category - change image for preview in admin in tooltip */
+function phChangePreviewImage(id, image) {
+	if (image != '') {
+		var phOutput = '<img src="' + image + '" alt="" />';
+	} else {
+		var phOutput = '<span class="glyphicon glyphicon-ban-circle ban-circle"></span>';
+	}
+
+	var idItem = '#phTooltipImagePreview_' + id;
+	jQuery(idItem).html(phOutput);
+	return true;
 }

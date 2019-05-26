@@ -68,7 +68,10 @@ class PhocacartText {
 		$body = isset($replace['totaltopaynoformat'])		? str_replace('{totaltopaynoformat}', $replace['totaltopaynoformat'], $body)		: $body;
 		$body = isset($replace['currencycode'])				? str_replace('{currencycode}', $replace['currencycode'], $body)		            : $body;
 
-        $body = isset($replace['openingtimesinfo'])			? str_replace('{openingtimesinfo}', $replace['openingtimesinfo'], $body)		            : $body;
+        $body = isset($replace['openingtimesinfo'])			? str_replace('{openingtimesinfo}', $replace['openingtimesinfo'], $body)		    : $body;
+
+        $body = isset($replace['vendorname'])			    ? str_replace('{vendorname}', $replace['vendorname'], $body)		                : $body;
+        $body = isset($replace['vendorusername'])			? str_replace('{vendorusername}', $replace['vendorusername'], $body)		        : $body;
 
 
 		return $body;
@@ -122,6 +125,7 @@ class PhocacartText {
 		$price			= new PhocacartPrice();
 		$price->setCurrency($common->currency_code, $orderId);
 		$totalBrutto	= $order->getItemTotal($orderId, 0, 'brutto');
+
 
 		$r = array();
 		// Standard User get standard download page and order page
@@ -219,6 +223,13 @@ class PhocacartText {
 
         $r['openingtimesinfo']      = PhocacartTime::getOpeningTimesMessage();
 
+        $r['vendorname']            = '';
+        $r['venderusername']        = '';
+        if ((int)$common->vendor_id > 0) {
+            $vendor                 = JFactory::getUser((int)$common->vendor_id);
+            $r['vendorname']        = $vendor->name;
+            $r['venderusername']    = $vendor->username;
+        }
 		return $r;
 
 	}

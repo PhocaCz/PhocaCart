@@ -112,6 +112,8 @@ class PhocacartCart
 			$this->coupon['title']		= $cartDb['coupontitle'];
 			$this->coupon['code']		= $cartDb['couponcode'];
 			$this->shipping['id']		= $cartDb['shipping'];
+			$this->shipping['title']	= $cartDb['shippingtitle'];
+			$this->shipping['method']	= $cartDb['shippingmethod'];
 			$this->payment['id']		= $cartDb['payment'];
 			$this->payment['title']		= $cartDb['paymenttitle'];
 			$this->payment['method']	= $cartDb['paymentmethod'];
@@ -136,6 +138,8 @@ class PhocacartCart
 			$this->coupon['title']		= $cartDb['coupontitle'];
 			$this->coupon['code']		= $cartDb['couponcode'];
 			$this->shipping['id']		= $cartDb['shipping'];
+			$this->shipping['title']	= $cartDb['shippingtitle'];
+			$this->shipping['method']	= $cartDb['shippingmethod'];
 			$this->payment['id']		= $cartDb['payment'];
 			$this->payment['title']		= $cartDb['paymenttitle'];
 			$this->payment['method']	= $cartDb['paymentmethod'];
@@ -325,6 +329,9 @@ class PhocacartCart
 			PhocacartPayment::removePayment();
 			$session->set('cart', array(), 'phocaCart');
 		} else {
+
+			PhocacartShipping::removeShipping(1);// session for shipping even removed
+			PhocacartPayment::removePayment(1);// session for payment even removed
 			$session->set('cart', $this->items, 'phocaCart');
 		}
 	}
@@ -720,6 +727,7 @@ class PhocacartCart
 		return $payment;
 	}
 
+
 	public function getShippingMethod() {
 
 
@@ -777,7 +785,6 @@ class PhocacartCart
 	}
 
 	public function getShippingCosts() {
-
 		return isset($this->shipping['costs']) ? $this->shipping['costs'] : false;
 	}
 
@@ -899,6 +906,11 @@ class PhocacartCart
 				$this->shipping['costs']['title_lang_suffix2'] 		= '';
 				$this->shipping['costs']['description'] = $sI->description;
 				$this->shipping['costs']['image'] 		= $sI->image;
+
+				// Update even the shipping info
+				$this->shipping['id'] = $sI->id;
+				$this->shipping['title'] = $sI->title;
+				$this->shipping['method'] = $sI->method;
 			}
 
 			$calc->calculateShipping($priceI, $this->total[0]);
@@ -929,6 +941,8 @@ class PhocacartCart
 
 		if (!$paymentValid) {
 			PhocacartPayment::removePayment();// In case user has in cart payment method which does not exists
+
+			// Remove Shipping and Payment when updated
 			unset($pI);
 		}
 
@@ -957,6 +971,11 @@ class PhocacartCart
 				$this->payment['costs']['title_lang_suffix2'] 		= '';
 				$this->payment['costs']['description'] 	= $pI->description;
 				$this->payment['costs']['image'] 		= $pI->image;
+
+				// Update even the shipping info
+				$this->payment['id'] = $pI->id;
+				$this->payment['title'] = $pI->title;
+				$this->payment['method'] = $pI->method;
 			}
 			$calc->calculatePayment($priceI, $this->total[0]);
 			//$calc->round($this->total[0], 0);

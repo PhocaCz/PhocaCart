@@ -11,7 +11,7 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
-jimport( 'joomla.filesystem.folder' );  
+jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
 class PhocaCartViewItems extends JViewLegacy
@@ -21,9 +21,9 @@ class PhocaCartViewItems extends JViewLegacy
 	protected $items;
 	protected $t;
 	protected $p;
-	
-	function display($tpl = null) {		
-		
+
+	function display($tpl = null) {
+
 		$app						= JFactory::getApplication();
 		$this->p 					= $app->getParams();
 		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
@@ -32,7 +32,9 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );// optional
 		$this->t['limitstart']		= $app->input->get( 'limitstart', 0, 'int' );
 		$this->t['ajax'] 			= 0;
-		
+
+
+
 		// PARAMS
 		$this->t['display_new']				= $this->p->get( 'display_new', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
@@ -57,7 +59,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
-		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
+
 		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
 		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
@@ -67,30 +69,42 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
-		
-		// Catalogue function
-		if ($this->t['hide_addtocart'] == 1) {
+
+
+		// Rights or catalogue options --------------------------------
+		$rights								= new PhocacartAccessRights();
+		$this->t['can_display_price']		= $rights->canDisplayPrice();
+		$this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+		$this->t['can_display_attributes']	= $rights->canDisplayAttributes();
+
+		if (!$this->t['can_display_addtocart']) {
 			$this->t['category_addtocart']		= 0;
 			$this->t['display_addtocart_icon'] 	= 0;
 			//$this->t['hide_attributes_category']= 1; Should be displayed or not?
 		}
-		if ($this->t['hide_attributes'] == 1) {
+		if (!$this->t['can_display_attributes']) {
 			$this->t['hide_attributes_category'] = 1;
 		}
-		
+		// ------------------------------------------------------------
+
 		$this->t['display_view_product_button']	= $this->p->get( 'display_view_product_button', 1 );
 		$this->t['product_name_link']			= $this->p->get( 'product_name_link', 0 );
 		$this->t['switch_image_category_items']	= $this->p->get( 'switch_image_category_items', 0 );
-		
+
+		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 0 );
+		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
+		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
+		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
+
 		//$this->category					= $model->getCategory($this->t['categoryid']);
 		//$this->subcategories				= $model->getSubcategories($this->t['categoryid']);
 		$this->items						= $model->getItemList();
 		$this->t['pagination']				= $model->getPagination();
 		$this->t['ordering']				= $model->getOrdering();
-		$this->t['layouttype']				= $model->getLayoutType();	
+		$this->t['layouttype']				= $model->getLayoutType();
 		$this->t['layouttypeactive'] 		= PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
 		$this->t['columns_cat'] 			= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat'] : 1;
-		
+
 		$this->t['action']					= $uri->toString();
 		//$this->t['actionbase64']			= base64_encode(htmlspecialchars($this->t['action']));
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
@@ -98,25 +112,26 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['linkcomparison']			= JRoute::_(PhocacartRoute::getComparisonRoute(0));
 		$this->t['linkwishlist']			= JRoute::_(PhocacartRoute::getWishListRoute(0));
 		$this->t['limitstarturl'] 			= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
-		
+
 		$media = new PhocacartRenderMedia();
 		$media->loadBootstrap();
 		$media->loadChosen();
 		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		$this->t['class_thumbnail'] = $media->loadProductHover();
+		$this->t['class_lazyload']  = $media->loadLazyLoad();
 
 		PhocacartRenderJs::renderAjaxAddToCart();
 		PhocacartRenderJs::renderAjaxAddToCompare();
 		PhocacartRenderJs::renderAjaxAddToWishList();
 		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phItemsBox');
-		
+
 		$media->loadTouchSpin('quantity');// only css, js will be loaded in ajax success
-		
+
 		if ($this->t['hide_attributes_category'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 		}
-		
-		
+
+
 		if ($this->t['dynamic_change_price'] == 1) {
 			// items == category -> this is why items has class: ph-category-price-box (to have the same styling)
 			PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'Items', 'ph-category-price-box');// We need to load it here
@@ -127,7 +142,7 @@ class PhocaCartViewItems extends JViewLegacy
 		// CHANGE PRICE FOR ITEM QUICK VIEW
 		if ($this->t['display_quickview'] == 1) {
 			PhocacartRenderJs::renderAjaxQuickViewBox();
-			
+
 			// CHANGE PRICE FOR ITEM QUICK VIEW
 			if ($this->t['dynamic_change_price'] == 1) {
 				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ItemQuick', 'ph-item-price-box');// We need to load it here
@@ -138,14 +153,14 @@ class PhocaCartViewItems extends JViewLegacy
 			$media->loadPhocaAttribute(1);// We need to load it here
 			$media->loadPhocaSwapImage($this->t['dynamic_change_image']);// We need to load it here in ITEM (QUICK VIEW) VIEW
 		}
-			
+
 		$media->loadPhocaMoveImage($this->t['switch_image_category_items']);// Move (switch) images in CATEGORY, ITEMS VIEW
 
 		$this->_prepareDocument();
 		$this->t['pathcat'] = PhocacartPath::getPath('categoryimage');
 		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
-		
-		
+
+
 		// Plugins ------------------------------------------
 		JPluginHelper::importPlugin('pcv');
 		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
@@ -154,10 +169,10 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
 		// Foreach values are rendered in default foreaches
 		// END Plugins --------------------------------------
-		
-		parent::display($tpl);	
+
+		parent::display($tpl);
 	}
-	
+
 
 	protected function _prepareDocument() {
 		$category = false;

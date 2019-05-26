@@ -98,6 +98,7 @@ class PhocacartUtilsSettings
 		$p[] = 'price_from';
 		$p[] = 'price_to';
 		$p[] = 'tag';
+		$p[] = 'label';
 		$p[] = 'manufacturer';
 		$p[] = 'a';
 		$p[] = 's';

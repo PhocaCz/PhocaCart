@@ -352,7 +352,7 @@ class PhocacartShipping
 
 		$db = JFactory::getDBO();
 
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image,'
+		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.method, s.description, s.image,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
@@ -392,6 +392,54 @@ class PhocacartShipping
 
 		return $items;
 	}
+
+	/**
+	 * Store shipping id inside checkout - if enabled in parameters and there is only one valid shipping, it can be directly stored
+	 * But then the cart needs to be reloaded to store the costs of the shipping and make ready for payment (payment gets info about shipping because of rules)
+	 * @param $shippingId
+	 * @param $userId
+	 */
+
+	public function storeShippingRegistered($shippingId, $userId)
+	{
+
+		$row = JTable::getInstance('PhocacartCart', 'Table');
+
+
+		if ((int)$userId > 0) {
+			if (!$row->load(array('user_id' => (int)$userId, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
+				return false;// there must be some info in cart yet
+			}
+		}
+
+		if (!empty($row->cart)) {
+
+			$data['shipping'] = (int)$shippingId;
+			$data['user_id'] = (int)$userId;
+
+			if (!$row->bind($data)) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
+
+			$row->date = gmdate('Y-m-d H:i:s');
+
+			if (!$row->check()) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
+
+
+			if (!$row->store()) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
+			return (int)$shippingId;
+		}
+
+		return false;
+	}
+
 
 	/* Used as payment rule too
 	 * Used in administration (this is why $type = array();
@@ -458,31 +506,40 @@ class PhocacartShipping
 	 * cart to e.g. one item, shipping cannot stay the same, the same happens with countries and region
 	 */
 
-	public static function removeShipping() {
-		$db 			= JFactory::getDBO();
-		$user			= array();
-		$vendor			= array();
-		$ticket			= array();
-		$unit			= array();
-		$section		= array();
-		$dUser			= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
+	public static function removeShipping($type = 0) {
 
-		$pos_shipping_force = 0;
-		if (PhocacartPos::isPos()) {
-			$app					= JFactory::getApplication();
-			$paramsC 				= PhocacartUtils::getComponentParameters();
-			$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
+		if ($type == 0 || $type == 1) {
+
+			$session 		= JFactory::getSession();
+			$session->set('guestshipping', false, 'phocaCart');
 		}
 
-		$query = 'UPDATE #__phocacart_cart_multiple SET shipping = '.(int)$pos_shipping_force
-			.' WHERE user_id = '.(int)$user->id
-			.' AND vendor_id = '.(int)$vendor->id
-			.' AND ticket_id = '.(int)$ticket->id
-			.' AND unit_id = '.(int)$unit->id
-			.' AND section_id = '.(int)$section->id;
-		$db->setQuery($query);
+		if ($type == 0) {
+			$db = JFactory::getDBO();
+			$user = array();
+			$vendor = array();
+			$ticket = array();
+			$unit = array();
+			$section = array();
+			$dUser = PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 
-		$db->execute();
+			$pos_shipping_force = 0;
+			if (PhocacartPos::isPos()) {
+				$app = JFactory::getApplication();
+				$paramsC = PhocacartUtils::getComponentParameters();
+				$pos_shipping_force = $paramsC->get('pos_shipping_force', 0);
+			}
+
+			$query = 'UPDATE #__phocacart_cart_multiple SET shipping = ' . (int)$pos_shipping_force
+				. ' WHERE user_id = ' . (int)$user->id
+				. ' AND vendor_id = ' . (int)$vendor->id
+				. ' AND ticket_id = ' . (int)$ticket->id
+				. ' AND unit_id = ' . (int)$unit->id
+				. ' AND section_id = ' . (int)$section->id;
+			$db->setQuery($query);
+
+			$db->execute();
+		}
 		return true;
 	}
 
@@ -537,7 +594,7 @@ class PhocacartShipping
 				.' AND a.folder = ' . $db->quote('pcs');
 
 		if ($namePlugin != '') {
-			$query .= 'AND a.element = '. $db->quote($name);
+			$query .= 'AND a.element = '. $db->quote($namePlugin);
 		}
 
 		$query .= ' ORDER BY a.ordering';

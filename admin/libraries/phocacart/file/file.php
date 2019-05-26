@@ -245,7 +245,12 @@ class PhocacartFile
 			}
 		}
 
+	}
 
+
+	public static function changeFileExtension($filename, $newExtension) {
+		$info = pathinfo($filename);
+		return $info['dirname'] .'/'. $info['filename'] . '.' . $newExtension;
 	}
 
 }

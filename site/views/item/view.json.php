@@ -51,6 +51,8 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['catid']	= (int)$this->category[0]->id;
 		}
 
+
+
 		// PARAMS
 		$this->t['tax_calculation'] 		= $this->p->get( 'tax_calculation', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
@@ -68,7 +70,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['display_wishlist']		= $this->p->get( 'display_wishlist', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );*/
-		$this->t['hide_price']				= $this->p->get( 'hide_price', 0 );
+
 		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
 		$this->t['hide_attributes_item']	= $this->p->get( 'hide_attributes_item', 0 );
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
@@ -81,15 +83,24 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
-			// Catalogue function
-		if ($this->t['hide_addtocart'] == 1) {
+		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
+
+
+		// Rights or catalogue options --------------------------------
+		$rights								= new PhocacartAccessRights();
+		$this->t['can_display_price']		= $rights->canDisplayPrice();
+		$this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+		$this->t['can_display_attributes']	= $rights->canDisplayAttributes();
+
+		if (!$this->t['can_display_addtocart']) {
 			$this->t['item_addtocart']		= 0;
 			//$this->t['display_addtocart_icon'] 	= 0;
 			//$this->t['hide_attributes_category']= 1; Should be displayed or not?
 		}
-		if ($this->t['hide_attributes'] == 1) {
+		if (!$this->t['can_display_attributes']) {
 			$this->t['hide_attributes_item'] = 1;
 		}
+		// ------------------------------------------------------------
 
 
 		$this->t['image_rel'] = '';

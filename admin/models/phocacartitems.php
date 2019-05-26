@@ -30,6 +30,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 				'ordering', 'pc.ordering',
 				'language', 'a.language',
 				'hits', 'a.hits',
+				'date', 'a.date',
 				'published','a.published',
 				'image', 'a.image',
 				'price', 'a.price',

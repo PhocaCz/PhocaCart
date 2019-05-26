@@ -128,10 +128,51 @@ class PhocacartCategoryMultiple
 			$db->setQuery($query);
 			$storedArray = $db->loadColumn();
 
+			// ----------------------------------------------------------
+			// Check if some category, or parent category is unpublished
+            $storeString = implode(',', array_unique(array_map('intval', $storeArray)));
+
+
+            $q = ' WITH RECURSIVE cte (id, title, parent_id, published) AS ('
+                .'   SELECT id, title, parent_id, published FROM #__phocacart_categories'
+                .'   WHERE id IN ('.$storeString.')'
+                .'   UNION ALL SELECT p.id, p.title, p.parent_id, p.published'
+                .'   FROM #__phocacart_categories AS p'
+                .'   INNER JOIN cte ON p.id = cte.parent_id'
+                .' )'
+                .' SELECT * FROM cte WHERE published = 0;';
+
+            try {
+                $db->setQuery($q);
+                $unpublishedCats = $db->loadAssocList('id');// with assoc list the categories will be unique
+                if (!empty($unpublishedCats)) {
+                    $count = count($unpublishedCats);
+                    if ($count > 1) {
+                        $msg = JText::_('COM_PHOCACART_BE_AWARE_FOLLOWING_SELECTED_CATEGORIES_OR_THEIR_PARENT_CATEGORIES_ARE_NOT_PUBLISHED') . ': ';
+                    } else {
+                        $msg = JText::_('COM_PHOCACART_BE_AWARE_FOLLOWING_SELECTED_CATEGORY_OR_ITS_PARENT_CATEGORY_IS_NOT_PUBLISHED'). ': ';
+                    }
+                    $msg .= '<ul>';
+                    foreach ($unpublishedCats as $k => $v) {
+                        $msg .= '<li><b>' . $v['title'] . '</b></li>';
+                    }
+                    $msg .= '</ul>';
+
+                    JFactory::getApplication()->enqueueMessage($msg, 'warning');
+                }
+            } catch (RuntimeException $e) {
+                // No error, because this is just additional info
+                //JFactory::getApplication()->enqueueMessage('PROBABLY WITH RECURSIVE IS NOT SUPPORTED', 'warning');
+            }
+            // ----------------------------------------------------------
+
 
 			$store 	= array_diff($storeArray,$storedArray);// we only store categories which are not stored yet by this product id
 			$delete = array_diff($storedArray, $storeArray);// category is stored in db but we removed it in administration so it is
 															// not more selected for this product and we need to remove it
+
+
+
 
 			if (!empty($delete)) {
 				foreach($delete as $k => $v) {

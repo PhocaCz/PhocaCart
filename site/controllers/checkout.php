@@ -11,11 +11,13 @@ defined('_JEXEC') or die();
 class PhocaCartControllerCheckout extends JControllerForm
 {
 	/*
-	 * Add product to cart 
+	 * Add product to cart
 	 */
 	public function add() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
+
+
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -23,12 +25,20 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['quantity']	= $this->input->get( 'quantity', 0, 'int'  );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		$item['attribute']	= $this->input->get( 'attribute', array(), 'array'  );
-		
-	
+
+
+        $rights								= new PhocacartAccessRights();
+        $this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+
+        if (!$this->t['can_display_addtocart']) {
+            $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+            $app->redirect(base64_decode($item['return']));
+        }
+
 		$cart	= new PhocacartCart();
-		
+
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
-		
+
 		if ($added) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART'), 'message');
 		} else {
@@ -37,7 +47,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}
-	
+
 	/*
 	 * Change currency
 	 */
@@ -47,42 +57,42 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
-		
+
 		//$currency = new PhocacartCurrency();
 		//$currency->setCurrentCurrency((int)$item['id']);
-		
+
 		PhocacartCurrency::setCurrentCurrency((int)$item['id']);
-		
+
 		$app->redirect(base64_decode($item['return']));
 	}
-	
+
 	/*
 	 * Save billing and shipping address
 	 */
-	 
+
 	 public function saveaddress() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app					= JFactory::getApplication();
 		$item					= array();
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
 		$item['jform']			= $this->input->get( 'jform', array(), 'array'  );
 		$item['phcheckoutbsas']	= $this->input->get( 'phcheckoutbsas', false, 'string'  );
-		$guest					= PhocacartUserGuestuser::getGuestUser();	
+		$guest					= PhocacartUserGuestuser::getGuestUser();
 		$error 					= 0;
 		$msgSuffix				= '<span id="ph-msg-ns" class="ph-hidden"></span>';
 		if(!empty($item['jform'])) {
-			
+
 			// Form Data
 			$billing	= array();
 			$shipping	= array();
-			
+
 			$bas 		= PhocacartUser::convertAddressTwo($item['jform']);
 			$billing 	= $bas[0];
 			$shipping	= $bas[1];
-			
-			
-			
+
+
+
 			// Form Items
 			$fI = new PhocacartFormItems();
 			$items = $fI->getFormItems(1,1,0);
@@ -90,12 +100,12 @@ class PhocaCartControllerCheckout extends JControllerForm
 				foreach($items as $k => $v) {
 					if ($v->required == 1) {
 						if (isset($billing[$v->title]) && $billing[$v->title] == '') {
-							$msg = JText::_('COM_PHOCACART_FILL_OUT_THIS_FIELD') . ': '.JText::_($v->label) 
+							$msg = JText::_('COM_PHOCACART_FILL_OUT_THIS_FIELD') . ': '.JText::_($v->label)
 							. ' <small>('.JText::_('COM_PHOCACART_BILLING_ADDRESS').')</small>';
 							$app->enqueueMessage($msg, 'error');
 							$error = 1;
 						}
-						
+
 						// Don't check the shipping as it is not required
 						if ($item['phcheckoutbsas']) {
 							$billing['ba_sa'] = 1;
@@ -113,7 +123,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 							}
 						}
 					}
-				
+
 				}
 			} else {
 				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NO_FORM_LOADED') . $msgSuffix, 'error');
@@ -126,7 +136,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		if ($error == 1) {
 			$app->redirect(base64_decode($item['return']));
 		}
-		
+
 		if ($guest) {
 			$model 	= $this->getModel('checkout');
 			if ($item['phcheckoutbsas']) {
@@ -134,7 +144,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				foreach($item['jform'] as $k => $v) {
 					$pos = strpos($k, '_phs');
 					if ($pos === false) {
-						
+
 					} else {
 						unset($item['jform'][$k]);
 					}
@@ -145,9 +155,9 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$app->enqueueMessage($msg. $msgSuffix, 'error');
 				$error = 1;
 			}
-		
+
 		} else {
-			
+
 			if (!empty($billing)) {
 				$model 	= $this->getModel('checkout');
 				if(!$model->saveAddress($billing)) {
@@ -161,7 +171,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				}
 				//$app->redirect(base64_decode($item['return']));
 			}
-			
+
 			if (!empty($shipping)) {
 				$model 	= $this->getModel('checkout');
 				if(!$model->saveAddress($shipping, 1)) {
@@ -176,8 +186,8 @@ class PhocaCartControllerCheckout extends JControllerForm
 				//$app->redirect(base64_decode($item['return']));
 			}
 		}
-		
-		
+
+
 		// Remove shipping because shipping methods can change while chaning address
 		PhocacartShipping::removeShipping(0);
 		PhocacartPayment::removePayment(0);
@@ -185,17 +195,17 @@ class PhocaCartControllerCheckout extends JControllerForm
 		if ($error != 1) {
 			$app->enqueueMessage($msg, 'message');
 		}
-		
+
 		$app->redirect(base64_decode($item['return']));
 	 }
-	 
-	 
+
+
 	 /*
 	 * Save shipping method
 	 */
-	 
+
 	 public function saveshipping() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app					= JFactory::getApplication();
 		$item					= array();
@@ -203,11 +213,11 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['phshippingopt']	= $this->input->get( 'phshippingopt', array(), 'array'  );
 		$guest					= PhocacartUserGuestuser::getGuestUser();
 		$msgSuffix				= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-		
+
 		if(!empty($item['phshippingopt']) && isset($item['phshippingopt'][0]) && (int)$item['phshippingopt'][0] > 0) {
-			
+
 			$model 	= $this->getModel('checkout');
-			
+
 			if ($guest) {
 				if(!$model->saveShippingGuest((int)$item['phshippingopt'][0])) {
 					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
@@ -217,7 +227,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$app->enqueueMessage($msg, 'message');
 					PhocacartPayment::removePayment($guest);
 				}
-			
+
 			} else {
 				if(!$model->saveShipping((int)$item['phshippingopt'][0])) {
 					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
@@ -228,20 +238,20 @@ class PhocaCartControllerCheckout extends JControllerForm
 					PhocacartPayment::removePayment($guest);
 				}
 			}
-			
+
 		} else {
 			$msg = JText::_('COM_PHOCACART_NO_SHIPPING_METHOD_SELECTED');
 			$app->enqueueMessage($msg.$msgSuffix, 'error');
 		}
 		$app->redirect(base64_decode($item['return']));
 	}
-	
+
 	/*
 	 * Save payment method and coupons
 	 */
-	 
+
 	 public function savepayment() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app						= JFactory::getApplication();
 		$item						= array();
@@ -252,17 +262,17 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$guest						= PhocacartUserGuestuser::getGuestUser();
 		$params 					= $app->getParams();
 		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-	
+
 		$this->t['enable_coupons']			= $params->get( 'enable_coupons', 1 );
 		$this->t['enable_rewards']			= $params->get( 'enable_rewards', 1 );
-	
-	
+
+
 		if(!empty($item['phpaymentopt']) && isset($item['phpaymentopt'][0]) && (int)$item['phpaymentopt'][0] > 0) {
-			
+
 			// Coupon
 			$couponId = 0;
 			if (isset($item['phcoupon']) && $item['phcoupon'] != '' && $this->t['enable_coupons']) {
-				
+
 				$coupon = new PhocacartCoupon();
 				$coupon->setCoupon(0, $item['phcoupon']);
 				$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
@@ -273,7 +283,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 						$couponId = $couponData['id'];
 					}
 				}
-				
+
 				if(!$couponId) {
 					$msg = JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT');
 					$app->enqueueMessage($msg.$msgSuffix, 'error');
@@ -282,16 +292,16 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$app->enqueueMessage($msg, 'message');
 				}
 			}
-			
+
 			$rewards 			= array();
 			$rewards['used'] 	= 0;
-			
+
 			if (isset($item['phreward']) && $item['phreward'] != '' && $this->t['enable_rewards']) {
-				
+
 				$reward 			= new PhocacartReward();
 				$rewards['used']	= $reward->checkReward((int)$item['phreward'], 1);
-				
-				
+
+
 				if($rewards['used'] === false) {
 					$msg = JText::_('COM_PHOCACART_REWARD_POINTS_NOT_ADDED');
 					$app->enqueueMessage($msg.$msgSuffix, 'error');
@@ -299,12 +309,12 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$msg = JText::_('COM_PHOCACART_REWARD_POINTS_ADDED');
 					$app->enqueueMessage($msg, 'message');
 				}
-				
-				
+
+
 			}
-			
+
 			$model 	= $this->getModel('checkout');
-			
+
 			if ($guest) {
 				if(!$model->savePaymentAndCouponGuest((int)$item['phpaymentopt'][0], $couponId)) {
 					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
@@ -320,22 +330,22 @@ class PhocaCartControllerCheckout extends JControllerForm
 				} else {
 					$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 					$app->enqueueMessage($msg, 'message');
-				}	
+				}
 			}
-			
-			
+
+
 		} else {
 			$msg = JText::_('COM_PHOCACART_NO_PAYMENT_METHOD_SELECTED');
 			$app->enqueueMessage($msg.$msgSuffix, 'error');
 		}
 		$app->redirect(base64_decode($item['return']));
 	}
-	
+
 	/*
 	 * Update or delete from cart
 	 */
 	public function update() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
@@ -345,9 +355,18 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		$item['action']		= $this->input->get( 'action', '', 'string'  );
 		$msgSuffix			= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-		
+
+
+        $rights								= new PhocacartAccessRights();
+        $this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
+
+        if (!$this->t['can_display_addtocart']) {
+            $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+            $app->redirect(base64_decode($item['return']));
+        }
+
 		if ((int)$item['idkey'] != '' && $item['action'] != '') {
-		
+
 			$cart	= new PhocacartCart();
 			if ($item['action'] == 'delete') {
 				$updated	= $cart->updateItemsFromCheckout($item['idkey'], 0);
@@ -365,22 +384,22 @@ class PhocaCartControllerCheckout extends JControllerForm
 				}
 			}
 		}
-		
+
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}
 	/*
 	 public function saveshipping() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app					= JFactory::getApplication();
 		$item					= array();
 		$item['return']			= $this->input->get( 'return', '', 'string'  );
 		$item['phshippingopt']	= $this->input->get( 'phshippingopt', array(), 'array'  );
 
-		
+
 		if(!empty($item['phshippingopt']) && isset($item['phshippingopt'][0]) && (int)$item['phshippingopt'][0] > 0) {
-			
+
 			$model 	= $this->getModel('checkout');
 			if(!$model->saveShipping((int)$item['phshippingopt'][0])) {
 				$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
@@ -389,7 +408,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 				$app->enqueueMessage($msg, 'message');
 			}
-			
+
 		} else {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_SHIPPING_METHOD_SELECTED'), 'error');
 		}
@@ -399,14 +418,14 @@ class PhocaCartControllerCheckout extends JControllerForm
 	/*
 	 * Make an order
 	 */
-	 
+
 	 public function order() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$pC 								= PhocacartUtils::getComponentParameters();
 		$display_checkout_privacy_checkbox	= $pC->get( 'display_checkout_privacy_checkbox', 0 );
 		$display_checkout_toc_checkbox		= $pC->get( 'display_checkout_toc_checkbox', 2);
-		
+
 		$app						= JFactory::getApplication();
 		$item						= array();
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
@@ -414,32 +433,32 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['privacy']			= $this->input->get( 'privacy', false, 'string'  );
 		$item['phcomment']			= $this->input->get( 'phcomment', '', 'string'  );
 		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-		
+
 		$item['privacy'] 			= $item['privacy'] ? 1 : 0;
 		$item['phcheckouttac']	 	= $item['phcheckouttac'] ? 1 : 0;
 
-		
+
 		if ($display_checkout_privacy_checkbox == 2 && $item['privacy'] == 0) {
 			$msg = JText::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_PRIVACY_TERMS_AND_CONDITIONS');
 			$app->enqueueMessage($msg.$msgSuffix, 'error');
 			$app->redirect(base64_decode($item['return']));
 			return false;
-			
+
 		}
-		
+
 		if ($display_checkout_toc_checkbox == 2 && $item['phcheckouttac'] == 0) {
 			$msg = JText::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_TERMS_AND_CONDITIONS');
 			$app->enqueueMessage($msg.$msgSuffix, 'error');
 			$app->redirect(base64_decode($item['return']));
 			return false;
 		}
-	
 
-		
-	
-		$order = new PhocacartOrder();		
+
+
+
+		$order = new PhocacartOrder();
 		$orderMade = $order->saveOrderMain($item);
-		
+
 		if(!$orderMade) {
 			$msg = '';
 			if (!PhocacartUtils::issetMessage()){
@@ -449,14 +468,14 @@ class PhocaCartControllerCheckout extends JControllerForm
 			$app->redirect(base64_decode($item['return']));
 			return true;
 		} else {
-			
+
 			$cart = new PhocacartCart();
 			$cart->emptyCart();
 			PhocacartUserGuestuser::cancelGuestUser();
-			
+
 			$action 	= $order->getActionAfterOrder();// Which action should be done
 			$message	= $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
-			
+
 			$session 	= JFactory::getSession();
 			if ($action == 4 || $action == 3) {
 				// Ordered OK, but now we proceed to payment
@@ -464,37 +483,37 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$session->set('infomessage', $message, 'phocaCart');
 				$app->redirect(JRoute::_(PhocacartRoute::getPaymentRoute(), false));
 				return true;
-				// This message should stay 
+				// This message should stay
 				// when order - the message is created
 				// when payment - the message stays unchanged
 				// after payment - it will be redirected to info view and there the message will be displayed and then deleted
-			
+
 			} else {
 				// Ordered OK, but the payment method does not have any instruction to proceed to payment (e.g. cash on delivery)
 				//$msg = JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
 				// We produce not message but we redirect to specific view with message and additional instructions
 				//$app->enqueueMessage($msg, 'message');
-				
+
 				$session->set('infoaction', $action, 'phocaCart');
 				$session->set('infomessage', $message, 'phocaCart');
 				$app->redirect(JRoute::_(PhocacartRoute::getInfoRoute(), false));
 				return true;
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	public function setguest() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		$msgSuffix			= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-		
-		
+
+
 		$guest	= new PhocacartUserGuestuser();
 		$set	= $guest->setGuestUser((int)$item['id']);
 		if ((int)$item['id'] == 1) {
@@ -515,13 +534,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 	}
 	/*
 	public function compareadd() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
-		
+
 		$compare	= new PhocacartCompare();
 		$added	= $compare->addItem((int)$item['id']);
 		if ($added) {
@@ -532,15 +551,15 @@ class PhocaCartControllerCheckout extends JControllerForm
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}
-	
+
 		public function compareremove() {
-		
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
 		$app				= JFactory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
-		
+
 		$compare	= new PhocacartCompare();
 		$added	= $compare->removeItem((int)$item['id']);
 		if ($added) {
@@ -551,6 +570,6 @@ class PhocaCartControllerCheckout extends JControllerForm
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}*/
-	
+
 }
 ?>

@@ -88,8 +88,9 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
-		$this->t['hide_price']				= 0;//$this->p->get( 'hide_price', 0 );
-		$this->t['hide_addtocart']			= 0;//$this->p->get( 'hide_addtocart', 0 );
+		$this->t['display_price']			= true;//$this->p->get( 'hide_price', 0 );
+		$this->t['display_addtocart']		= true;//$this->p->get( 'hide_addtocart', 0 );
+		$this->t['can_display_price']		= true;
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
 		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
@@ -112,6 +113,11 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['product_name_link']						= $this->p->get( 'product_name_link', 0 );
 		$this->t['switch_image_category_items']				= $this->p->get( 'switch_image_category_items', 0 );
 		$this->t['pos_loyalty_card_number_input_type']		= $this->p->get( 'pos_loyalty_card_number_input_type', 'text' );
+
+		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 0 );
+		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
+		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
+		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 
 
 		$this->t['pos_input_autocomplete_output'] = '';

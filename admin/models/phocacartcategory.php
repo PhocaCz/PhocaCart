@@ -144,6 +144,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
 		}
 
+		$user = JFactory::getUser();
 
 
 		// ALIAS
@@ -195,10 +196,24 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				$isNew = false;
 			}
 
+
+
 			// Bind the data.
 			if (!$table->bind($data)) {
 				$this->setError($table->getError());
 				return false;
+			}
+
+			if(intval($table->date) == 0) {
+				$table->date = JFactory::getDate()->toSql();
+			}
+
+			if ($isNew) {
+				$table->created = JFactory::getDate()->toSql();
+				$table->created_by = isset($user->id) ? (int)$user->id: 0;
+			} else {
+				$table->modified = JFactory::getDate()->toSql();
+				$table->modified_by = isset($user->id) ? (int)$user->id: 0;
 			}
 
 			// Prepare the row for saving
