@@ -133,8 +133,9 @@ class PhocaCartViewCategory extends JViewLegacy
 			$media->loadChosen();
 			$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 			$this->t['class_thumbnail'] = $media->loadProductHover();
-            $this->t['class_lazyload']  = $media->loadLazyLoad();
-
+            $lazyLoad  					= $media->loadLazyLoad();
+			$this->t['class_lazyload']	= $lazyLoad['class'];
+			$this->t['script_lazyload']	= $lazyLoad['script'];
 			PhocacartRenderJs::renderAjaxAddToCart();
 			PhocacartRenderJs::renderAjaxAddToCompare();
 			PhocacartRenderJs::renderAjaxAddToWishList();
@@ -186,6 +187,9 @@ class PhocaCartViewCategory extends JViewLegacy
 			// END Plugins --------------------------------------
 
 			parent::display($tpl);
+
+			// Must be loaded bottom because of ignoring async in Firefox
+			echo $this->t['script_lazyload'];
 		}
 	}
 

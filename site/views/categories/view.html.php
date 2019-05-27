@@ -47,7 +47,9 @@ class PhocaCartViewCategories extends JViewLegacy
 		//$media->loadChosen();
 		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		//$this->t['class_thumbnail'] = $media->loadProductHover();
-		$this->t['class_lazyload']  = $media->loadLazyLoad();
+		$lazyLoad  					= $media->loadLazyLoad();
+		$this->t['class_lazyload']	= $lazyLoad['class'];
+		$this->t['script_lazyload']	= $lazyLoad['script'];
 
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
 
@@ -63,6 +65,9 @@ class PhocaCartViewCategories extends JViewLegacy
 
 		$this->_prepareDocument();
 		parent::display($tpl);
+
+		// Must be loaded bottom because of ignoring async in Firefox
+		echo $this->t['script_lazyload'];
 
 	}
 

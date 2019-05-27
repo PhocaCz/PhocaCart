@@ -76,27 +76,27 @@ class PhocacartRenderMedia
 		if ($this->p['lazy_load_category_items'] == 1 && ($this->view == 'category' || $this->view == 'items')) {
 
 			if ($this->format == 'raw') {
-				return 'ph-lazyload'; // return only class, don't load library in ajax
-
+				return array('class' => 'ph-lazyload', 'script' => ''); // return only class, don't load library in ajax
 			}
 
-			$this->document->addCustomTag(implode("\n", $s));
+			// Firefox ignores async - we need to load it at the bottom of the page
+			//$this->document->addCustomTag(implode("\n", $s));
+			//return 'ph-lazyload';
+			return array('class' => 'ph-lazyload', 'script' => implode("\n", $s));
 
-			return 'ph-lazyload';
 		} else if ($this->p['lazy_load_categories'] == 1 && $this->view == 'categories') {
 
 			if ($this->format == 'raw') {
-				return 'ph-lazyload'; // return only class, don't load library in ajax
-
+				return array('class' => 'ph-lazyload', 'script' => ''); // return only class, don't load library in ajax
 			}
 
-			$this->document->addCustomTag(implode("\n", $s));
-
-			return 'ph-lazyload';
+			// Firefox ignores async - we need to load it at the bottom of the page
+			//$this->document->addCustomTag(implode("\n", $s));
+			//return 'ph-lazyload';
+			return array('class' => 'ph-lazyload', 'script' => implode("\n", $s));
 		}
 
-
-		return '';
+		return array();
 	}
 
 	public function loadProductHover() {

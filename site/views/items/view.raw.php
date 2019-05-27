@@ -115,7 +115,8 @@ class PhocaCartViewItems extends JViewLegacy
 		$media 						= new PhocacartRenderMedia();
 		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		$this->t['class_thumbnail'] = $media->loadProductHover();
-        $this->t['class_lazyload']  = $media->loadLazyLoad();
+		$lazyLoad  					= $media->loadLazyLoad();
+		$this->t['class_lazyload']	= $lazyLoad['class'];
 
 
 
