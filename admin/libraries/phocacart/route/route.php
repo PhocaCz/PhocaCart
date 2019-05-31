@@ -191,13 +191,17 @@ class PhocacartRoute
 		return self::_buildLink($link, $needles);
 	}
 
-	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array()) {
+	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array(), $forceView = 0) {
 
 		$app 			= JFactory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
 		$option			= $app->input->get( 'option', '', 'string' );
-		$view			= $app->input->get( 'view', '', 'string' );
+		$view 			= $app->input->get( 'view', '', 'string' );
+
+		if ($forceView == 1) {
+			$view = 'item';// We link the view from administration - to preview the product
+		}
 		/*$catidCurrent	= $app->input->get( 'id', 0, 'int' );
 
 		if ($catidCurrent > 0) {

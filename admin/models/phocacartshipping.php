@@ -13,19 +13,19 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartShipping', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartshipping', 'phocacartshipping', array('control' => 'jform', 'load_data' => $loadData));
@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartshipping.data', array());
 		if (empty($data)) {
@@ -45,7 +45,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -65,6 +65,9 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 		$table->maximal_width 	= PhocacartUtils::replaceCommaWithPoint($table->maximal_width);
 		$table->maximal_height 	= PhocacartUtils::replaceCommaWithPoint($table->maximal_height);
 		$table->maximal_length 	= PhocacartUtils::replaceCommaWithPoint($table->maximal_length);
+        $table->minimal_width 	= PhocacartUtils::replaceCommaWithPoint($table->minimal_width);
+        $table->minimal_height 	= PhocacartUtils::replaceCommaWithPoint($table->minimal_height);
+        $table->minimal_length 	= PhocacartUtils::replaceCommaWithPoint($table->minimal_length);
 		$table->minimal_quantity= PhocacartUtils::replaceCommaWithPoint($table->minimal_quantity);
 		$table->maximal_quantity= PhocacartUtils::replaceCommaWithPoint($table->maximal_quantity);
 
@@ -72,7 +75,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
-		
+
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);
 
 		if (empty($table->id)) {
@@ -94,7 +97,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	public function save($data)
 	{
 		//$dispatcher = J EventDispatcher::getInstance();
@@ -121,7 +124,7 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 				$table->load($pk);
 				$isNew = false;
 			}
-			
+
 			// Plugin parameters are converted to params column in shipping table (x001)
 			// Store form parameters of selected method
 			$app			= JFactory::getApplication();
@@ -170,22 +173,22 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
-			
+
 			if ((int)$table->id > 0) {
-				
+
 				if (!isset($data['zone'])) { $data['zone'] = array();}
 				PhocacartZone::storeZones($data['zone'], (int)$table->id);
-				
+
 				if (!isset($data['country'])) {$data['country'] = array();}
 				PhocacartCountry::storeCountries($data['country'], (int)$table->id);
-				
+
 				if (!isset($data['region'])) {$data['region'] = array();}
 				PhocacartRegion::storeRegions($data['region'], (int)$table->id);
-				
+
 				if (!isset($data['group'])) {$data['group'] = array();}
 				PhocacartGroup::storeGroupsById((int)$table->id, 7, $data['group']);
-				
-			
+
+
 			}
 
 			// Clean the cache.
@@ -211,16 +214,16 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 
 		return true;
 	}
-	
+
 	public function delete(&$cid = array()) {
 
 		if (count( $cid )) {
 			$delete = parent::delete($cid);
 			if ($delete) {
-				
+
 				\Joomla\Utilities\ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
-			
+
 				$query = 'DELETE FROM #__phocacart_item_groups'
 				. ' WHERE item_id IN ( '.$cids.' )'
 				. ' AND type = 7';
@@ -229,10 +232,10 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 			}
 		}
 	}
-	
-	
+
+
 	public function setDefault($id = 0) {
-		
+
 		$user = JFactory::getUser();
 		$db   = $this->getDbo();
 
@@ -256,9 +259,9 @@ class PhocaCartCpModelPhocacartShipping extends JModelAdmin
 
 		return true;
 	}
-	
+
 	public function unsetDefault($id = 0) {
-		
+
 		$user = JFactory::getUser();
 		$db   = $this->getDbo();
 

@@ -289,10 +289,12 @@ class PhocacartAttribute
 									// SELECT - only one default value
 									$defaultValue = 0;
 									$dVR = 1;
-								} else if ($dTV == '' && (int)$dI > 0) {
+								} else if ($dTV === '' && (int)$dI > 0) {
+
 									// TEXT - no default value
 									$defaultValue = 0;
 									$dVR = 1;
+
 								}
 							}
 
@@ -438,6 +440,7 @@ class PhocacartAttribute
 							$notDeleteOptions[]	= $newIdO;
 
 						}
+
 
 						// One or more default values removed
 						if ($dVR == 1) {

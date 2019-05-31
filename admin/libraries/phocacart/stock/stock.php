@@ -48,9 +48,10 @@ class PhocacartStock
 		// N = 0
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$stock_checking			= $paramsC->get( 'stock_checking', 0 );
-		$display_stock_status	= $paramsC->get( 'display_stock_status', 1 );
-		$stock_checkout			= $paramsC->get( 'stock_checkout', 0 );
+		$stock_checking			    = $paramsC->get( 'stock_checking', 0 );
+		$display_stock_status	    = $paramsC->get( 'display_stock_status', 1 );
+		$stock_checkout			    = $paramsC->get( 'stock_checkout', 0 );
+        $stock_status_display_count	= $paramsC->get( 'stock_status_display_count', 0 );
 
 		$stock 	= array();
 
@@ -64,6 +65,7 @@ class PhocacartStock
 		$stock['status_image'] 	        = false;
         $stock['status_link'] 	        = false;
         $stock['status_link_target'] 	= false;
+        $stock['status_display_count'] 	= (int)$stock_status_display_count;
 
 		$stock['stock_status_feed'] = false; // Additional status text for feeds only - it is managed by $stock['stock_status']
 
@@ -167,11 +169,11 @@ class PhocacartStock
         }
 
 
-		if ($stockStatus['stock_status'] && $stockStatus['stock_count']) {
+		if ($stockStatus['stock_status'] && $stockStatus['stock_count'] !== false && $stockStatus['status_display_count'] == 1) {
 			$o .= $stockStatus['stock_status'] . ' ('.$stockStatus['stock_count'].')';
-		} else if (!$stockStatus['stock_status'] && $stockStatus['stock_count']) {
+		} else if (!$stockStatus['stock_status'] && $stockStatus['stock_count'] !== false) {
 			$o .= $stockStatus['stock_count'];
-		} else if ($stockStatus['stock_status'] && !$stockStatus['stock_count']) {
+		} else if ($stockStatus['stock_status'] /* && $stockStatus['status_display_count'] == 0*/) {
 			$o .= $stockStatus['stock_status'];
 		}
 

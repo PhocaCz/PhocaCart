@@ -331,7 +331,7 @@ class PhocacartOrder
 			//    - check if this method even exists
 			//	  - and check if the selected method meets every criteria and rules to be selected
 			//$shippingMethods	= $shippingClass->checkAndGetShippingMethod($shippingId); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-			$shippingMethods	= $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], $shippingId, 0 );
+			$shippingMethods	= $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], $shippingId, 0 );
 
 
 
@@ -352,7 +352,7 @@ class PhocacartOrder
             // Cooperates with components/com_phocacart/views/checkout/view.html.php 230
 
             // Find all possible shipping methods (without shipping method selected) to see if there is really no rule to display any method
-            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['max_length'], $total[0]['max_width'], $total[0]['max_height'], 0, 0 );
+            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, 0 );
             if (empty($shippingtMethodsAllPossible)) {
                 $shippingNotFoundAllowProceed = true;
             }

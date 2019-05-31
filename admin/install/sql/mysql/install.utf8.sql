@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_categories` (
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  
+
   `created_by` int(11) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_by` int(11) NOT NULL DEFAULT '0',
   `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  
+
   `ordering` int(11) NOT NULL DEFAULT '0',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -113,12 +113,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
-  
+
   `created_by` int(11) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_by` int(11) NOT NULL DEFAULT '0',
   `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  
+
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `hits` int(11) NOT NULL DEFAULT '0',
   `sales` int(11) NOT NULL DEFAULT '0',
@@ -301,12 +301,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_specifications` (
   `alias` varchar(255) NOT NULL DEFAULT '',
   `value` text,
   `alias_value` varchar(255) NOT NULL DEFAULT '',
-  
+
   `image` varchar(255) NOT NULL DEFAULT '',
   `image_medium` varchar(255) NOT NULL DEFAULT '',
   `image_small` varchar(255) NOT NULL DEFAULT '',
   `color` varchar(50) NOT NULL DEFAULT '',
-  
+
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -448,6 +448,10 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods` (
   `maximal_width` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `maximal_height` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `maximal_length` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
+
+  `minimal_width` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
+  `minimal_height` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
+  `minimal_length` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
 
   `active_quantity` tinyint(1) NOT NULL DEFAULT '0',
   `minimal_quantity` int(11) NOT NULL DEFAULT '0',
@@ -1014,10 +1018,10 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`invoice_spec_top_desc` text,
 	`invoice_spec_middle_desc` text,
 	`invoice_spec_bottom_desc` text,
-	
+
 	`oidn_spec_billing_desc` text,
 	`oidn_spec_shipping_desc` text,
-	
+
 
 	`privacy` tinyint(1) NOT NULL default '0',
 
@@ -1028,7 +1032,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`params` text,
-	
+
 	`user_lang` char(7) NOT NULL DEFAULT '',
 	`default_lang` char(7) NOT NULL DEFAULT '',
 	`language` char(7) NOT NULL DEFAULT '',

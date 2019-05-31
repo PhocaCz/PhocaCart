@@ -32,7 +32,7 @@ class PhocacartShipping
 	 * Always test for the id before using this function
 	 */
 
-	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $weight, $maxLength, $maxWidth, $maxHeight, $id = 0, $selected = 0) {
+	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $weight, $length, $width, $height, $id = 0, $selected = 0) {
 
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
@@ -65,7 +65,8 @@ class PhocacartShipping
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-		.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' s.highest_weight, s.default,'
+		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height,'
 		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
@@ -74,7 +75,8 @@ class PhocacartShipping
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-		.' s.highest_weight, s.default, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' s.highest_weight, s.default,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type';
 		$groupsFast		= 's.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -206,15 +208,22 @@ class PhocacartShipping
 				// Size Rule
 				if($v->active_size == 1) {
 					$sP = 0;
-					if ($maxLength <= $v->maximal_length || $maxLength == $v->maximal_length) {
+					if (($length >= $v->minimal_length || $length == $v->minimal_length)
+						&& ($length <= $v->maximal_length || $length == $v->maximal_length)) {
+
 						$sP++;
 					}
-					if ($maxWidth <= $v->maximal_width || $maxWidth == $v->maximal_width) {
+					if (($width >= $v->minimal_width || $width == $v->minimal_width)
+						&& ($width <= $v->maximal_width || $width == $v->maximal_width)) {
+
 						$sP++;
 					}
-					if ($maxHeight <= $v->maximal_height || $maxHeight == $v->maximal_height) {
+					if (($height >= $v->minimal_height || $height == $v->minimal_height)
+						&& ($height <= $v->maximal_height || $height == $v->maximal_height)) {
+
 						$sP++;
 					}
+
 					if ($sP == 3) {
 						$s = 1;
 					}
@@ -334,7 +343,7 @@ class PhocacartShipping
 			$region = (int)$dataAddress['bregion'];
 		}
 
-		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $totalFinal['weight'], $totalFinal['max_length'], $totalFinal['max_width'], $totalFinal['max_height'], $selectedShippingId, $selected);
+		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
 
 
 		if (!empty($shippingMethods)) {

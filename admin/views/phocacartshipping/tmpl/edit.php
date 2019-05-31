@@ -45,7 +45,7 @@ echo $r->navigation($tabs);
 
 echo '<div class="tab-content">'. "\n";
 
-echo '<div class="tab-pane active" id="general">'."\n"; 
+echo '<div class="tab-pane active" id="general">'."\n";
 $formArray = array ('title', 'cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
@@ -65,48 +65,48 @@ $formArray = array ('minimal_quantity', 'maximal_quantity', 'active_quantity');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="amount">'."\n"; 
+echo '<div class="tab-pane" id="amount">'."\n";
 $formArray = array ('lowest_amount', 'highest_amount', 'active_amount');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
 
-echo '<div class="tab-pane" id="zone">'."\n"; 
+echo '<div class="tab-pane" id="zone">'."\n";
 $formArray = array ('zone', 'active_zone');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="country">'."\n"; 
+echo '<div class="tab-pane" id="country">'."\n";
 $formArray = array ('country', 'active_country');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="region">'."\n"; 
+echo '<div class="tab-pane" id="region">'."\n";
 $formArray = array ('region', 'active_region');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="weight">'."\n"; 
+echo '<div class="tab-pane" id="weight">'."\n";
 $formArray = array ('lowest_weight', 'highest_weight', 'active_weight');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="size">'."\n"; 
+echo '<div class="tab-pane" id="size">'."\n";
 //$formArray = array ('shortest_length', 'longest_length', 'lowest_width', 'largest_width', 'lowest_height', 'highest_height', 'active_size');
-$formArray = array ('maximal_length', 'maximal_width', 'maximal_height', 'active_size');
+$formArray = array ('minimal_length', 'maximal_length', 'minimal_width', 'maximal_width', 'minimal_height', 'maximal_height', 'active_size');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="method">'."\n"; 
+echo '<div class="tab-pane" id="method">'."\n";
 echo '<div id="ph-extended-params" class="ph-extended-params">'.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
 echo '</div>';
 
-echo '<div class="tab-pane" id="tracking">'."\n"; 
+echo '<div class="tab-pane" id="tracking">'."\n";
 $formArray = array ('tracking_link', 'tracking_description');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="publishing">'."\n"; 
+echo '<div class="tab-pane" id="publishing">'."\n";
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -117,7 +117,7 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
-				
+
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column

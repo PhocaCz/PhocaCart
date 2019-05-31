@@ -190,7 +190,7 @@ if ($this->t['can_display_price']) {
 			$class_icon					= 'ph-display-none';
 		}
 
-		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count']) {
+		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
 			$d							= array();
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;

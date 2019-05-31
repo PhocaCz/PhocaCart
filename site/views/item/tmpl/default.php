@@ -241,12 +241,13 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			$class_icon					= 'ph-display-none';
 		}
 
-		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count']) {
+		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
 			$d							= array();
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;
 			$d['typeview']				= 'Item';
 			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
+
 			echo $layoutS->render($d);
 		}
 

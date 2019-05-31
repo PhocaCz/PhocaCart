@@ -119,7 +119,7 @@ if (!empty($this->items)) {
 				$dA['class_icon']		= 'ph-display-none';// hide icon
 			}
 
-			if($stockStatus['stock_status'] || $stockStatus['stock_count']) {
+			if($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
 				$dS							= array();
 				$dS['class']				= 'ph-item-stock-box';
 				$dS['product_id']			= (int)$v->id;

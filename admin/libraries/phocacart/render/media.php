@@ -96,7 +96,7 @@ class PhocacartRenderMedia
 			return array('class' => 'ph-lazyload', 'script' => implode("\n", $s));
 		}
 
-		return array();
+		return array('class' => '', 'script' => '');
 	}
 
 	public function loadProductHover() {

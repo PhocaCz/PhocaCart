@@ -56,9 +56,9 @@ class PhocacartCartCalculation
 		$total['dnetto']					= 0;
 		$total['quantity']					= 0;
 
-		$total['max_length']				= 0;
-		$total['max_width']					= 0;
-		$total['max_height']				= 0;
+		$total['length']				= 0;
+		$total['width']					= 0;
+		$total['height']				= 0;
 
 		$total['points_needed']				= 0;
 		$total['points_received']			= 0;
@@ -245,9 +245,9 @@ class PhocacartCartCalculation
 				$total['weight']				+= ($fullItems[$k]['weight'] * $fQ);
 				$total['volume']				+= ($fullItems[$k]['volume'] * $fQ);
 
-				$total['max_length']			= $itemD->length > $total['max_length'] ? $itemD->length : $total['max_length'];
-				$total['max_width']				= $itemD->width > $total['max_width'] ? $itemD->width : $total['max_width'];
-				$total['max_height']			= $itemD->height > $total['max_height'] ? $itemD->height : $total['max_height'];
+				$total['length']			= $itemD->length > $total['length'] ? $itemD->length : $total['length'];
+				$total['width']				= $itemD->width > $total['width'] ? $itemD->width : $total['width'];
+				$total['height']			= $itemD->height > $total['height'] ? $itemD->height : $total['height'];
 
 				$total['points_needed']			+= ($fullItems[$k]['points_needed'] * $fQ);
 				$total['points_received']		+= ($fullItems[$k]['points_received'] * $fQ);

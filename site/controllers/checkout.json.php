@@ -164,7 +164,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			$stock = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $item, 1);
 
 			$o = '';
-			if($stockStatus['stock_status'] || $stockStatus['stock_count']) {
+			if($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
 				$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
 				$d							= array();
 				$d['class']					= $class;

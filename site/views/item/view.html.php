@@ -218,6 +218,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
 		// END Plugins --------------------------------------
 
+
 		parent::display($tpl);
 	}
 

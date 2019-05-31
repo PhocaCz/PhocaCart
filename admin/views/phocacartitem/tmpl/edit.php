@@ -130,6 +130,28 @@ $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditp
 echo '<br /><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkStatus.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
+
+// Preview
+if ((int)$this->item->id > 1) {
+
+    $catidA = PhocacartCategoryMultiple::getCategories((int)$this->item->id, 1);
+    if (isset($catidA[0]) && $catidA[0] > 0) {
+        $idPr = 'phEditProductPreview';
+        $textButton = 'COM_PHOCACART_PRODUCT_PREVIEW';
+        $w = 500;
+        $h = 400;
+
+        $linkPreview = PhocacartRoute::getItemRoute((int)$this->item->id, (int)$catidA[0], '', '', array(), 1) /* . '&tmpl=component'*/;
+        $linkPreview = PhocacartPath::getRightPathLink($linkPreview);
+
+        echo '<br /><a href="#' . $idPr . '" role="button" class="ph-u ' . $idPr . 'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="' . $linkPreview . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButton) . '</a>';
+
+        $footer = '<span class="ph-warning-modal-window">'.JText::_('COM_PHOCACART_YOU_ARE_PREVIEWING_LIVE_PAGE').'</span><button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('COM_PHOCACART_CLOSE') . '</button>';
+        echo $r->modalWindowDynamic($idPr, $textButton, $w, $h, false, 0, '', '', $footer);
+
+    }
+}
+
 echo '</div>';
 
 // ORDERING cannot be used

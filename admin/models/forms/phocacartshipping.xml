@@ -82,7 +82,11 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 <field name="maximal_width" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMAL_WIDTH_LABEL" description="COM_PHOCACART_FIELD_MAXIMAL_WIDTH_DESC" />
 <field name="maximal_height" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMAL_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_MAXIMAL_HEIGHT_DESC" />
 <field name="maximal_length" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMAL_LENGTH_LABEL" description="COM_PHOCACART_FIELD_MAXIMAL_LENGTH_DESC" />
-<field name="active_size" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_SIZE_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_SIZE_DESC">
+        <field name="minimal_width" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMAL_WIDTH_LABEL" description="COM_PHOCACART_FIELD_MINIMAL_WIDTH_DESC" />
+        <field name="minimal_height" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMAL_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_MINIMAL_HEIGHT_DESC" />
+        <field name="minimal_length" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMAL_LENGTH_LABEL" description="COM_PHOCACART_FIELD_MINIMAL_LENGTH_DESC" />
+
+        <field name="active_size" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_SIZE_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_SIZE_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
@@ -137,7 +141,7 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 	label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
 	class="inputbox" rows="3" cols="30" />
 	</fieldset>
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
@@ -154,7 +158,7 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->
 	</fieldset>
-	
+
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 <!--
@@ -178,5 +182,5 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 </fieldset>
 </fields>
 
-	
+
 </form>

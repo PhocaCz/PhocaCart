@@ -796,6 +796,11 @@
                 <option value="3">COM_PHOCACART_YES_CATEGORY_ALL_VIEWS</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
+			
+			<field name="stock_status_display_count" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_AMOUNT_IN_STOCK_STATUS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_AMOUNT_IN_STOCK_STATUS_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
 
             <field name="hide_products_out_of_stock" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_DESC">
