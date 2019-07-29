@@ -13,7 +13,7 @@ if ($d['external_text'] != '') {
 	$text = $d['external_text'];
 }
 ?>
-<div class="<?php echo $d['s']['c']['pull-right']; ?>' ph-item-buy-now-box">
+<div class="<?php echo $d['s']['c']['pull-right']; ?> ph-item-buy-now-box">
 	<a class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" href="<?php echo $d['external_link']; ?>" target="_blank"><span class="<?php echo $d['s']['i']['ext-link'] ?>"></span> <?php echo JText::_($text); ?></a>
 </div>
 <div class="ph-cb"></div>

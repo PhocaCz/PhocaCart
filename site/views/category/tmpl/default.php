@@ -247,7 +247,6 @@ if (!empty($this->items)) {
 
 		// Different button or icons
 		//$addToCartHidden = 0;// Button can be hidden based on price
-
 		if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
 			// Don't display Add to Cart in case the price is zero
 			//$addToCartHidden = 1;
@@ -258,6 +257,8 @@ if (!empty($this->items)) {
 			// ADD TO CART BUTTONS - we have data yet
 		} else if ((int)$this->t['category_addtocart'] == 102 && (int)$v->external_id != '') {
 			// EXTERNAL LINK PADDLE
+			$dA2['t']				= $this->t;
+			$dA2['s']				= $this->s;
 			$dA2['external_id']		= (int)$v->external_id;
 			$dA2['return']			= $this->t['actionbase64'];
 
@@ -267,6 +268,8 @@ if (!empty($this->items)) {
 
 		} else if ((int)$this->t['category_addtocart'] == 103 && $v->external_link != '') {
 			// EXTERNAL LINK
+			$dA3['t']				= $this->t;
+			$dA3['s']				= $this->s;
 			$dA3['external_link']	= $v->external_link;
 			$dA3['external_text']	= $v->external_text;
 			$dA3['return']			= $this->t['actionbase64'];
@@ -305,7 +308,7 @@ if (!empty($this->items)) {
 		$dL['layout']['dV']		= $dV;// Link to Product View
 		$dL['layout']['dA']		= $dA;// Button Add to Cart
 		$dL['layout']['dA2']	= $dA2;// Button Buy now
-		$dL['layout']['dA2']	= $dA3;// Button external link
+		$dL['layout']['dA3']	= $dA3;// Button external link
 
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
