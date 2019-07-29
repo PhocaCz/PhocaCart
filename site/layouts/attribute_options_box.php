@@ -45,6 +45,7 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 			$d2							= array();
 			$d2['attribute']			= $v;
 			$d2['required']				= $req;
+			$d2['s']                    = $d['s'];
 			$d2['dynamic_change_image'] = $d['dynamic_change_image'];
 			$d2['zero_attribute_price'] = $d['zero_attribute_price'];
 			$d2['pathitem']				= $d['pathitem'];

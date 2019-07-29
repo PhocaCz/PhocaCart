@@ -134,7 +134,7 @@ class PhocacartRoute
 
 	/* Items route can be without id or with id, if id, then it is a category id
 	*/
-	public static function getItemsRoute($catid = '', $catidAlias = '') {
+	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '') {
 
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
@@ -185,6 +185,8 @@ class PhocacartRoute
 
 		if ($catid != '') {
 			$link = 'index.php?option=com_phocacart&view=items&id='.$catid;
+		} else if ($parameter != '' && $value != '') {
+			$link = 'index.php?option=com_phocacart&view=items&'.htmlspecialchars($parameter).'='.htmlspecialchars($value);
 		} else {
 			$link = 'index.php?option=com_phocacart&view=items';
 		}

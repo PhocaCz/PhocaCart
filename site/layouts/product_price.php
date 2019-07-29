@@ -62,7 +62,7 @@ if (isset($d['discount']) && $d['discount']) {
 		// Standard price
 		if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0
             && ($d['priceitems']['netto'] != $d['priceitems']['brutto'])) { ?>
-		<div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['nettotxt'] ?></div>
+		<div class="ph-price-txt ph-price-netto-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['nettotxt'] ?></div>
 		<div class="ph-price-netto <?php echo $classPS; ?>"><?php echo $d['priceitems']['nettoformat'] ?></div>
 	<?php } ?>
 
@@ -72,7 +72,7 @@ if (isset($d['discount']) && $d['discount']) {
 	<?php } ?>
 
 	<?php if (isset($d['priceitems']['brutto'])) { ?>
-		<div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['bruttotxt'] ?></div>
+		<div class="ph-price-txt ph-price-brutto-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['bruttotxt'] ?></div>
 		<div class="ph-price-brutto <?php echo $classPS; ?>"><?php echo $d['priceitems']['bruttoformat'] ?></div>
 	<?php }
 
@@ -89,7 +89,7 @@ if (isset($d['discount']) && $d['discount']) {
 	if (isset ($d['discount']) && $d['discount']) { ?>
 		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0
                     && ($d['priceitemsdiscount']['brutto'] != $d['priceitemsdiscount']['netto'])) { ?>
-			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['nettotxt'] ?></div>
+			<div class="ph-price-txt ph-price-netto-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['nettotxt'] ?></div>
 			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscount']['nettoformat'] ?></div>
 		<?php } ?>
 
@@ -99,7 +99,7 @@ if (isset($d['discount']) && $d['discount']) {
 		<?php } ?>
 
 		<?php if ($d['priceitemsdiscount']['brutto']) { ?>
-			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['bruttotxt'] ?></div>
+			<div class="ph-price-txt ph-price-brutto-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['bruttotxt'] ?></div>
 			<div class="ph-price-brutto ph-price-discount ph-price-discount-product"><?php echo $d['priceitemsdiscount']['bruttoformat'] ?></div>
 		<?php } ?>
 	<?php }?>
@@ -109,7 +109,7 @@ if (isset($d['discount']) && $d['discount']) {
 	if (isset ($d['discountcart']) && $d['discountcart']) { ?>
 		<?php if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0
                 && ($d['priceitemsdiscountcart']['brutto'] != $d['priceitemsdiscountcart']['netto'])) { ?>
-			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettotxt'] ?></div>
+			<div class="ph-price-txt ph-price-netto-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettotxt'] ?></div>
 			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettoformat'] ?></div>
 		<?php } ?>
 
@@ -119,7 +119,7 @@ if (isset($d['discount']) && $d['discount']) {
 		<?php } ?>
 
 		<?php if ($d['priceitemsdiscountcart']['brutto']) { ?>
-			<div class="ph-price-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['bruttotxt'] ?></div>
+			<div class="ph-price-txt ph-price-brutto-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['bruttotxt'] ?></div>
 			<div class="ph-price-brutto ph-price-discount ph-price-discount-cart"><?php echo $d['priceitemsdiscountcart']['bruttoformat'] ?></div>
 		<?php } ?>
 	<?php }?>

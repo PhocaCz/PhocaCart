@@ -13,57 +13,57 @@ jimport('joomla.application.component.model');
 
 final class PhocacartCategory
 {
-	
+
 	private static $categoryA = array();
 	private static $categoryF = array();
 	private static $categoryP = array();
 	private static $categoryI = array();
-	
-	public function __construct() {}
-	
-	
-	public static function CategoryTreeOption($data, $tree, $id=0, $text='', $currentId) {		
 
-		foreach ($data as $key) {	
+	public function __construct() {}
+
+
+	public static function CategoryTreeOption($data, $tree, $id=0, $text='', $currentId) {
+
+		foreach ($data as $key) {
 			$show_text =  $text . $key->text;
-			
+
 			if ($key->parentid == $id && $currentId != $id && $currentId != $key->value) {
 				$tree[$key->value] 			= new JObject();
 				$tree[$key->value]->text 	= $show_text;
 				$tree[$key->value]->value 	= $key->value;
-				$tree = self::CategoryTreeOption($data, $tree, $key->value, $show_text . " - ", $currentId );	
-			}	
+				$tree = self::CategoryTreeOption($data, $tree, $key->value, $show_text . " - ", $currentId );
+			}
 		}
 		return($tree);
 	}
 
 	public static function filterCategory($query, $active = NULL, $frontend = NULL, $onChange = TRUE, $fullTree = NULL ) {
-		
+
 		$db	= JFactory::getDBO();
 
 		$form = 'adminForm';
 		if ($frontend == 1) {
 			$form = 'phocacartproductsform';
 		}
-		
+
 		if ($onChange) {
 			$onChO = 'class="inputbox" size="1" onchange="document.'.$form.'.submit( );"';
 		} else {
 			$onChO = 'class="inputbox" size="1"';
 		}
-		
+
 		$categories[] = JHtml::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -');
 		$db->setQuery($query);
 		$catData = $db->loadObjectList();
-		
-		
-		
+
+
+
 		if ($fullTree) {
-			
+
 			// Start - remove in case there is a memory problem
 			$tree = array();
 			$text = '';
-			
+
 			$queryAll = ' SELECT cc.id AS value, cc.title AS text, cc.parent_id as parentid'
 					.' FROM #__phocacart_categories AS cc'
 					.' ORDER BY cc.ordering';
@@ -71,7 +71,7 @@ final class PhocacartCategory
 			$catDataAll 		= $db->loadObjectList();
 
 			$catDataTree	= PhocacartCategory::CategoryTreeOption($catDataAll, $tree, 0, $text, -1);
-			
+
 			$catDataTreeRights = array();
 			/*foreach ($catData as $k => $v) {
 				foreach ($catDataTree as $k2 => $v2) {
@@ -81,7 +81,7 @@ final class PhocacartCategory
 					}
 				}
 			}*/
-			
+
 			foreach ($catDataTree as $k => $v) {
                 foreach ($catData as $k2 => $v2) {
                    if ($v->value == $v2->value) {
@@ -92,29 +92,29 @@ final class PhocacartCategory
                 }
              }
 
-			
-			
+
+
 			$catDataTree = array();
 			$catDataTree = $catDataTreeRights;
 			// End - remove in case there is a memory problem
-			
+
 			// Uncomment in case there is a memory problem
 			//$catDataTree	= $catData;
 		} else {
 			$catDataTree	= $catData;
-		}	
-	
+		}
+
 		$categories = array_merge($categories, $catDataTree );
 
 		$category = JHtml::_('select.genericlist',  $categories, 'catid', $onChO, 'value', 'text', $active);
 
 		return $category;
 	}
-	
+
 	public static function options($type = 0)
 	{
 
-		
+
 		$db = JFactory::getDBO();
 
        //build the list of categories
@@ -124,24 +124,24 @@ final class PhocacartCategory
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$items = $db->loadObjectList();
-	
+
 		$catId	= -1;
-		
+
 		$javascript 	= 'class="inputbox" size="1" onchange="submitform( );"';
-		
+
 		$tree = array();
 		$text = '';
 		$tree = PhocacartCategory::CategoryTreeOption($items, $tree, 0, $text, $catId);
-		
+
 		return $tree;
 
 	}
-	
+
 	public static function getCategoryById($id) {
-		
+
 		$id = (int)$id;
 		if( empty(self::$categoryI[$id])) {
-			
+
 			$db = JFactory::getDBO();
 			$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
 			. ' FROM #__phocacart_categories AS a'
@@ -153,7 +153,7 @@ final class PhocacartCategory
 		}
 		return self::$categoryI[$id];
 	}
-	
+
 	public static function getChildren($id) {
 		$db = JFactory::getDBO();
 		$query = 'SELECT a.title, a.alias, a.id'
@@ -164,26 +164,26 @@ final class PhocacartCategory
 		$categories = $db->loadObjectList();
 		return $categories;
 	}
-	
+
 	public static function getPath($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
-		
-		if( empty(self::$categoryA[$id])) { 
-			self::$categoryP[$id]	= self::getPathTree($path, $id, $parent_id, $title, $alias);	
-		}		
+
+		if( empty(self::$categoryA[$id])) {
+			self::$categoryP[$id]	= self::getPathTree($path, $id, $parent_id, $title, $alias);
+		}
 		return self::$categoryP[$id];
 	}
-	
+
 	public static function getPathTree($path = array(), $id = 0, $parent_id = 0, $title, $alias = '') {
-		
+
 		static $iCT = 0;
-		
+
 		if ((int)$id > 0) {
 			$path[$iCT]['id'] = (int)$id;
 			$path[$iCT]['catid'] = (int)$parent_id;
 			$path[$iCT]['title'] = $title;
 			$path[$iCT]['alias'] = $alias;
 		}
-		
+
 		if ((int)$parent_id > 0) {
 			$db = JFactory::getDBO();
 			$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
@@ -192,31 +192,31 @@ final class PhocacartCategory
 			. ' ORDER BY a.ordering';
 			$db->setQuery( $query );
 			$category = $db->loadObject();
-			
+
 			if (isset($category->id)) {
 				$id 	= (int)$category->id;
 				$title 	= '';
 				if (isset($category->title)) {
 					$title = $category->title;
 				}
-				
+
 				$alias 	= '';
 				if (isset($category->alias)) {
 					$alias = $category->alias;
 				}
-				
+
 				$parent_id = 0;
 				if (isset($category->parent_id)) {
 					$parent_id = (int)$category->parent_id;
 				}
 				$iCT++;
-				
+
 				$path = self::getPathTree($path, (int)$id, (int)$parent_id, $title, $alias);
 			}
 		}
 		return $path;
 	}
-	
+
 	public static function categoryTree($d, $r = 0, $pk = 'parent_id', $k = 'id', $c = 'children') {
 		$m = array();
 		foreach ($d as $e) {
@@ -227,7 +227,7 @@ final class PhocacartCategory
 		//return $m[$r][0]; // remove [0] if there could be more than one root nodes
 		if (isset($m[$r])) {
 			return $m[$r];
-		} 
+		}
 		return 0;
 	}
 
@@ -238,7 +238,7 @@ final class PhocacartCategory
 			$result[] = '<ul>';
 			foreach ($data as $k => $v) {
 				$link 		= JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
-				
+
 				// Current Category is selected
 				if ($currentCatid == $v['id']) {
 					$result[] = sprintf(
@@ -251,7 +251,7 @@ final class PhocacartCategory
 						'<li>%s%s</li>',
 						'<a href="'.$link.'">' . $v['title']. '</a>',
 						self::nestedToUl($v['children'], $currentCatid)
-					);	
+					);
 				}
 			}
 			$result[] = '</ul>';
@@ -259,23 +259,23 @@ final class PhocacartCategory
 
 		return implode($result);
 	}
-	
+
 	public static function nestedToCheckBox($data, $d, $currentCatid = 0) {
 		$result = array();
 		if (!empty($data) && count($data) > 0) {
 			$result[] = '<ul class="ph-filter-module-category-tree">';
 			foreach ($data as $k => $v) {
-				
+
 				$checked 	= '';
 				$value		= htmlspecialchars($v['alias']);
 				if (isset($d['nrinalias']) && $d['nrinalias'] == 1) {
 					$value 		= (int)$v['id'] .'-'. htmlspecialchars($v['alias']);
-				} 
-				
+				}
+
 				if (in_array($value, $d['getparams'])) {
 					$checked 	= 'checked';
 				}
-				
+
 				$result[] = '<li><div class="checkbox">';
 				$result[] = '<label><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\');" />'.$v['title'].'</label>';
 				$result[] = '</div></li>';
@@ -286,9 +286,9 @@ final class PhocacartCategory
 
 		return implode($result);
 	}
-	
+
 	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {
-		
+
 		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide. 'l'. $lang);
 		if( empty(self::$categoryF[$cis])) {
 			/* phocacart import('phocacart.ordering.ordering');*/
@@ -301,27 +301,27 @@ final class PhocacartCategory
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
-			
+
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 			}
-			
+
 			if (!empty($type) && is_array($type)) {
 				$wheres[] = " c.type IN (".implode(',', $type).")";
 			}
-			
+
 			if ($display != '') {
 				$wheres[] = " c.id IN (".$display.")";
 			}
 			if ($hide != '') {
 				$wheres[] = " c.id NOT IN (".$hide.")";
 			}
-			
+
 			$columns		= 'c.id, c.title, c.alias, c.parent_id';
 			$groupsFull		= $columns;
 			$groupsFast		= 'c.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-			
+
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
@@ -329,18 +329,18 @@ final class PhocacartCategory
 			. ' GROUP BY '.$groups
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
-			
+
 			$items 						= $db->loadAssocList();
 			$tree 						= self::categoryTree($items);
 			$currentCatid				= self::getActiveCategoryId();
-			self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);	
-		}		
-	
+			self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);
+		}
+
 		return self::$categoryF[$cis];
 	}
-	
+
 	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {
-		
+
 		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide . 'l'. $lang);
 		if( empty(self::$categoryA[$cis])) {
 			/*phocacart import('phocacart.ordering.ordering');*/
@@ -353,42 +353,42 @@ final class PhocacartCategory
 			$wheres[] 		= " c.access IN (".$userLevels.")";
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
-			
+
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 			}
-			
+
 			if (!empty($type) && is_array($type)) {
 				$wheres[] = " c.type IN (".implode(',', $type).")";
 			}
-			
+
 			if ($display != '') {
 				$wheres[] = " c.id IN (".$display.")";
 			}
 			if ($hide != '') {
 				$wheres[] = " c.id NOT IN (".$hide.")";
 			}
-			
-			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
+
+			$query = 'SELECT c.id, c.title, c.alias, c.parent_id, c.image, c.description'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
 			$items 						= $db->loadAssocList();
-			self::$categoryA[$cis]	= self::categoryTree($items);	
-		}		
+			self::$categoryA[$cis]	= self::categoryTree($items);
+		}
 		return self::$categoryA[$cis];
 	}
-	
+
 	public static function getActiveCategoryId() {
-		
+
 		$app			= JFactory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
 		$catid			= $app->input->get( 'catid', '', 'int' ); // ID in items view is category id
 		$id				= $app->input->get( 'id', '', 'int' );
-		
+
 		if ($option == 'com_phocacart' && ($view == 'items' || $view == 'category')) {
 
 			if ((int)$id > 0) {
@@ -403,8 +403,8 @@ final class PhocacartCategory
 		}
 		return 0;
 	}
-	
-	
+
+
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;

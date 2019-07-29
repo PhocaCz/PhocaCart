@@ -9,10 +9,10 @@
 defined('_JEXEC') or die();
 
 echo '<div class="ph-pos-vendor-title">';
-	
+
 echo '<div class="dropdown">';
 
-echo '<button class="btn btn-info dropdown-toggle" type="button" id="phdropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+echo '<button class="'.$this->s['c']['btn.btn-info'].' dropdown-toggle" type="button" id="phdropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 if (isset($this->t['vendor']->image) && $this->t['vendor']->image != '') {
 	echo '<div class="ph-img-inside-btn">' . PhocacartImage::getImage($this->t['vendor']->image) . '</div>';
 }
@@ -40,14 +40,14 @@ echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.
 echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 echo JHtml::_('form.token');
-echo '<button class="btn btn-primary loadMainContent ph-pos-btn-dropdown"><span class="'.PhocacartRenderIcon::getClass('shopping-cart').' icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_ORDERS').'</button>';
+echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent ph-pos-btn-dropdown"><span class="'.$this->s['i']['shopping-cart'].' icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_ORDERS').'</button>';
 echo '</form>';
 
 
 // LOGOUT
 echo '<div class="ph-dropdown-header">'.JText::_('COM_PHOCACART_LOGOUT').'</div>';
 echo '<form action="'. JRoute::_('index.php?option=com_users&task=user.logout').'" method="post">';
-echo '<button type="submit" class="btn btn-danger ph-pos-btn-dropdown"><span class="'.PhocacartRenderIcon::getClass('log-out').' icon-white"></span> '.JText::_('JLOGOUT').'</button>';
+echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].'  ph-pos-btn-dropdown"><span class="'.$this->s['i']['log-out'].' icon-white"></span> '.JText::_('JLOGOUT').'</button>';
 echo '<input type="hidden" name="return" value="'. base64_encode(PhocacartRoute::getPosRoute()).'" />';
 echo JHtml::_('form.token');
 echo '</form>';

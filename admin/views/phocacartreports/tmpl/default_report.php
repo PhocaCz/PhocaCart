@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 $layout 	= new JLayoutFile('report', null, array('component' => 'com_phocacart'));
 if (!empty($this->items) && !empty($this->t['date_days'])) {
 	$d				= array();
+	$d['s']         = $this->s;
 	$d['items']		= $this->items;
 	$d['total']		= $this->total;
 	$d['params']	= $this->params;

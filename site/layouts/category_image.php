@@ -17,20 +17,9 @@ if (isset($d['t']['image_width_cats']) && $d['t']['image_width_cats'] != '' && i
     $srcPlaceHolder = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 '.(int)$d['t']['image_width_cats'] .' '.(int)$d['t']['image_height_cats'] .'\'%3E%3C/svg%3E';
 }
 
-
-
-$class          = 'img-responsive ph-image';
-$classLazyLoad  = '';
-if ($d['t']['lazy_load_categories'] == 1) {
-    $classLazyLoad = 'ph-lazyload';
-    $class = $classLazyLoad . ' '. $class;
-}
-
-
+$class          = PhocacartRenderFront::completeClass(array($d['s']['c']['img-responsive'], 'ph-image', $d['t']['class_lazyload']));
 $src            = JURI::base(true).'/'.$d['image']['image']->rel;
 $srcImg         = JURI::base(true).'/'.$d['image']['image']->rel; // fallback
-
-
 
 
 if ($d['t']['display_webp_images'] == 1) {

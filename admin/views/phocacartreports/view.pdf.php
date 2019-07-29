@@ -8,24 +8,26 @@
  */
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.view' );
- 
+
 class PhocaCartCpViewPhocacartReports extends JViewLegacy
 {
 
 	protected $state;
 	protected $t;
-	protected $params;	
+	protected $s;
+	protected $params;
 	protected $items 	= array();
 	protected $total	= array();
-	
-	
+
+
 	function display($tpl = null) {
-		
-		
+
+
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('COM_PHOCACART_REPORT'));
-	
+
 		$this->t				= PhocacartUtils::setVars('report');
+		$this->s                = PhocacartRenderStyle::getStyles();
 		$this->state			= $this->get('State');
 		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
 		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());
@@ -33,37 +35,37 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 		$this->params			= PhocacartUtils::getComponentParameters();
 		$app				= JFactory::getApplication();
 		$this->t['format']	= $app->input->get('format', '', 'string');
-		
+
 		if (!empty($this->t['date_days'])) {
 			$count	= iterator_count($this->t['date_days']);
 		} else {
 			$count = 0;
 		}
-		
+
 		$this->t['data_error'] 			= 0;
 		$this->t['data_possible_days'] 	= 365;
 		if ($count > (int)$this->t['data_possible_days']) {
 			$this->state->set('filter.date_to', '');
 			$this->state->set('filter.date_from', '');
 			$this->t['data_error'] = 1;
-		}		
+		}
 
 		if ($this->t['data_error'] == 0) {
-			
+
 			$items				= $this->get('Items');
 			$orderCalc 			= new PhocacartOrderCalculation();
 			$orderCalc->calculateOrderItems($items);
 			$this->items		= $orderCalc->getItems();
 			$this->total		= $orderCalc->getTotal();
 			$this->currencies 	= $orderCalc->getCurrencies();
-	
+
 		}
 
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);
 			return false;
 		}
-		
+
 		parent::display('report');
 	}
 }

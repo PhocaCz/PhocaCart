@@ -10,32 +10,30 @@ defined('_JEXEC') or die();
 
 $layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
 
-
 echo '<div id="ph-pc-wishlist-box" class="pc-wishlist-view'.$this->p->get( 'pageclass_sfx' ).'">';
-
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_WISH_LIST')));
 
 if (!empty($this->t['items'])) {
 
-	echo '<div class="row">';
+	echo '<div class="'.$this->s['c']['row'].'">';
 
-	echo '<div class="col-sm-2 col-md-2"><b>'.JText::_('COM_PHOCACART_IMAGE').'</b></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_IMAGE').'</b></div>';
 
-	echo '<div class="col-sm-4 col-md-4"><b>'.JText::_('COM_PHOCACART_PRODUCT').'</b></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'"><b>'.JText::_('COM_PHOCACART_PRODUCT').'</b></div>';
 
 	if (isset($this->t['value']['stock']) && $this->t['value']['stock'] == 1)	{
-		echo '<div class="col-sm-2 col-md-2"><b>'.JText::_('COM_PHOCACART_AVAILABILITY').'</b></div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_AVAILABILITY').'</b></div>';
 	} else {
-		echo '<div class="col-sm-2 col-md-2"></div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"></div>';
 	}
 
 	if ($this->t['can_display_price']) {
-		echo '<div class="col-sm-2 col-md-2"><b>'.JText::_('COM_PHOCACART_PRICE').'</b></div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_PRICE').'</b></div>';
 	} else {
-		echo '<div class="col-sm-2 col-md-2"></div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"></div>';
 	}
 
-	echo '<div class="col-sm-2 col-md-2"><b>'.JText::_('COM_PHOCACART_ACTION').'</b></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_ACTION').'</b></div>';
 
 	echo '</div>';
 
@@ -48,7 +46,7 @@ if (!empty($this->t['items'])) {
 
 	foreach($this->t['items'] as $k => $v) {
 
-		echo '<div class="row">';
+		echo '<div class="'.$this->s['c']['row'].'">';
 
 		if (isset($v['catid2']) && (int)$v['catid2'] > 0 && isset($v['catalias2']) && $v['catalias2'] != '') {
 			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
@@ -64,10 +62,11 @@ if (!empty($this->t['items'])) {
 
             $d						= array();
             $d['t']					= $this->t;
+            $d['s']					= $this->s;
             $d['src']				= JURI::base(true).'/'.$image->rel;
             $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
             $d['alt-value']			= PhocaCartImage::getAltTitle($v['title'], $image->rel);
-            $d['class']				= PhocacartRenderFront::getClass(array('img-responsive'));
+            $d['class']				= $this->s['c']['img-responsive'];
 
             $imageO .= $layoutI->render($d);
 
@@ -76,23 +75,23 @@ if (!empty($this->t['items'])) {
 			$imageO .= '</div>';
 		}
 
-		echo '<div class="col-sm-2 col-md-2 phVMiddle">'.$imageO.'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle">'.$imageO.'</div>';
 
-		echo '<div class="col-sm-4 col-md-4 phVMiddle">'.$v['title'].'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' phVMiddle">'.$v['title'].'</div>';
 
 		if (isset($this->t['value']['stock']) && $this->t['value']['stock'] == 1)	{
-			echo '<div class="col-sm-2 col-md-2 phVMiddle">'.JText::_($v['stock']).'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle">'.JText::_($v['stock']).'</div>';
 		} else {
-			echo '<div class="col-sm-2 col-md-2 phVMiddle"></div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle"></div>';
 		}
 
 		if ($this->t['can_display_price']) {
-			echo '<div class="col-sm-2 col-md-2 phVMiddle">'.$price->getPriceItem($v['price'], $v['group_price']).'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle">'.$price->getPriceItem($v['price'], $v['group_price']).'</div>';
 		} else {
-			echo '<div class="col-sm-2 col-md-2 phVMiddle"></div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle"></div>';
 		}
 
-		echo '<div class="col-sm-2 col-md-2 phVMiddle">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle">';
 
 		echo '<form action="'.$this->t['linkwishlist'].'" method="post">';
 		echo '<input type="hidden" name="id" value="'.(int)$v['id'].'">';
@@ -101,14 +100,14 @@ if (!empty($this->t['items'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		//echo '<div class="ph-center">';
-		echo '<button type="submit" class="btn btn-danger ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="'.PhocacartRenderIcon::getClass('remove').'"></span></button>';
+		echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="'.$this->s['i']['remove'].'"></span></button>';
 		//echo '</div>';
 
 
 		echo ' ';
 
 		$link = JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
-		echo '<a href="'.$link.'" class="btn btn-primary ph-btn" role="button" title="'.JText::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.PhocacartRenderIcon::getClass('search').'"></span></a>';
+		echo '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" role="button" title="'.JText::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.$this->s['i']['search'].'"></span></a>';
 
 		echo JHtml::_('form.token');
 		echo '</form>';

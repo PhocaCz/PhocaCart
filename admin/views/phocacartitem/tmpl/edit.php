@@ -132,7 +132,7 @@ echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 
 // Preview
-if ((int)$this->item->id > 1) {
+if ((int)$this->item->id > 0) {
 
     $catidA = PhocacartCategoryMultiple::getCategories((int)$this->item->id, 1);
     if (isset($catidA[0]) && $catidA[0] > 0) {

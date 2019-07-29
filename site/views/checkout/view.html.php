@@ -32,6 +32,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->u							= PhocacartUser::getUser();
 		$this->p							= $app->getParams();
 		$this->a							= new PhocacartAccess();
+		$this->s							= PhocacartRenderStyle::getStyles();
 		$guest								= PhocacartUserGuestuser::getGuestUser();
 		$reward								= new PhocacartReward();
 
@@ -44,6 +45,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['stock_checkout']			= $this->p->get( 'stock_checkout', 0 );
 		$this->t['stock_checking']			= $this->p->get( 'stock_checking', 0 );
 		$this->t['guest_checkout']			= $this->p->get( 'guest_checkout', 0 );
+		$this->t['guest_checkout_auto_enable']	= $this->p->get( 'guest_checkout_auto_enable', 0 );
 		$this->t['icon_suffix']				= $this->p->get( 'icon_suffix', '-circle' );
 		$this->t['display_shipping_desc']	= $this->p->get( 'display_shipping_desc', 0 );
 		$this->t['display_payment_desc']	= $this->p->get( 'display_payment_desc', 0 );
@@ -64,6 +66,12 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// Message set in Openting Times class
 		PhocacartTime::checkOpeningTimes();
 
+		// Enable guest checkout automatically
+		if ($this->t['guest_checkout'] == 1 && $this->t['guest_checkout_auto_enable'] == 1) {
+			$guest	= new PhocacartUserGuestuser();
+			$guest->setGuestUser(1);
+		}
+
 
 
 		// Terms and Conditions
@@ -80,6 +88,13 @@ class PhocaCartViewCheckout extends JViewLegacy
 		if ($this->t['display_checkout_privacy_checkbox'] > 0) {
 			$this->t['checkout_privacy_checkbox_label_text']	= $this->p->get( 'checkout_privacy_checkbox_label_text', 0 );
 			$this->t['checkout_privacy_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_privacy_checkbox_label_text'], 'html', '');
+		}
+
+		// Newsletter
+		$this->t['display_checkout_newsletter_checkbox']	= $this->p->get( 'display_checkout_newsletter_checkbox', 0 );
+		if ($this->t['display_checkout_newsletter_checkbox'] > 0) {
+			$this->t['checkout_newsletter_checkbox_label_text']	= $this->p->get( 'checkout_newsletter_checkbox_label_text', 0 );
+			$this->t['checkout_newsletter_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_newsletter_checkbox_label_text'], 'html', '');
 		}
 
 		$this->t['enable_captcha_checkout']	= PhocacartCaptcha::enableCaptchaCheckout();
@@ -469,11 +484,11 @@ class PhocaCartViewCheckout extends JViewLegacy
 
 
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
+		$media->loadBase();
 		$media->loadChosen();
 		$media->loadWindowPopup();
 
-		$media->loadTouchSpin('quantity');
+		$media->loadTouchSpin('quantity',$this->s['i']);
 
 		//Scroll to
 		if ($this->t['checkout_scroll'] == 0) {
@@ -498,6 +513,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['stockvalid']			= $this->cart->getStockValid();
 		$this->t['minqtyvalid']			= $this->cart->getMinimumQuantityValid();
 		$this->t['minmultipleqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
+
+		$media->loadSpec();
 
 		$this->_prepareDocument();
 
@@ -526,6 +543,9 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
 
 		// END Plugins --------------------------------------
+
+        $media->loadSpec();
+
 		parent::display($tpl);
 
 

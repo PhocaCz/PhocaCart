@@ -220,7 +220,7 @@ echo $r->td(implode(' ', $catO), "small");
 
 
 echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price).'</span>', "small");
-echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price_original:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price_original).'</span>', "small");
+echo $r->td('<span class="ph-editinplace-text ph-eip-price_original" id="products:price_original:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price_original).'</span>', "small");
 //echo $r->td($item->hits, "small");
 echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:stock:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->stock).'</span>', "small");
 

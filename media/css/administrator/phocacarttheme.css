@@ -1,6 +1,6 @@
 /*
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin-ext');
 
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin-ext');
 
 .admin.com_phocacart input, 
 .admin.com_phocacart button, 
@@ -15,6 +15,7 @@
 .admin.com_phocacart .small{
 	font-size: 96% !important;
 }
+*/
 .ph-editinplace-text {
 	display: block;
 	min-height: 2.7em;
@@ -24,15 +25,20 @@
 #j-main-container {
 	padding: 20px !important;
 }
-*/
+
+
+
+
+
+
 
 
 .container-main {
 	background: transparent;
-	margin-top: -10px;
+	margin-top: -11px;
 	padding-left: 0px !important;
 	padding-right: 0px !important;
-	padding-bottom: 10px !important;
+	padding-bottom: 11px !important;
 }
 
 
@@ -110,8 +116,8 @@
 
 
 .subhead {
-    background: #f5f5f5 !important;
-    border-bottom: 1px solid #DFE8F1 !important;
+    background: #f3f3f3 !important;
+    border-bottom: 1px solid #f3f3f3 !important;
 	
    /* color: #0C192E;
     box-shadow: 3px 3px 5px 0px rgba(0,0,0,1);
@@ -777,7 +783,7 @@
 	
     text-shadow: 0px 0px 0px 0px transparent !important;
     text-shadow: none !important;
-    background-color: #2D6CA2 !important;
+   /* background-color: #2D6CA2 !important;*/
 	
 
 }
@@ -1083,3 +1089,111 @@ table#extensionList tr td {
 	text-decoration:none;
 	color: #555;
 }
+
+
+/* 3.3.0 */
+
+.ph-cpanel-chart-box {
+	box-shadow: 0 3px 8px 0 rgba(60,70,100,.1), 0 3px 6px 0 rgba(0,0,0,0.1);
+	background-image: linear-gradient(-45deg,#0443a5,#009bd5);
+    background-position: center;
+	border: 0;
+	color: #fff;
+}
+
+.ph-icon-inside-box {
+    border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#f5f5f5);
+    box-shadow: 0 3px 8px 0 rgba(60,70,100,.1), 0 3px 6px 0 rgba(0,0,0,0.1);
+}
+
+.ph-cpanel-info-box, .ph-cpanel-tips-box {
+    border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#f7f7f7);
+    box-shadow: 0 3px 8px 0 rgba(60,70,100,.1), 0 3px 6px 0 rgba(0,0,0,0.1);
+}
+
+.ph-cpanel-color {
+    border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#f7f7f7);
+    box-shadow: 0 3px 8px 0 rgba(60,70,100,.1), 0 3px 6px 0 rgba(0,0,0,0.1);
+}
+
+.ph-cpanel-color-right {
+   /* background: rgba(200,200,200,0.1);*/
+   background: #fff;
+}
+
+.ph-cpanel-color1 {
+	color: #3ddcf7;
+}
+.ph-cpanel-color1,
+.ph-cpanel-color1 .ph-cpanel-color-right {
+	background-image: linear-gradient(80deg, #3ddcf7,#0ad3f5);
+	color: #fff;
+}
+
+.ph-cpanel-color2 {
+	color: #00b19d;
+}
+.ph-cpanel-color2,
+.ph-cpanel-color2 .ph-cpanel-color-right {
+	background-image: linear-gradient(80deg, #00b19d,#007a6d);
+	color: #fff;
+}
+
+.ph-cpanel-color3 {
+	color: #F76397;
+}
+.ph-cpanel-color3,
+.ph-cpanel-color3 .ph-cpanel-color-right {
+	background-image: linear-gradient(80deg, #F76397,#f42e74);
+	color: #fff;
+}
+
+.ph-cpanel-color4 {
+	color: #7266BA;
+}
+.ph-cpanel-color4,
+.ph-cpanel-color4 .ph-cpanel-color-right {
+	background-image: linear-gradient(80deg, #7266BA,#5649a2);
+	color: #fff;
+}
+
+.ph-cpanel-color5 {
+	color: #FFAA00;
+}
+.ph-cpanel-color5,
+.ph-cpanel-color5 .ph-cpanel-color-right {
+	background-image: linear-gradient(80deg, #FFAA00,#cc8800);
+	color: #fff;
+}
+
+.ph-cpanel-color6 {
+	color: #3BAFDA;
+}
+.ph-cpanel-color6,
+.ph-cpanel-color6 .ph-cpanel-color-right {
+	background-image: linear-gradient(80deg, #3BAFDA,#2493bd);
+	color: #fff;
+}
+
+.sidebar-nav .nav-list > li > a:focus,
+.sidebar-nav .nav-list > li > a:hover,
+.nav-list > .active > a, .nav-list > .active > a:hover,
+.nav-list > .active > a:focus,
+
+.sidebar-nav .nav-list > .active > a, 
+.sidebar-nav .nav-list > .active > a:hover,
+.sidebar-nav .nav-list > .active > a:focus {
+    background-color: #2D6CA2 !important;
+	background-image: linear-gradient(-80deg, #2D6CA2,#215078);
+}
+
+.ph-admin-manage table {
+	/*box-shadow: 0 3px 8px 0 rgba(60,70,100,.1), 0 3px 6px 0 rgba(0,0,0,0.1);*/
+	
+	box-shadow: 0 3px 6px 0 #dfe8f1;
+}
+
+

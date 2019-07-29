@@ -275,7 +275,8 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 				$coupon = new PhocacartCoupon();
 				$coupon->setCoupon(0, $item['phcoupon']);
-				$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
+				//$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
+				$couponTrue = $coupon->checkCoupon();// Complete Check - mostly coupon is added at the end so do complete check - can be changed to basic
 				$couponId 	= 0;
 				if ($couponTrue) {
 					$couponData = $coupon->getCoupon();
@@ -431,11 +432,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
 		$item['phcheckouttac']		= $this->input->get( 'phcheckouttac', false, 'string'  );
 		$item['privacy']			= $this->input->get( 'privacy', false, 'string'  );
+		$item['newsletter']			= $this->input->get( 'newsletter', false, 'string'  );
 		$item['phcomment']			= $this->input->get( 'phcomment', '', 'string'  );
 		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
 		$item['privacy'] 			= $item['privacy'] ? 1 : 0;
 		$item['phcheckouttac']	 	= $item['phcheckouttac'] ? 1 : 0;
+		$item['newsletter']	 		= $item['newsletter'] ? 1 : 0;
 
 
 		if ($display_checkout_privacy_checkbox == 2 && $item['privacy'] == 0) {

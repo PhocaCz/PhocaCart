@@ -13,7 +13,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-jimport( 'joomla.filesystem.folder' ); 
+jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 */
 
@@ -50,36 +50,36 @@ if ($this->page == 0) { ?>
 	<div class="row-fluid">
 		<div class="span6 col-sm-6 col-md-6">
 			<div class="ph-wizard-start-page-box">
-				
+
 				<div><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_DEMO_DATA'); ?>:</div>
-				
-				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="<?php PhocacartRenderIcon::getClassAdmin('download')?> icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
-				
+
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="<?php $this->s['i']['download']?> icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
+
 				<ol>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_INSTALL_BOTH_PACKAGES'); ?></li>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_CREATE_OR_IMPORT_COUNTRIES'); ?></li>
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_CREATE_MENU_LINK'); ?></li>
-					
+
 					<li><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="https://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</li>
 				</ol>
-			
-	
+
+
 				<div><?php echo JText::_('COM_PHOCACART_FOR_MORE_INFORMATION_FOLLOW_THIS_GUIDE'); ?>: <a href="https://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data-demo-data-in-phoca-cart" target="_blank"><?php echo JText::_('COM_PHOCACART_INSTALLING_SAMPLE_DATA_IN_PHOCA_CART'); ?></a>.</div>
-	
+
 			</div>
 		</div>
-		
+
 		<div class="span6  col-sm-6 col-md-6">
 			<div class="ph-wizard-start-page-box">
 				<div><?php echo JText::_('COM_PHOCACART_WIZARD_START_QUICK_SETUP_WIZARD');?>.</div>
 				<div>&nbsp;</div>
-				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn" href="<?php echo JRoute::_($linkWizard.'&page=1'); ?>"><span class="<?php PhocacartRenderIcon::getClassAdmin('share-alt')?> icon-share"></span> <?php echo JText::_('COM_PHOCACART_START_WIZARD'); ?></a></div>
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn" href="<?php echo JRoute::_($linkWizard.'&page=1'); ?>"><span class="glyphicon glyphicon-ok share-alt icon-share"></span> <?php echo JText::_('COM_PHOCACART_START_WIZARD'); ?></a></div>
 			</div>
 		</div>
 	</div>
 </div><?php
 
-} else if ($this->page == 1) { 
+} else if ($this->page == 1) {
 ?>
 
 <div class="ph-wizard-start-page-window nextpage" data-page="1">
@@ -92,75 +92,75 @@ if ($this->page == 0) { ?>
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_CATEGORY'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkCategoryEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_CATEGORY'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardCategory"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_TAX_IN_CASE_TAXABLE_PRODUCTS_WILL_BE_SOLD_IN_SHOP'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkTaxEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_TAX'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardTax"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_PRODUCT'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkProductEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_PRODUCT'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardProduct"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_SHIPPING_METHOD'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkShippingEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_SHIPPING_METHOD'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardShipping"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_AT_LEAST_ONE_PAYMENT_METHOD'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkPaymentEdit);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_PAYMENT_METHOD'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardPayment"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_COUNTRIES'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkCountryView);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_COUNTRY'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardCountry"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_REGIONS'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkRegionView);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_IMPORT_REGION'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardRegion"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_CREATE_MENU_LINK_TO_PHOCA_CART'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkMenus);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_CREATE_MENU_LINK'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardMenu"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_PHOCA_CART_MODULES'); ?> (<a href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><?php echo JText::_('COM_PHOCACART_DOWNLOAD_PHOCA_CART_MODULES'); ?></a>)</div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkModules);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_ADD_OR_EDIT_MODULES'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardModule"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span6 col-sm-6 col-md-6"><?php echo JText::_('COM_PHOCACART_EDIT_PHOCA_CART_OPTIONS'); ?></div>
 		<div class="span3 col-sm-3 col-md-3 "><a class="btn btn-primary ph-btn phClickBtn" href="<?php echo JRoute::_($linkOptions);?>" target="_parent"><?php echo JText::_('COM_PHOCACART_OPTIONS'); ?></a></div>
 		<div class="span3 col-sm-3 col-md-3"><div id="phResultWizardOption"></div></div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span12 col-sm-12 col-md-12"><?php echo JText::_('COM_PHOCACART_WIZARD_BOOTSTRAP_TEMPLATE_RECOMMENDED'); ?> <a href="https://www.phoca.cz/joomla-templates" target="_blank"><?php echo JText::_('COM_PHOCACART_WIZARD_DOWNLOAD_BOOTSTRAP_TEMPLATE'); ?></a>.</div>
 	</div>
-	
+
 	<div class="row-fluid ph-vertical-align ph-wizard-row">
 		<div class="span12 col-sm-12 col-md-12"><?php echo JText::_('COM_PHOCACART_DISCOVER'); ?> <a href="https://www.phoca.cz/phocacart-extensions" target="_blank"><?php echo JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS'); ?></a>.</div>
 	</div>
-	
+
 </div><?php
 
 }
@@ -172,15 +172,15 @@ if ($this->page == 0) { ?>
 $link	= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartedittax&tmpl=component&id='.(int)$this->id);
 
 if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->title) && $this->item->title != '') {
-	
+
 	$flag = '';
 	if (isset($this->item->code2) && $this->item->code2 != '') {
-		$flag = PhocacartUtils::getCountryFlag($this->item->code2); 
+		$flag = PhocacartUtils::getCountryFlag($this->item->code2);
 	}
 	echo '<h1 class="ph-modal-header">'.$flag .' '.$this->item->title.'</h1>';
 
 	echo '<form action="'.$link.'" method="post">';
-	
+
 	//echo '<table class="ph-tax-edit">';
 	echo '<div class="row-fluid ph-tax-edit-header">';
 	echo '<div class="span4 col-sm-4 col-md-4">'.JText::_('COM_PHOCACART_TAX_NAME').'</div>';
@@ -189,21 +189,21 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 	echo '<div class="span2 col-sm-2 col-md-2">'.JText::_('COM_PHOCACART_ALIAS').'</div>';
 	echo '<div class="span2 col-sm-2 col-md-2">'.JText::_('COM_PHOCACART_TAX_RATE_COUNTRY').'</div>';
 	echo '</div>';
-	
+
 	if (!empty($this->itemcountrytax)) {
 		foreach($this->itemcountrytax as $k => $v) {
 			echo '<div class="row-fluid ph-tax-edit-item">';
 			echo '<div class="span4 col-sm-4 col-md-4">'.JText::_($v->title).'</div>';
 			echo '<div class="span2 col-sm-2 col-md-2">'.PhocacartPrice::cleanPrice($v->tax_rate).'</div>';
-			
+
 			echo '<div class="span2 col-sm-2 col-md-2">';
-			
+
 			echo '<input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][title]" value="'.htmlspecialchars($v->tc_title).'">';
 			echo '<input type="hidden" name="jform['.(int)$v->id.'][tax_id]" value="'.(int)$v->id.'">';
 			echo '</div>';
-			
+
 			echo '<div class="span2 col-sm-2 col-md-2"><input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][alias]" value="'.htmlspecialchars($v->tc_alias).'"></div>';
-			
+
 			// cleanPrice method add 0 to empty values which is wrong in this case as we have:
 			// VAT = 0 (valid VAT)
 			// VAT = '' (vat not set)
@@ -213,15 +213,15 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 			}
 			echo '<div class="span2 col-sm-2 col-md-2"><input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][tax_rate]" value="'.htmlspecialchars($tcTaxRate).'"></div>';
 			echo '</div>';
-			
+
 		}
 	}
 	//echo '</table>';
-	
 
 
-	
-	
+
+
+
 	echo '<input type="hidden" name="jform[id]" value="'.(int)$this->id.'">';
 	echo '<input type="hidden" name="task" value="phocacartedittax.edittax">';
 	echo '<input type="hidden" name="tmpl" value="component" />';

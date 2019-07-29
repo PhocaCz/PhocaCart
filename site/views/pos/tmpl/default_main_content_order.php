@@ -11,11 +11,11 @@ $price	= $this->t['price'];
 $order	= new PhocacartOrderRender();
 
 
-$view = '<a href="#" data-type="1" data-order="'.(int)$this->t['id'].'" class="btn btn-default btn-small btn-xs ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.PhocacartRenderIcon::getClass('order').' ph-icon-success"></span></a>';
-$view .= ' <a href="#" data-type="4" data-order="'.(int)$this->t['id'].'" class="btn btn-default btn-small btn-xs ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_RECEIPT').'" class="'.PhocacartRenderIcon::getClass('receipt').' ph-icon-success"></span></a>';
-$view .= ' <a href="#" data-type="2" data-order="'.(int)$this->t['id'].'" class="btn btn-default btn-small btn-xs ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.PhocacartRenderIcon::getClass('invoice').' ph-icon-danger"></span></a>';
-$view .= ' <a href="#" data-type="3" data-order="'.(int)$this->t['id'].'" class="btn btn-default btn-small btn-xs ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.PhocacartRenderIcon::getClass('del-note').'"></span></a>';
-$view .= ' <a href="#" data-type="-1" data-order="'.(int)$this->t['id'].'" class="btn btn-success btn-small btn-xs ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_PRINT').'" class="'.PhocacartRenderIcon::getClass('print').'"></span></a>';
+$view = '<a href="#" data-type="1" data-order="'.(int)$this->t['id'].'" class="'.$this->s['c']['btn.btn-default.btn-sm'].' ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.$this->s['i']['order'].' ph-icon-success"></span></a>';
+$view .= ' <a href="#" data-type="4" data-order="'.(int)$this->t['id'].'" class="'.$this->s['c']['btn.btn-default.btn-sm'].' ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_RECEIPT').'" class="'.$this->s['i']['receipt'].' ph-icon-success"></span></a>';
+$view .= ' <a href="#" data-type="2" data-order="'.(int)$this->t['id'].'" class="'.$this->s['c']['btn.btn-default.btn-sm'].' ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['invoice'].' ph-icon-danger"></span></a>';
+$view .= ' <a href="#" data-type="3" data-order="'.(int)$this->t['id'].'" class="'.$this->s['c']['btn.btn-default.btn-sm'].' ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['del-note'].'"></span></a>';
+$view .= ' <a href="#" data-type="-1" data-order="'.(int)$this->t['id'].'" class="'.$this->s['c']['btn.btn-default.btn-sm'].' ph-btn phOrderPrintBtn" role="button"><span title="'.JText::_('COM_PHOCACART_PRINT').'" class="'.$this->s['i']['print'].'"></span></a>';
 
 // Default document displayed at start
 $o = $order->render($this->t['id'], 4, 'raw');

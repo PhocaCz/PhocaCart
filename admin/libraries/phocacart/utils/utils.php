@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartUtils
 {
 	public static function setVars( $task = '') {
-	
+
 		$a				= array();
 		$app			= JFactory::getApplication();
 		$a['o'] 		= htmlspecialchars(strip_tags($app->input->get('option')));
@@ -27,7 +27,7 @@ class PhocacartUtils
 		$a['bootstrap']	= 'media/'.$a['o'].'/bootstrap/';
 		$a['task']		= $a['c'] . htmlspecialchars(strip_tags($task));
 		$a['tasks'] 	= $a['task']. 's';
-		
+
 		switch ($task) {
 		 case 'tax':
 		 case 'stockstatus':
@@ -44,11 +44,11 @@ class PhocacartUtils
 
 		return $a;
 	}
-	
+
 	public static function getPhocaVersion($component = 'com_phocacart') {
 		$component = 'com_phocacart';
 		$folder = JPATH_ADMINISTRATOR .'/components'.'/'.$component;
-		
+
 		if (JFolder::exists($folder)) {
 			$xmlFilesInDir = JFolder::files($folder, '.xml$');
 		} else {
@@ -72,24 +72,24 @@ class PhocacartUtils
 				}
 			}
 		}
-		
+
 		if (isset($xml_items['version']) && $xml_items['version'] != '' ) {
 			return $xml_items['version'];
 		} else {
 			return '';
 		}
 	}
-	
-	public static function getAliasName($alias) {	
+
+	public static function getAliasName($alias) {
 		$alias = JApplicationHelper::stringURLSafe($alias);
 		if (trim(str_replace('-', '', $alias)) == '') {
 			$alias = JFactory::getDate()->format("Y-m-d-H-i-s");
 		}
 		return $alias;
 	}
-	
+
 	public static function setMessage($new = '', $current = '') {
-		
+
 		$message = $current;
 		if($new != '') {
 			if ($current != '') {
@@ -99,18 +99,18 @@ class PhocacartUtils
 		}
 		return $message;
 	}
-	
+
 	public static function getInfo($mode = 1) {
-		
+
 		if ($mode == 0) {
 			return "\n\n" . 'Powered by Phoca Cart' . "\n" . 'https://www.phoca.cz/phocacart';
 		} else {
 			return '<div style="text-align:right;color:#ccc;display:block">Powered by <a href="https://www.phoca.cz/phocacart">Phoca Cart</a></div>';
 		}
 	}
-	
+
 	public static function getToken($type = 'token') {
-		
+
 		$app		= JFactory::getApplication();
 		$secret		= $app->get('secret');
 		$secretPartA= substr($secret, mt_rand(4,15), mt_rand(0,10));
@@ -122,39 +122,39 @@ class PhocacartUtils
 		$randC		= mt_rand(0, $randB);
 		$randD		= mt_rand(0,24);
 		$randD2		= mt_rand(0,24);
-		
-		
+
+
 		$salt 		= md5('string '. $secretPartA . date('s'). $randA . str_replace($randC, $randD, date('r')). $secretPartB . 'end string');
 		$salt 		= str_replace($saltArray[$randD], $saltArray[$randD2], $salt);
 		if ($type > 100) {
 			$salt 	=  md5($salt);
 		}
-		
-	 
+
+
 		// use password_hash since php 5.5.0
 		$salt		= crypt($salt, $salt);
 		$rT			= $randC + $randA;
 		if ($rT < 1) {$rT = 1;}
 		$time		= (int)time() * $randB / $rT;
 		$token = hash('sha256', $salt . $time . time());
-		
+
 		if ($type == 'folder') {
 			return substr($token, $randD, 16);
 		} else {
 			return $token;
 		}
 	}
-	
+
 	public static function isURLAddress($url) {
 		return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
 	}
-	
+
 	public static function round($value, $precision = 2) {
-		
+
 		return round($value, $precision);
 	}
-	
-	public static function getRandomString($length = '') {		
+
+	public static function getRandomString($length = '') {
 		$code = md5(uniqid(rand(), true));
 		if ($length != '' && (int)$length > 0) {
 			$length = $length - 1;
@@ -163,7 +163,7 @@ class PhocacartUtils
 			return chr(rand(97,122)) . $code;
 		}
 	}
-	
+
 	public static function wordDelete($string,$length,$end) {
 		if (strlen($string) < $length || strlen($string) == $length) {
 			return $string;
@@ -171,7 +171,7 @@ class PhocacartUtils
 			return substr($string, 0, $length) . $end;
 		}
 	}
-	
+
 	public static function wordDeleteWhole($string,$length,$end = '...') {
 		if (strlen($string) < $length || strlen($string) == $length) {
 			return $string;
@@ -181,7 +181,7 @@ class PhocacartUtils
 		}
 	}
 
-	
+
 	public static function strTrimAll($input) {
 		$output	= '';
 	    $input	= trim($input);
@@ -194,16 +194,16 @@ class PhocacartUtils
 	    }
 	    return $output;
 	}
-	
+
 	public static function convertEncoding($string) {
-	
+
 		$pC						= JComponentHelper::getParams( 'com_phocacart' );
 		$import_encoding_method	= $pC->get( 'import_encoding_method', '' );
 		$import_encoding		= $pC->get( 'import_encoding', '' );
 		$returnString		= '';
 
-		if ($import_encoding != '') { 
-			
+		if ($import_encoding != '') {
+
 			if ($import_encoding_method == 1) { //'iconv'
 				$returnString = iconv( $import_encoding, "UTF-8", $string );
 			} else if ($import_encoding_method == 2) {//'mb_convert_encoding'
@@ -217,15 +217,15 @@ class PhocacartUtils
 
 		return self::removeUtf8Bom($returnString);
 	}
-	
+
 	public static function removeUtf8Bom($text) {
 		$bom = pack('H*','EFBBBF');
 		$text = preg_replace("/^$bom/", '', $text);
 		return $text;
 	}
-	
+
 	public static function getIp() {
-		
+
 		$ip = false;
 		if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) {
 			$ip  = $_SERVER['REMOTE_ADDR'];
@@ -235,11 +235,11 @@ class PhocacartUtils
 		if (!$ip) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
-		
+
 		return $ip;
 	}
 
-	
+
 	public static function StripHiddenChars($str) {
 		$chars = array("\r\n", "\n", "\r", "\t", "\0", "\x0B", "\xEF", "\xBB", "\xBF");
 
@@ -247,10 +247,10 @@ class PhocacartUtils
 
 		return preg_replace('/\s+/',' ',$str);
 	}
-	
-	
+
+
 	public static function setOptionParameter($parameter, $value = '') {
-		
+
 		$component			= 'com_phocacart';
 		$paramsC			= JComponentHelper::getParams($component) ;
 		$paramsC->set($parameter, $value);
@@ -263,7 +263,7 @@ class PhocacartUtils
 			throw new Exception($db->getErrorMsg());
 			return false;
 		}
-			
+
 		// pre-save checks
 		if (!$table->check()) {
 			throw new Exception($table->getError());
@@ -277,15 +277,15 @@ class PhocacartUtils
 		}
 		return true;
 	}
-	
+
 	public static function setWizard($status) {
 		self::setOptionParameter('enable_wizard', $status);
 	}
-	
-	
+
+
 	public static function doesExist($type) {
-		
-		
+
+
 		switch ($type) {
 			case 'category':
 				$q = 'SELECT id FROM #__phocacart_categories ORDER BY id LIMIT 1';
@@ -319,29 +319,29 @@ class PhocacartUtils
 				$q = 'SELECT params FROM #__extensions WHERE type = \'component\' AND element = \'com_phocacart\' ORDER BY params LIMIT 1';
 			break;
 		}
-		
+
 		$db = JFactory::getDBO();
 		$db->setQuery($q);
 		$item = $db->loadResult();
-		
+
 		if ($type == 'option') {
 			$item = str_replace('{}', '', $item);
-			if (isset($item) && $item != '') { 
+			if (isset($item) && $item != '') {
 				return 1;
 			}
 		} else {
-			if (isset($item) && (int)$item > 0) { 
+			if (isset($item) && (int)$item > 0) {
 				return 1;
 			}
 		}
-		
+
 		return 0;
-		
+
 	}
-	
+
 	// $version - minimum version it must have
 	public static function isJCompatible($version) {
-		
+
 		$currentVersion = new JVersion();
 		if($currentVersion->isCompatible($version)) {
 			return true;
@@ -349,14 +349,14 @@ class PhocacartUtils
 		return false;
 	}
 	public static function setConcatCharCount($count = 16384) {
-		
+
 		$db = JFactory::getDBO();
 		$db->setQuery("SET @@group_concat_max_len = ".(int)$count);
 		$db->execute();
 	}
-	
+
 	public static function issetMessage() {
-		
+
 		$app		= JFactory::getApplication();
 		$message 	= $app->getMessageQueue();
 
@@ -365,7 +365,7 @@ class PhocacartUtils
 		}
 		return false;
 	}
-	
+
 	public static function date($date, $format = '') {
 		if ($format == '') {
 			$format = JText::_('DATE_FORMAT_LC2');
@@ -379,9 +379,9 @@ class PhocacartUtils
 		$dateN = JHtml::_('date', $date, $format);
 		return $dateN;
 	}
-	
+
 	public static function getComponentParameters() {
-		
+
 		$app = JFactory::getApplication();
 		if ($app->isClient('administrator')) {
 			return JComponentHelper::getParams('com_phocacart');
@@ -392,18 +392,18 @@ class PhocacartUtils
 			} else {
 				return JComponentHelper::getParams('com_phocacart');
 			}
-			
+
 		}
-		
+
 		return JComponentHelper::getParams('com_phocacart');
-		
+
 	}
-	
+
 	public static function replaceCommaWithPoint($item) {
-		
+
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$comma_point		= $paramsC->get( 'comma_point', 0 );
-		
+
 		$item = PhocacartUtils::getDecimalFromString($item);
 		if ($comma_point == 1) {
 			return str_replace(',', '.', $item);
@@ -411,9 +411,9 @@ class PhocacartUtils
 			return $item;
 		}
 	}
-	
+
 	public static function getIntFromString($string) {
-		
+
 		if (empty($string)) {
 			return 0;
 		}
@@ -424,37 +424,37 @@ class PhocacartUtils
 		}
 		return $int;
 	}
-	
+
 	public static function getDateFromString($string) {
-		
-	
+
+
 		if (empty($string)) {
 			return '0000-00-00';
 		}
-		
+
 		return $string;
 	}
-	
+
 	public static function getDecimalFromString($string) {
-		
-	
+
+
 		if (empty($string)) {
 			return '0.0';
 		}
-		
+
 		return $string;
 	}
-	
+
 	public static function getStringFromItem($item) {
-		
-	
+
+
 		if (empty($item)) {
 			return '';
 		}
-		
+
 		return $item;
 	}
-	
+
 	public static function getDefaultTemplate() {
 
 		$db = JFactory::getDBO();
@@ -462,21 +462,21 @@ class PhocacartUtils
 		$db->setQuery($q);
 		$item = $db->loadResult();
 		return $item;
-	
+
 	}
-	
+
 	public static function cleanExternalHtml($html) {
 		$allowedTags = PhocacartUtilsSettings::getHTMLTagsExternalSource();
 		$allowedTagsString = '<' . implode('><', $allowedTags). '>';
-		
+
 		$html = strip_tags($html, $allowedTagsString);
-		
+
 		return $html;
-		
+
 	}
-	
+
 	public static function curl_get_contents($url) {
-		
+
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -488,40 +488,42 @@ class PhocacartUtils
 
 		return $data;
 	}
-	
+
 	public static function addSeparator($string, $separator = ' - ') {
-		
+
 		$o = '';
 		if ($string != '') {
 			$o = $separator . $string;
 		}
 		return $o;
 	}
-	
+
 	public static function isView($viewToCheck = '') {
-	
+
 		if ($viewToCheck != '') {
 			$app 		= JFactory::getApplication();
 			$view 		= $app->input->get('view', '');
 			$option 	= $app->input->get('option', '');
-		
+
+
 			if ($option == 'com_phocacart' && $view == $viewToCheck) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public static function isController($controllerToCheck = '') {
-	
+
 		if ($controllerToCheck != '') {
 			$app 		= JFactory::getApplication();
-			//$task 		= $app->input->get('task');
+			//$task 		= $app->input->get('task','', 'raw');
 			$controller = $app->input->get('controller', '');// Set in POS controllers
 			$option 	= $app->input->get('option', '');
 
+
 			//$taskA		= explode('.', $task);
-		
+
 			//if ($option == 'com_phocacart' && isset($taskA[0]) && $taskA[0] == $controllerToCheck) {
 			if ($option == 'com_phocacart' && $controller == $controllerToCheck) {
 				return true;

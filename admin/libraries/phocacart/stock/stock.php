@@ -156,6 +156,7 @@ class PhocacartStock
 
 	public static function getStockStatusOutput($stockStatus) {
 		$o = '';
+		$s = PhocacartRenderStyle::getStyles();
 
         // LINK
         if ($stockStatus['status_link'] != '') {
@@ -178,7 +179,7 @@ class PhocacartStock
 		}
 
 		if ($stockStatus['status_image']) {
-			$o .= '<img src="'.JURI::base(true).'/'.$stockStatus['status_image'].'" alt="" class="img-responsive ph-image" />';
+			$o .= '<img src="'.JURI::base(true).'/'.$stockStatus['status_image'].'" alt="" class="'.$s['c']['img-responsive'].' ph-image" />';
 		}
 
 		// LINK

@@ -9,6 +9,6 @@
 defined('_JEXEC') or die();
 
 echo '<div class="ph-pos-logo">';
-echo '<img class="img-responsive ph-image" src="'.JURI::base(true).'/media/com_phocacart/images/phoca-pos.png" alt=""  />';
+echo '<img class="'.$this->s['c']['img-responsive'].' ph-image" src="'.JURI::base(true).'/media/com_phocacart/images/phoca-pos.png" alt=""  />';
 echo '</div>';
 ?>

@@ -202,18 +202,18 @@ $info .= '</div>';
 
 echo $r->td($info, "small");
 // ACTION
-$view = '<a href="'.$linkOrderView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.PhocacartRenderIcon::getClassAdmin('search').' ph-icon-success"></span></a>';
-$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.PhocacartRenderIcon::getClassAdmin('list-alt').' ph-icon-danger"></span></a>';
-$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.PhocacartRenderIcon::getClassAdmin('barcode').' ph-icon-warning"></span></a>';
+$view = '<a href="'.$linkOrderView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.$this->s['i']['search'].' ph-icon-success"></span></a>';
+$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['list-alt'].' ph-icon-danger"></span></a>';
+$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['barcode'].' ph-icon-warning"></span></a>';
 
 
 if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 
 	$formatPDF = '&format=pdf';
 	$view .= '<br />';
-	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.PhocacartRenderIcon::getClassAdmin('search').' ph-icon-success"></span><br /><span class="ph-icon-success-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
-	$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.PhocacartRenderIcon::getClassAdmin('list-alt').' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
-	$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.PhocacartRenderIcon::getClassAdmin('barcode').' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.$this->s['i']['search'].' ph-icon-success"></span><br /><span class="ph-icon-success-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['list-alt'].' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+	$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['barcode'].' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
 
 }
 echo $r->td($view, "small");

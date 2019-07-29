@@ -1069,3 +1069,7 @@ input[type="number"] {
 .ph-pos-wrap-top a.nav-link.active {
 	cursor: pointer !important;
 }
+
+.form-inline .form-group .ph-input-quantity.ph-input-sm {
+    width: 2em;
+}

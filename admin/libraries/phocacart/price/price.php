@@ -630,7 +630,6 @@ class PhocacartPrice
 		}
 
 
-
 		return $priceO;
 	}
 

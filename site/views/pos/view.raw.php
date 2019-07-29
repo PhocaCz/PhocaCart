@@ -18,6 +18,7 @@ class PhocaCartViewPos extends JViewLegacy
 	protected $items;
 	protected $t;
 	protected $p;
+	protected $s;
 	protected $cart;
 
 	function display($tpl = null) {
@@ -25,6 +26,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$app						= JFactory::getApplication();
 		$document					= JFactory::getDocument();
 		$this->p 					= $app->getParams();
+		$this->s					= PhocacartRenderStyle::getStyles();
 		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$model						= $this->getModel();
 		$this->state				= $this->get('State');
@@ -286,7 +288,7 @@ class PhocaCartViewPos extends JViewLegacy
 				$this->t['ordering']		= $model->getOrdering();
 
 				$media 						= new PhocacartRenderMedia();
-				$this->t['class-row-flex'] 	= $media->loadEqualHeights();
+				//$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 				$this->t['class_thumbnail'] = 'ph-pos-thumbnail';
 
 				parent::display('main_content_orders');
@@ -316,7 +318,7 @@ class PhocaCartViewPos extends JViewLegacy
 				$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');
 
 				$media 						= new PhocacartRenderMedia();
-				$this->t['class-row-flex'] 	= $media->loadEqualHeights();
+				//$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 				$this->t['class_thumbnail'] = 'ph-pos-thumbnail';
 
 				parent::display('main_content_products');

@@ -9,9 +9,11 @@
 
 defined('JPATH_BASE') or die;
 
+$s = PhocacartRenderStyle::getStyles();
+
 $icon = empty($displayData['icon']) ? 'generic' : preg_replace('#\.[^ .]*$#', '', $displayData['icon']);
 ?>
 <h1 class="page-title">
-	<span class="<?php echo PhocacartRenderIcon::getClassAdmin($icon) ?>"></span>
+	<span class="glyphicon glyphicon-<?php echo $icon ?>"></span>
 	<?php echo $displayData['title']; ?>
 </h1>

@@ -12,21 +12,19 @@ echo '<div id="ph-pc-orders-box" class="pc-orders-view'.$this->p->get( 'pageclas
 
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ORDERS')));
 
-
-
 /*if ( $this->t['description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['description']. '</div>';
 }*/
 
 if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 
-	echo '<div class="ph-orders-header-box-row" >';
+	echo '<div class="'.$this->s['c']['row'].' ph-orders-header-box-row" >';
 
-	echo '<div class="col-sm-2 col-md-2 ">'.JText::_('COM_PHOCACART_ORDER_NUMBER').'</div>';
-	echo '<div class="col-sm-2 col-md-2 ">'.JText::_('COM_PHOCACART_STATUS').'</div>';
-	echo '<div class="col-sm-3 col-md-3 ">'.JText::_('COM_PHOCACART_DATE_ADDED').'</div>';
-	echo '<div class="col-sm-2 col-md-2 ph-right">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
-	echo '<div class="col-sm-3 col-md-3 ph-center">'.JText::_('COM_PHOCACART_ACTION').'</div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.JText::_('COM_PHOCACART_ORDER_NUMBER').'</div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.JText::_('COM_PHOCACART_STATUS').'</div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_DATE_ADDED').'</div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-right">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">'.JText::_('COM_PHOCACART_ACTION').'</div>';
 
 	echo '<div class="ph-cb"></div>';
 	echo '</div>';
@@ -34,20 +32,20 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 
 		$price			= new PhocacartPrice();
 		foreach($this->t['orders'] as $k => $v) {
-			echo '<div class="col-sm-12 col-md-12 ph-orders-item-box-row" >';
+			echo '<div class="'.$this->s['c']['row'].'  ph-orders-item-box-row" >';
 
-			echo '<div class="col-sm-2 col-md-2 ">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $v->order_number).'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $v->order_number).'</div>';
 			$statusClass = PhocacartUtilsSettings::getOrderStatusClass($v->status_title);
 			$status = '<span class="'.$statusClass.'">'.JText::_($v->status_title).'</span>';
-			echo '<div class="col-sm-2 col-md-2 ">'.$status.'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.$status.'</div>';
 
-			echo '<div class="col-sm-3 col-md-3 ">'.PhocacartUtils::date($v->date).'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.PhocacartUtils::date($v->date).'</div>';
 
 			$price->setCurrency($v->currency_id);
 			$total = $price->getPriceFormat($v->total_amount);
-			echo '<div class="col-sm-2 col-md-2 ph-right">'.$total.'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-right">'.$total.'</div>';
 
-			echo '<div class="col-sm-3 col-md-3 ph-center">';
+			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">';
 
 			$token = '';
 			if ($this->t['token'] != '') {
@@ -61,23 +59,23 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 
 			$linkOrderViewHandler= 'onclick="phWindowPopup(this.href, \'orderview\', 2, 1.3);return false;"';
 
-			$view = '<a href="'.$linkOrderView.'" class="btn btn-success btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.PhocacartRenderIcon::getClass('order').' ph-icon-order"></span></a>';
-			$view .= ' <a href="'.$linkInvoiceView.'" class="btn btn-danger btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.PhocacartRenderIcon::getClass('invoice').' ph-icon-invoice"></span></a>';
-			$view .= ' <a href="'.$linkDelNoteView.'" class="btn btn-warning btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.PhocacartRenderIcon::getClass('del-note').' ph-icon-del-note"></span></a>';
+			$view = '<a href="'.$linkOrderView.'" class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn ph-orders-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.$this->s['i']['order'].' ph-icon-order"></span></a>';
+			$view .= ' <a href="'.$linkInvoiceView.'" class="'.$this->s['c']['btn.btn-danger.btn-sm'].' ph-btn ph-orders-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['invoice'].' ph-icon-invoice"></span></a>';
+			$view .= ' <a href="'.$linkDelNoteView.'" class="'.$this->s['c']['btn.btn-warning.btn-sm'].' ph-btn ph-orders-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['del-note'].' ph-icon-del-note"></span></a>';
 
 			if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 
 				$formatPDF = '&format=pdf';
 				$view .= '<br />';
 
-				$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-success btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.PhocacartRenderIcon::getClass('order').' ph-icon-order"></span></a>';
-				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-danger btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.PhocacartRenderIcon::getClass('invoice').' ph-icon-invoice"></span></a>';
-				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-warning btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.PhocacartRenderIcon::getClass('del-note').' ph-icon-del-note"></span></a>';
-				$view .= '<div class="ph-icon-pdf-text-box"><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></div>';
+				$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn ph-orders-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.$this->s['i']['order'].' ph-icon-order"></span><br /><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="'.$this->s['c']['btn.btn-danger.btn-sm'].' ph-btn ph-orders-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['invoice'].' ph-icon-invoice"></span><br /><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="'.$this->s['c']['btn.btn-warning.btn-sm'].' ph-btn ph-orders-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['del-note'].' ph-icon-del-note"></span><br /><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></a>';
+				//$view .= '<div class="ph-icon-pdf-text-box"><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></div>';
 
-			/*	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.PhocacartRenderIcon::getClass('order').' icon-search ph-icon-success"></span><br /><span class="ph-icon-success-txt">PDF</span></a>';
-				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.PhocacartRenderIcon::getClass('invoice').' icon-ph-invoice ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">PDF</span></a>';
-				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.PhocacartRenderIcon::getClass('del-note').' icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">PDF</span></a>';*/
+			/*	$view .= '<a href="'.$linkOrderView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_ORDER').'" class="'.$this->s['i']['order'].' icon-search ph-icon-success"></span><br /><span class="ph-icon-success-txt">PDF</span></a>';
+				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['invoice'].' icon-ph-invoice ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">PDF</span></a>';
+				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['del-note'].' icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">PDF</span></a>';*/
 
 			}
 
@@ -86,7 +84,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			echo '</div>';
 
 			if ($this->t['display_reward_points_user_orders'] == 1) {
-				echo '<div class="col-sm-12 col-md-12">';
+				echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 				$points = PhocacartReward::getRewardPointsByOrderId($v->id);
 				if (!empty($points)) {
 					foreach ($points as $k => $v) {
@@ -98,12 +96,12 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 						if ($v->type == 1) {
 
 							if ($v->published == 0) {
-								echo '<div>' . JText::_('COM_PHOCACART_USER_POINTS_TO_RECEIVE') . ' <span class="label label-success ' . $approvedClass . '">' . $v->points . '</span> <small>(' . JText::_('COM_PHOCACART_USER_NOT_APPROVED_YET') . ')</small></div>';
+								echo '<div>' . JText::_('COM_PHOCACART_USER_POINTS_TO_RECEIVE') . ' <span class="'.$this->s['c']['label.label-success'].' ' . $approvedClass . '">' . $v->points . '</span> <small>(' . JText::_('COM_PHOCACART_USER_NOT_APPROVED_YET') . ')</small></div>';
 							} else {
-								echo '<div>' . JText::_('COM_PHOCACART_USER_POINTS_RECEIVED') . ' <span class="label label-success ' . $approvedClass . '">' . $v->points . '</span></div>';
+								echo '<div>' . JText::_('COM_PHOCACART_USER_POINTS_RECEIVED') . ' <span class="'.$this->s['c']['label.label-success'].' ' . $approvedClass . '">' . $v->points . '</span></div>';
 							}
 						} else if ($v->type == -1) {
-							echo '<div>' . JText::_('COM_PHOCACART_USER_POINTS_USED') . ' <span class="label label-important label-danger ' . $approvedClass . '">' . $v->points . '</span></div>';
+							echo '<div>' . JText::_('COM_PHOCACART_USER_POINTS_USED') . ' <span class="'.$this->s['c']['label.label-danger'].' ' . $approvedClass . '">' . $v->points . '</span></div>';
 						} else {
 							//echo '<div><span class="label">'.$v->points.'</span></div>';
 						}
@@ -114,7 +112,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			}
 
 
-			echo '<div class="col-sm-12 col-md-12">';
+			echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 
 			$r 							= array();
 			$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($v);
@@ -217,7 +215,6 @@ if (!empty($this->t['categories'])) {
 	echo '</div></div>'. "\n";
 }*/
 echo '</div>';
-echo '<div>&nbsp;</div>';
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
 ?>

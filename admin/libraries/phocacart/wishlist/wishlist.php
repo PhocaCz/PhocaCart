@@ -19,8 +19,8 @@ class PhocacartWishlist
 		$session 		= JFactory::getSession();
 		$this->user		= PhocacartUser::getUser();
 		$app 			= JFactory::getApplication();
-		
-		
+
+
 		if((int)$this->user->id > 0) {
 			// DATABASE - logged in user - Singleton because of not load data from database every time wishlist instance is loaded
 			// 1. Not found in DATABASE - maybe user logged in now, so:
@@ -29,7 +29,7 @@ class PhocacartWishlist
 			// 4. Remove them from SESSION as they are stored in DATABASE
 			$wLDb = $this->getWishListItemdDb();// user logged in - try to get wishlist from db
 			$this->items 		= $wLDb;
-		
+
 			if(empty($this->items)) {
 				$this->items	= $session->get('wishlist', array(), 'phocaCart');
 				if(!empty($this->items)) {
@@ -39,14 +39,14 @@ class PhocacartWishlist
 			}
 		} else {
 			$this->items	= $session->get('wishlist', array(), 'phocaCart');
-		
+
 		}
 	}
-	
+
 	public function getWishListItemdDb() {
 		if ($this->user->id > 0) {
 			$db = JFactory::getDBO();
-		
+
 			$query = 'SELECT a.product_id, a.category_id, a.user_id'
 					.' FROM #__phocacart_wishlists AS a'
 					.' WHERE a.user_id = '.(int)$this->user->id
@@ -55,7 +55,7 @@ class PhocacartWishlist
 			$items = $db->loadAssocList();
 			$itemsSorted = array();
 			if (!empty($items)) {
-				
+
 				foreach($items as $k => $v) {
 					$itemsSorted[$v['product_id']]['product_id'] 	= $v['product_id'];
 					$itemsSorted[$v['product_id']]['category_id'] 	= $v['category_id'];
@@ -70,19 +70,19 @@ class PhocacartWishlist
 		}
 		return false;
 	}
-	
+
 	public function updateWishListItems() {
 		if ($this->user->id > 0) {
 			$db 	= JFactory::getDBO();
 			//$items	= se rialize($this->items);
 			$date 	= JFactory::getDate();
 			$now	= $date->toSql();
-			
-		
+
+
 			if (!empty($this->items)) {
-				
+
 				$q = '';
-				// Unfortunately we need to run SQL query more times in foreach as 
+				// Unfortunately we need to run SQL query more times in foreach as
 				// ON DUPLICATE KEY UPDATE can work with one SQL uqery INSERT INTO ... VALUES (a,b,c), (a2,b2,c2)
 				// but it does not work with multiple columns product_id x category_id x user_id in combination
 				foreach($this->items as $k => $v) {
@@ -100,39 +100,39 @@ class PhocacartWishlist
 			}
 			return false;
 		} else {
-			
+
 			$session 		= JFactory::getSession();
 			$session->set('wishlist', $this->items, 'phocaCart');
 		}
 		return false;
 	}
-	
+
 	public function addItem($id = 0, $catid = 0) {
 		if ($id > 0) {
-			
+
 			$app			= JFactory::getApplication();
 			$paramsC 		= PhocacartUtils::getComponentParameters();
 			$maxWishListItems	= $paramsC->get( 'max_wishlist_items', 20 );
-			
+
 			$count = count($this->items);
-		
+
 			if ($count > (int)$maxWishListItems || $count == (int)$maxWishListItems) {
 				$message = JText::_('COM_PHOCACART_COUNT_OF_PRODUCTS_IN_WISH_LIST_IS_LIMITED');
 				$app->enqueueMessage($message, 'error');
 				return false;
 			}
-			
+
 			if(isset($this->items[$id]) && (int)$this->items[$id] > 0) {
-				
+
 				$message = JText::_('COM_PHOCACART_PRODUCT_INCLUDED_IN_WISH_LIST');
 				$app->enqueueMessage($message, 'error');
 				return false;
 			} else {
-				
+
 				$this->items[$id]['product_id'] 	= $id;
 				$this->items[$id]['category_id'] 	= $catid;
 				if ($this->user->id > 0) {
-					$this->items[$id]['user_id'] 	= $this->user->id;	
+					$this->items[$id]['user_id'] 	= $this->user->id;
 				}
 				$this->updateWishListItems();
 				return true;
@@ -140,29 +140,29 @@ class PhocacartWishlist
 		}
 		return false;
 	}
-	
+
 	public function removeItem($id = 0) {
 		if ($id > 0) {
 			if(isset($this->items[$id]) && (int)$this->items[$id] > 0) {
 				if ($this->user->id > 0) {
 					if (isset($this->items[$id]['product_id']) && isset($this->items[$id]['category_id'])) {
-						
+
 						$db 	= JFactory::getDBO();
 						$query = ' DELETE '
 						.' FROM #__phocacart_wishlists'
 						.' WHERE product_id = '.(int)$this->items[$id]['product_id']
 						.' AND category_id =  '.(int)$this->items[$id]['category_id']
 						.' AND user_id =  '.(int)$this->user->id;
-						
+
 						unset($this->items[$id]);// Because of ajax
-						
+
 						$db->setQuery($query);
 						$db->execute();
 						return true;
 					} else {
 						return false;
 					}
-					
+
 				} else {
 					unset($this->items[$id]);
 					$session 		= JFactory::getSession();
@@ -177,31 +177,31 @@ class PhocacartWishlist
 		}
 		return false;
 	}
-	
+
 	public function emptyWishList() {
 		$session 		= JFactory::getSession();
 		$session->set('wishlist', array(), 'phocaCart');
 	}
-	
+
 	public function getItems() {
 		return $this->items;
 	}
-	
-	
+
+
 	public function getQueryList($items, $full = 0){
-		
+
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$itemsS		= $this->getItemsIdString($items);
-		
-		
-		
+
+
+
 		if ($itemsS == '') {
 			return false;
 		}
-		
-		$wheres[] = 'a.id IN ('.(string)$itemsS.')';	
+
+		$wheres[] = 'a.id IN ('.(string)$itemsS.')';
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos - not used outside online shop
 		$wheres[] = " a.access IN (".$userLevels.")";
@@ -209,11 +209,11 @@ class PhocacartWishlist
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		$wheres[] = " c.published = 1";
 		$wheres[] = " a.published = 1";
-		
+
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
-		
+
 		if ($full == 1) {
-			
+
 			$columns		= 'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
 			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
 			//.' a.length, a.width, a.height, a.weight, a.volume,'
@@ -225,8 +225,8 @@ class PhocacartWishlist
 			.' ppg.price, pptg.points_received';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-			
-			$query = 
+
+			$query =
 			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
@@ -234,24 +234,24 @@ class PhocacartWishlist
 			//.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
 			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-			
+
 			// user is in more groups, select lowest price by best group
 			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			// user is in more groups, select highest points by best group
 			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
-			
+
 			.  $where
 			. ' GROUP BY '.$groups
 			. ' ORDER BY a.id';
 		} else {
-			
+
 			$columns		= 'a.id as id, a.title as title, a.alias as alias,'
 			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories';
 			$groupsFull		= 'a.id, a.title, a.alias';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-									
-			$query = 
+
+			$query =
 			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
@@ -261,12 +261,12 @@ class PhocacartWishlist
 			.  $where
 			. ' GROUP BY '.$groups
 			. ' ORDER BY a.id';
-		}	
+		}
 		return $query;
 	}
-	
+
 	public function getItemsIdString($items) {
-		
+
 		$itemsR = '';
 		if (!empty($items)) {
 			$itemsA = array();
@@ -277,54 +277,56 @@ class PhocacartWishlist
 			}
 			$itemsR = implode (',', $itemsA);
 		}
-		
+
 		if ($itemsR == '') {
 			return false;
 		}
-		
+
 		return $itemsR;
 	}
-	
+
 	public function renderList() {
-		
-		$db 				= JFactory::getDBO();
-		$uri 				= \Joomla\CMS\Uri\Uri::getInstance();
-		$action				= $uri->toString();
-		$app			= JFactory::getApplication();
-		$paramsC 		= PhocacartUtils::getComponentParameters();
+
+		$db 				    = JFactory::getDBO();
+		$uri 				    = \Joomla\CMS\Uri\Uri::getInstance();
+		$action			        = $uri->toString();
+		$app			        = JFactory::getApplication();
+		$s                      = PhocacartRenderStyle::getStyles();
+		$paramsC 		        = PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
-		$query				= $this->getQueryList($this->items);
-		
-		$d					= array();
-		
+		$query				    = $this->getQueryList($this->items);
+
+		$d					    = array();
+		$d['s']			        = $s;
+
 		if ($query) {
 			//echo nl2br(str_replace('#__', 'jos_', $query));
 			$db->setQuery($query);
 			$d['wishlist'] 			= $db->loadObjectList();
-			
+
 			$tempItems = $this->correctItems();
 			PhocacartCategoryMultiple::setBestMatchCategory($d['wishlist'], $tempItems, 1);// returned by reference
-			
-		}	
+
+		}
 		$d['actionbase64']		= base64_encode($action);
 		$d['linkwishlist']		= JRoute::_(PhocacartRoute::getWishListRoute());
 		$d['method']			= $add_wishlist_method;
-			
+
 		$layoutW 			= new JLayoutFile('list_wishlist', null, array('component' => 'com_phocacart'));
 		echo $layoutW->render($d);
 	}
-	
+
 	public function getFullItems() {
-		
+
 		$db 		= JFactory::getDBO();
 		$query		= $this->getQueryList($this->items, 1);
-		
+
 		$products	= array();
 		if ($query) {
 			$db->setQuery($query);
 			$products = $db->loadAssocList();
-			
-			
+
+
 			$tempItems = array();
 			if (!empty($this->items)) {
 				foreach($this->items as $k => $v) {
@@ -336,9 +338,9 @@ class PhocacartWishlist
 			PhocacartCategoryMultiple::setBestMatchCategory($products, $tempItems);// returned by reference
 		}
 		return $products;
-	
+
 	}
-	
+
 	// Correct $this->items array for finding the right category
 	public function correctItems() {
 		$tempItems = array();
@@ -350,7 +352,7 @@ class PhocacartWishlist
 		}
 		return $tempItems;
 	}
-	
+
 	public function getWishListCountItems() {
 		return count($this->items);
 	}

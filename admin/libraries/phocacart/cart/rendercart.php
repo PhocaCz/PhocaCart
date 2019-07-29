@@ -21,16 +21,16 @@ class PhocacartCartRendercart extends PhocacartCart
 	public $params;
 
 	public function __construct() {
-		
+
 		$this->setInstance(1);//cart
 		parent::__construct();
 	}
-	
-	
+
+
 	public function render() {
-		
+
 		$pC 					= PhocacartUtils::getComponentParameters();
-		
+		$s                      = PhocacartRenderStyle::getStyles();
 		if (empty($this->fullitems)) {
 			$this->fullitems = $this->getFullItems();// get them from parent
 		}
@@ -41,13 +41,13 @@ class PhocacartCartRendercart extends PhocacartCart
 			if (empty($this->total)) {
 				$this->total = $this->getTotal();
 			}
-			
+
 			// COUPONTITLE
 			if (empty($this->coupon['title'])) {
 				$this->coupon['title'] = $this->getCouponTitle();
 			}
 		}
-		
+
 		// Final Brutto
 	/*	if ($this->total['brutto']) {
 			$this->total['fbrutto'] = $this->total['brutto'];
@@ -55,19 +55,20 @@ class PhocacartCartRendercart extends PhocacartCart
 				$this->total['fbrutto'] = $this->total['brutto'] - $this->total['cbrutto'];
 			}
 		}*/
-		
+
 		$app	= JFactory::getApplication();
 		$d		= array();
+		$d['s'] = $s;
 		if($app->isClient('administrator')) {
 			// client = 0, ask phoca cart frontend layouts
 			$d['client'] = 1;//admin
 			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
-			
+
 		} else {
 			$d['client'] = 0;//frontend
 			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
 		}
-		
+
 		$d['paramsmodule']		= $this->params; // Module Parameters
 		$d['params']			= $pC; // Component Parameters
 		$d['fullitems']			= $this->fullitems;
@@ -85,6 +86,6 @@ class PhocacartCartRendercart extends PhocacartCart
 
 		return $layout->render($d);
 	}
-	
+
 }
 ?>

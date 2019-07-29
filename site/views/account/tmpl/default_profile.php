@@ -45,20 +45,21 @@ $lang->load('plg_user_profile', JPATH_ADMINISTRATOR);
 <?php
 
 // Header
-	echo '<div class="col-sm-12 col-md-12 ph-account-box-row" >';
-	echo '<div class="ph-account-box-header" id="phaccountaddressedit"><h3>'.JText::_('COM_PHOCACART_EDIT_MY_PROFILE').'</h3></div>';
-	echo '</div>';
+echo '<div class="'.$this->s['c']['row'].' ph-account-box-row" >';
+echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-box-header" id="phaccountaddressedit"><h3>'.JText::_('COM_PHOCACART_EDIT_MY_PROFILE').'</h3></div>';
+echo '</div>';
 
 echo '<form action="'.$this->t['linkaccount'].'" method="post" class="form-horizontal form-validate" role="form" id="phcheckoutAddress">';
-echo '<div class="ph-account-box-action">';
-echo '<div class="col-sm-12 col-md-12 ph-account-billing-row" id="phUserProfile" >';
+
+echo '<div class="'.$this->s['c']['row'].' ph-account-box-action">';
+echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-billing-row" id="phUserProfile" >';
 //echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_USER_PROFILE').'</div>';
 
 ?>
 
 <?php foreach ($this->form->getFieldsets() as $group => $fieldset):// Iterate through the form fieldsets and display each one.?>
 	<?php $fields = $this->form->getFieldset($group);
-	
+
 	if ($group != 'core') {
 		continue;
 	}
@@ -71,20 +72,20 @@ echo '<div class="col-sm-12 col-md-12 ph-account-billing-row" id="phUserProfile"
 		<?php endif; */ ?>
 		<?php foreach ($fields as $field):// Iterate through the fields in the set and display them.?>
 			<?php if ($field->hidden):// If the field is hidden, just display the input.?>
-				<div class="control-group">
-					<div class="controls">
+				<div class="<?php echo $this->s['c']['control-group'] ?>">
+					<div class="<?php echo $this->s['c']['controls'] ?>">
 						<?php echo $field->input;?>
 					</div>
 				</div>
 			<?php else:?>
-				<div class="control-group">
-					<div class="control-label">
+				<div class="<?php echo $this->s['c']['control-group'] ?>">
+					<div class="<?php echo $this->s['c']['control-label'] ?>">
 						<?php echo $field->label; ?>
 						<?php if (!$field->required && $field->type != 'Spacer') : ?>
 						<span class="optional"><?php echo JText::_('COM_USERS_OPTIONAL'); ?></span>
 						<?php endif; ?>
 					</div>
-					<div class="controls">
+					<div class="<?php echo $this->s['c']['controls'] ?>">
 						<?php echo $field->input; ?>
 					</div>
 				</div>
@@ -98,8 +99,8 @@ echo '<div class="col-sm-12 col-md-12 ph-account-billing-row" id="phUserProfile"
 	<fieldset>
 		<legend><?php echo JText::_('COM_USERS_PROFILE_TWO_FACTOR_AUTH') ?></legend>
 
-		<div class="control-group">
-			<div class="control-label">
+		<div class="<?php echo $this->s['c']['control-group'] ?>">
+			<div class="<?php echo $this->s['c']['control-label'] ?>">
 				<label id="jform_twofactor_method-lbl" for="jform_twofactor_method" class="hasTooltip"
 					   title="<strong><?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_LABEL') ?></strong><br/><?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_DESC') ?>">
 					<?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_LABEL'); ?>
@@ -131,28 +132,34 @@ echo '<div class="col-sm-12 col-md-12 ph-account-billing-row" id="phUserProfile"
 			<?php echo JText::_('COM_USERS_PROFILE_OTEPS_WAIT_DESC') ?>
 		</div>
 		<?php else: ?>
-		<?php foreach ($this->otpConfig->otep as $otep): ?>
-		<span class="span3">
+		<?php foreach ($ths->otpConfig->otep as $otep): ?>
+		<span class="<?php echo $this->s['c']['col.xs12.sm3.md3']?>">
 			<?php echo substr($otep, 0, 4) ?>-<?php echo substr($otep, 4, 4) ?>-<?php echo substr($otep, 8, 4) ?>-<?php echo substr($otep, 12, 4) ?>
 		</span>
 		<?php endforeach; ?>
-		<div class="clearfix"></div>
+		<div class="ph-cb"></div>
 		<?php endif; ?>
 	</fieldset>
 <?php endif; ?>
 
 <?php
-echo '</div>';// end row
 
-
-echo '<div class="ph-cb"></div>';
-
-echo '<div class="ph-pull-right ph-account-address-save">';
-echo '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('save').'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' '.$this->s['c']['pull-right'].' ph-right ph-account-address-save">';
+echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['save'].'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
 //echo '<input type="submit" value="submit" />';
 echo '</div>';
 
-echo '<div class="ph-cb"></div>';
+
+echo '</div>';// end row
+echo '</div>';// end row
+
+
+//echo '<div class="ph-cb"></div>';
+
+
+
+
+//echo '<div class="ph-cb"></div>';
 echo '</div>'."\n";// end box action
 
 
@@ -253,7 +260,7 @@ echo '</form>'. "\n";
 
 			<input type="hidden" name="option" value="com_phocacart" />
 			<input type="hidden" name="task" value="account.saveprofile" />
-			<?php 
+			<?php
 			echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 			echo JHtml::_('form.token');
 			?>

@@ -13,12 +13,14 @@ class PhocaCartViewComparison extends JViewLegacy
 {
 	protected $t;
 	protected $p;
+	protected $s;
 
 	function display($tpl = null)
 	{
 		$app								= JFactory::getApplication();
-		$model								= $this->getModel();
-		$document							= JFactory::getDocument();
+		//$model								= $this->getModel();
+		//$document							= JFactory::getDocument();
+		$this->s                            = PhocacartRenderStyle::getStyles();
 		$this->p 							= $app->getParams();
 
 		//$this->t['categories']				= $model->getCategoriesList();
@@ -92,7 +94,8 @@ class PhocaCartViewComparison extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
+		$media->loadBase();
+		$media->loadSpec();
 
 		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		$this->_prepareDocument();

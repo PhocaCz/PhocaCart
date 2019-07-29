@@ -579,7 +579,7 @@ final class PhocacartRenderJs
 		}
 	}
 
-	public static function renderAjaxQuickViewBox() {
+	public static function renderAjaxQuickViewBox($options = array()) {
 
 
 		$app					= JFactory::getApplication();
@@ -657,7 +657,7 @@ final class PhocacartRenderJs
 
 		$s[] = 'phChangeAttributeType(\'ItemQuick\');';// Recreate the select attribute (color, image) after AJAX
 
-		$s[] = '		'. $media->loadTouchSpin('quantity');// Touch spin for input
+		$s[] = '		'. $options['touchspin'];// Touch spin for input
 
 		$s[] = '			  } else {';
 		//$s[] = '					// Don\'t change the price box';

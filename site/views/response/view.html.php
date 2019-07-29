@@ -13,19 +13,21 @@ class PhocaCartViewResponse extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
-	
+	protected $s;
+
 	function display($tpl = null) {
-		
-		$document					= JFactory::getDocument();		
+
+		$document					= JFactory::getDocument();
 		$app						= JFactory::getApplication();
 		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
-		
+		$this->s                    = PhocacartRenderStyle::getStyles();
+
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
-	
+
 	protected function _prepareDocument() {
 		//PhocacartRenderFront::prepareDocument($this->document, $this->p);
 	}

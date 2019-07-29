@@ -8,8 +8,6 @@
  */
 defined('_JEXEC') or die();
 
-
-
 echo '<div id="ph-pc-categories-box" class="pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 echo $this->t['event']->onCategoriesBeforeHeader;
@@ -20,7 +18,7 @@ if ( $this->t['main_description'] != '') {
 }
 if (!empty($this->t['categories'])) {
 	echo '<div class="ph-categories">';
-	
+
 	if ($this->t['categories_view_layout'] == 2) {
 		echo $this->loadTemplate('colspan');
 	} else {

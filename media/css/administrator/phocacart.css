@@ -1313,6 +1313,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 
 }
 
+.ph-editinplace-text.ph-eip-price_original form input
 .ph-editinplace-text.ph-eip-price form input {
 
 
@@ -1376,6 +1377,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	right: 0.3em;
 	padding: 1em;
 	background: #f0f0f0;
+	z-index: 1;
 
 
 }

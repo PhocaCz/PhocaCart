@@ -9,15 +9,15 @@
 defined('_JEXEC') or die();
 $d = $displayData;
 ?>
-<div class="ph-pull-left">
+<div class="<?php echo $d['s']['c']['pull-left']; ?>">
 <?php
 if ($d['display_view_product_button'] == 1) {
-	
-	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary btn-sm ph-btn" role="button"><span class="<?php echo PhocacartRenderIcon::getClass('view-product') ?>"></span> <?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?></a><?php
+
+	?><a href="<?php echo $d['link']; ?>" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><span class="<?php echo $d['s']['i']['view-product'] ?>"></span> <?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?></a><?php
 
 } else if ($d['display_view_product_button'] == 2) {
-	
-	?><a href="<?php echo $d['link']; ?>" class="btn btn-primary btn-sm ph-btn" role="button" title="<?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('view-product') ?>"></span></a><?php
+
+	?><a href="<?php echo $d['link']; ?>" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button" title="<?php echo JText::_('COM_PHOCACART_VIEW_PRODUCT'); ?>"><span class="<?php echo $d['s']['i']['view-product'] ?>"></span></a><?php
 
 } ?>
 </div>

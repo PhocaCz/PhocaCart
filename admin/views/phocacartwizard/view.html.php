@@ -8,23 +8,23 @@
  */
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.view' );
- 
+
 class PhocaCartCpViewPhocaCartWizard extends JViewLegacy
 {
 	protected $t;
+	protected $s;
 	protected $page;
-	
+
 	function display($tpl = null) {
-		
-		$app				= JFactory::getApplication();
-		$this->page		= $app->input->get('page', 0, 'int');
-		
+
+		$app				    = JFactory::getApplication();
+		$this->page		        = $app->input->get('page', 0, 'int');
 		$this->t				= PhocacartUtils::setVars('');
-		
-		
+		$this->s                = PhocacartRenderStyle::getStyles();
+
 
 		$media = new PhocacartRenderAdminmedia();
-	
+
 		parent::display($tpl);
 	}
 }

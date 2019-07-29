@@ -14,7 +14,8 @@ $layoutI	= new JLayoutFile('category_image', null, array('component' => 'com_pho
 $d 		= $displayData;
 $v		= $d['v'];
 $t		= $d['t'];
-$p		= $d['p'];
+$s      = $d['s'];
+
 $image 	= PhocacartImage::getThumbnailName($t['path'], $v->image, $d['image_size']);
 $link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 
@@ -23,6 +24,7 @@ $dI	= array();
 if (isset($image->rel) && $image->rel != '') {
 
     $dI['t']			    = $t;
+    $dI['s']			    = $s;
     $dI['image']['title']	= $v->title;
     $dI['image']['image']	= $image;
 
@@ -78,6 +80,7 @@ if ((int)$t['display_view_category_button'] > 0) {
 
 	$d2									= array();
 	$d2['link']							= $link;
+    $d2['s']							= $s;
 	$d2['display_view_category_button']	= $t['display_view_category_button'];
 	echo '<div class="ph-item-action-box">';
 	echo $layoutV->render($d2);

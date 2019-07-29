@@ -12,35 +12,35 @@ $d = $displayData;
 if (!empty($d['compare'])) {
 	foreach ($d['compare'] as $k => $v) {
 		// Try to find the best menu link
-		
+
 		if (isset($v->catid2) && (int)$v->catid2 > 0 && isset($v->catalias2) && $v->catalias2 != '') {
 			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
 		} else {
 			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 		}
-		
+
 ?>
-<div class="row">
-	<div class="col-sm-8 col-md-8"><a href="<?php echo $linkProduct; ?>"><?php echo $v->title; ?></a></div>
-	<div class="col-sm-4 col-md-4">
+<div class="<?php echo $d['s']['c']['row'] ?>">
+	<div class="<?php echo $d['s']['c']['col.xs12.sm8.md8'] ?>"><a href="<?php echo $linkProduct; ?>"><?php echo $v->title; ?></a></div>
+	<div class="<?php echo $d['s']['c']['col.xs12.sm4.md4'] ?>">
 		<form action="<?php echo $d['linkcomparison']; ?>" method="post" id="phCompareRemove<?php echo (int)$v->id; ?>">
 			<input type="hidden" name="id" value="<?php echo (int)$v->id; ?>">
 			<input type="hidden" name="task" value="comparison.remove">
 			<input type="hidden" name="tmpl" value="component" />
 			<input type="hidden" name="option" value="com_phocacart" />
 			<input type="hidden" name="return" value="<?php echo $d['actionbase64']; ?>" />
-			<div class="ph-pull-right">
+			<div class="<?php echo $d['s']['c']['pull-right'] ?>">
 			<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('remove') ?>"></span></a></div>
+				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
 			<?php } else { ?>
-				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo PhocacartRenderIcon::getClass('remove') ?>"></span></a></div>
+				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
 			<?php } ?>
 			</div>
 		<?php echo JHtml::_('form.token'); ?>
 		</form>
 	</div>
 </div>
-<?php 			
+<?php
 	}
 } else {
 	echo '<div>'.JText::_('COM_PHOCACART_COMPARISON_LIST_IS_EMPTY').'</div>';

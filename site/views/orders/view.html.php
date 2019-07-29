@@ -14,12 +14,14 @@ class PhocaCartViewOrders extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
 
 	function display($tpl = null)
 	{
 		$app								= JFactory::getApplication();
 		$this->u							= PhocacartUser::getUser();
-		$document							= JFactory::getDocument();
+		//$document							= JFactory::getDocument();
+		$this->s							= PhocacartRenderStyle::getStyles();
 		$this->p 							= $app->getParams();
 		$model								= $this->getModel();
 		$this->t['orders']					= $model->getOrderList();
@@ -50,8 +52,9 @@ class PhocaCartViewOrders extends JViewLegacy
 		$this->t['component-pdf']	= PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
 
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
+		$media->loadBase();
 		$media->loadWindowPopup();
+		$media->loadSpec();
 
 		//$this->t['path'] = PhocacartPath::getPath('categoryimage');
 		$this->_prepareDocument();

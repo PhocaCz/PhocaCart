@@ -14,10 +14,11 @@ class PhocaCartViewAccount extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
 	protected $fields2;
 	protected $data2;
 	protected $form2;
-	
+
 	// User profile
 	protected $params;
 	protected $fields;
@@ -29,26 +30,27 @@ class PhocaCartViewAccount extends JViewLegacy
 	protected $otpConfig;
 
 	function display($tpl = null)
-	{		
+	{
 		$app								= JFactory::getApplication();
 		$this->u							= PhocacartUser::getUser();
 		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
+		$this->s                            = PhocacartRenderStyle::getStyles();
 		$model								= $this->getModel();
-		
+
 		$this->t['action']							= $uri->toString();
 		$this->t['actionbase64']					= base64_encode($this->t['action']);
 		$this->t['linkaccount']						= JRoute::_(PhocacartRoute::getAccountRoute());
 		$this->t['linkcheckout']					= JRoute::_(PhocacartRoute::getCheckoutRoute());
 		$this->t['display_edit_profile']			= $this->p->get( 'display_edit_profile', 1 );
 		$this->t['display_reward_points_total_info']= $this->p->get( 'display_reward_points_total_info', 0 );
-		
+
 		$lang = JFactory::getLanguage();
 		//$lang->load('com_users.sys');
 		$lang->load('com_users');
-		
-		
+
+
 		if ((int)$this->u->id > 0) {
 			// Checkout Model
 			jimport('joomla.application.component.model');
@@ -60,8 +62,8 @@ class PhocaCartViewAccount extends JViewLegacy
 			$this->data2				= $modelCheckout->getData();
 			$this->form2				= $modelCheckout->getForm();
 			$this->t['dataaddressform']	= PhocacartUser::getAddressDataForm($this->form2, $this->fields2['array'], $this->u);
-			
-		
+
+
 			// USER PROFILE - USER MODULE
 			jimport('joomla.application.component.model');
 			//JLoader::import('user',JPATH_SITE.'/components/com_users/models');
@@ -72,7 +74,7 @@ class PhocaCartViewAccount extends JViewLegacy
 			JForm::addFormPath($loadformpath.'/forms');
 			JForm::addFieldPath($loadformpath.'/fields');
 			$this->form	  			= $modelUsers->getForm();
-			
+
 			$this->state            = $modelUsers->getState();
 			$this->params           = $this->state->get('params');
 			$this->twofactorform    = $modelUsers->getTwofactorform();
@@ -80,24 +82,25 @@ class PhocaCartViewAccount extends JViewLegacy
 			$this->otpConfig        = $modelUsers->getOtpConfig();
 			$this->data->tags 		= new JHelperTags;
 			$this->data->tags->getItemTags('com_users.user.', $this->data->id);
-			
+
 			// REWARD POINTS
 			$reward = new PhocacartReward();
 			$this->t['rewardpointstotal'] = $reward->getTotalPointsByUserId((int)$this->u->id);
-			
-			
+
+
 		}
-		
+
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
+		$media->loadBase();
 		$media->loadChosen();
 		PhocacartRenderJs::renderBillingAndShippingSame();
-		
+        $media->loadSpec();
+
 		$this->_prepareDocument();
 		parent::display($tpl);
-		
+
 	}
-	
+
 	protected function _prepareDocument() {
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ACCOUNT'));
 	}

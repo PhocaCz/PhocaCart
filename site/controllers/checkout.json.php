@@ -56,6 +56,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 		$app		= JFactory::getApplication();
+		$s 			= PhocacartRenderStyle::getStyles();
 		$attribute	= $app->input->get( 'attribute', '', 'array'  );
 		$id			= $app->input->get( 'id', 0, 'int'  );
 		$class		= $app->input->get( 'class', '', 'string'  );
@@ -85,6 +86,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 
 				$d = array();
+				$d['s']				= $s;
 				$d['class']			= $class;
 				$d['zero_price']		= 1;// Apply zero price if possible
 				// Original Price
@@ -147,6 +149,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		}
 
 		$app		= JFactory::getApplication();
+		$s 			= PhocacartRenderStyle::getStyles();
 		$attribute	= $app->input->get( 'attribute', '', 'array'  );
 		$id			= $app->input->get( 'id', 0, 'int'  );
 		$class		= $app->input->get( 'class', '', 'string'  );
@@ -167,6 +170,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 			if($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
 				$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
 				$d							= array();
+				$d['s']						= $s;
 				$d['class']					= $class;
 				$d['product_id']			= (int)$id;
 				$d['typeview']				= $typeView;
@@ -209,6 +213,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 		$app				= JFactory::getApplication();
+		$s 					= PhocacartRenderStyle::getStyles();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['catid']		= $this->input->get( 'catid', 0, 'int' );
@@ -227,6 +232,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 			$d 				= array();
+			$d['s']			= $s;
 			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
 			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
 			$oE 			= $layoutPE->render($d);
@@ -257,6 +263,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 		if (!$added) {
 
 			$d 				= array();
+			$d['s']			= $s;
 			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
 
 			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
@@ -284,8 +291,9 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 		// Render the layout
-		$d = array();
-		$layoutP	= new JLayoutFile('popup_add_to_cart', null, array('component' => 'com_phocacart'));
+		$d 				= array();
+		$d['s']			= $s;
+		$layoutP		= new JLayoutFile('popup_add_to_cart', null, array('component' => 'com_phocacart'));
 
 		$d['link_checkout'] = JRoute::_(PhocacartRoute::getCheckoutRoute((int)$item['id'], (int)$item['catid']));
 		$d['link_continue'] = '';
@@ -375,6 +383,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 		$msgSuffix			= '';
 		$app				= JFactory::getApplication();
+		$s 					= PhocacartRenderStyle::getStyles();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['idkey']		= $this->input->get( 'idkey', '', 'string' );
@@ -397,6 +406,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 			$d 				= array();
+			$d['s']			= $s;
 			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
 			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
 			$oE 			= $layoutPE->render($d);
@@ -424,6 +434,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				if (!$updated) {
 
 					$d 				= array();
+					$d['s']			= $s;
 					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
 					$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
 					$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
@@ -447,6 +458,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				if (!$updated) {
 
 					$d 				= array();
+					$d['s']			= $s;
 					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
 					$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
 					$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));

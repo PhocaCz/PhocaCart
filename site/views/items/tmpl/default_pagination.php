@@ -10,45 +10,34 @@ defined('_JEXEC') or die();
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 
-echo '<div class="clearfix"></div>';
+echo '<div class="ph-cb"></div>';
 echo '<form action="'.$this->t['action'].'" method="post" name="adminForm">'. "\n";
-echo '<div class="ph-pagination">';
-if ($this->p->get('show_pagination')) {	
-	
-	
-	$s = 12;
+echo '<div class="'.$this->s['c']['row'].' ph-pagination">';
+if ($this->p->get('show_pagination')) {
+
+    echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-center-pagination">';
 	if ($this->p->get('display_item_ordering')) {
-		$s = 7;
-		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-center-pagination">';
-		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select" style="width: 16em"', $this->t['ordering']);
-		echo '</div>';
-		
+		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select" style="width: 16em"', $this->t['ordering']);
 	}
-	
-	
-	
-	
-	
-	if ($this->p->get('show_pagination_limit')) {
-		$s = 5;
-		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-center-pagination">';
-		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getLimitBox());
-		echo '</div>';
-	}
-	
-	
-	
-	
-	echo '<div class="clearfix"></div>';
-	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination pagination  phPaginationBox">'. str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
-	
-	echo '<div class="clearfix"></div>';
-	
-	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination ph-pagination-mt pagination">';
-	echo str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getPagesCounter());
 	echo '</div>';
-	
-	echo '<div class="clearfix"></div>';
+
+    echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-center-pagination">';
+	if ($this->p->get('show_pagination_limit')) {
+		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select"', $this->t['pagination']->getLimitBox());
+	}
+    echo '</div>';
+
+	echo '<div class="ph-cb"></div>';
+
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination pagination">'. str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
+
+    echo '<div class="ph-cb"></div>';
+
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination ph-pagination-mt pagination">';
+	echo str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select"', $this->t['pagination']->getPagesCounter());
+	echo '</div>';
+
+    echo '<div class="ph-cb"></div>';
 }
 echo '</div>';
 if ($this->p->get('ajax_pagination_category', 0) == 1) {

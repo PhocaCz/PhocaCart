@@ -41,7 +41,7 @@ body.com_phocacart #toolbar .ph-icon-pdf  {
 
 
 body.com_phocacart .chzn-container-single .chzn-single div {
-    background-color: #fff;
+    background-color: #dfe8f1;
     border-left: 0px;
     bottom: 0;
     height: auto;
@@ -52,7 +52,20 @@ body.com_phocacart .chzn-container-single .chzn-single div {
 body.com_phocacart #toolbar .btn {
     line-height: 24px;
     margin-right: 4px;
-    padding: 3px 12px 3px 10px;
+    padding: 7px 12px 7px 10px;
+	
+	box-shadow: 0 2px 5px 5px #f5f5f5;
+	color: #646473;
+}
+
+body.com_phocacart #toolbar .btn span,
+body.com_phocacart #toolbar .btn i{
+	color: #3BAFDA;
+}
+body.com_phocacart #toolbar .btn.btn-warning span,
+body.com_phocacart #toolbar .btn.btn-primary i,
+body.com_phocacart #toolbar .btn.btn-success span{
+	color: #fff;
 }
 
 .chzn-container-multi .chzn-choices li.search-choice .search-choice-close:before {

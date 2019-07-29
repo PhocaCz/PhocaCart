@@ -135,6 +135,7 @@ if($item->active_quantity) {$rules[] = '<span class="label label-default label-d
 if($item->active_country) {$rules[] = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_COUNTRY_RULE'). '</span>';}
 if($item->active_region) {$rules[] = '<span class="label label-info label-info">'.JText::_('COM_PHOCACART_REGION_RULE'). '</span>';}
 if($item->active_weight) {$rules[] = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_WEIGHT_RULE'). '</span>';}
+if($item->active_size) {$rules[] = '<span class="label label-primary label-primary">'.JText::_('COM_PHOCACART_SIZE_RULE'). '</span>';}
 
 echo $r->td(implode(" ", $rules), "small");
 

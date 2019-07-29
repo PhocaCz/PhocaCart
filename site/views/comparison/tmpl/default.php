@@ -17,8 +17,6 @@ echo '<div id="ph-pc-comparison-box" class="pc-comparison-view'.$this->p->get( '
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_COMPARISON')));
 
 
-
-
 if (!empty($this->t['items'])) {
 
 	$c = array();
@@ -66,10 +64,11 @@ if (!empty($this->t['items'])) {
 
             $d						= array();
             $d['t']					= $this->t;
+            $d['s']			        = $this->s;
             $d['src']				= JURI::base(true).'/'.$image->rel;
             $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
             $d['alt-value']			= PhocaCartImage::getAltTitle($v['title'], $image->rel);
-            $d['class']				= PhocacartRenderFront::getClass(array('img-responsive'));
+            $d['class']				= $this->s['c']['img-responsive'];
 
             $c['title'] .= $layoutI->render($d);
 
@@ -84,6 +83,7 @@ if (!empty($this->t['items'])) {
 
 			$price 				= new PhocacartPrice;
 			$d					= array();
+			$d['s']			    = $this->s;
 
 			$d['priceitems']	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, $v['group_price']);
 			$d['priceitemsorig']= array();
@@ -118,7 +118,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<input type="hidden" name="option" value="com_phocacart" />';
 		$c['remove'] .= '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		$c['remove'] .= '<div class="ph-center">';
-		$c['remove'] .= '<button type="submit" class="btn btn-danger ph-btn"><span class="'.PhocacartRenderIcon::getClass('remove').'"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
+		$c['remove'] .= '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn"><span class="'.$this->s['i']['remove'].'"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
 		$c['remove'] .= '</div>';
 		$c['remove'] .= JHtml::_('form.token');
 		$c['remove'] .= '</form>';
@@ -154,7 +154,7 @@ if (!empty($this->t['items'])) {
 		}
 
 		$c2['link'] .= '<td class="ph-center">';
-		$c2['link'] .= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="'.PhocacartRenderIcon::getClass('search').'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+		$c2['link'] .= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm']. ' ph-btn" role="button"><span class="'.$this->s['i']['search'].'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 		$c2['link'] .= '</td>';
 
 	}

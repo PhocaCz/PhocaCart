@@ -1,0 +1,308 @@
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Cart
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+
+.ph-right {
+	text-align: left;
+}
+.ph-left{
+	text-align: right;
+}
+
+
+.ph-item-reward-box .ph-reward,
+.ph-category-price-box .ph-price-brutto,
+.ph-category-price-box .ph-price-netto,
+.ph-category-price-box .ph-price-original,
+.ph-category-price-box .ph-price-base,
+.ph-category-price-box .ph-tax,
+
+.ph-item-sku-box .ph-sku,
+.ph-item-upc-box .ph-upc,
+.ph-item-ean-box .ph-ean,
+.ph-item-jan-box .ph-jan,
+.ph-item-isbn-box .ph-isbn,
+.ph-item-mpn-box .ph-mpn,
+.ph-item-serial-number-box .ph-serial-number,
+
+.ph-item-min-qty-box .ph-min-qty,
+.ph-item-manufacturer-box .ph-manufacturer,
+.ph-item-delivery-date-box .ph-delivery-date,
+.ph-item-price-box .ph-price-brutto,
+.ph-item-price-box .ph-price-netto,
+.ph-item-price-box .ph-price-original,
+.ph-item-price-box .ph-price-base,
+.ph-item-price-box .ph-tax,
+.ph-item-stock-box .ph-stock {
+	float: left;
+}
+
+.ph-item-reward-box .ph-reward-txt,
+
+.ph-category-price-box .ph-price-txt,
+.ph-category-price-box .ph-tax-txt,
+.ph-category-stock-box .ph-stock-txt,
+
+.ph-item-sku-box .ph-sku-txt,
+.ph-item-upc-box .ph-upc-txt,
+.ph-item-ean-box .ph-ean-txt,
+.ph-item-jan-box .ph-jan-txt,
+.ph-item-isbn-box .ph-isbn-txt,
+.ph-item-mpn-box .ph-mpn-txt,
+.ph-item-serial-number-box .ph-serial-number-txt,
+
+.ph-item-min-qty-box .ph-min-qty-txt,
+.ph-item-manufacturer-box .ph-manufacturer-txt,
+.ph-item-delivery-date-box .ph-delivery-date-txt,
+.ph-item-price-box .ph-price-txt,
+.ph-item-price-box .ph-tax-txt,
+.ph-item-stock-box .ph-stock-txt {
+	float: right;
+	clear: both;
+}
+
+.ph-checkout-cart-product {
+	text-align: right;
+}
+
+.ph-checkout-total-discount,
+.ph-checkout-total-coupon,
+.ph-checkout-total-amount,
+.ph-checkout-cart-netto,
+.ph-checkout-cart-brutto,
+.ph-checkout-cart-tax {
+	text-align: left;
+	/*margin-right: 10px;
+	padding-right: 10px;*/
+}
+
+.ph-checkout-cart-box tr td ul {
+	margin-right: -20px;
+}
+
+
+
+.ph-li-inline li {
+	float: right;
+
+	margin-right: 30px;
+}
+
+.ph-left-border {
+	border-right: 1px solid #ddd;
+	margin-right: -1px;
+}
+.ph-right-border {
+	border-left: 1px solid #ddd;
+}
+
+.ph-checkout-icon-finished,
+.ph-checkout-icon-ok {
+	margin-left: 3px;
+}
+
+.ph-checkout-icon-pending,
+.ph-checkout-icon-not-ok {
+	margin-left: 3px;
+
+}
+
+.ph-checkout-payment-netto,
+.ph-checkout-payment-brutto,
+.ph-checkout-payment-tax ,
+.ph-checkout-shipping-netto,
+.ph-checkout-shipping-brutto,
+.ph-checkout-shipping-tax {
+	text-align: left;
+}
+
+
+.ph-checkout-checkbox-confirm {
+	padding-left: 20px;
+}
+
+.ph-idnr-to-pay-value {
+	text-align: left;
+}
+
+
+.ph-category-item-addtocart {
+	float: left;
+}
+
+.ph-category-item-compare {
+	float: left;
+}
+
+.ph-category-item-wishlist {
+	float: left;
+}
+
+.ph-category-item-quickview {
+	float: left;
+}
+.ph-center-pagination input,
+.ph-center-pagination select,
+.ph-center-pagination .chosen-container {
+	text-align:right;
+}
+
+.ph-new-icon {
+	right: auto;
+	left: 25px;
+}
+.ph-hot-icon {
+	right: auto;
+	left: 45px;
+}
+.ph-featured-icon {
+	right: auto;
+	left: 65px;
+}
+
+
+/* SINCE 3.1.2 - LABELS including HOT, NEW, FEATURED */
+
+.ph-label-box {
+	right: auto;
+	left: 0.2em;
+}
+
+.ph-item-box.list .ph-label-box {
+	left: auto;
+	right: 0.3em;
+}
+
+#phQuickViewPopup .ph-label-box,
+#ph-pc-item-box .ph-label-box {
+	left: 1.2em;
+}
+
+.ph-corner-icon-wrapper {
+	float: left;
+}
+
+.ph-item-box.list .ph-corner-icon-wrapper {
+	float: right;
+}
+
+.ph-right-zero {
+	margin-left: -15px;
+	padding-left: 0px;
+}
+
+.ph-left-zero {
+	margin-right: 0px;
+	padding-right: 0px;
+}
+
+.ph-video-container iframe, .ph-video-container object, .ph-video-container embed {
+	left: auto;
+	right:0;
+}
+
+
+/* Modules */
+
+.ph-filter-module-categories-tree {
+	margin-right: -1em;
+}
+ul.ph-filter-module-category-tree {
+	padding-right: 1em;
+}
+
+.ph-checkout-shipping-row .form-group .control-label,
+.ph-checkout-billing-row .form-group .control-label {
+	text-align: right;
+}
+
+.phSelectBoxButton.on:after {
+  left: auto;
+  right: -3px;
+}
+
+
+.phSelectBoxImage.on:after {
+ 	left: auto;
+  	right: 40%;
+}
+
+.ph-item-image-full-left-box {
+	text-align: right;
+}
+
+#phItemAttributesBox .btn.phCheckBoxButton.phCheckBoxImage.active span.glyphicon,
+#phItemAttributesBox .btn.phCheckBoxButton.phCheckBoxImage.active span.fa {
+	left: auto;
+	right: 40%;
+}
+
+.ph-cart-link-checkout {
+	margin-left: 2px;
+}
+
+
+.ph-cart-module-image {}
+.ph-cart-attribute-box {}
+.ph-cart-attribute-box-i {
+	padding-right: 30%;
+}
+
+.ph-checkout-attribute-box {
+	margin-right: 15px;
+}
+
+
+#phItemTopBoxForm .ph-pag-top-row {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+
+.ph-pull-right {
+	float: left;
+}
+.ph-pull-left {
+	float: right;
+}
+
+.ph-currency-list-suffix .ph-currency-image-list {
+	margin-right: 3px
+}
+.ph-currency-list .ph-currency-image-list {
+	margin-right: -5px;
+}
+
+.ph-t-cell h3 {
+	left: auto;
+	right: 1em;
+}
+.ph-t-cell .btn {
+	left: auto;
+	right: 1em;
+}
+
+#phPriceFilterPrice {
+	text-align: left;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left: auto; right:  0px;}
+.right-addon .glyphicon { right: auto; left: 0px;}
+.left-addon .fa  { left: auto; right:  10px;}
+.right-addon .fa { right: auto; left: 10px;}
+/* add padding  */
+.left-addon input  { padding-right:  30px; width: 100% }
+.right-addon input { padding-left: 30px; width: 100% }
+
+table.pc-tax-recapitulation tr td {
+	text-align: left;
+}
+
+.ph-plg-product-info {
+	text-align: right;
+}

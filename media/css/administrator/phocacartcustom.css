@@ -15,7 +15,6 @@
 
 .subhead {
     border-bottom: 0px;
-	background-color: #f2f2f2;
 }
 
 .btn-wrapper .btn-small {
@@ -23,10 +22,18 @@
 }
 
 .btn-toolbar .btn {
-	border: 1px solid #DEDEDE !important;
+	border: 1px solid #dfe8f1 !important;
+	border: 1px solid transparent !important;
 	background: #fff !important;
 	box-shadow: none !important;
 	text-shadow: none !important;
+	font-weight: bold !important;
+
+}
+
+#j-main-container .btn-toolbar .btn {
+	border: 2px solid #dfe8f1 !important;
+	/*background-color: #dfe8f1 !important;*/
 }
 
 .btn-toolbar .btn.btn-primary {
@@ -46,7 +53,7 @@
 }
 
 .btn {
-	border: 1px solid #DEDEDE !important;
+	border: 2px solid #dfe8f1 !important;
 	background: #fff !important;
 	box-shadow: none  !important;
 	text-shadow: none  !important;
@@ -172,10 +179,10 @@
 }
 
 .controls .btn-group.btn-group-yesno > .btn.active.btn-danger {
-	border: 1px solid #F76397 !important;
+	border: 2px solid #F76397 !important;
 }
 .controls .btn-group.btn-group-yesno > .btn.active.btn-success {
-	border: 1px solid #00B19D !important;
+	border: 2px solid #00B19D !important;
 }
 
 .controls .btn-group > .btn {
@@ -199,7 +206,7 @@
 #adminForm .btn-micro, #adminForm .btn-micro.hasTooltip {
 	background: #fff !important;
     color: #333  !important;
-	border: 1px solid #dedede;
+	border: 2px solid #dfe8f1 !important;
 	box-shadow: 0px 0px 0px 0px transparent !important;
 	box-shadow: inset 0px 0px 0px 0px transparent !important;
 }
@@ -207,14 +214,14 @@
 #adminForm .btn-micro.active, #adminForm .btn-micro:active {
     background: #fff !important;
     color: #333 !important;
-	border: 1px solid #dedede !important;
+	border: 2px solid #dfe8f1 !important;
 	box-shadow: 0px 0px 0px 0px transparent !important;
 	box-shadow: inset 0px 0px 0px 0px transparent !important;
 }
 .btn-micro:hover, .btn-micro:focus, .btn-micro:active, .btn-micro.active, .btn-micro.disabled, .btn-micro[disabled] {
     background: #fff !important;
     color: #333;
-	border: 1px solid #dedede;
+	border: 2px solid #dfe8f1 !important;
 	box-shadow: 0px 0px 0px 0px transparent !important;
 	box-shadow: inset 0px 0px 0px 0px transparent !important;
 }
@@ -234,15 +241,23 @@
 
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
     background-color: #fff  !important;
-    border: 1px solid #DEDEDE  !important;
+    border: 2px solid #dfe8f1 !important;
     box-shadow: none  !important;
     transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s !important;
+	/*height: 30px !important;*/
 }
 
+input[name="filter_search"] {
+ height: 30px !important;
+}
+input[name="filter_date_to"],
+input[name="filter_date_from"] {
+ height: 30px !important;
+}
 
 .controls .chzn-container-single .chzn-single,
 #phAdminEdit .chzn-container-single .chzn-single {
-    border: 1px solid #DEDEDE  !important;
+    border: 2px solid #dfe8f1 !important;
     box-shadow: none  !important;
     color: #444 !important;
     height: 30px !important;
@@ -292,7 +307,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 #phAdminView .chzn-container .chzn-drop,
 #phAdminEdit .chzn-container .chzn-drop {
 	top: 29px !important;
-	border-color: #dedede;
+	border-color: #dfe8f1;
 	box-shadow: none;
 }
 
@@ -315,14 +330,15 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 #phEditPopup .chzn-container-single .chzn-single,
 .btn-toolbar .chzn-container-single .chzn-single {
    /* background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%) repeat scroll 0 0 padding-box;*/
-   border: 1px solid #DEDEDE;
+   border: 2px solid #dfe8f1;
+   background: #dfe8f1;
    /*box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);*/
    box-shadow: none;
    color: #444;
    height: 35px;
    line-height: 24px; 
-   background: #fff;
-   padding: 5px 0 5px 8px;
+  
+   padding: 3px 0 5px 8px;
    box-shadow: none;
    border-radius: 3px;
    text-shadow: none;
@@ -338,19 +354,22 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 }
 
 .chzn-container-active.chzn-with-drop .chzn-single {
-	border-color: #dedede !important;
+	border-color: #dfe8f1 !important;
+	border: 2px solid #dfe8f1 !important;
 	box-shadow: none !important;
 	background: #fff !important;
 }
 .btn-toolbar .chzn-container .chzn-drop {
 	top: 34px !important;
-	border-color: #dedede;
+	border-color: #dfe8f1;
+	border: 2px solid #dfe8f1 !important;
 	box-shadow: none;
 }
 
 #phAdminEdit .chzn-container .chzn-choices,
 #phAdminEdit .chzn-container-active .chzn-choices {
-    border-color: #dedede;
+    border-color: #dfe8f1;
+	border: 2px solid #dfe8f1 !important;
     box-shadow: 0px 0px 0px 0px transparent !important;
 	box-shadow: inset 0px 0px 0px 0px transparent !important;
 	background-image: none !important;
@@ -361,7 +380,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 }
 
 table.table-striped tr th {
-	color: #000;
+	color: #3071a9;;
 }
 
 table.table-striped {
@@ -371,12 +390,12 @@ table.table-striped {
 }
 
 table.table-striped tr th {
-	color: #000;
+	color: #3071a9;
 	border-bottom: 3px solid #e8e8e8;
 }
 
 table.table-striped tr th, table.table-striped tr th a {
-	color: #000;
+	color: #3071a9;
 }
 
 #status {
@@ -386,7 +405,7 @@ table.table-striped tr th, table.table-striped tr th a {
 }
 
 .select2-container .select2-choice {
-    border: 1px solid #DEDEDE;
+    border: 2px solid #dfe8f1;
 	background-color: #fff;
 	background-image:none;
 }
@@ -398,7 +417,7 @@ table.table-striped tr th, table.table-striped tr th a {
 }
 
 .input-append .add-on, .input-prepend .add-on {
-	border: 1px solid #DEDEDE;
+	border: 2px solid #dfe8f1;
 }
 
 .ph-options-head-expert,
@@ -408,17 +427,17 @@ table.table-striped tr th, table.table-striped tr th a {
 }
 
 .chzn-container-multi .chzn-choices {
-    border: 1px solid #DEDEDE;
+    border: 2px solid #dfe8f1;
 	background-image: none;
 }
 
 .chzn-container .chzn-drop {
-    border-color: #DEDEDE;
+    border-color: #dfe8f1;
 }
 
 .chzn-container-active.chzn-with-drop .chzn-single {
     background-image: none;
-    border: 1px solid #DEDEDE;
+    border: 2px solid #dfe8f1;
 }
 
 .control-group .control-label {

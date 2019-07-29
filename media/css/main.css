@@ -1,3 +1,10 @@
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Cart
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
 .ph-top {
 	margin-bottom: 5px;
 }
@@ -115,7 +122,7 @@ a.b-thumbnail.active {
 
 /*.ph-item-reward-box,*/
 .ph-category-bottom-box,
-.ph-category-add-to-cart-box,
+.ph-category-action-buttons,
 .ph-item-bottom-box,
 .ph-item-add-to-cart-box,
 .ph-item-min-qty-box,
@@ -218,10 +225,10 @@ a.b-thumbnail.active {
 	font-weight: bold;
 }
 .form-inline .form-group .ph-input-quantity {
-	width:30px;
+	width:2em;
 }
 .form-inline .form-group .ph-input-quantity.ph-input-sm {
-	width:26px;
+	width:56px;
 	height: 22px;
 	font-size: 12px;
 	line-height: 22px;
@@ -400,7 +407,9 @@ table tr th.ph-checkout-cart-image {
 	border-right: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
 	border-radius: 0px 0px 4px 4px;
-	margin: 0px auto 20px auto;
+	/*margin: 20px 0px 0px 0px;*/
+	margin-top: 0px;
+	margin-bottom: 0px;
 	background: #f9f9f9;
 }
 .ph-account-box-action-raw,
@@ -420,23 +429,29 @@ table tr th.ph-checkout-cart-image {
 .ph-checkout-box-header {
 	border: 1px solid #ddd;
 	border-radius: 4px 4px 0px 0px;
-	margin: 20px 0px 0px 0px;
+	/*margin: 20px 0px 0px 0px;*/
+	margin-top: 20px;
 	background: #fff;
+
 }
 
 .ph-account-box-header{
-	margin: -5px 0px 0px 0px;
+	/*margin: -5px 0px 0px 0px;*/
+	margin-top: -5px;
 }
 .ph-checkout-box-header {
-	margin: 20px 0px 0px 0px;
+	/*margin: 20px 0px 0px 0px;*/
+	margin-top: 20px;
 }
 
 .ph-account-box-header-pas,
 .ph-checkout-box-header-pas {
 	border: 1px solid #ddd;
 	border-radius: 4px 4px 4px 4px;
-	margin: 20px 0px 0px 0px;
+	/*margin: 20px 0px 0px 0px;*/
+	margin-top: 20px;
 	background: #fff;
+
 }
 .ph-account-box-header-pas h3,
 .ph-account-box-header h3,
@@ -505,7 +520,7 @@ table tr th.ph-checkout-cart-image {
 	font-weight: bold;
 	width: 30px;
 	text-align: center;
-
+	margin-right: -13px;
 	/*
 	font-size: 220%;
 	width: 70px;
@@ -526,6 +541,7 @@ table tr th.ph-checkout-cart-image {
 	font-weight: bold;
 	width: 30px;
 	text-align: center;
+	margin-right: -13px;
 	/* border-radius: 0px 3px 0px 0px; */
 }
 
@@ -533,18 +549,16 @@ table tr th.ph-checkout-cart-image {
 .ph-checkout-address-edit,
 .ph-checkout-check-box,
 .ph-checkout-address-save {
-	margin-right: 40px;
-	margin-bottom: 10px;
+	margin: 10px
 }
 .ph-checkout-payment-edit,
 .ph-checkout-shipping-edit {
-	margin-right: 10px;
-	margin-bottom: 10px;
+	margin: 10px;
 }
 
+.ph-checkout-payment-save,
 .ph-checkout-shipping-save {
-	margin-right: 30px;
-	margin-bottom: 10px;
+	margin: 10px;
 }
 
 .ph-checkout-payment-netto,
@@ -1238,8 +1252,8 @@ ul.ph-filter-module-category-tree li .checkbox{
 }
 .ph-icon-pdf-text {
 	font-size: 60%;
-	margin-left: 6px;
-	margin-right: 6px;
+	/*margin-left: 6px;
+	margin-right: 6px;*/
 
 }
 
@@ -1298,6 +1312,10 @@ ul.ph-filter-module-category-tree li .checkbox{
 }
 .phSelectBoxButton.fa.on:after {
 	font-family: FontAwesome;
+	content: '\f00c'; /* Ok/check mark */
+}
+.phSelectBoxButton.fa.fa5.on:after {
+	font-family: "Font Awesome 5 Free";
 	content: '\f00c'; /* Ok/check mark */
 }
 
@@ -2193,3 +2211,11 @@ img.ph-lazyload:not([src]) {
 	text-align: center;
 	padding: 2em 1em;
 }
+
+.ph-askquestion-checkbox-confirm label div,
+.ph-askquestion-checkbox-confirm label p,
+.ph-checkout-checkbox-confirm label div,
+.ph-checkout-checkbox-confirm label p {
+	display: inline;
+}
+

@@ -236,20 +236,22 @@ final class PhocacartRenderAdminjs
 
 	public static function renderAjaxDoRequestWizard() {
 
-		$s 	= array();
-		$s[] = ' function phDoRequestWizard(url) {';
-		$s[] = '   var s = [];';
-		$s[] = '   s["phTrue"] = \'<div class="ph-true"><span class="'.PhocacartRenderIcon::getClassAdmin('ok').' icon-ok"></span> '.JText::_('COM_PHOCACART_CREATED').'</div>\';';
-		$s[] = '   s["phTrueAdd"] = \'<div class="ph-true"><span class="'.PhocacartRenderIcon::getClassAdmin('ok').' icon-ok"></span> '.JText::_('COM_PHOCACART_ADDED').'</div>\';';
-		$s[] = '   s["phTrueEdit"] = \'<div class="ph-true"><span class="'.PhocacartRenderIcon::getClassAdmin('ok').' icon-ok"></span> '.JText::_('COM_PHOCACART_EDITED').'</div>\';';
-		$s[] = '   s["phTrueAll"] = 1';
-		$s[] = '   s["phFalse"] = \'<div class="ph-false"><span class="'.PhocacartRenderIcon::getClassAdmin('remove').' icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_CREATED_YET').'</div>\';';
-		$s[] = '   s["phFalseAdd"] = \'<div class="ph-false"><span class="'.PhocacartRenderIcon::getClassAdmin('remove').' icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_ADDED_YET').'</div>\';';
-		$s[] = '   s["phFalseEdit"] = \'<div class="ph-false"><span class="'.PhocacartRenderIcon::getClassAdmin('remove').' icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_EDITED_YET').'</div>\';';
-		$s[] = '  phDoRequestWizardParent(url, s);';
-		$s[] = '}';
+		$s = PhocacartRenderStyle::getStyles();
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		$js 	= array();
+		$js[] = ' function phDoRequestWizard(url) {';
+		$js[] = '   var s = [];';
+		$js[] = '   s["phTrue"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.JText::_('COM_PHOCACART_CREATED').'</div>\';';
+		$js[] = '   s["phTrueAdd"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.JText::_('COM_PHOCACART_ADDED').'</div>\';';
+		$js[] = '   s["phTrueEdit"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.JText::_('COM_PHOCACART_EDITED').'</div>\';';
+		$js[] = '   s["phTrueAll"] = 1';
+		$js[] = '   s["phFalse"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_CREATED_YET').'</div>\';';
+		$js[] = '   s["phFalseAdd"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_ADDED_YET').'</div>\';';
+		$js[] = '   s["phFalseEdit"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_EDITED_YET').'</div>\';';
+		$js[] = '  phDoRequestWizardParent(url, s);';
+		$js[] = '}';
+
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $js));
 	}
 
 

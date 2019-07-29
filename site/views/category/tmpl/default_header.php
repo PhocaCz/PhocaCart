@@ -8,9 +8,6 @@
  */
 defined('_JEXEC') or die();
 
-
-
-
 if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $this->t['display_back'] == 3)) {
 	if ($this->category[0]->parentid == 0) {
 		$linkUp = JRoute::_(PhocacartRoute::getCategoriesRoute());
@@ -20,12 +17,14 @@ if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $th
 		$linkUpText = $this->category[0]->parenttitle;
 	} else {
 		$linkUp 	= false;
-		$linkUpText = false; 
+		$linkUpText = false;
 	}
-	
+
 	if ($linkUp && $linkUpText) {
 		echo '<div class="ph-top">'
-		.'<a class="btn btn-success" title="'.$linkUpText.'" href="'. $linkUp.'" ><span class="'.PhocacartRenderIcon::getClass('back-category').'"></span> '.JText::_($linkUpText).'</a></div>';
+		.'<a class="'.$this->s['c']['btn.btn-success'].'" title="'.$linkUpText.'" href="'. $linkUp.'" >'
+        .'<span class="'.$this->s['i']['back-category'].'"></span> '.JText::_($linkUpText).'</a>'
+        .'</div>';
 	}
 }
 

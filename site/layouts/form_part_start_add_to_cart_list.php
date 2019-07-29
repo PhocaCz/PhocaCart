@@ -6,7 +6,7 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
- 
+
 // Add to cart button
 // 1 Standard Button
 // 4 Icon Only Button
@@ -23,7 +23,7 @@ $sectionId 		= isset($d['sectionid']) ? (int)$d['sectionid'] : 0;
 
 echo '<form 
 	id="phCartAddToCartButton'.(int)$d['id'].'"
-	class="phItemCartBoxForm phjAddToCart phj'.$d['typeview'].' phjAddToCartV'.$d['typeview'].'P'.(int)$d['id'].' form-inline" 
+	class="phItemCartBoxForm phjAddToCart phj'.$d['typeview'].' phjAddToCartV'.$d['typeview'].'P'.(int)$d['id'].'" 
 	action="'.$d['linkch'].'" method="post">';
 
 echo '<input type="hidden" name="id" value="'.(int)$d['id'].'">';

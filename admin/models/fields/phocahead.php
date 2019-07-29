@@ -14,21 +14,21 @@ class JFormFieldPhocaHead extends JFormField
 {
 	protected $type = 'PhocaHead';
 	protected function getLabel() { return '';}
-	
+
 	protected function getInput() {
-	
+
 		$tc = 'phocacart';
 		$ts = 'media/com_'.$tc.'/css/administrator/';
 		$ti = 'media/com_'.$tc.'/images/administrator/';
 		JHtml::stylesheet( $ts.'/'.$tc.'options.css' );
-		echo '<div style="clear:both;"></div>';
+		//echo '<div style="clear:both;"></div>';
 		$phocaImage	= ( (string)$this->element['phocaimage'] ? $this->element['phocaimage'] : '' );
 		$image 		= '';
-		
+
 		if ($phocaImage != ''){
 			$image 	= JHtml::_('image', $ti . $phocaImage, '' );
 		}
-		
+
 		if ($this->element['default']) {
 			if ($image != '') {
 				return '<div class="tab-header ph-options-head">'
@@ -42,7 +42,7 @@ class JFormFieldPhocaHead extends JFormField
 		} else {
 			return parent::getLabel();
 		}
-		echo '<div style="clear:both;"></div>';
+		//echo '<div style="clear:both;"></div>';
 	}
 }
 ?>

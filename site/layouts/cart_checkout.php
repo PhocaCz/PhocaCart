@@ -51,25 +51,25 @@ if (!empty($d['fullitemsgroup'][0])) {
 
 if (!empty($d['fullitems'][1])) {
 
-	$r		= 'row';
-	$cA 	= 'col-sm-12 col-md-12 col-xs-12';// whole row
-	$cI 	= 'col-sm-2 col-md-2 col-xs-2 ';// image
-	$cQ		= 'col-sm-2 col-md-2 col-xs-2 ';// quantity
-	$cN 	= 'col-sm-2 col-md-2 col-xs-2 ';// netto
-	$cT 	= 'col-sm-2 col-md-2 col-xs-2 ';// tax
-	$cB 	= 'col-sm-2 col-md-2 col-xs-2 ';// brutto
+	$r		= $d['s']['c']['row'];
+	$cA 	= $d['s']['c']['col.xs12.sm12.md12'];// whole row
+	$cI 	= $d['s']['c']['col.xs2.sm2.md2'];// image
+	$cQ		= $d['s']['c']['col.xs2.sm2.md2'];// quantity
+	$cN 	= $d['s']['c']['col.xs2.sm2.md2'];// netto
+	$cT 	= $d['s']['c']['col.xs2.sm2.md2'];// tax
+	$cB 	= $d['s']['c']['col.xs2.sm2.md2'];// brutto
 	$cV		= ' ph-vertical-align';
 	$cVRow	= ' ph-vertical-align-row';
-	$cAT	= 'col-sm-10 col-md-10 col-xs-10';// attributes
+	$cAT	= $d['s']['c']['col.xs10.sm10.md10'];// attributes
 
 	// Total summarization
-	$cTotE = 'col-sm-6 col-md-6 col-xs-0'; // empty space
-	$cTotT = 'col-sm-4 col-md-4 col-xs-8'; // title
-	$cTotB = 'col-sm-2 col-md-2 col-xs-4'; // price
+	$cTotE = $d['s']['c']['col.xs0.sm6.md6']; // empty space
+	$cTotT = $d['s']['c']['col.xs8.sm4.md4']; // title
+	$cTotB = $d['s']['c']['col.xs4.sm2.md2']; // price
 	if ((int)$p['tax_calculation'] > 0) {
-		$cP 	= 'col-sm-2 col-md-2 col-xs-2';// title - 4 (Tax, Netto)
+		$cP 	= $d['s']['c']['col.xs2.sm2.md2'];// title - 4 (Tax, Netto)
 	} else {
-		$cP 	= 'col-sm-6 col-md-6 col-xs-6';// title + 4 (Tax, Netto)
+		$cP 	= $d['s']['c']['col.xs6.sm6.md6'];// title + 4 (Tax, Netto)
 	}
 
 	if ($d['pos']) {
@@ -77,24 +77,24 @@ if (!empty($d['fullitems'][1])) {
 		// HIDE TAX for POS
 		$displayTax = false;
 
-		$cI 	= 'col-sm-0 col-md-0 col-xs-0';// image (display: none in css)
+		$cI 	= $d['s']['c']['col.xs0.sm0.md0'];// image (display: none in css)
 		//$cQ		= 'col-sm-3 col-md-3 col-xs-3';// quantity
 		if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-			$cP 	= 'col-sm-2 col-md-2 col-xs-2';// - 4 (Tax, Netto)
+			$cP 	= $d['s']['c']['col.xs2.sm2.md2'];// - 4 (Tax, Netto)
 		} else {
-			$cP 	= 'col-sm-6 col-md-6 col-xs-6';// + 4 (Tax, Netto)
+			$cP 	= $d['s']['c']['col.xs6.sm6.md6'];// + 4 (Tax, Netto)
 		}
-		$cQ		= 'col-sm-3 col-md-3 col-xs-3 ph-pd-zero';// quantity
-		$cN 	= 'col-sm-3 col-md-3 col-xs-3';// netto
-		$cT 	= 'col-sm-3 col-md-3 col-xs-3';// tax
-		$cB 	= 'col-sm-3 col-md-3 col-xs-3';// brutto
+		$cQ		= $d['s']['c']['col.xs3.sm3.md3'].' ph-pd-zero';// quantity
+		$cN 	= $d['s']['c']['col.xs3.sm3.md3'];// netto
+		$cT 	= $d['s']['c']['col.xs3.sm3.md3'];// tax
+		$cB 	= $d['s']['c']['col.xs3.sm3.md3'];// brutto
 
-		$cAT	= 'col-sm-12 col-md-12 col-xs-12';// attributes
+		$cAT	= $d['s']['c']['col.xs12.sm12.md12'];// attributes
 
 		// Total summarization
-		$cTotE = 'col-sm-0 col-md-0 col-xs-0'; // empty space
-		$cTotT = 'col-sm-8 col-md-8 col-xs-8'; // title
-		$cTotB = 'col-sm-4 col-md-4 col-xs-4'; // price
+		$cTotE = $d['s']['c']['col.xs0.sm0.md0']; // empty space
+		$cTotT = $d['s']['c']['col.xs8.sm8.md8']; // title
+		$cTotB = $d['s']['c']['col.xs4.sm4.md4']; // price
 
 		$cV		= '';
 		$cVRow	= '';
@@ -154,12 +154,12 @@ if (!empty($d['fullitems'][1])) {
 				$d2['src']						= JURI::base(true).'/'.$image['image']->rel;
 				$d2['srcset-webp']				= JURI::base(true).'/'.$image['image']->rel_webp;
 				$d2['alt-value']				= PhocaCartImage::getAltTitle($v['title'], $image['image']->rel);
-				$d2['class']					= PhocacartRenderFront::getClass(array('img-responsive', 'ph-img-cart-checkout'));
+				$d2['class']					= PhocacartRenderFront::completeClass(array($d['s']['c']['img-responsive'], 'ph-img-cart-checkout'));
 
 				$imageOutput = $layoutI->render($d2);
 			}
 		} else {
-			$imageOutput = '<div class="ph-no-image"><span class="'.PhocacartRenderIcon::getClass('ban').'"</span></div>';
+			$imageOutput = '<div class="ph-no-image"><span class="'.$d['s']['i']['ban'].'"</span></div>';
 		}
 
 		echo '<div class="'.$r.$cV.'">';
@@ -188,9 +188,9 @@ if (!empty($d['fullitems'][1])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$d['actionbase64'].'" />';
 		//UPDATE
-		echo ' <button class="btn btn-success btn-xs ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.PhocacartRenderIcon::getClass('refresh').'"></span></button>';
+		echo ' <button class="'.$d['s']['c']['btn.btn-success.btn-sm'].' ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.$d['s']['i']['refresh'].'"></span></button>';
 		//DELETE
-		echo ' <button class="btn btn-danger btn-xs ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'" class="'.PhocacartRenderIcon::getClass('trash').'"></span></button>';
+		echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'" class="'.$d['s']['i']['trash'].'"></span></button>';
 		echo JHtml::_('form.token');
 		echo '</div>';
 		echo '</form>';
@@ -601,6 +601,42 @@ if (!empty($d['fullitems'][1])) {
 		}
 	}
 
+	// Posible feature request
+	// Sum all taxes together: Product + Shipping + Payment
+	// Different rates will be of course not be added together
+
+	/*
+	// SUM OF ALL TAXES ON ONE LINE
+	if (!empty($d['total'][0]['tax'])) {
+		foreach($d['total'][0]['tax'] as $k3 => $v3) {
+			if($v3['tax'] !== 0 && $v3['tax'] != 0 && $p['tax_calculation'] != 0) {
+				$tax = $v3['tax'];
+				// Add shipping method taxes to sum of all taxes
+				if (isset($sC['taxkey']) && $sC['taxkey'] == $k3) {
+					if (isset($sC['tax']) && $sC['tax'] > 0) {
+						$tax = $tax + $sC['tax'];
+					}
+
+				}
+				// Add payment method taxes to sum of all taxes
+				if (isset($pC['taxkey']) && $pC['taxkey'] == $k3) {
+					if (isset($pC['tax']) && $pC['tax'] > 0) {
+						$tax = $tax + $pC['tax'];
+					}
+
+				}
+
+				echo '<div class="'.$r.' ph-cart-tax-box">';
+				echo '<div class="'.$cTotE.'"></div>';
+				echo '<div class="'.$cTotT.' ph-cart-tax-txt">SUM OF ALL TAXES - '.$v3['title'].'</div>';
+				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-tax">'.$price->getPriceFormat($tax).'</div>';
+				echo '</div>';// end row
+			}
+		}
+	}
+	*/
+
+
 
 	// ROUNDING | ROUNDING CURRENCY
 
@@ -690,7 +726,7 @@ if (!empty($d['fullitems'][1])) {
 } else {
 
 	if ($d['pos']) {
-		echo '<div class="ph-cart-icon"><span class="'.PhocacartRenderIcon::getClass('shopping-cart').'"></span></div>';
+		echo '<div class="ph-cart-icon"><span class="'.$d['s']['i']['shopping-cart'].'"></span></div>';
 	}
 	echo '<div class="ph-cart-empty">'.JText::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY').'</div>';
 }

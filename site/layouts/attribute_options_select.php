@@ -12,7 +12,7 @@ $displayData 		= null;
 $v 					= $d['attribute'];
 $attributeIdName	= 'V'.$d['typeview'].'P'.(int)$d['product_id'].'A'.(int)$v->id;
 $productIdName		= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
-$iconType			= PhocacartRenderIcon::getIconType();
+$iconType			= $d['s']['i']['icon-type'];
 $price				= new PhocacartPrice();
 
 $attr				= array();
@@ -38,48 +38,48 @@ foreach ($v->options as $k2 => $v2) {
 		$operator = $v2->operator;
 	}
 	$amount = $d['price']->getPriceFormat($v2->amount);
-	
+
 	// Switch large image
 	$attrO		= '';
-	
+
 	if ($d['dynamic_change_image'] == 1) {
 		if ($d['image_size'] == 'large' && isset($v2->image) && $v2->image != '') {
 			$imageO 	= PhocacartImage::getThumbnailName($d['pathitem'], $v2->image, $d['image_size']);
 		} else if ($d['image_size'] == 'medium' && isset($v2->image) && $v2->image != '') {
 			$imageO 	= PhocacartImage::getThumbnailName($d['pathitem'], $v2->image, $d['image_size']);
 		}
-		
+
 		if (isset($imageO->rel) && $imageO->rel != '') {
 			$linkO 		= JURI::base(true).'/'.$imageO->rel;
-			
+
 			if (JFile::exists($imageO->abs)) {
 				$attrO		.= 'data-image-option="'.htmlspecialchars($linkO).'"';
 			}
 		}
-		
+
 	}
-	
+
 	// SELECTBOX COLOR
 	if ($v->type == 2 && isset($v2->color) && $v2->color != '') {
 		$attrO		.= ' data-color="'.strip_tags($v2->color).'"';
 	}
-	
+
 	// SELECTBOX IMAGE
 	if ($v->type == 3 && isset($v2->image_small) && $v2->image_small != '') {
 		$linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v2->image_small;
 		$attrO		.= ' data-image="'.strip_tags($linkI).'"';
 	}
-	
-	// SELECTED SOME VALUE? 
+
+	// SELECTED SOME VALUE?
 	if ($v2->default_value == 1) {
 		$attrO		.= ' selected="seleced"';
 	}
-	
+
 	$suffix =  ' ('.$operator.' '.$amount.')';
 	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $price->roundPrice($v2->amount) < 0.01 && $price->roundPrice($v2->amount) > -0.01) {
 		$suffix = '';
-	}	
-	
+	}
+
 	echo '<option '.$attrO.' value="'.$v2->id.'">'.htmlspecialchars($v2->title).$suffix.'</option>';
 }
 

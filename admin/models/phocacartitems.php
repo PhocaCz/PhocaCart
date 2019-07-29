@@ -114,6 +114,9 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 	{
 
 
+		$paramsC 					    = PhocacartUtils::getComponentParameters();
+		$search_matching_option_admin	= $paramsC->get( 'search_matching_option_admin', 'exact' );
+
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
@@ -268,9 +271,48 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				//$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
-				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.' OR a.sku LIKE '.$search.')');
+
+				switch ($search_matching_option_admin) {
+					case 'all':
+					case 'any':
+
+						$words	= explode(' ', $search);
+						$wheres = array();
+						foreach ($words as $word) {
+
+							if (!$word = trim($word)) {
+								continue;
+							}
+
+							$word			= $db->quote('%'.$db->escape($word, true).'%', false);
+							$wheresSub 		= array();
+							$wheresSub[]	= 'a.title LIKE '.$word;
+							$wheresSub[]	= 'a.alias LIKE '.$word;
+							$wheresSub[]	= 'a.metakey LIKE '.$word;
+							$wheresSub[]	= 'a.metadesc LIKE '.$word;
+							$wheresSub[]	= 'a.description LIKE '.$word;
+							$wheresSub[]	= 'a.sku LIKE '.$word;
+							$wheres[]		= implode(' OR ', $wheresSub);
+						}
+
+						$query->where('(' . implode(($search_matching_option_admin == 'all' ? ') AND (' : ') OR ('), $wheres) . ')');
+
+					break;
+
+					case 'exact':
+					default:
+						$text		= $db->quote('%'.$db->escape($search, true).'%', false);
+						$wheresSub	= array();
+						$wheresSub[]	= 'a.title LIKE '.$text;
+						$wheresSub[]	= 'a.alias LIKE '.$text;
+						$wheresSub[]	= 'a.metakey LIKE '.$text;
+						$wheresSub[]	= 'a.metadesc LIKE '.$text;
+						$wheresSub[]	= 'a.description LIKE '.$text;
+						$wheresSub[]	= 'a.sku LIKE '.$text;
+						$query->where('(' . implode(') OR (', $wheresSub) . ')');
+
+					break;
+				}
 			}
 		}
 

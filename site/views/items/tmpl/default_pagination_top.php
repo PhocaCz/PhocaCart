@@ -10,46 +10,45 @@ defined('_JEXEC') or die();
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 
-echo '<div class="clearfix"></div>';
+echo '<div class="ph-cb"></div>';
 
 echo '<form id="phItemTopBoxForm" action="'.$this->t['action'].'" method="post" name="phitemstopboxform">'. "\n";
-echo '<div class="ph-pagination-top">';
+echo '<div class="'.$this->s['c']['row'].' ph-pagination-top">';
 
-if ($this->p->get('show_pagination_top', 1)) {	
-	$sN = 12;
+if ($this->p->get('show_pagination_top', 1)) {
+
+    echo '<div class="'.$this->s['c']['col.xs12.sm5.md5'].' ph-pag-top-row">';
 	if ($this->p->get('display_item_ordering_top', 1)) {
-		$s 	= 5;
-		$sN = $sN - $s;
-		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-pag-top-row">';
-		$ordering = str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select" style="width: 16em"', $this->t['ordering']);
+
+		$ordering = str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select" style="width: 16em;"', $this->t['ordering']);
 		$ordering = str_replace( 'id="itemordering"', 'id="itemorderingtop"', $ordering);// possible two the same ID
 		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. $ordering;
-		echo '</div>';
-		
-	}
 
+	}
+    echo '</div>';
+
+    echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">';
 	if ($this->p->get('show_pagination_limit_top', 1)) {
-		$s = 3;
-		$sN = $sN - $s;
-		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-pag-top-row">';
-		$limit = str_replace( 'class="inputbox"', 'class="inputbox form-control chosen-select"', $this->t['pagination']->getLimitBox());
+
+		$limit = str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select"', $this->t['pagination']->getLimitBox());
 		$limit = str_replace( 'id="limit"', 'id="limittop"', $limit);// possible two the same ID
 		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . $limit;
-		echo '</div>';
+
 	}
-	
-	
+    echo '</div>';
+
+
+    echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'">';
 	if ($this->p->get('show_switch_layout_type', 1)) {
-		$s = $sN;
-	
-		echo '<div class="col-xs-12 col-sm-'.$s.' col-md-'.$s.' ph-pag-top-row">';
-		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType grid '.$this->t['layouttypeactive'][0].'" data-layouttype="grid"><span class="'.PhocacartRenderIcon::getClass('grid').'"></span></button> ';
-		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType gridlist '.$this->t['layouttypeactive'][1].'" data-layouttype="gridlist"><span class="'.PhocacartRenderIcon::getClass('gridlist').'"></span></button> ';
-		echo '<button type="button" class="btn btn-default phItemSwitchLayoutType list '.$this->t['layouttypeactive'][2].'" data-layouttype="list"><span class="'.PhocacartRenderIcon::getClass('list').'"></span></button>';
-		echo '</div>';
+
+		echo '<button type="button" class="'.$this->s['c']['btn.btn-default'].' phItemSwitchLayoutType grid '.$this->t['layouttypeactive'][0].'" data-layouttype="grid"><span class="'.$this->s['i']['grid'].'"></span></button> ';
+		echo '<button type="button" class="'.$this->s['c']['btn.btn-default'].' phItemSwitchLayoutType gridlist '.$this->t['layouttypeactive'][1].'" data-layouttype="gridlist"><span class="'.$this->s['i']['gridlist'].'"></span></button> ';
+		echo '<button type="button" class="'.$this->s['c']['btn.btn-default'].' phItemSwitchLayoutType list '.$this->t['layouttypeactive'][2].'" data-layouttype="list"><span class="'.$this->s['i']['list'].'"></span></button>';
+
 	}
-	
-	echo '<div class="clearfix"></div>';
+    echo '</div>';
+
+    echo '<div class="ph-cb"></div>';
 }
 echo '</div>';
 echo '<input type="hidden" name="format" value="raw" />';

@@ -13,6 +13,7 @@ class PhocaCartViewCategories extends JViewLegacy
 {
 	protected $t;
 	protected $p;
+	protected $s;
 
 	public function display($tpl = null) {
 
@@ -20,7 +21,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		$model									= $this->getModel();
 		$document								= JFactory::getDocument();
 		$this->p 								= $app->getParams();
-
+		$this->s								= PhocacartRenderStyle::getStyles();
 
 		$this->t['csv_display_subcategories']	= $this->p->get( 'csv_display_subcategories', 0 );
 		$this->t['categories']					= $model->getCategoriesList($this->t['csv_display_subcategories']);
@@ -29,7 +30,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['cart_metadesc'] 				= $this->p->get( 'cart_metadesc', '' );
 		$this->t['main_description']			= $this->p->get( 'main_description', '' );
 		$this->t['main_description']			= PhocacartRenderFront::renderArticle($this->t['main_description']);
-		$this->t['columns_cats']				= $this->p->get( 'columns_cats', 3 );
+
 		$this->t['image_width_cats']			= $this->p->get( 'image_width_cats', '' );
 		$this->t['image_height_cats']			= $this->p->get( 'image_height_cats', '' );
 		$this->t['display_view_category_button']= $this->p->get( 'display_view_category_button', 1 );
@@ -42,14 +43,16 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 
 
-		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
-		//$media->loadChosen();
-		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
-		//$this->t['class_thumbnail'] = $media->loadProductHover();
-		$lazyLoad  					= $media->loadLazyLoad();
-		$this->t['class_lazyload']	= $lazyLoad['class'];
-		$this->t['script_lazyload']	= $lazyLoad['script'];
+
+		$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'row-flex' : '';
+        $this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
+        $this->t['class_lazyload']       		= $this->t['lazy_load_categories']  == 1 ? 'ph-lazyload' : '';
+
+
+        $media = new PhocacartRenderMedia();
+		$media->loadBase();
+		$media->loadChosen();
+
 
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
 
@@ -63,11 +66,11 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['event']->onCategoriesBeforeHeader = trim(implode("\n", $results));
 		// END Plugins --------------------------------------
 
+        $media->loadSpec();
 		$this->_prepareDocument();
 		parent::display($tpl);
 
-		// Must be loaded bottom because of ignoring async in Firefox
-		echo $this->t['script_lazyload'];
+		echo $media->returnLazyLoad();// Render all bottom scripts // Must be loaded bottom because of ignoring async in Firefox
 
 	}
 

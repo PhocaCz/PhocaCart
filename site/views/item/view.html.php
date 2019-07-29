@@ -20,19 +20,21 @@ class PhocaCartViewItem extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
 
 	function display($tpl = null){
 
 		$app = JFactory::getApplication();
-		$menus	= $app->getMenu('site', array());
-		$items	= $menus->getItems('component', 'com_phocacart');
+		//D $menus	= $app->getMenu('site', array());
+		//D $items	= $menus->getItems('component', 'com_phocacart');
 
 		$app					= JFactory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
+		$this->s				= PhocacartRenderStyle::getStyles();
 		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
 		$model					= $this->getModel();
-		$document				= JFactory::getDocument();
+		//D $document				= JFactory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');
 		$catid					= $app->input->get('catid', 0, 'int');
 
@@ -146,13 +148,12 @@ class PhocaCartViewItem extends JViewLegacy
 
 
 			$media = new PhocacartRenderMedia();
-			$media->loadBootstrap();
+			$media->loadBase();
 			$media->loadChosen();
 			$media->loadRating();
 			$media->loadPhocaSwapImage();
 			$media->loadPhocaAttribute(1);
-
-			$media->loadTouchSpin('quantity');// only css, js will be loaded in ajax success
+			$media->loadTouchSpin('quantity', $this->s['i']);// only css, js will be loaded in ajax success
 
 
 			if ($this->t['popup_askquestion'] == 1) {
@@ -183,9 +184,7 @@ class PhocaCartViewItem extends JViewLegacy
 			PhocacartRenderJs::renderAjaxAddToCart();
 			PhocacartRenderJs::renderAjaxAddToCompare();
 			PhocacartRenderJs::renderAjaxAddToWishList();
-
-
-
+            $media->loadSpec();
 
 			if (isset($this->category[0]) && is_object($this->category[0]) && isset($this->item[0]) && is_object($this->item[0])){
 				$this->_prepareDocument($this->category[0], $this->item[0]);

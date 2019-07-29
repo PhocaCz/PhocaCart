@@ -37,7 +37,9 @@ if (isset($this->category[0]->id) && ($this->t['display_back'] == 2 || $this->t[
 
 	if ($linkUp && $linkUpText) {
 		echo '<div class="ph-top">'
-		.'<a class="btn btn-success" title="'.$linkUpText.'" href="'. $linkUp.'" ><span class="'.PhocacartRenderIcon::getClass('back-category').'"></span> '.JText::_($linkUpText).'</a></div>';
+		.'<a class="'.$this->s['c']['btn.btn-success'].'" title="'.$linkUpText.'" href="'. $linkUp.'" >'
+        .'<span class="'.$this->s['i']['back-category'].'"></span> '.JText::_($linkUpText).'</a>'
+        .'</div>';
 	}
 }
 
@@ -48,12 +50,11 @@ $x = $this->item[0];
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 
-
 	$idName			= 'VItemP'.(int)$x->id;
-	echo '<div class="row">';
+	echo '<div class="'.$this->s['c']['row'].'">';
 
 	// === IMAGE PANEL
-	echo '<div id="phImageBox" class="col-xs-12 col-sm-5 col-md-5">';
+	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .'">';
 
 	$label 	= PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
 
@@ -76,8 +77,6 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 
-
-
 	if (isset($image->rel) && $image->rel != '') {
 
         $altValue   = PhocaCartImage::getAltTitle($x->title, $image->rel);
@@ -94,12 +93,13 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		$d						= array();
 		$d['t']					= $this->t;
+		$d['s']					= $this->s;
 		$d['src']				= JURI::base(true).'/'.$image->rel;
 		$d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
 		$d['data-image']		= JURI::base(true).'/'.$image->rel;
 		$d['data-image-webp']	= JURI::base(true).'/'.$image->rel_webp;
 		$d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $image->rel);
-		$d['class']				= PhocacartRenderFront::getClass(array('img-responsive', $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
+		$d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'] , $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
 		$d['style']				= '';
 		if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
 			$d['style'] = 'width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px';
@@ -108,18 +108,17 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		echo '</a>';
 
-		echo '</div>'. "\n";
+		echo '</div>'. "\n";// end item_row_item_box_full_image
 	}
 
 
 	// ADDITIONAL IMAGES
 	if (!empty($this->t['add_images'])) {
 
-		echo '<div class="row ph-item-image-add-box">';
-
+		echo '<div class="'.$this->s['c']['row'].' ph-item-image-add-box">';
 
 		foreach ($this->t['add_images'] as $v2) {
-			echo '<div class="col-xs-12 col-sm-4 col-md-4 ph-item-image-box">';
+			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-image-box">';
 			$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'small');
 			$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');
 			$link 	= JURI::base(true).'/'.$imageL->rel;
@@ -133,10 +132,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 			$d						= array();
 			$d['t']					= $this->t;
+			$d['s']					= $this->s;
 			$d['src']				= JURI::base(true).'/'.$image->rel;
 			$d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
 			$d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $v2->image);
-			$d['class']				= PhocacartRenderFront::getClass(array('img-responsive', $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
+			$d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full' /*, 'phjProductImage'.$idName*/));
 			echo $layoutI->render($d);
 
 			echo '</a>';
@@ -146,16 +146,19 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo '</div>';// end additional images
 	}
 
-	echo '</div>';// end image panel
+	echo '</div>';// end item_row_item_c1
 
 	// === PRICE PANEL
-	echo '<div class="col-xs-12 col-sm-7 col-md-7"><div class="ph-item-price-panel">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm7.md7'].'">';
+	echo '<div class="ph-item-price-panel">';
 
-$title = '';
-if (isset($this->item[0]->title) && $this->item[0]->title != '') {
-	$title = $this->item[0]->title;
-}
-echo PhocacartRenderFront::renderHeader(array($title));
+	$title = '';
+	if (isset($this->item[0]->title) && $this->item[0]->title != '') {
+		$title = $this->item[0]->title;
+	}
+
+
+	echo PhocacartRenderFront::renderHeader(array($title));
 
 
 
@@ -164,6 +167,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	if ($this->t['can_display_price']) {
 
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 
 		$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
@@ -243,6 +247,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
 			$d							= array();
+			$d['s']						= $this->s;
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;
 			$d['typeview']				= 'Item';
@@ -253,6 +258,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 		if($this->t['stock_status']['min_quantity']) {
 			$dPOQ						= array();
+			$dPOQ['s']					= $this->s;
 			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_quantity'];
 			echo $layoutPOQ->render($dPOQ);
@@ -260,6 +266,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 		if($this->t['stock_status']['min_multiple_quantity']) {
 			$dPOQ						= array();
+			$dPOQ['s']					= $this->s;
 			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
 			echo $layoutPOQ->render($dPOQ);
@@ -285,6 +292,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	if ((int)$this->t['item_display_size_options'] > 0){
 
 		$dSZ						= array();
+		$dSZ['s']					= $this->s;
 		$dSZ['length']				= $x->length;
 		$dSZ['width']				= $x->width;
 		$dSZ['height']				= $x->height;
@@ -308,6 +316,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	// ATTRIBUTES, OPTIONS
 
 	$d							= array();
+	$d['s']						= $this->s;
 	$d['attr_options']			= $this->t['attr_options'];
 	$d['hide_attributes']		= $this->t['hide_attributes_item'];
 	$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
@@ -329,6 +338,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	} else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
 
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['id']			= (int)$x->id;
 		$d['catid']			= $this->t['catid'];
 		$d['return']		= $this->t['actionbase64'];
@@ -340,12 +350,14 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 	} else if ((int)$this->t['item_addtocart'] == 102 && (int)$x->external_id != '') {
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['external_id']	= (int)$x->external_id;
 		$d['return']		= $this->t['actionbase64'];
 
 		echo $layoutA2->render($d);
 	} else if ((int)$this->t['item_addtocart'] == 103 && $x->external_link != '') {
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['external_link']	= $x->external_link;
 		$d['external_text']	= $x->external_text;
 		$d['return']		= $this->t['actionbase64'];
@@ -353,8 +365,10 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 	}
 
+
 	echo '</form>';
 	echo '<div class="ph-cb"></div>';
+
 
 	echo $this->t['event']->onItemAfterAddToCart;
 	echo '<div class="ph-top-space"></div>';
@@ -412,6 +426,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] != 0 || $addToCartHidden != 0))) {
 
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['id']			= (int)$x->id;
 		$d['catid']			= $this->t['catid'];
 		$d['popup']			= 0;
@@ -423,7 +438,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		$d['link']			=  JRoute::_(PhocacartRoute::getQuestionRoute($x->id, $x->catid, $x->alias, $x->catalias, $tmpl));
 		$d['return']		= $this->t['actionbase64'];
 		echo $layoutQ->render($d);
-		echo '<div class="clearfix"></div>';
+		echo '<div class="ph-cb"></div>';
 	}
 
 	// TAGS
@@ -441,6 +456,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	// :L: COMPARE
 	if ($this->t['display_compare'] == 1) {
 		$d			= array();
+		$d['s']		= $this->s;
 		$d['linkc']	= $this->t['linkcomparison'];
 		$d['id']	= (int)$x->id;
 		$d['catid']	= (int)$x->catid;
@@ -452,6 +468,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	// :L: WISHLIST
 	if ($this->t['display_wishlist'] == 1) {
 		$d			= array();
+		$d['s']		= $this->s;
 		$d['linkw']	= $this->t['linkwishlist'];
 		$d['id']	= (int)$x->id;
 		$d['catid']	= (int)$x->catid;
@@ -460,11 +477,12 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		echo $layoutW->render($d);
 	}
 
-	echo '<div class="clearfix"></div>';
+	echo '<div class="ph-cb"></div>';
 
 	// :L: PUBLIC DOWNLOAD
 	if ($this->t['display_public_download'] == 1 && $x->public_download_file != '') {
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['linkdownload']	= $this->t['linkdownload'];
 		$d['id']			= (int)$x->id;
 		$d['return']		= $this->t['actionbase64'];
@@ -473,13 +491,14 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			$d['title']		= $x->public_download_text;
 		}
 
-		echo '<div class="clearfix"></div>';
+		echo '<div class="ph-cb"></div>';
 		echo $layoutPD->render($d);
 	}
 
 	// :L: EXTERNAL LINK
 	if ($this->t['display_external_link'] == 1 && $x->external_link != '') {
 		$d					= array();
+		$d['s']				= $this->s;
 		$d['linkexternal']	= $x->external_link;
 		//$d['id']			= (int)$x->id;
 		//$d['return']		= $this->t['actionbase64'];
@@ -488,48 +507,52 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			$d['title']		= $x->external_text;
 		}
 
-		echo '<div class="clearfix"></div>';
+		echo '<div class="ph-cb"></div>';
 		echo $layoutEL->render($d);
 	}
 
 	echo $this->t['event']->onItemBeforeEndPricePanel;
-	echo '</div></div>';// end right side
 
-	echo '</div>';// end row 1
 
-	echo '<div class="row ph-item-bottom-box">';
+	echo '</div>';// end item_row_item_box_price
+	echo '</div>';// end item_row_item_c2
+
+	echo '</div>';// end item_row
+
+	echo '<div class="ph-item-bottom-box">';
 
 
 
 	// TABS
-	$active = 'active in';
+	$active 		= $this->s['c']['tabactive'];
+	$activeTab 		= $this->s['c']['tabactvietab'];// Not displayed in Bootstrap4
 	$tabO	= '';
 	$tabLiO	= '';
 
 	// DESCRIPTION
 	if (isset($x->description_long) && $x->description_long != '') {
-		$tabLiO .= '<li class="'.$active.'"><a href="#phdescription" data-toggle="tab">'.JText::_('COM_PHOCACART_DESCRIPTION').'</a></li>';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phdescription" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_DESCRIPTION').'</a></li>';
 
-		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phdescription">';
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phdescription">';
 		$tabO	.= JHtml::_('content.prepare', $x->description_long);
 		$tabO	.= '</div>';
-		$active = '';
+		$active = $activeTab = '';
 	}
 
 	// VIDEO
 	if (isset($x->video) && $x->video != '') {
-		$tabLiO .= '<li class="'.$active.'"><a href="#phvideo" data-toggle="tab">'.JText::_('COM_PHOCACART_VIDEO').'</a></li>';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phvideo" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_VIDEO').'</a></li>';
 
-		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phvideo">';
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phvideo">';
 		$tabO	.= PhocacartRenderFront::displayVideo($x->video);
 		$tabO	.= '</div>';
-		$active = '';
+		$active = $activeTab = '';
 	}
 
 	// SPECIFICATION
 	if (!empty($this->t['specifications'])){
-		$tabLiO .= '<li class="'.$active.'"><a href="#phspecification" data-toggle="tab">'.JText::_('COM_PHOCACART_SPECIFICATIONS').'</a></li>';
-		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phspecification">';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phspecification" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_SPECIFICATIONS').'</a></li>';
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phspecification">';
 
 
 		foreach($this->t['specifications'] as $k => $v) {
@@ -540,12 +563,12 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 			if (!empty($v)) {
 				foreach($v as $k2 => $v2) {
-					$tabO	.= '<div class="row">';
-					$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5">';
+					$tabO	.= '<div class="'.$this->s['c']['row'].'">';
+					$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'">';
 					$tabO	.= '<div class="ph-spec-title">'.$v2['title'].'</div>';
 					$tabO	.= '</div>';
 
-					$tabO	.= '<div class="col-xs-12 col-sm-7 col-md-7">';
+					$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm7.md7'].'">';
 					$tabO	.= '<div class="ph-spec-value">'.$v2['value'].'</div>';
 					$tabO	.= '</div>';
 					$tabO	.= '</div>';
@@ -555,14 +578,14 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		}
 
 		$tabO	.= '</div>';
-		$active = '';
+		$active = $activeTab = '';
 	}
 
 
 	// REVIEWS
 	if ($this->t['enable_review'] > 0) {
-		$tabLiO .= '<li class="'.$active.'"><a href="#phreview" data-toggle="tab">'.JText::_('COM_PHOCACART_REVIEWS').'</a></li>';
-		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phreview">';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phreview" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_REVIEWS').'</a></li>';
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phreview">';
 
 		if (!empty($this->t['reviews'])) {
 			foreach($this->t['reviews'] as $k => $v) {
@@ -578,15 +601,15 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		if ((int)$this->u->id > 0) {
 
 
-			$tabO	.= '<form action="'.$this->t['linkitem'].'" method="post" class="jf_ph_cart_item_review">';
+			$tabO	.= '<form action="'.$this->t['linkitem'].'" method="post" class="'.$this->s['c']['item_review_form'].'">';
 			// ROW
-			$tabO	.= '<div class="row">';
+			$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-2 col-md-2">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">';
 			$tabO	.= '<div class="ph-review-title">'.JText::_('COM_PHOCACART_RATING').'</div>';
 			$tabO	.= '</div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-10 col-md-10 ph-rating-box">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm10.md10'].' ph-rating-box">';
 			$tabO	.= '<div class="ph-review-value ph-rating">';
 			$tabO	.= '<select name="rating" id="phitemrating">
 						<option value="1">1</option>
@@ -601,47 +624,47 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			$tabO	.= '</div>';
 
 			// ROW
-			$tabO	.= '<div class="row">';
+			$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-2 col-md-2">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">';
 			$tabO	.= '<div class="ph-review-title">'.JText::_('COM_PHOCACART_NAME').'</div>';
 			$tabO	.= '</div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'">';
 			$tabO	.= '<div class="ph-review-value"><input type="text" name="name" class="form-control" value="'. $this->u->name .'" /></div>';
 			$tabO	.= '</div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5"></div>';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'"></div>';
 
 			$tabO	.= '</div>';
 
 			// ROW
-			$tabO	.= '<div class="row">';
+			$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-2 col-md-2">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">';
 			$tabO	.= '<div class="ph-review-title">'.JText::_('COM_PHOCACART_REVIEW').'</div>';
 			$tabO	.= '</div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'">';
 			$tabO	.= '<div class="ph-review-value"><textarea class="" name="review" rows="3"></textarea></div>';
 			$tabO	.= '</div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5"></div>';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'"></div>';
 
 			$tabO	.= '</div>';
 
 			// ROW
-			$tabO	.= '<div class="row">';
+			$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-2 col-md-2"></div>';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"></div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5">';
-			$tabO	.= '<div class="ph-pull-right">';
-			$tabO	.= '<button class="btn btn-primary btn-sm ph-btn"><span class="'.PhocacartRenderIcon::getClass('edit').'"></span> '.JText::_('COM_PHOCACART_SUBMIT').'</button>';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'">';
+			$tabO	.= '<div class="'.$this->s['c']['pull-right'].'">';
+			$tabO	.= '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['edit'].'"></span> '.JText::_('COM_PHOCACART_SUBMIT').'</button>';
 			$tabO	.= '</div>';
 			$tabO	.= '</div>';
 
-			$tabO	.= '<div class="col-xs-12 col-sm-5 col-md-5"></div>';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'"></div>';
 
 			$tabO	.= '</div>';
 
@@ -659,20 +682,20 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			$tabO	.= '<div class="ph-message">'.JText::_('COM_PHOCACART_ONLY_LOGGED_IN_USERS_CAN_MAKE_REVIEW_PLEASE_LOGIN').'</div>';
 		}
 		$tabO	.= '</div>';
-		$active = '';
+		$active = $activeTab = '';
 	}
 
 	// RELATED PRODUCTS
 
 	if (!empty($this->t['rel_products'])) {
-		$tabLiO .= '<li class="'.$active.'"><a href="#phrelated" data-toggle="tab">'.JText::_('COM_PHOCACART_RELATED_PRODUCTS').'</a></li>';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phrelated" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_RELATED_PRODUCTS').'</a></li>';
 
-		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phrelated">';
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phrelated">';
 
-		$tabO	.= '<div class="row">';
+		$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
 		foreach($this->t['rel_products'] as $k => $v) {
-			$tabO	.= '<div class="col-xs-12 col-sm-3 col-md-3">';
+			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">';
 			$tabO	.= '<div class="ph-item-thumbnail-related">';
 			$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, 'medium');
 
@@ -684,7 +707,7 @@ echo PhocacartRenderFront::renderHeader(array($title));
 			}
 			$tabO	.= '<a href="'.$link.'">';
 			if (isset($image->rel) && $image->rel != '') {
-				$tabO	.= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive ph-image"';
+				$tabO	.= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img_responsive'].' ph-image"';
 				if (isset($this->t['image_width']) && $this->t['image_width'] != '' && isset($this->t['image_height']) && $this->t['image_height'] != '') {
 					$tabO	.= ' style="width:'.$this->t['image_width'].';height:'.$this->t['image_height'].'"';
 				}
@@ -692,10 +715,10 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 			}
 			$tabO	.= '</a>';
-			$tabO	.= '<div class="caption"><h4><a href="'.$link.'">'.$v->title.'</a></h4></div>';
+			$tabO	.= '<div class="'.$this->s['c']['caption'].'"><h4><a href="'.$link.'">'.$v->title.'</a></h4></div>';
 
-			$tabO	.= '<div>';
-			$tabO	.= '<a href="'.$link.'" class="btn btn-primary btn-sm ph-btn" role="button"><span class="'.PhocacartRenderIcon::getClass('view-product').'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+			$tabO	.= '<div class="">';
+			$tabO	.= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn" role="button"><span class="'.$this->s['i']['view-product'].'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 			$tabO	.= '</div>';
 
 			$tabO	.= '</div>';
@@ -703,17 +726,17 @@ echo PhocacartRenderFront::renderHeader(array($title));
 		}
 		$tabO	.= '</div>';
 		$tabO	.= '</div>';
-		$active = '';
+		$active = $activeTab = '';
 	}
 
 	// PRICE HISTORY
 	if ($this->t['enable_price_history'] && $this->t['price_history_data']) {
-		$tabLiO .= '<li class="'.$active.'"><a href="#phpricehistory" data-toggle="tab">'.JText::_('COM_PHOCACART_PRICE_HISTORY').'</a></li>';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phpricehistory" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_PRICE_HISTORY').'</a></li>';
 
-		$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="phpricehistory">';
-		$tabO	.= '<div class="row">';
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phpricehistory">';
+		$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
-		$tabO	.= '<div class="ph-cpanel-chart-box">';
+		$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-cpanel-chart-box">';
 		$tabO	.= '<div id="phChartAreaLineHolder" class="ph-chart-canvas-holder" style="width:95%" >';
         $tabO	.= '<canvas id="phChartAreaLine" class="ph-chart-area-line" />';
 		$tabO	.= '</div>';
@@ -729,24 +752,25 @@ echo PhocacartRenderFront::renderHeader(array($title));
 	if (!empty($this->t['event']->onItemInsideTabPanel) && is_array($this->t['event']->onItemInsideTabPanel)) {
 		foreach($this->t['event']->onItemInsideTabPanel as $k => $v) {
 			if (isset($v['title']) && isset($v['alias']) && isset($v['content'])) {
-				$tabLiO .= '<li class="'.$active.'"><a href="#'.strip_tags($v['alias']).'" data-toggle="tab">'.$v['title'].'</a></li>';
-				$tabO 	.= '<div class="tab-pane '.$active.' fade ph-tab-pane" id="'.strip_tags($v['alias']).'">';
+				$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#'.strip_tags($v['alias']).'" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.$v['title'].'</a></li>';
+				$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="'.strip_tags($v['alias']).'">';
 				$tabO	.= $v['content'];
 				$tabO	.= '</div>';
-				$active = '';
+				$active = $activeTab = '';
 			}
 		}
 	}
 
 
 	if ($tabLiO != '') {
-		echo '<ul class="nav nav-tabs">';
+		echo '<ul class="'.$this->s['c']['tabnav'].'">';
 		echo $tabLiO;
 		echo '</ul>';
+
 	}
 
 	if ($tabO != '') {
-		echo '<div class="tab-content">';
+		echo '<div class="'.$this->s['c']['tabcontent'].'">';
 		echo $tabO;
 		echo '</div>';
 	}
@@ -755,12 +779,19 @@ echo PhocacartRenderFront::renderHeader(array($title));
 
 	echo '</div>'; // end row 2 (bottom)
 
+
+
+
+
+
 	echo $this->t['event']->onItemAfterTabs;
 
 }
 
 if ($this->itemnext[0] || $this->itemprev[0]) {
-	echo '<div class="row"><div class="col-sm-4 col-md-4 ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['row'].'">';
+
+	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
 	if($this->itemprev[0]) {
 		$p = $this->itemprev[0];
 		$title 	= '';
@@ -769,19 +800,23 @@ if ($this->itemnext[0] || $this->itemprev[0]) {
 			$title = $titleT;
 		} else if ($this->t['title_next_prev'] == 2) {
 			$title = JText::_('COM_PHOCACART_PREVIOUS_PRODUCT');
+		} else if ($this->t['title_next_prev'] == 3) {
+			$title = $p->title;
 		}
 		$linkPrev = JRoute::_(PhocacartRoute::getItemRoute($p->id, $p->categoryid, $p->alias, $p->categoryalias));
-		echo '<div class="ph-pull-left"><a href="'.$linkPrev.'" class="btn btn-default ph-item-navigation" role="button" title="'.$titleT.'"><span class="'.PhocacartRenderIcon::getClass('prev').'"></span> '.$title.'</a></div>';
+		echo '<div class="'.$this->s['c']['pull-left'].'">';
+		echo '<a href="'.$linkPrev.'" class="'.$this->s['c']['btn.btn-default'].' ph-item-navigation" role="button" title="'.$titleT.'"><span class="'.$this->s['i']['prev'].'"></span> '.$title.'</a>';
+		echo '</div>';
 	}
 	echo '</div>';
 
-	echo '<div class="col-sm-2 col-md-2 ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
 	echo '</div>';
 
-	echo '<div class="col-sm-2 col-md-2 ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
 	echo '</div>';
 
-	echo '<div class="col-sm-4 col-md-4 ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
 	if($this->itemnext[0]) {
 		$n = $this->itemnext[0];
 		$title 	= '';
@@ -790,11 +825,17 @@ if ($this->itemnext[0] || $this->itemprev[0]) {
 			$title = $titleT;
 		} else if ($this->t['title_next_prev'] == 2) {
 			$title = JText::_('COM_PHOCACART_NEXT_PRODUCT');
+		} else if ($this->t['title_next_prev'] == 3) {
+			$title = $n->title;
 		}
 		$linkNext = JRoute::_(PhocacartRoute::getItemRoute($n->id, $n->categoryid, $n->alias, $n->categoryalias));
-		echo '<div class="ph-pull-right"><a href="'.$linkNext.'" class="btn btn-default ph-item-navigation" role="button" title="'.$titleT.'">'.$title.' <span class="'.PhocacartRenderIcon::getClass('next').'"></span></a></div>';
+		echo '<div class="'.$this->s['c']['pull-right'].'">';
+		echo '<a href="'.$linkNext.'" class="'.$this->s['c']['btn.btn-default'].' ph-item-navigation" role="button" title="'.$titleT.'">'.$title.' <span class="'.$this->s['i']['next'].'"></span></a>';
+		echo '</div>';
 	}
-	echo '</div></div>';
+	echo '</div>';
+
+	echo '</div>';
 }
 
 echo '</div>';

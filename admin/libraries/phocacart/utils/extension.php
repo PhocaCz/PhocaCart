@@ -14,9 +14,9 @@ class PhocacartUtilsExtension
 {
 	private static $extension = array();
 	private static $extensionLoad = array();
-	
+
 	private function __construct(){}
-	
+
 	/**
 	 * Get information about extension.
 	 *
@@ -30,16 +30,16 @@ class PhocacartUtilsExtension
 	 */
 
 	public static function getExtensionInfo( $element = null, $type = 'component', $folder = '' ) {
-		
+
 		$elementFolder = $element . $folder;
-		
+
 		if( is_null( $element ) ) {
 			throw new Exception('Function Error: No element added', 500);
 			return false;
 		}
-		
+
 		if( !array_key_exists( $elementFolder, self::$extension ) ) {
-			
+
 			$db		= JFactory::getDbo();
 			$query	= $db->getQuery(true);
 			if ($type == 'component'){
@@ -54,7 +54,7 @@ class PhocacartUtilsExtension
 			}
 			$query->where('`element` = '.$db->quote($element));
 			$db->setQuery($query);
-			
+
 			$cache 			= JFactory::getCache('_system','callback');
 			$extensionData	=  $cache->get(array($db, 'loadObject'), null, $element, false);
 			if (isset($extensionData->enabled) && $extensionData->enabled == 1) {
@@ -65,23 +65,23 @@ class PhocacartUtilsExtension
 				self::$extension[$elementFolder] = 0;
 			}
 		}
-		
+
 		return self::$extension[$elementFolder];
-		
+
 	}
-	
+
 	public static function getExtensionLoadInfo( &$extension, $element = null, $type = 'component', $folder = '', $version = '') {
-		
+
 		$elementFolder = $element . $folder;
-		
+
 		if( is_null( $element ) ) {
 			return false;
 		}
-		
-		
+
+
 		if( !array_key_exists( $elementFolder, self::$extensionLoad ) ) {
-			
-			
+
+
 			$table 					= JTable::getInstance('Extension', 'JTable');
 
 			$key['type']	= $type;
@@ -89,56 +89,56 @@ class PhocacartUtilsExtension
 			if ($type == 'plugin') {
 				$key['folder'] = $folder;
 			}
-			
+
 			if ($table->load($key)){
-				
+
 				$extension['installed'] = true;
 				$extension['enabled']   = (bool) $table->enabled;
 				$manifest  		= json_decode($table->manifest_cache);
-				
+
 				if (version_compare($extension['version'], @$manifest->version, 'gt')){
 					$extension['versioncurrent'] = $manifest->version;
 				}
 			}
 			self::$extensionLoad[$elementFolder] = $extension;
 		}
-		
+
 		return self::$extensionLoad[$elementFolder];
 	}
-	
-	
+
+
 	public static function getExtensionsObtainTypeButton($type, $download, $extension) {
-		
-		
-	
-		
+
+
+
+		$s = PhocacartRenderStyle::getStyles();
 		$o 		= '';
-		
+
 		// BUTTON
 		$link 		= '';
 		$icon 		= '';
 		$text 		= '';
 		$class		= '';
 		$target 	= '';
-		
+
 		// TEXT
 		$iconTxt 	= '';
 		$classTxt 	= '';
 		$textTxt 	= '';
-		
+
 		if (($type == 0 || $type == 4) && $extension['installed'] == false) {
-			
+
 			$link  	= $download;
 			$icon 	= 'shopping-cart';
 			$class	= 'btn-buy';
 			$text	= JText::_('COM_PHOCACART_BUY_NOW');
 			$target = 'target="_blank"';
-			
+
 		} else  {
 			if ($extension['installed']) {
 				if ($extension['enabled']) {
 					if ($extension['versioncurrent']) {
-						
+
 						if ($type == 0) {
 							// 0 - Paid but update - installed but updated paid version found
 							$link = $download;
@@ -146,11 +146,11 @@ class PhocacartUtilsExtension
 							$class	= 'btn-buy';
 							$text	= JText::_('COM_PHOCACART_REQUEST') . ' ('.$extension['version'].')';
 							$target = 'target="_blank"';
-							
+
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
 							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
-							
+
 						} else if ($type == 4) {
 							// 0 - Paid but update - installed but updated paid version found
 							$link = $download;
@@ -158,11 +158,11 @@ class PhocacartUtilsExtension
 							$class	= 'btn-buy';
 							$text	= JText::_('COM_PHOCACART_REQUEST') . ' ('.$extension['version'].')';
 							$target = 'target="_blank"';
-							
+
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
 							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
-							
+
 						} else if ($type == 1) {
 							// Direct Install
 							$link = JRoute::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . JSession::getFormToken() . '=1', false);//SEC
@@ -170,11 +170,11 @@ class PhocacartUtilsExtension
 							$class	= 'btn-success';
 							$text	= JText::_('COM_PHOCACART_UPDATE') . ' ('.$extension['version'].')';
 							$target = '';
-							
+
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
 							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
-							
+
 						} else {
 							// 2 - Download, 3 Download/Register
 							$link = $download;
@@ -182,21 +182,21 @@ class PhocacartUtilsExtension
 							$class	= 'btn-primary';
 							$text	= JText::_('COM_PHOCACART_DOWNLOAD') . ' ('.$extension['version'].')';
 							$target = 'target="_blank"';
-							
+
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
 							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
 						}
-						
+
 					} else {
-						
+
 						// Installed - version OK
 						$iconTxt 	= 'ok';
 						$classTxt 	= 'ph-success-txt';
 						$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
 					}
 				} else {
-					
+
 					$iconTxt 	= 'remove';
 					$classTxt 	= 'ph-disabled-txt';
 					$textTxt 	= JText::_('COM_PHOCACART_DISABLED');
@@ -209,7 +209,7 @@ class PhocacartUtilsExtension
 					$class	= 'btn-success';
 					$text	= JText::_('COM_PHOCACART_INSTALL');
 					$target = '';
-					
+
 				} else {
 					// 2 - Download, 3 Download/Register
 					$link 	= $download;
@@ -220,25 +220,25 @@ class PhocacartUtilsExtension
 				}
 			}
 		}
-		
+
 		$o .= '<div class="ph-center ph-extension-button">';
 		if ($textTxt != '' && $classTxt != '' && $iconTxt != '') {
-			$o .= '<div class="'.$classTxt.'"><span class="'.PhocacartRenderIcon::getClassAdmin($iconTxt).'"></span> '.$textTxt.'</div>';
+			$o .= '<div class="'.$classTxt.'"><span class="'.$s['i'][$iconTxt].'"></span> '.$textTxt.'</div>';
 		}
 		if ($link != '' && $icon != '' && $text != '') {
 			$o .= '<a href="'.$link.'" '.$target.' class="btn btn-small '.$class.'">';
-			$o .= '<span class="'.PhocacartRenderIcon::getClassAdmin($icon).'"></span> ';
+			$o .= '<span class="'.$s['i'][$icon].'"></span> ';
 			$o .= $text . '</a>';
 		}
 		$o .= '</div>';
-		
-		
+
+
 		return $o;
-		
+
 	}
-	
-	
-	
+
+
+
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;

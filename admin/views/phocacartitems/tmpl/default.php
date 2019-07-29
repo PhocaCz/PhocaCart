@@ -84,7 +84,7 @@ echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHE
 //echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JTEXT::_($this->t['l'].'_CATEGORY').'</th>'."\n";
 echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-price_original">'.JHtml::_('grid.sort', $this->t['l'].'_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-stock">'.JHtml::_('grid.sort', $this->t['l'].'_IN_STOCK', 'a.stock', $listDirn, $listOrder ).'</th>'."\n";
 //echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
@@ -186,7 +186,7 @@ echo $r->td(implode(' ', $catO), "small");
 
 
 echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price).'</span>', "small");
-echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:price_original:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price_original).'</span>', "small");
+echo $r->td('<span class="ph-editinplace-text ph-eip-price_original" id="products:price_original:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->price_original).'</span>', "small");
 //echo $r->td($item->hits, "small");
 echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="products:stock:'.(int)$item->id.'">'.PhocacartPrice::cleanPrice($item->stock).'</span>', "small");
 

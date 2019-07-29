@@ -18,11 +18,13 @@ class PhocaCartViewItems extends JViewLegacy
 	protected $items;
 	protected $t;
 	protected $p;
+	protected $s;
 
 	function display($tpl = null) {
 
 		$app						= JFactory::getApplication();
 		$this->p 					= $app->getParams();
+		$this->s					= PhocacartRenderStyle::getStyles();
 		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$model						= $this->getModel();
 		$document					= JFactory::getDocument();
@@ -42,6 +44,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
 		$this->t['columns_cat']				= $this->p->get( 'columns_cat', 3 );
+		$this->t['columns_subcat_cat']		= $this->p->get( 'columns_subcat_cat', 3 );
 		$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['cv_display_subcategories']= $this->p->get( 'cv_display_subcategories', 5 );
 		$this->t['display_back']			= $this->p->get( 'display_back', 3 );
@@ -50,14 +53,20 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['display_quickview']		= $this->p->get( 'display_quickview', 0 );
 		$this->t['display_addtocart_icon']	= $this->p->get( 'display_addtocart_icon', 0 );
 		$this->t['fade_in_action_icons']	= $this->p->get( 'fade_in_action_icons', 0 );
+
+		// Hide action icon box if no icon displayed
+		$this->t['display_action_icons'] = 1;
+		if ($this->t['display_compare'] == 0 && $this->t['display_wishlist'] == 0 && $this->t['display_quickview'] == 0 && $this->t['display_addtocart_icon'] == 0) {
+			$this->t['display_action_icons'] = 0;
+		}
+
 		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
-
-		$this->t['hide_addtocart']			= $this->p->get( 'hide_addtocart', 0 );
+		$this->t['display_addtocart']		= $this->p->get( 'display_addtocart', 1 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
 		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
 		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
@@ -88,6 +97,7 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['switch_image_category_items']	= $this->p->get( 'switch_image_category_items', 0 );
 
 		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 0 );
+		$this->t['lazy_load_categories']		= $this->p->get( 'lazy_load_categories', 0 );// Subcategories
 		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
@@ -112,12 +122,10 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['pathcat'] 		= PhocacartPath::getPath('categoryimage');
 		$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');
 
-		$media 						= new PhocacartRenderMedia();
-		$this->t['class-row-flex'] 	= $media->loadEqualHeights();
-		$this->t['class_thumbnail'] = $media->loadProductHover();
-		$lazyLoad  					= $media->loadLazyLoad();
-		$this->t['class_lazyload']	= $lazyLoad['class'];
 
+		$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'row-flex' : '';
+        $this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
+        $this->t['class_lazyload']       		= $this->t['lazy_load_category_items']  == 1 ? 'ph-lazyload' : '';
 
 
 

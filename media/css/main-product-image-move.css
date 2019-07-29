@@ -29,7 +29,8 @@
     padding: 0;
     position: absolute;
     top: 0;
-    transform: translate(-100%, 0px);
+    /*transform: translate(-100%, 0px);*/
+	left: -100%;
     transition: all 0.5s ease-in-out 0s;
     width: 100%;
 }

@@ -42,66 +42,71 @@ if (isset($d['filterprice']) && $d['filterprice'] == 2) {
 
 $displayData 	= null;
 ?>
-<div class="panel panel-default">
-	<div class="panel-heading" role="tab" id="heading<?php echo $d['param']; ?>">
-		<h4 class="panel-title">
-			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><span class="<?php echo PhocacartRenderIcon::getClass('triangle-bottom') ?>"></span></a> 
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>">
+	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $d['param']; ?>">
+		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
+			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><span class="<?php echo $d['s']['i']['triangle-bottom'] ?>"></span></a>
 			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><?php echo $d['title'] ?></a>
 		</h4>
 	</div>
-			
-	<div id="collapse<?php echo $d['param']; ?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading<?php echo $d['param']; ?>">
-		<div class="panel-body form-horizontal" id="<?php echo $d['id']; ?>">
-		
-			<div class="form-group row" <?php echo $styleFormGroup ?>>
-				<label class="col-sm-5" for="<?php echo $d['paramname']; ?>"><?php echo $d['title1']; ?></label>
-				<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['paramname']; ?>" value="<?php echo $d['getparams'][0]; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" /></div>
+
+	<div id="collapse<?php echo $d['param']; ?>" class="<?php echo $d['s']['c']['panel-collapse.collapse.in'] ?>" role="tabpanel" aria-labelledby="heading<?php echo $d['param']; ?>">
+		<div class="<?php echo $d['s']['c']['panel-body'] ?> <?php echo $d['s']['c']['form-horizontal'] ?>" id="<?php echo $d['id']; ?>">
+
+			<div class="<?php echo $d['s']['c']['form-group'] ?> <?php echo $d['s']['c']['row'] ?>" <?php echo $styleFormGroup ?>>
+				<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['paramname']; ?>"><?php echo $d['title1']; ?></label>
+				<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>"><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" value="<?php echo $d['getparams'][0]; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" /></div>
 			</div>
 			<?php
 			if (isset($d['param2']) && $d['param2'] != '') { ?>
-				<div class="form-group row" <?php echo $styleFormGroup ?>>
-					<label class="col-sm-5" for="<?php echo $d['param2name']; ?>"><?php echo $d['title2']; ?></label>
-					<div class="col-sm-7"><input type="text" class="form-control" name="<?php echo $d['param2name']; ?>" value="<?php echo $d['getparams2'][0]; ?>" id="<?php echo $d['id'].$d['param2name']; ?>" /></div>
+				<div class="<?php echo $d['s']['c']['form-group'] ?> <?php echo $d['s']['c']['row'] ?>" <?php echo $styleFormGroup ?>>
+					<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['param2name']; ?>"><?php echo $d['title2']; ?></label>
+					<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>"><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['param2name']; ?>" value="<?php echo $d['getparams2'][0]; ?>" id="<?php echo $d['id'].$d['param2name']; ?>" /></div>
 				</div>
 			<?php } ?>
-			
-			
+
+
 			<?php
 			// Display filter price range (graphic range)
 			if (isset($d['filterprice']) && ($d['filterprice'] == 2 || $d['filterprice'] == 3)) { ?>
-			<div class="col-sm-12 ph-price-filter-box">
+            <div class="<?php echo $d['s']['c']['row'] ?>">
+			<div class="<?php echo $d['s']['c']['col.xs12.sm12.md12'] ?> ph-price-filter-box">
 				<div id="phPriceFilterRange"></div>
 				<div id="phPriceFilterPrice"></div>
 			</div>
+            </div>
 			<?php } ?>
-			
-			<div class="col-sm-5"></div>
-			<div class="col-sm-7">
-				<div class="ph-pull-right btn-group ph-zero ph-right-zero">
-					<button class="btn btn-success tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="<?php echo PhocacartRenderIcon::getClass('ok') ?>"></span></button>
-					<button class="btn btn-danger tip hasTooltip ph-pull-right" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="<?php echo PhocacartRenderIcon::getClass('clear') ?>"></span></button> 
+
+            <div class="<?php echo $d['s']['c']['row'] ?>">
+			<div class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>"></div>
+			<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>">
+				<div class="<?php echo $d['s']['c']['pull-right'] ?> <?php echo $d['s']['c']['btn-group'] ?> ph-zero ph-right-zero">
+					<button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="<?php echo $d['s']['i']['ok'] ?>"></span></button>
+					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip hasTooltip <?php echo $d['s']['c']['pull-right'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="<?php echo $d['s']['i']['clear'] ?>"></span></button>
 				</div>
 			</div>
+            </div>
 			<?php
 			/*
-			
+
 			<button class="btn tip hasTooltip" type="button" onclick="phChangeFilter('.$d['param'].', \''. $value.'\', 0, \'text\');" title="<?php echo JText::_('COM_PHOCACART_CLEAR_PRICE'); ?>"><span class="icon-remove"></span></button>
-			
+
 			foreach ($d['items'] as $k => $v) {
-				
+
 				$checked 	= '';
 				$value 		= (int)$v->id .'-'. htmlspecialchars($v->alias);
-				
+
 				if (in_array($value, $d['getparams'])) {
 					$checked 	= 'checked';
 				}
-				
+
 				echo '<div class="checkbox">';
 				echo '<label><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(this, \''.$d['param'].'\', \''. $value.'\');" />'.$v->title.'</label>';
 				echo '</div>';
-				
+
 			}*/
 		?>
+            <div class="ph-cb"></div>
 		</div>
 	</div>
 </div>

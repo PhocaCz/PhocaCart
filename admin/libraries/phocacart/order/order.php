@@ -269,6 +269,7 @@ class PhocacartOrder
 		// Data order
 		$d['comment'] 				= isset($data['phcomment']) ? $data['phcomment'] : '';
 		$d['privacy']				= isset($data['privacy']) ? (int)$data['privacy'] : '';
+		$d['newsletter']			= isset($data['newsletter']) ? (int)$data['newsletter'] : 0;
 
 		// Data POS
 		$d['amount_pay'] 			= isset($data['amount_pay']) ? $data['amount_pay'] : 0;
@@ -467,128 +468,133 @@ class PhocacartOrder
 		// GET ID OF ORDER
 		if ($row->id > 0) {
 
-			// Set Order Billing
-			$orderBillingData = $this->saveOrderBilling($row->id, $row->date);
+            // Set Order Billing
+            $orderBillingData = $this->saveOrderBilling($row->id, $row->date);
 
-			// ADDRESS;
-			//$address = PhocacartUser::getUserAddress($user->id); - set above
-			// Type 0 is Billing Address
-			if (isset($address[0]->type) && $address[0]->type == 0) {
-				$this->cleanTable('phocacart_order_users', $row->id);
-				$this->saveOrderUsers($address[0], $row->id);
-			} else if (isset($address[1]->type) && $address[1]->type == 0) {
-				$this->cleanTable('phocacart_order_users', $row->id);
-				$this->saveOrderUsers($address[1], $row->id);
-			}
+            // ADDRESS;
+            //$address = PhocacartUser::getUserAddress($user->id); - set above
+            // Type 0 is Billing Address
+            if (isset($address[0]->type) && $address[0]->type == 0) {
+                $this->cleanTable('phocacart_order_users', $row->id);
+                $this->saveOrderUsers($address[0], $row->id);
+            } else if (isset($address[1]->type) && $address[1]->type == 0) {
+                $this->cleanTable('phocacart_order_users', $row->id);
+                $this->saveOrderUsers($address[1], $row->id);
+            }
 
-			// Type 1 is Shipping Address
-			if (isset($address[1]->type) && $address[1]->type == 1) {
-				$this->saveOrderUsers($address[1], $row->id);
-			} else if (isset($address[0]->type) && $address[0]->type == 1) {
-				$this->saveOrderUsers($address[0], $row->id);
-			}
+            // Type 1 is Shipping Address
+            if (isset($address[1]->type) && $address[1]->type == 1) {
+                $this->saveOrderUsers($address[1], $row->id);
+            } else if (isset($address[0]->type) && $address[0]->type == 1) {
+                $this->saveOrderUsers($address[0], $row->id);
+            }
 
-			//PRODUCT
-			if (!empty($fullItems[1])) {
-				$this->cleanTable('phocacart_order_products', $row->id);
-				$this->cleanTable('phocacart_order_attributes', $row->id);
+            //PRODUCT
+            if (!empty($fullItems[1])) {
+                $this->cleanTable('phocacart_order_products', $row->id);
+                $this->cleanTable('phocacart_order_attributes', $row->id);
 
-				foreach($fullItems[1] as $k => $v) {
-
-
-					// While saving:
-					// Check if attributes which are required were filled
-					// Check if products can be accessed (include their categories)
+                foreach ($fullItems[1] as $k => $v) {
 
 
-					$orderProductId = $this->saveOrderProducts($v, $row->id);
+                    // While saving:
+                    // Check if attributes which are required were filled
+                    // Check if products can be accessed (include their categories)
 
-					/*
-					$v['id'] = product_id
-					$row->id = order_id
-					$orderProductId = order_product_id
-					*/
 
-					if ($orderProductId > 0) {
-						// PRODUCT DISCOUNTS - we are here because we need Product ID and Order Product ID - both are different ids
-						$this->saveOrderProductDiscounts($orderProductId, $v['id'], $row->id, $k, $fullItems);
-					}
+                    $orderProductId = $this->saveOrderProducts($v, $row->id);
 
-					if ($orderProductId > 0) {
-						// DOWNLOAD - we are here because we need Product ID and Order Product ID - both are different ids
+                    /*
+                    $v['id'] = product_id
+                    $row->id = order_id
+                    $orderProductId = order_product_id
+                    */
 
-                        if (!isset($v['attributes'])){
+                    if ($orderProductId > 0) {
+                        // PRODUCT DISCOUNTS - we are here because we need Product ID and Order Product ID - both are different ids
+                        $this->saveOrderProductDiscounts($orderProductId, $v['id'], $row->id, $k, $fullItems);
+                    }
+
+                    if ($orderProductId > 0) {
+                        // DOWNLOAD - we are here because we need Product ID and Order Product ID - both are different ids
+
+                        if (!isset($v['attributes'])) {
                             $v['attributes'] = false;
                         }
-						$this->saveOrderDownloads($orderProductId, $v['id'], $v['catid'], $row->id);
-					}
+                        $this->saveOrderDownloads($orderProductId, $v['id'], $v['catid'], $row->id);
+                    }
 
-					if ($orderProductId > 0) {
-						// UPDATE the number of sales of one product - to save sql queries in frontend
-						$this->updateNumberOfSalesOfProduct($orderProductId, $v['id'], $row->id);
-					}
+                    if ($orderProductId > 0) {
+                        // UPDATE the number of sales of one product - to save sql queries in frontend
+                        $this->updateNumberOfSalesOfProduct($orderProductId, $v['id'], $row->id);
+                    }
 
-					if (!$orderProductId) {
+                    if (!$orderProductId) {
 
-						// DELETE NEWLY CREATED ORDER WHEN FAIL (not accessible product, required option)
-						$this->deleteOrder($row->id);
-						$this->cleanTable('phocacart_order_products', $row->id);
-						$this->cleanTable('phocacart_order_attributes', $row->id);
-						$this->cleanTable('phocacart_order_users', $row->id);
-						$this->cleanTable('phocacart_order_product_discounts', $row->id);
-						$this->cleanTable('phocacart_order_discounts', $row->id);
-						$this->cleanTable('phocacart_order_coupons', $row->id);
+                        // DELETE NEWLY CREATED ORDER WHEN FAIL (not accessible product, required option)
+                        $this->deleteOrder($row->id);
+                        $this->cleanTable('phocacart_order_products', $row->id);
+                        $this->cleanTable('phocacart_order_attributes', $row->id);
+                        $this->cleanTable('phocacart_order_users', $row->id);
+                        $this->cleanTable('phocacart_order_product_discounts', $row->id);
+                        $this->cleanTable('phocacart_order_discounts', $row->id);
+                        $this->cleanTable('phocacart_order_coupons', $row->id);
 
-						$msg = JText::_('COM_PHOCACART_ORDER_NOT_EXECUTED_PRODUCT_NOT_ACCESSIBLE_OR_REQUIRED_ATTRIBUTE_OPTION_NOT_SELECTED');
-						$app->enqueueMessage($msg, 'error');
-						return false;
+                        $msg = JText::_('COM_PHOCACART_ORDER_NOT_EXECUTED_PRODUCT_NOT_ACCESSIBLE_OR_REQUIRED_ATTRIBUTE_OPTION_NOT_SELECTED');
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
 
-					}
-				}
-			}
-
-
-
-			// DISCOUNTS
-			$this->cleanTable('phocacart_order_discounts', $row->id);
-			if ($total[2]['dnetto'] > 0) {
-				$this->saveOrderDiscounts(JText::_('COM_PHOCACART_PRODUCT_DISCOUNT'), $total[2], $row->id);
-			}
-			if ($total[3]['dnetto'] > 0) {
-				$this->saveOrderDiscounts(JText::_('COM_PHOCACART_CART_DISCOUNT'), $total[3], $row->id);
-			}
-
-			// COUPONS
-			if (!empty($coupon)) {
-				$this->cleanTable('phocacart_order_coupons', $row->id);
-				$this->saveOrderCoupons($coupon, $total[4], $row->id);
-				PhocacartCoupon::storeCouponCount((int)$coupon['id']);
-				PhocacartCoupon::storeCouponCountUser((int)$coupon['id'], $d['user_id'] );
-			}
+                    }
+                }
+            }
 
 
-			// REWARD
-			$this->cleanTable('phocacart_reward_points', $row->id);
+            // DISCOUNTS
+            $this->cleanTable('phocacart_order_discounts', $row->id);
+            if ($total[2]['dnetto'] > 0) {
+                $this->saveOrderDiscounts(JText::_('COM_PHOCACART_PRODUCT_DISCOUNT'), $total[2], $row->id);
+            }
+            if ($total[3]['dnetto'] > 0) {
+                $this->saveOrderDiscounts(JText::_('COM_PHOCACART_CART_DISCOUNT'), $total[3], $row->id);
+            }
 
-			// REWARD DISCOUNT - user used the points to buy items
-			if ($user->id > 0 && isset($total[0]['rewardproductusedtotal']) && (int)$total[0]['rewardproductusedtotal'] > 0) {
-				$rewardProductTotal = -(int)$total[0]['rewardproductusedtotal'];
-				$this->saveRewardPoints($user->id, $rewardProductTotal, $orderBillingData, 0, -1);
-			}
-			// REWARD POINTS + user get the points when buying items
-			if ($user->id > 0 && isset($total[0]['points_received']) && (int)$total[0]['points_received'] > 0) {
-				$this->saveRewardPoints($user->id, (int)$total[0]['points_received'], $orderBillingData, 0, 1);
-			}
+            // COUPONS
+            if (!empty($coupon)) {
+                $this->cleanTable('phocacart_order_coupons', $row->id);
+                $this->saveOrderCoupons($coupon, $total[4], $row->id);
+                PhocacartCoupon::storeCouponCount((int)$coupon['id']);
+                PhocacartCoupon::storeCouponCountUser((int)$coupon['id'], $d['user_id']);
+            }
 
 
-			// HISTORY AND ORDER STATUS
-			$this->cleanTable('phocacart_order_history', $row->id);
-			$notify = 0;
-			$status = PhocacartOrderStatus::getStatus($d['status_id']);
-			if (isset($status['email_customer'])) {
-				$notify = $status['email_customer'];
-			}
-			$this->saveOrderHistory($d['status_id'], $notify, $user->id, $row->id);
+            // REWARD
+            $this->cleanTable('phocacart_reward_points', $row->id);
+
+            // REWARD DISCOUNT - user used the points to buy items
+            if ($user->id > 0 && isset($total[0]['rewardproductusedtotal']) && (int)$total[0]['rewardproductusedtotal'] > 0) {
+                $rewardProductTotal = -(int)$total[0]['rewardproductusedtotal'];
+                $this->saveRewardPoints($user->id, $rewardProductTotal, $orderBillingData, 0, -1);
+            }
+            // REWARD POINTS + user get the points when buying items
+            if ($user->id > 0 && isset($total[0]['points_received']) && (int)$total[0]['points_received'] > 0) {
+                $this->saveRewardPoints($user->id, (int)$total[0]['points_received'], $orderBillingData, 0, 1);
+            }
+
+
+            // HISTORY AND ORDER STATUS
+            $this->cleanTable('phocacart_order_history', $row->id);
+            $notify = 0;
+            $status = PhocacartOrderStatus::getStatus($d['status_id']);
+            if (isset($status['email_customer'])) {
+                $notify = $status['email_customer'];
+            }
+            $this->saveOrderHistory($d['status_id'], $notify, $user->id, $row->id);
+
+            // UPDATE NEWSLETTER INFO
+
+            if ((int)$d['newsletter'] > 0 && (int)$user->id > 0) {
+                PhocacartUser::updateNewsletterInfoByUser((int)$user->id, 1);
+            }
 
 			// BE AWARE***********
 			// $d is newly defined so use d2

@@ -18,44 +18,44 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 	if (!empty($this->t['files'])) {
 
 		//echo '<div class="ph-download-files">';
-		
-		echo '<div class="row-fluid ph-download-header-box-row ph-vertical-align">';
-		echo '<div class="col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_TITLE').'</div>';
-		echo '<div class="col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FILENAME').'</div>';
-		echo '<div class="col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_STATUS').'</div>';
-		echo '<div class="col-sm-3 col-md-3 ph-center">'.JText::_('COM_PHOCACART_DOWNLOAD').'</div>';
+
+		echo '<div class="'.$this->s['c']['row'].' ph-download-header-box-row ph-vertical-align">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_TITLE').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_FILENAME').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_STATUS').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">'.JText::_('COM_PHOCACART_DOWNLOAD').'</div>';
 		echo '<div class="ph-cb"></div>';
 		echo '</div>';
-		
-		
+
+
 		foreach ($this->t['files'] as $k => $v) {
-		
-			echo '<div class="row-fluid ph-download-item-box-row ph-vertical-align">';
-			
-			echo '<div class="col-sm-3 col-md-3">'.$v->title.'</div>';
-			
+
+			echo '<div class="'.$this->s['c']['row'].' ph-download-item-box-row ph-vertical-align">';
+
+			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$v->title.'</div>';
+
 			$fileA = explode('/', $v->download_file);
 			$fileACount = count($fileA);
 			$fileACount--;
 			$file = $fileA[$fileACount];
-			echo '<div class="col-sm-3 col-md-3">'.$file.'</div>';
-		
-		
+			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$file.'</div>';
+
+
 			$downloadPossible = 0;
 			$status = '';
 			if((int)$this->t['download_count'] > 0 && ((int)$this->t['download_count'] == (int)$v->download_hits || (int)$this->t['download_count'] < (int)$v->download_hits)) {
-				$status .= '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_MAXIMUM_DOWNLOADS_REACHED'). '</span><br />';
+				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.JText::_('COM_PHOCACART_MAXIMUM_DOWNLOADS_REACHED'). '</span><br />';
 
 			}
 
 			if((int)$this->t['download_days'] > 0 && !PhocacartDownload::isActive($v->date, $this->t['download_days'])) {
-				$status .= '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span><br />';
+				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.JText::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span><br />';
 
 			}
 
 			if ($status == '') {
-				$status = '<span class="label label-success label-success">'.JText::_('COM_PHOCACART_ACTIVE'). '</span><br />';
-				
+				$status = '<span class="'.$this->s['c']['label.label-success'].'">'.JText::_('COM_PHOCACART_ACTIVE'). '</span><br />';
+
 				$rem	= (int)$this->t['download_count'] - (int)$v->download_hits;
 				if ((int)$rem > 0) {
 					$status .= ' <span class="ph-small"><b>'.$rem. '</b> ';
@@ -66,21 +66,21 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 					}
 					$status .= JText::_('COM_PHOCACART_REMAINING'). '</span>';
 				}
-				
+
 				$dateValid = PhocacartDownload::validUntil($v->date, $this->t['download_days']);
 				if ($dateValid) {
 					$status .= '<br /> <span class="ph-small">'.JText::_('COM_PHOCACART_DOWNLOAD_VALID_UNTIL'). ': ';
 					$status .= ' '.$dateValid.'<span>';
 				}
-				
+
 				$downloadPossible = 1;
 			}
 
-			echo '<div class="col-sm-3 col-md-3">'.$status.'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$status.'</div>';
 
 			if($downloadPossible ==1) {
-				echo '<div class="col-sm-3 col-md-3 ph-center">';
-			
+				echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">';
+
 				echo '<form action="'.$this->t['linkdownload'].'" method="post">';
 				echo '<input type="hidden" name="id" value="'.(int)$v->id.'">';
 				echo '<input type="hidden" name="task" value="download.download">';
@@ -89,20 +89,20 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 				echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 				echo '<input type="hidden" name="d" value="'.$this->t['token_download'].'" />';
 				echo '<input type="hidden" name="o" value="'.$this->t['token_order'].'" />';
-				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="'.PhocacartRenderIcon::getClass('download').'"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
+				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="'.$this->s['i']['download'].'"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
 				echo JHtml::_('form.token');
 				echo '</form>';
-				
+
 				echo '</div>';
-		
+
 			} else {
-				echo '<div class="col-sm-3 col-md-3 ph-center"><span class="'.PhocacartRenderIcon::getClass('ban').' ph-red"></span></div>';
+				echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center"><span class="'.$this->s['i']['ban'].' ph-red"></span></div>';
 			}
-			
+
 			echo '</div>';// end row
 		}
 		echo '<div class="ph-cb ph-download-item-box-row-line"></div>';
-		
+
 		//echo '</div>';// end download files
 	} else {
 		echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_THERE_ARE_NO_FILES_TO_DOWNLOAD').'</div>';

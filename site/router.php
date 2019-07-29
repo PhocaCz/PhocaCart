@@ -580,6 +580,13 @@ class PhocacartRouter extends JComponentRouterBase
 				}
 			}
 			
+		/*	if (empty($vars) && count($segments) > 1) {
+				
+				throw new Exception(JText::_('Nothing found'), 404);
+				return false;
+			}
+		*/	
+			
 			unset($segments[0]);
 			unset($segments[1]);
 			return $vars;

@@ -44,6 +44,9 @@ class PhocacartSearch
 
 	public static function getSqlParts($type, $search, $param, $params = array()) {
 
+
+
+
 		$in 	= '';
 		$where 	= '';
 		$left	= '';
@@ -187,14 +190,14 @@ class PhocacartSearch
 					switch ($phrase) {
 						case 'exact':
 							$text		= $db->quote('%'.$db->escape($in, true).'%', false);
-							$wheres	= array();
-							$wheres[]	= 'a.title LIKE '.$text;
-							$wheres[]	= 'a.alias LIKE '.$text;
-							$wheres[]	= 'a.metakey LIKE '.$text;
-							$wheres[]	= 'a.metadesc LIKE '.$text;
-							$wheres[]	= 'a.description LIKE '.$text;
-							$wheres[]	= 'a.sku LIKE '.$text;
-							$where		= '(' . implode(') OR (', $wheres) . ')';
+							$wheresSub	= array();
+							$wheresSub[]	= 'a.title LIKE '.$text;
+							$wheresSub[]	= 'a.alias LIKE '.$text;
+							$wheresSub[]	= 'a.metakey LIKE '.$text;
+							$wheresSub[]	= 'a.metadesc LIKE '.$text;
+							$wheresSub[]	= 'a.description LIKE '.$text;
+							$wheresSub[]	= 'a.sku LIKE '.$text;
+							$where		= '(' . implode(') OR (', $wheresSub) . ')';
 							$left 		= '';
 						break;
 
@@ -210,16 +213,17 @@ class PhocacartSearch
 									continue;
 								}
 
-								$word		= $db->quote('%'.$db->escape($word, true).'%', false);
-
-								$wheres[]	= 'a.title LIKE '.$word;
-								$wheres[]	= 'a.alias LIKE '.$word;
-								$wheres[]	= 'a.metakey LIKE '.$word;
-								$wheres[]	= 'a.metadesc LIKE '.$word;
-								$wheres[]	= 'a.description LIKE '.$word;
-								$wheres[]	= 'a.sku LIKE '.$word;
-								$wheres[]	= implode(' OR ', $wheres);
+								$word			= $db->quote('%'.$db->escape($word, true).'%', false);
+								$wheresSub 		= array();
+								$wheresSub[]	= 'a.title LIKE '.$word;
+								$wheresSub[]	= 'a.alias LIKE '.$word;
+								$wheresSub[]	= 'a.metakey LIKE '.$word;
+								$wheresSub[]	= 'a.metadesc LIKE '.$word;
+								$wheresSub[]	= 'a.description LIKE '.$word;
+								$wheresSub[]	= 'a.sku LIKE '.$word;
+								$wheres[]		= implode(' OR ', $wheresSub);
 							}
+
 							$where	= '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
 							$left 	= '';
 

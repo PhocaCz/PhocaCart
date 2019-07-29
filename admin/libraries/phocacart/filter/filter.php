@@ -40,6 +40,7 @@ class PhocacartFilter
 
 		// $db = JFactory::getDBO();
 		$o			= array();
+		$s 			= PhocacartRenderStyle::getStyles();
 		//$app		= JFactory::getApplication();
 		$layout 	= new JLayoutFile('form_filter_checkbox', null, array('component' => 'com_phocacart'));
 		$layout2 	= new JLayoutFile('form_filter_text', null, array('component' => 'com_phocacart'));
@@ -58,6 +59,7 @@ class PhocacartFilter
 
 		// =FILTER=
 		$data				= array();
+		$data['s']			= $s;
 		$data['getparams']	= array();
 
 		//-CATEGORY- ACTIVE CATEGORY
@@ -180,6 +182,7 @@ class PhocacartFilter
 				foreach($attributes as $k => $v) {
 
 					$data				= array();
+					$data['s']			= $s;
 					$data['param'] 		= 'a['.$v['alias']. ']';
 					$data['title']		= $v['title'];
 					$data['items']		= $v['options'];
@@ -215,6 +218,7 @@ class PhocacartFilter
 			if (!empty($specifications)) {
 				foreach($specifications as $k => $v) {
 					$data				= array();
+					$data['s']			= $s;
 					$data['param'] 		= 's['.$v['alias']. ']';
 					$data['title']		= $v['title'];
 					$data['items']		= $v['value'];

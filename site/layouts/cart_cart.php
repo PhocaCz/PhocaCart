@@ -33,25 +33,25 @@ if (!empty($d['fullitems'])) {
 	if (isset($d['paramsmodule']['display_image']) && $d['paramsmodule']['display_image'] == 1) {
 		//$c2 = 3;// Colspans of table;
 		//$c3 = 4;
-		$cI 	= 'col-sm-2 col-md-2';// +2
-		$cX 	= 'col-sm-1 col-md-1';
-		$cXT 	= 'col-sm-5 col-md-5';// -1
-		$cXP 	= 'col-sm-4 col-md-4';// -1
+		$cI 	= $d['s']['c']['col.xs12.sm2.md2'];// +2
+		$cX 	= $d['s']['c']['col.xs12.sm1.md1'];
+		$cXT 	= $d['s']['c']['col.xs12.sm5.md5'];// -1
+		$cXP 	= $d['s']['c']['col.xs12.sm4.md4'];// -1
 		$cS		= '-i';
 	} else {
 		//$c2 = 2;
 		//$c3 = 3;
 		$cI 	= '';
-		$cX 	= 'col-sm-1 col-md-1'; // X Emtpy space
-		$cXT 	= 'col-sm-6 col-md-6'; // T Text/Title
-		$cXP 	= 'col-sm-5 col-md-5'; // P Price
+		$cX 	= $d['s']['c']['col.xs12.sm1.md1']; // X Emtpy space
+		$cXT 	= $d['s']['c']['col.xs12.sm6.md6']; // T Text/Title
+		$cXP 	= $d['s']['c']['col.xs12.sm5.md5']; // P Price
 		$cS		= ''; // S Suffix
 	}
 	//$r	= 'row-fluid';
-	$r	= 'row';
-	$cT = 'col-sm-7 col-md-7';
-	$cP = 'col-sm-5 col-md-5';
-	$cA = 'col-sm-12 col-md-12';
+	$r	= $d['s']['c']['row'];
+	$cT = $d['s']['c']['col.xs12.sm7.md7'];
+	$cP = $d['s']['c']['col.xs12.sm5.md5'];
+	$cA = $d['s']['c']['col.xs12.sm12.md12'];
 
 	///echo '<table class="ph-cart-small-box">';
 	echo '<div class="ph-cart-small-box">';
@@ -115,11 +115,12 @@ if (!empty($d['fullitems'])) {
 					echo '<div class="'.$cI.' ph-small ph-mod-cart-image">';
 
                     $d2								= array();
+                    $d2['s']                        = $d['s'];
                     $d2['t']['display_webp_images']	= $p['display_webp_images'];
                     $d2['src']						= JURI::base(true).'/'.$image['image']->rel;
                     $d2['srcset-webp']				= JURI::base(true).'/'.$image['image']->rel_webp;
                     $d2['alt-value']				= PhocaCartImage::getAltTitle($v['title'], $image['image']->rel);
-                    $d2['class']					= PhocacartRenderFront::getClass(array('img-responsive', 'ph-img-cart-cart'));
+                    $d2['class']					= PhocacartRenderFront::completeClass(array($d['s']['c']['img-responsive'], 'ph-img-cart-cart'));
 
                     echo $layoutI->render($d2);
 

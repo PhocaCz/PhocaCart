@@ -14,6 +14,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 
 	protected $state;
 	protected $t;
+	protected $s;
 	protected $params;
 	protected $items 	= array();
 	protected $total	= array();
@@ -25,6 +26,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 		$document->setTitle(JText::_('COM_PHOCACART_REPORT'));
 
 		$this->t				= PhocacartUtils::setVars('report');
+		$this->s                = PhocacartRenderStyle::getStyles();
 		$this->state			= $this->get('State');
 		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
 		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());

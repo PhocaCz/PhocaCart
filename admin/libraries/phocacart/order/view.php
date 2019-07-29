@@ -153,7 +153,7 @@ class PhocacartOrderView
 	public function getItemProducts($orderId) {
 
 		$db = JFactory::getDBO();
-		$query = 'SELECT DISTINCT p.*, pr.download_token, pd.published as download_published'
+		$query = 'SELECT DISTINCT p.*, pd.download_token, pd.download_file, pd.download_folder, pd.published as download_published'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__phocacart_order_products AS p ON o.id = p.order_id'
 				.' LEFT JOIN #__phocacart_products AS pr ON pr.id = p.product_id'

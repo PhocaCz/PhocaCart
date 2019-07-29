@@ -87,6 +87,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 	/*
 	 * Add product to cart
+	 * see pos.json
 	 */
 	public function add() {
 
@@ -110,6 +111,7 @@ class PhocaCartControllerPos extends JControllerForm
 			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
 		}
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));*/
+
 		$app->redirect(base64_decode($item['return']));
 	}
 

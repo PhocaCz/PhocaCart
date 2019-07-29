@@ -19,23 +19,26 @@ $layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 
 $layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
 $layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
 
+$close = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>';
+
 $x = $this->item[0];
 ?>
-<div id="phQuickViewPopup" class="modal zoom" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <a role="button" class="close" data-dismiss="modal" >&times;</a>
-		  <h4><span class="<?php echo PhocacartRenderIcon::getClass('quick-view') ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
+<div id="phQuickViewPopup" class="<?php echo $this->s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="<?php echo $this->s['c']['modal-dialog'] ?> <?php echo $this->s['c']['modal-lg'] ?>">
+      <div class="<?php echo $this->s['c']['modal-content'] ?>">
+        <div class="<?php echo $this->s['c']['modal-header'] ?>">
+          <?php echo $this->s['c']['class-type'] != 'bs4' ? $close : '' ?>
+		  <h4><span class="<?php echo $this->s['i']['quick-view'] ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
+            <?php echo $this->s['c']['class-type'] == 'bs4' ? $close : '' ?>
         </div>
-        <div class="modal-body"><?php
+        <div class="<?php echo $this->s['c']['modal-body'] ?>"><?php
 
 
 //echo '<h1>'.$x->title.'</h1>';
 echo '<div class="row">';
 
 // === IMAGE PANEL
-echo '<div id="phImageBox" class="col-xs-12 col-sm-6 col-md-6">';
+echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
 
 
 $idName			= 'VItemQuickP'.(int)$x->id;
@@ -80,12 +83,13 @@ if (isset($image->rel) && $image->rel != '') {
 
     $d						= array();
     $d['t']					= $this->t;
+    $d['s']					= $this->s;
     $d['src']				= JURI::base(true).'/'.$image->rel;
     $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
     $d['data-image']		= JURI::base(true).'/'.$image->rel;// Default image - when changed by javascript back to default
     $d['data-image-webp']	= JURI::base(true).'/'.$image->rel_webp;// Default image - when changed by javascript back to default
     $d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $image->rel);
-    $d['class']				= PhocacartRenderFront::getClass(array('img-responsive', $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
+    $d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
     $d['style']				= '';
     if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
         $d['style'] = 'width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px';
@@ -103,7 +107,7 @@ echo '</div>';// end image panel
 
 
 // === PRICE PANEL
-echo '<div class="col-xs-12 col-sm-6 col-md-6 ph-item-price-panel">';
+echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-price-panel">';
 
 $title = '';
 if (isset($x->title) && $x->title != '') {
@@ -117,6 +121,7 @@ $price 	= new PhocacartPrice;// Can be used by options
 if ($this->t['can_display_price']) {
 
 	$d					= array();
+	$d['s']				= $this->s;
 	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 	$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
 
@@ -183,15 +188,16 @@ if ($this->t['can_display_price']) {
 	$class_btn	= '';
 	$class_icon	= '';
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
-		$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
+		$this->stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
 
-		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
+		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$this->stock < 1) {
 			$class_btn 					= 'ph-visibility-hidden';
 			$class_icon					= 'ph-display-none';
 		}
 
 		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
 			$d							= array();
+			$d['s']					    = $this->s;
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;
 			$d['typeview']				= 'Item';
@@ -201,6 +207,7 @@ if ($this->t['can_display_price']) {
 
 		if($this->t['stock_status']['min_quantity']) {
 			$dPOQ						= array();
+			$dPOQ['s']					= $this->s;
 			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_quantity'];
 			echo $layoutPOQ->render($dPOQ);
@@ -208,6 +215,7 @@ if ($this->t['can_display_price']) {
 
 		if($this->t['stock_status']['min_multiple_quantity']) {
 			$dPOQ						= array();
+			$dPOQ['s']					= $this->s;
 			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
 			echo $layoutPOQ->render($dPOQ);
@@ -229,6 +237,7 @@ action="'.$this->t['linkcheckout'].'" method="post">';
 
 // ATTRIBUTES, OPTIONS
 $d							= array();
+$d['s']					    = $this->s;
 $d['attr_options']			= $this->t['attr_options'];
 $d['hide_attributes']		= $this->t['hide_attributes_item'];
 $d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
@@ -250,6 +259,7 @@ if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 } else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
 
 	$d					= array();
+	$d['s']			    = $this->s;
 	$d['id']			= (int)$x->id;
 	$d['catid']			= $this->t['catid'];
 	$d['return']		= $this->t['actionbase64'];
@@ -261,12 +271,14 @@ if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 
 } else if ((int)$this->t['item_addtocart'] == 2 && (int)$x->external_id != '') {
 	$d					= array();
+	$d['s']				= $this->s;
 	$d['external_id']	= (int)$x->external_id;
 	$d['return']		= $this->t['actionbase64'];
 
 	echo$layoutA2->render($d);
 } else if ((int)$this->t['item_addtocart'] == 3 && $x->external_link != '') {
 	$d					= array();
+	$d['s']				= $this->s;
 	$d['external_link']	= $x->external_link;
 	$d['external_text']	= $x->external_text;
 	$d['return']		= $this->t['actionbase64'];
@@ -291,7 +303,7 @@ echo '</div>';// end row
 
 
         ?></div>
-		<div class="modal-footer"></div>
+		<div class="<?php echo $this->s['c']['modal-footer'] ?>"></div>
 	   </div>
     </div>
 </div>

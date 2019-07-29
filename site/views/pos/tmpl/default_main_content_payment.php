@@ -12,17 +12,17 @@ $price		= new PhocacartPrice();
 
 echo '<div class="ph-pos-payment-box">';
 
-echo '<div class="row row-vac">';
+echo '<div class="'.$this->s['c']['row'].' row-vac">';
 
-echo '<div class="row-item col-sm-3 col-md-3">';
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 echo '</div>';
 
 
-echo '<div class="row-item col-sm-3 col-md-3">';
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 echo '<div class="ph-pos-payment-item-txt">' . JText::_('COM_PHOCACART_TOTAL_TO_PAY') . '</div>';
 echo '</div>';
 
-echo '<div class="row-item col-sm-3 col-md-3">';
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 //$totalAmount = 0;
 if ($this->t['total'][0]['brutto_currency'] !== 0) {
 	echo '<div class="ph-pos-total-to-pay ph-right">' . $price->getPriceFormat($this->t['total'][0]['brutto_currency'], 0, 1).'</div>';
@@ -34,7 +34,7 @@ if ($this->t['total'][0]['brutto_currency'] !== 0) {
 echo '</div>';
 
 
-echo '<div class="row-item col-sm-3 col-md-3">';
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 echo '</div>';
 
 echo '</div>'; // end row-vac
@@ -54,12 +54,12 @@ echo $output;
 
 
 
-echo '<div class="row row-vac">';
+echo '<div class="'.$this->s['c']['row'].' row-vac">';
 
-echo '<div class="row-item col-sm-3 col-md-3">';
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 echo '</div>';
 
-echo '<div class="row-item col-sm-6 col-md-6 ph-pos-payment-confirm-box">';
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm6.md6'].' ph-pos-payment-confirm-box">';
 
 echo '<input type="hidden" name="task" value="pos.order">';
 echo '<input type="hidden" name="page" value="main.content.payment">';
@@ -71,11 +71,11 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo '<input type="hidden" name="redirectsuccess" value="main.content.order" />';
 echo '<input type="hidden" name="redirecterror" value="main.content.payment" />';
 echo JHtml::_('form.token');
-echo '<button class="btn btn-success btn-lg editMainContent btn-extra-lg">'.JText::_('COM_PHOCACART_CONFIRM').'</button>';
+echo '<button class="'.$this->s['c']['btn.btn-success.btn-lg'].' btn-extra-lg editMainContent">'.JText::_('COM_PHOCACART_CONFIRM').'</button>';
 
 echo '</div>';
-	
-echo '<div class="row-item col-sm-3 col-md-3">';
+
+echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 echo '</div>';
 
 echo '</div>';// end row-vac

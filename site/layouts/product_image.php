@@ -16,12 +16,12 @@ if ($d['typeview'] == 'Pos') {
 }
 
 
-$class          = 'img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName;
-$classSwitch    = 'img-responsive ph-image phIR phjProductImageNoChange'.$productIdName;
+$class          = $d['s']['c']['img-responsive'].' ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName;
+$classSwitch    = $d['s']['c']['img-responsive'].' ph-image phIR phjProductImageNoChange'.$productIdName;
 $classLazyLoad  = '';
 if ($d['t']['lazy_load_category_items'] == 1) {
     $classLazyLoad = 'ph-lazyload';
-    $class = $classLazyLoad . ' img-responsive ph-image phjProductImage'.$productIdName;// Remove $d['image']['phil'] for lazy loads (switch image disabled)
+    $class = $classLazyLoad . ' '.$d['s']['c']['img-responsive'].' ph-image phjProductImage'.$productIdName;// Remove $d['image']['phil'] for lazy loads (switch image disabled)
 }
 
 

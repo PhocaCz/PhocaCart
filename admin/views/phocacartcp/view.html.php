@@ -12,10 +12,12 @@ jimport( 'joomla.application.component.view' );
 class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 {
 	protected $t;
-	
+	protected $s;
+
 	function display($tpl = null) {
-		
+
 		$this->t	= PhocacartUtils::setVars();
+		$this->s    = PhocacartRenderStyle::getStyles();
 		$this->views= array(
 		'items'			=> array($this->t['l'] . '_PRODUCTS', 'folder-close', '#c1a46d'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', 'folder-open', '#da7400'),
@@ -58,8 +60,8 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'sections'		=> array($this->t['l'] . '_SECTIONS', 'unchecked', '#b35900'),
 		'units'			=> array($this->t['l'] . '_UNITS', 'modal-window', '#ff9326'),
 		);
-		
-	/*	
+
+	/*
 		$this->views= array(
 		'items'			=> array($this->t['l'] . '_PRODUCTS', 'folder-close', '#eff8a5'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', 'folder-open', '#fdb784'),
@@ -87,48 +89,48 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#7fadf8')
 		);
 		*/
-		
+
 		$this->t['version'] = PhocacartUtils::getPhocaVersion('com_phocacart');
-		
+
 		$paramsC = JComponentHelper::getParams('com_phocacart');
 		$this->t['enable_wizard']	= $paramsC->get( 'enable_wizard', 1 );
-		
-	
-		
+
+
+
 		$media = new PhocacartRenderAdminmedia();
-		
+
 
 		$this->addToolbar();
 		parent::display($tpl);
-		
+
 	}
-	
+
 	protected function addToolbar() {
 		require_once JPATH_COMPONENT.'/helpers/phocacartcp.php';
 
 		$state	= $this->get('State');
 		$canDo	= PhocaCartCpHelper::getActions();
 		JToolbarHelper::title( JText::_( 'COM_PHOCACART_PC_CONTROL_PANEL' ), 'home' );
-		
+
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = JToolbar::getInstance( 'toolbar' );
 		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.JText::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.JText::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
-		
-		
+
+
 		if ($canDo->get('core.admin')) {
 			JToolbarHelper::preferences('com_phocacart');
 			JToolbarHelper::divider();
 		}
-		
+
 		JToolbarHelper::help( 'screen.phocacart', true );
-		
+
 		$this->addModal();
 	}
-	
+
 	protected function addModal() {
-		
-		
+
+
 		// Getting Started Wizard
 		$this->t['modalwindowdynamic'] = '';
 		$autoOpenModal 	= 0;
@@ -137,16 +139,16 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		$linkWizard 	= JRoute::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=0', false );
 		$w 				= 700;
 		$h 				= 400;
-		
+
 		// WIZARD
 		// 1 ... run wizard automatically but only if product and category do not exist
 		// 2 ... run wizard automatically - force it any way
 		// 11 ... run wizard automatically - go to first site of wizard
-		
+
 		// ------------------------------
 		// 1) MANUALLY RUN START WIZARD
 		// ------------------------------
-		// Render Button to Stard Wizard 
+		// Render Button to Stard Wizard
 		PhocacartRenderAdminview::renderWizardButton('start', $idMd , $linkWizard, $w, $h);
 
 		// ---------------------------------
@@ -187,8 +189,8 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 
 		$rV = new PhocacartRenderAdminview();
 		$this->t['modalwindowdynamic'] = $rV->modalWindowDynamic($idMd, $textButton, $w, $h, false, $autoOpenModal, $linkWizard, 'ph-body-iframe-wizard', $customFooter, $pageClass);
-		
-		
+
+
 	}
 }
 ?>

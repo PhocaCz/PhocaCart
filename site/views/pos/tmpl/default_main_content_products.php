@@ -30,7 +30,7 @@ if (!empty($this->items)) {
 	$i		= 1; // Not equal Heights
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
-	echo '<div class="row '.$this->t['class-row-flex'].' '.$lt.'">';
+	echo '<div class="row '.$this->s['c']['row.row-flex'].' '.$lt.'">';
 
 	foreach ($this->items as $v) {
 
@@ -60,6 +60,7 @@ if (!empty($this->items)) {
 		$dI	= array();
 		if (isset($image['image']->rel) && $image['image']->rel != '') {
 			$dI['t']				= $this->t;
+			$dI['s']				= $this->s;
 			$dI['product_id']		= (int)$v->id;
 			$dI['layouttype']		= $lt;
 			$dI['image']			= $image;
@@ -73,7 +74,8 @@ if (!empty($this->items)) {
 
 
 		// :L: PRICE
-		$dP = array();
+		$dP 			= array();
+		$dP['s']		= $this->s;
 		if ($this->t['can_display_price']) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
@@ -109,6 +111,7 @@ if (!empty($this->items)) {
 		$dSO 				= '';
 		$dA['class_btn']	= '';
 		$dA['class_icon']	= '';
+		$dA['s']			= $this->s;
 		if ($this->t['pos_display_stock_status'] == 1) {
 
 			$stockStatus 				= array();
@@ -121,6 +124,7 @@ if (!empty($this->items)) {
 
 			if($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
 				$dS							= array();
+				$dS['s']					= $this->s;
 				$dS['class']				= 'ph-item-stock-box';
 				$dS['product_id']			= (int)$v->id;
 				$dS['typeview']				= 'Pos';
@@ -130,6 +134,7 @@ if (!empty($this->items)) {
 
 			if($stockStatus['min_quantity']) {
 				$dPOQ						= array();
+				$dPOQ['s']					= $this->s;
 				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
@@ -137,6 +142,7 @@ if (!empty($this->items)) {
 
 			if($stockStatus['min_multiple_quantity']) {
 				$dPOQ						= array();
+				$dPOQ['s']					= $this->s;
 				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_multiple_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
@@ -154,6 +160,7 @@ if (!empty($this->items)) {
 		// - Add to Cart Icon Only
 
 		// FORM DATA
+		$dF['s']					= $this->s;
 		$dF['linkch']				= $this->t['linkcheckout'];// link to checkout (add to cart)
 		$dF['id']					= (int)$v->id;
 		$dF['catid']				= (int)$v->catid;
@@ -173,6 +180,7 @@ if (!empty($this->items)) {
 		$dA['typeview']				= 'Pos';
 
 		// ATTRIBUTES, OPTIONS
+		$dAb['s']						= $this->s;
 		$dAb['attr_options']			= $attributesOptions;
 		$dAb['hide_attributes']			= $this->t['pos_hide_attributes'];
 		$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
@@ -198,7 +206,7 @@ if (!empty($this->items)) {
 		// ======
 		// RENDER
 		// ======
-		echo '<div class="row-item col-sx-12 col-sm-'.$col.' col-md-'.$col.'">';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']["col.xs12.sm{$col}.md{$col}"].'">';
 		echo '<div class="ph-item-box '.$lt.'">';
 		//echo '<div class="ph-label-box">'.$label['new'] . $label['hot'] . $label['feat'].'</div>';
 		echo '<div class="'.$this->t['class_thumbnail'].' ph-thumbnail ph-thumbnail-c ph-item '.$lt.'">';
@@ -208,7 +216,7 @@ if (!empty($this->items)) {
 		// -----------
 		// RENDER GRID
 		// -----------
-		echo '<div class="jf_ph_cat_item_grid">';
+		echo '<div class="'.$this->s['c']['cat_item_grid'].'">';
 		// :L: IMAGE
 		echo '<a href="'.$link.'">';
 		if (!empty($dI)) { echo $layoutI->render($dI);}
@@ -266,7 +274,7 @@ if (!empty($this->items)) {
 
 
 
-		echo '<div class="clearfix"></div>';
+		echo '<div class="ph-cb"></div>';
 
 
 		echo '</div>';// end ph-item-content
@@ -275,21 +283,21 @@ if (!empty($this->items)) {
 		echo '</div>'. "\n"; // end row item - columns
 
 		if ($i%(int)$this->t['columns_pos'] == 0) {
-			echo '<div class="clearfix"></div>';
+			echo '<div class="ph-cb"></div>';
 		}
 		$i++;
 	}
 
 
 	echo '</div>';// end row (row-flex)
-	echo '<div class="clearfix"></div>';
+	echo '<div class="pb-cb"></div>';
 
 	echo $this->loadTemplate('pagination');
 
 	echo '</div>'. "\n"; // end items
 } else {
-	echo '<div id="phItems" class="ph-items grid">';
-	echo '<div class="ph-pos-no-items-icon"><span class="'.PhocacartRenderIcon::getClass('ban').'"></span></div>';
+	echo '<div id="phItems" class="ph-items '.$this->s['c']['grid'].'">';
+	echo '<div class="ph-pos-no-items-icon"><span class="'.$this->s['i']['ban'].'"></span></div>';
 	echo '<div class="ph-pos-no-items">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
 
 	echo $this->loadTemplate('pagination');// empty pagination only needed variables

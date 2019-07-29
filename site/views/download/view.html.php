@@ -14,12 +14,14 @@ class PhocaCartViewDownload extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
 
 	function display($tpl = null)
-	{		
+	{
 		$app								= JFactory::getApplication();
-		$model								= $this->getModel();
-		$document							= JFactory::getDocument();
+		//$model								= $this->getModel();
+		//$document							= JFactory::getDocument();
+		$this->s                            = PhocacartRenderStyle::getStyles();
 		$this->p 							= $app->getParams();
 		$this->u							= PhocacartUser::getUser();
 		$this->t['token_download']			= $app->input->get('d', '', 'string');
@@ -35,21 +37,22 @@ class PhocaCartViewDownload extends JViewLegacy
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
 		$this->t['download_days']			= $this->p->get( 'download_days', 0 );
 		$this->t['download_count']			= $this->p->get( 'download_count', 0 );
-		
+
 		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
 		$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute());
-		
+
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
+		$media->loadBase();
+		$media->loadSpec();
 
 		$this->t['pathfile'] = PhocacartPath::getPath('productfile');
 		$this->_prepareDocument();
 		parent::display($tpl);
-		
+
 	}
-	
+
 	protected function _prepareDocument() {
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_DOWNLOAD'));
 	}

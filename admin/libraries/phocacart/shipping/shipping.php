@@ -110,6 +110,7 @@ class PhocacartShipping
 
 
 		$i = 0;
+
 		if (!empty($shippings)) {
 			foreach($shippings as $k => $v) {
 

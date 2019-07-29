@@ -12,6 +12,7 @@ jimport( 'joomla.application.component.view');
 class PhocaCartViewWishList extends JViewLegacy
 {
 	protected $t;
+	protected $s;
 	protected $p;
 	protected $u;
 
@@ -22,6 +23,7 @@ class PhocaCartViewWishList extends JViewLegacy
 		$document							= JFactory::getDocument();
 		$this->p 							= $app->getParams();
 		$this->u							= PhocacartUser::getUser();
+		$this->s							= PhocacartRenderStyle::getStyles();
 
 		$rights							= new PhocacartAccessRights();
 		$this->t['can_display_price']	= $rights->canDisplayPrice();
@@ -80,8 +82,8 @@ class PhocaCartViewWishList extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
-
+		$media->loadBase();
+        $media->loadSpec();
 
 		$this->t['pathitem'] = PhocacartPath::getPath('productimage');
 		$this->_prepareDocument();

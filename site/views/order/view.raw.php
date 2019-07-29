@@ -14,38 +14,41 @@ class PhocaCartViewOrder extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
+
 	public function display($tpl = null) {
-	
+
 		$app				= JFactory::getApplication();
 		$this->p 			= $app->getParams();
+		$this->s            = PhocacartRenderStyle::getStyles();
 		$id					= $app->input->get('id', 0, 'int');
 		$type				= $app->input->get('type', 0, 'int');
 		$format				= $app->input->get('format', '', 'string');
 		$token				= $app->input->get('o', '', 'string');
 		$pos				= $app->input->get('pos', '', '0');
 		$print_server		= $app->input->get('printserver', '', '0');
-		
+
 		$orderGuestAccess	= $this->p->get( 'order_guest_access', 0 );
 		$pos_server_print	= $this->p->get( 'pos_server_print', 0 );
-		
+
 		if ($orderGuestAccess == 0) {
 			$token = '';
 		}
-		
-		
+
+
 		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format, $token, $pos);
-		
-		
-		
-	
+
+
+
+
 		if ($pos == 1 && $type == 4) {
-			
+
 			// PRINT SERVER PRINT
 			if ($print_server == 1 && ($pos_server_print == 2 || $pos_server_print == 3)) {
-				
+
 				try{
-					
+
 					$printPos = new PhocacartPosPrint(1);
 					$printPos->printOrder($o);
 					echo '<div class="ph-result-txt ph-success-txt">'.JText::_('COM_PHOCACART_RECEIPT_SENT_TO_PRINTER'). '</div>';
@@ -53,16 +56,16 @@ class PhocaCartViewOrder extends JViewLegacy
 					echo '<div class="ph-result-txt ph-error-txt">'.JText::_('COM_PHOCACART_ERROR'). ": ". $e->getMessage(). '</div>';
 				}
 			} else {
-				// RECEIPT IN HTML 
+				// RECEIPT IN HTML
 				$o = str_replace("\n", '', $o); // produce html output in PRE and CODE tag without new rows ("\n");
 				echo '<div class="phPrintInBox">'.$o.'</div>'; // --> components\com_phocacart\views\pos\tmpl\default_main_content_order.php
 			}
-			
+
 		} else {
 			echo '<div class="phPrintInBox">'.$o.'</div>'; // --> components\com_phocacart\views\pos\tmpl\default_main_content_order.php
 		}
 	}
-	
+
 	protected function _prepareDocument() {
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDER'));
 	}

@@ -9,13 +9,24 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-
+/*
+ *
+ * DEPRECATED CLASS - WILL BE REMOVED in Joomla! 4
+ * @deprecated use  $s = PhocacartRenderStyle::getStyles(); --> $s['i']['icon-name'] instead
+ */
 class PhocacartRenderIcon
 {
 	private static $iconType = '';
 	private static $i = 0;
+
+	/*
+	 * @deprecated
+	 */
 	private function __construct(){}
 
+	/*
+	 * @deprecated
+	 */
 	public static function getClassAdmin($name = '') {
 
 		if ($name != ''){
@@ -24,6 +35,9 @@ class PhocacartRenderIcon
 		return '';
 	}
 
+	/*
+	 * @deprecated
+	 */
 	public static function getIconType() {
 		if( self::$iconType == '' ) {
 			$pC 		= PhocacartUtils::getComponentParameters();
@@ -39,6 +53,9 @@ class PhocacartRenderIcon
 		return self::$iconType;
 	}
 
+	/*
+	 * @deprecated
+	 */
 	public static function getClass( $name = '') {
 		self::$i++;
 
@@ -170,9 +187,13 @@ class PhocacartRenderIcon
 
 	}
 
+	/*
+	 * @deprecated
+	 */
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
 	}
 }
+
 ?>

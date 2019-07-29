@@ -12,100 +12,102 @@ defined('_JEXEC') or die();
 
 class PhocacartSection
 {
-	
-	public static function renderTitleAndBackButton($sectionId, $unitId) {
-		
 
+	public static function renderTitleAndBackButton($sectionId, $unitId) {
+
+
+	    $s              = PhocacartRenderStyle::getStyles();
 		$section		= PhocacartSection::getSectionById($sectionId);
 		$unit			= PhocacartUnit::getUnitById($unitId);
-		
+
 		$o = '<div class="ph-link-sections">';
 		if (isset($section->title) && $section->title != '' && isset($unit->title) && $unit->title != '') {
-			
+
 			// Section including unit
 			$unitSectionTitle	= $section->title . ' ('.$unit->title.')';
 			$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', $sectionId));
-			
-			$o .= '<div class="btn-group" role="group">';
-			$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">';
-	        $o .= '<span class="'.PhocacartRenderIcon::getClass('back-category').' icon-white" aria-hidden="true"></span></a>';
-	        $o .= '<a href="'.$linkSection.'" class="btn btn-primary active">'.$unitSectionTitle.'</a>';
+
+			$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
+			$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
+	        $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+	        $o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else if (isset($section->title) && $section->title != '') {
-			
+
 			// One section without unit
 			$unitSectionTitle	= $section->title;
 			$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', $sectionId));
-			
-			$o .= '<div class="btn-group" role="group">';
-			$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">';
-	        $o .= '<span class="'.PhocacartRenderIcon::getClass('back-category').' icon-white" aria-hidden="true"></span></a>';
-	        $o .= '<a href="'.$linkSection.'" class="btn btn-primary active">'.$unitSectionTitle.'</a>';
+
+			$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
+			$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
+	        $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+	        $o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else {
 			$sections 		= PhocacartSection::getSections();
-			
+
 			$linkSections 	= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
 			if (!empty($sections)) {
 				foreach($sections as $k => $v) {
 					$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', (int)$v->id));
-					$o .= '<div class="btn-group" role="group">';
-					$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">';
-					$o .= '<span class="'.PhocacartRenderIcon::getClass('back-category').' icon-white" aria-hidden="true"></span></a>';
-					$o .= '<a href="'.$linkSection.'" class="btn btn-primary active">'.JText::_('COM_PHOCACART_SECTIONS').'</a>';
+					$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
+					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
+					$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.JText::_('COM_PHOCACART_SECTIONS').'</a>';
 					$o .= '</div>';
 					break;
 				}
-			} else {			
+			} else {
 				$o .= '<div>&nbsp;</div>';
 			}
 		}
-		
+
 		$o .= '</div>';
-		
-		
+
+
 		return $o;
-		
+
 	}
-	
+
 	public static function renderNavigation($sectionId) {
-		
+
 		// $ticketId is active ticket
 		$sections = self::getSections();
-		
-		$o = '<ul class="nav nav-tabs">';
+		$s              = PhocacartRenderStyle::getStyles();
+
+		$o = '<ul class="'.$s['c']['tabnav'].'">';
 		if (!empty($sections)) {
 			foreach($sections as $k => $v) {
-				
+
 				$active = '';
 				if ((int)$v->id == (int)$sectionId) {
 					$active = 'active';
 				}
-				
-				
+
+
 				$link = JRoute::_(PhocacartRoute::getPosRoute(1,0,0, 'section', (int)$v->id));
-				$o .= '<li class="nav-item '.$active.'">';
-				$o .= '<a class="nav-link '.$active.'" href="'.$link.'"> '.$v->title.' </a>';
+				$o .= '<li class="'.$s['nav-item'].' '.$active.'">';
+				$o .= '<a class="'.$s['nav-link'].' '.$active.'" href="'.$link.'"> '.$v->title.' </a>';
 				$o .= '</li>';
-				
+
 			}
-			
+
 		} else {
 			$link = JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
-				
-			$o .= '<li class="nav-item active">';
-			$o .= '<a class="nav-link active" href="'.$link.'">'.JText::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
+
+			$o .= '<li class="'.$s['nav-item'].' active">';
+			$o .= '<a class="'.$s['nav-link'].' active" href="'.$link.'">'.JText::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
 			$o .= '</li>';
 		}
-			
+
 		$o .= '</ul>';
-		
+
 		return $o;
-		
+
 	}
-	
+
 	public static function getSections($limit = 0) {
-		
+
 		$db 	= JFactory::getDBO();
 		$query = ' SELECT a.id, a.title FROM #__phocacart_sections AS a'
 				.' WHERE a.published = 1'
@@ -115,12 +117,12 @@ class PhocacartSection
 				}
 		$db->setQuery($query);
 		$sections = $db->loadObjectList();
-		
+
 		return $sections;
 	}
-	
+
 	public static function existsSection($sectionId) {
-		
+
 		$db 	= JFactory::getDBO();
 		$query = ' SELECT id FROM #__phocacart_sections'
 				.' WHERE id = '.(int)$sectionId
@@ -132,9 +134,9 @@ class PhocacartSection
 		}
 		return false;
 	}
-	
+
 	public static function getSectionById($sectionId) {
-		
+
 		$db 	= JFactory::getDBO();
 		$query = ' SELECT id, title FROM #__phocacart_sections'
 				.' WHERE id = '.(int)$sectionId
@@ -143,7 +145,7 @@ class PhocacartSection
 		$result = $db->loadObject();
 		return $result;
 	}
-	
+
 	public static function options() {
 
 		$db = JFactory::getDBO();
@@ -153,7 +155,7 @@ class PhocacartSection
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$items = $db->loadObjectList();
-	
+
 		return $items;
 	}
 

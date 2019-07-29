@@ -149,6 +149,8 @@ class PhocacartUser
 
 		$app	= JFactory::getApplication();
 
+		$s = PhocacartRenderStyle::getStyles();
+
 		$baSa = $form->getValue('ba_sa');
 
 
@@ -173,9 +175,9 @@ class PhocacartUser
 					}
 
 					if (!$app->isClient('administrator')) {
-						$o['b'] .= '<div class="form-group">';
-						$o['b'] .= '<div class="col-sm-5 control-label">'.$form->getLabel($v->title . $billingSuffix).'</div>';
-						$o['b'] .= '<div class="col-sm-7">'.$form->getInput($v->title . $billingSuffix).'</div>';
+						$o['b'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
+						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $billingSuffix).'</div>';
+						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$form->getInput($v->title . $billingSuffix).'</div>';
 						$o['b'] .= '</div>' . "\n";
 
 					} else {
@@ -200,9 +202,9 @@ class PhocacartUser
 					}
 
 					if (!$app->isClient('administrator')) {
-						$o['s'] .= '<div class="form-group">';
-						$o['s'] .= '<div class="col-sm-5 control-label">'.$form->getLabel($v->title . $shippingSuffix).'</div>';
-						$o['s'] .= '<div class="col-sm-7">'.$form->getInput($v->title . $shippingSuffix).'</div>';
+						$o['s'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
+						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $shippingSuffix).'</div>';
+						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$form->getInput($v->title . $shippingSuffix).'</div>';
 						$o['s'] .= '</div>' . "\n";
 					} else {
 						// Admin uses obsolete bootstrap
@@ -220,6 +222,8 @@ class PhocacartUser
 	}
 
 	public static function getAddressDataOutput($data, $fields, $user, $guestUser = 0) {
+
+		$s = PhocacartRenderStyle::getStyles();
 
 		$o['b']		= '';// Output Billing
 		$o['s'] 	= '';// Output Shipping
@@ -280,13 +284,13 @@ class PhocacartUser
 						} else if ($v->title == 'country') {
 							$o['bcountry']	= (int)$value;// Return region and country
                             $countryTitle = isset($data[0]->countrytitle) ? $data[0]->countrytitle : PhocacartCountry::getCountryById((int)$value);
-							$o['b'] .= '<div class="col-sm-12">'.$countryTitle.'</div>';
+							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$countryTitle.'</div>';
 						} else if ($v->title == 'region') {
 							$o['bregion']	= (int)$value;// Return region and country
                             $regionTitle = isset($data[0]->regiontitle) ? $data[0]->regiontitle : PhocacartRegion::getRegionById((int)$value);
-							$o['b'] .= '<div class="col-sm-12">'.$regionTitle.'</div>';
+							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
 						} else {
-							$o['b'] .= '<div class="col-sm-12">'.$value.'</div>';
+							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						}
 					}
 				}
@@ -311,12 +315,12 @@ class PhocacartUser
 							$sNameO .= $value . ' ';
 						} else if ($v->title == 'country') {
                             $countryTitle = isset($data[1]->countrytitle) ? $data[1]->countrytitle : PhocacartCountry::getCountryById((int)$value);
-							$o['s'] .= '<div class="col-sm-12">'.$countryTitle.'</div>';
+							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$countryTitle.'</div>';
 						} else if ($v->title == 'region') {
                             $regionTitle = isset($data[1]->regiontitle) ? $data[1]->regiontitle : PhocacartRegion::getRegionById((int)$value);
-							$o['s'] .= '<div class="col-sm-12">'.$regionTitle.'</div>';
+							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
 						} else {
-							$o['s'] .= '<div class="col-sm-12">'.$value.'</div>';
+							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						}
 					}
 
@@ -324,10 +328,10 @@ class PhocacartUser
 			}
 
 			if ($bNameO != '' && $o['b'] != '') {
-				$o['b'] = '<div class="col-sm-12">'.$bNameO.'</div>' . $o['b'];
+				$o['b'] = '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$bNameO.'</div>' . $o['b'];
 			}
 			if ($sNameO != '' && $o['s'] != '') {
-				$o['s'] = '<div class="col-sm-12">'.$sNameO.'</div>' . $o['s'];
+				$o['s'] = '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$sNameO.'</div>' . $o['s'];
 			}
 		}
 
@@ -507,6 +511,18 @@ class PhocacartUser
 		}
 
 		return $name;
+	}
+
+	public static function updateNewsletterInfoByUser($userId, $newsletter = 0) {
+
+
+		$db 	= JFactory::getDBO();
+		$query = ' UPDATE #__phocacart_users'
+				.' SET newsletter = '.(int)$newsletter
+				.' WHERE user_id = '.(int)$userId;
+		$db->setQuery($query);
+		$db->execute();
+		return true;
 	}
 
 

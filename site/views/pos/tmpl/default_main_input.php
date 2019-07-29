@@ -22,11 +22,11 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo JHtml::_('form.token');
 
 if ($this->t['userexists']) {
-	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('user').' icon-white"></span>  &nbsp;'.$this->t['user']->name.'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['user'].' icon-white"></span>  &nbsp;'.$this->t['user']->name.'</button>';
 } else if ($this->t['anonymoususerexists']) {
-	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('user').' icon-white"></span>  &nbsp;'.$this->t['loyalty_card_number'].'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['user'].' icon-white"></span>  &nbsp;'.$this->t['loyalty_card_number'].'</button>';
 } else {
-	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('user').' icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_SELECT_CUSTOMER').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['user'].' icon-white"></span> &nbsp;'.JText::_('COM_PHOCACART_SELECT_CUSTOMER').'</button>';
 }
 
 echo '</form>';
@@ -42,7 +42,7 @@ if ($this->t['shippingmethodexists']) {
 }
 
 if ($this->t['pos_shipping_force'] == 0) {
-	
+
 	echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
 	echo '<input type="hidden" name="format" value="raw">';
 	echo '<input type="hidden" name="page" value="main.content.shippingmethods">';
@@ -52,13 +52,13 @@ if ($this->t['pos_shipping_force'] == 0) {
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 	echo JHtml::_('form.token');
-	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('shipping-method').' icon-white"></span> &nbsp;'.$title.'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['shipping-method'].' icon-white"></span> &nbsp;'.$title.'</button>';
 	echo '</form>';
 } else {
-	echo '<div><button class="btn btn-primary"><span class="'.PhocacartRenderIcon::getClass('shipping-method').' icon-white"></span> &nbsp;'.$title.'</button></div>';
+	echo '<div><button class="'.$this->s['c']['btn.btn-primary'].'"><span class="'.$this->s['i']['shipping-method'].' icon-white"></span> &nbsp;'.$title.'</button></div>';
 }
-	
-	
+
+
 // PAYMENT Method
 $title = JText::_('COM_PHOCACART_SELECT_PAYMENT_METHOD');
 if ($this->t['paymentmethodexists']) {
@@ -78,12 +78,12 @@ if ($this->t['pos_payment_force'] == 0) {
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 	echo JHtml::_('form.token');
-	echo '<button class="btn btn-primary loadMainContent"><span class="'.PhocacartRenderIcon::getClass('payment-method').' icon-white"></span> &nbsp;'.$title.'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['payment-method'].' icon-white"></span> &nbsp;'.$title.'</button>';
 	echo '</form>';
 } else {
-	echo '<div><button class="btn btn-primary"><span class="'.PhocacartRenderIcon::getClass('payment-method').' icon-white"></span> &nbsp;'.$title.'</button></div>';
+	echo '<div><button class="'.$this->s['c']['btn.btn-primary'].'"><span class="'.$this->s['i']['payment-method'].' icon-white"></span> &nbsp;'.$title.'</button></div>';
 }
-	
+
 
 // PAYMENT
 echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
@@ -97,7 +97,7 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo JHtml::_('form.token');
 
 //if (!$this->t['paymentexists']) {
-echo '<button class="btn btn-success btn-lg loadMainContent">'.JText::_('COM_PHOCACART_PAYMENT').'</button>';
+echo '<button class="'.$this->s['c']['btn.btn-success.btn-lg'].' loadMainContent">'.JText::_('COM_PHOCACART_PAYMENT').'</button>';
 //} else {
 //	echo '<button class="btn btn-success btn-lg loadMainContent">'.$this->t['user']->name.'</button>';
 //}

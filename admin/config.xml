@@ -171,7 +171,7 @@
             </field>
 
             <field name="show_pagination_limit" class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SELECT_CATEGORY_ITEMS_VIEW_LABEL"
-                   description="COM_PHOCACART_FIELD_DISPLAY_SELECT_CATEGORY_ITEMS_VIEW_LABEL">
+                   description="COM_PHOCACART_FIELD_DISPLAY_SELECT_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
@@ -323,6 +323,7 @@
             <field name="title_next_prev" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_NEXT_PREVIOUS_TITLE_LABEL" description="COM_PHOCACART_FIELD_NEXT_PREVIOUS_TITLE_DESC">
                 <option value="1">COM_PHOCACART_YES_INCLUDING_PRODUCT_NAME</option>
                 <option value="2">COM_PHOCACART_YES_EXCLUDING_PRODUCT_NAME</option>
+				<option value="3">COM_PHOCACART_YES_ONLY_PRODUCT_NAME</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
@@ -540,21 +541,6 @@
 
             <field name="cart_metadesc" default="" type="textarea" label="COM_PHOCACART_FIELD_META_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_META_DESCRIPTION_DESC"/>
 
-            <field name="load_main_css" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
-
-            <field name="load_bootstrap" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_LABEL" description="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
-
-            <field name="load_chosen" type="list" default="1" label="COM_PHOCACART_FIELD_LOAD_CHOSEN_LABEL" description="COM_PHOCACART_FIELD_LOAD_CHOSEN_DESC">
-                <option value="1">COM_PHOCACART_YES_EXCLUDING_BOOTSTRAP_JS</option>
-                <option value="2">COM_PHOCACART_YES_INCLUDING_BOOTSTRAP_JS</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
 
             <field name="image_popup_method" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_IMAGE_POPUP_METHOD_LABEL" description="COM_PHOCACART_FIELD_IMAGE_POPUP_METHOD_DESC">
                 <option value="1">COM_PHOCACART_PRETTYPHOTO</option>
@@ -626,12 +612,6 @@
                 <option value="0">COM_PHOCACART_HIDE</option>
             </field>
 
-            <field name="icon_type" type="radio" class="btn-group btn-group-yesno" default="bs" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
-                <option value="bs">Bootstrap</option>
-                <option value="fa">Font Awesome</option>
-            </field>
-
-
             <field name="alt_value" type="list" default="1" label="COM_PHOCACART_FIELD_ALT_VALUE_LABEL" description="COM_PHOCACART_FIELD_ALT_VALUE_DESC">
                 <option value="0">COM_PHOCACART_EMPTY_VALUE</option>
                 <option value="1">COM_PHOCACART_TITLE_CATEGORY_OR_PRODUCT_TITLE</option>
@@ -662,6 +642,49 @@
                 <option value="0">COM_PHOCACART_STANDARD</option>
                 <option value="1">COM_PHOCACART_AJAX</option>
                 <option value="2">COM_PHOCACART_AJAX_WITH_POPUP_WINDOW</option>
+            </field>
+			
+			
+			<field name="phocahead35" type="phocahead" default="COM_PHOCACART_CONFIG_THEME_OPTIONS_LABEL" label="" description=""/>
+			
+			<field name="theme" type="list" class="btn-group btn-group-yesno" default="bootstrap3" label="COM_PHOCACART_FIELD_THEME_LABEL" description="COM_PHOCACART_FIELD_THEME_DESC">
+                <option value="bs3">Bootstrap 3</option>
+                <option value="bs4">Bootstrap 4</option>
+				
+            </field>
+			
+            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="bs" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
+                <option value="bs">Bootstrap</option>
+                <option value="fa">Font Awesome</option>
+				<option value="fa5">Font Awesome 5</option>
+            </field>
+			
+			<field name="load_main_css" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			<field name="load_spec_css" type="list" class="btn-group btn-group-yesno" default="" label="COM_PHOCACART_FIELD_LOAD_SPECIFIC_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_SPECIFIC_CSS_DESC">
+                <option value="">COM_PHOCACART_NO</option>
+                <option value="gantry">Gantry</option>
+				<option value="astroid">Astroid</option>
+            </field>
+			
+			<field name="load_rtl_css" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_LOAD_RTL_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_RTL_CSS_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+				<option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+            <field name="load_bootstrap" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_LABEL" description="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_DESC">
+                <option value="2">Bootstrap 4</option>
+				<option value="1">Bootstrap 3</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+            <field name="load_chosen" type="list" default="1" label="COM_PHOCACART_FIELD_LOAD_CHOSEN_LABEL" description="COM_PHOCACART_FIELD_LOAD_CHOSEN_DESC">
+                <option value="1">COM_PHOCACART_YES_EXCLUDING_BOOTSTRAP_JS</option>
+                <option value="2">COM_PHOCACART_YES_INCLUDING_BOOTSTRAP_JS</option>
+                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -924,6 +947,11 @@
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
+			
+			<field name="guest_checkout_auto_enable" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_AUTO_ENABLE_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_AUTO_ENABLE_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
 
             <field name="order_guest_access" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_LABEL" description="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
@@ -1178,8 +1206,15 @@
 			
 			<field name="phocahead34" type="phocahead" default="COM_PHOCACART_SEARCH_AND_FILTER_OPTIONS_LABEL" label="" description=""/>
 
-            <field name="search_matching_option" type="list" default="0" label="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_LABEL"
+            <field name="search_matching_option" type="list" default="any" label="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_LABEL"
                    description="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_DESC">
+                <option value="any">COM_PHOCACART_SEARCH_ANY</option>
+                <option value="all">COM_PHOCACART_SEARCH_ALL</option>
+				<option value="exact">COM_PHOCACART_SEARCH_EXACT</option>
+            </field>
+			
+			<field name="search_matching_option_admin" type="list" default="exact" label="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_ADMIN_LABEL"
+                   description="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_ADMIN_DESC">
                 <option value="any">COM_PHOCACART_SEARCH_ANY</option>
                 <option value="all">COM_PHOCACART_SEARCH_ALL</option>
 				<option value="exact">COM_PHOCACART_SEARCH_EXACT</option>
@@ -1376,6 +1411,17 @@
 
             <field name="question_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+				   
+				   
+				   <field name="display_checkout_newsletter_checkbox" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL"
+                   description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+            <field name="checkout_newsletter_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
+                   label="COM_PHOCACART_FIELD_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL_TEXT_LABEL" description="COM_PHOCACART_FIELD_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL_TEXT_DESC"
+                   addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
             <field name="phocahead28" type="phocahead" default="COM_PHOCACART_OPENING_TIMES_OPTIONS_LABEL" label="" description=""/>
@@ -1520,7 +1566,7 @@
             <field name="pos_shipping_force" type="PhocaCartShippingMethod" typemethod="2" label="COM_PHOCACART_FIELD_FORCE_SHIPPING_METHOD_POS_LABEL" description="COM_PHOCACART_FIELD_FORCE_SHIPPING_METHOD_POS_DESC"
                    class="inputbox" size="1"/>
 
-            <field name="pos_payment_force" type="PhocaCartPayMentMethod" typemethod="2" label="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_LABEL" description="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_LABEL"
+            <field name="pos_payment_force" type="PhocaCartPayMentMethod" typemethod="2" label="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_LABEL" description="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_DESC"
                    class="inputbox" size="1"/>
 
             <field name="pos_preferred_sku" class="btn-group" type="list" default="sku" label="COM_PHOCACART_FIELD_POS_PREFERRED_SKU_LABEL" description="COM_PHOCACART_FIELD_POS_PREFERRED_SKU_DESC">

@@ -14,17 +14,17 @@ $d = $displayData;
 // $d['type']; // parameter checkout_icon_status
 
 $d['icon'] 	= $d['status'] == 'finished' ? 'ok' : 'not-ok';
-$d['class']	= PhocacartRenderIcon::getClass($d['icon']). strip_tags($d['suffix']).' ph-checkout-icon-'.$d['status'];
+$d['class']	= $d['s']['i'][$d['icon']]. strip_tags($d['suffix']).' ph-checkout-icon-'.$d['status'];
 
-if ($d['type'] == 1) { 
+if ($d['type'] == 1) {
 
-?><div class="ph-pull-right">
+?><div class="<?php echo $d['s']['c']['pull-right'] ?>">
 	<span class="ph-checkout-icon-spec-<?php echo $d['status'];?>"><?php echo $d['number'];?></span>
 </div><?php
 
-} else { 
+} else {
 
-?><div class="ph-pull-right">
+?><div class="<?php echo $d['s']['c']['pull-right'] ?>">
 	<span class="<?php echo $d['class']; ?>"></span>
 </div><?php
 

@@ -14,7 +14,7 @@ $displayData 		= null;
 $v 					= $d['attribute'];
 $attributeIdName	= 'V'.$d['typeview'].'P'.(int)$d['product_id'].'A'.(int)$v->id;
 $productIdName		= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
-$iconType			= PhocacartRenderIcon::getIconType();
+$iconType			= $d['s']['i']['icon-type'];
 $price				= new PhocacartPrice();
 
 $attr				= array();
@@ -59,7 +59,7 @@ foreach ($v->options as $k2 => $v2) {
 
 	$maxLength = ' maxlength="'.PhocacartAttribute::getAttributeLength($v->type).'"';
 
-	echo '<div><label class="btn phTextAttributeInput '.$active.'" style="background-color: '.strip_tags($v2->color).'">'.htmlspecialchars($v2->title). $suffix.'</label><br />';
+	echo '<div><label class="'.$d['s']['c']['btn'].' phTextAttributeInput '.$active.'" style="background-color: '.strip_tags($v2->color).'">'.htmlspecialchars($v2->title). $suffix.'</label><br />';
 	switch($v->type) {
         case 10:
         case 11:

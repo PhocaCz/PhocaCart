@@ -16,7 +16,7 @@ echo '<div class="ph-pos-filter-box">';
 // DATE FILTER (ORDERS)
 echo '<div class="ph-pos-date-order-box" id="phPosDateOrdersBox">';
 echo '<form id="phPosDateOrdersForm" class="form-inline" action="'.$this->t['linkpos'].'" method="post">';
-	
+
 JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
@@ -35,11 +35,11 @@ $valueFrom 	= $this->escape($this->state->get('filter.date', PhocacartDate::getC
 
 
 $calendar = JHtml::_('calendar', $valueFrom, $name, $id, $format, $attributes);
-$calendarIcon = PhocacartRenderIcon::getClass('calendar');
+$calendarIcon = $this->s['i']['calendar'];
 $calendar = str_replace('icon-calendar', $calendarIcon .' icon-calendar', $calendar);
 
 echo '<div class="ph-inline-param">'. $calendar.'</div>';
-	
+
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="format" value="raw" />';
@@ -51,12 +51,12 @@ echo JHtml::_('form.token');
 echo '</form>';
 echo '</div>';
 
-    
+
 // SKU PRODUCT (ajax based on .phItemCartBoxForm)
 echo '<div class="ph-pos-sku-product-box" id="phPosSkuProductBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="'.PhocacartRenderIcon::getClass('barcode').'"></i>';
+echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
 
 echo '<form id="phPosSkuProductForm" class="phItemCartBoxForm phjAddToCart phjPos phjAddToCartVPosPSku form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -69,7 +69,7 @@ echo '<input type="hidden" name="ticketid" value="'.$this->t['ticket']->id.'" />
 echo '<input type="hidden" name="unitid" value="'.$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" />';
 //echo '<input type="hidden" name="return" value="'.$this->t['mainboxdatabase64'].'" />';
-echo '<input type="'.$this->t['pos_sku_input_type'].'" name="sku" id="phPosSku" value="'.htmlspecialchars($this->t['sku']).'" class="form-control ph-pos-search" placeholder="'.$this->t['skutypetxt'].' ..." '.$this->t['pos_input_autocomplete_output'].' />';
+echo '<input type="'.$this->t['pos_sku_input_type'].'" name="sku" id="phPosSku" value="'.htmlspecialchars($this->t['sku']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.$this->t['skutypetxt'].' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 //echo '<input type="submit" value="submit" />';
 echo JHtml::_('form.token');
 echo '</form>';
@@ -82,7 +82,7 @@ echo '</div>';
 echo '<div class="ph-pos-card-user-box" id="phPosCartUserBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="'.PhocacartRenderIcon::getClass('barcode').'"></i>';
+echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
 
 echo '<form id="phPosCardUserForm" class="phjAddToCartVPosPCard form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -95,22 +95,22 @@ echo '<input type="hidden" name="ticketid" value="'.$this->t['ticket']->id.'" />
 echo '<input type="hidden" name="unitid" value="'.$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" />';
 //echo '<input type="hidden" name="return" value="'.$this->t['mainboxdatabase64'].'" />';
-echo '<input type="'.$this->t['pos_loyalty_card_number_input_type'].'" name="card" id="phPosCard" value="'.htmlspecialchars($this->t['card']).'" class="form-control ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_LABEL').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
+echo '<input type="'.$this->t['pos_loyalty_card_number_input_type'].'" name="card" id="phPosCard" value="'.htmlspecialchars($this->t['card']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_LABEL').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 //echo '<input type="submit" value="submit" />';
 echo JHtml::_('form.token');
 echo '</form>';
 
 echo '</div>';
 echo '</div>';
-    
-    
-// SEARCH 
+
+
+// SEARCH
 echo '<div class="ph-pos-search-box" id="phPosSearchBox">';
 echo '<div class="inner-addon right-addon">';
-echo ' <i class="'.PhocacartRenderIcon::getClass('search').'"></i>';
-echo '	<input type="text" name="phpossearch" id="phPosSearch" value="'.htmlspecialchars($this->t['search']).'" class="form-control ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_SEARCH').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
+echo ' <i class="'.$this->s['i']['search'].'"></i>';
+echo '	<input type="text" name="phpossearch" id="phPosSearch" value="'.htmlspecialchars($this->t['search']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_SEARCH').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 echo '</div>';
 echo '</div>';
-    
+
 echo '</div>'; // end ph-pos-filter-box
 ?>

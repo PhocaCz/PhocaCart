@@ -15,48 +15,51 @@ class PhocacartCartRendercheckout extends PhocacartCart
 	protected $fullitems;
 	protected $total;
 	public $params;
-	
-	
+
+
 	public function __construct() {
-		
+
 		$this->setInstance(2);//checkout
 		parent::__construct();
 	}
-	
-	
+
+
 	public function render() {
-	
+
 		$app					= JFactory::getApplication();
+		$s                      = PhocacartRenderStyle::getStyles();
 		$pC 					= PhocacartUtils::getComponentParameters();
 		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
 		$url['action']			= $uri->toString();
 		$url['actionbase64']	= base64_encode($url['action']);
 		$pos					= PhocacartPos::isPos();
-	
+
 		if ($pos) {
 			$url['linkcheckout']	= JRoute::_(PhocacartRoute::getPosRoute());
 		} else {
 			$url['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute());
 		}
-		
-		
+
+
 		if (empty($this->fullitems)) {
 			$this->fullitems = $this->getFullItems();// get them from parent
-			
+
 			// SUBTOTAL
 			if (empty($this->total)) {
 				$this->total = $this->getTotal();
-				
+
 			}
-		
+
 			// COUPONTITLE
 			if (empty($this->coupon['title'])) {
 				$this->coupon['title'] = $this->getCouponTitle();
 			}
 		}
-	
+
+
 		$layout 				= new JLayoutFile('cart_checkout', null, array('component' => 'com_phocacart'));
 		$d						= array();
+		$d['s']			        = $s;
 		$d['params']			= $pC;
 		$d['fullitems']			= $this->fullitems;
 		$d['total']				= $this->total;
@@ -73,10 +76,10 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		$d['ticketid']			= (int)$this->ticket->id;
 		$d['unitid']			= (int)$this->unit->id;
 		$d['sectionid']			= (int)$this->section->id;
-		
-		
 
-		return $layout->render($d);	
+
+
+		return $layout->render($d);
 	}
 }
 ?>

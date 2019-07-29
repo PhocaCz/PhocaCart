@@ -14,21 +14,25 @@ class PhocaCartViewTerms extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
+
 	public function display($tpl = null) {
-	
+
 		$app						= JFactory::getApplication();
 		$this->p 					= $app->getParams();
+		$this->s                    = PhocacartRenderStyle::getStyles();
 		$this->t['terms_conditions']= $this->p->get( 'terms_conditions', '' );
 		$this->t['terms_conditions']= PhocacartRenderFront::renderArticle($this->t['terms_conditions']);
 
 		$media = new PhocacartRenderMedia();
-		$media->loadBootstrap();
-		
+		$media->loadBase();
+		$media->loadSpec();
+
 		$this->_prepareDocument();
 		parent::display($tpl);
-		
+
 	}
-	
+
 	protected function _prepareDocument() {
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS'));
 	}

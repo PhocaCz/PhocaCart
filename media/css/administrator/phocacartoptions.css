@@ -14,7 +14,7 @@ hr {
 	margin:5px 0;
 	display:block;
 	text-shadow: 0 1px 0 #ffffff;
-	margin-left: -300px;
+	margin-left: -180px;
 	font-size: 110%;
 }
 
@@ -31,7 +31,25 @@ hr {
 }
 
 
+/* 3.3.0 */
+.ph-options-head {
+	background-image: linear-gradient(-90deg, #129ED9,#0a5c80);
+	color: #fff;
+	text-shadow: none;
+	border: 0;
+	font-size: 120%;
+	border-radius: 3px;
+}
+.ph-options-head-expert {
+	background-image: linear-gradient(-90deg, #b74848,#b74848);
+	color: #fff;
+	text-shadow: none;
+	border: 0;
+	font-size: 120%;
+	border-radius: 3px;
+}
+
 
 .form-horizontal .controls {
-    margin-left: 300px !important;
+    /*margin-left: 300px !important;*/
 }

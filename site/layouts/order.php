@@ -598,6 +598,15 @@ if (!empty($d['products'])) {
 			foreach ($v->attributes as $k2 => $v2) {
 				$p[] = '<li><span class="ph-small ph-cart-small-attribute ph-idnr-li">'.$v2->attribute_title .' '.$v2->option_title.'</span></li>';
 
+				/* Should we display the values of attributes added by users in order/delivery note/receipt/invoice?
+
+				$p[] = '<li><span class="ph-small ph-cart-small-attribute ph-idnr-li">'.$v2->attribute_title .' '.$v2->option_title.'</span>';
+				 if (isset($v2->option_value) && urldecode($v2->option_value) != '') {
+                    $p[] =  ': <span class="ph-small ph-cart-small-attribute">' . htmlspecialchars(urldecode($v2->option_value), ENT_QUOTES, 'UTF-8') . '</span>';
+                }
+				$p[] = '</li>';
+				*/
+
 				if ($pR) { $oPr[] = $pP->printLineColumns(array(' - ' .$v2->attribute_title .' '.$v2->option_title)); }
 
 			}

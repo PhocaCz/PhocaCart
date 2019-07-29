@@ -20,6 +20,7 @@ class PhocaCartViewItem extends JViewLegacy
 	protected $t;
 	protected $p;
 	protected $u;
+	protected $s;
 
 	function display($tpl = null){
 
@@ -39,6 +40,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$app					= JFactory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
+		$this->s				= PhocacartRenderStyle::getStyles();
 		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
 		$model					= $this->getModel();
 		$document				= JFactory::getDocument();
