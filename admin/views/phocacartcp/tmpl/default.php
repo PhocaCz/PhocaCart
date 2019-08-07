@@ -19,6 +19,8 @@ $cAmountW	= $s->getAmountOfOrders();
 $cAmountD	= $s->getAmountOfOrders(0);
 
 
+
+
 ?><form action="index.php" method="post" name="adminForm">
 
 
@@ -121,6 +123,9 @@ $cAmountD	= $s->getAmountOfOrders(0);
 			<?php
 
 			$dataS = $s->getDataChart();
+
+
+
 
 			$s->renderChartJsLine('phChartAreaLine', $dataS['amount'], JText::_('COM_PHOCACART_TOTAL_AMOUNT'), $dataS['orders'], JText::_('COM_PHOCACART_TOTAL_ORDERS'), $dataS['ticks']);
 			$s->setFunction('phChartAreaLine', 'Line');

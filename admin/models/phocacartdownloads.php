@@ -11,8 +11,8 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartDownloads extends JModelList
 {
-	protected $option 	= 'com_phocacart';	
-	
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array()) {
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
@@ -29,7 +29,7 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 		}
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null) {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -40,7 +40,7 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
-		
+
 
 
 		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
@@ -50,13 +50,13 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 		//$this->setState('filter.language', $language);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
 
 		// List state information.
 		parent::populateState('a.title', 'asc');
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -66,7 +66,7 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 		$id	.= ':'.$this->getState('filter.download_id');
 		return parent::getStoreId($id);
 	}
-	
+
 	protected function getListQuery() {
 
 		$db		= $this->getDbo();
@@ -80,7 +80,7 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 			)
 		);
 		$query->from('`#__phocacart_order_downloads` AS a');
-		
+
 
 		// Join over the language
 		//$query->select('l.title AS language_title');
@@ -89,19 +89,19 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		
+
 		$query->select('o.id AS orderid, o.date AS order_date, o.order_number AS order_number');
 		$query->join('LEFT', '#__phocacart_orders AS o ON o.id=a.order_id');
-		
+
 		$query->select('u.name AS user_name, u.username AS user_username');
 		$query->join('LEFT', '#__users AS u ON u.id=o.user_id');
-		
+
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = '.(int) $access);
 		}*/
-		
+
 
 
 		// Filter by published state.
@@ -127,13 +127,13 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
-	
+
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		return $query;	
+		return $query;
 	}
 }
 ?>

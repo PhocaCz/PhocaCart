@@ -11,8 +11,8 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocaCartQuestions extends JModelList
 {
-	protected $option 	= 'com_phocacart';	
-	
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -36,7 +36,7 @@ class PhocaCartCpModelPhocaCartQuestions extends JModelList
 		}
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null) {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -47,7 +47,7 @@ class PhocaCartCpModelPhocaCartQuestions extends JModelList
 
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
-		
+
 
 
 		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
@@ -57,13 +57,13 @@ class PhocaCartCpModelPhocaCartQuestions extends JModelList
 		//$this->setState('filter.language', $language);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
 
 		// List state information.
 		parent::populateState('a.name', 'asc');
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -71,11 +71,11 @@ class PhocaCartCpModelPhocaCartQuestions extends JModelList
 		//$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.question_id');
-		
+
 
 		return parent::getStoreId($id);
 	}
-	
+
 	protected function getListQuery() {
 
 		$db		= $this->getDbo();
@@ -89,30 +89,30 @@ class PhocaCartCpModelPhocaCartQuestions extends JModelList
 			)
 		);
 		$query->from('`#__phocacart_questions` AS a');
-		
+
 		$query->select('p.title AS productname');
 		$query->join('LEFT', '#__phocacart_products AS p ON p.id=a.product_id');
-		
+
 		$query->select('c.title AS cattitle, c.id AS catid');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id=a.category_id');
 
 		// Join over the language
 		//$query->select('l.title AS language_title');
 		//$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
-		
+
 		$query->select('ua.id AS questionuserid, ua.username AS questionusername, ua.name AS questionname');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.user_id');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		
+
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = '.(int) $access);
 		}*/
-		
+
 
 
 		// Filter by published state.
@@ -138,14 +138,14 @@ class PhocaCartCpModelPhocaCartQuestions extends JModelList
 				$query->where('( a.name LIKE '.$search.' OR a.message LIKE '.$search.' OR productname LIKE '.$search.')');
 			}
 		}
-	
+
 		$orderCol	= $this->state->get('list.ordering', 'productname');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		
-		return $query;	
+
+		return $query;
 	}
 }
 ?>

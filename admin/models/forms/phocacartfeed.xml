@@ -22,6 +22,8 @@
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
+<field name="feed_plugin" type="PhocaCartXmlFeedPlugin" class="inputbox" label="COM_PHOCACART_FIELD_XML_FEED_PLUGIN_LABEL" description="COM_PHOCACART_FIELD_XML_FEED_PLUGIN_DESC" />
+
 	</fieldset>
 	
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
@@ -106,6 +108,9 @@
 <field name="item_reward_points" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_REWARD_POINTS_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_REWARD_POINTS_ELEMENT_DESC"  />
 <field name="item_reward_points_name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_REWARD_POINTS_NAME_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_REWARD_POINTS_NAME_ELEMENT_DESC"  />
 <field name="item_reward_points_value" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_REWARD_POINTS_VALUE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_REWARD_POINTS_VALUE_ELEMENT_DESC"  />
+
+
+<field name="item_fixed_elements" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_FIXED_ELEMENTS_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FIXED_ELEMENTS_DESC" rows="4" cols="40" filter="raw" />
 
 
 <!--

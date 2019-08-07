@@ -22,6 +22,7 @@ $layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 
 $layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
 $layoutSZ	= new JLayoutFile('product_size', null, array('component' => 'com_phocacart'));
 $layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
+$layoutAAQ	= new JLayoutFile('popup_container_iframe', null, array('component' => 'com_phocacart'));
 
 echo '<div id="ph-pc-item-box" class="pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
@@ -423,6 +424,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo '<div class="ph-cb"></div>';
 	}
 
+	$popupAskAQuestion = 0;// we need this info for the container at the bottom (if modal popup is used for ask a question)
 	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] != 0 || $addToCartHidden != 0))) {
 
 		$d					= array();
@@ -431,8 +433,9 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$d['catid']			= $this->t['catid'];
 		$d['popup']			= 0;
 		$tmpl				= '';
-		if ($this->t['popup_askquestion'] == 1) {
-			$d['popup']			= 1;
+		if ((int)$this->t['popup_askquestion'] > 0) {
+			$d['popup']			= (int)$this->t['popup_askquestion'];
+			$popupAskAQuestion	= (int)$this->t['popup_askquestion'];
 			$tmpl				= 'tmpl=component';
 		}
 		$d['link']			=  JRoute::_(PhocacartRoute::getQuestionRoute($x->id, $x->catid, $x->alias, $x->catalias, $tmpl));
@@ -840,6 +843,20 @@ if ($this->itemnext[0] || $this->itemprev[0]) {
 
 echo '</div>';
 echo '<div id="phContainer"></div>';
+
+if ($popupAskAQuestion == 2) {
+	echo '<div id="phContainerPopup">';
+	$d						= array();
+	$d['id']				= 'phAskAQuestionPopup';
+	$d['title']				= JText::_('COM_PHOCACART_ASK_A_QUESTION');
+	$d['icon']				= $this->s['i']['question-sign'];
+	$d['t']					= $this->t;
+	$d['s']					= $this->s;
+	echo $layoutAAQ->render($d);
+	echo '</div>';// end phContainerPopup
+}
+
+
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
 ?>

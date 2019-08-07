@@ -20,9 +20,11 @@ class PhocacartUtilsInfo
             return '';
         }
 
-        if ($mode == 0) {
+
+
+        if ($mode === 0) {
             return "\n\n" . 'Powered by Phoca Cart' . "\n" . 'https://www.phoca.cz/phocacart';
-        } else if ($mode == 2) {
+        } else if ($mode === 2) {
             return '<div>Powered by <a href="https://www.phoca.cz/phocacart"><img src="'.JURI::root(true).'/media/com_phocacart/images/phoca-cart.png" alt="Phoca Cart" style="height:1.2em;width:auto;margin-bottom: 3px;" /></a> & <a href="https://www.phoca.cz/phocacart"><img src="'.JURI::root(true).'/media/com_phocacart/images/phoca-pos.png" alt="Phoca POS" style="height:1.2em;width:auto;margin-bottom: 3px;" /></a></div>';
         } else {
             return '<div style="text-align:right;color:#ccc;display:block">Powered by <a href="https://www.phoca.cz/phocacart">Phoca Cart</a></div>';

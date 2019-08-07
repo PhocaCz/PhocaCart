@@ -48,7 +48,7 @@ $iconType		= $d['s']['i']['icon-type'];
 				}
 
 				if (isset($v->color) && $v->color != '') {
-					echo '<a href="#" class="phSelectBoxButton '.$class.' color-'.str_replace('#', '', $v->color).'" style="background-color:'.$v->color.'" onclick="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;" title="'.$v->title.'">&nbsp;</a>';
+					echo '<a href="#" class="phSelectBoxButton '.$class.' color-'.str_replace('#', '', $v->color).'" style="background-color:'.$v->color.'" onclick="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;" title="'.htmlspecialchars($v->title).'">&nbsp;</a>';
 				}
 			}
 			echo '</div>';

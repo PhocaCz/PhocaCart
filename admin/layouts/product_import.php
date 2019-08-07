@@ -8,12 +8,12 @@
  */
 defined('_JEXEC') or die();
 
-function filter_xml($matches) { 
-    return trim(htmlspecialchars($matches[1])); 
-} 
+function filter_xml($matches) {
+    return trim(htmlspecialchars($matches[1]));
+}
 
 
-$paramsC 				= JComponentHelper::getParams('com_phocacart');
+$paramsC 				= PhocacartUtils::getComponentParameters();
 $import_export_type		= $paramsC->get( 'import_export_type', 0 );
 $import_column			= $paramsC->get( 'import_column', 1 );
 
@@ -40,14 +40,14 @@ if($xml) {
 	// XML
 	if (!empty($d['products'])){
 		foreach($d['products'] as $k => $v) {
-			
+
 			$data = array();
-		
+
 			if (isset($v['item']) && $v['item'] != '') {
-				
-				
+
+
 				$item = simplexml_load_string($v['item'], null, LIBXML_NOCDATA);
-				
+
 				// Remove @attributes in case xml includes parameters (this can be enabled by customization)
 				// See comment in components\com_phocacart\layouts\product_export.php - line cca 36
 				/*
@@ -64,103 +64,103 @@ if($xml) {
 						case 'tags':
 							$item2[$k] = $v;
 						break;
-						
+
 						default:
 							$item2[$k] = (string)$item->$k;
 						break;
 					}
 				}
-				
+
 				$json = json_encode($item2);*/
-				
+
 				$json = json_encode($item);
 				$data = json_decode($json, true);
-				
-				
+
+
 				$data['tax_id'] 				= array();
 				$data['manufacturer_id'] 		= array();
 				$data['catid_multiple']			= array();
-				$data['catid_multiple_ordering']= array();	
-				
-				
-				
-				
+				$data['catid_multiple_ordering']= array();
+
+
+
+
 
 				// TITLE
 				// No title - skip
 				if (isset($data['title']) && $data['title'] == '') {
 					continue;
 				}
-				
+
 				// TAX
 				// Specific rules
 				if (isset($data['tax'])) {
 					$data['tax_id'] = PhocacartUtils::getIntFromString($data['tax']);
 					unset($data['tax']);
 				}
-				
+
 				// MANUFACTURER
 				if (isset($data['manufacturer'])) {
 					$data['manufacturer_id'] = PhocacartUtils::getIntFromString($data['manufacturer']);
 					unset($data['manufacturer']);
 				}
-				
+
 				// CATEGORY
 				if (!empty($data['categories']['category'])) {
-					
+
 					if (isset($data['categories']['category']['id']) && $data['categories']['category']['ordering']) {
-						
+
 						$idC = (int)PhocacartUtils::getIntFromString($data['categories']['category']['id']);
 						$data['catid_multiple'][0] 				= (int)PhocacartUtils::getIntFromString($idC);
 						$data['catid_multiple_ordering'][$idC]	= (int)$data['categories']['category']['ordering'];
-					
+
 					} else if (is_array($data['categories']['category'])) {
-						
+
 						$categories = $data['categories']['category'];
 						foreach($categories as $kC => $vC) {
 							$idC = (int)PhocacartUtils::getIntFromString($vC['id']);
 							$data['catid_multiple'][] 				= $idC;
 							$data['catid_multiple_ordering'][$idC]	= $vC['ordering'];
-						} 
-						
+						}
+
 					} else {
 						// skip
 						continue;
 					}
 				}
-					
+
 				if(empty($data['catid_multiple'])) {
 					// skip no category found
 					continue;
 				}
-			
+
 				// IMAGES
 				if (!empty($data['images']['image'])) {
-					
+
 					if (is_array($data['images']['image'])) {
 						$images 					= $data['images']['image'];
 						$data['images'] 			= array();
 						foreach($images as $kI => $vI) {
-							$data['images'][]['image'] = $vI; 
+							$data['images'][]['image'] = $vI;
 						}
 					} else {
 						$image 						= $data['images']['image'];
 						$data['images'] 			= array();
 						$data['images'][0]['image'] = $image;
 					}
-					
+
 				} else {
 					$data['images'] = array();
 				}
-				
+
 				// ATTRIBUTES
 				if (!empty($data['attributes']['attribute'])) {
-					
+
 					if (isset($data['attributes']['attribute']['id'])) {
 						// ATTRIBUTES STRING
 						$attribute 			= $data['attributes']['attribute'];
 						$data['attributes'] = array();
-						
+
 						// OPTIONS
 						if (isset($attribute['options']['option']['id'])) {
 							// OPTION STRING
@@ -171,17 +171,17 @@ if($xml) {
 							// OPTIONS ARRAY
 							$attribute['options'] = $attribute['options']['option'];
 						}
-						
+
 						$data['attributes'][0]	= $attribute;
-						
-					
+
+
 					} else if (is_array($data['attributes']['attribute'])) {
 						// ATTRIBUTES ARRAY
 						$attributes 			= $data['attributes']['attribute'];
 						$data['attributes'] 	= array();
-						
+
 						// OPTIONS
-						
+
 						foreach($attributes as $kA => $vA) {
 							if (isset($vA['options']['option']['id'])) {
 								// OPTION STRING
@@ -194,17 +194,17 @@ if($xml) {
 							}
 						}
 						$data['attributes']		= $attributes;
-						
+
 					}
-					
-					
+
+
 				} else {
 					$data['attributes'] = array();
 				}
-					
+
 				// SPECIFICATIONS
 				if (!empty($data['specifications']['specification'])) {
-					
+
 					if (isset($data['specifications']['specification']['id'])) {
 						// SPECIFICATIONS STRING
 						$specification 				= $data['specifications']['specification'];
@@ -215,15 +215,15 @@ if($xml) {
 						$specifications 			= $data['specifications']['specification'];
 						$data['specifications'] 	= array();
 						$data['specifications']		= $specifications;
-						
+
 					}
 				} else {
 					$data['specifications'] = array();
 				}
-				
+
 				// ADVANCED STOCK OPTIONS
 				if (!empty($data['advanced_stock_options']['advanced_stock_option'])) {
-					
+
 					if (isset($data['advanced_stock_options']['advanced_stock_option']['id'])) {
 						// ADVANCED STOCK OPTIONS
 						$aso 								= $data['advanced_stock_options']['advanced_stock_option'];
@@ -234,15 +234,15 @@ if($xml) {
 						$asos 								= $data['advanced_stock_options']['advanced_stock_option'];
 						$data['advanced_stock_options'] 	= array();
 						$data['advanced_stock_options']		= $asos;
-						
+
 					}
 				} else {
 					$data['advanced_stock_options'] = array();
 				}
-				
+
 				// DISCOUNTS
 				if (!empty($data['discounts']['discount'])) {
-					
+
 					if (isset($data['discounts']['discount']['id'])) {
 						// DISCOUNTS STRING
 						$discount 				= $data['discounts']['discount'];
@@ -253,23 +253,23 @@ if($xml) {
 						$discounts 			= $data['discounts']['discount'];
 						$data['discounts'] 	= array();
 						$data['discounts']	= $discounts;
-						
+
 					}
 				} else {
 					$data['discounts'] = array();
 				}
-				
+
 				// GROUPS IN DISCOUNT
 				if (!empty($data['discounts'])) {
 					foreach ($data['discounts'] as $kD => $vD) {
-				
+
 						if (!empty($data['discounts'][$kD]['groups']['group'])) {
-							
+
 							if (is_array($data['discounts'][$kD]['groups']['group']) && isset($data['discounts'][$kD]['groups']['group'][0])) {
-							
+
 								$groups 						= $data['discounts'][$kD]['groups']['group'];
 								$data['discounts'][$kD]['groups'] 	= array();
-								
+
 								foreach($groups as $kG => $vG) {
 									if (isset($vG['id'])) {
 										$data['discounts'][$kD]['groups'][] = (int)PhocacartUtils::getIntFromString($vG['id']);
@@ -277,54 +277,54 @@ if($xml) {
 								}
 							} else {
 								$group 						= $data['discounts'][$kD]['groups']['group'];
-								
+
 								$data['discounts'][$kD]['groups'] 			= array();
 								$data['discounts'][$kD]['groups'][0] 		= (int)PhocacartUtils::getIntFromString($group['id']);
 							}
-							
+
 						} else {
 							$data['discounts'][$kD]['groups'] = array();
 						}
 					}
 				}
-				
-				
+
+
 				// GROUPS (USER)
 				if (!empty($data['groups']['group'])) {
-					
+
 					if (is_array($data['groups']['group']) && isset($data['groups']['group'][0])) {
-						$groups 					= $data['groups']['group'];		
+						$groups 					= $data['groups']['group'];
 						$data['groups'] 			= array();
-						
+
 						foreach($groups as $kG => $vG) {
-							
+
 							if (isset($vG['id'])) {
 								$data['groups'][] = (int)PhocacartUtils::getIntFromString($vG['id']);
-								
+
 							}
 						}
-						
+
 					} else {
 						$group 						= $data['groups']['group'];
-						
+
 						$data['groups'] 			= array();
 						$data['groups'][0] 			= (int)PhocacartUtils::getIntFromString($group['id']);
 					}
-					
+
 				} else {
 					$data['groups'] = array();
 				}
-			
-				
+
+
 				// PRICE GROUPS
 				if (!empty($data['price_groups']['price_group'])) {
-					
+
 					if (is_array($data['price_groups']['price_group']) && isset($data['price_groups']['price_group'][0])) {
-						
+
 						$groups 					= $data['price_groups']['price_group'];
 						$data['price_groups'] 		= array();
 						foreach($groups as $kG => $vG) {
-					
+
 							$data['price_groups'][$kG]['id'] 			= (int)PhocacartUtils::getIntFromString($vG['id']);
 							$data['price_groups'][$kG]['product_id'] 	= (int)PhocacartUtils::getIntFromString($vG['product_id']);
 							$data['price_groups'][$kG]['group_id'] 		= (int)PhocacartUtils::getIntFromString($vG['group_id']);
@@ -332,22 +332,22 @@ if($xml) {
 						}
 					} else {
 						$group 						= $data['price_groups']['price_group'];
-						
+
 						$data['price_groups'] 			= array();
 						$data['price_groups'][0]['id'] 			= (int)PhocacartUtils::getIntFromString($group['id']);
 						$data['price_groups'][0]['product_id'] 	= (int)PhocacartUtils::getIntFromString($group['product_id']);
 						$data['price_groups'][0]['group_id'] 	= (int)PhocacartUtils::getIntFromString($group['group_id']);
 						$data['price_groups'][0]['price'] 		= $group['price'];
 					}
-				
-					
+
+
 				} else {
 					$data['price_groups'] = array();
 				}
-		
+
 				// POINT GROUPS
 				if (!empty($data['point_groups']['point_group'])) {
-					
+
 					if (is_array($data['point_groups']['point_group']) && isset($data['point_groups']['point_group'][0])) {
 						$groups 					= $data['point_groups']['point_group'];
 						$data['point_groups'] 		= array();
@@ -359,28 +359,28 @@ if($xml) {
 						}
 					} else {
 						$group 						= $data['point_groups']['point_group'];
-						
+
 						$data['point_groups'] 			= array();
 						$data['point_groups'][0]['id'] 			= (int)PhocacartUtils::getIntFromString($group['id']);
 						$data['point_groups'][0]['product_id'] 	= (int)PhocacartUtils::getIntFromString($group['product_id']);
 						$data['point_groups'][0]['group_id'] 	= (int)PhocacartUtils::getIntFromString($group['group_id']);
 						$data['point_groups'][0]['points_received'] = $group['points_received'];
 					}
-					
+
 				} else {
 					$data['point_groups'] = array();
 				}
-				
-				
+
+
 				// PRICE HISTORIES
 				if (!empty($data['price_histories']['price_history'])) {
-					
+
 					if (is_array($data['price_histories']['price_history']) && isset($data['price_histories']['price_history'][0])) {
-						
+
 						$histories 					= $data['price_histories']['price_history'];
 						$data['price_histories'] 		= array();
 						foreach($histories as $kG => $vG) {
-					
+
 							$data['price_histories'][$kG]['id'] 			= (int)PhocacartUtils::getIntFromString($vG['id']);
 							$data['price_histories'][$kG]['product_id'] 	= (int)PhocacartUtils::getIntFromString($vG['product_id']);
 							$data['price_histories'][$kG]['date'] 			= $vG['date'];
@@ -388,44 +388,44 @@ if($xml) {
 						}
 					} else {
 						$group 						= $data['price_histories']['price_history'];
-						
+
 						$data['price_histories'] 			= array();
 						$data['price_histories'][0]['id'] 			= (int)PhocacartUtils::getIntFromString($group['id']);
 						$data['price_histories'][0]['product_id'] 	= (int)PhocacartUtils::getIntFromString($group['product_id']);
 						$data['price_histories'][0]['date'] 		= $group['date'];
 						$data['price_histories'][0]['price'] 		= $group['price'];
 					}
-				
-					
+
+
 				} else {
 					$data['price_histories'] = array();
 				}
-				
-				
+
+
 				// RELATED
 				if (!empty($data['related']['related_product'])) {
-					
+
 					if (is_array($data['related']['related_product']) && isset($data['related']['related_product'][0])) {
 						$relateds 					= $data['related']['related_product'];
 						$data['related'] 			= array();
 						foreach($relateds as $kR => $vR) {
-							$data['related'][] = (int)PhocacartUtils::getIntFromString($vR); 
+							$data['related'][] = (int)PhocacartUtils::getIntFromString($vR);
 						}
 					} else {
 						$related 			= $data['related']['related_product'];
 						$data['related'] 	= array();
 						$data['related'][0] = (int)PhocacartUtils::getIntFromString($related);
 					}
-					
+
 				} else {
 					$data['related'] = array();
 				}
-				
+
 				$data['related'] = implode(',', $data['related']);
-				
+
 				// TAG
 				if (!empty($data['tags']['tag'])) {
-					
+
 					if (isset($data['tags']['tag']['id'])) {
 						// TAG STRING
 						$tag 				= $data['tags']['tag'];
@@ -443,10 +443,10 @@ if($xml) {
 				} else {
 					$data['tags'] = array();
 				}
-				
+
 				// correct simple xml
 				foreach($data as $k => $v) {
-					if (empty($v)) { 
+					if (empty($v)) {
 						$data[$k] = '';
 					}
 				}
@@ -461,7 +461,7 @@ if($xml) {
 		PhocacartRelated::correctProductId($productIdChange);// needed for related when new IDs are created by auto increment
 	}
 } else {
-	
+
 	// --------
 	// CSV
 	if (isset($d['productcolumns'][0]['item']) && ($d['productcolumns'][0]['item'] != '')) {
@@ -471,7 +471,7 @@ if($xml) {
 				if (isset($v['item']) && $v['item'] != '') {
 					$pcAP = str_getcsv($v['item'], ';', '"');
 					if (!empty($pcAH) && !empty($pcAP)) {
-						
+
 						$cPcAH = count($pcAH);
 						$cPcAP = count($pcAP);
 						if ($cPcAH > $cPcAP) {
@@ -480,36 +480,36 @@ if($xml) {
 							$pcAH = array_pad($pcAH, $cPcAP, '');
 						}
 						$data = array_combine($pcAH, $pcAP);
-						
+
 						$data['tax_id'] 				= array();
 						$data['manufacturer_id'] 		= array();
 						$data['catid_multiple']			= array();
-						$data['catid_multiple_ordering']= array();	
+						$data['catid_multiple_ordering']= array();
 
 
 						// No title - skip
 						if (isset($data['title']) && $data['title'] == '') {
 							continue;
 						}
-						
+
 						// Specific rules
 						if (isset($data['tax'])) {
 							$data['tax_id'] = PhocacartUtils::getIntFromString($data['tax']);
 							unset($data['tax']);
 						}
-						
+
 						if (isset($data['manufacturer'])) {
 							$data['manufacturer_id'] = PhocacartUtils::getIntFromString($data['manufacturer']);
 							unset($data['manufacturer']);
 						}
-						
+
 						if (isset($data['categories'])) {
-							
-						
+
+
 							$categories = json_decode($data['categories'], true);
-							
+
 							if (!empty($categories)) {
-								
+
 								foreach($categories as $kC => $vC) {
 									$idC = (int)PhocacartUtils::getIntFromString($vC['id']);
 									$data['catid_multiple'][] 				= $idC;
@@ -519,64 +519,64 @@ if($xml) {
 								// No categories - skip
 								continue;
 							}
-							
+
 							unset($data['categories']);
 						}
-						
+
 						if (isset($data['images'])) {
 							$images = array();
 							if ($data['images'] != '') {
 								$images = explode("|", $data['images']);
 							}
-							
+
 							$data['images'] = array();
 							if (!empty($images)) {
 								foreach($images as $kI => $vI) {
-									$data['images'][]['image'] = $vI; 
+									$data['images'][]['image'] = $vI;
 								}
 							}
 						}
-						
+
 						if (isset($data['attributes'])) {
 							$data['attributes'] = json_decode($data['attributes'], true);
 						}
-						
+
 						if (isset($data['specifications'])) {
 							$data['specifications'] = json_decode($data['specifications'], true);
 						}
 						if (isset($data['advanced_stock_options'])) {
 							$data['advanced_stock_options'] = json_decode($data['advanced_stock_options'], true);
 						}
-						
-						
+
+
 						// DISCOUNT GROUPS
 						if (isset($data['discounts'])) {
 							$data['discounts'] = json_decode($data['discounts'], true);
-							
-							
+
+
 							$groupsD = array();
 							if (!empty($data['discounts'])) {
 								foreach($data['discounts'] as $kDG => $vDG) {
 									$groupsD = $vDG['groups'];
-							
+
 									if (!empty($groupsD)) {
 										foreach($groupsD as $kR => $vR) {
 											$groupsD[$kR] = PhocacartUtils::getIntFromString($vR['id']);
 										}
 									}
 									$data['discounts'][$kDG]['groups'] = $groupsD;
-									
+
 								}
-								
+
 							}
-			
+
 						}
-						
+
 						if (isset($data['groups'])) {
 							$data['groups'] = json_decode($data['groups'], true);
 							$groups = array();
 							$groups = $data['groups'];
-							
+
 							if (!empty($groups)) {
 								foreach($groups as $kR => $vR) {
 									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
@@ -584,30 +584,30 @@ if($xml) {
 							}
 							$data['groups'] = $groups;
 						}
-						
+
 						// Price Groups
 						if (isset($data['price_groups'])) {
 							$data['price_groups'] = json_decode($data['price_groups'], true);
 							/*$groups = array();
 							$groups = $data['price_groups'];
-							
+
 							if (!empty($groups)) {
 								foreach($groups as $kR => $vR) {
 									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
 								}
 							}
 							$data['price_groups'] = $groups;*/
-							
+
 						} else {
 							$data['price_groups'] = array();
 						}
-						
+
 						// Point Groups
 						if (isset($data['point_groups'])) {
 							$data['point_groups'] = json_decode($data['point_groups'], true);
 							/*$groups = array();
 							$groups = $data['point_groups'];
-							
+
 							if (!empty($groups)) {
 								foreach($groups as $kR => $vR) {
 									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
@@ -617,25 +617,25 @@ if($xml) {
 						} else {
 							$data['point_groups'] = array();
 						}
-						
+
 						// Price Groups
 						if (isset($data['price_histories'])) {
 							$data['price_histories'] = json_decode($data['price_histories'], true);
 							/*$groups = array();
 							$groups = $data['price_groups'];
-							
+
 							if (!empty($groups)) {
 								foreach($groups as $kR => $vR) {
 									$groups[$kR] = PhocacartUtils::getIntFromString($vR['id']);
 								}
 							}
 							$data['price_groups'] = $groups;*/
-							
+
 						} else {
 							$data['price_histories'] = array();
 						}
-						
-						
+
+
 						if (isset($data['related'])) {
 							$related = array();
 							if ($data['related'] != '') {
@@ -647,11 +647,11 @@ if($xml) {
 								}
 							}
 							$data['related'] = implode(',', $related);
-						
+
 						}
-						
+
 						if (isset($data['tags'])) {
-							
+
 							$tags = array();
 							if ($data['tags'] != '') {
 								$tags = explode("|", $data['tags']);
@@ -662,18 +662,18 @@ if($xml) {
 								}
 							}
 							$data['tags'] = $tags;
-							
+
 						}
-						
-					
+
+
 						$newId = PhocacartProduct::storeProduct($data, $import_column);
 						if ($newId > 0) {
 							$productIdChange[$newId] = $data['id'];
 						}
-					}	
+					}
 				}
 			}
-			
+
 			PhocacartRelated::correctProductId($productIdChange);// needed for related when new IDs are created by auto increment
 		}
 	}

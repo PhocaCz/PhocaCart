@@ -14,7 +14,7 @@ $layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' =>
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
 $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
 
-$layoutQV 	= new JLayoutFile('popup_quickview', null, array('component' => 'com_phocacart'));
+//$layoutQV 	= new JLayoutFile('popup_quickview', null, array('component' => 'com_phocacart'));
 $layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
 $layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
 $layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));

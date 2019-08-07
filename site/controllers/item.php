@@ -10,10 +10,10 @@ defined('_JEXEC') or die();
 
 class PhocaCartControllerItem extends JControllerForm
 {
-	public function review() { 
-		
+	public function review() {
+
 		JSession::checkToken() or jexit( 'Invalid Token' );
-		//$paramsC 			= JComponentHelper::getParams('com_phocacart');
+		//$paramsC 			= PhocacartUtils::getComponentParameters();
 		$app				= JFactory::getApplication();
 		$paramsC 			= $app->getParams();
 		$approve_review 	= $paramsC->get( 'approve_review',0 );
@@ -25,7 +25,7 @@ class PhocaCartControllerItem extends JControllerForm
 		$item['name']		= $this->input->get( 'name', 0, 'string'  );
 		$item['review']		= $this->input->get( 'review', 0, 'string'  );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
-		
+
 		$errMsg = array();// Error message in this controller
 		if ((int)$item['rating'] < 1) {
 			$errorMsg[] = JText::_('COM_PHOCACART_PLEASE_ADD_RATING');
@@ -40,10 +40,10 @@ class PhocaCartControllerItem extends JControllerForm
 			$app->enqueueMessage(implode( '<br />', $errorMsg ), 'warning');
 			$app->redirect(base64_decode($item['return']));
 		}
-		
+
 		$error = 0;// Error message from database
 		$added = PhocacartReview::addReview($error, $approve_review, $item['id'], $u->id, $item['name'], $item['rating'], $item['review']);
-		
+
 		if ($added) {
 			$msg = JText::_('COM_PHOCACART_THANK_YOU_FOR_YOUR_REVIEW');
 			if ($approve_review == 1) {

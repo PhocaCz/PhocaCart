@@ -21,10 +21,10 @@ if (!function_exists('str_putcsv')) {
 	}
 }
 
-// Params of component	
+// Params of component
 $db 							= JFactory::getDBO();
 $user							= JFactory::getUser();
-$paramsC 						= JComponentHelper::getParams('com_phocacart');
+$paramsC 						= PhocacartUtils::getComponentParameters();
 $import_export_type				= $paramsC->get( 'import_export_type', 0 );
 $export_attributes				= $paramsC->get( 'export_attributes', 1 );
 $export_advanced_stock_options	= $paramsC->get( 'export_advanced_stock_options', 0 );
@@ -36,7 +36,7 @@ $export_add_title				= $paramsC->get( 'export_add_title', 0);
 /*
 *
 * Unfortunately, add attributes to xml tags can be very problematic
-*  - it takes a lot of memory when managing (importing) it 
+*  - it takes a lot of memory when managing (importing) it
 *  - and it takes a lot of place in exporting file
 * Problems when importing XML:
 * Because of bind columns when importing ( xml-> joomla database), we need to remove '@attribute' array from xml
@@ -246,32 +246,32 @@ if (!empty($d['productcolumns'])){
 }
 
 if (!empty($d['products'])){
-	
+
 	foreach($d['products'] as $k => $v) {
-		
+
 		if (!empty($d['productcolumns'])) {
 			$iP = array();
-			
+
 			if ($xml) { $iP[] =  $t0 . '<product>';}
-			
-			
-			
-			foreach($d['productcolumns'] as $k2 => $v2) {	
-				
+
+
+
+			foreach($d['productcolumns'] as $k2 => $v2) {
+
 				$col = $v2[0];
-				
-				
-				
+
+
+
 				if (isset($v[$col])) {
 					// COLUMNS FROM PRODUCT TABLE
-				
+
 					//$iP[] = $qT . $v[$col] . $qT;
-					
+
 					$l 	= '';
 					$r 	= '';
-					
+
 					switch($iCN[$k2]) {
-						
+
 						case 'description':
 						case 'description_long':
 						case 'type_feed':
@@ -283,51 +283,51 @@ if (!empty($d['products'])){
 								// CSV
 								$v[$col] = str_replace("\n", '', $v[$col]);
 								$v[$col] = str_replace("\r", '', $v[$col]);
-								
+
 							}
 						break;
-					
-						
+
+
 						default:
 						break;
-						
+
 					}
-			
+
 					if ($xml) {
-						
+
 						$title = '';
 						if ($export_add_title == 1) {
 							$title = ' title="'.strip_tags(JText::_($iCV[$k2])).'"';
 						}
-						
+
 						if (isset($v[$col])) {
 							$iP[] = $t1 . '<'.strip_tags($iCN[$k2]).$title.'>' . $l . $v[$col] . $r. '</'.strip_tags($iCN[$k2]).'>';
 						}
 					} else {
 						$iP[] = $v[$col];
 					}
-					
+
 				} else {
-					
-					
+
+
 					// COLUMNS DYNAMICALLY CREATED BY OTHER TABLES
 					switch($col) { // we select col, so here we don't need to check: if (isset($v[$col])) {
-						
+
 						case 'categories':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartProduct::getCategoriesByProductId((int)$v['id']);
 								if (!empty($items)) {
-									
+
 									if ($xml) {
-										
+
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
-										
+
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
+									}
 
 									$x = array();
 									foreach($items as $kX => $vX) {
@@ -339,10 +339,10 @@ if (!empty($d['products'])){
 										} else {
 											$x[$kX]['id'] 			= $vX['category_id'].':'.$vX['alias'];
 											$x[$kX]['ordering'] 	= $vX['ordering'];
-											
+
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -354,21 +354,21 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'images':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartProduct::getImagesByProductId((int)$v['id']);
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
 									foreach($items as $kX => $vX) {
 										if ($xml) {
@@ -377,7 +377,7 @@ if (!empty($d['products'])){
 											$x[] = $vX['image'];
 										}
 									}
-	
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -388,21 +388,21 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'attributes':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartAttribute::getAttributesAndOptions((int)$v['id']);
-								
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
+									}
 
 									$x = array();
 									foreach($items as $kX => $vX) {
@@ -439,7 +439,7 @@ if (!empty($d['products'])){
 											//$x[] = $vX['image'];
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -451,24 +451,24 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'specifications':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartSpecification::getSpecificationsById((int)$v['id'], 1);
-								
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
 										if ($xml) {
 											$iP[] = $t2 . '<specification>';
@@ -483,7 +483,7 @@ if (!empty($d['products'])){
 											//$x[] = $vX['image'];
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -495,29 +495,29 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'discounts':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartDiscountProduct::getDiscountsById((int)$v['id'], 1);
-								
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
-										
+
 										$groups = PhocacartGroup::getGroupsById((int)$vX['id'], 4, 2, (int)$v['id']);
-										
-										
+
+
 										if ($xml) {
 											$iP[] = $t2 . '<discount>';
 											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
@@ -529,23 +529,23 @@ if (!empty($d['products'])){
 											$iP[] = $t3 . '<quantity_from>'.$vX['quantity_from'].'</quantity_from>';
 											$iP[] = $t3 . '<valid_from>'.$vX['valid_from'].'</valid_from>';
 											$iP[] = $t3 . '<valid_to>'.$vX['valid_to'].'</valid_to>';
-											
-											
-											
+
+
+
 											if (!empty($groups)) {
 												$iP[] = $t3 . '<groups>';
-										
+
 												foreach($groups as $kY => $vY) {
 													$iP[] = $t4 . '<group>';
 													$iP[] = $t5 . '<id>'.$vY['id'].'</id>';
 													$iP[] = $t5 . '<title>'.$vY['title'].'</title>';
 													$iP[] = $t4 . '</group>';
 												}
-											
+
 												$iP[] = $t3 . '</groups>';
-	
+
 											}
-											
+
 											$iP[] = $t2 . '</discount>';
 										} else {
 											//$x[] = $vX['image'];
@@ -558,7 +558,7 @@ if (!empty($d['products'])){
 											$items[$kX]['groups'] = $groups;// set it for CSV
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -570,25 +570,25 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
-						
+
+
 						case 'advanced_stock_options':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartAttribute::getCombinationsStockById((int)$v['id'], 1);
-								
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
 										if ($xml) {
 											$iP[] = $t2 . '<advanced_stock_option>';
@@ -601,7 +601,7 @@ if (!empty($d['products'])){
 											//$x[] = $vX['image'];
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -613,12 +613,12 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'related':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartRelated::getRelatedItemsById((int)$v['id'], 2, 1);
-								
+
 								if (!empty($items)) {
 									if ($xml) {
 										$title = '';
@@ -626,8 +626,8 @@ if (!empty($d['products'])){
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-								
+									}
+
 									$x = array();
 									foreach($items as $kX => $vX) {
 										if ($xml) {
@@ -636,7 +636,7 @@ if (!empty($d['products'])){
 											$x[] = $vX->id.':'.$vX->alias;
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -647,7 +647,7 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'tags':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
@@ -659,8 +659,8 @@ if (!empty($d['products'])){
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
 									foreach($items as $kX => $vX) {
 										if ($xml) {
@@ -669,8 +669,8 @@ if (!empty($d['products'])){
 											$x[] = $vX->id.':'.$vX->alias;
 										}
 									}
-									
-									
+
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
@@ -681,24 +681,24 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'groups':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartGroup::getGroupsById((int)$v['id'], 3, 2);
-								
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
 										if ($xml) {
 											$iP[] = $t2 . '<group>';
@@ -711,12 +711,12 @@ if (!empty($d['products'])){
 											unset($items[$kX]['type']);
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
 										//$iP[] = implode('|', $x);
-										
+
 										$iP[] = json_encode($items);
 									}
 								} else {
@@ -724,25 +724,25 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'price_groups':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartGroup::getProductPriceGroupsById((int)$v['id']);
-								
-								
+
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
 										if ($xml) {
 											$iP[] = $t2 . '<price_group>';
@@ -753,15 +753,15 @@ if (!empty($d['products'])){
 											$iP[] = $t2 . '</price_group>';
 										} else {
 											//$x[] = $vX['image'];
-											
+
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
 										//$iP[] = implode('|', $x);
-										
+
 										$iP[] = json_encode($items);
 									}
 								} else {
@@ -769,25 +769,25 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						case 'point_groups':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartGroup::getProductPointGroupsById((int)$v['id']);
-								
-							
+
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
 										if ($xml) {
 											$iP[] = $t2 . '<point_group>';
@@ -798,15 +798,15 @@ if (!empty($d['products'])){
 											$iP[] = $t2 . '</point_group>';
 										} else {
 											//$x[] = $vX['image'];
-											
+
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
 										//$iP[] = implode('|', $x);
-										
+
 										$iP[] = json_encode($items);
 									}
 								} else {
@@ -814,26 +814,26 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						// Price history
 						case 'price_histories':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartPriceHistory::getPriceHistoryById((int)$v['id'], 0, 1);
-								
-								
+
+
 								if (!empty($items)) {
-									
+
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
 											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
-									} 
-									
+									}
+
 									$x = array();
-								
+
 									foreach($items as $kX => $vX) {
 										if ($xml) {
 											$iP[] = $t2 . '<price_history>';
@@ -844,15 +844,15 @@ if (!empty($d['products'])){
 											$iP[] = $t2 . '</price_history>';
 										} else {
 											//$x[] = $vX['image'];
-											
+
 										}
 									}
-									
+
 									if ($xml) {
 										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
 									} else {
 										//$iP[] = implode('|', $x);
-										
+
 										$iP[] = json_encode($items);
 									}
 								} else {
@@ -860,18 +860,18 @@ if (!empty($d['products'])){
 								}
 							}
 						break;
-						
+
 						default:
-						
+
 						break;
-						
-					}	
+
+					}
 				}
 			}
-			
+
 			if ($xml) { $iP[] = $t0 . '</product>'; }
-			
-			
+
+
 			if (!empty($iP)) {
 				//$iA[] = ' ('.(int)$user->id .', '. $db->quote(implode($sP, $iP)).', 0)';
 				//$iA[] = ' ('.(int)$user->id .', '. $db->quote(serialize($iP)).'), 0';
@@ -888,7 +888,7 @@ if (!empty($d['products'])){
 // First Row Head - column name (ID) CSV
 if (!empty($iCN) && $d['page'] == 1 && !$xml) {
 	$iO[] = ' ('.(int)$user->id .', '. $db->quote(str_putcsv($iCN)).', 1)';
-}	
+}
 // Second Row Head - column name translated CSV
 if (!empty($iCV) && $d['page'] == 1 && !$xml) {
 	$iO[] = ' ('.(int)$user->id .', '. $db->quote(str_putcsv($iCV)).', 1)';

@@ -1585,7 +1585,32 @@ final class PhocacartRenderJs
 
 
 
+	public static function renderAjaxAskAQuestion($options = array()) {
+		$paramsC = PhocacartUtils::getComponentParameters();
+		$item_askquestion = $paramsC->get('item_askquestion', 0);
+		$popup_askquestion = $paramsC->get('popup_askquestion', 0);
+		//$media 					= new PhocacartRenderMedia();
 
+
+		if ($item_askquestion > 0 && $popup_askquestion == 2) {
+
+			JHtml::stylesheet('media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+
+			$s[] = ' jQuery(document).ready(function(){';
+			$s[] = '   jQuery("a.phModalContainerButton").on("click", function(e) {';
+			$s[] = '      var src = jQuery(this).attr("data-src");';
+			$s[] = '      var height = "100%";';//jQuery(this).attr("data-height") || 300;// Does not work and it is solved by CSS
+			$s[] = '      var width = "100%";';//jQuery(this).attr("data-width") || 400;
+			$s[] = '      var id = "#" + jQuery(this).attr("data-id");';
+			$s[] = '      var idIframe = id + " iframe";';
+			$s[] = '      jQuery(idIframe).attr({"src":src, "height": height, "width": width});';
+			$s[] = '      jQuery(id).modal();';
+			$s[] = '   });';
+			$s[] = ' });';
+
+			JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		}
+	}
 
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);

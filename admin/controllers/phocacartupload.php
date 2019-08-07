@@ -20,12 +20,12 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 	function createfolder() {
 		JSession::checkToken() or jexit( 'COM_PHOCADOWNLOAD_INVALID_TOKEN' );
 		$app	= JFactory::getApplication();
-		
+
 		// Set FTP credentials, if given
 		jimport('joomla.client.helper');
 		JClientHelper::setCredentialsFromRequest('ftp');
-		
-		$paramsC = JComponentHelper::getParams('com_phocacart');
+
+		$paramsC = PhocacartUtils::getComponentParameters();
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
 		//$folder_permissions = octdec((int)$folder_permissions);
 
@@ -36,8 +36,8 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 		$field			= $app->input->get( 'field');
 		$viewBack		= $app->input->get( 'viewback', 'phocacartmanager' );
 		$manager		= $app->input->get( 'manager', 'file', 'string' );
-		
-		
+
+
 		$link = '';
 		if ($manager != '') {
 			$group 	= PhocacartUtilsSettings::getManagerGroup($manager);
@@ -57,10 +57,10 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 
 		if (strlen($folderNew) > 0) {
 			$folder = JPath::clean($path['orig_abs_ds'].$parent.'/'.$folderNew);
-		
+
 			if (!JFolder::exists($folder) && !JFile::exists($folder)) {
 				//JFolder::create($path, $folder_permissions );
-				
+
 				switch((int)$folder_permissions) {
 					case 777:
 						JFolder::create($folder, 0777 );
@@ -73,7 +73,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 					break;
 					case 644:
 						JFolder::create($folder, 0644 );
-					break;				
+					break;
 					case 755:
 					Default:
 						JFolder::create($folder, 0755 );
@@ -85,7 +85,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 				} else {
 					$app->redirect($link, JText::_('COM_PHOCACART_ERROR_FOLDER_CREATING'));
 				}
-				
+
 				$app->redirect($link, JText::_('COM_PHOCACART_SUCCESS_FOLDER_CREATING'));
 			} else {
 				$app->redirect($link, JText::_('COM_PHOCACART_ERROR_FOLDER_CREATING_EXISTS'));
@@ -94,16 +94,16 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 		}
 		$app->redirect($link);
 	}
-	
+
 	function multipleupload() {
 		$result = PhocacartFileUpload::realMultipleUpload();
-		return true;	
+		return true;
 	}
-	
+
 	function upload() {
 		$result = PhocacartFileUpload::realSingleUpload();
 		return true;
 	}
-	
-	
+
+
 }

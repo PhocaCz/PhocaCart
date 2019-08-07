@@ -10,11 +10,11 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.application.component.controller' );
 
 class PhocaCartController extends JControllerLegacy
-{	
-	
+{
+
 	public function display($cachable = false, $urlparams = false)
 	{
-		
+
 		if ( ! JFactory::getApplication()->input->get('view') ) {
 			JFactory::getApplication()->input->set('view', 'categories' );
 		}
@@ -23,9 +23,9 @@ class PhocaCartController extends JControllerLegacy
 			// Don't forget, this settings needs to have set router.php too - in method PhocacartParseRoute()
 			$this->getView('feed', 'xml');
 		}*/
-		
-		
-		//$paramsC 	= JComponentHelper::getParams('com_phocacart');
+
+
+		//$paramsC 	= PhocacartUtils::getComponentParameters();
 		$app		= JFactory::getApplication();
 		$paramsC 	= $app->getParams();
 
@@ -34,7 +34,7 @@ class PhocaCartController extends JControllerLegacy
 		if ($cache == 1) {
 			$cachable 	= true;
 		}
-		
+
 		$document 	= JFactory::getDocument();
 
 		$safeurlparams = array('catid'=>'INT','id'=>'INT','cid'=>'ARRAY','year'=>'INT','month'=>'INT','limit'=>'INT','limitstart'=>'INT',

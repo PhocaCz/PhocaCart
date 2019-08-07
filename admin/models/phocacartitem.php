@@ -74,6 +74,13 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$registry->loadString($item->metadata);
 				$item->metadata = $registry->toArray();
 			}
+
+			if (isset($item->params_feed)) {
+				$registry = new JRegistry;
+				$registry->loadString($item->params_feed);
+				$item->params_feed = $registry->toArray();
+			}
+
 			// Make the numbers more readable
 			// it has no influence on saving it to db
 			$item->price 			= PhocacartPrice::cleanPrice($item->price);
@@ -198,6 +205,18 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 
+
+
+		if (!empty($data['feed'])) {
+			$registry 	= new JRegistry($data['feed']);
+			//$registry 	= new JRegistry($dataPh);
+			$dataFeed 	= $registry->toString();
+			if($dataFeed != '') {
+				$data['params_feed'] = $dataFeed;
+			}
+		} else {
+			$data['params_feed'] = '';
+		}
 
 
 		// Include the content plugins for the on save events.
@@ -1271,7 +1290,42 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 				$form->load($addform, false);
 			}
+
+
 		}
+
+		// Load Feed Forms
+		$feedPlugins = PhocacartFeed::getFeedPluginMethods();
+
+		if (!empty($feedPlugins)) {
+			foreach ($feedPlugins as $k => $v) {
+
+				$element = htmlspecialchars($v->element, ENT_QUOTES, 'UTF-8');
+				$addformF = new SimpleXMLElement('<form />');
+				$fields = $addformF->addChild('fields');
+				$fields->addAttribute('name', 'feed');
+				//$fields->addAttribute('addfieldpath', 'associations');
+				$fieldset = $fields->addChild('fieldset');
+				$fieldset->addAttribute('name', 'feed_'.$element);
+				$fieldset->addAttribute('group', 'pcf');
+
+				$field = $fieldset->addChild('field');
+				$field->addAttribute('name', $element);
+				$field->addAttribute('type', 'subform');
+
+				$field->addAttribute('label', JText::_(strtoupper($v->name)));
+				$field->addAttribute('multiple', 'false');
+				$field->addAttribute('layout', 'joomla.form.field.subform.default');
+				$field->addAttribute('formsource', 'plugins/pcf/'.$element.'/models/forms/item.xml');
+				$field->addAttribute('clear', 'true');
+				$field->addAttribute('propagate', 'true');
+				$form->load($addformF, false);
+			}
+
+
+		}
+
+
 		parent::preprocessForm($form, $data, $group);
 	}
 }

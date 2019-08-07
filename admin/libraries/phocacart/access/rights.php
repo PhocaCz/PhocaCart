@@ -20,7 +20,7 @@ class PhocacartAccessRights
 	public function __construct() {
 
 		$this->user         = JFactory::getUser();
-        $this->params 		= JComponentHelper::getParams('com_phocacart') ;
+        $this->params 		= PhocacartUtils::getComponentParameters() ;
 
 	}
 

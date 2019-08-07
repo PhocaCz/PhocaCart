@@ -2219,3 +2219,14 @@ img.ph-lazyload:not([src]) {
 	display: inline;
 }
 
+
+#phContainerPopup .modal-dialog,
+#phContainerPopup .modal-content {
+    height: 95%;
+}
+
+#phContainerPopup .modal-body {
+    /* 100% = dialog height, 120px = header + footer */
+    /* bootstrap 4: max-height: calc(100% - 120px);*/
+	height: calc(100% - 120px);
+}

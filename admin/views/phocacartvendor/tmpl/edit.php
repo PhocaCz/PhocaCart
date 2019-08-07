@@ -18,7 +18,6 @@ $r 			=  new $class();
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
 	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-		<?php echo $this->form->getField('description')->save(); ?>
 		Joomla.submitform(task, document.getElementById('adminForm'));
 	}
 	else {
@@ -36,12 +35,12 @@ echo $r->navigation($tabs);
 
 echo '<div class="tab-content">'. "\n";
 
-echo '<div class="tab-pane active" id="general">'."\n"; 
+echo '<div class="tab-pane active" id="general">'."\n";
 $formArray = array ( 'user_id', 'image', 'ordering');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="publishing">'."\n"; 
+echo '<div class="tab-pane" id="publishing">'."\n";
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -52,7 +51,7 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
-				
+
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column

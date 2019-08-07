@@ -13,26 +13,26 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartCountry', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartcountry', 'phocacartcountry', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
@@ -40,7 +40,7 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -52,7 +52,7 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 
 		return $data;
 	}
-	
+
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
@@ -85,26 +85,26 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	public function importcountries() {
 		$app	= JFactory::getApplication();
 		$db		= JFactory::getDBO();
-		
+
 		$db->setQuery('SELECT COUNT(id) FROM #__phocacart_countries');
 		$sum = $db->loadResult();
-		
+
 		/*if ((int)$sum > 240) {
 			$message = JText::_('COM_PHOCACART_COUNTRIES_ALREADY_IMPORTED');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}*/
-		
+
 		if ((int)$sum > 0) {
 			$message = JText::_('COM_PHOCACART_COUNTRIES_CAN_BE_IMPORTED_ONLY_WHEN_COUNTRY_TABLE_IS_EMPTY');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}
-		
+
 		$file	= JPATH_ADMINISTRATOR . '/components/com_phocacart/install/sql/mysql/countries.utf8.sql';
 		if(JFile::exists($file)) {
 			$buffer = file_get_contents($file);
@@ -112,7 +112,7 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 			if (count($queries) == 0) {
 				return false;
 			}
-			
+
 			foreach ($queries as $query){
 				$query = trim($query);
 				if ($query != '' && $query{0} != '#'){
@@ -130,16 +130,16 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 			return false;
 		}
 	}
-	
+
 	public function delete(&$cid = array()) {
-		
-		$paramsC 			= JComponentHelper::getParams('com_phocacart');
+
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$delete_regions		= $paramsC->get( 'delete_regions', 0 );
-		
+
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-			
+
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
@@ -151,20 +151,20 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 					return false;
 				}
 			}
-			
+
 			// 1. DELETE COUNTRIES
 			$query = 'DELETE FROM #__phocacart_countries'
 				. ' WHERE id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
-			
+
+
 			// 2. DELETE COUNTRY TAXES
 			$query = 'DELETE FROM #__phocacart_tax_countries'
 				. ' WHERE country_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 3. DELETE REGIONS
 			if ($delete_regions == 1) {
 				$query = 'DELETE FROM #__phocacart_regions'
@@ -172,13 +172,13 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 				$this->_db->setQuery( $query );
 				$this->_db->execute();
 			}
-			
+
 			// 4. DELETE COUNTRIES IN SHIPPING METHOD
 			$query = 'DELETE FROM #__phocacart_shipping_method_countries'
 				. ' WHERE country_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 5. DELETE COUNTRIES IN PAYMENT METHOD
 			$query = 'DELETE FROM #__phocacart_payment_method_countries'
 				. ' WHERE country_id IN ( '.$cids.' )';

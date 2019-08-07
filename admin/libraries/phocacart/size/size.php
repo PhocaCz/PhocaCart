@@ -15,7 +15,7 @@ class PhocacartSize
     public $p;
 
     public function __construct() {
-        $this->p    = JComponentHelper::getParams( 'com_phocacart' );
+        $this->p    = PhocacartUtils::getComponentParameters();
     }
 
     public function getSizeFormat($value, $type = 'size') {

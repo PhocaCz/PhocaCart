@@ -14,6 +14,10 @@ class PhocacartImage
 {
 	public static function getThumbnailName($path, $filename, $size) {
 
+
+		$paramsC 	= PhocacartUtils::getComponentParameters();
+		$thumb_name_prefix = $paramsC->get('thumb_name_prefix', 'phoca_thumb');
+
 		$thumbName	= new StdClass();
 		if ($filename == '') {
 			$thumbName->abs 		= false;
@@ -25,14 +29,14 @@ class PhocacartImage
 		$title 		= self::getTitleFromFile($filename , 1);
 		switch ($size) {
 			case 'large':
-			$fileNameThumb 			= 'phoca_thumb_l_'. $title;
+			$fileNameThumb 			= $thumb_name_prefix.'_l_'. $title;
 			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			$thumbName->rel_webp	= PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
 			break;
 
 			case 'medium':
-			$fileNameThumb 			= 'phoca_thumb_m_'. $title;
+			$fileNameThumb 			= $thumb_name_prefix.'_m_'. $title;
 			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			$thumbName->rel_webp	= PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
@@ -40,7 +44,7 @@ class PhocacartImage
 
 			default:
 			case 'small':
-			$fileNameThumb 			= 'phoca_thumb_s_'. $title;
+			$fileNameThumb 			= $thumb_name_prefix.'_s_'. $title;
 			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			$thumbName->rel_webp	= PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
@@ -50,6 +54,10 @@ class PhocacartImage
 	}
 
 	public static function getTitleFromFile(&$filename, $displayExt = 0, $isThumbnail = 0) {
+
+
+		$paramsC 	= PhocacartUtils::getComponentParameters();
+		$thumb_name_prefix = $paramsC->get('thumb_name_prefix', 'phoca_thumb');
 
 		$filename 			= str_replace('//', '/', $filename);
 		//$filename			= str_replace(DS, '/', $filename);
@@ -73,7 +81,7 @@ class PhocacartImage
 
 		if ($isThumbnail) {
 
-			$titleO = str_replace(array('phoca_thumb_l_', 'phoca_thumb_m_', 'phoca_thumb_s_'), '', $titleO);
+			$titleO = str_replace(array($thumb_name_prefix.'_l_', $thumb_name_prefix.'_m_', $thumb_name_prefix.'_s_'), '', $titleO);
 		}
 
 		return $titleO;
@@ -135,7 +143,7 @@ class PhocacartImage
 	public static function getImageChangedByAttributes($attributes, $imageSize) {
 
 
-		$paramsC 					= JComponentHelper::getParams('com_phocacart');
+		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$display_attribute_image	= $paramsC->get( 'display_attribute_image', 1 );
 
 		if ($display_attribute_image == 0) {
@@ -198,7 +206,7 @@ class PhocacartImage
 
 	public static function getImageChangedBySelectedAttribute($attributes, $imageSize) {
 
-		$paramsC 							= JComponentHelper::getParams('com_phocacart');
+		$paramsC 							= PhocacartUtils::getComponentParameters();
 		$display_attribute_image_checkout	= $paramsC->get( 'display_attribute_image_checkout', 1 );
 
 		if ($display_attribute_image_checkout == 0) {
@@ -331,7 +339,7 @@ class PhocacartImage
 
 	public static function getAltTitle($title, $imageName) {
 
-		$paramsC 	= JComponentHelper::getParams('com_phocacart');
+		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$alt_value	= $paramsC->get( 'alt_value', 1 );
 
 		switch($alt_value) {

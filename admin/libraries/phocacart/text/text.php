@@ -120,7 +120,7 @@ class PhocacartText {
 
 
 
-		$pC				= JComponentHelper::getParams( 'com_phocacart' );
+		$pC				= PhocacartUtils::getComponentParameters();
 		$config 		= JFactory::getConfig();
 		$price			= new PhocacartPrice();
 		$price->setCurrency($common->currency_code, $orderId);

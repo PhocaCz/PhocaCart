@@ -98,6 +98,8 @@ class PhocaCartViewQuestion extends JViewLegacy
 
 		if ($tmpl == 'component') {
 
+			$buffer = JFactory::getApplication()->sendHeaders();
+
 			$document->addCustomTag( "<style type=\"text/css\"> \n"
 			." #ph-pc-question-box {
 				margin: 20px

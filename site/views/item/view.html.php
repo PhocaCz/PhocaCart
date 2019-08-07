@@ -184,6 +184,7 @@ class PhocaCartViewItem extends JViewLegacy
 			PhocacartRenderJs::renderAjaxAddToCart();
 			PhocacartRenderJs::renderAjaxAddToCompare();
 			PhocacartRenderJs::renderAjaxAddToWishList();
+			PhocacartRenderJs::renderAjaxAskAQuestion();
             $media->loadSpec();
 
 			if (isset($this->category[0]) && is_object($this->category[0]) && isset($this->item[0]) && is_object($this->item[0])){

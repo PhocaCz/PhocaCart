@@ -19,16 +19,16 @@ JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phoc
 class PhocacartRouter extends JComponentRouterBase
 {
 	public function build(&$query) {
-		
+
 		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
 		$viewsAll	= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
-		
+
 		$segments = array();
 
 		// Get a menu item based on Itemid or currently active
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		// Unset limitstart=0 since it's pointless
@@ -66,20 +66,20 @@ class PhocacartRouter extends JComponentRouterBase
 			return $segments;
 		}
 
-		
-	
+
+
 		// Are we dealing with an item or category that is attached to a menu item?
 	/*	if (($menuItem instanceof stdClass)
 			&& $menuItem->query['view'] == $query['view']
 			&& isset($query['id'])
 			&& $menuItem->query['id'] == (int) $query['id'])
 		{*/
-			
+
 		if (($menuItem instanceof stdClass)
 			&& $menuItem->query['view'] == $query['view']
 			&& isset($query['view']) && in_array($query['view'], $viewsNoId)
 			) {
-			
+
 			unset($query['view']);
 
 			if (isset($query['catid'])){
@@ -94,8 +94,8 @@ class PhocacartRouter extends JComponentRouterBase
 
 			return $segments;
 		}
-		
-		
+
+
 		// Category
 		// Item
 		if ($view == 'category' || $view == 'item'){
@@ -103,24 +103,24 @@ class PhocacartRouter extends JComponentRouterBase
 				$segments[] = $view;
 			}
 
-			
+
 			unset($query['view']);
-			
-			
+
+
 
 			if ($view == 'item')
 			{
 				if (isset($query['id']) && isset($query['catid']) && $query['catid'])
 				{
 					$catid = $query['catid'];
-					
-					
+
+
 
 					// Make sure we have the id and the alias
 					if (strpos($query['id'], ':') === false)
 					{
-						
-						
+
+
 						$db = JFactory::getDbo();
 						$dbQuery = $db->getQuery(true)
 							->select('alias')
@@ -129,13 +129,13 @@ class PhocacartRouter extends JComponentRouterBase
 						$db->setQuery($dbQuery);
 						$alias = $db->loadResult();
 						$query['id'] = $query['id'] . ':' . $alias;
-						
+
 					}
 				}
 				else
 				{
 					// We should have these two set for this view.  If we don't, it is an error
-					
+
 					return $segments;
 				}
 			} else {
@@ -162,18 +162,18 @@ class PhocacartRouter extends JComponentRouterBase
 			//$categories = JCategories::getInstance('Content');
 			//$category = $categories->get($catid);
 			$category = PhocacartCategory::getCategoryById($catid);
-			
-			
+
+
 			if (!$category)
 			{
 				// We couldn't find the category we were given.  Bail.
 				return $segments;
 			}
 
-			
+
 			$path = PhocacartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
-			
-		
+
+
 			$array = array();
 
 			foreach ($path as $id)
@@ -215,7 +215,7 @@ class PhocacartRouter extends JComponentRouterBase
 			unset($query['id']);
 			unset($query['catid']);
 		}
-		
+
 		// Question
 		if ($view == 'question'){
 			if (!$menuItemGiven){
@@ -227,14 +227,14 @@ class PhocacartRouter extends JComponentRouterBase
 				unset($query['view']);
 			}
 			//unset($query['view']);
-			
+
 			if (isset($query['id']) && isset($query['catid']) && $query['catid']) {
 				$catid = $query['catid'];
-				
+
 				// Make sure we have the id and the alias
 				if (strpos($query['id'], ':') === false) {
-					
-					
+
+
 					$db = JFactory::getDbo();
 					$dbQuery = $db->getQuery(true)
 						->select('alias')
@@ -243,11 +243,11 @@ class PhocacartRouter extends JComponentRouterBase
 					$db->setQuery($dbQuery);
 					$alias = $db->loadResult();
 					$query['id'] = $query['id'] . ':' . $alias;
-					
+
 				}
 			} else {
 				// We should have these two set for this view.  If we don't, it is an error
-				
+
 				return $segments;
 			}
 
@@ -260,17 +260,17 @@ class PhocacartRouter extends JComponentRouterBase
 			}
 
 			$category = PhocacartCategory::getCategoryById($catid);
-			
-			
+
+
 			if (!$category) {
 				// We couldn't find the category we were given.  Bail.
 				return $segments;
 			}
 
-			
+
 			$path = PhocacartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
-			
-		
+
+
 			$array = array();
 
 			foreach ($path as $id)
@@ -306,14 +306,14 @@ class PhocacartRouter extends JComponentRouterBase
 			}
 
 			$segments[] = $id;
-			
+
 
 			unset($query['id']);
 			unset($query['catid']);
 		}
 		/*
 		if ($view == 'question') {
-		
+
 			if (!$menuItemGiven){
 				$segments[] = $view;
 			}
@@ -336,19 +336,19 @@ class PhocacartRouter extends JComponentRouterBase
 				$segments[]	= $query['view']; // Every View without ID
 				unset($query['view']);
 			}
-			
+
 		} else {
 			if (isset($query['view']) && in_array($query['view'], $viewsId)) {
-				
+
 				$segments[]	= $query['view']; // Every View with ID except (category and item): items, feed
 				$segments[]	= $query['id'];
 				unset($query['id']);
 				unset($query['view']);
 			}
-			
+
 		}
-		
-	
+
+
 
 		/*
 		 * If the layout is specified and it is the same as the layout in the menu item, we
@@ -383,18 +383,18 @@ class PhocacartRouter extends JComponentRouterBase
 	}
 
 	public function parse(&$segments) {
-		
+
 
 		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
 		$viewsAll		= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
-		
+
 		// question - can be an ID page (id of product) but without ID page - direct link
-		
+
 		$total = count($segments);
 		$vars = array();
-		
+
 
 
 		for ($i = 0; $i < $total; $i++)
@@ -404,13 +404,13 @@ class PhocacartRouter extends JComponentRouterBase
 
 		// Get the active menu item.
 		$item = $this->menu->getActive();
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$advanced = $params->get('sef_advanced_link', 0);
 		$db = JFactory::getDbo();
 
 		// Count route segments
 		$count = count($segments);
-		
+
 
 		/*
 		 * Standard routing for items.  If we don't pick up an Itemid then we get the view from the segments
@@ -430,14 +430,14 @@ class PhocacartRouter extends JComponentRouterBase
 		if ($count == 1) {
 			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
 					$vars['view']  = $segments[0];
-				unset($segments[0]);		
+				unset($segments[0]);
 				return $vars;
 			}
-			
+
 			// Question can include ID/CATID but can be without ID/CATID
 			if(isset($segments[0]) && in_array($segments[0], $viewsNotOwnId)) {
 					$vars['view']  = $segments[0];
-				
+
 				return $vars;
 			}
 		}
@@ -447,7 +447,7 @@ class PhocacartRouter extends JComponentRouterBase
 		 * We test it first to see if it is a category.  If the id and alias match a category,
 		 * then we assume it is a category.  If they don't we assume it is an item
 		 */
-		
+
 		if ($count == 1) {
 			// We check to see if an alias is given.  If not, we assume it is an item CATEGORY BETTER
 			// Mostly handling of wrong URl: categories/wrong-alias ( return category = 0, no category found)
@@ -461,7 +461,7 @@ class PhocacartRouter extends JComponentRouterBase
 				} else {
 					$vars['view'] = 'categories';
 				}
-				
+
 				$vars['id'] = (int) $segments[0];
 
 				return $vars;
@@ -472,8 +472,8 @@ class PhocacartRouter extends JComponentRouterBase
 			// First we check if it is a category
 			///$category = JCategories::getInstance('Content')->get($id);
 			$category = PhocacartCategory::getCategoryById($id);
-			
-			
+
+
 			if ($category && $category->alias == $alias)
 			{
 				$vars['view'] = 'category';
@@ -489,19 +489,19 @@ class PhocacartRouter extends JComponentRouterBase
 				$db->setQuery($query);
 				$item1 = $db->loadObject();
 
-				
+
 				if ($item1) {
 					if ($item1->alias == $alias) {
-						
+
 						$vars['view'] 	= 'item';
 						$vars['id'] 	= (int) $id;
 						$vars['catid']	 = (int) $item1->catid;
-						
+
 						// We have direct link to category view and item1->catid is null
 						if ((int) $vars['catid'] == 0 && isset($item->query['id']) && $item->query['id'] > 0) {
 							$vars['catid'] = (int)$item->query['id'];
 						}
-						
+
 
 						return $vars;
 					}
@@ -514,10 +514,10 @@ class PhocacartRouter extends JComponentRouterBase
 		 * because the first segment will have the target category id prepended to it.  If the
 		 * last segment has a number prepended, it is an item, otherwise, it is a category.
 		 */
-		
-	
+
+
 		if (!$advanced) {
-		
+
 			$view 	= '';
 			$id 	= 0;
 			$catid 	= 0;
@@ -525,30 +525,30 @@ class PhocacartRouter extends JComponentRouterBase
 
 				// Second part can be category/subcategory string
 				$second = explode(':', $segments[1]);
-				
+
 				if (isset($second[0]) && (int)$second[0] > 0) {
 					// Question
 					$view 		= $segments[0];
 					$cat_id 	= (int)$segments[1];
 					$item_id 	= (int)$segments[2];
-					
+
 				} else {
 					$view 		= 'item';// can be category, right view will be solved after
 					$cat_id 	= (int)$segments[0];
 					// $segments[1] is a part of category/subcategory string
 					$item_id 	= (int)$segments[2];
-					
+
 				}
-				
+
 			} else {
 				// Item
 				$view		= '';
 				$cat_id 	= (int)$segments[0];
 				$item_id 	= (int)$segments[$count - 1];
-				
+
 			}
-			
-			
+
+
 			if ($cat_id > 0) {
 				if ($item_id > 0) {
 					if ($view != '') {
@@ -556,11 +556,11 @@ class PhocacartRouter extends JComponentRouterBase
 					} else {
 						$vars['view'] = 'item';
 					}
-					
+
 					$vars['catid'] = $cat_id;
 					$vars['id'] = $item_id;
-					
-					
+
+
 				} else {
 					$vars['view'] = 'category';
 					$vars['id'] = $cat_id;
@@ -571,22 +571,22 @@ class PhocacartRouter extends JComponentRouterBase
 					if ($count == 3) {
 						$vars['view'] 	= $view;
 						$vars['catid'] 	= $cat_id;
-						$vars['id'] 	= $item_id;	
+						$vars['id'] 	= $item_id;
 					} else {
 						// Other than category or item view with ID (items, feed)
 						$vars['view'] = $segments[0];
-						$vars['id'] = $item_id;	
+						$vars['id'] = $item_id;
 					}
 				}
 			}
-			
+
 		/*	if (empty($vars) && count($segments) > 1) {
-				
+
 				throw new Exception(JText::_('Nothing found'), 404);
 				return false;
 			}
-		*/	
-			
+		*/
+
 			unset($segments[0]);
 			unset($segments[1]);
 			return $vars;
@@ -596,7 +596,7 @@ class PhocacartRouter extends JComponentRouterBase
 		if (isset($item->query['id'])) {
 			$id = $item->query['id'];
 		} else {
-			
+
 			if ($count == 3) {
 				// Question
 
@@ -607,10 +607,10 @@ class PhocacartRouter extends JComponentRouterBase
 				$id 	= (int)$segments[0];
 			}
 		}
-		
-		
-		
-		
+
+
+
+
 		$category = PhocacartCategory::getCategoryById($id);
 
 		if (!$category)
@@ -623,7 +623,7 @@ class PhocacartRouter extends JComponentRouterBase
 		$vars['catid'] = $id;
 		$vars['id'] = $id;
 		$found = 0;
-		
+
 		foreach ($segments as $segment) {
 			$segment = str_replace(':', '-', $segment);
 
@@ -636,7 +636,7 @@ class PhocacartRouter extends JComponentRouterBase
 					$vars['view'] = 'category';
 					$categories = PhocacartCategory::getChildren($category->id);
 					$found = 1;
-					
+
 					break;
 				}
 			}
@@ -658,15 +658,15 @@ class PhocacartRouter extends JComponentRouterBase
 				{
 					$cid = $segment;
 				}
-				
+
 				$vars['id'] = $cid;
 				$vars['view'] = 'item';
 			}
 
 			$found = 0;
 		}*/
-		
-	
+
+
 
 		return $vars;
 	}

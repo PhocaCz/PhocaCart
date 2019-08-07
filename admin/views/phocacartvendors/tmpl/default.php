@@ -50,14 +50,14 @@ echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('fi
 
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();	
+echo $r->endFilterBar();
 
 $idMd = 'phEditStatusModal';
 $textButton = 'COM_PHOCACART_EDIT_TAX';
 $w = 500;
 $h = 400;
 $rV = new PhocacartRenderAdminview();
-echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);	
+echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
 echo $r->startTable('categoryList');
 
@@ -73,11 +73,11 @@ echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHE
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
-			
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 if (is_array($this->items)) {
@@ -87,10 +87,11 @@ if (is_array($this->items)) {
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
-$orderkey   	= array_search($item->id, $this->ordering[0]);		
-$ordering		= ($listOrder == 'a.ordering');			
+$orderkey   	= array_search($item->id, $this->ordering[0]);
+$ordering		= ($listOrder == 'a.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
+
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
 $linkEdit 		= JRoute::_( $urlEdit. $item->id );
@@ -104,7 +105,7 @@ echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 
 $image = '';
 if (isset($item->image) && $item->image != '') {
-	$image = ' <span>'.PhocacartImage::getImage($item->image, '', '30px', 'auto') . '<span> '; 
+	$image = ' <span>'.PhocacartImage::getImage($item->image, '', '30px', 'auto') . '<span> ';
 }
 echo $r->td($image, "small");
 /*
@@ -124,9 +125,9 @@ $uO = '';
 
 
 if ($item->user_id > 0) {
-	$user = JFactory::getUser($item->user_id);
-	$uO .= $this->escape($user->name);
-	$uO .= ' <small>('.$user->username.')</small>';
+	$userCurrent = JFactory::getUser($item->user_id);
+	$uO .= $this->escape($userCurrent->name);
+	$uO .= ' <small>('.$this->escape($userCurrent->username).')</small>';
 }
 //echo $r->td($uO, "small");
 
@@ -135,10 +136,11 @@ if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 
+
 if ($canCreate || $canEdit) {
 	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $uO.'</a>';
 } else {
-	$checkO .= $this->escape($uO);
+	$checkO .= $uO;// is escaped yet
 }
 echo $r->td($checkO, "small");
 
@@ -147,7 +149,7 @@ echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].
 echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }

@@ -274,7 +274,7 @@ class PhocacartUtilsSettings
 
 	public static function isFullGroupBy() {
 
-		$pC							= JComponentHelper::getParams( 'com_phocacart' );
+		$pC							= PhocacartUtils::getComponentParameters();
 		$sql_only_full_group_by		= $pC->get( 'sql_only_full_group_by', 0 );
 		return (bool)$sql_only_full_group_by;
 	}
@@ -306,7 +306,7 @@ class PhocacartUtilsSettings
 
 		$db 				= JFactory::getDbo();
 		// Possible settings
-		//$pC					= JComponentHelper::getParams( 'com_phocacart' );
+		//$pC					= PhocacartUtils::getComponentParameters();
 		//$filter_lang_type	= $pC->get( 'filter_lang_type', 2 );
 		//$type1 				= ' ' . $db->quoteName($column) . ' = '.$db->quote($lang);
 		$type2 				= ' ' . $db->quoteName($column) . ' IN ('.$db->quote($lang).','.$db->quote('*').')';

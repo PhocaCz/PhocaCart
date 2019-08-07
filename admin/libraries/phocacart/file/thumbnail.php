@@ -26,24 +26,27 @@ class PhocacartFileThumbnail
 		$path		= PhocacartPath::getPath($manager);
 		$title 		= PhocacartFile::getTitleFromFilenameWithExt($filename);
 
+		$paramsC 	= PhocacartUtils::getComponentParameters();
+		$thumb_name_prefix = $paramsC->get('thumb_name_prefix', 'phoca_thumb');
+
 		$thumbName	= new JObject();
 
 		switch ($size) {
 			case 'large':
-			$fileNameThumb 	= 'phoca_thumb_l_'. $title;
+			$fileNameThumb 	= $thumb_name_prefix.'_l_'. $title;
 			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;
 
 			case 'medium':
-			$fileNameThumb 	= 'phoca_thumb_m_'. $title;
+			$fileNameThumb 	= $thumb_name_prefix.'_m_'. $title;
 			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;
 
 			default:
 			case 'small':
-			$fileNameThumb 	= 'phoca_thumb_s_'. $title;
+			$fileNameThumb 	= $thumb_name_prefix.'_s_'. $title;
 			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/'  . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;

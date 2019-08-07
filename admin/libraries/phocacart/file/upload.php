@@ -495,7 +495,7 @@ class PhocacartFileUpload
 			$disallowedMimeType = PhocacartFile::getMimeTypeString($dft);
 
 			$ignoreUploadCh = 0;
-			$ignoreUploadCheck = $params->get( 'ignore_file_types_check', 2 );
+			$ignoreUploadCheck = $paramsC->get( 'ignore_file_types_check', 0 );
 			if ($ignoreUploadCheck == 1 || $ignoreUploadCheck == 4 ) {
 				$ignoreUploadCh = 1;
 			}
@@ -508,8 +508,8 @@ class PhocacartFileUpload
 			$disallowedMimeType = PhocacartFile::getMimeTypeString($dft);
 
 			$ignoreUploadCh = 0;
-			$ignoreUploadCheck = $paramsC->get( 'ignore_file_types_check', 2 );
-			if ($ignoreUploadCheck == 5 || $ignoreUploadCheck == 5 ) {
+			$ignoreUploadCheck = $paramsC->get( 'ignore_file_types_check', 0 );
+			if ($ignoreUploadCheck == 2 || $ignoreUploadCheck == 5 ) {
 				$ignoreUploadCh = 1;
 			}
 		}

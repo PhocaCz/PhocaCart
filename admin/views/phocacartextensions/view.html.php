@@ -8,7 +8,7 @@
  */
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.view' );
- 
+
 class PhocaCartCpViewPhocacartExtensions extends JViewLegacy
 {
 	protected $items;
@@ -16,15 +16,15 @@ class PhocaCartCpViewPhocacartExtensions extends JViewLegacy
 	protected $state;
 	protected $t;
 	protected $d;
-	
+
 	function display($tpl = null) {
-	
+
 		$document				= JFactory::getDocument();
 		$this->t				= PhocacartUtils::setVars('extension');
-		
-		$paramsC 						= JComponentHelper::getParams('com_phocacart');
+
+		$paramsC 						= PhocacartUtils::getComponentParameters();
 		$this->t['load_extension_list']	= $paramsC->get( 'load_extension_list', 1);
-		
+
 		if ($this->t['load_extension_list'] == 1) {
 			$this->items		= $this->get('Items');
 			$this->news			= $this->get('News');
@@ -32,34 +32,34 @@ class PhocaCartCpViewPhocacartExtensions extends JViewLegacy
 		}
 		$media = new PhocacartRenderAdminmedia();
 
-		$this->addToolbar(); 
+		$this->addToolbar();
 		parent::display($tpl);
 	}
-	
+
 	function addToolbar() {
 
-	
+
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.extension_id'));
 
 		JToolbarHelper::title( JText::_( $this->t['l'].'_EXTENSIONS' ), 'th-large' );
-		
+
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = JToolbar::getInstance( 'toolbar' );
 		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.JText::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.JText::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
-		
+
 		if ($this->t['load_extension_list'] == 1) {
-		
+
 			JToolbarHelper::custom($this->t['task'].'.refresh', 'refresh.png', 'refresh.png', 'COM_PHOCACART_REFRESH', false);
 		}
 	/*
 		if ($canDo->get('core.create')) {
 			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
-	
+
 		if ($canDo->get('core.edit')) {
 			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
@@ -69,14 +69,14 @@ class PhocaCartCpViewPhocacartExtensions extends JViewLegacy
 			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
 			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
-	
+
 		if ($canDo->get('core.delete')) {
 			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartlogs.delete', $this->t['l'].'_DELETE');
 		}*/
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
-	
+
 	protected function getSortFields() {
 		return array(
 			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),

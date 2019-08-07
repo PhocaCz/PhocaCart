@@ -11,8 +11,8 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartRegions extends JModelList
 {
-	protected $option 	= 'com_phocacart';	
-	
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -29,7 +29,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		}
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null) {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -40,7 +40,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
-		
+
 		$countryId = $app->getUserStateFromRequest($this->context.'.filter.country_id', 'filter_country_id', null);
 		$this->setState('filter.country_id', $countryId);
 
@@ -51,13 +51,13 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		//$this->setState('filter.language', $language);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
 
 		// List state information.
 		parent::populateState('a.title', 'asc');
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -66,22 +66,22 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.country_id');
 		$id	.= ':'.$this->getState('filter.region_id');
-		
+
 
 		return parent::getStoreId($id);
 	}
-	
+
 	protected function getListQuery() {
 
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-		
+
 		$columns	= 'a.id, a.country_id, uc.name, c.title, a.checked_out, a.title, a.published, a.code2, a.code3, a.ordering';
 		$groupsFull	= $columns . ', c.id';
 		$groupsFast	= 'a.id';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-		
-	
+
+
 		$query->select($this->getState('list.select', $columns));
 		$query->from('`#__phocacart_regions` AS a');
 
@@ -92,15 +92,15 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		
+
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = '.(int) $access);
 		}*/
-		
-		
-		
+
+
+
 		$query->select('c.title AS country_title, c.id AS country_id');
 		$query->join('LEFT', '#__phocacart_countries AS c ON c.id = a.country_id');
 
@@ -130,21 +130,21 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
-		
+
 		// Filter by country.
 		$countryId = $this->getState('filter.country_id');
 		if (is_numeric($countryId)) {
 			$query->where('a.country_id = ' . (int) $countryId);
 		}
-		
+
 		$query->group($groups);
-	
+
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		return $query;	
+		return $query;
 	}
 }
 ?>

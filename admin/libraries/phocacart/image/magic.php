@@ -40,6 +40,8 @@ class PhocacartImageMagic
 		$jpeg_quality		= PhocacartImage::getJpegQuality($jpeg_quality);
 		$create_webp_copy	= $params->get( 'create_webp_copy', 0);
 
+		$thumb_name_prefix = $params->get('thumb_name_prefix', 'phoca_thumb');
+
 
 		$fileWatermark = '';
 
@@ -104,8 +106,8 @@ class PhocacartImageMagic
 					$thumbnailMedium	= false;
 					$thumbnailLarge		= false;
 
-					$thumbnailMedium	= preg_match("/phoca_thumb_m_/i", $fileOut);
-					$thumbnailLarge 	= preg_match("/phoca_thumb_l_/i", $fileOut);
+					$thumbnailMedium	= preg_match("/".$thumb_name_prefix."_m_/i", $fileOut);
+					$thumbnailLarge 	= preg_match("/".$thumb_name_prefix."_l_/i", $fileOut);
 
 					$path				= PhocacartPath::getPath($manager);
 					$fileName 			= PhocacartFile::getTitleFromFile($fileIn, 1);

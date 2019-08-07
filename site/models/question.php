@@ -89,7 +89,7 @@ class PhocaCartModelQuestion extends JModelForm
 
 		$uri 	= \Joomla\CMS\Uri\Uri::getInstance();
 		$app    = JFactory::getApplication();
-		$params = JComponentHelper::getParams('com_phocacart') ;
+		$params = PhocacartUtils::getComponentParameters() ;
 
 		// Maximum of character, they will be saved in database
 		$data['message']		= substr($data['message'], 0, $params->get('max_char_question', 3000));

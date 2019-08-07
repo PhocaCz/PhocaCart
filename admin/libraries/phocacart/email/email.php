@@ -11,8 +11,8 @@
 defined('_JEXEC') or die();
 
 class PhocacartEmailMail extends JMail{
-	
-	
+
+
 	public static function getInstance($id = 'Joomla', $exceptions = true)
 	{
 		if (empty(self::$instances[$id]))
@@ -22,14 +22,14 @@ class PhocacartEmailMail extends JMail{
 
 		return self::$instances[$id];
 	}
-	
+
 	// PHOCAEDIT
 	//public function sendMail($from, $fromName, $recipient, $subject, $body, $mode = false, $cc = null, $bcc = null, $attachment = null,
 	//	$replyTo = null, $replyToName = null)
 	public function sendMailA($from, $fromName, $recipient, $subject, $body, $mode = false, $cc = null, $bcc = null, $attachmentString = '', $attachmentFileName = '', $replyTo = null, $replyToName = null)
 	{
-		
-		
+
+
 		$this->setSubject($subject);
 		$this->setBody($body);
 
@@ -47,13 +47,13 @@ class PhocacartEmailMail extends JMail{
 
 		if ($this->addCc($cc) === false)
 		{
-			
+
 			return false;
 		}
 
-		
+
 		if ($this->addBcc($bcc) === false)
-		{	
+		{
 			return false;
 		}
 
@@ -91,22 +91,22 @@ class PhocacartEmailMail extends JMail{
 
 		if ($this->setSender(array($from, $fromName, $autoReplyTo)) === false)
 		{
-			
+
 			return false;
 		}
-		
-		
+
+
 		return $this->Send();
 	}
-	
+
 }
-	
-	
-	
+
+
+
 class PhocacartEmailFactory extends JFactory{
-	
+
 	public static $mailer = null;
-	
+
 	public static function getMailer()
 	{
 		if (!self::$mailer)
@@ -118,7 +118,7 @@ class PhocacartEmailFactory extends JFactory{
 
 		return $copy;
 	}
-	
+
 	protected static function createMailer()
 	{
 		$conf = self::getConfig();
@@ -183,40 +183,40 @@ class PhocacartEmailFactory extends JFactory{
 
 class PhocacartEmail
 {
-	
-	
+
+
 	public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachmentString = '', $attachmentFilename = '', $replyTo = null, $replyToName = null) {
-		
+
 	//public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachment = null, $replyTo = null, $replyToName = null) {
-	
+
 		$config			= JFactory::getConfig();
-		
+
 		if ($from == '') {
 			$from 		= $config->get('mailfrom');
-		} 
+		}
 		if ($fromName == '') {
 			$fromName 		= $config->get('fromname');
-		} 
-		
+		}
+
 		if ($replyTo == '') {
 			$replyTo 		= $from;
-		} 
+		}
 		if ($replyToName == '') {
 			$replyToName 		= $fromName;
-		} 
-		
+		}
+
 		if ($cc == '') {
 			$cc = array();
 		}
 		if ($bcc == '') {
 			$bcc = array();
 		}
-		
+
 		// REMOVE DUPLICITY EMAIL ADDRESS: recepient vs. cc vs. bcc
 		$dR 	= array(0 => $recipient);
 		$dCc	= is_array($cc) ? $cc : array(0 => $cc);
 		$dBcc	= is_array($bcc) ? $bcc : array(0 => $bcc);
-		
+
 		if (!empty($dCc)) {
 			foreach($dCc as $k => $v) {
 				if (in_array($v, $dR)) {
@@ -224,7 +224,7 @@ class PhocacartEmail
 				}
 			}
 		}
-		
+
 		if (!empty($dBcc)) {
 			foreach($dBcc as $k => $v) {
 				if (in_array($v, $dR)) {
@@ -236,9 +236,9 @@ class PhocacartEmail
 		}
 		// Set back cleaned arrays
 		$cc		= $dCc;
-		$bcc	= $dBcc; 
-		
-		
+		$bcc	= $dBcc;
+
+
 		// Attachment
 		/*if (!empty($tmpl['attachment'])) {
 			$i = 0;
@@ -255,17 +255,17 @@ class PhocacartEmail
 		}*/
 		$subject 	= html_entity_decode($subject, ENT_QUOTES);
 		$body 		= html_entity_decode($body, ENT_QUOTES);
-		
+
 		$mail 		= PhocacartEmailFactory::getMailer();
-		
-		
+
+
 		$body 		= $body . PhocacartUtilsInfo::getInfo($mode);
-	
+
 
 		$sendMail = $mail->sendMailA($from, $fromName, $recipient, $subject, $body, $mode, $cc, $bcc, $attachmentString, $attachmentFilename, $replyTo, $replyToName);
-		
 
-		
+
+
 		if (is_object($sendMail) && $sendMail->getMessage()) {
 			PhocacartLog::add(1, 'Error sending email', 0, $sendMail->getMessage() . ', Mail From: '.$from );
 			return false;
@@ -275,26 +275,26 @@ class PhocacartEmail
 		} else {
 			return true;
 		}
-		
+
 	}
-	
-	
-	
+
+
+
 	public static function sendQuestionMail ($id, $data, $url, $tmpl) {
-		
+
 		$app			= JFactory::getApplication();
 		$db 			= JFactory::getDBO();
 		$sitename 		= $app->get( 'sitename' );
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$numCharEmail	= $paramsC->get( 'max_char_question_email', 1000 );
-		
+
 		//get all selected users
 		$query = 'SELECT name, email, sendEmail' .
 		' FROM #__users' .
 		' WHERE id = '.(int)$id;
 		$db->setQuery( $query );
 		$rows = $db->loadObjectList();
-		
+
 		$subject = $sitename .' - '.JText::_( 'COM_PHOCACART_NEW_QUESTION' );
 		if (isset($data['product']->title) && $data['product']->title != '') {
 			$subject .= ', '.JText::_('COM_PHOCACART_PRODUCT'). ': '. $data['product']->title;
@@ -302,32 +302,32 @@ class PhocacartEmail
 		if (isset($data['category']->title) && $data['category']->title != '') {
 			$subject .= ', '.JText::_('COM_PHOCACART_CATEGORY'). ': '. $data['category']->title;
 		}
-		
-		
-		
+
+
+
 		if (isset($data['name']) && $data['name'] != '') {
 			$fromname = $data['name'];
 		} else {
 			$fromname = 'Unknown';
 		}
-		
+
 		if (isset($data['email']) && $data['email'] != '') {
 			$mailfrom = $data['email'];
 		} else {
 			$mailfrom = $rows[0]->email;
 		}
-		
+
 		if (isset($data['message']) && $data['message'] != '') {
 			$message = $data['message'];
 		} else {
 			$message = "...";
 		}
-		
+
 		$email = $rows[0]->email;
-		
+
 		$message = str_replace("</p>", "\n", $message );
 		$message = strip_tags($message);
-		
+
 		$message = JText::_( 'COM_PHOCACART_NEW_POST_ADDED' ) . "\n\n"
 							. JText::_( 'COM_PHOCACART_FROM' ) . ': '. $fromname . "\n"
 							. JText::_( 'COM_PHOCACART_DATE' ) . ': '. JHtml::_('date',  gmdate('Y-m-d H:i:s'), JText::_( 'DATE_FORMAT_LC2' )) . "\n\n"
@@ -340,12 +340,12 @@ class PhocacartEmail
 							. $url."\n\n"
 							. JText::_( 'COM_PHOCACART_REGARDS' ) .", \n"
 							. $sitename ."\n";
-					
+
 		$subject = html_entity_decode($subject, ENT_QUOTES);
 		$message = html_entity_decode($message, ENT_QUOTES);
-				
+
 		$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $message, false, null, null, '', '', $mailfrom, $fromname);
-		
+
 		return $notify;
 	}
 }

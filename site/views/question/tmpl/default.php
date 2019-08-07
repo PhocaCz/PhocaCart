@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 
 $layoutPC 	= new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
 
+
 echo '<div id="ph-pc-question-box" class="pc-question-view'.$this->p->get( 'pageclass_sfx' ).'">';
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ASK_A_QUESTION')));
 
@@ -135,3 +136,5 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 setTimeout(function () { window.close();}, 1000);
 </script>
 */ ?>
+
+

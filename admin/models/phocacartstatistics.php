@@ -13,8 +13,8 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartStatistics extends JModelList
 {
-	protected $option 	= 'com_phocacart';	
-	
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -25,7 +25,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
@@ -43,25 +43,25 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
-		
+
 		$date_from = $app->getUserStateFromRequest($this->context.'.filter.date_from', 'filter_date_from', PhocacartDate::getCurrentDate(30), 'string');
 		$this->setState('filter.date_from', $date_from);
-		
+
 		$date_to = $app->getUserStateFromRequest($this->context.'.filter.date_to', 'filter_date_to', PhocacartDate::getCurrentDate(), 'string');
 		$this->setState('filter.date_to', $date_to);
 
-		
-		
+
+
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
-		
-		
+
+
 
 		// List state information.
 		parent::populateState('a.date', 'desc');
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -73,9 +73,9 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 
 		return parent::getStoreId($id);
 	}
-	
+
 	protected function getListQuery() {
-				
+
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
@@ -87,21 +87,21 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 			)
 		);
 		$query->from('`#__phocacart_orders` AS a');
-		
+
 		$query->select('SUM(t.amount) AS order_amount');
 		$query->join('LEFT', '#__phocacart_order_total AS t ON a.id=t.order_id');
 		$query->where('t.type = \'brutto\'' );
-		
+
 		// Filter by order status
 		$whereOrderStatus = '';
 		if (!PhocacartStatistics::setWhereByOrderStatus($whereOrderStatus)) {
-			$dummyQuery = 'SELECT "" AS date_only, 0 AS count_orders FROM `#__phocacart_orders`';	
+			$dummyQuery = 'SELECT "" AS date_only, 0 AS count_orders FROM `#__phocacart_orders`';
 			return $dummyQuery;
 		}
 		if ($whereOrderStatus != '') {
 			$query->where( $whereOrderStatus );
 		}
-	
+
 
 		// Filter by search in title
 		$dateFrom = $this->getState('filter.date_from', PhocacartDate::getCurrentDate(30));
@@ -115,7 +115,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 		}
 		///// -- $query->group('DATE(a.date), a.id');
 		$query->group('DATE(a.date)');
-		
+
 		$query->order($db->escape('a.date ASC'));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));exit;

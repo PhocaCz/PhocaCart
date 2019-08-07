@@ -73,7 +73,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 
 	function getList() {
 		static $list;
-		$params	= JComponentHelper::getParams( 'com_phocacart' );
+		$params	= PhocacartUtils::getComponentParameters();
 
 		// Only process the list once per request
 		if (is_array($list)) {

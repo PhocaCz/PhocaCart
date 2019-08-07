@@ -184,6 +184,9 @@
 .controls .btn-group.btn-group-yesno > .btn.active.btn-success {
 	border: 2px solid #00B19D !important;
 }
+.controls .btn-group.btn-group-yesno > .btn.active.btn-primary {
+	border: 2px solid #3BAFDA !important;
+}
 
 .controls .btn-group > .btn {
 	border-radius: 3px 0px 0px 3px !important;

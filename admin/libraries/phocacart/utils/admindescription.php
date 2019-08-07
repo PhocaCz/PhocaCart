@@ -17,7 +17,7 @@ class PhocacartUtilsAdmindescription
     public $display_admin_description;
 
     public function __construct() {
-        $pC							        = JComponentHelper::getParams( 'com_phocacart' );
+        $pC							        = PhocacartUtils::getComponentParameters();
         $this->display_admin_description	= $pC->get( 'display_admin_description', 35 );
     }
 

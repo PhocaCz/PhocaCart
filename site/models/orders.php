@@ -21,7 +21,7 @@ class PhocaCartModelOrders extends JModelLegacy
 
 		$app		= JFactory::getApplication();
 		$config 	= JFactory::getConfig();
-		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
+		//$paramsC 	= PhocacartUtils::getComponentParameters() ;
 		$paramsC 	= $app->getParams();
 		$defaultP	= $paramsC->get( 'default_pagination', '20' );
 		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.orders.limit', 'limit', $defaultP, 'int'));

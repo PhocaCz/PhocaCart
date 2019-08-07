@@ -8,26 +8,24 @@
  */
 defined('_JEXEC') or die();
 
-/*
- * SET IN DEFAULT_QUICKVIEW.PHP of ITEM View components/com_phocacart/views/item/tmpl/default_quickview.php
- *
- */
-$d = $displayData;
+$d          = $displayData;
+$s          = $d['s'];
 $d['close'] = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>';
 
 ?>
-<div id="phQuickViewPopup" class="<?php echo $s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="<?php echo $d['id'] ?>" class="<?php echo $s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c']['modal-lg'] ?>">
       <div class="<?php echo $s['c']['modal-content'] ?>">
         <div class="<?php echo $s['c']['modal-header'] ?>">
           <?php echo $d['s']['c']['class-type'] != 'bs4' ? $d['close'] : '' ?>
-		  <h4><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
+		  <h4><span class="<?php echo $d['icon'] ?>"></span> <?php echo $d['title']; ?></h4>
             <?php echo $d['s']['c']['class-type'] == 'bs4' ? $d['close'] : '' ?>
         </div>
         <div class="<?php echo $s['c']['modal-body'] ?>">
-			<?php echo $d['content']; ?>
+			<iframe frameborder="0"></iframe>
         </div>
 		<div class="<?php echo $s['c']['modal-footer'] ?>"></div>
 	   </div>
     </div>
 </div>
+

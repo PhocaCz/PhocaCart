@@ -77,6 +77,7 @@ class PhocacartStock
 		// $display_stock_status = 1 ... item view
 		// $display_stock_status = 2 ... category (items) view
 		// $display_stock_status = 3 ... item and category (items) view
+        // $display_stock_status = 3 ... item and category (items) view
 		if ($display_stock_status > 0) {
 			if ($stock_checking == 1) {
 				if ((int)$stockCount > 0) {

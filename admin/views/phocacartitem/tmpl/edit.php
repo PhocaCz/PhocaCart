@@ -88,6 +88,7 @@ $tabs['download']       = JText::_($this->t['l'].'_DOWNLOAD_OPTIONS');
 $tabs['size' ]          = JText::_($this->t['l'].'_SIZE_OPTIONS');
 $tabs['reward']         = JText::_($this->t['l'].'_REWARD_POINTS');
 $tabs['publishing']     = JText::_($this->t['l'].'_PUBLISHING_OPTIONS');
+$tabs['feed']           = JText::_($this->t['l'].'_FEED_OPTIONS');
 $tabs['metadata']       = JText::_($this->t['l'].'_METADATA_OPTIONS');
 if (!$isModal && $assoc) {
     $tabs['associations']          = JText::_($this->t['l'].'_ASSOCIATIONS');
@@ -112,7 +113,7 @@ echo '<div class="ph-float-right ph-admin-additional-box">';
 if ($this->item->image != '') {
     $pathImage = PhocacartPath::getPath('productimage');
     $image = PhocacartImage::getThumbnailName($pathImage, $this->item->image, 'small');
-    echo '<img src="'. Juri::root() . $image->rel.'" alt="" /><hr />';
+    echo '<div class="ph-admin-additional-box-img-box"><img src="'. Juri::root() . $image->rel.'" alt="" /></div><hr />';
 }
 
 $linkStatus = JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricegroup&tmpl=component&id='.(int)$this->item->id  );
@@ -461,6 +462,11 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
+
+
+echo '<div class="tab-pane" id="feed">'. "\n";
+echo $this->loadTemplate('feed');
+echo '</div>'. "\n";
 
 echo '<div class="tab-pane" id="metadata">'. "\n";
 echo $this->loadTemplate('metadata');

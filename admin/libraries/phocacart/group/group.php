@@ -488,7 +488,7 @@ class PhocacartGroup
 
 				} else {
 
-					if ((int)$v['id'] > 0) {
+					if (isset($v['id']) && (int)$v['id'] > 0) {
 						// IMPORT
 						$values 	= '('.(int)$v['id'].', '.(int)$v['product_id'].', '.(int)$v['group_id'].', '.$db->quote($v['points_received']).')';
 						$query = ' INSERT INTO #__phocacart_product_point_groups (id, product_id, group_id, points_received) VALUES '.$values;

@@ -1377,9 +1377,14 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	right: 0.3em;
 	padding: 1em;
 	background: #f0f0f0;
-	z-index: 1;
+	/*z-index: 1;*/
+}
+.ph-admin-additional-box-img-box {
+	text-align: center;
+}
 
-
+.ph-admin-additional-box img {
+	margin: 0 auto;
 }
 
 .ph-warning-modal-window {

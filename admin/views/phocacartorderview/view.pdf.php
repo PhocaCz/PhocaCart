@@ -11,12 +11,12 @@ jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 {
-	
+
 	protected $t;
-	
+
 	public function display($tpl = null) {
-		
-		
+
+
 		$app			= JFactory::getApplication();
 		$this->t		= PhocacartUtils::setVars('orderview');
 		$id				= $app->input->get('id', 0, 'int');
@@ -24,22 +24,22 @@ class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 		$format			= $app->input->get('format', '', 'string');
 
 		$orderBillingData	= PhocacartOrder::getOrderBillingData($id);
-		
-		
-		
-		
-		$paramsC 		= JComponentHelper::getParams('com_phocacart');
+
+
+
+
+		$paramsC 		= PhocacartUtils::getComponentParameters();
 		//$invoice_prefix	= $paramsC->get( 'invoice_prefix', '');
-		
+
 		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format);
 
-		
-		
+
+
 		switch($type) {
 			case 2:
 				$invoiceNumber	= PhocacartOrder::getInvoiceNumber($id, $orderBillingData['date'], $orderBillingData['invoice_number']);
-				
+
 				$title			= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
 			break;
 			case 1:
@@ -49,18 +49,18 @@ class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 				$title			= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 			break;
 		}
-		
+
 		// Set title here, if customized in pdf plugin parameters, it overwrites this title - this is only default title
 		$this->document->setTitle($title);
-	
+
 		echo $o;
 
-		
-		
+
+
 		//$media = new PhocacartRenderAdminmedia();
 
-		//parent::display($tpl);	
+		//parent::display($tpl);
 	}
-	
+
 }
 ?>

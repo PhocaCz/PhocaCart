@@ -136,7 +136,7 @@ class PhocacartRenderAdminview
 			break;
 		}
 		$o = '';
-		$o .= '<input type="text" name="'.$form.'['.(int)$id.']['.htmlspecialchars($name).']" id="'.$form.'_'.(int)$id.'_'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" class="'.htmlspecialchars($class).'" />';
+		$o .= '<input type="text" name="'.$form.'['.(int)$id.']['.htmlspecialchars($name, ENT_QUOTES, 'UTF-8').']" id="'.$form.'_'.(int)$id.'_'.htmlspecialchars($name, ENT_QUOTES, 'UTF-8').'" value="'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8').'" class="'.htmlspecialchars($class, ENT_QUOTES, 'UTF-8').'" />';
 
 		return $o;
 	}
@@ -148,7 +148,7 @@ class PhocacartRenderAdminview
 			$checked = 'checked="checked"';
 		}
 		$o = '';
-		$o .= '<input type="checkbox" name="'.$form.'['.(int)$id.']['.htmlspecialchars($name).']" id="'.$form.'_'.(int)$id.'_'.htmlspecialchars($name).'"  '.$checked.' />';
+		$o .= '<input type="checkbox" name="'.$form.'['.(int)$id.']['.htmlspecialchars($name, ENT_QUOTES, 'UTF-8').']" id="'.$form.'_'.(int)$id.'_'.htmlspecialchars($name, ENT_QUOTES, 'UTF-8').'"  '.$checked.' />';
 
 		return $o;
 	}
@@ -173,7 +173,7 @@ class PhocacartRenderAdminview
 		.'<div class="ph-add-item">'
 
 		.'<div class="input-append">'
-		.'<input class="imageCreateThumbs" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value).'" class="inputbox" size="40" type="text">'
+		.'<input class="imageCreateThumbs" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8').'" class="inputbox" size="40" type="text">'
 		.'<a class="modal_jform_image btn" title="'.JText::_('COM_PHOCACART_FORM_SELECT_IMAGE').'" href="'.$url.$id.'"';
 
 		if ($js == 1) {
@@ -226,7 +226,7 @@ class PhocacartRenderAdminview
 			. '</span>';
 
 
-		$o .='<input class="imageCreateThumbs inputbox" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value).'" size="40" type="text">';
+		$o .='<input class="imageCreateThumbs inputbox" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8').'" size="40" type="text">';
 		//$o .= '<a class="modal_jform_image btn" title="'.JText::_('COM_PHOCACART_FORM_SELECT_IMAGE').'" href="'.$url.$id.'"';
 
 		//$o .= '<a href="#'.$idA.'" onclick="setPhRowImageId('.$id.')" role="button" class="btn btn-primary phbtnaddimages" data-toggle="modal" title="' . JText::_($textButton) . '">'
@@ -276,24 +276,24 @@ class PhocacartRenderAdminview
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
 		.'<input id="jform_attrid'.$id.'" name="pformattr['.$id.'][id]" value="'.(int)$idDb.'" type="hidden">'
-		.'<input id="jform_attrtitle'.$id.'" name="pformattr['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox input-small" size="40" type="text">'
+		.'<input id="jform_attrtitle'.$id.'" name="pformattr['.$id.'][title]" value="'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'" class="inputbox input-small" size="40" type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
-		.'<input id="jform_attralias'.$id.'" name="pformattr['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox input-small" size="20" type="text">'
+		.'<input id="jform_attralias'.$id.'" name="pformattr['.$id.'][alias]" value="'.htmlspecialchars($alias, ENT_QUOTES, 'UTF-8').'" class="inputbox input-small" size="20" type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $requiredArray, 'pformattr['.$id.'][required]', 'class="input-mini"', 'value', 'text', htmlspecialchars($required), 'jform_attrrequired'.$id)
+		. JHtml::_('select.genericlist', $requiredArray, 'pformattr['.$id.'][required]', 'class="input-mini"', 'value', 'text', htmlspecialchars($required, ENT_QUOTES, 'UTF-8'), 'jform_attrrequired'.$id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
-		. JHtml::_('select.genericlist', $typeArray, 'pformattr['.$id.'][type]', 'class="input"', 'value', 'text', htmlspecialchars($type), 'jform_attrtype'.$id)
+		. JHtml::_('select.genericlist', $typeArray, 'pformattr['.$id.'][type]', 'class="input"', 'value', 'text', htmlspecialchars($type, ENT_QUOTES, 'UTF-8'), 'jform_attrtype'.$id)
 		.'<input type="hidden" name="pformattr['.$id.'][attrid]" id="jform_attrid'.$id.'" value="'.$id.'" />'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-5 col-md-5"></div>'
-		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowAttribute('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_ATTRIBUTE').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
+		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowAttribute('.$id.'); return false;" title="'.htmlspecialchars(JText::_('COM_PHOCACART_REMOVE_ATTRIBUTE'), ENT_QUOTES, 'UTF-8').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 
 		. '</div>';
@@ -342,25 +342,25 @@ class PhocacartRenderAdminview
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
 		.'<input id="jform_optionid'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][id]" value="'.(int)$idDb.'" type="hidden">'
-		.'<input id="jform_optiontitle'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox input-small" size="40" type="text" autofocus>'
+		.'<input id="jform_optiontitle'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][title]" value="'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'" class="inputbox input-small" size="40" type="text" autofocus>'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_optionalias'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox input-mini" size="30" type="text">'
+		.'<input id="jform_optionalias'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][alias]" value="'.htmlspecialchars($alias, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini" size="30" type="text">'
 		.'</div>'
 
 		// Amount - Value
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operator), 'jform_optionoperator'.$attrId. $id)
+		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operator, ENT_QUOTES, 'UTF-8'), 'jform_optionoperator'.$attrId. $id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_optionamount'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][amount]" value="'.htmlspecialchars($amount).'" class="inputbox input-mini" size="30" type="text">'
+		.'<input id="jform_optionamount'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][amount]" value="'.htmlspecialchars($amount, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini" size="30" type="text">'
 		.'</div>'
 
 		// Stock
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_optionstock'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][stock]" value="'.htmlspecialchars($stock).'" class="inputbox input-mini" size="30" type="text">'
+		.'<input id="jform_optionstock'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][stock]" value="'.htmlspecialchars($stock, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini" size="30" type="text">'
 
 		//.'<input type="hidden" name="pformattr['.$attrId.'][options]['.$id.'][id]" id="jform_optionid'.$attrId.$id.'" value="'.$id.'" />'
 		.'</div>'
@@ -368,11 +368,11 @@ class PhocacartRenderAdminview
 
 		// Weight
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator_weight]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operatorWeight), 'jform_optionoperatorweight'.$attrId. $id)
+		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator_weight]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operatorWeight, ENT_QUOTES, 'UTF-8'), 'jform_optionoperatorweight'.$attrId. $id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_optionweight'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][weight]" value="'.htmlspecialchars($weight).'" class="inputbox input-mini" size="40" type="text">'
+		.'<input id="jform_optionweight'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][weight]" value="'.htmlspecialchars($weight, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini" size="40" type="text">'
 		.'</div>';
 
 
@@ -400,7 +400,7 @@ class PhocacartRenderAdminview
 
 		$html	= array();
 		$html[] = '<span class="input-append">';
-		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image]" value="'. htmlspecialchars($image).'"' .' '.$attr.' />';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image]" value="'. htmlspecialchars($image, ENT_QUOTES, 'UTF-8').'"' .' '.$attr.' />';
 
 		/*$html[] = '<a class="modal_jform_optionimage'.$attrId.$id.' btn" title="'.JText::_($textButton).'"'
 				.' href="'.$link.'"'
@@ -432,7 +432,7 @@ class PhocacartRenderAdminview
 
 		$html	= array();
 	/*	$html[] = '<span class="input-append">';
-		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage_medium'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_medium]" value="'. htmlspecialchars($image_medium).'"' .' '.$attr.' />';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage_medium'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_medium]" value="'. htmlspecialchars($image_medium, ENT_QUOTES, 'UTF-8').'"' .' '.$attr.' />';
 		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url2 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
 			. '<span class="icon-list icon-white"></span>'
 			. JText::_($textButton2). '</a></span>';
@@ -455,7 +455,7 @@ class PhocacartRenderAdminview
 
 		$html	= array();
 		$html[] = '<span class="input-append">';
-		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage_small'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_small]" value="'. htmlspecialchars($image_small).'"' .' '.$attr.' />';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage_small'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image_small]" value="'. htmlspecialchars($image_small, ENT_QUOTES, 'UTF-8').'"' .' '.$attr.' />';
 		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url3 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
 			. '<span class="icon-list icon-white"></span>'
 			. JText::_($textButton2). '</a></span>';
@@ -533,7 +533,7 @@ class PhocacartRenderAdminview
 		// ****
 		// Design issue - reverse ordering because of float right, we just don't have enough bootstrap spans
 		// ****
-		$o .= '<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowOption('.$id.','.$attrId.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_OPTION').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>';
+		$o .= '<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowOption('.$id.','.$attrId.'); return false;" title="'.htmlspecialchars(JText::_('COM_PHOCACART_REMOVE_OPTION'), ENT_QUOTES, 'UTF-8').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>';
 
 
 
@@ -566,7 +566,7 @@ class PhocacartRenderAdminview
 
 		$html	= array();
 		$html[] = '<span class="input-append">';
-		$html[] = '<input class="imageCreateThumbs ph-w40 input-medium" type="text" id="jform_optiondownload_file'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_file]" value="'. htmlspecialchars($download_file).'"' .' '.$attr.' />';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-medium" type="text" id="jform_optiondownload_file'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_file]" value="'. htmlspecialchars($download_file, ENT_QUOTES, 'UTF-8').'"' .' '.$attr.' />';
 
 
 		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$urlO4 . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'" data-id-folder="jform_optiondownload_folder'.$attrId.$id.'">'
@@ -585,7 +585,7 @@ class PhocacartRenderAdminview
 
 		// Folder
 		$o .= '<div class="col-xs-12 col-sm-4 col-md-4">';
-		$o .= '<input id="jform_optiondownload_folder'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_folder]" value="'.htmlspecialchars($download_folder).'" class="inputbox input-medium" size="40" type="text" readonly="readonly" data-attribute-id="'.$attrId.'" >';
+		$o .= '<input id="jform_optiondownload_folder'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_folder]" value="'.htmlspecialchars($download_folder, ENT_QUOTES, 'UTF-8').'" class="inputbox input-medium" size="40" type="text" readonly="readonly" data-attribute-id="'.$attrId.'" >';
 		$o .= '</div>';
 
 		// File
@@ -595,7 +595,7 @@ class PhocacartRenderAdminview
 
 		// Token
 		$o .= '<div class="col-xs-12 col-sm-4 col-md-4">';
-		$o .= '<input id="jform_optiondownload_token'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_token]" value="'.htmlspecialchars($download_token).'" class="inputbox input-medium" size="40" type="text">';
+		$o .= '<input id="jform_optiondownload_token'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][download_token]" value="'.htmlspecialchars($download_token, ENT_QUOTES, 'UTF-8').'" class="inputbox input-medium" size="40" type="text">';
 		$o .= '</div>';
 
 
@@ -663,11 +663,11 @@ class PhocacartRenderAdminview
 
 		.'<div class="col-xs-12 col-sm-3 col-md-3">'
 		.'<input id="jform_specid'.$id.'" name="pformspec['.$id.'][id]" value="'.(int)$idDb.'" type="hidden">'
-		.'<input id="jform_spectitle'.$id.'" name="pformspec['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox" size="40" type="text">'
+		.'<input id="jform_spectitle'.$id.'" name="pformspec['.$id.'][title]" value="'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'" class="inputbox" size="40" type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-3 col-md-3">'
-		.'<textarea id="jform_specvalue'.$id.'" name="pformspec['.$id.'][value]" class="inputbox" rows="3" cols="10" type="textarea">'.htmlspecialchars($value).'</textarea>'
+		.'<textarea id="jform_specvalue'.$id.'" name="pformspec['.$id.'][value]" class="inputbox" rows="3" cols="10" type="textarea">'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8').'</textarea>'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
@@ -676,7 +676,7 @@ class PhocacartRenderAdminview
 
 
 		.'<div class="col-xs-12 col-sm-4 col-md-4"></div>'
-		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowSpecification('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_PARAMETER').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
+		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowSpecification('.$id.'); return false;" title="'.htmlspecialchars(JText::_('COM_PHOCACART_REMOVE_PARAMETER'), ENT_QUOTES, 'UTF-8').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 
 
@@ -686,11 +686,11 @@ class PhocacartRenderAdminview
 		.'<div class="ph-row-specification">'
 
 		.'<div class="col-xs-12 col-sm-3 col-md-3">'
-		. JText::_('COM_PHOCACART_ALIAS_PARAMETER') . '<br /><input id="jform_specalias'.$id.'" name="pformspec['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox" size="40" type="text">'
+		. JText::_('COM_PHOCACART_ALIAS_PARAMETER') . '<br /><input id="jform_specalias'.$id.'" name="pformspec['.$id.'][alias]" value="'.htmlspecialchars($alias, ENT_QUOTES, 'UTF-8').'" class="inputbox" size="40" type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-3 col-md-3">'
-		. JText::_('COM_PHOCACART_ALIAS_VALUE') . '<br /><input id="jform_specalias_value'.$id.'" name="pformspec['.$id.'][alias_value]" value="'.htmlspecialchars($alias_value).'" class="inputbox" size="40" type="text">'
+		. JText::_('COM_PHOCACART_ALIAS_VALUE') . '<br /><input id="jform_specalias_value'.$id.'" name="pformspec['.$id.'][alias_value]" value="'.htmlspecialchars($alias_value, ENT_QUOTES, 'UTF-8').'" class="inputbox" size="40" type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2"> </div>'
@@ -719,7 +719,7 @@ class PhocacartRenderAdminview
 		$html	= array();
 		$html[] = JText::_('COM_PHOCACART_IMAGES') . '<br />';
 		$html[] = '<span class="input-append">';
-		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_specimage_small'.$id.'" name="pformspec['.$id.'][image_small]" value="'.htmlspecialchars($image_small).'"' .' '.$attr.' />';
+		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_specimage_small'.$id.'" name="pformspec['.$id.'][image_small]" value="'.htmlspecialchars($image_small, ENT_QUOTES, 'UTF-8').'"' .' '.$attr.' />';
 		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$url3 . $id.'" data-height="'.$h.'" data-width="'.$w.'">'
 			. '<span class="icon-list icon-white"></span>'
 			. JText::_($textButton2). '</a></span>';
@@ -783,7 +783,7 @@ class PhocacartRenderAdminview
 
 		$html 	= array();
 		$html[] = JText::_('COM_PHOCACART_COLOR') . '<br />';
-		$html[] =  '<input type="text" id="jform_speccolor'.$id.'" name="pformspec['.$id.'][color]" value="'.htmlspecialchars($color).'" '
+		$html[] =  '<input type="text" id="jform_speccolor'.$id.'" name="pformspec['.$id.'][color]" value="'.htmlspecialchars($color, ENT_QUOTES, 'UTF-8').'" '
 			. $hint . $class . $position . $control
 			. $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus
 			. $format . $keywords . $direction . $validate . '/>';
@@ -925,11 +925,11 @@ class PhocacartRenderAdminview
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
 		.'<input id="jform_discid'.$id.'" name="pformdisc['.$id.'][id]" value="'.(int)$idDb.'" type="hidden">'
-		.'<input id="jform_disctitle'.$id.'" name="pformdisc['.$id.'][title]" value="'.htmlspecialchars($title).'" class="inputbox input-mini"  type="text">'
+		.'<input id="jform_disctitle'.$id.'" name="pformdisc['.$id.'][title]" value="'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini"  type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_discalias'.$id.'" name="pformdisc['.$id.'][alias]" value="'.htmlspecialchars($alias).'" class="inputbox input-mini"  type="text">'
+		.'<input id="jform_discalias'.$id.'" name="pformdisc['.$id.'][alias]" value="'.htmlspecialchars($alias, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini"  type="text">'
 		.'</div>'
 
 
@@ -942,7 +942,7 @@ class PhocacartRenderAdminview
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_discdiscount'.$id.'" name="pformdisc['.$id.'][discount]" value="'.htmlspecialchars($discount).'" class="inputbox input-mini"  type="text">'
+		.'<input id="jform_discdiscount'.$id.'" name="pformdisc['.$id.'][discount]" value="'.htmlspecialchars($discount, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini"  type="text">'
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
@@ -950,7 +950,7 @@ class PhocacartRenderAdminview
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<input id="jform_discquantity_from'.$id.'" name="pformdisc['.$id.'][quantity_from]" value="'.htmlspecialchars($quantity_from).'" class="inputbox input-mini" type="text">'
+		.'<input id="jform_discquantity_from'.$id.'" name="pformdisc['.$id.'][quantity_from]" value="'.htmlspecialchars($quantity_from, ENT_QUOTES, 'UTF-8').'" class="inputbox input-mini" type="text">'
 		.'</div>';
 
 		/*
@@ -969,7 +969,7 @@ class PhocacartRenderAdminview
 				// Calender is initialized and cannot access DOM then so we need to render it manually in javascript
 				// and then initialize the calendar in phAddRowDiscount function
 				$o .= '<div class="input-append">'
-				. '<input title="" name="pformdisc['.$id.'][valid_from]" id="jform_discvalid_from'.$id.'" value="'.htmlspecialchars($quantity_from).'" size="30" maxlength="30" class="input-mini hasTooltip" type="text">'
+				. '<input title="" name="pformdisc['.$id.'][valid_from]" id="jform_discvalid_from'.$id.'" value="'.htmlspecialchars($quantity_from, ENT_QUOTES, 'UTF-8').'" size="30" maxlength="30" class="input-mini hasTooltip" type="text">'
 				. '<button type="button" class="btn" id="jform_discvalid_from'.$id.'_img"><span class="icon-calendar"></span></button>'
 				.'</div>';
 
@@ -995,7 +995,7 @@ class PhocacartRenderAdminview
 				$o .=  JHtml::_('calendar', $valid_to, 'pformdisc['.$id.'][valid_to]', 'jform_discvalid_to'.$id, '%Y-%m-%d', $attributes);
 			} else {
 				$o .= '<div class="input-append">'
-				. '<input title="" name="pformdisc['.$id.'][valid_to]" id="jform_discvalid_to'.$id.'" value="'.htmlspecialchars($quantity_from).'" size="30" maxlength="30" class="input-mini hasTooltip" type="text">'
+				. '<input title="" name="pformdisc['.$id.'][valid_to]" id="jform_discvalid_to'.$id.'" value="'.htmlspecialchars($quantity_from, ENT_QUOTES, 'UTF-8').'" size="30" maxlength="30" class="input-mini hasTooltip" type="text">'
 				. '<button type="button" class="btn" id="jform_discvalid_to'.$id.'_img"><span class="icon-calendar"></span></button>'
 				.'</div>';
 
@@ -1018,7 +1018,7 @@ class PhocacartRenderAdminview
 
 
 		$o .= '<div class="col-xs-12 col-sm-1 col-md-1"></div>'
-		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowDiscount('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_DISCOUNT').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
+		.'<div class="ph-float-icon"><a class="btn btn-transparent" href="#" onclick="phRemoveRowDiscount('.$id.'); return false;" title="'.htmlspecialchars(JText::_('COM_PHOCACART_REMOVE_DISCOUNT'), ENT_QUOTES, 'UTF-8').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>'
 
 
@@ -1088,7 +1088,7 @@ class PhocacartRenderAdminview
 
 
 		$o .= '<div class="col-xs-12 col-sm-1 col-md-1">'
-		.'<div class="ph-float-icon-l"><a class="btn btn-transparent" href="#" onclick="phRemoveRowPricehistory('.$id.'); return false;" title="'.JText::_('COM_PHOCACART_REMOVE_PRICE').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
+		.'<div class="ph-float-icon-l"><a class="btn btn-transparent" href="#" onclick="phRemoveRowPricehistory('.$id.'); return false;" title="'.htmlspecialchars(JText::_('COM_PHOCACART_REMOVE_PRICE'), ENT_QUOTES, 'UTF-8').'"><i class="icon-cancel ph-icon-remove"></i>'.''.'</a></div>'
 		.'<div class="ph-cb ph-pad-b"></div>';
 		$o .= '</div>';
 
@@ -1185,7 +1185,7 @@ class PhocacartRenderAdminview
 			}
 			if ($iframeClass != '') {
 				// Add specific class to body in iframe - to stylize it easily
-				$s[] = '         jQuery(this).contents().find("body").addClass("'.strip_tags(htmlspecialchars($iframeClass)).'");';
+				$s[] = '         jQuery(this).contents().find("body").addClass("'.strip_tags(htmlspecialchars($iframeClass, ENT_QUOTES, 'UTF-8')).'");';
 			}
 			$s[] = '      });';
 		}

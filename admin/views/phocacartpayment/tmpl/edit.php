@@ -13,8 +13,8 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminview';
-$r 			=  new $class();
+
+$r 			=  new PhocacartRenderAdminview();
 ?>
 <script type="text/javascript">
 Joomla.submitbutton = function(task) {
@@ -43,7 +43,7 @@ echo $r->navigation($tabs);
 
 echo '<div class="tab-content">'. "\n";
 
-echo '<div class="tab-pane active" id="general">'."\n"; 
+echo '<div class="tab-pane active" id="general">'."\n";
 $formArray = array ('title', 'cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
@@ -58,37 +58,37 @@ echo $r->group($this->form, $formArray, 1);
 echo '</div>';
 
 
-echo '<div class="tab-pane" id="amount">'."\n"; 
+echo '<div class="tab-pane" id="amount">'."\n";
 $formArray = array ('lowest_amount', 'highest_amount', 'active_amount');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="zone">'."\n"; 
+echo '<div class="tab-pane" id="zone">'."\n";
 $formArray = array ('zone', 'active_zone');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="country">'."\n"; 
+echo '<div class="tab-pane" id="country">'."\n";
 $formArray = array ('country', 'active_country');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="region">'."\n"; 
+echo '<div class="tab-pane" id="region">'."\n";
 $formArray = array ('region', 'active_region');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="shipping">'."\n"; 
+echo '<div class="tab-pane" id="shipping">'."\n";
 $formArray = array ('shipping', 'active_shipping');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
 
-echo '<div class="tab-pane" id="method">'."\n"; 
+echo '<div class="tab-pane" id="method">'."\n";
 echo '<div id="ph-extended-params" class="ph-extended-params">'.JText::_('COM_PHOCACART_SELECT_PAYMENT_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
 echo '</div>';
 
-echo '<div class="tab-pane" id="publishing">'."\n"; 
+echo '<div class="tab-pane" id="publishing">'."\n";
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -99,7 +99,7 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
-				
+
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column

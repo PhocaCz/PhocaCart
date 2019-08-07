@@ -50,7 +50,7 @@ $iconType		= $d['s']['i']['icon-type'];
 
 					$linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v->image_small;
 
-					echo '<a href="#" class="phSelectBoxImage '.$class.'" onclick="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;" title="'.$v->title.'">'
+					echo '<a href="#" class="phSelectBoxImage '.$class.'" onclick="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;" title="'.htmlspecialchars($v->title).'">'
 					.'<img style="'.$d['style'].'" src="'.$linkI.'" alt="'.$v->title.'" />'
 					.'</a>';
 				}

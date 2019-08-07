@@ -13,8 +13,8 @@ jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartLogs extends JModelList
 {
-	protected $option 	= 'com_phocacart';	
-	
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -41,7 +41,7 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 
 		parent::__construct($config);
 	}
-	
+
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
@@ -61,13 +61,13 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 		$this->setState('filter.language', $language);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_phocacart');
+		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
 
 		// List state information.
 		parent::populateState('a.date', 'desc');
 	}
-	
+
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
@@ -78,10 +78,10 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 
 		return parent::getStoreId($id);
 	}
-	
+
 	protected function getListQuery()
 	{
-		
+
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
@@ -94,12 +94,12 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 			)
 		);
 		$query->from('`#__phocacart_logs` AS a');
-		
+
 		$query->select('u.name AS user_name, u.username AS user_username');
 		$query->join('LEFT', '#__users AS u ON u.id=a.user_id');
-		
-	
-	
+
+
+
 		// Join over the language
 		//$query->select('l.title AS language_title');
 		//$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
@@ -107,7 +107,7 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		
+
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
@@ -137,23 +137,23 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
-	
+
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'date');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
-		
-	
-		
+
+
+
 		/*if ($orderCol != 'a.id') {
 			$orderCol = 'a.id';
 		}*/
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		
-		
+
+
 		return $query;
 	}
-	
+
 }
 ?>

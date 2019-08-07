@@ -92,7 +92,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 
 		$this->t['version'] = PhocacartUtils::getPhocaVersion('com_phocacart');
 
-		$paramsC = JComponentHelper::getParams('com_phocacart');
+		$paramsC = PhocacartUtils::getComponentParameters();
 		$this->t['enable_wizard']	= $paramsC->get( 'enable_wizard', 1 );
 
 

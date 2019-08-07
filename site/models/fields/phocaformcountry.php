@@ -30,7 +30,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 
 
 		$config 	= JComponentHelper::getParams('com_media');
-		//$paramsC 	= JComponentHelper::getParams('com_phocacart') ;
+		//$paramsC 	= PhocacartUtils::getComponentParameters() ;
 
 
 		if (!$app->isClient('administrator')) {
@@ -38,7 +38,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 			$load_chosen= $paramsC->get( 'load_chosen', 1 );
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. JSession::getFormToken().'=1\';';
 		} else {
-			$paramsC 	= JComponentHelper::getParams('com_phocacart');
+			$paramsC 	= PhocacartUtils::getComponentParameters();
 			$load_chosen= $paramsC->get( 'load_chosen', 1 );
 			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=phocacartuser.setregion&format=json&'. JSession::getFormToken().'=1\';';
 		}

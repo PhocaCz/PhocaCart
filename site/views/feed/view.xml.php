@@ -63,7 +63,7 @@ class PhocaCartViewFeed extends JViewLegacy
 			if ($p['category_separator'] == '\r') {$p['category_separator'] = "\r";}
 			if ($p['category_separator'] == '\r\n') {$p['category_separator'] = "\r\n";}
 
-			// Item Params (phocacartfeex.xml, language string, view.xml.php here defined and conditions below)
+			// Item Params (phocacartfeed.xml, language string, view.xml.php here defined and conditions below)
 			$p['item_id'] 							= $iP->get('item_id', '');
 			$p['item_title'] 						= $iP->get('item_title', '');
 			$p['item_title_extended'] 				= $iP->get('item_title_extended', '');
@@ -98,6 +98,7 @@ class PhocaCartViewFeed extends JViewLegacy
 			$p['item_type_feed'] 					= $iP->get('item_type_feed', '');
 			$p['item_category_type_feed'] 			= $iP->get('item_category_type_feed', '');
 
+			$p['item_fixed_elements'] 			    = $iP->get('item_fixed_elements', '');
 
 			/*
 			// We can find specific feed and customize it for specific needs
@@ -139,9 +140,9 @@ class PhocaCartViewFeed extends JViewLegacy
 			// one time, not in foreach. Of course currency class is singleton so we don't run sql query many time
 			// but we don't need to run the function many times too.
 			$cur = '';
-			if ($p['item_currency'] != '') {
+			//if ($p['item_currency'] != '') {
 				$cur	= PhocacartCurrency::getDefaultCurrencyCode();
-			}
+			//}
 
 			// START FOREACH OF PRODUCTS
 			if (!empty($products)) {
@@ -335,10 +336,12 @@ class PhocaCartViewFeed extends JViewLegacy
 					}
 
 					// STOCK DELIVERY_DATE
+
 					if ($p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
 
 
 						$stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+
 						//$stockText		= PhocacartStock::getStockStatusOutput($stockStatus);
 						if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
 							$o[] = $l.$p['item_delivery_date'].$r.$stockStatus['stock_status'].$e.$p['item_delivery_date'].$r;
@@ -420,12 +423,49 @@ class PhocaCartViewFeed extends JViewLegacy
 					}
 
 
+                    // PRODUCT - Specific FEED plugin
+                    if (isset($v->params_feed) && $v->params_feed != '') {
+
+                        $registry = new JRegistry;
+				        $registry->loadString($v->params_feed);
+				        $paramsFeedA = $registry->toArray();
+                        if (!empty($paramsFeedA)) {
+                            foreach ($paramsFeedA as $k => $v) {
+
+                                if (trim($k) == trim($feed['feed_plugin'])) {
+
+                                    if (!empty($v)) {
+                                        foreach ($v as $k2 => $v2) {
+                                            if (trim($v2) != '') {
+
+                                                // Some feeds have the same parameters but we cannot storem them under the same name
+                                                // so internaly they are stored as e.g.: EXTRA_MESSAGE{1}, EXTRA_MESSAGE{2}
+                                                // in XML the {1} and {2} are removed and there is only one parameter EXTRA_MESSAGE on different places
+                                                $k2 = preg_replace("/\{[^}]+\}/","",$k2);
+                                                $o[] = $l.$k2.$r.htmlspecialchars($v2).$e.$k2.$r;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    // PRODUCT - Fixed XML Elements
+                    if ($p['item_fixed_elements'] != '') {
+                        $o[] = $p['item_fixed_elements'];
+                    }
+
 
 
 					// PRODUCT END
 					if (isset($feed['item']) && $feed['item'] != '') {
 						$o[] = $e.$feed['item'].$r;
 					}
+
+
 				}
 
 			}

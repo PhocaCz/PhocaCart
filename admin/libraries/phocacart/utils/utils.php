@@ -197,7 +197,7 @@ class PhocacartUtils
 
 	public static function convertEncoding($string) {
 
-		$pC						= JComponentHelper::getParams( 'com_phocacart' );
+		$pC						= PhocacartUtils::getComponentParameters();
 		$import_encoding_method	= $pC->get( 'import_encoding_method', '' );
 		$import_encoding		= $pC->get( 'import_encoding', '' );
 		$returnString		= '';
@@ -382,21 +382,10 @@ class PhocacartUtils
 
 	public static function getComponentParameters() {
 
-		$app = JFactory::getApplication();
-		if ($app->isClient('administrator')) {
-			return JComponentHelper::getParams('com_phocacart');
-		} else {
-			$option	= $app->input->get('option');
-			if ($option == 'com_phocacart') {
-				return $app->getParams();
-			} else {
-				return JComponentHelper::getParams('com_phocacart');
-			}
-
-		}
-
-		return JComponentHelper::getParams('com_phocacart');
-
+		$app 	= JFactory::getApplication();
+		$option	= $app->input->get('option');
+		$client	= $app->isClient('administrator') ? 'A' : 'S';
+		return PhocacartUtilsOptions::getOptions('PC', $client, $option);
 	}
 
 	public static function replaceCommaWithPoint($item) {

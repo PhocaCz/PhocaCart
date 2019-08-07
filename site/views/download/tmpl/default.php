@@ -30,6 +30,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 		foreach ($this->t['files'] as $k => $v) {
 
+
 			echo '<div class="'.$this->s['c']['row'].' ph-download-item-box-row ph-vertical-align">';
 
 			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$v->title.'</div>';
