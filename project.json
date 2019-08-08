@@ -14,7 +14,8 @@
 	"projectDemo" : {
 		"Phoca Cart Demo": "https://www.phoca.cz/phocacartdemo/",
 		"Phoca Cart - Phoca Premiere Template Demo": "https://www.phoca.cz/phocacartdemo/premiere/",
-		"Phoca Cart Demo - Phoca Stock Photo": "https://www.phoca.cz/stockphoto/"
+		"Phoca Cart Demo - Phoca Stock Photo": "https://www.phoca.cz/stockphoto/",
+		"Phoca Cart - Astroid Framework Demo": "https://www.phoca.cz/phocacartdemo/astroid/"
 	},
 	"projectColor": "#129ed9",												
 	"menu": {
