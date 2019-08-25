@@ -48,7 +48,7 @@ if ($this->a->paymentnotused == 1) {
 		//echo '<div class="'.$this->s['c']['row'].'">';
 		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
 
-		if ($this->t['paymentmethod']['image'] != '') {
+		if (isset($this->t['paymentmethod']['image']) && $this->t['paymentmethod']['image'] != '') {
 			echo '<div class="ph-payment-image"><img src="'.JURI::base(true) .'/'. $this->t['paymentmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['paymentmethod']['title'])).'" /></div>';
 		}
 
@@ -189,7 +189,7 @@ if ($this->a->paymentnotused == 1) {
 	//echo '<div class="ph-cb"></div>';
 
 	// COUPON CODE
-	if ($this->t['enable_coupons'] == 1) {
+	if ($this->t['enable_coupons'] > 0 && $this->t['display_apply_coupon_form'] == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 		echo '<label>'.JText::_('COM_PHOCACART_COUPON_CODE'). ' <small>('.JText::_('COM_PHOCACART_APPLY_COUPON_CODE').')</small><br /><input type="text" name="phcoupon" id="phcoupon" value="'.$this->t['couponcodevalue'].'" ></label>';
 		echo '</div>';
@@ -197,7 +197,8 @@ if ($this->a->paymentnotused == 1) {
 	}
 
 	// REWARD POINTS
-	if ($this->t['rewards']['apply']) {
+	if ($this->t['rewards']['apply'] && $this->t['display_apply_reward_points_form'] == 1) {
+
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 		echo '<label>'.JText::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" ></label>';
 		echo '</div>';

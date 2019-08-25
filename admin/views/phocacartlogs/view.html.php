@@ -84,6 +84,7 @@ class PhocaCartCpViewPhocacartLogs extends JViewLegacy
 			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
 			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),
 			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
+			'a.type' 		    => JText::_($this->t['l'] . '_TYPE'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);
 	}

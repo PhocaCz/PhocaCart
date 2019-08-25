@@ -32,6 +32,7 @@ class PhocacartFilter
 
 	public $manufacturer_title			= '';
 	public $filter_language				= 0;
+	public $open_filter_panel           = 1;
 
 
 	public function __construct() {}
@@ -42,11 +43,11 @@ class PhocacartFilter
 		$o			= array();
 		$s 			= PhocacartRenderStyle::getStyles();
 		//$app		= JFactory::getApplication();
-		$layout 	= new JLayoutFile('form_filter_checkbox', null, array('component' => 'com_phocacart'));
-		$layout2 	= new JLayoutFile('form_filter_text', null, array('component' => 'com_phocacart'));
-		$layout3 	= new JLayoutFile('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));
-		$layout4 	= new JLayoutFile('form_filter_color', null, array('component' => 'com_phocacart'));
-		$layout5 	= new JLayoutFile('form_filter_image', null, array('component' => 'com_phocacart'));
+		$layout 	= new JLayoutFile('form_filter_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
+		$layout2 	= new JLayoutFile('form_filter_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
+		$layout3 	= new JLayoutFile('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
+		$layout4 	= new JLayoutFile('form_filter_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
+		$layout5 	= new JLayoutFile('form_filter_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
 
 
 		$language = '';
@@ -63,6 +64,8 @@ class PhocacartFilter
 		$data['getparams']	= array();
 
 		//-CATEGORY- ACTIVE CATEGORY
+		$data				= array();
+		$data['s']			= $s;
 		$data['param'] 		= 'id';
 		$data['title']		= JText::_('COM_PHOCACART_CATEGORY');
 		$category			= PhocacartRoute::getIdForItemsRoute();
@@ -71,6 +74,7 @@ class PhocacartFilter
 		$data['nrinalias']	= 1;
 		$data['formtype']	= 'category';
 		$data['uniquevalue']= 1;
+		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
 
 		if ((int)$this->category == 1 && (int)$category['id'] > 0) {
@@ -85,6 +89,8 @@ class PhocacartFilter
 
 
 		// -CATEGORY MORE- (ALL CATEGORIES)
+		$data				= array();
+		$data['s']			= $s;
 		$data['param'] 		= 'c';
 		$data['title']		= JText::_('COM_PHOCACART_CATEGORY');
 		$data['getparams']	= $this->getArrayParamValues($data['param'], 'string');
@@ -92,9 +98,27 @@ class PhocacartFilter
 		$data['formtype']	= 'checked';
 		$data['uniquevalue']= 0;
 
+
+		// OPEN OR CLOSE PANEL
+		// $data['params']['open_filter_panel'] = $this->open_filter_panel;
 		if ((int)$this->category == 2) {
+			$data['active'] = 0;
 			$data['items'] 	= PhocacartCategory::getCategoryTreeArray(1, '', '', array(0,1), $language);
-			$data['output']	= PhocacartCategory::nestedToCheckBox($data['items'], $data);
+			$data['output']	= PhocacartCategory::nestedToCheckBox($data['items'], $data, 0, $data['active']);
+
+			if ($this->open_filter_panel == 0) {
+			    $data['collapse_class'] = $s['c']['panel-collapse.collapse'];
+			    $data['triangle_class'] = $s['i']['triangle-right'];
+			} else if ($this->open_filter_panel == 2 && $data['active'] == 1) {
+			    $data['collapse_class'] = $s['c']['panel-collapse.collapse.in'];// closed as default and wait if there is some active item to open it
+				$data['triangle_class'] = $s['i']['triangle-bottom'];
+			} else if ($this->open_filter_panel == 2 && $data['active'] == 0) {
+			    $data['collapse_class'] = $s['c']['panel-collapse.collapse'];
+			    $data['triangle_class'] = $s['i']['triangle-right'];
+			} else {
+				$data['collapse_class'] = $s['c']['panel-collapse.collapse.in'];
+				$data['triangle_class'] = $s['i']['triangle-bottom'];
+			}
 
 			if (!empty($data['items'])) {
 				$o[] = $layout3->render($data);
@@ -102,6 +126,8 @@ class PhocacartFilter
 		}
 
 		// -PRICE- AVAILABLE PRODUCTS ONLY - Yes
+		$data				= array();
+		$data['s']			= $s;
 		$data['param'] 		= 'price_from';
 		$data['param2'] 	= 'price_to';
 		$data['id'] 		= 'phPriceFromTo';
@@ -116,17 +142,36 @@ class PhocacartFilter
 		$data['uniquevalue']= 1;
 		$data['filterprice']= $this->price;
 
+		// OPEN OR CLOSE PANEL
+		// $data['params']['open_filter_panel'] = $this->open_filter_panel;
+		if ($this->open_filter_panel == 0) {
+		    $data['collapse_class'] = $s['c']['panel-collapse.collapse'];
+		    $data['triangle_class'] = $s['i']['triangle-right'];
+		} else if ($this->open_filter_panel == 2 && ($data['getparams'][0] != '' || $data['getparams2'][0] != '' )) {
+		    $data['collapse_class'] = $s['c']['panel-collapse.collapse.in'];// closed as default and wait if there is some active item to open it
+			$data['triangle_class'] = $s['i']['triangle-bottom'];
+		} else if ($this->open_filter_panel == 2 && ($data['getparams'][0] == '' || $data['getparams2'][0] == '' )) {
+		    $data['collapse_class'] = $s['c']['panel-collapse.collapse'];
+		    $data['triangle_class'] = $s['i']['triangle-right'];
+		} else {
+			$data['collapse_class'] = $s['c']['panel-collapse.collapse.in'];
+			$data['triangle_class'] = $s['i']['triangle-bottm'];
+		}
+
 		if ($this->price > 0) {
 			$o[] = $layout2->render($data);
 		}
 
 		// -TAG-
+		$data				= array();
+		$data['s']			= $s;
 		$data['param'] 		= 'tag';
 		$data['title']		= JText::_('COM_PHOCACART_TAGS');
 		$data['getparams']	= $this->getArrayParamValues($data['param'], 'string');
 		$data['nrinalias']	= 1;
 		$data['formtype']	= 'checked';
 		$data['uniquevalue']= 0;
+		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
 		if ($this->tag) {
 			/*phocacart import('phocacart.tag.tag');*/
@@ -135,16 +180,20 @@ class PhocacartFilter
 		}
 
 		if (!empty($data['items'])) {
+
 			$o[] = $layout->render($data);
 		}
 
 		// -LABEL-
+		$data				= array();
+		$data['s']			= $s;
 		$data['param'] 		= 'label';
 		$data['title']		= JText::_('COM_PHOCACART_LABELS');
 		$data['getparams']	= $this->getArrayParamValues($data['param'], 'string');
 		$data['nrinalias']	= 1;
 		$data['formtype']	= 'checked';
 		$data['uniquevalue']= 0;
+		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
 		if ($this->label) {
 			/*phocacart import('phocacart.tag.tag');*/
@@ -157,12 +206,15 @@ class PhocacartFilter
 		}
 
 		// -MANUFACTURER- AVAILABLE PRODUCTS ONLY - Yes
+		$data				= array();
+		$data['s']			= $s;
 		$data['param'] 		= 'manufacturer';
 		$data['title']		= $this->manufacturer_title != '' ? JText::_($this->manufacturer_title) : JText::_('COM_PHOCACART_MANUFACTURERS');
 		$data['getparams']	= $this->getArrayParamValues($data['param'], 'string');
 		$data['nrinalias']	= 1;
 		$data['formtype']	= 'checked';
 		$data['uniquevalue']= 0;
+		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
 		if ($this->manufacturer) {
 			/*phocacart import('phocacart.manufacturer.manufacturer');*/
@@ -189,6 +241,7 @@ class PhocacartFilter
 					$data['getparams']	= $this->getArrayParamValues($data['param'], 'array');
 					$data['uniquevalue']= 0;
 					$data['pathitem']	= $pathProductImage;
+					$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
 					if (!empty($data['items'])) {
 
@@ -215,6 +268,7 @@ class PhocacartFilter
 		if ($this->specifications) {
 			/*phocacart import('phocacart.specification.specification');*/
 			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, 1, $language);
+
 			if (!empty($specifications)) {
 				foreach($specifications as $k => $v) {
 					$data				= array();
@@ -226,6 +280,9 @@ class PhocacartFilter
 					$data['formtype']	= 'checked';
 					$data['uniquevalue']= 0;
                     $data['pathitem']	= $pathProductImage;
+                    $data['params']['open_filter_panel'] = $this->open_filter_panel;
+
+
 
 					if (!empty($data['items'])) {
 
@@ -241,6 +298,7 @@ class PhocacartFilter
                         } else {
                             // Select
                             $data['formtype']	= 'checked';
+
                             $o[] = $layout->render($data);
                         }
 					}

@@ -190,7 +190,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 		// Remove shipping because shipping methods can change while chaning address
 		PhocacartShipping::removeShipping(0);
-		PhocacartPayment::removePayment(0);
+		PhocacartPayment::removePayment(0, 0);// Don't remove coupon by guests
 		$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 		if ($error != 1) {
 			$app->enqueueMessage($msg, 'message');
@@ -225,7 +225,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				} else {
 					$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 					$app->enqueueMessage($msg, 'message');
-					PhocacartPayment::removePayment($guest);
+					PhocacartPayment::removePayment($guest, 0);// Don't remove coupon by guests
 				}
 
 			} else {
@@ -235,7 +235,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				} else {
 					$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 					$app->enqueueMessage($msg, 'message');
-					PhocacartPayment::removePayment($guest);
+					PhocacartPayment::removePayment($guest, 0);// Don't remove coupon by guests
 				}
 			}
 
@@ -257,52 +257,98 @@ class PhocaCartControllerCheckout extends JControllerForm
 		$item						= array();
 		$item['return']				= $this->input->get( 'return', '', 'string'  );
 		$item['phpaymentopt']		= $this->input->get( 'phpaymentopt', array(), 'array'  );
-		$item['phcoupon']			= $this->input->get( 'phcoupon', '', 'string'  );
-		$item['phreward']			= $this->input->get( 'phreward', '', 'int'  );
+		$item['phcoupon']			= $this->input->get( 'phcoupon', -1, 'string'  );// -1 ... no form data, '' ... form data yes but empty (e.g. when removing coupon)
+		$item['phreward']			= $this->input->get( 'phreward', -1, 'int'  );// -1 ... no form data, 0 ... form data yes but it is set to not use points (0)
 		$guest						= PhocacartUserGuestuser::getGuestUser();
+		$user 	                    = PhocacartUser::getUser();
 		$params 					= $app->getParams();
 		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
+		$guest_checkout			    = $params->get( 'guest_checkout', 0 );
+		$enable_coupons			    = $params->get( 'enable_coupons', 2 );
 
-		$this->t['enable_coupons']			= $params->get( 'enable_coupons', 1 );
-		$this->t['enable_rewards']			= $params->get( 'enable_rewards', 1 );
+		// Coupon
+		// 1) we save payment without coupon form --> phcoupon = -1 ==> $couponId = -1 (in model the coupon will be ignored when saving to not change current value
+		// 2) we save payment with coupon form and ask the coupon class for $couponId
+		// 2a) $couponId == -2 ... empty string was set which means to remove coupon ==> $couponId = 0
+		// 2b) $couponId == 0 ... coupon is not valid ==> $couponId = 0
+		// 2c) $couponId > 0 ... coupon is valid ==> $couponId > 0
+		//
+		// What is the difference between 2a) and 2b) - in database there is no difference but we need to differentiate messages for the customers (coupon empty vs. coupon not valid)
+		// IMPORTANT:
+		// $item['phcoupon'] = -1 ... coupon is not included in sent payment form
+		// $couponId = -1 ... coupon will be ignored in model when saving to database because to not change the current value
+		// $coupoiId = -2 ... coupon was included in sent payment form but it was empty (empty means that user just want to remove it), we need -2 for message only, in database we set it to 0
+
+
+
+
+
+
 
 
 		if(!empty($item['phpaymentopt']) && isset($item['phpaymentopt'][0]) && (int)$item['phpaymentopt'][0] > 0) {
 
 			// Coupon
-			$couponId = 0;
-			if (isset($item['phcoupon']) && $item['phcoupon'] != '' && $this->t['enable_coupons']) {
+			if ($item['phcoupon'] === -1) {
+				$couponId = -1;// coupon data was not sent in the form, don't touch its data in db
+			} else {
+				$msgExists = 0;
+				$couponId = $this->getCouponIdByCouponCode($item['phcoupon']);
 
-				$coupon = new PhocacartCoupon();
-				$coupon->setCoupon(0, $item['phcoupon']);
-				//$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
-				$couponTrue = $coupon->checkCoupon();// Complete Check - mostly coupon is added at the end so do complete check - can be changed to basic
-				$couponId 	= 0;
-				if ($couponTrue) {
-					$couponData = $coupon->getCoupon();
-					if (isset($couponData['id']) && $couponData['id'] > 0) {
-						$couponId = $couponData['id'];
+				// Coupons disabled
+				if ($enable_coupons == 0 && $item['phcoupon'] != '' && $item['phcoupon'] !== -1) {
+					$app->enqueueMessage(JText::_('COM_PHOCACART_APPLYING_COUPONS_IS_DISABLED').$msgSuffix, 'error');
+					$couponId = 0;// Remove coupon
+					$msgExists = 1;//
+				}
+
+				// Cupon only allowed for logged in users or guest checkout
+				// Guest Checkout is still not enabled so we have message for a) not logged in users or b) not started guest checkout users
+				if ($enable_coupons == 2) {
+				    if (!$guest) {
+						if ((int)$user->id < 1) {
+							if ($guest_checkout == 1) {
+								$app->enqueueMessage(JText::_('COM_PHOCACART_PLEASE_LOG_IN_OR_ENABLE_GUEST_CHECKOUT_TO_APPLY_COUPON_FIRST').$msgSuffix, 'error');
+								$msgExists = 1;
+							} else {
+								$app->enqueueMessage(JText::_('COM_PHOCACART_PLEASE_LOG_IN_TO_APPLY_COUPON_FIRST').$msgSuffix, 'error');
+								$msgExists = 1;
+							}
+							$couponId = 0;
+						}
 					}
 				}
 
-				if(!$couponId) {
-					$msg = JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT');
-					$app->enqueueMessage($msg.$msgSuffix, 'error');
+				if ($couponId === -2) {
+					// Coupon code is empty which means we remove the coupon code
+					$msg = JText::_('COM_PHOCACART_COUPON_NOT_SET');
+					$app->enqueueMessage($msg, 'message');
+					$couponId = 0;// Remove coupon
+				} else if (!$couponId) {
+					// Coupon code just not valid
+					if ($msgExists == 1) {
+						// error message set so don't add another message
+					} else {
+						$msg = JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT');
+						$app->enqueueMessage($msg.$msgSuffix, 'error');
+					}
+
+
+					$couponId = 0;// Possible feature request - couponId can be set to -1 to be ignored when saving. E.g. not valied coupon will not remove previously added valid coupon
 				} else {
+					// Coupon code successfuly tested
 					$msg = JText::_('COM_PHOCACART_COUPON_ADDED');
 					$app->enqueueMessage($msg, 'message');
 				}
 			}
 
-			$rewards 			= array();
-			$rewards['used'] 	= 0;
 
-			if (isset($item['phreward']) && $item['phreward'] != '' && $this->t['enable_rewards']) {
+			// Reward Points
+			if ($item['phreward'] === -1) {
+				$rewards['used'] = -1;// reward points not sent in the form, don't touch its data in db
+			} else {
 
-				$reward 			= new PhocacartReward();
-				$rewards['used']	= $reward->checkReward((int)$item['phreward'], 1);
-
-
+				$rewards = $this->getRewardPointsByRewardPointsCode($item['phreward']);
 				if($rewards['used'] === false) {
 					$msg = JText::_('COM_PHOCACART_REWARD_POINTS_NOT_ADDED');
 					$app->enqueueMessage($msg.$msgSuffix, 'error');
@@ -310,13 +356,15 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$msg = JText::_('COM_PHOCACART_REWARD_POINTS_ADDED');
 					$app->enqueueMessage($msg, 'message');
 				}
-
-
 			}
+
+
 
 			$model 	= $this->getModel('checkout');
 
 			if ($guest) {
+				// 1) GUEST
+				// Guest enabled
 				if(!$model->savePaymentAndCouponGuest((int)$item['phpaymentopt'][0], $couponId)) {
 					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 					$app->enqueueMessage($msg.$msgSuffix, 'error');
@@ -324,7 +372,22 @@ class PhocaCartControllerCheckout extends JControllerForm
 					$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 					$app->enqueueMessage($msg, 'message');
 				}
+			} else if ((int)$user->id < 1) {
+
+				// 2) PRE-GUEST/PRE-LOGIN - NOT LOGGED IN OR STILL NOT ENABLED GUEST CHECKOUT
+				// Guest not enabled yet MOVECOUPON
+				if(!$model->savePaymentAndCouponGuest((int)$item['phpaymentopt'][0], $couponId)) {
+					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+					$app->enqueueMessage($msg.$msgSuffix, 'error');
+
+				} else {
+					$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+					$app->enqueueMessage($msg, 'message');
+
+				}
+
 			} else {
+				// 3) LOGGED IN USER
 				if(!$model->savePaymentAndCouponAndReward((int)$item['phpaymentopt'][0], $couponId, $rewards['used'])) {
 					$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 					$app->enqueueMessage($msg.$msgSuffix, 'error');
@@ -341,6 +404,259 @@ class PhocaCartControllerCheckout extends JControllerForm
 		}
 		$app->redirect(base64_decode($item['return']));
 	}
+
+	/*
+	 * Save coupon only
+	 */
+
+	 public function savecoupon() {
+
+
+	 	/* There are following situations:
+	 	a) user is not logged in and will log in - regarding coupon user is taken as guest checkout (internally in session - so even guest checkout is disabled)
+	 	b) user is not logged in and will enable guest checkout - regarding coupon user is taken as guestcheckou (internally in session - so even guest checkout is disabled)
+	 	c) user is logged in
+	 	d) user enabled guest checkout
+	 	*/
+
+		JSession::checkToken() or jexit( 'Invalid Token' );
+		$app						= JFactory::getApplication();
+		$item						= array();
+		$item['return']				= $this->input->get( 'return', '', 'string'  );
+		$item['phcoupon']			= $this->input->get( 'phcoupon', '', 'string'  );
+		$guest						= PhocacartUserGuestuser::getGuestUser();
+		$user 	                    = PhocacartUser::getUser();
+		$params 					= $app->getParams();
+		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
+		$guest_checkout			    = $params->get( 'guest_checkout', 0 );
+		$enable_coupons			    = $params->get( 'enable_coupons', 2 );
+
+
+		// Coupons disabled
+		if ($enable_coupons == 0) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_APPLYING_COUPONS_IS_DISABLED'), 'error');
+			$app->redirect(base64_decode($item['return']));
+		}
+
+
+		// Cupon only allowed for logged in users or guest checkout
+		// Guest Checkout is still not enabled so we have message for a) not logged in users or b) not started guest checkout users
+		if ($enable_coupons == 2) {
+		    if (!$guest) {
+				if ((int)$user->id < 1) {
+					if ($guest_checkout == 1) {
+						$app->enqueueMessage(JText::_('COM_PHOCACART_PLEASE_LOG_IN_OR_ENABLE_GUEST_CHECKOUT_TO_APPLY_COUPON_FIRST'), 'error');
+					} else {
+						$app->enqueueMessage(JText::_('COM_PHOCACART_PLEASE_LOG_IN_TO_APPLY_COUPON_FIRST'), 'error');
+					}
+					$app->redirect(base64_decode($item['return']));
+				}
+			}
+		}
+
+		$couponId = $this->getCouponIdByCouponCode($item['phcoupon']);
+
+		$msgError = 0;
+		if ($couponId === -2) {
+			// Coupon code is empty which means we remove the coupon code
+			$couponMessage = JText::_('COM_PHOCACART_COUPON_NOT_SET');
+			$couponId = 0;
+		} else if (!$couponId) {
+			// Coupon code just not valid
+			$couponMessage = JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT');
+			$couponId = 0;
+			$msgError = 1;
+		} else {
+			// Coupon code successfuly tested
+			$couponMessage = JText::_('COM_PHOCACART_COUPON_ADDED');
+		}
+
+
+
+		$model 	= $this->getModel('checkout');
+
+		if ($guest) {
+			// 1) GUEST
+			// Guest enabled
+			if(!$model->saveCouponGuest($couponId)) {
+				$msg = $couponMessage != '' ? $couponMessage : JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+				$app->enqueueMessage($msg.$msgSuffix, 'error');
+
+			} else {
+				$msg = $couponMessage != '' ? $couponMessage : JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+
+				$app->enqueueMessage($msg, 'message');
+			}
+		} else if ((int)$user->id < 1) {
+
+			// 2) PRE-GUEST/PRE-LOGIN - NOT LOGGED IN OR STILL NOT ENABLED GUEST CHECKOUT
+			// Guest not enabled yet MOVECOUPON
+			if(!$model->saveCouponGuest($couponId)) {
+				$msg = $couponMessage != '' ? $couponMessage : JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+				$app->enqueueMessage($msg.$msgSuffix, 'error');
+
+			} else {
+				$msg = $couponMessage != '' ? $couponMessage : JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+				if ($msgError == 1) {
+					$app->enqueueMessage($msg.$msgSuffix, 'error');
+				} else {
+					$app->enqueueMessage($msg, 'message');
+				}
+
+			}
+
+		} else {
+
+			// 3) LOGGED IN USER
+			if(!$model->saveCoupon($couponId)) {
+				$msg = $couponMessage != '' ? $couponMessage : JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+				$app->enqueueMessage($msg.$msgSuffix, 'error');
+			} else {
+				$msg = $couponMessage != '' ? $couponMessage : JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+				if ($msgError == 1) {
+					$app->enqueueMessage($msg.$msgSuffix, 'error');
+				} else {
+					$app->enqueueMessage($msg, 'message');
+				}
+			}
+		}
+
+		$app->redirect(base64_decode($item['return']));
+	}
+
+	/*
+	 * return:
+	 * couponId = -2 (couponId = '') ... coupon code is empty, e.g. when removing it (we use not dynamic variable)
+	 * couponId = 0 ... coupon code is not valid
+	 * couponId > 0 ... coupon code is valid
+	 */
+
+
+	public function getCouponIdByCouponCode($code) {
+
+	 	$app						= JFactory::getApplication();
+	 	$params 					= $app->getParams();
+		$enable_coupons	            = $params->get( 'enable_coupons', 2 );
+
+	 	$couponId = -2;
+	 	$couponTrue = false;
+	 	if (isset($code) && $code != '' && $enable_coupons > 0) {
+
+			$coupon = new PhocacartCoupon();
+			$coupon->setCoupon(0, $code);
+			//$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
+			//$couponTrue = $coupon->checkCoupon();// Complete Check - mostly coupon is added at the end so do complete check - can be changed to basic - no items, no categories can be checked
+
+			$cart			= new PhocacartCartRendercheckout();
+			$cart->setInstance(2);//checkout
+			$cart->setType(array(0,1));
+			$cart->setFullItems();
+			$fullItems 		= $cart->getFullItems();
+			$total		    = $cart->getTotal();
+
+			//$couponTrue		= $cart->getCouponValid();// cart itself cannot say us if the coupon is valid, because this coupon was still not added to the cart
+
+			if (!empty($fullItems[4]) && !empty($total[4])) {
+				foreach ($fullItems[4] as $k => $v) {
+					$validCoupon = $coupon->checkCoupon(0, $v['id'], $v['catid'], $total[4]['quantity'], $total[4]['netto']);
+
+					// !!! VALID COUPON
+					// In case the coupon is valid at least for one product or one category it is then valid
+					// and will be divided into valid products/categories
+					// As global we mark it as valid - so change the valid coupon variable only in case it is valid
+					if ($validCoupon == 1) {
+						$couponTrue = $validCoupon;
+						break;
+					}
+				}
+			}
+
+			$couponId 	= 0;
+			if ($couponTrue) {
+				$couponData = $coupon->getCoupon();
+				if (isset($couponData['id']) && $couponData['id'] > 0) {
+					$couponId = $couponData['id'];
+				}
+			}
+		}
+
+	 	return $couponId;
+	}
+
+
+	public function saverewardpoints() {
+
+
+		JSession::checkToken() or jexit( 'Invalid Token' );
+		$app						= JFactory::getApplication();
+		$item						= array();
+		$item['return']				= $this->input->get( 'return', '', 'string'  );
+		$item['phreward']			= $this->input->get( 'phreward', '', 'int'  );
+		$guest						= PhocacartUserGuestuser::getGuestUser();
+		//$user 	                = PhocacartUser::getUser();
+		//$params 					= $app->getParams();
+		$msgSuffix					= '<span id="ph-msg-ns" class="ph-hidden"></span>';
+
+
+
+		// Reward Points
+		$rewards = $this->getRewardPointsByRewardPointsCode($item['phreward']);
+
+		if($rewards['used'] === false) {
+			$rewardMessage = JText::_('COM_PHOCACART_REWARD_POINTS_NOT_ADDED');
+		} else {
+
+			if ($rewards['used'] === 0) {
+				$rewardMessage = JText::_('COM_PHOCACART_REWARD_POINTS_REMOVED');
+			} else {
+				$rewardMessage = JText::_('COM_PHOCACART_REWARD_POINTS_ADDED');
+			}
+
+		}
+
+		$model 	= $this->getModel('checkout');
+
+		if ($guest) {
+
+		} else {
+
+			if(!$model->saveRewardPoints($rewards['used'])) {
+				$msg = $rewardMessage != '' ? $rewardMessage : JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+				$app->enqueueMessage($msg.$msgSuffix, 'error');
+			} else {
+				$msg = $rewardMessage != '' ? $rewardMessage : JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+				$app->enqueueMessage($msg, 'message');
+			}
+		}
+
+		$app->redirect(base64_decode($item['return']));
+	}
+
+
+	public function getRewardPointsByRewardPointsCode($points) {
+
+	 	$app						= JFactory::getApplication();
+	 	$params 					= $app->getParams();
+		$enable_rewards			    = $params->get( 'enable_rewards', 1 );
+
+
+		$rewards 			= array();
+		$rewards['used'] 	= 0;
+
+		if (isset($points) && $points != '' && $enable_rewards) {
+
+			$reward 			= new PhocacartReward();
+			$rewards['used']	= $reward->checkReward((int)$points, 1);
+		}
+
+		return $rewards;
+
+	}
+
+
+
+
+
 
 	/*
 	 * Update or delete from cart

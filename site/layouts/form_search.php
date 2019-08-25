@@ -41,7 +41,7 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 		<?php if ($d['display_inner_icon'] == 1) { ?>
 		<div class="inner-addon right-addon">
-			<i class="<?php echo $this->s['i']['search'] ?>"></i>
+			<i class="<?php echo $d['s']['i']['search'] ?>"></i>
 			<input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>"  placeholder="<?php echo JText::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" />
 		</div>
 		<?php } else { ?>
@@ -52,8 +52,8 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 		<div style="display:none">
 	  <?php } ?>
 	  <span class="input-group-btn">
-        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'].$d['paramname'].'Btn'; ?>" ><span class="<?php echo $this->s['i']['search'] ?>"></span></button>
-		<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip hasTooltip" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo JText::_('COM_PHOCACART_CLEAR'); ?>" ><span class="<?php echo $this->s['i']['clear'] ?>" ></span></button>
+        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'].$d['paramname'].'Btn'; ?>" ><span class="<?php echo $d['s']['i']['search'] ?>"></span></button>
+		<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip hasTooltip" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo JText::_('COM_PHOCACART_CLEAR'); ?>" ><span class="<?php echo $d['s']['i']['clear'] ?>" ></span></button>
       </span>
 	  <?php if ($d['hide_buttons'] == 1) { ?>
 		</div>

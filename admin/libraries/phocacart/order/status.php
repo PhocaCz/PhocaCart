@@ -25,7 +25,7 @@ class PhocacartOrderStatus
 		if( !array_key_exists( $id, self::$status ) ) {
 
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_text_others, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
+			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -43,6 +43,7 @@ class PhocacartOrderStatus
 				self::$status[$id]['email_subject']				= $s->email_subject;
 				self::$status[$id]['email_subject_others']		= $s->email_subject_others;
 				self::$status[$id]['email_text']				= $s->email_text;
+				self::$status[$id]['email_footer']				= $s->email_footer;
 				self::$status[$id]['email_text_others']			= $s->email_text_others;
 				self::$status[$id]['email_send']				= $s->email_send;
 				self::$status[$id]['download']					= $s->download;
@@ -259,13 +260,13 @@ class PhocacartOrderStatus
 				// - in case of payment method server contacts the server to change the status
 				if ($orderToken != '' && $orderToken == $common->order_token && $guest) {
 					$canSend = 1;// User is guest - not logged in user run this script
-					//PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Guest User');
+					//PhocacartLog::add(4, 'CHECK', (int)$orderId, 'Guest User');
 				} else if ($orderToken != '' && $orderToken == $common->order_token ) {
 					$canSend = 1;// Payment method server returned status which will change order status - payment method runs this script
-					//PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Payment method');
+					//PhocacartLog::add(4, 'CHECK', (int)$orderId, 'Payment method');
 				} else if ($user->id == $common->user_id) {
 					$canSend = 1;// User is the customer who made the order
-					//PhocacartLog::add(1, 'CHECK', (int)$orderId, 'Registered User');
+					//PhocacartLog::add(4, 'CHECK', (int)$orderId, 'Registered User');
 				}
 
 			} else {
@@ -275,7 +276,7 @@ class PhocacartOrderStatus
 
 			// Payment method returns status
 			if ($canSend == 0) {
-				PhocacartLog::add(1, 'Order Status - Notify - ERROR', (int)$orderId, JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
+				PhocacartLog::add(2, 'Order Status - Notify - ERROR', (int)$orderId, JText::_('COM_PHOCACART_NO_USER_ORDER_FOUND'));
 
 				// Don't die here because even if we cannot send email to customer we can send email to others
 				// $recipient == '' so no email will be sent to recipient
@@ -520,7 +521,7 @@ class PhocacartOrderStatus
 				if (JFile::exists(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php')) {
 					require_once(JPATH_ADMINISTRATOR.'/components/com_phocapdf/helpers/phocapdfrender.php');
 				} else {
-					PhocacartLog::add(1, 'Order Status - Notify - ERROR (PDF Class)', (int)$orderId, 'Render PDF file could not be found in system');
+					PhocacartLog::add(2, 'Order Status - Notify - ERROR (PDF Class)', (int)$orderId, 'Render PDF file could not be found in system');
 					throw new Exception('Error - Phoca PDF Helper - Render PDF file could not be found in system', 500);
 					return false;
 				}
@@ -620,6 +621,10 @@ class PhocacartOrderStatus
 				break;
 
 			}
+
+			// Email Footer
+			$body .= '<br><br>'.PhocacartText::completeText($status['email_footer'], $r, 1);
+
 			$pLang->setLanguageBack();
 
 

@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 $layoutC	= new JLayoutFile('categories_category', null, array('component' => 'com_phocacart'));
 
 echo '<div class="'.PhocacartRenderFront::completeClass(array($this->s['c']['row'], $this->t['class_row_flex'], 'grid', 'ph-row-cats', $this->t['class_lazyload'])).'">';
-$col	= 12/(int)$this->p->get('column_cats', 3);
+$col	= 12/(int)$this->p->get('columns_cats', 3);
 
 foreach ($this->t['categories'] as $v) {
 

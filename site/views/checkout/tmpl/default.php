@@ -17,10 +17,46 @@ if ( isset($this->t['checkout_desc']) && $this->t['checkout_desc'] != '') {
 }
 
 
+
 echo $this->loadTemplate('cart');
 echo $this->t['event']->onCheckoutAfterCart;
+
+// Coupon form before login
+if ($this->t['enable_coupons'] > 0 && $this->t['display_apply_coupon_form'] == 2) {
+	if ($this->t['enable_coupons'] == 1) {
+		// Display for all
+		echo $this->loadTemplate('coupon');
+	} else if ($this->t['enable_coupons'] == 2 && ($this->a->login == 1 || $this->a->login == 2)){
+		// Display for logged in user or guest checkout started
+		echo $this->loadTemplate('coupon');
+	}
+}
+
+// Reward points form before login
+if ($this->t['enable_rewards'] > 0 && $this->t['display_apply_reward_points_form'] == 2) {
+	echo $this->loadTemplate('rewardpoints');
+}
+
 echo $this->loadTemplate('login');
 echo $this->t['event']->onCheckoutAfterLogin;
+
+// Coupon form after login or
+// Coupon form after login but user needs to be logged in or guest checkout is on
+if ($this->t['enable_coupons'] > 0 && $this->t['display_apply_coupon_form'] == 3) {
+	if ($this->t['enable_coupons'] == 1) {
+		// Display for all
+		echo $this->loadTemplate('coupon');
+	} else if ($this->t['enable_coupons'] == 2 && ($this->a->login == 1 || $this->a->login == 2)){
+		// Display for logged in user or guest checkout started
+		echo $this->loadTemplate('coupon');
+	}
+}
+
+// Reward points form after login
+if ($this->t['enable_rewards'] > 0 && $this->t['display_apply_reward_points_form'] == 3) {
+	echo $this->loadTemplate('rewardpoints');
+}
+
 echo $this->loadTemplate('address');
 echo $this->t['event']->onCheckoutAfterAddress;
 echo $this->loadTemplate('shipping');

@@ -1390,6 +1390,10 @@ a.phSelectBoxButton.on:focus {
 	font-family: FontAwesome;
 	content: '\f00c'; /* Ok/check mark */
 }
+.phSelectBoxImage.fa.fa5.on:after {
+	font-family: "Font Awesome 5 Free";
+	content: '\f00c'; /* Ok/check mark */
+}
 
 
 .phSelectBoxImage:hover,
@@ -2227,6 +2231,20 @@ img.ph-lazyload:not([src]) {
 
 #phContainerPopup .modal-body {
     /* 100% = dialog height, 120px = header + footer */
-    /* bootstrap 4: max-height: calc(100% - 120px);*/
+    /* bootstrap 4: max-height: calc(100% - 120px);
+	height: calc(100% - 120px);*/
 	height: calc(100% - 120px);
+}
+
+.ph-checkout-box-apply-coupon {
+	margin-top: 1em;
+}
+.ph-checkout-box-apply-coupon .btn {
+	margin-left: 0.5em;
+}
+.ph-checkout-box-reward-points {
+	margin-top: 1em;
+}
+.ph-checkout-box-reward-points .btn {
+	margin-left: 0.5em;
 }

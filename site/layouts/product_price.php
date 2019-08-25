@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 $paramsC 					= PhocacartUtils::getComponentParameters();
 $zero_price_text			= $paramsC->get( 'zero_price_text', '' );
 $zero_price_label			= $paramsC->get( 'zero_price_label', '' );
+$price_on_demand_text       = $paramsC->get( 'price_on_demand_text', '' );
+$price_on_demand_label      = $paramsC->get( 'price_on_demand_label', '' );
 if ($zero_price_label == '0') {
 
 }
@@ -36,47 +38,95 @@ if (isset($d['discount']) && $d['discount']) {
 	<?php }
 	} */ ?>
 	<?php
-	if (isset($d['priceitems']['brutto']) && $d['priceitems']['brutto'] == 0 && $d['zero_price'] == 1) {
+
+
+    // Display Price - there are a lot of variants
+    // a) when e.g. price is zero, different text can be displayed
+    // b) when product type (PRODUCTTYPE) is "Price On Demand" - different text can be displayed (it can overwrite zero_price but if not set, zero_price text and label are active
+    $labelNetto     = '';
+    $labelTax       = '';
+    $labelBrutto    = '';
+
+    $priceNetto     = '';
+    $priceTax       = '';
+    $priceBrutto    = '';
+
+    $displayPrice   = 1;// At start display price = yes. If there will be some condition which will hide the price then use the information e.g. for discount prices (even disable them)
+
+    if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0 && ($d['priceitems']['netto'] != $d['priceitems']['brutto'])) {
+		$labelNetto = '<div class="ph-price-txt ph-price-netto-txt '.$classPS.'-txt">'. $d['priceitems']['nettotxt'].'</div>';
+		$priceNetto = '<div class="ph-price-netto '.$classPS.'">'.$d['priceitems']['nettoformat'].'</div>';
+	}
+
+	if ($d['priceitems']['tax'] && $d['priceitems']['taxcalc'] > 0) {
+		$labelTax = '<div class="ph-tax-txt '.$classPS.'-txt">'.$d['priceitems']['taxtxt'].'</div>';
+		$priceTax = '<div class="ph-tax '.$classPS.'">'.$d['priceitems']['taxformat'].'</div>';
+	}
+
+	if (isset($d['priceitems']['brutto'])) {
+		$labelBrutto = '<div class="ph-price-txt ph-price-brutto-txt '.$classPS.'-txt">'.$d['priceitems']['bruttotxt'].'</div>';
+		$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.$d['priceitems']['bruttoformat'].'</div>';
+	}
+
+
+    if (isset($d['priceitems']['brutto']) && $d['priceitems']['brutto'] == 0 && $d['zero_price'] == 1) {
+        $labelNetto     = '';
+        $labelTax       = '';
+        $priceNetto     = '';
+        $priceTax       = '';
 
 		// Text and Label instead of zero price
 		// Label - Nothing | Custom Text | Standard "Price" String (ONLY IN CASE THE PRICE IS ZERO)
-		if ($zero_price_label == '0') {
-			?><div class="ph-price-txt <?php echo $classPS; ?>-txt"></div><?php
+        if ($zero_price_label == '0') {
+			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt"></div>';
 		} else if ($zero_price_label != '') {
-			?><div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo JText::_($zero_price_label) ?></div><?php
+			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt">'.JText::_($zero_price_label).'</div>';
 		} else {
-			?><div class="ph-price-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['bruttotxt'] ?></div><?php
+			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt">'.$d['priceitems']['bruttotxt'].'</div>';
 		}
 
-		// Price - Custom Text | Standard Price (ONLY IN CASE THE PRICE IS ZERO)
+        // Price - Custom Text | Standard Price (ONLY IN CASE THE PRICE IS ZERO)
 		if ($zero_price_text == '0') {
-			?><div class="ph-price-brutto <?php echo $classPS; ?>-txt"></div><?php
+			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'>-txt"></div>';
+			$displayPrice   = 0;
 		} else if ($zero_price_text != '') {
-			?><div class="ph-price-brutto <?php echo $classPS; ?>"><?php echo JText::_($zero_price_text) ?></div><?php
+			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.JText::_($zero_price_text).'</div>';
+			$displayPrice   = 0;
 		} else {
-			?><div class="ph-price-brutto <?php echo $classPS; ?>"><?php echo $d['priceitems']['bruttoformat'] ?></div><?php
+			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.$d['priceitems']['bruttoformat'].'</div>';
 		}
 
-	} else {
+    }
 
-		// Standard price
-		if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0
-            && ($d['priceitems']['netto'] != $d['priceitems']['brutto'])) { ?>
-		<div class="ph-price-txt ph-price-netto-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['nettotxt'] ?></div>
-		<div class="ph-price-netto <?php echo $classPS; ?>"><?php echo $d['priceitems']['nettoformat'] ?></div>
-	<?php } ?>
+    if (isset($d['type']) && $d['type'] == 3) {
 
-	<?php if ($d['priceitems']['tax'] && $d['priceitems']['taxcalc'] > 0) { ?>
-		<div class="ph-tax-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['taxtxt'] ?></div>
-		<div class="ph-tax <?php echo $classPS; ?>"><?php echo $d['priceitems']['taxformat'] ?></div>
-	<?php } ?>
+        $labelNetto     = '';
+        $labelTax       = '';
+        $priceNetto     = '';
+        $priceTax       = '';
 
-	<?php if (isset($d['priceitems']['brutto'])) { ?>
-		<div class="ph-price-txt ph-price-brutto-txt <?php echo $classPS; ?>-txt"><?php echo $d['priceitems']['bruttotxt'] ?></div>
-		<div class="ph-price-brutto <?php echo $classPS; ?>"><?php echo $d['priceitems']['bruttoformat'] ?></div>
-	<?php }
+        if ($price_on_demand_label == '0') {
+            $labelBrutto    = '<div class="ph-price-txt '.$classPS.'-txt"></div>';
+            $displayPrice   = 0;
+        } else if ($price_on_demand_label != '') {
+            $labelBrutto    = '<div class="ph-price-txt '.$classPS.'-txt">'.JText::_($price_on_demand_label).'</div>';
+            $displayPrice   = 0;
+        }
 
-	}
+        if ($price_on_demand_text == '0') {
+            $priceBrutto    = '<div class="ph-price-brutto '.$classPS.'-txt"></div>';
+            $displayPrice   = 0;
+        } else if ($price_on_demand_text != '') {
+            $priceBrutto    = '<div class="ph-price-brutto '.$classPS.'-txt">'.JText::_($price_on_demand_text).'</div>';
+            $displayPrice   = 0;
+        }
+    }
+
+
+
+    echo $labelNetto . $priceNetto;
+    echo $labelTax . $priceTax;
+    echo $labelBrutto . $priceBrutto;
 
 	?>
 
@@ -86,7 +136,7 @@ if (isset($d['discount']) && $d['discount']) {
 	<?php
 
 	// PRODUCT DISCOUNT
-	if (isset ($d['discount']) && $d['discount']) { ?>
+	if (isset ($d['discount']) && $d['discount'] && $displayPrice == 1) { ?>
 		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0
                     && ($d['priceitemsdiscount']['brutto'] != $d['priceitemsdiscount']['netto'])) { ?>
 			<div class="ph-price-txt ph-price-netto-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['nettotxt'] ?></div>
@@ -106,7 +156,7 @@ if (isset($d['discount']) && $d['discount']) {
 
 	<?php
 	// CART DISCOUNT DISPLAYED IN PRODUCT VIEWS (under specific conditions only)
-	if (isset ($d['discountcart']) && $d['discountcart']) { ?>
+	if (isset ($d['discountcart']) && $d['discountcart'] && $displayPrice == 1) { ?>
 		<?php if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0
                 && ($d['priceitemsdiscountcart']['brutto'] != $d['priceitemsdiscountcart']['netto'])) { ?>
 			<div class="ph-price-txt ph-price-netto-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettotxt'] ?></div>

@@ -12,22 +12,46 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartLog
 {
 	/* type - type : e.g warning, error, etc.
+	 * 1 ... all
+	 * 2 ... error
+	 * 3 ... warnings
+	 * 4 ... notices
 	 * typeid - for example order id, category id, product id
 	 *
 	 * Example:
 	 * PhocacartLog::add(1, 'Message', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
 	 */
-	
+
 	public static function add( $type = 0, $title = '', $typeid = 0, $description = '') {
 
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$enable_logging		= $paramsC->get( 'enable_logging', 0 );
-		
+		$enable_logging		= $paramsC->get( 'enable_logging', 0 );// 0 disable, 1 all, 2 error only
+
 		if ($enable_logging == 0) {
 			return false;
 		}
-	
+
+		if ($enable_logging == 2 && $type != 2) {
+			return false;
+		}
+
+		// Additional User information
+		$descSuffix     = '';
+		if ($app->isClient('site')){
+			$user 		    = PhocacartUser::getUser();
+			$guest		    = PhocacartUserGuestuser::getGuestUser();
+
+			if ($guest){
+				$descSuffix .= ', User: Guest Checkout';
+			} else if ($user->username != ''){
+				$descSuffix .= ', User: '.$user->username;
+			} else {
+				$descSuffix .= ', User: Anonymous'; // Not logged in user, no guest checkout started
+			}
+		}
+		$description .= $descSuffix;
+
 		if ((int)$type > 0 && $title != '' ) {
 			$uri			= \Joomla\CMS\Uri\Uri::getInstance();
 			$user			= PhocacartUser::getUser();
@@ -38,15 +62,15 @@ class PhocacartLog
 			if (isset($user->id) && (int)$user->id > 0) {
 				$userid = $user->id;
 			}
-			
+
 			// Ordering
 			$ordering = 0;
 			$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_logs');
 			$max = $db->loadResult();
 			$ordering = $max+1;
-			
-			
-			
+
+
+
 			$query = ' INSERT INTO #__phocacart_logs ('
 			.$db->quoteName('user_id').', '
 			.$db->quoteName('type_id').', '
@@ -69,14 +93,14 @@ class PhocacartLog
 			.$db->quote('1').', '
 			.$db->quote((int)$ordering).', '
 			.$db->quote(gmdate('Y-m-d H:i:s')).' )';
-			
+
 			$db->setQuery($query);
 			$db->execute();
 
 			return true;
 		}
 		return false;
-		
+
 	}
 }
 ?>

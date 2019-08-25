@@ -264,6 +264,12 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
+            <field name="category_askquestion" type="list" default="0" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_CATEGORY_VIEW_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="2">COM_PHOCACART_YES_ONLY_IF_ADD_TO_CART_NOT_DISPLAYED</option>
+            </field>
+
 
             <field name="phocahead5" type="phocahead" default="COM_PHOCACART_ITEM_VIEW_LABEL" label="" description=""/>
 
@@ -300,13 +306,6 @@
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_ONLY_IF_ADD_TO_CART_NOT_DISPLAYED</option>
-            </field>
-
-            <field name="popup_askquestion" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_POPUP_ITEM_VIEW_LABEL"
-                   description="COM_PHOCACART_FIELD_ASK_A_QUESTION_POPUP_ITEM_VIEW_DESC">
-                <option value="1">COM_PHOCACART_YES_WINDOW_POPUP</option>
-				<option value="2">COM_PHOCACART_YES_MODAL_POPUP</option>
-				<option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="display_public_download" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PUBLIC_DOWNLOAD_BUTTON_LABEL"
@@ -419,6 +418,24 @@
                    description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_RECEIVED_POINTS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
+            </field>
+
+			<field name="display_zero_total" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ZERO_TOTAL_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ZERO_TOTAL_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+
+            <field name="display_apply_coupon_form" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_APPLY_COUPON_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_APPLY_COUPON_FORM_DESC">
+                <option value="1">COM_PHOCACART_IN_PAYMENT_METHOD_FORM</option>
+                <option value="2">COM_PHOCACART_BEFORE_LOGIN_FORM</option>
+                <option value="3">COM_PHOCACART_AFTER_LOGIN_FORM</option>
+            </field>
+
+            <field name="display_apply_reward_points_form" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_APPLY_REWARD_POINTS_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_APPLY_REWARD_POINTS_FORM_DESC">
+                <option value="1">COM_PHOCACART_IN_PAYMENT_METHOD_FORM</option>
+                <option value="2">COM_PHOCACART_BEFORE_LOGIN_FORM</option>
+                <option value="3">COM_PHOCACART_AFTER_LOGIN_FORM</option>
             </field>
 
 
@@ -597,9 +614,12 @@
                 <option value="2">COM_PHOCACART_UP_DOWN</option>
             </field>
 
+            <field name="zero_price_label" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_DESC"/>
             <field name="zero_price_text" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_TEXT_DESC"/>
 
-            <field name="zero_price_label" default="" size="20" type="text" label="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_LABEL" description="COM_PHOCACART_FIELD_ZERO_PRICE_LABEL_DESC"/>
+            <field name="price_on_demand_label" default="" size="20" type="text" label="COM_PHOCACART_FIELD_PRICE_ON_DEMAND_LABEL_LABEL" description="COM_PHOCACART_FIELD_PRICE_ON_DEMAND_LABEL_DESC"/>
+            <field name="price_on_demand_text" default="" size="20" type="text" label="COM_PHOCACART_FIELD_PRICE_ON_DEMAND_TEXT_LABEL" description="COM_PHOCACART_FIELD_PRICE_ON_DEMAND_TEXT_DESC"/>
+
 
             <field name="hide_add_to_cart_zero_price" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_DESC">
@@ -622,6 +642,13 @@
 			<field name="display_webp_images" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+            <field name="popup_askquestion" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_POPUP_ITEM_VIEW_LABEL"
+                   description="COM_PHOCACART_FIELD_ASK_A_QUESTION_POPUP_ITEM_VIEW_DESC">
+                <option value="1">COM_PHOCACART_YES_WINDOW_POPUP</option>
+				<option value="2">COM_PHOCACART_YES_MODAL_POPUP</option>
+				<option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
@@ -751,9 +778,10 @@
                 <option value="2">COM_PHOCACART_CHANGE_TAXES_TOTAL_AMOUNT_AND_ROUNDING_CALCULATION</option>
             </field>
 
-            <field name="enable_coupons" type="list" default="1" label="COM_PHOCACART_FIELD_ENABLE_COUPONS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COUPONS_DESC">
+            <field name="enable_coupons" type="list" default="2" label="COM_PHOCACART_FIELD_ENABLE_COUPONS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COUPONS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
+				<option value="2">COM_PHOCACART_YES_USER_LOGGED_IN_GUEST_CHECKOUT_ENABLED</option>
             </field>
 
             <field name="enable_rewards" type="list" default="1" label="COM_PHOCACART_FIELD_ENABLE_REWARD_POINTS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_REWARD_POINTS_DESC">
@@ -1040,7 +1068,8 @@
 
 
             <field name="enable_logging" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_LOGGING_LABEL" description="COM_PHOCACART_FIELD_ENABLE_LOGGING_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
+                <option value="1">COM_PHOCACART_YES_ALL</option>
+				<option value="2">COM_PHOCACART_YES_ERRORS_ONLY</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
@@ -1114,7 +1143,7 @@
             </field>
 
             <field name="upload_maxsize" type="phocatext" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
-			
+
 			<field name="ignore_file_types_check" default="0" type="list" label="COM_PHOCACART_IGNORE_FILE_TYPES_CHECK_LABEL" description="COM_PHOCACART_IGNORE_FILE_TYPES_CHECK_DESC" >
 	<!--<option value="1">COM_PHOCACART_YES_UPLOAD_PARAM</option>
 	<option value="2">COM_PHOCACART_YES_UPLOAD_PARAM_ADMIN</option>
@@ -1242,7 +1271,7 @@
 
             <field name="product_image_path" default="images/phocacartproducts" size="4" type="text" label="COM_PHOCACART_FIELD_PRODUCT_IMAGE_PATH_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_IMAGE_PATH_DESC"/>
             <field name="category_image_path" default="images/phocacartcategories" size="4" type="text" label="COM_PHOCACART_FIELD_CATEGORY_IMAGE_PATH_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_IMAGE_PATH_DESC"/>
-			
+
 			<field name="thumb_name_prefix" default="phoca_thumb" size="4" type="text" label="COM_PHOCACART_FIELD_THUMBNAIL_NAME_PREFIX_LABEL" description="COM_PHOCACART_FIELD_THUMBNAIL_NAME_PREFIX_DESC"/>
 
 

@@ -60,22 +60,24 @@ class PhocaCartViewCategory extends JViewLegacy
 			$this->t['display_action_icons'] = 0;
 		}
 
-		$this->t['category_addtocart']		= $this->p->get( 'category_addtocart', 1 );
-		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
-		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
-		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
-		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
-		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
-		$this->t['display_addtocart']		= $this->p->get( 'display_addtocart', 1 );
-		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
-		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
-		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
-		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
-		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
-		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
-		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
+		$this->t['category_addtocart']			= $this->p->get( 'category_addtocart', 1 );
+		$this->t['dynamic_change_image']		= $this->p->get( 'dynamic_change_image', 0);
+		$this->t['dynamic_change_price']		= $this->p->get( 'dynamic_change_price', 0 );
+		$this->t['dynamic_change_stock']		= $this->p->get( 'dynamic_change_stock', 0 );
+		$this->t['add_compare_method']			= $this->p->get( 'add_compare_method', 0 );
+		$this->t['add_wishlist_method']			= $this->p->get( 'add_wishlist_method', 0 );
+		$this->t['display_addtocart']			= $this->p->get( 'display_addtocart', 1 );
+		$this->t['display_star_rating']			= $this->p->get( 'display_star_rating', 0 );
+		$this->t['add_cart_method']				= $this->p->get( 'add_cart_method', 0 );
+		$this->t['hide_attributes_category']	= $this->p->get( 'hide_attributes_category', 1 );
+		$this->t['hide_attributes']				= $this->p->get( 'hide_attributes', 0 );
+		$this->t['display_stock_status']		= $this->p->get( 'display_stock_status', 1 );
+		$this->t['hide_add_to_cart_stock']		= $this->p->get( 'hide_add_to_cart_stock', 0 );
+		$this->t['zero_attribute_price']		= $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
-		$this->t['cv_subcategories_layout']	= $this->p->get( 'cv_subcategories_layout', 1 );
+		$this->t['cv_subcategories_layout']		= $this->p->get( 'cv_subcategories_layout', 1 );
+		$this->t['category_askquestion']	 	= $this->p->get( 'category_askquestion', 0 );
+		$this->t['popup_askquestion']		    = $this->p->get( 'popup_askquestion', 1 );
 
 
 		// Rights or catalogue options --------------------------------

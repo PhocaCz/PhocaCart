@@ -582,6 +582,7 @@ class PhocacartShipping
 		}
 
 		// 2) TEST IF SHIPPING METHOD IS NOT DISABLED FOR ALL DOWNLOADABLE PRODUCTS
+		// PRODUCTTYPE tested
 		if (isset($options['all_digital_products']) &&  $options['all_digital_products'] == 1 && $skip_shipping_method == 1) {
 			return true;
 		}

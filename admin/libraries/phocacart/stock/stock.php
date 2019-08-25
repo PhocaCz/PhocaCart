@@ -363,7 +363,7 @@ class PhocacartStock
 			}
 
 			if ($i > 1 && $ajax != 1) {
-				PhocacartLog::add(1, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
+				PhocacartLog::add(3, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
 			}
 
 		} else if ($item->stock_calculation == 2) {

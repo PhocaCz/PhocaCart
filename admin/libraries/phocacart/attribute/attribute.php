@@ -270,7 +270,7 @@ class PhocacartAttribute
 							// Transform checkbox to INT (1 or 0)
 							// And check if there are more default values which is not possible e.g. for select box
 							$defaultValue = 0;
-							//PhocacartLog::add(1, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
+							//PhocacartLog::add(3, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
 
 							// can be "on" (sent by form) or "0" or "1" sent by database e.g. in batch
 							if (isset($v2['default_value']) && $v2['default_value'] != '0') {
@@ -623,7 +623,7 @@ class PhocacartAttribute
 							// Transform checkbox to INT (1 or 0)
 							// And check if there are more default values which is not possible e.g. for select box
 							$defaultValue = 0;
-							//PhocacartLog::add(1, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
+							//PhocacartLog::add(3, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
 
 							// can be "on" (sent by form) or "0" or "1" sent by database e.g. in batch
 							if (isset($v2['default_value']) && $v2['default_value'] != '0') {
@@ -1046,7 +1046,7 @@ class PhocacartAttribute
 
 		if (!empty($msgA)) {
 			//$u = PhocacartUser::getUserInfo();
-			//PhocacartLog::add(1, implode(' ', $msgA), $id, 'IP: '. $u['ip'].', User ID: '.$u['id'] . ', User Name: '.$u['username']);
+			//PhocacartLog::add(3, implode(' ', $msgA), $id, 'IP: '. $u['ip'].', User ID: '.$u['id'] . ', User Name: '.$u['username']);
 		}
 		return $passAll;
 	}

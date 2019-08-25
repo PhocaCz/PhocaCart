@@ -97,7 +97,7 @@ if (!empty($this->t['paymentmethods'])) {
 		echo '<div class="ph-pos-coupon-reward-box">';
 
 		// COUPON CODE
-		if ($this->t['enable_coupons'] == 1) {
+		if ($this->t['enable_coupons'] > 0) {
 			//echo '<div class="col-sm-12 col-md-12 ">';
 			echo '<label>'.JText::_('COM_PHOCACART_COUPON_CODE'). ' <small>('.JText::_('COM_PHOCACART_APPLY_COUPON_CODE').')</small><br /><input type="text" name="phcoupon" id="phcoupon" value="'.$this->t['couponcodevalue'].'" autocomplete="off"></label>';
 			//echo '</div><div class="ph-cb"></div>';

@@ -260,7 +260,7 @@ final class PhocacartCategory
 		return implode($result);
 	}
 
-	public static function nestedToCheckBox($data, $d, $currentCatid = 0) {
+	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active) {
 		$result = array();
 		if (!empty($data) && count($data) > 0) {
 			$result[] = '<ul class="ph-filter-module-category-tree">';
@@ -274,12 +274,13 @@ final class PhocacartCategory
 
 				if (in_array($value, $d['getparams'])) {
 					$checked 	= 'checked';
+					$active     = 1;
 				}
 
 				$result[] = '<li><div class="checkbox">';
 				$result[] = '<label><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\');" />'.$v['title'].'</label>';
 				$result[] = '</div></li>';
-				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid);
+				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active);
 			}
 			$result[] = '</ul>';
 		}

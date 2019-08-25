@@ -27,7 +27,7 @@ if ($this->p->get('show_pagination_top', 1)) {
 	}
     echo '</div>';
 
-    echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">';
+    echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-pag-top-row">';
 	if ($this->p->get('show_pagination_limit_top', 1)) {
 
 		$limit = str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox.form-control'].' chosen-select"', $this->t['pagination']->getLimitBox());
@@ -38,7 +38,7 @@ if ($this->p->get('show_pagination_top', 1)) {
     echo '</div>';
 
 
-    echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'">';
+    echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-pag-top-row">';
 	if ($this->p->get('show_switch_layout_type', 1)) {
 
 		echo '<button type="button" class="'.$this->s['c']['btn.btn-default'].' phItemSwitchLayoutType grid '.$this->t['layouttypeactive'][0].'" data-layouttype="grid"><span class="'.$this->s['i']['grid'].'"></span></button> ';

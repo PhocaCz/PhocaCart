@@ -84,6 +84,7 @@ if (!empty($this->t['items'])) {
 			$price 				= new PhocacartPrice;
 			$d					= array();
 			$d['s']			    = $this->s;
+			$d['type']			= $v['type'];// PRODUCTTYPE
 
 			$d['priceitems']	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, $v['group_price']);
 			$d['priceitemsorig']= array();

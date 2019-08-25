@@ -17,6 +17,7 @@ $layoutA	= new JLayoutFile('button_add_to_cart_list', null, array('component' =>
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
 $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
 $layoutBSH	= new JLayoutFile('button_submit_hidden', null, array('component' => 'com_phocacart'));
+$layoutQ	= new JLayoutFile('button_ask_question', null, array('component' => 'com_phocacart'));
 
 $d 		= $displayData;
 $t		= $d['t'];
@@ -73,14 +74,14 @@ if ($t['fade_in_action_icons'] == 0  && $t['display_action_icons'] == 1) {
 if (!empty($d['review'])) { echo $d['review'];}
 
 // DESCRIPTION
-if (!empty($d['description'])) { echo '<div class="ph-item-desc">' . $d['description'] . '</div>';}
+if (!empty($d['description'])) { echo  $d['description'];}
 
 // VIEW PRODUCT BUTTON
 echo '<div class="ph-item-action-box ph-caption ph-category-action-box-buttons '.$d['lt'].'">';
 echo '<div class="ph-category-action-buttons '.$d['lt'].'">';
 
 // :L: Stock status
-if (!empty($d['layout']['dSO'])) { echo $dL['layout']['dSO'];}
+if (!empty($d['layout']['dSO'])) { echo $d['layout']['dSO'];}
 
 // Start Form
 if (!empty($d['layout']['dF'])) { echo $layoutPFS->render($d['layout']['dF']);}
@@ -93,6 +94,9 @@ if (!empty($d['layout']['dV'])) { echo $layoutV->render($d['layout']['dV']);}
 
 // :L: ADD TO CART
 if (!empty($d['layout']['dA'])) { echo $layoutA->render($d['layout']['dA']);} else if ($d['icon']['addtocart'] != '') { echo $layoutBSH->render();}
+
+// :L: ASK A QUESTION
+if (!empty($d['layout']['dQ'])) { echo $layoutQ->render($d['layout']['dQ']);}
 
 // End Form
 if (!empty($d['layout']['dF'])) { echo $layoutPFE->render();}

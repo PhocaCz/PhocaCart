@@ -13,16 +13,16 @@ defined('JPATH_BASE') or die;
 class PhocacartCaptchaRecaptcha
 {
 	public static function render() {
-		
+
 		$document	= JFactory::getDocument();
 		$pC 		= PhocacartUtils::getComponentParameters();
 		$siteKey	= strip_tags(trim($pC->get( 'recaptcha_sitekey', '' )));
-		
+
 		$document->addScript('https://www.google.com/recaptcha/api.js');
 		return '<div class="g-recaptcha" data-sitekey="'.$siteKey.'"></div>';
 	}
 	public static function isValid() {
-		
+
 		$app 		= JFactory::getApplication();
 		$pC 		= PhocacartUtils::getComponentParameters();
 		$secretKey	= strip_tags(trim($pC->get( 'recaptcha_privatekey', '' )));
@@ -31,12 +31,12 @@ class PhocacartCaptchaRecaptcha
 		$response 	= $app->input->post->get('g-recaptcha-response', '', 'string');
 		$remoteIp	= $_SERVER['REMOTE_ADDR'];
 		$urlVerify	= 'https://www.google.com/recaptcha/api/siteverify';
-		
+
 		$recaptchaMethod = $pC->get( 'recaptcha_request_method', 2 );//1 file_get_contents, 2 curl
-		
+
 		try {
 
-			
+
 			if ($recaptchaMethod == 1) {
 				// FILE GET CONTENTS
 				$data = ['secret'   => $secretKey,
@@ -47,7 +47,7 @@ class PhocacartCaptchaRecaptcha
 					'http' => [
 						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
 						'method'  => 'POST',
-						'content' => http_build_query($data) 
+						'content' => http_build_query($data)
 					]
 				];
 
@@ -68,18 +68,18 @@ class PhocacartCaptchaRecaptcha
 						'remoteip' => $remoteIp],
 					CURLOPT_RETURNTRANSFER => true
 				]);
-				
+
 				$result = curl_exec($ch);
 				curl_close($ch);
 			}
-			
+
 			//$resultString = print r($result, true);
-			//PhocacartLog::add(1, 'Ask a Question - Captcha Result', 0, $resultString);
+			//PhocacartLog::add(3, 'Ask a Question - Captcha Result', 0, $resultString);
 			if (!$result) {
 				return false;
 			}
 			return json_decode($result)->success;
-				
+
 		}
 		catch (Exception $e) {
 			return null;

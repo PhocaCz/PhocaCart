@@ -424,13 +424,15 @@ class PhocacartPayment
 	 * cart to e.g. one item, payment cannot stay the same, the same happens with countries and region
 	 */
 
-	public static function removePayment($type = 0) {
+	public static function removePayment($type = 0, $removeCoupon = 1) {
 
 		if ($type == 0 || $type == 1) {
 
 			$session 		= JFactory::getSession();
 			$session->set('guestpayment', false, 'phocaCart');
-			$session->set('guestcoupon', false, 'phocaCart');
+			if ($removeCoupon == 1) {
+				$session->set('guestcoupon', false, 'phocaCart');
+			}
 			$session->set('guestloyaltycardnumber', false, 'phocaCart');
 		}
 
@@ -439,14 +441,29 @@ class PhocacartPayment
 			$user			= $vendor = $ticket = $unit	= $section = array();
 			$dUser			= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 
+			$set = array();
+
 			$pos_payment_force = 0;
 			if (PhocacartPos::isPos()) {
 				$app					= JFactory::getApplication();
 				$paramsC 				= PhocacartUtils::getComponentParameters();
 				$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
+
+				if ($removeCoupon == 1 && $pos_payment_force == 0) {
+					$set[]  = 'coupon = 0';
+				}
+
+			} else {
+				if ($removeCoupon == 1) {
+					$set[]  = 'coupon = 0';
+				}
 			}
 
-			$query = 'UPDATE #__phocacart_cart_multiple SET payment = '.(int)$pos_payment_force
+			$set[]  = 'payment = '.(int)$pos_payment_force;
+
+			$sets = implode(', ', $set);
+
+			$query = 'UPDATE #__phocacart_cart_multiple SET '.$sets
 				.' WHERE user_id = '.(int)$user->id
 				.' AND vendor_id = '.(int)$vendor->id
 				.' AND ticket_id = '.(int)$ticket->id

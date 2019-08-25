@@ -539,7 +539,7 @@ class PhocaCartControllerPos extends JControllerForm
 		$item['phreward']	= $this->input->get( 'phreward', '', 'int'  );
 		$params 			= $app->getParams();
 
-		$enable_coupons		= $params->get( 'enable_coupons', 1 );
+		$enable_coupons		= $params->get( 'enable_coupons', 2 );
 		$enable_rewards		= $params->get( 'enable_rewards', 1 );
 
 		// Controller name in Joomla! is not called "pos" - it includes task variable
@@ -568,7 +568,7 @@ class PhocaCartControllerPos extends JControllerForm
 		// Coupon
 		$couponId = 0;
 
-		if (isset($item['phcoupon']) && $item['phcoupon'] != '' && $enable_coupons) {
+		if (isset($item['phcoupon']) && $item['phcoupon'] != '' && $enable_coupons > 0) {
 
 			$coupon = new PhocacartCoupon();
 			$coupon->setCoupon(0, $item['phcoupon']);

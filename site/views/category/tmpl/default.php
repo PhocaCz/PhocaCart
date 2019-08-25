@@ -18,6 +18,7 @@ $layoutAI	= new JLayoutFile('button_add_to_cart_icon', null, array('component' =
 $layoutIL	= new JLayoutFile('items_list', null, array('component' => 'com_phocacart'));
 $layoutIGL	= new JLayoutFile('items_gridlist', null, array('component' => 'com_phocacart'));
 $layoutIG	= new JLayoutFile('items_grid', null, array('component' => 'com_phocacart'));
+$layoutAAQ	= new JLayoutFile('popup_container_iframe', null, array('component' => 'com_phocacart'));
 
 // HEADER - NOT AJAX
 if (!$this->t['ajax']) {
@@ -106,6 +107,7 @@ if (!empty($this->items)) {
 
 		// :L: PRICE
 		$dP = array();
+		$dP['type'] = $v->type;// PRODUCTTYPE
 
 		if ($this->t['can_display_price']) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
@@ -246,13 +248,19 @@ if (!empty($this->items)) {
 		}
 
 		// Different button or icons
-		//$addToCartHidden = 0;// Button can be hidden based on price
-		if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
-			// Don't display Add to Cart in case the price is zero
-			//$addToCartHidden = 1;
+		$addToCartHidden = 0;// Design parameter - if there is no button (add to cart, paddle link, external link), used e.g. for displaying ask a question button
+		if ($v->type == 3) {
+			// PRODUCTTYPE - price on demand price cannot be added to cart
 			$dA = array(); // Skip Standard Add to cart button
 			$icon['addtocart'] = '';// Skip Add to cart icon
 			$dF = array();// Skip form
+			$addToCartHidden = 1;
+		} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
+			// Don't display Add to Cart in case the price is zero
+			$dA = array(); // Skip Standard Add to cart button
+			$icon['addtocart'] = '';// Skip Add to cart icon
+			$dF = array();// Skip form
+			$addToCartHidden = 1;
 		} else if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4) {
 			// ADD TO CART BUTTONS - we have data yet
 		} else if ((int)$this->t['category_addtocart'] == 102 && (int)$v->external_id != '') {
@@ -278,6 +286,7 @@ if (!empty($this->items)) {
 			$icon['addtocart'] = '';// Skip Add to cart icon
 			$dF = array();// Skip form
 
+
 		} else {
 			// ADD TO CART ICON ONLY (NO BUTTONS)
 			$dA = array(); // Skip Standard Add to cart button
@@ -286,8 +295,30 @@ if (!empty($this->items)) {
 			// $dA for button will be rendered
 			// $dA for icon was rendered already
 			// Do not skip the form here
+			$addToCartHidden = 1;
 		}
 		// ---------------------------- END BUTTONS
+
+		$dQ	= array();
+		if (((int)$this->t['category_askquestion'] == 1) || ($this->t['category_askquestion'] == 2 && ((int)$this->t['category_addtocart'] == 0 || $addToCartHidden != 0))) {
+
+			$dQ['s']			= $this->s;
+			$dQ['id']			= (int)$v->id;
+			$dQ['catid']		= $this->t['categoryid'];;
+			$dQ['popup']		= 0;
+			$tmpl				= '';
+			if ((int)$this->t['popup_askquestion'] > 0) {
+				$dQ['popup']		= (int)$this->t['popup_askquestion'];
+				$popupAskAQuestion	= (int)$this->t['popup_askquestion'];
+				$tmpl				= 'tmpl=component';
+			}
+			$dQ['link']			=  JRoute::_(PhocacartRoute::getQuestionRoute($v->id, $v->catid, $v->alias, $v->catalias, $tmpl));
+			$dQ['return']		= $this->t['actionbase64'];
+
+		}
+
+
+
 
 
 
@@ -309,6 +340,7 @@ if (!empty($this->items)) {
 		$dL['layout']['dA']		= $dA;// Button Add to Cart
 		$dL['layout']['dA2']	= $dA2;// Button Buy now
 		$dL['layout']['dA3']	= $dA3;// Button external link
+		$dL['layout']['dQ']		= $dQ;// Ask A Question
 
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
@@ -380,6 +412,20 @@ if (!$this->t['ajax']) {
 	echo '</div>';// end #ph-pc-category-box
 
 	echo '<div id="phContainer"></div>';
+
+	if (isset($popupAskAQuestion) && $popupAskAQuestion == 2) {
+
+		echo '<div id="phContainerPopup">';
+		$d						= array();
+		$d['id']				= 'phAskAQuestionPopup';
+		$d['title']				= JText::_('COM_PHOCACART_ASK_A_QUESTION');
+		$d['icon']				= $this->s['i']['question-sign'];
+		$d['t']					= $this->t;
+		$d['s']					= $this->s;
+		echo $layoutAAQ->render($d);
+		echo '</div>';// end phContainerPopup
+	}
+
 	echo '<div>&nbsp;</div>';
 	echo PhocacartUtilsInfo::getInfo();
 }

@@ -148,13 +148,13 @@ class PhocacartEmailFactory extends JFactory{
 				// Check for a false return value if exception throwing is disabled
 				if ($mail->setFrom($mailfrom, JMailHelper::cleanLine($fromname), false) === false)
 				{
-					PhocacartLog::add(1, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
+					PhocacartLog::add(2, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
 					JLog::add(__METHOD__ . '() could not set the sender data.', JLog::WARNING, 'mail');
 				}
 			}
 			catch (phpmailerException $e)
 			{
-				PhocacartLog::add(1, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
+				PhocacartLog::add(2, 'Error sending email', 0, __METHOD__ . '() could not set the sender data. Warning: ' . JLog::WARNING, 'Mail From: '.$mailfrom );
 				JLog::add(__METHOD__ . '() could not set the sender data.', JLog::WARNING, 'mail');
 			}
 		}
@@ -267,10 +267,10 @@ class PhocacartEmail
 
 
 		if (is_object($sendMail) && $sendMail->getMessage()) {
-			PhocacartLog::add(1, 'Error sending email', 0, $sendMail->getMessage() . ', Mail From: '.$from );
+			PhocacartLog::add(2, 'Error sending email', 0, $sendMail->getMessage() . ', Mail From: '.$from );
 			return false;
 		} else if (!$sendMail) {
-			PhocacartLog::add(1, 'Error sending email', 0,  'No error data set, Mail From: '.$from );
+			PhocacartLog::add(2, 'Error sending email', 0,  'No error data set, Mail From: '.$from );
 			return false;
 		} else {
 			return true;

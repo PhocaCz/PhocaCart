@@ -5,3 +5,11 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+ 
+#phContainerPopup .modal-body {
+	height: calc(95vh - 120px);
+}
+
+#phContainerPopup .modal-body iframe{
+	height: 95%;
+}

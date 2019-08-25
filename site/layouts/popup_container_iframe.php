@@ -13,7 +13,7 @@ $s          = $d['s'];
 $d['close'] = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>';
 
 ?>
-<div id="<?php echo $d['id'] ?>" class="<?php echo $s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="<?php echo $d['id'] ?>" class="<?php echo $s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none">
     <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c']['modal-lg'] ?>">
       <div class="<?php echo $s['c']['modal-content'] ?>">
         <div class="<?php echo $s['c']['modal-header'] ?>">
@@ -22,7 +22,13 @@ $d['close'] = '<button type="button" class="close" aria-label="'.JText::_('COM_P
             <?php echo $d['s']['c']['class-type'] == 'bs4' ? $d['close'] : '' ?>
         </div>
         <div class="<?php echo $s['c']['modal-body'] ?>">
-			<iframe frameborder="0"></iframe>
+			<?php
+            /* We paste the iframe dynamically per Javascript so it does not include previous instance at start
+                <iframe frameborder="0"></iframe>
+                administrator/components/com_phocacart/libraries/phocacart/render/js.php
+                public static function renderAjaxAskAQuestion($options = array()) {
+             */
+			?>
         </div>
 		<div class="<?php echo $s['c']['modal-footer'] ?>"></div>
 	   </div>

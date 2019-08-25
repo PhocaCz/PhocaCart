@@ -24,6 +24,7 @@ $p['display_discount_product']			= $d['params']->get( 'display_discount_product'
 $p['zero_shipping_price_calculation']	= $d['params']->get( 'zero_shipping_price_calculation', 0 );
 $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_calculation', 0 );
 $p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
+$p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
 
 if (!empty($d['fullitems'])) {
 
@@ -419,7 +420,7 @@ if (!empty($d['fullitems'])) {
 		echo '<div class="'.$cP.' ph-small ph-right ph-b ph-cart-brutton-currency">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
 	//} else if (!($price->roundPrice($d['total'][0]['brutto']) > -0.01 && $price->roundPrice($d['total'][0]['brutto'] < 0.01)) == 1) {
-	} else if ($d['total'][0]['brutto'] !== 0) {
+	} else if ($d['total'][0]['brutto'] !== 0 || ($d['total'][0]['brutto'] === 0 && $p['display_zero_total'] == 1)) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.' ph-small ph-cart-total-txt">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cP.' ph-small ph-right ph-b ph-cart-total">'.$price->getPriceFormat($d['total'][0]['brutto']).'</div>';

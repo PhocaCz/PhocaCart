@@ -79,6 +79,7 @@ class PhocacartCartCalculation
 		$total['countallproducts']			= 0;
 		$total['countphysicalproducts']		= 0;
 		$total['countdigitalproducts']		= 0;
+		$total['countpriceondemandproducts']= 0;
 
 		// OPTIONS (VARIANTS) QUANTITY
 		// The same option can be in different items
@@ -281,12 +282,21 @@ class PhocacartCartCalculation
 				$total['tax'][$taxKey]['type']	= $itemD->taxcalculationtype;
 				$total['tax'][$taxKey]['rate']	= $itemD->taxrate;
 
-				// Digital product
+				// PRODUCTTYPE Digital product
 				$total['countallproducts']++;
 				if ($itemD->type == 0) {
 					$total['countphysicalproducts']++;
 				} else if ($itemD->type == 1) {
 					$total['countdigitalproducts']++;
+				} else if ($itemD->type == 2) {
+					// physical and digital
+					// This rule can be changed but for now e.g. we test if the product is digital to ensure that the shipping will be skipped
+					// if the product is both - digital and physical, we cannot skip shipping so we do not count it as digital
+					// Uncomment if you need to opposite rule
+					//$total['countphysicalproducts']++;
+					//$total['countdigitalproducts']++;
+				} else if ($itemD->type == 3) {
+					$total['countpriceondemandproducts']++;
 				}
 
 				// ==========
@@ -781,6 +791,7 @@ class PhocacartCartCalculation
 	// ============
 	// CART COUPON
 	// ============
+
 	/*
 	 * $coupon ... coupon ID and Title set in checkout
 	 * $couponO ... coupon object
@@ -796,6 +807,7 @@ class PhocacartCartCalculation
 		foreach($fullItems as $k => $v) {
 
 			$validCoupon 	= $couponO->checkCoupon(0, $v['id'], $v['catid'], $total['quantity'], $total['netto']);
+
 
 			if ($validCoupon) {
 				$validCouponId					= $couponDb['id'];
@@ -859,12 +871,15 @@ class PhocacartCartCalculation
 
 			/*
 			 *
-			 * Must be done in recalculateCartCoupons
-			if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
-				$fullItems[$k]['finaldiscount']	= $fullItems[$k]['nettodiscount'] * $v['quantity'];
-			} else if (isset($fullItems[$k]['bruttodiscount'])) {
-				$fullItems[$k]['finaldiscount']	= $fullItems[$k]['bruttodiscount'] * $v['quantity'];
-			}			 */
+			 * Must be done in recalculateCartCoupons for fixed coupons
+			 */
+			if ($couponDb['calculation_type'] != 0) {
+				if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
+					$fullItems[$k]['finaldiscount']	= $fullItems[$k]['nettodiscount'] * $v['quantity'];
+				} else if (isset($fullItems[$k]['bruttodiscount'])) {
+					$fullItems[$k]['finaldiscount']	= $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+				}
+			}
 
 			if ($this->correctsubtotal) {
 				$this->correctSubTotal($fullItems[$k], $total);

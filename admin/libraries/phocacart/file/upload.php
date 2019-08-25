@@ -305,7 +305,7 @@ class PhocacartFileUpload
 
 
 				if(!JFile::upload($file['tmp_name'], $filepathImgFinal, false, true)) {
-					PhocacartLog::add(1, 'Error uploading file - JFile upload Ajax', 0, 'File: '.$file['name'].', File Path: '.$filepathImgFinal );
+					PhocacartLog::add(2, 'Error uploading file - JFile upload Ajax', 0, 'File: '.$file['name'].', File Path: '.$filepathImgFinal );
 					jexit(json_encode(array( 'jsonrpc' => '2.0', 'result' => 'error', 'code' => 109,
 					'message' => JText::_('COM_PHOCACART_ERROR').': ',
 					'details' => JTEXT::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE') .'<br />'
@@ -324,7 +324,7 @@ class PhocacartFileUpload
 			}
 		} else {
 			// No isset $file['name']
-			PhocacartLog::add(1, 'Error uploading file - Filename does not exist', 0, 'File: File does not exist - Multiple Upload ' );
+			PhocacartLog::add(2, 'Error uploading file - Filename does not exist', 0, 'File: File does not exist - Multiple Upload ' );
 
 			jexit(json_encode(array( 'jsonrpc' => '2.0', 'result' => 'error', 'code' => 104,
 			'message' => JText::_('COM_PHOCACART_ERROR').': ',
@@ -429,7 +429,7 @@ class PhocacartFileUpload
 
 			if (!JFile::upload($file['tmp_name'], $filepath, false, true)) {
 
-				PhocacartLog::add(1, 'Error uploading file - JFile upload', 0, 'File: '.$file['name'].', File Path: '.$filepath );
+				PhocacartLog::add(2, 'Error uploading file - JFile upload', 0, 'File: '.$file['name'].', File Path: '.$filepath );
 				if ($return) {
 					$app->enqueueMessage( JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
 					$app->redirect(base64_decode($return).'&manager='.(string)$manager.'&folder='.$folderUrl);
@@ -458,7 +458,7 @@ class PhocacartFileUpload
 				}
 			}
 		} else {
-			PhocacartLog::add(1, 'Error uploading file - Filename does not exist', 0, 'File: File does not exist (Single Upload)' );
+			PhocacartLog::add(2, 'Error uploading file - Filename does not exist', 0, 'File: File does not exist (Single Upload)' );
 			$msg = JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE');
 			if ($return) {
 				$app->enqueueMessage($msg);

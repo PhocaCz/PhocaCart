@@ -104,8 +104,8 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 	param 			= phArrayToString(param);
 	var queryString	= jQuery.param.querystring();
 	queryString		= phArrayToString(queryString);
-	var paramsAll;
 	
+	var paramsAll;
 	if (phFilterNewUrlRemove !== '' || phFilterNewUrlRemovePreviousParamWaiting == 1) {
 		paramsAll = jQuery.deparam.querystring(phFilterNewUrlRemove);
 	} else {
@@ -178,9 +178,9 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 	
 	/* Array -> String */
 	url		= phArrayToString(url);
-	
+
 	phFilterNewUrlRemove 	= jQuery.param.querystring( url, paramsTypeStringNew, mergeMode);// one parameter only
-	
+
 	phFilterNewUrlRemove 	= phReplaceAll('%2C', ',', phFilterNewUrlRemove);
 	phFilterNewUrlRemove 	= phReplaceAll('%5B', '[', phFilterNewUrlRemove);
 	phFilterNewUrlRemove 	= phReplaceAll('%5D', ']', phFilterNewUrlRemove);
@@ -227,9 +227,12 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 	var paramsAll;
 	if (phFilterNewUrlSet !== '' || phFilterNewUrlSetPreviousParamWaiting == 1) {
 		paramsAll = jQuery.deparam.querystring(phFilterNewUrlSet);
+	
 	} else {
 		paramsAll = jQuery.deparam.querystring(queryString);
+		
 	}
+	
 	
 	
 	var paramsTypeStringNew		= {};

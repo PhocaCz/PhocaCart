@@ -49,6 +49,8 @@
 
 <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC" />
 
+<field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC" />
+
 <field name="email_subject_others" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC" />
 
 <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC" />

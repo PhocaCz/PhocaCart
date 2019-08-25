@@ -52,7 +52,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['zero_shipping_price']		= $this->p->get( 'zero_shipping_price', 1 );
 		$this->t['zero_payment_price']		= $this->p->get( 'zero_payment_price', 1 );
 		$this->t['checkout_scroll']			= $this->p->get( 'checkout_scroll', 1 );
-		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 1 );
+		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 2 );
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 		$this->t['checkout_icon_status']	= $this->p->get( 'checkout_icon_status', 1 );
 		$this->t['display_webp_images']		= $this->p->get( 'display_webp_images', 0 );
@@ -61,6 +61,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		$this->t['skip_payment_method']		= $this->p->get( 'skip_payment_method', 0 );
 		$this->t['automatic_shipping_method_setting']	= $this->p->get( 'automatic_shipping_method_setting', 0 );
 		$this->t['automatic_payment_method_setting']	= $this->p->get( 'automatic_payment_method_setting', 0 );
+		$this->t['display_apply_coupon_form']	        = $this->p->get( 'display_apply_coupon_form', 1 );
+		$this->t['display_apply_reward_points_form']	= $this->p->get( 'display_apply_reward_points_form', 1 );
 
 
 		// Message set in Openting Times class
@@ -126,6 +128,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// Is there even a shipping or payment (or is active based on criterias)
 		$total 							= $this->cart->getTotal();
 		$sOCh 							= array();// Shipping Options Checkout
+		// PRODUCTTYPE
 		$sOCh['all_digital_products']	= isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
 		$pOCh 							= array();// Payment Options Checkout
 		$pOCh['order_amount_zero']		= $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ? 1 : 0;
@@ -136,7 +139,32 @@ class PhocaCartViewCheckout extends JViewLegacy
 
 
 
+		// COUPONS - Coupon can be added in payment method or below calculation
+		$this->t['couponcodevalue'] = '';
+		if ($this->cart->getCouponCode() != '') {
+			$this->t['couponcodevalue'] = $this->cart->getCouponCode();
 
+		}
+
+		// REWARD POINTS - reward points can be added in payment method or below the calculation
+		$this->t['rewards'] 			= array();
+		$this->t['rewards']['apply'] 	= false;
+		if ($this->t['enable_rewards']) {
+			if ($this->u->id > 0) {
+				$this->t['rewards']['needed'] = $this->cart->getRewardPointsNeeded();
+				$this->t['rewards']['usertotal'] = $reward->getTotalPointsByUserId($this->u->id);
+
+				$this->t['rewards']['usedvalue'] = '';
+				if ($this->cart->getRewardPointsUsed() != '' && (int)$this->cart->getRewardPointsUsed() > 0) {
+					$this->t['rewards']['usedvalue'] = $this->cart->getRewardPointsUsed();
+				}
+
+				if ($this->t['rewards']['usertotal'] > 0) {
+					$this->t['rewards']['text'] = '<small>('.JText::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS').': '.(int)$this->t['rewards']['usertotal'].', '.JText::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE').': '.(int)$this->t['rewards']['needed'].')</small>';
+					$this->t['rewards']['apply'] 	= true;
+				}
+			}
+		}
 
 		// Numbers
 		$this->t['nl'] = 1;// Login
@@ -322,6 +350,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$this->a->paymentedit	= $app->input->get('paymentedit', 0, 'int'); // Edit Shipping
 				$this->t['paymentmethod'] = $this->cart->getPaymentMethod();
 
+
 				$country = 0;
 				if(isset($this->t['dataaddressoutput']['bcountry']) && (int)$this->t['dataaddressoutput']['bcountry']) {
 					$country = (int)$this->t['dataaddressoutput']['bcountry'];
@@ -415,6 +444,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 					};
 
 
+				/*	BOTH COUPON OR REWARD POINTS CAN BE SET BEFORE PAYMENT
+					// COUPON
 					$this->t['couponcodevalue'] = '';
 					if ($this->cart->getCouponCode() != '') {
 						$this->t['couponcodevalue'] = $this->cart->getCouponCode();
@@ -439,6 +470,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 							}
 						}
 					}
+				*/
 				}
 			}
 
@@ -510,6 +542,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		//$total				= $this->cart->getTotal();
 		$this->t['cartoutput']			= $this->cart->render();
 
+		$this->t['cartempty']           = $this->cart->getCartCountItems() > 0 ? false : true;
+
 		$this->t['stockvalid']			= $this->cart->getStockValid();
 		$this->t['minqtyvalid']			= $this->cart->getMinimumQuantityValid();
 		$this->t['minmultipleqtyvalid']	= $this->cart->getMinimumMultipleQuantityValid();
@@ -545,6 +579,8 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// END Plugins --------------------------------------
 
         $media->loadSpec();
+
+
 
 		parent::display($tpl);
 

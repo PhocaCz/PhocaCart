@@ -86,6 +86,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 				$price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 
 				$d = array();
+				$d['type']          = $item->type;
 				$d['s']				= $s;
 				$d['class']			= $class;
 				$d['zero_price']		= 1;// Apply zero price if possible

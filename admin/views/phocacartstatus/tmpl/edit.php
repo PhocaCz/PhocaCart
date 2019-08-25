@@ -40,7 +40,7 @@ echo $r->navigation($tabs);
 
 echo '<div class="tab-content">'. "\n";
 
-echo '<div class="tab-pane active" id="general">'."\n"; 
+echo '<div class="tab-pane active" id="general">'."\n";
 
 $translatedTitle = $this->form->getValue('title') ? '<small>('.JText::_($this->form->getValue('title')).')</small>' : '';
 echo $r->item($this->form, 'title', $translatedTitle, 1);
@@ -49,6 +49,9 @@ $formArray = array ( 'stock_movements', 'change_user_group', 'change_points_need
 echo $r->group($this->form, $formArray);
 
 $formArray = array( 'email_text');
+echo $r->group($this->form, $formArray, 1);
+
+$formArray = array( 'email_footer');
 echo $r->group($this->form, $formArray, 1);
 
 $formArray = array ( 'email_subject_others', 'email_others');
@@ -70,7 +73,7 @@ echo $r->group($this->form, $formArray, 1);
 
 echo '</div>';
 
-echo '<div class="tab-pane" id="publishing">'."\n"; 
+echo '<div class="tab-pane" id="publishing">'."\n";
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -81,7 +84,7 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
-				
+
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column

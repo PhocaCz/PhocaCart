@@ -169,6 +169,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		$d					= array();
 		$d['s']				= $this->s;
+		$d['type']          = $x->type;// PRODUCTTYPE
 		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 
 		$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
@@ -333,7 +334,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// :L: ADD TO CART
 	$addToCartHidden = 0;// Button can be hidden based on price
-	if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
+
+	if ($x->type == 3) {
+		// PRODUCTTYPE - price on demand price cannot be added to cart
+		$addToCartHidden = 1;
+	} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 		// Don't display Add to Cart in case the price is zero
 		$addToCartHidden = 1;
 	} else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
@@ -425,7 +430,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 	$popupAskAQuestion = 0;// we need this info for the container at the bottom (if modal popup is used for ask a question)
-	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] != 0 || $addToCartHidden != 0))) {
+
+	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] == 0 || $addToCartHidden != 0))) {
 
 		$d					= array();
 		$d['s']				= $this->s;

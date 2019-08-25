@@ -180,6 +180,12 @@ a.ph-btn {
 	height: 30px;
 }
 
+#ph-pc-checkout-box .form-inline .form-group .ph-input-apply-coupon,
+#ph-pc-checkout-box .form-inline .form-group .ph-input-apply-reward-points {
+    max-width: 10em !important;
+    /*height: 30px;*/
+}
+
 #phQuickViewPopup .bootstrap-touchspin .input-group-btn-vertical > .btn,
 #ph-pc-checkout-box .bootstrap-touchspin .input-group-btn-vertical > .btn,
 #ph-pc-item-box .bootstrap-touchspin .input-group-btn-vertical > .btn {

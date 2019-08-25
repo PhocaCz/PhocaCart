@@ -113,6 +113,18 @@ class PhocacartOrder
 
 
 		// --------------------
+		// CHECK COUPON
+		// --------------------
+
+		if (isset($coupon['id']) && (int)$coupon['id'] > 0 && $cart->getCouponValid() == false) {
+			$msg =JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT') . $msgSuffix;
+			$app->enqueueMessage($msg, 'error');
+			PhocacartPayment::removePayment(0, 1);
+			return false;
+		}
+
+
+		// --------------------
 		// CHECK OPENING TIMES
 		// --------------------
         // Possible parameter: display message on info page: PhocacartTime::checkOpeningTimes(), Hide message on info page: PhocacartTime::checkOpeningTimes(0)
@@ -342,6 +354,7 @@ class PhocacartOrder
 		}
 
 		$sOCh							= array();// Shipping Options Checkout
+        // PRODUCTTYPE
 		$sOCh['all_digital_products']	= isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
 		$shippingNotUsed 				= PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 

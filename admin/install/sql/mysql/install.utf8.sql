@@ -935,6 +935,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `email_customer` tinyint(1) NOT NULL DEFAULT '0',
   `email_others` text,
   `email_text` text,
+  `email_footer` text,
   `email_text_others` text,
   `email_subject` varchar(255) NOT NULL DEFAULT '',
   `email_subject_others` varchar(255) NOT NULL DEFAULT '',

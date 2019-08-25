@@ -108,7 +108,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['zero_shipping_price']		= $this->p->get( 'zero_shipping_price', 1 );
 		$this->t['zero_payment_price']		= $this->p->get( 'zero_payment_price', 1 );
         $this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
-		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 1 );
+		$this->t['enable_coupons']			= $this->p->get( 'enable_coupons', 2 );
 		$this->t['enable_rewards']			= $this->p->get( 'enable_rewards', 1 );
 
 		$this->t['display_view_product_button']				= $this->p->get( 'display_view_product_button', 1 );

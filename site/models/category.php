@@ -185,7 +185,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
 
 
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean,'
+			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.type,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
 						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,'
 						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
@@ -194,7 +194,7 @@ class PhocaCartModelCategory extends JModelLegacy
 						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 						.' AVG(r.rating) AS rating, at.required AS attribute_required';
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
 			$groupsFast	= 'a.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 

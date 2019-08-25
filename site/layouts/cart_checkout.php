@@ -24,6 +24,7 @@ $p['zero_shipping_price_calculation']	= $d['params']->get( 'zero_shipping_price_
 $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_calculation', 0 );
 $p['display_reward_points_receive_info']= $d['params']->get( 'display_reward_points_receive_info', 0 );
 $p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
+$p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
 
 
 //$p['min_quantity_calculation']	= $d['params']->get( 'min_quantity_calculation', 0 ); set in product xml - product options, not in global
@@ -665,7 +666,7 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-cart-total ph-right ph-cart-brutto-currency">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
 	//} else if (!($price->roundPrice($d['total'][0]['brutto']) > -0.01 && $price->roundPrice($d['total'][0]['brutto'] < 0.01)) == 1) {
-	} else if ($d['total'][0]['brutto'] !== 0) {
+	} else if ($d['total'][0]['brutto'] !== 0 || ($d['total'][0]['brutto'] === 0 && $p['display_zero_total'] == 1)) {
 		echo '<div class="'.$r.' ph-cart-total-box">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-total-txt">'.JText::_('COM_PHOCACART_TOTAL').'</div>';

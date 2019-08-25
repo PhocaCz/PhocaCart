@@ -21,41 +21,41 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 		return $this->fields;
 	}
-	
+
 	public function getTable($type = 'PhocacartUser', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		if (empty($this->fields['xml'])) {
 			$this->fields = $this->getFields();
 		}
 		$form = $this->loadForm('com_phocacart.checkout', (string)$this->fields['xml'], array('control' => 'jform', 'load_data' => $loadData));
-		
+
 		if (empty($form)) {
 			return false;
 		}
-		
+
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$formData = (array) JFactory::getApplication()->getUserState('com_phocacart.checkout.data', array());
-		
+
 		if (empty($data)) {
 			$formData = $this->getItem();
 		}
-		
+
 		return $formData;
 	}
-	
+
 	public function getItem($pk = null) {
 		$app	= JFactory::getApplication();
 		$user 	= PhocacartUser::getUser();
 		$table 	= $this->getTable('PhocacartUser', 'Table');
 		$tableS 	= $this->getTable('PhocacartUser', 'Table');
-		
+
 		// Billing
 		if(isset($user->id) && (int)$user->id > 0) {
 			$return = $table->load(array('user_id' => (int)$user->id, 'type' => 0));
@@ -64,7 +64,7 @@ class PhocaCartModelCheckout extends JModelForm
 				return false;
 			}
 		}
-		
+
 		// Shipping
 		if(isset($user->id) && (int)$user->id > 0) {
 			$returnS = $tableS->load(array('user_id' => (int)$user->id, 'type' => 1));
@@ -73,22 +73,22 @@ class PhocaCartModelCheckout extends JModelForm
 				return false;
 			}
 		}
-		
+
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
 		$item = \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
-		
+
 		$propertiesS = $tableS->getProperties(1);
 		//$itemS = \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
-		
+
 		//Add shipping data to billing and do both data package
 		if(!empty($propertiesS) && is_object($item)) {
 			foreach($propertiesS as $k => $v) {
 				$newName = $k . '_phs';
 				$item->$newName = $v;
-			
+
 			}
-		
+
 		}
 		/*
 
@@ -101,17 +101,17 @@ class PhocaCartModelCheckout extends JModelForm
 
 		return $item;
 	}
-	
+
 	public function getData() {
 		return PhocacartUser::getUserData();
 	}
-	
+
 	public function saveAddress($data, $type = 0) {
-		
+
 		$app	= JFactory::getApplication();
 		$user 	= PhocacartUser::getUser();
-		
-		
+
+
 		if ((int)$user->id < 1) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
 			return false;
@@ -133,7 +133,7 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 
 		$row->date = gmdate('Y-m-d H:i:s');
-		
+
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -146,20 +146,20 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 		return $row->id;
 	}
-	
+
 	public function saveShipping($shippingId) {
-		
+
 		$app	= JFactory::getApplication();
 		$user 	= PhocacartUser::getUser();
-		
+
 		if ((int)$user->id < 1) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
 			return false;
 		}
-		
+
 		$data['shipping']	= (int)$shippingId;
 		$data['user_id']	= (int)$user->id;
-		
+
 		$shipping 			= new PhocacartShipping();
 		//$shipping->setType();
 		$isValidShipping	= $shipping->checkAndGetShippingMethod($shippingId);
@@ -167,7 +167,7 @@ class PhocaCartModelCheckout extends JModelForm
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
 			return false;
 		}
-		
+
 		$row = $this->getTable('PhocacartCart', 'Table');
 
 		if(isset($user->id) && $user->id > 0) {
@@ -175,12 +175,12 @@ class PhocaCartModelCheckout extends JModelForm
 				// No data yet
 			}
 		}
-		
+
 		if (empty($row->cart)) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_SHIPPING_METHOD_CANNOT_BE_SET'), 'error');
 			return false;
 		}
-		
+
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -197,11 +197,11 @@ class PhocaCartModelCheckout extends JModelForm
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		return $row->user_id;
-	
+
 	}
-	
+
 	public function savePaymentAndCouponAndReward($paymentId, $couponId, $reward) {
 		$app	= JFactory::getApplication();
 		$user 	= PhocacartUser::getUser();
@@ -209,12 +209,23 @@ class PhocaCartModelCheckout extends JModelForm
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
 			return false;
 		}
-		
-		$data['payment'] 	= (int)$paymentId;
-		$data['coupon'] 	= (int)$couponId;
+
 		$data['user_id']	= (int)$user->id;
-		$data['reward'] 	= (int)$reward;
-		
+		$data['payment'] 	= (int)$paymentId;
+
+		if ((int)$couponId === -1) {
+			// Coupon was not sent in form, only payment, Don't change the coupon
+		} else {
+			$data['coupon'] 	= (int)$couponId;
+		}
+
+		if ((int)$reward === -1) {
+			// Reward points was not sent in form, only payment, Don't change the reward points
+		} else {
+			$data['reward'] 	= (int)$reward;
+		}
+
+
 		$payment 			= new PhocacartPayment();
 		//$payment->setType();
 		$isValidPayment		= $payment->checkAndGetPaymentMethod($paymentId);
@@ -222,63 +233,165 @@ class PhocaCartModelCheckout extends JModelForm
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
 			return false;
 		}
-		
+
 		// Coupon has own rules in cart
 		// Reward points have own rules in cart
-		
-		
+
+
 		$row = $this->getTable('PhocacartCart', 'Table');
-		
-		
+
+
 		if(isset($user->id) && $user->id > 0) {
 			if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
 				// No data yet
 			}
 		}
-		
+
 		if (empty($row->cart)) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_PAYMENT_METHOD_CANNOT_BE_SET'), 'error');
 			return false;
 		}
-		
+
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
 
 		$row->date = gmdate('Y-m-d H:i:s');
-		
+
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
 
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		return $row->user_id;
-	
+
 	}
-	
-	/* 
+
+	public function saveCoupon($couponId) {
+		$app	= JFactory::getApplication();
+		$user 	= PhocacartUser::getUser();
+		if ((int)$user->id < 1) {
+			// This should not happen as the user is controlled in controller (because of different return messages for standard checkout or guest checkout
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
+			return false;
+		}
+
+
+		$data['coupon'] 	= (int)$couponId;
+		$data['user_id']	= (int)$user->id;
+
+		// Coupon has own rules in cart
+		$row = $this->getTable('PhocacartCart', 'Table');
+
+		if(isset($user->id) && $user->id > 0) {
+			if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
+				// No data yet
+			}
+		}
+
+		// Possible feature request ceck for if cart is empty
+		/*if (empty($row->cart)) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_PAYMENT_METHOD_CANNOT_BE_SET'), 'error');
+			return false;
+		}*/
+
+		if (!$row->bind($data)) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		$row->date = gmdate('Y-m-d H:i:s');
+
+		if (!$row->check()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+
+		// Store the table to the database
+		if (!$row->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		return $row->user_id;
+
+	}
+
+	public function saveRewardPoints($reward) {
+		$app	= JFactory::getApplication();
+		$user 	= PhocacartUser::getUser();
+		if ((int)$user->id < 1) {
+			// This should not happen as the user is controlled in controller (because of different return messages for standard checkout or guest checkout
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
+			return false;
+		}
+
+
+		$data['user_id']	= (int)$user->id;
+		$data['reward'] 	= (int)$reward;
+
+		// Reward points have own rules in cart
+		$row = $this->getTable('PhocacartCart', 'Table');
+
+		if(isset($user->id) && $user->id > 0) {
+			if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => 0, 'ticket_id' => 0, 'unit_id' => 0, 'section_id' => 0))) {
+				// No data yet
+			}
+		}
+
+		// Possible feature request ceck for if cart is empty
+		/*if (empty($row->cart)) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_PAYMENT_METHOD_CANNOT_BE_SET'), 'error');
+			return false;
+		}*/
+
+		if (!$row->bind($data)) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		$row->date = gmdate('Y-m-d H:i:s');
+
+		if (!$row->check()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+
+		// Store the table to the database
+		if (!$row->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		return $row->user_id;
+
+	}
+
+	/*
 	 *
 	 * GUEST CHECKOUT
 	 *
 	 */
-	
+
 	public function getFieldsGuest(){
 		if (empty($this->fieldsguest)) {
 			$this->fieldsguest = PhocacartFormUser::getFormXml('', '_phs', 1, 1, 0, 1);//Fields in XML Format
 		}
 		return $this->fieldsguest;
 	}
-	
+
 	public function getFormGuest($data = array(), $loadData = true) {
-		
+
 		if (empty($this->fieldsguest['xml'])) {
 			$this->fieldsguest = $this->getFieldsGuest();
 		}
@@ -286,10 +399,10 @@ class PhocaCartModelCheckout extends JModelForm
 		if (empty($form)) {
 			return false;
 		}
-		
+
 		return $form;
 	}
-	
+
 	protected function loadFormGuest($name, $source = null, $options = array(), $clear = false, $xpath = false)
 	{
 		// Handle the optional arguments.
@@ -343,25 +456,25 @@ class PhocaCartModelCheckout extends JModelForm
 
 		return $form;
 	}
-	
+
 	protected function loadFormDataGuest() {
 		$formData = (array) JFactory::getApplication()->getUserState('com_phocacart.checkout.data', array());
-		
+
 		if (empty($data)) {
 			$formData = $this->getItemGuest();
 		}
-		
+
 		return $formData;
 	}
-	
+
 	public function getItemGuest($pk = null) {
-		
+
 		$guest 	= new PhocacartUserGuestuser();
 		$item	= $guest->getAddress();
 
 		return $item;
 	}
-	
+
 	public function saveAddressGuest($data) {
 		$guest	= new PhocacartUserGuestuser();
 		$data['user_id']	= 0;
@@ -373,16 +486,16 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 
 	}
-	
+
 	public function getDataGuest() {
-		
+
 		$guest	= new PhocacartUserGuestuser();
 		$data	= $guest->getAddress();
 		if (!empty($data)) {
-			
-			
+
+
 			$dataN = PhocacartUser::convertAddressTwo($data, 0);
-			
+
 			$dataN[0]->countrytitle = null;
 			$dataN[0]->regiontitle = null;
 			$dataN[1]->countrytitle = null;
@@ -396,7 +509,7 @@ class PhocaCartModelCheckout extends JModelForm
 			if (isset($dataN[1]->country) && $dataN[1]->country > 0 ) {
 				if (isset($dataN[0]->country) && $dataN[0]->country == $dataN[1]->country) {
 					$dataN[1]->countrytitle = $dataN[0]->countrytitle;//great to save one sql query
-					
+
 				} else {
 					$dataN[1]->countrytitle = PhocacartCountry::getCountryById($dataN[1]->country);
 				}
@@ -413,9 +526,9 @@ class PhocaCartModelCheckout extends JModelForm
 		}
 		return false;
 	}
-	
+
 	public function saveShippingGuest($shippingId) {
-		
+
 		if (PhocacartUserGuestuser::storeShipping((int)$shippingId)) {
 			return true;
 		}
@@ -423,14 +536,29 @@ class PhocaCartModelCheckout extends JModelForm
 	}
 
 	public function savePaymentAndCouponGuest($paymentId, $couponId) {
-		
-		
-		if (PhocacartUserGuestuser::storePayment((int)$paymentId) &&  PhocacartUserGuestuser::storeCoupon((int)$couponId)) {
+
+		if ($couponId === -1) {
+			// we ignore storing the coupon (it is not a part of payment form)
+			if (PhocacartUserGuestuser::storePayment((int)$paymentId)) {
+				return true;
+			}
+		} else {
+			if (PhocacartUserGuestuser::storePayment((int)$paymentId) &&  PhocacartUserGuestuser::storeCoupon((int)$couponId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function saveCouponGuest($couponId) {
+
+		if (PhocacartUserGuestuser::storeCoupon((int)$couponId)) {
 			return true;
 		}
 		return false;
-	}	
-	
-	
+	}
+
+
 }
 ?>

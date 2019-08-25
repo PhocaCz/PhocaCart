@@ -75,6 +75,8 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
+		$this->t['category_askquestion']	 	= $this->p->get( 'category_askquestion', 0 );
+		$this->t['popup_askquestion']		    = $this->p->get( 'popup_askquestion', 1 );
 
 		// Rights or catalogue options --------------------------------
 		$rights								= new PhocacartAccessRights();

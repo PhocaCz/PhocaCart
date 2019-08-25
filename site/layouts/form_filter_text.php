@@ -45,12 +45,12 @@ $displayData 	= null;
 <div class="<?php echo $d['s']['c']['panel.panel-default'] ?>">
 	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $d['param']; ?>">
 		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
-			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><span class="<?php echo $d['s']['i']['triangle-bottom'] ?>"></span></a>
+			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
 			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><?php echo $d['title'] ?></a>
 		</h4>
 	</div>
 
-	<div id="collapse<?php echo $d['param']; ?>" class="<?php echo $d['s']['c']['panel-collapse.collapse.in'] ?>" role="tabpanel" aria-labelledby="heading<?php echo $d['param']; ?>">
+	<div id="collapse<?php echo $d['param']; ?>" class="<?php echo $d['collapse_class'] ?>" role="tabpanel" aria-labelledby="heading<?php echo $d['param']; ?>">
 		<div class="<?php echo $d['s']['c']['panel-body'] ?> <?php echo $d['s']['c']['form-horizontal'] ?>" id="<?php echo $d['id']; ?>">
 
 			<div class="<?php echo $d['s']['c']['form-group'] ?> <?php echo $d['s']['c']['row'] ?>" <?php echo $styleFormGroup ?>>

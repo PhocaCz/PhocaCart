@@ -129,6 +129,7 @@ $s['c']['panel.panel-default']      = 'panel panel-default';
 $s['c']['panel-heading']            = 'panel-heading';
 $s['c']['panel-title']              = 'panel-title';
 $s['c']['panel-body']               = 'panel-body';
+$s['c']['panel-collapse.collapse']  = 'panel-collapse collapse';
 $s['c']['panel-collapse.collapse.in'] = 'panel-collapse collapse in';
 
 $s['c']['label.label-success']      = 'label label-success';

@@ -137,6 +137,10 @@ class PhocacartProduct
 
 				//$wheres[] 	= ' c.id = '.(int)$catid;
 
+                // PRODUCTTYPE
+                // 0 ... physical product, 1 ... digital product, 2 ... physical and digital product, 3 ... price on demand product
+                $wheres[]   = ' a.type != 3';// price on demand product cannot be ordered and cannot be added to cart
+
 				$query = ' SELECT a.id'
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'

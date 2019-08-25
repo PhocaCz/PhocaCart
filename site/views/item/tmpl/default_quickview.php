@@ -122,6 +122,7 @@ if ($this->t['can_display_price']) {
 
 	$d					= array();
 	$d['s']				= $this->s;
+	$d['type']          = $x->type;// PRODUCTTYPE
 	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
 	$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
 
@@ -253,7 +254,10 @@ echo $layoutAB->render($d);
 
 // :L: ADD TO CART
 $addToCartHidden = 0;// Button can be hidden based on price
-if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
+if ($x->type == 3) {
+    // PRODUCTTYPE - price on demand price cannot be added to cart
+    $addToCartHidden = 1;
+} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 	// Don't display Add to Cart in case the price is zero
 	$addToCartHidden = 1;
 } else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {

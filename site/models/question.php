@@ -140,7 +140,7 @@ class PhocaCartModelQuestion extends JModelForm
 
 			if (!$send) {
 				$user 	= PhocacartUser::getUser();
-				PhocacartLog::add(1, 'Ask a Question - Problems with sending email', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id);
+				PhocacartLog::add(2, 'Ask a Question - ERROR - Problems with sending email', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id);
 			}
 		}
 

@@ -79,6 +79,8 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['zero_attribute_price']	= $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
+		$this->t['category_askquestion']	 	= $this->p->get( 'category_askquestion', 0 );
+		$this->t['popup_askquestion']		    = $this->p->get( 'popup_askquestion', 1 );
 
 
 		// Rights or catalogue options --------------------------------
@@ -137,6 +139,13 @@ class PhocaCartViewItems extends JViewLegacy
 		PhocacartRenderJs::renderAjaxAddToCompare();
 		PhocacartRenderJs::renderAjaxAddToWishList();
 		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phItemsBox');
+
+		if((int)$this->t['category_askquestion'] > 0) {
+				PhocacartRenderJs::renderAjaxAskAQuestion();
+				if ($this->t['popup_askquestion'] == 1) {
+					$media->loadWindowPopup();
+				}
+			}
 
 		$touchSpinJs = $media->loadTouchSpin('quantity', $this->s['i']);// only css, js will be loaded in ajax success
 

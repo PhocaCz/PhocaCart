@@ -26,7 +26,7 @@ class PhocacartCartDb
 
 			$db 	= JFactory::getDBO();
 			$query = ' SELECT c.cart, c.shipping, c.payment, c.coupon, c.reward, c.loyalty_card_number,'
-					.' s.title as shippingtitle, s.method as shippingmethod, p.title as paymenttitle, p.method as paymentmethod,'
+					.' s.title as shippingtitle, s.method as shippingmethod, s.image as shippingimage, p.title as paymenttitle, p.method as paymentmethod, p.image as paymentimage,'
 					.' co.title as coupontitle, co.code as couponcode'
 					.' FROM #__phocacart_cart_multiple AS c'
 					.' LEFT JOIN #__phocacart_shipping_methods AS s ON c.shipping = s.id'
@@ -66,8 +66,10 @@ class PhocacartCartDb
 				$cartDb['discount'] 			= array();
                 $cartDb['shippingtitle'] 		= '';
                 $cartDb['shippingmethod']		= '';
+                $cartDb['shippingimage']		= '';
 				$cartDb['paymenttitle'] 		= '';
 				$cartDb['paymentmethod']		= '';
+				$cartDb['paymentimage']		    = '';
 				$cartDb['coupontitle'] 			= '';
 				$cartDb['couponcode'] 			= '';
 				$cartDb['reward']				= '';

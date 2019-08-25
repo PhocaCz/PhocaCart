@@ -19,11 +19,16 @@ class PhocacartSearch
 
 		$o						= array();
 		$app					= JFactory::getApplication();
+		$s 			            = PhocacartRenderStyle::getStyles();
+		$layout 	= new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
+
+		$data                   = array();
+		$data['s']              = $s;
 		$data['id'] 			= 'phSearch';
 		$data['param'] 			= 'search';
 		$data['getparams']		= PhocacartText::filterValue($app->input->get('search', '', 'string'), 'text');
 		$data['title']			= JText::_('COM_PHOCACART_SEARCH');
-		$category				= PhocacartRoute::getIdForItemsRoute();
+		//$category				= PhocacartRoute::getIdForItemsRoute();
 		//$data['getparams'][]	= $category['idalias'];
 		$data['activefilter']	= PhocacartRoute::isFilterActive();
 		//$data['searchoptions']	= $searchOptions;
@@ -32,8 +37,8 @@ class PhocacartSearch
 				$data[$k] = $v;
 			}
 		}
-		//$app		= JFactory::getApplication();
-		$layout 	= new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
+
+
 
 		$o[] = $layout->render($data);
 		$o2 = implode("\n", $o);

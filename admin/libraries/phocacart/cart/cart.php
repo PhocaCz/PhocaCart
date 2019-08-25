@@ -80,11 +80,13 @@ class PhocacartCart
 		$this->shipping['title']			= '';
 		$this->shipping['method']			= '';
 		$this->shipping['costs']			= 0;
+		$this->shipping['image']            = '';
 		$this->payment['id']				= 0;
 		$this->payment['title']				= '';
 		$this->payment['method']			= '';
 		$this->payment['costs']				= 0;
 		$this->payment['calculation_type']	= 0;
+		$this->payment['image']             = '';
 		$this->stock['valid']				= 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
 		$this->minqty['valid']				= 1;// check minimum order quantity
 		$this->minmultipleqty['valid']		= 1;// check minimum multiple order quantity
@@ -114,9 +116,11 @@ class PhocacartCart
 			$this->shipping['id']		= $cartDb['shipping'];
 			$this->shipping['title']	= $cartDb['shippingtitle'];
 			$this->shipping['method']	= $cartDb['shippingmethod'];
+			$this->shipping['image']	= $cartDb['shippingimage'];
 			$this->payment['id']		= $cartDb['payment'];
 			$this->payment['title']		= $cartDb['paymenttitle'];
 			$this->payment['method']	= $cartDb['paymentmethod'];
+			$this->payment['image']	    = $cartDb['paymentimage'];
 			$this->reward['used']		= $cartDb['reward'];
 			$this->loyalty_card_number	= $cartDb['loyalty_card_number'];
 
@@ -140,9 +144,11 @@ class PhocacartCart
 			$this->shipping['id']		= $cartDb['shipping'];
 			$this->shipping['title']	= $cartDb['shippingtitle'];
 			$this->shipping['method']	= $cartDb['shippingmethod'];
+			$this->shipping['image']	= $cartDb['shippingimage'];
 			$this->payment['id']		= $cartDb['payment'];
 			$this->payment['title']		= $cartDb['paymenttitle'];
 			$this->payment['method']	= $cartDb['paymentmethod'];
+			$this->payment['image']	    = $cartDb['paymentimage'];
 			$this->reward['used']		= $cartDb['reward'];
 			$this->loyalty_card_number	= $cartDb['loyalty_card_number'];
 			$sessionItems = $session->get('cart', array(), 'phocaCart');
@@ -152,6 +158,14 @@ class PhocacartCart
 
 			if(empty($this->items)) {
 				$this->items	= $session->get('cart', array(), 'phocaCart');
+				// COUPONMOVE - we can move the cart items to logged in user or guest checkout, so we do with coupon
+				$this->coupon['id']			= $session->get('guestcoupon', false, 'phocaCart');
+				if ((int)$this->coupon['id'] > 0) {
+					$couponInfo = PhocacartCoupon::getCouponInfoById($this->coupon['id']);
+					$this->coupon['title'] = isset($couponInfo->title) ? $couponInfo->title : '';
+					$this->coupon['code'] = isset($couponInfo->code) ? $couponInfo->code : '';
+				}
+
 				if(!empty($this->items)) {
 					$this->updateItemsDb();
 					// Very important - clean the static variable
@@ -164,6 +178,7 @@ class PhocacartCart
 					// between instances (FIRST INSTANCE - EMPTY CART BUT REFILLED BY SESSION = FULL CART, SECOND INSTANCE EMPTY CART SET BY FIRST INSTANCE)
 					PhocacartCartDb::clearCartDbVariable((int)$this->user->id);
 					$session->set('cart', array(), 'phocaCart');
+					$session->set('guestcoupon', array(), 'phocaCart');// guestcoupon is variable for both: for still not logged in user or someone who enabled guest checkout
 				}
 			} else {
 				// we have stored items in database from previously
@@ -173,18 +188,50 @@ class PhocacartCart
 					$message = JText::_( 'COM_PHOCACART_CART_UPDATED_BASED_ON_YOUR_PREVIOUS_VISIT' );
 					$app->enqueueMessage($message, 'message');
 					$session->set('cart', array(), 'phocaCart');
+					$session->set('guestcoupon', array(), 'phocaCart');
 				}
 
 			}
 		} else if ($guest) {
 			$this->items 				= $session->get('cart', array(), 'phocaCart');
+
 			$this->shipping['id']		= $session->get('guestshipping', false, 'phocaCart');
+			if ((int)$this->shipping['id'] > 0) {
+				$shippingNew	= new PhocacartShipping();
+				$shippingNew->setType($this->type);
+				$shippingInfo	= $shippingNew->getShippingMethod((int)$this->shipping['id']);
+				$this->shipping['title'] = isset($shippingInfo->title) ? $shippingInfo->title : '';
+				$this->shipping['method'] = isset($shippingInfo->method) ? $shippingInfo->method : '';
+				$this->shipping['image'] = isset($shippingInfo->image) ? $shippingInfo->image : '';
+			}
+
 			$this->payment['id']		= $session->get('guestpayment', false, 'phocaCart');
-			$this->coupon['id']			= $session->get('guestcoupon', false, 'phocaCart');
+			if ((int)$this->payment['id'] > 0) {
+				$paymentNew	= new PhocacartPayment();
+				$paymentNew->setType($this->type);
+				$paymentInfo	= $paymentNew->getPaymentMethod((int)$this->payment['id']);
+				$this->payment['title'] = isset($paymentInfo->title) ? $paymentInfo->title : '';
+				$this->payment['method'] = isset($paymentInfo->method) ? $paymentInfo->method : '';
+				$this->payment['image'] = isset($paymentInfo->image) ? $paymentInfo->image : '';
+			}
+
+			$this->coupon['id']			= $session->get('guestcoupon', false, 'phocaCart');// COUPONMOVE
+			if ((int)$this->coupon['id'] > 0) {
+				$couponInfo = PhocacartCoupon::getCouponInfoById($this->coupon['id']);
+				$this->coupon['title'] = isset($couponInfo->title) ? $couponInfo->title : '';
+				$this->coupon['code'] = isset($couponInfo->code) ? $couponInfo->code : '';
+			}
+
 			$this->loyalty_card_number	= $session->get('guestloyaltycardnumber', false, 'phocaCart');
 		} else {
 			// SESSION - not logged in user
-			$this->items	= $session->get('cart', array(), 'phocaCart');
+			$this->items	    = $session->get('cart', array(), 'phocaCart');
+			$this->coupon['id']	= $session->get('guestcoupon', false, 'phocaCart');// COUPONMOVE
+			if ((int)$this->coupon['id'] > 0) {
+				$couponInfo = PhocacartCoupon::getCouponInfoById($this->coupon['id']);
+				$this->coupon['title'] = isset($couponInfo->title) ? $couponInfo->title : '';
+				$this->coupon['code'] = isset($couponInfo->code) ? $couponInfo->code : '';
+			}
 		}
 
 
@@ -357,16 +404,19 @@ class PhocacartCart
 				.' ORDER BY user_id LIMIT 1';
 		$db->setQuery($query);
 		$result = $db->loadRow();
+
 		if (!empty($result)) {
 
 			$query = 'UPDATE #__phocacart_cart_multiple'
 			.' SET cart = '.$db->quote($items).','
+			.' coupon = '.(int)$this->coupon['id']	.',' // COUPONMOVE
 			.' date = '.$db->quote($now)
 			.' WHERE user_id = '.(int)$this->user->id
 			.' AND vendor_id = '.(int)$this->vendor->id
 			.' AND ticket_id = '.(int)$this->ticket->id
 			.' AND unit_id = '.(int)$this->unit->id
 			.' AND section_id = '.(int)$this->section->id;
+
 
 			$db->setQuery($query);
 			$db->execute();
@@ -378,9 +428,9 @@ class PhocacartCart
 				// if vendorid == 0: 1) standard eshop - userid must be > 0)
 				// ticket can be always zero
 			} else {
-
-				$query = 'INSERT INTO #__phocacart_cart_multiple (user_id, vendor_id, ticket_id, unit_id, section_id, cart, date)'
-				.' VALUES ('.(int)$this->user->id.', '.(int)$this->vendor->id.', '.(int)$this->ticket->id.', '.(int)$this->unit->id.', '.(int)$this->section->id.', '.$db->quote($items).', '.$db->quote($now).');';
+				// COUPONMOVE
+				$query = 'INSERT INTO #__phocacart_cart_multiple (user_id, vendor_id, ticket_id, unit_id, section_id, cart, coupon, date)'
+				.' VALUES ('.(int)$this->user->id.', '.(int)$this->vendor->id.', '.(int)$this->ticket->id.', '.(int)$this->unit->id.', '.(int)$this->section->id.', '.$db->quote($items).', '. (int)$this->coupon['id'].', '.$db->quote($now).');';
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -619,6 +669,26 @@ class PhocacartCart
 
 
 
+				if ($this->coupon['code'] != '' && $this->coupon['valid'] === 0) {
+					// coupon is not valid and will be not counted
+					// but it was added to database so remove it from db
+					// E.g. user added a coupon when not logged in (e.g. he/she was in group "default"
+					// then he/she was logged in and after log in the coupon was still here but e.g.
+					// the user changed its group to "otherthandefault" and coupon does not meet rules
+					// it will be not counted in calculation but even we can remove it from db
+
+					// Remove it from database
+					$this->removeCouponDb();
+					// And after removing it and using the ide in instance - remove the instance
+					$this->coupon['id']     = 0;
+					$this->coupon['title']  = '';
+					$this->coupon['code']   = '';
+
+
+
+
+				}
+
 			}
 		}
 	}
@@ -710,6 +780,7 @@ class PhocacartCart
 		$payment['title'] 	= $this->payment['title'];
 		$payment['method'] 	= $this->payment['method'];
 		$payment['id']		= $this->payment['id'];
+		$payment['image']	= $this->payment['image'];
 
 		// E.g. guest checkout
 		if (isset($payment['id']) && (int)$payment['id'] > 0 && $payment['title'] == '' && $payment['method'] == '') {
@@ -721,6 +792,10 @@ class PhocacartCart
 			}
 			if (isset($pI->method)) {
 				$payment['method'] 	= $pI->method;
+			}
+
+			if (isset($pI->image)) {
+				$payment['image'] 	= $pI->image;
 			}
 		}
 
@@ -736,19 +811,23 @@ class PhocacartCart
 		$shipping['title'] 	= $this->shipping['title'];
 		$shipping['method'] = $this->shipping['method'];
 		$shipping['id']		= $this->shipping['id'];
-
+		$shipping['image']	= $this->shipping['image'];
 
 
 		// E.g. guest checkout
 		if (isset($shipping['id']) && (int)$shipping['id'] > 0 && $shipping['title'] == '' && $shipping['method'] == '') {
 			$shippingNew	= new PhocacartShipping();
 			$shippingNew->setType($this->type);
-			$pI	= $shippingNew->getShippingMethod((int)$shipping['id']);
-			if (isset($pI->title)) {
-				$shipping['title'] 	= $pI->title;
+			$sI	= $shippingNew->getShippingMethod((int)$shipping['id']);
+			if (isset($sI->title)) {
+				$shipping['title'] 	= $sI->title;
 			}
-			if (isset($pI->method)) {
-				$shipping['method'] = $pI->method;
+			if (isset($sI->method)) {
+				$shipping['method'] = $sI->method;
+			}
+
+			if (isset($sI->image)) {
+				$shipping['image'] 	= $sI->image;
 			}
 		}
 
@@ -911,6 +990,7 @@ class PhocacartCart
 				$this->shipping['id'] = $sI->id;
 				$this->shipping['title'] = $sI->title;
 				$this->shipping['method'] = $sI->method;
+				$this->shipping['image'] = $sI->image;
 			}
 
 			$calc->calculateShipping($priceI, $this->total[0]);
@@ -964,6 +1044,7 @@ class PhocacartCart
 			$this->payment['costs'] 	= $priceI;
 
 			if (!isset($this->total[0]['free_payment']) || (isset($this->total[0]['free_payment']) && $this->total[0]['free_payment'] != 1)) {
+
 				$this->payment['costs']['id'] 			= $pI->id;
 				$this->payment['costs']['title'] 		= $pI->title;
 				$this->payment['costs']['title_lang'] 		= $pI->title;
@@ -972,10 +1053,11 @@ class PhocacartCart
 				$this->payment['costs']['description'] 	= $pI->description;
 				$this->payment['costs']['image'] 		= $pI->image;
 
-				// Update even the shipping info
+				// Update even the payment info
 				$this->payment['id'] = $pI->id;
 				$this->payment['title'] = $pI->title;
 				$this->payment['method'] = $pI->method;
+				$this->payment['image'] = $pI->image;
 			}
 			$calc->calculatePayment($priceI, $this->total[0]);
 			//$calc->round($this->total[0], 0);
@@ -1025,6 +1107,29 @@ class PhocacartCart
 			$this->coupon['title'] = $this->getCouponTitle();
 		}
 		return $this->total;
+	}
+
+
+	public function removeCouponDb() {
+
+		$db 	= JFactory::getDBO();
+		$date 	= JFactory::getDate();
+		$now	= $date->toSql();
+
+		$query = 'UPDATE #__phocacart_cart_multiple'
+			.' SET coupon = '.(int)$this->coupon['id']. ', '
+			.' date = '.$db->quote($now)
+			.' WHERE user_id = '.(int)$this->user->id
+			.' AND vendor_id = '.(int)$this->vendor->id
+			.' AND ticket_id = '.(int)$this->ticket->id
+			.' AND unit_id = '.(int)$this->unit->id
+			.' AND section_id = '.(int)$this->section->id;
+
+
+		$db->setQuery($query);
+		$db->execute();
+
+		return true;
 	}
 
 
