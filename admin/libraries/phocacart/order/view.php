@@ -147,21 +147,26 @@ class PhocacartOrderView
 				.' ORDER BY o.id';
 		$db->setQuery($query);
 		$order = $db->loadObject();
+
 		return $order;
 	}
 
 	public function getItemProducts($orderId) {
 
 		$db = JFactory::getDBO();
-		$query = 'SELECT DISTINCT p.*, pd.download_token, pd.download_file, pd.download_folder, pd.published as download_published'
+		//$query = 'SELECT DISTINCT p.*, pd.download_token, pd.download_file, pd.download_folder, pd.published as download_published, pd.type as download_type'
+		//		.' FROM #__phocacart_orders AS o'
+		$query = 'SELECT DISTINCT p.*'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__phocacart_order_products AS p ON o.id = p.order_id'
 				.' LEFT JOIN #__phocacart_products AS pr ON pr.id = p.product_id'
-				.' LEFT JOIN #__phocacart_order_downloads AS pd ON pd.order_product_id = p.id'
+		//		.' LEFT JOIN #__phocacart_order_downloads AS pd ON pd.order_product_id = p.id'
 			    .' WHERE o.id = '.(int)$orderId
 				.' ORDER BY p.id';
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
+
+
 
 		// BE AWARE
 		// Product ID ... is an ID of product
@@ -177,12 +182,55 @@ class PhocacartOrderView
 			foreach ($items as $k => $v) {
 				$attributes = $this->getItemAttributes($orderId, $v->id);
 
-				if (!empty($attributes) && !empty($attributes[0]->id)) {
-					$v->attributes = new stdClass();
-					$v->attributes = $attributes;
+
+				if (!empty($attributes)) {
+
+					$v->attributes = array();
+					foreach($attributes as $k2 => $v2) {
+						if (isset($v2->id) && $v2->id > 0) {
+							$v->attributes[$k2] = $v2;
+						}
+					}
 				}
+
+
+				$downloads = $this->getItemDownloads($orderId, $v->id);
+
+				if (!empty($downloads)) {
+					$v->downloads = array();
+					foreach($downloads as $k2 => $v2) {
+						if (isset($v2->id) && $v2->id > 0) {
+							$v->downloads[$k2] = $v2;
+						}
+					}
+				}
+
 			}
 		}
+
+		return $items;
+	}
+
+	public function getItemDownloads($orderId, $orderProductId) {
+
+
+		$db = JFactory::getDBO();
+		// BE AWARE
+		// productid is ID of Product Ordered not of product
+		// productquantity is QUANTITY of Product Ordered not of product
+		// select all files except attributes as these are selected in attributes
+		$query = 'SELECT DISTINCT p.id AS productid,'
+				.' pd.id, pd.download_token, pd.download_file, pd.download_folder, pd.published, pd.type'
+				.' FROM #__phocacart_order_products AS p'
+				.' LEFT JOIN #__phocacart_order_downloads AS pd ON p.id = pd.order_product_id AND (pd.type = 0 OR pd.type = 1 or pd.type = 2)'
+			    .' WHERE p.id = '.(int)$orderProductId . ' AND p.order_id = '.(int)$orderId
+				.' ORDER BY p.id';
+
+
+		$db->setQuery($query);
+
+		$items = $db->loadObjectList();
+
 		return $items;
 	}
 

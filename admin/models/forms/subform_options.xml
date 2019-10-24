@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+	
+		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />
+
+		<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="operator" type="list" label="COM_PHOCACART_FIELD_OPERATOR_PRICE_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_PRICE_DESC" default="+" >
+	<option value="+">+</option>
+	<option value="-">-</option>
+</field>
+
+<field name="amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_DESC" />
+<field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_LABEL" description="COM_PHOCACART_FIELD_STOCK_DESC" />
+
+<field name="operator_weight" type="list" label="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_DESC" default="+" >
+	<option value="+">+</option>
+	<option value="-">-</option>
+</field>
+<field name="weight" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_WEIGHT_DESC" />
+
+<field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox imageCreateThumbs" size="40" />
+
+<field name="image_medium" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_MEDIUM_DESC" class="inputbox imageCreateThumbs" size="40" />
+
+<field name="image_small" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_SMALL_DESC" class="inputbox imageCreateThumbs" size="40" />
+
+<field name="download_folder" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL" readonly="true"  description="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_DESC" class="inputbox" size="40" />
+<field name="download_token" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL"  description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC" class="inputbox" size="40" />
+<field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
+
+<field name="color" type="phocacolortext" label="COM_PHOCACART_FIELD_COLOR_LABEL"  description="COM_PHOCACART_FIELD_COLOR_DESC" class="inputbox" size="40" default=""  />
+
+	</fieldset>
+</form>

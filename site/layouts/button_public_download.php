@@ -16,7 +16,7 @@ $d = $displayData;
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 	<div class="ph-pull-right">
-		<div class="ph-category-item-wishlist">
+		<div class="ph-category-item-public-download">
 		<button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn"><span class="<?php echo $d['s']['i']['download'] ?>"></span><?php
 		if ($d['title'] != '') {
 			echo ' '. $d['title'];

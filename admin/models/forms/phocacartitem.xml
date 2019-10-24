@@ -53,12 +53,19 @@
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 <field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC" />
 
+
+
+
 <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC" />
 <field name="stock_calculation" type="list" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_DESC" class="inputbox" size="1" default="0">
 	<option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
 	<option value="1">COM_PHOCACART_PRODUCT_VARIATIONS</option>
 	<option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
 </field>
+
+
+
+
 
 
 
@@ -78,9 +85,15 @@
 
 <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox imageCreateThumbs" size="40" />
 
+
+
 <field name="public_download_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
 
 <field name="public_download_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL" class="inputbox" size="40" />
+
+<field name="public_play_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_DESC" class="inputbox" size="40" />
+
+<field name="public_play_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_LABEL"  description="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_DESC" class="inputbox" size="40" />
 
 <field name="video" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_VIDEO_URL_LABEL" description="COM_PHOCACART_FIELD_VIDEO_URL_DESC" />
 
@@ -99,7 +112,11 @@
 	<option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
 </field>
 
-<field name="attributes" type="PhocaAttributes" multiple="1" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" class="inputbox" size="1" />
+
+
+
+<!--
+<field name="attributes" type="PhocaAttributes" multiple="1" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" class="inputbox" size="1" /> -->
 
 <field name="unit_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_UNIT_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_UNIT_AMOUNT_DESC" />
 <field name="unit_unit" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_UNIT_UNIT_LABEL" description="COM_PHOCACART_FIELD_UNIT_UNIT_DESC" />
@@ -143,6 +160,21 @@
 <field name="metadesc" type="textarea"
 	label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
 	class="inputbox" rows="3" cols="30" />
+	
+	<!-- SUBFORM -->
+<field name="additional_images" type="subform" label="COM_PHOCACART_FIELD_ADDITIONAL_IMAGES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_IMAGES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_additional_images.xml"/>
+
+<field name="attributes" type="subform" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_attributes.xml" class="phSubformAttributes" />
+
+<field name="specifications" type="subform" label="COM_PHOCACART_FIELD_SPECIFICATIONS_LABEL" description="COM_PHOCACART_FIELD_SPECIFICATIONS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_specifications.xml"/>
+
+<field name="discounts" type="subform" label="COM_PHOCACART_FIELD_DISCOUNTS_LABEL" description="COM_PHOCACART_FIELD_DISCOUNTS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_discounts.xml"/>
+
+<field name="additional_download_files" type="subform" label="COM_PHOCACART_FIELD_ADDITIONAL_DOWNLOAD_FILES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_DOWNLOAD_FILES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_additional_download_files.xml"/>
+	
+
+	
+	
 	</fieldset>
 
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
@@ -169,6 +201,8 @@
 <field name="modified" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" />
 
 <field name="modified_by" type="user" class="inputbox" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly" />
+
+
 
 
 <!--

@@ -12,6 +12,7 @@ $layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_ph
 $layoutW 	= new JLayoutFile('button_wishlist', null, array('component' => 'com_phocacart'));
 $layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
 $layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
+$layoutPP	= new JLayoutFile('product_play', null, array('component' => 'com_phocacart'));
 $layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
 $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
@@ -47,7 +48,9 @@ if (isset($this->category[0]->id) && ($this->t['display_back'] == 2 || $this->t[
 echo $this->t['event']->onItemBeforeHeader;
 
 
+$popupAskAQuestion = 0;// we need this info for the container at the bottom (if modal popup is used for ask a question)
 $x = $this->item[0];
+
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 
@@ -57,101 +60,115 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// === IMAGE PANEL
 	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .'">';
 
-	$label 	= PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
+	//JPluginHelper::importPlugin('pcv');
+	$results = \JFactory::getApplication()->triggerEvent('PCVonItemImage', array('com_phocacart.item', &$x, &$this->t, &$this->p));
+	$imageOutput = trim(implode("\n", $results));
 
 
-	// IMAGE
-	$image 		= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image
-	$imageL 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image Link to enlarge
+	if ($imageOutput != '') {
+		echo $imageOutput;// rendered by plugin
+	} else {
+
+		$label = PhocacartRenderFront::getLabel($x->date, $x->sales, $x->featured);
 
 
-	// Some of the attribute is selected - this attribute include image so the image should be displayed instead of default
-	$imageA = PhocaCartImage::getImageChangedByAttributes($this->t['attr_options'], 'large');
-	if ($imageA != '') {
-		$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
-		$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
-	}
-
-	$link 	= JURI::base(true).'/'.$imageL->rel;
-	if($this->t['display_webp_images'] == 1) {
-		$link 	= JURI::base(true).'/'.$imageL->rel_webp;
-	}
+		// IMAGE
+		$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image
+		$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'large');// Image Link to enlarge
 
 
-	if (isset($image->rel) && $image->rel != '') {
-
-        $altValue   = PhocaCartImage::getAltTitle($x->title, $image->rel);
-
-	    echo '<div class="ph-item-image-full-box '.$label['cssthumbnail'].'">';
-		echo '<div class="ph-label-box">';
-		echo $label['new'] . $label['hot'] . $label['feat'];
-		if ($this->t['taglabels_output'] != '') {
-			echo $this->t['taglabels_output'];
+		// Some of the attribute is selected - this attribute include image so the image should be displayed instead of default
+		$imageA = PhocaCartImage::getImageChangedByAttributes($this->t['attr_options'], 'large');
+		if ($imageA != '') {
+			$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
+			$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
 		}
-		echo '</div>';
 
-		echo '<a href="'.$link.'" '.$this->t['image_rel'].' class="'.$this->t['image_class'].' phjProductHref'.$idName.'" data-href="'.$link.'">';
-
-		$d						= array();
-		$d['t']					= $this->t;
-		$d['s']					= $this->s;
-		$d['src']				= JURI::base(true).'/'.$image->rel;
-		$d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
-		$d['data-image']		= JURI::base(true).'/'.$image->rel;
-		$d['data-image-webp']	= JURI::base(true).'/'.$image->rel_webp;
-		$d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $image->rel);
-		$d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'] , $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
-		$d['style']				= '';
-		if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
-			$d['style'] = 'width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px';
+		$link = JURI::base(true) . '/' . $imageL->rel;// Thumbnail
+		//$link = JURI::base(true) . '/' . $this->t['pathitem']['orig_rel_ds'] . $x->image;// Original image
+		if ($this->t['display_webp_images'] == 1) {
+			$link = JURI::base(true) . '/' . $imageL->rel_webp;
 		}
-		echo $layoutI->render($d);
-
-		echo '</a>';
-
-		echo '</div>'. "\n";// end item_row_item_box_full_image
-	}
 
 
-	// ADDITIONAL IMAGES
-	if (!empty($this->t['add_images'])) {
+		if (isset($image->rel) && $image->rel != '') {
 
-		echo '<div class="'.$this->s['c']['row'].' ph-item-image-add-box">';
+			$altValue = PhocaCartImage::getAltTitle($x->title, $image->rel);
 
-		foreach ($this->t['add_images'] as $v2) {
-			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-image-box">';
-			$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'small');
-			$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');
-			$link 	= JURI::base(true).'/'.$imageL->rel;
-			if ($this->t['display_webp_images'] == 1) {
-				$link 	= JURI::base(true).'/'.$imageL->rel_webp;
+			echo '<div class="ph-item-image-full-box ' . $label['cssthumbnail'] . '">';
+			echo '<div class="ph-label-box">';
+			echo $label['new'] . $label['hot'] . $label['feat'];
+			if ($this->t['taglabels_output'] != '') {
+				echo $this->t['taglabels_output'];
 			}
+			echo '</div>';
 
-            $altValue   = PhocaCartImage::getAltTitle($x->title, $v2->image);
+			echo '<a href="' . $link . '" ' . $this->t['image_rel'] . ' class="' . $this->t['image_class'] . ' phjProductHref' . $idName . ' phImageFullHref" data-href="' . $link . '">';
 
-			echo '<a href="'.$link.'" '.$this->t['image_rel'].'  class="'.$this->t['image_class'].'">';
-
-			$d						= array();
-			$d['t']					= $this->t;
-			$d['s']					= $this->s;
-			$d['src']				= JURI::base(true).'/'.$image->rel;
-			$d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
-			$d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $v2->image);
-			$d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full' /*, 'phjProductImage'.$idName*/));
+			$d = array();
+			$d['t'] = $this->t;
+			$d['s'] = $this->s;
+			$d['src'] = JURI::base(true) . '/' . $image->rel;
+			$d['srcset-webp'] = JURI::base(true) . '/' . $image->rel_webp;
+			$d['data-image'] = JURI::base(true) . '/' . $image->rel;
+			$d['data-image-webp'] = JURI::base(true) . '/' . $image->rel_webp;
+			$d['alt-value'] = PhocaCartImage::getAltTitle($x->title, $image->rel);
+			$d['class'] = PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phImageFull', 'phjProductImage' . $idName));
+			$d['style'] = '';
+			if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
+				$d['style'] = 'width:' . $this->t['image_width'] . 'px;height:' . $this->t['image_height'] . 'px';
+			}
 			echo $layoutI->render($d);
 
 			echo '</a>';
-			echo '</div>';
+
+			echo '</div>' . "\n";// end item_row_item_box_full_image
 		}
 
-		echo '</div>';// end additional images
-	}
+
+		// ADDITIONAL IMAGES
+		if (!empty($this->t['add_images'])) {
+
+			echo '<div class="' . $this->s['c']['row'] . ' ph-item-image-add-box">';
+
+			foreach ($this->t['add_images'] as $v2) {
+				echo '<div class="' . $this->s['c']['col.xs12.sm4.md4'] . ' ph-item-image-box">';
+				$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'small');
+				$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');
+				$link = JURI::base(true) . '/' . $imageL->rel;
+				if ($this->t['display_webp_images'] == 1) {
+					$link = JURI::base(true) . '/' . $imageL->rel_webp;
+				}
+
+				$altValue = PhocaCartImage::getAltTitle($x->title, $v2->image);
+
+				echo '<a href="' . $link . '" ' . $this->t['image_rel'] . '  class="' . $this->t['image_class'] . ' phImageAdditionalHref">';
+
+				$d = array();
+				$d['t'] = $this->t;
+				$d['s'] = $this->s;
+				$d['src'] = JURI::base(true) . '/' . $image->rel;
+				$d['srcset-webp'] = JURI::base(true) . '/' . $image->rel_webp;
+				$d['alt-value'] = PhocaCartImage::getAltTitle($x->title, $v2->image);
+				$d['class'] = PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phImageAdditional', /*, 'phjProductImage'.$idName*/));
+				echo $layoutI->render($d);
+
+				echo '</a>';
+				echo '</div>';
+			}
+
+			echo '</div>';// end additional images
+		}
+	} // end image output
 
 	echo '</div>';// end item_row_item_c1
 
+
+
+
 	// === PRICE PANEL
 	echo '<div class="'.$this->s['c']['col.xs12.sm7.md7'].'">';
-	echo '<div class="ph-item-price-panel">';
+	echo '<div class="ph-item-price-panel phItemPricePanel">';
 
 	$title = '';
 	if (isset($this->item[0]->title) && $this->item[0]->title != '') {
@@ -429,7 +446,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo '<div class="ph-cb"></div>';
 	}
 
-	$popupAskAQuestion = 0;// we need this info for the container at the bottom (if modal popup is used for ask a question)
+
 
 	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] == 0 || $addToCartHidden != 0))) {
 
@@ -502,6 +519,22 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		echo '<div class="ph-cb"></div>';
 		echo $layoutPD->render($d);
+	}
+
+	// :L: PUBLIC FILE PLAY
+	if ($this->t['display_file_play'] == 1 && $x->public_play_file != '') {
+		$d						= array();
+		$d['s']					= $this->s;
+		$d['id']				= (int)$x->id;
+		$d['publicplayfile']	= $x->public_play_file;
+		$d['pathpublicfile'] 	= $this->t['pathpublicfile'];
+		$d['title']				= '';
+		if ($x->public_play_text != '') {
+			$d['title']			= $x->public_play_text;
+		}
+
+		echo '<div class="ph-cb"></div>';
+		echo $layoutPP->render($d);
 	}
 
 	// :L: EXTERNAL LINK
@@ -716,7 +749,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			}
 			$tabO	.= '<a href="'.$link.'">';
 			if (isset($image->rel) && $image->rel != '') {
-				$tabO	.= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img_responsive'].' ph-image"';
+				$tabO	.= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
 				if (isset($this->t['image_width']) && $this->t['image_width'] != '' && isset($this->t['image_height']) && $this->t['image_height'] != '') {
 					$tabO	.= ' style="width:'.$this->t['image_width'].';height:'.$this->t['image_height'].'"';
 				}
@@ -747,7 +780,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-cpanel-chart-box">';
 		$tabO	.= '<div id="phChartAreaLineHolder" class="ph-chart-canvas-holder" style="width:95%" >';
-        $tabO	.= '<canvas id="phChartAreaLine" class="ph-chart-area-line" />';
+        $tabO	.= '<canvas id="phChartAreaLine" class="ph-chart-area-line"></canvas>';
 		$tabO	.= '</div>';
 		$tabO	.= '</div>';
 
@@ -861,6 +894,8 @@ if ($popupAskAQuestion == 2) {
 	echo $layoutAAQ->render($d);
 	echo '</div>';// end phContainerPopup
 }
+
+
 
 
 echo '<div>&nbsp;</div>';

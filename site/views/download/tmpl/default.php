@@ -33,7 +33,10 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 			echo '<div class="'.$this->s['c']['row'].' ph-download-item-box-row ph-vertical-align">';
 
-			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$v->title.'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$v->title;
+
+			echo '<br /><span class="'.$this->s['c']['label.label-info'].'">'.PhocacartOrder::getOrderNumber($v->order_id).'</span>';
+			echo '</div>';
 
 			$fileA = explode('/', $v->download_file);
 			$fileACount = count($fileA);

@@ -12,21 +12,44 @@ defined('_JEXEC') or die();
 
 class PhocacartSpecification
 {
-	public static function getSpecificationsById($productId, $returnArray = 0) {
+	public static function getSpecificationsById($productId, $return = 0) {
 
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT a.id, a.title, a.alias, a.value, a.alias_value, a.group_id, a.image, a.image_medium, a.image_small, a.color'
 				.' FROM #__phocacart_specifications AS a'
 			    .' WHERE a.product_id = '.(int) $productId
-				.' ORDER BY a.id';
+				.' ORDER BY a.ordering';
 		$db->setQuery($query);
-		if ($returnArray) {
-			$specifications = $db->loadAssocList();
+
+		if ($return == 0) {
+			return $db->loadObjectList();
+		} else if ($return == 1) {
+			return $db->loadAssocList();
 		} else {
-			$specifications = $db->loadObjectList();
-		}
-		return $specifications;
+		    $specifications          = $db->loadAssocList();
+		    $specificationsSubform   = array();
+		    $i              = 0;
+		    if (!empty($specifications)) {
+				foreach($specifications as $k => $v) {
+
+				    $specificationsSubform['specifications'.$i]['id'] = (int)$v['id'];
+				    $specificationsSubform['specifications'.$i]['title'] = (string)$v['title'];
+				    $specificationsSubform['specifications'.$i]['alias'] = (string)$v['alias'];
+				    $specificationsSubform['specifications'.$i]['value'] = (string)$v['value'];
+				    $specificationsSubform['specifications'.$i]['alias_value'] = (string)$v['alias_value'];
+				    $specificationsSubform['specifications'.$i]['group_id'] = (int)$v['group_id'];
+				    $specificationsSubform['specifications'.$i]['image'] = (string)$v['image'];
+				    $specificationsSubform['specifications'.$i]['image_medium'] = (string)$v['image_medium'];
+				    $specificationsSubform['specifications'.$i]['image_small'] = (string)$v['image_small'];
+				    $specificationsSubform['specifications'.$i]['color'] = (string)$v['color'];
+					$i++;
+				}
+			}
+		    return $specifications;
+        }
+
+		return false;
 	}
 
 	public static function getGroupArray() {
@@ -60,6 +83,7 @@ class PhocacartSpecification
 
 			if (!empty($specsArray)) {
 				$values 	= array();
+				$i = 1;
 				foreach($specsArray as $k => $v) {
 
 					// Don't store empty specification
@@ -71,6 +95,8 @@ class PhocacartSpecification
 						$v['alias'] = $v['title'];
 					}
 					$v['alias'] = PhocacartUtils::getAliasName($v['alias']);
+
+
 
 					if(empty($v['alias_value'])) {
 						$v['alias_value'] = $v['value'];
@@ -124,20 +150,23 @@ class PhocacartSpecification
                         .' image = '.$db->quote($v['image']).','
                         .' image_medium = '.$db->quote($v['image_medium']).','
                         .' image_small = '.$db->quote($v['image_small']).','
-                        .' color = '.$db->quote($v['color'])
+                        .' color = '.$db->quote($v['color']).','
+						.' ordering = '.$i
 						.' WHERE id = '.(int)$idExists;
 						$db->setQuery($query);
 						$db->execute();
+						$i++;
 
 						$newIdS 				= $idExists;
 
 					} else {
-						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].', '.$db->quote($v['image']).', '.$db->quote($v['image_medium']).', '.$db->quote($v['image_small']).', '.$db->quote($v['color']).')';
+						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].', '.$db->quote($v['image']).', '.$db->quote($v['image_medium']).', '.$db->quote($v['image_small']).', '.$db->quote($v['color']).', '.$i.')';
 
-						$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id, image, image_medium, image_small, color)'
+						$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id, image, image_medium, image_small, color, ordering)'
 								.' VALUES '.$values;
 						$db->setQuery($query);
 						$db->execute();
+						$i++;
 
 						$newIdS = $db->insertid();
 					}
@@ -251,7 +280,7 @@ class PhocacartSpecification
 
 	}
 
-	public static function getAllSpecificationsAndValues($ordering = 1, $onlyAvailableProducts = 0, $lang = '') {
+	public static function getAllSpecificationsAndValues($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 6);
@@ -283,6 +312,11 @@ class PhocacartSpecification
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
 				$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
 			}
+		}
+
+		if (!empty($filterProducts)) {
+			$productIds = implode (',', $filterProducts);
+			$wheres[]	= 'p.id IN ('.$productIds.')';
 		}
 
 		$query = 'SELECT '.$columns

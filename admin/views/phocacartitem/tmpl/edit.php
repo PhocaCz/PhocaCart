@@ -122,6 +122,7 @@ echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 
 // Product Price History
+
 $idMd = 'phEditProductPriceHistoryModal';
 $textButton = 'COM_PHOCACART_PRODUCT_PRICE_HISTORY';
 $w = 500;
@@ -156,7 +157,7 @@ if ((int)$this->item->id > 0) {
 echo '</div>';
 
 // ORDERING cannot be used
-$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text', 'condition', 'type_feed', 'type_category_feed');
+$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description' );
 echo $r->group($this->form, $formArray, 1);
@@ -181,12 +182,15 @@ $formArray = array ('image');
 echo $r->group($this->form, $formArray);
 echo '<h3>'.JText::_($this->t['l'].'_ADDITIONAL_IMAGES').'</h3>';
 
+$formArray = array ('additional_images');// , 'download_hits' - it is counted in orders
+echo $r->group($this->form, $formArray);
+
+/*
 $i 		= 0;
 $url 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_image';
-$images = PhocacartImageAdditional::getImagesByProductId($this->item->id);
 
-if (!empty($images)) {
-	foreach ($images as $k => $v) {
+if (!empty($this->additional_images)) {
+	foreach ($this->additional_images as $k => $v) {
 		echo $r->additionalImagesRow((int)$i, $url, $v->image, 0);
 		$i++;
 	}
@@ -197,7 +201,7 @@ $newRow = $r->additionalImagesRow('\' + phRowCountImage +  \'', $url, '', 1, $w,
 $newRow = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newRow);
 PhocacartRenderAdminjs::renderJsManageRowImage($i, $newRow);
 echo $r->modalWindowDynamic('phFileImageNameModalAT', 'COM_PHOCACART_FORM_SELECT_IMAGE', $w, $h);
-echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_IMAGE'), 'image');
+echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_IMAGE'), 'image');*/
 
 echo '</div>'. "\n";
 
@@ -205,6 +209,7 @@ echo '</div>'. "\n";
 
 
 // ATTRIBUTES, OPTIONS
+/*
 $pathAttributes = PhocacartPath::getPath('attributefile');
 $w = 700;
 $h = 400;
@@ -212,10 +217,15 @@ $urlO 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=comp
 $urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_medium';
 $urlO3 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_optionimage_small';
 $urlO4 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=attributefile&amp;field=jform_optiondownload_file';
+
+
+*/
 echo '<div class="tab-pane" id="attributes">'. "\n";
-
-
 echo '<h3>'.JText::_($this->t['l'].'_ATTRIBUTES').'</h3>';
+$formArray = array ('attributes');
+echo $r->group($this->form, $formArray);
+
+/*
 $i = 0; // i ... ATTRIBUTES
 $j = 0; // j ... OPTIONS
 
@@ -271,21 +281,24 @@ $newHeader 	= preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $newHeader);
 PhocacartRenderAdminjs::renderJsManageRowOption($j, $newRow, $newHeader);
 
 echo '<div>&nbsp;</div>';
-//echo '</div>'. "\n";
+//echo '</div>'. "\n";*/
 
 echo '</div>'. "\n";
 
 
 
 // SPECIFICATIONS
-$w = 700;
+/*$w = 700;
 $h = 400;
 $urlO 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage';
 $urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage_medium';
 $urlO3 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage_small';
-
+*/
 echo '<div class="tab-pane" id="specifications">'. "\n";
 echo '<h3>'.JText::_($this->t['l'].'_SPECIFICATIONS').'</h3>';
+$formArray = array ('specifications');
+echo $r->group($this->form, $formArray);
+/*
 $i = 0; //
 if (!empty($this->specifications)) {
 	foreach ($this->specifications as $k => $v) {
@@ -307,7 +320,8 @@ PhocacartRenderAdminjs::renderJsManageRowSpecification($i, $newRow, $newHeader);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_PARAMETER'), 'specification');//phrowboxspecification in button
 
 echo '<div>&nbsp;</div>';
-//echo '</div>'. "\n";
+//echo '</div>'. "\n";*/
+
 echo '</div>'. "\n";
 
 
@@ -383,7 +397,10 @@ echo '</div>'. "\n";
 // PRODUCT DISCOUNTS
 echo '<div class="tab-pane" id="discount">'. "\n";
 echo '<h3>'.JText::_($this->t['l'].'_PRODUCT_DISCOUNT').'</h3>';
-$i = 0; //
+$formArray = array ('discounts');
+echo $r->group($this->form, $formArray);
+
+/*$i = 0; //
 if (!empty($this->discounts)) {
 
 	foreach ($this->discounts as $k => $v) {
@@ -401,7 +418,7 @@ if (!empty($this->discounts)) {
 		}
 
 
-		echo $r->additionalDiscountsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->access, $activeGroups, $v->discount, $v->calculation_type, $v->quantity_from, /*$v->quantity_to*/ 0, $v->valid_from, $v->valid_to, 0);
+		echo $r->additionalDiscountsRow((int)$i, (int)$v->id, $v->title, $v->alias, $v->access, $activeGroups, $v->discount, $v->calculation_type, $v->quantity_from, /*$v->quantity_to*//* 0, $v->valid_from, $v->valid_to, 0);
 		$i++;
 	}
 }
@@ -416,14 +433,19 @@ PhocacartRenderAdminjs::renderJsManageRowDiscount($i, $newRow, $newHeader);
 echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_DISCOUNT'), 'discount');//phrowboxspecification in button
 
 echo '<div>&nbsp;</div>';
-//echo '</div>'. "\n";
+//echo '</div>'. "\n";*/
 echo '</div>'. "\n";
 
 
 // DOWNLOAD
 echo '<div class="tab-pane" id="download">'. "\n";
-$formArray = array ('download_folder', 'download_file', 'download_token', 'type');// , 'download_hits' - it is counted in orders
+$formArray = array ('download_folder', 'download_token', 'type', 'download_file');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
+
+echo '<h3>'.JText::_($this->t['l'].'_ADDITIONAL_DOWNLOAD_FILES').'</h3>';
+$formArray = array ('additional_download_files');// , 'download_hits' - it is counted in orders
+echo $r->group($this->form, $formArray);
+
 echo '</div>'. "\n";
 
 echo '<div class="tab-pane" id="size">'. "\n";
@@ -462,6 +484,10 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
+
+
+
+
 
 
 echo '<div class="tab-pane" id="feed">'. "\n";

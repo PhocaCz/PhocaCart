@@ -23,6 +23,15 @@ class PhocacartRenderAdminmedia
 
         $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/phocacart.js');
 
+
+
+        // FORM
+		$app = JFactory::getApplication();
+		$app->getDocument()->addScriptOptions('phLang', array('COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE')));
+		$app->getDocument()->addScriptOptions('phVars', array('token' => JSession::getFormToken()));
+		//$app->getDocument()->addScriptOptions('phParams', array());
+        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/phocacartform.js');
+
 		//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
 		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css' );
 		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacart.css' );
@@ -34,7 +43,10 @@ class PhocacartRenderAdminmedia
 			JHtml::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
 		}
 
-
+		$lang = JFactory::getLanguage();
+		if ($lang->isRtl()){
+			JHtml::stylesheet( 'media/com_phocacart/css/administrator/rtl.css' );
+		}
 
 		// EDIT IN PLACE
 		$urlText = JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1';

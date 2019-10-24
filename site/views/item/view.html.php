@@ -55,6 +55,7 @@ class PhocaCartViewItem extends JViewLegacy
 		//$this->t['enable_social']			    = $this->p->get( 'enable_social', 0 );
 		$this->t['enable_item_navigation']  	= $this->p->get( 'enable_item_navigation', 0 );
 		$this->t['item_addtocart']		    	= $this->p->get( 'item_addtocart', 1 );
+		//$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
 		$this->t['enable_review']			    = $this->p->get( 'enable_review', 1 );
 		$this->t['dynamic_change_image']    	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	    = $this->p->get( 'dynamic_change_price', 0 );
@@ -72,6 +73,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['popup_askquestion']		    = $this->p->get( 'popup_askquestion', 1 );
 		$this->t['title_next_prev']			    = $this->p->get( 'title_next_prev', 1 );
 		$this->t['display_public_download']     = $this->p->get( 'display_public_download', 1 );
+		$this->t['display_file_play']     		= $this->p->get( 'display_file_play', 1 );
 		$this->t['display_external_link']	    = $this->p->get( 'display_external_link', 1 );
 		$this->t['enable_rewards']			    = $this->p->get( 'enable_rewards', 1 );
 		$this->t['enable_price_history'] 	    = $this->p->get( 'enable_price_history', 0 );
@@ -82,6 +84,8 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['zero_attribute_price']	    = $this->p->get( 'zero_attribute_price', 1 );
 		$this->t['hide_add_to_cart_zero_price']	= $this->p->get( 'hide_add_to_cart_zero_price', 0 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
+		$this->t['item_display_labels']			= $this->p->get( 'item_display_labels', 2 );
+		$this->t['item_display_tags']			= $this->p->get( 'item_display_tags', 1 );
 
 
 
@@ -112,8 +116,8 @@ class PhocaCartViewItem extends JViewLegacy
 
 			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
-			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id);
-			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, 1);
+			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags']);
+			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels']);
 			$this->t['stock_status']		= array();
 			//$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
 
@@ -191,7 +195,8 @@ class PhocaCartViewItem extends JViewLegacy
 				$this->_prepareDocument($this->category[0], $this->item[0]);
 			}
 
-			$this->t['pathitem'] = PhocacartPath::getPath('productimage');
+			$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');
+			$this->t['pathpublicfile'] 	= PhocacartPath::getPath('publicfile');
 
 		}
 		$model->hit((int)$id);

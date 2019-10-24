@@ -46,9 +46,9 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 		}
 
 
-		$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		PhocacartRenderAdminjs::renderAjaxDoRequestAfterChange($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage', 'imageCreateThumbs');
-		PhocacartRenderAdminjs::renderAjaxDoRequestAfterPaste($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage');
+		//$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
+		//PhocacartRenderAdminjs::phEventCreateImageThumbnail($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage', 'imageCreateThumbs');
+		//PhocacartRenderAdminjs::phAddValueImage($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage');
 
 		// ASSOCIATION
 		// If we are forcing a language in modal (used for associations).

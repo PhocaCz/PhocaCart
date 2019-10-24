@@ -16,7 +16,7 @@ $displayData 	= null;
 
 if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 
-	///PhocacartRenderJs::renderPhSwapImageInitialize($d['id'], $d['dynamic_change_image'], $d['init_type']);
+	//PhocacartRenderJs::renderPhSwapImageInitialize($d['id'], $d['dynamic_change_image'], $d['init_type']);
 
 	echo '<div class="ph-item-attributes-box" id="phItemAttributesBox">';
 	echo '<h4>'.JText::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';

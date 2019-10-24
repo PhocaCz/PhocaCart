@@ -19,9 +19,9 @@ class JFormFieldPhocaDiscountProduct extends JFormField
 		$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' typeahead"' : ' class="typeahead"';
 		$attr 	.= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
 		$onchange 	= (string) $this->element['onchange'];
-		
+
 		$id 	= $this->form->getValue('id');
-		
+
 		$value = '';
 		if ((int)$id > 0) {
 			$relatedOption	= PhocacartDiscountCart::getDiscountProductsById((int)$id);
@@ -36,7 +36,7 @@ class JFormFieldPhocaDiscountProduct extends JFormField
 				}
 			}
 		}
-		
+
 		$document = JFactory::getDocument();
 		JHtml::stylesheet('media/com_phocacart/js/administrator/select2/select2.css' );
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/select2/select2.js');

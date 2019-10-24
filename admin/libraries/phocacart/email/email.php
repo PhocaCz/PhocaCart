@@ -280,18 +280,20 @@ class PhocacartEmail
 
 
 
-	public static function sendQuestionMail ($id, $data, $url, $tmpl) {
+	public static function sendQuestionMail ($data, $url, $tmpl) {
 
-		$app			= JFactory::getApplication();
-		$db 			= JFactory::getDBO();
-		$sitename 		= $app->get( 'sitename' );
-		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$numCharEmail	= $paramsC->get( 'max_char_question_email', 1000 );
+		$app						= JFactory::getApplication();
+		$db 						= JFactory::getDBO();
+		$sitename 					= $app->get( 'sitename' );
+		$paramsC 					= PhocacartUtils::getComponentParameters();
+		$numCharEmail				= $paramsC->get( 'max_char_question_email', 2000 );
+		$send_email_question		= $paramsC->get( 'send_email_question', 0 );
+		$send_email_question_others	= $paramsC->get( 'send_email_question_others', '' );
 
 		//get all selected users
 		$query = 'SELECT name, email, sendEmail' .
 		' FROM #__users' .
-		' WHERE id = '.(int)$id;
+		' WHERE id = '.(int)$send_email_question;
 		$db->setQuery( $query );
 		$rows = $db->loadObjectList();
 
@@ -314,39 +316,70 @@ class PhocacartEmail
 		if (isset($data['email']) && $data['email'] != '') {
 			$mailfrom = $data['email'];
 		} else {
-			$mailfrom = $rows[0]->email;
+			$mailfrom = isset($rows[0]->email) ? $rows[0]->email : '';
 		}
 
 		if (isset($data['message']) && $data['message'] != '') {
 			$message = $data['message'];
 		} else {
-			$message = "...";
+			$message = JText::_('COM_PHOCACART_NO_MESSAGE');
 		}
 
-		$email = $rows[0]->email;
+
+		$email = '';
+		if (isset($rows[0]->email)) {
+			$email = $rows[0]->email;
+		}
 
 		$message = str_replace("</p>", "\n", $message );
 		$message = strip_tags($message);
 
-		$message = JText::_( 'COM_PHOCACART_NEW_POST_ADDED' ) . "\n\n"
-							. JText::_( 'COM_PHOCACART_FROM' ) . ': '. $fromname . "\n"
-							. JText::_( 'COM_PHOCACART_DATE' ) . ': '. JHtml::_('date',  gmdate('Y-m-d H:i:s'), JText::_( 'DATE_FORMAT_LC2' )) . "\n\n"
-							. JText::_( 'COM_PHOCACART_SUBJECT' ) . ': '.$subject."\n"
-							. JText::_( 'COM_PHOCACART_MESSAGE' ) . ': '."\n"
-							. "\n\n"
-							.PhocacartUtils::wordDelete($message, $numCharEmail, '...')."\n\n"
-							. "\n\n"
-							//. JText::_( 'COM_PHOCACART_CLICK_LINK_READ_FULL_POST' ) ."\n"
-							. $url."\n\n"
-							. JText::_( 'COM_PHOCACART_REGARDS' ) .", \n"
-							. $sitename ."\n";
+
+		$layoutE 			= new JLayoutFile('email_ask_question', null, array('component' => 'com_phocacart'));
+		$d					= array();
+		$d['fromname']		= $fromname;
+		$d['name']			= isset($data['name']) ? $data['name'] : '';
+		$d['email']			= isset($data['email']) ? $data['email'] : '';
+		$d['phone']			= isset($data['phone']) ? $data['phone'] : '';
+		$d['subject']		= $subject;
+		$d['message']		= $message;
+		$d['numcharemail']	= $numCharEmail;
+		$d['url']			= $url;
+		$d['sitename']		= $sitename;
+
+		$body = $layoutE->render($d);
+
 
 		$subject = html_entity_decode($subject, ENT_QUOTES);
-		$message = html_entity_decode($message, ENT_QUOTES);
+		$body = html_entity_decode($body, ENT_QUOTES);
 
-		$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $message, false, null, null, '', '', $mailfrom, $fromname);
+		$notify = false;
+		// Send email to selected user
+		if ($mailfrom != '' && $send_email_question != '' && $email != '') {
+			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, '', '', $mailfrom, $fromname);
+		}
 
-		return $notify;
+
+		// Send email to others
+		$emailOthers	= '';
+		$bcc			= null;
+		if (isset($send_email_question_others) && $send_email_question_others != '') {
+			$bcc = explode(',', $send_email_question_others );
+			if (isset($bcc[0]) && JMailHelper::isEmailAddress($bcc[0])) {
+				$emailOthers = $bcc[0];
+			}
+		}
+
+		$notifyOthers = false;
+		if ($emailOthers != '' && JMailHelper::isEmailAddress($emailOthers)) {
+			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, '', '', $mailfrom, $fromname);
+		}
+
+
+		if ($notify || $notifyOthers) {
+			return true;
+		}
+		return false;
 	}
 }
 ?>

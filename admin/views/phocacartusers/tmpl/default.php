@@ -43,7 +43,7 @@ echo $r->startMainContainer();
 echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
 							$this->escape($this->state->get('filter.search')));
-							
+
 $userNameSelected = isset($this->items[0]->user_name_selected) ? $this->items[0]->user_name_selected : '';
 echo $r->inputFilterUser($this->t['l'].'_FILTER_USER_LABEL', $this->t['l'].'_FILTER_USER_DESC',
 							$this->escape($this->state->get('filter.user')), $userNameSelected);
@@ -63,7 +63,7 @@ $textButton = 'COM_PHOCACART_VIEW_CART';
 $w = 500;
 $h = 400;
 $rV = new PhocacartRenderAdminview();
-echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);		
+echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
 echo $r->startTable('categoryList');
 
@@ -78,31 +78,31 @@ echo '<th class="ph-name">'.JHtml::_('grid.sort',  $this->t['l'].'_FIRST_NAME_LA
 echo '<th class="ph-name">'.JHtml::_('grid.sort',  $this->t['l'].'_LAST_NAME_LABEL', 'a.name_last', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-address">'.JHtml::_('grid.sort',  $this->t['l'].'_ADDRESS_1_LABEL', 'a.address_1', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-email">'.JHtml::_('grid.sort',  $this->t['l'].'_EMAIL_LABEL', 'a.email', $listDirn, $listOrder ).'</th>'."\n";
-//echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
+//echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'u.id', $listDirn, $listOrder ).'</th>'."\n";
 
-				
-				
+
+
 echo $r->endTblHeader();
-			
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 if (is_array($this->items)) {
-	
+
 	$emailConflict	= 0;
-	
+
 	foreach ($this->items as $i => $item) {
 		//if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
 			$j++;
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
-$orderkey   	= array_search($item->id, $this->ordering[0]);		
-$ordering		= ($listOrder == 'a.ordering');			
+$orderkey   	= array_search($item->id, $this->ordering[0]);
+$ordering		= ($listOrder == 'a.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -120,7 +120,7 @@ echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
-					
+
 $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -136,7 +136,7 @@ if (isset($item->user_username)) {
 	$checkO .= ' <small>('.$item->user_username.')</small>';
 }
 echo $r->td($checkO, "small");
- 
+
 // Status
 // NOT ACTIVE
 if ((int)$item->id < 1 && (int)$item->cartuserid < 1) {
@@ -151,7 +151,7 @@ else if ( (int)$item->orderuserid > 0 ) {
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
-} 
+}
 
 // ADDED BILLING AND SHIPPING ADDRESS
 else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '' || $item->city != '' || $item->address_1 != '')) {
@@ -189,13 +189,13 @@ else if ( (int)$item->cartuserid > 0) {
 // OTHER
 else {
 	echo $r->td( '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
-	//echo $r->td('-', "small"); 
+	//echo $r->td('-', "small");
 }
 
 
 // GROUP
-if (isset($item->groups) && $item->groups != '') {
-	$groupsA = explode(',', $item->groups);
+if (isset($item->usergroups) && $item->usergroups != '') {
+	$groupsA = explode(',', $item->usergroups);
 	asort($groupsA);
 	$groupsI = '';
 	foreach($groupsA as $k => $v) {
@@ -220,9 +220,9 @@ if ($item->email != $item->user_email) {
 
 echo $r->td($email, "small");
 echo $r->td($item->user_id, "small");
-	
+
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }

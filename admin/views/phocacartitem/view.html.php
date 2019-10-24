@@ -26,15 +26,29 @@ class PhocaCartCpViewPhocaCartItem extends JViewLegacy
 		$media = new PhocacartRenderAdminmedia();
 
 
-		$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		PhocacartRenderAdminjs::renderAjaxDoRequestAfterChange($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage', 'imageCreateThumbs');
-		PhocacartRenderAdminjs::renderAjaxDoRequestAfterPaste($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage');
+		//$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
+
+		// FIELD: IMAGE, ADDITIONAL IMAGE
+		// EVENT - ONCHANGE - 1) create thumbnails
+		//PhocacartRenderAdminjs::phEventCreateImageThumbnail($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage', 'imageCreateThumbs');
+		// EVENT - ONCLICK - 1) paste selected image 2) create thumbnails
+		//PhocacartRenderAdminjs::phAddValueImage($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage');
+
+		// FIELD: FILE (DOWNLOAD), ADDITIONAL FILES (DOWNLOAD), PUBLIC DOWNLOAD FILE
+		// EVENT - ONCLICK - 1) paste selected image 2) create thumbnails
+		//
 
 		// Attribute Option
 		if ((int)$this->item->id > 0) {
-			$this->attributes		= PhocacartAttribute::getAttributesById((int)$this->item->id);
-			$this->specifications	= PhocacartSpecification::getSpecificationsById((int)$this->item->id);
-			$this->discounts		= PhocacartDiscountProduct::getDiscountsById((int)$this->item->id);
+			//$this->attributes					= PhocacartAttribute::getAttributesById((int)$this->item->id);
+			//$this->specifications				= PhocacartSpecification::getSpecificationsById((int)$this->item->id);
+			//$this->discounts					= PhocacartDiscountProduct::getDiscountsById((int)$this->item->id);
+			//$this->additional_images 			= PhocacartImageAdditional::getImagesByProductId((int)$this->item->id);
+
+
+
+
+
 		}
 
 		// ASSOCIATION

@@ -87,7 +87,7 @@ class PhocacartTag
      * @param string $lang
      * @return mixed
      */
-	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = 0, $lang = '') {
+	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = 0, $lang = '', $filterProducts = array()) {
 
 	/*	$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
@@ -150,6 +150,11 @@ class PhocacartTag
 				$lefts[] 	= ' '.$related.' AS tr ON tr.tag_id = t.id';
 				$lefts[] 	= ' #__phocacart_products AS p ON tr.item_id = p.id';
 			}
+		}
+
+		if (!empty($filterProducts)) {
+			$productIds = implode (',', $filterProducts);
+			$wheres[]	= 'p.id IN ('.$productIds.')';
 		}
 
 		$q = ' SELECT DISTINCT '.$columns
@@ -250,18 +255,26 @@ class PhocacartTag
 	/**
 	 *
 	 * @param int $itemId
-	 * @param number $type 0 ... tag, 1 ... tag label
+	 * @param number $type 0 ... nothing, 1 ... tags only, 2 ... labels only, 3 ... tags and labels
 	 * @return string
 	 */
 
 	public static function getTagsRendered($itemId, $type = 0) {
 
-
-		if ($type == 1) {
-			$tags 	= self::getTagLabels($itemId);
-		} else {
+	    if ($type == 1) {
+	        // Only tags
 			$tags 	= self::getTags($itemId);
-		}
+		} else if ($type == 2) {
+		    // Only labels
+			$tags 	= self::getTagLabels($itemId);
+		} else if ($type == 3) {
+		    // Tags and Labels together (they can be displayed as labels in category/items view)
+		    $t 	= self::getTags($itemId);
+		    $l 	= self::getTagLabels($itemId);
+		    $tags = array_merge($t, $l);
+        } else {
+	        return '';
+        }
 		$db 	= JFactory::getDBO();
 		$p 		= PhocacartUtils::getComponentParameters();
 		$tl		= $p->get( 'tags_links', 0 );
@@ -270,7 +283,7 @@ class PhocacartTag
 		if (!empty($tags)) {
 			foreach($tags as $k => $v) {
 
-				if ($type == 1) {
+				if ($type == 2 || $type == 3) {
 					$o .= '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-'.htmlspecialchars(strip_tags($v->alias)).'">';
 				} else {
 					$o .= '<span class="label label-info">';
@@ -321,7 +334,7 @@ class PhocacartTag
 					}
 				} else if ($tl == 3) {
 					$link = PhocacartRoute::getItemsRoute();
-                    if ($type == 1) {
+                    if ($type == 2 || $type == 3) {
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $v->id, $v->alias);
                     } else {
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
@@ -330,7 +343,7 @@ class PhocacartTag
 					$o .= '<a href="'.$link.'">'.$dO.'</a>';
 				}
 
-				if ($type == 1) {
+				if ($type == 2 || $type == 3) {
 					$o .= '</div></div>';
 				} else {
 					$o .= '</span>';

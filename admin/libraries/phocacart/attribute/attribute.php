@@ -12,40 +12,86 @@ defined('_JEXEC') or die();
 
 class PhocacartAttribute
 {
-	public static function getAttributesById($productId, $returnArray = 0) {
+	public static function getAttributesById($productId, $return = 0) {
 
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT a.id, a.title, a.alias, a.required, a.type'
 				.' FROM #__phocacart_attributes AS a'
 			    .' WHERE a.product_id = '.(int) $productId
-				.' ORDER BY a.id';
+				.' ORDER BY a.ordering';
 		$db->setQuery($query);
-		if ($returnArray) {
-			$attributes = $db->loadAssocList();
-		} else {
-			$attributes = $db->loadObjectList();
-		}
 
-		return $attributes;
+
+		if ($return == 0) {
+			return $db->loadObjectList();
+		} else if ($return == 1) {
+			return $db->loadAssocList();
+		} else {
+		    $attributes          = $db->loadAssocList();
+		    $attributesSubform   = array();
+		    $i              = 0;
+		    if (!empty($attributes)) {
+				foreach($attributes as $k => $v) {
+					$attributesSubform['attributes'.$i]['id'] = (int)$v['id'];
+				    $attributesSubform['attributes'.$i]['title'] = (string)$v['title'];
+				    $attributesSubform['attributes'.$i]['alias'] = (string)$v['alias'];
+				    $attributesSubform['attributes'.$i]['required'] = (int)$v['required'];
+				    $attributesSubform['attributes'.$i]['type'] = (int)$v['type'];
+					$i++;
+				}
+			}
+		    return $attributesSubform;
+        }
+
+		return false;
 	}
 
-	public static function getOptionsById($attributeId, $returnArray = 0) {
+	public static function getOptionsById($attributeId, $return = 0) {
 
 		$db =JFactory::getDBO();
+
+
 
 		$query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value';
 		$query .= ' FROM #__phocacart_attribute_values AS a'
 			    .' WHERE a.attribute_id = '.(int) $attributeId
-				.' ORDER BY a.id';
+				.' ORDER BY a.ordering';
 		$db->setQuery($query);
-		if ($returnArray) {
-			$options = $db->loadAssocList();
-		} else {
-			$options = $db->loadObjectList();
-		}
 
-		return $options;
+		if ($return == 0) {
+			return $db->loadObjectList();
+		} else if ($return == 1) {
+			return $db->loadAssocList();
+		} else {
+		    $options          = $db->loadAssocList();
+		    $optionsSubform   = array();
+		    $i              = 0;
+		    if (!empty($options)) {
+				foreach($options as $k => $v) {
+					$optionsSubform['options'.$i]['id'] = (int)$v['id'];
+				    $optionsSubform['options'.$i]['title'] = (string)$v['title'];
+				    $optionsSubform['options'.$i]['alias'] = (string)$v['alias'];
+				    $optionsSubform['options'.$i]['operator'] = (string)$v['operator'];
+				    $optionsSubform['options'.$i]['amount'] = PhocacartPrice::cleanPrice($v['amount']);
+				    $optionsSubform['options'.$i]['stock'] = (string)$v['stock'];
+				    $optionsSubform['options'.$i]['operator_weight'] = (string)$v['operator_weight'];
+				    $optionsSubform['options'.$i]['weight'] = PhocacartPrice::cleanPrice($v['weight']);
+				    $optionsSubform['options'.$i]['image'] = (string)$v['image'];
+				    $optionsSubform['options'.$i]['image_medium'] = (string)$v['image_medium'];
+				    $optionsSubform['options'.$i]['image_small'] = (string)$v['image_small'];
+				    $optionsSubform['options'.$i]['download_folder'] = (string)$v['download_folder'];
+				    $optionsSubform['options'.$i]['download_file'] = (string)$v['download_file'];
+				    $optionsSubform['options'.$i]['download_token'] = (string)$v['download_token'];
+				    $optionsSubform['options'.$i]['color'] = (string)$v['color'];
+
+					$i++;
+				}
+			}
+		    return $optionsSubform;
+        }
+
+		return false;
 	}
 
 	public static function getTypeArray($returnId = 0, $returnValue = 0, $returnFull = 0) {
@@ -183,11 +229,12 @@ class PhocacartAttribute
 			// are now active - so all others will be removed
 			$notDeleteAttribs = array();// Select all attributes which will be not deleted
 			// Options are defined in attributes array
-
+			$i                  = 1;
 			// ADD ATTRIBUTES
 			if (!empty($attributesArray)) {
 
 				foreach($attributesArray as $k => $v) {
+
 
 					if(empty($v['alias'])) {
 						$v['alias'] = $v['title'];
@@ -223,22 +270,24 @@ class PhocacartAttribute
 						.' title = '.$db->quote($v['title']).','
 						.' alias = '.$db->quote($v['alias']).','
 						.' required = '.(int)$v['required'].','
-						.' type = '.(int)$v['type']
+						.' type = '.(int)$v['type'].','
+						.' ordering = '.(int)$i
 						.' WHERE id = '.(int)$idExists;
 						$db->setQuery($query);
 						$db->execute();
-
+						$i++;
 						$newIdA 				= $idExists;
 
 					} else {
 
 						$valuesString 	= '';
-						$valuesString 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.(int)$v['required'].', '.(int)$v['type'].')';
-						$query = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type)'
+						$valuesString 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.(int)$v['required'].', '.(int)$v['type'].', '.$i.')';
+						$query = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type, ordering)'
 									.' VALUES '.(string)$valuesString;
 						$db->setQuery($query);
 						$db->execute(); // insert is not done together but step by step because of getting last insert id
 
+						$i++;
 						// ADD OPTIONS
 						$newIdA = $db->insertid();
 
@@ -258,7 +307,7 @@ class PhocacartAttribute
 						$dTV = self::getTypeArray($v['type'], 1);
 						$dI  = 0;// defaultValue $i
 						$dVR = 0;// defaultValue removed?
-
+						$j	 = 0;// ordering
 
 						foreach($v['options'] as $k2 => $v2) {
 
@@ -397,12 +446,14 @@ class PhocacartAttribute
 								.' download_file = '.$db->quote($v2['download_file']).','
 								.' download_token = '.$db->quote($v2['download_token']).','
 								.' color = '.$db->quote($v2['color']).','
-								.' default_value = '.(int)$defaultValue
+								.' default_value = '.(int)$defaultValue .','
+								.' ordering = '.(int)$j
 								.' WHERE id = '.(int)$idExists;
 
 
 								$db->setQuery($query);
 								$db->execute();
+								$j++;
 
 								$newIdO 				= $idExists;
 
@@ -426,14 +477,16 @@ class PhocacartAttribute
 									.$db->quote($v2['download_file']).','
 									.$db->quote($v2['download_token']).','
 									.$db->quote($v2['color']).', '
-									.(int)$defaultValue.')';
+									.(int)$defaultValue.','
+									.(int)$j.')';
 
 
-								$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value)'
+								$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, ordering)'
 											.' VALUES '.$options;
 
 								$db->setQuery($query);
 								$db->execute();
+								$j++;
 								$newIdO = $db->insertid();
 							}
 
@@ -708,7 +761,7 @@ class PhocacartAttribute
 
 
 
-	public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '') {
+	public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 5);
@@ -742,12 +795,18 @@ class PhocacartAttribute
 			}
 		}
 
+		if (!empty($filterProducts)) {
+			$productIds = implode (',', $filterProducts);
+			$wheres[]	= 'p.id IN ('.$productIds.')';
+		}
+
 		$q = ' SELECT '.$columns
 			.' FROM  #__phocacart_attribute_values AS v'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;
+
 
 		$db->setQuery($q);
 		$attributes = $db->loadObjectList();

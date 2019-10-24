@@ -48,7 +48,15 @@ foreach ($d['items'] as $k => $v) {
     }
 
     if (isset($v->color) && $v->color != '') {
-        $output .= '<a href="#" class="phSelectBoxButton '.$class.' color-'.str_replace('#', '', $v->color).'" style="background-color:'.$v->color.'" onclick="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;" title="'.htmlspecialchars($v->title).'">&nbsp;</a>';
+
+        $jsSet = '';
+        if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+            // Category View - force the category parameter if set in parameters
+            $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+        }
+        $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;';
+
+        $output .= '<a href="#" class="phSelectBoxButton '.$class.' color-'.str_replace('#', '', $v->color).'" style="background-color:'.$v->color.'" onclick="'.$jsSet.'" title="'.htmlspecialchars($v->title).'">&nbsp;</a>';
     }
 }
 

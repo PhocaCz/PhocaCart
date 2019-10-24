@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS `#__phocacart_products`;
 DROP TABLE IF EXISTS `#__phocacart_product_categories`;
 DROP TABLE IF EXISTS `#__phocacart_product_featured`;
 DROP TABLE IF EXISTS `#__phocacart_product_images`;
+DROP TABLE IF EXISTS `#__phocacart_product_files`;
 DROP TABLE IF EXISTS `#__phocacart_product_access`;
 DROP TABLE IF EXISTS `#__phocacart_product_discounts`;
 DROP TABLE IF EXISTS `#__phocacart_product_discount_access`;

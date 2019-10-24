@@ -201,10 +201,12 @@ class PhocacartRenderFront
 				foreach($pathWayIdA as $k => $v) {
 					if (isset($v->link)) {
 						$parts = parse_url($v->link);
-						parse_str($parts['query'], $query);
-						if (isset($query['id'])){
-							$pIdA[] = (int)$query['id'];
-						}
+						if (isset($parts['query'])) {
+                            parse_str($parts['query'], $query);
+                            if (isset($query['id'])) {
+                                $pIdA[] = (int)$query['id'];
+                            }
+                        }
 					}
 				}
 			}
@@ -253,10 +255,12 @@ class PhocacartRenderFront
 				foreach($pathWayIdA as $k => $v) {
 					if (isset($v->link)) {
 						$parts = parse_url($v->link);
-						parse_str($parts['query'], $query);
-						if (isset($query['id'])){
-							$pIdA[] = (int)$query['id'];
-						}
+						if (isset($parts['query'])) {
+                            parse_str($parts['query'], $query);
+                            if (isset($query['id'])) {
+                                $pIdA[] = (int)$query['id'];
+                            }
+                        }
 					}
 				}
 			}

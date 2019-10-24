@@ -151,7 +151,11 @@ class PhocacartFileUploadmultiple
 		$js.='	pgJQ("#'.$name.'").pluploadQueue({'."\n";
 		$js.='		runtimes : \''.$runtime.'\','."\n";
 		$js.='		url : \''.$this->url.'\','."\n";
-		$js.='		max_file_size : \''.PhocacartText::filterValue($this->maxFileSize, 'alphanumeric3').'\','."\n";
+
+		if ($this->maxFileSize != '0b') {
+			$js.='		max_file_size : \''.PhocacartText::filterValue($this->maxFileSize, 'alphanumeric3').'\','."\n";
+		}
+
 
 		if ($chunkEnabled == 1) {
 			$js.='		chunk_size : \'1mb\','."\n";

@@ -652,6 +652,18 @@ class PhocacartRoute
 				$a['alias']		= $category->alias;
 			}
 
+		} else if ($option == 'com_phocacart' && ($view == 'item')) {
+			$a['id']		= $app->input->get( 'catid', '', 'int' );
+			$category 		= PhocacartCategory::getCategoryById($a['id']);
+
+			$a['idalias']	= $app->input->get( 'catid', '', 'string' );
+			$a['alias']		= self::getAliasFromId($a['idalias']);
+			$a['idalias']	= str_replace(':', '-', $a['idalias']);
+			if (isset($category->alias)) {
+				$a['idalias']	= $a['id'] .'-'. $category->alias;
+				$a['alias']		= $category->alias;
+			}
+
 		}
 
 		return $a;

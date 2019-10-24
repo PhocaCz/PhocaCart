@@ -271,6 +271,13 @@
             </field>
 
 
+            <field name="category_display_labels" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_LABELS_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_LABELS_CATEGORY_VIEW_DESC">
+                <option value="2">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="3">COM_PHOCACART_YES_TAGS_AND_LABELS</option>
+            </field>
+
+
             <field name="phocahead5" type="phocahead" default="COM_PHOCACART_ITEM_VIEW_LABEL" label="" description=""/>
 
 
@@ -301,6 +308,17 @@
                 <option value="3">COM_PHOCACART_SEARCH_OUTCOME</option>
             </field>
 
+            <field name="item_display_labels" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_LABELS_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_LABELS_ITEM_VIEW_DESC">
+                <option value="2">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="3">COM_PHOCACART_YES_TAGS_AND_LABELS</option>
+            </field>
+
+            <field name="item_display_tags" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_TAGS_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_TAGS_ITEM_VIEW_LABEL">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+
 
             <field name="item_askquestion" type="list" default="0" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_ITEM_VIEW_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
@@ -310,6 +328,12 @@
 
             <field name="display_public_download" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PUBLIC_DOWNLOAD_BUTTON_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PUBLIC_DOWNLOAD_BUTTON_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			<field name="display_file_play" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_FILE_PLAY_LABEL"
+                   description="COM_PHOCACART_FIELD_DISPLAY_FILE_PLAY_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
@@ -1227,6 +1251,7 @@
 
             <field name="send_email_question" type="user" section="com_phocacart" default="" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_DESC"/>
 
+			<field name="send_email_question_others" type="textarea" class="inputbox" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_DESC" />
 
             <field name="phocahead17" type="phocahead" default="COM_PHOCACART_SECURITY_OPTIONS_LABEL" label="" description=""/>
 

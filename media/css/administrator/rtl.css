@@ -1,0 +1,26 @@
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Cart
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+
+.ph-float-right,
+.ph-right {
+	text-align: left;
+}
+.ph-float-left,
+.ph-left{
+	text-align: right;
+}
+
+.ph-admin-additional-box {
+    left: 0.3em;
+	right: auto;
+}
+
+#toolbar [class^="icon-"],
+#toolbar [class*=" icon-"] {
+	border-left: none !important;
+}

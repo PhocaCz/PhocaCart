@@ -17,14 +17,14 @@ final class PhocacartRenderAdminjs
 	// =======
 	// AJAX
 	// =======
-	public static function renderAjaxDoRequestAfterChange($url, $msg, $manager = 'product', $value = 'imageCreateThumbs') {
+	/*public static function phEventCreateImageThumbnail($url, $msg, $manager = 'product', $value = 'imageCreateThumbs') {
 
 		$path = PhocacartPath::getPath($manager);
 		$pathImage = Juri::root() . $path['orig_rel_ds'];
 
 		$s 	= array();
 		$s[] = ' ';
-		$s[] = '/* Event Create Thumbnails */ ';
+		$s[] = '/* Event Create Thumbnails *//* ';
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   jQuery(document).on("change", \'.'.$value.'\', function() {';
 
@@ -52,16 +52,16 @@ final class PhocacartRenderAdminjs
 	/**
 	 * Add value from popup window (file manager mostly) to the list of items - e.g. select image - then thumbnails will be recreated
 	 */
-
-	public static function renderAjaxDoRequestAfterPaste($url, $msg, $manager = 'productimage') {
+/*
+	public static function phAddValueImage($url, $msg, $manager = 'productimage') {
 
 		$path = PhocacartPath::getPath($manager);
 		$pathImage = Juri::root() . $path['orig_rel_ds'];
 
 		$s 	= array();
 		$s[] = ' ';
-		$s[] = '/* Function phAddValue */ ';
-		$s[] = 'function phAddValue(id, title, request) {';
+		$s[] = '/* Function phAddValueImage *//* ';
+		$s[] = 'function phAddValueImage(id, title, request) {alert("test");';
 		$s[] = '   document.getElementById(id).value = title;';
 		//$s[] = '   SqueezeBox.close();';// close
 		$s[] = '   jQuery(\'.modal\').modal(\'hide\');';
@@ -88,6 +88,26 @@ final class PhocacartRenderAdminjs
 		//});
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
+*/
+
+	/*public static function phAddValueFile() {
+
+		//$path = PhocacartPath::getPath($manager);
+		//$pathImage = Juri::root() . $path['orig_rel_ds'];
+
+		$s 	= array();
+		$s[] = ' ';
+		$s[] = '/* Function phAddValueFile /* ';
+		$s[] = 'function phAddValueFile(id, title) {';
+		$s[] = '   document.getElementById(id).value = title;';
+		$s[] = '   jQuery(\'.modal\').modal(\'hide\');';
+		$s[] = '}';
+		$s[] = ' ';
+		//jQuery('.modal').on('hidden', function () {
+		//  // Do something after close
+		//});
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+	}*/
 
 
 
@@ -259,7 +279,7 @@ final class PhocacartRenderAdminjs
 	// ROWS
 	// ========
 
-	public static function renderJsManageRowImage($i, $newRow) {
+	/*public static function renderJsManageRowImage($i, $newRow) {
 
 		// We have only two modal box - 1. for image, 2. for additinal images (all)
 		// So we need to get info, which additional images we have clicked
@@ -286,9 +306,9 @@ final class PhocacartRenderAdminjs
 		$s[] = ' }';
 
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-	}
+	}*/
 
-	public static function renderJsManageRowAttribute($i, $newRow) {
+	/*public static function renderJsManageRowAttribute($i, $newRow) {
 
 		$url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&'. JSession::getFormToken().'=1';
 
@@ -308,9 +328,9 @@ final class PhocacartRenderAdminjs
 		$s[] = ' }';
 
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-	}
+	}*/
 
-	public static function renderJsManageRowOption($j,  $newRow, $newHeader) {
+	/*public static function renderJsManageRowOption($j,  $newRow, $newHeader) {
 
 		$url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&'. JSession::getFormToken().'=1';
 
@@ -331,9 +351,9 @@ final class PhocacartRenderAdminjs
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxoptionjs - header created by javascript
 		// #phrowboxoption - header created by php/mysql
-	}
+	}*/
 
-	public static function renderJsManageRowSpecification($i, $newRow, $newHeader) {
+	/*public static function renderJsManageRowSpecification($i, $newRow, $newHeader) {
 		$s 	= array();
 		$s[] = ' var phRowCountSpecification = '.$i.';';
 		$s[] = ' function phAddRowSpecification() {';
@@ -344,10 +364,10 @@ final class PhocacartRenderAdminjs
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxspecification - header created by javascript
 		// #phrowboxspecificationheader - header created by php/mysql
-	}
+	}*/
 
 
-
+/*
 	public static function renderJsManageRowDiscount($i, $newRow, $newHeader) {
 
 		$compatible = PhocacartUtils::isJCompatible('3.7') ? '1' : '0';
@@ -362,10 +382,10 @@ final class PhocacartRenderAdminjs
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxspecification - header created by javascript
 		// #phrowboxspecificationheader - header created by php/mysql
-	}
+	}*/
 
 
-	public static function renderJsManageRowPriceHistory($i, $newRow) {
+	/*public static function renderJsManageRowPriceHistory($i, $newRow) {
 
 		$compatible = PhocacartUtils::isJCompatible('3.7') ? '1' : '0';
 		$s 	= array();
@@ -377,7 +397,7 @@ final class PhocacartRenderAdminjs
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxspecification - header created by javascript
 		// #phrowboxspecificationheader - header created by php/mysql
-	}
+	}*/
 
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);

@@ -1557,8 +1557,14 @@ class PhocacartOrder
 		//$productItem 	= new PhocacartProduct();
 		$product		= PhocacartProduct::getProduct((int)$productId, (int)$catId, $this->type);
 
+		// Additional download files
+        $additionalDownloadFiles = PhocacartFileAdditional::getProductFilesByProductId((int)$productId, 1);
+
 		// Attribute Option Download Files
         $attributeDownloadFiles = PhocacartAttribute::getAttributeOptionDownloadFilesByOrder($orderId, $productId, $orderProductId);
+
+
+
 
 
         // 1) download_file for ordered product
@@ -1603,6 +1609,7 @@ class PhocacartOrder
             $d['download_token']	= $product->download_token;
             $d['download_folder']	= $product->download_folder;
             $d['download_file']		= $product->download_file;
+            $d['type']		        = 1;
 
             $db = JFactory::getDbo();
             //$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads WHERE catid = '.(int)$orderId);
@@ -1634,10 +1641,63 @@ class PhocacartOrder
 		}
 
 		// 2)
-        if (!empty($attributeDownloadFiles)) {
+
+        if ($forceOnlyDownloadFileAttribute  == 0 && !empty($additionalDownloadFiles) ) {
 
             $d['ordering'] = $d['ordering'] + 1;
+            $d['download_token']	= '';
+            $d['download_folder']	= $product->download_folder;
+            $d['download_file']		= '';
+            $d['type']		        = 2;
 
+            foreach($additionalDownloadFiles as $k => $v) {
+
+
+                if (isset($v['download_file']) && $v['download_file'] != ''
+                    && isset($d['download_folder']) && $d['download_folder'] != ''
+                    && isset($v['download_token'])) {
+
+
+                    $d['download_token'] = $v['download_token'];
+                    $d['download_file'] = $v['download_file'];
+
+                    $d['title'] = $product->title;
+
+                    $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
+
+
+                    if (!$row->bind($d)) {
+                        //throw new Exception($db->getErrorMsg());
+                        $msg = JText::_($db->getErrorMsg());
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
+                    }
+
+                    if (!$row->check()) {
+                        //throw new Exception($row->getError());
+                        $msg = JText::_($row->getErrorMsg());
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
+                    }
+
+                    if (!$row->store()) {
+                        //throw new Exception($row->getError());
+                        $msg = JText::_($row->getErrorMsg());
+                        $app->enqueueMessage($msg, 'error');
+                        return false;
+                    }
+                    $isDownloadableProduct = 1;
+                    $d['ordering'] = $d['ordering'] + 1;
+                }
+            }
+
+		}
+
+		// 3)
+        if (!empty($attributeDownloadFiles)) {
+
+            $d['ordering']  = $d['ordering'] + 1;
+            $d['type']	    = 3;
             foreach ($attributeDownloadFiles as $k => $v) {
 
                 if (isset($v['download_file']) && $v['download_file'] != ''

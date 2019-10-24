@@ -20,7 +20,7 @@ class PhocacartSearch
 		$o						= array();
 		$app					= JFactory::getApplication();
 		$s 			            = PhocacartRenderStyle::getStyles();
-		$layout 	= new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
+		$layout 	            = new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
 
 		$data                   = array();
 		$data['s']              = $s;

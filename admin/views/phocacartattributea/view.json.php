@@ -28,7 +28,7 @@ class PhocaCartCpViewPhocaCartAttributeA extends JViewLegacy
 
 		if ($task == 'gettoken') {
 
-
+			// Only tokens and names - don't create folders now they will be created when accessing manager
 			$token 	= PhocacartUtils::getToken();
 			$folder	= PhocacartUtils::getToken('folder');
 

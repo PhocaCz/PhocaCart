@@ -32,12 +32,21 @@ class PhocacartDownload
 		}
 		$wheres[]	= ' d.published = 1';
 
-		$query = ' SELECT d.*'
+		// In case of full group there can be problem with filtering additional files
+		// so the loading can be divided into download files, additional download files and attributed download files
+
+		$columns	= 'd.id, d.order_id, d.product_id, d.attribute_id, d.option_id, d.order_product_id, d.order_attribute_id, d.order_option_id, d.title, d.alias, d.download_token, d.download_folder, d.download_file, d.download_hits, d.ordering, d.date, d.published, d.type';
+		$groupsFull	= 'd.id, d.order_id, d.product_id, d.attribute_id, d.option_id, d.order_product_id, d.order_attribute_id, d.order_option_id, d.title, d.alias, d.download_token, d.download_folder, d.download_file, d.download_hits, d.ordering, d.date, d.published, d.type';
+		$groupsFast	= 'd.order_id, d.download_file';
+		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+
+		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_order_downloads AS d'
 				.' LEFT JOIN #__phocacart_orders AS o ON o.id = d.order_id'
 				. $leftJoin
 				.' WHERE ' . implode( ' AND ', $wheres )
-				.' ORDER BY d.date';
+                .' GROUP BY '.$groups
+		        .' ORDER BY d.date';
 		$db->setQuery($query);
 
 		$files = $db->loadObjectList();

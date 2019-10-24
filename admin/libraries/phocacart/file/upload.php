@@ -628,7 +628,10 @@ class PhocacartFileUpload
 				if ($chunkEnabled != 1) {
 					if(($imginfo = getimagesize($file['tmp_name'])) === FALSE) {
 						$err = 'COM_PHOCACART_WARNINVALIDIMG';
-						$err = $imginfo[0];
+
+						if (isset($imginfo[0]) && $imginfo[0] != '') {
+							$err = $imginfo[0];
+						}
 						return false;
 					}
 				}

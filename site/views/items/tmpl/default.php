@@ -141,9 +141,10 @@ if (!empty($this->items)) {
 		// :L: LINK TO PRODUCT VIEW
 		$dV = array();
 		$dV['s'] = $this->s;
+		$dV['display_view_product_button'] 	= $this->t['display_view_product_button'];
 		if ((int)$this->t['display_view_product_button'] > 0) {
 			$dV['link']							= $link;
-			$dV['display_view_product_button'] 	= $this->t['display_view_product_button'];
+			//$dV['display_view_product_button'] 	= $this->t['display_view_product_button'];
 		}
 
 		// :L: ADD TO CART
@@ -340,12 +341,12 @@ if (!empty($this->items)) {
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
 
 		// Events
-		$results = \JFactory::getApplication()->triggerEvent('onItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
+		$results = \JFactory::getApplication()->triggerEvent('PCVonItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
 		$dL['event']['onCategoryItemsItemAfterAddToCart'] = trim(implode("\n", $results));
 
 		// LABELS
 		$dL['labels'] =  $label['new'] . $label['hot'] . $label['feat'];
-		$tagLabelsOutput = PhocacartTag::getTagsRendered((int)$v->id, 1);
+		$tagLabelsOutput = PhocacartTag::getTagsRendered((int)$v->id, $this->t['category_display_labels']);
 		if ($tagLabelsOutput != '') {
 			$dL['labels'] .= $tagLabelsOutput;
 		}

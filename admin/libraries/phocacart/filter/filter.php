@@ -19,6 +19,7 @@ class PhocacartFilter
 	public $price			= false;
 	public $attributes		= false;
 	public $specifications	= false;
+	public $category		= false;
 
 	public $enable_color_filter 		= false;
 	public $enable_image_filter 		= false;
@@ -33,6 +34,14 @@ class PhocacartFilter
 	public $manufacturer_title			= '';
 	public $filter_language				= 0;
 	public $open_filter_panel           = 1;
+
+	public $force_category				= 0;
+	public $limit_attributes_category	= 0;
+	public $limit_tags_category			= 0;
+	public $limit_labels_category		= 0;
+	public $limit_price_category		= 0;
+	public $limit_manufacturers_category	= 0;
+	public $limit_specifications_category = 0;
 
 
 	public function __construct() {}
@@ -63,18 +72,39 @@ class PhocacartFilter
 		$data['s']			= $s;
 		$data['getparams']	= array();
 
-		//-CATEGORY- ACTIVE CATEGORY
+
+		// - SPECIFIC CASE - CATEGORY -
+		// When we are in category view the identificator for category is ID
+		// When we are in item view the identificator for category is CATID
+		// When we are in items view (search, filter) the identificator for category is c=1-category
+		// So when we are in category or item view and someone will filter products we can even set the category (form ID or CATID to c=1-category) for items view
+		// Parameter for this is "force_category"
+		// We even can limit filter items like attributes only for specific category
+		// Parameter for this is "limit_attributes_category" (attributes)
+		$category					= PhocacartRoute::getIdForItemsRoute();// Used for parameter: Filter Category: Yes (Active Category) (int)$this->category == 1
+		$forceCategory				= array();
+		$forceCategory['id']		= 0;
+		$forceCategory['idalias']	= '';
+		if ($this->force_category == 1) {
+			$forceCategory	= $category;
+		}
+
+
+
+		//-CATEGORY- ACTIVE CATEGORY (CATEGORY VIEW)
 		$data				= array();
 		$data['s']			= $s;
 		$data['param'] 		= 'id';
 		$data['title']		= JText::_('COM_PHOCACART_CATEGORY');
-		$category			= PhocacartRoute::getIdForItemsRoute();
+		//$category			= PhocacartRoute::getIdForItemsRoute();
+
 
 		$data['getparams'][]= $category['idalias'];
 		$data['nrinalias']	= 1;
 		$data['formtype']	= 'category';
 		$data['uniquevalue']= 1;
 		$data['params']['open_filter_panel'] = $this->open_filter_panel;
+
 
 
 		if ((int)$this->category == 1 && (int)$category['id'] > 0) {
@@ -84,11 +114,12 @@ class PhocacartFilter
 			if (!empty($data['items'])) {
 				$o[] = $layout->render($data);
 			}
+
 		}
 
 
 
-		// -CATEGORY MORE- (ALL CATEGORIES)
+		// -CATEGORY MORE- (ALL CATEGORIES, ITEMS VIEW)
 		$data				= array();
 		$data['s']			= $s;
 		$data['param'] 		= 'c';
@@ -99,12 +130,16 @@ class PhocacartFilter
 		$data['uniquevalue']= 0;
 
 
+
 		// OPEN OR CLOSE PANEL
 		// $data['params']['open_filter_panel'] = $this->open_filter_panel;
 		if ((int)$this->category == 2) {
 			$data['active'] = 0;
+			// if we are in category view and want to force active category when clicking on filter
+			// so we want to move the category id from CATEGORY VIEW to ITEMS VIEW
+			// and we should mark the category active in category list = $forceActive
 			$data['items'] 	= PhocacartCategory::getCategoryTreeArray(1, '', '', array(0,1), $language);
-			$data['output']	= PhocacartCategory::nestedToCheckBox($data['items'], $data, 0, $data['active']);
+			$data['output']	= PhocacartCategory::nestedToCheckBox($data['items'], $data, 0, $data['active'], $forceCategory['id']);
 
 			if ($this->open_filter_panel == 0) {
 			    $data['collapse_class'] = $s['c']['panel-collapse.collapse'];
@@ -125,6 +160,51 @@ class PhocacartFilter
 			}
 		}
 
+
+		// LIMIT ... TO CATEGORY - Display items only from products of the current category
+		$activeProducts = array();
+		$activeCategory = array();
+		$activeProductsAttributes 	= array();
+		$activeProductsTags			= array();
+		$activeProductsLabels 		= array();
+		$activeProductsPrice 		= array();
+		$activeProductsManufacturers	= array();
+		$activeProductsSpecifications	= array();
+		if($this->limit_attributes_category == 1 || $this->limit_tags_category == 1 || $this->limit_labels_category == 1
+			|| $this->limit_price_category == 1 || $this->limit_manufacturers_category == 1 || $this->limit_specifications_category == 1) {
+			if ((int)$category['id'] > 0) {
+				$activeCategory[] = (int)$category['id'];
+			}
+
+			if (!empty($data['getparams'])) {
+				foreach ($data['getparams'] as $k => $v) {
+					$activeCategory[] = (int)$v;
+				}
+			}
+			$activeCategory = array_unique($activeCategory);
+			$activeProducts = PhocacartProduct::getProducts(0, 0, 1, 0, true, false, false, 0, $activeCategory, 0, array(0, 1), 'a.id', 'column');
+
+			if($this->limit_attributes_category == 1) {
+				$activeProductsAttributes = $activeProducts;
+			}
+			if($this->limit_tags_category == 1) {
+				$activeProductsTags = $activeProducts;
+			}
+			if($this->limit_labels_category == 1) {
+				$activeProductsLabels = $activeProducts;
+			}
+			if($this->limit_price_category == 1) {
+				$activeProductsPrice = $activeProducts;
+			}
+			if($this->limit_manufacturers_category == 1) {
+				$activeProductsManufacturers = $activeProducts;
+			}
+			if($this->limit_specifications_category == 1) {
+				$activeProductsSpecifications = $activeProducts;
+			}
+
+		}
+
 		// -PRICE- AVAILABLE PRODUCTS ONLY - Yes
 		$data				= array();
 		$data['s']			= $s;
@@ -142,6 +222,8 @@ class PhocacartFilter
 		$data['uniquevalue']= 1;
 		$data['filterprice']= $this->price;
 
+		$data['forcecategory']['idalias'] 	= $forceCategory['idalias'];// This input form field can force category when filtering from category/item view to items view
+
 		// OPEN OR CLOSE PANEL
 		// $data['params']['open_filter_panel'] = $this->open_filter_panel;
 		if ($this->open_filter_panel == 0) {
@@ -155,12 +237,49 @@ class PhocacartFilter
 		    $data['triangle_class'] = $s['i']['triangle-right'];
 		} else {
 			$data['collapse_class'] = $s['c']['panel-collapse.collapse.in'];
-			$data['triangle_class'] = $s['i']['triangle-bottm'];
+			$data['triangle_class'] = $s['i']['triangle-bottom'];
 		}
 
 		if ($this->price > 0) {
 			$o[] = $layout2->render($data);
 		}
+
+
+		// RENDER PRICE FROM TO INPUT RANGE
+
+		if ($this->price == 2 || $this->price == 3) {
+
+			$document					= JFactory::getDocument();
+			$document->addScript(JURI::root(true).'/media/com_phocacart/js/ui/jquery-ui.slider.min.js');
+			JHTML::stylesheet('media/com_phocacart/js/ui/jquery-ui.slider.min.css' );
+
+			$currency 	= PhocacartCurrency::getCurrency();
+			PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
+			$price_from	= $this->getArrayParamValues('price_from', 'string');
+			$price_to	= $this->getArrayParamValues('price_to', 'string');
+			$min		= PhocacartProduct::getProductPrice(2, 1, $language, $activeProductsPrice);// min price
+			$max		= PhocacartProduct::getProductPrice(1, 1, $language, $activeProductsPrice);// max price
+
+			if (!$min) {
+				$min = 0;
+			}
+			if (!$max) {
+				$max = 0;
+			}
+
+			if ($price_to[0] == '') {
+				$price_to[0] = $max;
+			}
+			if ($price_from[0] == '') {
+				$price_from[0] = $min;
+			}
+
+			PhocacartRenderJs::renderFilterRange($min, $max, $price_from[0], $price_to[0]);
+		}
+
+
+
+
 
 		// -TAG-
 		$data				= array();
@@ -173,9 +292,11 @@ class PhocacartFilter
 		$data['uniquevalue']= 0;
 		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
+		$data['forcecategory']['idalias'] 	= $forceCategory['idalias'];// This input form field can force category when filtering from category/item view to items view
+
 		if ($this->tag) {
 			/*phocacart import('phocacart.tag.tag');*/
-			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag, 1, 0, $language);
+			$data['items'] = PhocacartTag::getAllTags($this->ordering_tag, 1, 0, $language, $activeProductsTags);
 
 		}
 
@@ -195,9 +316,11 @@ class PhocacartFilter
 		$data['uniquevalue']= 0;
 		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
+		$data['forcecategory']['idalias'] 	= $forceCategory['idalias'];// This input form field can force category when filtering from category/item view to items view
+
 		if ($this->label) {
 			/*phocacart import('phocacart.tag.tag');*/
-			$data['items'] = PhocacartTag::getAllTags($this->ordering_label, 1, 1, $language);
+			$data['items'] = PhocacartTag::getAllTags($this->ordering_label, 1, 1, $language, $activeProductsLabels);
 
 		}
 
@@ -216,9 +339,11 @@ class PhocacartFilter
 		$data['uniquevalue']= 0;
 		$data['params']['open_filter_panel'] = $this->open_filter_panel;
 
+		$data['forcecategory']['idalias'] 	= $forceCategory['idalias'];// This input form field can force category when filtering from category/item view to items view
+
 		if ($this->manufacturer) {
 			/*phocacart import('phocacart.manufacturer.manufacturer');*/
-			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer, 1, $language);
+			$data['items'] = PhocacartManufacturer::getAllManufacturers($this->ordering_manufacturer, 1, $language, $activeProductsManufacturers);
 		}
 
 		if (!empty($data['items'])) {
@@ -228,7 +353,7 @@ class PhocacartFilter
 		// -ATTRIBUTES- AVAILABLE PRODUCTS ONLY - Yes
 		if ($this->attributes) {
 			/*phocacart import('phocacart.attribute.attribute');*/
-			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, 1, $language);
+			$attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, 1, $language, $activeProductsAttributes);
 
 			if (!empty($attributes)) {
 				foreach($attributes as $k => $v) {
@@ -242,6 +367,8 @@ class PhocacartFilter
 					$data['uniquevalue']= 0;
 					$data['pathitem']	= $pathProductImage;
 					$data['params']['open_filter_panel'] = $this->open_filter_panel;
+
+					$data['forcecategory']['idalias'] 	= $forceCategory['idalias'];// This input form field can force category when filtering from category/item view to items view
 
 					if (!empty($data['items'])) {
 
@@ -267,7 +394,7 @@ class PhocacartFilter
 		// -SPECIFICATIONS- AVAILABLE PRODUCTS ONLY - Yes
 		if ($this->specifications) {
 			/*phocacart import('phocacart.specification.specification');*/
-			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, 1, $language);
+			$specifications = PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, 1, $language, $activeProductsSpecifications);
 
 			if (!empty($specifications)) {
 				foreach($specifications as $k => $v) {
@@ -282,6 +409,7 @@ class PhocacartFilter
                     $data['pathitem']	= $pathProductImage;
                     $data['params']['open_filter_panel'] = $this->open_filter_panel;
 
+					$data['forcecategory']['idalias'] 	= $forceCategory['idalias'];// This input form field can force category when filtering from category/item view to items view
 
 
 					if (!empty($data['items'])) {
@@ -336,6 +464,7 @@ class PhocacartFilter
 		}
 
 		$a 		= explode(',', $paramString);
+
 		$inA 	= array();
 		if (!empty($a)) {
 			if ($type == 'int') {

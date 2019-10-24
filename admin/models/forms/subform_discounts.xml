@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+	
+		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />
+
+		<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+
+<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1"/>
+
+<field name="discount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_DESC" />
+
+<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" default="1" >
+	<option value="0">COM_PHOCACART_FIXED_AMOUNT</option>
+	<option value="1">COM_PHOCACART_PERCENTAGE</option>
+</field>
+
+<field name="quantity_from" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_DESC" />
+<!--
+<field name="quantity_to" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_DESC" />
+-->
+<field name="valid_from" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="JComponentHelper::filterText"/>
+<field name="valid_to" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="JComponentHelper::filterText"/>
+
+<field name="groups" type="PhocacartGroups" table="4" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
+
+
+	</fieldset>
+</form>

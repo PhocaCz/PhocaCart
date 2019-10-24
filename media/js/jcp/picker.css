@@ -1,0 +1,41 @@
+.picker_layer {
+
+	text-decoration: none;
+	background-color: #fff;
+	border: 1px solid #fff;
+	box-shadow: 0 0 5px 5px rgba(0,0,0,0.1);
+	border-radius: 3px;
+	padding: 10px;
+	overflow: visible;
+	height: auto !important;
+	width: auto !important;
+}
+.picker_buttons {
+
+	background-color:#d4d0c8;
+	border-style:solid;
+	border-color:#666666;
+	border-width:1px;
+	padding:1px;
+	cursor:pointer;
+	color:#000000;
+}
+.cell_color {
+	cursor:pointer;
+	width:15px;
+	height:15px;
+	border: 1px solid #fff;
+	border-collapse: unset !important;
+    border-spacing: inherit !important;
+}
+.color_table {
+	
+	text-decoration: none;
+}
+.choosed_color_cell{
+	border-style:solid; border-color:#fff; border-width:1px;
+}
+.Default_color_btn{
+	width:17px; height:17px; background-image:url(Defaultcolor.jpg);
+	background-repeat:no-repeat; background-position:center;
+}

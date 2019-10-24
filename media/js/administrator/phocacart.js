@@ -53,37 +53,7 @@ jQuery(document).ready(function() {
 })
 
 
-/* Function phDoRequest (create thumbnails) */
-function phDoRequest(url, data, msg) {
 
-	jQuery("#ph-ajaxtop").html(phGetMsg(msg, 1));
-	jQuery("#ph-ajaxtop").show();
-
-	phRequestActive = jQuery.ajax({
-	   	url: url,
-	   	type:'POST',
-	   	data:data,
-	   	dataType:'JSON',
-	   	success:function(response){
-
-			if ( response.status == 2) {
-				// No message
-				jQuery("#ph-ajaxtop").hide();
-				jQuery(".ph-result-txt").remove();
-				phRequestActive = null;
-			} else if ( response.status == 1 ){
-			 	jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));
-			 	phRequestActive = null;
-			 	phCloseMsgBoxSuccess();
-		  	} else {
-
-				jQuery("#ph-ajaxtop-message").html(phGetMsg(response.error, 0));
-			 	phRequestActive = null;
-				phCloseMsgBoxError();
-		  	}
-	   	}
-	});
-}
 
 function phAddRowOptionParent(newRow, newHeader, attrid, url) {
 
@@ -390,17 +360,4 @@ function phDoRequestWizardParent(url, s) {
 			}
 		}
 	});
-}
-
-/* Image preview - product/category - change image for preview in admin in tooltip */
-function phChangePreviewImage(id, image) {
-	if (image != '') {
-		var phOutput = '<img src="' + image + '" alt="" />';
-	} else {
-		var phOutput = '<span class="glyphicon glyphicon-ban-circle ban-circle"></span>';
-	}
-
-	var idItem = '#phTooltipImagePreview_' + id;
-	jQuery(idItem).html(phOutput);
-	return true;
 }

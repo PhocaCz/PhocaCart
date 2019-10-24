@@ -16,15 +16,27 @@ if (isset($d['param2']) && $d['param2'] != '') {
 
 if (isset($d['param2']) && $d['param2'] != '') {
 	// We have second parameter, so in first we define that the javascript should wait with re-direct
-	$jsSet	= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 1);';
+
+    $jsSet = '';
+    if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+        // Category View - force the category parameter if set in parameters
+        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+    }
+    $jsSet	.= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 1);';
 	$jsSet	.= 'phChangeFilter(\''.$d['param2'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['param2name'].'&quot;]\').val(), 1, \'text\', 1);';
+
 	$jsClear		 = 'phClearField(\'#'.$d['id'].$d['paramname'].'\');';
 	$jsClear		.= 'phClearField(\'#'.$d['id'].$d['param2name'].'\');';
 	$jsClear		.= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1, 1);';
 	$jsClear		.= 'phChangeFilter(\''.$d['param2'].'\', \'\', 0, \'text\', 1);';
 } else {
 	// We have only one parameter so we don't need define wait and the site is reloaded immediately
-	$jsSet	= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1);';
+    $jsSet = '';
+    if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+        // Category View - force the category parameter if set in parameters
+        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+    }
+	$jsSet	.= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1);';
 	$jsClear= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1);';
 }
 

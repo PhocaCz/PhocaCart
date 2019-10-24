@@ -61,13 +61,15 @@ echo '<div style="border-bottom:1px solid #cccccc;margin-bottom: 10px">&nbsp;</d
 
 echo '<ul class="nav nav-tabs" id="configTabs">';
 
-$label = JHtml::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
-echo '<li><a href="#upload" data-toggle="tab">'.$label.'</a></li>';
 
 if((int)$this->t['enablemultiple']  >= 0) {
 	$label = JHtml::_( 'image', $this->t['i'].'icon-16-upload-multiple.png','') . '&nbsp;'.JText::_($this->t['l'].'_MULTIPLE_UPLOAD');
 	echo '<li><a href="#multipleupload" data-toggle="tab">'.$label.'</a></li>';
 }
+
+$label = JHtml::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
+echo '<li><a href="#upload" data-toggle="tab">'.$label.'</a></li>';
+
 
 $label = JHtml::_( 'image', $this->t['i'].'icon-16-folder.png','') . '&nbsp;'.JText::_($this->t['l'].'_CREATE_FOLDER');
 echo '<li><a href="#createfolder" data-toggle="tab">'.$label.'</a></li>';
@@ -77,12 +79,14 @@ echo '</ul>';
 
 echo '<div class="tab-content">'. "\n";
 
-echo '<div class="tab-pane" id="upload">'. "\n";
-echo $this->loadTemplate('upload');
-echo '</div>'. "\n";
 echo '<div class="tab-pane" id="multipleupload">'. "\n";
 echo $this->loadTemplate('multipleupload');
 echo '</div>'. "\n";
+
+echo '<div class="tab-pane" id="upload">'. "\n";
+echo $this->loadTemplate('upload');
+echo '</div>'. "\n";
+
 
 echo '<div class="tab-pane" id="createfolder">'. "\n";
 echo PhocacartFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $this->currentFolder, 'phocacartmanager', 'manager='.$this->manager.'&amp;tab=createfolder&amp;field='. $this->field );

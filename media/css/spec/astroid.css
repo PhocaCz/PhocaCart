@@ -18,7 +18,8 @@
 	-ms-user-select: none;
 	user-select: none;
 	padding-left: 30px;
-	padding-top: 2px;
+	padding-top: 5px;
+	margin-top:0;
 	padding-bottom: 2px;
 }
 
@@ -81,6 +82,11 @@
 .phSelectBoxButton.color-ffffff:after {
 	color: #f0f0f0;
 	text-shadow: -2px 0 #f0f0f0, 0 2px #f0f0f0, 2px 0 #f0f0f0, 0 -2px #f0f0f0;
+}
+
+.blog-sidebar .ph-filter-box ul:not(.slick-dots) li {
+	padding: 0;
+	font-size: inherit;
 }
 
 /* Pagination */
@@ -231,7 +237,10 @@ input[type="radio"], input[type="checkbox"] {
 
 
 
+
 /* Custom CSS */
+
+/*
 .ph-mega-menu-content-module-box .ph-image,
 #ph-pc-categories-box .ph-item-content a .ph-image,
 #ph-pc-category-box .phIBox .ph-image,
@@ -339,7 +348,7 @@ ul.nav.astroid-social-icons li a {
 	color: #fff;
 	padding: 13em 5em;
 	font-weight: bold;
-	/*text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 0 9px #fff, 0 0 12px #FC9B3C, 0 0 15px #FC9B3C, 0 0 18px #FC9B3C, 0 0 21px #FC9B3C, 0 0 24px #FC9B3C;*/
+	/*text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 0 9px #fff, 0 0 12px #FC9B3C, 0 0 15px #FC9B3C, 0 0 18px #FC9B3C, 0 0 21px #FC9B3C, 0 0 24px #FC9B3C;*//*
 	text-shadow: 0 0 3px #fc9b3c;
 	opacity: 0.7;
 	
@@ -354,3 +363,4 @@ ul.nav.astroid-social-icons li a {
 	font-size: 3em;
 	margin-top: 0.5em;
 }
+*/

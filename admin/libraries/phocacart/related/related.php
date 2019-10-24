@@ -13,8 +13,8 @@ defined('_JEXEC') or die();
 class PhocacartRelated
 {
 	public static function storeRelatedItemsById($relatedString, $productId) {
-	
-		
+
+
 		if ((int)$productId > 0) {
 			$db =JFactory::getDBO();
 			$query = ' DELETE '
@@ -22,20 +22,20 @@ class PhocacartRelated
 					. ' WHERE product_a = '. (int)$productId;
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			if (isset($relatedString) && $relatedString != '') {
-				
+
 				$relatedArray 	= explode(",", $relatedString);
 				$values 		= array();
 				$valuesString 	= '';
-				
+
 				foreach($relatedArray as $k => $v) {
 					$values[] = ' ('.(int)$productId.', '.(int)$v.')';
 				}
-				
+
 				if (!empty($values)) {
 					$valuesString = implode($values, ',');
-				
+
 					$query = ' INSERT INTO #__phocacart_product_related (product_a, product_b)'
 								.' VALUES '.(string)$valuesString;
 
@@ -45,24 +45,24 @@ class PhocacartRelated
 			}
 		}
 	}
-	
+
 	/*
 	* Try to find the best menu link so we search for category which we are located
 	* if we find the category, we use this, if not we use another if accessible, etc.
 	*/
-	
+
 	public static function getRelatedItemsById($productId, $select = 0, $frontend = 0) {
-	
+
 		$db 		= JFactory::getDBO();
 		$wheres		= array();
 		$wheres[] 	= 't.product_a = '.(int) $productId;
 		$catid		= 0;
-		
+
 		if ($frontend) {
 			$user 		= PhocacartUser::getUser();
 			$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
-			
+
 			$wheres[] = " c.access IN (".$userLevels.")";
 			$wheres[] = " a.access IN (".$userLevels.")";
 			$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
@@ -70,11 +70,11 @@ class PhocacartRelated
 			$wheres[] = " c.published = 1";
 			$wheres[] = " a.published = 1";
 			$wheres[] = " c.type IN (0,1)";// Related are displayed only in online shop (0 - all, 1 - online shop, 2 - pos)
-			
+
 			$catid	= PhocacartCategoryMultiple::getCurrentCategoryId();
 
 		}
-		
+
 		if ($select == 1) {
 			$query = ' SELECT t.product_b';
 		} else if ($select == 2) {
@@ -87,25 +87,25 @@ class PhocacartRelated
 					.' SUBSTRING_INDEX(GROUP_CONCAT(c.id ORDER BY c.parent_id), \',\', 1) as catid,'
 					.' SUBSTRING_INDEX(GROUP_CONCAT(c.title ORDER BY c.parent_id), \',\', 1) as cattitle,'
 					.' SUBSTRING_INDEX(GROUP_CONCAT(c.alias ORDER BY c.parent_id), \',\', 1) as catalias';
-	
+
 					/*.' (SELECT c.id FROM jos_phocacart_product_categories AS pc'
 		 			.' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catid, '
 					.' (SELECT c.title FROM jos_phocacart_product_categories AS pc'
 					.' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS cattitle, '
 					.' (SELECT c.alias FROM jos_phocacart_product_categories AS pc'
 					.' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catalias';*/
-					
+
 		}
 		if ((int)$catid > 0) {
 			$query .= ', ';
 			$query .= ' GROUP_CONCAT(c2.id) AS catid2, GROUP_CONCAT(c2.alias) AS catalias2, GROUP_CONCAT(c2.title) AS cattitle2';
 		}
-		
+
 		if (!$frontend) {
 			$query .= ', ';
 			$query .= ' GROUP_CONCAT(c.title SEPARATOR " ") AS categories_title';
 		}
-			
+
 		$query .= ' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_related AS t ON a.id = t.product_b'
 			  //.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
@@ -117,7 +117,7 @@ class PhocacartRelated
 		$query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
 		$query .= ' WHERE ' . implode( ' AND ', $wheres );
-		
+
 		if ($select == 1) {
 			$query .= ' GROUP BY a.id, t.product_b';
 		} else if ($select == 2) {
@@ -129,16 +129,16 @@ class PhocacartRelated
 		}
 
 		$db->setQuery($query);
-		
+
 		if ($select == 1) {
 			$related = $db->loadColumn();
 		} else {
 			$related = $db->loadObjectList();
 		}
-	
+
 		return $related;
 	}
-	
+
 	public static function correctProductId($productIdChange) {
 		$db 		= JFactory::getDBO();
 		if (!empty($productIdChange)) {

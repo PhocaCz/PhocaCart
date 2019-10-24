@@ -49,7 +49,7 @@ echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();
 
 echo $r->startTable('categoryList');
 
@@ -61,18 +61,19 @@ echo '<th class="ph-product">'.JHtml::_('grid.sort',  	$this->t['l'].'_PRODUCT',
 echo '<th class="ph-category">'.JHtml::_('grid.sort',  	$this->t['l'].'_CATEGORY', 'cattitle', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-name">'.JHtml::_('grid.sort',  	$this->t['l'].'_NAME', 'a.name', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-email">'.JHtml::_('grid.sort',  	$this->t['l'].'_EMAIL', 'a.email', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-phone">'.JHtml::_('grid.sort',  	$this->t['l'].'_PHONE', 'a.phone', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-ip">'.JHtml::_('grid.sort',  	$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
 //echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-message">'.JHtml::_('grid.sort',  	$this->t['l'].'_MESSAGE', 'a.message', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";		
+echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
-			
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 if (is_array($this->items)) {
@@ -82,8 +83,8 @@ if (is_array($this->items)) {
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
-$orderkey   	= array_search($item->id, $this->ordering[$item->product_id]);		
-$ordering		= ($listOrder == 'a.ordering');			
+$orderkey   	= array_search($item->id, $this->ordering[$item->product_id]);
+$ordering		= ($listOrder == 'a.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -129,6 +130,7 @@ echo $r->td($this->escape($item->name.$nameSuffix), "small");
 
 
 echo $r->td($this->escape($item->email), "small");
+echo $r->td($this->escape($item->phone), "small");
 echo $r->td($this->escape($item->ip), "small");
 
 //echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
@@ -140,13 +142,13 @@ echo $r->td(JHtml::date($item->date, JText::_('DATE_FORMAT_LC5')), "small");
 echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 10);
+echo $r->tblFoot($this->pagination->getListFooter(), 11);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);

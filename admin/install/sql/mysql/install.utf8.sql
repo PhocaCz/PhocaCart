@@ -97,6 +97,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `video` varchar(255) NOT NULL DEFAULT '',
   `public_download_file` varchar(255) NOT NULL DEFAULT '',
   `public_download_text` varchar(255) NOT NULL DEFAULT '',
+  `public_play_file` varchar(255) NOT NULL DEFAULT '',
+  `public_play_text` varchar(255) NOT NULL DEFAULT '',
   `featured` tinyint(1) NOT NULL DEFAULT '0',
   `allow_upload` tinyint(1) NOT NULL DEFAULT '0',
   `custom_text` text,
@@ -162,6 +164,21 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL DEFAULT '0',
   `image` varchar(255) NOT NULL DEFAULT '',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY  (`id`),
+  KEY `idx_product` (`product_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_product_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) NOT NULL DEFAULT '0',
+  `download_token` char(64) NOT NULL DEFAULT '',
+  `download_folder` varchar(255) NOT NULL DEFAULT '',
+  `download_file` varchar(255) NOT NULL DEFAULT '',
+  `download_hits` int(11) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `idx_product` (`product_id`)
 ) DEFAULT CHARSET=utf8;
@@ -232,6 +249,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_price_history` (
   `product_id` int(11) NOT NULL DEFAULT '0',
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `price` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=utf8;
 
@@ -1250,6 +1268,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_downloads` (
   `download_hits` int(11) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `published` tinyint(1) NOT NULL DEFAULT '0',

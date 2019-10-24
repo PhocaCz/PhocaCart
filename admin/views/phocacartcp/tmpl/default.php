@@ -133,7 +133,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 
 				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
 						<div id="ph-canvas-holder2" class="phChartAreaLineholder" style="width: 97%;" >
-						<canvas id="phChartAreaLine" class="ph-chart-area"s />
+                            <canvas id="phChartAreaLine" class="ph-chart-area"s></canvas>
 						</div>
 					</div>
 

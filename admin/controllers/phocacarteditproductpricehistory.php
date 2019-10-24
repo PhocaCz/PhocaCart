@@ -29,7 +29,7 @@ class PhocaCartCpControllerPhocaCartEditProductPriceHistory extends PhocaCartCpC
 
 		if (!empty($jform)) {
 			$model = $this->getModel( 'phocacarteditproductpricehistory' );
-			if(!$model->save($jform, $id)) {
+			if(!$model->save($jform)) {
 				$message = JText::_( 'COM_PHOCACART_ERROR_ADD_PRODUCT_PRICE_HISTORY' );
 				$app->enqueueMessage($message, 'error');
 			} else {

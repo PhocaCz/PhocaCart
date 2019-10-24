@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+
+		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />
+	
+		<field name="download_token" type="phocacarttoken" manager="token" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC" />
+	
+		<field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
+
+	</fieldset>
+</form>

@@ -36,8 +36,16 @@ foreach ($d['items'] as $k => $v) {
         $d['collapse_class'] = $d['s']['c']['panel-collapse.collapse.in'];
     }
 
+
+    $jsSet = '';
+    if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+        // Category View - force the category parameter if set in parameters
+        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+    }
+    $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\', 0);';
+
     $output .= '<div class="checkbox">';
-    $output .= '<label class="ph-checkbox-container"><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\');" />'.$v->title.'<span class="ph-checkbox-checkmark"></span></label>';
+    $output .= '<label class="ph-checkbox-container"><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'.$v->title.'<span class="ph-checkbox-checkmark"></span></label>';
     $output .= '</div>';
 
 }

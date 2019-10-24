@@ -21,7 +21,7 @@
 .ph-editinplace-text {
 	display: block;
 	min-height: 2.7em;
-	font-size: 96% !important;
+	/*font-size: 96% !important;*/
 }
 
 #j-main-container {
@@ -890,9 +890,6 @@
 
 }
 
-
-
-
 .alert {
 	border-radius: 0px !important;
 	border: 0px !important;
@@ -1198,4 +1195,41 @@ table#extensionList tr td {
 	box-shadow: 0 3px 6px 0 #dfe8f1;
 }
 
+#phAdminEdit .subform-repeatable-group {
+    background: #F1F5F9;
+	border:0;
+	border-radius: 5px;
+	margin-top: 10px;
+}
 
+#phAdminEdit .form-horizontal .subform-repeatable-group .control-group {
+	margin-bottom: 8px;
+}
+
+#phAdminEdit .subform-repeatable-group .subform-repeatable-group {
+	background: #cfdbe5;
+	border:0;
+	border-radius: 5px;
+}
+
+#phAdminEdit .btn.group-add,
+#phAdminEdit .btn.group-remove {
+	border-radius: 3px !important;
+}
+#phAdminEdit .btn.group-move {
+	font-weight: normal !important;
+    border-radius: 3px 0 0 3px !important;
+    border: 0 !important;
+	margin-right: 0 !important;
+}
+#phAdminEdit .ph-admin-order-link,
+#phAdminEdit .ph-admin-download-links {
+	background: #F1F5F9;
+	border:0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 5px;
+}
+#phAdminEdit .ph-admin-download-links table tr td {
+	padding: 5px;
+}

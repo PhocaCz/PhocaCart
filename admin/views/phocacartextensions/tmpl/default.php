@@ -21,36 +21,36 @@ $userId		= $user->get('id');
 
 
 if ($this->t['load_extension_list'] == 0) {
-	
+
 	echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-	
+
 	echo $r->startFilter();
 	echo $r->endFilter();
 	echo $r->startMainContainer();
-	
+
 	echo '<div class="alert alert-warning">';
 	echo '<button type="button" class="close" data-dismiss="alert">×</button>';
 	//echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
 	echo '<div class="alert-message">'.JText::_('COM_PHOCACART_LOADING_OF_EXTENSION_LIST_DISABLED').'</div>';
 	echo '</div>';
-	
+
 	echo '<div class="alert alert-info">';
 	echo '<button type="button" class="close" data-dismiss="alert">×</button>';
 	//echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
 	echo '<div class="alert-message">'.JText::_('COM_PHOCACART_DISCOVER').' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">'.JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS').'</a> '.$linkIcon .'</div>';
 	echo '</div>';
-	
-	
+
+
 	echo $r->startFilterBar();
 	echo $r->startFilterBar(2);
 	echo $r->endFilterBar();
 	echo $r->endFilterBar();
-	
+
 	echo $r->endMainContainer();
 	echo $r->endForm();
-	
+
 } else {
-	
+
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -88,7 +88,7 @@ echo '</div>';
 if (is_array($this->news)) {
 	foreach ($this->news as $n => $m) {
 		if (isset($m['name']) && $m['name'] != '' && isset($m['description']) && $m['description'] != '') {
-			
+
 			$mClass 	= isset($m['class']) ? $this->escape(strip_tags($m['class'])) : '';
 			$mStyle 	= isset($m['style']) ? $this->escape(strip_tags($m['style'])) : '';
 			$mImage 	= isset($m['image']) ? $this->escape(strip_tags($m['image'])) : '';
@@ -96,29 +96,29 @@ if (is_array($this->news)) {
 			$mLink		= isset($m['link']) ? $this->escape(strip_tags($m['link'])) : '';
 			$aStart		= '';
 			$aEnd		= '';
-			
+
 			if ($mLink != '') {
 				$aStart = '<a href="'.$mLink.'" target="_blank">';
 				$aEnd 	= '</a>';
 			}
-			
+
 			echo '<div class="ph-featured-box '.$mClass.'" style="'.$mStyle.'">';
 			echo '<div class="ph-featured-head">'.$aStart.$this->escape(strip_tags($m['name'])).$aEnd.'</div>';
-			
+
 			echo '<div class="ph-featured-image-large">'.$aStart.'<img src="'.$mImageLarge.'" alt="" />'.$aEnd.'</div>';
-			
+
 			echo '<div class="ph-featured-description">';
 			if ($mImage != '') {
 				echo '<div class="ph-featured-image">'.$aStart.'<img src="'.$mImage.'" alt="" />'.$aEnd.'</div>';
 			}
 			echo $aStart.$this->escape(strip_tags($m['description'])).$aEnd;
-			
+
 			echo '<div class="ph-cb"></div>';
 			echo '</div>';
-			
+
 			echo '</div>';
-			
-			
+
+
 		}
 	}
 }
@@ -129,7 +129,7 @@ echo $r->selectFilterCategory(PhocacartUtilsSettings::getExtenstionsArray($this-
 echo $r->endFilterBar();
 
 echo $r->endFilterBar();
-	
+
 
 echo $r->startTable('extensionList');
 
@@ -139,24 +139,24 @@ echo $r->startTblHeader();
 echo '<th class="ph-image">'.JText::_($this->t['l'].'_IMAGE').'</th>'."\n";
 echo '<th class="ph-title-small">'.JText::_($this->t['l'].'_NAME').'</th>'."\n";
 echo '<th class="ph-description">'.JTEXT::_($this->t['l'].'_DESCRIPTION').'</th>'."\n";
-echo '<th class="ph-version">'.JText::_($this->t['l'].'_VERSION').'</th>'."\n";	
+echo '<th class="ph-version">'.JText::_($this->t['l'].'_VERSION').'</th>'."\n";
 echo '<th class="ph-developer">'.JTEXT::_($this->t['l'].'_DEVELOPER').'</th>'."\n";
 echo '<th class="ph-type">'.JTEXT::_($this->t['l'].'_TYPE').'</th>'."\n";
 echo '<th class="ph-action">'.JTEXT::_($this->t['l'].'_ACTION').'</th>'."\n";
 
 echo $r->endTblHeader();
-		
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 $price			= new PhocacartPrice();
 
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
-		
+
 			$j++;
 /*
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
@@ -165,8 +165,8 @@ $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
 $orderkey		= 0;
 if ($this->t['ordering'] && !empty($this->ordering)) {
 	$orderkey   	= array_search($item->id, $this->ordering[$this->t['catid']]);
-}	
-$ordering		= ($listOrder == 'pc.ordering');			
+}
+$ordering		= ($listOrder == 'pc.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -175,7 +175,7 @@ $linkEdit 		= JRoute::_( $urlEdit. $item->id );
 
 //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
 $canEditCat	= $user->authorise('core.edit', $this->t['o']);*/
-			
+
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -246,13 +246,13 @@ if ($canCreate && $canChange && $canEdit) {
 
 
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot('', 7);///
+echo $r->tblFoot('', 7);//
 echo $r->endTable();
 
 echo '<input type="hidden" name="type" value="'.$this->state->get('filter.category_id'). '" />'. "\n";

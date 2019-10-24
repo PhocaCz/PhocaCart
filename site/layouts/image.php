@@ -16,9 +16,14 @@ if ($d['t']['display_webp_images'] == 1) {
     echo ' <source type="image/webp"';
     echo isset($d['srcset-webp']) ? ' srcset="'.$d['srcset-webp'].'"' : ' srcset=""';
     echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
-    echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
-    echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';
+    //echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : ''; // TEST
+    //echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : ''; // TEST
     echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';
+
+    echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="'.$d['data-image-small'].'"' : '';
+    echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
+    echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
+    echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
     echo '/>';
 
     echo ' <img';
@@ -27,6 +32,11 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
     echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';
     echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';
+
+    echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="'.$d['data-image-small'].'"' : '';
+    echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
+    echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
+    echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
     echo '/>';
 
     echo '</picture>';
@@ -39,6 +49,11 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
     echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';
     echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';
+
+    echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="'.$d['data-image-small'].'"' : '';
+    echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
+    echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
+    echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
     echo '/>';
 }
 ?>

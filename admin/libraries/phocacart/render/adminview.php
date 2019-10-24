@@ -1160,7 +1160,7 @@ class PhocacartRenderAdminview
 			$s[] = '   jQuery(document.body).on(\'click\', \'.'.$id.'ModalButton\' ,function(e) {';
 			$s[] = '      var src = jQuery(this).attr(\'data-src\');';
 
-			// Specific case for downloadable files - they need to include token folder like product has (produt and attribute download files are stored in one folder)
+			// Specific case for downloadable files - they need to include token folder like product has (product and attribute download files are stored in one folder)
 			if ($id == 'phFileDownloadNameModalO') {
 				// Get value from each row not from main
                 $s[] = '      var idFolder = \'#\' + jQuery(this).attr(\'data-id-folder\');';
@@ -1190,9 +1190,12 @@ class PhocacartRenderAdminview
 			$s[] = '      });';
 		}
 
-		$s[] = '      var height = jQuery(this).attr(\'data-height\') || '.$w.';';
+		//$s[] = '      var height = jQuery(this).attr(\'data-height\') || '.$w.';';
+		$s[] = '      var height = jQuery(window).height() - 200;';
 		$s[] = '      var width = jQuery(this).attr(\'data-width\') || '.$h.';';
 		$s[] = '      height = height + \'px\';';
+
+
 		$s[] = '      width = width + \'px\';';
 		$s[] = '      jQuery("#'.$id.' iframe").attr({\'src\':src, \'height\': height, \'width\': width});';
 		//$s[] = ' var maxHeight = jQuery(this).height();';

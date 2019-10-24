@@ -10,7 +10,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class TablePhocacartProductPriceHistory extends JTable
 {
 	function __construct( &$db ) {
-		parent::__construct( '#__phocacart_product_price_history', 'id', $db );
+		parent::__construct( '#__phocacart_product_price_history', 'product_id', $db );
 	}
 	
 	function check(){

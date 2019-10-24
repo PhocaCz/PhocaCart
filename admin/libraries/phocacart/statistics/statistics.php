@@ -201,7 +201,7 @@ options: {
 		responsive: true,
 		hoverMode: 'label',
 		stacked: false,
-		legend: { labels: { fontColor: 'rgba(255,255,255,0.8)' } }, 
+		legend: { labels: { fontColor: '#000000' } }, 
 		scales: {
 			xAxes: [{
 				display: true,
@@ -209,15 +209,15 @@ options: {
 					drawOnChartArea: true,
 					offsetGridLines: false,
 					show: true,
-					color: 'rgba(255,255,255,0.2)',
-					zeroLineColor: 'rgba(255,255,255,0.2)',
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
 					lineWidth: 1,
 					/*drawOnChartArea: true,
 					drawTicks: true,
 					zeroLineWidth: 10,
 					zeroLineColor: '#fff300'*/					
 				},
-				ticks: {fontColor: 'rgba(255,255,255,0.9)'}
+				ticks: {fontColor: '#000000'}
 			}],
 			yAxes: [{
 				type: 'linear',
@@ -226,13 +226,13 @@ options: {
 				id: 'y-axis-1',
 				gridLines: {
 					drawOnChartArea: true,
-					color: 'rgba(255,255,255,0.2)',
-					zeroLineColor: 'rgba(255,255,255,0.2)',
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
 					lineWidth: 1,
 				},
 				label: 'text',
 				ticks: {
-				    fontColor: 'rgba(255,255,255,0.9)',
+				    fontColor: '#000000',
 					callback: function(value) {
 						if (value % 1 === 0) {
 							return Math.floor(value);
@@ -248,12 +248,12 @@ options: {
 				id: 'y-axis-2',
 				gridLines: {
 					drawOnChartArea: false,
-					color: 'rgba(255,255,255,0.2)',
-					zeroLineColor: 'rgba(255,255,255,0.2)',
+					color: '#ffffff',
+					zeroLineColor: '#ffffff',
 				},
 				label: 'text',
 				ticks: {
-				    fontColor: 'rgba(255,255,255,0.9)',
+				    fontColor: '#000000',
 					callback: function(value) {
 						if (value % 1 === 0) {
 							return Math.floor(value);

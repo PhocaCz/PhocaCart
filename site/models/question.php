@@ -120,7 +120,7 @@ class PhocaCartModelQuestion extends JModelForm
 		}
 
 		// Everything OK - send email
-		if ($params->get('send_email_question', 0) > 0) {
+		if ($params->get('send_email_question', 0) > 0 || $params->get('send_email_question_others', '') != '') {
 
 			$data['product'] 	= array();
 			$data['category']	= array();
@@ -136,7 +136,7 @@ class PhocaCartModelQuestion extends JModelForm
 			}
 
 
-			$send = PhocacartEmail::sendQuestionMail($params->get('send_email_question'), $data, Uri::getInstance()->toString(), $params);
+			$send = PhocacartEmail::sendQuestionMail($data, Uri::getInstance()->toString(), $params);
 
 			if (!$send) {
 				$user 	= PhocacartUser::getUser();

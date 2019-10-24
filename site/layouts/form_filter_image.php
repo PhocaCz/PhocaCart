@@ -51,7 +51,14 @@ foreach ($d['items'] as $k => $v) {
 
         $linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v->image_small;
 
-        $output .= '<a href="#" class="phSelectBoxImage '.$class.'" onclick="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;" title="'.htmlspecialchars($v->title).'">'
+        $jsSet = '';
+        if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+            // Category View - force the category parameter if set in parameters
+            $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+        }
+        $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;';
+
+        $output .= '<a href="#" class="phSelectBoxImage '.$class.'" onclick="'.$jsSet.'" title="'.htmlspecialchars($v->title).'">'
         .'<img style="'.$d['style'].'" src="'.$linkI.'" alt="'.$v->title.'" />'
         .'</a>';
     }

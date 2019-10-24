@@ -93,7 +93,7 @@ if ($this->t['data_error'] == 1) {
 	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
 	<div class="ph-cpanel-chart-box">
 	<div id="phChartAreaLineHolder" class="ph-chart-canvas-holder" style="width:95%" >
-        <canvas id="phChartAreaLine" class="ph-chart-area-line" />
+        <canvas id="phChartAreaLine" class="ph-chart-area-line"></canvas>
     </div>
 	</div>
 	<?php
@@ -120,21 +120,21 @@ if (!empty($this->t['best_selling2'])) {
 		echo '<tr><td>'. $v->title. '</td><td class="ph-table-td-left">'.$v->count_products.'x</td></tr>';
 	}
 	echo '</table>';
-	
+
 	$s->renderChartJsPie('phChartAreaPieBs2', $dataBs2);
 	$s->setFunction('phChartAreaPieBs2', 'Pie');
-	
+
 	echo '<div id="phChartAreaPieBs2Holder" style="width: 300px;margin-top:10px;" >';
     echo '<canvas class="ph-stats-canvas" id="phChartAreaPieBs2" width="300" height="300" />';
     echo '</div>';
-	
+
 	if ($this->t['best_selling2_count'] != '') {
 		echo '<div class="ph-stat-total">';
 		echo '<h3>'.JText::_('COM_PHOCACART_ALL_PRODUCTS'). '</h3>';
 		echo '<div>'.JText::_('COM_PHOCACART_TOTAL'). ': '.$this->t['best_selling2_count'].'</div>';
 		echo '</div>';
 	}
-	
+
 } else {
 	echo JText::_('COM_PHOCACART_NO_PRODUCTS_SOLD_IN_THIS_PERIOD');
 }
@@ -148,7 +148,7 @@ echo '<h2>'. JText::_('COM_PHOCACART_TOP_5') . ' - '. JText::_('COM_PHOCACART_BE
 echo JText::_('COM_PHOCACART_FOR_THE_WHOLE_PERIOD').'</h2>';
 
 if (!empty($this->t['best_selling'])) {
-	
+
 	$dataBs = array();
 	echo '<table>';
 	foreach ($this->t['best_selling'] as $k => $v) {
@@ -157,21 +157,21 @@ if (!empty($this->t['best_selling'])) {
 		echo '<tr><td>'. $v->title. '</td><td class="ph-table-td-left">'.$v->count_products.'x</td></tr>';
 	}
 	echo '</table>';
-	
+
 	$s->renderChartJsPie('phChartAreaPieBs1', $dataBs1);
 	$s->setFunction('phChartAreaPieBs1', 'Pie');
-	
+
 	echo '<div id="phChartAreaPieBs1Holder" style="width: 300px;margin-top:10px;" >';
     echo '<canvas class="ph-stats-canvas" id="phChartAreaPieBs1" width="300" height="300" />';
     echo '</div>';
-	
+
 	if ($this->t['best_selling_count'] != '') {
 		echo '<div class="ph-stat-total">';
 		echo '<h3>'.JText::_('COM_PHOCACART_ALL_PRODUCTS'). '</h3>';
 		echo '<div>'.JText::_('COM_PHOCACART_TOTAL'). ': '.$this->t['best_selling_count'].'</div>';
 		echo '</div>';
 	}
-	
+
 } else {
 	echo JText::_('COM_PHOCACART_NO_PRODUCTS_SOLD_FOR_THE_WHOLE_PERIOD');
 }
@@ -184,7 +184,7 @@ $dataMv = array();
 echo '<div class="col-xs-12 col-sm-4 col-md-4 ph-admin-stat-box">';
 echo '<h2>'. JText::_('COM_PHOCACART_TOP_5') . ' - '. JText::_('COM_PHOCACART_MOST_VIEWED_PRODUCTS').'<br />';
 	echo JText::_('COM_PHOCACART_FOR_THE_WHOLE_PERIOD').'</h2>';
-	
+
 if (!empty($this->t['most_viewed'])) {
 	echo '<table>';
 	foreach ($this->t['most_viewed'] as $k => $v) {
@@ -193,14 +193,14 @@ if (!empty($this->t['most_viewed'])) {
 		echo '<tr><td>'. $v->title. '</td><td class="ph-table-td-left">'.$v->hits.'x</td></tr>';
 	}
 	echo '</table>';
-	
+
 	$s->renderChartJsPie('phChartAreaPieMv', $dataMv);
 	$s->setFunction('phChartAreaPieMv', 'Pie');
-	
+
 	echo '<div id="phChartAreaPieMvHolder" style="width: 300px;margin-top:10px;" >';
     echo '<canvas class="ph-stats-canvas" id="phChartAreaPieMv" width="300" height="300" />';
     echo '</div>';
-	
+
 	if ($this->t['most_viewed_count'] != '') {
 		echo '<div class="ph-stat-total">';
 		echo '<h3>'.JText::_('COM_PHOCACART_ALL_PRODUCTS'). '</h3>';

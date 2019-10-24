@@ -23,48 +23,48 @@ class JFormFieldPhocaSelectItem extends JFormField
 	public function getInput() {
 		$html 	= array();
 		$url 	= 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		
+
 		// Possible problem with modal
 		//$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' typeahead"' : ' class="typeahead"';
 		$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' "' : ' class=""';
-		
+
 		$attr  .= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
 		$attr  .= $this->element['required'] ? ' required aria-required="true"' : '';
-		
-		
+
+
 		$related = $this->element['related'] ? true : false;
 
 		//$attr  .= $this->multiple ? ' multiple' : '';
-		
+
 		// Be aware
 		// multiple = true -> name will be $this->name = jform[related][]
 		// multiple = false -> name will be $this->name = jform[related]
-		
-		
+
+
 		if ($this->multiple) {
 			$multiple = 'true';
 		} else {
 			$multiple = 'false';
 		}
-		
-		
+
+
 		$onchange 	= (string) $this->element['onchange'];
 		$value = '';
 		if ($related) {
 			// Related product - select related products by "parent" product ID
 			$id 	= $this->form->getValue('id');
-		
-		
+
+
 			if ((int)$id > 0) {
 				$relatedOption	= PhocacartRelated::getRelatedItemsById((int)$id);
-				
+
 				if(!empty($relatedOption)) {
 					$i = 0;
 					foreach($relatedOption as $k => $v) {
 						if ($i > 0) {
 							$value .= ',';
 						}
-						$value .= (int)$v->id . ':'. $v->title .' ('.$v->categories_title.')';
+						$value .= (int)$v->id . ':'. PhocacartText::filterValue($v->title, 'text') .' ('.PhocacartText::filterValue($v->categories_title, 'text').')';
 						$i++;
 					}
 				}
@@ -72,16 +72,17 @@ class JFormFieldPhocaSelectItem extends JFormField
 		} else {
 			// Standard product - only select one product by ID
 			$product = PhocacartProduct::getProductByProductId((int)$this->value);
-			
+
 			if(isset($product->id)) {
-				$value .= (int)$product->id . ':'. $product->title .' ('.$product->categories_title.')';
+				$value .= (int)$product->id . ':'.PhocacartText::filterValue($product->title, 'text') .' ('.PhocacartText::filterValue($product->categories_title, 'text').')';
 			}
 			$id = (int)$this->value;
-			
-		}
-	
 
-		
+		}
+
+
+
+
 		$document = JFactory::getDocument();
 		JHtml::stylesheet('media/com_phocacart/js/administrator/select2/select2.css' );
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/select2/select2.js');
@@ -182,17 +183,17 @@ $s[] = '});';
 
     $document->addScriptDeclaration(implode("\n", $s));
 
-		
+
 		$html[] = '<div>';
 		$html[] = '<input type="hidden" style="width: 400px;" id="'.$this->id.'" name="'.$this->name.'" value="'. $value.'"' .' '.$attr.' />';
 		$html[] = '</div>'. "\n";
-		
+
 
 		return implode("\n", $html);
 	}
-	
+
 	public function getInputWithoutFormData() {
-		
+
 		$this->value				= '';
 		$this->id					= 'copy_attributes';
 		$this->name					= 'copy_attributes';

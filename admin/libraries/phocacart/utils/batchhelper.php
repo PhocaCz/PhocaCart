@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartUtilsBatchhelper
 {
-	public static function storeProductItems($idSource, $idDest, $batchParams) {
+	public static function storeProductItems($idSource, $idDest, $batchParams, $params = array()) {
 
 		if ($idSource > 0 && $idDest > 0) {
 
@@ -24,9 +24,10 @@ class PhocacartUtilsBatchhelper
 			}
 
 			PhocacartRelated::storeRelatedItemsById($aRS, (int)$idDest );
+
 			// Additional Images
-			$iA = PhocacartImageAdditional::getImagesByProductId($idSource, 1);
-			PhocacartImageAdditional::storeImagesByProductId((int)$idDest, $iA);
+			$iA = PhocacartImageAdditional::getImagesByProductId($idSource, 2);
+			PhocacartImageAdditional::storeImagesByProductId((int)$idDest, $iA, 1);
 
 			// Attributes
 			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
@@ -49,6 +50,28 @@ class PhocacartUtilsBatchhelper
             }
 
 			PhocacartAttribute::storeAttributesById((int)$idDest, $aA, 1, $copy);
+
+
+            // Additional download files
+			if (isset($batchParams['copy_download_files']) && $batchParams['copy_download_files'] == 1) {
+
+				$fA = PhocacartFileAdditional::getProductFilesByProductId($idSource, 2);
+
+				$fANew = array();
+				if(!empty($fA)) {
+					foreach($fA as $k => $v) {
+						if (isset($v['download_file']) && $v['download_file'] != '') {
+							$fANew[]['download_file'] = str_replace($params['olddownloadfolder'], $params['newdownloadfolder'], $v['download_file']);
+						}
+					}
+				}
+
+				PhocacartFileAdditional::storeProductFilesByProductId((int)$idDest, $fANew, 1);
+			}
+
+
+
+
 
 			// Specifications
 			$sA = PhocacartSpecification::getSpecificationsById($idSource, 1);

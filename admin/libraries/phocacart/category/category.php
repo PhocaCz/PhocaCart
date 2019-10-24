@@ -260,7 +260,7 @@ final class PhocacartCategory
 		return implode($result);
 	}
 
-	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active) {
+	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active, $forceCategoryId = 0) {
 		$result = array();
 		if (!empty($data) && count($data) > 0) {
 			$result[] = '<ul class="ph-filter-module-category-tree">';
@@ -277,8 +277,19 @@ final class PhocacartCategory
 					$active     = 1;
 				}
 
+				// This only can happen in category view (category filters are empty, id of category is larger then zero)
+				// This is only marking the category as active in category list
+				if (empty($d['getparams']) || (isset($d['getparams'][0]) && $d['getparams'][0] == '')) {
+					// Empty parameters, so we can set category id by id of category view
+					if ($forceCategoryId > 0 && (int)$forceCategoryId == (int)$v['id']) {
+						$checked = 'checked';
+						$active = 1;
+					}
+				}
+
+
 				$result[] = '<li><div class="checkbox">';
-				$result[] = '<label><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\');" />'.$v['title'].'</label>';
+				$result[] = '<label class="ph-checkbox-container"><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\');" />'.$v['title'].'<span class="ph-checkbox-checkmark"></span></label>';
 				$result[] = '</div></li>';
 				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active);
 			}

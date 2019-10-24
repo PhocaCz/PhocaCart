@@ -2248,3 +2248,30 @@ img.ph-lazyload:not([src]) {
 .ph-checkout-box-reward-points .btn {
 	margin-left: 0.5em;
 }
+
+.ph-item-play-file {
+	margin: 1em auto;
+	/*text-align: center;*/
+}
+.ph-item-play-title {
+	margin: 0.5em;
+	text-align:left;
+}
+.ph-item-play-file audio,
+.ph-item-play-file video {
+	/*margin: 0 auto;*/
+}
+
+.ph-category-item-public-download {
+	margin: 1em auto;
+}
+
+.ph-box-size {
+	margin-bottom: 0.5em;
+}
+.ph-header-size {
+	margin-top: 0.5em;
+}
+.ph-item-attributes-box {
+	margin-top: 1em;
+}

@@ -399,42 +399,131 @@ echo '</div>';
 
 echo '<div class="tab-pane" id="download">'."\n";
 
-if (isset($this->itemcommon->order_token)) {
-	if (!empty($this->itemproducts)) {
-		/*phocacart import('phocacart.path.route');*/
-		echo '<table class="ph-table-download-links">';
-		echo '<tr><th class="title">'.JText::_('COM_PHOCACART_PRODUCT').'</th>';
-		echo '<th class="link">'.JText::_('COM_PHOCACART_DOWNLOAD_LINK').'</th></tr>';
-		foreach($this->itemproducts as $k => $v) {
-			if (isset($v->download_token)) {
-				echo '<tr><td>'.$v->title.'</td>';
-				//$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
-				//. '&d='.htmlspecialchars($v->download_token));
-				$link = PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
-				. '&d='.htmlspecialchars($v->download_token);
 
-				$dLink = PhocacartPath::getRightPathLink($link);
+if (!empty($this->itemproducts)) {
+    /*phocacart import('phocacart.path.route');*/
 
-				echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+    foreach($this->itemproducts as $k => $v) {
 
-                
-                // Product Attribute Option Download File
-                if (!empty($v->attributes)) {
-                    foreach ($v->attributes as $k2 => $v2) {
 
-                        if ($v2->download_token) {
-                            echo '<tr><td>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</td>';
-                            $link = PhocacartRoute::getDownloadRoute() . '&o='.$this->itemcommon->order_token.'&d='.htmlspecialchars($v2->download_token);
-                            $dLink = PhocacartPath::getRightPathLink($link);
-                            echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+        echo '<div class="ph-admin-download-links">';
+        echo '<h3>'.$v->title.'</h3>';
+        echo '<table class="ph-table-download-links">';
+        echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
 
-                        }
+        if (!empty($v->downloads)) {
+
+            foreach ($v->downloads as $k2 => $v2) {
+
+                if ($v2->download_token) {
+
+
+                    if ($v2->type == 0 || $v2->type == 1) {
+                        $type = '<span class="label label-success">' . JText::_('COM_PHOCACART_DOWNLOAD_FILE') . '</span>';
+                    } else if ($v2->type == 2) {
+                        $type = '<span class="label label-info">' . JText::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE') . '</span>';
+                    } /*else {
+                    $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                    }*/
+
+                    echo '<tr><td>' . $type. '</td>';
+                    echo '<td>'.htmlspecialchars($v2->download_file) . '</td></tr>';
+
+                    //$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+                    //. '&d='.htmlspecialchars($v->download_token));
+                    $link = PhocacartRoute::getDownloadRoute() . '&o=' . htmlspecialchars($this->itemcommon->order_token)
+                        . '&d=' . htmlspecialchars($v2->download_token);
+
+                    $dLink = PhocacartPath::getRightPathLink($link);
+
+
+                    echo '<tr><td>'.JText::_('COM_PHOCACART_DOWNLOAD_LINK').': </td>';
+                    echo '<td><input type="text" name="" value="' . $dLink . '" style="width: 90%;" /></td></tr>';
+
+                }
+
+            }
+
+            if (!empty($v->attributes)) {
+                foreach ($v->attributes as $k2 => $v2) {
+
+                    if ($v2->download_token) {
+
+
+                        $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                        echo '<tr><td>'.$type.'</td>';
+                        echo '<td>'.htmlspecialchars($v2->download_file).'</td></tr>';
+
+                        $link = PhocacartRoute::getDownloadRoute() . '&o='.$this->itemcommon->order_token.'&d='.htmlspecialchars($v2->download_token);
+                        $dLink = PhocacartPath::getRightPathLink($link);
+
+
+
+                        echo '<tr><td>'.$v2->attribute_title.': '.$v2->option_title.'</td>';
+
+                        echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+
+
                     }
                 }
-			}
-		}
-		echo '</table>';
-	}
+            }
+
+        }
+        echo '</table>';
+        echo '</div>';
+/*
+
+        if (isset($v->download_token)) {
+            echo '<tr><td>'.$v->title.'</td>';
+            //$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+            //. '&d='.htmlspecialchars($v->download_token));
+            $link = PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+            . '&d='.htmlspecialchars($v->download_token);
+
+            $dLink = PhocacartPath::getRightPathLink($link);
+
+            echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+
+            if ($v->download_type == 0 || $v->download_type == 1) {
+                $type = '<span class="label label-success">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE').'</span>';
+            } else if ($v->download_type == 2) {
+                $type = '<span class="label label-info">'.JText::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE').'</span>';
+            } /*else {
+                $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+            }*/
+        /*	echo '<tr><td>'.$type.'</td>';
+            echo '<td><small>('.htmlspecialchars($v->download_file).')</small></td></tr>';
+
+
+
+
+            // Product Attribute Option Download File
+            if (!empty($v->attributes)) {
+                foreach ($v->attributes as $k2 => $v2) {
+
+                    if ($v2->download_token) {
+                        echo '<tr><td>&nbsp;</td>';
+                        echo '<td>&nbsp;</td></tr>';
+
+                        echo '<tr><td>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</td>';
+                        $link = PhocacartRoute::getDownloadRoute() . '&o='.$this->itemcommon->order_token.'&d='.htmlspecialchars($v2->download_token);
+                        $dLink = PhocacartPath::getRightPathLink($link);
+                        echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
+
+                        $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                        echo '<tr><td>'.$type.'</td>';
+                        echo '<td><small>('.htmlspecialchars($v2->download_file).')</small></td></tr>';
+
+                    }
+                }
+            }
+
+            echo '<tr><td>&nbsp;</td>';
+            echo '<td>&nbsp;</td></tr>';
+        }*/
+    }
+    //echo '</table>';*/
+
 }
 echo '</div>';
 
@@ -443,16 +532,17 @@ echo '<div class="tab-pane" id="orderlink">'."\n";
 if (isset($this->itemcommon->order_token)) {
 	if (!empty($this->itemproducts)) {
 		/*phocacart import('phocacart.path.route');*/
+        echo '<div class="ph-admin-order-link">';
 		echo '<table class="ph-table-order-link">';
-		echo '<tr><th class="link">'.JText::_('COM_PHOCACART_ORDER_LINK').'</th></tr>';
-
+        echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
 		//$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
 				//. '&d='.htmlspecialchars($v->download_token));
 		$link = PhocacartRoute::getOrdersRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token);
 		$oLink = PhocacartPath::getRightPathLink($link);
 
-		echo '<tr><td><input type="text" name="" value="'.$oLink.'" style="width: 90%;" /></td></tr>';
+		echo '<tr><td>'.JText::_('COM_PHOCACART_ORDER_LINK').': </td><td><input type="text" name="" value="'.$oLink.'" style="width: 90%;" /></td></tr>';
 		echo '</table>';
+		echo '</div>';
 	}
 }
 echo '</div>';

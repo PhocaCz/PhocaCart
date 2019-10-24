@@ -9,15 +9,78 @@
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditProductPriceHistory extends JModelList
+class PhocaCartCpModelPhocaCartEditProductPriceHistory extends JModelAdmin
 {
-	protected	$option 		= 'com_phocacart';
-	
-	
-	public function save($data, $productId) {
-		
+	protected	$option 		        = 'com_phocacart';
+	protected 	$text_prefix	        = 'com_phocacart';
+	public      $typeAlias 		        = 'com_phocacart.phocacartpricehistory';
+
+
+	public function getTable($type = 'PhocacartProductPriceHistory', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	public function getForm($data = array(), $loadData = true) {
+
+		$app	= JFactory::getApplication();
+		$form 	= $this->loadForm('com_phocacart.phocacartpricehistory', 'phocacartpricehistory', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
+	}
+
+	protected function loadFormData()
+	{
+		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartpricehistory.data', array());
+
+		if (empty($data)) {
+			$data = $this->getItem();
+
+		}
+
+		return $data;
+	}
+
+
+	public function getItem($pk = null) {
+		if ($item = parent::getItem($pk)) {
+
+			$history =  PhocacartPriceHistory::getPriceHistoryById((int)$item->product_id, 0, 1);
+			if (!empty($history)) {
+				foreach($history as $k => $v) {
+					$history[$k]['price'] = PhocacartPrice::cleanPrice($v['price']);
+				}
+			}
+
+			$item->set('price_history', $history);
+
+
+		}
+
+		return $item;
+	}
+
+	protected function prepareTable($table) {
+		jimport('joomla.filter.output');
+
+		$table->price 					= PhocacartUtils::replaceCommaWithPoint($table->price);
+
+
+	}
+
+
+	public function save($data/*, $productId*/) {
+
+		$app					= JFactory::getApplication();
+		$productId				= $app->input->get('id', 0, 'int');
+
+
+
 		if (!empty($data)) {
-			return PhocacartPriceHistory::storePriceHistoryCustomById($data, $productId);
+			return PhocacartPriceHistory::storePriceHistoryCustomById($data['price_history'], $productId);
 		}
 	}
 }

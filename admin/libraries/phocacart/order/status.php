@@ -439,6 +439,7 @@ class PhocacartOrderStatus
 		// Set language of order for the customer
 		$pLang = new PhocacartLanguage();
 
+
 		if (($recipient != '' && JMailHelper::isEmailAddress($recipient)) || ($recipientOthers != '' && JMailHelper::isEmailAddress($recipientOthers))) {
 
 			$sitename 		= $config->get('sitename');

@@ -14,7 +14,7 @@ class PhocacartManufacturer
 {
 
 
-	public static function getAllManufacturers($ordering = 1, $onlyAvailableProducts = 0, $lang = '') {
+	public static function getAllManufacturers($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 4);
@@ -50,6 +50,11 @@ class PhocacartManufacturer
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
 				$lefts[] = ' #__phocacart_products AS p ON m.id = p.manufacturer_id';
 			}
+		}
+
+		if (!empty($filterProducts)) {
+			$productIds = implode (',', $filterProducts);
+			$wheres[]	= 'p.id IN ('.$productIds.')';
 		}
 
 		$q = ' SELECT DISTINCT '.$columns

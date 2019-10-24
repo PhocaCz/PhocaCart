@@ -12,29 +12,29 @@ defined('_JEXEC') or die();
 
 class PhocacartPriceHistory
 {
-	
+
 	public static function storePriceHistoryById($productId, $price) {
-		
+
 		$date		= JFactory::getDate();
-		$dateNow 	= $date->toSql();		
-		
+		$dateNow 	= $date->toSql();
+
 		$db = JFactory::getDBO();
-		
+
 		$query = 'SELECT a.id, a.price, a.date'
 				.' FROM #__phocacart_product_price_history AS a'
 			    .' WHERE a.product_id = '.(int) $productId
 				.' AND a.date = (SELECT MAX(date) FROM #__phocacart_product_price_history WHERE product_id = '.(int)$productId.')'
 				.' ORDER BY a.id';
-							
+
 		$db->setQuery($query);
 		$history = $db->loadAssoc();
-		
+
 		$price		= PhocacartUtils::replaceCommaWithPoint($price);
-		
+
 		if (isset($history['price']) && $history['price'] == $price) {
 			// Do nothing
 		} else if (isset($history['date']) && isset($history['id'])) {
-			
+
 			$dateDb2 	= JHtml::_('date', $history['date'], 'Y-m-d');
 			$dateNow2	= JHtml::_('date', $dateNow , 'Y-m-d');
 			if ($dateDb2 == $dateNow2) {
@@ -54,28 +54,32 @@ class PhocacartPriceHistory
 			$db->setQuery($query);
 			$db->execute();
 		}
-		
+
 		return true;
 	}
-	
+
 	/*
 	 * Difference to automatic way of adding history prices:
 	 * custom - the same price can be used for more dates - we don't ask for latest date
 	 * automatic - when the same price then is is not written to database - we ask for latest date so we can compare and detect
-	 *             that tha latest price is the same and in such case we don't add it to the database
+	 *             that the latest price is the same and in such case we don't add it to the database
 	 */
 	public static function storePriceHistoryCustomById($data, $productId) {
-		
+
 		$db 				= JFactory::getDBO();
 		$notDeleteIds 		= array();
+
+
 		if (!empty($data)) {
-			
+
+		    $i = 1;
 			foreach ($data as $k => $v) {
-				
+
+
 				if (isset($v['date']) && isset($v['price']) && (float)$v['price'] > 0) {
 					$date		= JFactory::getDate($v['date']);
-					$dateDb 	= $date->toSql();	
-					
+					$dateDb 	= $date->toSql();
+
 					$query = 'SELECT a.id'
 					.' FROM #__phocacart_product_price_history AS a'
 					.' WHERE a.product_id = '.(int) $productId
@@ -83,7 +87,7 @@ class PhocacartPriceHistory
 					.' ORDER BY a.id';
 					$db->setQuery($query);
 					$history = $db->loadAssocList();
-					
+
 					// Remove duplicates
 					if (!empty($history)) {
 						foreach($history as $k2 => $v2) {
@@ -97,30 +101,32 @@ class PhocacartPriceHistory
 							}
 						}
 					}
-					
+
 					if (isset($history[0]['id']) && (int)$history[0]['id']) {
-						$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($v['price'])
+						$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($v['price']) . ', ordering = '.$i
 						.' WHERE id = '.(int)$history[0]['id'];
 						$db->setQuery($query);
 						$db->execute();
-						
+
+						$i++;
 						$notDeleteIds[]	= (int)$history[0]['id'];
-						
+
 					} else {
-						
-						$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price)'
-							.' VALUES ('.(int)$productId.', '.$db->quote($dateDb).', '.$db->quote($v['price']).');';
+
+						$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price, ordering)'
+							.' VALUES ('.(int)$productId.', '.$db->quote($dateDb).', '.$db->quote($v['price']).', '.$i.');';
 						$db->setQuery($query);
 						$db->execute();
-						
+
+						$i++;
 						$newIdA 		= $db->insertid();
 						$notDeleteIds[]	= (int)$newIdA;
 					}
 				}
-		
+
 			}
-			
-			
+
+
 			// Remove all ids except the active
 			if (!empty($notDeleteIds)) {
 				$notDeleteIdsString = implode($notDeleteIds, ',');
@@ -128,7 +134,7 @@ class PhocacartPriceHistory
 						.' FROM #__phocacart_product_price_history'
 						.' WHERE product_id = '. (int)$productId
 						.' AND id NOT IN ('.$notDeleteIdsString.')';
-				
+
 			} else {
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_price_history'
@@ -136,21 +142,30 @@ class PhocacartPriceHistory
 			}
 			$db->setQuery($query);
 			$db->execute();
-			
-			
-			
+
+
+
 			return true;
-		}
+		} else {
+
+		    $query = ' DELETE '
+						.' FROM #__phocacart_product_price_history'
+						.' WHERE product_id = '. (int)$productId;
+		    $db->setQuery($query);
+			$db->execute();
+
+			return true;
+        }
 		return false;
 	}
-	
+
 	public static function getPriceHistoryById($productId, $limit = 10, $admin = 0) {
-		
+
 		$date		= JFactory::getDate();
 		$dateNow 	= $date->toSql();
 		$db 		= JFactory::getDBO();
-		
-		
+
+
 		$query = 'SELECT a.id, a.product_id, a.price, a.date'
 				.' FROM #__phocacart_product_price_history AS a'
 			    .' WHERE a.product_id = '.(int) $productId
@@ -158,25 +173,25 @@ class PhocacartPriceHistory
 		if ((int)$limit > 0 ) {
 			$query .= ' LIMIT '.(int)$limit;
 		}
-							
+
 		$db->setQuery($query);
 		$history = $db->loadAssocList();
-		
+
 		if ($admin == 1) {
 			return $history;
 		}
-		
+
 		// We need to get the outcome from latest to history so we get the e.g. latest 10 items
 		// but for displaying we need to start from start
 		$history = array_reverse($history);
-		
-	
-		
+
+
+
 		$query = 'SELECT a.price'
 				.' FROM #__phocacart_products AS a'
 			    .' WHERE a.id = '.(int) $productId
 				.' ORDER BY a.id';
-							
+
 		$db->setQuery($query);
 		$todayDb = $db->loadAssoc();
 		$today	= array();
@@ -184,9 +199,9 @@ class PhocacartPriceHistory
 			$today[0]['id'] 	= 0;
 			$today[0]['date']	= $dateNow;
 			$today[0]['price']	= $todayDb['price'];
-			
+
 		}
-		
+
 		// Join today with price history
 		$c = count($history);
 		$c--;
@@ -198,7 +213,7 @@ class PhocacartPriceHistory
 				unset($history[$c]);
 			}
 		}
-		
+
 		if (!empty($history) && !empty($today)) {
 			$new = array_merge($history, $today);
 		} else if (empty($history) && !empty($today)) {
@@ -208,31 +223,31 @@ class PhocacartPriceHistory
 		} else {
 			$new = array();
 		}
-		
+
 		// correct the count of items in case the current date was added to the prict history list
 		$c2 = count($new);
 		if ($c2 > $limit && isset($new[0])) {
 			unset($new[0]);
 		}
-		
+
 		return $new;
 	}
-	
-	
+
+
 	public static function getPriceHistoryChartById($productId) {
-		
+
 		$data = array();
 		$dataX = $dataY = array();
 		$history = self::getPriceHistoryById($productId);
-		
+
 		if (!empty($history)) {
 			foreach($history as $k => $v) {
-				
+
 				$dataY[] = '\'' . $v['price'] . '\'';
 				$dataX[] = '\'' . JHtml::_('date', $v['date'] , JText::_('DATE_FORMAT_LC3')) .'\'';
 			}
 		}
-		
+
 		$data['x'] = '';
 		if (!empty($dataX)) {
 			$data['x'] = implode(',', $dataX);
@@ -241,10 +256,10 @@ class PhocacartPriceHistory
 		if (!empty($dataY)) {
 			$data['y'] = implode(',', $dataY);
 		}
-		
+
 		if (!empty($data['x']) && !empty($data['y'])) {
 			$s = new PhocacartStatistics();
-		
+
 			$s->renderChartJsLine2('phChartAreaLine', $data['y'], JText::_('COM_PHOCACART_PRICE'), $data['x']);
 			$s->setFunction('phChartAreaLine', 'Line');
 			$s->renderFunctions();

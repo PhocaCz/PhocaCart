@@ -39,8 +39,8 @@ class PhocacartProduct
 		///$wheres[] 	= ' c.id = '.(int)$catid;
 		$wheres[] 	= ' i.id = '.(int)$productId;
 
-		$columns		= 'i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.type, i.public_download_file, i.public_download_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.download_file, i.download_token, i.download_folder, i.date, i.delivery_date, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
-		$groupsFull		= 'i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.stock_calculation, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, i.type, i.download_file, i.download_token, i.download_folder, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title';
+		$columns		= 'i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.type, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.download_file, i.download_token, i.download_folder, i.date, i.delivery_date, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+		$groupsFull		= 'i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.stock_calculation, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, i.type, i.download_file, i.download_token, i.download_folder, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title';
 		$groupsFast		= 'i.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -420,7 +420,7 @@ class PhocacartProduct
 	* checkPrice - check if the product has price or not ( > 0 )
 	*/
 
-	public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0, $type = array(0,1)) {
+	public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0, $type = array(0,1), $queryColumns = '', $return = '') {
 
 
 
@@ -481,12 +481,17 @@ class PhocacartProduct
 		 *                    - overrides category type_feed (type feed in category table)
 		 * type - digital (downloadable) product or physical product
 		 */
-
-		$columns		= 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.ean, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle, a.condition, a.points_received, a.points_needed, a.delivery_date, a.type, a.type_feed, a.type_category_feed, a.params_feed,'
-		. ' AVG(r.rating) AS rating,'
-		. ' at.required AS attribute_required';
-		$groupsFull		= 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.ean, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, c.type_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required, a.condition, a.points_receiieved, a.points_needed, a.delivery_date, a.type, a.type_feed, a.type_category_feed, a.params_feed';
-		$groupsFast		= 'a.id';
+        if ($queryColumns != '') {
+            $columns        = $queryColumns;
+            $groupsFull     = $queryColumns;
+            $groupsFast     = 'a.id';
+        } else {
+            $columns = 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.ean, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle, a.condition, a.points_received, a.points_needed, a.delivery_date, a.type, a.type_feed, a.type_category_feed, a.params_feed,'
+                . ' AVG(r.rating) AS rating,'
+                . ' at.required AS attribute_required';
+            $groupsFull = 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.ean, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, c.type_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required, a.condition, a.points_receiieved, a.points_needed, a.delivery_date, a.type, a.type_feed, a.type_category_feed, a.params_feed';
+            $groupsFast = 'a.id';
+        }
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 		$q = ' SELECT '.$columns;
@@ -543,7 +548,13 @@ class PhocacartProduct
 
 		$db->setQuery($q);
 
-		$products = $db->loadObjectList();
+
+        if ($return == 'column') {
+            $products = $db->loadColumn();
+        } else {
+            $products = $db->loadObjectList();
+        }
+
 		return $products;
 	}
 
@@ -1109,6 +1120,7 @@ class PhocacartProduct
 			PhocacartAttribute::storeCombinationsById((int)$table->id, $advancedStockOptions);
 			PhocacartSpecification::storeSpecificationsById((int)$table->id, $data['specifications']);
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $data['discounts']);
+			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->id, $data['additional_download_files']);
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
 			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
 
@@ -1242,7 +1254,7 @@ class PhocacartProduct
 	}
 
 
-	public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '') {
+	public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
 		switch($type) {
 
@@ -1275,6 +1287,11 @@ class PhocacartProduct
 		}
 
 		$group = PhocacartUtilsSettings::isFullGroupBy() ? ' GROUP BY p.published' : '';
+
+		if (!empty($filterProducts)) {
+			$productIds = implode (',', $filterProducts);
+			$wheres[]	= 'p.id IN ('.$productIds.')';
+		}
 
 		$q = ' SELECT '.$select
 			.' FROM  #__phocacart_products AS p'

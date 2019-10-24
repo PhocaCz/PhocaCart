@@ -14,7 +14,7 @@ phocacart import('phocacart.cart.cartdb');
 phocacart import('phocacart.cart.rendercart');
 phocacart import('phocacart.currency.currency');
 */
- 
+
 class PhocaCartCpViewPhocaCartEditProductPointGroup extends JViewLegacy
 {
 	protected $t;
@@ -22,24 +22,27 @@ class PhocaCartCpViewPhocaCartEditProductPointGroup extends JViewLegacy
 	protected $itemhistory;
 	protected $id;
 	function display($tpl = null) {
-		
+
 		$app					= JFactory::getApplication();
 		$this->id				= $app->input->get('id', 0, 'int');
-		
+
 		if ($this->id < 1) {
-			echo JText::_('COM_PHOCACART_NO_PRODUCT_FOUND');
+			echo '<div class="alert alert-error">';
+		    echo JText::_('COM_PHOCACART_NO_PRODUCT_FOUND'). '<br/>';
+			echo JText::_('COM_PHOCACART_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST');
+		    echo '</div>';
 			return;
 		}
-		
+
 		$this->t						= PhocacartUtils::setVars('product');
 		$this->t['product']				= PhocacartProduct::getProduct((int)$this->id);
 		$this->t['groups']				= PhocacartGroup::getGroupsById((int)$this->id, 3, 2);
 		$this->t['product_groups']		= PhocacartGroup::getProductPointGroupsById((int)$this->id, 3, 2);
-		
+
 
 
 		$media = new PhocacartRenderAdminmedia();
-	
+
 		parent::display($tpl);
 	}
 }

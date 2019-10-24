@@ -41,8 +41,10 @@ class PhocacartPath
 			$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $downloadFolderPublic . '/';
 
 			$downloadFolderPublicRel 		= JPath::clean($downloadFolderPublic);
-			$path['orig_rel_ds'] 			= '../' . $downloadFolderPublicRel;
+			$path['orig_rel'] 				= '../' . $downloadFolderPublicRel;
 			$path['orig_rel_ds'] 			= '../' . $downloadFolderPublicRel .'/';
+			$path['orig_rel_path'] 			= Juri::root() . $downloadFolderPublicRel;
+			$path['orig_rel_path_ds'] 		= Juri::root() . $downloadFolderPublicRel .'/';
 
 		} else if ($group['f'] == 4) {
 			// Images Categories
@@ -73,6 +75,8 @@ class PhocacartPath
 				$downloadFolderRel 				= JPath::clean($downloadFolder);
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel;
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel .'/';
+				$path['orig_rel_path'] 			= Juri::root() . $downloadFolderRel;
+				$path['orig_rel_path_ds'] 		= Juri::root() . $downloadFolderRel .'/';
 			}
 		} else {
 			$path['orig_abs'] 				= JPATH_ROOT . '/tmp';

@@ -19,8 +19,8 @@ final class PhocacartRenderJspos
 	 * POS
 	 * =============
 	 */
-	
-	
+
+
 	/*
 	 * Main Pos function
 	 * ajax to render all pages in content area
@@ -31,16 +31,16 @@ final class PhocacartRenderJspos
 
 		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$pos_focus_input_fields		= $paramsC ->get( 'pos_focus_input_fields', 0 );
-		
+
 		JFactory::getDocument()->addScript(JURI::root(true).'/media/com_phocacart/js/base64.js');
-		
+
 		$s 	= array();
-		
-		
+
+
 		// ------------
 		// FUNCTIONS
 		// ------------
-		
+
 		/*
 		 * Update input box after change
 		 */
@@ -59,17 +59,17 @@ final class PhocacartRenderJspos
 		$s[] = '         jQuery("#phPosInputBox").html(data);';
 		$s[] = '      }';
 		$s[] = '   })';
-		$s[] = '   return false;';	
+		$s[] = '   return false;';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Update categories box after change (users can have different access rights for different catgories, so when selecting user, categories must be changed)
 		 */
 		$s[] = ' /* Function phDoSubmitFormUpdateCategoriesBox */';
 		$s[] = 'function phDoSubmitFormUpdateCategoriesBox(sFormData, phUrlAjax) {';
-		
+
 		// Change categories only when customer changed
 		$s[] = '   var page 	= jQuery("#phPosPaginationBox input[name=page]").val();';
 		$s[] = '   if (page != "main.content.customers") {';
@@ -87,46 +87,46 @@ final class PhocacartRenderJspos
 		$s[] = '         jQuery("#phPosCategoriesBox").html(data);';
 		$s[] = '      }';
 		$s[] = '   })';
-		$s[] = '   return false;';	
+		$s[] = '   return false;';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Main content box can be variable: products/customers/payment/shippment
 		 * Get info about current ticket id and page (page: products, customers, payment, shipping)
-		 * 
+		 *
 		 */
 		$s[] = '/* Function phPosCurrentData */';
 		$s[] = 'function phPosCurrentData(forcepage, format, id) {';
-		
+
 		$s[] = '   if (typeof forcepage !== "undefined") {';
 		$s[] = '      var page 	= forcepage;';
 		$s[] = '   } else {';
 		$s[] = '      var page 	= jQuery("#phPosPaginationBox input[name=page]").val();';
 		$s[] = '   }';
-		
+
 		$s[] = '   if (typeof format !== "undefined") {';
 		$s[] = '      var formatSuffix = format;';
 		$s[] = '   } else {';
 		$s[] = '      var formatSuffix = "raw";';
 		$s[] = '   }';
-		
+
 		$s[] = '   if (typeof id !== "undefined") {';
 		$s[] = '      var idSuffix 	= "&id="+id;';
 		$s[] = '   } else {';
 		$s[] = '      var idSuffix 	= "";';
 		$s[] = '   }';
-		
+
 		$s[] = '   var ticketid	= jQuery("#phPosPaginationBox input[name=ticketid]").val();';
 		$s[] = '   var unitid		= jQuery("#phPosPaginationBox input[name=unitid]").val();';
 		$s[] = '   var sectionid	= jQuery("#phPosPaginationBox input[name=sectionid]").val();';
 		$s[] = '   var phData		= "format=" + formatSuffix + "&tmpl=component&page=" + page + idSuffix +"&ticketid=" + ticketid + "&unitid=" + unitid + "&sectionid=" + sectionid + "&'. JSession::getFormToken().'=1";';
-		$s[] = '   return phData;';	
+		$s[] = '   return phData;';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * When chaning main page, clear all filters (e.g. going from product list to customer list)
 		 * Category - remove url parameters in url bar, then empty all checkboxes
@@ -137,18 +137,18 @@ final class PhocacartRenderJspos
 		$s[] = '   phUpdateUrlParameter("category", "");';
 		$s[] = '   jQuery("input.phPosCategoryCheckbox:checkbox:checked").prop("checked", false);';
 		$s[] = '   jQuery("label.phCheckBoxCategory").removeClass("active");';
-		$s[] = '   phUpdateUrlParameter("search", "");';	
+		$s[] = '   phUpdateUrlParameter("search", "");';
 		$s[] = '   jQuery("#phPosSearch").val("");';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Focus on form input if asked (sku, loyalty card, coupon, tendered amount)
 		 */
 		$s[] = '/* Function phPosManagePageFocus */';
 		$s[] = 'function phPosManagePageFocus(page) {';
-		
+
 		if ($pos_focus_input_fields	== 1) {
 			$s[] = '   if (page == "main.content.products") {';
 			$s[] = '      var hasFocusSearch = jQuery("#phPosSearch").is(":focus");';
@@ -172,9 +172,9 @@ final class PhocacartRenderJspos
 			$s[] = '   return true;';
 		}
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Manage view after ajax request (hide or display different parts on site)
 		 * 1) Hide categories for another views than products
@@ -182,13 +182,13 @@ final class PhocacartRenderJspos
 		$s[] = '/* Function phPosManagePage */';
 		$s[] = 'function phPosManagePage() {';
 		$s[] = '   var page = jQuery("#phPosPaginationBox input[name=page]").val();';
-		
+
 		// we use ajax and start parameter can be used for more items (products, customers, orders) so we cannot leave it in url
 		// because if there are 100 products and 10 customers - switching to customers per ajax will leave e.g. 50 which is will display zero results
 		// START IS SET ONLY WHEN CLICKING ON PAGINATION LINKS (see: renderSubmitPaginationTopFor, it is removed directly by click
 		//$s[] = 'phUpdateUrlParameter("start", "");';
-		
-	
+
+
 		$s[] = '   if (page == "main.content.products") {'; // PRODUCTS
 		$s[] = '      jQuery(".ph-pos-checkbox-box").show();';
 		$s[] = '      jQuery(".ph-pos-sku-product-box").show();';
@@ -237,14 +237,14 @@ final class PhocacartRenderJspos
 		$s[] = '   	  jQuery(".ph-pos-date-order-box").hide();';
 		$s[] = '   }';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		// Declare it on start (event associated to phPosManagePage function
 		$s[] = 'jQuery(document).ready(function(){';
 		$s[] = '   phPosManagePage();';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
 
 		/*
@@ -252,14 +252,14 @@ final class PhocacartRenderJspos
 		 */
 		$s[] = '/* Function phAddSuffixToUrl */';
 		$s[] = 'function phAddSuffixToUrl(action, suffix) {';
-		$s[] = '   return action + (action.indexOf(\'?\') != -1 ? \'&\' : \'?\') + suffix;';	
+		$s[] = '   return action + (action.indexOf(\'?\') != -1 ? \'&\' : \'?\') + suffix;';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Edit something in main view and then reload cart, main page, input page
-		 * 
+		 *
 		 */
 		$s[] = '/* Function phAjaxEditPos */';
 		$s[] = 'function phAjaxEditPos(sFormData, phUrlAjax, forcepageSuccess, forcepageError) {';
@@ -298,17 +298,17 @@ final class PhocacartRenderJspos
 		$s[] = '         }';
 		$s[] = '      }';
 		$s[] = '   })';
-		$s[] = '   return false;';	
+		$s[] = '   return false;';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 
 		// ------------
 		// EVENTS
 		// ------------
 		$s[] = 'jQuery(document).ready(function(){';
-		
+
 		$s[] = ' ';
 		/*
 		 * Clear form input after submit - for example, if vendor add products per
@@ -323,9 +323,9 @@ final class PhocacartRenderJspos
 	    $s[] = '      jQuery("#phPosSku").val("");';
 	    $s[] = '   }, 100);';
 	    $s[] = '});';
-	    
+
 	    $s[] = ' ';
-	    
+
 	    $s[] = 'jQuery(document).on("submit","#phPosCardUserForm",function(){';
 	   // $s[] = '   jQuery("#phPosSku").val("");';
 	   // $s[] = '   e.preventDefault();';
@@ -334,7 +334,7 @@ final class PhocacartRenderJspos
 	    $s[] = '      jQuery("#phPosCard").val("");';
 	    $s[] = '   }, 100);';
 	    $s[] = '});';
-		
+
 		$s[] = ' ';
 		/*
 		 * Test if Bootstrap JS is loaded more than once
@@ -346,9 +346,9 @@ final class PhocacartRenderJspos
 		$s[] = 'var bMinJs = "bootstrap.min.js";';
 		$s[] = 'var bJs = "bootstrap.js";';
 		$s[] = 'var bJsCount = 0;';
-		
+
 		$s[] = ' ';
-		
+
 		$s[] = 'jQuery.each(phScriptsLoaded, function (k, v) {';
 		$s[] = '   var s = v.src;';
 		$s[] = '   var n = s.indexOf("?")';
@@ -358,14 +358,14 @@ final class PhocacartRenderJspos
 		$s[] = '      bJsCount++;';
 		$s[] = '   }';
 		$s[] = '})';
-		 
-		$s[] = 'if (bJsCount > 1){';	
-		$s[] = '   jQuery("#phPosWarningMsgBox").text("'.JText::_('COM_PHOCACART_WARNING_BOOTSTRAP_JS_LOADED_MORE_THAN_ONCE').'");';	
+
+		$s[] = 'if (bJsCount > 1){';
+		$s[] = '   jQuery("#phPosWarningMsgBox").text("'.JText::_('COM_PHOCACART_WARNING_BOOTSTRAP_JS_LOADED_MORE_THAN_ONCE').'");';
 		$s[] = '   jQuery("#phPosWarningMsgBox").show();';
-		$s[] = '}';	
-		
+		$s[] = '}';
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Load main content by links - e.g. in input box we call list of customers, payment methods or shipping methods
 		 */
@@ -379,9 +379,9 @@ final class PhocacartRenderJspos
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clean message box
 		$s[] = '      e.preventDefault();';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
-		
+
 		/*
 		 * Edit something in content area (e.g. customer list is loaded in main content and we change it)
 		 */
@@ -397,9 +397,9 @@ final class PhocacartRenderJspos
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clean message box
 		$s[] = '   e.preventDefault();';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
-		
+
 		// Unfortunately we have form without buttons so we need to run the form without click too
 		// to not submit more forms at once we will use ID :-(
 		$s[] = '/* Event phPosCardUserForm */';
@@ -412,9 +412,9 @@ final class PhocacartRenderJspos
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clean message box
 		$s[] = '      e.preventDefault();';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
-	
+
 		$s[] = '/* Event phPosDateOrdersForm */';
 		$s[] = 'jQuery(document).on("submit", "#phPosDateOrdersForm", function (e) {';
 		$s[] = '   phPosClearFilter();';
@@ -428,7 +428,7 @@ final class PhocacartRenderJspos
 		$s[] = '})';
 
 		$s[] = ' ';
-		
+
 		/*
 		 * Display warning when closing a ticket
 		 */
@@ -446,27 +446,27 @@ final class PhocacartRenderJspos
 		$s[] = '      return true;';
 		$s[] = '   }';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
 
 		$s[] = '})';// end document ready
 		$s[] = ' ';
-		
+
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
-	
-	
-	
+
+
+
 	/*
 	 * Search by key type - typing of charcters into the search field
-	 * 
+	 *
 	 * Must be loaded:
 	 * renderSubmitPaginationTopForm()
 	 * changeUrlParameter()
 	 * editPos()
 	 */
 	public static function searchPosByType($id) {
-		
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Function phFindMemer*/';
@@ -477,9 +477,9 @@ final class PhocacartRenderJspos
 		$s[] = '   phDoSubmitFormPaginationTop(phData, phUrl);';
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clear message box
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		$s[] = '/* Event phFindMemer Keyuup */';
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   var phThread = null;';
@@ -488,43 +488,43 @@ final class PhocacartRenderJspos
 	    $s[] = '      var $this = jQuery(this); phThread = setTimeout(function(){phFindMember($this.val())}, 800);';
 	    $s[] = '   });';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
-		
+
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
-	
-	
-	
-	
+
+
+
+
 	/*
 	 * Get all checkboxes of categories which are active and add them to url bar and filter the categories
-	 * 
+	 *
 	 * Must be loaded:
 	 * renderSubmitPaginationTopForm()
 	 * changeUrlParameter()
 	 * editPos()
-	 * 
+	 *
 	 * Test checkbox
 	 * components\com_phocacart\views\pos\tmpl\default_main_categories.php
 	 * data-toggle="buttons" - changes the standard checkbox to graphical checkbox
-	 * 
+	 *
 	 */
 	public static function searchPosByCategory() {
-		
+
 		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$pos_filter_category		= $paramsC ->get( 'pos_filter_category', 1 );// reload equal height
-		
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Event phPosCategoryCheckbox */';
 		$s[] = 'jQuery(document).ready(function(){';
-		
+
 		//$s[] = '   jQuery("#phPosCategoriesBox .phPosCategoryCheckbox").off().on("change", function() {';// categories box is loaded newly, document needed
 		$s[] = '   jQuery(document).on("change", "#phPosCategoriesBox .phPosCategoryCheckbox", function() {';
-		
+
 		if ($pos_filter_category == 2) {
-			
+
 			// Multiple categories can be displayed - can be active
 			$s[] = '      var phA = [];';
 			$s[] = '      jQuery("input.phPosCategoryCheckbox:checkbox:checked").each(function () {';
@@ -541,16 +541,16 @@ final class PhocacartRenderJspos
 			$s[] = '            jQuery("label.phCheckBoxCategory").removeClass("active");';
 			$s[] = '         }';
 			$s[] = '      })';
-			
+
 			// Current checkbox was deselected
 			$s[] = '      if (jQuery(this).prop("checked") == false) {';
 			$s[] = '         cValue = "";';
 			$s[] = '      }; ';
 		}
-		
-		
+
+
 		$s[] = ' ';
-		
+
 		$s[] = '      var phData 	= "category=" + cValue + "&" + phPosCurrentData();';
 		$s[] = '      phUpdateUrlParameter("category", cValue);';// update URL bar
 		//$s[] = '      var phUrl = phUpdateUrlParameter("category", cValue, phUrl);';// Update phUrl - it is a form url which is taken by joomla to create pagination links
@@ -559,9 +559,9 @@ final class PhocacartRenderJspos
 		$s[] = '      jQuery(".ph-pos-message-box").html("");';// clear message box
 		$s[] = '   });';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
-		
+
 		/*$s[] = 'jQuery(document).ready(function(){';
 		$s[] = '	jQuery(document).on("click", ".mainBoxCategory", function (e) {';
 		$s[] = '        var phUrl 		= phAddSuffixToUrl(window.location.href, \'format=raw\');';
@@ -571,14 +571,14 @@ final class PhocacartRenderJspos
 		$s[] = '		e.preventDefault();';
 		$s[] = '	})';
 		$s[] = '})';*/
-		
+
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
-	
-	
-	
+
+
+
 	public static function changeUrlParameter($params) {
-		
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Function phRemoveUrlParameter */';
@@ -601,7 +601,7 @@ final class PhocacartRenderJspos
 	    $s[] = '}';
 
 		$s[] = ' ';
-		
+
 		$s[] = '/* Function phRemoveUrlParameter */';
 		$s[] = 'function phUpdateUrlParameter(param, value, urlChange) {';
 		$s[] = '   if (typeof urlChange !== "undefined") {';
@@ -613,7 +613,7 @@ final class PhocacartRenderJspos
 	    $s[] = '      var url = window.location.href;';
 	    $s[] = '      var hash = location.hash;';
 	    $s[] = '   }';
-		
+
 	    $s[] = '   url = url.replace(hash, \'\');';
 	    $s[] = '   if (url.indexOf(param + "=") >= 0) {';
 	    $s[] = '      var prefix = url.substring(0, url.indexOf(param));';
@@ -629,36 +629,36 @@ final class PhocacartRenderJspos
 	    $s[] = '      }';
 	    $s[] = '   }';
 	    $s[] = '   url = url.replace(/[^=&]+=(&|$)/g,"").replace(/&$/,"");';// remove all parameters with empty values
-	    
+
 	    $s[] = '   if (typeof urlChange !== "undefined") {';
 	    $s[] = '      return (url + hash);';
 	    $s[] = '   } else {';
 	    $s[] = '      window.history.pushState(null, null, url + hash);';
 	    $s[] = '   }';
 	    $s[] = '}';
-		
+
 	    $s[] = ' ';
-	    
+
 	    if (!empty($params)) {
-	    	
+
 			$s[] = 'jQuery(document).ready(function(){';
 			foreach($params as $k => $v) {
 				$s[] = '   phUpdateUrlParameter("'.$k.'", '.(int)$v.');';
 			}
 			$s[] = '})';
-			
+
 			$s[] = ' ';
 	    }
-	   
+
 	    JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
-	
-	
+
+
 	/*
 	 * Print to POS printer
 	 */
 	public static function printPos($url) {
-		
+
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$pos_server_print	= $paramsC->get( 'pos_server_print', 0 );
 
@@ -666,9 +666,9 @@ final class PhocacartRenderJspos
 		$s 	 = array();
 		$s[] = ' ';
 		$s[] = 'jQuery(document).ready(function(){';
-		
+
 		$s[] = ' ';
-		
+
 		$s[] = '/* Event phPosContentBox */';
 		$s[] = 'jQuery("#phPosContentBox").on("click", ".phOrderPrintBtn", function (e) {';
 		$s[] = '   var phUrlAjax 		= "'.$url.'"';
@@ -676,12 +676,12 @@ final class PhocacartRenderJspos
 		$s[] = '   var phType	 		= jQuery(this).data("type");';
 		$s[] = '   var phOrderCurrent	= jQuery("#phPosOrderPrintBox").attr("data-order");';// data("order"); not working
 		$s[] = '   var phTypeCurrent	= jQuery("#phPosOrderPrintBox").attr("data-type");';// data("type"); not working
-		
+
 		$s[] = ' ';
-		
+
 		// PC PRINT
 		$s[] = '   if (phType == "-1") {';// -1 type is print (1 order, 2 invoice, 3 delivery note, 4 receipt)
-		
+
 		if ($pos_server_print == 2 || $pos_server_print == 3) {
 			// - 1 AND 4 PC PRINT FOR ALL DOCUMENTS EXCEPT 4 (Receipt) - Receipt will be printend by SERVER PRINT
 			$s[] = '      if (phTypeCurrent == "4") {';
@@ -705,14 +705,14 @@ final class PhocacartRenderJspos
 			$s[] = '      } else {';
 			$s[] = '         window.print(); return false;';// print with javascript for all documents except receipt (receipt is ready for server POS printers)
 			$s[] = '      }';
-			
+
 		} else {
 			$s[] = '      window.print(); return false;';// print with javascript for all document (including receipt)
 		}
 		$s[] = '   }';
-		
+
 		$s[] = ' ';
-		
+
 		// DISPLAYING THE DOCUMENT
 		$s[] = '   var phClass 	= "phType" + phType;';
 		$s[] = '   var phUrlAjax 	= phAddSuffixToUrl(phUrlAjax, "id=" + phOrder + "&type=" + phType + "&pos=1");';
@@ -728,22 +728,22 @@ final class PhocacartRenderJspos
 		$s[] = '         jQuery("#phPosOrderPrintBox").html(data);';// Add the document itself to the site
 		$s[] = '      }';
 		$s[] = '   })';
-		
-		
+
+
 		$s[] = '   e.preventDefault();';
 		$s[] = '})';
-		
+
 		$s[] = ' ';
 
 		$s[] = '})';// end document ready
 
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
-	
+
 	/* POS Scroll cart */
-	
+
 	public static function renderJsScrollToPos() {
-	
+
 		$s = array();
 		$s[] = ' ';
 		$s[] = '/* Function phScrollPosCart */';
@@ -755,9 +755,9 @@ final class PhocacartRenderJspos
 		$s[] = '      phPosCart.animate({scrollTop: phPosCartHeight}, 1500 );';
 		$s[] = '   }';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   var phPosCart 		= jQuery(\'#phPosCart\');';
 		$s[] = '   phScrollPosCart(phPosCart);';//  On start
@@ -767,29 +767,29 @@ final class PhocacartRenderJspos
 		$s[] = '      }';
 		$s[] = '   });';
 		$s[] = '});';
-		
+
 		$s[] = ' ';
-			
+
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
-	
-	
-	
+
+
+
 	// ========
 	// JQUERY UI
 	// ========
 	public static function renderJsUi() {
-	
+
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Function phSetCloseButton */';
 		$s[] = 'function phSetCloseButton() {';
 		$s[] = '   jQuery(".ui-dialog-titlebar-close").html(\'<span class="ph-close-button ui-button-icon-primary ui-icon ui-icon-closethick"></span>\');';
 		$s[] = '}';
-		
+
 		$s[] = ' ';
-		
+
 		$s[] = 'function phConfirm(submitForm, dataPost, txt) {';
 		$s[] = '   jQuery("#phDialogConfirm" ).html( txt );';
 		$s[] = '   jQuery("#phDialogConfirm").dialog({';

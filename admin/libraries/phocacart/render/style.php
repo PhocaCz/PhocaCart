@@ -134,6 +134,7 @@ $s['c']['panel-collapse.collapse.in'] = 'panel-collapse collapse in';
 
 $s['c']['label.label-success']      = 'label label-success';
 $s['c']['label.label-danger']       = 'label label-important label-danger';
+$s['c']['label.label-info']         = 'label label-info';
 
 $s['c']['modal.zoom']               = 'modal zoom';
 $s['c']['modal-dialog']             = 'modal-dialog';
@@ -169,6 +170,10 @@ $s['c']['inputbox.form-control']    = 'inputbox form-control';
                 $s['c']['tabactvietab']             = '';
 
                 $s['c']['panel-collapse.collapse.in'] = 'panel-collapse collapse show';
+
+                $s['c']['label.label-success']      = 'badge badge-success';
+                $s['c']['label.label-danger']       = 'badge badge-important label-danger';
+                $s['c']['label.label-info']         = 'badge badge-info';
 
             break;
             case 'bootstrap3':

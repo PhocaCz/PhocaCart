@@ -36,7 +36,7 @@ class PhocacartImageMagic
 
 		$params 			= PhocacartUtils::getComponentParameters();
 		$jfile_thumbs		= $params->get( 'jfile_thumbs', 1 );
-		$jpeg_quality		= $params->get( 'jpeg_quality', 85 );
+		$jpeg_quality		= $params->get( 'jpeg_quality', 100 );
 		$jpeg_quality		= PhocacartImage::getJpegQuality($jpeg_quality);
 		$create_webp_copy	= $params->get( 'create_webp_copy', 0);
 
@@ -288,10 +288,29 @@ class PhocacartImageMagic
 				switch($type) {
 					case IMAGETYPE_PNG:
                     case IMAGETYPE_WEBP:
-						//imagealphablending($image1, false);
-						@imagealphablending($image2, false);
-						//imagesavealpha($image1, true);
-						@imagesavealpha($image2, true);
+
+						// Possible FR FR1
+						$correctWhite = 0;
+						if ($correctWhite == 1) {
+							// It can happen that GD makes the white background with very wrong quality
+							// - white color will be dirty (this happens on JPG or not transparent PNG)
+							// So we cannot use JPG or not transparent PNG
+							// And when we use transparent PNG, it can have bad quality of borders - gritty
+							// So we will use transparent PNG as source but we want to do not transparent
+							// PNG as destination. Normally in such case the PNG has black background
+							// so we need to add white retangle as background - such white background will
+							// be nice without dirty effects
+							$white = imagecolorallocate($image2,  255, 255, 255);
+							imagefilledrectangle($image2, 0, 0, $dst[2],$dst[3], $white);
+						} else {
+							//imagealphablending($image1, false);
+							@imagealphablending($image2, false);
+							//imagesavealpha($image1, true);
+							@imagesavealpha($image2, true);
+						}
+
+
+
 					break;
 				}
 
@@ -348,6 +367,57 @@ class PhocacartImageMagic
 								return false;
 							}
 						}
+
+
+						// Possible FR FR2 - adding copyright of IPTC to thumbnails
+						/*
+						$fileIn ... original image
+						$fileOut ... destination image (e.g. thumbnail)
+
+						$copyright = array();
+						$info = array();
+						$data = '';
+						$size = getimagesize($fileIn, $info);
+						if(isset($info['APP13'])){
+							$iptc = iptcparse($info['APP13']);
+							if(isset($iptc['2#116'][0]) && $iptc['2#116'][0] != ''){
+								$iptcEmbed = array('2#116' => $iptc['2#116'][0]);
+								foreach($iptcEmbed as $tag => $string) {
+									$tag = substr($tag, 2);
+									// iptc_make_tag function can be found here, see below:
+									// https://www.php.net/manual/en/function.iptcembed.php (example 1)
+									$data .= iptc_make_tag(2, $tag, $string);
+								}
+								$content = iptcembed($data, $fileOut);
+								// User Joomla! methods to write files
+								$fw = fopen($fileOut, 'w');
+								fwrite($fw, $content);
+								fclose($fw);
+							}
+						}
+
+						function iptc_make_tag($rec, $data, $value) {
+							$length = strlen($value);
+							$retval = chr(0x1C) . chr($rec) . chr($data);
+
+							if($length < 0x8000)
+							{
+								$retval .= chr($length >> 8) .  chr($length & 0xFF);
+							}
+							else
+							{
+								$retval .= chr(0x80) .
+										   chr(0x04) .
+										   chr(($length >> 24) & 0xFF) .
+										   chr(($length >> 16) & 0xFF) .
+										   chr(($length >> 8) & 0xFF) .
+										   chr($length & 0xFF);
+							}
+
+							return $retval . $value;
+						}
+
+						*/
 					break;
 
 					case IMAGETYPE_PNG :

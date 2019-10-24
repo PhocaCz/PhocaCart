@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+
+<field name="price_history" type="subform" label="COM_PHOCACART_FIELD_PRICE_HISTORY_LABEL" description="COM_PHOCACART_FIELD_PRICE_HISTORY_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_price_history.xml"/>	
+	
+	
+	</fieldset>
+
+
+
+</form>

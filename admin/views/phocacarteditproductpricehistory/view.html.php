@@ -14,7 +14,7 @@ phocacart import('phocacart.cart.cartdb');
 phocacart import('phocacart.cart.rendercart');
 phocacart import('phocacart.currency.currency');
 */
- 
+
 class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 {
 	protected $t;
@@ -22,21 +22,39 @@ class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 	protected $itemhistory;
 	protected $id;
 	function display($tpl = null) {
-		
+
 		$app					= JFactory::getApplication();
 		$this->id				= $app->input->get('id', 0, 'int');
-		
+
+
+
+
 		if ($this->id < 1) {
-			echo JText::_('COM_PHOCACART_NO_PRODUCT_FOUND');
+			echo '<div class="alert alert-error">';
+		    echo JText::_('COM_PHOCACART_NO_PRODUCT_FOUND'). '<br/>';
+			echo JText::_('COM_PHOCACART_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST');
+		    echo '</div>';
 			return;
 		}
-		
+
+		$this->t		= PhocacartUtils::setVars('pricehistory');
+		$this->state	= $this->get('State');
+		$this->state->set('phocacarteditproductpricehistory.id', (int)$this->id);
+		$this->form		= $this->get('Form');
+		$this->item		= $this->get('Item');
+
+
+
+
 		$this->t						= PhocacartUtils::setVars('product');
 		$this->t['history']				= PhocacartPriceHistory::getPriceHistoryById((int)$this->id, 0, 1);
-		
+
+
+
+
 
 		$media = new PhocacartRenderAdminmedia();
-	
+
 		parent::display($tpl);
 	}
 }

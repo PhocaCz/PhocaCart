@@ -115,6 +115,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
+		$this->t['category_display_labels']		= $this->p->get( 'category_display_labels', 2 );
 
 
 

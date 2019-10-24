@@ -243,7 +243,8 @@
 }
 
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
-    background-color: #fff  !important;
+
+ /*   background-color: #fff  !important; not because of color picker background color */
     border: 2px solid #dfe8f1 !important;
     box-shadow: none  !important;
     transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s !important;

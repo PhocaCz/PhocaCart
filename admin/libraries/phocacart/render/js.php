@@ -52,6 +52,7 @@ final class PhocacartRenderJs
 		}
 
 		if ($add_cart_method > 0) {
+
 			$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&task='.$task.'&format=json&'. JSession::getFormToken().'=1&checkoutview='.(int)$cView;
 
 

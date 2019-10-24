@@ -92,6 +92,24 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$item->volume			= PhocacartPrice::cleanPrice($item->volume);
 			$item->unit_amount 		= PhocacartPrice::cleanPrice($item->unit_amount);
 
+
+			$item->set('additional_download_files', PhocacartFileAdditional::getProductFilesByProductId((int)$item->id, 2));
+			$item->set('additional_images', PhocacartImageAdditional::getImagesByProductId((int)$item->id, 2));
+
+			$attributes = PhocacartAttribute::getAttributesById((int)$item->id, 2);
+			if (!empty($attributes)) {
+				foreach ($attributes as $k => $v) {
+					$attributes[$k]['options']	= PhocacartAttribute::getOptionsById((int)$v['id'], 2);
+				}
+			}
+			$item->set('attributes', $attributes);
+
+			$item->set('specifications', PhocacartSpecification::getSpecificationsById((int)$item->id, 2));
+
+			$item->set('discounts', PhocacartDiscountProduct::getDiscountsById((int)$item->id, 2));
+
+
+
 			// ASSOCIATION
 			// Load associated Phoca Cart items
 			$assoc = JLanguageAssociations::isEnabled();
@@ -116,20 +134,15 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$date = JFactory::getDate();
 		$user = JFactory::getUser();
 
-		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
-
-
-
-		$table->price 			= PhocacartUtils::replaceCommaWithPoint($table->price);
-		$table->price_original 	= PhocacartUtils::replaceCommaWithPoint($table->price_original);
-		$table->length 			= PhocacartUtils::replaceCommaWithPoint($table->length);
-		$table->width 			= PhocacartUtils::replaceCommaWithPoint($table->width);
-		$table->height 			= PhocacartUtils::replaceCommaWithPoint($table->height);
-		$table->weight 			= PhocacartUtils::replaceCommaWithPoint($table->weight);
-		$table->volume 			= PhocacartUtils::replaceCommaWithPoint($table->volume);
-
-
+		$table->title					= htmlspecialchars_decode($table->title, ENT_QUOTES);
+		$table->alias					= JApplicationHelper::stringURLSafe($table->alias);
+		$table->price 					= PhocacartUtils::replaceCommaWithPoint($table->price);
+		$table->price_original 			= PhocacartUtils::replaceCommaWithPoint($table->price_original);
+		$table->length 					= PhocacartUtils::replaceCommaWithPoint($table->length);
+		$table->width 					= PhocacartUtils::replaceCommaWithPoint($table->width);
+		$table->height 					= PhocacartUtils::replaceCommaWithPoint($table->height);
+		$table->weight 					= PhocacartUtils::replaceCommaWithPoint($table->weight);
+		$table->volume 					= PhocacartUtils::replaceCommaWithPoint($table->volume);
 		$table->tax_id 					= PhocacartUtils::getIntFromString($table->tax_id);
 		$table->manufacturer_id			= PhocacartUtils::getIntFromString($table->manufacturer_id);
 		$table->stock					= PhocacartUtils::getIntFromString($table->stock);
@@ -143,6 +156,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
 
+		/*
 		if (empty($table->id)) {
 			// Set the values
 			//$table->created	= $date->toSql();
@@ -155,16 +169,21 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_productcategories WHERE category_id = '.(int)$table->category_id);
 				$max = $db->loadResult();
 				$table->ordering = $max+1;
-			}*/
+			}
 		} else {
 			// Set the values
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
+		*/
 	}
 
 
 	function save($data) {
+
+		$app		= JFactory::getApplication();
+
+
 
 		/*if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
@@ -322,21 +341,30 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			}
 
 
-			$pFormImg = $app->input->post->get('pformimg', array(), 'array');
-			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
-			$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
-			PhocacartAttribute::storeAttributesById((int)$table->id, $pFormAttr);
-			$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
-			PhocacartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
-			$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
-			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
+			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->id, $data['additional_download_files']);
+			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['additional_images']);
+
+			PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
+
+
+			PhocacartSpecification::storeSpecificationsById((int)$table->id, $data['specifications']);
+
+
+			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $data['discounts']);
+
+
+
+			//$pFormImg = $app->input->post->get('pformimg', array(), 'array');
+			//PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
+			//$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
+			//PhocacartAttribute::storeAttributesById((int)$table->id, $pFormAttr);
+			//$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
+			//PhocacartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
+			//$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
+			//PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
 
 			PhocacartGroup::storeGroupsById((int)$table->id, 3, $data['group']);
-
-
 			PhocacartPriceHistory::storePriceHistoryById((int)$table->id, $data['price']);
-
-
 			PhocacartGroup::updateGroupProductPriceById((int)$table->id, $data['price']);
 			PhocacartGroup::updateGroupProductRewardPointsById((int)$table->id, $data['points_received']);
 
@@ -565,6 +593,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 
+			// 12. DELETE PRODUCT ADDITIONAL FILES
+			$query = 'DELETE FROM #__phocacart_product_files'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+
 			// Remove download folders
 			PhocacartFile::deleteDownloadFolders($foldersP, 'productfile');
 			PhocacartFile::deleteDownloadFolders($foldersA, 'attributefile');
@@ -624,6 +658,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			// Pop the first ID off the stack
 			$pk = array_shift($pks);
 
+
 			$table->reset();
 
 			// Check that the row actually exists
@@ -639,6 +674,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 					continue;
 				}
 			}
+
+
 
 			// Alter the title & alias
 			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
@@ -658,6 +695,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$table->hits = 0;
 
 
+			$params['olddownloadfolder']		= $table->download_folder;
+			$params['newdownloadfolder']		= $params['olddownloadfolder'];
 
 			// COPY OR BATCH functions - we cannot do the same tokens so create new token and token folder and if set copy the files
 			// EACH DOWNLOAD FILE MUST HAVE UNIQUE DOWNLOAD TOKEN AND DOWNLOAD FOLDER
@@ -667,35 +706,70 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			}
 			if ($copy > 0) {
 				// First create new token and token folder
-				$oldDownloadFolder		= $table->download_folder;
-				$table->download_token 	= PhocacartUtils::getToken();
-				$table->download_folder	= PhocacartUtils::getToken('folder');
+				$table->download_token 			= PhocacartUtils::getToken();
+				$table->download_folder			= PhocacartUtils::getToken('folder');
+				$params['newdownloadfolder']	= $table->download_folder;
 
 				$pathFile = PhocacartPath::getPath('productfile');
 
-				if($copy == 2 && $table->download_file != '' && \Joomla\CMS\Filesystem\File::exists($pathFile['orig_abs_ds'] . $table->download_file)) {
+				if($copy == 2) {
 
-					$newDownloadFile = str_replace($oldDownloadFolder, $table->download_folder, $table->download_file);
-					if (!\Joomla\CMS\Filesystem\Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
-						// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+					// Download File
+					if ($table->download_file != '' && \Joomla\CMS\Filesystem\File::exists($pathFile['orig_abs_ds'] . $table->download_file)) {
 
-						$msg = JText::_('COM_PHOCACART_DOWNLOAD_FOLDER'). ': '. $table->download_folder . "<br />";
-						$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
-						$app->enqueueMessage($msg, 'error');
+						$newDownloadFile = str_replace($params['olddownloadfolder'], $table->download_folder, $table->download_file);
+						if (!\Joomla\CMS\Filesystem\Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
+							// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+
+							$msg = JText::_('COM_PHOCACART_DOWNLOAD_FOLDER') . ': ' . $table->download_folder . "<br />";
+							$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
+							$app->enqueueMessage($msg, 'error');
+						}
+
+						if (!\Joomla\CMS\Filesystem\File::copy($pathFile['orig_abs_ds'] . $table->download_file, $pathFile['orig_abs_ds'] . $newDownloadFile)) {
+							$msg = JText::_('COM_PHOCACART_DOWNLOAD_FILE') . ': ' . $table->download_file . "<br />";
+							$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
+							$app->enqueueMessage($msg, 'error');
+						}
+						$table->download_file = $newDownloadFile;
 					}
 
-					if (!\Joomla\CMS\Filesystem\File::copy($pathFile['orig_abs_ds'] . $table->download_file, $pathFile['orig_abs_ds'] . $newDownloadFile)) {
-						$msg = JText::_('COM_PHOCACART_DOWNLOAD_FILE'). ': '. $table->download_file . "<br />";
-						$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
-						$app->enqueueMessage($msg, 'error');
+					// Additional Download Files
+					$downloadFiles = PhocacartFileAdditional::getProductFilesByProductId($pk);
+
+					if(!empty($downloadFiles)) {
+						foreach($downloadFiles as $k => $v) {
+
+							if (isset($v['download_file']) && $v['download_file'] != '') {
+								$newDownloadFile = str_replace($params['olddownloadfolder'], $table->download_folder, $v['download_file']);
+
+								// In case download_file is emtpy we schould create the folder
+								if (!\Joomla\CMS\Filesystem\Folder::exists($pathFile['orig_abs_ds'] . $table->download_folder)) {
+									if (!\Joomla\CMS\Filesystem\Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
+										// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+
+										$msg = JText::_('COM_PHOCACART_DOWNLOAD_FOLDER') . ': ' . $table->download_folder . "<br />";
+										$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
+										$app->enqueueMessage($msg, 'error');
+									}
+								}
+								if (!\Joomla\CMS\Filesystem\File::copy($pathFile['orig_abs_ds'] . $v['download_file'], $pathFile['orig_abs_ds'] . $newDownloadFile)) {
+									$msg = JText::_('COM_PHOCACART_DOWNLOAD_FILE') . ': ' . $table->download_file . "<br />";
+									$msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
+									$app->enqueueMessage($msg, 'error');
+								}
+							}
+						}
 					}
-					$table->download_file = $newDownloadFile;
+					// Files copied on server, we will copy the database info below in PhocacartUtilsBatchhelper::storeProductItems
+
 				} else {
 					$table->download_file = '';
 				}
 
-
 			}
+
+
 
 
 			// Check the row.
@@ -712,12 +786,13 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 			$newId = $table->get('id');
 
+
+
 			// Add the new ID to the array
 			$newIds[$pk]	= $newId;
 
 			// Store other new information
-
-			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId, $batchParams);
+			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId, $batchParams, $params);
 			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
 
 
@@ -762,6 +837,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		// Clean the cache
 		$this->cleanCache();
+
 
 		return $newIds;
 	}

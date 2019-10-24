@@ -67,6 +67,8 @@ class PhocacartOrdering
 					case 4:$orderingOutput	= 'at.title DESC, v.title DESC';break;
 					case 5:$orderingOutput	= 'v.id ASC';break;
 					case 6:$orderingOutput	= 'v.id DESC';break;
+					case 7:$orderingOutput	= 'at.ordering, v.ordering ASC';break;
+					case 8:$orderingOutput	= 'at.ordering, v.ordering DESC';break;
 					case 1:default:$orderingOutput = 'at.id ASC';break;
 				}
 			break;

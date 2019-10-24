@@ -10,8 +10,13 @@ defined('_JEXEC') or die();
 echo '<div id="'.$this->t['c'].'-upload" class="ph-in">';
 echo '<div id="upload-noflash" class="actions">';
 echo '<form action="'. $this->t['su_url'] .'" id="uploadFormU" method="post" enctype="multipart/form-data">';
-if ($this->t['ftp']) { echo PhocacartFileUpload::renderFTPaccess();}  
-echo '<div class="ph-head-form">'. JText::_( $this->t['l'].'_UPLOAD_FILE' ).' [ '. JText::_( $this->t['l'].'_MAX_SIZE' ).':&nbsp;'.$this->t['uploadmaxsizeread'].'] </div>';
+if ($this->t['ftp']) { echo PhocacartFileUpload::renderFTPaccess();}
+echo '<div class="ph-head-form-small">' . JText::_( $this->t['l'].'_UPLOAD_FILE' );
+
+if ($this->tmpl['uploadmaxsizeread'] && $this->tmpl['uploadmaxsizeread'] != '0 B' ) {
+	echo  ' [ ' . JText::_( $this->t['l'].'_MAX_SIZE' ).':&nbsp;'.$this->tmpl['uploadmaxsizeread'].']';
+}
+echo '</div>';
 echo $this->t['su_output'];
 echo '</form>';
 echo '</div>';

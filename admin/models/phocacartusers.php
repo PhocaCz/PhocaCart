@@ -111,7 +111,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 
 
-		$query->select('GROUP_CONCAT(DISTINCT g.title ORDER BY g.title) AS groups');
+		$query->select('GROUP_CONCAT(DISTINCT g.title ORDER BY g.title) AS usergroups');
 		$query->join('LEFT', '#__phocacart_item_groups AS ug ON ug.item_id=u.id AND ug.type = 1');
 		$query->join('LEFT', '#__phocacart_groups AS g ON g.id=ug.group_id');
 
