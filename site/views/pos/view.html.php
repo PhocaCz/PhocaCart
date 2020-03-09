@@ -144,7 +144,7 @@ class PhocaCartViewPos extends JViewLegacy
 
 		PhocacartRenderJs::renderAjaxAddToCart();
 		PhocacartRenderJs::renderAjaxUpdateCart();
-		PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
+		// Moved to JS PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
 
 		PhocacartRenderJspos::managePos($this->t['action']);
 		PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));

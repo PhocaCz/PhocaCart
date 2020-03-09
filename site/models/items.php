@@ -11,6 +11,7 @@ jimport('joomla.application.component.model');
 
 class PhocaCartModelItems extends JModelLegacy
 {
+
 	protected $item 				= null;
 	protected $item_ordering		= null;
 	protected $layout_type			= null;
@@ -31,6 +32,10 @@ class PhocaCartModelItems extends JModelLegacy
 		$item_ordering		= $paramsC->get( 'item_ordering', 1 );
 		$layout_type		= $paramsC->get( 'layout_type', 'grid' );
 
+
+		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
+		$manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
+
 		$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 
 		$this->setState('limit', $limit);
@@ -42,17 +47,19 @@ class PhocaCartModelItems extends JModelLegacy
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
 		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
 
-
 		// =FILTER=
 		$this->setState('tag', $app->input->get('tag', '', 'string'));
 		$this->setState('label', $app->input->get('label', '', 'string'));
-		$this->setState('manufacturer', $app->input->get('manufacturer', '', 'string'));
-		$this->setState('price_from', $app->input->get('price_from', '', 'string'));
-		$this->setState('price_to', $app->input->get('price_to', '', 'string'));
+		$manufacturerParameter = '';
+		$this->setState('manufacturer', $app->input->get($manufacturer_alias, '', 'string'));
+		$this->setState('price_from', $app->input->get('price_from', '', 'float'));
+		$this->setState('price_to', $app->input->get('price_to', '', 'float'));
 		$this->setState('c', $app->input->get('c', '', 'string')); // Category More (All Categories)
 		$this->setState('id', $app->input->get('id', '', 'int')); // Category ID (Active Category)
 		$this->setState('a', $app->input->get('a', '', 'array')); // Attributes
 		$this->setState('s', $app->input->get('s', '', 'array')); // Specifications
+		$parameters = PhocacartParameter::getAllParameters();
+		$this->setState('parameter', $parameters);
 
 		// =SEARCH=
 		$this->setState('search', $app->input->get('search', '', 'string'));
@@ -84,11 +91,9 @@ class PhocaCartModelItems extends JModelLegacy
 		if (empty($this->total)) {
 			$query = $this->getItemListQuery(1);
 			$this->total = $this->_getListCount($query);
-
 		}
 		return $this->total;
 	}
-
 
 	public function getItemList() {
 		if (empty($this->item)) {
@@ -125,9 +130,12 @@ class PhocaCartModelItems extends JModelLegacy
 		$lefts		= array();
 
 
-		$skip			= array();
-		$skip['access']	= false;
-		$skip['group']	= false;
+		$skip			        = array();
+		$skip['access']	        = $params->get('sql_products_skip_access', 0);
+		$skip['group']	        = $params->get('sql_products_skip_group', 0);
+		$skip['attributes']	    = $params->get('sql_products_skip_attributes', 0);
+		$skip['category_type']  = $params->get('sql_products_skip_category_type', 0);
+		$skip['tax']   			= $params->get('sql_products_skip_tax', 0);
 
 		$p = array();
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
@@ -135,11 +143,13 @@ class PhocaCartModelItems extends JModelLegacy
 		$p['join_tag_label_filter']			= $params->get( 'join_tag_label_filter', 0 );
 		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
 
+		$wheres		= array();
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
 
-		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
-
+		if (!$skip['category_type']) {
+            $wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+        }
 
 		if ($this->getState('filter.language')) {
 			$lang 		= JFactory::getLanguage()->getTag();
@@ -159,7 +169,6 @@ class PhocaCartModelItems extends JModelLegacy
 			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		}
 
-
 		if ($p['hide_products_out_of_stock'] == 1) {
 			$wheres[] = " a.stock > 0";
 		}
@@ -168,7 +177,7 @@ class PhocaCartModelItems extends JModelLegacy
 		// -TAG- -LABEL-
 		if ($p['join_tag_label_filter'] == 1) {
 
-			// -LABEL-
+			// -TAG-
 			$wheresTL = array();
 			if ($this->getState('tag')) {
 				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
@@ -194,11 +203,12 @@ class PhocaCartModelItems extends JModelLegacy
 			}
 		} else {
 
-			// -LABEL-
+			// -TAG-
 			if ($this->getState('tag')) {
 				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
 				$wheres[]	= $s['where'];
 				$lefts[]	= $s['left'];
+
 			}
 			// -LABEL-
 			if ($this->getState('label')) {
@@ -208,6 +218,51 @@ class PhocaCartModelItems extends JModelLegacy
 			}
 
 		}
+
+		// -PARAMETER
+		// Custom parameters set by user in administrator
+		// All custom parameters are stored in one table so they are unique
+		// So we can use one left for all parameters
+
+		/*if ($this->getState('parameter')) {
+			$parameterValues = array();
+			foreach ($this->getState('parameter') as $k => $v) {
+				$alias = PhocacartText::filterValue($v->alias, 'url');
+				$parameter = $app->input->get($alias, '', 'string');
+
+				if($parameter != '') {
+					$parameterValues[] = $parameter;
+				}
+			}
+			if (!empty($parameterValues)) {
+				$parameterValuesString = implode(',', $parameterValues);//Join all custom parameters together because of SQL query - all should be in one IN(): AND pr.parameter_id IN (1,2,3)
+				if ($parameterValuesString != '') {
+					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameterValuesString);
+					$wheres[] = $s['where'];
+					$lefts[] = $s['left'];
+
+				}
+			}
+		}*/
+
+		if ($this->getState('parameter')) {
+			//$leftOnce = 0;
+			foreach ($this->getState('parameter') as $k => $v) {
+				$alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
+				$parameter = $app->input->get($alias, '', 'string');
+
+				if($parameter != '') {
+					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, array(), $v->id);
+					$wheres[] = $s['where'];// There must be AND between custom parameters
+					//if ($leftOnce < 1) {
+						$lefts[] = $s['left'];
+						//$leftOnce = 1;
+					//}
+				}
+			}
+
+		}
+
 
 		// -MANUFACTURER-
 		if ($this->getState('manufacturer')) {
@@ -286,8 +341,12 @@ class PhocaCartModelItems extends JModelLegacy
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
-			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
+			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
 
+
+			if (!$skip['attributes']) {
+			    $lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
+            }
 
 			if (!$skip['group']) {
 				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
@@ -306,10 +365,17 @@ class PhocaCartModelItems extends JModelLegacy
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
-			$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
-			//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
-			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
+			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
+
+			if (!$skip['tax']) {
+				$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
+			}
+
+			if (!$skip['attributes']) {
+			    //$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
+			    $lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
+            }
 
 			if (!$skip['group']) {
 				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
@@ -321,27 +387,47 @@ class PhocaCartModelItems extends JModelLegacy
 			}
 
 
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.type,'
+			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.type, a.points_received, a.price_original,'
+						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
+						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
 						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price,';
 
-			if (!$skip['group']) {
-				$columns	.= ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received,';
+			if (!$skip['tax']) {
+				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
 			} else {
-				$columns	.= ' NULL as group_price, NULL as group_points_received,';
+				$columns	.= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
 			}
 
-			$columns	.= ' a.points_received, a.price_original,'
-						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,'
-						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
-						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
-						.' AVG(r.rating) AS rating, at.required AS attribute_required';
+			if (!$skip['attributes']) {
+                $columns	.= 'at.required AS attribute_required, ';
+            }
+
+			if (!$skip['group']) {
+                $columns	.= ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received,';
+            } else {
+                $columns	.= ' NULL as group_price, NULL as group_points_received,';
+            }
 
 
+			$columns	.= ' m.id as manufacturerid, m.title as manufacturertitle, m.alias as manufactureralias,'
+						. $selImages
+						.' AVG(r.rating) AS rating';
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
+
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text';
+
+			if (!$skip['tax']) {
+                $groupsFull	.= ', t.id, t.tax_rate, t.calculation_type, t.title';
+            }
+			if (!$skip['attributes']) {
+                $groupsFull	.= ', at.required';
+            }
+
 			$groupsFast	= 'a.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+
+
 
 			$q = ' SELECT '.$columns
 			. ' FROM #__phocacart_products AS a'

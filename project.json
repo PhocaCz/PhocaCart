@@ -173,90 +173,108 @@
 				"title": "COM_PHOCACART_TAGS"
 			},
 			"24": {
+				"image": "icon-16-pc-menu-tag.png",
+				"view": "phocacartparameters",
+				"link": "option=com_phocacart&amp;view=phocacartparameters",
+				"title": "COM_PHOCACART_PARAMETERS"
+			},
+			"25": {
+				"image": "icon-16-pc-menu-tag.png",
+				"view": "phocacartparametervalues",
+				"link": "option=com_phocacart&amp;view=phocacartparametervalues",
+				"title": "COM_PHOCACART_PARAMETER_VALUES"
+			},
+			"26": {
 				"image": "icon-16-pc-menu-feed.png",
 				"view": "phocacartfeeds",
 				"link": "option=com_phocacart&amp;view=phocacartfeeds",
 				"title": "COM_PHOCACART_XML_FEEDS"
 			},
-			"25": {
+			"27": {
 				"image": "icon-16-pc-menu-wishlist.png",
 				"view": "phocacartwishlists",
 				"link": "option=com_phocacart&amp;view=phocacartwishlists",
 				"title": "COM_PHOCACART_WISH_LISTS"
 			},
-			"26": {
+			"28": {
 				"image": "icon-16-pc-menu-question.png",
 				"view": "phocacartquestions",
 				"link": "option=com_phocacart&amp;view=phocacartquestions",
 				"title": "COM_PHOCACART_QUESTIONS"
 			},
-			"27": {
+			"29": {
 				"image": "icon-16-pc-menu-time.png",
 				"view": "phocacarttimes",
 				"link": "option=com_phocacart&amp;view=phocacarttimes",
 				"title": "COM_PHOCACART_OPENING_TIMES"
 			},
-			"28": {
+			"30": {
+				"image": "icon-16-pc-menu-duplicate.png",
+				"view": "phocacartsubmititems",
+				"link": "option=com_phocacart&amp;view=phocacartsubmititems",
+				"title": "COM_PHOCACART_SUBMITTED_ITEMS"
+			},
+			"31": {
 				"image": "icon-16-pc-menu-statistics.png",
 				"view": "phocacartstatistics",
 				"link": "option=com_phocacart&amp;view=phocacartstatistics",
 				"title": "COM_PHOCACART_STATISTICS"
 			},
-			"29": {
+			"32": {
 				"image": "icon-16-pc-menu-report.png",
 				"view": "phocacartreports",
 				"link": "option=com_phocacart&amp;view=phocacartreports",
 				"title": "COM_PHOCACART_REPORTS"
 			},
-			"30": {
+			"33": {
 				"image": "icon-16-pc-menu-hits.png",
 				"view": "phocacarthits",
 				"link": "option=com_phocacart&amp;view=phocacarthits",
 				"title": "COM_PHOCACART_HITS"
 			},
-			"31": {
+			"34": {
 				"image": "icon-16-pc-menu-import.png",
 				"view": "phocacartimports",
 				"link": "option=com_phocacart&amp;view=phocacartimports",
 				"title": "COM_PHOCACART_IMPORT"
 			},
-			"32": {
+			"35": {
 				"image": "icon-16-pc-menu-export.png",
 				"view": "phocacartexports",
 				"link": "option=com_phocacart&amp;view=phocacartexports",
 				"title": "COM_PHOCACART_EXPORT"
 			},
-			"33": {
+			"36": {
 				"image": "icon-16-pc-menu-log.png",
 				"view": "phocacartlogs",
 				"link": "option=com_phocacart&amp;view=phocacartlogs",
 				"title": "COM_PHOCACART_SYSTEM_LOG"
 			},
-			"34": {
+			"37": {
 				"image": "icon-16-pc-menu-info.png",
 				"view": "phocacartinfo",
 				"link": "option=com_phocacart&amp;view=phocacartinfo",
 				"title": "COM_PHOCACART_INFO"
 			},
-			"35": {
+			"38": {
 				"image": "icon-16-pc-menu-extension.png",
 				"view": "phocacartextensions",
 				"link": "option=com_phocacart&amp;view=phocacartextensions",
 				"title": "COM_PHOCACART_EXTENSIONS"
 			},
-			"36": {
+			"39": {
 				"image": "icon-16-pc-menu-vendor.png",
 				"view": "phocacartvendors",
 				"link": "option=com_phocacart&amp;view=phocacartvendors",
 				"title": "COM_PHOCACART_VENDORS"
 			},
-			"37": {
+			"40": {
 				"image": "icon-16-pc-menu-section.png",
 				"view": "phocacartsections",
 				"link": "option=com_phocacart&amp;view=phocacartsections",
 				"title": "COM_PHOCACART_SECTIONS"
 			},
-			"38": {
+			"41": {
 				"image": "icon-16-pc-menu-unit.png",
 				"view": "phocacartextunits",
 				"link": "option=com_phocacart&amp;view=phocacartextunits",

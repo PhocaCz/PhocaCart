@@ -61,7 +61,7 @@ $formArray = array( 'email_text_others');
 echo $r->group($this->form, $formArray, 1);
 
 
-$formArray = array ('email_send');
+$formArray = array ('email_send', 'orders_view_display');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('ordering');

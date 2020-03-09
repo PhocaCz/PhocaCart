@@ -29,10 +29,11 @@ class JFormFieldPhocacartCategory extends JFormField
 		$javascript		= '';
 		$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
 		$typeMethod		= $this->element['typemethod'];
 		$categoryType	= $this->element['categorytype'];// 0 all, 1 ... online shop, 2 ... pos
 		$attr		= '';
-		$attr		.= 'class="inputbox" ';
+		$attr		.= $class . ' ';
 		if ($multiple) {
 			$attr		.= 'size="4" multiple="multiple" ';
 		}

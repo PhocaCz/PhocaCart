@@ -130,6 +130,9 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){submitbutton(\'phocacartcategory.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
 		$bar->appendButton('Custom', $dhtml);
 
+		$dhtml = '<button onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacartcategory.countproducts\');}" class="btn btn-small button-plus"><i class="icon-plus" title="'.JText::_($this->t['l'].'_COUNT_PRODUCTS').'"></i> '.JText::_($this->t['l'].'_COUNT_PRODUCTS').'</button>';
+		$bar->appendButton('Custom', $dhtml, 'countproducts');
+
 
 
 		JToolbarHelper::divider();
@@ -203,6 +206,8 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 					$tree[$iCT]->language			= $key->language;
 					$tree[$iCT]->language_title		= $key->language_title;
 					$tree[$iCT]->language_image		= $key->language_image;
+					$tree[$iCT]->count_date			= $key->count_date;
+					$tree[$iCT]->count_products		= $key->count_products;
 				//	$tree[$iCT]->deleteuserid		= $key->deleteuserid;
 				//	$tree[$iCT]->userfolder			= $key->userfolder;
 				//	$tree[$iCT]->approved			= $key->approved;
@@ -225,6 +230,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 			'a.title' 		=> JText::_($this->t['l'] . '_TITLE'),
 			'a.published' 	=> JText::_($this->t['l'] . '_PUBLISHED'),
 			'parent_title' 	=> JText::_($this->t['l'] . '_PARENT_CATEGORY'),
+			'a.count_products' 	=> JText::_($this->t['l'] . '_PRODUCT_COUNT'),
 			'language' 		=> JText::_('JGRID_HEADING_LANGUAGE'),
 			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
 			'a.id' 			=> JText::_('JGRID_HEADING_ID')

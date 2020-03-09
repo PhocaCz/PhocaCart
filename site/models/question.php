@@ -97,7 +97,8 @@ class PhocaCartModelQuestion extends JModelForm
 
 		$data['params']			= '';
 		$data['category_id']	= PhocacartUtils::getIntFromString($data['category_id']);
-		$data['product_id']	= PhocacartUtils::getIntFromString($data['product_id']);
+		$data['product_id']		= PhocacartUtils::getIntFromString($data['product_id']);
+		$data['ordering']		= $this->increaseOrdering();
 		$row = $this->getTable('PhocaCartQuestion');
 
 
@@ -147,6 +148,13 @@ class PhocaCartModelQuestion extends JModelForm
 		$data['id'] = $row->id;
 
 		return true;
+	}
+
+	public function increaseOrdering() {
+		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_questions');
+		$max = $this->_db->loadResult();
+		$ordering = $max + 1;
+		return $ordering;
 	}
 }
 ?>

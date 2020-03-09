@@ -44,7 +44,7 @@ class PhocaCartViewCategories extends JViewLegacy
 
 
 
-		$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'row-flex' : '';
+		$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'ph-row-flex' : '';
         $this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
         $this->t['class_lazyload']       		= $this->t['lazy_load_categories']  == 1 ? 'ph-lazyload' : '';
 

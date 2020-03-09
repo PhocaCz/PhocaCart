@@ -20,6 +20,7 @@ final class PhocacartRenderJs
 		$app					= JFactory::getApplication();
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$add_cart_method		= $paramsC->get( 'add_cart_method', 0 );
+		$theme 					= $paramsC->get( 'theme', 'bs3' );
 
 
 		// We need to refresh checkout site when AJAX used for removing or adding products to cart
@@ -47,7 +48,8 @@ final class PhocacartRenderJs
 			return false;
 		}
 
-		if ($add_cart_method == 2) {
+
+		if ($add_cart_method == 2 && $theme == 'bs3') {
 			JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
 		}
 
@@ -288,6 +290,7 @@ final class PhocacartRenderJs
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		$theme 				= $paramsC->get( 'theme', 'bs3' );
 
 		// We need to refresh comparison site when AJAX used for removing or adding products to comparison list
 		$app 		= JFactory::getApplication();
@@ -302,7 +305,7 @@ final class PhocacartRenderJs
 		if ($add_compare_method == 0) {
 			return false;
 		}
-		if ($add_compare_method == 2) {
+		if ($add_compare_method == 2 && $theme == 'bs3') {
 			JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
 		}
 
@@ -358,9 +361,10 @@ final class PhocacartRenderJs
 
 	public static function renderAjaxRemoveFromCompare() {
 
-		$app			= JFactory::getApplication();
-		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$app				= JFactory::getApplication();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		$theme 				= $paramsC->get( 'theme', 'bs3' );
 
 		// We need to refresh comparison site when AJAX used for removing or adding products to comparison list
 		$app 		= JFactory::getApplication();
@@ -376,7 +380,7 @@ final class PhocacartRenderJs
 		if ($add_compare_method == 0) {
 			return false;
 		}
-		if ($add_compare_method == 2) {
+		if ($add_compare_method == 2 && $theme == 'bs3') {
 			JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
 		}
 
@@ -434,9 +438,10 @@ final class PhocacartRenderJs
 
 	public static function renderAjaxAddToWishList() {
 
-		$app			= JFactory::getApplication();
-		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$app					= JFactory::getApplication();
+		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
+		$theme 					= $paramsC->get( 'theme', 'bs3' );
 
 		// We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
 		$app 		= JFactory::getApplication();
@@ -451,7 +456,7 @@ final class PhocacartRenderJs
 		if ($add_wishlist_method == 0) {
 			return false;
 		}
-		if ($add_wishlist_method == 2) {
+		if ($add_wishlist_method == 2 && $theme == 'bs3') {
 			JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
 		}
 
@@ -507,9 +512,10 @@ final class PhocacartRenderJs
 
 	public static function renderAjaxRemoveFromWishList() {
 
-		$app			= JFactory::getApplication();
-		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$app					= JFactory::getApplication();
+		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
+		$theme 					= $paramsC->get( 'theme', 'bs3' );
 
 		// We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
 		$app 		= JFactory::getApplication();
@@ -525,7 +531,7 @@ final class PhocacartRenderJs
 		if ($add_wishlist_method == 0) {
 			return false;
 		}
-		if ($add_wishlist_method == 2) {
+		if ($add_wishlist_method == 2 && $theme == 'bs3') {
 			JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
 		}
 
@@ -587,6 +593,7 @@ final class PhocacartRenderJs
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$dynamic_change_price 	= $paramsC->get( 'dynamic_change_price', 1 );
 		$load_chosen 			= $paramsC->get( 'load_chosen', 1 );
+		$theme 					= $paramsC->get( 'theme', 'bs3' );
 		$media 					= new PhocacartRenderMedia();
 		self::renderPhocaAttribute();// needed because of phChangeAttributeType()
 
@@ -601,9 +608,9 @@ final class PhocacartRenderJs
 			$cView = 0;
 		}*/
 
-
-		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
-
+		if ($theme == 'bs3') {
+			JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+		}
 
 
 		$urlAjax = JURI::base(true).'/index.php?option=com_phocacart&view=item&format=json&tmpl=component&'. JSession::getFormToken().'=1';
@@ -905,6 +912,7 @@ final class PhocacartRenderJs
 	 * This function is used to reload POS main box by ajax
 	 */
 
+	/*
 	public static function renderSubmitPaginationTopForm($urlAjax, $outputDiv) {
 
 		$app						= JFactory::getApplication();
@@ -923,9 +931,11 @@ final class PhocacartRenderJs
 
 		// ::ACTION Ajax for top pagination: pagination/ordering/layouttype
 		$s[] = ' ';
-		$s[] = '/* Function phDoSubmitFormPaginationTop */ ';
-		$s[] = 'function phDoSubmitFormPaginationTop(sFormData, phUrlJs) {';
+		$s[] = '/* Function phRenderPage  ';
+		$s[] = 'function phRenderPage(sFormData, phUrlJs) {';
 		//$s[] = '    	e.preventDefault();';
+		/*$s[] = 'console.log(sFormData);
+		$s[] = 'console.log(phUrlJs);'
 
 		$s[] = $overlay1['start'];
 
@@ -985,7 +995,7 @@ final class PhocacartRenderJs
 		$s[] = '	    jQuery(".phItemSwitchLayoutType").removeClass("active");';
 		$s[] = '	    jQuery(".phItemSwitchLayoutType." + phDataL).addClass("active");';
 		$s[] = '        var phUrl = window.location.href;';
-		$s[] = '		phDoSubmitFormPaginationTop(sFormData, phUrl);';
+		$s[] = '		phRenderPage(sFormData, phUrl);';
 		$s[] = '	})';
 		$s[] = '})';
 		$s[] = ' ';
@@ -998,7 +1008,7 @@ final class PhocacartRenderJs
 			$s[] = '		var phUrl = jQuery(this).attr("href");';
 			$s[] = '	    var sForm 	= jQuery(this).closest("form");';// Find in which form the right button was clicked
 			$s[] = '	    var sFormData = sForm.serialize();';
-			$s[] = '		phDoSubmitFormPaginationTop(sFormData, phUrl);';
+			$s[] = '		phRenderPage(sFormData, phUrl);';
 
 			// Don't set format for url bar (e.g. pagination uses ajax with raw - such cannot be set in url bar)
 			// we use ajax and pagination for different views inside one view (customers, products, orders) so we cannot set this parameter in url, because of ajax
@@ -1016,7 +1026,7 @@ final class PhocacartRenderJs
 
 		// ::EVENT (CHANGE) Automatically reload of the pagination/ordering form Clicking on Ordering and Display Num
 		$s[] = ' ';
-		$s[] = '/* Function phEventChangeFormPagination */ ';
+		$s[] = '/* Function phEventChangeFormPagination  ';
 		$s[] = 'function phEventChangeFormPagination(sForm, sItem) {';
 		$s[] = '   var phA = 1;';// Full Overlay Yes
 
@@ -1037,12 +1047,12 @@ final class PhocacartRenderJs
 		if ($ajax_pagination_category == 1 || PhocacartUtils::isView('pos')) {
 			// Everything is AJAX - pagination top even pagination bottom
 			$s[] = '   var phUrl = window.location.href;';
-			$s[] = '   phDoSubmitFormPaginationTop(jQuery(sForm).serialize(), phUrl);';
+			$s[] = '   phRenderPage(jQuery(sForm).serialize(), phUrl);';
 		} else {
 			// Only top pagination is ajax, bottom pagination is not ajax start prev 1 2 3 next end
 			$s[] = '   if (formName == "phitemstopboxform") {';// AJAX - Top pagination always ajax
 			$s[] = '       var phUrl = window.location.href;';
-			$s[] = '       phDoSubmitFormPaginationTop(jQuery(sForm).serialize(), phUrl);';
+			$s[] = '       phRenderPage(jQuery(sForm).serialize(), phUrl);';
 			$s[] = '   } else {';
 			$s[] = '	   sForm.submit();'; // STANDARD
 			$s[] = $overlay2;
@@ -1052,8 +1062,9 @@ final class PhocacartRenderJs
 		$s[] = '}';
 		$s[] = ' ';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-	}
 
+	}
+*/
 
 
 
@@ -1070,7 +1081,7 @@ final class PhocacartRenderJs
 	public static function getPriceFormatJavascript($price_decimals, $price_dec_symbol, $price_thousands_sep, $price_currency_symbol, $price_prefix, $price_suffix, $price_format) {
 
 
-		JFactory::getDocument()->addScript(JURI::root(true).'/media/com_phocacart/js/number_format.js');
+		//JFactory::getDocument()->addScript(JURI::root(true).'/media/com_phocacart/js/number_format.js');
 
 		$s 	= array();
 		$s[] = ' ';
@@ -1107,9 +1118,9 @@ final class PhocacartRenderJs
 		}
 
 		$s[] = '	if ($negative == 1) {';
-		$s[] = '		return "- " + "'.$price_prefix.'" + $price + "'.$price_suffix.'";';
+		$s[] = '		return "- " + "'.addslashes($price_prefix).'" + $price + "'.addslashes($price_suffix).'";';
 		$s[] = '	} else {';
-		$s[] = '		return "'.$price_prefix.'" + $price + "'.$price_suffix.'";';
+		$s[] = '		return "'.addslashes($price_prefix).'" + $price + "'.addslashes($price_suffix).'";';
 		$s[] = '	}';
 		$s[] = '}';
 		$s[] = ' ';
@@ -1117,7 +1128,7 @@ final class PhocacartRenderJs
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
-
+/*
 	public static function renderFilterRange($min, $max, $priceFrom, $priceTo) {
 
 
@@ -1165,7 +1176,7 @@ final class PhocacartRenderJs
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
 	}
-
+*/
 
 
 
@@ -1174,7 +1185,7 @@ final class PhocacartRenderJs
 	// HELPERS
 	// ========
 
-		public static function renderBillingAndShippingSame() {
+	/*	public static function renderBillingAndShippingSame() {
 
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
@@ -1241,7 +1252,7 @@ final class PhocacartRenderJs
 		$s[] = '   }';
 		$s[] = '});';
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-	}
+	}*/
 
 	public static function renderAjaxTopHtml($text = '') {
 		$o = '<div id="ph-ajaxtop">';
@@ -1268,7 +1279,7 @@ final class PhocacartRenderJs
 
 	// loading.gif - whole page
 	// Singleton - check if loaded - No Singleton, it must be inside each javascript function
-	public static function renderLoaderFullOverlay() {
+/*	public static function renderLoaderFullOverlay() {
 		//static $fullOverlay = 0;
 		//if( $fullOverlay == 0) {
 			$s 	= array();
@@ -1296,9 +1307,9 @@ final class PhocacartRenderJs
 		  .ajaxStop(function () {
 			$loading.hide();
 		  });
-		*/
-	}
 
+	}*/
+/*
 	public static function renderLoaderDivOverlay($outputDiv) {
 
 		$overlay['start'] = '';
@@ -1316,7 +1327,7 @@ final class PhocacartRenderJs
 
 		return $overlay;
 	}
-
+*/
 	public static function renderOverlay(){
 
 		$s	 = array();
@@ -1590,12 +1601,16 @@ final class PhocacartRenderJs
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$item_askquestion = $paramsC->get('item_askquestion', 0);
 		$popup_askquestion = $paramsC->get('popup_askquestion', 0);
+		$theme 					= $paramsC->get( 'theme', 'bs3' );
 		//$media 					= new PhocacartRenderMedia();
 
 
 		if ($item_askquestion > 0 && $popup_askquestion == 2) {
 
-			JHtml::stylesheet('media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+			if ($theme == 'bs3') {
+				JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+			}
+
 
 			$s[] = ' jQuery(document).ready(function(){';
 			//$s[] = '   jQuery("a.phModalContainerButton").on("click", function(e) {';

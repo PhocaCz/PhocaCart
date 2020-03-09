@@ -91,6 +91,7 @@ $s['c']['col.xs4.sm2.md2']	        = 'col-xs-4 col-sm-2 col-md-2';
 $s['c']['btn-group']	            = 'btn-group';
 $s['c']['btn']	                    = 'btn';
 $s['c']['btn.btn-primary']	        = 'btn btn-primary';
+$s['c']['btn.btn-secondary']	    = 'btn btn-secondary';
 $s['c']['btn.btn-success']	        = 'btn btn-success';
 $s['c']['btn.btn-default']	        = 'btn btn-default';
 $s['c']['btn.btn-danger']	        = 'btn btn-danger';
@@ -161,6 +162,10 @@ $s['c']['inputbox.form-control']    = 'inputbox form-control';
         switch($theme) {
 
             case 'bs4':
+
+                $s['c']['col.xs12.sm3.md3']		    = 'col-sm-12 col-md-6 col-lg-4 col-xl-3';
+                $s['c']['col.xs12.sm4.md4']		    = 'col-sm-12 col-md-6 col-lg-4 col-xl-4';
+
                 $s['c']['class-type']		        = 'bs4';
                 $s['c']['modal.zoom']               = 'modal';
 
@@ -172,7 +177,7 @@ $s['c']['inputbox.form-control']    = 'inputbox form-control';
                 $s['c']['panel-collapse.collapse.in'] = 'panel-collapse collapse show';
 
                 $s['c']['label.label-success']      = 'badge badge-success';
-                $s['c']['label.label-danger']       = 'badge badge-important label-danger';
+                $s['c']['label.label-danger']       = 'badge badge-danger';
                 $s['c']['label.label-info']         = 'badge badge-info';
 
             break;
@@ -200,6 +205,7 @@ $s['i']['ok']               = $pf.'ok'.$sf;
 $s['i']['not-ok']           = $pf.'remove'.$sf;
 $s['i']['remove']           = $pf.'remove'.$sf;
 $s['i']['clear']            = $pf.'remove'.$sf;
+$s['i']['remove-circle']    = $pf.'remove-sign'.$sf;
 $s['i']['edit']             = $pf.'edit'.$sf;
 $s['i']['plus']             = $pf.'plus'.$sf;
 $s['i']['minus']            = $pf.'minus'.$sf;
@@ -241,6 +247,7 @@ $s['i']['shipping-method']  = $pf.'barcode'.$sf;
 $s['i']['log-out']          = $pf.'arrow-left'.$sf;
 $s['i']['calendar']         = $pf.'calendar'.$sf;
 $s['i']['globe']            = $pf.'globe'.$sf;
+$s['i']['upload']           = $pf.'upload'.$sf;
         switch($icons) {
 
             case 'fa':
@@ -259,6 +266,7 @@ $s['i']['ok']               = $pf.'check'.$sf;
 $s['i']['not-ok']           = $pf.'remove'.$sf;
 $s['i']['remove']           = $pf.'remove'.$sf;
 $s['i']['clear']            = $pf.'remove'.$sf;
+$s['i']['remove-circle']    = $pf.'times-circle'.$sf;
 $s['i']['edit']             = $pf.'edit'.$sf;
 $s['i']['plus']             = $pf.'plus'.$sf;
 $s['i']['minus']            = $pf.'minus'.$sf;
@@ -299,6 +307,7 @@ $s['i']['shipping-method']  = $pf.'barcode'.$sf;
 $s['i']['log-out']          = $pf.'sign-out-alt'.$sf;
 $s['i']['calendar']         = $pf.'calendar'.$sf;
 $s['i']['globe']            = $pf.'globe'.$sf;
+$s['i']['upload']           = $pf.'upload'.$sf;
 
 if ($icons == 'fa5') {
 

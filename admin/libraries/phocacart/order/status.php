@@ -25,7 +25,7 @@ class PhocacartOrderStatus
 		if( !array_key_exists( $id, self::$status ) ) {
 
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.download FROM #__phocacart_order_statuses AS a'
+			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.orders_view_display, a.download FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -46,6 +46,7 @@ class PhocacartOrderStatus
 				self::$status[$id]['email_footer']				= $s->email_footer;
 				self::$status[$id]['email_text_others']			= $s->email_text_others;
 				self::$status[$id]['email_send']				= $s->email_send;
+				self::$status[$id]['orders_view_display']		= $s->orders_view_display;
 				self::$status[$id]['download']					= $s->download;
 				$query = 'SELECT a.title AS text, a.id AS value'
 				. ' FROM #__phocacart_order_statuses AS a'

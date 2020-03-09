@@ -20,7 +20,7 @@ class PhocacartRouter extends JComponentRouterBase
 {
 	public function build(&$query) {
 
-		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos');
+		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos', 'submit');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
 		$viewsAll	= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
@@ -385,7 +385,7 @@ class PhocacartRouter extends JComponentRouterBase
 	public function parse(&$segments) {
 
 
-		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos');
+		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos', 'submit');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
 		$viewsAll		= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);

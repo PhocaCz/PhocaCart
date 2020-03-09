@@ -91,7 +91,11 @@ function phSetUrl(url) {
 }
 */
 
-function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait) {
+function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
+
+
+	var phParams = Joomla.getOptions('phParamsPC');
+
 
 	/*
 	 * If there is empty phFilterNewUrlRemove, this means:
@@ -134,6 +138,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 		paramsTypeArray 		= phCleanArray(paramsTypeArray);
 		var findVal				= paramsTypeArray.indexOf(value);
 
+
 		if ( findVal === -1 ){
 			// Value to remove is not there
 		} else {
@@ -162,16 +167,42 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 
 
 	var url;
-	
-	if (isItemsView == 1) {
+
+	if (filteredProductsOnly == 1) {
 		url = location.search;
 	} else {
-		
+
 		url = urlItemsView;// It is possible to deselect category in category/item view
 		document.location = url;
 		return 1;
 		//return 2; // Not possible to deselect in other than items view
 		//return false;
+	}
+	if ((isItemsView == 1 && filteredProductsOnly != 1) || isItemsView != 1) {
+		url = urlItemsView;// skip all parameters (a) search all products in items view or b) no items view
+	} else {
+		url = location.search;// complete url with selected parameters
+	}
+
+	var url;
+
+/*	if (isItemsView == 1) {
+		url = location.search;
+	} else {
+
+		url = urlItemsView;// It is possible to deselect category in category/item view
+		document.location = url;
+		return 1;
+		//return 2; // Not possible to deselect in other than items view
+		//return false;
+	}*/
+
+	if ((isItemsView == 1 && filteredProductsOnly != 1) || isItemsView != 1) {
+		url = urlItemsView;// skip all parameters (a) search all products in items view or b) no items view
+		document.location = url;
+		return 1;
+	} else {
+		url = location.search;// complete url with selected parameters
 	}
 
 
@@ -183,7 +214,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 
 	/* Array -> String */
 	url		= phArrayToString(url);
-	
+
 
 	phFilterNewUrlRemove 	= jQuery.param.querystring( url, paramsTypeStringNew, mergeMode);// one parameter only
 
@@ -201,15 +232,47 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wa
 	if (wait == 1) {
 		// Don't reload, wait for other parameter
 		phFilterNewUrlRemovePreviousParamWaiting = 1;
+
+		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {// and ajax
+			return 2;// don't run overlay
+		}
+
 	} else {
-		
-		document.location = phFilterNewUrlRemove;
+
+		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
+			phUpdatePageAndParts(phFilterNewUrlRemove, source);// Update Main, Search, Filter
+			phFilterNewUrlRemove = '';
+			phFilterNewUrlRemovePreviousParamWaiting = 0;
+			return 2;
+		} else {
+			document.location = phFilterNewUrlSet;
+		}
 		phFilterNewUrlRemove = '';
+
 	}
+
+	return 1;
 }
 
 
-function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait) {
+/*
+ * param: parameter name
+ * value: parameter value
+ * isItemsView: comes the request from itemsView (Ajax possible) or not
+ * urlItemsView: urlItemsView differently set by different parameters
+ * filteredProductsOnly: when searching - a) all products can be searched or - b) only filtered products can be searched
+						 a) c=1-category&search=search - c=1-category will be removed from url to search all parameters
+						 b) c=1-category&search=search - nothing will be removed from url to search filtered parameters
+ * uniqueValue: c=1-category,c=2category is not unique value, price_from=100 is unique value
+ * wait: wait for next parameter before reload and end the action (e.g. price with two values)
+ * source: where the request comes, values: 1 filter, 2 search
+ */
+
+
+function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
+
+
+	var phParams = Joomla.getOptions('phParamsPC');
 
 	/*
 	 * We need to differentiate:
@@ -262,7 +325,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 
 		var paramsTypeArray		= paramsTypeString.split(',');
 		paramsTypeArray 		= phCleanArray(paramsTypeArray);
-	
+
 
 		var findVal				= paramsTypeArray.indexOf(value);
 
@@ -276,31 +339,31 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 			paramsTypeStringNew[param] = paramsTypeString;//{ param:paramsTypeString};// Unchanged
 		}
 	} else {
-		
+
 		paramsTypeStringNew[param] = value;//{ param:value};
 	}
 
 
-	
-
 	var url;
-	if (isItemsView == 1) {
-		
-		url = location.search;
+	if ((isItemsView == 1 && filteredProductsOnly != 1) || isItemsView != 1) {
+		url = urlItemsView;// skip all parameters (a) search all products in items view or b) no items view
 	} else {
-		url = urlItemsView;
+		url = location.search;// complete url with selected parameters
 	}
 
 
 	// Set new url or take the one from previous parameter
 	if (phFilterNewUrlSet !== '' || phFilterNewUrlSetPreviousParamWaiting == 1) {
 		url = phFilterNewUrlSet;
+
 	}
 
 	/* Array -> String */
 	url		= phArrayToString(url);
 
+
 	phFilterNewUrlSet = jQuery.param.querystring( url, paramsTypeStringNew, mergeMode);// one parameter only
+
 
 	phFilterNewUrlSet = phReplaceAll('%2C', ',', phFilterNewUrlSet);
 	phFilterNewUrlSet 	= phReplaceAll('%2C', ',', phFilterNewUrlSet);
@@ -316,40 +379,56 @@ function phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait)
 		// Don't reload, wait for other parameter
 		phFilterNewUrlSetPreviousParamWaiting = 1;
 
+		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
+			return 2;// don't run overlay
+		}
+
 	} else {
-		
-		//window.history.pushState({},"", phFilterNewUrlSet);return 2;
-		document.location = phFilterNewUrlSet;
+
+
+		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
+			phUpdatePageAndParts(phFilterNewUrlSet, source);// Update Main, Search, Filter
+			phFilterNewUrlSet = '';
+			phFilterNewUrlSetPreviousParamWaiting = 0;
+			return 2;
+		} else {
+
+			document.location = phFilterNewUrlSet;
+		}
+
 		phFilterNewUrlSet = '';
 	}
+
+	return 1;
 
 }
 
 
 /* Function phChangeFilter */
-function phChangeFilter(param, value, formAction, formType, uniqueValue, wait) {
-	
-	Joomla.loadingLayer('load');
+function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, source) {
+
+
 	var phVars 		= Joomla.getOptions('phVarsModPhocacartFilter');
 	var phParams 	= Joomla.getOptions('phParamsModPhocacartFilter');
+
 
 	var isItemsView					= phVars['isItemsView'];
 	var isSef						= phVars['isSef'];
 	var urlItemsView				= phVars['urlItemsView'];
 	var urlItemsViewWithoutParams	= phVars['urlItemsViewWithoutParams'];
 	var phA = 1;
- 
+
 	if (formType == "text") {
 		//value = phEncode(value);
       	if (formAction == 1) {
-         	phA = phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait);
+         	phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	} else {
-			
-         	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait);
+
+         	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	}
    	} else if (formType == "category") {
 		urlItemsView = urlItemsViewWithoutParams;
-		 
+
      	if (phParams['removeParametersCat'] == 1) {
 			document.location 		= urlItemsView;
 		} else {
@@ -358,63 +437,104 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait) {
 				if (isSef == 1) {
 					document.location 		= jQuery.param.querystring(urlItemsView, currentUrlParams, 2);
 				} else {
-					phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait);
+					phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
 				}
 			} else {
 				document.location 		= urlItemsView;
 			}
 		}
    	} else {
-		
+
       	if (formAction.checked) {
-         	phA = phSetFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait);
+         	phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	} else {
-			
-         	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, uniqueValue, wait);
+
+         	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	}
-   	}
-   	phRenderFullOverlay(phA);
+	}
+
+
+	startFullOverlay(phA);
 }
 
-/* Function phChangeSearch*/ 
+/* Function phChangeSearch*/
 function phChangeSearch(param, value, formAction) {
 
-	Joomla.loadingLayer('load');
+
 	var phVars 		= Joomla.getOptions('phVarsModPhocacartSearch');
 	var phParams 	= Joomla.getOptions('phParamsModPhocacartSearch');
+	var phVarsPC 	= Joomla.getOptions('phParamsPC');
 
 	var isItemsView					= phVars['isItemsView'];
 	var urlItemsView				= phVars['urlItemsView'];
 	var urlItemsViewWithoutParams	= phVars['urlItemsViewWithoutParams'];
 	var phA = 1;
-	
+
+	var filteredProductsOnly = isItemsView;
 	if (formAction == 1) {
 		if (phParams['searchOptions'] == 1) {
-		   if(jQuery("#phSearchSearchAllProducts").attr("checked")) {
+		   if(jQuery("#phSearchBoxSearchAllProducts").attr("checked")) {
 			  	urlItemsView = urlItemsViewWithoutParams;
-			  	isItemsView = 0; // When options are enabled and searching is set to all - we search without filtering
+			  	filteredProductsOnly = 0; // When options are enabled and searching is set to all - we search without filtering
 			}
 		} else {
-			isItemsView = 0;// When options are disabled we always search without filtering
+			filteredProductsOnly = 0;// When options are disabled we always search without filtering
 		}
-		
-		phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, 0);
+
+		phA = phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly,  1, 0, 2);
 	} else {
-		phA = phRemoveFilter(param, value, isItemsView, urlItemsView, 1,0);  
+		phA = phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
 	}
-	phRenderFullOverlay(phA);
+
+	startFullOverlay(phA);
  }
 
-/* phRenderFullOverlay*/
-function phRenderFullOverlay(phA) {
-	if (phA == 2) {
-		// 2 means false
-	} else {
-		var phOverlay = jQuery('<div id="phOverlay"><div id="phLoaderFull"> </div></div>');
-		phOverlay.appendTo(document.body);
-		jQuery("#phOverlay").fadeIn().css("display","block");
-	}
+
+function phPriceFilterRange() {
+
+
+	var phVars 	= Joomla.getOptions('phParamsPC');
+	var phLang	= Joomla.getOptions('phLangPC');
+
+	// Filter Range
+	jQuery("#phPriceFilterRange").slider({
+		range: true,
+		min: phVars['filterPriceMin'],
+		max: phVars['filterPriceMax'],
+		values: [phVars['filterPriceFrom'], phVars['filterPriceTo']],
+		slide: function( event, ui ) {
+			jQuery("#phPriceFromTopricefrom").val(ui.values[0]);
+			jQuery("#phPriceFromTopriceto").val(ui.values[1]);
+			jQuery("#phPriceFilterPrice").html("" + phLang['COM_PHOCACART_PRICE'] + ": " + phGetPriceFormat(ui.values[0]) + " - " + phGetPriceFormat(ui.values[1]));
+		}
+	});
+
+	jQuery("#phPriceFilterPrice").html("" + phLang['COM_PHOCACART_PRICE'] + ": " + phGetPriceFormat(phVars['filterPriceFrom']) + " - " + phGetPriceFormat(phVars['filterPriceTo']));
+
+
+	jQuery("#phPriceFromTopricefrom").on("change", function (e) {
+		var from = jQuery("#phPriceFromTopricefrom").val();
+		var to = jQuery("#phPriceFromTopriceto").val();
+		if (to == '') { to = phVars['filterPriceMax'];}
+		if (from == '') { from = phVars['filterPriceMin'];}
+		if (Number(to) < Number(from)) {to = from;jQuery("#phPriceFromTopriceto").val(to);}
+		jQuery( "#phPriceFilterRange" ).slider({values: [from,to]});
+		jQuery("#phPriceFilterPrice").html("" + phLang['COM_PHOCACART_PRICE'] + ": " + phGetPriceFormat(from) + " - " + phGetPriceFormat(to));
+	})
+
+	jQuery("#phPriceFromTopriceto").on("change", function (e) {
+		var from = jQuery("#phPriceFromTopricefrom").val();
+		var to = jQuery("#phPriceFromTopriceto").val();
+		if (to == '') { to = phVars['filterPriceMax'];}
+		if (from == '') { from = phVars['filterPriceMin'];}
+		if (Number(to) < Number(from)) {to = from;jQuery("#phPriceFromTopriceto").val(to);}
+		jQuery( "#phPriceFilterRange" ).slider({values: [from,to]});
+		jQuery("#phPriceFilterPrice").html("" + phLang['COM_PHOCACART_PRICE'] + ": " + phGetPriceFormat(from) + " - " + phGetPriceFormat(to));
+	})
+
 }
+
+
 
 jQuery(document).ready(function () {
 	jQuery('.collapse')
@@ -425,7 +545,10 @@ jQuery(document).ready(function () {
     .on('hidden.bs.collapse', function() {
         jQuery(this).parent().find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
         jQuery(this).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
-    });
+	});
+
+
+	phPriceFilterRange ();
 });
 
 function phClearField(field) {

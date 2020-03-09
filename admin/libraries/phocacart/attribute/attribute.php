@@ -84,6 +84,7 @@ class PhocacartAttribute
 				    $optionsSubform['options'.$i]['download_file'] = (string)$v['download_file'];
 				    $optionsSubform['options'.$i]['download_token'] = (string)$v['download_token'];
 				    $optionsSubform['options'.$i]['color'] = (string)$v['color'];
+					$optionsSubform['options'.$i]['default_value'] = (int)$v['default_value'];
 
 					$i++;
 				}
@@ -362,6 +363,7 @@ class PhocacartAttribute
 							if (empty($v2['download_file']))	{$v2['download_file'] 	= '';}
 							if (empty($v2['download_token']))	{$v2['download_token']	= '';}
 							if (empty($v2['color'])) 			{$v2['color'] 			= '';}
+							//if (empty($v2['default_value'])) 	{$v2['default_value'] 	= '';}
 
 
 							// COPY OR BATCH functions - we cannot do the same tokens so create new token and token folder and if set copy the files
@@ -1583,5 +1585,29 @@ class PhocacartAttribute
 	}
 
 	*/
+    public static function getActiveAttributeValues($items, $ordering) {
+
+    	$db     = JFactory::getDbo();
+	    $o      = array();
+        $wheres = array();
+        $ordering = PhocacartOrdering::getOrderingText($ordering, 5);//at v
+        if (!empty($items)) {
+            foreach ($items as $k => $v) {
+                $wheres[] = '( v.alias = ' . $db->quote($k) . ' AND at.alias IN (' . $v . ') )';
+            }
+            if (!empty($wheres)) {
+                // FULL GROUP BY GROUP_CONCAT(DISTINCT o.title) AS title
+                $q = 'SELECT DISTINCT at.title, at.alias, CONCAT(\'a[\', v.alias, \']\')  AS parameteralias, v.title AS parametertitle FROM #__phocacart_attribute_values AS at'
+                    . ' LEFT JOIN #__phocacart_attributes AS v ON v.id = at.attribute_id'
+                    . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
+                    . ' GROUP BY v.alias, at.alias, at.title'
+                    . ' ORDER BY ' . $ordering;
+
+                $db->setQuery($q);
+                $o = $db->loadAssocList();
+            }
+        }
+        return $o;
+    }
 }
 ?>

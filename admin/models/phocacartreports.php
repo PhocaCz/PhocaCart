@@ -134,7 +134,7 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		// USERS
 		$query->select('ou.name_first AS user_name_first, ou.name_last AS user_name_last, ou.company AS user_company, ou.vat_1 AS user_vat_1,'
 		.' ou.address_1 AS user_address_1, ou.city AS user_city, ou.zip AS user_zip, co.title AS user_country');
-		$query->join('LEFT', '#__phocacart_order_users AS ou ON a.id = ou.order_id');
+		$query->join('LEFT', '#__phocacart_order_users AS ou ON a.id = ou.order_id AND ou.type = 0');
 		$query->join('LEFT', '#__phocacart_countries AS co ON ou.country = co.id');
 
 

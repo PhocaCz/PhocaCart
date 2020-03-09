@@ -23,6 +23,7 @@ class PhocaCartCpModelPhocacartDownloads extends JModelList
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
+				'download_hits', 'a.download_hits',
 				'published','a.published',
 				'order_id', 'a.order_id'
 			);

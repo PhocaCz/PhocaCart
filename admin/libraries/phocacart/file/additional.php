@@ -16,7 +16,7 @@ class PhocacartFileAdditional
 
 		$db = JFactory::getDBO();
 
-		$query = 'SELECT a.id, a.download_file, a.download_token';
+		$query = 'SELECT a.id, a.download_file, a.download_token, a.download_days';
 		$query .= ' FROM #__phocacart_product_files AS a'
 			    .' WHERE a.product_id = '.(int) $productId
 				.' ORDER BY a.ordering';
@@ -34,6 +34,7 @@ class PhocacartFileAdditional
 				    $filesSubform['additional_download_files'.$i]['id'] = (string)$v['id'];
 					$filesSubform['additional_download_files'.$i]['download_file'] = (string)$v['download_file'];
 					$filesSubform['additional_download_files'.$i]['download_token'] = (string)$v['download_token'];
+					$filesSubform['additional_download_files'.$i]['download_days'] = (string)$v['download_days'];
 					$i++;
 				}
 			}
@@ -59,6 +60,7 @@ class PhocacartFileAdditional
 				    // correct simple xml
 					if (empty($v['download_token'])) {$v['download_token'] = '';}
 					if (empty($v['download_file'])) {$v['download_file'] = '';}
+					if (empty($v['download_days'])) {$v['download_days'] = -1;}
 
                     $idExists = 0;
 					if ($new == 0) {
@@ -81,6 +83,7 @@ class PhocacartFileAdditional
 						.' product_id = '.(int)$productId.','
 						.' download_token = '.$db->quote($v['download_token']).','
                         .' download_file = '.$db->quote($v['download_file']).','
+                        .' download_days = '.(int)$v['download_days'].','
                         .' ordering = '.(int)$i
 						.' WHERE id = '.(int)$idExists;
 						$db->setQuery($query);
@@ -91,8 +94,8 @@ class PhocacartFileAdditional
 					} else {
 
 
-						$valuesString 	= '('.(int)$productId.', '.$db->quote($v['download_token']).', '.$db->quote($v['download_file']).', '.$i.')';
-						$query = ' INSERT INTO #__phocacart_product_files (product_id, download_token, download_file, ordering)'
+						$valuesString 	= '('.(int)$productId.', '.$db->quote($v['download_token']).', '.$db->quote($v['download_file']).', '.(int)$v['download_days'].', '.$i.')';
+						$query = ' INSERT INTO #__phocacart_product_files (product_id, download_token, download_file, download_days, ordering)'
 								.' VALUES '.(string)$valuesString;
 						$db->setQuery($query);
 						$db->execute(); // insert is not done together but step by step because of getting last insert id

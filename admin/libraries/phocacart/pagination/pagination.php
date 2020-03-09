@@ -13,7 +13,7 @@ jimport('joomla.html.pagination');
 class PhocacartPagination extends JPagination
 {
 	function getLimitBox() {
-		
+
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$pos			= PhocacartPos::isPos();
@@ -22,9 +22,9 @@ class PhocacartPagination extends JPagination
 		} else {
 			$pagination = $paramsC->get( 'item_pagination', '5,10,15,20,50' );
 		}
-		
+
 		$paginationArray	= explode( ',', $pagination );
-		
+
 		// Initialize variables
 		$limits = array ();
 
@@ -43,10 +43,10 @@ class PhocacartPagination extends JPagination
 		}
 		return $html;
 	}
-	
+
 	//public static function getMaximumLimit(int $limit) : int {
 	public static function getMaximumLimit($limit) {
-		
+
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$pos		= PhocacartPos::isPos();
 		if ($pos == 1) {
@@ -56,14 +56,15 @@ class PhocacartPagination extends JPagination
 			$item_pagination_limit	= $paramsC->get( 'item_pagination_limit', 0);
 			$pagination 			= $paramsC->get( 'item_pagination', '5,10,15,20,50' );
 		}
-		
-		
+
+
 		$l = $limit;
 		if ((int)$item_pagination_limit == 1) {
-			
+
 			$paginationArray		= explode( ',', $pagination );
+
 			$maxPagination			= max($paginationArray);
-			
+
 			if ((int)$limit == 0 && (int)$maxPagination > 0) {
 				// Pagination limit not set in frontend (all) but maximum pagination limit set
 				$l = (int)$maxPagination;
@@ -77,6 +78,6 @@ class PhocacartPagination extends JPagination
 		}
 		return $l;
 	}
-	
+
 }
 ?>

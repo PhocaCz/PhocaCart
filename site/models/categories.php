@@ -22,112 +22,112 @@ class PhocaCartModelCategories extends JModelLegacy
 	}
 
 	public function getCategoriesList($displaySubcategories = 0) {
-		if (empty($this->categories)) {			
+		if (empty($this->categories)) {
 			$categoriesOrdering = $this->getCategoryOrdering();
-			
+
 			if ((int)$displaySubcategories > 0) {
 				$id = -1; // display subcategories - -1 means to load all items
 			} else {
 				$id = 0;// display only parent categories
 			}
-			
+
 			$query			= $this->getCategoriesListQuery($id, $categoriesOrdering);
 			$categories 	= $this->_getList($query);
-			
+
 			if (!empty($categories)) {
-				
+
 				// Parent Only
 				foreach ($categories as $k => $v) {
 					if ($v->parent_id == 0) {
 						$this->categories[$v->id] = $categories[$k];
-					}	
+					}
 				}
-			
+
 				// Subcategories
 				foreach ($categories as $k => $v) {
 					if (isset($this->categories[$v->parent_id])) {
 						$this->categories[$v->parent_id]->subcategories[] = $categories[$k];
 						$this->categories[$v->parent_id]->numsubcat++;
-					}	
+					}
 				}
 			}
 			/*
-			$this->categories 	= $this->_getList( $query );	
+			$this->categories 	= $this->_getList( $query );
 			if (!empty($this->categories)) {
 				foreach ($this->categories as $key => $value) {
 					$query	= $this->getCategoriesListQuery( $value->id, $categoriesOrdering );
 					$this->categories[$key]->subcategories = $this->_getList( $query );
 				}
 			}*/
-			
+
 		}
 		return $this->categories;
 	}
 
 	public function getCategoriesListQuery($id, $categoriesOrdering) {
-		
+
 		$wheres				= array();
 		$user 				= PhocacartUser::getUser();
 		$userLevels			= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 		= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$app				= JFactory::getApplication();
 		$params 			= $app->getParams();
-		
-		
+
+
 		$display_categories = $params->get('display_categories', '');
 		$hide_categories 	= $params->get('hide_categories', '');
-		
+
 		if (!empty($display_categories)) {
 			$display_categories = implode(',', $display_categories);
 		}
 		if (!empty($hide_categories)) {
 			$hide_categories = implode(',', $hide_categories);
 		}
-		
+
 		if ( $display_categories != '' ) {
 			$wheres[] = " c.id IN (".$display_categories.")";
 		}
-		
+
 		if ( $hide_categories != '' ) {
 			$wheres[] = " c.id NOT IN (".$hide_categories.")";
 		}
-		
+
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
-		
+
 		if ($id == -1) {
 			// No limit for parent_id - load all categories include subcategories
 		} else {
 			$wheres[] = " c.parent_id = " . (int)$id;
 		}
-		
+
 		$wheres[] = " c.published = 1";
-		
+
 		if ($this->getState('filter.language')) {
 			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
-		
+
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
-		
+
 		/*$query =  " SELECT c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc"
 		. " FROM #__phocacart_categories AS c"
 		. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
 		. " WHERE " . implode( " AND ", $wheres )
 		. " GROUP BY c.id"
 		. " ORDER BY c.".$categoriesOrdering;*/
-		
-		
-		$columns	= 'c.id, c.title, c.alias, c.image, c.description, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat';
-		$groupsFull	= 'c.id, c.title, c.alias, c.image, c.description, c.image, c.parent_id';
+
+
+		$columns	= 'c.id, c.title, c.alias, c.image, c.description, c.icon_class, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat';
+		$groupsFull	= 'c.id, c.title, c.alias, c.image, c.description, c.icon_class, c.image, c.parent_id';
 		$groupsFast	= 'c.id';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-		
-		
+
+
 		$query =  'SELECT '.$columns
-		
+
 		. " FROM #__phocacart_categories AS c"
 		//. " LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id AND s.published = 1"
-		
+
 		//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
 		//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1"
 		//. " LEFT JOIN #__phocacart_products AS a ON a.catid = c.id AND a.published = 1"
@@ -141,13 +141,13 @@ class PhocaCartModelCategories extends JModelLegacy
 						 #__phocacart_categories as s
 						 on s.parent_id = c.id
 					group by c.id";*/
-			
-	
+
+
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-		
+
 		return $query;
 	}
-	
+
 	public function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
 			$app						= JFactory::getApplication();

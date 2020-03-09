@@ -28,6 +28,7 @@ if ($d['t']['display_webp_images'] == 1) {
 
     echo ' <img';
     echo isset($d['src']) ? ' src="'.$d['src'].'"' : ' src=""';
+    //echo isset($d['src']) ? ' srcset="'.$d['src'].'"' : ' srcset=""';
     echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
     echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
     echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';

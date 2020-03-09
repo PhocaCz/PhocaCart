@@ -62,6 +62,12 @@
 	<option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
 </field>
 
+<field name="orders_view_display" type="list" label="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" class="inputbox" size="1" filter="int_array" default="" multiple="1">
+	<option value="1">COM_PHOCACART_ORDER</option>
+	<option value="2">COM_PHOCACART_INVOICE</option>
+	<option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
+</field>
+
 <field name="ordering" type="PhocacartOrdering" table="status" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 		
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />

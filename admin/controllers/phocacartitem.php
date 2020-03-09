@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartCommon
 {
-	
+
 
 	public function batch($model = null) {
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -19,7 +19,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 
 		return parent::batch($model);
 	}
-	
+
 	public function copyattributes($model = null) {
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		$model	= $this->getModel('phocacartitem', '', array());
@@ -27,7 +27,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		$cid 		= JFactory::getApplication()->input->get( 'cid', array(),'array' );
 		$idSource 	= JFactory::getApplication()->input->get( 'copy_attributes', 0, 'int' );
 		\Joomla\Utilities\ArrayHelper::toInteger($cid);
-		
+
 
 		if(!$model->copyattributes($cid, $idSource)) {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_ATTRIBUTES_NOT_COPIED'), 'error');
@@ -36,8 +36,8 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		}
 		$this->setRedirect(JRoute::_('index.php?option=com_phocacart&view=phocacartitems'.$this->getRedirectToListAppend(), false));
 	}
-	
-	
+
+
 	function recreate() {
 		$app	= JFactory::getApplication();
 		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
@@ -46,7 +46,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		if (count( $cid ) < 1) {
 			$message = JText::_( 'COM_PHOCACART_SELECT_ITEM_RECREATE' );
 			$app->enqueueMessage($message, 'error');
-			$app->redirect('index.php?option=com_phocacart&view=phocacartcategories');
+			$app->redirect('index.php?option=com_phocacart&view=phocacartitems');
 		}
 		$message = '';
 		$model = $this->getModel( 'phocacartitem' );
@@ -61,11 +61,11 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 
 		$app->redirect('index.php?option=com_phocacart&view=phocacartitems');
 	}
-	
-	
+
+
 	/*
 	function removeduplicates() {
-		
+
 		$app	= JFactory::getApplication();
 		if (PhocacartCategoryMultiple::removeDuplicates()) {
 			$message = JText::_( 'COM_PHOCACART_SUCCESS_DUPLICATES_REMOVED' );
@@ -75,6 +75,6 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		$app->enqueueMessage($message, 'message');
 		$app->redirect('index.php?option=com_phocacart&view=phocacartitems');
 	}*/
-	
+
 }
 ?>

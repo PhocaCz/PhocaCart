@@ -182,7 +182,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';// end radio
 
 		echo '</div>';// end row second column
-		//echo '<div class="ph-cb"></div>';
+		echo '<div class="ph-cb"></div>';
 
 	}
 

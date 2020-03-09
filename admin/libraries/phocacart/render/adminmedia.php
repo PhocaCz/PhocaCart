@@ -27,9 +27,9 @@ class PhocacartRenderAdminmedia
 
         // FORM
 		$app = JFactory::getApplication();
-		$app->getDocument()->addScriptOptions('phLang', array('COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE')));
-		$app->getDocument()->addScriptOptions('phVars', array('token' => JSession::getFormToken()));
-		//$app->getDocument()->addScriptOptions('phParams', array());
+		$this->document->addScriptOptions('phLang', array('COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE'), 'COM_PHOCACART_ERROR_TITLE_NOT_SET' => JText::_('COM_PHOCACART_ERROR_TITLE_NOT_SET')));
+		$this->document->addScriptOptions('phVars', array('token' => JSession::getFormToken()));
+		//$this->document->getDocument()->addScriptOptions('phParams', array());
         $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/phocacartform.js');
 
 		//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
@@ -38,6 +38,8 @@ class PhocacartRenderAdminmedia
 		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacarttheme.css' );
 		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacartcustom.css' );
 		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css' );
+		
+		JHtml::stylesheet( 'media/com_phocacart/duoton/joomla-fonts.css' );
 
 		if(PhocacartUtils::isJCompatible('3.7')) {
 			JHtml::stylesheet( 'media/com_phocacart/css/administrator/37.css' );

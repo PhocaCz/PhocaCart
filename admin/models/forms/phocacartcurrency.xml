@@ -19,25 +19,25 @@
 				<option value="3">COM_PHOCACART_CURRENCY_SYMBOL_S_PRICE</option>
 			</field>
 		<field name="price_currency_symbol" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_CURRENCY_SYMBOL_LABEL" description="COM_PHOCACART_FIELD_PRICE_CURRENCY_SYMBOL_LABEL" />
-		
+
 		<field name="price_dec_symbol" default="," size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_DECIMAL_SYMBOL_LABEL" description="COM_PHOCACART_FIELD_PRICE_DECIMAL_SYMBOL_DESC" />
-		
+
 		<field name="price_decimals" default="2" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_DECIMALS_LABEL" description="COM_PHOCACART_FIELD_PRICE_DECIMALS_DESC" />
-		<field name="price_thousands_sep" default="." size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_THOUSANDS_SEPARATOR_LABEL" description="COM_PHOCACART_FIELD_PRICE_THOUSANDS_SEPARATOR_DESC" />
-		
-		<field name="price_suffix" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_SUFFIX_DESC" />
-		<field name="price_prefix" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" />
-		
+		<field name="price_thousands_sep" default="" size="5" type="text" label="COM_PHOCACART_FIELD_PRICE_THOUSANDS_SEPARATOR_LABEL" description="COM_PHOCACART_FIELD_PRICE_THOUSANDS_SEPARATOR_DESC" />
+
+		<field name="price_suffix" default="" size="255" type="text" label="COM_PHOCACART_FIELD_PRICE_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_SUFFIX_DESC" filter="safehtml" />
+		<field name="price_prefix" default="" size="255" type="text" label="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" description="COM_PHOCACART_FIELD_PRICE_PREFIX_LABEL" filter="safehtml" />
+
 		<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
-		
+
 
 <field name="ordering" type="PhocacartOrdering" table="currency" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-	
+
 	</fieldset>
 
 
 
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
@@ -55,7 +55,7 @@
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->
 	</fieldset>
-	
+
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 <!--
@@ -79,5 +79,5 @@
 </fieldset>
 </fields>
 
-	
+
 </form>

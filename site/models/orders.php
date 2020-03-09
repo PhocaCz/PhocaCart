@@ -80,7 +80,7 @@ class PhocaCartModelOrders extends JModelLegacy
 		$query = ' SELECT o.*,'
 		.' os.title AS status_title,'
 		.' t.amount AS total_amount,'
-		.' s.id AS shippingid, s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription'
+		.' s.id AS shippingid, s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription, os.orders_view_display as ordersviewdisplay'
 		.' FROM #__phocacart_orders AS o'
 		.' LEFT JOIN #__phocacart_order_statuses AS os ON os.id = o.status_id'
 		.' LEFT JOIN #__phocacart_order_total AS t ON o.id = t.order_id'

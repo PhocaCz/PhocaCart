@@ -62,6 +62,13 @@ class PhocacartUtilsSettings
 				$group['c']	= '&amp;tmpl=component';
 			break;
 
+			case 'submititem':
+				$group['f'] = 7;//File
+				$group['i'] = 1;//Image
+				$group['t'] = 'image';//Text
+				$group['c']	= '&amp;tmpl=component';
+			break;
+
 			case 'productfile':
 				$group['f'] = 3;//File
 				$group['i'] = 0;//Image
@@ -95,13 +102,25 @@ class PhocacartUtilsSettings
 	}
 
 	public static function getListFilterParams($includeId = 0) {
+
+		$pC 						= PhocacartUtils::getComponentParameters();
+		$manufacturer_alias			= $pC->get( 'manufacturer_alias', 'manufacturer');
+		$manufacturer_alias 		!= '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
 		$p[] = 'price_from';
 		$p[] = 'price_to';
 		$p[] = 'tag';
 		$p[] = 'label';
-		$p[] = 'manufacturer';
+		$p[] = $manufacturer_alias;
 		$p[] = 'a';
 		$p[] = 's';
+
+
+		$parameters = PhocacartParameter::getAllParameters();
+		if (!empty($parameters)) {
+			foreach ($parameters as $k => $v) {
+				$p[] = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
+			}
+		}
 		if ($includeId > 0) {
 			$p[] = 'id';
 		}

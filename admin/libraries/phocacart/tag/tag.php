@@ -46,6 +46,50 @@ class PhocacartTag
 		return $tags;
 	}
 
+	/*
+	 * TAGS (stored in submitted items) Field JFormFieldPhocaTagsSubmitItems
+	 */
+	public static function getTagsSubmitItems($itemId) {
+
+		$db = JFactory::getDBO();
+		$query = 'SELECT a.items_item';
+		$query .= ' FROM #__phocacart_submit_items AS a'
+				.' WHERE a.id = '.(int) $itemId
+                .' ORDER BY a.id';
+		$db->setQuery($query);
+		$items = $db->loadResult();
+
+		if (!empty($items)) {
+			$itemsA = json_decode($items, true);
+			if (isset($itemsA['tags'])){
+				return $itemsA['tags'];
+			}
+		}
+
+		return array();
+	}
+
+	public static function getTagsByIds($cids) {
+
+		$db = JFactory::getDBO();
+        if ($cids != '') {//cids is string separated by comma
+
+            $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
+                //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
+                . ' LEFT JOIN #__phocacart_tags_related AS r ON a.id = r.tag_id'
+                . ' WHERE a.type = 0'
+                . ' AND r.item_id IN (' . $cids . ')'
+                . ' ORDER BY a.id';
+
+            $db->setQuery($query);
+            $tags = $db->loadColumn();
+            $tags = array_unique($tags);
+
+            return $tags;
+        }
+        return array();
+	}
+
 	/**
 	 * Labels - are displayed at the top
 	 * @param int $itemId
@@ -80,6 +124,50 @@ class PhocacartTag
 		return $tags;
 	}
 
+	/*
+	 * TAGLABELS (stored in submitted items) Field JFormFieldPhocaTaglabelsSubmitItems
+	 */
+	public static function getTagLabelsSubmitItems($itemId) {
+
+		$db = JFactory::getDBO();
+		$query = 'SELECT a.items_item';
+		$query .= ' FROM #__phocacart_submit_items AS a'
+				.' WHERE a.id = '.(int) $itemId
+                .' ORDER BY a.id';
+		$db->setQuery($query);
+		$items = $db->loadResult();
+
+		if (!empty($items)) {
+			$itemsA = json_decode($items, true);
+			if (isset($itemsA['taglabels'])){
+				return $itemsA['taglabels'];
+			}
+		}
+
+		return array();
+	}
+
+	public static function getTagsLabelsByIds($cids) {
+
+		$db = JFactory::getDBO();
+        if ($cids != '') {//cids is string separated by comma
+
+            $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
+                //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
+                . ' LEFT JOIN #__phocacart_taglabels_related AS r ON a.id = r.tag_id'
+                . ' WHERE a.type = 1'
+                . ' AND r.item_id IN (' . $cids . ')'
+                . ' ORDER BY a.id';
+
+            $db->setQuery($query);
+            $tags = $db->loadColumn();
+            $tags = array_unique($tags);
+
+            return $tags;
+        }
+        return array();
+	}
+
     /**
      * @param int $ordering
      * @param int $onlyAvailableProducts
@@ -87,7 +175,7 @@ class PhocacartTag
      * @param string $lang
      * @return mixed
      */
-	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = 0, $lang = '', $filterProducts = array()) {
+	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = 0, $lang = '', $filterProducts = array(), $limitCount = -1) {
 
 	/*	$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
@@ -119,10 +207,9 @@ class PhocacartTag
 		$db 			= JFactory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
 
-		$wheres		= array();
-		$lefts		= array();
 
-		$columns		= 't.id, t.title, t.alias, t.type';
+
+		$columns		= 't.id, t.title, t.alias, t.type, t.count_products';
 		/*$groupsFull		= $columns;
 		$groupsFast		= 'm.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
@@ -157,6 +244,11 @@ class PhocacartTag
 			$wheres[]	= 'p.id IN ('.$productIds.')';
 		}
 
+		if ((int)$limitCount > -1) {
+		    $wheres[] = " t.count_products > ".(int)$limitCount;
+		}
+
+
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_tags AS t'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
@@ -167,6 +259,7 @@ class PhocacartTag
 		$db->setQuery($q);
 
 		$items = $db->loadObjectList();
+
 
 		return $items;
 	}
@@ -237,7 +330,7 @@ class PhocacartTag
 
 	}
 
-	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0 ) {
+	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0, $class = 'inputbox') {
 
 		$db = JFactory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
@@ -247,7 +340,7 @@ class PhocacartTag
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();
 
-		$tagsO = JHtml::_('select.genericlist', $tags, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$tagsO = JHtml::_('select.genericlist', $tags, $name, 'class="'.$class.'" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $tagsO;
 	}
@@ -259,7 +352,7 @@ class PhocacartTag
 	 * @return string
 	 */
 
-	public static function getTagsRendered($itemId, $type = 0) {
+	public static function getTagsRendered($itemId, $type = 0, $separator = '') {
 
 	    if ($type == 1) {
 	        // Only tags
@@ -277,16 +370,19 @@ class PhocacartTag
         }
 		$db 	= JFactory::getDBO();
 		$p 		= PhocacartUtils::getComponentParameters();
+		$s      = PhocacartRenderStyle::getStyles();
 		$tl		= $p->get( 'tags_links', 0 );
-		$o 	= '';
 
+
+		$o 	= array();
+		$i  = 0;
 		if (!empty($tags)) {
 			foreach($tags as $k => $v) {
 
 				if ($type == 2 || $type == 3) {
-					$o .= '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-'.htmlspecialchars(strip_tags($v->alias)).'">';
+					$o[$i] = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-'.htmlspecialchars(strip_tags($v->alias)).'">';
 				} else {
-					$o .= '<span class="label label-info">';
+					$o[$i] = '<span class="'.$s['c']['label.label-info'] .'">';
 				}
 
 
@@ -300,18 +396,18 @@ class PhocacartTag
 					}
 				} else if ($v->display_format == 3) {
 					if ($v->icon_class != '') {
-						$dO = '<span class="'.htmlspecialchars(strip_tags($v->icon_class)).'"></span> ';
+						$dO = '<span class="'.htmlspecialchars(strip_tags($v->icon_class)).'"></span>';
 					}
 					$dO .= $v->title;
 				}
 
 				if ($tl == 0) {
-					$o .= $dO;
+					$o[$i] .= $dO;
 				} else if ($tl == 1) {
 					if ($v->link_ext != '') {
-						$o .= '<a href="'.$v->link_ext.'">'.$dO.'</a>';
+						$o[$i] .= '<a href="'.$v->link_ext.'">'.$dO.'</a>';
 					} else {
-						$o .= $dO;
+						$o[$i] .= $dO;
 					}
 				} else if ($tl == 2) {
 
@@ -325,12 +421,12 @@ class PhocacartTag
 
 						if (isset($category->id) && isset($category->alias)) {
 							$link = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
-							$o .= '<a href="'.$link.'">'.$dO.'</a>';
+							$o[$i] .= '<a href="'.$link.'">'.$dO.'</a>';
 						} else {
-							$o .= $dO;
+							$o[$i] .= $dO;
 						}
 					} else {
-						$o .= $dO;
+						$o[$i] .= $dO;
 					}
 				} else if ($tl == 3) {
 					$link = PhocacartRoute::getItemsRoute();
@@ -340,17 +436,21 @@ class PhocacartTag
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
                     }
 
-					$o .= '<a href="'.$link.'">'.$dO.'</a>';
+					$o[$i] .= '<a href="'.JRoute::_($link).'">'.$dO.'</a>';
 				}
 
 				if ($type == 2 || $type == 3) {
-					$o .= '</div></div>';
+					$o[$i] .= '</div></div>';
 				} else {
-					$o .= '</span>';
+					$o[$i] .= '</span>';
 				}
+
+				$i++;
 			}
+
 		}
-		return $o;
+
+		return implode($separator, $o);
 	}
 
 
@@ -368,4 +468,45 @@ class PhocacartTag
 
 		}
 	}
+
+
+	public static function getActiveTags($items, $ordering) {
+
+	    $db     = JFactory::getDbo();
+	    $o      = array();
+        $wheres = array();
+        $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t
+        if ($items != '') {
+            $wheres[] = 't.id IN (' . $items . ')';
+            $wheres[] = 't.type = 0';
+            $q = 'SELECT DISTINCT t.title, CONCAT(t.id, \'-\', t.alias) AS alias, \'tag\' AS parameteralias, \'tag\' AS parametertitle FROM #__phocacart_tags AS t'
+                . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+                . ' GROUP BY t.alias, t.title'
+                . ' ORDER BY ' . $ordering;
+
+            $db->setQuery($q);
+            $o = $db->loadAssocList();
+        }
+        return $o;
+    }
+
+    public static function getActiveLabels($items, $ordering) {
+
+	    $db     = JFactory::getDbo();
+	    $o      = array();
+        $wheres = array();
+        $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t
+        if ($items != '') {
+            $wheres[] = 't.id IN (' . $items . ')';
+            $wheres[] = 't.type = 1';
+            $q = 'SELECT DISTINCT t.title, CONCAT(t.id, \'-\', t.alias) AS alias, \'tag\' AS parameteralias, \'tag\' AS parametertitle FROM #__phocacart_tags AS t'
+                . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+                . ' GROUP BY t.alias, t.title'
+                . ' ORDER BY ' . $ordering;
+
+            $db->setQuery($q);
+            $o = $db->loadAssocList();
+        }
+        return $o;
+    }
 }

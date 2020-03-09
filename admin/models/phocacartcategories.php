@@ -24,6 +24,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 				'checked_out_time', 'a.checked_out_time',
 				'category_id', 'category_id',
 				'access', 'a.access', 'access_level',
+				'count_products', 'a.count_products',
 				'ordering', 'a.ordering',
 				'language', 'a.language',
 				'hits', 'a.hits',
@@ -157,7 +158,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
-		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language';
+		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language, a.count_products, a.count_date';
 		//$groupsFull	= $columns . ', ' .'l.title, uc.name, ag.title, c.title, c.id, cc.countid';
 		//$groupsFast	= 'a.id';
 		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;

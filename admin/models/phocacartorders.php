@@ -119,6 +119,11 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
 
+		// Search users in orders
+		$query->join('LEFT', '#__phocacart_order_users AS us0 ON a.id=us0.order_id AND us0.type = 0');// search in billing address
+		$query->join('LEFT', '#__phocacart_order_users AS us1 ON a.id=us1.order_id AND us1.type = 1');// search in shipping address
+
+
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = '.(int) $access);
@@ -143,8 +148,22 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 			}
 			else
 			{
+
+				$searchIn = array('name_first', 'name_middle', 'name_last', 'name_degree', 'company', 'vat_1', 'vat_2', 'address_1', 'address_2', 'city', 'zip', 'email', 'email_contact', 'phone_1', 'phone_2', 'phone_mobile', 'fax' );
+
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
+				$searchInP =  array();
+
+				$searchInP[] = 'a.title LIKE '. $search;
+				$searchInP[] = 'a.alias LIKE '. $search;
+				$searchInP[] = 'a.comment LIKE '. $search;
+				foreach($searchIn as $k => $v) {
+					$searchInP[] = 'us0.'.$v . ' LIKE '. $search;// search in billing address
+					$searchInP[] = 'us1.'.$v . ' LIKE '. $search;// search in shipping address
+				}
+
+				$query->where('('.implode(' OR ', $searchInP).')');
+				//$query->where('( a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
 

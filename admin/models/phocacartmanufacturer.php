@@ -13,19 +13,19 @@ class PhocaCartCpModelPhocacartManufacturer extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartManufacturer', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartmanufacturer', 'phocacartmanufacturer', array('control' => 'jform', 'load_data' => $loadData));
@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocacartManufacturer extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartmanufacturer.data', array());
 		if (empty($data)) {
@@ -42,7 +42,7 @@ class PhocaCartCpModelPhocacartManufacturer extends JModelAdmin
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -74,5 +74,20 @@ class PhocaCartCpModelPhocacartManufacturer extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
+
+	public function save($data) {
+
+	    if (parent::save($data)) {
+
+	        $savedId = $this->getState($this->getName().'.id');
+		    if ((int)$savedId > 0) {
+               PhocacartCount::setProductCount(array(0 => (int)$savedId), 'manufacturer', 1);
+            }
+		    return true;
+        } else {
+	        return false;
+        }
+
+    }
 }
 ?>

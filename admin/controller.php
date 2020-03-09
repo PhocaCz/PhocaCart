@@ -37,10 +37,13 @@ $l['co']	= array('COM_PHOCACART_COUPONS', 'phocacartcoupons');
 $l['di']	= array('COM_PHOCACART_DISCOUNTS', 'phocacartdiscounts');
 $l['do']	= array('COM_PHOCACART_DOWNLOADS', 'phocacartdownloads');
 $l['tg']	= array('COM_PHOCACART_TAGS', 'phocacarttags');
+$l['pr']	= array('COM_PHOCACART_PARAMETERS', 'phocacartparameters');
+$l['pv']	= array('COM_PHOCACART_PARAMETER_VALUES', 'phocacartparametervalues');
 $l['fd']	= array('COM_PHOCACART_XML_FEEDS', 'phocacartfeeds');
 $l['wl']	= array('COM_PHOCACART_WISH_LISTS', 'phocacartwishlists');
 $l['qu']	= array('COM_PHOCACART_QUESTIONS', 'phocacartquestions');
 $l['ot']	= array('COM_PHOCACART_OPENING_TIMES', 'phocacarttimes');
+$l['si']	= array('COM_PHOCACART_SUBMITTED_ITEMS', 'phocacartsubmititems');
 $l['sc']	= array('COM_PHOCACART_STATISTICS', 'phocacartstatistics');
 $l['rt']	= array('COM_PHOCACART_REPORTS', 'phocacartreports');
 $l['hi']	= array('COM_PHOCACART_HITS', 'phocacarthits');
@@ -63,7 +66,7 @@ $layout	= JFactory::getApplication()->input->get('layout');
 if ($layout == 'edit') {
 } else {
 	foreach ($l as $k => $v) {
-		
+
 		if ($v[1] == '') {
 			$link = 'index.php?option='.$option;
 		} else {

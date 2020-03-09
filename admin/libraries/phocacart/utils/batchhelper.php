@@ -102,6 +102,22 @@ class PhocacartUtilsBatchhelper
 				$tLA = array();
 			}
 			PhocacartTag::storeTagLabels($tLA, (int)$idDest);
+
+			// Parameters
+			$parameters = PhocacartParameter::getAllParameters();
+			if (!empty($parameters)) {
+				foreach ($parameters as $kP => $vP) {
+					if (isset($vP->id) && (int)$vP->id > 0) {
+						$idP = (int)$vP->id;
+
+						$pA = PhocacartParameter::getParameterValues($idSource, $idP, 1);
+						if (!isset($pA)) {
+							$pA = array();
+						}
+						PhocacartParameter::storeParameterValues($pA, (int)$idDest, $idP);
+					}
+				}
+			}
 		}
 		return true;
 	}

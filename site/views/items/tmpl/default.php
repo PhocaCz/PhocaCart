@@ -98,12 +98,12 @@ if (!empty($this->items)) {
 		// :L: QUICKVIEW
 		$icon['quickview'] = '';
 		if ($this->t['display_quickview'] == 1) {
-			$d			= array();
-			$d['s']				= $this->s;
+			$d				= array();
+			$d['s']			= $this->s;
 			$d['linkqvb']	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
-			$d['id']	= (int)$v->id;
-			$d['catid']	= $this->t['categoryid'];
-			$d['return']= $this->t['actionbase64'];
+			$d['id']		= (int)$v->id;
+			$d['catid']		= $this->t['categoryid'];
+			$d['return']	= $this->t['actionbase64'];
 			$icon['quickview'] = $layoutQVB->render($d);
 		}
 
@@ -112,6 +112,7 @@ if (!empty($this->items)) {
 		$dP['type'] = $v->type;// PRODUCTTYPE
 
 		if ($this->t['can_display_price']) {
+
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
@@ -148,7 +149,7 @@ if (!empty($this->items)) {
 		}
 
 		// :L: ADD TO CART
-		$dA = $dA2 = $dA3 = $dAb = $dF = array();
+		$dA = $dA2 = $dA3 = $dA4 = $dAb = $dF = array();
 		$icon['addtocart'] = '';
 
 		// STOCK ===================================================
@@ -250,10 +251,11 @@ if (!empty($this->items)) {
 
 		// Different button or icons
 		$addToCartHidden = 0;// Design parameter - if there is no button (add to cart, paddle link, external link), used e.g. for displaying ask a question button
-		if ($v->type == 3) {
+		// Type 3 is Product Price on Demand - there is no add to cart button except Quick View Button
+		if ($v->type == 3 && (int)$this->t['category_addtocart'] != 104) {
 			// PRODUCTTYPE - price on demand price cannot be added to cart
 			$dA = array(); // Skip Standard Add to cart button
-			$icon['addtocart'] = '';// Skip Add to cart icon
+			$icon['addtocart'] = '';// Skip Add to cart icon except Quick View Button
 			$dF = array();// Skip form
 			$addToCartHidden = 1;
 		} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
@@ -282,6 +284,20 @@ if (!empty($this->items)) {
 			$dA3['external_link']	= $v->external_link;
 			$dA3['external_text']	= $v->external_text;
 			$dA3['return']			= $this->t['actionbase64'];
+
+			$dA = array(); // Skip Standard Add to cart button
+			$icon['addtocart'] = '';// Skip Add to cart icon
+			$dF = array();// Skip form
+
+		} else if ((int)$this->t['category_addtocart'] == 104) {
+			// QUICK VIEW
+			$dA4				= array();
+			$dA4['s']			= $this->s;
+			$dA4['linkqvb']		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$dA4['id']			= (int)$v->id;
+			$dA4['catid']		= $this->t['categoryid'];
+			$dA4['return']		= $this->t['actionbase64'];
+			$dA4['button'] 		= 1;
 
 			$dA = array(); // Skip Standard Add to cart button
 			$icon['addtocart'] = '';// Skip Add to cart icon
@@ -335,7 +351,9 @@ if (!empty($this->items)) {
 		$dL['layout']['dA']		= $dA;// Button Add to Cart
 		$dL['layout']['dA2']	= $dA2;// Button Buy now
 		$dL['layout']['dA3']	= $dA3;// Button external link
+		$dL['layout']['dA4']	= $dA4;// Button external link
 		$dL['layout']['dQ']		= $dQ;// Ask A Question
+
 
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
@@ -368,6 +386,20 @@ if (!empty($this->items)) {
 		if ($this->t['cv_display_description'] == 1 && $v->description != '') {
 			$dL['description'] = '<div class="ph-item-desc">' . JHtml::_('content.prepare', $v->description) . '</div>';
 		}
+
+		// TAGS
+		$dL['tags'] =  '';
+		$tagsOutput = PhocacartTag::getTagsRendered((int)$v->id, $this->t['category_display_tags'], ', ');
+		if ($tagsOutput != '') {
+			$dL['tags'] .= $tagsOutput;
+		}
+
+		// MANUFACTURER
+		$dL['manufacturer'] =  '';
+		if ($this->t['category_display_manufacturer'] > 0) {
+			$dL['manufacturer'] .= PhocacartManufacturer::getManufacturerRendered((int)$v->manufacturerid, $v->manufacturertitle, $v->manufactureralias, $this->t['manufacturer_alias'], $this->t['category_display_manufacturer'], 0, '');
+		}
+
 
 		if ($lt == 'list') {
 			echo $layoutIL->render($dL);

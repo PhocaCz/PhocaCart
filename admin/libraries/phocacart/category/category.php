@@ -261,6 +261,8 @@ final class PhocacartCategory
 	}
 
 	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active, $forceCategoryId = 0) {
+
+
 		$result = array();
 		if (!empty($data) && count($data) > 0) {
 			$result[] = '<ul class="ph-filter-module-category-tree">';
@@ -287,9 +289,32 @@ final class PhocacartCategory
 					}
 				}
 
+				$count = '';
+				// If we are in item view - one category is selected but if user click on filter to select other category, this one should be still selected - we go to items view with 2 selected
+				// because force category is on
+				if (isset($v['count_products']) && isset($d['params']['display_category_count']) && $d['params']['display_category_count'] == 1 ) {
+					$count = ' <span class="ph-filter-count">'.(int)$v['count_products'].'</span>';
+				}
+
+				$icon = '';
+				if ($v['icon_class'] != '') {
+					$icon = '<span class="' . PhocacartText::filterValue($v['icon_class'], 'text') . ' ph-filter-item-icon"></span> ';
+				}
+
+				$jsSet = '';
+
+				if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+					// Category View - force the category parameter if set in parameters
+					$jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1,  \'text\', 0, 1, 1);'; // ADD IS FIXED ( use "text" as formType - it cannot by managed by checkbox, it is fixed - always 1 - does not depends on checkbox, it is fixed 1
+				}
+
+
+
+				$jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\', 0, 1);';// ADD OR REMOVE
+
 
 				$result[] = '<li><div class="checkbox">';
-				$result[] = '<label class="ph-checkbox-container"><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\');" />'.$v['title'].'<span class="ph-checkbox-checkmark"></span></label>';
+				$result[] = '<label class="ph-checkbox-container"><input type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'. $icon . $v['title'].$count.'<span class="ph-checkbox-checkmark"></span></label>';
 				$result[] = '</div></li>';
 				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active);
 			}
@@ -351,9 +376,9 @@ final class PhocacartCategory
 		return self::$categoryF[$cis];
 	}
 
-	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {
+	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '', $limitCount = -1) {
 
-		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide . 'l'. $lang);
+		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide . 'l'. $lang . 'c'.$limitCount);
 		if( empty(self::$categoryA[$cis])) {
 			/*phocacart import('phocacart.ordering.ordering');*/
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
@@ -381,7 +406,11 @@ final class PhocacartCategory
 				$wheres[] = " c.id NOT IN (".$hide.")";
 			}
 
-			$query = 'SELECT c.id, c.title, c.alias, c.parent_id, c.image, c.description'
+			if ((int)$limitCount > -1) {
+				$wheres[] = " c.count_products > ".(int)$limitCount;
+			}
+
+			$query = 'SELECT c.id, c.title, c.alias, c.parent_id, c.icon_class, c.image, c.description, c.count_products'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
@@ -416,8 +445,27 @@ final class PhocacartCategory
 		return 0;
 	}
 
+    public static function getActiveCategories($items, $ordering) {
 
-	public final function __clone() {
+		$db     = JFactory::getDbo();
+	    $o      = array();
+        $wheres = array();
+        $ordering = PhocacartOrdering::getOrderingText($ordering, 1);//c
+		if ($items != '') {
+			$wheres[] = 'c.id IN (' . $items . ')';
+			$q = 'SELECT DISTINCT c.title, CONCAT(c.id, \'-\', c.alias) AS alias, \'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
+				. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+				. ' GROUP BY c.alias, c.title'
+				. ' ORDER BY ' . $ordering;
+
+			$db->setQuery($q);
+			$o = $db->loadAssocList();
+		}
+		return $o;
+    }
+
+
+    public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
 	}

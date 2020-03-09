@@ -56,6 +56,7 @@ class PhocacartOrderRender
 
 
 
+
 		// Access rights actions ignored in administration
 		if (!$app->isClient('administrator')){
 
@@ -79,6 +80,32 @@ class PhocacartOrderRender
 
 			} else {
 				$user = PhocacartUser::getUser();
+
+
+				// Frontend displaying rules
+				// Frontend, view = orders view or view = order view
+				// Order status can prevent from displaying some documents (can be set for each order status, parameter: orders_view_diplay
+				// So this rules only applies to frontend orders or order view (and of course then all other rules are applied too, like user or token
+				$app				= JFactory::getApplication();
+				$view				= $app->input->get('view', '', 'string');
+				$option				= $app->input->get('option', '', 'string');
+
+				$displayInOrderView = true;
+				if ($option == 'com_phocacart' && ($view == 'orders' || $view == 'order')) {
+					$displayDocument = json_decode($d['common']->ordersviewdisplay);
+					if (!in_array($type, $displayDocument)) {
+						$displayInOrderView = false;
+					}
+				}
+
+
+
+
+				// We are in orders/order view and order status cannot display current document
+				if ($displayInOrderView == false) {
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Order status does not allow this document to be displayed in Order/Orders View');
+					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+				}
 
 				if ((int)$user->id < 1 && $token == '') {
 					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (1)');

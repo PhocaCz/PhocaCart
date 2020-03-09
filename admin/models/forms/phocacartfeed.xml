@@ -59,6 +59,8 @@
 
 <field name="item_description_long" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_LONG_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_LONG_LABEL"  />
 
+<field name="item_features" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_FEATURES_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FEATURES_ELEMENT_DESC"  />
+
 <field name="item_url" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_URL_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_URL_ELEMENT_DESC"  />
 
 <field name="item_url_image" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_IMAGE_URL_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_IMAGE_URL_ELEMENT_DESC"  />

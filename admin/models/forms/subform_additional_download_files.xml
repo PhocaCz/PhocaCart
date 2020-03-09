@@ -7,6 +7,8 @@
 		<field name="download_token" type="phocacarttoken" manager="token" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC" />
 	
 		<field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL"  description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="inputbox" size="40" />
+		
+		<field name="download_days" default="-1" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_DESC"/>
 
 	</fieldset>
 </form>

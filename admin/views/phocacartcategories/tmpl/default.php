@@ -29,10 +29,10 @@ if ($saveOrder) {
 $sortFields = $this->getSortFields();
 
 
-$nrColumns = 9;
+$nrColumns = 10;
 $assoc     = JLanguageAssociations::isEnabled();
 if ($assoc) {
-    $nrColumns = 10;
+    $nrColumns = 11;
 }
 
 echo $r->jsJorderTable($listOrder);
@@ -77,6 +77,7 @@ echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_PARENT_CATEGORY', 'parentcat_title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-productcount">'.JHtml::_('grid.sort', $this->t['l'].'_PRODUCT_COUNT', 'a.count_products', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
 
 if ($assoc) {
@@ -146,6 +147,15 @@ if ($canEditParent) {
 	$parentO = $this->escape($item->parentcat_title);
 }
 echo $r->td($parentO, "small");
+
+
+$pC = '<div class="center">'.$item->count_products;
+if (PhocacartUtils::validateDate($item->count_date)) {
+    $pC .= '<br><small class="nowrap">('.JHtml::_('date', $item->count_date, 'd-m-Y H:i').')</small>';
+}
+$pC .= '</div>';
+echo $r->td($pC, "small");
+
 echo $r->td($this->escape($item->access_level), "small");
 
 if ($assoc) {

@@ -8,5 +8,21 @@
  */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
-class PhocaCartCpControllerPhocacartManufacturer extends PhocaCartCpControllerPhocaCartCommon {}
+class PhocaCartCpControllerPhocacartManufacturer extends PhocaCartCpControllerPhocaCartCommon {
+
+    function countproducts() {
+		$app	= JFactory::getApplication();
+		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		\Joomla\Utilities\ArrayHelper::toInteger($cid);
+		$redirect = 'index.php?option=com_phocacart&view=phocacartmanufacturers';
+
+		if (count( $cid ) < 1) {
+			$app->enqueueMessage(JText::_( 'COM_PHOCACART_SELECT_ITEM_COUNT_PRODUCTS' ), 'error');
+			$app->redirect($redirect);
+		}
+
+		PhocacartCount::setProductCount($cid, 'manufacturer');// Message set by Count Class
+		$app->redirect($redirect);
+	}
+}
 ?>

@@ -81,7 +81,13 @@ class PhocacartUtils
 	}
 
 	public static function getAliasName($alias) {
-		$alias = JApplicationHelper::stringURLSafe($alias);
+
+		if (JFactory::getConfig()->get('unicodeslugs') == 1) {
+			$alias= JFilterOutput::stringURLUnicodeSlug($alias);
+		} else {
+			$alias = JFilterOutput::stringURLSafe($alias);
+		}
+
 		if (trim(str_replace('-', '', $alias)) == '') {
 			$alias = JFactory::getDate()->format("Y-m-d-H-i-s");
 		}
@@ -236,6 +242,7 @@ class PhocacartUtils
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
+
 		return $ip;
 	}
 
@@ -260,7 +267,7 @@ class PhocacartUtils
 		$table->load($idCom);
 
 		if (!$table->bind($data)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($table->getError());
 			return false;
 		}
 
@@ -518,6 +525,18 @@ class PhocacartUtils
 				return true;
 			}
 		}
+		return false;
+	}
+
+
+	public static function validateDate($date) {
+		$format = 'Y-m-d H:i:s';
+		$dateTime = DateTime::createFromFormat($format, $date);
+
+		if ($dateTime instanceof DateTime && $dateTime->format('Y-m-d H:i:s') == $date) {
+			return $dateTime->getTimestamp();
+		}
+
 		return false;
 	}
 }

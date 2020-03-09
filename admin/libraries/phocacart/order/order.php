@@ -1575,6 +1575,7 @@ class PhocacartOrder
         $d['order_product_id']	= (int)$orderProductId;
         $d['title']				= $product->title;
         $d['download_hits']		= 0;
+        $d['download_days']		= $product->download_days;
         $d['published']			= 0;
         $d['date']				= gmdate('Y-m-d H:i:s');
         $d['ordering']			= 0;
@@ -1648,6 +1649,7 @@ class PhocacartOrder
             $d['download_token']	= '';
             $d['download_folder']	= $product->download_folder;
             $d['download_file']		= '';
+            $d['download_days']		= -1;
             $d['type']		        = 2;
 
             foreach($additionalDownloadFiles as $k => $v) {
@@ -1655,11 +1657,12 @@ class PhocacartOrder
 
                 if (isset($v['download_file']) && $v['download_file'] != ''
                     && isset($d['download_folder']) && $d['download_folder'] != ''
-                    && isset($v['download_token'])) {
+                    && isset($v['download_token']) && isset($v['download_days'])) {
 
 
                     $d['download_token'] = $v['download_token'];
                     $d['download_file'] = $v['download_file'];
+                    $d['download_days'] = $v['download_days'];
 
                     $d['title'] = $product->title;
 
@@ -1977,10 +1980,10 @@ class PhocacartOrder
 		return $orderBillingData;
 	}
 
-	public static function getOrderCusomerData($orderId) {
+	public static function getOrderCustomerData($orderId) {
 		$db 	= JFactory::getDBO();
 		$query 	= ' SELECT *'
-				. ' FROM #__phocacart_order_users WHERE order_id = '. (int)$orderId . ' LIMIT 2';
+				. ' FROM #__phocacart_order_users WHERE order_id = '. (int)$orderId . ' ORDER BY type ASC LIMIT 2';
 		$db->setQuery($query);
 
 		$data = $db->loadAssocList();

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+    <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
+
+        <field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
+
+        <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+
+		<field name="title_header" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PARAMETER_TITLE_HEADER_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_TITLE_HEADER_DESC" />
+
+		<field name="link_type" type="list" label="COM_PHOCACART_FIELD_PARAMETER_LINK_TYPE_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_LINK_TYPE_DESC" class="inputbox" size="1" default="0">
+            <option value="0">COM_PHOCACART_NONE</option>
+			<option value="1">COM_PHOCACART_SEARCH_OUTCOME_LINK</option>
+        </field>
+        <!--
+        <field name="link_cat" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LINK_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_LINK_DESC" class="inputbox"  />
+
+        <field name="link_ext" type="text" label="COM_PHOCACART_FIELD_EXT_LINK_TAG_LABEL"  description="COM_PHOCACART_FIELD_EXT_LINK_TAG_DESC" class="inputbox" size="40" />
+
+        <field name="type" type="list" label="COM_PHOCACART_FIELD_TAG_TYPE_LABEL" description="COM_PHOCACART_FIELD_TAG_TYPE_DESC" class="inputbox" size="1" default="0">
+            <option value="0">COM_PHOCACART_TAG</option>
+            <option	value="1">COM_PHOCACART_LABEL</option>
+        </field>
+
+        <field name="display_format" type="list" label="COM_PHOCACART_FIELD_TAG_DISPLAY_FORMAT_LABEL" description="COM_PHOCACART_FIELD_TAG_DISPLAY_FORMAT_DESC" class="inputbox" size="1" default="1">
+            <option value="1">COM_PHOCACART_TITLE_ONLY</option>
+            <option value="2">COM_PHOCACART_ICON_ONLY</option>
+            <option	value="3">COM_PHOCACART_ICON_AND_TITLE</option>
+        </field>
+
+        <field name="icon_class" type="text" label="COM_PHOCACART_FIELD_TAG_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_TAG_ICON_CLASS_DESC" class="inputbox" size="40" />
+        -->
+        <field name="ordering" type="phocacartOrdering" table="tag" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
+
+    </fieldset>
+
+    <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
+
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+
+        <field name="limit_count" default="-1" size="10" type="text" label="COM_PHOCACART_FIELD_LIMIT_PARAMETER_COUNT_PRODUCTS_LABEL"
+                       description="COM_PHOCACART_FIELD_LIMIT_PARAMETER_COUNT_PRODUCTS_DESC"/>
+
+    </fieldset>
+
+</form>

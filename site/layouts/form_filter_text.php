@@ -20,24 +20,24 @@ if (isset($d['param2']) && $d['param2'] != '') {
     $jsSet = '';
     if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
         // Category View - force the category parameter if set in parameters
-        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1, 1);';
     }
-    $jsSet	.= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 1);';
-	$jsSet	.= 'phChangeFilter(\''.$d['param2'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['param2name'].'&quot;]\').val(), 1, \'text\', 1);';
+    $jsSet	.= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 1, 1);';
+	$jsSet	.= 'phChangeFilter(\''.$d['param2'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['param2name'].'&quot;]\').val(), 1, \'text\', 1, 0, 1);';
 
 	$jsClear		 = 'phClearField(\'#'.$d['id'].$d['paramname'].'\');';
 	$jsClear		.= 'phClearField(\'#'.$d['id'].$d['param2name'].'\');';
-	$jsClear		.= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1, 1);';
-	$jsClear		.= 'phChangeFilter(\''.$d['param2'].'\', \'\', 0, \'text\', 1);';
+	$jsClear		.= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1, 1, 1);';
+	$jsClear		.= 'phChangeFilter(\''.$d['param2'].'\', \'\', 0, \'text\', 1, 0, 1);';
 } else {
 	// We have only one parameter so we don't need define wait and the site is reloaded immediately
     $jsSet = '';
     if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
         // Category View - force the category parameter if set in parameters
-        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+        $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1, 1);';
     }
-	$jsSet	.= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1);';
-	$jsClear= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1);';
+	$jsSet	.= 'phChangeFilter(\''.$d['param'].'\', jQuery(\'#'. $d['id'].' input[name=&quot;'.$d['paramname'].'&quot;]\').val(), 1, \'text\', 1, 0, 1);';
+	$jsClear= 'phChangeFilter(\''.$d['param'].'\', \'\', 0, \'text\', 1, 0 , 1);';
 }
 
 
@@ -52,13 +52,14 @@ if (isset($d['filterprice']) && $d['filterprice'] == 2) {
 	$styleFormGroup = 'style="display:none"';
 }
 
+$title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 $displayData 	= null;
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>">
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> <?php echo $d['param']; ?>">
 	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $d['param']; ?>">
 		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
-			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
-			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse"><?php echo $d['title'] ?></a>
+			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo JText::_('COM_PHOCACART_COLLAPSE') . ' ' . $title ?>"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
+			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo $title ?>"><?php echo $title ?></a>
 		</h4>
 	</div>
 
@@ -66,13 +67,13 @@ $displayData 	= null;
 		<div class="<?php echo $d['s']['c']['panel-body'] ?> <?php echo $d['s']['c']['form-horizontal'] ?>" id="<?php echo $d['id']; ?>">
 
 			<div class="<?php echo $d['s']['c']['form-group'] ?> <?php echo $d['s']['c']['row'] ?>" <?php echo $styleFormGroup ?>>
-				<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['paramname']; ?>"><?php echo $d['title1']; ?></label>
+				<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['id'].$d['paramname']; ?>"><?php echo $d['title1']; ?></label>
 				<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>"><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" value="<?php echo $d['getparams'][0]; ?>" id="<?php echo $d['id'].$d['paramname']; ?>" /></div>
 			</div>
 			<?php
 			if (isset($d['param2']) && $d['param2'] != '') { ?>
 				<div class="<?php echo $d['s']['c']['form-group'] ?> <?php echo $d['s']['c']['row'] ?>" <?php echo $styleFormGroup ?>>
-					<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['param2name']; ?>"><?php echo $d['title2']; ?></label>
+					<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['id'].$d['param2name']; ?>"><?php echo $d['title2']; ?></label>
 					<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>"><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['param2name']; ?>" value="<?php echo $d['getparams2'][0]; ?>" id="<?php echo $d['id'].$d['param2name']; ?>" /></div>
 				</div>
 			<?php } ?>

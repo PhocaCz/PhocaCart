@@ -108,7 +108,6 @@ if (!empty($this->items)) {
 		// :L: PRICE
 		$dP = array();
 		$dP['type'] = $v->type;// PRODUCTTYPE
-
 		if ($this->t['can_display_price']) {
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 
@@ -146,7 +145,7 @@ if (!empty($this->items)) {
 		}
 
 		// :L: ADD TO CART
-		$dA = $dA2 = $dA3 = $dAb = $dF = array();
+		$dA = $dA2 = $dA3 = $dA4 = $dAb = $dF = array();
 		$icon['addtocart'] = '';
 
 		// STOCK ===================================================
@@ -250,10 +249,10 @@ if (!empty($this->items)) {
 
 		// Different button or icons
 		$addToCartHidden = 0;// Design parameter - if there is no button (add to cart, paddle link, external link), used e.g. for displaying ask a question button
-		if ($v->type == 3) {
+		if ($v->type == 3 && (int)$this->t['category_addtocart'] != 104) {
 			// PRODUCTTYPE - price on demand price cannot be added to cart
 			$dA = array(); // Skip Standard Add to cart button
-			$icon['addtocart'] = '';// Skip Add to cart icon
+			$icon['addtocart'] = '';// Skip Add to cart icon except Quick View Button
 			$dF = array();// Skip form
 			$addToCartHidden = 1;
 		} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
@@ -287,6 +286,20 @@ if (!empty($this->items)) {
 			$icon['addtocart'] = '';// Skip Add to cart icon
 			$dF = array();// Skip form
 
+
+		} else if ((int)$this->t['category_addtocart'] == 104) {
+			// QUICK VIEW
+			$dA4				= array();
+			$dA4['s']			= $this->s;
+			$dA4['linkqvb']		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$dA4['id']			= (int)$v->id;
+			$dA4['catid']		= $this->t['categoryid'];
+			$dA4['return']		= $this->t['actionbase64'];
+			$dA4['button'] 		= 1;
+
+			$dA = array(); // Skip Standard Add to cart button
+			$icon['addtocart'] = '';// Skip Add to cart icon
+			$dF = array();// Skip form
 
 		} else {
 			// ADD TO CART ICON ONLY (NO BUTTONS)
@@ -341,6 +354,7 @@ if (!empty($this->items)) {
 		$dL['layout']['dA']		= $dA;// Button Add to Cart
 		$dL['layout']['dA2']	= $dA2;// Button Buy now
 		$dL['layout']['dA3']	= $dA3;// Button external link
+		$dL['layout']['dA4']	= $dA4;// Button external link
 		$dL['layout']['dQ']		= $dQ;// Ask A Question
 
 		$dL['icon']				= $icon;// Icons
@@ -373,6 +387,19 @@ if (!empty($this->items)) {
 		$dL['description'] = '';
 		if ($this->t['cv_display_description'] == 1 && $v->description != '') {
 			$dL['description'] = '<div class="ph-item-desc">' . JHtml::_('content.prepare', $v->description) . '</div>';
+		}
+
+		// TAGS
+		$dL['tags'] =  '';
+		$tagsOutput = PhocacartTag::getTagsRendered((int)$v->id, $this->t['category_display_tags'], ', ');
+		if ($tagsOutput != '') {
+			$dL['tags'] .= $tagsOutput;
+		}
+
+		// MANUFACTURER
+		$dL['manufacturer'] =  '';
+		if ($this->t['category_display_manufacturer'] > 0) {
+			$dL['manufacturer'] .= PhocacartManufacturer::getManufacturerRendered((int)$v->manufacturerid, $v->manufacturertitle, $v->manufactureralias, $this->t['manufacturer_alias'], $this->t['category_display_manufacturer'], 0, '');
 		}
 
 		if ($lt == 'list') {

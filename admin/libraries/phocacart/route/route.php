@@ -57,6 +57,15 @@ class PhocacartRoute
 
 	public static function getCategoryRoute($catid, $catidAlias = '', $lang = array()) {
 
+
+		$pC = PhocacartUtils::getComponentParameters();
+        $skip_category_view = $pC->get('skip_category_view', 0);
+
+        if ($skip_category_view == 1) {
+        	return self::getItemsRoute('', '', 'c', (int)$catid .'-'.$catidAlias) ;
+		}
+
+
 		$app 		= JFactory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();

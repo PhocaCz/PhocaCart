@@ -12,7 +12,7 @@ $d = $displayData;
 if ($d['popup'] == 2) { ?>
 
 <div class="<?php echo $d['s']['c']['pull-right'];?>">
-        <a data-toggle="modal" data-id="phAskAQuestionPopup" data-src="<?php echo $d['link'] ?>" class="<?php echo $d['s']['c']['btn.btn-default.btn-sm'];?> ph-btn phModalContainerButton" role="button" title="<?php echo JText::_('COM_PHOCACART_ASK_A_QUESTION'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['question-sign'] ?>"></span> <?php echo JText::_('COM_PHOCACART_ASK_A_QUESTION'); ?></a>
+        <a href="javascript:void(0)" data-toggle="modal" data-id="phAskAQuestionPopup" data-src="<?php echo $d['link'] ?>" class="<?php echo $d['s']['c']['btn.btn-default.btn-sm'];?> ph-btn phModalContainerButton" role="button" title="<?php echo JText::_('COM_PHOCACART_ASK_A_QUESTION'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['question-sign'] ?>"></span> <?php echo JText::_('COM_PHOCACART_ASK_A_QUESTION'); ?></a>
 </div>
 
 <?php } else if ($d['popup'] == 1) { ?>

@@ -285,13 +285,13 @@ final class PhocacartRenderJspos
 		$s[] = '            }';
 		$s[] = '            var phDataMain 	= phPosCurrentData(forcepageSuccess, "raw", id);';
 		$s[] = '            phDoSubmitFormUpdateCategoriesBox(phDataCats, phUrl);';// refresh categories box (when chaning users, users can have different access to categories)
-		$s[] = '            phDoSubmitFormPaginationTop(phDataMain, phUrl);';// reload main box to default (list of products)
+		$s[] = '            phRenderPage(phDataMain, phUrl);';// reload main box to default (list of products)
 		$s[] = '            phDoSubmitFormUpdateInputBox(phDataInput, phUrl);';// refresh input box
 		$s[] = '            phDoSubmitFormUpdateCart(phDataCart);';// reload updated cart
 		$s[] = '            jQuery(".ph-pos-message-box").html(data.message);';
 		$s[] = '         } else if (data.status == 0){';
 		$s[] = '            var phDataMain 	= phPosCurrentData(forcepageError);';
-		$s[] = '            phDoSubmitFormPaginationTop(phDataMain, phUrl);';// reload main box to default (list of products)
+		$s[] = '            phRenderPage(phDataMain, phUrl);';// reload main box to default (list of products)
 		$s[] = '            phDoSubmitFormUpdateInputBox(phDataInput, phUrl);';// refresh input box
 		$s[] = '            phDoSubmitFormUpdateCart(phDataCart);';// reload updated cart
 		$s[] = '            jQuery(".ph-pos-message-box").html(data.error);';
@@ -375,7 +375,7 @@ final class PhocacartRenderJspos
 		$s[] = '   var phUrl 		= phAddSuffixToUrl(window.location.href, \'format=raw\');';
 		$s[] = '   var sForm 		= jQuery(this).closest("form");';// Find in which form the right button was clicked
 		$s[] = '   var sFormData 	= sForm.serialize();';
-		$s[] = '   phDoSubmitFormPaginationTop(sFormData, phUrl);';
+		$s[] = '   phRenderPage(sFormData, phUrl);';
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clean message box
 		$s[] = '      e.preventDefault();';
 		$s[] = '})';
@@ -422,7 +422,7 @@ final class PhocacartRenderJspos
 		$s[] = '   var sForm		= jQuery("#phPosDateOrdersForm");';
 		$s[] = '   var sFormData	= sForm.serialize();';
 		//$s[] = '   var phDataMain 	= phPosCurrentData();';
-		$s[] = '   phDoSubmitFormPaginationTop(sFormData, phUrl);';// reload main box to default (list of products)
+		$s[] = '   phRenderPage(sFormData, phUrl);';// reload main box to default (list of products)
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clean message box
 		$s[] = '      e.preventDefault();';
 		$s[] = '})';
@@ -474,7 +474,7 @@ final class PhocacartRenderJspos
 		$s[] = '   var phData 	= "search=" + typeValue + "&" + phPosCurrentData();';
 		$s[] = '   phUpdateUrlParameter("search", typeValue);';
 		$s[] = '   var phUrl 	= phAddSuffixToUrl(window.location.href, \'format=raw\');';//get the url after update
-		$s[] = '   phDoSubmitFormPaginationTop(phData, phUrl);';
+		$s[] = '   phRenderPage(phData, phUrl);';
 		$s[] = '   jQuery(".ph-pos-message-box").html("");';// clear message box
 		$s[] = '}';
 
@@ -555,7 +555,7 @@ final class PhocacartRenderJspos
 		$s[] = '      phUpdateUrlParameter("category", cValue);';// update URL bar
 		//$s[] = '      var phUrl = phUpdateUrlParameter("category", cValue, phUrl);';// Update phUrl - it is a form url which is taken by joomla to create pagination links
 		$s[] = '      var phUrl 	= phAddSuffixToUrl(window.location.href, \'format=raw\');';// get the link after update of url bar
-		$s[] = '      phDoSubmitFormPaginationTop(phData, phUrl);';
+		$s[] = '      phRenderPage(phData, phUrl);';
 		$s[] = '      jQuery(".ph-pos-message-box").html("");';// clear message box
 		$s[] = '   });';
 		$s[] = '})';
@@ -567,7 +567,7 @@ final class PhocacartRenderJspos
 		$s[] = '        var phUrl 		= phAddSuffixToUrl(window.location.href, \'format=raw\');';
 		$s[] = '	    var sForm 		= jQuery(this).closest("form");';// Find in which form the right button was clicked
 		$s[] = '	    var sFormData 	= sForm.serialize()';
-		$s[] = '		phDoSubmitFormPaginationTop(sFormData, phUrl);';
+		$s[] = '		phRenderPage(sFormData, phUrl);';
 		$s[] = '		e.preventDefault();';
 		$s[] = '	})';
 		$s[] = '})';*/
@@ -580,8 +580,8 @@ final class PhocacartRenderJspos
 	public static function changeUrlParameter($params) {
 
 		$s 	= array();
-		$s[] = ' ';
-		$s[] = '/* Function phRemoveUrlParameter */';
+		/*$s[] = ' ';
+		$s[] = '/* Function phRemoveUrlParameter ';
 		$s[] = 'function phRemoveUrlParameter(param, url) {';
 		$s[] = '   var rtn = url.split("?")[0],';
         $s[] = '   param,';
@@ -602,7 +602,7 @@ final class PhocacartRenderJspos
 
 		$s[] = ' ';
 
-		$s[] = '/* Function phRemoveUrlParameter */';
+		$s[] = '/* Function phRemoveUrlParameter ';
 		$s[] = 'function phUpdateUrlParameter(param, value, urlChange) {';
 		$s[] = '   if (typeof urlChange !== "undefined") {';
 		$s[] = '      var url =  urlChange;';
@@ -637,7 +637,7 @@ final class PhocacartRenderJspos
 	    $s[] = '   }';
 	    $s[] = '}';
 
-	    $s[] = ' ';
+	    $s[] = ' ';*/
 
 	    if (!empty($params)) {
 

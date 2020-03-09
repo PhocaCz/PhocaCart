@@ -52,7 +52,12 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 			}
 
-			if((int)$this->t['download_days'] > 0 && !PhocacartDownload::isActive($v->date, $this->t['download_days'])) {
+			$downloadDays = (int)$this->t['download_days'];
+			if (isset($v->download_days) && (int)$v->download_days > -1) {
+				$downloadDays = (int)$v->download_days;
+			}
+
+			if($downloadDays != 0 && !PhocacartDownload::isActive($v->date, $downloadDays)) {
 				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.JText::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span><br />';
 
 			}
@@ -71,7 +76,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 					$status .= JText::_('COM_PHOCACART_REMAINING'). '</span>';
 				}
 
-				$dateValid = PhocacartDownload::validUntil($v->date, $this->t['download_days']);
+				$dateValid = PhocacartDownload::validUntil($v->date, $downloadDays);
 				if ($dateValid) {
 					$status .= '<br /> <span class="ph-small">'.JText::_('COM_PHOCACART_DOWNLOAD_VALID_UNTIL'). ': ';
 					$status .= ' '.$dateValid.'<span>';

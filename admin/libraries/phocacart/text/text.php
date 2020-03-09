@@ -145,7 +145,7 @@ class PhocacartText {
 				foreach ($products as $k => $v) {
 
 				    // Main Product Download File
-					if ($v->download_published == 1 && isset($v->download_file) && $v->download_file != '' && isset($v->download_folder) && $v->download_folder != '') {
+					if (isset($v->download_published) && $v->download_published == 1 && isset($v->download_file) && $v->download_file != '' && isset($v->download_folder) && $v->download_folder != '') {
 						$downloadO .= '<div><strong>'.$v->title.'</strong></div>';
 						$downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v->download_token);
 						$downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
@@ -154,7 +154,7 @@ class PhocacartText {
 					// Product Attribute Option Download File
                     if (!empty($v->attributes)) {
                         foreach ($v->attributes as $k2 => $v2) {
-                            if ($v2->download_published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '') {
+                            if (isset($v2->download_published) && $v2->download_published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '') {
                                 $downloadO .= '<div><strong>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</strong></div>';
                                 $downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v2->download_token);
                                 $downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
@@ -281,7 +281,7 @@ class PhocacartText {
             break;
 
             case 'text':
-                return htmlspecialchars(strip_tags($string), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                return trim(htmlspecialchars(strip_tags($string), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
                 break;
 
             case 'html':

@@ -54,21 +54,23 @@ foreach ($d['items'] as $k => $v) {
         $jsSet = '';
         if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
             // Category View - force the category parameter if set in parameters
-            $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1);';
+            $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1, 1);';
         }
-        $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\');return false;';
+        $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\', 0, 1);return false;';
 
         $output .= '<a href="#" class="phSelectBoxImage '.$class.'" onclick="'.$jsSet.'" title="'.htmlspecialchars($v->title).'">'
         .'<img style="'.$d['style'].'" src="'.$linkI.'" alt="'.$v->title.'" />'
         .'</a>';
     }
 }
+
+$title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>">
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>  <?php echo $dParamAttr; ?>">
 	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
 		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
 			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $d['title'] ?></a>
+			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $title ?></a>
 		</h4>
 	</div>
 

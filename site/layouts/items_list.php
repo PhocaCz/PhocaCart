@@ -16,6 +16,7 @@ $layoutPFE	= new JLayoutFile('form_part_end', null, array('component' => 'com_ph
 $layoutA	= new JLayoutFile('button_add_to_cart_list', null, array('component' => 'com_phocacart'));
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
 $layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
+$layoutA4 	= new JLayoutFile('button_quickview', null, array('component' => 'com_phocacart'));
 $layoutBSH	= new JLayoutFile('button_submit_hidden', null, array('component' => 'com_phocacart'));
 $layoutQ	= new JLayoutFile('button_ask_question', null, array('component' => 'com_phocacart'));
 
@@ -54,6 +55,11 @@ echo $d['product_header'];
 
 // DESCRIPTION
 if (!empty($d['description'])) { echo $d['description'];}
+
+// TAGS
+if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.JText::_('COM_PHOCACART_TAGS'). '</span>: ' .  $d['tags'] . '</div>';}
+// MANUFACTURER
+if (!empty($d['manufacturer'])) { echo '<div class="ph-manufacturer-box">'  . '<span class="ph-manufacturer-box-header">'.JText::_('COM_PHOCACART_MANUFACTURER'). '</span>: ' .  $d['manufacturer'] . '</div>';}
 
 echo '</div>';// end category_row_item_box_wrap_content_caption
 echo '</div>';// end category_row_item_list_inner_c2 2/3
@@ -105,6 +111,7 @@ if (!empty($d['layout']['dF'])) { echo $layoutPFE->render();}
 
 if (!empty($d['layout']['dA2'])) { echo $layoutA2->render($d['layout']['dA2']);}
 if (!empty($d['layout']['dA3'])) { echo $layoutA3->render($d['layout']['dA3']);}
+if (!empty($d['layout']['dA4'])) { echo $layoutA4->render($d['layout']['dA4']);}
 
 echo '</div>';// end category_action_buttons
 

@@ -15,14 +15,15 @@ class JFormFieldPhocaTags extends JFormField
 
 	protected function getInput() {
 		
-		$id = (int) $this->form->getValue('id');
+		$id 	= (int) $this->form->getValue('id');
+		$class	= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
 
 		$activeTags = array();
 		if ((int)$id > 0) {
 			$activeTags	= PhocacartTag::getTags($id, 1);
 		}
 		
-		return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL,'id' );
+		return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL, 'id', 0, $class );
 	}
 }
 ?>

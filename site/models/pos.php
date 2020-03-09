@@ -31,6 +31,9 @@ class PhocaCartModelPos extends JModelLegacy
 		$item_pagination	= $paramsC->get( 'pos_pagination_default', 24 );
 		$item_ordering		= $paramsC->get( 'pos_ordering', 1 );
 
+		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
+		$manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
+
 		$this->setState('page', $app->input->get('page', 'main.content.products'));
 		//$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'), 1);
 
@@ -77,9 +80,9 @@ class PhocaCartModelPos extends JModelLegacy
 		// =FILTER=
 		$this->setState('tag', $app->input->get('tag', '', 'string'));
         $this->setState('label', $app->input->get('label', '', 'string'));
-		$this->setState('manufacturer', $app->input->get('manufacturer', '', 'string'));
-		$this->setState('price_from', $app->input->get('price_from', '', 'string'));
-		$this->setState('price_to', $app->input->get('price_to', '', 'string'));
+		$this->setState('manufacturer', $app->input->get($manufacturer_alias, '', 'string'));
+		$this->setState('price_from', $app->input->get('price_from', '', 'float'));
+		$this->setState('price_to', $app->input->get('price_to', '', 'float'));
 		// Javascript update url has problems with "c", so changed to "category"
 		//$this->setState('c', $app->input->get('c', '', 'string')); // Category More (All Categories)
 		$this->setState('c', $app->input->get('category', '', 'string')); // Category More (All Categories)

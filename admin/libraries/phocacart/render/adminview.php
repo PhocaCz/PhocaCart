@@ -73,6 +73,7 @@ class PhocacartRenderAdminview
 				}
 			} else {
 				foreach ($formArray as $value) {
+
 					$o .= '<div class="control-group">'."\n"
 					. '<div class="control-label">'. $form->getLabel($value) . '</div>'."\n"
 					. '<div class="controls">' . $form->getInput($value). '</div>'."\n"

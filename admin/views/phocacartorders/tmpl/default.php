@@ -153,7 +153,7 @@ if ($item->user_id > 0) {
 } else {
 
 	$userO = '<span class="label label-info">'.JText::_('COM_PHOCACART_GUEST').'</span>';
-	$userData = PhocacartOrder::getOrderCusomerData($item->id);
+	$userData = PhocacartOrder::getOrderCustomerData($item->id);
 
 	if (isset($userData[0]['name_first']) && isset($userData[0]['name_last'])) {
 		$userO .= '<br /><span>'. $userData[0]['name_first'] .' ' . $userData[0]['name_last'].'</span>';

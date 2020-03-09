@@ -64,6 +64,13 @@ class PhocaCartModelItem extends JModelLegacy
 		$params 	= $app->getParams();
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
 
+		$skip			        = array();
+		$skip['access']	        = $params->get('sql_product_skip_access', 0);
+		$skip['group']	        = $params->get('sql_product_skip_group', 0);
+		//$skip['attributes']	    = $params->get('sql_product_skip_attributes', 0);
+		$skip['category_type']  = $params->get('sql_product_skip_category_type', 0);
+		//$skip['tax']   			= $params->get('sql_product_skip_tax', 0);
+
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -82,13 +89,19 @@ class PhocaCartModelItem extends JModelLegacy
 			$order = 'ASC';
 		}
 
-		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		if (!$skip['category_type']) {
+			$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		}
 
-		$wheres[] = " c.access IN (".$userLevels.")";
-		$wheres[] = " a.access IN (".$userLevels.")";
+		if (!$skip['access']) {
+			$wheres[] = " c.access IN (" . $userLevels . ")";
+			$wheres[] = " a.access IN (" . $userLevels . ")";
+		}
 
-		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		if (!$skip['group']) {
+			$wheres[] = " (ga.group_id IN (" . $userGroups . ") OR ga.group_id IS NULL)";
+			$wheres[] = " (gc.group_id IN (" . $userGroups . ") OR gc.group_id IS NULL)";
+		}
 
 		if ($this->getState('filter.language')) {
 			$lang 		= JFactory::getLanguage()->getTag();
@@ -103,10 +116,13 @@ class PhocaCartModelItem extends JModelLegacy
 		$query = ' SELECT a.id, a.title, a.alias, a.catid, c.id AS categoryid, c.title AS categorytitle, c.alias AS categoryalias'
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
-				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-				. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-				.' WHERE ' . implode( ' AND ', $wheres )
+				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+		if (!$skip['group']) {
+			$query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+					. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+		}
+
+		$query .= ' WHERE ' . implode( ' AND ', $wheres )
 				.' ORDER BY pc.ordering '.$order;
 
 
@@ -118,7 +134,7 @@ class PhocaCartModelItem extends JModelLegacy
 		$app		= JFactory::getApplication();
 		$params 	= $app->getParams();
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
-		$wheres		= array();
+
 
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -131,19 +147,34 @@ class PhocaCartModelItem extends JModelLegacy
 			$categoryId = $category[0]->id;
 		}
 
+		$skip			        = array();
+		$skip['access']	        = $params->get('sql_product_skip_access', 0);
+		$skip['group']	        = $params->get('sql_product_skip_group', 0);
+		//$skip['attributes']	    = $params->get('sql_product_skip_attributes', 0);
+		$skip['category_type']  = $params->get('sql_product_skip_category_type', 0);
+		$skip['tax']   			= $params->get('sql_product_skip_tax', 0);
+
+		$wheres		= array();
 		$wheres[]	= " pc.category_id= ".(int) $categoryId;
 		$wheres[]	= " pc.category_id= c.id";
 		$wheres[] 	= " i.published = 1";
 		$wheres[] 	= " c.published = 1";
 		$wheres[] 	= " i.id = " . (int) $itemId;
 
-		$wheres[] = " c.access IN (".$userLevels.")";
-		$wheres[] = " i.access IN (".$userLevels.")";
+		if (!$skip['category_type']) {
+			$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		}
 
-		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		if (!$skip['access']) {
+			$wheres[] = " c.access IN (" . $userLevels . ")";
+			$wheres[] = " i.access IN (" . $userLevels . ")";
+		}
 
-		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		if (!$skip['group']) {
+			$wheres[] = " (ga.group_id IN (" . $userGroups . ") OR ga.group_id IS NULL)";
+			$wheres[] = " (gc.group_id IN (" . $userGroups . ") OR gc.group_id IS NULL)";
+		}
+
 
 		if ($this->getState('filter.language')) {
 			$wheres[] =  ' i.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
@@ -154,26 +185,56 @@ class PhocaCartModelItem extends JModelLegacy
 			$wheres[] = " i.stock > 0";
 		}
 
-		$columns	= 'i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.type, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.date, i.delivery_date, c.id AS catid, c.title AS cattitle, c.alias AS catalias, t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
-		$groupsFull	= 'i.id, i.title, i.alias, i.description, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.type, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, c.id, c.title, c.alias, t.id, t.tax_rate, t.title, t.calculation_type, m.id, m.title, m.link';
-		$groupsFast	= 'i.id';
+
+		$columns	= 'i.id, i.title, i.alias, i.description, i.features, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.type, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.external_link2, i.external_text2, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.date, i.date_update, i.delivery_date, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
+
+		if (!$skip['tax']) {
+            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
+        } else {
+            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
+        }
+
+        if (!$skip['group']) {
+            $columns .= ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+        } else {
+            $columns .= ' NULL as group_price, NULL as group_points_received';
+        }
+
+
+		$groupsFull	= 'i.id, i.title, i.alias, i.description, i.features, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.type, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.date_update, i.delivery_date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.external_link2, i.external_text2, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, c.id, c.title, c.alias, m.id, m.title, m.link';
+
+        if (!$skip['tax']) {
+            $groupsFull .= ', t.id, t.tax_rate, t.calculation_type, t.title';
+        }
+
+        $groupsFast	= 'i.id';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+
 
 		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_products AS i'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = i.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
-				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id'
-				.' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id'
-				. ' LEFT JOIN #__phocacart_item_groups AS ga ON i.id = ga.item_id AND ga.type = 3'// type 3 is product
-				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+				.' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id';
 
-				// user is in more groups, select lowest price by best group
-			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON i.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)'
+		if (!$skip['tax']) {
+            $query .= ' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id';
+        }
+
+		if (!$skip['group']) {
+			$query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON i.id = ga.item_id AND ga.type = 3';// type 3 is product
+			$query .= ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+			// user is in more groups, select lowest price by best group
+			$query .= ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON i.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)';
 			// user is in more groups, select highest points by best group
-			. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)'
+			$query .= ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN ('.$userGroups.') AND type = 3)';
+		}
 
-				.' WHERE ' . implode( ' AND ', $wheres )
+
+
+
+
+		$query .= ' WHERE ' . implode( ' AND ', $wheres )
 				.' GROUP BY '.$groups
 				.' ORDER BY pc.ordering';
 

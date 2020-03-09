@@ -46,7 +46,12 @@ if ($d['t']['display_webp_images'] == 1) {
 
         echo '<picture>';
         //echo '<source type="image/webp" data-src="'. $srcWebP.'" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" />';
-        echo '<source type="image/webp" data-src="'. $srcWebP.'" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" />';// TEST
+       // echo '<source type="image/webp" data-src="'. $srcWebP.'" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" />';// TEST
+
+        // TEST 2 (removed data-src because it is transformed to src in picture tag which is obsolete)
+        echo '<source type="image/webp" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" />';
+
+
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
         echo '</picture>';
 

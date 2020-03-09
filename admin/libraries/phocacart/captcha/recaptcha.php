@@ -17,8 +17,13 @@ class PhocacartCaptchaRecaptcha
 		$document	= JFactory::getDocument();
 		$pC 		= PhocacartUtils::getComponentParameters();
 		$siteKey	= strip_tags(trim($pC->get( 'recaptcha_sitekey', '' )));
+		$lang	    = strip_tags(trim($pC->get( 'recaptcha_lang', '' )));
 
-		$document->addScript('https://www.google.com/recaptcha/api.js');
+		if ($lang != '') {
+		    $lang = '?hl='.$lang;
+        }
+
+		$document->addScript('https://www.google.com/recaptcha/api.js'.$lang);
 		return '<div class="g-recaptcha" data-sitekey="'.$siteKey.'"></div>';
 	}
 	public static function isValid() {

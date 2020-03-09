@@ -16,9 +16,9 @@
 /* FUNCTIONS */
 function phRenderModalWindow(id, title) {
 
-    Joomla.loadingLayer('load');
+
     var phLang = Joomla.getOptions('phLang');
-    
+
 
     o = ''
     + '<div id="'+ id +'" tabindex="-1" class="modal hide fade jviewport-width80">'
@@ -32,7 +32,7 @@ function phRenderModalWindow(id, title) {
 
     jQuery(".modal-backdrop").remove();// Remove not correctly hidden modal-backdrop
     jQuery("#phModalContainer").remove();// Remove previously created container
-    jQuery("#loading-logo").remove();// Remove loading logo (Joomla!)
+
 
     var phModalContainer = jQuery('<div id="phModalContainer"></div>');
 	phModalContainer.appendTo(document.body);
@@ -82,7 +82,7 @@ function phAddValueFile(id, title) {
 function phAddValueImage(id, title, params) {
     document.getElementById(id).value = title;
     jQuery(".modal").modal("hide");
-    
+
     if (params["request"] == 1) {
         var data = {};
         data["filename"] = encodeURIComponent(title);
@@ -111,7 +111,7 @@ function phChangePreviewImage(id, image) {
     //var idItem = '#phTooltipImagePreview_' + id;
    // var idItem = jQuery(this).prev(".phTooltipImagePreview").attr("id");
     var idItem = jQuery("#"+id).prev("span").children(".phTooltipImagePreview");
-    
+
 	jQuery(idItem).html(phOutput);
 	return true;
 }
@@ -129,14 +129,14 @@ jQuery(document).ready(function() {
         var idModal     = "phProductFileModalName" + id;
         var idIframe    = idModal + " iframe";
         src = src.replace("{ph-field-id}", id);
-        
+
         // Select right download folder
         var idFolder =  id;
         // 1) Download File - form field added manually
         idFolder = idFolder.replace("jform_download_file", "jform_download_folder");
         // 2) Download File - form field added dynamically
         // 2a) Files in download options have only one download folder - in this case == undefined (if undefined use the 1) )
-        // 2b) Files in attribute options have download folder for each file - in this case == true   
+        // 2b) Files in attribute options have download folder for each file - in this case == true
         idFolder = idFolder.replace("__download_file", "__download_folder");
 
         if(typeof jQuery("#" + idFolder).val() !== "undefined") {
@@ -146,20 +146,20 @@ jQuery(document).ready(function() {
             // download options (dynamically added download file form fields)
             var phDownloadFolder = jQuery("#jform_download_folder").val();
         }
-       
+
 		src = src + "&folder=" + phDownloadFolder + "&downloadfolder=" + phDownloadFolder;
-        
+
         var phModalWidth = 700;
-        //var phModalHeight = 400; 
+        //var phModalHeight = 400;
         var width = jQuery(this).attr("data-width") || phModalWidth;
         //var height = jQuery(this).attr("data-height") || phModalHeight;
         var height = jQuery(window).height() - 200;
-        
+
         phRenderModalWindow(idModal, title);// Render Modal Window
         jQuery("#" + idIframe).attr({"src": src, "height": height, "width": width});// Set iframe url for rendered modal window
-		
+
     });
-    
+
     /* PublicFile */
 	jQuery(document).on("click", "a.phPublicFileModalButton", function (e) {
         var src         = jQuery(this).attr("data-src");
@@ -170,14 +170,14 @@ jQuery(document).ready(function() {
         src = src.replace("{ph-field-id}", id);
 		//var phDownloadFolder = jQuery("#jform_download_folder").val();
 		src = src + "&folder=&downloadfolder=";
-        
+
         var phModalWidth = 700;
         var width = jQuery(this).attr("data-width") || phModalWidth;
         var height = jQuery(window).height() - 200;
-        
+
         phRenderModalWindow(idModal, title);// Render Modal Window
         jQuery("#" + idIframe).attr({"src": src, "height": height, "width": width});// Set iframe url for rendered modal window
-		
+
     });
 
     /* Image */
@@ -191,18 +191,18 @@ jQuery(document).ready(function() {
         var idIframe    = idModal + " iframe";
         src = src.replace("{ph-field-id}", id);
 		//src = src + "&folder=&downloadfolder=";
-        
+
         var phModalWidth = 700;
         var width = jQuery(this).attr("data-width") || phModalWidth;
         var height = jQuery(window).height() - 200;
-        
+
         phRenderModalWindow(idModal, title);// Render Modal Window
         jQuery("#" + idIframe).attr({"src": src, "height": height, "width": width});// Set iframe url for rendered modal window
-		
-    });
-    
 
-    /* Event Create Thumbnails */ 
+    });
+
+
+    /* Event Create Thumbnails */
 	jQuery(document).on("change", ".imageCreateThumbs", function() {
         var data = {};
 		data["filename"] = encodeURIComponent(jQuery(this).val());
@@ -213,7 +213,7 @@ jQuery(document).ready(function() {
         if (jQuery(this).val().trim() != "") {
 			var image 	= jQuery(this).attr("data-pathimage") + jQuery(this).val();
         }
-		
+
         phChangePreviewImage(jQuery(this).attr("id"), image);
         phDoRequest(jQuery(this).attr("data-requesturl"), data, jQuery(this).attr("data-requestmsg"));
     })
@@ -225,23 +225,23 @@ jQuery(document).ready(function() {
     });
 
 
-    
- 
+
+
 
     /* Event - adding new row of options (in attributes)
      * Add and create download token and download folder for attribute download files
      */
     jQuery(document).on('subform-row-add', function(event, row){
-       
+
         /*
         * Get "download_token" and "download_folder for "options"
         * Get only "download_token" for "additional download files"
         */
        if (jQuery(row).attr("data-base-name") == "options" || jQuery(row).attr("data-base-name") == "additional_download_files") {
 
-            Joomla.loadingLayer('load');
+
             var phVars = Joomla.getOptions('phVars');
-            
+
             var data = {};
             data["task"] = "gettoken";
             var optionId = jQuery(row).find('input').first().attr('id');// Get the option form field ID name of added option row
@@ -257,7 +257,7 @@ jQuery(document).ready(function() {
                 dataType: 'JSON',
                 success:function(response){
                     if ( response.status == 1 ){
-   
+
                         if (jQuery(row).attr("data-base-name") == "options") {
                             // folder is not set for additional files
                             jQuery("#" + idFolder).val(response.folder);
@@ -281,14 +281,14 @@ jQuery(document).ready(function() {
      * Remove download folder and its files
      */
     jQuery(document).on('subform-row-remove', function(event, row){
-       
 
-        /* Possible warning but unfortunately the event cannot be stopped 
+
+        /* Possible warning but unfortunately the event cannot be stopped
          *if(confirm("COM_PHOCACART_WARNING_REMOVING_ATTRIBUTE_OPTION_DELETES_DOWNLOAD_FOLDER_DOWNLOAD_FILE")){}
         */
         if (jQuery(row).attr("data-base-name") == "options") {
- 
-            Joomla.loadingLayer('load');
+
+
             var phVars = Joomla.getOptions('phVars');
 
             data = {};
@@ -329,21 +329,107 @@ jQuery(document).ready(function() {
     })
 
 
+
+
+    jQuery(document).on('paste', '.imageCreateThumbs',function() {
+
+        var element     = jQuery(this);
+        var id          = element.attr("id");
+        var path 	    = element.attr("data-pathimage");
+        var manager 	= element.attr("data-manager");
+        var requestUrl  = element.attr("data-requesturl");
+        var requestMsg  = element.attr("data-requestmsg");
+
+
+        var phVars = Joomla.getOptions('phVars');
+        var phLang = Joomla.getOptions('phLang');
+        var url = 'index.php?option=com_phocacart&view=phocacartimagea&format=json&tmpl=component&' + phVars['token'] + '=1';
+
+        // use event.originalEvent.clipboard for newer chrome versions
+        var items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+        //console.log(JSON.stringify(items)); // will give you the mime types
+        // find pasted image among pasted items
+        var blob = null;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+            }
+        }
+        // load image if there is a pasted image
+        if (blob !== null) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var imgFormat = event.target.result.split(',')[0];
+                var imgData = event.target.result.split(',')[1];
+
+
+                var title = jQuery('#jform_title').val();
+
+                if (title == '') {
+                    jQuery("#ph-ajaxtop").html(phGetMsg(' &nbsp; ', 1));
+                    jQuery("#ph-ajaxtop").show();
+                    jQuery("#ph-ajaxtop-message").html(phGetMsg('<span class="ph-result-txt ph-error-txt">'+ phLang['COM_PHOCACART_ERROR_TITLE_NOT_SET'] + '</span>', 0));
+                    phCloseMsgBoxSuccess();
+                    return false;
+                }
+
+                jQuery.ajax({
+                    url: url,
+                    type:'post',
+                    dataType: 'JSON',
+                    data:{'image':imgData, 'imagetitle': title, 'imageformat': imgFormat},
+                    success: function(response) {
+
+                        if ( response.status == 1 ){
+
+                            jQuery("#ph-ajaxtop").html(phGetMsg(' &nbsp; ', 1));
+                            jQuery("#ph-ajaxtop").show();
+                            jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));
+                            phCloseMsgBoxSuccess();
+                            if ( response.file != '' ){
+                                element.val(response.file);
+
+                                var image = path + response.file;
+                                phChangePreviewImage(id, image);
+
+                                var dataCreateThumbs            = {};
+                                dataCreateThumbs["filename"]    = encodeURIComponent(response.file);
+                                dataCreateThumbs["manager"]     = manager;
+                                phDoRequest(requestUrl, dataCreateThumbs, requestMsg);
+                            }
+                        } else {
+                            jQuery("#ph-ajaxtop").html(phGetMsg(' &nbsp; ', 1));
+                            jQuery("#ph-ajaxtop").show();
+                            jQuery("#ph-ajaxtop-message").html(phGetMsg(response.error, 0));
+                            phCloseMsgBoxError();
+                        }
+                    }
+                });
+            }
+            reader.readAsDataURL(blob);
+        }
+
+        return true;
+    })
+
 })
-		 
+
+
+
+
 
 
 
 //jQuery(document).ready(function() {
     //(function (Joomla) {
-      //  Joomla.loadingLayer('load');
+
      //   var id = Joomla.getOptions('category-change');
         //var element = document.querySelector("#".concat(id));
 //alert(id);
 
 
-    
-    
+
+
 
    // })(Joomla);
 //})

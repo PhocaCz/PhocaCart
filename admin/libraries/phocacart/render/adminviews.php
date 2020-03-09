@@ -111,6 +111,19 @@ class PhocacartRenderAdminviews
 		return $o;
 	}
 
+	public function selectFilterParameter($parameterList, $txtLng, $state) {
+
+		$o = '<div class="btn-group ph-pull-right ">'. "\n"
+		.'<select name="filter_parameter_id" class="inputbox" onchange="this.form.submit()">'."\n";
+
+		if ($txtLng != '') {
+			$o .= '<option value="">'.JText::_($txtLng).'</option>';
+		}
+		$o .= JHtml::_('select.options', $parameterList, 'value', 'text', $state)
+		. '</select></div>'. "\n";
+		return $o;
+	}
+
 
 
 	public function selectFilterLevels($txtLng, $state) {

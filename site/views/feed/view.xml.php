@@ -158,11 +158,11 @@ class PhocaCartViewFeed extends JViewLegacy
 					}
 
 					if ($p['item_title'] != '' && isset($v->title) && $v->title != '') {
-						$o[] = $l.$p['item_title'].$r.$v->title.$e.$p['item_title'].$r;
+						$o[] = $l.$p['item_title'].$r.htmlspecialchars($v->title).$e.$p['item_title'].$r;
 					}
 
 					if ($p['item_title_extended'] != '' && isset($v->title) && $v->title != '') {
-						$o[] = $l.$p['item_title_extended'].$r.$v->title.$e.$p['item_title_extended'].$r;
+						$o[] = $l.$p['item_title_extended'].$r.htmlspecialchars($v->title).$e.$p['item_title_extended'].$r;
 					}
 
 					if ($p['item_description_short'] != '' && isset($v->description) && $v->description != '') {
@@ -251,7 +251,7 @@ class PhocaCartViewFeed extends JViewLegacy
 
 					// PRODUCT CURRENCY (DEFAULT)
 					if ($p['item_currency'] != '' && $cur != '') {
-						$o[] = $l.$p['item_currency'].$r.$cur.$e.$p['item_currency'].$r;
+						$o[] = $l.$p['item_currency'].$r.htmlspecialchars($cur).$e.$p['item_currency'].$r;
 					}
 
 
@@ -281,7 +281,7 @@ class PhocaCartViewFeed extends JViewLegacy
 
 					// CATEGORY
 					if ($p['item_category'] != '' && isset($v->cattitle) && $v->cattitle != '') {
-						$o[] = $l.$p['item_category'].$r.$v->cattitle.$e.$p['item_category'].$r;
+						$o[] = $l.$p['item_category'].$r.htmlspecialchars($v->cattitle).$e.$p['item_category'].$r;
 					}
 
 					// CATEGORIES
@@ -291,12 +291,12 @@ class PhocaCartViewFeed extends JViewLegacy
 							$p['category_separator'] = ' ';
 						}
 						$categories = str_replace('|', $p['category_separator'], $v->categories);
-						$o[] = $l.$p['item_categories'].$r.$categories.$e.$p['item_categories'].$r;
+						$o[] = $l.$p['item_categories'].$r.htmlspecialchars($categories).$e.$p['item_categories'].$r;
 					}
 
 					// CATEGORY FEED
 					if ($p['feed_category'] != '' && isset($v->cattitlefeed) && $v->cattitlefeed != '') {
-						$o[] = $l.$p['feed_category'].$r.$v->cattitlefeed.$e.$p['feed_category'].$r;
+						$o[] = $l.$p['feed_category'].$r.htmlspecialchars($v->cattitlefeed).$e.$p['feed_category'].$r;
 					}
 
 					// CATEGORY TYPE OR PRODUCT CATEGORY TYPE
@@ -311,7 +311,7 @@ class PhocaCartViewFeed extends JViewLegacy
 
 							// 2) Categories - loaded by db
 							$feedcategories = str_replace('|', $p['category_separator'], htmlspecialchars($v->feedcategories));
-							$o[] = $l.$p['item_category_type_feed'].$r.$feedcategories.$e.$p['item_category_type_feed'].$r;
+							$o[] = $l.$p['item_category_type_feed'].$r.htmlspecialchars($feedcategories).$e.$p['item_category_type_feed'].$r;
 
 							// Only one category possible e.g. in Google Products, so this can be customized
 							//$feedcategories = explode('|', $v->feedcategories);
@@ -327,7 +327,7 @@ class PhocaCartViewFeed extends JViewLegacy
 
 					// MANUFACTURER
 					if ($p['item_manufacturer'] != '' && isset($v->manufacturertitle) && $v->manufacturertitle != '') {
-						$o[] = $l.$p['item_manufacturer'].$r.$v->manufacturertitle.$e.$p['item_manufacturer'].$r;
+						$o[] = $l.$p['item_manufacturer'].$r.htmlspecialchars($v->manufacturertitle).$e.$p['item_manufacturer'].$r;
 					}
 
 					// STOCK
@@ -344,7 +344,7 @@ class PhocaCartViewFeed extends JViewLegacy
 
 						//$stockText		= PhocacartStock::getStockStatusOutput($stockStatus);
 						if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
-							$o[] = $l.$p['item_delivery_date'].$r.$stockStatus['stock_status'].$e.$p['item_delivery_date'].$r;
+							$o[] = $l.$p['item_delivery_date'].$r.htmlspecialchars($stockStatus['stock_status']).$e.$p['item_delivery_date'].$r;
 						}
 					}
 
@@ -359,7 +359,7 @@ class PhocaCartViewFeed extends JViewLegacy
 
 
 						if (isset($stockStatus['stock_status_feed']) && $stockStatus['stock_status_feed'] != '') {
-							$o[] = $l.$p['feed_delivery_date'].$r.$stockStatus['stock_status_feed'].$e.$p['feed_delivery_date'].$r;
+							$o[] = $l.$p['feed_delivery_date'].$r.htmlspecialchars($stockStatus['stock_status_feed']).$e.$p['feed_delivery_date'].$r;
 						}
 					}
 
@@ -376,7 +376,7 @@ class PhocaCartViewFeed extends JViewLegacy
 								if (isset($v2->title) && $v2->title != '') {
 
 									$o[] = $l.$p['item_attribute'].$r;
-									$o[] = $l.$p['item_attribute_name'].$r.$v2->title.$e.$p['item_attribute_name'].$r;
+									$o[] = $l.$p['item_attribute_name'].$r.htmlspecialchars($v2->title).$e.$p['item_attribute_name'].$r;
 
 									if (!empty($v2->options)) {
 										$opt = array();
@@ -384,7 +384,7 @@ class PhocaCartViewFeed extends JViewLegacy
 											$opt[] = $v3->title;
 										}
 										$optText = implode(';', $opt);
-										$o[] = $l.$p['item_attribute_value'].$r.$optText.$e.$p['item_attribute_value'].$r;
+										$o[] = $l.$p['item_attribute_value'].$r.htmlspecialchars($optText).$e.$p['item_attribute_value'].$r;
 									}
 									$o[] = $e.$p['item_attribute'].$r;
 								}
@@ -396,7 +396,7 @@ class PhocaCartViewFeed extends JViewLegacy
 					// PRODUCT CONDITION
 					if ($p['item_condition'] != '' && isset($v->condition)) {
 						$condition = PhocacartUtilsSettings::getProductConditionValues($v->condition);
-						$o[] = $l.$p['item_condition'].$r.$condition.$e.$p['item_condition'].$r;
+						$o[] = $l.$p['item_condition'].$r.htmlspecialchars($condition).$e.$p['item_condition'].$r;
 
 					}
 

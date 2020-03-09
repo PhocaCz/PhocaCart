@@ -323,6 +323,58 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 	// END SIZE OPTIONS =========================================
 
+	if (isset($x->sku) && $x->sku != '') {
+		echo '<div class="ph-item-sku-box">';
+		echo '<div class="ph-sku-txt">'.JText::_('COM_PHOCACART_SKU').':</div>';
+		echo '<div class="ph-sku">'.$x->sku.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	if (isset($x->upc) && $x->upc != '') {
+		echo '<div class="ph-item-upc-box">';
+		echo '<div class="ph-upc-txt">'.JText::_('COM_PHOCACART_UPC').':</div>';
+		echo '<div class="ph-upc">'.$x->upc.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	if (isset($x->ean) && $x->ean != '') {
+		echo '<div class="ph-item-ean-box">';
+		echo '<div class="ph-ean-txt">'.JText::_('COM_PHOCACART_EAN').':</div>';
+		echo '<div class="ph-ean">'.$x->ean.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	if (isset($x->jan) && $x->jan != '') {
+		echo '<div class="ph-item-jan-box">';
+		echo '<div class="ph-jan-txt">'.JText::_('COM_PHOCACART_JAN').':</div>';
+		echo '<div class="ph-jan">'.$x->jan.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	if (isset($x->isbn) && $x->isbn != '') {
+		echo '<div class="ph-item-isbn-box">';
+		echo '<div class="ph-isbn-txt">'.JText::_('COM_PHOCACART_ISBN').':</div>';
+		echo '<div class="ph-isbn">'.$x->isbn.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	if (isset($x->mpn) && $x->mpn != '') {
+		echo '<div class="ph-item-mpn-box">';
+		echo '<div class="ph-mpn-txt">'.JText::_('COM_PHOCACART_MPN').':</div>';
+		echo '<div class="ph-mpn">'.$x->mpn.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+	if (isset($x->serial_number) && $x->serial_number != '') {
+		echo '<div class="ph-item-serial-number-box">';
+		echo '<div class="ph-serial-number-txt">'.JText::_('COM_PHOCACART_SERIAL_NUMBER').':</div>';
+		echo '<div class="ph-serial-number">'.$x->serial_number.'</div>';
+		echo '</div>';
+		echo '<div class="ph-cb"></div>';
+	}
+
+	// END SKU, UPC  ...=========================================
+
 	// This form can get two events:
 	// when option selected - price or image is changed id=phItemPriceBoxForm
 	// when ajax cart is active and submit button is clicked class=phItemCartBoxForm
@@ -396,84 +448,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	echo $this->t['event']->onItemAfterAddToCart;
 	echo '<div class="ph-top-space"></div>';
 
-	if (isset($x->sku) && $x->sku != '') {
-		echo '<div class="ph-item-sku-box">';
-		echo '<div class="ph-sku-txt">'.JText::_('COM_PHOCACART_SKU').':</div>';
-		echo '<div class="ph-sku">'.$x->sku.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->upc) && $x->upc != '') {
-		echo '<div class="ph-item-upc-box">';
-		echo '<div class="ph-upc-txt">'.JText::_('COM_PHOCACART_UPC').':</div>';
-		echo '<div class="ph-upc">'.$x->upc.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->ean) && $x->ean != '') {
-		echo '<div class="ph-item-ean-box">';
-		echo '<div class="ph-ean-txt">'.JText::_('COM_PHOCACART_EAN').':</div>';
-		echo '<div class="ph-ean">'.$x->ean.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->jan) && $x->jan != '') {
-		echo '<div class="ph-item-jan-box">';
-		echo '<div class="ph-jan-txt">'.JText::_('COM_PHOCACART_JAN').':</div>';
-		echo '<div class="ph-jan">'.$x->jan.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->isbn) && $x->isbn != '') {
-		echo '<div class="ph-item-isbn-box">';
-		echo '<div class="ph-isbn-txt">'.JText::_('COM_PHOCACART_ISBN').':</div>';
-		echo '<div class="ph-isbn">'.$x->isbn.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->mpn) && $x->mpn != '') {
-		echo '<div class="ph-item-mpn-box">';
-		echo '<div class="ph-mpn-txt">'.JText::_('COM_PHOCACART_MPN').':</div>';
-		echo '<div class="ph-mpn">'.$x->mpn.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->serial_number) && $x->serial_number != '') {
-		echo '<div class="ph-item-serial-number-box">';
-		echo '<div class="ph-serial-number-txt">'.JText::_('COM_PHOCACART_SERIAL_NUMBER').':</div>';
-		echo '<div class="ph-serial-number">'.$x->serial_number.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
 
 
-
-	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] == 0 || $addToCartHidden != 0))) {
-
-		$d					= array();
-		$d['s']				= $this->s;
-		$d['id']			= (int)$x->id;
-		$d['catid']			= $this->t['catid'];
-		$d['popup']			= 0;
-		$tmpl				= '';
-		if ((int)$this->t['popup_askquestion'] > 0) {
-			$d['popup']			= (int)$this->t['popup_askquestion'];
-			$popupAskAQuestion	= (int)$this->t['popup_askquestion'];
-			$tmpl				= 'tmpl=component';
-		}
-		$d['link']			=  JRoute::_(PhocacartRoute::getQuestionRoute($x->id, $x->catid, $x->alias, $x->catalias, $tmpl));
-		$d['return']		= $this->t['actionbase64'];
-		echo $layoutQ->render($d);
-		echo '<div class="ph-cb"></div>';
-	}
-
-	// TAGS
-	if ($this->t['tags_output'] != '') {
-		echo '<div class="ph-item-tag-box">';
-		echo $this->t['tags_output'];
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
 
 	if ($this->t['display_compare'] == 1 || $this->t['display_wishlist'] == 1) {
 		//echo '<div class="ph-cb"></div>';
@@ -553,6 +529,46 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo $layoutEL->render($d);
 	}
 
+	// :L: EXTERNAL LINK 2
+	if ($this->t['display_external_link'] == 1 && $x->external_link2 != '') {
+		$d					= array();
+		$d['s']				= $this->s;
+		$d['linkexternal']	= $x->external_link2;
+		//$d['id']			= (int)$x->id;
+		//$d['return']		= $this->t['actionbase64'];
+		$d['title']			= '';
+		if ($x->external_text2 != '') {
+			$d['title']		= $x->external_text2;
+		}
+
+		echo '<div class="ph-cb"></div>';
+		echo $layoutEL->render($d);
+	}
+
+	// ASK A QUESTION
+	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] == 0 || $addToCartHidden != 0))) {
+
+		$d					= array();
+		$d['s']				= $this->s;
+		$d['id']			= (int)$x->id;
+		$d['catid']			= $this->t['catid'];
+		$d['popup']			= 0;
+		$tmpl				= '';
+		if ((int)$this->t['popup_askquestion'] > 0) {
+			$d['popup']			= (int)$this->t['popup_askquestion'];
+			$popupAskAQuestion	= (int)$this->t['popup_askquestion'];
+			$tmpl				= 'tmpl=component';
+		}
+		$d['link']			=  JRoute::_(PhocacartRoute::getQuestionRoute($x->id, $x->catid, $x->alias, $x->catalias, $tmpl));
+		$d['return']		= $this->t['actionbase64'];
+
+		echo '<div class="ph-cb"></div>';
+		echo $layoutQ->render($d);
+	}
+
+
+	echo '<div class="ph-cb"></div>';
+
 	echo $this->t['event']->onItemBeforeEndPricePanel;
 
 
@@ -577,6 +593,16 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phdescription">';
 		$tabO	.= JHtml::_('content.prepare', $x->description_long);
+		$tabO	.= '</div>';
+		$active = $activeTab = '';
+	}
+
+	// FEATURES
+	if (isset($x->features) && $x->features != '') {
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phfeatures" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_FEATURES').'</a></li>';
+
+		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phfeatures">';
+		$tabO	.= JHtml::_('content.prepare', $x->features);
 		$tabO	.= '</div>';
 		$active = $activeTab = '';
 	}
@@ -737,8 +763,15 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$tabO	.= '<div class="'.$this->s['c']['row'].'">';
 
 		foreach($this->t['rel_products'] as $k => $v) {
-			$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">';
-			$tabO	.= '<div class="ph-item-thumbnail-related">';
+
+
+			$tabO	.= '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
+			$tabO	.= '<div class="ph-item-box grid ph-item-thumbnail-related">';
+
+
+			$tabO	.= '<div class="'.PhocacartRenderFront::completeClass(array($this->s['c']['thumbnail'], 'ph-thumbnail', 'ph-thumbnail-c', 'ph-item')).'">';
+			$tabO	.= '<div class="ph-item-content">';
+
 			$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, 'medium');
 
 			// Try to find the best menu link
@@ -749,11 +782,27 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			}
 			$tabO	.= '<a href="'.$link.'">';
 			if (isset($image->rel) && $image->rel != '') {
-				$tabO	.= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
+				/*$tabO	.= '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
 				if (isset($this->t['image_width']) && $this->t['image_width'] != '' && isset($this->t['image_height']) && $this->t['image_height'] != '') {
 					$tabO	.= ' style="width:'.$this->t['image_width'].';height:'.$this->t['image_height'].'"';
 				}
-				$tabO	.= ' />';
+				$tabO	.= ' />';*/
+
+				$d = array();
+				$d['t'] = $this->t;
+				$d['s'] = $this->s;
+				$d['src'] = JURI::base(true) . '/' . $image->rel;
+				$d['srcset-webp'] = JURI::base(true) . '/' . $image->rel_webp;
+				$d['data-image'] = JURI::base(true) . '/' . $image->rel;
+				$d['data-image-webp'] = JURI::base(true) . '/' . $image->rel_webp;
+				$d['alt-value'] = PhocaCartImage::getAltTitle($v->title, $image->rel);
+				$d['class'] = PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phImageFull', 'phjProductImage' . $idName));
+				$d['style'] = '';
+				/*if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
+					$d['style'] = 'width:' . $this->t['image_width'] . 'px;height:' . $this->t['image_height'] . 'px';
+				}*/
+
+				$tabO .= $layoutI->render($d);
 
 			}
 			$tabO	.= '</a>';
@@ -765,6 +814,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 			$tabO	.= '</div>';
 			$tabO	.= '</div>';
+
+			$tabO	.= '</div>';
+			$tabO	.= '</div>';
+
+
 		}
 		$tabO	.= '</div>';
 		$tabO	.= '</div>';
@@ -818,17 +872,37 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 
-
 	echo '</div>'; // end row 2 (bottom)
-
-
-
-
-
 
 	echo $this->t['event']->onItemAfterTabs;
 
+	// TAGS
+	if ($this->t['tags_output'] != '') {
+
+		echo '<div class="ph-cb"></div>';
+
+		echo '<div class="ph-item-tag-box">';
+		echo '<h3>Tags</h3>';
+		echo $this->t['tags_output'];
+		echo '</div>';
+
+	}
+
+	// PARAMETERS
+	if ($this->t['parameters_output'] != '') {
+
+		echo '<div class="ph-cb"></div>';
+		echo '<div class="ph-item-parameter-box">';
+		echo $this->t['parameters_output'];
+		echo '</div>';
+
+
+	}
+
+	echo '<div class="ph-cb"></div>';
+
 }
+
 
 if ($this->itemnext[0] || $this->itemprev[0]) {
 	echo '<div class="'.$this->s['c']['row'].'">';

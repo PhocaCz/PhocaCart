@@ -30,7 +30,7 @@ if (isset($d['file_type']) && $d['file_type'] == 1) {
 	$xml = false;
 }
 
-$productIdChange = array();// Neded for related table, when the product changes its ID (autoincrement), recreat related table
+$productIdChange = array();// Needed for related table, when the product changes its ID (autoincrement), recreat related table
 
 
 
@@ -443,6 +443,8 @@ if($xml) {
 				} else {
 					$data['tags'] = array();
 				}
+
+				// TODO PARAMETERS
 
 				// correct simple xml
 				foreach($data as $k => $v) {

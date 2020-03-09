@@ -93,7 +93,7 @@ class PhocacartPrice
 	 * 2) or we can force the negative - e.g. for discount
 	 */
 
-	public function getPriceFormat($price, $negative = 0, $skipCurrencyConverting = 0, $forceCurrency = 0) {
+	public function getPriceFormat($price, $negative = 0, $skipCurrencyConverting = 0, $forceCurrency = 0, $skipPrefix = 0, $skipSuffix = 0) {
 
 		$currentCurrency = $this->currency_id;
 
@@ -166,6 +166,14 @@ class PhocacartPrice
 		return $o;
 
 	}
+
+	public function setPrefix($prefix) {
+	    $this->price_prefix = $prefix;
+    }
+
+    public function setSuffix($suffix) {
+	    $this->price_suffix = $suffix;
+    }
 
 	public function getTaxFormat($tax, $taxCalculationType, $format = 1) {
 
@@ -960,6 +968,7 @@ class PhocacartPrice
 		return $price;
 	}
 	public static function convertPriceCurrentToDefaultCurrency($price, $rate = 1) {
+
 		$price /= $rate;
 		return $price;
 	}

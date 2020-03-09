@@ -30,7 +30,7 @@ if (!empty($this->items)) {
 	$i		= 1; // Not equal Heights
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
-	echo '<div class="row '.$this->s['c']['row.row-flex'].' '.$lt.'">';
+	echo '<div class="'.$this->s['c']['row.row-flex'].' '.$lt.'">';
 
 	foreach ($this->items as $v) {
 

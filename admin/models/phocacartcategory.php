@@ -264,6 +264,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		$savedId = $this->getState($this->getName().'.id');
 		if ((int)$savedId > 0) {
 			PhocacartGroup::storeGroupsById((int)$savedId, 2, $data['group']);
+			PhocacartCount::setProductCount(array(0 => (int)$savedId), 'category', 1);
 		}
 
 

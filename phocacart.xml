@@ -2,12 +2,12 @@
 <extension type="component" method="upgrade" version="3">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>24/10/2019</creationDate>
+	<creationDate>09/03/2020</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.4.0</version>
+	<version>3.5.0Beta</version>
 	<description>COM_PHOCACART_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<projectName>PhocaCart</projectName>
@@ -46,6 +46,7 @@
 	<media destination="com_phocacart" folder="media">
 		<folder>bootstrap</folder>
 		<folder>css</folder>
+		<folder>duoton</folder>
 		<folder>images</folder>
 		<folder>js</folder>
 		<filename>index.html</filename>
@@ -85,10 +86,13 @@
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-discount.png" alt="COM_PHOCACART_DISCOUNTS" view="phocacartdiscounts" link="option=com_phocacart&amp;view=phocacartdiscounts">COM_PHOCACART_DISCOUNTS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-download.png" alt="COM_PHOCACART_DOWNLOADS" view="phocacartdownloads" link="option=com_phocacart&amp;view=phocacartdownloads">COM_PHOCACART_DOWNLOADS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-tag.png" alt="COM_PHOCACART_TAGS" view="phocacarttags" link="option=com_phocacart&amp;view=phocacarttags">COM_PHOCACART_TAGS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-tag.png" alt="COM_PHOCACART_PARAMETERS" view="phocacartparameters" link="option=com_phocacart&amp;view=phocacartparameters">COM_PHOCACART_PARAMETERS</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-tag.png" alt="COM_PHOCACART_PARAMETER_VALUES" view="phocacartparametervalues" link="option=com_phocacart&amp;view=phocacartparametervalues">COM_PHOCACART_PARAMETER_VALUES</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-feed.png" alt="COM_PHOCACART_XML_FEEDS" view="phocacartfeeds" link="option=com_phocacart&amp;view=phocacartfeeds">COM_PHOCACART_XML_FEEDS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-wishlist.png" alt="COM_PHOCACART_WISH_LISTS" view="phocacartwishlists" link="option=com_phocacart&amp;view=phocacartwishlists">COM_PHOCACART_WISH_LISTS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-question.png" alt="COM_PHOCACART_QUESTIONS" view="phocacartquestions" link="option=com_phocacart&amp;view=phocacartquestions">COM_PHOCACART_QUESTIONS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-time.png" alt="COM_PHOCACART_OPENING_TIMES" view="phocacarttimes" link="option=com_phocacart&amp;view=phocacarttimes">COM_PHOCACART_OPENING_TIMES</menu>
+				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-duplicate.png" alt="COM_PHOCACART_SUBMITTED_ITEMS" view="phocacartsubmititems" link="option=com_phocacart&amp;view=phocacartsubmititems">COM_PHOCACART_SUBMITTED_ITEMS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-statistics.png" alt="COM_PHOCACART_STATISTICS" view="phocacartstatistics" link="option=com_phocacart&amp;view=phocacartstatistics">COM_PHOCACART_STATISTICS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-report.png" alt="COM_PHOCACART_REPORTS" view="phocacartreports" link="option=com_phocacart&amp;view=phocacartreports">COM_PHOCACART_REPORTS</menu>
 				<menu img="media/com_phocacart/images/administrator/icon-16-pc-menu-hits.png" alt="COM_PHOCACART_HITS" view="phocacarthits" link="option=com_phocacart&amp;view=phocacarthits">COM_PHOCACART_HITS</menu>

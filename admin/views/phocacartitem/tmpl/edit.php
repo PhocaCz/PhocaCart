@@ -157,11 +157,13 @@ if ((int)$this->item->id > 0) {
 echo '</div>';
 
 // ORDERING cannot be used
-$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
+$formArray = array ('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description' );
 echo $r->group($this->form, $formArray, 1);
 $formArray = array('description_long' );
+echo $r->group($this->form, $formArray, 1);
+$formArray = array('features' );
 echo $r->group($this->form, $formArray, 1);
 //$formArray = array ('upc', 'ean', 'jan', 'mpn', 'isbn');
 //echo $r->group($this->form, $formArray);
@@ -439,7 +441,7 @@ echo '</div>'. "\n";
 
 // DOWNLOAD
 echo '<div class="tab-pane" id="download">'. "\n";
-$formArray = array ('download_folder', 'download_token', 'type', 'download_file');// , 'download_hits' - it is counted in orders
+$formArray = array ('download_folder', 'download_token', 'download_file', 'download_days', 'type');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
 
 echo '<h3>'.JText::_($this->t['l'].'_ADDITIONAL_DOWNLOAD_FILES').'</h3>';
@@ -483,12 +485,15 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo $field->input;
 	echo '</div></div>';
 }
+
+echo $this->loadTemplate('parameter');
+
 echo '</div>';
 
 
 
 
-
+// FEED
 
 echo '<div class="tab-pane" id="feed">'. "\n";
 echo $this->loadTemplate('feed');

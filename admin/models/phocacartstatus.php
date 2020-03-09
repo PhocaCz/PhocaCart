@@ -13,19 +13,19 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocaCartStatus', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartstatus', 'phocacartstatus', array('control' => 'jform', 'load_data' => $loadData));
@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartstatus.data', array());
 		if (empty($data)) {
@@ -42,7 +42,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -50,6 +50,8 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+
+
 
 		if (empty($table->alias)) {
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
@@ -73,17 +75,17 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
-		
+
 		if (isset($table->type) && isset($table->published) && $table->type == 1 && $table->published == 0) {
 			$table->published = 1;
 			$app = JFactory::getApplication();
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 		}
 	}
-	
+
 	public function delete(&$cid = array()) {
-		
-		
+
+
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			//$cids = implode( ',', $cid );
@@ -102,7 +104,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 						$this->_db->setQuery( $query );
 						$this->_db->execute();
 					}
-				
+
 				}
 			}
 		}
@@ -113,12 +115,12 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	public function publish(&$pks, $value = 1)
 	{
-		
+
 		$user = JFactory::getUser();
 		$table = $this->getTable();
 		$pks = (array) $pks;
@@ -129,8 +131,8 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 			$table->reset();
 
 			if ($table->load($pk)) {
-				
-				
+
+
 				if (!$this->canEditState($table)){
 					// Prune items that you can't change.
 					unset($pks[$i]);
@@ -145,16 +147,16 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 					unset($pks[$i]);
 					return false;
 				}
-				
+
 				if (property_exists($table, 'type') && $table->type && ((int)$table->type == 1) && $value == 0){
 					$error = 1;
 					unset($pks[$i]);
 					//return false;
-				}			
+				}
 			}
 		}
 
-		
+
 		// Attempt to change the state of the records.
 		if (!empty($pks)) {
 			if (!$table->publish($pks, $value, $user->get('id'))) {
@@ -162,11 +164,11 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 				return false;
 			}
 		}
-		
-		
-	
+
+
+
 		if ($error) {
-			
+
 			//$this->setError(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			return true;
@@ -175,5 +177,15 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 		}
 		$this->cleanCache();
 	}
+
+	public function save($data) {
+
+	    if(!isset($data['orders_view_display'])) {
+	        $data['orders_view_display'] = array();
+        }
+	    $data['orders_view_display'] = json_encode($data['orders_view_display']);
+
+	    return parent::save($data);
+    }
 }
 ?>

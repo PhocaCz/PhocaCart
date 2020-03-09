@@ -85,6 +85,12 @@ color: #999;
 	width: 7%;
 	white-space: nowrap;
 }
+.nowrap {
+		white-space: nowrap;
+}
+.center {
+	text-align: center;
+}
 .ph-owner,
 .ph-rating,
 .ph-hits,

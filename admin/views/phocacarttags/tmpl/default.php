@@ -49,7 +49,7 @@ echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();		
+echo $r->endFilterBar();
 
 echo $r->startTable('categoryList');
 
@@ -59,15 +59,16 @@ echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";	
+echo '<th class="ph-productcount">'.JHtml::_('grid.sort', $this->t['l'].'_PRODUCT_COUNT', 'a.count_products', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
-			
+
 echo '<tbody>'. "\n";
 
-$originalOrders = array();	
-$parentsStr 	= "";		
+$originalOrders = array();
+$parentsStr 	= "";
 $j 				= 0;
 
 if (is_array($this->items)) {
@@ -77,8 +78,8 @@ if (is_array($this->items)) {
 
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
-$orderkey   	= array_search($item->id, $this->ordering[0]);		
-$ordering		= ($listOrder == 'a.ordering');			
+$orderkey   	= array_search($item->id, $this->ordering[0]);
+$ordering		= ($listOrder == 'a.ordering');
 $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
@@ -93,7 +94,7 @@ echo "\n\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
-					
+
 $checkO = '';
 if ($item->checked_out) {
 	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
@@ -108,19 +109,26 @@ echo $r->td($checkO, "small");
 echo $r->td(PhocacartTag::getTagType($item->type), "small");
 
 
+$pC = '<div class="center">'.$item->count_products;
+if (PhocacartUtils::validateDate($item->count_date)) {
+    $pC .= '<br><small class="nowrap">('.JHtml::_('date', $item->count_date, 'd-m-Y H:i').')</small>';
+}
+$pC .= '</div>';
+echo $r->td($pC, "small");
+
 echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 
 echo $r->td($item->id, "small");
 
 echo '</tr>'. "\n";
-						
+
 		//}
 	}
 }
 echo '</tbody>'. "\n";
 
-echo $r->tblFoot($this->pagination->getListFooter(), 6);
+echo $r->tblFoot($this->pagination->getListFooter(), 7);
 echo $r->endTable();
 
 echo $r->formInputs($listOrder, $listDirn, $originalOrders);

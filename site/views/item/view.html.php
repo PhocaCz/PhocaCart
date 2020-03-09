@@ -86,7 +86,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 		$this->t['item_display_labels']			= $this->p->get( 'item_display_labels', 2 );
 		$this->t['item_display_tags']			= $this->p->get( 'item_display_tags', 1 );
-
+		$this->t['item_display_parameters']		= $this->p->get( 'item_display_parameters', 0 );
 
 
 		// Rights or catalogue options --------------------------------
@@ -116,8 +116,8 @@ class PhocaCartViewItem extends JViewLegacy
 
 			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
-			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags']);
-			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels']);
+			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags'], ' ');
+			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels'], ' ');
 			$this->t['stock_status']		= array();
 			//$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
 
@@ -132,6 +132,8 @@ class PhocaCartViewItem extends JViewLegacy
 				$this->t['price_history_data']	= PhocacartPriceHistory::getPriceHistoryChartById((int)$id);
 			}
 
+			$this->t['parameters_output']	= PhocacartParameter::getParametersRendered((int)$id, $this->t['item_display_parameters']);
+
 			$this->t['action']				= $uri->toString();
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
@@ -143,6 +145,7 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			$this->itemnext[0]			= false;
 			$this->itemprev[0]			= false;
+
 			if ($this->t['enable_item_navigation'] == 1) {
 				if (isset($this->item[0]->ordering) && isset($this->item[0]->catid) && isset($this->item[0]->id) && $this->item[0]->catid > 0 && $this->item[0]->id > 0) {
 					$this->itemnext			= $model->getItemNext($this->item[0]->ordering, $this->item[0]->catid);

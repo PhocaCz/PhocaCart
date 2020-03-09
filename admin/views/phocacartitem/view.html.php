@@ -23,6 +23,7 @@ class PhocaCartCpViewPhocaCartItem extends JViewLegacy
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
+
 		$media = new PhocacartRenderAdminmedia();
 
 
@@ -65,6 +66,7 @@ class PhocaCartCpViewPhocaCartItem extends JViewLegacy
 			// Only allow to select tags with All language or with the forced language.
 			//$this->form->setFieldAttribute('tags', 'language', '*,' . $forcedLanguage);
 		}
+
 
 		$this->addToolbar();
 		parent::display($tpl);

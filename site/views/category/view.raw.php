@@ -106,6 +106,20 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 		$this->t['category_display_labels']		= $this->p->get( 'category_display_labels', 2 );
+		$this->t['category_display_tags']		= $this->p->get( 'category_display_tags', 0 );
+		$this->t['category_display_manufacturer']		= $this->p->get( 'category_display_manufacturer', 0 );
+		$this->t['manufacturer_alias']			= $this->p->get( 'manufacturer_alias', 'manufacturer');
+		$this->t['manufacturer_alias'] 			!= '' ? trim(PhocacartText::filterValue($this->t['manufacturer_alias'], 'alphanumeric'))  : 'manufacturer';
+
+		$this->t['show_pagination'] 			= $this->p->get('show_pagination');
+		$this->t['show_pagination_top'] 		= $this->p->get('show_pagination_top', 1);
+		$this->t['display_item_ordering'] 		= $this->p->get('display_item_ordering');
+		$this->t['display_item_ordering_top'] 	= $this->p->get('display_item_ordering_top', 1);
+		$this->t['show_pagination_limit'] 		= $this->p->get('show_pagination_limit');
+		$this->t['show_pagination_limit_top'] 	= $this->p->get('show_pagination_limit_top', 1);
+		$this->t['ajax_pagination_category'] 	= $this->p->get('ajax_pagination_category', 0);
+		$this->t['display_pagination_labels'] 	= $this->p->get('display_pagination_labels', 1);
+		$this->t['show_switch_layout_type'] 	= $this->p->get('show_switch_layout_type', 1);
 
 		$this->category						= $model->getCategory($this->t['categoryid']);
 
@@ -133,7 +147,7 @@ class PhocaCartViewCategory extends JViewLegacy
 			$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');
 
 
-			$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'row-flex' : '';
+			$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'ph-row-flex' : '';
         	$this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
         	$this->t['class_lazyload']       		= $this->t['lazy_load_category_items']  == 1 ? 'ph-lazyload' : '';
 

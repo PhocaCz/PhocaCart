@@ -32,7 +32,11 @@ if (isset($image->rel) && $image->rel != '') {
     echo $layoutI->render($dI);
 	echo '</a>';
 
-} else {
+} else if ($v->icon_class != '') {
+    echo '<div class="ph-image-box-content">';
+	echo '<div class="ph-image-box-content-item"><span class="'. PhocacartText::filterValue($v->icon_class, 'text').' ph-image-box-content-icon"></span></div>';
+	echo '</div>';
+}  else {
 	// No image, add possible image per CSS
 	//echo '<a href="'.$link.'">';
 	echo '<div class="ph-image-box-content">';

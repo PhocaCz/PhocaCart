@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 $d = $displayData;
 ?>
 <div class="<?php echo $d['s']['c']['pull-right'] ?>">
-    <div class="ph-category-item-quickview">
+    <?php echo isset($d['button']) && $d['button'] == 1 ? '' : '<div class="ph-category-item-quickview">'; ?>
         <form action="<?php echo $d['linkqvb']; ?>" method="post" id="phQuickView<?php echo (int)$d['id']; ?>" class="phItemQuickViewBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />
             <input type="hidden" name="catid" value="<?php echo (int)$d['catid']; ?>" />
@@ -18,9 +18,13 @@ $d = $displayData;
             <input type="hidden" name="option" value="com_phocacart" />
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
-            <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span></a>
+            <?php if (isset($d['button']) && $d['button'] == 1) { ?>
+                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></a>
 
+            <?php } else { ?>
+                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span></a>
+            <?php } ?>
             <?php echo JHtml::_('form.token'); ?>
         </form>
-    </div>
+    <?php echo isset($d['button']) && $d['button'] == 1 ? '' : '</div>'; ?>
 </div>

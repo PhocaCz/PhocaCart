@@ -118,6 +118,12 @@ class JFormFieldPhocacartOrdering extends JFormField
 					$table		=	'#__phocacart_questions';
 				break;
 
+				case "submititem":
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_submit_items';
+				break;
+
 				case "wishlist":
 					$whereLabel	=	'';
 					$whereValue	=	'';
@@ -162,7 +168,10 @@ class JFormFieldPhocacartOrdering extends JFormField
 		// Create a regular list.
 		else {
 			$html[] = JHtml::_('list.ordering', $this->name, $query, trim($attr), $this->value, $id ? 0 : 1);
+
 		}
+
+
 
 		return implode($html);
 	}

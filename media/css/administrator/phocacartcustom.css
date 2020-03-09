@@ -349,6 +349,8 @@ input[name="filter_date_from"] {
    
  /* border: 1px solid #ccc;
    box-shadow: 0 0 3px #fff inset, 0 1px 1px rgba(0, 0, 0, 0.1) !important;*/
+
+   box-shadow: 0 1px 1px 0 rgba(0,0,0,.15);
 }
 
 

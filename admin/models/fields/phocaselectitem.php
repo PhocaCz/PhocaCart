@@ -16,6 +16,11 @@ if (! class_exists('PhocacartProduct')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/product/product.php');
 }
 
+if (! class_exists('PhocacartText')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/text/text.php');
+}
+
+
 class JFormFieldPhocaSelectItem extends JFormField
 {
 	public $type = 'PhocaSelectItem';
@@ -60,13 +65,21 @@ class JFormFieldPhocaSelectItem extends JFormField
 
 				if(!empty($relatedOption)) {
 					$i = 0;
+					//$value .= '[';
 					foreach($relatedOption as $k => $v) {
 						if ($i > 0) {
-							$value .= ',';
+							$value .= '[|]';
 						}
-						$value .= (int)$v->id . ':'. PhocacartText::filterValue($v->title, 'text') .' ('.PhocacartText::filterValue($v->categories_title, 'text').')';
+
+						$title = PhocacartText::filterValue($v->title, 'text');
+						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
+						//$title = str_replace(',', '-', $title);
+						//$titleCat = str_replace(',', '-', $titleCat);
+
+						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
 						$i++;
 					}
+					//$value .= ']';
 				}
 			}
 		} else {
@@ -104,6 +117,8 @@ $s[] = '})(jQuery);';
 $s[] = ' ';
 $s[] = ' function phSearchItemsMultiple(element, url) {';
 $s[] = '   jQuery(element).select2({';
+//$s[] = '   dropdownAutoWidth : true,';
+//$s[] = '   width: "auto",';
 $s[] = '   placeholder: "",';
 $s[] = '   minimumInputLength: 1,';
 $s[] = '   multiple: '.$multiple.',';
@@ -129,7 +144,7 @@ $s[] = '   formatResult: formatResult,';
 $s[] = '   formatSelection: formatSelection,';
 $s[] = '   initSelection: function(element, callback) {';
 $s[] = '    var data = [];';
-$s[] = '    jQuery(element.val().split(",")).each(function(i) {';
+$s[] = '    jQuery(element.val().split("[|]")).each(function(i) {';
 $s[] = '     var item = this.split(\':\');';
 $s[] = '      data.push({';
 $s[] = '       id: item[0],';

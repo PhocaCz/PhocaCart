@@ -39,6 +39,10 @@ class PhocacartRenderMedia
 		$this->p['dynamic_change_image']	= $params->get( 'dynamic_change_image', 0);
 		$this->p['quantity_input_spinner']	= $params->get( 'quantity_input_spinner', 0);
 		$this->p['icon_type']				= $params->get( 'icon_type', 'bs');
+		$this->p['ajax_pagination_category']= $params->get( 'ajax_pagination_category', 0);
+		$this->p['ajax_searching_filtering_items']= $params->get( 'ajax_searching_filtering_items', 0);
+
+
 
 		$this->p['lazy_load_category_items']= $params->get( 'lazy_load_category_items', 0 );
 		$this->p['lazy_load_categories']	= $params->get( 'lazy_load_categories', 0 );
@@ -50,13 +54,56 @@ class PhocacartRenderMedia
 		if ($this->format == 'raw' || $this->format == 'json') {
 			$this->load == false;
 		}
+
+
+		$this->document = JFactory::getDocument();
+		$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
+		$action			= $uri->toString();
+		// =================
+		// Render Page
+		// =================
+
+
+		$oVars 		= array();
+		$oLang 		= array();
+		$oParams 	= array();
+		$oLang 		= array('COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE'), 'COM_PHOCACART_ERROR_TITLE_NOT_SET' => JText::_('COM_PHOCACART_ERROR_TITLE_NOT_SET'));
+
+		$oVars['renderPageUrl'] 	= $action;
+		$oVars['token'] 			= JSession::getFormToken();
+		$oVars['basePath']			= JURI::base(true);
+		if ($this->view == 'category' || $this->view == 'items' || $this->view == 'pos') {
+
+			if ($this->view == 'pos') {
+				$oVars['renderPageOutput'] = 'phPosContentBox';
+			} else {
+				$oVars['renderPageOutput'] = 'phItemsBox';
+			}
+		}
+		$oVars['isPOS'] 						= (int)PhocacartUtils::isView('pos');
+		$oParams['loadChosen'] 					= (int)$this->p['load_chosen'];
+		$oParams['ajaxPaginationCategory']		= (int)$this->p['ajax_pagination_category'];
+		$oParams['ajaxSearchingFilteringItems'] = (int)$this->p['ajax_searching_filtering_items'];
+
+
+		JHtml::_('jquery.framework', false);
+		$this->document->addScriptOptions('phLangPC', $oLang);
+		$this->document->addScriptOptions('phVarsPC', $oVars);
+		$this->document->addScriptOptions('phParamsPC', $oParams);
+		//$this->document->getDocument()->addScriptOptions('phParams', array());
+        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocacart.js');
+        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattribute.js');
+
+
+
+
 	}
 
 	public function loadBase() {
 
 		if ($this->load) {
 			JHtml::_('jquery.framework', false);
-			$this->document = JFactory::getDocument();
+
 
 			if ($this->p['load_main_css'] == 1) {
 				JHtml::stylesheet('media/com_phocacart/css/main.css');
@@ -158,7 +205,16 @@ class PhocacartRenderMedia
 				$this->document->addScriptDeclaration($js);
 				JHtml::stylesheet('media/com_phocacart/js/chosen/chosen.css');
 				JHtml::stylesheet('media/com_phocacart/js/chosen/chosen-bootstrap.css');
+
 			}
+		}
+	}
+
+
+	public function loadFileInput() {
+		if ($this->load) {
+			$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
+			JHtml::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
 		}
 	}
 
@@ -188,7 +244,7 @@ class PhocacartRenderMedia
 			$this->document->addScriptDeclaration($jsS . $js . $jsE);
 		}
 
-		return $js;
+		//return $js;
 	}
 
 	public function loadSwiper(){

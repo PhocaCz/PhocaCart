@@ -381,5 +381,119 @@ class PhocacartEmail
 		}
 		return false;
 	}
+
+	public static function sendSubmitItemMail ($dataItem, $dataContact, $dataParameter, $url, $tmpl) {
+
+		$app							= JFactory::getApplication();
+		$db 							= JFactory::getDBO();
+		$sitename 						= $app->get( 'sitename' );
+		$paramsC 						= PhocacartUtils::getComponentParameters();
+		$numCharEmail				    = $paramsC->get( 'max_char_submit_item_email', 2000 );
+		$send_email_submit_item			= $paramsC->get( 'send_email_submit_item', 0 );
+		$send_email_submit_item_others	= $paramsC->get( 'send_email_submit_item_others', '' );
+
+
+		//get all selected users
+		$query = 'SELECT name, email, sendEmail' .
+		' FROM #__users' .
+		' WHERE id = '.(int)$send_email_submit_item;
+		$db->setQuery( $query );
+		$rows = $db->loadObjectList();
+
+		$subject = $sitename .' - '.JText::_( 'COM_PHOCACART_NEW_ITEM_SUBMITTED' );
+
+
+
+		if (isset($dataContact['name']) && $dataContact['name'] != '') {
+			$fromname = $dataContact['name'];
+		} else {
+			$fromname = 'Unknown';
+		}
+
+		if (isset($dataContact['email']) && $dataContact['email'] != '') {
+			$mailfrom = $dataContact['email'];
+		} else {
+			$mailfrom = isset($rows[0]->email) ? $rows[0]->email : '';
+		}
+
+		/*if (isset($dataItem['title']) && $dataItem['title'] != '') {
+			$message[] = $dataItem['title'];
+		} else {
+			$message[] = '';
+		}*/
+
+		/*if (isset($dataContact['title']) && $dataContact['title'] != '') {
+			$message .= $dataContact['title'];
+		} else {
+			$message .= '';
+		}*/
+
+		if (isset($dataContact['message']) && $dataContact['message'] != '') {
+			$message = $dataContact['message'];
+		} else {
+			$message = '';
+		}
+
+
+		$email = '';
+		if (isset($rows[0]->email)) {
+			$email = $rows[0]->email;
+		}
+
+
+
+		$message = str_replace("</p>", "\r\n", $message );
+		$message = str_replace("<br>", "\r\n", $message );
+		$message = strip_tags($message);
+
+
+
+		$layoutE 			= new JLayoutFile('email_submit_item', null, array('component' => 'com_phocacart'));
+		$d					= array();
+		$d['fromname']		= $fromname;
+		$d['name']			= isset($dataContact['name']) ? $dataContact['name'] : '';
+		$d['email']			= isset($dataContact['email']) ? $dataContact['email'] : '';
+		$d['phone']			= isset($dataContact['phone']) ? $dataContact['phone'] : '';
+		$d['title']			= isset($dataItem['title']) ? $dataItem['title'] : '';
+		$d['subject']		= $subject;
+		$d['message']		= $message;
+		$d['numcharemail']	= $numCharEmail;
+		$d['url']			= $url;
+		$d['sitename']		= $sitename;
+
+		$body = $layoutE->render($d);
+
+
+		$subject = html_entity_decode($subject, ENT_QUOTES);
+		$body = html_entity_decode($body, ENT_QUOTES);
+
+		$notify = false;
+		// Send email to selected user
+		if ($mailfrom != '' && $send_email_submit_item != '' && $email != '') {
+			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, '', '', $mailfrom, $fromname);
+		}
+
+
+		// Send email to others
+		$emailOthers	= '';
+		$bcc			= null;
+		if (isset($send_email_submit_item_others) && $send_email_submit_item_others != '') {
+			$bcc = explode(',', $send_email_submit_item_others );
+			if (isset($bcc[0]) && JMailHelper::isEmailAddress($bcc[0])) {
+				$emailOthers = $bcc[0];
+			}
+		}
+
+		$notifyOthers = false;
+		if ($emailOthers != '' && JMailHelper::isEmailAddress($emailOthers)) {
+			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, '', '', $mailfrom, $fromname);
+		}
+
+
+		if ($notify || $notifyOthers) {
+			return true;
+		}
+		return false;
+	}
 }
 ?>

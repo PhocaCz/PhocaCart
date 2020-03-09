@@ -474,7 +474,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 				}
 			}
 
-			PhocacartRenderJs::renderBillingAndShippingSame();
+			///PhocacartRenderJs::renderBillingAndShippingSame();
 		}
 
 	//  Rounding set before checking shipping and payment method

@@ -39,6 +39,26 @@ class PhocacartCategoryMultiple
 		return $tags;
 	}
 
+	public static function getCategoriesByIds($cids) {
+
+		$db = JFactory::getDBO();
+        if ($cids != '') {//cids is string separated by comma
+
+            $query = 'SELECT c.category_id FROM #__phocacart_categories AS a'
+                //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
+                . ' LEFT JOIN #__phocacart_product_categories AS c ON a.id = c.category_id'
+                . ' WHERE c.product_id IN (' . $cids . ')'
+                . ' ORDER BY a.id';
+
+            $db->setQuery($query);
+            $tags = $db->loadColumn();
+            $tags = array_unique($tags);
+
+            return $tags;
+        }
+        return array();
+	}
+
 
 
 	public static function getAllCategories($filter = 0, $type = array(0,1)) {

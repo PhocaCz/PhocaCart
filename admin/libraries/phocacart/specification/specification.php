@@ -355,5 +355,30 @@ class PhocacartSpecification
 		return $a;
 
 	}
+
+    public static function getActiveSpecificationValues($items, $ordering) {
+
+		$db     = JFactory::getDbo();
+	    $o      = array();
+        $wheres = array();
+        $ordering = PhocacartOrdering::getOrderingText($ordering, 6);//s
+        if (!empty($items)) {
+            foreach ($items as $k => $v) {
+                $wheres[] = '( p.alias = ' . $db->quote($k) . ' AND s.alias IN (' . $v . ') )';
+            }
+            if (!empty($wheres)) {
+                // FULL GROUP BY GROUP_CONCAT(DISTINCT o.title) AS title
+                $q = 'SELECT DISTINCT s.title, s.alias, CONCAT(\'a[\', p.alias, \']\')  AS parameteralias, p.title AS parametertitle FROM #__phocacart_specifications AS s'
+                    . ' LEFT JOIN #__phocacart_specification_groups AS p ON p.id = s.group_id'
+                    . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
+                    . ' GROUP BY p.alias, s.alias, s.title'
+                    . ' ORDER BY ' . $ordering;
+
+                $db->setQuery($q);
+                $o = $db->loadAssocList();
+            }
+        }
+        return $o;
+	}
 }
 ?>

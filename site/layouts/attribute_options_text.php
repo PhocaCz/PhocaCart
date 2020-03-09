@@ -55,6 +55,8 @@ foreach ($v->options as $k2 => $v2) {
 	$suffix =  ' ('.$operator.' '.$amount.')';
 	if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 0 && $price->roundPrice($v2->amount) < 0.01 && $price->roundPrice($v2->amount) > -0.01) {
 		$suffix = '';
+	} else if (isset($d['zero_attribute_price']) && $d['zero_attribute_price'] == 2) {
+		$suffix = '';// hide always
 	}
 
 	$maxLength = ' maxlength="'.PhocacartAttribute::getAttributeLength($v->type).'"';

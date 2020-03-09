@@ -211,6 +211,20 @@ class PhocacartFile
 		return true;
 	}
 
+	public static function createUploadFolder($folder) {
+		$path = PhocacartPath::getPath('submititem');
+		if (!JFolder::exists($path['orig_abs_ds'] . $folder )) {
+			if (JFolder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
+				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
+				JFile::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static function existsFileOriginal($filename, $manager) {
 		$fileOriginal = self::getFileOriginal($filename, 0, $manager);
 		if (JFile::exists($fileOriginal)) {

@@ -184,7 +184,6 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		$app		= JFactory::getApplication();
 
 
-
 		/*if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
 		}*/
@@ -225,7 +224,6 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 
 
-
 		if (!empty($data['feed'])) {
 			$registry 	= new JRegistry($data['feed']);
 			//$registry 	= new JRegistry($dataPh);
@@ -246,6 +244,13 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$table->load($pk);
 			$isNew = false;
 		}
+
+		// Set product count for manufacturers (we need to recount obsolete data and even new data - if manufacturer will be changed when saving, we need to recount old data
+        $previousManufacturers = array();
+		if (!$isNew) {
+		    $previousManufacturers = PhocacartManufacturer::getManufacturers($data['id'], 1);
+        }
+
 
 		// Bind the data.
 		if (!$table->bind($data)) {
@@ -312,10 +317,20 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		if ((int)$table->id > 0) {
 
 
+		    $currentManufacturers = isset($data['manufacturer_id']) && (int)$data['manufacturer_id'] > 0 ? array(0 => (int)$data['manufacturer_id']) : array();
+		    $allManufacturers = array_unique(array_merge($previousManufacturers, $currentManufacturers));
+			PhocacartCount::setProductCount($allManufacturers, 'manufacturer', 1);// We need to recount all manufacturers - previous (now deleted), and new
+
 			if (!isset($data['catid_multiple'])) {
 				$data['catid_multiple'] = array();
 			}
+
+			$previousCategories = PhocacartCategoryMultiple::getCategories((int)$table->id, 1);
 			PhocacartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->id);
+			$allCategories = array_unique(array_merge($previousCategories, $data['catid_multiple']));
+			PhocacartCount::setProductCount($allCategories, 'category', 1);// We need to recount all categories - previous (now deleted), and new
+
+
 
 			if (isset($data['featured'])) {
 				$this->featured((int)$table->id, $data['featured']);
@@ -377,16 +392,39 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$data['tags'] = array();
 			}
 
+			$previousTags = PhocacartTag::getTags((int)$table->id, 1);
 			PhocacartTag::storeTags($data['tags'], (int)$table->id);
-
+			$allTags = array_unique(array_merge($previousTags, $data['tags']));
+			PhocacartCount::setProductCount($allTags, 'tag', 1);// We need to update product count even for values which were removed when editing ($allTags)
 
 			// TAG LABELS
 			if (!isset($data['taglabels'])) {
 				$data['taglabels'] = array();
 			}
 
+			$previousLabels = PhocacartTag::getTagLabels((int)$table->id, 1);
 			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
+			$allLabels = array_unique(array_merge($previousLabels, $data['taglabels']));
+			PhocacartCount::setProductCount($allLabels, 'label', 1);// We need to update product count even for values which were removed when editing ($allLabels)
 
+			// PARAMETERS
+			$parameters = PhocacartParameter::getAllParameters();
+			if (!empty($parameters)) {
+				foreach ($parameters as $kP => $vP) {
+					if (isset($vP->id) && (int)$vP->id > 0) {
+						$idP = (int)$vP->id;
+
+						if (empty($data['items_parameter'][$idP])) {
+							$data['items_parameter'][$idP] = array();
+						}
+
+						$previousParameterValues = PhocacartParameter::getParameterValues((int)$table->id, $idP, 1);
+						PhocacartParameter::storeParameterValues($data['items_parameter'][$idP], (int)$table->id, $idP);
+						$allParameterValues = array_unique(array_merge($previousParameterValues, $data['items_parameter'][$idP]));
+						PhocacartCount::setProductCount($allParameterValues, 'parameter', 1);
+					}
+				}
+			}
 		}
 
 		// Clean the cache.
@@ -480,6 +518,9 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
+            // Get all manufacturers from products which should be removed so we can update count of products for manufacturers
+			$allManufacturers = PhocacartManufacturer::getManufacturersByIds($cids);
+
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
@@ -556,10 +597,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$this->_db->execute();
 
 			// 8. DELETE CATEGORY RELATIONSHIP
+            $allCategories = PhocacartCategoryMultiple::getCategoriesByIds($cids);
 			$query = 'DELETE FROM #__phocacart_product_categories'
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
+			PhocacartCount::setProductCount($allCategories, 'category', 1);
 
 			// 9. DELETE SPECIFICATIONS
 			$query = 'DELETE FROM #__phocacart_specifications'
@@ -598,6 +641,34 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				. ' WHERE product_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
+
+
+			// 12. DELETE PRODUCT TAGS
+            $allTags = PhocacartTag::getTagsByIds($cids);// All these tags will be influneced by deleting the item, so we need to recount the products for tags then
+			$query = 'DELETE FROM #__phocacart_tags_related'
+				. ' WHERE item_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			PhocacartCount::setProductCount($allTags, 'tag', 1);
+
+			// 13. DELETE PRODUCT LABELS
+            $allLabels = PhocacartTag::getTagsLabelsByIds($cids);
+			$query = 'DELETE FROM #__phocacart_taglabels_related'
+				. ' WHERE item_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			PhocacartCount::setProductCount($allLabels, 'label', 1);
+
+			// 14. DELETE PRODUCT PARAMTERS
+			$allParameterValues = PhocacartParameter::getParameterValuesByIds($cids);
+			$query = 'DELETE FROM #__phocacart_parameter_values_related'
+				. ' WHERE item_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+			PhocacartCount::setProductCount($allParameterValues, 'parameter', 1);
+
+			// Recount all manufacturers which will be removed (after removing) so the count will be updated
+            PhocacartCount::setProductCount($allManufacturers, 'manufacturer', 1);
 
 			// Remove download folders
 			PhocacartFile::deleteDownloadFolders($foldersP, 'productfile');
@@ -1370,7 +1441,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		}
 
-		// Load Feed Forms
+		// Load Feed Forms - by Plugin
 		$feedPlugins = PhocacartFeed::getFeedPluginMethods();
 
 		if (!empty($feedPlugins)) {
@@ -1399,6 +1470,41 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			}
 
 
+		}
+
+
+		// Load Parameter Values for Parameters
+		$parameters = PhocacartParameter::getAllParameters();
+
+
+
+		if (count($parameters) > 1){
+			$addform = new SimpleXMLElement('<form />');
+			$fields = $addform->addChild('fields');
+			$fields->addAttribute('name', 'items_parameter');
+			$fieldset = $fields->addChild('fieldset');
+			$fieldset->addAttribute('name', 'items_parameter');
+
+			foreach ($parameters as $k => $v)
+			{
+
+				$field = $fieldset->addChild('field');
+				$field->addAttribute('name', $v->id);
+				$field->addAttribute('parameterid', $v->id);
+				$field->addAttribute('type', 'PhocaCartParameterValues');
+				//$field->addAttribute('language', $language->lang_code);
+				$field->addAttribute('label', $v->title);
+				$field->addAttribute('multiple', 'true');
+				$field->addAttribute('translate_label', 'false');
+				$field->addAttribute('select', 'true');
+				$field->addAttribute('new', 'true');
+				$field->addAttribute('edit', 'true');
+				$field->addAttribute('clear', 'true');
+				$field->addAttribute('propagate', 'true');
+			}
+
+
+			$form->load($addform, false);
 		}
 
 

@@ -21,6 +21,8 @@ class PhocacartOrdering
 					case 4:$orderingOutput	= 'c.title DESC';break;
 					case 5:$orderingOutput	= 'c.date ASC';break;
 					case 6:$orderingOutput	= 'c.date DESC';break;
+					case 7:$orderingOutput	= 'c.count_products ASC';break;
+					case 8:$orderingOutput	= 'c.count_products DESC';break;
 					case 1: default: $orderingOutput = 'c.ordering ASC'; break;
 				}
 			break;
@@ -45,6 +47,8 @@ class PhocacartOrdering
 					case 4:$orderingOutput	= 't.title DESC';break;
 					case 5:$orderingOutput	= 't.id ASC';break;
 					case 6:$orderingOutput	= 't.id DESC';break;
+					case 7:$orderingOutput	= 't.count_products ASC';break;
+					case 8:$orderingOutput	= 't.count_products DESC';break;
 					case 1:default:$orderingOutput = 't.ordering ASC';break;
 				}
 			break;
@@ -56,6 +60,8 @@ class PhocacartOrdering
 					case 4:$orderingOutput	= 'm.title DESC';break;
 					case 5:$orderingOutput	= 'm.id ASC';break;
 					case 6:$orderingOutput	= 'm.id DESC';break;
+					case 7:$orderingOutput	= 'm.count_products ASC';break;
+					case 8:$orderingOutput	= 'm.count_products DESC';break;
 					case 1:default:$orderingOutput = 'm.ordering ASC';break;
 				}
 			break;
@@ -119,6 +125,30 @@ class PhocacartOrdering
 				}
 			break;
 
+			case 12:// PARAMETERS
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'pp.ordering DESC';break;
+					case 3:$orderingOutput	= 'pp.title ASC';break;
+					case 4:$orderingOutput	= 'pp.title DESC';break;
+					case 5:$orderingOutput	= 'pp.id ASC';break;
+					case 6:$orderingOutput	= 'pp.id DESC';break;
+					case 1:default:$orderingOutput = 'pp.ordering ASC';break;
+				}
+			break;
+
+			case 13:// PARAMETER VALUES
+				switch ((int)$ordering) {
+					case 2:$orderingOutput	= 'pv.ordering DESC';break;
+					case 3:$orderingOutput	= 'pv.title ASC';break;
+					case 4:$orderingOutput	= 'pv.title DESC';break;
+					case 5:$orderingOutput	= 'pv.id ASC';break;
+					case 6:$orderingOutput	= 'pv.id DESC';break;
+					case 7:$orderingOutput	= 'pv.count_products ASC';break;
+					case 8:$orderingOutput	= 'pv.count_products DESC';break;
+					case 1:default:$orderingOutput = 'pv.ordering ASC';break;
+				}
+			break;
+
 			default://PRODUCTS
 				switch ((int)$ordering) {
 					case 2:$orderingOutput	= 'pc.ordering DESC';break;
@@ -128,6 +158,8 @@ class PhocacartOrdering
 					case 6:$orderingOutput	= 'a.price DESC';break;
 					case 7:$orderingOutput	= 'a.date ASC';break;
 					case 8:$orderingOutput	= 'a.date DESC';break;
+					case 21:$orderingOutput	= 'a.date_update ASC';break;
+					case 22:$orderingOutput	= 'a.date_update DESC';break;
 					case 9:$orderingOutput	= 'rating ASC';break;
 					case 10:$orderingOutput	= 'rating DESC';break;
 
@@ -189,7 +221,7 @@ class PhocacartOrdering
 			break;
 
 			default:
-				$typeOrdering 	= self::getOrderingItemArray();
+				$typeOrdering 	= self::getOrderingItemArray(1);
 				$ordering		= 'itemordering';
 			break;
 		}
@@ -199,22 +231,73 @@ class PhocacartOrdering
 		return $html;
 	}
 
-	public static function getOrderingItemArray() {
-		$itemOrdering	= array(
+	public static function getOrderingItemArray($frontend = 0) {
+
+		$paramsC 					= PhocacartUtils::getComponentParameters();
+
+		if ($frontend == 1) {
+			$ordering_asc_desc_arrows 	= $paramsC->get('ordering_asc_desc_arrows', 0);
+			$item_ordering_values 		= $paramsC->get('item_ordering_values', '1,2,3,4,5,6,7,8,21,22,9,10,19,20');
+		} else {
+			$ordering_asc_desc_arrows 	= 0;
+			$item_ordering_values 		= '1,2,3,4,5,6,7,8,21,22,9,10,19,20';
+		}
+
+		if ($ordering_asc_desc_arrows == 1) {
+			$itemOrdering	= array(
+				1 => JText::_('COM_PHOCACART_ORDERING') . " &nbsp;" . "&#8679;",
+				2 => JText::_('COM_PHOCACART_ORDERING') . " &nbsp;" .  "&#8681;",
+				3 => JText::_('COM_PHOCACART_TITLE'). " &nbsp;" .  "&#8679;",
+				4 => JText::_('COM_PHOCACART_TITLE'). " &nbsp;" .  "&#8681;",
+				5 => JText::_('COM_PHOCACART_PRICE'). " &nbsp;" .  "&#8679;",
+				6 => JText::_('COM_PHOCACART_PRICE'). " &nbsp;" .  "&#8681;",
+				7 => JText::_('COM_PHOCACART_DATE_ADDED'). " &nbsp;" .  "&#8679;",
+				8 => JText::_('COM_PHOCACART_DATE_ADDED'). " &nbsp;" .  "&#8681;",
+				21 => JText::_('COM_PHOCACART_DATE_UPDATED'). " &nbsp;" .  "&#8679;",
+				22 => JText::_('COM_PHOCACART_DATE_UPDATED'). " &nbsp;" .  "&#8681;",
+				9 => JText::_('COM_PHOCACART_RATING'). " &nbsp;" .  "&#8679;",
+				10 => JText::_('COM_PHOCACART_RATING'). " &nbsp;" .  "&#8681;",
+				19 => JText::_('COM_PHOCACART_SKU'). " &nbsp;" .  "&#8679;",
+				20 => JText::_('COM_PHOCACART_SKU'). " &nbsp;" .  "&#8681;",
+				13 => JText::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8679;",
+				14 => JText::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8681;",
+				15 => JText::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8679;",
+				16 => JText::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8681;"
+			);
+		} else {
+			$itemOrdering	= array(
 				1 => JText::_('COM_PHOCACART_ORDERING_ASC'),
 				2 => JText::_('COM_PHOCACART_ORDERING_DESC'),
 				3 => JText::_('COM_PHOCACART_TITLE_ASC'),
 				4 => JText::_('COM_PHOCACART_TITLE_DESC'),
 				5 => JText::_('COM_PHOCACART_PRICE_ASC'),
 				6 => JText::_('COM_PHOCACART_PRICE_DESC'),
-				7 => JText::_('COM_PHOCACART_DATE_ASC'),
-				8 => JText::_('COM_PHOCACART_DATE_DESC'),
+				7 => JText::_('COM_PHOCACART_DATE_ADDED_ASC'),
+				8 => JText::_('COM_PHOCACART_DATE_ADDED_DESC'),
+				21 => JText::_('COM_PHOCACART_DATE_UPDATED_ASC'),
+				22 => JText::_('COM_PHOCACART_DATE_UPDATED_DESC'),
 				9 => JText::_('COM_PHOCACART_RATING_ASC'),
 				10 => JText::_('COM_PHOCACART_RATING_DESC'),
 				19 => JText::_('COM_PHOCACART_SKU_ASC'),
-				20 => JText::_('COM_PHOCACART_SKU_DESC')
-		);
-		return $itemOrdering;
+				20 => JText::_('COM_PHOCACART_SKU_DESC'),
+				13 => JText::_('COM_PHOCACART_MOST_POPULAR_ASC'),
+				14 => JText::_('COM_PHOCACART_MOST_POPULAR_DESC'),
+				15 => JText::_('COM_PHOCACART_MOST_VIEWED_ASC'),
+				16 => JText::_('COM_PHOCACART_MOST_VIEWED_DESC')
+			);
+		}
+
+		$itemOrderingValuesA = explode(',', $item_ordering_values);
+
+		//$itemOrdering = array_intersect_key($itemOrdering, $itemOrderingValues);
+		$validItemOrdering = array();
+		foreach ($itemOrderingValuesA as $k => $v) {
+			if (isset($itemOrdering[$v])) {
+				$validItemOrdering[$v] = $itemOrdering[$v];
+			}
+		}
+
+		return $validItemOrdering;
 	}
 
 	public static function getOrderingUserArray() {

@@ -19,7 +19,7 @@ class PhocacartLog
 	 * typeid - for example order id, category id, product id
 	 *
 	 * Example:
-	 * PhocacartLog::add(1, 'Message', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->unsername);
+	 * PhocacartLog::add(1, 'Message', $productId, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
 	 */
 
 	public static function add( $type = 0, $title = '', $typeid = 0, $description = '') {
