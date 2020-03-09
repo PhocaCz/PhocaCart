@@ -115,7 +115,7 @@ class PhocacartAttribute
         '11' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048'), ''),
 		);
 
-		if ((int)$returnValue > 0 && (int)$returnValue > 0) {
+		if ((int)$returnId > 0 && (int)$returnValue > 0) {
 			return $o[(int)$returnId][(int)$returnValue];//returnValue: 0 ... Title, 1 ... Default Value Type
 		}
 
@@ -236,6 +236,9 @@ class PhocacartAttribute
 
 				foreach($attributesArray as $k => $v) {
 
+					if(empty($v['title'])) {
+						$v['title'] = JFactory::getDate()->format("Y-m-d-H-i-s");
+					}
 
 					if(empty($v['alias'])) {
 						$v['alias'] = $v['title'];

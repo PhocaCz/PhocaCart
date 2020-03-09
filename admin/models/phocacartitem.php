@@ -128,6 +128,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return $item;
 	}
+	
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
