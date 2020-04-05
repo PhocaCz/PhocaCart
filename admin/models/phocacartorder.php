@@ -194,8 +194,14 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
 
+		$currentStatus 	= 0;
+		$newStatus 		= $data['status_id'];
 		if ($pk > 0) {
 			$table->load($pk);
+
+			if (isset($table->status_id) && (int)$table->status_id > 0) {
+				$currentStatus = (int)$table->status_id;
+			}
 			$isNew = false;
 		} else {
 			$app->enqueueMessage('Wrong ID', 'message');
@@ -220,11 +226,18 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 			return false;
 		}
 
-		// Store the history
-		$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);
-		$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
+		// Change status only if it really changed when editing
 
-		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
+		if ((int)$currentStatus == (int)$newStatus) {
+			// Status still the same, don't send email, don't change history
+		} else {
+			$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);
+			$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
+
+			// Store the history
+			PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
+		}
+
 
 
 		$cache = JFactory::getCache($this->option);

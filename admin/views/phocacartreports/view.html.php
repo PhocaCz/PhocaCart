@@ -87,9 +87,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 		$bar->appendButton('Custom', $dhtml);
 
 
-		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/ui/jquery-ui.min.js');
-			JHtml::stylesheet('media/com_phocacart/js/ui/jquery-ui.min.css' );
-			JHtml::stylesheet('media/com_phocacart/js/ui/phoca-ui.css' );
+
 
 		$linkTxt 		= JRoute::_( 'index.php?option=com_phocacart&view=phocacartreports&tmpl=component&format=raw' );
 		// Direct download

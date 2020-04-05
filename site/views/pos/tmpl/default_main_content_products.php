@@ -219,9 +219,9 @@ if (!empty($this->items)) {
 		// -----------
 		echo '<div class="'.$this->s['c']['cat_item_grid'].'">';
 		// :L: IMAGE
-		echo '<a href="'.$link.'">';
+	//	echo '<a href="'.$link.'">';
 		if (!empty($dI)) { echo $layoutI->render($dI);}
-		echo '</a>';
+	//	echo '</a>';
 
 
 		echo '</div>';

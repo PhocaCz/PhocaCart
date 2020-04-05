@@ -43,7 +43,7 @@ class PhocaCartViewDownload extends JViewLegacy
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
 		$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute());
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadSpec();
 

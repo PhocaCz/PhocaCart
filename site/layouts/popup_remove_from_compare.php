@@ -20,7 +20,7 @@ if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
 }
 
 ?>
-<div id="phRemoveFromComparePopup" class="<?php echo $s['c']['modal-zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="phRemoveFromComparePopup" class="<?php echo $d['s']['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="<?php echo $d['s']['c']['modal-dialog'] ?>">
       <div class="<?php echo $d['s']['c']['modal-content'] ?>">
         <div class="<?php echo $d['s']['c']['modal-header'] ?>">

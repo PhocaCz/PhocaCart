@@ -123,6 +123,19 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		$query->join('LEFT', '#__phocacart_order_users AS us0 ON a.id=us0.order_id AND us0.type = 0');// search in billing address
 		$query->join('LEFT', '#__phocacart_order_users AS us1 ON a.id=us1.order_id AND us1.type = 1');// search in shipping address
 
+		// Search country or region
+		$query->select('co0.title AS country0_title');
+		$query->select('co1.title AS country1_title');
+		//$query->join('LEFT', '#__phocacart_countries AS co ON co.id = us0.country OR co.id = us1.country');
+		$query->join('LEFT', '#__phocacart_countries AS co0 ON co0.id = us0.country');
+		$query->join('LEFT', '#__phocacart_countries AS co1 ON co1.id = us1.country');
+
+		$query->select('re0.title AS region0_title');
+		$query->select('re1.title AS region1_title');
+		//$query->join('LEFT', '#__phocacart_regions AS re ON re.id = us0.region OR re.id = us1.region');
+		$query->join('LEFT', '#__phocacart_regions AS re0 ON re0.id = us0.region');
+		$query->join('LEFT', '#__phocacart_regions AS re1 ON re1.id = us1.region');
+
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
@@ -157,6 +170,10 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 				$searchInP[] = 'a.title LIKE '. $search;
 				$searchInP[] = 'a.alias LIKE '. $search;
 				$searchInP[] = 'a.comment LIKE '. $search;
+				$searchInP[] = 'co0.title LIKE '. $search;
+				$searchInP[] = 'co1.title LIKE '. $search;
+				$searchInP[] = 're0.title LIKE '. $search;
+				$searchInP[] = 're1.title LIKE '. $search;
 				foreach($searchIn as $k => $v) {
 					$searchInP[] = 'us0.'.$v . ' LIKE '. $search;// search in billing address
 					$searchInP[] = 'us1.'.$v . ' LIKE '. $search;// search in shipping address

@@ -363,6 +363,8 @@ class PhocacartCart
 		$session 		= JFactory::getSession();
 		if($this->pos && (int)$this->vendor->id > 0) {
 
+
+
 			$this->updateItemsDb();
 			// if user changes the cart shipping method needs to be removed because it can be based on amount or region, etc.
 			// payment is for now without dependency to address or to amount, don't update it
@@ -689,6 +691,8 @@ class PhocacartCart
 
 				}
 
+
+
 			}
 		}
 	}
@@ -743,6 +747,11 @@ class PhocacartCart
 	}
 
 	public function getTotal() {
+
+		$items = array('netto', 'brutto', 'quantity', 'weight', 'length', 'width', 'height');
+		foreach($items as $k => $v) {
+			if (!isset($this->total[0][$v])) { $this->total[0][$v] = 0;}
+		}
 
 		return $this->total;
 	}
@@ -885,11 +894,11 @@ class PhocacartCart
 	}
 
 	public function getRewardPointsNeeded() {
-		return $this->total[0]['points_needed'];
+		return isset($this->total[0]['points_needed']) ? $this->total[0]['points_needed'] : 0;
 	}
 
 	public function getRewardPointsReceived() {
-		return $this->total[0]['points_received'];
+		return sset($this->total[0]['points_received']) ? $this->total[0]['points_received'] : 0;
 	}
 	public function getRewardPointsUsed() {
 		return $this->reward['used'];
@@ -950,7 +959,7 @@ class PhocacartCart
 		$shipping->setType($this->type);
 		$sI	= $shipping->getShippingMethod((int)$shippingId);
 
-
+		if (!isset($this->total[0])) {$this->total[0] = array();}
 		$shippingValid 	= $shipping->checkAndGetShippingMethodInsideCart((int)$shippingId, $this->total[0]);
 		if (!$shippingValid) {
 			PhocacartShipping::removeShipping();// In case user has in cart shipping method which does not exists
@@ -1017,6 +1026,7 @@ class PhocacartCart
 			$shippingId		= $this->shipping['costs']['id'];
 		}
 
+		if (!isset($this->total[0])) {$this->total[0] = array();}
 		$paymentValid 	= $payment->checkAndGetPaymentMethodInsideCart((int)$paymentId, $this->total[0], $shippingId);
 
 		if (!$paymentValid) {

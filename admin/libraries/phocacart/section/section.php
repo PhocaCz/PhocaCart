@@ -86,8 +86,8 @@ class PhocacartSection
 
 
 				$link = JRoute::_(PhocacartRoute::getPosRoute(1,0,0, 'section', (int)$v->id));
-				$o .= '<li class="'.$s['nav-item'].' '.$active.'">';
-				$o .= '<a class="'.$s['nav-link'].' '.$active.'" href="'.$link.'"> '.$v->title.' </a>';
+				$o .= '<li class="'.$s['c']['nav-item'].' '.$active.'">';
+				$o .= '<a class="'.$s['c']['nav-link'].' '.$active.'" href="'.$link.'"> '.$v->title.' </a>';
 				$o .= '</li>';
 
 			}
@@ -95,8 +95,8 @@ class PhocacartSection
 		} else {
 			$link = JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
 
-			$o .= '<li class="'.$s['nav-item'].' active">';
-			$o .= '<a class="'.$s['nav-link'].' active" href="'.$link.'">'.JText::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
+			$o .= '<li class="'.$s['c']['nav-item'].' active">';
+			$o .= '<a class="'.$s['c']['nav-link'].' active" href="'.$link.'">'.JText::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
 			$o .= '</li>';
 		}
 

@@ -183,7 +183,14 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 	    if(!isset($data['orders_view_display'])) {
 	        $data['orders_view_display'] = array();
         }
+
+	    if(!isset($data['email_attachments'])) {
+	        $data['email_attachments'] = array();
+        }
 	    $data['orders_view_display'] = json_encode($data['orders_view_display']);
+	    $data['email_attachments'] = json_encode($data['email_attachments']);
+
+
 
 	    return parent::save($data);
     }

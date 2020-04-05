@@ -281,6 +281,7 @@ class PhocacartOrder
 		// Data order
 		$d['comment'] 				= isset($data['phcomment']) ? $data['phcomment'] : '';
 		$d['privacy']				= isset($data['privacy']) ? (int)$data['privacy'] : '';
+		$d['terms']				    = isset($data['phcheckouttac']) ? (int)$data['phcheckouttac'] : '';
 		$d['newsletter']			= isset($data['newsletter']) ? (int)$data['newsletter'] : 0;
 
 		// Data POS

@@ -82,7 +82,7 @@ class PhocacartCategoryMultiple
 				return false;
 			} else {
 				// Only some selected
-				$wheres[] = ' c.id IN ('.implode($pos_categories, ',').')';
+				$wheres[] = ' c.id IN ('.implode(',', $pos_categories).')';
 
 			}
 		}
@@ -227,7 +227,7 @@ class PhocacartCategoryMultiple
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 					$query = ' INSERT INTO #__phocacart_product_categories (product_id, category_id, ordering)'
 								.' VALUES '.(string)$valuesString;
 					$db->setQuery($query);

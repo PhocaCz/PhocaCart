@@ -109,7 +109,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['category_display_tags']		= $this->p->get( 'category_display_tags', 0 );
 		$this->t['category_display_manufacturer']		= $this->p->get( 'category_display_manufacturer', 0 );
 		$this->t['manufacturer_alias']			= $this->p->get( 'manufacturer_alias', 'manufacturer');
-		$this->t['manufacturer_alias'] 			!= '' ? trim(PhocacartText::filterValue($this->t['manufacturer_alias'], 'alphanumeric'))  : 'manufacturer';
+		$this->t['manufacturer_alias']			= $this->t['manufacturer_alias'] != '' ? trim(PhocacartText::filterValue($this->t['manufacturer_alias'], 'alphanumeric'))  : 'manufacturer';
 
 		$this->t['show_pagination'] 			= $this->p->get('show_pagination');
 		$this->t['show_pagination_top'] 		= $this->p->get('show_pagination_top', 1);

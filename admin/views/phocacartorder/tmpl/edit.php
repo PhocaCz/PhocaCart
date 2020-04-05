@@ -96,7 +96,7 @@ if ($this->itemcommon->paymenttitle != '') {
 	echo $r->itemText($this->itemcommon->paymenttitle, JText::_('COM_PHOCACART_PAYMENT_METHOD'));
 }
 
-$formArray = array ('id', 'status_id', 'order_token', 'comment');
+$formArray = array ('id', 'status_id', 'order_token', 'comment', 'terms', 'privacy', 'newsletter');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 

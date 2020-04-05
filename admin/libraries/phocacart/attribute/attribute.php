@@ -511,7 +511,7 @@ class PhocacartAttribute
 
 					// Remove all options except the active
 					if (!empty($notDeleteOptions)) {
-						$notDeleteOptionsString = implode($notDeleteOptions, ',');
+						$notDeleteOptionsString = implode(',', $notDeleteOptions);
 
 						// Remove all download files from not active attribute values:
 						$qS = ' SELECT download_folder, download_file'
@@ -548,7 +548,7 @@ class PhocacartAttribute
 
 			// Remove all attributes except the active
 			if (!empty($notDeleteAttribs)) {
-				$notDeleteAttribsString = implode($notDeleteAttribs, ',');
+				$notDeleteAttribsString = implode(',', $notDeleteAttribs);
 
 				// Remove all download files from not active attributes:
 				$qS = ' SELECT v.download_folder, v.download_file'
@@ -616,7 +616,7 @@ class PhocacartAttribute
 			$deleteIds = $db->loadColumn();
 
 			if (!empty($deleteIds)) {
-				$deleteString = implode($deleteIds, ',');
+				$deleteString = implode(',', $deleteIds);
 
 				$query = ' DELETE '
 					.' FROM #__phocacart_attribute_values'
@@ -715,7 +715,7 @@ class PhocacartAttribute
 
 							$options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
 							if (!empty($options)) {
-								$valuesString2 = implode($options, ',');
+								$valuesString2 = implode(',', $options);
 							}
 						}
 						$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_small, color, default_value)'
@@ -1472,7 +1472,7 @@ class PhocacartAttribute
 			}
 			// Remove all discounts except the active
 			if (!empty($notDeleteItems)) {
-				$notDeleteItemsString = implode($notDeleteItems, ',');
+				$notDeleteItemsString = implode(',', $notDeleteItems);
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_stock'
 						.' WHERE product_id = '. (int)$productId
@@ -1560,7 +1560,7 @@ class PhocacartAttribute
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, operator, amount)'
 								.' VALUES '.(string)$valuesString;

@@ -69,7 +69,7 @@ if (isset($d['discount']) && $d['discount']) {
 	}
 
 
-    if (isset($d['priceitems']['brutto']) && $d['priceitems']['brutto'] == 0 && $d['zero_price'] == 1) {
+    if (isset($d['priceitems']['brutto']) && $d['priceitems']['brutto'] == 0 && isset($d['zero_price']) && $d['zero_price'] == 1) {
         $labelNetto     = '';
         $labelTax       = '';
         $priceNetto     = '';

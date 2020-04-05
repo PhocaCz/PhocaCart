@@ -115,7 +115,7 @@ class PhocacartFileAdditional
 
 			// Remove all files except the active
 			if (!empty($notDeleteFiles)) {
-				$notDeleteFilesString = implode($notDeleteFiles, ',');
+				$notDeleteFilesString = implode(',', $notDeleteFiles);
 
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_files'

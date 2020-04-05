@@ -264,6 +264,7 @@ class PhocacartOrdering
 				15 => JText::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8679;",
 				16 => JText::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8681;"
 			);
+
 		} else {
 			$itemOrdering	= array(
 				1 => JText::_('COM_PHOCACART_ORDERING_ASC'),

@@ -8,6 +8,8 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 
 class JFormFieldPhocacartFile extends JFormField
 {

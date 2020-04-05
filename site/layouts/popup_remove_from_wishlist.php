@@ -21,7 +21,7 @@ if (isset($d['wishlist_view']) && $d['wishlist_view'] == 1) {
       <div class="<?php echo $d['s']['c']['modal-content'] ?>">
         <div class="<?php echo $d['s']['c']['modal-header'] ?>">
          <?php echo $d['s']['c']['class-type'] != 'bs4' ? $d['close'] : '' ?>
-		  <h4><span class="<?php echo $this->s['i']['info-sign'] ?>"></span> <?php echo $d['info_msg'] ?></h4>
+		  <h4><span class="<?php echo $d['s']['i']['info-sign'] ?>"></span> <?php echo $d['info_msg'] ?></h4>
             <?php echo $d['s']['c']['class-type'] == 'bs4' ? $d['close'] : '' ?>
         </div>
         <div class="<?php echo $d['s']['c']['modal-body'] ?>">

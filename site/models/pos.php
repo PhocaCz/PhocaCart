@@ -32,7 +32,7 @@ class PhocaCartModelPos extends JModelLegacy
 		$item_ordering		= $paramsC->get( 'pos_ordering', 1 );
 
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
-		$manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
+		$manufacturer_alias = $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
 
 		$this->setState('page', $app->input->get('page', 'main.content.products'));
 		//$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'), 1);
@@ -242,7 +242,7 @@ class PhocaCartModelPos extends JModelLegacy
 			return 'SELECT id FROM #__phocacart_products WHERE 1 <> 1;';
 		} else {
 			// Only some selected
-			$wheres[] = ' c.id IN ('.implode($pos_categories, ',').')';
+			$wheres[] = ' c.id IN ('.implode(',', $pos_categories).')';
 
 		}
 
@@ -389,7 +389,7 @@ class PhocaCartModelPos extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)';
 
 
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit,  a.description,'
+			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.type,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
 						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,'
 						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
@@ -398,7 +398,7 @@ class PhocaCartModelPos extends JModelLegacy
 						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 						.' AVG(r.rating) AS rating, at.required AS attribute_required';
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.title, at.required';
 			$groupsFast	= 'a.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -768,12 +768,16 @@ class PhocaCartModelPos extends JModelLegacy
 		$data['user_id']	= (int)$user->id;
 		$shipping 			= new PhocacartShipping();
 		$shipping->setType(array(0,2));
-		$isValidShipping	= $shipping->checkAndGetShippingMethod($shippingId);
-		if (!$isValidShipping) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
-			return false;
-		}
 
+		if ((int)$shippingId == 0) {
+			// Deselect Shipping
+		} else {
+			$isValidShipping = $shipping->checkAndGetShippingMethod($shippingId);
+			if (!$isValidShipping) {
+				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
+				return false;
+			}
+		}
 		$row = $this->getTable('PhocacartCart', 'Table');
 		if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => (int)$vendor->id, 'ticket_id' => (int)$ticket->id, 'unit_id' => (int)$unit->id, 'section_id' => (int)$section->id))) {}
 
@@ -799,6 +803,12 @@ class PhocaCartModelPos extends JModelLegacy
 			return false;
 		}
 
+		if ((int)$shippingId == 0) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_DESELECTED'), 'success');
+		} else {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_SELECTED'), 'success');
+		}
+
 		return true;
 	}
 
@@ -815,11 +825,17 @@ class PhocaCartModelPos extends JModelLegacy
 		$data['reward'] 	= (int)$reward;
 		$payment 			= new PhocacartPayment();
 		$payment->setType(array(0,2));
-		$isValidPayment	= $payment->checkAndGetPaymentMethod($paymentId);
-		if (!$isValidPayment) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
-			return false;
+
+		if ((int)$paymentId == 0) {
+			// Deselect Payment
+		} else {
+			$isValidPayment	= $payment->checkAndGetPaymentMethod($paymentId);
+			if (!$isValidPayment) {
+				$app->enqueueMessage( $paymentId . JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
+				return false;
+			}
 		}
+
 
 		$row = $this->getTable('PhocacartCart', 'Table');
 		if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => (int)$vendor->id, 'ticket_id' => (int)$ticket->id, 'unit_id' => (int)$unit->id, 'section_id' => (int)$section->id))) {}
@@ -846,6 +862,13 @@ class PhocaCartModelPos extends JModelLegacy
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
+
+		if ((int)$paymentId == 0) {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_PAYMENT_METHOD_DESELECTED'), 'success');
+		} else {
+			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_PAYMENT_METHOD_SELECTED'), 'success');
+		}
+
 
 		return true;
 	}

@@ -12,9 +12,9 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
 class PhocacartZone
-{	
+{
 	public static function getZones($id, $select = 0, $table = 'shipping') {
-	
+
 		if ($table == 'shipping') {
 			$t = '#__phocacart_shipping_method_zones';
 			$c = 'shipping_id';
@@ -22,9 +22,9 @@ class PhocacartZone
 			$t = '#__phocacart_payment_method_zones';
 			$c = 'payment_id';
 		}
-		
+
 		$db =JFactory::getDBO();
-		
+
 		if ($select == 1) {
 			$query = 'SELECT c.zone_id';
 		} else {
@@ -35,37 +35,37 @@ class PhocacartZone
 			    .' WHERE c.'.$c.' = '.(int) $id
 				.' ORDER BY a.id';
 		$db->setQuery($query);
-		
+
 		if ($select == 1) {
 			$zones = $db->loadColumn();
 		} else {
 			$zones = $db->loadObjectList();
-		}	
-	
+		}
+
 		return $zones;
 	}
-	
+
 	public static function getAllZonesSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
-	
+
 		$db =JFactory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_zones AS a'
 				. ' ORDER BY '. $order;
 		$db->setQuery($query);
 		$zones = $db->loadObjectList();
-		
+
 		$zonesO = JHtml::_('select.genericlist', $zones, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
-		
+
 		return $zonesO;
 	}
-	
+
 	/*
 	 * used for shipping method rules
 	 * used for payment method rules
 	 */
-	
+
 	public static function storeZones($zonesArray, $id, $table = 'shipping') {
-	
+
 
 		if ($table == 'shipping') {
 			$t = '#__phocacart_shipping_method_zones';
@@ -74,7 +74,7 @@ class PhocacartZone
 			$t = '#__phocacart_payment_method_zones';
 			$c = 'payment_id';
 		}
-	
+
 		if ((int)$id > 0) {
 			$db =JFactory::getDBO();
 			$query = ' DELETE '
@@ -82,19 +82,19 @@ class PhocacartZone
 					. ' WHERE '.$c.' = '. (int)$id;
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			if (!empty($zonesArray)) {
-				
+
 				$values 		= array();
 				$valuesString 	= '';
-				
+
 				foreach($zonesArray as $k => $v) {
 					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
 				}
-				
+
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
-				
+					$valuesString = implode(',',$values);
+
 					$query = ' INSERT INTO '.$t.' ('.$c.', zone_id)'
 								.' VALUES '.(string)$valuesString;
 
@@ -104,7 +104,7 @@ class PhocacartZone
 			}
 		}
 	}
-	
+
 	public static function getCountries($id = 0) {
 		if ($id > 0) {
 			$db =JFactory::getDBO();
@@ -117,7 +117,7 @@ class PhocacartZone
 		}
 		return false;
 	}
-	
+
 	public static function getRegions($id = 0) {
 		if ($id > 0) {
 			$db =JFactory::getDBO();
@@ -130,9 +130,9 @@ class PhocacartZone
 		}
 		return false;
 	}
-	
+
 	public static function isCountryOrRegionIncluded($zones, $country, $region){
-		
+
 		if (!empty($zones)) {
 			foreach($zones as $k => $v) {
 				// Get all countries from current zone - zones which are set as rules in shipping rule
@@ -141,7 +141,7 @@ class PhocacartZone
 				if (in_array((int)$country, $countries)) {
 					return true;
 				}
-				
+
 				// Get all regions from current zone - zones which are set as rules in shipping rule
 				$regions = self::getRegions((int)$v);
 				// Is user's region included in region which is included in selected Zone
@@ -149,7 +149,7 @@ class PhocacartZone
 					return true;
 				}
 			}
-			
+
 			/*
 			// POSSIBLE SOLUTION Countries and regions not in one foreach, first we test countries than regions
 			foreach($zones as $k => $v) {
@@ -161,9 +161,9 @@ class PhocacartZone
 				}
 			}*/
 		}
-		
+
 		return false;
 	}
-	
+
 }
 ?>

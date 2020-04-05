@@ -154,7 +154,7 @@ class PhocaCartViewItem extends JViewLegacy
 			}
 
 
-			$media = new PhocacartRenderMedia();
+			$media = PhocacartRenderMedia::getInstance('main');
 			$media->loadBase();
 			$media->loadChosen();
 			$media->loadRating();
@@ -189,6 +189,7 @@ class PhocaCartViewItem extends JViewLegacy
 			}
 
 			PhocacartRenderJs::renderAjaxAddToCart();
+			//PhocacartRenderJs::renderAjaxUpdateCart();// used only in POS
 			PhocacartRenderJs::renderAjaxAddToCompare();
 			PhocacartRenderJs::renderAjaxAddToWishList();
 			PhocacartRenderJs::renderAjaxAskAQuestion();

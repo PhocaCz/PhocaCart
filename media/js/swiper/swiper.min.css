@@ -48,14 +48,18 @@
 }
 .swiper-container.ph-mod-brands-swiper-container .swiper-wrapper .swiper-slide,
 .swiper-container.ph-mod-product-scroller-swiper-container .swiper-wrapper .swiper-slide {
-	height: 100%;
+	height: auto;
 	display: flex;
+	margin-top:0;
+	margin-bottom:0;
 }
 
 .swiper-container.ph-mod-brands-swiper-container .swiper-wrapper .swiper-slide .ph-item-box,
 .swiper-container.ph-mod-product-scroller-swiper-container .swiper-wrapper .swiper-slide .ph-item-box {
 	margin-left: auto;
 	margin-right: auto;
+	width: 100%;
+	padding: 10px;
 }
 
 .swiper-container.ph-mod-brands-swiper-container .swiper-wrapper .swiper-slide .ph-item-box .ph-thumbnail,

@@ -42,7 +42,7 @@ class PhocaCartCpViewPhocaCartImports extends JViewLegacy
 		JHtml::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 
 		JHtml::_('jquery.framework', false);
-		PhocacartRenderJs::renderOverlayOnSubmit('phFormUpload');
+		PhocacartRenderAdminjs::renderOverlayOnSubmit('phFormUpload');
 
 		$this->addToolbar();
 		parent::display($tpl);

@@ -201,7 +201,7 @@ if ($this->t['can_display_price']) {
 			$d['s']					    = $this->s;
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;
-			$d['typeview']				= 'Item';
+			$d['typeview']				= 'ItemQuick';
 			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
 			echo $layoutS->render($d);
 		}

@@ -119,7 +119,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		}
 
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadChosen();
 

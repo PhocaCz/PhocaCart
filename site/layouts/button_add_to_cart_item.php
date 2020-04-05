@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 $d = $displayData;
+
 ?>
 <div class="<?php echo $d['s']['c']['pull-right'] ?> <?php echo $d['s']['c']['form-group'] ?> ph-item-add-to-cart-box">
 	<input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>">

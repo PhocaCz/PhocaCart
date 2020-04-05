@@ -498,7 +498,7 @@ class PhocacartShipping
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO '.$t.' ('.$c.', shipping_id)'
 								.' VALUES '.(string)$valuesString;
@@ -538,6 +538,9 @@ class PhocacartShipping
 				$app = JFactory::getApplication();
 				$paramsC = PhocacartUtils::getComponentParameters();
 				$pos_shipping_force = $paramsC->get('pos_shipping_force', 0);
+				if ((int)$pos_shipping_force > 0) {
+					$pos_shipping_force = PhocacartShipping::isShippingMethodActive($pos_shipping_force) === true ? (int)$pos_shipping_force : 0;
+				}
 			}
 
 			$query = 'UPDATE #__phocacart_cart_multiple SET shipping = ' . (int)$pos_shipping_force
@@ -649,6 +652,33 @@ class PhocacartShipping
 
 		return $p;
 
+	}
+
+	/*
+	 * Used in POS - we can define forced shipping method in Global Configuration
+	 * But if user unpublish this method, we need to test it
+	*/
+
+	public static function isShippingMethodActive($id) {
+
+
+		$db =JFactory::getDBO();
+
+		$query = 'SELECT a.id'
+				.' FROM #__phocacart_shipping_methods AS a'
+				.' WHERE a.published = 1'
+				.' AND a.type IN (0,2)'// IT IS A POS (0 common, 2 POS)
+				.' AND a.id = '.(int)$id
+				.' ORDER BY id LIMIT 1';
+		$db->setQuery($query);
+		$method = $db->loadResult();
+
+		if ((int)$method > 0) {
+			return true;
+		}
+
+
+		return false;
 	}
 }
 ?>

@@ -13,7 +13,7 @@ echo '<form action="'. $this->t['su_url'] .'" id="uploadFormU" method="post" enc
 if ($this->t['ftp']) { echo PhocacartFileUpload::renderFTPaccess();}
 echo '<div class="ph-head-form-small">' . JText::_( $this->t['l'].'_UPLOAD_FILE' );
 
-if ($this->tmpl['uploadmaxsizeread'] && $this->tmpl['uploadmaxsizeread'] != '0 B' ) {
+if (isset($this->tmpl['uploadmaxsizeread']) && $this->tmpl['uploadmaxsizeread'] && $this->tmpl['uploadmaxsizeread'] != '0 B' ) {
 	echo  ' [ ' . JText::_( $this->t['l'].'_MAX_SIZE' ).':&nbsp;'.$this->tmpl['uploadmaxsizeread'].']';
 }
 echo '</div>';

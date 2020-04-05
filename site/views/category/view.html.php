@@ -119,7 +119,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['category_display_tags']		= $this->p->get( 'category_display_tags', 0 );
 		$this->t['category_display_manufacturer']		= $this->p->get( 'category_display_manufacturer', 0 );
 		$this->t['manufacturer_alias']			= $this->p->get( 'manufacturer_alias', 'manufacturer');
-		$this->t['manufacturer_alias'] 			!= '' ? trim(PhocacartText::filterValue($this->t['manufacturer_alias'], 'alphanumeric'))  : 'manufacturer';
+		$this->t['manufacturer_alias']			= $this->t['manufacturer_alias'] != '' ? trim(PhocacartText::filterValue($this->t['manufacturer_alias'], 'alphanumeric'))  : 'manufacturer';
 
 
 		$this->t['show_pagination'] 			= $this->p->get('show_pagination');
@@ -160,12 +160,13 @@ class PhocaCartViewCategory extends JViewLegacy
         	$this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
         	$this->t['class_lazyload']       		= $this->t['lazy_load_category_items']  == 1 ? 'ph-lazyload' : '';
 
-			$media = new PhocacartRenderMedia();
+			$media = PhocacartRenderMedia::getInstance('main');
 			$media->loadBase();
 			$media->loadChosen();
 			$media->loadProductHover();
 
 			PhocacartRenderJs::renderAjaxAddToCart();
+			//PhocacartRenderJs::renderAjaxUpdateCart();// used only in POS
 			PhocacartRenderJs::renderAjaxAddToCompare();
 			PhocacartRenderJs::renderAjaxAddToWishList();
 			// Moved to JS PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phItemsBox');
@@ -181,6 +182,7 @@ class PhocaCartViewCategory extends JViewLegacy
 
 			$touchSpinJs = $media->loadTouchSpin('quantity', $this->s['i']);
 
+
 			if ($this->t['hide_attributes_category'] == 0) {
 				$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 			}
@@ -194,14 +196,14 @@ class PhocaCartViewCategory extends JViewLegacy
 
 			// CHANGE PRICE FOR ITEM QUICK VIEW
 			if ($this->t['display_quickview'] == 1 || $this->t['category_addtocart'] == 104) {
-				PhocacartRenderJs::renderAjaxQuickViewBox(array('touchspin' => $touchSpinJs));
+				PhocacartRenderJs::renderAjaxQuickViewBox();
 
 				// CHANGE PRICE FOR ITEM QUICK VIEW
 				if ($this->t['dynamic_change_price'] == 1) {
-					PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ItemQuick');// We need to load it here
+					PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ItemQuick', 'ph-item-price-box');// We need to load it here
 				}
 				if ($this->t['dynamic_change_stock'] == 1) {
-					PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'ItemQuick');
+					PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'ItemQuick', 'ph-item-stock-box');
 				}
 				$media->loadPhocaAttribute(1);// We need to load it here
 				$media->loadPhocaSwapImage($this->t['dynamic_change_image']);// We need to load it here in ITEM (QUICK VIEW) VIEW

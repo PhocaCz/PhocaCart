@@ -27,44 +27,6 @@ function phRemoveUrlParameter(param, url) {
  }
 
 
-
-
-
- /* POS */
-function phUpdateUrlParameter(param, value, urlChange) {
-	if (typeof urlChange !== "undefined") {
-	   var url =  urlChange;
-	   var urlA =  url.split("#");
-	   var hash =  ""
-	   if(urlA.length > 1) { hash = urlA[1];}
-	} else {
-	   var url = window.location.href;
-	   var hash = location.hash;
-	}
-
-	url = url.replace(hash, '');
-	if (url.indexOf(param + "=") >= 0) {
-	   var prefix = url.substring(0, url.indexOf(param));
-	   var suffix = url.substring(url.indexOf(param));
-	   suffix = suffix.substring(suffix.indexOf("=") + 1);
-	   suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
-	   url = prefix + param + "=" + value + suffix;
-	} else {
-	   if (url.indexOf("?") < 0) {
-		  url += "?" + param + "=" + value;
-	   } else {
-		  url += "&" + param + "=" + value;
-	   }
-	}
-	url = url.replace(/[^=&]+=(&|$)/g,"").replace(/&$/,"");// remove all parameters with empty values
-
-	if (typeof urlChange !== "undefined") {
-	   return (url + hash);
-	} else {
-	   window.history.pushState(null, null, url + hash);
-	}
-}
-
 function startOverlay(outputDiv) {
 	var phOverlay = jQuery('<div id="phOverlayDiv"><div id="phLoaderFull"> </div></div>');
 
@@ -136,29 +98,32 @@ function phUpdatePageAndParts(url, source) {
 	urlModule = phRemoveParamFromUrl('view', urlModule);
 	urlModule = phRemoveParamFromUrl('module', urlModule);
 
+	urlModule = urlModule.substring(urlModule.indexOf('?') + 1);
 	
-
-
 	var urlSearchModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_search';
 	var urlFilterModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_filter';
-	if (urlMain.indexOf("?") == 0) {
+
+
+	if (urlModule.indexOf("?") == 0) {
 		urlSearchModule = urlSearchModule + '&' +urlModule.substr(1);
 		urlFilterModule = urlFilterModule + '&' +urlModule.substr(1);
-	} else if (urlMain.indexOf("&") == 0) {
+		
+	} else if (urlModule.indexOf("&") == 0) {
 		urlSearchModule = urlSearchModule + urlModule;
 		urlFilterModule = urlFilterModule + urlModule;
+		
 	} else {
 		urlSearchModule = urlSearchModule + '&' + urlModule;
 		urlFilterModule = urlFilterModule + '&' + urlModule;
+		
 	}
 
-
-	if (phParamsS['displayActiveParameters'] == 1) {
+	if (typeof phParamsS != 'undefined' && phVars['mod_phocacart_search'] == 1 && phParamsS['displayActiveParameters'] == 1) {
 		// Update filter only when
 		phRenderPagePart({}, 'phSearchActiveTags', urlSearchModule);// AJAX update search module
 	}
 
-	if (source == 2) {
+	if (typeof phVars != 'undefined' && phVars['mod_phocacart_filter'] == 1 && source == 2) {
 		// Update filter only when source comes from search filter
 		phRenderPagePart({}, 'phFilterBox', urlFilterModule);// AJAX update filter module
 	}
@@ -198,7 +163,9 @@ function phRenderPage(sFormData, phUrlJs) {
 			if (loadChosen == 1) {
 				jQuery('select').chosen('destroy').chosen({disable_search_threshold : 10,allow_single_deselect : true});
 			}
-			phChangeAttributeType();// Recreate the select attribute (color, image) after AJAX
+			if (typeof phChangeAttributeType === "function") {
+				phChangeAttributeType();// Recreate the select attribute (color, image) after AJAX
+			}
 			if(typeof phLazyLoadInstance !== "undefined" && phLazyLoadInstance) {
 				phLazyLoadInstance.update();// Lazy load - reload if enabled
 			}
@@ -305,7 +272,7 @@ function phEventChangeFormPagination(sForm, sItem) {
 	}
 }
 
-function number_format (number, decimals, decPoint, thousandsSep) {
+function phNumberFormat (number, decimals, decPoint, thousandsSep) {
   
 	number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
 	var n = !isFinite(+number) ? 0 : +number
@@ -333,6 +300,10 @@ function number_format (number, decimals, decPoint, thousandsSep) {
 	return s.join(dec)
 }
 
+
+// ------
+// Events
+// ------
 jQuery(document).ready(function(){
 
 	// ::EVENT (CLICK) Change Layout Type Clicking on Grid, Gridlist, List

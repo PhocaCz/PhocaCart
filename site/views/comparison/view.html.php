@@ -93,7 +93,7 @@ class PhocaCartViewComparison extends JViewLegacy
 			}
 		}
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadSpec();
 

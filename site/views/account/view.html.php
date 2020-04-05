@@ -90,7 +90,7 @@ class PhocaCartViewAccount extends JViewLegacy
 
 		}
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadChosen();
 		///PhocacartRenderJs::renderBillingAndShippingSame();

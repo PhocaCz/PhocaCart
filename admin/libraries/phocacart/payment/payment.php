@@ -448,6 +448,9 @@ class PhocacartPayment
 				$app					= JFactory::getApplication();
 				$paramsC 				= PhocacartUtils::getComponentParameters();
 				$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
+				if ((int)$pos_payment_force > 0) {
+					$pos_payment_force = PhocacartPayment::isPaymentMethodActive($pos_payment_force) === true ? (int)$pos_payment_force : 0;
+				}
 
 				if ($removeCoupon == 1 && $pos_payment_force == 0) {
 					$set[]  = 'coupon = 0';
@@ -594,6 +597,33 @@ class PhocacartPayment
 
 		return $response;
 
+	}
+
+	/*
+	 * Used in POS - we can define forced payment method in Global Configuration
+	 * But if user unpublish this method, we need to test it
+	*/
+
+	public static function isPaymentMethodActive($id) {
+
+
+		$db =JFactory::getDBO();
+
+		$query = 'SELECT a.id'
+				.' FROM #__phocacart_payment_methods AS a'
+				.' WHERE a.published = 1'
+				.' AND a.type IN (0,2)'// IT IS A POS (0 common, 2 POS)
+				.' AND a.id = '.(int)$id
+				.' ORDER BY id LIMIT 1';
+		$db->setQuery($query);
+		$method = $db->loadResult();
+
+		if ((int)$method > 0) {
+			return true;
+		}
+
+
+		return false;
 	}
 }
 ?>

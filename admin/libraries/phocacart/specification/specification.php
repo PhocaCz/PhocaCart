@@ -177,7 +177,7 @@ class PhocacartSpecification
 
 			// Remove all specifications except the active
 			if (!empty($notDeleteSpecs)) {
-				$notDeleteSpecsString = implode($notDeleteSpecs, ',');
+				$notDeleteSpecsString = implode(',', $notDeleteSpecs);
 				$query = ' DELETE '
 						.' FROM #__phocacart_specifications'
 						.' WHERE product_id = '. (int)$productId
@@ -245,7 +245,7 @@ class PhocacartSpecification
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 					$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id)'
 							.' VALUES '.(string)$valuesString;
 					$db->setQuery($query);

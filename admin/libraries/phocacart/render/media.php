@@ -10,17 +10,25 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 class PhocacartRenderMedia
 {
 	public $jquery			= 0;
 	protected $document		= false;
 	protected $p			= array();
+	protected $t			= array();
 	protected $format		= '';
 	protected $view			= '';
 	protected $load			= true;
 
+	protected $name			= '';
+	protected static $instances = array();
 
-	public function __construct() {
+
+	public function __construct($name = 'main') {
+		$this->name = $name;
+
 
 		$app	= JFactory::getApplication();
 		//$params = $app->getParams();// We call media from modules too
@@ -42,10 +50,19 @@ class PhocacartRenderMedia
 		$this->p['ajax_pagination_category']= $params->get( 'ajax_pagination_category', 0);
 		$this->p['ajax_searching_filtering_items']= $params->get( 'ajax_searching_filtering_items', 0);
 
+		$this->p['theme'] 					= $params->get( 'theme', 'bs3' );
+
+		$this->p['pos_focus_input_fields']	= $params ->get( 'pos_focus_input_fields', 0 );
+		$this->p['pos_filter_category']		= $params ->get( 'pos_filter_category', 1 );// reload equal height
 
 
 		$this->p['lazy_load_category_items']= $params->get( 'lazy_load_category_items', 0 );
 		$this->p['lazy_load_categories']	= $params->get( 'lazy_load_categories', 0 );
+		$this->p['pos_server_print']		= $params->get( 'pos_server_print', 0 );
+
+		$this->p['load_min_js']				= $params->get( 'load_min_js', 1 );
+        $this->t['min']                    	= $this->p['load_min_js'] == 0 ? '' : '.min';
+
 
 		$this->format 	= $app->input->get('format', '', 'string');
 		$this->view 	= $app->input->get('view', '', 'string');
@@ -87,16 +104,96 @@ class PhocacartRenderMedia
 
 
 		JHtml::_('jquery.framework', false);
+        //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocacart'.$this->t['min'].'.js');
+        //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocarequest'.$this->t['min'].'.js');
+        //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/filter/jquery.ba-bbq.min.js');
+        HTMLHelper::_('script', 'media/com_phocacart/js/phoca/phocacart'.$this->t['min'].'.js', array('version' => 'auto'));
+        HTMLHelper::_('script', 'media/com_phocacart/js/phoca/phocarequest'.$this->t['min'].'.js', array('version' => 'auto'));
+        HTMLHelper::_('script', 'media/com_phocacart/js/filter/jquery.ba-bbq.min.js', array('version' => 'auto'));
+
+        // phocacartfilter.js can work without loaded jquery-ui.slder.min.js - it tests if the function exist - no error
+		// if set in phoca cart filter moduler - the slider range can be displayed in filter module
+		// in such case the following libraries are loaded:
+		// $this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/ui/jquery-ui.slider.min.js');
+     	// JHTML::stylesheet('media/com_phocacart/js/ui/jquery-ui.slider.min.css');
+
+		// if there will be problem when loading the libraries, possible solution is to get module parameters here
+		// and load before phocafilter.js library
+		/*
+		$module			= JModuleHelper::getModule('mod_phocacart_filter');
+		$paramsM		= new JRegistry($module->params);
+		$filter_price	= $paramsM->get( 'filter_price', 1 );
+		if ($filter_price == 2 || $filter_price == 3) {
+			$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/ui/jquery-ui.slider.min.js');
+     		JHTML::stylesheet('media/com_phocacart/js/ui/jquery-ui.slider.min.css');
+		}
+		*/
+
+		// Are filter and search modules enabled - needed because of phocacart.js
+		$modPhocaCartFilter = JModuleHelper::getModule('mod_phocacart_filter');// Get info if modules are enabled and installed
+		$modPhocaCartSearch = JModuleHelper::getModule('mod_phocacart_search');
+		$oVars['mod_phocacart_filter'] = 1;
+		if (!$modPhocaCartFilter || (isset($modPhocaCartFilter->id) && (int)$modPhocaCartFilter->id < 1)) {
+			$oVars['mod_phocacart_filter'] = 0;
+		}
+
+		$oVars['mod_phocacart_search'] = 1;
+		if (!$modPhocaCartSearch || (isset($modPhocaCartSearch->id) && (int)$modPhocaCartSearch->id < 1)) {
+			$oVars['mod_phocacart_search'] = 0;
+		}
+
+
+
+		$currency = PhocacartCurrency::getCurrency();
+		PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
+       // $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocafilter'.$this->t['min'].'.js');
+        HTMLHelper::_('script', 'media/com_phocacart/js/phoca/phocafilter'.$this->t['min'].'.js', array('version' => 'auto'));
+
+		if ($this->view == 'pos') {
+
+
+            $oLang['COM_PHOCACART_WARNING_BOOTSTRAP_JS_LOADED_MORE_THAN_ONCE'] = JText::_('COM_PHOCACART_WARNING_BOOTSTRAP_JS_LOADED_MORE_THAN_ONCE');
+
+            $oLang['COM_PHOCACART_OK'] = JText::_('COM_PHOCACART_OK');
+            $oLang['COM_PHOCACART_CANCEL'] = JText::_('COM_PHOCACART_CANCEL');
+
+
+			$oParams['posFocusInputFields'] = (int)$this->p['pos_focus_input_fields'];
+			$oParams['posFilterCategory'] 	= (int)$this->p['pos_filter_category'];
+			$oParams['posServerPrint'] 		= (int)$this->p['pos_server_print'];
+			$oVars['urlOrder']				= JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw');
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/base64/base64'.$this->t['min'].'.js');
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocapos'.$this->t['min'].'.js');
+
+			HTMLHelper::_('script', 'media/com_phocacart/js/base64/base64'.$this->t['min'].'.js', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/phoca/phocapos'.$this->t['min'].'.js', array('version' => 'auto'));
+		}
+
 		$this->document->addScriptOptions('phLangPC', $oLang);
 		$this->document->addScriptOptions('phVarsPC', $oVars);
 		$this->document->addScriptOptions('phParamsPC', $oParams);
-		//$this->document->getDocument()->addScriptOptions('phParams', array());
-        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocacart.js');
-        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattribute.js');
 
+		// Bootstrap 3 Modal transition
+		if ($this->p['theme']  == 'bs3') {
+			//JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bs_modal_transition.css');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bs_modal_transition.css', array('version' => 'auto'));
+		}
 
+	}
 
+	/**
+	 * Returns the global PhocacartRenderMedia object, only creating it if it doesn't already exist.
+	 * @param   string  $name  The name of the media
+	 * @return  PhocacartRenderMedia  The PhocacartRenderMedia object
+	 * @since   3.5
+	 */
+	public static function getInstance($name = 'main') {
+		if (empty(self::$instances[$name]))
+		{
+			self::$instances[$name] = new PhocacartRenderMedia($name);
+		}
 
+		return self::$instances[$name];
 	}
 
 	public function loadBase() {
@@ -106,16 +203,16 @@ class PhocacartRenderMedia
 
 
 			if ($this->p['load_main_css'] == 1) {
-				JHtml::stylesheet('media/com_phocacart/css/main.css');
+				//JHtml::stylesheet('media/com_phocacart/css/main.css');
+				HTMLHelper::_('stylesheet', 'media/com_phocacart/css/main.css', array('version' => 'auto'));
 			}
 
 			$this->loadBootstrap();
 
 			if (PhocacartUtils::isView('pos')) {
-				JHtml::stylesheet('media/com_phocacart/css/pos.css');
-				$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/ui/jquery-ui.min.js');
-				JHtml::stylesheet('media/com_phocacart/js/ui/jquery-ui.min.css');
-				JHtml::stylesheet('media/com_phocacart/js/ui/phoca-ui.css');
+				//JHtml::stylesheet('media/com_phocacart/css/pos.css');
+				HTMLHelper::_('stylesheet', 'media/com_phocacart/css/pos.css', array('version' => 'auto'));
+
 			}
 		}
 	}
@@ -123,11 +220,13 @@ class PhocacartRenderMedia
 	public function loadSpec() {
 		// should be loaded as last because they overwrite base
 		if ($this->p['load_spec_css'] != '') {
-			JHtml::stylesheet('media/com_phocacart/css/spec/'.htmlspecialchars(strip_tags($this->p['load_spec_css'])).'.css');
+			//JHtml::stylesheet('media/com_phocacart/css/spec/'.htmlspecialchars(strip_tags($this->p['load_spec_css'])).'.css');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/spec/'.htmlspecialchars(strip_tags($this->p['load_spec_css'])).'.css', array('version' => 'auto'));
 		}
 
 		if ($this->p['load_rtl_css'] == 1) {
-			JHtml::stylesheet('media/com_phocacart/css/spec/rtl.css');
+			//JHtml::stylesheet('media/com_phocacart/css/spec/rtl.css');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/spec/rtl.css', array('version' => 'auto'));
 		}
 	}
 
@@ -160,40 +259,50 @@ class PhocacartRenderMedia
 			if ($this->p['display_compare'] == 0 && $this->p['display_wishlist'] == 0 && $this->p['display_quickview'] == 0 && $this->p['display_addtocart_icon'] == 0) {
 				return false;
 			}
-			JHtml::stylesheet('media/com_phocacart/css/main-product-hover.css');
+			//JHtml::stylesheet('media/com_phocacart/css/main-product-hover.css');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/main-product-hover.css', array('version' => 'auto'));
 		}
 	}
 
 	public function loadPhocaMoveImage($load = 0) {
 		if ($load == 1 && $this->load) {
-			JHtml::stylesheet('media/com_phocacart/css/main-product-image-move.css' );
+			//JHtml::stylesheet('media/com_phocacart/css/main-product-image-move.css' );
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/main-product-image-move.css', array('version' => 'auto'));
 		}
 	}
 
 	public function loadBootstrap() {
 		if ($this->p['load_bootstrap'] == 1 && $this->load) {
-			JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
+			//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.min.css' );
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap.min.js');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap.min.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/bootstrap/js/bootstrap.min.js', array('version' => 'auto'));
 		} else if ($this->p['load_bootstrap'] == 2 && $this->load) {
-			JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap4.min.css' );
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap4.min.js');
+			//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap4.min.css' );
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/bootstrap/js/bootstrap4.min.js');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap4.min.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/bootstrap/js/bootstrap4.min.js', array('version' => 'auto'));
 		}
 	}
 
 	public function loadWindowPopup() {
 		if ($this->load) {
-			$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/windowpopup.js');
+			//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/phoca/jquery.phocawindowpopup'.$this->t['min'].'.js');
+			HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocawindowpopup'.$this->t['min'].'.js', array('version' => 'auto'), array('defer' => true));
 		}
 	}
 
 	public function loadChosen() {
 		if ($this->load) {
 			if ($this->p['load_chosen'] == 2) {
-				$this->document->addScript(JURI::root(true) . '/media/com_phocacart/bootstrap/js/bootstrap.min.js');
+				//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/bootstrap/js/bootstrap.min.js');
+				HTMLHelper::_('script', 'media/com_phocacart/bootstrap/js/bootstrap.min.js', array('version' => 'auto'));
 			}
 			if ($this->p['load_chosen'] == 1 || $this->p['load_chosen'] == 2) {
-				$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/chosen/chosen.jquery.min.js');
-				$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/chosen/chosen.required.js');
+				//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/chosen/chosen.jquery.min.js');
+				//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/chosen/chosen.required.js');
+				HTMLHelper::_('script', 'media/com_phocacart/js/chosen/chosen.jquery.min.js', array('version' => 'auto'));
+				HTMLHelper::_('script', 'media/com_phocacart/js/chosen/chosen.required.js', array('version' => 'auto'));
 				$js = "\n" . 'jQuery(document).ready(function(){' . "\n";
 				$js .= '   jQuery(".chosen-select").chosen({disable_search_threshold: 10});' . "\n"; // Set chosen, created hidden will be required
 				// When select box is required, display the error message (when value not selected)
@@ -203,9 +312,10 @@ class PhocacartRenderMedia
 				//$js .= '   jQuery(".chosen-select").attr(\'style\',\'display:visible; position:absolute; clip:rect(0,0,0,0)\');'."\n";
 				$js .= '});' . "\n";
 				$this->document->addScriptDeclaration($js);
-				JHtml::stylesheet('media/com_phocacart/js/chosen/chosen.css');
-				JHtml::stylesheet('media/com_phocacart/js/chosen/chosen-bootstrap.css');
-
+				//JHtml::stylesheet('media/com_phocacart/js/chosen/chosen.css');
+				//JHtml::stylesheet('media/com_phocacart/js/chosen/chosen-bootstrap.css');
+				HTMLHelper::_('stylesheet', 'media/com_phocacart/js/chosen/chosen.css', array('version' => 'auto'));
+				HTMLHelper::_('stylesheet', 'media/com_phocacart/js/chosen/chosen-bootstrap.css', array('version' => 'auto'));
 			}
 		}
 	}
@@ -213,8 +323,10 @@ class PhocacartRenderMedia
 
 	public function loadFileInput() {
 		if ($this->load) {
-			$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
-			JHtml::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
+			//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
+			//JHtml::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/tower/tower-file-input.min.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/tower/tower-file-input.min.js', array('version' => 'auto'), array('defer' => true));
 		}
 	}
 
@@ -237,9 +349,10 @@ class PhocacartRenderMedia
 		$jsE = '});'."\n";
 
 		if ($this->p['quantity_input_spinner'] > 0 && $load && $this->load) {
-
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/touchspin/jquery.bootstrap-touchspin.js');
-			JHtml::stylesheet( 'media/com_phocacart/js/touchspin/jquery.bootstrap-touchspin.css' );
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/touchspin/jquery.bootstrap-touchspin'.$this->t['min'].'.js');
+			//JHtml::stylesheet( 'media/com_phocacart/js/touchspin/jquery.bootstrap-touchspin.css' );
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/touchspin/jquery.bootstrap-touchspin.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/touchspin/jquery.bootstrap-touchspin'.$this->t['min'].'.js', array('version' => 'auto'), array('defer' => true));
 
 			$this->document->addScriptDeclaration($jsS . $js . $jsE);
 		}
@@ -249,11 +362,10 @@ class PhocacartRenderMedia
 
 	public function loadSwiper(){
 		if ($this->load) {
-			JHtml::stylesheet('media/com_phocacart/js/swiper/swiper.min.css');
-			$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/swiper/swiper.min.js');
-			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/ui/jquery-ui.min.js');
-
-			//JHtml::stylesheet('media/com_phocacart/js/swiper/swiper-custom.css' );
+			//JHtml::stylesheet('media/com_phocacart/js/swiper/swiper.min.css');
+			//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/swiper/swiper.min.js');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'));
 		}
 	}
 
@@ -307,31 +419,60 @@ class PhocacartRenderMedia
 
 	public function loadPhocaSwapImage() {
 		if ($this->p['dynamic_change_image'] == 1 && $this->load) {
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaswapimage.js');
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaswapimage'.$this->t['min'].'.js');
+			HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaswapimage'.$this->t['min'].'.js', array('version' => 'auto'), array('defer' => true));
 		}
 	}
 
 
 	public function loadPhocaAttribute($load = 0) {
 		if ($load == 1 && $this->load) {
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattribute.js');
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattribute'.$this->t['min'].'.js');
+			HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaattribute'.$this->t['min'].'.js', array('version' => 'auto'));
 		}
 	}
 
 	public function loadPhocaAttributeRequired($load = 0) {
 		if ($load == 1 && $this->load) {
-			$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattributerequired.js');
+			//$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattributerequired'.$this->t['min'].'.js');
+			HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaattributerequired'.$this->t['min'].'.js', array('version' => 'auto'));
 		}
 	}
 
 	public function loadRating() {
 		if ($this->load) {
-			JHtml::stylesheet('media/com_phocacart/js/barrating/css/rating.css');
-			$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/barrating/jquery.barrating.js');
+			//JHtml::stylesheet('media/com_phocacart/js/barrating/css/rating.css');
+			//JHtml::stylesheet('media/com_phocacart/js/barrating/themes/css-stars.css');
+			//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/barrating/jquery.barrating'.$this->t['min'].'.js');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/barrating/themes/css-stars.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/barrating/jquery.barrating'.$this->t['min'].'.js', array('version' => 'auto'), array('defer' => true));
 			$js = "\n" . 'jQuery(document).ready(function(){' . "\n";
-			$js .= '   jQuery(\'#phitemrating\').barrating({ showSelectedRating:false });' . "\n";
+			$js .= '   jQuery(\'#phitemrating\').barrating({ showSelectedRating:false, theme: \'css-stars\' });' . "\n";
 			$js .= '});' . "\n";
 			$this->document->addScriptDeclaration($js);
+		}
+	}
+
+
+	public function loadUiSlider() {
+		if ($this->load) {
+			//$document->addScript(JURI::root(true) . '/media/com_phocacart/js/ui/jquery-ui.slider.min.js');
+			//JHTML::stylesheet('media/com_phocacart/js/ui/jquery-ui.slider.min.css');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/ui/jquery-ui.slider.min.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/ui/jquery-ui.slider.min.js', array('version' => 'auto'), array('defer' => true));
+
+			// Can be set in case of problem with Joomla! core bootstrap which loads tooltip js
+			// libraries/cms/html/bootstrap.php cca line 500 - loaded e.g. per pagination
+			//HTMLHelper::_('script', 'media/com_phocacart/js/ui/jquery-ui.slider.tooltip.min.js', array('version' => 'auto'), array('defer' => true));
+		}
+	}
+
+	public function loadJsTree() {
+		if ($this->load) {
+			//JHTML::stylesheet('media/com_phocacart/js/jstree/themes/proton/style.min.css');
+			//$document->addScript(JURI::root(true).'/media/com_phocacart/js/jstree/jstree.min.js');
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/jstree/themes/proton/style.min.css', array('version' => 'auto'));
+			HTMLHelper::_('script', 'media/com_phocacart/js/jstree/jstree.min.js', array('version' => 'auto'), array('defer' => true));
 		}
 	}
 }

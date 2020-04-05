@@ -1,0 +1,69 @@
+/*.br-theme-css-stars .br-widget {
+  height: 40px;
+  white-space: nowrap;
+  margin-top: -15px;
+}
+.br-theme-css-stars .br-widget a {
+  text-decoration: none;
+  height: 30px;
+  width: 30px;
+  float: left;
+  font-size: 35px;
+  margin-right: 0px;
+}
+.br-theme-css-stars .br-widget a:after {
+  content: "\2605";
+  color: #d2d2d2;
+}
+.br-theme-css-stars .br-widget a.br-active:after {
+  color: #45A7D4;
+}
+.br-theme-css-stars .br-widget a.br-selected:after {
+  color: #45A7D4;
+}
+.br-theme-css-stars .br-widget .br-current-rating {
+  display: none;
+}
+.br-theme-css-stars .br-readonly a {
+  cursor: default;
+}
+@media print {
+  .br-theme-css-stars .br-widget a:after {
+    content: "\2606";
+    color: black;
+  }
+  .br-theme-css-stars .br-widget a.br-active:after,
+  .br-theme-css-stars .br-widget a.br-selected:after {
+    content: "\2605";
+    color: black;
+  }
+}*/
+
+/* Backward compatibility with templates*/
+.ph-rating .br-widget {
+    height: 24px;
+}
+
+.ph-rating .br-widget a {
+    background: url('../img/star.png');
+    width: 24px;
+    height: 24px;
+    display: block;
+    float: left;
+}
+
+.ph-rating .br-widget a:hover,
+.ph-rating .br-widget a.br-active,
+.ph-rating .br-widget a.br-selected {
+    background-position: 0 24px;
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio : 1.5),
+(min-resolution: 192dpi) {
+    .ph-rating .br-widget a {
+        background: url('../img/star@2x.png');
+        background-size: 24px 48px;
+    }
+}

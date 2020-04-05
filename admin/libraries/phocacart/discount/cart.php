@@ -78,7 +78,7 @@ class PhocacartDiscountCart
 
 	public static function getCartDiscount($id = 0, $catid = 0, $quantity, $amount) {
 
-		$app									= JFactory::getApplication();
+		//$app									= JFactory::getApplication();
 		$paramsC 								= PhocacartUtils::getComponentParameters();
 		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
 
@@ -280,7 +280,7 @@ class PhocacartDiscountCart
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_discount_products (discount_id, product_id)'
 								.' VALUES '.(string)$valuesString;
@@ -312,7 +312,7 @@ class PhocacartDiscountCart
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_discount_categories (discount_id, category_id)'
 								.' VALUES '.(string)$valuesString;

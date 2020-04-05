@@ -1,4 +1,8 @@
--- 3.4.1
+-- 3.5.0 RC
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_attachments` text;
+ALTER TABLE `#__phocacart_orders` ADD COLUMN `terms` tinyint(1) NOT NULL default '0';
+
+-- 3.5.0 Beta
 
 ALTER TABLE `#__phocacart_products` ADD COLUMN `date_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `#__phocacart_products` ADD COLUMN `external_link2` varchar(255) NOT NULL DEFAULT '';

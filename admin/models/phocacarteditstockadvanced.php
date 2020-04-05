@@ -12,30 +12,30 @@ jimport( 'joomla.application.component.modellist' );
 class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 {
 	protected	$option 		= 'com_phocacart';
-	
-	
+
+
 	public function save($data, $productId) {
-		
+
 		if (!empty($data)) {
-			
+
 			$notDeleteItems = array();
-			
+
 			foreach($data as $k => $v) {
 				$row = $this->getTable('PhocacartProductStock', 'Table');
-				
+
 				if(isset($v['product_key']) && $v['product_key'] != '') {
 					if (!$row->load(array('product_key' => $v['product_key']))) {
 						// No data yet
 					}
 				}
-				
+
 				$v['stock'] = PhocacartUtils::getIntFromString($v['stock']);
-				
+
 				if (!$row->bind($v)) {
 					$this->setError($this->_db->getErrorMsg());
 					return false;
 				}
-				
+
 				if (!$row->check()) {
 					$this->setError($this->_db->getErrorMsg());
 					return false;
@@ -45,15 +45,15 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 					$this->setError($this->_db->getErrorMsg());
 					return false;
 				}
-				
+
 				if (isset($row->id) && (int)$row->id > 0) {
 					$notDeleteItems[] = (int)$row->id;
 				}
-				
+
 			}
-			
+
 			if (!empty($notDeleteItems)) {
-				$notDeleteItemsString = implode($notDeleteItems, ',');
+				$notDeleteItemsString = implode(',', $notDeleteItems);
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_stock'
 						.' WHERE product_id = '. (int)$productId
@@ -63,21 +63,21 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 						.' FROM #__phocacart_product_stock'
 						.' WHERE product_id = '. (int)$productId;
 			}
-			
+
 			$this->_db->setQuery($query);
 			$this->_db->execute();
-			
+
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	/*public function getData() {
-	
+
 		$app	= JFactory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
-		
+
 		$db = JFactory::getDBO();
 		$query = 'SELECT a.status_id'
 		. ' FROM #__phocacart_orders AS a'
@@ -87,19 +87,19 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 		$item = $db->loadObject();
 		if (isset($item->status_id) && (int)$item->status_id > 0) {
 			$status = PhocacartOrderStatus::getStatus($item->status_id);
-			
+
 			$status['select'] = JHtml::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
 		}
-		return array();	
+		return array();
 
 	}*/
 	/*
 	public function getHistoryData() {
-	
+
 		$app	= JFactory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
-		
+
 		if ((int)$id > 0) {
 			$db = JFactory::getDBO();
 			$query = 'SELECT h.*,'
@@ -115,13 +115,13 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 			return $items;
 		}
 	}*/
-	
-	
-	
-	
+
+
+
+
 	/*
 	public function editStatus($data) {
-		
+
 		$data['id']			= (int)$data['id'];
 		$data['status_id']	= (int)$data['status_id'];
 		$data['email_send']	= (int)$data['email_send'];
@@ -141,7 +141,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 		}
 
 		$row->modified = $date = gmdate('Y-m-d H:i:s');
-		
+
 
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
@@ -153,10 +153,10 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the history
 		$db = JFactory::getDBO();
-		
+
 		// EMAIL
 		$notifyUser 	= 0;
 		$notifyOther 	= 0;
@@ -166,21 +166,21 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
 		if (isset($data['notify_others'])) {
 			$notifyOther = 1;
 		}
-		
-	
-		
-		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements']); 
-		
+
+
+
+		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements']);
+
 		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment']);
-		
-		
+
+
 		return $row->id;
 	}*/
 	/*
 	public function emptyHistory($id) {
-		
+
 		if ((int)$id > 0) {
-		
+
 			$db = JFactory::getDBO();
 			$query = 'DELETE FROM #__phocacart_order_history WHERE order_id = '.(int)$id;
 			$db->setQuery( $query );

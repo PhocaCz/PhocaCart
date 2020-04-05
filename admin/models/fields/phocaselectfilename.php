@@ -31,6 +31,8 @@ class JFormFieldPhocaSelectFilename extends JFormField
 
 		if ((string)$this->element['manager'] == 'publicfile') {
 			$idA			= 'phPublicFile';
+		} else if ((string)$this->element['manager'] == 'attachmentfile') {
+			$idA			= 'phPublicFile'; //'phAttachmentFile' - phPublciFile does not have specific javascript features, so it can be shared for another groups
 		} else {
 			$idA			= 'phProductFile';
 		}
@@ -40,8 +42,14 @@ class JFormFieldPhocaSelectFilename extends JFormField
 
 		JHtml::_('jquery.framework');
 
+
+		// Each Group is defined by its $idA
+		// And can have event in phocacartform.js
+
 		// 1) phocacartform.js - loads click event to run modal window - NO NEED TO DEFINE EVENT HERE
         // 2) phocacartform.js - creates modal window, then loads the iframe with url - NO NEED TO LOAD MODAL WINDOW AND TO BUILD IT HERE
+
+		// jQuery(document).on("click", "a.phProductFileModalButton", function (e) {
 
 
 		$idAC = $idA.'ModalName'. $this->id;

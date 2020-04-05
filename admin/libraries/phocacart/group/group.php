@@ -186,7 +186,7 @@ class PhocacartGroup
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_item_groups (item_id, group_id, product_id, type)'
 								.' VALUES '.(string)$valuesString;
@@ -424,7 +424,7 @@ class PhocacartGroup
 			}
 
 			if (!empty($notDeleteItems)) {
-				$notDeleteItemsString = implode($notDeleteItems, ',');
+				$notDeleteItemsString = implode(',', $notDeleteItems);
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_price_groups'
 						.' WHERE product_id = '. (int)$productId
@@ -515,7 +515,7 @@ class PhocacartGroup
 			}
 
 			if (!empty($notDeleteItems)) {
-				$notDeleteItemsString = implode($notDeleteItems, ',');
+				$notDeleteItemsString = implode(',', $notDeleteItems);
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_point_groups'
 						.' WHERE product_id = '. (int)$productId

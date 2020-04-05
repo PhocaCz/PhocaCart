@@ -14,6 +14,17 @@ final class PhocacartRenderAdminjs
 	private function __construct(){}
 
 
+	  /* For example creating thumbnail message - administration */
+	public static function renderAjaxTopHtml($text = '') {
+		$o = '<div id="ph-ajaxtop">';
+		if ($text != '') {
+			$o .= '<div id="ph-ajaxtop-message"><div class="ph-loader-top"></div> '. strip_tags(addslashes($text)) . '</div>';
+		}
+		$o .= '</div>';
+		return $o;
+	}
+
+
 	// =======
 	// AJAX
 	// =======
@@ -61,7 +72,7 @@ final class PhocacartRenderAdminjs
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = '/* Function phAddValueImage *//* ';
-		$s[] = 'function phAddValueImage(id, title, request) {alert("test");';
+		$s[] = 'function phAddValueImage(id, title, request) {';
 		$s[] = '   document.getElementById(id).value = title;';
 		//$s[] = '   SqueezeBox.close();';// close
 		$s[] = '   jQuery(\'.modal\').modal(\'hide\');';
@@ -108,6 +119,27 @@ final class PhocacartRenderAdminjs
 		//});
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}*/
+
+	public static function renderOverlayOnSubmit($id) {
+
+		$document	= JFactory::getDocument();
+
+		$s[] = 'jQuery(document).ready(function(){';
+		$s[] = '   jQuery(\'#'.$id.'\').on(\'submit\', function(){';
+		$s[] = self::renderOverlay();
+		$s[] = '   })';
+		$s[] = '})';
+
+		$document->addScriptDeclaration(implode("\n", $s));
+	}
+
+	public static function renderOverlay(){
+		$s	 = array();
+		$s[] = '		var phOverlay = jQuery(\'<div id="phOverlay"><div id="phLoaderFull"> </div></div>\');';
+		$s[] = '		phOverlay.appendTo(document.body);';
+		$s[] = '		jQuery("#phOverlay").fadeIn().css("display","block");';
+		return implode("\n", $s);
+	}
 
 
 
@@ -158,7 +190,7 @@ final class PhocacartRenderAdminjs
 		if ($reload == 1) {
 			// TO DO enable
 			$s[] =	'	           window.setTimeout(function () {document.location.reload();}, 1000);';
-			$s[] = PhocacartRenderJs::renderOverlay();
+			$s[] = self::renderOverlay();
 		}
 
 		$s[] = '			    }';

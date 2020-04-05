@@ -44,6 +44,20 @@
                filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"/>
 
 
+        <field name="terms" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_LABEL" description="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_DESC" size="1" default="0">
+            <option value="1">COM_PHOCACART_YES</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
+        <field name="privacy" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_PRIVACY_AGREED_LABEL" description="COM_PHOCACART_FIELD_PRIVACY_AGREED_DESC" size="1" default="0">
+            <option value="1">COM_PHOCACART_YES</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
+        <field name="newsletter" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_DESC" size="1" default="0">
+            <option value="1">COM_PHOCACART_YES</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
+
+
     </fieldset>
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">

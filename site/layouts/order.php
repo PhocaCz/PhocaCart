@@ -51,6 +51,10 @@ $invoice_global_top_desc				= $d['params']->get( 'invoice_global_top_desc', 0 );
 $invoice_global_middle_desc				= $d['params']->get( 'invoice_global_middle_desc', 0 );
 $invoice_global_bottom_desc				= $d['params']->get( 'invoice_global_bottom_desc', 0 );
 
+$order_global_top_desc					= $d['params']->get( 'order_global_top_desc', 0 );// Article ID
+$order_global_middle_desc				= $d['params']->get( 'order_global_middle_desc', 0 );
+$order_global_bottom_desc				= $d['params']->get( 'order_global_bottom_desc', 0 );
+
 $oidn_global_billing_desc			    = $d['params']->get( 'oidn_global_billing_desc', 0 );
 $oidn_global_shipping_desc			    = $d['params']->get( 'oidn_global_shipping_desc', 0 );
 
@@ -359,7 +363,7 @@ $o[] = '<td colspan="5"><b>'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</b></t
 // BILLING
 // -----------
 $ob = array();
-
+$ob2 = array();// specific case for $oidn_global_billing_desc
 if (!empty($d['bas']['b'])) {
 
 	$v = $d['bas']['b'];
@@ -403,7 +407,7 @@ if (!empty($d['bas']['b'])) {
 			$oidnBillingDescArticle 	= PhocacartText::completeText($oidnBillingDescArticle, $d['preparereplace'], 1);
 			$oidnBillingDescArticle 	= PhocacartText::completeTextFormFields($oidnBillingDescArticle, $d['bas']['b'], 1);
 			$oidnBillingDescArticle 	= PhocacartText::completeTextFormFields($oidnBillingDescArticle, $d['bas']['s'], 2);
-			$ob[] = $oidnBillingDescArticle;
+			$ob2[] = $oidnBillingDescArticle;
 		}
 	}
 
@@ -414,6 +418,7 @@ if (!empty($d['bas']['b'])) {
 // SHIPPING
 // -----------
 $os = array();
+$os2 = array();// specific case for $oidn_global_shipping_desc
 if (!empty($d['bas']['s'])) {
 	$v = $d['bas']['s'];
 	if ($v['company'] != '') { $os[] = '<b>'.$v['company'].'</b><br />';}
@@ -449,13 +454,14 @@ if (!empty($d['bas']['s'])) {
 			$oidnShippingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_shipping_desc);
 		}
 
+
 		if ($oidnShippingDescArticle != '') {
 			//$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 			$oidnShippingDescArticle 	= PhocacartPdf::skipStartAndLastTag($oidnShippingDescArticle, 'p');
 			$oidnShippingDescArticle 	= PhocacartText::completeText($oidnShippingDescArticle, $d['preparereplace'], 1);
 			$oidnShippingDescArticle 	= PhocacartText::completeTextFormFields($oidnShippingDescArticle, $d['bas']['b'], 1);
 			$oidnShippingDescArticle 	= PhocacartText::completeTextFormFields($oidnShippingDescArticle, $d['bas']['s'], 2);
-			$os[] = $oidnShippingDescArticle;
+			$os2[] = $oidnShippingDescArticle;
 		}
 	}
 }
@@ -464,6 +470,7 @@ if (!empty($d['bas']['s'])) {
 // BILLING OUTPUT
 $o[] = '<tr><td colspan="5" '.$bBox.' ><div '.$bBoxIn.'>';
 $o[] = implode("\n", $ob);
+$o[] = implode("\n", $ob2);
 $o[] = '</div></td>';
 $o[] = '<td colspan="2">&nbsp;</td>';
 
@@ -472,8 +479,10 @@ $o[] = '<td colspan="2">&nbsp;</td>';
 $o[] = '<td colspan="5" '.$sBox.'><div '.$sBoxIn.'>';
 if ((isset($d['bas']['b']['ba_sa']) && $d['bas']['b']['ba_sa'] == 1) || (isset($d['bas']['s']['ba_sa']) && $d['bas']['s']['ba_sa'] == 1)) {
 	$o[] = implode("\n", $ob);
+	//$o[] = implode("\n", $ob2); Don't display shipping description in billing
 } else {
 	$o[] = implode("\n", $os);
+	$o[] = implode("\n", $os2);
 }
 $o[] = '</div></td></tr>';
 //$o[] = '<tr><td colspan="12">&nbsp;</td></tr>';
@@ -499,6 +508,17 @@ if ($d['type'] == 2) {
 		$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['b'], 1);
 		$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['s'], 2);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceTopDescArticle.'</td></tr></table>';
+	}
+} else if ($d['type'] == 1) {
+	$orderTopDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_top_desc);
+
+	if ($orderTopDescArticle != '') {
+		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+		$orderTopDescArticle 	= PhocacartPdf::skipStartAndLastTag($orderTopDescArticle, 'p');
+		$orderTopDescArticle 	= PhocacartText::completeText($orderTopDescArticle, $d['preparereplace'], 1);
+		$orderTopDescArticle 	= PhocacartText::completeTextFormFields($orderTopDescArticle, $d['bas']['b'], 1);
+		$orderTopDescArticle 	= PhocacartText::completeTextFormFields($orderTopDescArticle, $d['bas']['s'], 2);
+		$o[] = '<table '.$bDesc.'><tr><td>'.$orderTopDescArticle.'</td></tr></table>';
 	}
 }
 
@@ -847,6 +867,17 @@ if ($d['type'] == 2) {
 		$invoiceMiddleDescArticle 	= PhocacartText::completeTextFormFields($invoiceMiddleDescArticle, $d['bas']['s'], 2);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceMiddleDescArticle.'</td></tr></table>';
 	}
+} else if ($d['type'] == 1) {
+	$orderMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_middle_desc);
+
+	if ($orderMiddleDescArticle != '') {
+		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+		$orderMiddleDescArticle 	= PhocacartPdf::skipStartAndLastTag($orderMiddleDescArticle, 'p');
+		$orderMiddleDescArticle 	= PhocacartText::completeText($orderMiddleDescArticle, $d['preparereplace'], 1);
+		$orderMiddleDescArticle 	= PhocacartText::completeTextFormFields($orderMiddleDescArticle, $d['bas']['b'], 1);
+		$orderMiddleDescArticle 	= PhocacartText::completeTextFormFields($orderMiddleDescArticle, $d['bas']['s'], 2);
+		$o[] = '<table '.$bDesc.'><tr><td>'.$orderMiddleDescArticle.'</td></tr></table>';
+	}
 }
 
 
@@ -1041,6 +1072,17 @@ if ($d['type'] == 2) {
 		$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['b'], 1);
 		$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['s'], 2);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceBottomDescArticle.'</td></tr></table>';
+	}
+} else if ($d['type'] == 1) {
+	$orderBottomDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_bottom_desc);
+
+	if ($orderBottomDescArticle != '') {
+		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+		$orderBottomDescArticle 	= PhocacartPdf::skipStartAndLastTag($orderBottomDescArticle, 'p');
+		$orderBottomDescArticle 	= PhocacartText::completeText($orderBottomDescArticle, $d['preparereplace'], 1);
+		$orderBottomDescArticle 	= PhocacartText::completeTextFormFields($orderBottomDescArticle, $d['bas']['b'], 1);
+		$orderBottomDescArticle 	= PhocacartText::completeTextFormFields($orderBottomDescArticle, $d['bas']['s'], 2);
+		$o[] = '<table '.$bDesc.'><tr><td>'.$orderBottomDescArticle.'</td></tr></table>';
 	}
 }
 

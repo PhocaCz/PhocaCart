@@ -101,7 +101,7 @@ echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-billing-row
 
 		<div class="<?php echo $this->s['c']['control-group'] ?>">
 			<div class="<?php echo $this->s['c']['control-label'] ?>">
-				<label id="jform_twofactor_method-lbl" for="jform_twofactor_method" class="hasTooltip"
+				<label id="jform_twofactor_method-lbl" for="jform_twofactor_method" class="<?php echo $this->s['c']['hastooltip'] ?>"
 					   title="<strong><?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_LABEL') ?></strong><br/><?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_DESC') ?>">
 					<?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_LABEL'); ?>
 				</label>
@@ -213,7 +213,7 @@ echo '</form>'. "\n";
 
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_twofactor_method-lbl" for="jform_twofactor_method" class="hasTooltip"
+				<label id="jform_twofactor_method-lbl" for="jform_twofactor_method" class="<?php echo $this->s['c']['hastooltip'] ?>"
 					   title="<strong><?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_LABEL') ?></strong><br/><?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_DESC') ?>">
 					<?php echo JText::_('COM_USERS_PROFILE_TWOFACTOR_LABEL'); ?>
 				</label>

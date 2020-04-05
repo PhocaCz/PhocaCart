@@ -18,6 +18,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 	protected $type;
 	protected $folderstate;
 	protected $images;
+	protected $manager;
 	protected $folders;
 	protected $tmpl;
 	protected $session;
@@ -29,9 +30,11 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		$this->t				= PhocacartUtils::setVars('manager');
 		$this->field			= JFactory::getApplication()->input->get('field');
 		$this->fce 				= 'phocaSelectFileName_'.$this->field;
-		$this->manager 			= JFactory::getApplication()->input->get( 'manager', '', '', 'file' );
-		$downloadFolder			= JFactory::getApplication()->input->get( 'downloadfolder', '', '', 'string' );
+		$this->manager 			= JFactory::getApplication()->input->get( 'manager', '', 'file' );
+		$downloadFolder			= JFactory::getApplication()->input->get( 'downloadfolder', '', 'string' );
 		$downloadFolderExists	= PhocacartFile::createDownloadFolder($downloadFolder);
+
+
 
 		$this->folderstate		= $this->get('FolderState');
 		$this->files			= $this->get('Files');

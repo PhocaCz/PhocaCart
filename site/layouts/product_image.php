@@ -18,6 +18,7 @@ if ($d['typeview'] == 'Pos') {
 
 $class          = $d['s']['c']['img-responsive'].' ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName;
 $classSwitch    = $d['s']['c']['img-responsive'].' ph-image phIR phjProductImageNoChange'.$productIdName;
+$classSource    = 'phjProductSource'.$productIdName;
 $classLazyLoad  = '';
 if ($d['t']['lazy_load_category_items'] == 1) {
     $classLazyLoad = 'ph-lazyload';
@@ -49,7 +50,8 @@ if ($d['t']['display_webp_images'] == 1) {
        // echo '<source type="image/webp" data-src="'. $srcWebP.'" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" />';// TEST
 
         // TEST 2 (removed data-src because it is transformed to src in picture tag which is obsolete)
-        echo '<source type="image/webp" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" />';
+        // class needed because of chaning attributes - changing attributes changes images
+        echo '<source type="image/webp" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" class="'.$classSource.'" />';
 
 
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
@@ -59,7 +61,8 @@ if ($d['t']['display_webp_images'] == 1) {
 
         echo '<picture>';
         //echo '<source type="image/webp" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" />';
-        echo '<source type="image/webp" alt="' . $altValue . '"  srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" />';// TEST
+        // class needed because of chaning attributes - changing attributes changes images
+        echo '<source type="image/webp" alt="' . $altValue . '"  srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" class="'.$classSource.'" />';// TEST
         echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-image="' . $dataImg . '" />';
         echo '</picture>';
 

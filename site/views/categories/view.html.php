@@ -49,7 +49,7 @@ class PhocaCartViewCategories extends JViewLegacy
         $this->t['class_lazyload']       		= $this->t['lazy_load_categories']  == 1 ? 'ph-lazyload' : '';
 
 
-        $media = new PhocacartRenderMedia();
+        $media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadChosen();
 

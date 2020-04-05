@@ -47,4 +47,5 @@ if ($d['t']['ajax_pagination_category'] == 1) {
 }
 echo JHtml::_( 'form.token' );
 echo '</form>';
+
 ?>

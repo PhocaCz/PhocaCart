@@ -24,7 +24,7 @@ class PhocaCartViewTerms extends JViewLegacy
 		$this->t['terms_conditions']= $this->p->get( 'terms_conditions', '' );
 		$this->t['terms_conditions']= PhocacartRenderFront::renderArticle($this->t['terms_conditions']);
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadSpec();
 

@@ -129,7 +129,7 @@ class PhocacartPriceHistory
 
 			// Remove all ids except the active
 			if (!empty($notDeleteIds)) {
-				$notDeleteIdsString = implode($notDeleteIds, ',');
+				$notDeleteIdsString = implode(',', $notDeleteIds);
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_price_history'
 						.' WHERE product_id = '. (int)$productId

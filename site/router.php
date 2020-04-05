@@ -29,8 +29,8 @@ class PhocacartRouter extends JComponentRouterBase
 
 		// Get a menu item based on Itemid or currently active
 		$params = PhocacartUtils::getComponentParameters();
-		$advanced = $params->get('sef_advanced_link', 0);
-
+		//$advanced = $params->get('sef_advanced_link', 0);
+		$advanced = $params->get('remove_sef_ids', 0);// REMOVE IDs
 		// Unset limitstart=0 since it's pointless
 		if (isset($query['limitstart']) && $query['limitstart'] == 0)
 		{
@@ -395,18 +395,63 @@ class PhocacartRouter extends JComponentRouterBase
 		$total = count($segments);
 		$vars = array();
 
-
-
-		for ($i = 0; $i < $total; $i++)
-		{
-			$segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);
-		}
-
 		// Get the active menu item.
 		$item = $this->menu->getActive();
 		$params = PhocacartUtils::getComponentParameters();
-		$advanced = $params->get('sef_advanced_link', 0);
+		//$advanced = $params->get('sef_advanced_link', 0);
+		$advanced = $params->get('remove_sef_ids', 0);// REMOVE IDs
 		$db = JFactory::getDbo();
+
+		if($advanced == 1){
+
+		    $segmentId = '';
+            $segmentCatid = '';
+
+            for ($i = 0; $i < $total; $i++){
+
+                if(isset($segments[$i]) && $i == 0 && in_array($segments[$i], $viewsNotOwnId)) {
+                    $vars['view'] = $segments[$i];
+                    continue;
+                }
+
+                if(empty($segmentCatid)){
+
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName(array('id')))
+                        ->from($db->quoteName('#__phocacart_categories'))
+                        ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
+                    $db->setQuery($query);
+                    $segmentCatid = $db->loadResult();
+                    if(!empty($segmentCatid)) {
+                        $segments[$i] = $segmentCatid.'-'.$segments[$i];
+                        continue;
+                    }
+
+                }
+
+                if (empty($segmentId)){
+
+                    //$segmentProductId = '';
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName(array('id')))
+                        ->from($db->quoteName('#__phocacart_products'))
+                        ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
+                    $db->setQuery($query);
+                    $segmentId = $db->loadResult();
+
+                    if(!empty($segmentId)) {
+                        $segments[$i] = $segmentId.'-'.$segments[$i];
+                    }
+                }
+
+            }
+            $advanced = 0;
+        }
+
+		for ($i = 0; $i < $total; $i++) {
+		    $segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);
+		}
+
 
 		// Count route segments
 		$count = count($segments);
@@ -426,6 +471,7 @@ class PhocacartRouter extends JComponentRouterBase
 			return $vars;
 		}
 
+
 		// First handle views without ID
 		if ($count == 1) {
 			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
@@ -435,12 +481,15 @@ class PhocacartRouter extends JComponentRouterBase
 			}
 
 			// Question can include ID/CATID but can be without ID/CATID
+
 			if(isset($segments[0]) && in_array($segments[0], $viewsNotOwnId)) {
 					$vars['view']  = $segments[0];
 
 				return $vars;
 			}
 		}
+
+
 
 		/*
 		 * If there is only one segment, then it points to either an item or a category.

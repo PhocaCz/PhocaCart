@@ -127,6 +127,15 @@ class PhocaCartViewPos extends JViewLegacy
 			$this->t['pos_input_autocomplete_output'] = ' autocomplete="off" ';
 		}
 
+		if ((int)$this->t['pos_payment_force'] > 0) {
+			$this->t['pos_payment_force'] = PhocacartPayment::isPaymentMethodActive($this->t['pos_payment_force']) === true ? (int)$this->t['pos_payment_force'] : 0;
+		}
+		if ((int)$this->t['pos_shipping_force'] > 0) {
+			$this->t['pos_shipping_force'] = PhocacartShipping::isShippingMethodActive($this->t['pos_shipping_force']) === true ? (int)$this->t['pos_shipping_force'] : 0;
+		}
+
+
+
 
 		// CATEGORIES
 		$this->t['categories'] = PhocacartCategoryMultiple::getAllCategories(1, array(0,2));
@@ -135,7 +144,7 @@ class PhocaCartViewPos extends JViewLegacy
 		PhocacartPos::renderPosPage();// render the page (boxes)
 
 		// MEDIA
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadBootstrap();
 		$media->loadChosen();
@@ -146,17 +155,16 @@ class PhocaCartViewPos extends JViewLegacy
 		PhocacartRenderJs::renderAjaxUpdateCart();
 		// Moved to JS PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
 
-		PhocacartRenderJspos::managePos($this->t['action']);
-		PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
-		PhocacartRenderJspos::searchPosByType('#phPosSearch');
-		PhocacartRenderJspos::searchPosByCategory();
+		////PhocacartRenderJspos::managePos($this->t['action']);
+		////PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
+		////PhocacartRenderJspos::searchPosByType('#phPosSearch');
+		////PhocacartRenderJspos::searchPosByCategory();
 
 		// Tendered
-		$currency = PhocacartCurrency::getCurrency();
-		PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
+		//$currency = PhocacartCurrency::getCurrency(); - loaded before filter
+		//PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
 
-		// UI
-		PhocacartRenderJspos::renderJsUi();
+
 
 		if ($this->t['pos_hide_attributes'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
@@ -273,20 +281,46 @@ class PhocaCartViewPos extends JViewLegacy
 				$this->items = $sortedItems;
 
 				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
-				PhocacartRenderJspos::changeUrlParameter( array(
-				"sectionid" => (int)$this->t['section']->id));
+				$changeUrlParameter = array("sectionid" => (int)$this->t['section']->id);
+
+				if (!empty($changeUrlParameter)) {
+					$s[] = 'jQuery(document).ready(function(){';
+					foreach($changeUrlParameter as $k => $v) {
+						$s[] = '   phUpdateUrlParameter("'.$k.'", '.(int)$v.');';
+					}
+					$s[] = '})';
+					$s[] = ' ';
+					JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+				}
+
 				parent::display('section');
 			break;
 
 			default:
 
 				// Scroll cart to bottom
-				PhocacartRenderJspos::renderJsScrollToPos();
+			/*	PhocacartRenderJspos::renderJsScrollToPos();
 				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
 				PhocacartRenderJspos::changeUrlParameter( array(
 				"ticketid" => (int)$this->t['ticket']->id,
 				"unitid" => (int)$this->t['unit']->id,
-				"sectionid" => (int)$this->t['section']->id));
+				"sectionid" => (int)$this->t['section']->id));*/
+
+				// Change the url bar (only to not confuse when the ticketid will be changed to existing from not existing)
+				$changeUrlParameter = array(
+				"ticketid" => (int)$this->t['ticket']->id,
+				"unitid" => (int)$this->t['unit']->id,
+				"sectionid" => (int)$this->t['section']->id);
+
+				if (!empty($changeUrlParameter)) {
+					$s[] = 'jQuery(document).ready(function(){';
+					foreach($changeUrlParameter as $k => $v) {
+						$s[] = '   phUpdateUrlParameter("'.$k.'", '.(int)$v.');';
+					}
+					$s[] = '})';
+					$s[] = ' ';
+					JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+				}
 
 				parent::display($tpl);
 			break;

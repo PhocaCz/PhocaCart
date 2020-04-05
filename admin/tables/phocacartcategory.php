@@ -12,13 +12,13 @@ use Joomla\String\StringHelper;
 
 class TablePhocacartCategory extends JTable
 {
-	
+
 	protected $_jsonEncode = array('params', 'metadata');
-	
+
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_categories', 'id', $db);
 	}
-	
+
 	function check() {
 		if (trim( $this->title ) == '') {
 			$this->setError( JText::_( 'COM_PHOCACART_CATEGORY_MUST_HAVE_TITLE') );
@@ -29,7 +29,20 @@ class TablePhocacartCategory extends JTable
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
-		
+
+        // Add prefix to category alias if it or its name starts with digit
+        // Needed, when: SUBCATEGORY is used, SUBCATEGORY NAME starts with digit, SEF is used because of possible problems in router
+        // Digit in subcategory name can be handled as product ID because two Numbers will be displayed in URL (first real subcategory ID, second digit in alias title which will confuse router
+		$pC = PhocacartUtils::getComponentParameters();
+		$category_alias_prefix = $pC->get('category_alias_prefix', '');
+        if ($category_alias_prefix != '' && is_numeric(substr($this->alias, 0, 1))) {
+            $this->alias = JApplicationHelper::stringURLSafe($category_alias_prefix . $this->alias);
+        }
+
+
+
+
+
 		// Clean up keywords -- eliminate extra spaces between phrases
 		// and cr (\r) and lf (\n) characters from string if not empty
 		if (!empty($this->metakey))

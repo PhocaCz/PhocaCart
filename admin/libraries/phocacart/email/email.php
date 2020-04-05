@@ -26,7 +26,7 @@ class PhocacartEmailMail extends JMail{
 	// PHOCAEDIT
 	//public function sendMail($from, $fromName, $recipient, $subject, $body, $mode = false, $cc = null, $bcc = null, $attachment = null,
 	//	$replyTo = null, $replyToName = null)
-	public function sendMailA($from, $fromName, $recipient, $subject, $body, $mode = false, $cc = null, $bcc = null, $attachmentString = '', $attachmentFileName = '', $replyTo = null, $replyToName = null)
+	public function sendMailA($from, $fromName, $recipient, $subject, $body, $mode = false, $cc = null, $bcc = null, $attachment = null, $attachmentString = '', $attachmentFileName = '', $replyTo = null, $replyToName = null)
 	{
 
 
@@ -63,6 +63,12 @@ class PhocacartEmailMail extends JMail{
 			{
 				return false;
 			}
+		}
+
+		//public function addAttachment($path, $name = '', $encoding = 'base64', $type = 'application/octet-stream', $disposition = 'attachment')
+		if ($this->addAttachment($attachment) === false)
+		{
+			return false;
 		}
 
 		// Take care of reply email addresses
@@ -185,7 +191,7 @@ class PhocacartEmail
 {
 
 
-	public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachmentString = '', $attachmentFilename = '', $replyTo = null, $replyToName = null) {
+	public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachment = null, $attachmentString = '', $attachmentFilename = '', $replyTo = null, $replyToName = null) {
 
 	//public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachment = null, $replyTo = null, $replyToName = null) {
 
@@ -262,7 +268,8 @@ class PhocacartEmail
 		$body 		= $body . PhocacartUtilsInfo::getInfo($mode);
 
 
-		$sendMail = $mail->sendMailA($from, $fromName, $recipient, $subject, $body, $mode, $cc, $bcc, $attachmentString, $attachmentFilename, $replyTo, $replyToName);
+
+		$sendMail = $mail->sendMailA($from, $fromName, $recipient, $subject, $body, $mode, $cc, $bcc, $attachment, $attachmentString, $attachmentFilename, $replyTo, $replyToName);
 
 
 
@@ -356,7 +363,7 @@ class PhocacartEmail
 		$notify = false;
 		// Send email to selected user
 		if ($mailfrom != '' && $send_email_question != '' && $email != '') {
-			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, '', '', $mailfrom, $fromname);
+			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, null, '', '', $mailfrom, $fromname);
 		}
 
 
@@ -372,7 +379,7 @@ class PhocacartEmail
 
 		$notifyOthers = false;
 		if ($emailOthers != '' && JMailHelper::isEmailAddress($emailOthers)) {
-			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, '', '', $mailfrom, $fromname);
+			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, null, '', '', $mailfrom, $fromname);
 		}
 
 
@@ -470,7 +477,7 @@ class PhocacartEmail
 		$notify = false;
 		// Send email to selected user
 		if ($mailfrom != '' && $send_email_submit_item != '' && $email != '') {
-			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, '', '', $mailfrom, $fromname);
+			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, null, '', '', $mailfrom, $fromname);
 		}
 
 
@@ -486,7 +493,7 @@ class PhocacartEmail
 
 		$notifyOthers = false;
 		if ($emailOthers != '' && JMailHelper::isEmailAddress($emailOthers)) {
-			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, '', '', $mailfrom, $fromname);
+			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, null, '', '', $mailfrom, $fromname);
 		}
 
 

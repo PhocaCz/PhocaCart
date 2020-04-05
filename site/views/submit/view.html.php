@@ -126,7 +126,7 @@ class PhocaCartViewSubmit extends JViewLegacy
 			$this->form = $this->get('Form');
 		}
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadChosen();
 		//$media->loadFileInput();

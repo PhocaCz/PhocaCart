@@ -714,7 +714,7 @@
             </field>
 
             <field name="zero_attribute_price" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ATTRIBUTE_PRICE_LABEL"
-                   description="COM_PHOCACART_FIELD_ZERO_ATTRIBUTE_PRICE_DESC">
+                   description="COM_PHOCACART_FIELD_ATTRIBUTE_PRICE_DESC">
                 <option value="1">COM_PHOCACART_DISPLAY</option>
 				<option value="0">COM_PHOCACART_HIDE_ZERO_PRICE</option>
 				<option value="2">COM_PHOCACART_HIDE_ANY_PRICE</option>
@@ -944,8 +944,8 @@
 
             <field name="hide_products_out_of_stock" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_DESC">
-                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
+				<option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -1346,7 +1346,31 @@
 
 
 	<field name="manufacturer_alias" default="manufacturer" size="10" type="text" label="COM_PHOCACART_FIELD_MANUFACTURER_ALIAS_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_ALIAS_DESC"/>
-            <field name="phocahead18" type="phocahead" default="COM_PHOCACART_IMPORT_EXPORT_OPTIONS_LABEL" label="" description=""/>
+
+
+		   <field name="load_min_js" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_LABEL" description="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+			<field name="category_alias_prefix" default="" size="10" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ALIAS_PREFIX_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ALIAS_PREFIX_DESC"/>
+			
+			
+			<!--<field name="sef_advanced" type="radio" class="btn-group btn-group-yesno btn-group-reversed" default="0" label="JGLOBAL_SEF_ADVANCED_LABEL" description="JGLOBAL_SEF_ADVANCED_DESC" filter="integer" >
+			<option value="0">JGLOBAL_SEF_ADVANCED_LEGACY</option>
+			<option value="1">JGLOBAL_SEF_ADVANCED_MODERN</option>
+		</field>
+
+		<field name="sef_ids" type="radio" class="btn-group btn-group-yesno" default="0" label="JGLOBAL_SEF_NOIDS_LABEL" description="JGLOBAL_SEF_NOIDS_DESC" showon="sef_advanced:1" filter="integer" >
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>-->
+		<field name="remove_sef_ids" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_SEF_NOIDS_LABEL" description="COM_PHOCACART_SEF_NOIDS_DESC"  filter="integer" >
+			<option value="1">COM_PHOCACART_YES</option>
+			<option value="0">COM_PHOCACART_NO</option>
+		</field>
+
+		   <field name="phocahead18" type="phocahead" default="COM_PHOCACART_IMPORT_EXPORT_OPTIONS_LABEL" label="" description=""/>
 
 
             <field name="import_export_type" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_IMPORT_EXPORT_TYPE_LABEL" description="COM_PHOCACART_FIELD_IMPORT_EXPORT_TYPE_DESC">
@@ -1618,6 +1642,13 @@
                    description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
             <field name="invoice_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+				   
+				   <field name="order_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_TOP_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="order_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="order_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
             <field name="oidn_global_billing_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
                    label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_GLOBAL_BILLING_DESCRIPTION_LABEL"
@@ -2008,7 +2039,7 @@
 
 			<field name="allowed_file_types_upload_frontend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_DESC"/>
 
-			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
+			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
 
 
 			<field name="upload_maxsize" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>

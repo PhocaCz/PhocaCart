@@ -396,7 +396,7 @@ if (!empty($this->items)) {
 
 		// MANUFACTURER
 		$dL['manufacturer'] =  '';
-		if ($this->t['category_display_manufacturer'] > 0) {
+		if ($this->t['category_display_manufacturer'] > 0 && (int)$v->manufacturerid > 0 && $v->manufacturertitle != '') {
 			$dL['manufacturer'] .= PhocacartManufacturer::getManufacturerRendered((int)$v->manufacturerid, $v->manufacturertitle, $v->manufactureralias, $this->t['manufacturer_alias'], $this->t['category_display_manufacturer'], 0, '');
 		}
 

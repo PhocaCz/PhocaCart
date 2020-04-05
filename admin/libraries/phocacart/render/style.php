@@ -158,6 +158,8 @@ $s['c']['checkbox']	                = 'checkbox';
 $s['c']['inputbox']	                = 'inputbox';
 $s['c']['inputbox.form-control']    = 'inputbox form-control';
 
+$s['c']['hastooltip']               = 'hasTooltipPc';// 'hasTooltip' can create JS problems on site (mixing different libraries)
+
 
         switch($theme) {
 

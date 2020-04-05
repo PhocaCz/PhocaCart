@@ -198,6 +198,7 @@ class PhocacartFile
 	}
 
 	public static function createDownloadFolder($folder) {
+
 		$path = PhocacartPath::getPath('productfile');
 		if (!JFolder::exists($path['orig_abs_ds'] . $folder )) {
 			if (JFolder::create( $path['orig_abs_ds'] . $folder, 0755 )) {

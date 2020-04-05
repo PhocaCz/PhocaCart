@@ -25,7 +25,7 @@ class PhocacartOrderStatus
 		if( !array_key_exists( $id, self::$status ) ) {
 
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.orders_view_display, a.download FROM #__phocacart_order_statuses AS a'
+			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.email_attachments, a.orders_view_display, a.download FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -46,6 +46,7 @@ class PhocacartOrderStatus
 				self::$status[$id]['email_footer']				= $s->email_footer;
 				self::$status[$id]['email_text_others']			= $s->email_text_others;
 				self::$status[$id]['email_send']				= $s->email_send;
+				self::$status[$id]['email_attachments']			= $s->email_attachments;
 				self::$status[$id]['orders_view_display']		= $s->orders_view_display;
 				self::$status[$id]['download']					= $s->download;
 				$query = 'SELECT a.title AS text, a.id AS value'
@@ -120,6 +121,8 @@ class PhocacartOrderStatus
 		$notifyOthersV	= false;
 		$emailSendV		= false;
 		$stockMovementsV= '';
+
+
 
 		// 1) NOTIFY USER
 		if ($notifyUser == 0) {
@@ -691,7 +694,32 @@ class PhocacartOrderStatus
 				// 0 ... not sent
 				// -1 ... not sent (error)
 
-				$notify = PhocacartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, null, $attachmentContent, $attachmentName);
+
+				// Additional attachments
+				$attachment = null;
+				if (isset($status['email_attachments']) && !empty($status['email_attachments'])) {
+					$attachmentA = json_decode($status['email_attachments'], true);
+
+					if (!empty($attachmentA)) {
+
+						$attachment = array();
+						$pathAttachment = PhocacartPath::getPath('attachmentfile');
+
+						foreach ($attachmentA as $k => $v) {
+							if (isset($v['file_attachment']) && $v['file_attachment'] != '') {
+
+								$pathAttachmentFile = $pathAttachment['orig_abs_ds'] . $v['file_attachment'];
+
+								if (Joomla\CMS\Filesystem\File::exists($pathAttachmentFile)){
+									$attachment[] = $pathAttachmentFile;
+								}
+							}
+						}
+					}
+				}
+
+
+				$notify = PhocacartEmail::sendEmail('', '', $recipient, $subject, $body, true, null, null, $attachment, $attachmentContent, $attachmentName);
 
 			}
 
@@ -702,8 +730,8 @@ class PhocacartOrderStatus
 					$bodyOthers = JText::_('COM_PHOCACART_ORDER_NR'). ': '.$orderNumber .' - '. JText::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': '.$status['title'] . '<br>'. $bodyOthers;
 				}
 
-
-				$notifyOthers = PhocacartEmail::sendEmail('', '', $recipientOthers, $subjectOthers, $bodyOthers, true, null, $bcc, $attachmentContent, $attachmentName);
+				$attachment = null;
+				$notifyOthers = PhocacartEmail::sendEmail('', '', $recipientOthers, $subjectOthers, $bodyOthers, true, null, $bcc, $attachment, $attachmentContent, $attachmentName);
 
 
 			}

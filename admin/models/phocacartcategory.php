@@ -89,6 +89,8 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	}
 
 	protected function prepareTable($table){
+
+
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
 		$user = JFactory::getUser();
@@ -99,6 +101,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
+
 
 		$table->parent_id 	= PhocacartUtils::getIntFromString($table->parent_id);
 		$table->date 		= PhocacartUtils::getDateFromString($table->date);

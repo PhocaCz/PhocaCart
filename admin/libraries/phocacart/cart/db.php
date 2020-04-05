@@ -57,6 +57,12 @@ class PhocacartCartDb
 					$paramsC 				= PhocacartUtils::getComponentParameters();
 					$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
 					$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
+					if ((int)$pos_payment_force > 0) {
+						$pos_payment_force = PhocacartPayment::isPaymentMethodActive($pos_payment_force) === true ? (int)$pos_payment_force : 0;
+					}
+					if ((int)$pos_shipping_force > 0) {
+						$pos_shipping_force = PhocacartShipping::isShippingMethodActive($pos_shipping_force) === true ? (int)$pos_shipping_force : 0;
+					}
 				}
 
 				$cartDb['cart'] 				= array();

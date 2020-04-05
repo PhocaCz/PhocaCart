@@ -1024,6 +1024,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `email_text` text,
   `email_footer` text,
   `email_text_others` text,
+  `email_attachments` text,
   `email_subject` varchar(255) NOT NULL DEFAULT '',
   `email_subject_others` varchar(255) NOT NULL DEFAULT '',
   `email_send` int(2) NOT NULL DEFAULT '0',
@@ -1112,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`oidn_spec_billing_desc` text,
 	`oidn_spec_shipping_desc` text,
 
-
+	`terms` tinyint(1) NOT NULL default '0',
 	`privacy` tinyint(1) NOT NULL default '0',
 	`newsletter` tinyint(1) NOT NULL default '0',
 	

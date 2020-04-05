@@ -142,10 +142,10 @@ class PhocacartSearch
 						if ($k != '' && $v != '' && !empty($a)) {
 							if ($search == 'a') {
 								// Attributes
-								$inA[] = '(at2.alias = '.$db->quote($k). ' AND v2.alias IN ('. '\'' . implode($a, '\',\''). '\'' .'))';
+								$inA[] = '(at2.alias = '.$db->quote($k). ' AND v2.alias IN ('. '\'' . implode('\',\'', $a). '\'' .'))';
 							} else if ($search == 's') {
 								// Specifications
-								$inA[] = '(s2.alias = '.$db->quote($k). ' AND s2.alias_value IN ('. '\'' . implode($a, '\',\''). '\'' .'))';
+								$inA[] = '(s2.alias = '.$db->quote($k). ' AND s2.alias_value IN ('. '\'' . implode('\',\'', $a). '\'' .'))';
 							}
 
 						}

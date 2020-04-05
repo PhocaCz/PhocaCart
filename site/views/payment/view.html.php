@@ -61,7 +61,7 @@ class PhocaCartViewPayment extends JViewLegacy
 			$this->t['o'] = '';
 		}
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
         $media->loadSpec();
 		$this->_prepareDocument();

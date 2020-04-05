@@ -12,9 +12,9 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
 class PhocacartCountry
-{	
+{
 	public static function getCountryById($countryId) {
-		
+
 		$db =JFactory::getDBO();
 		$query = 'SELECT title FROM #__phocacart_countries WHERE id = '.(int) $countryId. ' ORDER BY title LIMIT 1';
 		$db->setQuery($query);
@@ -24,7 +24,7 @@ class PhocacartCountry
 		}
 		return '';
 	}
-	
+
 	public static function options() {
 
 		$db = JFactory::getDBO();
@@ -34,12 +34,12 @@ class PhocacartCountry
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$items = $db->loadObjectList();
-	
+
 		return $items;
 	}
-	
+
 	public static function getCountries($id, $select = 0, $table = 'shipping') {
-	
+
 		if ($table == 'shipping') {
 			$t = '#__phocacart_shipping_method_countries';
 			$c = 'shipping_id';
@@ -50,9 +50,9 @@ class PhocacartCountry
 			$t = '#__phocacart_zone_countries';
 			$c = 'zone_id';
 		}
-		
+
 		$db =JFactory::getDBO();
-		
+
 		if ($select == 1) {
 			$query = 'SELECT c.country_id';
 		} else {
@@ -63,23 +63,23 @@ class PhocacartCountry
 			    .' WHERE c.'.$c.' = '.(int) $id
 				.' ORDER BY a.id';
 		$db->setQuery($query);
-		
+
 		if ($select == 1) {
 			$countries = $db->loadColumn();
 		} else {
 			$countries = $db->loadObjectList();
-		}	
-	
+		}
+
 		return $countries;
 	}
-	
+
 	/*
 	 * used for shipping method rules
 	 * used for payment method rules
 	 */
-	
+
 	public static function storeCountries($countriesArray, $id, $table = 'shipping') {
-	
+
 
 		if ($table == 'shipping') {
 			$t = '#__phocacart_shipping_method_countries';
@@ -91,7 +91,7 @@ class PhocacartCountry
 			$t = '#__phocacart_zone_countries';
 			$c = 'zone_id';
 		}
-	
+
 		if ((int)$id > 0) {
 			$db =JFactory::getDBO();
 			$query = ' DELETE '
@@ -99,19 +99,19 @@ class PhocacartCountry
 					. ' WHERE '.$c.' = '. (int)$id;
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			if (!empty($countriesArray)) {
-				
+
 				$values 		= array();
 				$valuesString 	= '';
-				
+
 				foreach($countriesArray as $k => $v) {
 					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
 				}
-				
+
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
-				
+					$valuesString = implode(',', $values);
+
 					$query = ' INSERT INTO '.$t.' ('.$c.', country_id)'
 								.' VALUES '.(string)$valuesString;
 
@@ -121,37 +121,37 @@ class PhocacartCountry
 			}
 		}
 	}
-	
+
 	public static function getAllCountriesSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
-	
+
 		$db =JFactory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_countries AS a'
 				. ' ORDER BY '. $order;
 		$db->setQuery($query);
 		$countries = $db->loadObjectList();
-		
+
 		$countriesO = JHtml::_('select.genericlist', $countries, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
-		
+
 		return $countriesO;
 	}
-	
+
 	public static function getCountryFlag($code = '', $frontend = 0, $image = '', $width = '', $height = '') {
-		
+
 		if ($image != '') {
 			$imageO = PhocacartImage::getImage($image, '', $width, $height);
 			if ($imageO) {
 				return $imageO;
 			}
 		}
-		
+
 		if ($code != '') {
 			//$link	= '/media/mod_languages/images/'. strip_tags(strtolower($code)). '.gif';
 			//$link	= '/media/com_phocacart/images/flags/'. strip_tags(strtolower($code)). '-22x14.png';
 			$link	= '/media/com_phocacart/images/flags/'. strip_tags(strtolower($code)). '.png';
-			
+
 			$abs	= JPATH_ROOT . $link;
-			
+
 			if ($frontend == 1) {
 				$rel	= JURI::base(true) . $link;
 			} else {

@@ -12,7 +12,26 @@ echo '<div id="ph-pc-pos-site">';
 
 
 // POPUP
-echo '<div id="phDialogConfirm" class="ph-dialog" title="'. JText::_('COM_PHOCACART_CONFIRM').'"></div>';
+// jQuery UI
+//echo '<div id="phDialogConfirm" class="ph-dialog" title="'. JText::_('COM_PHOCACART_CONFIRM').'"></div>';
+
+
+// Bootstrap Modal
+echo '<div id="phDialogConfirm" class="modal fade" tabindex="-1" role="dialog">';
+echo '<div class="modal-dialog" role="document">';
+echo '<div class="modal-content">';
+echo '<div class="modal-header">';
+echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+echo '<h4 class="modal-title">'. JText::_('COM_PHOCACART_CONFIRM').'</h4>';
+echo '</div>';
+echo '<div class="modal-body"></div>';
+echo '<div class="modal-footer">';
+echo '<button type="button" class="btn btn-default" data-dismiss="modal">'. JText::_('COM_PHOCACART_CANCEL').'</button>';
+echo '<button id="phDialogConfirmSave" type="button" class="btn btn-success">'. JText::_('COM_PHOCACART_OK').'</button>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
 
 
 // TOP

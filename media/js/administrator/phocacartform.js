@@ -347,7 +347,7 @@ jQuery(document).ready(function() {
 
         // use event.originalEvent.clipboard for newer chrome versions
         var items = (event.clipboardData  || event.originalEvent.clipboardData).items;
-        //console.log(JSON.stringify(items)); // will give you the mime types
+        //console . log(JSON.stringify(items)); // will give you the mime types
         // find pasted image among pasted items
         var blob = null;
         for (var i = 0; i < items.length; i++) {
@@ -413,23 +413,3 @@ jQuery(document).ready(function() {
     })
 
 })
-
-
-
-
-
-
-
-//jQuery(document).ready(function() {
-    //(function (Joomla) {
-
-     //   var id = Joomla.getOptions('category-change');
-        //var element = document.querySelector("#".concat(id));
-//alert(id);
-
-
-
-
-
-   // })(Joomla);
-//})

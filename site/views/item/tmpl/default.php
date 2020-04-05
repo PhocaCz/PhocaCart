@@ -49,7 +49,7 @@ echo $this->t['event']->onItemBeforeHeader;
 
 
 $popupAskAQuestion = 0;// we need this info for the container at the bottom (if modal popup is used for ask a question)
-$x = $this->item[0];
+$x = isset($this->item[0]) ? $this->item[0]: 0;
 
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
@@ -422,6 +422,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$d['class_btn']		= $class_btn;
 		$d['class_icon']	= $class_icon;
 		echo $layoutA->render($d);
+
 
 	} else if ((int)$this->t['item_addtocart'] == 102 && (int)$x->external_id != '') {
 		$d					= array();
@@ -904,12 +905,13 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 }
 
 
-if ($this->itemnext[0] || $this->itemprev[0]) {
+if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[0]) && $this->itemprev[0])) {
 	echo '<div class="'.$this->s['c']['row'].'">';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
-	if($this->itemprev[0]) {
+	if(isset($this->itemprev[0]) && $this->itemprev[0]) {
 		$p = $this->itemprev[0];
+
 		$title 	= '';
 		$titleT = JText::_('COM_PHOCACART_PREVIOUS_PRODUCT'). ' ('. $p->title.')';
 		if ($this->t['title_next_prev'] == 1) {
@@ -933,7 +935,7 @@ if ($this->itemnext[0] || $this->itemprev[0]) {
 	echo '</div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
-	if($this->itemnext[0]) {
+	if(isset($this->itemnext[0]) && $this->itemnext[0]) {
 		$n = $this->itemnext[0];
 		$title 	= '';
 		$titleT = JText::_('COM_PHOCACART_NEXT_PRODUCT'). ' ('. $n->title.')';

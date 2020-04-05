@@ -284,7 +284,7 @@ class PhocacartTag
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_tags_related (item_id, tag_id)'
 								.' VALUES '.(string)$valuesString;
@@ -317,7 +317,7 @@ class PhocacartTag
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_taglabels_related (item_id, tag_id)'
 								.' VALUES '.(string)$valuesString;

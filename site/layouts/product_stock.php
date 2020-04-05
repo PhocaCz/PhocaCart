@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 $d = $displayData;
+
 ?>
 <div id="phItemStockBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">

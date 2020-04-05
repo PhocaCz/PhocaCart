@@ -58,7 +58,7 @@ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Pho
 
 ## Version
 
-3.5.0Beta
+3.5.0RC2
 
 
 

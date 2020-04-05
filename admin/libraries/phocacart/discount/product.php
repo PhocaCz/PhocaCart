@@ -389,7 +389,7 @@ class PhocacartDiscountProduct
 
 			// Remove all discounts except the active
 			if (!empty($notDeleteDiscs)) {
-				$notDeleteDiscsString = implode($notDeleteDiscs, ',');
+				$notDeleteDiscsString = implode(',', $notDeleteDiscs);
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_discounts'
 						.' WHERE product_id = '. (int)$productId
@@ -468,7 +468,7 @@ class PhocacartDiscountProduct
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 					$query = ' INSERT INTO #__phocacart_product_discounts (product_id, title, alias, access, discount, calculation_type, quantity_from, quantity_to, valid_from, valid_to, ordering)'
 							.' VALUES '.(string)$valuesString;
 					$db->setQuery($query);

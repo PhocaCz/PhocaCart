@@ -99,7 +99,7 @@ class PhocacartCompare
 		if ($full == 1) {
 
 			$columns		=
-			'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
+			'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image, a.type,'
 			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
 			.' a.length, a.width, a.height, a.weight, a.volume, a.unit_amount, a.unit_unit, a.price_original,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
@@ -107,7 +107,7 @@ class PhocacartCompare
 			.' t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype,'
 			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
 			$groupsFull		=
-			'a.id, a.title, a.alias, a.description, a.price, a.image,'
+			'a.id, a.title, a.alias, a.description, a.price, a.image, a.type,'
 			.' a.length, a.width, a.height, a.weight, a.volume,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' m.title,'

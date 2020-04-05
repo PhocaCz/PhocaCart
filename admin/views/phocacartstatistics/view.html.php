@@ -110,9 +110,10 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 
 		$media = new PhocacartRenderAdminmedia();
 		JHtml::_('jquery.framework', false);
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/jquery.equalheights.min.js');
+		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/jquery.equalheights.min.js');
 		$document->addScriptDeclaration(
-		'jQuery(window).load(function(){
+		//'jQuery(window).load(function(){
+		'jQuery(window).on(\'load\', function(){
 			jQuery(\'.ph-admin-stat-box\').equalHeights();
 		});');
 

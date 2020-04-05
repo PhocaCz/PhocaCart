@@ -338,7 +338,7 @@ class PhocacartCoupon
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_coupon_products (coupon_id, product_id)'
 								.' VALUES '.(string)$valuesString;
@@ -370,7 +370,7 @@ class PhocacartCoupon
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_coupon_categories (coupon_id, category_id)'
 								.' VALUES '.(string)$valuesString;

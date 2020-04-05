@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\HTML\HTMLHelper;
+
 final class PhocacartStatistics
 {
 	protected $fn = array();
@@ -17,8 +20,9 @@ final class PhocacartStatistics
 
 		$document	= JFactory::getDocument();
 		JHtml::_('jquery.framework', false);
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/chartjs/Chart.min.js');
+		//$document->addScript(JURI::root(true).'/media/com_phocacart/js/chartjs/Chart.min.js');
 		//$document->addScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.js');
+		HTMLHelper::_('script', 'media/com_phocacart/js/chartjs/Chart.min.js', array('version' => 'auto'), array('defer' => true));
 	}
 
 	public function renderChartJsLine($id, $dataA, $dataALabel, $dataB, $dataBLabel, $dataX) {
@@ -576,7 +580,7 @@ var config".$id." = {
 			return false;
 		} else {
 			// Only some statuses selected, so where clause changed
-			$whereStatus = 'a.status_id IN ('.implode($statistics_order_status, ',').')';
+			$whereStatus = 'a.status_id IN ('.implode(',', $statistics_order_status).')';
 			return true;
 		}
 		return false;

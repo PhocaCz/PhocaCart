@@ -69,7 +69,7 @@ class PhocacartFilter
         $app                    = JFactory::getApplication();
         $paramsC                = PhocacartUtils::getComponentParameters();
         $manufacturer_alias     = $paramsC->get('manufacturer_alias', 'manufacturer');
-        $manufacturer_alias     != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric')) : 'manufacturer';
+        $manufacturer_alias     = $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric')) : 'manufacturer';
         $parameters             = PhocacartParameter::getAllParameters();
 
 
@@ -255,11 +255,12 @@ class PhocacartFilter
 
     public function renderList()
     {
-
+        $document	= JFactory::getDocument();
         $p = array();
         $pC = PhocacartUtils::getComponentParameters();
         $p['manufacturer_alias'] = $pC->get('manufacturer_alias', 'manufacturer');
-        $p['manufacturer_alias'] != '' ? trim(PhocacartText::filterValue($p['manufacturer_alias'], 'alphanumeric')) : 'manufacturer';
+        $p['manufacturer_alias'] = $p['manufacturer_alias'] != '' ? trim(PhocacartText::filterValue($p['manufacturer_alias'], 'alphanumeric')) : 'manufacturer';
+
 
         // $db = JFactory::getDBO();
         $o = array();
@@ -467,15 +468,12 @@ class PhocacartFilter
 
 
         // RENDER PRICE FROM TO INPUT RANGE
-
         if ($this->price == 2 || $this->price == 3) {
 
-            $document = JFactory::getDocument();
-            $document->addScript(JURI::root(true) . '/media/com_phocacart/js/ui/jquery-ui.slider.min.js');
-            JHTML::stylesheet('media/com_phocacart/js/ui/jquery-ui.slider.min.css');
 
-            $currency = PhocacartCurrency::getCurrency();
-            PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
+            $media = PhocacartRenderMedia::getInstance('main');
+            $media->loadUiSlider();
+
             $price_from = $this->getArrayParamValues('price_from', 'string');
             $price_to = $this->getArrayParamValues('price_to', 'string');
             $min = PhocacartProduct::getProductPrice(2, $this->check_available_products, $language, $activeProductsPrice);// min price

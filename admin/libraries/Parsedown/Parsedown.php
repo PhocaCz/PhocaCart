@@ -1887,7 +1887,7 @@ class Parsedown
                 {
                     unset($Element['attributes'][$att]);
                 }
-                # dump onevent attribute
+                # d ump onevent attribute
                 elseif (self::striAtStart($att, 'on'))
                 {
                     unset($Element['attributes'][$att]);

@@ -26,6 +26,17 @@ class PhocaCartControllerPos extends JControllerForm
 
 		$app					= JFactory::getApplication();
 
+		$paramsC 				= PhocacartUtils::getComponentParameters();
+		$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
+		$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
+
+		if ((int)$pos_payment_force > 0) {
+            $pos_payment_force = PhocacartPayment::isPaymentMethodActive($pos_payment_force) === true ? (int)$pos_payment_force : 0;
+        }
+        if ((int)$pos_shipping_force > 0) {
+            $pos_shipping_force = PhocacartShipping::isShippingMethodActive($pos_shipping_force) === true ? (int)$pos_shipping_force : 0;
+        }
+
 		$item					= array();
 		$item['id']				= $this->input->get( 'id', 0, 'int' );
 		$item['catid']			= $this->input->get( 'catid', 0, 'int' );
@@ -114,16 +125,25 @@ class PhocaCartControllerPos extends JControllerForm
 
 		$cart->setFullItems();
 
-		$shippingId = $cart->getShippingId();
+		// When adding new product - shipping and payment is removed - don't add it again from not updated class (this $cart instance does not include the info about removed shipping and payment)
+		// But there is an exception in case of forced payment or shipping
+		if ((int)$pos_shipping_force > 0) {
+			$shippingId = $cart->getShippingId();
+
+			if (isset($shippingId) && (int)$shippingId > 0) {
+				$cart->addShippingCosts($shippingId);
+			}
+		}
+
+		if ((int)$pos_payment_force > 0) {
+			$paymentId = $cart->getPaymentId();
+
+			if (isset($paymentId) && (int)$paymentId > 0) {
+				$cart->addPaymentCosts($paymentId);
+			}
+		}
 
 
-		if (isset($shippingId) && (int)$shippingId > 0) {
-			$cart->addShippingCosts($shippingId);
-		}
-		$paymentId 	= $cart->getPaymentId();
-		if (isset($paymentId) && (int)$paymentId > 0) {
-			$cart->addPaymentCosts($paymentId);
-		}
 		$cart->roundTotalAmount();
 
 		$o = $o2 = '';
@@ -142,6 +162,9 @@ class PhocaCartControllerPos extends JControllerForm
 			$total = $totalA[0]['brutto'];
 		}
 
+
+
+
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
@@ -155,6 +178,12 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 	}
+
+
+
+
+
+
 
 	// Add item to cart
 	function update($tpl = null){
@@ -250,7 +279,7 @@ class PhocaCartControllerPos extends JControllerForm
 					$d 				= array();
 					$d['s']			= $s;
 					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
-					$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
+					$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
 					$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
 					$oE 			= $layoutPE->render($d);
 					$response = array(
@@ -296,6 +325,9 @@ class PhocaCartControllerPos extends JControllerForm
 				//$total = $price->getPriceFormat($totalA['fbrutto']); Set in Layout
 				$total = $totalA[0]['brutto'];
 			}
+
+
+
 			$message = $item['action'] == 'delete' ? JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') : JText::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED');
 			$response = array(
 				'status'	=> '1',
@@ -345,6 +377,9 @@ class PhocaCartControllerPos extends JControllerForm
 				//$total = $price->getPriceFormat($totalA['fbrutto']); Set in Layout
 				$total = $totalA[0]['brutto'];
 			}
+
+
+
 
 			$response = array(
 				'status'	=> '1',
@@ -511,9 +546,11 @@ class PhocaCartControllerPos extends JControllerForm
 		} else {
 			$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 			$app->enqueueMessage($msg, 'message');
+
+
 			$response = array(
 				'status' => '1',
-				'item' => '<div class="ph-result-txt ph-success-txt">' . PhocacartRenderFront::renderMessageQueue() . '</div>');
+				'message' => '<div class="ph-result-txt ph-success-txt">' . PhocacartRenderFront::renderMessageQueue() . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -616,6 +653,8 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 		$model 	= $this->getModel('pos');
+
+
 		if(!$model->savePaymentAndCouponAndReward((int)$item['id'], $couponId, $rewards['used'])) {
 			$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 			$app->enqueueMessage($msg, 'error');
@@ -629,7 +668,7 @@ class PhocaCartControllerPos extends JControllerForm
 			$app->enqueueMessage($msg, 'message');
 			$response = array(
 				'status' => '1',
-				'item' => '<div class="ph-result-txt ph-success-txt">' . PhocacartRenderFront::renderMessageQueue() . '</div>');
+				'message' => '<div class="ph-result-txt ph-success-txt">' . PhocacartRenderFront::renderMessageQueue() . '</div>');
 			echo json_encode($response);
 			return;
 		}

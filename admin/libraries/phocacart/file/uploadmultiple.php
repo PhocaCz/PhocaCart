@@ -35,24 +35,17 @@ class PhocacartFileUploadmultiple
 		JHtml::_('behavior.framework', true);// Load it here to be sure, it is loaded before jquery
 		JHtml::_('jquery.framework', false);// Load it here because of own nonConflict method (nonconflict is set below)
 		$document			= JFactory::getDocument();
-		// No more used  - - - - -
-		//$document->addScript(JURI::root(true).'/components/com_phocacart/assets/jquery/jquery-1.6.4.min.js');//USE SYSTEM
-		//$nC = 'var pgJQ =  jQuery.noConflict();';//SET BELOW
-		//$document->addScriptDeclaration($nC);//SET BELOW
-		// - - - - - - - - - - - -
-		//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.js');
-		//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/jquery.ui.plupload/jquery-ui.min.js');
-		//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/jquery.ui.plupload/jquery.ui.plupload.js');
 
-		if ($uploadMethod == 2) {
+
+		/*if ($uploadMethod == 2) {
 			//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/gears_init.js');
 		}
 		if ($uploadMethod == 5) {
 			//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
-		}
+		}*/
 
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.js');
-		if ($uploadMethod == 2) {
+		/*if ($uploadMethod == 2) {
 			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.gears.js');
 		}
 		if ($uploadMethod == 3) {
@@ -66,7 +59,7 @@ class PhocacartFileUploadmultiple
 		}
 		if ($uploadMethod == 6) {
 			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.html4.js');
-		}
+		}*/
 		if ($uploadMethod == 4) {
 			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.html5.js');
 		}
@@ -86,20 +79,21 @@ class PhocacartFileUploadmultiple
 		$document			= JFactory::getDocument();
 
 		switch ($this->method) {
-			case 2:
+			/* case 2:
 				$name		= 'gears_uploader';
 				$runtime	= 'gears';
 			break;
 			case 3:
 				$name		= 'silverlight_uploader';
 				$runtime	= 'silverlight';
-			break;
+			break;*/
 			case 4:
+			default:
 				$name		= 'html5_uploader';
 				$runtime	= 'html5';
 			break;
 
-			case 5:
+			/* case 5:
 				$name		= 'browserplus_uploader';
 				$runtime	= 'browserplus';
 			break;
@@ -113,7 +107,7 @@ class PhocacartFileUploadmultiple
 			default:
 				$name		= 'flash_uploader';
 				$runtime	= 'flash';
-			break;
+			break;*/
 		}
 
 		$chunkEnabled = 0;
@@ -174,11 +168,11 @@ class PhocacartFileUploadmultiple
 				$js.=''."\n";
 			}
 		}*/
-		if ($this->method == 1) {
+		/* if ($this->method == 1) {
 			$js.='		flash_swf_url : \''.JURI::root(true).'/media/com_phocacart/js/plupload/plupload.flash.swf\''."\n";
 		} else if ($this->method == 3) {
 			$js.='		silverlight_xap_url : \''.JURI::root(true).'/media/com_phocacart/js/plupload/plupload.silverlight.xap\''."\n";
-		}
+		}*/
 		$js.='	});'."\n";
 
 		$js.=''."\n";
@@ -187,43 +181,43 @@ class PhocacartFileUploadmultiple
 		$js.='	Uploader.bind(\'FileUploaded\', function(Up, File, Response) {'."\n";
 		$js.='		var obj = eval(\'(\' + Response.response + \')\');'."\n";
 		//if ($this->method == 4 || $this->method == 6) {
-		if ($this->method == 6) {
-			$js.='		var queueFiles = Uploader.total.failed + Uploader.total.uploaded;'."\n";
-			$js.='		var uploaded0 = Uploader.total.uploaded;'."\n";
-		} else {
+		//if ($this->method == 6) {
+		//	$js.='		var queueFiles = Uploader.total.failed + Uploader.total.uploaded;'."\n";
+		//	$js.='		var uploaded0 = Uploader.total.uploaded;'."\n";
+		//} else {
 			$js.='		var queueFiles = Uploader.total.failed + Uploader.total.uploaded + 1;'."\n";
 			$js.='		var uploaded0 = Uploader.total.uploaded + 1;'."\n";
-		}
+		//}
 		$js.=''."\n";
 		$js.='		if ((typeof(obj.result) != \'undefined\') && obj.result == \'error\') {'."\n";
 		$js.='			'."\n";
-		if ($this->method == 6) {
+		//if ($this->method == 6) {
 			//$js.='		var uploaded0 = Uploader.total.uploaded;'."\n";
-		} else {
+		//} else {
 			//$js.='		var uploaded0 = Uploader.total.uploaded + 1;'."\n";
-		}
+		//}
 		$js.='			Up.trigger("Error", {message : obj.message, code : obj.code, details : obj.details, file: File});'."\n";
 		$js.='				if( queueFiles == Uploader.files.length) {'."\n";
-		if ($this->method == 6) {
+		//if ($this->method == 6) {
+		//	$js.='		var uploaded0 = Uploader.total.uploaded;'."\n";
+		//} else {
 			$js.='		var uploaded0 = Uploader.total.uploaded;'."\n";
-		} else {
-			$js.='		var uploaded0 = Uploader.total.uploaded;'."\n";
-		}
+		//}
 		$js.='					window.location = \''.$this->reload.'\' + \'&muuploaded=\' + uploaded0 + \'&mufailed=\' + Uploader.total.failed;'."\n";
-		//$js.='					alert(\'Error\' + obj.message)'."\n";
+		//$js.='					ale rt(\'Error\' + obj.message)'."\n";
 		$js.='				}'."\n";
 		$js.='				return false; '."\n";
 		$js.=''."\n";
 		$js.='		} else {'."\n";
 		$js.='			if( queueFiles == Uploader.files.length) {'."\n";
 		//$js.='				var uploaded = Uploader.total.uploaded + 1;'."\n";
-		if ($this->method == 6) {
-			$js.='		var uploaded = Uploader.total.uploaded;'."\n";
-		} else {
+		//if ($this->method == 6) {
+		//	$js.='		var uploaded = Uploader.total.uploaded;'."\n";
+		//} else {
 			$js.='		var uploaded = Uploader.total.uploaded + 1;'."\n";
-		}
+		//}
 		$js.='				window.location = \''.$this->reload.'\' + \'&muuploaded=\' + uploaded + \'&mufailed=\' + Uploader.total.failed;'."\n";
-		//$js.='					alert(\'OK\' + obj.message)'."\n";
+		//$js.='					ale rt(\'OK\' + obj.message)'."\n";
 		$js.='			}'."\n";
 		$js.='		}'."\n";
 		$js.='	});'."\n";
@@ -246,20 +240,21 @@ class PhocacartFileUploadmultiple
 
 
 		switch ($this->method) {
-			case 2:
+			/*case 2:
 				$name		= 'gears_uploader';
 				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_GEARS');
 			break;
 			case 3:
 				$name		= 'silverlight_uploader';
 				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_SILVERLIGHT');
-			break;
+			break;*/
 			case 4:
+			default:
 				$name		= 'html5_uploader';
 				$msg		= JText::_('COM_PHOCACART_NOT_SUPPORTED_HTML5');
 			break;
 
-			case 5:
+			/* case 5:
 				$name		= 'browserplus_uploader';
 				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_BROWSERPLUS');
 			break;
@@ -273,7 +268,7 @@ class PhocacartFileUploadmultiple
 			default:
 				$name		= 'flash_uploader';
 				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_FLASH');
-			break;
+			break;*/
 		}
 
 		$style				= '';

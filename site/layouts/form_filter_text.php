@@ -94,15 +94,15 @@ $displayData 	= null;
 			<div class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>"></div>
 			<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>">
 				<div class="<?php echo $d['s']['c']['pull-right'] ?> <?php echo $d['s']['c']['btn-group'] ?> ph-zero ph-right-zero">
-					<button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip hasTooltip" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"><span class="<?php echo $d['s']['i']['ok'] ?>"></span></button>
-					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip hasTooltip <?php echo $d['s']['c']['pull-right'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>"><span class="<?php echo $d['s']['i']['clear'] ?>"></span></button>
+					<button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"  aria-label="<?php echo $d['titleset']; ?>"><span class="<?php echo $d['s']['i']['ok'] ?>"></span></button>
+					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?> <?php echo $d['s']['c']['pull-right'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>" aria-label="<?php echo $d['titleclear']; ?>"><span class="<?php echo $d['s']['i']['clear'] ?>"></span></button>
 				</div>
 			</div>
             </div>
 			<?php
 			/*
 
-			<button class="btn tip hasTooltip" type="button" onclick="phChangeFilter('.$d['param'].', \''. $value.'\', 0, \'text\');" title="<?php echo JText::_('COM_PHOCACART_CLEAR_PRICE'); ?>"><span class="icon-remove"></span></button>
+			<button class="btn tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="phChangeFilter('.$d['param'].', \''. $value.'\', 0, \'text\');" title="<?php echo JText::_('COM_PHOCACART_CLEAR_PRICE'); ?>"><span class="icon-remove"></span></button>
 
 			foreach ($d['items'] as $k => $v) {
 

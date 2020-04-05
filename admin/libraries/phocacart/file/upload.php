@@ -496,10 +496,11 @@ class PhocacartFileUpload
 
         } else {
 
-            $aft = $paramsC->get('allowed_file_types_upload_backend', '{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}');
+            $aft = $paramsC->get('allowed_file_types_upload_backend', '{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}');
             //$dft = $paramsC->get( 'disallowed_file_types_download', '' );
             $allowedMimeType = PhocacartFile::getMimeTypeString($aft);
             //$disallowedMimeType = PhocacartFile::getMimeTypeString($dft);
+
 
             $ignoreUploadCh = 0;
             $ignoreUploadCheck = $paramsC->get('ignore_file_types_check', 0);
@@ -633,11 +634,13 @@ class PhocacartFileUpload
             //$illegal_mime = explode(',', $paramsL['upload_mime_illegal']);
             if (function_exists('finfo_open')) {// We have fileinfo
                 $finfo = finfo_open(FILEINFO_MIME);
-                $type = finfo_file($finfo, $file['tmp_name']);
+                $type = finfo_file($finfo, $file['tmp_name'], FILEINFO_MIME_TYPE );
+
                 if (strlen($type) && !in_array($type, $allowed_mime) /* && in_array($type, $illegal_mime)*/) {
                     $err = 'COM_PHOCACART_WARNINVALIDMIME';
                     return false;
                 }
+
                 finfo_close($finfo);
             } else if (function_exists('mime_content_type')) { // we have mime magic
                 $type = mime_content_type($file['tmp_name']);

@@ -215,7 +215,7 @@ class PhocacartParameter
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_parameter_values_related (item_id, parameter_value_id, parameter_id)'
 								.' VALUES '.(string)$valuesString;

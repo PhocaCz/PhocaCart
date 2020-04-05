@@ -127,7 +127,12 @@ class PhocaCartViewPos extends JViewLegacy
 			$this->t['pos_input_autocomplete_output'] = ' autocomplete="off" ';
 		}
 
-
+		if ((int)$this->t['pos_payment_force'] > 0) {
+			$this->t['pos_payment_force'] = PhocacartPayment::isPaymentMethodActive($this->t['pos_payment_force']) === true ? (int)$this->t['pos_payment_force'] : 0;
+		}
+		if ((int)$this->t['pos_shipping_force'] > 0) {
+			$this->t['pos_shipping_force'] = PhocacartShipping::isShippingMethodActive($this->t['pos_shipping_force']) === true ? (int)$this->t['pos_shipping_force'] : 0;
+		}
 
 		// 2) CHECK TICKET
 		if ((int)$this->t['ticket']->id < 1) {

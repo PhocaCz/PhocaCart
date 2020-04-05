@@ -112,7 +112,7 @@ class PhocacartImageAdditional
 
 			// Remove all images except the active
 			if (!empty($notDeleteImages)) {
-				$notDeleteImagesString = implode($notDeleteImages, ',');
+				$notDeleteImagesString = implode(',', $notDeleteImages);
 
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_images'

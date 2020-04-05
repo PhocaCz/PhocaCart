@@ -13,26 +13,26 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartRegion', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartregion', 'phocacartregion', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
@@ -40,7 +40,7 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -52,7 +52,7 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 
 		return $data;
 	}
-	
+
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
@@ -85,35 +85,35 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	public function importregions() {
 		$app	= JFactory::getApplication();
 		$db		= JFactory::getDBO();
-		
+
 		$db->setQuery('SELECT COUNT(id) FROM #__phocacart_regions');
 		$sum = $db->loadResult();
-		
+
 		/*if ((int)$sum > 3900) {
 			$message = JText::_('COM_PHOCACART_REGIONS_ALREADY_IMPORTED');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}*/
-		
+
 		if ((int)$sum > 0) {
 			$message = JText::_('COM_PHOCACART_REGIONS_CAN_BE_IMPORTED_ONLY_WHEN_REGION_TABLE_IS_EMPTY');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}
-		
+
 		$db->setQuery('SELECT COUNT(id) FROM #__phocacart_countries');
 		$sum = $db->loadResult();
-		
+
 		if ((int)$sum < 240) {
 			$message = JText::_('COM_PHOCACART_FIRST_COUNTRIES_NEED_TO_BE_IMPORTED');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}
-		
+
 		$file	= JPATH_ADMINISTRATOR . '/components/com_phocacart/install/sql/mysql/regions.utf8.sql';
 		if(JFile::exists($file)) {
 			$buffer = file_get_contents($file);
@@ -121,10 +121,10 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 			if (count($queries) == 0) {
 				return false;
 			}
-			
+
 			foreach ($queries as $query){
 				$query = trim($query);
-				if ($query != '' && $query{0} != '#'){
+				if ($query != '' && $query[0] != '#'){
 					$db->setQuery($query);
 					if (!$db->execute()){
 						JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), JLog::WARNING);
@@ -138,14 +138,14 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 			return false;
 		}
 	}
-	
+
 	public function delete(&$cid = array()) {
-		
-		
+
+
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-			
+
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
@@ -157,27 +157,27 @@ class PhocaCartCpModelPhocacartRegion extends JModelAdmin
 					return false;
 				}
 			}
-			
+
 			// 1. DELETE REGIONS
 			$query = 'DELETE FROM #__phocacart_regions'
 				. ' WHERE id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
-			
+
+
 			// 2. DELETE REGION TAXES
 			$query = 'DELETE FROM #__phocacart_tax_regions'
 				. ' WHERE region_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
-			
+
+
 			// 3. DELETE COUNTRIES IN SHIPPING METHOD
 			$query = 'DELETE FROM #__phocacart_shipping_method_regions'
 				. ' WHERE region_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 4. DELETE COUNTRIES IN PAYMENT METHOD
 			$query = 'DELETE FROM #__phocacart_payment_method_regions'
 				. ' WHERE region_id IN ( '.$cids.' )';

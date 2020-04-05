@@ -90,6 +90,13 @@ class PhocacartUtilsSettings
 				$group['c']	= '&amp;tmpl=component';
 			break;
 
+			case 'attachmentfile':
+				$group['f'] = 8;//File
+				$group['i'] = 0;//Image
+				$group['t'] = 'file';//Text
+				$group['c']	= '&amp;tmpl=component';
+			break;
+
 			default:
 				$group['f'] = 0;//File
 				$group['i'] = 0;//Image
@@ -105,7 +112,7 @@ class PhocacartUtilsSettings
 
 		$pC 						= PhocacartUtils::getComponentParameters();
 		$manufacturer_alias			= $pC->get( 'manufacturer_alias', 'manufacturer');
-		$manufacturer_alias 		!= '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
+		$manufacturer_alias			= $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
 		$p[] = 'price_from';
 		$p[] = 'price_to';
 		$p[] = 'tag';

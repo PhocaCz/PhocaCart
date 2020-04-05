@@ -107,7 +107,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// Not ready yet
 		// Checkout cart can be changed by ajax
 		// But not module cart, no shipping, no payment is refreshed, no plus/minus (touchspin.js) refreshed
-		//PhocacartRenderJs::renderAjaxUpdateCart();
+		//PhocacartRenderJs::renderAjaxUpdateCart();// used only in POS
 
 
 		// Cart
@@ -131,7 +131,12 @@ class PhocaCartViewCheckout extends JViewLegacy
 		// PRODUCTTYPE
 		$sOCh['all_digital_products']	= isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
 		$pOCh 							= array();// Payment Options Checkout
+
+		$pOCh['order_amount_zero'] = 1;
 		$pOCh['order_amount_zero']		= $total[0]['brutto'] == 0 && $total[0]['netto'] == 0 ? 1 : 0;
+
+
+
 		$this->a->shippingnotused 		= PhocacartShipping::isShippingNotUsed($sOCh);
 		$this->a->paymentnotused		= PhocacartPayment::isPaymentNotUsed($pOCh);
 
@@ -515,12 +520,13 @@ class PhocaCartViewCheckout extends JViewLegacy
 
 
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadChosen();
 		$media->loadWindowPopup();
 
 		$media->loadTouchSpin('quantity',$this->s['i']);
+		//PhocacartRenderJs::renderAjaxUpdateCart(); used only in POS
 
 		//Scroll to
 		if ($this->t['checkout_scroll'] == 0) {

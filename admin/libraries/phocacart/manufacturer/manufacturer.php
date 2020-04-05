@@ -121,7 +121,7 @@ class PhocacartManufacturer
 	}
 
 	public static function getManufacturerRendered($id, $title, $alias, $manufacturerAlias, $type = 1, $catId = 0, $catAlias = '') {
-		if ($type == 1) {
+		if ($type == 1 && (int)$id > 0 && $title != '') {
 
 			$link = PhocacartRoute::getItemsRoute();
 			$link = $link . PhocacartRoute::getItemsRouteSuffix($manufacturerAlias, $id, $alias);

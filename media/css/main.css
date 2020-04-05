@@ -2368,3 +2368,11 @@ img.ph-lazyload:not([src]) {
 	margin: 0 auto;
 	font-size: 6em;
 }
+
+/* Modal Popups - combination of more popups */
+#phAddToCartPopup {
+	z-index: 1051;
+}
+#phQuickViewPopup {
+	z-index: 1050;
+}

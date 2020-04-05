@@ -30,7 +30,7 @@ class PhocaCartViewInfo extends JViewLegacy
 		$session->set('infoaction', 0, 'phocaCart');
 		$session->set('infomessage', array(), 'phocaCart');
 
-		$media = new PhocacartRenderMedia();
+		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadSpec();
 

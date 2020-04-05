@@ -34,7 +34,7 @@ class PhocacartRelated
 				}
 
 				if (!empty($values)) {
-					$valuesString = implode($values, ',');
+					$valuesString = implode(',', $values);
 
 					$query = ' INSERT INTO #__phocacart_product_related (product_a, product_b)'
 								.' VALUES '.(string)$valuesString;

@@ -34,7 +34,7 @@ class PhocaCartModelCategory extends JModelLegacy
 
 
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
-		$manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
+		$manufacturer_alias	= $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
 
 		$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 
@@ -220,7 +220,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			}
 
 
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.type, a.points_received, a.price_original,'
+			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.upc, a.type, a.points_received, a.price_original,'
 						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
 						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
@@ -248,7 +248,7 @@ class PhocaCartModelCategory extends JModelLegacy
 						.' AVG(r.rating) AS rating';
 
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text';
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.upc, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text';
 
 			if (!$skip['tax']) {
                 $groupsFull	.= ', t.id, t.tax_rate, t.calculation_type, t.title';

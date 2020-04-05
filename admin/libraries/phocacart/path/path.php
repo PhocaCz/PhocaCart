@@ -25,6 +25,7 @@ class PhocacartPath
 		$categoryImagePath		= $paramsC->get( 'category_image_path', 'images/phocacartcategories' );
 		$downloadFolder			= $paramsC->get( 'download_folder', 'phocacartdownload' );
 		$downloadFolderPublic	= $paramsC->get( 'public_download_folder', 'phocacartdownloadpublic' );
+		$attachmentFolder		= $paramsC->get( 'attachment_folder', 'phocacartattachment' );
 		$uploadFolder			= $paramsC->get( 'upload_folder', 'phocacartupload' );// frontend upload
 		// Absolute path which can be outside public_html - if this will be set, download folder will be ignored
 		$absolutePath		= $paramsC->get( 'absolute_path', '' );
@@ -37,7 +38,18 @@ class PhocacartPath
 
 		$path['media_abs_front_ds']			= JPATH_ROOT . '/media/com_phocacart/images/' ;
 
-		if ($group['f'] == 6) {
+		if ($group['f'] == 8) {
+			$attachmentFolder 				= JPath::clean($attachmentFolder);
+			$path['orig_abs'] 				= JPATH_ROOT . '/' . $attachmentFolder;
+			$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $attachmentFolder . '/';
+
+			$attachmentFolderRel 			= JPath::clean($attachmentFolder);
+			$path['orig_rel'] 				= '../' . $attachmentFolderRel;
+			$path['orig_rel_ds'] 			= '../' . $attachmentFolderRel .'/';
+			$path['orig_rel_path'] 			= Juri::root() . $attachmentFolderRel;
+			$path['orig_rel_path_ds'] 		= Juri::root() . $attachmentFolderRel .'/';
+
+		} else if ($group['f'] == 6) {
 			$downloadFolderPublic 			= JPath::clean($downloadFolderPublic);
 			$path['orig_abs'] 				= JPATH_ROOT . '/' . $downloadFolderPublic;
 			$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $downloadFolderPublic . '/';

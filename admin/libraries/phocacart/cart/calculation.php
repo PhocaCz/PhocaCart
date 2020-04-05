@@ -665,55 +665,59 @@ class PhocacartCartCalculation
 
 
 			$discount 		= PhocacartDiscountCart::getCartDiscount($v['id'], $v['catid'], $total['quantity'], $total['netto']);
-			$discountId		= $discount['id'];
-			$discountAmount	= $discount['discount'];
 
-			if ($discount['free_shipping'] == 1) {
-				$total['free_shipping']		= $discount['free_shipping'];
-			}
-			if ($discount['free_payment'] == 1) {
-				$total['free_payment']		= $discount['free_payment'];
-			}
+			// First check if there is even some discount
+			if ($discount) {
 
-			if (isset($discount['discount']) && isset($discount['calculation_type'])) {
+				$discountId = $discount['id'];
+				$discountAmount = $discount['discount'];
 
-				$fullItems[$k]['discountcart'] 			= 1;
-				$fullItems[$k]['discountcarttitle'] 	= $discount['title'];
-				$fullItems[$k]['discountcartid'] 		= $discount['id'];
-
-				if ($discount['calculation_type'] == 0) {
-					// FIXED AMOUNT
-					// We need to divide fixed discount amount to products which meet the discount ID rule
-					// There can be two products in the cart and each can meet other discount rules
-					if (isset($total['discountcartfixedamount'][$discountId]['quantity'])) {
-						$total['discountcartfixedamount'][$discountId]['quantity'] += $v['quantity'];
-					} else {
-						$total['discountcartfixedamount'][$discountId]['quantity'] = $v['quantity'];
-					}
-
-					if (isset($total['discountcartfixedamount'][$discountId]['netto'])) {
-						$total['discountcartfixedamount'][$discountId]['netto'] += $v['netto'] * $v['quantity'];
-					} else {
-						$total['discountcartfixedamount'][$discountId]['netto'] = $v['netto'] * $v['quantity'];
-					}
-
-
-					$total['discountcartfixedamount'][$discountId]['discount'] 	= $discountAmount;
-					$fullItems[$k]['discountcartfixedid'] 						= $discountId;
-
-
-
-				} else {
-					// PERCENTAGE
-					PhocacartCalculation::calculateDiscountPercentage($discount['discount'], $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
-					$price							= new PhocacartPrice();
-					$total['discountcarttxtsuffix'] = ' ('.$price->cleanPrice($discount['discount']).' %)';
-
+				if ($discount['free_shipping'] == 1) {
+					$total['free_shipping'] = $discount['free_shipping'];
+				}
+				if ($discount['free_payment'] == 1) {
+					$total['free_payment'] = $discount['free_payment'];
 				}
 
-				$cartDiscount['id'] 	= $discount['id'];
-				$cartDiscount['title']	= $discount['title'];
+				if (isset($discount['discount']) && isset($discount['calculation_type'])) {
 
+					$fullItems[$k]['discountcart'] = 1;
+					$fullItems[$k]['discountcarttitle'] = $discount['title'];
+					$fullItems[$k]['discountcartid'] = $discount['id'];
+
+					if ($discount['calculation_type'] == 0) {
+						// FIXED AMOUNT
+						// We need to divide fixed discount amount to products which meet the discount ID rule
+						// There can be two products in the cart and each can meet other discount rules
+						if (isset($total['discountcartfixedamount'][$discountId]['quantity'])) {
+							$total['discountcartfixedamount'][$discountId]['quantity'] += $v['quantity'];
+						} else {
+							$total['discountcartfixedamount'][$discountId]['quantity'] = $v['quantity'];
+						}
+
+						if (isset($total['discountcartfixedamount'][$discountId]['netto'])) {
+							$total['discountcartfixedamount'][$discountId]['netto'] += $v['netto'] * $v['quantity'];
+						} else {
+							$total['discountcartfixedamount'][$discountId]['netto'] = $v['netto'] * $v['quantity'];
+						}
+
+
+						$total['discountcartfixedamount'][$discountId]['discount'] = $discountAmount;
+						$fullItems[$k]['discountcartfixedid'] = $discountId;
+
+
+					} else {
+						// PERCENTAGE
+						PhocacartCalculation::calculateDiscountPercentage($discount['discount'], $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+						$price = new PhocacartPrice();
+						$total['discountcarttxtsuffix'] = ' (' . $price->cleanPrice($discount['discount']) . ' %)';
+
+					}
+
+					$cartDiscount['id'] = $discount['id'];
+					$cartDiscount['title'] = $discount['title'];
+
+				}
 			}
 
 			$fullItems[$k]['final']	= $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
@@ -873,7 +877,7 @@ class PhocacartCartCalculation
 			 *
 			 * Must be done in recalculateCartCoupons for fixed coupons
 			 */
-			if ($couponDb['calculation_type'] != 0) {
+			if (isset($couponDb['calculation_type']) && $couponDb['calculation_type'] != 0) {
 				if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
 					$fullItems[$k]['finaldiscount']	= $fullItems[$k]['nettodiscount'] * $v['quantity'];
 				} else if (isset($fullItems[$k]['bruttodiscount'])) {

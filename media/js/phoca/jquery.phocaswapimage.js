@@ -14,6 +14,7 @@ jQuery(document).ready(function() {
 	
 		var phProductIdName	= jQuery(this).data('product-id-name');
 		var phProductImg	= '.phjProductImage' + phProductIdName;
+		var phProductSource	= '.phjProductSource' + phProductIdName;// Webp source
 		var phProductHref	= '.phjProductHref' + phProductIdName;
 		
 		var phDefaultSrc 	= jQuery(phProductImg).data('image');// image includes data-image attribute
@@ -43,19 +44,22 @@ jQuery(document).ready(function() {
 		var phNewHref		= phNewSrc;
 		var phSelectedHref	= phSelectedSrc;
 		
-		
+	
 		if (phNewSrc) {
 			// New image found - change to new image
 			jQuery(phProductHref).attr('href', phNewHref);
 			jQuery(phProductImg).attr('src', phNewSrc);
+			jQuery(phProductSource).attr('srcset', phNewSrc);//webp
 		} else if (!phNewSrc && phSelectedSrc) {
 			// New image not found but there is some selected image yet (e.g. selected previously in other select box)
 			jQuery(phProductHref).attr('href', phSelectedHref);
 			jQuery(phProductImg).attr('src', phSelectedSrc);
+			jQuery(phProductSource).attr('srcset', phSelectedSrc);//webp
 		} else {
 			// Return back to default image (no new image, no selected image by other select box)
 			jQuery(phProductHref).attr('href', phDefaultHref);
 			jQuery(phProductImg).attr('src', phDefaultSrc);
+			jQuery(phProductSource).attr('srcset', phDefaultSrc);//webp
 		}
 
 	})
