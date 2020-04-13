@@ -16,6 +16,7 @@ class PhocaCartViewCategories extends JViewLegacy
 	protected $s;
 
 	public function display($tpl = null) {
+		
 
 		$app									= JFactory::getApplication();
 		$model									= $this->getModel();

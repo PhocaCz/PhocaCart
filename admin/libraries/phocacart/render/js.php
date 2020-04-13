@@ -969,6 +969,8 @@ final class PhocacartRenderJs
             $s[] = '   } else {';
             if ($animation == 1) {
                 $s[] = '	  jQuery(\'html,body\').animate({scrollTop: jQuery("#' . $scrollTo . '").offset().top}, 1500 );';
+            } else  if ($animation == 2) {
+                $s[] = '	  jQuery(\'html,body\').animate({scrollTop: jQuery("#' . $scrollTo . '").offset().top}, 1000 );';
             } else {
                 $s[] = '      jQuery(document).scrollTop( jQuery("#' . $scrollTo . '").offset().top );';
             }

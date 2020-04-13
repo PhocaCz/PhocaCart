@@ -555,7 +555,7 @@ echo '</div>';
 
 
 echo '<div class="tab-pane" id="billing">'."\n";
-$formArray = array ('order_number', 'receipt_number', 'invoice_number', 'invoice_prn', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
+$formArray = array ('order_number', 'order_number_id', 'receipt_number', 'receipt_number_id', 'invoice_number', 'invoice_number_id', 'invoice_prn', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'date', 'modified', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 

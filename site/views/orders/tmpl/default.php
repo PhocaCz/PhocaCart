@@ -70,7 +70,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 				$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['order'] . ' ph-icon-order"></span></a>';
 			}
 
-			if (in_array(2, $displayDocument)) {
+			if (in_array(2, $displayDocument) && $v->invoice_number != '') {
 				$view .= ' <a href="' . $linkInvoiceView . '" class="' . $this->s['c']['btn.btn-danger.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['invoice'] . ' ph-icon-invoice"></span></a>';
 			}
 
@@ -86,7 +86,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 					$view .= '<a href="' . $linkOrderView . $formatPDF . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['order'] . ' ph-icon-order"></span><br /><span class="ph-icon-pdf-text">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
 				}
 
-				if (in_array(2, $displayDocument)) {
+				if (in_array(2, $displayDocument) && $v->invoice_number != '') {
 					$view .= ' <a href="' . $linkInvoiceView . $formatPDF . '" class="' . $this->s['c']['btn.btn-danger.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['invoice'] . ' ph-icon-invoice"></span><br /><span class="ph-icon-pdf-text">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
 				}
 

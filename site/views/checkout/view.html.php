@@ -534,12 +534,12 @@ class PhocaCartViewCheckout extends JViewLegacy
 		}
 		if ($scrollTo == '') {
 		} else if ($scrollTo == 'phcheckoutaddressedit' || $scrollTo == 'phcheckoutshippingedit' || $scrollTo == 'phcheckoutpaymentedit') {
-			PhocacartRenderJs::renderJsScrollTo($scrollTo, 0);
+			PhocacartRenderJs::renderJsScrollTo($scrollTo, 2);
 		} else if ($scrollTo == 'phcheckoutpaymentview') {
 			// last view - in fact phcheckoutconfirmedit
 			PhocacartRenderJs::renderJsScrollTo($scrollTo, 1);
 		} else {
-			PhocacartRenderJs::renderJsScrollTo('', 0);
+			PhocacartRenderJs::renderJsScrollTo('', 2);
 		}
 
 

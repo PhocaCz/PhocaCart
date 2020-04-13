@@ -572,27 +572,35 @@ class PhocacartOrderStatus
 				case 2:
 					$orderRender = new PhocacartOrderRender();
 
-					if ($attachment_format == 0 || $attachment_format == 2) {
-						$body .= "<br><br>";
-						$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
+					$invoiceNumber				= PhocacartOrder::getInvoiceNumber($orderId, $common->date, $common->invoice_number);
 
-						$bodyOthers .= "<br><br>";
-						$bodyOthers .= $orderRender->render($orderId, 2, 'mail', $orderToken);
-					}
 
-					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
-						$staticData					= array();
-						$invoiceNumber				= PhocacartOrder::getInvoiceNumber($orderId, $common->date, $common->invoice_number);
-						$staticData['option']		= 'com_phocacart';
-						$staticData['title']		= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
-						$staticData['file']			= '';// Must be empty to not save the pdf to server
-						$staticData['filename']		= strip_tags(JText::_('COM_PHOCACART_INVOICE'). '_'. $invoiceNumber).'.pdf';
-						$staticData['subject']		= '';
-						$staticData['keywords']		= '';
-						$staticData['output']		= $orderRender->render($orderId, 2, 'pdf', $orderToken);
-						$attachmentContent 			= PhocaPDFRender::renderPDF('', $staticData);
-						$attachmentName 			= $staticData['filename'];
+					// If invoice is not created yet, it cannot be sent
+					if ($invoiceNumber == '') {
+						PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it doesn not exist yet. Check order status settings and billing settings.', $orderId, 'Order ID: '. $orderId.', Status ID: '.$statusId);
+					} else {
+						if ($attachment_format == 0 || $attachment_format == 2) {
+							$body .= "<br><br>";
+							$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
 
+							$bodyOthers .= "<br><br>";
+							$bodyOthers .= $orderRender->render($orderId, 2, 'mail', $orderToken);
+						}
+
+						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+							$staticData = array();
+
+							$staticData['option'] = 'com_phocacart';
+							$staticData['title'] = JText::_('COM_PHOCACART_INVOICE_NR') . ': ' . $invoiceNumber;
+							$staticData['file'] = '';// Must be empty to not save the pdf to server
+							$staticData['filename'] = strip_tags(JText::_('COM_PHOCACART_INVOICE') . '_' . $invoiceNumber) . '.pdf';
+							$staticData['subject'] = '';
+							$staticData['keywords'] = '';
+							$staticData['output'] = $orderRender->render($orderId, 2, 'pdf', $orderToken);
+							$attachmentContent = PhocaPDFRender::renderPDF('', $staticData);
+							$attachmentName = $staticData['filename'];
+
+						}
 					}
 
 				break;
@@ -775,6 +783,10 @@ class PhocacartOrderStatus
 					.' WHERE id = '.(int)$orderId;
 		$db->setQuery($query);
 		$db->execute();
+
+		// Set invoice data in case status can set invoice ID
+		PhocacartOrder::storeOrderReceiptInvoiceId((int)$orderId, gmdate('Y-m-d H:i:s'), (int)$statusId, array('I'));
+
 		return true;
 
 	}

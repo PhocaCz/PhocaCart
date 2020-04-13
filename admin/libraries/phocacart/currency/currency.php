@@ -140,6 +140,9 @@ class PhocacartCurrency
 		return self::$defaultcurrency;
 	}
 	
+	/*
+	 * XML Feed only
+	 */
 	public static function getDefaultCurrencyCode() {
 		
 		if(self::$defaultcurrencycode === false){
@@ -159,6 +162,9 @@ class PhocacartCurrency
 		return self::$defaultcurrencycode;
 	}
 	
+	/*
+	 * Administration only - currency and currencies view
+	 */
 	public static function getDefaultCurrencyArray() {
 		
 		if(self::$defaultcurrencyarray === false){

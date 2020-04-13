@@ -404,6 +404,61 @@ class PhocacartRouter extends JComponentRouterBase
 
 		if($advanced == 1){
 
+            $segmentId = '';
+            $segmentCatid = '';
+            // As default first part is category but it can even be view
+            // If it is a view, shift they key to next part
+            $segmentCatidKey = 0;
+
+            for ($i = 0; $i < $total; $i++){
+
+                if(isset($segments[$i]) && $i == 0 && in_array($segments[$i], $viewsNotOwnId)) {
+                    $segmentCatidKey = 1;// First part is a view (e.g. Quick View), shift the key to next part
+                    $vars['view'] = $segments[$i];
+                    continue;
+                }
+
+                $segmentCatidTemp = '';
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName(array('id')))
+                    ->from($db->quoteName('#__phocacart_categories'))
+                    ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
+                $db->setQuery($query);
+                $segmentCatidTemp = $db->loadResult();
+                if(!empty($segmentCatidTemp)) {
+                    $segmentCatid = $segmentCatidTemp;
+                    continue;
+                }
+
+                //we found or did not find the category ID, we will check it later
+                if (empty($segmentId)){
+
+                    //$segmentProductId = '';
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName(array('id')))
+                        ->from($db->quoteName('#__phocacart_products'))
+                        ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
+                    $db->setQuery($query);
+                    $segmentId = $db->loadResult();
+
+                    if(!empty($segmentId)) {
+
+                        $segments[$i] = $segmentId.'-'.$segments[$i];
+                    }
+                }
+
+            }
+
+            if(!empty($segmentCatid)) {
+                //we found one or more category IDS, and add the last ID to the beginning of the line (to the first segment)
+                $segments[$segmentCatidKey] = $segmentCatid.'-'.$segments[$segmentCatidKey];
+            }
+            //disable advanced mode and then the router works as before
+            $advanced = 0;
+        }
+
+		/*if($advanced == 1){
+
 		    $segmentId = '';
             $segmentCatid = '';
 
@@ -446,7 +501,7 @@ class PhocacartRouter extends JComponentRouterBase
 
             }
             $advanced = 0;
-        }
+        }*/
 
 		for ($i = 0; $i < $total; $i++) {
 		    $segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);

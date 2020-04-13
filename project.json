@@ -15,7 +15,8 @@
 		"Phoca Cart Demo": "https://www.phoca.cz/phocacartdemo/",
 		"Phoca Cart - Phoca Premiere Template Demo": "https://www.phoca.cz/phocacartdemo/premiere/",
 		"Phoca Cart Demo - Phoca Stock Photo": "https://www.phoca.cz/stockphoto/",
-		"Phoca Cart - Astroid Framework Demo": "https://www.phoca.cz/phocacartdemo/astroid/"
+		"Phoca Cart - Astroid Framework Demo": "https://www.phoca.cz/phocacartdemo/astroid/",
+		"Joomla! Templates Directory": "https://www.phoca.cz/jtd/"
 	},
 	"projectColor": "#129ed9",												
 	"menu": {
@@ -281,5 +282,35 @@
 				"title": "COM_PHOCACART_UNITS"
 			}
 		}
+	},
+	"projectDocumentationLinks": {
+		"Features": "https://www.phoca.cz/documents/116-phoca-cart-component/786-features",
+		"Phoca Cart": "https://www.phoca.cz/documents/116-phoca-cart-component/957-phoca-cart",
+		"Screenshots": "https://www.phoca.cz/documents/116-phoca-cart-component/796-screenshots",
+		"System Requirements": "https://www.phoca.cz/documents/116-phoca-cart-component/1038-system-requirements",
+		"Installation": "https://www.phoca.cz/documents/116-phoca-cart-component/1037-installation",
+		"Installing Sample Data": "https://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data",
+		"Basic Settings": "https://www.phoca.cz/documents/116-phoca-cart-component/1039-basic-settings",
+		"Administration": "https://www.phoca.cz/documents/116-phoca-cart-component/922-administration",
+		"Options": "https://www.phoca.cz/documents/116-phoca-cart-component/880-options",
+		"Views": "https://www.phoca.cz/documents/116-phoca-cart-component/828-views",
+		"Tax Management (VAT)": "https://www.phoca.cz/documents/116-phoca-cart-component/924-tax-management-vat",
+		"Stock Management": "https://www.phoca.cz/documents/116-phoca-cart-component/932-stock-management",
+		"Order Statuses": "https://www.phoca.cz/documents/116-phoca-cart-component/935-order-statuses",
+		"Reward Points": "https://www.phoca.cz/documents/116-phoca-cart-component/946-reward-points",
+		"Opening Times": "https://www.phoca.cz/documents/116-phoca-cart-component/990-opening-times",
+		"Icons, Labels and Tags": "https://www.phoca.cz/documents/116-phoca-cart-component/986-icons-labels-and-tags",
+		"Sending emails to customer or vendors": "https://www.phoca.cz/documents/116-phoca-cart-component/966-sending-emails-to-customer-or-vendors",
+		"Multilingual Feature": "https://www.phoca.cz/documents/116-phoca-cart-component/980-multilingual-feature",
+		"Billing": "https://www.phoca.cz/documents/116-phoca-cart-component/1067-billing",
+		"Payment - PayPal Standard": "https://www.phoca.cz/documents/116-phoca-cart-component/829-payment-paypal-standard",
+		"Point of Sale (POS)": "https://www.phoca.cz/documents/116-phoca-cart-component/964-point-of-sale-pos",
+		"XML Feed - Example - Google Merchant Feed": "https://www.phoca.cz/documents/116-phoca-cart-component/1001-xml-feed-example-google-merchant-feed",
+		"Examples Of Use Cases": "https://www.phoca.cz/documents/116-phoca-cart-component/920-examples-of-use-cases",
+		"Tips": "https://www.phoca.cz/documents/116-phoca-cart-component/923-tips",
+		"Phoca Cart - Development": "https://www.phoca.cz/documents/116-phoca-cart-component/939-phoca-cart-development",
+		"Phoca Cart - Template Overrides": "https://www.phoca.cz/documents/116-phoca-cart-component/995-phoca-cart-template-overrides",
+		"Setting Up Phoca Cart and Gantry5 Template": "https://www.phoca.cz/documents/116-phoca-cart-component/989-setting-up-phoca-cart-and-gantry-5-template",
+		"Setting Up Phoca Cart and Astroid Template": "https://www.phoca.cz/documents/116-phoca-cart-component/1042-setting-up-phoca-cart-and-astroid-template"
 	}
 }

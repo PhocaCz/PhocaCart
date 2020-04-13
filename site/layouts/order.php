@@ -65,6 +65,33 @@ $display_reward_points_invoice			= $d['params']->get( 'display_reward_points_inv
 $display_reward_points_pos				= $d['params']->get( 'display_reward_points_pos', 0 );
 
 $display_time_of_supply_invoice			= $d['params']->get( 'display_time_of_supply_invoice', 0 );
+
+
+
+if($d['type'] == 1 && $d['common']->order_number == '') {
+	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_ORDER_DOES_NOT_EXIST').'</div>';
+	return;
+}
+if($d['type'] == 3 && $d['common']->order_number == '') {
+	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_DELIVERY_NOTE_NOT_YET_ISSUED').'</div>';
+	return;
+}
+if($d['type'] == 1 && $d['common']->receipt_number == '') {
+	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_RECEIPT_NOT_YET_ISSUED').'</div>';
+	return;
+}
+if($d['type'] == 2 && $d['common']->invoice_number == '') {
+	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED').'</div>';
+	return;
+}
+
+if(!isset($d['bas']['b'])) {
+	$d['bas']['b'] = array();
+}
+if(!isset($d['bas']['s'])) {
+	$d['bas']['s'] = array();
+}
+
 /*
  * FORMAT
  */

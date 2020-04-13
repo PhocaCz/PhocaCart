@@ -1606,6 +1606,13 @@
                 <option value="Y">COM_PHOCACART_ON_ANNUAL_BASIS</option>
                 <option value="M">COM_PHOCACART_ON_MONTHLY_BASIS</option>
             </field>
+			
+			<field name="invoice_creating_status_based" class="btn-group" default="0" type="PhocacartOrderstatus" typemethod="1" label="COM_PHOCACART_FIELD_CREATING_INVOICE_NUMBER_BASED_ON_ORDER_STATUS_LABEL"
+                   description="COM_PHOCACART_FIELD_CREATING_INVOICE_NUMBER_BASED_ON_ORDER_STATUS_DESC">
+          
+            </field>
+			
+		
             <field name="invoice_number_format" default="{prefix}{year}{orderid}{suffix}" size="18" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_LABEL"
                    description="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_DESC"/>
             <field name="invoice_number_prefix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_PREFIX_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_PREFIX_DESC"/>

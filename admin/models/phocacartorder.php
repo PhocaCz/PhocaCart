@@ -231,12 +231,18 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		if ((int)$currentStatus == (int)$newStatus) {
 			// Status still the same, don't send email, don't change history
 		} else {
+
+			// Set invoice data in case status can set invoice ID (before notify)
+			PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], gmdate('Y-m-d H:i:s'), (int)$data['status_id'], array('I'));
+
 			$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);
 			$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
 
 			// Store the history
 			PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
+
 		}
+
 
 
 

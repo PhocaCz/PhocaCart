@@ -208,8 +208,6 @@ class PhocaCartControllerSubmit extends JControllerForm
 		}
 
 
-
-		//print_r($form);
 		$validate 			= $model->validate($form, $data);// includes preprocessForm so it includes parameters too
 
 
