@@ -362,7 +362,7 @@ class PhocacartShipping
 
 		$db = JFactory::getDBO();
 
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.method, s.description, s.image,'
+		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.method, s.description, s.image, s.params,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
@@ -372,6 +372,12 @@ class PhocacartShipping
 		$db->setQuery($query);
 
 		$shipping = $db->loadObject();
+		if (isset($shipping->params))
+		{
+			$registry = new JRegistry;
+			$registry->loadString($shipping->params);
+			$shipping->params = $registry;
+		}
 		return $shipping;
 	}
 
