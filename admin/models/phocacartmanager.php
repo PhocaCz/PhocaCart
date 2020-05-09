@@ -42,15 +42,38 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		static $set;
 
 		if (!$set) {
-			$app	= JFactory::getApplication();
-			$folder		= $app->input->get( 'folder', '', 'path' );
+			$app		= JFactory::getApplication();
+			$session	= JFactory::getSession();
+
+			// Folder = false - is not set, there is a way for session
+			// Folder = '' - empty/root - is not set but means a root - no way for session
+			$folder		= $app->input->get( 'folder', false, 'path' );
 			$upload		= $app->input->get( 'upload', '', 'int' );
 			$manager	= $app->input->get( 'manager', '', 'path' );
 
 
 
+			// ============ START Folder based on session - possible FR - add to parameters
+			$sessionNameCurrentFolder	= 'phocacartmanagercurrentfolder.'.$manager;
+			if ($folder === false) {
+				// Nothing set, try to use the value from session
+				if ($session->get($sessionNameCurrentFolder, '') != '') {
+					$folder = $session->get($sessionNameCurrentFolder, '');
+				}
+			} else if($folder != '')  {
+				// Folder is set, store it to session
+    			$session->set($sessionNameCurrentFolder, $folder);
+			} else if ($folder === '') {
+				// we are in root - no folder, no session, clear the session
+				$session->clear($sessionNameCurrentFolder);
+			}
+			// ============ END Folder based on session
+
+
 			$this->setState('folder', $folder);
 			$this->setState('manager', $manager);
+
+
 
 			$parent = str_replace("\\", "/", dirname($folder));
 			$parent = ($parent == '.') ? null : $parent;

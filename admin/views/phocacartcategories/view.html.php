@@ -25,8 +25,10 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$model 				= $this->getModel();
 		$this->items		= $model->getItems();
 		$this->pagination	= $model->getPagination();
-        $this->filterForm   = $this->get('FilterForm');
 		$this->state		= $model->getState();
+        $this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+
 
 		// Preprocess the list of items to find ordering divisions.
 		foreach ($this->items as &$item) {

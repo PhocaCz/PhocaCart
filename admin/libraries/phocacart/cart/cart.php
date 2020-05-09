@@ -796,6 +796,7 @@ class PhocacartCart
 			$paymentNew	= new PhocacartPayment();
 			$paymentNew->setType($this->type);
 			$pI	= $paymentNew->getPaymentMethod((int)$payment['id']);
+
 			if (isset($pI->title)) {
 				$payment['title'] 	= $pI->title;
 			}
@@ -973,7 +974,7 @@ class PhocacartCart
 
 			$sI->freeshipping = 0;
 
-			if ($this->total[0]['free_shipping'] == 1) {
+			if (isset($this->total[0]['free_shipping']) && $this->total[0]['free_shipping'] == 1) {
 				$sI->freeshipping = 1;
 			}
 
@@ -985,7 +986,7 @@ class PhocacartCart
 			$calc->setType($this->type);
 			$this->shipping['costs'] 	= $priceI;
 
-			if ($this->total[0]['free_shipping'] != 1) {
+			if (!isset($this->total[0]['free_shipping']) || (isset($this->total[0]['free_shipping']) && $this->total[0]['free_shipping'] != 1)) {
 
 				$this->shipping['costs']['id'] 		= $sI->id;
 				$this->shipping['costs']['title'] 		= $sI->title;

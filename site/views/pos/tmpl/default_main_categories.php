@@ -13,7 +13,7 @@ if (!empty($this->t['categories'])) {
 
 	// this function is triggered in phocapos.js
 	echo '<form class="'.$this->s['c']['form-inline'].' ph-pos-checkbox-form" action="'.$this->t['linkpos'].'" id="phPosCategory" method="post">';
-	echo '<div class="ph-pos-checkbox-box" data-toggle="buttons"  >';// data-toggle="buttons" - changes the standard checkbox to graphical checkbox
+	echo '<div class="ph-pos-checkbox-box btn-group-toggle" data-toggle="buttons"  >';// data-toggle="buttons" - changes the standard checkbox to graphical checkbox
 
 
 	foreach ($this->t['categories'] as $k => $v) {

@@ -648,7 +648,8 @@ final class PhocacartRenderJs
     public static function renderAjaxChangeProductPriceByOptions($id = 0, $typeView = '', $class = '') {
 
         $paramsC = PhocacartUtils::getComponentParameters();
-        $dynamic_change_price = $paramsC->get('dynamic_change_price', 0);
+        $dynamic_change_price   = $paramsC->get('dynamic_change_price', 0);
+        $theme                  = $paramsC->get('theme', 'bs3');
 
         if ($dynamic_change_price == 0) {
             return false;
@@ -691,14 +692,16 @@ final class PhocacartRenderJs
         $s[] = '}';
         $s[] = ' ';*/
 
+        $s[] = '    var phSelectboxA             =  "select.phj' . $typeView . '.phjProductAttribute"';
+        $s[] = '    var phSelectboxASelected    =  phSelectboxA + ":selected"';
         $s[] = 'jQuery(document).ready(function(){';
-        $s[] = '	jQuery(document).on(\'change\', \'select.phj' . $typeView . '.phjProductAttribute\', function(){';// Select Box
+        $s[] = '	jQuery(document).on(\'change\', phSelectboxA, function(e){';// Select Box
         //$s[] = '		jQuery(this).off("change");';
         $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
         $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
         $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
         $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
-        $s[] = '		phAjaxChangePrice' . $typeView . '(phProductId, phDataA1, phDataA2);';
+        $s[] = '		phAjaxChangePrice' . $typeView . '(phProductId, phDataA1, phDataA2);';// If REQUIRED, don't allow to untick image or color "select box" - see jquery.phocaattribute.js
         $s[] = '	})';
 
         // Checkbox
@@ -708,12 +711,31 @@ final class PhocacartRenderJs
         // So we run click on div box over the checkbox which works and don't run ajax 3x
         //$s[] = '	jQuery(document).on(\'change\', \'.ph-checkbox-attribute.phj'.$typeView.'.phjProductAttribute :checkbox\', function(){';
         //$s[] = '	jQuery(document).on(\'click\', \'#phItemPriceBoxForm .ph-checkbox-attribute.ph-item-input-set-attributes\', function(){';
-        $s[] = '	jQuery(document).on(\'click\', \'.ph-checkbox-attribute.phj' . $typeView . '.phjProductAttribute\', function(e){';
+
+        $s[] = '    var phCheckboxA             =  ".ph-checkbox-attribute.phj' . $typeView . '.phjProductAttribute"';
+       // $s[] = '    var phCheckboxAInputChecked =  phCheckboxA + " input:checked"';
+        $s[] = '	jQuery(document).on(\'click\', phCheckboxA, function(e){';
         $s[] = '        if (e.target.tagName.toUpperCase() === "LABEL") { return;}';// Prevent from twice running
+        if ($theme == 'bs4') {
+            $s[] = '        if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") { return;}';// Prevent from twice running
+        }
         $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
         $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
         $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
         $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
+
+        // If REQUIRED, don't allow to untick all checkboxes
+        $s[] = '		var phRequired = jQuery(this).data("required");';
+        $s[] = '        var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked"';
+        $s[] = '        var phACheckedLength = jQuery(phCheckboxAInputChecked).length;';
+
+        $s[] = '        if (phACheckedLength == 0) {';
+        $s[] = '            var phThisLabel = jQuery(e.target).parent();';// Bootstrap checkboxes - colors, images
+        $s[] = '            phThisLabel.addClass("active");';// Bootstrap checkboxes - colors, images
+        $s[] = '            e.preventDefault();';
+        $s[] = '            return false;';
+        $s[] = '        }';
+
         $s[] = '		phAjaxChangePrice' . $typeView . '(phProductId, phDataA1, phDataA2);';
         $s[] = '	})';
 
@@ -744,6 +766,7 @@ final class PhocacartRenderJs
         $paramsC                = PhocacartUtils::getComponentParameters();
         $dynamic_change_stock   = $paramsC->get('dynamic_change_stock', 0);
         $hide_add_to_cart_stock = $paramsC->get('hide_add_to_cart_stock', 0);
+        $theme                  = $paramsC->get('theme', 'bs3');
 
         if ($dynamic_change_stock == 0) {
             return false;
@@ -824,15 +847,33 @@ final class PhocacartRenderJs
         $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
         $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
         $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
-        $s[] = '		phAjaxChangeStock' . $typeView . '(phProductId, phDataA1, phDataA2);';
+        $s[] = '		phAjaxChangeStock' . $typeView . '(phProductId, phDataA1, phDataA2);';// If REQUIRED, don't allow to untick image or color "select box" - see jquery.phocaattribute.js
         $s[] = '	})';
 
-        $s[] = '	jQuery(document).on(\'click\', \'.ph-checkbox-attribute.phj' . $typeView . '.phjProductAttribute\', function(e){';// check box
+        $s[] = '    var phCheckboxA             =  ".ph-checkbox-attribute.phj' . $typeView . '.phjProductAttribute"';
+        //$s[] = '    var phCheckboxAInputChecked =  phCheckboxA + " input:checked"';
+        $s[] = '	jQuery(document).on(\'click\', phCheckboxA, function(e){';// check box
         $s[] = '        if (e.target.tagName.toUpperCase() === "LABEL") { return;}';// Prevent from twice running
+        if ($theme == 'bs4') {
+            $s[] = '        if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") { return;}';// Prevent from twice running
+        }
         $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
         $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
         $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
         $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
+
+        // If REQUIRED, don't allow to untick all checkboxes
+        $s[] = '		var phRequired = jQuery(this).data("required");';
+        $s[] = '        var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked"';
+        $s[] = '        var phACheckedLength = jQuery(phCheckboxAInputChecked).length;';
+
+        $s[] = '        if (phACheckedLength == 0) {';
+        $s[] = '            var phThisLabel = jQuery(e.target).parent();';// Bootstrap checkboxes - colors, images
+        $s[] = '            phThisLabel.addClass("active");';// Bootstrap checkboxes - colors, images
+        $s[] = '            e.preventDefault();';
+        $s[] = '            return false;';
+        $s[] = '        }';
+
         $s[] = '		phAjaxChangeStock' . $typeView . '(phProductId, phDataA1, phDataA2);';
         $s[] = '	})';
 
@@ -946,14 +987,16 @@ final class PhocacartRenderJs
     public static function renderRequiredParts($id, $required) {
 
         // If the attribute is required
-        $req['attribute'] = '';// Attribute - required field HTML 5
-        $req['span'] = '';// Span - displayed * next to title
-        $req['class'] = '';// Class - Checkboxes cannot be checked per HTML 5, jquery used PhocacartRenderJs::renderCheckBoxRequired()
+        $req['attribute']   = '';// Attribute - required field HTML 5
+        $req['span']        = '';// Span - displayed * next to title
+        $req['class']       = '';// Class - Checkboxes cannot be checked per HTML 5, jquery used PhocacartRenderJs::renderCheckBoxRequired()
+        $req['required']    = 0;// data-required attribute
 
         if ($required) {
-            $req['attribute'] = ' required="" aria-required="true"';
-            $req['span'] = ' <span class="ph-req">*</span>';
-            $req['class'] = ' checkbox-group-' . (int)$id . ' checkbox-group required';
+            $req['attribute']   = ' required="" aria-required="true"';
+            $req['span']        = ' <span class="ph-req">*</span>';
+            $req['class']       = ' checkbox-group-' . (int)$id . ' checkbox-group required';
+            $req['required']    = 1;
         }
         return $req;
     }

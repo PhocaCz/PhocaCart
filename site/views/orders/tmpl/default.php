@@ -58,10 +58,8 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$linkInvoiceView 	= JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=2'.$token );
 			$linkDelNoteView 	= JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=3'.$token );
 
-
-			$displayDocument = json_decode($v->ordersviewdisplay);
+			$displayDocument = json_decode($v->ordersviewdisplay, true);
 			$view = '';
-
 
 
 			$linkOrderViewHandler= 'onclick="phWindowPopup(this.href, \'orderview\', 2, 1.3);return false;"';

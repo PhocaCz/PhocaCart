@@ -19,6 +19,8 @@ class PhocaCartModelCheckout extends JModelForm
 		if (empty($this->fields)) {
 			$this->fields = PhocacartFormUser::getFormXml('', '_phs', $billing, $shipping, $account);//Fields in XML Format
 		}
+
+
 		return $this->fields;
 	}
 
@@ -28,9 +30,12 @@ class PhocaCartModelCheckout extends JModelForm
 
 	public function getForm($data = array(), $loadData = true) {
 
+
 		if (empty($this->fields['xml'])) {
 			$this->fields = $this->getFields();
+
 		}
+
 		$form = $this->loadForm('com_phocacart.checkout', (string)$this->fields['xml'], array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form)) {
@@ -116,6 +121,22 @@ class PhocaCartModelCheckout extends JModelForm
 			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_NOT_LOGGED_IN'), 'error');
 			return false;
 		}
+
+
+		// Email cannot be changed in checkout or in user account (form address), only in user account profile
+        if (isset($data['email'])) {
+			if (isset($user->email) && $user->email != '') {
+				$data['email'] = $user->email;
+			} else {
+
+				//unset($data['email']);
+				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_USER_EMAIL_NOT_EXISTS'), 'error');
+				return false;
+			}
+        }
+
+
+
 		$data['user_id']	= (int)$user->id;
 		$data['type']		= (int)$type;
 		$row = $this->getTable('PhocacartUser', 'Table');
@@ -469,17 +490,18 @@ class PhocaCartModelCheckout extends JModelForm
 
 	public function getItemGuest($pk = null) {
 
-		$guest 	= new PhocacartUserGuestuser();
-		$item	= $guest->getAddress();
+		//$guest 	= new PhocacartUserGuestuser();
+		//$item	= $guest->getAddress();
+		$item = PhocacartUserGuestuser::getAddress();
 
 		return $item;
 	}
 
 	public function saveAddressGuest($data) {
-		$guest	= new PhocacartUserGuestuser();
+		//$guest	= new PhocacartUserGuestuser();
 		$data['user_id']	= 0;
 		$data['type']		= 0;
-		if ($guest->storeAddress($data)) {
+		if (PhocacartUserGuestuser::storeAddress($data)) {
 			return true;
 		} else {
 			return false;
@@ -489,8 +511,8 @@ class PhocaCartModelCheckout extends JModelForm
 
 	public function getDataGuest() {
 
-		$guest	= new PhocacartUserGuestuser();
-		$data	= $guest->getAddress();
+		//$guest	= new PhocacartUserGuestuser();
+		$data	= PhocacartUserGuestuser::getAddress();
 		if (!empty($data)) {
 
 

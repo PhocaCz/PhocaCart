@@ -21,6 +21,11 @@
 	padding: 6px 10px;
 }
 
+.btn-toolbar .js-stools-container-bar .btn-wrapper {
+	margin: 0 3px;
+	padding: 3px 0px;
+}
+
 .btn-toolbar .btn {
 	border: 1px solid #dfe8f1 !important;
 	border: 1px solid transparent !important;
@@ -251,12 +256,13 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 	/*height: 30px !important;*/
 }
 
-input[name="filter_search"] {
- height: 30px !important;
+input[name="filter_search"],
+input[id="filter_search"] {
+ min-height: 30px !important;
 }
 input[name="filter_date_to"],
 input[name="filter_date_from"] {
- height: 30px !important;
+ min-height: 30px !important;
 }
 
 .controls .chzn-container-single .chzn-single,
@@ -264,7 +270,7 @@ input[name="filter_date_from"] {
     border: 2px solid #dfe8f1 !important;
     box-shadow: none  !important;
     color: #444 !important;
-    height: 30px !important;
+    min-height: 30px !important;
     line-height: 30px !important;
     background: #fff !important;
     box-shadow: none !important;

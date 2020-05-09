@@ -412,7 +412,7 @@ class PhocacartFilter
             if ($this->limit_labels_category == 1) {
                 $activeProductsLabels = $activeProducts;
             }
-            if ($this->limit_paramters_category == 1) {
+            if ($this->limit_parameters_category == 1) {
                 $activeProductsParameters = $activeProducts;
             }
             if ($this->limit_price_category == 1) {

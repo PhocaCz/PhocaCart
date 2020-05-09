@@ -186,28 +186,28 @@ if ($this->a->shippingnotused == 1) {
 			// Display blank price field
 		} else if ($this->t['zero_shipping_price'] == 2 && $priceI['zero'] == 1) {
 			// Display free text
-			echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'"></div>';
-			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-tax">'.JText::_('COM_PHOCACART_FREE').'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-free-txt"></div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-free">'.JText::_('COM_PHOCACART_FREE').'</div>';
 		} else {
 			if ($priceI['nettoformat'] == $priceI['bruttoformat']) {
 
 			} else if ($priceI['nettoformat'] != '') {
-				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">'.$priceI['nettotxt'].'</div>';
+				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-netto-txt">'.$priceI['nettotxt'].'</div>';
 				echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-netto">'.$priceI['nettoformat'].'</div>';
 			}
 
 			if ($priceI['taxformat'] != '') {
-				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">'.$priceI['taxtxt'].'</div>';
+				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-tax-txt">'.$priceI['taxtxt'].'</div>';
 				echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-tax">'.$priceI['taxformat'].'</div>';
 			}
 
 			if ($priceI['bruttoformat'] != '') {
-				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">'.$priceI['bruttotxt'].'</div>';
+				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-brutto-txt">'.$priceI['bruttotxt'].'</div>';
 				echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-brutto">'.$priceI['bruttoformat'].'</div>';
 			}
 
 			if ($priceI['costinfo'] != '') {
-				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'"></div>';
+				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-payment-cost-info-txt"></div>';
 				echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-right ph-checkout-payment-cost-info">'.$priceI['costinfo'].'</div>';
 
 			}

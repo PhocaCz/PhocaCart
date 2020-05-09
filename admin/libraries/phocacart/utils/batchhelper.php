@@ -82,8 +82,41 @@ class PhocacartUtilsBatchhelper
 			PhocacartDiscountProduct::storeDiscountsById((int)$idDest, $dA, 1);
 
 			// Advanced Stock Options
-			$aSOA = PhocacartAttribute::getCombinationsStockById($idSource, 1);
-			PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOA, 1);
+			 $aSOA = PhocacartAttribute::getCombinationsStockById($idSource, 1);// NOT POSSIBLE TO COPY
+			// We need to create new attributes including new product key, etc.
+
+
+			$product = array();
+			$product['product']			= PhocacartProduct::getProduct((int)$idDest);
+			$product['attr_options']	= PhocacartAttribute::getAttributesAndOptions((int)$idDest);
+			$product['combinations']		= array();
+			$product['combinations_stock']	= array();
+
+			if (!empty($product['product'])) {
+				//PhocacartAttribute::storeCombinationsById((int)$idDest, $product['attr_options'], 1);
+				PhocacartAttribute::getCombinations( $product['product']->id, $product['product']->title,  $product['attr_options'], $product['combinations']);
+
+				$aSOANew = array();
+				if (!empty($product['combinations'])) {
+					$i = 0;
+					foreach($product['combinations'] as $k => $v) {
+
+						$attributes = PhocacartProduct::getProductKey($v['product_id'], $v['attributes'], 0);
+						$aSOANew[$i]['product_id'] = (int)$v['product_id'];
+						$aSOANew[$i]['product_key'] = $v['product_key'];
+						$aSOANew[$i]['stock'] = 0;// Stock cannot be copied as the attributes are completely new and product key is different
+						$aSOANew[$i]['attributes'] = $attributes;
+						$i++;
+					}
+
+
+					PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOANew, 1);
+				}
+
+			}
+
+
+
 
 			// Customer groups
 			$cA = PhocacartGroup::getGroupsById($idSource, 3, 1);

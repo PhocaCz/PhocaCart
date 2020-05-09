@@ -168,6 +168,7 @@ class PhocaCartViewItems extends JViewLegacy
 			}
 
 		$touchSpinJs = $media->loadTouchSpin('quantity', $this->s['i']);// only css, js will be loaded in ajax success
+		$media->loadPhocaSwapImage($this->t['dynamic_change_image']);
 
 		if ($this->t['hide_attributes_category'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox

@@ -128,7 +128,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		return $item;
 	}
-	
+
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
@@ -408,6 +408,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			$allLabels = array_unique(array_merge($previousLabels, $data['taglabels']));
 			PhocacartCount::setProductCount($allLabels, 'label', 1);// We need to update product count even for values which were removed when editing ($allLabels)
 
+
+
 			// PARAMETERS
 			$parameters = PhocacartParameter::getAllParameters();
 			if (!empty($parameters)) {
@@ -670,6 +672,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 			// Recount all manufacturers which will be removed (after removing) so the count will be updated
             PhocacartCount::setProductCount($allManufacturers, 'manufacturer', 1);
+
+            // 16. DELETE ADVANCED STOCK ITEMS
+			$query = 'DELETE FROM #__phocacart_product_stock'
+				. ' WHERE product_id IN ( '.$cids.' )';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
 
 			// Remove download folders
 			PhocacartFile::deleteDownloadFolders($foldersP, 'productfile');

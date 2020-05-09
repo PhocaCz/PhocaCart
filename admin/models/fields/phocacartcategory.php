@@ -26,7 +26,7 @@ class JFormFieldPhocacartCategory extends JFormField
 
 		$db = JFactory::getDBO();
 
-		$javascript		= '';
+		//$javascript		= '';
 		$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
 		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
@@ -40,7 +40,9 @@ class JFormFieldPhocacartCategory extends JFormField
 		if ($required) {
 			$attr		.= 'required aria-required="true" ';
 		}
-		$attr		.= $javascript . ' ';
+		
+		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
+		//$attr		.= $javascript . ' ';
 
 
 		// Multiple load more values

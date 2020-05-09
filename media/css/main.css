@@ -1571,6 +1571,11 @@ a.phSelectBoxImage.on:focus {
 	color: #CC0000;
 }
 
+#phItemAttributesBox .btn.phCheckBoxButton.phCheckBoxColor,
+#phItemAttributesBox .btn.phCheckBoxButton.phCheckBoxImage {
+	display: inline;
+}
+
 
 /* Phoca Cart Cart Module */
 
@@ -2191,7 +2196,7 @@ table.pc-tax-recapitulation tr td {
 }
 
 
-/* Plugings */
+/* Plugins */
 .ph-plg-product-info {
 	margin: 5px 0 15px 0;
 	text-align: left;

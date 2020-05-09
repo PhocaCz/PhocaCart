@@ -26,10 +26,17 @@ $attr[]				= 'data-attribute-type="'. $v->type.'"';// Type of attribute (select,
 $attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - Unique name between different views and products
 $attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item
 $attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)
+$attr[]				= 'data-required="'.$d['required']['required'].'"';
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
 echo '<select '.implode(' ', $attr).'>';
-echo '<option value="">'. JText::_('COM_PHOCACART_SELECT_OPTION').'</option>';
+if ($d['required']['required'] != 1) {
+
+	// If the attribute is requried, there cannot be select option in select box (to select no value)
+	// this is not a problem for "add to cart" button as it just checks for the selected options
+	// but for ajaxes like chaning price or stock in item view, this is why this option is not displayed when attribute required
+	echo '<option value="">'. JText::_('COM_PHOCACART_SELECT_OPTION').'</option>';
+}
 
 foreach ($v->options as $k2 => $v2) {
 	if($v2->operator == '=') {

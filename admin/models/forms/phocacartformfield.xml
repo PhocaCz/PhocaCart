@@ -55,6 +55,9 @@
 
 <field name="additional" label="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_DESC" class="inputbox" />
 
+<field name="pattern" label="COM_PHOCACART_FIELD_PATTERN_LABEL" description="COM_PHOCACART_FIELD_PATTERN_DESC" class="inputbox" />
+<field name="maxlength" label="COM_PHOCACART_FIELD_MAXLENGTH_LABEL" description="COM_PHOCACART_FIELD_MAXLENGTH_DESC" class="inputbox" />
+
 
 <field name="ordering" type="PhocacartOrdering" table="formfield" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 

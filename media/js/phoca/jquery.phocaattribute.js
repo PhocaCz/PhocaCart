@@ -31,6 +31,7 @@ function phChangeAttributeType(typeView) {
 		var phType			= jQuery(this).data('attribute-type');// Type of attribute
 		var phTypeView		= jQuery(this).data('type-view');// Type of view, e.g. ItemQuickView is reloaded by ajax
 		var phTypeIcon 		= jQuery(this).data('type-icon');// Type of used icon library
+		var phRequired	 	= jQuery(this).data('required');// Type of used icon library
 
 		if (phType == 3) {
 			phClass			= 'phSelectBoxImage';// Image
@@ -89,8 +90,12 @@ function phChangeAttributeType(typeView) {
 				e.preventDefault();// Bootstrap modal (close and open again duplicates events)
 
 				var isActive = jQuery(this).hasClass('on');
-
+				
 				if (isActive) {
+					if (phRequired == 1) {
+						e.preventDefault();// Active item cannot be unselected when the select box is required
+						return false;
+					}
 					jQuery(this).removeClass('on');
 					jQuery('input[name="'+ phSelectName +'"]').val('');
 					jQuery(phSelectNameId).val('').change();// Because of required field

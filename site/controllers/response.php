@@ -12,10 +12,10 @@ JLog::addLogger( array('text_file' => 'com_phocacart_error_log.php'), JLog::ALL,
 
 class PhocaCartControllerResponse extends JControllerForm
 {
-	
+
 	// User gets info
 	public function paymentrecieve() {
-		
+
 		$app		= JFactory::getApplication();
 		$session 	= JFactory::getSession();
 		$session->set('proceedpayment', array(), 'phocaCart');
@@ -29,15 +29,15 @@ class PhocaCartControllerResponse extends JControllerForm
 		// the message will be deleted after it will be displayed in view
 		$app->redirect($return);
 	}
-	
+
 	// User gets info
 	public function paymentcancel() {
-		
+
 		$app		= JFactory::getApplication();
 		$session 	= JFactory::getSession();
 		$session->set('proceedpayment', array(), 'phocaCart');
 		//JSession::checkToken() or jexit( 'Invalid Token' );
-		
+
 		$type 		= $app->input->get('type', '', 'string');
 		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
 		$message	= array();
@@ -46,57 +46,57 @@ class PhocaCartControllerResponse extends JControllerForm
 		if ($plugin) {
 			\JFactory::getApplication()->triggerEvent('PCPafterCancelPayment', array($mid, &$message));
 		}
-		
+
 		$return = PhocacartRoute::getInfoRoute();
 		$session->set('infoaction', 5, 'phocaCart');
 		$session->set('infomessage', $message, 'phocaCart');
 		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_CANCELED'), 'info');
 		$app->redirect($return);
 	}
-	
-	
+
+
 	// Robot gets info
 	public function paymentnotify() {
-	
-		
+
+
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
 		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
 		$uri	= \Joomla\CMS\Uri\Uri::getInstance();
-		
+
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
 			\JFactory::getApplication()->triggerEvent('PCPbeforeCheckPayment', array($pid));
 		} else {
-			
+
 			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
             header('Allow: POST', true, 405);
             throw new Exception("Invalid HTTP request method.");
 		}
-				
-		exit;	
+
+		exit;
 	}
-	
-	
+
+
 	public function paymentwebhook() {
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
 		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
 		$uri	= \Joomla\CMS\Uri\Uri::getInstance();
-	
+
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
 			\JFactory::getApplication()->triggerEvent('PCPonPaymentWebhook', array($pid));
 		} else {
-			
+
 			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
 			header('Allow: POST', true, 405);
 			throw new Exception("Invalid HTTP request method.");
 		}
 		exit;
 	}
-	
+
 }
 ?>

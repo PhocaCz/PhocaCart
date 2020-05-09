@@ -20,11 +20,13 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'id', 'a.id',
-				'user_name','user_name',
+				'order_number', 'order_number',
+				'user_username','user_username',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
-				'status', 'status',
+				'status_id', 'a.status_id',
 				'date', 'a.date',
+				'total_amount', 'total_amount',
 				'modified', 'a.modified',
 				'ordering', 'a.ordering',
 				'language', 'a.language',
@@ -36,7 +38,7 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.date', $direction = 'DESC')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -48,18 +50,24 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
+
+		$status = $app->getUserStateFromRequest($this->context.'.filter.status_id', 'filter_status_id', '');
+		$this->setState('filter.status_id', $status);
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.date', 'desc');
+		parent::populateState($ordering, $direction);
+
+
+
 	}
 
 	protected function getStoreId($id = '')
@@ -67,8 +75,9 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		//$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.order_id');
+		$id	.= ':'.$this->getState('filter.status_id');
 
 		return parent::getStoreId($id);
 	}
@@ -84,7 +93,7 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.*'
+				'a.*, a.id as ordernumber'
 			)
 		);
 		$query->from('`#__phocacart_orders` AS a');
@@ -143,7 +152,7 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		}*/
 
 		// Filter by published state.
-		$published = $this->getState('filter.state');
+		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('a.published = '.(int) $published);
 		}
@@ -151,6 +160,14 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 			$query->where('(a.published IN (0, 1))');
 		}
 
+		$status = (int)$this->getState('filter.status_id');
+		if (!empty($status)) {
+
+			if ($status != '' && $status > 0) {
+				$query->where('a.status_id = '.$status);
+			}
+
+		}
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -187,6 +204,7 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
+
 
 		/*if ($orderCol != 'a.id') {
 			$orderCol = 'a.id';

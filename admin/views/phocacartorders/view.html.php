@@ -14,6 +14,8 @@ class PhocaCartCpViewPhocacartOrders extends JViewLegacy
 	protected $items;
 	protected $pagination;
 	protected $state;
+	public $filterForm;
+	public $activeFilters;
 	protected $t;
 	protected $s;
 
@@ -25,6 +27,9 @@ class PhocaCartCpViewPhocacartOrders extends JViewLegacy
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
+		$this->filterForm   = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
+
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -81,10 +86,10 @@ class PhocaCartCpViewPhocacartOrders extends JViewLegacy
 	protected function getSortFields() {
 		return array(
 			//'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.id' 				=> JText::_($this->t['l'] . '_ORDER_NUMBER'),
-			'username' 			=> JText::_($this->t['l'] . '_USER'),
-			'a.status' 			=> JText::_($this->t['l'] . '_STATUS'),
-			'total' 			=> JText::_($this->t['l'] . '_TOTAL'),
+			'order_number' 				=> JText::_($this->t['l'] . '_ORDER_NUMBER'),
+			'user_username' 			=> JText::_($this->t['l'] . '_USER'),
+			'a.status_id' 			=> JText::_($this->t['l'] . '_STATUS'),
+			'total_amount' 			=> JText::_($this->t['l'] . '_TOTAL'),
 			'a.date' 			=> JText::_($this->t['l'] . '_DATE_ADDED'),
 			'a.modified' 		=> JText::_($this->t['l'] . '_DATE_MODIFIED'),
 			'a.notify'	 		=> JText::_($this->t['l'] . '_USER_NOTIFIED'),

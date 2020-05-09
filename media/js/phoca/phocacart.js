@@ -349,4 +349,6 @@ jQuery(document).ready(function(){
 	})
 
 	phRenderBillingAndShippingSame();
+
+
 })

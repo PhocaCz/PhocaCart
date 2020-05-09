@@ -70,8 +70,9 @@ class PhocaCartViewCheckout extends JViewLegacy
 
 		// Enable guest checkout automatically
 		if ($this->t['guest_checkout'] == 1 && $this->t['guest_checkout_auto_enable'] == 1) {
-			$guest	= new PhocacartUserGuestuser();
-			$guest->setGuestUser(1);
+			//$guest	= new PhocacartUserGuestuser();
+			//$guest->setGuestUser(1);
+			$guest = PhocacartUserGuestuser::setGuestUser(1);
 		}
 
 

@@ -38,7 +38,6 @@ class PhocaCartViewCategory extends JViewLegacy
 
 
 
-
 		// PARAMS
 		$this->t['display_new']				= $this->p->get( 'display_new', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
@@ -180,7 +179,9 @@ class PhocaCartViewCategory extends JViewLegacy
 
 
 
+
 			$touchSpinJs = $media->loadTouchSpin('quantity', $this->s['i']);
+			$media->loadPhocaSwapImage($this->t['dynamic_change_image']);
 
 
 			if ($this->t['hide_attributes_category'] == 0) {

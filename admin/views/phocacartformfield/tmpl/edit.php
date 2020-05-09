@@ -35,7 +35,7 @@ echo $r->navigation($tabs);
 
 echo '<div class="tab-content">'. "\n";
 
-echo '<div class="tab-pane active" id="general">'."\n"; 
+echo '<div class="tab-pane active" id="general">'."\n";
 
 echo $r->item($this->form, 'title');
 
@@ -43,11 +43,11 @@ echo $r->item($this->form, 'label', '<small>('.JText::_($this->form->getValue('l
 
 echo $r->item($this->form, 'description', '<small>('.JText::_($this->form->getValue('description')).')</small>', 1);
 
-$formArray = array ('type', 'default', 'class', 'required', 'read_only', 'additional', 'validate', 'unique', 'ordering', 'access', 'group');
+$formArray = array ('type', 'default', 'class', 'required', 'read_only', 'pattern', 'maxlength', /*'additional',*/ 'validate', 'unique', 'ordering', 'access', 'group');
 echo $r->group($this->form, $formArray);
 echo '</div>';
 
-echo '<div class="tab-pane" id="publishing">'."\n"; 
+echo '<div class="tab-pane" id="publishing">'."\n";
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -58,7 +58,7 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';
-				
+
 echo '</div>';//end tab content
 echo '</div>';//end span10
 // Second Column

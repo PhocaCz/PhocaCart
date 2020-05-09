@@ -92,7 +92,7 @@ class PhocacartOrderRender
 
 				$displayInOrderView = true;
 				if ($option == 'com_phocacart' && ($view == 'orders' || $view == 'order')) {
-					$displayDocument = json_decode($d['common']->ordersviewdisplay);
+					$displayDocument = json_decode($d['common']->ordersviewdisplay, true);
 					if (!in_array($type, $displayDocument)) {
 						$displayInOrderView = false;
 					}

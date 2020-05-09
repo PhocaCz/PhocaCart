@@ -23,6 +23,7 @@ $productIdName		= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
 $iconType			= $d['s']['i']['icon-type'];
 $price				= new PhocacartPrice();
 
+
 $attr				= array();
 $attr[]				= 'id="phItemAttribute'.$attributeIdName.'"';// ID
 $attr[]				= 'class="ph-checkbox-attribute ph-item-input-set-attributes phj'. $d['typeview'].' phjProductAttribute '.$d['required']['class'].'"';// CLASS
@@ -32,6 +33,8 @@ $attr[]				= 'data-attribute-type="'. $v->type.'"';// Type of attribute (select,
 $attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - Unique name between different views and products
 $attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item
 $attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)
+$attr[]				= 'data-required="'.$d['required']['required'].'"';
+
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
 echo '<div '.implode(' ', $attr).'>';
@@ -39,7 +42,7 @@ echo '<div '.implode(' ', $attr).'>';
 
 // CHECKBOX COLOR CHECKBOX IMAGE
 if ($v->type == 5 || $v->type == 6) {
-	echo '<div class="ph-item-input-checkbox-color" data-toggle="buttons">';
+	echo '<div class="ph-item-input-checkbox-color btn-group-toggle" data-toggle="buttons">';
 }
 
 foreach ($v->options as $k2 => $v2) {

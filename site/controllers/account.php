@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 class PhocaCartControllerAccount extends JControllerForm
 {
-	
+
 	public function saveprofile()
 	{
 		// Check for request forgeries.
@@ -24,12 +24,12 @@ class PhocaCartControllerAccount extends JControllerForm
 		// Get the user data.
 		$data 		= $app->input->post->get('jform', array(), 'array');
 		$returnUrl 	= $app->input->post->get('return', '', 'string');
-		
-		
+
+
 		$lang = JFactory::getLanguage();
 		//$lang->load('com_users.sys');
 		$lang->load('com_users');
-		
+
 		// PHOCAEDIT
 		jimport('joomla.application.component.model');
 		//JLoader::import('user',JPATH_SITE.'/components/com_users/models');
@@ -39,15 +39,15 @@ class PhocaCartControllerAccount extends JControllerForm
 		$loadformpath = JPATH_SITE.'/components/com_users/models';
 		JForm::addFormPath($loadformpath.'/forms');
 		JForm::addFieldPath($loadformpath.'/fields');
-		$this->form	  = $model->getForm();
-		
+		//$this->form	  = $model->getForm();
+
 
 		// Force the ID to this user.
 		$data['id'] = $userId;
 
 		// Validate the posted data.
 		$form = $model->getForm();
-		
+
 		if (!$form)
 		{
 			throw new Exception($model->getError(), 500);
@@ -134,6 +134,6 @@ class PhocaCartControllerAccount extends JControllerForm
 		// Flush the data from the session.
 		$app->setUserState('com_users.edit.profile.data', null);
 	}
-	
+
 }
 ?>

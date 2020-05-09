@@ -358,10 +358,15 @@ class PhocacartPayment
 		if (isset($payment->params)) {
 
 			$registry = new JRegistry;
-			$registry->loadString($payment->params);
+			//$registry->loadString($payment->params);
+			if (isset($payment->params)) {
+				 $registry->loadString($payment->params);
+			}
 			$payment->params = $registry;
 			//$payment->paramsArray = $registry->toArray();
 		}
+
+
 		return $payment;
 	}
 

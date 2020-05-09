@@ -70,6 +70,19 @@ jQuery(document).ready(function(){
 	});
 })
 
+jQuery(document).ready(function(){
+	jQuery(document).on('click', '.phjAddToCart.phjPos button[type="submit"]', function() {
+		jQuery(this).closest("form").find(' .checkbox-group.required input:checkbox').each(function() {// 1
+			var phAttributeGroup 		= jQuery(this).closest(".checkbox-group").attr('id');// 2
+			var phAttributeGroupItems	= jQuery('.phjAddToCart.phjPos #' + phAttributeGroup + ' input:checkbox');// 3
+			phAttributeGroupItems.prop('required', true);
+			if(phAttributeGroupItems.is(":checked")){
+				phAttributeGroupItems.prop('required', false);
+			}
+		})
+	});
+})
+
 
 
 

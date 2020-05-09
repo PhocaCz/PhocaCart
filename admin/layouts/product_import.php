@@ -83,9 +83,6 @@ if($xml) {
 				$data['catid_multiple_ordering']= array();
 
 
-
-
-
 				// TITLE
 				// No title - skip
 				if (isset($data['title']) && $data['title'] == '') {
@@ -423,6 +420,8 @@ if($xml) {
 
 				$data['related'] = implode(',', $data['related']);
 
+
+
 				// TAG
 				if (!empty($data['tags']['tag'])) {
 
@@ -444,7 +443,84 @@ if($xml) {
 					$data['tags'] = array();
 				}
 
-				// TODO PARAMETERS
+				// LABELS
+				if (!empty($data['taglabels']['label'])) {
+
+					if (isset($data['taglabels']['label']['id'])) {
+						// TAG STRING
+						$tag 				    = $data['taglabels']['label'];
+						$data['taglabels'] 		= array();
+						$data['taglabels'][0]	= PhocacartUtils::getIntFromString($tag);
+					} else if (is_array($data['taglabels']['label'])) {
+						// TAGS ARRAY
+						$tags = $data['taglabels']['label'];
+						$data['taglabels'] 	= array();
+						foreach($tags as $kT => $vT) {
+							$vT = (int)PhocacartUtils::getIntFromString($vT);
+							$data['taglabels'][] 				= $vT;
+						}
+					}
+				} else {
+					$data['taglabels'] = array();
+				}
+
+				// ADDITIONAL DOWNLOAD FILES
+				if (!empty($data['additional_download_files']['additional_download_file'])) {
+
+					if (isset($data['additional_download_files']['additional_download_file']['id'])) {
+						// ADDITIONAL DOWNLOAD FILES STRING
+						$files 				= $data['additional_download_files']['additional_download_file'];
+						$data['additional_download_files'] 	= array();
+						$data['additional_download_files'][0]	= $files;
+					} else if (is_array($data['additional_download_files']['additional_download_file'])) {
+						// ADDITIONAL DOWNLOAD FILES ARRAY
+						$files 			= $data['additional_download_files']['additional_download_file'];
+						$data['additional_download_files'] 	= array();
+						$data['additional_download_files']		= $files;
+
+					}
+				} else {
+					$data['additional_download_files'] = array();
+				}
+
+				// PARAMETERS
+
+                if (isset($data['items_parameter']['parameter']['id'])) {
+                    // PARAMETER STRING
+                    $parameters = $data['items_parameter']['parameter'];
+
+                    $data['items_parameter'] = array();
+                    $data['items_parameter']['parameter'][0] = $parameters;
+                }
+
+                if (!empty($data['items_parameter']['parameter'])) {
+
+                    $parameters = $data['items_parameter']['parameter'];
+                    $data['items_parameter'] = array();
+                    foreach($parameters as $kP => $vP) {
+
+                        if (isset($vP['id']) && (int)$vP['id'] > 0) {
+                            $vPId = (int)$vP['id'];
+                            if(!empty($vP['values']['value'])) {
+
+                                if (isset($vP['values']['value']['id'])) {
+                                    // VALUES STRING
+                                    $data['items_parameter'][$vPId][] = (int)PhocacartUtils::getIntFromString($vP['values']['value']['id']);
+                                } else if (is_array($vP['values']['value'])) {
+                                    // ADDITIONAL DOWNLOAD FILES ARRAY
+                                    foreach ($vP['values']['value'] as $kPV => $vPV) {
+                                        if (isset($vPV['id']) && (int)$vPV['id'] > 0) {
+                                            $data['items_parameter'][$vPId][] = (int)PhocacartUtils::getIntFromString($vPV['id']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+				} else {
+					$data['items_parameter'] = array();
+				}
+
 
 				// correct simple xml
 				foreach($data as $k => $v) {
@@ -483,10 +559,12 @@ if($xml) {
 						}
 						$data = array_combine($pcAH, $pcAP);
 
+
 						$data['tax_id'] 				= array();
 						$data['manufacturer_id'] 		= array();
 						$data['catid_multiple']			= array();
 						$data['catid_multiple_ordering']= array();
+
 
 
 						// No title - skip
@@ -665,6 +743,44 @@ if($xml) {
 							}
 							$data['tags'] = $tags;
 
+						}
+
+						if (isset($data['taglabels'])) {
+
+							$tags = array();
+							if ($data['taglabels'] != '') {
+								$tags = explode("|", $data['taglabels']);
+							}
+							if (!empty($tags)) {
+								foreach($tags as $kT => $vT) {
+									$tags[$kT] = PhocacartUtils::getIntFromString($vT);
+								}
+							}
+							$data['taglabels'] = $tags;
+
+						}
+
+						if (isset($data['items_parameter'])) {
+
+						    $data['items_parameter'] = json_decode($data['items_parameter'], true);
+
+                            $itemParameters = array();
+                            if (!empty($data['items_parameter'])) {
+                                foreach($data['items_parameter'] as $kT => $vT) {
+                                    if (!empty($vT)) {
+                                        foreach($vT as $kT2 => $vT2) {
+                                            if (isset($vT2['id']) && (int)$vT2['id'] > 0) {
+                                                $itemParameters[$kT][$kT2] = (int)$vT2['id'];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $data['items_parameter'] = $itemParameters;
+                        }
+
+						if (isset($data['additional_download_files'])) {
+							$data['additional_download_files'] = json_decode($data['additional_download_files'], true);
 						}
 
 

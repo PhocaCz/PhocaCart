@@ -12,6 +12,8 @@ use Joomla\CMS\Form\Field\OrderingField;
  */
 defined('_JEXEC') or die();
 
+JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
+
 class PhocacartOrder
 {
     public $downloadable_product;
@@ -254,7 +256,7 @@ class PhocacartOrder
 
         $db = JFactory::getDBO();
 
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
+        //JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
         // ORDER
         $d = array();

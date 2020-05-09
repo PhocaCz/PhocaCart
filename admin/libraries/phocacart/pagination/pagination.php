@@ -23,6 +23,7 @@ class PhocacartPagination extends JPagination
 			$pagination = $paramsC->get( 'item_pagination', '5,10,15,20,50' );
 		}
 
+
 		$paginationArray	= explode( ',', $pagination );
 
 		// Initialize variables

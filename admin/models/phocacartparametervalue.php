@@ -77,6 +77,8 @@ class PhocaCartCpModelPhocacartParameterValue extends JModelAdmin
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
 
+
+
 		if (empty($table->alias)) {
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
@@ -88,7 +90,7 @@ class PhocaCartCpModelPhocacartParameterValue extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_parameter_values WHERE parent_id = '.(int)$table->parent_id);
+				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_parameter_values WHERE parameter_id = '.(int)$table->parameter_id);
 				$max = $db->loadResult();
 
 				$table->ordering = $max+1;

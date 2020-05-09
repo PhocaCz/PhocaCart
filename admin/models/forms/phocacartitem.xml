@@ -152,15 +152,15 @@
 
 
         <field name="metatitle" type="text"
-               label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"
+               label="COM_PHOCACART_FIELD_META_TITLE_LABEL" description="COM_PHOCACART_FIELD_META_TITLE_DESC"
                class="inputbox"/>
 
         <field name="metakey" type="textarea"
-               label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
+               label="JFIELD_META_KEYWORDS_LABEL" description="JFIELD_META_KEYWORDS_DESC"
                class="inputbox" rows="3" cols="30"/>
 
         <field name="metadesc" type="textarea"
-               label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
+               label="JFIELD_META_DESCRIPTION_LABEL" description="JFIELD_META_DESCRIPTION_DESC"
                class="inputbox" rows="3" cols="30"/>
 
         <!-- SUBFORM -->

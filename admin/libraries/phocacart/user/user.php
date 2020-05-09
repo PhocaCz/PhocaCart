@@ -154,6 +154,23 @@ class PhocacartUser
 		$baSa = $form->getValue('ba_sa');
 
 
+		// Setting "Delivery and billing addresses are the same" - enable or disabled
+		// This can be set for new users who didn't set the address yet and for gest only. Not for users how added the address as they made the choice which is saved and cannot be changed
+		$pC = PhocacartUtils::getComponentParameters();
+        $delivery_billing_same_enabled = $pC->get('delivery_billing_same_enabled', 0);
+
+        // 1) GUEST USER (no preference stored)
+		if ($guestUser > 0 && !PhocacartUserGuestuser::getAddress() && ($delivery_billing_same_enabled == 2 || $delivery_billing_same_enabled == 3)) {
+			$o['bsch'] = 'checked="checked"';
+		}
+
+		// 1) NEW LOGGED IN USER (no preference stored)
+		$userIdAddress = $form->getValue('id');
+		if (!(int)$userIdAddress > 0 && !$guestUser && ($delivery_billing_same_enabled == 1 || $delivery_billing_same_enabled == 3)){
+			$o['bsch'] = 'checked="checked"';
+		}
+
+		// 3) STANDARD USER WHO ADDED ADDRESS AND PREFERENCES WERE SAVED - now this is only stored preference of the user
 		if ($baSa == 1) {
 			$o['bsch'] = 'checked="checked"';
 		}
@@ -361,11 +378,13 @@ class PhocacartUser
 	public static function convertAddressTwo($data, $array = 1) {
 		$dataNew	= array();
 		if ($array == 1) {
-			$dataNew[0] = array();
-			$dataNew[1]	= array();
+			$dataNew[0] = array();// billing
+			$dataNew[1]	= array();// shipping
+			$dataNew[2] = array();// shipping including postfix _phs
 		} else {
 			$dataNew[0]= new StdClass();
 			$dataNew[1]= new StdClass();
+			$dataNew[2]= new StdClass();
 		}
 
 		if (!empty($data)) {
@@ -378,11 +397,15 @@ class PhocacartUser
 						$dataNew[0]->$k = $v;
 					}
 				} else {
-					$k = str_replace('_phs', '', $k);
+
+					$kx = str_replace('_phs', '', $k);
+
 					if ($array == 1) {
-						$dataNew[1][$k] = $v;
+						$dataNew[1][$kx] = $v;
+						$dataNew[2][$k] = $v;
 					} else {
-						$dataNew[1]->$k = $v;
+						$dataNew[1]->$kx = $v;
+						$dataNew[2]->k = $v;
 					}
 				}
 			}
@@ -392,10 +415,13 @@ class PhocacartUser
 			// Set right type for shipping address
 			if ($array == 1) {
 				$dataNew[1]['type'] = 1;
+				$dataNew[2]['type'] = 1;
 			} else {
 				$dataNew[1]->type = 1;
+				$dataNew[2]->type = 1;
 			}
 		}
+
 		return $dataNew;
 	}
 

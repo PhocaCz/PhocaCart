@@ -48,7 +48,7 @@ echo $r->endFilter();
 
 echo $r->startMainContainer();
 echo $r->startFilterBar();
-echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
+/*echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
 							$this->escape($this->state->get('filter.search')));
 echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
 echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
@@ -57,8 +57,9 @@ echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
 
 echo $r->startFilterBar(2);
 echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
-echo $r->endFilterBar();
+echo $r->endFilterBar();*/
 
+echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->endFilterBar();
 
 
@@ -72,22 +73,22 @@ echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
 
 
-echo $r->startTable('categoryList');
+echo $r->startTable('orderList');
 
 echo $r->startTblHeader();
 
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-order">'.JHtml::_('grid.sort',  	$this->t['l'].'_ORDER_NUMBER', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-user">'.JHtml::_('grid.sort',  $this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-status">'.JHtml::_('grid.sort',  $this->t['l'].'_STATUS', 'a.status', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-order">'.JHtml::_('searchtools.sort',  	$this->t['l'].'_ORDER_NUMBER', 'order_number', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-user">'.JHtml::_('searchtools.sort',  $this->t['l'].'_USER', 'user_username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-status">'.JHtml::_('searchtools.sort',  $this->t['l'].'_STATUS', 'a.status_id', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-action">'.JText::_($this->t['l'].'_INFO').'</th>'."\n";
 echo '<th class="ph-action">'.JText::_($this->t['l'].'_ACTION').'</th>'."\n";
-echo '<th class="ph-total-center">'.JHtml::_('grid.sort',  $this->t['l'].'_TOTAL', 'total', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE_ADDED', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.JHtml::_('grid.sort',  $this->t['l'].'_DATE_MODIFIED', 'a.modified', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-total-center">'.JHtml::_('searchtools.sort',  $this->t['l'].'_TOTAL', 'total_amount', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('searchtools.sort',  $this->t['l'].'_DATE_ADDED', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.JHtml::_('searchtools.sort',  $this->t['l'].'_DATE_MODIFIED', 'a.modified', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.JHtml::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -241,7 +242,7 @@ echo '</tbody>'. "\n";
 echo $r->tblFoot($this->pagination->getListFooter(), 12);
 echo $r->endTable();
 
-echo $r->formInputs($listOrder, $listDirn, $originalOrders);
+echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
 ?>

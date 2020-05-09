@@ -23,6 +23,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 	protected $tmpl;
 	protected $session;
 	protected $currentFolder;
+	protected $downloadFolder;
 	protected $t;
 
 	public function display($tpl = null) {
@@ -31,8 +32,8 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		$this->field			= JFactory::getApplication()->input->get('field');
 		$this->fce 				= 'phocaSelectFileName_'.$this->field;
 		$this->manager 			= JFactory::getApplication()->input->get( 'manager', '', 'file' );
-		$downloadFolder			= JFactory::getApplication()->input->get( 'downloadfolder', '', 'string' );
-		$downloadFolderExists	= PhocacartFile::createDownloadFolder($downloadFolder);
+		$this->downloadFolder	= JFactory::getApplication()->input->get( 'downloadfolder', '', 'string' );
+		$downloadFolderExists	= PhocacartFile::createDownloadFolder($this->downloadFolder);
 
 
 
@@ -58,6 +59,10 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 		if (isset($this->folderstate->folder) && $this->folderstate->folder != '') {
 			$this->currentFolder = $this->folderstate->folder;
 		}
+
+
+
+
 
 		// - - - - - - - - - -
 		//TABS

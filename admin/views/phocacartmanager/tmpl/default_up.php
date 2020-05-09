@@ -9,7 +9,12 @@
 defined('_JEXEC') or die();
 
 $group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
-$link = 'index.php?option='.$this->t['o'].'&amp;view='. PhocacartText::filterValue($this->t['task'], 'alphanumeric').'&amp;manager='.PhocacartText::filterValue($this->manager, 'alphanumeric') . $group['c'] .'&amp;folder='.PhocacartText::filterValue($this->folderstate->parent, 'folderpath') .'&amp;field='. PhocacartText::filterValue($this->field, 'alphanumeric2');
+
+if ($this->currentFolder === '' || ($this->currentFolder == $this->downloadFolder)) {
+    // Don't display arrow up when we are in root or download file root (download file root = download token folder)
+
+} else {
+    $link = 'index.php?option='.$this->t['o'].'&amp;view='. PhocacartText::filterValue($this->t['task'], 'alphanumeric').'&amp;manager='.PhocacartText::filterValue($this->manager, 'alphanumeric') . $group['c'] .'&amp;folder='.PhocacartText::filterValue($this->folderstate->parent, 'folderpath') .'&amp;field='. PhocacartText::filterValue($this->field, 'alphanumeric2');
 echo '<tr><td>&nbsp;</td>'
 .'<td class="ph-img-table">'
 .'<a href="'.$link.'" >'
@@ -17,3 +22,5 @@ echo '<tr><td>&nbsp;</td>'
 .'</td>'
 .'<td><a href="'.$link.'" >..</a></td>'
 .'</tr>';
+}
+

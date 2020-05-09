@@ -18,7 +18,10 @@ class JFormFieldPhocacartOrderstatus extends JFormField
 		$javascript	= '';
 		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		$multiple	= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
-		$type 		= isset($this->element['typemethod']) && (int)$this->element['typemethod'] > 0 ? 1 : 0;
+		$type 		= isset($this->element['typemethod']) ? (int)$this->element['typemethod'] : 0;
+		
+		
+	
 		$attr		= '';
 		$attr		.= 'class="inputbox" ';
 		if ($multiple) {
@@ -27,6 +30,9 @@ class JFormFieldPhocacartOrderstatus extends JFormField
 		if ($required) {
 			$attr		.= 'required aria-required="true" ';
 		}
+		
+		$attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
+		
 		$attr		.= $javascript . ' ';
 
 		if ($multiple) {
@@ -58,8 +64,10 @@ class JFormFieldPhocacartOrderstatus extends JFormField
 			$status = PhocacartOrderStatus::getStatus($id);
 			if ($type == 1) {
                 array_unshift($status['data'], JHtml::_('select.option', 0, JText::_('COM_PHOCACART_NO'), 'value', 'text'));
-            }
-			return JHtml::_('select.genericlist',  $status['data'],  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+            } else if ($type == 2) {
+				array_unshift($status['data'], JHtml::_('select.option', '', ' - ' . JText::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . ' - ', 'value', 'text'));
+			}
+			return JHtml::_('select.genericlist',  $status['data'],  $this->name, $attr , 'value', 'text', $this->value, $this->id );
 		}
 	}
 }

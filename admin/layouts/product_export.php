@@ -32,7 +32,7 @@ $export_specifications			= $paramsC->get( 'export_specifications', 1 );
 $export_discounts				= $paramsC->get( 'export_discounts', 1 );
 $export_downloads				= $paramsC->get( 'export_downloads', 0 );
 $export_add_title				= $paramsC->get( 'export_add_title', 0);
-
+$export_parameters				= $paramsC->get( 'export_parameters', 0);
 /*
 *
 * Unfortunately, add attributes to xml tags can be very problematic
@@ -128,6 +128,9 @@ $a[] = array('external_key', 'COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_LABEL');
 $a[] = array('external_link', 'COM_PHOCACART_FIELD_EXTERNAL_LINK_LABEL');
 $a[] = array('external_text', 'COM_PHOCACART_FIELD_EXTERNAL_TEXT_LABEL');
 
+$a[] = array('external_link2', 'COM_PHOCACART_FIELD_EXTERNAL_LINK_2_LABEL');///
+$a[] = array('external_text2', 'COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_LABEL');///
+
 
 $a[] = array('access', 'JFIELD_ACCESS_LABEL');
 $a[] = array('groups', 'COM_PHOCACART_FIELD_GROUPS_LABEL');
@@ -138,12 +141,16 @@ $a[] = array('video', 'COM_PHOCACART_FIELD_VIDEO_URL_LABEL');
 $a[] = array('public_download_file', 'COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL');
 $a[] = array('public_download_text', 'COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL');
 
+$a[] = array('public_play_file', 'COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_LABEL');///
+$a[] = array('public_play_text', 'COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_LABEL');///
+
 $a[] = array('condition', 'COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL');
 $a[] = array('type_feed', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL');
 $a[] = array('type_category_feed', 'COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_LABEL');
 
 $a[] = array('description', 'COM_PHOCACART_FIELD_DESCRIPTION_LABEL');
 $a[] = array('description_long', 'COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL');
+$a[] = array('features', 'COM_PHOCACART_FIELD_FEATURES_LABEL');///
 
 $a[] = array('image', 'COM_PHOCACART_FIELD_IMAGE_LABEL');
 
@@ -180,6 +187,9 @@ $a[] = array('stockstatus_n_id', 'COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL');
 $a[] = array('min_quantity', 'COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL');
 $a[] = array('min_multiple_quantity', 'COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL');
 $a[] = array('min_quantity_calculation', 'COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL');
+
+$a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');///
+
 //$a[] = array('availability', 'COM_PHOCACART_FIELD_AVAILABILITY_LABEL');
 
 if ($export_downloads == 1) {
@@ -187,6 +197,10 @@ if ($export_downloads == 1) {
 	$a[] = array('download_folder', 'COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL');
 	$a[] = array('download_file', 'COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL');
 	$a[] = array('download_hits', 'COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL');
+	$a[] = array('download_days', 'COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_LABEL');///
+
+    // IMAGES (not exist in query)
+    $a[] = array('additional_download_files', 'COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILES');///
 }
 $a[] = array('type', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL');
 $a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');
@@ -211,12 +225,32 @@ $a[] = array('published', 'COM_PHOCACART_FIELD_PUBLISHED_LABEL');
 $a[] = array('language', 'JFIELD_LANGUAGE_LABEL');
 
 $a[] = array('date', 'COM_PHOCACART_FIELD_DATE_LABEL');
+$a[] = array('date_update', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');///
+
+$a[] = array('created_by', 'COM_PHOCACART_FIELD_CREATED_BY_LABEL');///
+$a[] = array('created', 'COM_PHOCACART_FIELD_CREATED_DATE_LABEL');///
+$a[] = array('modified_by', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');///
+$a[] = array('modified', 'COM_PHOCACART_FIELD_MODIFIED_BY_LABEL');///
+
+
+
+
 
 // TAGS (not exist in query)
 $a[] = array('tags', 'COM_PHOCACART_TAGS');
+$a[] = array('taglabels', 'COM_PHOCACART_LABELS');///
+
+if($export_parameters == 1){
+    $a[] = array('items_parameter', 'COM_PHOCACART_PARAMETERS');///
+    $parameters = PhocacartParameter::getAllParameters();
+}
+
 
 $a[] = array('metakey', 'JFIELD_META_KEYWORDS_LABEL');
 $a[] = array('metadesc', 'JFIELD_META_DESCRIPTION_LABEL');
+$a[] = array('metatitle', 'COM_PHOCACART_FIELD_META_TITLE_LABEL');///
+$a[] = array('metadata', 'COM_PHOCACART_METADATA_LABEL');///
+$a[] = array('sales', 'COM_PHOCACART_FIELD_SALES_LABEL');///
 
 
 //$a[] = array('allow_upload', 'COM_PHOCACART_FIELD_ALLOW_UPLOAD_LABEL');
@@ -274,6 +308,7 @@ if (!empty($d['products'])){
 
 						case 'description':
 						case 'description_long':
+                        case 'features':
 						case 'type_feed':
 						case 'type_category_feed':
 							if ($xml) {
@@ -427,7 +462,11 @@ if (!empty($d['products'])){
 													$iP[] = $t5 . '<operator_weight>'.$vX2->operator_weight.'</operator_weight>';
 													$iP[] = $t5 . '<weight>'.$vX2->weight.'</weight>';
 													$iP[] = $t5 . '<image>'.$vX2->image.'</image>';
+													$iP[] = $t5 . '<image_medium>'.$vX2->image_medium.'</image_medium>';
 													$iP[] = $t5 . '<image_small>'.$vX2->image_small.'</image_small>';
+													$iP[] = $t5 . '<download_folder>'.$vX2->download_folder.'</download_folder>';
+													$iP[] = $t5 . '<download_token>'.$vX2->download_token.'</download_token>';
+													$iP[] = $t5 . '<download_file>'.$vX2->download_file.'</download_file>';
 													$iP[] = $t5 . '<color>'.$vX2->color.'</color>';
 													$iP[] = $t5 . '<default_value>'.$vX2->image.'</default_value>';
 													$iP[] = $t4 .'</option>';
@@ -478,6 +517,10 @@ if (!empty($d['products'])){
 											$iP[] = $t3 . '<alias>'.$vX['alias'].'</alias>';
 											$iP[] = $t3 . '<value>'.$vX['value'].'</value>';
 											$iP[] = $t3 . '<alias_value>'.$vX['alias_value'].'</alias_value>';
+											$iP[] = $t3 . '<image>'.$vX['image'].'</image>';
+											$iP[] = $t3 . '<image_medium>'.$vX['image_medium'].'</image_medium>';
+											$iP[] = $t3 . '<image_small>'.$vX['image_small'].'</image_small>';
+											$iP[] = $t3 . '<color>'.$vX['color'].'</color>';
 											$iP[] = $t2 . '</specification>';
 										} else {
 											//$x[] = $vX['image'];
@@ -682,6 +725,97 @@ if (!empty($d['products'])){
 							}
 						break;
 
+                        case 'taglabels':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+								$items = PhocacartTag::getTagLabels((int)$v['id'], 2);
+								if (!empty($items)) {
+									if ($xml) {
+										$title = '';
+										if ($export_add_title == 1) {
+											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+										}
+										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+									}
+
+									$x = array();
+									foreach($items as $kX => $vX) {
+										if ($xml) {
+											$iP[] = $t2 . '<label>'.$vX->id.':'.$vX->alias.'</label>';
+										} else {
+											$x[] = $vX->id.':'.$vX->alias;
+										}
+									}
+
+
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										$iP[] = implode('|', $x);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+
+                        case 'items_parameter':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+
+                                // $parameters = Parameters defined at start
+                                if (!empty($parameters)) {
+
+                                    if ($xml) {
+                                        $title = '';
+                                        if ($export_add_title == 1) {
+                                            $title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+                                        }
+                                        $iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+                                    }
+
+
+                                    $items = array();
+                                    foreach($parameters as $kX => $vX) {
+
+                                        $idP = (int)$vX->id;
+                                        $items[$idP] = array();
+										if ($xml) {
+											$pA = PhocacartParameter::getParameterValues((int)$v['id'], $idP,0);
+											if (!empty($pA)) {
+											    $iP[] = $t2 . '<parameter>';
+											    $iP[] = $t3 . '<id>'.$vX->id.'</id>';
+											    $iP[] = $t3 . '<title>'.$vX->title.'</title>';
+											    $iP[] = $t3 . '<alias>'.$vX->alias.'</alias>';
+												$iP[] = $t3 . '<values>';
+												foreach($pA as $kX2 => $vX2) {
+													$iP[] = $t4 . '<value>';
+													$iP[] = $t5 . '<id>'.$vX2->id.'</id>';
+													$iP[] = $t5 . '<title>'.$vX2->title.'</title>';
+													$iP[] = $t5 . '<alias>'.$vX2->alias.'</alias>';
+													$iP[] = $t4 .'</value>';
+												}
+												$iP[] = $t3 . '</values>';
+												$iP[] = $t2 . '</parameter>';
+											}
+
+										} else {
+										    $items[$idP]	= PhocacartParameter::getParameterValues((int)$v['id'], $idP,2);// CSV
+                                        }
+									}
+
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										//$iP[] = implode('|', $x);
+										$iP[] = json_encode($items);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+
 						case 'groups':
 
 							if (isset($v['id']) && (int)$v['id'] > 0) {
@@ -853,6 +987,49 @@ if (!empty($d['products'])){
 									} else {
 										//$iP[] = implode('|', $x);
 
+										$iP[] = json_encode($items);
+									}
+								} else {
+									if ($csv) {$iP[] = '';}// CSV set right column count
+								}
+							}
+						break;
+
+
+                        case 'additional_download_files':
+
+							if (isset($v['id']) && (int)$v['id'] > 0) {
+								$items = PhocacartFileAdditional::getProductFilesByProductId((int)$v['id'], 1);
+
+								if (!empty($items)) {
+
+									if ($xml) {
+										$title = '';
+										if ($export_add_title == 1) {
+											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+										}
+										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
+									}
+
+									$x = array();
+
+									foreach($items as $kX => $vX) {
+										if ($xml) {
+											$iP[] = $t2 . '<additional_download_file>';
+											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
+											$iP[] = $t3 . '<download_file>'.$vX['download_file'].'</download_file>';
+											$iP[] = $t3 . '<download_token>'.$vX['download_token'].'</download_token>';
+											$iP[] = $t3 . '<download_days>'.$vX['download_days'].'</download_days>';
+											$iP[] = $t2 . '</additional_download_file>';
+										} else {
+											//$x[] = $vX['image'];
+										}
+									}
+
+									if ($xml) {
+										$iP[] = $t1 . '</'.strip_tags($v2[0]).'>';
+									} else {
+										//$iP[] = implode('|', $x);
 										$iP[] = json_encode($items);
 									}
 								} else {

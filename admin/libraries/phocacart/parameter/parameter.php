@@ -205,6 +205,7 @@ class PhocacartParameter
 			$db->setQuery($query);
 			$db->execute();
 
+
 			if (!empty($parameterValuesArray)) {
 
 				$values 		= array();

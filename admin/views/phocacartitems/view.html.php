@@ -30,8 +30,10 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$this->t			= PhocacartUtils::setVars('item');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
-        $this->filterForm   = $this->get('FilterForm');
 		$this->state		= $this->get('State');
+        $this->filterForm   = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
+
 
 
 		// Multiple categories, ordering

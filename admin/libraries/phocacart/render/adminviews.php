@@ -237,6 +237,8 @@ class PhocacartRenderAdminviews
 	}
 
 	public function inputFilterSearchLimit($txtSl, $paginationLimitBox) {
+
+
 		return '<div class="btn-group ph-pull-right ">'. "\n"
 		.'<label for="limit" class="element-invisible">'.JText::_($txtSl).'</label>'. "\n"
 		.$paginationLimitBox ."\n" . '</div>'. "\n";
@@ -366,6 +368,16 @@ class PhocacartRenderAdminviews
 		.'<input type="hidden" name="boxchecked" value="0" />'. "\n"
 		.'<input type="hidden" name="filter_order" value="'.$listOrder.'" />'. "\n"
 		.'<input type="hidden" name="filter_order_Dir" value="'.$listDirn.'" />'. "\n"
+		. JHtml::_('form.token'). "\n"
+		.'<input type="hidden" name="original_order_values" value="'. implode(',', $originalOrders).'" />'. "\n";
+	}
+
+	public function formInputsXml($listOrder, $listDirn, $originalOrders) {
+
+		return '<input type="hidden" name="task" value="" />'. "\n"
+		.'<input type="hidden" name="boxchecked" value="0" />'. "\n"
+		//.'<input type="hidden" name="filter_order" value="'.$listOrder.'" />'. "\n"
+		//.'<input type="hidden" name="filter_order_Dir" value="'.$listDirn.'" />'. "\n"
 		. JHtml::_('form.token'). "\n"
 		.'<input type="hidden" name="original_order_values" value="'. implode(',', $originalOrders).'" />'. "\n";
 	}

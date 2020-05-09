@@ -1390,7 +1390,7 @@ class PhocacartAttribute
 
 		$db = JFactory::getDBO();
 
-		$query = 'SELECT a.id, a.product_id, a.product_key, a.stock'
+		$query = 'SELECT a.id, a.product_id, a.product_key, a.stock, a.attributes'
 				.' FROM #__phocacart_product_stock AS a'
 			    .' WHERE a.product_id = '.(int) $productId
 				.' ORDER BY a.id';
@@ -1417,9 +1417,18 @@ class PhocacartAttribute
 				$values 	= array();
 				foreach($aosArray as $k => $v) {
 
+					if (!is_array($v)) {
+						$v = array();
+					}
 					// correct simple xml
+					if (!isset($v['product_id'])) 		{$v['product_id'] 		= '';}
+					if (!isset($v['product_key'])) 		{$v['product_key'] 		= '';}
+					if (!isset($v['attributes'])) 		{$v['attributes'] 		= '';}
+					if (!isset($v['stock'])) 			{$v['stock'] 			= '';}
+
 					if (empty($v['product_id'])) 		{$v['product_id'] 		= '';}
 					if (empty($v['product_key'])) 		{$v['product_key'] 		= '';}
+					if (empty($v['attributes'])) 		{$v['attributes'] 		= '';}
 					if (empty($v['stock'])) 			{$v['stock'] 			= '';}
 
 					if ($v['product_key'] == '') {
@@ -1456,10 +1465,10 @@ class PhocacartAttribute
 
 					} else {
 
-						$values 	= '('.(int)$productId.', '.$db->quote($v['product_key']).', '.(int)$v['stock'].')';
+						$values 	= '('.(int)$productId.', '.$db->quote($v['product_key']).', '.$db->quote($v['attributes']).', '.(int)$v['stock'].')';
 
 
-						$query = ' INSERT INTO #__phocacart_product_stock (product_id, product_key, stock)'
+						$query = ' INSERT INTO #__phocacart_product_stock (product_id, product_key, attributes, stock)'
 								.' VALUES '.$values;
 						$db->setQuery($query);
 						$db->execute();

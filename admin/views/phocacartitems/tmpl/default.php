@@ -23,6 +23,8 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', $this->t['o']);
 
+
+
 $saveOrder 	= false;
 if ($this->t['ordering'] && !empty($this->ordering)) {
 	$saveOrder	= $listOrder == 'pc.ordering';
@@ -32,6 +34,8 @@ if ($this->t['ordering'] && !empty($this->ordering)) {
 	}
 }
 $sortFields = $this->getSortFields();
+
+
 
 $nrColumns = 19;
 $assoc     = JLanguageAssociations::isEnabled();
@@ -50,22 +54,24 @@ echo $r->startFilter();
 echo $r->endFilter();
 echo $r->startMainContainer();
 
+/*
 echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
-							$this->escape($this->state->get('filter.search')));
+						$this->escape($this->state->get('filter.search')));
 echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
 echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
 echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
 echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
-
 echo $r->startFilterBar(2);
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
 echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
 echo $r->selectFilterCategory(PhocacartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
 echo $r->endFilterBar();
-
 echo $r->endFilterBar();
-
+*/
+echo $r->startFilterBar();
+echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo $r->endFilterBar();
 
 
 
@@ -78,23 +84,23 @@ echo $r->startTblHeader();
 echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder, 'pc');
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-image">'.JText::_($this->t['l'].'_IMAGE').'</th>'."\n";
-echo '<th class="ph-sku">'.JHtml::_('grid.sort',  	$this->t['l'].'_SKU', 'a.sku', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-//echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-sku">'.JHtml::_('searchtools.sort',  	$this->t['l'].'_SKU', 'a.sku', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.JHtml::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.JHtml::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+//echo '<th class="ph-parentcattitle">'.JHtml::_('searchtools.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-parentcattitle">'.JTEXT::_($this->t['l'].'_CATEGORY').'</th>'."\n";
-echo '<th class="ph-price">'.JHtml::_('grid.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-price_original">'.JHtml::_('grid.sort', $this->t['l'].'_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-stock">'.JHtml::_('grid.sort', $this->t['l'].'_IN_STOCK', 'a.stock', $listDirn, $listOrder ).'</th>'."\n";
-//echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-price">'.JHtml::_('searchtools.sort', $this->t['l'].'_PRICE', 'a.price', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-price_original">'.JHtml::_('searchtools.sort', $this->t['l'].'_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-stock">'.JHtml::_('searchtools.sort', $this->t['l'].'_IN_STOCK', 'a.stock', $listDirn, $listOrder ).'</th>'."\n";
+//echo '<th class="ph-hits">'.JHtml::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
 
 if ($assoc) {
-	echo '<th class="ph-association">' . JHtml::_('grid.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
+	echo '<th class="ph-association">' . JHtml::_('searchtools.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
 }
-echo '<th class="ph-language">'.JHtml::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-language">'.JHtml::_('searchtools.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-hits">'.JHtml::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.JHtml::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -223,7 +229,7 @@ echo $this->loadTemplate('batch');
 
 echo $this->loadTemplate('copy_attributes');
 
-echo $r->formInputs($listOrder, $listDirn, $originalOrders);
+echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
 

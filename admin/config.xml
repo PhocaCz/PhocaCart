@@ -505,6 +505,17 @@
                 <option value="2">COM_PHOCACART_BEFORE_LOGIN_FORM</option>
                 <option value="3">COM_PHOCACART_AFTER_LOGIN_FORM</option>
             </field>
+			
+			
+			<field name="delivery_billing_same_enabled" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_CHECKED_LABEL" description="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_CHECKED_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES_NEW_USERS</option>
+				<option value="2">COM_PHOCACART_YES_NEW_GUEST_USERS</option>
+                <option value="3">COM_PHOCACART_YES_NEW_USERS_NEW_GUEST_USERS</option>
+            </field>
+			
+			
+			delivery_billing_same_enabled
 
 
             <field name="phocahead30" type="phocahead" default="COM_PHOCACART_USER_ACCOUNT_VIEW_LABEL" label="" description=""/>
@@ -1410,6 +1421,12 @@
             </field>
 
             <field name="export_downloads" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_EXPORT_DOWNLOADS_LABEL" description="COM_PHOCACART_FIELD_EXPORT_DOWNLOADS_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+			
+			<field name="export_parameters" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_EXPORT_PARAMETERS_LABEL"
+                   description="COM_PHOCACART_FIELD_EXPORT_PARAMETERS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
