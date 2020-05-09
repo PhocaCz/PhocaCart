@@ -70,8 +70,6 @@ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Pho
 
 - [Examples Of Use Cases](https://www.phoca.cz/documents/116-phoca-cart-component/920-examples-of-use-cases)
 
-- [Tips](https://www.phoca.cz/documents/116-phoca-cart-component/923-tips)
-
 - [Phoca Cart - Development](https://www.phoca.cz/documents/116-phoca-cart-component/939-phoca-cart-development)
 
 - [Phoca Cart - Template Overrides](https://www.phoca.cz/documents/116-phoca-cart-component/995-phoca-cart-template-overrides)
@@ -79,6 +77,8 @@ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Pho
 - [Setting Up Phoca Cart and Gantry5 Template](https://www.phoca.cz/documents/116-phoca-cart-component/989-setting-up-phoca-cart-and-gantry-5-template)
 
 - [Setting Up Phoca Cart and Astroid Template](https://www.phoca.cz/documents/116-phoca-cart-component/1042-setting-up-phoca-cart-and-astroid-template)
+
+- [Tips and Tricks](https://www.phoca.cz/documents/116-phoca-cart-component/1070-tips-and-tricks)
 
 
 
