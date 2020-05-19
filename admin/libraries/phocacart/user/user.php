@@ -250,6 +250,8 @@ class PhocacartUser
 		$sNameO		= '';// join first, middle, last name and degree
 		$o['bregion'] 	= '';// Return for shipping method (save database query)
 		$o['bcountry']	= '';// Return for shipping method (save database query)
+		$o['sregion'] 	= '';// Return for shipping method (save database query)
+		$o['scountry']	= '';// Return for shipping method (save database query)
 
 		// ba_sa = 0: billing and shipping addresses are NOT the same
 		// ba_sa = 1: billing and shipping addresses are same (don't check shipping fields)
@@ -331,9 +333,11 @@ class PhocacartUser
 						if ($v->title == 'name_first' || $v->title == 'name_middle' || $v->title == 'name_last' || $v->title == 'name_degree' ) {
 							$sNameO .= $value . ' ';
 						} else if ($v->title == 'country') {
+							$o['scountry']	= (int)$value;// Return region and country
                             $countryTitle = isset($data[1]->countrytitle) ? $data[1]->countrytitle : PhocacartCountry::getCountryById((int)$value);
 							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$countryTitle.'</div>';
 						} else if ($v->title == 'region') {
+							$o['sregion']	= (int)$value;// Return region and country
                             $regionTitle = isset($data[1]->regiontitle) ? $data[1]->regiontitle : PhocacartRegion::getRegionById((int)$value);
 							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
 						} else {

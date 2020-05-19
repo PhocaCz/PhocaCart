@@ -16,7 +16,7 @@ class PhocaCartViewCategories extends JViewLegacy
 	protected $s;
 
 	public function display($tpl = null) {
-		
+
 
 		$app									= JFactory::getApplication();
 		$model									= $this->getModel();
@@ -43,6 +43,8 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 
+		$this->t['image_categories_view']			= $this->p->get( 'image_categories_view', '' );
+		$this->t['image_categories_view']			= $this->t['image_categories_view'] != '' ? JURI::base(true) . '/'. $this->t['image_categories_view'] : '';
 
 
 		$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'ph-row-flex' : '';

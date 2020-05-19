@@ -67,7 +67,7 @@
 
 	</fieldset>
 
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
@@ -85,7 +85,7 @@
 	<option value="1">COM_PHOCACART_YES</option>
 </field>
 
-<field name="display_user_account" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_DESC" >
+<field name="display_account" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_DESC" >
 <option value="0">COM_PHOCACART_NO</option>
 	<option value="1">COM_PHOCACART_YES</option>
 </field>
@@ -98,5 +98,5 @@
 	</fieldset>
 
 
-	
+
 </form>

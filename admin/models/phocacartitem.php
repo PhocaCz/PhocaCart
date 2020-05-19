@@ -509,6 +509,11 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			}
 		}
 
+        if ($app->input->get('task') == 'editAssociations')
+		{
+			return $this->redirectToAssociations($data);
+		}
+
 		return true;
 	}
 
@@ -1209,7 +1214,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 		// CURRENT CATEGORY
 		$app 			= JFactory::getApplication('administrator');
-		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
+		$filter 	= $app->input->post->get('filter', array(), 'array');
+
+		$currentCatid = 0;
+		if (isset($filter['category_id'])) {
+			$currentCatid = (int)$filter['category_id'];
+		}
 
 
 		$tableClassName = get_class($table);
@@ -1226,6 +1236,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 
 		// Update ordering values
+
+
 		foreach ($pks as $i => $pk)
 		{
 			$table->load(array('product_id' => (int) $pk, 'category_id' => (int)$currentCatid));
@@ -1487,7 +1499,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 
 
-		if (count($parameters) > 1){
+		if (count($parameters) > 0){
 			$addform = new SimpleXMLElement('<form />');
 			$fields = $addform->addChild('fields');
 			$fields->addAttribute('name', 'items_parameter');
@@ -1496,6 +1508,8 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 
 			foreach ($parameters as $k => $v)
 			{
+
+
 
 				$field = $fieldset->addChild('field');
 				$field->addAttribute('name', $v->id);

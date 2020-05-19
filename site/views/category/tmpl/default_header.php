@@ -35,7 +35,14 @@ if (isset($this->category[0]->title) && $this->category[0]->title != '') {
 	$title = $this->category[0]->title;
 }
 
-echo PhocacartRenderFront::renderHeader(array($title));
+// Image meta is used for open graph plugins
+$imageMeta = '';
+if (isset($this->category[0]->image) && $this->category[0]->image != '') {
+	$pathItem	= $this->t['pathcat'];
+	$imageMeta	= JURI::base(true) . '/'. $pathItem['orig_rel_ds'] .$this->category[0]->image;
+}
+
+echo PhocacartRenderFront::renderHeader(array($title), '', $imageMeta);
 
 if ( isset($this->category[0]->description) && $this->category[0]->description != '') {
 	echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->category[0]->description). '</div>';

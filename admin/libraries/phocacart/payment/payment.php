@@ -212,6 +212,7 @@ class PhocacartPayment
 
 
 				// if some of the rules is not valid, all the payment is NOT valid
+
 				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $s == 0) {
 					$v->active = 0;
 				} else {
@@ -296,7 +297,7 @@ class PhocacartPayment
 		$data					= PhocacartUser::getUserData((int)$user->id);
 		$fields 				= PhocacartFormUser::getFormXml('', '_phs', 1,1,0);
 
-
+		$dataAddress = array();
 		if (!empty($data)) {
 			$dataAddress	= PhocacartUser::getAddressDataOutput($data, $fields['array'], $user);
 
@@ -310,7 +311,7 @@ class PhocacartPayment
 
 		}
 
-		$country = 0;
+		/*$country = 0;
 		if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
 			$country = (int)$dataAddress['bcountry'];
 		}
@@ -318,7 +319,9 @@ class PhocacartPayment
 		$region = 0;
 		if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
 			$region = (int)$dataAddress['bregion'];
-		}
+		}*/
+		$country 	= $this->getUserCountryPayment($dataAddress);
+		$region 	= $this->getUserRegionPayment($dataAddress);
 
 
 		$paymentMethods	= $this->getPossiblePaymentMethods($totalFinal['netto'], $totalFinal['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected);
@@ -329,6 +332,46 @@ class PhocacartPayment
 		}
 		return false;
 
+	}
+
+	public static function getUserCountryPayment($dataAddress) {
+
+		$pC = PhocacartUtils::getComponentParameters();
+        $payment_country_rule = $pC->get('payment_country_rule', 1);
+
+        $country = 0;
+
+        if ($payment_country_rule == 1) {
+        	if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+				$country = (int)$dataAddress['bcountry'];
+			}
+		} else {
+        	if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+				$country = (int)$dataAddress['scountry'];
+			}
+		}
+
+		return $country;
+	}
+
+	public static function getUserRegionPayment($dataAddress) {
+
+		$pC = PhocacartUtils::getComponentParameters();
+        $payment_region_rule = $pC->get('payment_region_rule', 1);
+
+        $region = 0;
+
+        if ($payment_region_rule == 1) {
+        	if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+				$region = (int)$dataAddress['bregion'];
+			}
+		} else {
+        	if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+				$region = (int)$dataAddress['sregion'];
+			}
+		}
+
+		return $region;
 	}
 
 	public function getPaymentMethod($paymentId) {

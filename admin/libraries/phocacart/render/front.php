@@ -144,10 +144,36 @@ class PhocacartRenderFront
         $document->setTitle($title);
 
 
+       /* if (isset($item->image) && $item->image != '') {
+            $pathItem		= PhocacartPath::getPath('productimage');
+            $thumbnail      = PhocacartImage::getThumbnailName($pathItem, $item->image, 'large');
+            if (isset($thumbnail->rel)) {
+                $document->setMetadata('og:image', JURI::base(true) . '/' .$thumbnail->rel);
+            }
+        } else if (isset($category->image) && $category->image != '') {
+            $pathItem		= PhocacartPath::getPath('categoryimage');
+            $document->setMetadata('og:image', JURI::base(true) . $pathItem['orig_rel_ds'] .$category->image);
+        }*/
+
+
         if (isset($item->metadesc) && $item->metadesc != '') {
             $document->setMetadata('description', $item->metadesc);
+        } else if (isset($item->description) && strip_tags($item->description) != '') {
+
+            $description = str_replace( '<', ' <', $item->description);
+            $description = strip_tags($description);
+            $description = preg_replace("/\s\s+/", " ", $description);
+            $description = htmlspecialchars(trim($description), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $document->setMetadata('description', $description);
         } else if (isset($category->metadesc) && $category->metadesc != '') {
             $document->setMetadata('description', $category->metadesc);
+        }  else if (isset($category->description) && strip_tags($category->description) != '') {
+
+            $description = str_replace( '<', ' <', $category->description);
+            $description = strip_tags($description);
+            $description = preg_replace("/\s\s+/", " ", $description);
+            $description = htmlspecialchars(trim($description), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $document->setMetadata('description', $description);
         } else if ($metadesc != '') {
             $document->setDescription($metadesc);
         } else if ($params->get('menu-meta_description', '')) {
@@ -313,7 +339,7 @@ class PhocacartRenderFront
     }
 
 
-    public static function renderHeader($headers = array(), $tag = '')
+    public static function renderHeader($headers = array(), $tag = '', $imageMeta = '')
     {
 
         $app = JFactory::getApplication();
@@ -360,8 +386,15 @@ class PhocacartRenderFront
             }
         }
 
+        $imgMetaAttr = '';
+        if ($imageMeta != '') {
+            $imgMetaAttr = 'data-image-meta="'.$imageMeta.'"';
+        }
+
         if (!empty($h)) {
-            return '<' . strip_tags($tag) . ' class="ph-header">' . implode(" - ", $h) . '</' . strip_tags($tag) . '>';
+            return '<' . strip_tags($tag) . ' class="ph-header" '.$imgMetaAttr.'>' . implode(" - ", $h) . '</' . strip_tags($tag) . '>';
+        } else if ($imgMetaAttr != '') {
+            return '<div style="display:none;" '.$imgMetaAttr.'></div>';// use hidden tag for open graph info
         }
         return false;
     }

@@ -24,6 +24,7 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
     echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
     echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
+    //echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="'.$d['data-image-meta'].'"' : '';// Display only once in img tag
     echo '/>';
 
     echo ' <img';
@@ -38,6 +39,7 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
     echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
     echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
+    echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="'.$d['data-image-meta'].'"' : '';
     echo '/>';
 
     echo '</picture>';
@@ -55,6 +57,7 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
     echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
     echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
+    echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="'.$d['data-image-meta'].'"' : '';
     echo '/>';
 }
 ?>

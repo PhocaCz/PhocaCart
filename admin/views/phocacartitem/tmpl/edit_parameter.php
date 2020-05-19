@@ -12,6 +12,7 @@ $fieldSets = $this->form->getFieldsets();
 
 $o = '';
 
+
 foreach($fieldSets as $name => $fieldSet) {
 
     if (isset($fieldSet->name) && $fieldSet->name == 'items_parameter') {

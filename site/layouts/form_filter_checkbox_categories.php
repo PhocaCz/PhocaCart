@@ -13,7 +13,7 @@ $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
 
 
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> <?php echo $dParamAttr; ?>">
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $dParamAttr; ?>">
 	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
 		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
 			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse" aria-label="<?php echo JText::_('COM_PHOCACART_COLLAPSE') . ' ' . $d['title'] ?>"><span class="<?php echo $d['triangle_class'] ?>"></span></a>

@@ -338,6 +338,11 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
             }
         }
 
+        if ($app->input->get('task') == 'editAssociations')
+		{
+			return $this->redirectToAssociations($data);
+		}
+
 
 		return true;
 	}

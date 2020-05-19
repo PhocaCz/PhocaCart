@@ -27,7 +27,7 @@ class PhocacartTag
 		} else if ($select == 2){
 			$query = 'SELECT a.id, a.alias ';
 		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
+			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat';
 		}
 		$query .= ' FROM #__phocacart_tags AS a'
 				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
@@ -105,7 +105,7 @@ class PhocacartTag
 		} else if ($select == 2){
 			$query = 'SELECT a.id, a.alias ';
 		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
+			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat';
 		}
 		$query .= ' FROM #__phocacart_tags AS a'
 				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
@@ -372,7 +372,6 @@ class PhocacartTag
 		$p 		= PhocacartUtils::getComponentParameters();
 		$s      = PhocacartRenderStyle::getStyles();
 		$tl		= $p->get( 'tags_links', 0 );
-
 
 		$o 	= array();
 		$i  = 0;

@@ -79,7 +79,8 @@ if ($this->a->shippingnotused == 1) {
 	echo '<div class="ph-cb"></div>';*/
 
 
-	if (isset($this->t['shippingmethod']) && $this->t['shippingmethod']['title'] != '') {
+
+	if (isset($this->t['shippingmethod']) && isset($this->t['shippingmethod']['title']) && $this->t['shippingmethod']['title'] != '') {
 
 		//echo '<div class="'.$this->s['c']['row'].'">';
 		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';

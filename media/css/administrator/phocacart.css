@@ -935,7 +935,8 @@ border-radius: 2px;
 #ph-icon-pdf.ph-icon-pdf::before,
 #ph-icon-wizard.ph-icon-wizard::before {
     font-family: "Glyphicons Halflings";
-    font-style: normal;
+	font-style: normal;
+	color: #fff;
 }
 
 .admin.com_phocacart [class^="icon-"].icon-earth::before,

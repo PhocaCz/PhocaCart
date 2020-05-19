@@ -81,7 +81,7 @@ echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
-echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder, 'pc');
+echo $r->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, 'pc');
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-image">'.JText::_($this->t['l'].'_IMAGE').'</th>'."\n";
 echo '<th class="ph-sku">'.JHtml::_('searchtools.sort',  	$this->t['l'].'_SKU', 'a.sku', $listDirn, $listOrder ).'</th>'."\n";

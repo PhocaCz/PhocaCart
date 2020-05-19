@@ -109,10 +109,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			$d['t'] = $this->t;
 			$d['s'] = $this->s;
 			$d['src'] = JURI::base(true) . '/' . $image->rel;
-			$d['srcset-webp'] = JURI::base(true) . '/' . $image->rel_webp;
 			$d['data-image'] = JURI::base(true) . '/' . $image->rel;
 			$d['data-image-webp'] = JURI::base(true) . '/' . $image->rel_webp;
 			$d['alt-value'] = PhocaCartImage::getAltTitle($x->title, $image->rel);
+			$d['srcset-webp'] = $d['data-image-webp'];
+			$d['data-image-meta'] = $d['data-image'];
 			$d['class'] = PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phImageFull', 'phjProductImage' . $idName));
 			$d['style'] = '';
 			if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {

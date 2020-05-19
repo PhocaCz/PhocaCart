@@ -143,10 +143,12 @@ class PhocacartOrderRender
 		$d['qrcode']	= '';
 		if ($type == 2 && $format == 'pdf') {
 			$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
-			$d['qrcode'] 	= PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['b'], 1);
-			$d['qrcode'] 	= PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['s'], 2);
-
-
+			if (isset($d['bas']['b'])) {
+				$d['qrcode'] 	= PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['b'], 1);
+			}
+			if (isset($d['bas']['s'])) {
+				$d['qrcode'] = PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['s'], 2);
+			}
 		}
 		//if ($type == 4 && $format == 'raw') {
 			// POS RECEIPT IS MANAGED BY SPECIFIC RULES

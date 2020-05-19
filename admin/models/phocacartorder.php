@@ -213,7 +213,10 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 			return false;
 		}
 
-		$table->modified = $date = JFactory::getDate()->toSql();
+		$table->modified  = JFactory::getDate()->toSql();
+		$date = $table->date;
+
+
 		$this->prepareTable($table);
 
 		if (!$table->check()) {
@@ -233,7 +236,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		} else {
 
 			// Set invoice data in case status can set invoice ID (before notify)
-			PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], gmdate('Y-m-d H:i:s'), (int)$data['status_id'], array('I'));
+			PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], $date, (int)$data['status_id'], array('I'));
 
 			$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);
 			$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');

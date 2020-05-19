@@ -319,7 +319,7 @@ class PhocaCartModelCategory extends JModelLegacy
 				. " GROUP BY ".$groups
 				. " ORDER BY ".$categoryOrdering;
 		} else {
-			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
+			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.image, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
 				. " FROM #__phocacart_categories AS c"
 				. " LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id"
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category

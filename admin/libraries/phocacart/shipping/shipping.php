@@ -322,6 +322,7 @@ class PhocacartShipping
 		$data					= PhocacartUser::getUserData((int)$user->id);
 		$fields 				= PhocacartFormUser::getFormXml('', '_phs', 1,1,0);
 
+		$dataAddress = array();
 		if (!empty($data)) {
 			$dataAddress	= PhocacartUser::getAddressDataOutput($data, $fields['array'], $user);
 		} else {
@@ -334,7 +335,10 @@ class PhocacartShipping
 
         }
 
-		$country = 0;
+
+		$country 	= $this->getUserCountryShipping($dataAddress);
+		$region 	= $this->getUserRegionShipping($dataAddress);
+		/*$country = 0;
 		if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
 			$country = (int)$dataAddress['bcountry'];
 		}
@@ -342,7 +346,7 @@ class PhocacartShipping
 		$region = 0;
 		if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
 			$region = (int)$dataAddress['bregion'];
-		}
+		}*/
 
 		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
 
@@ -352,6 +356,46 @@ class PhocacartShipping
 		}
 		return false;
 
+	}
+
+	public static function getUserCountryShipping($dataAddress) {
+
+		$pC = PhocacartUtils::getComponentParameters();
+        $shipping_country_rule = $pC->get('shipping_country_rule', 1);
+
+        $country = 0;
+
+        if ($shipping_country_rule == 1) {
+        	if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+				$country = (int)$dataAddress['bcountry'];
+			}
+		} else {
+        	if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+				$country = (int)$dataAddress['scountry'];
+			}
+		}
+
+		return $country;
+	}
+
+	public static function getUserRegionShipping($dataAddress) {
+
+		$pC = PhocacartUtils::getComponentParameters();
+        $shipping_region_rule = $pC->get('shipping_region_rule', 1);
+
+        $region = 0;
+
+        if ($shipping_region_rule == 1) {
+        	if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+				$region = (int)$dataAddress['bregion'];
+			}
+		} else {
+        	if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+				$region = (int)$dataAddress['sregion'];
+			}
+		}
+
+		return $region;
 	}
 
 	public function getShippingMethod($shippingId) {

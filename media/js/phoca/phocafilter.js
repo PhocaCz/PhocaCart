@@ -166,7 +166,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 	}
 
 
-	var url;
+	/*var url;
 
 	if (filteredProductsOnly == 1) {
 		url = location.search;
@@ -177,25 +177,16 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 		return 1;
 		//return 2; // Not possible to deselect in other than items view
 		//return false;
-	}
+	}*/
+	/*
 	if ((isItemsView == 1 && filteredProductsOnly != 1) || isItemsView != 1) {
 		url = urlItemsView;// skip all parameters (a) search all products in items view or b) no items view
 	} else {
 		url = location.search;// complete url with selected parameters
-	}
+	}*/
 
 	var url;
 
-/*	if (isItemsView == 1) {
-		url = location.search;
-	} else {
-
-		url = urlItemsView;// It is possible to deselect category in category/item view
-		document.location = url;
-		return 1;
-		//return 2; // Not possible to deselect in other than items view
-		//return false;
-	}*/
 
 	if ((isItemsView == 1 && filteredProductsOnly != 1) || isItemsView != 1) {
 		url = urlItemsView;// skip all parameters (a) search all products in items view or b) no items view
@@ -245,7 +236,8 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 			phFilterNewUrlRemovePreviousParamWaiting = 0;
 			return 2;
 		} else {
-			document.location = phFilterNewUrlSet;
+			//document.location = phFilterNewUrlSet;
+			document.location = phFilterNewUrlRemove;
 		}
 		phFilterNewUrlRemove = '';
 

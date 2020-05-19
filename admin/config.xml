@@ -51,6 +51,9 @@
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
+			
+			<field name="image_categories_view" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_CATEGORIES_VIEW_LABEL"
+                   description="COM_PHOCACART_FIELD_IMAGE_CATEGORIES_VIEW_DESC"/>
 
 
             <!--
@@ -314,7 +317,8 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-
+			<field name="image_items_view" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_ITEMS_VIEW_LABEL"
+                   description="COM_PHOCACART_FIELD_IMAGE_ITEMS_VIEW_DESC"/>
 
 
             <field name="phocahead5" type="phocahead" default="COM_PHOCACART_ITEM_VIEW_LABEL" label="" description=""/>
@@ -514,9 +518,6 @@
                 <option value="3">COM_PHOCACART_YES_NEW_USERS_NEW_GUEST_USERS</option>
             </field>
 			
-			
-			delivery_billing_same_enabled
-
 
             <field name="phocahead30" type="phocahead" default="COM_PHOCACART_USER_ACCOUNT_VIEW_LABEL" label="" description=""/>
 
@@ -836,6 +837,16 @@
                 <option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
                 <option value="0">COM_PHOCACART_NO_TAX_AMOUNT</option>
             </field>
+			
+			<field name="shipping_country_rule" type="list" default="1" label="COM_PHOCACART_FIELD_COUNTRY_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_COUNTRY_RULE_SHIPPING_DESC">
+                <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
+                <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
+            </field>
+			
+			<field name="shipping_region_rule" type="list" default="1" label="COM_PHOCACART_FIELD_REGION_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_REGION_RULE_SHIPPING_DESC">
+                <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
+                <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
+            </field>
 
             <field name="tax_calculation_payment" type="list" default="0" label="COM_PHOCACART_FIELD_TAX_CALCULATION_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_TAX_CALCULATION_PAYMENT_DESC">
                 <option value="2">COM_PHOCACART_TAX_INCLUSIVE_PRICE</option>
@@ -847,6 +858,16 @@
                 <option value="2">COM_PHOCACART_TAX_INCLUSIVE_AMOUNT</option>
                 <option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
                 <option value="0">COM_PHOCACART_NO_TAX_AMOUNT</option>
+            </field>
+			
+			<field name="payment_country_rule" type="list" default="1" label="COM_PHOCACART_FIELD_COUNTRY_RULE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_COUNTRY_RULE_PAYMENT_DESC">
+                <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
+                <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
+            </field>
+			
+			<field name="payment_region_rule" type="list" default="1" label="COM_PHOCACART_FIELD_REGION_RULE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_REGION_RULE_PAYMENT_DESC">
+                <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
+                <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
             </field>
 
             <field name="dynamic_tax_rate" type="list" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_TAX_RATE_LABEL" description="COM_PHOCACART_FIELD_DYNAMIC_TAX_RATE_DESC">
@@ -1483,6 +1504,33 @@
 
             <field name="report_display_rounding" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_LABEL"
                    description="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+			
+			
+			<field name="phocahead38" type="phocahead" default="COM_PHOCACART_PRINTED_CATALOG_OPTIONS_LABEL" label="" description=""/>
+
+			 <field name="printed_catalog_enable" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_CREATING_PRINTED_CATALOG_LABEL"
+                   description="COM_PHOCACART_FIELD_ENABLE_CREATING_PRINTED_CATALOG_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+            <field name="printed_catalog_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_HEADER_LABEL"
+                   description="COM_PHOCACART_FIELD_PRINTED_CATALOG_HEADER_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+			
+			<field name="printed_catalog_document_title" type="text" default="" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DOCUMENT_TITLE_LABEL" description="COM_PHOCACART_FIELD_PRINTED_CATALOG_DOCUMENT_TITLE_DESC" filter="string"/>
+
+			<field name="printed_catalog_css" default="" type="textarea" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_CSS_LABEL" description="COM_PHOCACART_FIELD_PRINTED_CATALOG_CSS_DESC"/>
+
+			 <field name="printed_catalog_display_category_title" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_CATEGORY_TITLE_LABEL"
+                   description="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_CATEGORY_TITLE_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+			
+			<field name="printed_catalog_display_price_label" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_PRICE_LABEL_LABEL"
+                   description="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_PRICE_LABEL_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>

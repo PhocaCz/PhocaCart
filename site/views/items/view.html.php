@@ -149,6 +149,9 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
 		$this->t['class_lazyload']       		= $this->t['lazy_load_category_items']  == 1 ? 'ph-lazyload' : '';
 
+		$this->t['image_items_view']			= $this->p->get( 'image_items_view', '' );
+		$this->t['image_items_view']			= $this->t['image_items_view'] != '' ? JURI::base(true) . '/'. $this->t['image_items_view'] : '';
+
 		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadChosen();

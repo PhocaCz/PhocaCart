@@ -40,7 +40,7 @@ class JFormFieldPhocacartCategory extends JFormField
 		if ($required) {
 			$attr		.= 'required aria-required="true" ';
 		}
-		
+
 		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
 		//$attr		.= $javascript . ' ';
 
@@ -60,7 +60,8 @@ class JFormFieldPhocacartCategory extends JFormField
 
 
 		// Filter language
-        $whereLang = '';
+        //$whereLang = '';
+		$wheres = array();
         if (!empty($this->element['language'])) {
             if (strpos($this->element['language'], ',') !== false)
             {
@@ -71,7 +72,7 @@ class JFormFieldPhocacartCategory extends JFormField
                 $language = $db->quote($this->element['language']);
             }
 
-            $whereLang = ' AND '.$db->quoteName('a.language') . ' IN (' . $language . ')';
+            $wheres[] = ' '.$db->quoteName('a.language') . ' IN (' . $language . ')';
         }
 
 
@@ -84,11 +85,11 @@ class JFormFieldPhocacartCategory extends JFormField
 		switch($categoryType) {
 
 			case 1:
-				$query .= ' WHERE a.type IN (0,1)';
+				$wheres[] = ' a.type IN (0,1)';
 			break;
 
 			case 2:
-				$query .= ' WHERE a.type IN (0,2)';
+				$wheres[] = ' a.type IN (0,2)';
 			break;
 
 
@@ -99,9 +100,11 @@ class JFormFieldPhocacartCategory extends JFormField
 
 		}
 
-		$query .= $whereLang;
+		$query .= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
+
 
 		$query .= ' ORDER BY a.ordering';
+
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 

@@ -77,7 +77,7 @@ echo $r->startTable('orderList');
 
 echo $r->startTblHeader();
 
-echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
+echo $r->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
 echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-order">'.JHtml::_('searchtools.sort',  	$this->t['l'].'_ORDER_NUMBER', 'order_number', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-user">'.JHtml::_('searchtools.sort',  $this->t['l'].'_USER', 'user_username', $listDirn, $listOrder ).'</th>'."\n";

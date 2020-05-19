@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 echo '<div id="ph-pc-categories-box" class="pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 echo $this->t['event']->onCategoriesBeforeHeader;
-echo PhocacartRenderFront::renderHeader();
+echo PhocacartRenderFront::renderHeader(array(), '', $this->t['image_categories_view']);
 
 if ( $this->t['main_description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['main_description']. '</div>';

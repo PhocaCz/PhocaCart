@@ -248,7 +248,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$this->a->shippingedit	= $app->input->get('shippingedit', 0, 'int'); // Edit Shipping
 				$shippingId 			= $this->cart->getShippingId();// Shipping stored in cart or not?
 
-				$country = 0;
+			/*	$country = 0;
 				if(isset($this->t['dataaddressoutput']['bcountry']) && (int)$this->t['dataaddressoutput']['bcountry']) {
 					$country = (int)$this->t['dataaddressoutput']['bcountry'];
 				}
@@ -256,7 +256,10 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$region = 0;
 				if(isset($this->t['dataaddressoutput']['bregion']) && (int)$this->t['dataaddressoutput']['bregion']) {
 					$region = (int)$this->t['dataaddressoutput']['bregion'];
-				}
+				}*/
+				$shipping	= new PhocacartShipping();
+				$country 	= $shipping->getUserCountryShipping($this->t['dataaddressoutput']);
+				$region 	= $shipping->getUserRegionShipping($this->t['dataaddressoutput']);
 
 				if (isset($shippingId) && (int)$shippingId > 0 && $this->a->shippingedit == 0) {
 					// Shipping method is stored in cart, we can update the cart (add shipping costs to whole cart)
@@ -273,7 +276,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					// It is not possible to edit the method because when switching to edit, the method will be set automatically as wished by enabling the parameter
 					// and redirect outside the editing mode
 					if ($this->t['automatic_shipping_method_setting'] == 1) {
-						$shipping					= new PhocacartShipping();
+						///$shipping					= new PhocacartShipping();
 						$this->t['shippingmethods']	= $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
 						if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1) {
 							$this->a->shippingdisplayeditbutton = 0;
@@ -287,7 +290,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->shippingview		= 0;
 					$this->a->shippingedit		= 1;
 					$scrollTo 					= 'phcheckoutshippingedit';
-					$shipping					= new PhocacartShipping();
+					///$shipping					= new PhocacartShipping();
 					//$shipping->setType();
 					$total						= $this->cart->getTotal();
 
@@ -357,7 +360,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$this->t['paymentmethod'] = $this->cart->getPaymentMethod();
 
 
-				$country = 0;
+				/*$country = 0;
 				if(isset($this->t['dataaddressoutput']['bcountry']) && (int)$this->t['dataaddressoutput']['bcountry']) {
 					$country = (int)$this->t['dataaddressoutput']['bcountry'];
 				}
@@ -365,7 +368,11 @@ class PhocaCartViewCheckout extends JViewLegacy
 				$region = 0;
 				if(isset($this->t['dataaddressoutput']['bregion']) && (int)$this->t['dataaddressoutput']['bregion']) {
 					$region = (int)$this->t['dataaddressoutput']['bregion'];
-				}
+				}*/
+
+				$payment	= new PhocacartPayment();
+				$country 	= $payment->getUserCountryPayment($this->t['dataaddressoutput']);
+				$region 	= $payment->getUserRegionPayment($this->t['dataaddressoutput']);
 
 				if (isset($this->t['paymentmethod']['id']) && (int)$this->t['paymentmethod']['id'] > 0 && $this->a->paymentedit == 0) {
 					$this->cart->addPaymentCosts($this->t['paymentmethod']['id']);
@@ -381,7 +388,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					// It is not possible to edit the method because when switching to edit, the method will be set automatically as wished by enabling the parameter
 					// and redirect outside the editing mode
 					if ($this->t['automatic_payment_method_setting'] == 1) {
-						$payment					= new PhocacartPayment();
+						//$payment					= new PhocacartPayment();
 						$shippingId 				= $this->cart->getShippingId();// Shipping stored in cart or not?
 						$this->t['paymentmethods']	= $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $this->t['paymentmethod']['id']);
 						if (!empty($this->t['paymentmethods']) && count($this->t['paymentmethods']) == 1) {
@@ -397,7 +404,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 					$this->a->paymentview		= 0;
 					$this->a->paymentedit		= 1;
 					$scrollTo 					= 'phcheckoutpaymentedit';
-					$payment					= new PhocacartPayment();
+					//$payment					= new PhocacartPayment();
 					$shippingId 				= $this->cart->getShippingId();// Shipping stored in cart or not?
 
 					$total						= $this->cart->getTotal();

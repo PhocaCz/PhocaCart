@@ -785,7 +785,7 @@ class PhocacartOrderStatus
 		$db->execute();
 
 		// Set invoice data in case status can set invoice ID
-		PhocacartOrder::storeOrderReceiptInvoiceId((int)$orderId, gmdate('Y-m-d H:i:s'), (int)$statusId, array('I'));
+		PhocacartOrder::storeOrderReceiptInvoiceId((int)$orderId, false, (int)$statusId, array('I'));
 
 		return true;
 

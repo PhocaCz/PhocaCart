@@ -350,14 +350,15 @@ class PhocacartOrder
             $address = PhocacartUser::getUserAddress($user->id);
         }
 
-        $country = 0;
-        if (isset($address[0]->type) && $address[0]->type == 0 && isset($address[0]->country) && (int)$address[0]->country > 0) {
-            $country = (int)$address[0]->country;
-        }
-        $region = 0;
-        if (isset($address[0]->type) && $address[0]->type == 0 && isset($address[0]->region) && (int)$address[0]->region > 0) {
-            $region = (int)$address[0]->region;
-        }
+        $dataAddress = array();
+        $dataAddress['bcountry'] =  isset($address[0]->country) && (int)$address[0]->country > 0 ? (int)$address[0]->country : 0;
+        $dataAddress['bregion'] =  isset($address[0]->region) && (int)$address[0]->region > 0 ? (int)$address[0]->region : 0;
+        $dataAddress['scountry'] =  isset($address[1]->country) && (int)$address[1]->country > 0 ? (int)$address[1]->country : 0;
+        $dataAddress['sregion'] =  isset($address[1]->region) && (int)$address[1]->region > 0 ? (int)$address[1]->region : 0;
+
+
+		$country 	= $shippingClass->getUserCountryShipping($dataAddress);
+		$region 	= $shippingClass->getUserRegionShipping($dataAddress);
 
 
         // Check Shipping method
@@ -416,6 +417,9 @@ class PhocacartOrder
             return false;
         }
 
+
+        $country 	= $paymentClass->getUserCountryPayment($dataAddress);
+		$region 	= $paymentClass->getUserRegionPayment($dataAddress);
 
         // Check Payment method
         if ($payment['id'] > 0) {
@@ -2397,6 +2401,13 @@ class PhocacartOrder
 		$d['id'] 				    = $id;
 
 
+		// if we create the data by order status changes, we don't use new date but the one which exists in order yet
+        // so when using this function from order statuses, the date is false to get the right date here
+		$date = !$date ? self::getOrderDate($id) : $date;
+        $d['date']              = $date;
+        // Don't change the date of order but change date for oder, receipt or delivery note number
+        $dateNow                = JFactory::getDate()->toSql();
+
 		// Will we create an invoice?
         $paramsC = PhocacartUtils::getComponentParameters();
         $invoice_creating_numbers = $paramsC->get('invoice_creating_numbers', 'A');
@@ -2440,16 +2451,16 @@ class PhocacartOrder
         // Example: auto increment can be 1250 but it is new year so based on year the number will be 1 (even autoincrement will be 1251)
 		if (in_array('O', $docs)) {
 		    $d['date']              = $date;
-            $d['order_number_id']   = PhocaCartOrder::getNumberId('order', $id, $date);
+            $d['order_number_id']   = PhocaCartOrder::getNumberId('order', $id, $dateNow);
             // Human readable numbers inclusive all prefixes, suffixes, etc.
-		    $d['order_number']      = PhocacartOrder::getOrderNumber($id, $date, false, $d['order_number_id']);
+		    $d['order_number']      = PhocacartOrder::getOrderNumber($id, $dateNow, false, $d['order_number_id']);
 		     $orderNumberId = $d['order_number_id'];
 		}
 
 		if (in_array('R', $docs)) {
 		    $d['date']              = $date;
-            $d['receipt_number_id'] = PhocaCartOrder::getNumberId('receipt', $id, $date);
-            $d['receipt_number']    = PhocacartOrder::getReceiptNumber($id, $date, false, $d['receipt_number_id']);
+            $d['receipt_number_id'] = PhocaCartOrder::getNumberId('receipt', $id, $dateNow);
+            $d['receipt_number']    = PhocacartOrder::getReceiptNumber($id, $dateNow, false, $d['receipt_number_id']);
             $receiptNumberId = $d['receipt_number_id'];
         }
 
@@ -2470,24 +2481,24 @@ class PhocacartOrder
 
 		    if ((!isset($orderData['invoice_number_id']) || (isset($orderData['invoice_number_id']) && (int)$orderData['invoice_number_id'] == 0))
             && (!isset($orderData['invoice_number']) || (isset($orderData['invoice_number']) && $orderData['invoice_number'] == ''))) {
-                $d['invoice_number_id'] = PhocaCartOrder::getNumberId('invoice', $id, $date);
+                $d['invoice_number_id'] = PhocaCartOrder::getNumberId('invoice', $id, $dateNow);
                 $invoiceNumberId = $d['invoice_number_id'];
-                $d['invoice_number'] = PhocacartOrder::getInvoiceNumber($id, $date, false, $d['invoice_number_id']);
+                $d['invoice_number'] = PhocacartOrder::getInvoiceNumber($id, $dateNow, false, $d['invoice_number_id']);
 
             }
 
 
 
 		    if (!isset($orderData['invoice_date']) || (isset($orderData['invoice_date']) && !PhocacartDate::activeDatabaseDate($orderData['invoice_date']))) {
-                $d['invoice_date'] = $date;
+                $d['invoice_date'] = $dateNow;
             }
 
 		    if (!isset($orderData['invoice_due_date']) || (isset($orderData['invoice_due_date']) && !PhocacartDate::activeDatabaseDate($orderData['invoice_due_date']))) {
-                $d['invoice_due_date'] = PhocacartOrder::getInvoiceDueDate($id, $date);
+                $d['invoice_due_date'] = PhocacartOrder::getInvoiceDueDate($id, $dateNow);
             }
 
 		    if (!isset($orderData['invoice_time_of_supply']) || (isset($orderData['invoice_time_of_supply']) && !PhocacartDate::activeDatabaseDate($orderData['invoice_time_of_supply']))) {
-                $d['invoice_time_of_supply'] = $date;
+                $d['invoice_time_of_supply'] = $dateNow;
             }
 
         }
@@ -2504,7 +2515,7 @@ class PhocacartOrder
                 'receipt' => $receiptNumberId,
                 'invoice' => $invoiceNumberId
             );
-            $prn = PhocacartOrder::getPaymentReferenceNumber($id, $date, false, $idNumberA);
+            $prn = PhocacartOrder::getPaymentReferenceNumber($id, $dateNow, false, $idNumberA);
             if ($prn != '') {
                 // PRN is not included in database and it exits
                 $d['invoice_prn'] = $prn;
@@ -2518,6 +2529,9 @@ class PhocacartOrder
         // This is why dome $d array keys are not defined
         // E.g. if this method is called by chaning status, order and receipt keys are inactive
 		$row = JTable::getInstance('PhocacartOrder', 'Table', array());
+
+
+
 
 		if (!$row->bind($d)) {
 			//throw new Exception($db->getErrorMsg());

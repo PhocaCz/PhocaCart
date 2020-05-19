@@ -22,6 +22,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 	function display($tpl = null) {
 
 		$this->t			= PhocacartUtils::setVars('category');
+		$this->s                = PhocacartRenderStyle::getStyles();
 		$model 				= $this->getModel();
 		$this->items		= $model->getItems();
 		$this->pagination	= $model->getPagination();
@@ -94,6 +95,10 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 
 	protected function addToolbar() {
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
+
+		$pC = PhocacartUtils::getComponentParameters();
+		$printed_catalog_enable 	= $pC->get( 'printed_catalog_enable', 0);
+
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.category_id'));
@@ -135,6 +140,49 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$dhtml = '<button onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacartcategory.countproducts\');}" class="btn btn-small button-plus"><i class="icon-plus" title="'.JText::_($this->t['l'].'_COUNT_PRODUCTS').'"></i> '.JText::_($this->t['l'].'_COUNT_PRODUCTS').'</button>';
 		$bar->appendButton('Custom', $dhtml, 'countproducts');
 
+
+
+
+		// Catalog JS
+		if ($printed_catalog_enable == 1) {
+			JFactory::getDocument()->addScriptDeclaration('
+
+function phOpenCatalog(href){
+	var categories = [];
+	jQuery("input:checkbox[name=\'cid[]\']:checked").each(function(){
+	    categories.push(parseInt(jQuery(this).val()));
+    });
+
+    if (categories === undefined || categories.length == 0) {
+        alert(\'' . JText::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');
+        return false;
+    } else {
+        
+        var categoriesString = categories.join(",");
+        href = href + "&cid=" + categoriesString;
+		window.open(href, \'catalog\', \'width=880,height=560,scrollbars=yes,menubar=no,resizable=yes\'); return false;
+	}
+}'
+			);
+
+			// Catalog HTML
+			$linkTxt = JRoute::_('index.php?option=com_phocacart&view=phocacartcatalogs&tmpl=component&format=raw&' . JSession::getFormToken() . '=1');
+			$linkTxtHandler = 'onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . JText::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.href);return false;}"';
+
+			// Catalog PDF
+			$dhtml = '<a href="' . $linkTxt . '" class="btn btn-small btn-primary" ' . $linkTxtHandler . '><i id="ph-icon-text" class="icon-dummy ' . $this->s['i']['list-alt'] . ' ph-icon-text"></i>' . JText::_('COM_PHOCACART_CREATE_CATALOG_HTML') . '</a>';
+			$bar->appendButton('Custom', $dhtml, 'countproducts');
+
+			$this->t['plugin-pdf'] = PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+			$this->t['component-pdf'] = PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
+			if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
+				$linkPdf = JRoute::_('index.php?option=com_phocacart&view=phocacartcatalogs&tmpl=component&format=pdf&' . JSession::getFormToken() . '=1');
+				$linkPdfHandler = 'onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . JText::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.href);return false;}"';
+				$dhtml = '<a href="' . $linkPdf . '" class="btn btn-small btn-danger" ' . $linkPdfHandler . '><i id="ph-icon-pdf" class="icon-dummy ' . $this->s['i']['list-alt'] . ' ph-icon-pdf"></i>' . JText::_('COM_PHOCACART_CREATE_CATALOG_PDF') . '</a>';
+				$bar->appendButton('Custom', $dhtml);
+
+			}
+		}
 
 
 		JToolbarHelper::divider();

@@ -1081,6 +1081,8 @@ class PhocacartProduct
             }
         }
 
+
+
         if (!$table->bind($data)) {
             throw new Exception($table->getError());
             return false;
@@ -1154,13 +1156,20 @@ class PhocacartProduct
                 }
             }
 
+            $additionalDownloadFiles = '';
+            if (!isset($data['additional_download_files'])) {
+                $additionalDownloadFiles = '';
+            } else {
+                $additionalDownloadFiles = $data['additional_download_files'];
+            }
+
             PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id);
             PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['images']);
             PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
             PhocacartAttribute::storeCombinationsById((int)$table->id, $advancedStockOptions);
             PhocacartSpecification::storeSpecificationsById((int)$table->id, $data['specifications']);
             PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $data['discounts']);
-            PhocacartFileAdditional::storeProductFilesByProductId((int)$table->id, $data['additional_download_files']);
+            PhocacartFileAdditional::storeProductFilesByProductId((int)$table->id, $additionalDownloadFiles);
             PhocacartTag::storeTags($data['tags'], (int)$table->id);
             PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
 
@@ -1418,6 +1427,52 @@ class PhocacartProduct
         $rules['wheres'] = $wheres;
         $rules['lefts'] = $lefts;
         return $rules;
+
+    }
+
+    public static function getProductsByCategories($cidA, $limitOffset = 0, $limitCount = 0, $orderingItem = 1) {
+
+        if (!empty($cidA)) {
+
+            $cidS = implode(',', $cidA);
+
+            $ordering = PhocacartOrdering::getOrderingCombination($orderingItem);
+            $db = JFactory::getDBO();
+            $wheres = array();
+
+            $wheres[] = 'c.id IN ('.$cidS.')';
+
+            $where = (count($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '');
+
+            $q = ' SELECT a.*, c.id as category_id, c.title as category_title, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle';
+
+            // No Images, Categories, Attributes, Specifications here
+            $q .= ', CONCAT_WS(":", t.id, t.alias) AS tax';
+            $q .= ', CONCAT_WS(":", m.id, m.alias) AS manufacturer';
+
+            $q .= ' FROM #__phocacart_products AS a'
+                . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
+                . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+                . ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
+                . ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id'
+                . $where;
+
+
+            if ($ordering != '') {
+                $q .= ' ORDER BY c.ordering, ' . $ordering;
+            }
+
+            if ((int)$limitCount > 0) {
+                $q .= ' LIMIT ' . (int)$limitOffset . ', ' . (int)$limitCount;
+            }
+
+            $db->setQuery($q);
+
+            $products = $db->loadAssocList();
+
+            return $products;
+
+        }
 
     }
 

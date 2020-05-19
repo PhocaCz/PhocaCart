@@ -88,9 +88,11 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
+
 	}
 
 	function displayItem(&$pks, $value = 1, $column = 'display_billing') {
+
 
 		//$dispatcher	= JDispatcher::getInstance();
 		$user		= JFactory::getUser();
@@ -115,6 +117,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 
 	public function save($data) {
+
 
 		$save = parent::save($data);
 		if ($save) {

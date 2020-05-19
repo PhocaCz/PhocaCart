@@ -66,7 +66,7 @@ foreach ($d['items'] as $k => $v) {
 
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>  <?php echo $dParamAttr; ?>">
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>  panel-<?php echo $dParamAttr; ?>">
 	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
 		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
 			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
