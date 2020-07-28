@@ -7,44 +7,40 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
 
-//$class		= $this->t['n'] . 'RenderAdminview';
-$r = new PhocacartRenderAdminview();
-?>
-<script type="text/javascript">
-    Joomla.submitbutton = function (task) {
-        if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        } else {
-            Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
-        }
-    }
-</script><?php
+
+$r 			=  $this->r;
+$js ='
+Joomla.submitbutton = function(task) {
+	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+		Joomla.submitform(task, document.getElementById("adminForm"));
+	} else {
+		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+	}
+}
+';
+JFactory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="span10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
 $tabs = array(
     'general' => JText::_($this->t['l'] . '_GENERAL_OPTIONS'),
     'item' => JText::_($this->t['l'] . '_PRODUCT_INFORMATION'),
     'contact' => JText::_($this->t['l'] . '_CONTACT_INFORMATION'));
 echo $r->navigation($tabs);
 
-echo '<div class="tab-content">' . "\n";
+echo $r->startTabs();
 
 
 // GENERAL OPTIONS
-echo '<div class="tab-pane active" id="general">' . "\n";
+echo $r->startTab('general', $tabs['general'], 'active');
 $formArray = array('title', 'user_id', 'ip', 'date_submit', 'published', 'ordering', 'upload_folder', 'upload_token');
 echo $r->group($this->form, $formArray);
-echo '</div>' . "\n";
+echo $r->endTab();
 
 
 // PRODUCT INFORMATION
-echo '<div class="tab-pane" id="item">' . "\n";
+echo $r->startTab('item', $tabs['item']);
 
 
 // Items
@@ -144,10 +140,10 @@ if (!empty($this->t['items_parameter'])) {
         }
     }
 }
-echo '</div>' . "\n";
+echo $r->endTab();
 
 // CONTACT INFORMATION
-echo '<div class="tab-pane" id="contact">' . "\n";
+echo $r->startTab('contact', $tabs['contact']);
 
 if (!empty($this->t['items_contact'])) {
 
@@ -192,10 +188,10 @@ if (!empty($this->t['items_contact'])) {
         }
     }
 }
-echo '</div>' . "\n";
+echo $r->endTab();
 
 
-echo '</div>';//end tab content
+echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
 echo '<div class="col-xs-12 col-sm-2 col-md-2">';

@@ -1324,3 +1324,140 @@ table#extensionList tr td {
 #phAdminEdit .ph-admin-download-links table tr td {
 	padding: 5px;
 }
+
+
+
+
+
+/* CP Info */
+.ph-box-cp {
+	display: flex;
+}
+
+.ph-left-cp {
+	flex-basis: 50%;
+}
+
+.ph-right-cp {
+	flex-basis: 50%;
+}
+
+
+/* CP Icons */
+
+.ph-cp-item-box {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 25px;
+}
+.ph-cp-item {
+	width: 7rem;
+	margin: 0 0.7em 1.4em 0.7em;
+}
+
+.ph-cp-item-icon {
+	background: #fff;
+	border-radius: 5px;
+	
+	width: 7rem;
+	height: 7rem;
+	text-align: center;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#ffffff);
+    box-shadow: 1px 2px 1px 0 rgba(0,0,0,.15);
+}
+
+.ph-cp-item-icon-link {
+	width: 7rem;
+	height:7rem;
+	display: flex;
+}
+
+.ph-cp-item-icon-link,
+.ph-cp-item-icon-link:hover,
+.ph-cp-item-icon-link:active,
+.ph-cp-item-icon-link:visited,
+.ph-cp-item-icon-link:focus {
+	color: #A6AAB1;
+	text-decoration: none;
+}
+
+.ph-cp-item-icon-link span {
+	border: 0px;
+	box-shadow: none;
+	border-radius: 50%;
+	width: 5rem;
+	height: 5rem;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	text-align: center;
+}
+
+.ph-cp-item-icon-link:hover {
+	border: 0px;
+	box-shadow: none;
+}
+
+.ph-cp-item-icon-link-large {
+	font-size: 2.6rem;
+	width: 2.6rem;
+	height:2.6rem;
+
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ph-cp-item-title {
+	
+	display:block;
+	font-size: 0.95em;
+	margin: 0 auto;
+	margin-top: 0.1em;
+	text-align: center
+}
+
+.ph-cp-item-icon-link-large {
+   text-shadow:
+   -2px -2px 0 #575757,
+    2px -2px 0 #575757,
+    -2px 2px 0 #575757,
+     2px 2px 0 #575757;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+@-moz-document url-prefix() {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+
+.ph-cp-item-icon-link-large:before {
+	font-family: 'JoomlaFont' !important;
+}
+
+.ph-cp-item [class^="icon-"], .ph-cp-item [class*=" icon-"] {
+    display: inline;
+    width: auto;
+    height: auto;
+    margin-right: auto;
+    line-height: 1;
+}
+
+.ph-cp-item [class^="icon-"].duotone:after, .ph-cp-item [class*=" icon-"].duotone:after {
+  opacity: 0.6;
+}

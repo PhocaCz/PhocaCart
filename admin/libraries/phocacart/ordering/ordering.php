@@ -23,6 +23,7 @@ class PhocacartOrdering
 					case 6:$orderingOutput	= 'c.date DESC';break;
 					case 7:$orderingOutput	= 'c.count_products ASC';break;
 					case 8:$orderingOutput	= 'c.count_products DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1: default: $orderingOutput = 'c.ordering ASC'; break;
 				}
 			break;
@@ -49,6 +50,7 @@ class PhocacartOrdering
 					case 6:$orderingOutput	= 't.id DESC';break;
 					case 7:$orderingOutput	= 't.count_products ASC';break;
 					case 8:$orderingOutput	= 't.count_products DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 't.ordering ASC';break;
 				}
 			break;
@@ -62,6 +64,7 @@ class PhocacartOrdering
 					case 6:$orderingOutput	= 'm.id DESC';break;
 					case 7:$orderingOutput	= 'm.count_products ASC';break;
 					case 8:$orderingOutput	= 'm.count_products DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'm.ordering ASC';break;
 				}
 			break;
@@ -105,6 +108,7 @@ class PhocacartOrdering
 			case 9:// SHIPPING METHODS (POS)
 				switch ((int)$ordering) {
 					case 2:$orderingOutput	= 'a.title DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'a.title ASC';break;
 				}
 			break;
@@ -112,6 +116,7 @@ class PhocacartOrdering
 			case 10:// PAYMENT METHODS (POS)
 				switch ((int)$ordering) {
 					case 2:$orderingOutput	= 'a.title DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'a.title ASC';break;
 				}
 			break;
@@ -121,6 +126,7 @@ class PhocacartOrdering
 					case 3:$orderingOutput	= 'a.id ASC';break;
 					case 3:$orderingOutput	= 'a.id DESC';break;
 					case 1:$orderingOutput	= 'a.date ASC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 2:default:$orderingOutput = 'a.date DESC';break;
 				}
 			break;
@@ -132,6 +138,7 @@ class PhocacartOrdering
 					case 4:$orderingOutput	= 'pp.title DESC';break;
 					case 5:$orderingOutput	= 'pp.id ASC';break;
 					case 6:$orderingOutput	= 'pp.id DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'pp.ordering ASC';break;
 				}
 			break;
@@ -145,6 +152,7 @@ class PhocacartOrdering
 					case 6:$orderingOutput	= 'pv.id DESC';break;
 					case 7:$orderingOutput	= 'pv.count_products ASC';break;
 					case 8:$orderingOutput	= 'pv.count_products DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'pv.ordering ASC';break;
 				}
 			break;
@@ -175,6 +183,7 @@ class PhocacartOrdering
 
 					case 19:$orderingOutput = 'a.sku ASC';break;
 					case 20:$orderingOutput = 'a.sku DESC';break;
+					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
 				}
 			break;
@@ -226,7 +235,7 @@ class PhocacartOrdering
 			break;
 		}
 
-		$html 	= JHtml::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected, $ordering);
+		$html 	= Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected, $ordering);
 
 		return $html;
 	}

@@ -30,17 +30,17 @@ class PhocacartPagination extends JPagination
 		$limits = array ();
 
 		foreach ($paginationArray as $paginationValue) {
-			$limits[] = JHtml::_('select.option', $paginationValue);
+			$limits[] = Joomla\CMS\HTML\HTMLHelper::_('select.option', $paginationValue);
 		}
-		$limits[] = JHtml::_('select.option', '0', JText::_('COM_PHOCACART_ALL'));
+		$limits[] = Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', JText::_('COM_PHOCACART_ALL'));
 
 		$selected = $this->viewall ? 0 : $this->limit;
 
 		// Build the select list
 		if ($app->isClient('administrator')) {
-			$html = JHtml::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="submitform();"', 'value', 'text', $selected);
+			$html = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="submitform();"', 'value', 'text', $selected);
 		} else {
-			$html = JHtml::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected);
+			$html = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $limits, 'limit', 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected);
 		}
 		return $html;
 	}

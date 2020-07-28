@@ -25,16 +25,16 @@ echo '<div class="row ">';
 if (!empty($this->items)) {
 
 	foreach ($this->items as $k => $v) {
-	
+
 		echo '<div class="ph-unit ph-unit-id-'.(int)$v['id'].'">';
 		$linkEdit = PhocacartRoute::getPosRoute(1, (int)$v['id'], $this->t['section']->id);
 		echo '<div class="ph-pos-section-unit-box"><a class="btn btn-default btn-unit" href="'.$linkEdit.'">'.$v['title'].'</a>';
 		if (!empty($v['tickets'])) {
-			
+
 			echo '<div class="ph-pos-section-ticket-box">';
 			foreach ($v['tickets'] as $k2 => $v2) {
 				if ($v2['id'] > 0) {
-					
+
 					$linkEditTicket = PhocacartRoute::getPosRoute((int)$v2['id'], (int)$v['unit_id'], (int)$v['section_id']);
 					$uO = '';
 					$uOClass = '';
@@ -58,22 +58,22 @@ if (!empty($this->items)) {
 							} else {
 								$uOClass = 'ph-pos-ticket-false';
 							}
-							
-							
+
+
 						}
 					}
 					echo '<a class="btn btn-ticket '.$uOClass.'" href="'.$linkEditTicket.'" title="'.$uO.'">'.(int)$v2['id'].'<span class="ph-pos-ticket-count '.$uOClass.'">'.$uCount.'</span></a>';
-					
+
 				}
 			}
 			echo '</div>';
 		}
 		echo '</div>';
-		
-		
+
+
 		echo '</div>';
 	}
-	
+
 } else {
 	echo '<div>'.JText::_('COM_PHOCACART_NO_UNIT_FOUND').'</div>';
 }
@@ -104,16 +104,16 @@ echo '<input type="hidden" name="page" value="'.$this->t['page'].'" />';
 echo '<input type="hidden" name="ticketid" value="'.$this->t['ticket']->id.'" />';
 echo '<input type="hidden" name="unitid" value="'.$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" />';
-echo JHtml::_( 'form.token' );
+echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
 echo '</form>';
 
 echo '</div>';// end ph-pos-main-page
 
 echo '</div>';// end ph-pos-wrap-main
-	
+
 echo '<div class="ph-pos-wrap-bottom">';
 echo $this->loadTemplate('bottom');
 echo '</div>';
-	
+
 echo '</div>';
 ?>

@@ -13,19 +13,19 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartPayment', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartpayment', 'phocacartpayment', array('control' => 'jform', 'load_data' => $loadData));
@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartpayment.data', array());
 		if (empty($data)) {
@@ -45,7 +45,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -53,7 +53,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
-		
+
 		$table->cost 			= PhocacartUtils::replaceCommaWithPoint($table->cost);
 		$table->cost_additional	= PhocacartUtils::replaceCommaWithPoint($table->cost_additional);
 		$table->lowest_amount 	= PhocacartUtils::replaceCommaWithPoint($table->lowest_amount);
@@ -62,7 +62,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		if (empty($table->alias)) {
 			$table->alias = JApplicationHelper::stringURLSafe($table->title);
 		}
-		
+
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);
 
 		if (empty($table->id)) {
@@ -84,13 +84,13 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	public function save($data)
 	{
 		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
-		
-		
+
+
 
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
 		{
@@ -113,7 +113,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 				$table->load($pk);
 				$isNew = false;
 			}
-			
+
 			// Plugin parameters are converted to params column in payment table (x001)
 			// Store form parameters of selected method
 			$app		= JFactory::getApplication();
@@ -148,15 +148,15 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
 				$this->setError($table->getError());
 				return false;
 			}
-			
-			
+
+
 
 			// Store the data.
 			if (!$table->store())
@@ -164,43 +164,43 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
-			
-			
+
+
 			if ((int)$table->id > 0) {
-				
+
 				if (!isset($data['zone'])) {
 					$data['zone'] = array();
 				}
-				
+
 				PhocacartZone::storeZones($data['zone'], (int)$table->id, 'payment');
-				
-				
+
+
 				if (!isset($data['country'])) {
 					$data['country'] = array();
 				}
-				
+
 				PhocacartCountry::storeCountries($data['country'], (int)$table->id, 'payment');
-				
+
 				if (!isset($data['region'])) {
 					$data['region'] = array();
 				}
-				
+
 				PhocacartRegion::storeRegions($data['region'], (int)$table->id, 'payment');
-				
+
 				if (!isset($data['shipping'])) {
 					$data['shipping'] = array();
 				}
-				
+
 				PhocacartShipping::storeShippingMethods($data['shipping'], (int)$table->id, 'payment');
-				
+
 				if (!isset($data['group'])) {
 					$data['group'] = array();
 				}
-		
+
 				PhocacartGroup::storeGroupsById((int)$table->id, 8, $data['group']);
-			
+
 			}
-		
+
 
 			// Clean the cache.
 			$this->cleanCache();
@@ -225,16 +225,16 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 		return true;
 	}
-	
+
 	public function delete(&$cid = array()) {
 
 		if (count( $cid )) {
 			$delete = parent::delete($cid);
 			if ($delete) {
-				
+
 				\Joomla\Utilities\ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
-			
+
 				$query = 'DELETE FROM #__phocacart_item_groups'
 				. ' WHERE item_id IN ( '.$cids.' )'
 				. ' AND type = 8';
@@ -243,9 +243,9 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 			}
 		}
 	}
-	
+
 	public function setDefault($id = 0) {
-		
+
 		$user = JFactory::getUser();
 		$db   = $this->getDbo();
 
@@ -269,9 +269,9 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 		return true;
 	}
-	
+
 	public function unsetDefault($id = 0) {
-		
+
 		$user = JFactory::getUser();
 		$db   = $this->getDbo();
 

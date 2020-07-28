@@ -619,7 +619,7 @@ class PhocacartRenderFront
                 $o = '{emailcloak=off}' . $o;
             }
 
-            $o = JHtml::_('content.prepare', $o);
+            $o = Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $o);
 
             if ($changeLang == 1) {
                 JPluginHelper::importPlugin('system');

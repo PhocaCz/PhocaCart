@@ -45,7 +45,7 @@ class JFormFieldPhocaDiscountCategory extends JFormField
 		}
 		
 		
-		return JHtml::_('select.genericlist', $tree, $this->name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $relatedOption, $id);
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $tree, $this->name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $relatedOption, $id);
 	}
 }
 ?>

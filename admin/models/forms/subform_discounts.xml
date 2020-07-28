@@ -27,5 +27,11 @@
 <field name="groups" type="PhocacartGroups" table="4" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
 
+<field name="background_image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_DISCOUNT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_BACKGROUND_IMAGE_DESC" class="inputbox imageCreateThumbs" size="40"/>
+
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DISCOUNT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_DISCOUNT_DESCRIPTION_DESC"/>
+
+
 	</fieldset>
 </form>

@@ -12,6 +12,7 @@ jimport( 'joomla.application.component.view');
 class PhocaCartViewCategories extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $p;
 	protected $s;
 

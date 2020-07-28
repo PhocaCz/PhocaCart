@@ -55,7 +55,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="ph-payment-title">'.$this->t['paymentmethod']['title'].'</div>';
 
 		if ($this->t['display_payment_desc'] && $this->t['paymentmethod']['description'] != '') {
-			echo '<div class="ph-checkout-payment-desc">'.JHtml::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
 		}
 
 		echo '</div>';
@@ -80,7 +80,7 @@ if ($this->a->paymentnotused == 1) {
 	//echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
     //echo '</div>';// end checkout box row
 
@@ -136,7 +136,7 @@ if ($this->a->paymentnotused == 1) {
 
 
 		if ($this->t['display_payment_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-payment-desc">'.JHtml::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';
 		}
 
 		echo '</div>';
@@ -223,7 +223,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 // PAYMENT NOT ADDED OR SHIPPING IS EDITED OR ADDRESS IS EDITED

@@ -206,6 +206,8 @@ class PhocacartShipping
 					$w = 1;
 				}
 
+
+
 				// Size Rule
 				if($v->active_size == 1) {
 					$sP = 0;
@@ -213,12 +215,15 @@ class PhocacartShipping
 						&& ($length <= $v->maximal_length || $length == $v->maximal_length)) {
 
 						$sP++;
+
 					}
+
 					if (($width >= $v->minimal_width || $width == $v->minimal_width)
 						&& ($width <= $v->maximal_width || $width == $v->maximal_width)) {
 
 						$sP++;
 					}
+
 					if (($height >= $v->minimal_height || $height == $v->minimal_height)
 						&& ($height <= $v->maximal_height || $height == $v->maximal_height)) {
 
@@ -231,6 +236,7 @@ class PhocacartShipping
 				} else {
 					$s = 1;
 				}
+
 
 
 				// No rule was set for shipping, it will be displayed at all events
@@ -523,7 +529,7 @@ class PhocacartShipping
 		$methods = $db->loadObjectList();
 
 
-		$methodsO = JHtml::_('select.genericlist', $methods, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$methodsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $methods, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 		return $methodsO;
 	}
 

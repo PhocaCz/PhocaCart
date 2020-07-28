@@ -23,12 +23,13 @@ class PhocaCartCpModelPhocacartManufacturers extends JModelList
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
 				'published','a.published',
+				'count_products', 'a.count_products'
 			);
 		}
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null) {
+	protected function populateState($ordering = 'a.title', $direction = 'ASC') {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
@@ -41,8 +42,8 @@ class PhocaCartCpModelPhocacartManufacturers extends JModelList
 
 
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		//$this->setState('filter.language', $language);
@@ -52,7 +53,7 @@ class PhocaCartCpModelPhocacartManufacturers extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.title', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
@@ -60,7 +61,7 @@ class PhocaCartCpModelPhocacartManufacturers extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		//$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.manufacturer_id');
 		return parent::getStoreId($id);
 	}
@@ -96,7 +97,7 @@ class PhocaCartCpModelPhocacartManufacturers extends JModelList
 
 
 		// Filter by published state.
-		$published = $this->getState('filter.state');
+		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('a.published = '.(int) $published);
 		}

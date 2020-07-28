@@ -215,6 +215,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_discounts` (
   `quantity_to` int(11) NOT NULL DEFAULT '0',
   `available_quantity` int(11) NOT NULL DEFAULT '0',
   `available_quantity_user` int(11) NOT NULL DEFAULT '0',
+  `image` varchar(255) NOT NULL DEFAULT '',
+  `background_image` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -1099,11 +1101,13 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`receipt_number` varchar(64) NOT NULL DEFAULT '',
 	`invoice_number` varchar(64) NOT NULL DEFAULT '',
 	`credit_number` varchar(64) NOT NULL DEFAULT '',
+	`queue_number` varchar(64) NOT NULL DEFAULT '',
 
 	`order_number_id` int(11) NOT NULL DEFAULT '0',
 	`receipt_number_id` int(11) NOT NULL DEFAULT '0',
 	`invoice_number_id` int(11) NOT NULL DEFAULT '0',
 	`credit_number_id` int(11) NOT NULL DEFAULT '0',
+	`queue_number_id` int(11) NOT NULL DEFAULT '0',
 
 	`invoice_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`invoice_due_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

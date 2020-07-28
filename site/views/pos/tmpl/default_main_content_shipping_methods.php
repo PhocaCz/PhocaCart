@@ -36,7 +36,7 @@ if (!empty($this->t['shippingmethods'])) {
 		echo '<span class="ph-shipping-title">'.$v->title.'</span>';
 
 		if ($this->t['display_shipping_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-shipping-desc">'.JHtml::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';
 		}
 		echo '</div>';
 
@@ -86,7 +86,7 @@ if (!empty($this->t['shippingmethods'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 		echo '<input type="hidden" name="redirectsuccess" value="main.content.products" />';
 		echo '<input type="hidden" name="redirecterror" value="main.content.shippingmethods" />';
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		echo '</form>'. "\n";
 
 		echo '</div>';

@@ -257,20 +257,38 @@ class PhocacartUser
 		// ba_sa = 1: billing and shipping addresses are same (don't check shipping fields)
 
 		if (empty($data[0])) {
+			// BILLING
 			// no billing return false
-			$o['filled'] = 0;
+			// No shipping data so test if we want any shipping data at all
+			$fI		= new PhocacartFormItems();
+			$active		= $fI->isFormFieldActive('billing');
 
-			return $o;
+			if ($active) {
+				// there is active some form field, so vendor asks for some field but nothing was filled in
+				$o['filled'] = 0;
+				return $o;
+			}
+
 		} else if (!empty($data[0])
 					&& isset($data[0]->ba_sa) && $data[0]->ba_sa == 0
 					&& isset($data[0]->type) && $data[0]->type == 0
 					&& empty($data[1])){
+			// SHIPPING
 			// In words - we have billing data, so we check if billing data are the same like shipping (ba_sa = 1)
 			// If not then we check if we have shipping data, if not return false
 			// And check if array 0 is really billing - array 0 (first array) cannot be shpping as we order it by type ASC in db query
-			$o['filled'] = 0;
+			// type = 0 ... billing, type = 1 ... shipping
 
-			return $o;
+			// No shipping data so test if we want any shipping data at all
+			$fI		= new PhocacartFormItems();
+			$active		= $fI->isFormFieldActive('shipping');
+
+			if ($active) {
+				// there is active some form field, so vendor asks for some field but nothing was filled in
+				$o['filled'] = 0;
+				return $o;
+			}
+
 		}
 
 
@@ -543,17 +561,7 @@ class PhocacartUser
 		return $name;
 	}
 
-	public static function updateNewsletterInfoByUser($userId, $newsletter = 0) {
 
-
-		$db 	= JFactory::getDBO();
-		$query = ' UPDATE #__phocacart_users'
-				.' SET newsletter = '.(int)$newsletter
-				.' WHERE user_id = '.(int)$userId;
-		$db->setQuery($query);
-		$db->execute();
-		return true;
-	}
 
 
 	/*

@@ -52,7 +52,7 @@ class PhocacartGroup
 		}
 
 
-		$groupsO = JHtml::_('select.genericlist', $groups, $name, $attributes . ' '. $javascript, 'value', 'text', $activeArray, $id);
+		$groupsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $groups, $name, $attributes . ' '. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $groupsO;
 	}

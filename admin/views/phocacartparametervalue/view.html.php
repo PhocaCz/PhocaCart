@@ -15,11 +15,13 @@ class PhocaCartCpViewPhocacartParameterValue extends JViewLegacy
 	protected $item;
 	protected $form;
 	protected $t;
+	protected $r;
 	protected $attributeoption;
 
 	public function display($tpl = null) {
 
 		$this->t		= PhocacartUtils::setVars('parametervalue');
+		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');

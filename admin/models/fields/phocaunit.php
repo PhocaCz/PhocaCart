@@ -13,19 +13,19 @@ class JFormFieldPhocaUnit extends JFormField
 	protected $type 		= 'PhocaUnit';
 
 	protected function getInput() {
-	
+
 		$units = array();
 		if ($this->element['table']) {
 			$units = PhocacartUtilsSettings::getUnit(0, $this->element['table']);
 		}
-		
+
 		$unitsA = array();
 		foreach ($units as $k => $v) {
 			$unitsA[$k] = JText::_($v[0]);
 		}
-		
-		
-		return JHtml::_('select.genericlist',  $unitsA,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+
+
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $unitsA,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

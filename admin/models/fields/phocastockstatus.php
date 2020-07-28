@@ -38,8 +38,8 @@ class JFormFieldPhocaStockstatus extends JFormField
 			}
 		}
 		
-		array_unshift($data, JHtml::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_STOCK_STATUS').' -', 'value', 'text'));
-		return JHtml::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_STOCK_STATUS').' -', 'value', 'text'));
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

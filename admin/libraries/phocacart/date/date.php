@@ -24,16 +24,18 @@ class PhocacartDate
 		$fromDate->setTimezone($tz);
 		$toDate->setTimezone($tz);
 
+
 		$status = 0;
+		$text = '';
 		if ( $now->toUnix() <= $fromDate->toUnix() ) {
 			$status = 0;
-			$text = '<span class="label label-warning">'.JText::_('COM_PHOCACART_PENDING' ).'</span>';
+			$text = '<span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_PENDING' ).'</span>';
 		} else if ( ( $now->toUnix() <= $toDate->toUnix() || $to == $nullDate ) ) {
 			$status = 1;
-			$text = '<span class="label label-success">'.JText::_('COM_PHOCACART_ACTIVE' ).'</span>';
+			$text = '<span class="label label-success badge badge-success">'.JText::_('COM_PHOCACART_ACTIVE' ).'</span>';
 		} else if ( $now->toUnix() > $toDate->toUnix() ) {
 			$status = 0;
-			$text = '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_EXPIRED' ).'</span>';
+			$text = '<span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_EXPIRED' ).'</span>';
 		}
 
 		if ($returnText == 1) {

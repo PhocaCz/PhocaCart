@@ -192,7 +192,7 @@ if (!empty($d['fullitems'][1])) {
 		echo ' <button class="'.$d['s']['c']['btn.btn-success.btn-sm'].' ph-btn" type="submit" name="action" value="update"><span title="'.JText::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.$d['s']['i']['refresh'].'"></span></button>';
 		//DELETE
 		echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete"><span title="'.JText::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'" class="'.$d['s']['i']['trash'].'"></span></button>';
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		echo '</div>';
 		echo '</form>';
 

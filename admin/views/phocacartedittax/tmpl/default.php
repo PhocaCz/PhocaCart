@@ -9,10 +9,10 @@
  */
 defined('_JEXEC') or die();
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
+Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
+Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 jimport( 'joomla.filesystem.folder' ); 
 jimport( 'joomla.filesystem.file' );
 
@@ -81,7 +81,7 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 	echo '<input type="hidden" name="option" value="com_phocacart" />';
 	echo '<div class="ph-tax-edit-button"><button class="btn btn-success btn-sm ph-btn"><span class="icon-edit"></span> '.JText::_('COM_PHOCACART_SAVE').'</button></div>';
 
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>';
 }
 
@@ -97,7 +97,7 @@ echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_TAX_INFORMATION').'</button>';
 echo '</div>';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 
 	

@@ -12,11 +12,13 @@ jimport( 'joomla.application.component.view' );
 class PhocaCartCpViewPhocaCartImports extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 
 
 	function display($tpl = null) {
 
 		$this->t						= PhocacartUtils::setVars('import');
+		$this->r 						= new PhocacartRenderAdminviews();
 		$model 							= $this->getModel();
 		$this->t['count']				= $model->getItemsCountImport();
 
@@ -41,7 +43,7 @@ class PhocaCartCpViewPhocaCartImports extends JViewLegacy
 		$media = new PhocacartRenderAdminmedia();
 		JHtml::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 		PhocacartRenderAdminjs::renderOverlayOnSubmit('phFormUpload');
 
 		$this->addToolbar();

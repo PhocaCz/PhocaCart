@@ -92,7 +92,7 @@ if ($this->a->shippingnotused == 1) {
 		echo '<div class="ph-shipping-title">'.$this->t['shippingmethod']['title'].'</div>';
 
 		if ($this->t['display_shipping_desc'] && $this->t['shippingmethod']['description'] != '') {
-			echo '<div class="ph-checkout-shipping-desc">'.JHtml::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
+			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
 		}
 
 		echo '</div>';
@@ -117,7 +117,7 @@ if ($this->a->shippingnotused == 1) {
 	//echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 	//echo '</div>';// end checkout box row
 
@@ -175,7 +175,7 @@ if ($this->a->shippingnotused == 1) {
 
 
 		if ($this->t['display_shipping_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-shipping-desc">'.JHtml::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';
 		}
 		echo '</div>';
 
@@ -244,7 +244,7 @@ if ($this->a->shippingnotused == 1) {
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 

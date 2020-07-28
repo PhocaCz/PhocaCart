@@ -72,7 +72,7 @@ if ($this->a->addressedit == 1) {
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="task" value="checkout.saveaddress" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 } else if ($this->a->addressview == 1){
@@ -138,7 +138,7 @@ if ($this->a->addressedit == 1) {
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	//echo '<input type="hidden" name="task" value="checkout.editaddress" />'. "\n";
 	//echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 } else {

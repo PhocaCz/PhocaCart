@@ -284,6 +284,7 @@ class PhocacartCart
 
 			$checkedA = PhocacartAttribute::checkRequiredAttributes($id, $attributes);
 
+
 			if (!$checkedA) {
 				//$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
 				//$action			= $uri->toString();

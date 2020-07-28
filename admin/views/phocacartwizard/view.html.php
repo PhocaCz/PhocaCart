@@ -12,6 +12,7 @@ jimport( 'joomla.application.component.view' );
 class PhocaCartCpViewPhocaCartWizard extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $s;
 	protected $page;
 
@@ -19,7 +20,8 @@ class PhocaCartCpViewPhocaCartWizard extends JViewLegacy
 
 		$app				    = JFactory::getApplication();
 		$this->page		        = $app->input->get('page', 0, 'int');
-		$this->t				= PhocacartUtils::setVars('');
+		$this->t				= PhocacartUtils::setVars('wizard');
+		$this->r				= new PhocacartRenderAdminview();
 		$this->s                = PhocacartRenderStyle::getStyles();
 
 

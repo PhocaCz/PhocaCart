@@ -82,7 +82,7 @@ if ((int)$this->u->id > 0) {
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="task" value="checkout.saveaddress" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 	if ($this->t['display_edit_profile'] == 1) {

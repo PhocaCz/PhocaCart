@@ -22,7 +22,7 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 
 $msg = JText::_('COM_PHOCACART_TICKET_NR') . ': <b>'.(int)$this->t['ticket']->id . '</b><br />'
@@ -38,7 +38,7 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 
 echo '</div>';// end ph-add-remove-tickets

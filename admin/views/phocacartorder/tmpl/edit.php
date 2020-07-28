@@ -7,28 +7,21 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
 
-
-$class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
-?>
-<script type="text/javascript">
+$js ='
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-		Joomla.submitform(task, document.getElementById('adminForm'));
-	}
-	else {
-		Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
+	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+		Joomla.submitform(task, document.getElementById("adminForm"));
+	} else {
+		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
-</script><?php
+';
+JFactory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div  class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
 $tabs = array (
 'order' 			=> JText::_($this->t['l'].'_ORDER_OPTIONS'),
 'billingaddress' 	=> JText::_($this->t['l'].'_BILLING_ADDRESS'),
@@ -41,9 +34,9 @@ $tabs = array (
 
 echo $r->navigation($tabs);
 
-echo '<div id="phAdminEdit" class="tab-content">'. "\n";
+echo $r->startTabs();
 
-echo '<div class="tab-pane active" id="order">'."\n";
+echo $r->startTab('order', $tabs['order'], 'active');
 
 echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id, $this->itemcommon->date, $this->itemcommon->order_number), JText::_('COM_PHOCACART_ORDER_NUMBER'));
 
@@ -55,7 +48,7 @@ if ($this->itemcommon->user_username != '') {
 if ($user != '') {
 	echo $r->itemText($user, JText::_('COM_PHOCACART_USER'));
 } else {
-	echo $r->itemText('<span class="label label-info">'.JText::_('COM_PHOCACART_GUEST').'</span>', JText::_('COM_PHOCACART_USER'));
+	echo $r->itemText('<span class="label label-info badge badge-info">'.JText::_('COM_PHOCACART_GUEST').'</span>', JText::_('COM_PHOCACART_USER'));
 }
 
 if (isset($this->itemcommon->vendor_name) && $this->itemcommon->vendor_name != '') {
@@ -98,19 +91,22 @@ if ($this->itemcommon->paymenttitle != '') {
 
 $formArray = array ('id', 'status_id', 'order_token', 'comment', 'terms', 'privacy', 'newsletter');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
 $data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['array'], $this->u, '_phb', '_phs');
 
-echo '<div class="tab-pane" id="billingaddress">'."\n";
+
+echo $r->startTab('billingaddress', $tabs['billingaddress']);
 echo $data['b'];
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="shippingaddress">'."\n";
+
+echo $r->startTab('shippingaddress', $tabs['shippingaddress']);
 echo $data['s'];
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="tracking">'."\n";
+
+echo $r->startTab('tracking', $tabs['tracking']);
 
 if ($this->itemcommon->shippingtrackinglink != '') {
 	PhocacartRenderJs::renderJsAddTrackingCode('jform_tracking_number', 'tracking-link');
@@ -124,11 +120,10 @@ if ($this->itemcommon->shippingtrackingdescription != '') {
 	echo $r->itemText($this->itemcommon->shippingtrackingdescription, JText::_('COM_PHOCACART_TRACKING_DESCRIPTION'));
 }
 
-echo '</div>';
+echo $r->endTab();
 
 
-echo '<div class="tab-pane" id="products">'."\n";
-
+echo $r->startTab('products', $tabs['products']);
 
 echo '<table class="ph-order-products" id="phAdminEditProducts">';
 if (!empty($this->itemproducts)) {
@@ -225,7 +220,7 @@ echo '<tr><td class="" colspan="7">&nbsp;</td></tr>';
 	foreach($this->itemtotal as $k => $v) {
 
 
-		echo '<tr class="'.$class.'">';
+		echo '<tr class="PhocacartRenderAdminview">';
 
 		// Language Variables
         if ($this->p['order_language_variables'] == 1) {
@@ -393,12 +388,11 @@ echo '<div class="ph-order-products-hr"></div>';
 echo '<div>&nbsp;</div>';
 echo '<div class="ph-order-products-hr"></div>';
 
-echo '</div>';
+echo $r->endTab();
 
 
 
-echo '<div class="tab-pane" id="download">'."\n";
-
+echo $r->startTab('download', $tabs['download']);
 
 if (!empty($this->itemproducts)) {
     /*phocacart import('phocacart.path.route');*/
@@ -419,11 +413,11 @@ if (!empty($this->itemproducts)) {
 
 
                     if ($v2->type == 0 || $v2->type == 1) {
-                        $type = '<span class="label label-success">' . JText::_('COM_PHOCACART_DOWNLOAD_FILE') . '</span>';
+                        $type = '<span class="label label-success badge badge-success">' . JText::_('COM_PHOCACART_DOWNLOAD_FILE') . '</span>';
                     } else if ($v2->type == 2) {
-                        $type = '<span class="label label-info">' . JText::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE') . '</span>';
+                        $type = '<span class="label label-info badge badge-info">' . JText::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE') . '</span>';
                     } /*else {
-                    $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                    $type = '<span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
                     }*/
 
                     echo '<tr><td>' . $type. '</td>';
@@ -450,7 +444,7 @@ if (!empty($this->itemproducts)) {
                     if ($v2->download_token) {
 
 
-                        $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                        $type = '<span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
                         echo '<tr><td>'.$type.'</td>';
                         echo '<td>'.htmlspecialchars($v2->download_file).'</td></tr>';
 
@@ -485,11 +479,11 @@ if (!empty($this->itemproducts)) {
             echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
 
             if ($v->download_type == 0 || $v->download_type == 1) {
-                $type = '<span class="label label-success">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE').'</span>';
+                $type = '<span class="label label-success badge badge-success">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE').'</span>';
             } else if ($v->download_type == 2) {
-                $type = '<span class="label label-info">'.JText::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE').'</span>';
+                $type = '<span class="label label-info badge badge-info">'.JText::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE').'</span>';
             } /*else {
-                $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                $type = '<span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
             }*/
         /*	echo '<tr><td>'.$type.'</td>';
             echo '<td><small>('.htmlspecialchars($v->download_file).')</small></td></tr>';
@@ -510,7 +504,7 @@ if (!empty($this->itemproducts)) {
                         $dLink = PhocacartPath::getRightPathLink($link);
                         echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
 
-                        $type = '<span class="label label-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
+                        $type = '<span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
                         echo '<tr><td>'.$type.'</td>';
                         echo '<td><small>('.htmlspecialchars($v2->download_file).')</small></td></tr>';
 
@@ -525,9 +519,9 @@ if (!empty($this->itemproducts)) {
     //echo '</table>';*/
 
 }
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="orderlink">'."\n";
+echo $r->startTab('orderlink', $tabs['orderlink']);
 
 if (isset($this->itemcommon->order_token)) {
 	if (!empty($this->itemproducts)) {
@@ -545,23 +539,19 @@ if (isset($this->itemcommon->order_token)) {
 		echo '</div>';
 	}
 }
-echo '</div>';
+echo $r->endTab();
 
 
 
 
-
-
-
-
-echo '<div class="tab-pane" id="billing">'."\n";
-$formArray = array ('order_number', 'order_number_id', 'receipt_number', 'receipt_number_id', 'invoice_number', 'invoice_number_id', 'invoice_prn', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'date', 'modified', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
+echo $r->startTab('billing', $tabs['billing']);
+$formArray = array ('order_number', 'order_number_id', 'receipt_number', 'receipt_number_id', 'invoice_number', 'invoice_number_id', 'invoice_prn', 'queue_number', 'queue_number_id', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'date', 'modified', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
 
 /*
-echo '<div class="tab-pane" id="publishing">'."\n";
+echo $r->startTab('publishing', $tabs['publishing']);
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -573,7 +563,7 @@ foreach($this->form->getFieldset('publish') as $field) {
 }
 echo '</div>';*/
 
-echo '</div>';//end tab content
+echo $r->endTabs();
 echo '</div>';//end col-xs-12 col-sm-10 col-md-10
 // Second Column
 echo '<div class="col-xs-12 col-sm-2 col-md-2">';

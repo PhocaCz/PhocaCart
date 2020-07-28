@@ -40,7 +40,7 @@ class JFormFieldPhocaCouponProduct extends JFormField
 		$document = JFactory::getDocument();
 		JHtml::stylesheet('media/com_phocacart/js/administrator/select2/select2.css' );
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/select2/select2.js');
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 $s = array();
 $s[] = 'jQuery(document).ready(function() {';
 $s[] = ' ';

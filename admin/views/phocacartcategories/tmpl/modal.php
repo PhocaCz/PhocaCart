@@ -7,35 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+// ASSOCIATION
 
 $app = JFactory::getApplication();
 if ($app->isClient('site')) {
 	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 }
 
-JHtml::_('behavior.core');
-JHtml::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
-JHtml::_('bootstrap.popover', '.hasPopover', array('placement' => 'bottom'));
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.polyfill', array('event'), 'lt IE 9');
-JHtml::_('script', 'com_phocacart/administrator/admin-phocacartitems-modal.min.js', array('version' => 'auto', 'relative' => true));
-
-
-//$class		= $this->t['n'] . 'RenderAdminviews';
-$r 			=  new PhocacartRenderAdminviews();
+$r 			= $this->r;
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', $this->t['o']);
-$saveOrder	= $listOrder == 'a.ordering';
-if ($saveOrder) {
-	$saveOrderingUrl = 'index.php?option='.$this->t['o'].'&task='.$this->t['tasks'].'.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
-}
-
 $function  	= $app->input->getCmd('function', 'jSelectPhocacartcategory');
 $onclick   	= $this->escape($function);
 
@@ -52,14 +36,24 @@ $iconStates = array(
 	2  => 'icon-archive',
 );
 
-$sortFields = $this->getSortFields();
+$canOrder	= $user->authorise('core.edit.state', $this->t['o']);
+$saveOrder	= $listOrder == 'a.ordering';
 
+$saveOrderingUrl = '';
+if ($saveOrder && !empty($this->items)) {
+	$saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
+}
+
+$sortFields = $this->getSortFields();
 echo $r->jsJorderTable($listOrder);
 
 //echo '<div class="clearfix"></div>';
 
+// phocacartcategory-form => adminForm
+echo $r->startFormModal($this->t['o'], $this->t['tasks'], 'adminForm', 'adminForm', $function);
 
-echo $r->startFormModal($this->t['o'], $this->t['tasks'], 'phocacartcategory-form', 'adminForm', $function);
+echo $r->startMainContainerNoSubmenu();
+/*
 echo $r->startFilterNoSubmenu();
 echo $r->endFilter();
 
@@ -78,30 +72,31 @@ echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING'
 echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
 
 echo $r->startFilterBar(2);
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
 //echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
 echo $r->selectFilterLevels('COM_PHOCACART_SELECT_MAX_LEVELS', $this->state->get('filter.level'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();
+echo $r->endFilterBar();*/
 
+echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
-echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
-echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-title">'.JHtml::_('grid.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-parentcattitle">'.JHtml::_('grid.sort', $this->t['l'].'_PARENT_CATEGORY', 'parentcat_title', $listDirn, $listOrder ).'</th>'."\n";
+echo $r->firstColumnHeader($listDirn, $listOrder);
+echo $r->secondColumnHeader($listDirn, $listOrder);
+echo '<th class="ph-title">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-parentcattitle">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'].'_PARENT_CATEGORY', 'parentcat_title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
-echo '<th class="ph-language">'.JHtml::_('grid.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-hits">'.JHtml::_('grid.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-language">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-hits">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
-echo '<tbody>'. "\n";
+echo $r->startTblBody($saveOrder, $saveOrderingUrl, $listDirn);
 
 $originalOrders = array();
 $parentsStr 	= "";
@@ -148,17 +143,17 @@ if (is_array($this->items)) {
 				$item->level = 0;
 			}
 
-			$iD = $i % 2;
-			echo "\n\n";
 
+			//echo $r->startTr($i, $this->t['catid']);
+			$iD = $i % 2;
 			echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" item-id="'.$item->id.'" parents="'.$parentsStr.'" level="'. $item->level.'">'. "\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" >'. "\n";
 
-			echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
-			echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
+			echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering, false);
+        echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering, false);
 			/*$checkO = '';
 			if ($item->checked_out) {
-				$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+				$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 			}
 			if ($canCreate || $canEdit) {
 				$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
@@ -174,7 +169,7 @@ if (is_array($this->items)) {
 
 			echo $r->td($linkBox, "small");
 
-			//echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
+			//echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 			echo $r->td('<span class="'.$iconStates[$this->escape($item->published)].'" aria-hidden="true"></span>');
 
@@ -192,19 +187,19 @@ if (is_array($this->items)) {
 			echo $r->td($item->hits, "small");
 			echo $r->td($item->id, "small");
 
-			echo '</tr>'. "\n";
+			echo $r->endTr();
 
 		}
 	}
 }
-echo '</tbody>'. "\n";
+echo $r->endTblBody();
 
 echo $r->tblFoot($this->pagination->getListFooter(), 9);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');
 
-echo $r->formInputs($listOrder, $listDirn, $originalOrders);
+echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
 ?>

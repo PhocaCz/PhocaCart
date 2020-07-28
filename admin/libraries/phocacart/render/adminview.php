@@ -10,9 +10,98 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 class PhocacartRenderAdminview
 {
-	public function __construct(){}
+	public $view 			= '';
+	public $option			= '';
+	public $compatible		= false;
+	public $sidebar 		= true;
+
+	public function __construct(){
+
+		$app				= JFactory::getApplication();
+		$version 			= new \Joomla\CMS\Version();
+		$this->compatible 	= $version->isCompatible('4.0.0-alpha');
+		$this->view			= $app->input->get('view');
+		$this->option		= $app->input->get('option');
+		$this->sidebar 		= Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
+
+		switch($this->view) {
+
+            default:
+				Joomla\CMS\HTML\HTMLHelper::_('behavior.formvalidator');
+				Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
+				Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
+
+				if (!$this->compatible) {
+					Joomla\CMS\HTML\HTMLHelper::_('behavior.tooltip');
+					Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
+				}
+			break;
+		}
+
+		// CSS is set in PhocacartRenderAdminmedia
+
+	}
+
+
+	public function startCp($id = '', $class = '') {
+
+		$idO = '';
+		if ($id != '') {
+			$idO = ' id="'.$id.'"';
+		}
+
+		$classO = ' class="row"';
+		if ($class != '') {
+			$classO = ' class="row '.$class.'"';
+		}
+
+		$o = array();
+		if ($this->compatible) {
+
+			if ($this->sidebar) {
+
+			} else {
+				$o[] = '<div'. $idO . $classO .'>';
+				$o[] = '<div id="j-sidebar-container" class="col-md-2">'.JHtmlSidebar::render().'</div>';
+				$o[] = '<div id="j-main-container" class="col-md-10">';
+			}
+
+		} else {
+			$o[] = '<div'. $idO . $classO .'>';
+			//$o[] = '<div id="j-sidebar-container" class="span2">' . JHtmlSidebar::render() . '</div>'."\n";
+
+			$o[] = '<div class="col-xs-12 col-sm-2 col-md-2 ph-admin-box-menu">'. JHtmlSidebar::render().'</div>';
+
+			//$o[] = '<div id="j-main-container" class="span10">'."\n";
+			$o[] = '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content ph-admin-manage">'. "\n";
+		 	$o[] = '<div id="ph-system-message-container"></div>'. "\n";// specific container for moving messages from joomla to phoca
+		PhocacartRenderAdminjs::moveSystemMessageFromJoomlaToPhoca();
+		}
+
+		return implode("\n", $o);
+	}
+
+	public function endCp() {
+
+		$o = array();
+		if ($this->compatible) {
+			if ($this->sidebar) {
+
+			} else {
+
+				$o[] = '</div></div>';
+			}
+		} else {
+			$o[] = '</div></div>';
+		}
+
+		return implode("\n", $o);
+	}
 
 	public function startForm($option, $view, $itemId, $id = 'adminForm', $name = 'adminForm', $class = '', $layout = 'edit',  $tmpl = '') {
 
@@ -42,22 +131,7 @@ class PhocacartRenderAdminview
 		if ($task != '') {
 			$o .= '<input type="hidden" name="taskgroup" value="'.strip_tags($task).'" />'. "\n";
 		}
-		$o .= JHtml::_('form.token'). "\n";
-		return $o;
-	}
-
-	public function navigation($tabs) {
-		$o = '<ul class="nav nav-tabs">';
-		$i = 0;
-		foreach($tabs as $k => $v) {
-			$cA = '';
-			if ($i == 0) {
-				$cA = 'class="active"';
-			}
-			$o .= '<li '.$cA.'><a href="#'.$k.'" data-toggle="tab">'. $v.'</a></li>'."\n";
-			$i++;
-		}
-		$o .= '</ul>';
+		$o .= Joomla\CMS\HTML\HTMLHelper::_('form.token'). "\n";
 		return $o;
 	}
 
@@ -285,11 +359,11 @@ class PhocacartRenderAdminview
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $requiredArray, 'pformattr['.$id.'][required]', 'class="input-mini"', 'value', 'text', htmlspecialchars($required, ENT_QUOTES, 'UTF-8'), 'jform_attrrequired'.$id)
+		. Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $requiredArray, 'pformattr['.$id.'][required]', 'class="input-mini"', 'value', 'text', htmlspecialchars($required, ENT_QUOTES, 'UTF-8'), 'jform_attrrequired'.$id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
-		. JHtml::_('select.genericlist', $typeArray, 'pformattr['.$id.'][type]', 'class="input"', 'value', 'text', htmlspecialchars($type, ENT_QUOTES, 'UTF-8'), 'jform_attrtype'.$id)
+		. Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $typeArray, 'pformattr['.$id.'][type]', 'class="input"', 'value', 'text', htmlspecialchars($type, ENT_QUOTES, 'UTF-8'), 'jform_attrtype'.$id)
 		.'<input type="hidden" name="pformattr['.$id.'][attrid]" id="jform_attrid'.$id.'" value="'.$id.'" />'
 		.'</div>'
 
@@ -352,7 +426,7 @@ class PhocacartRenderAdminview
 
 		// Amount - Value
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operator, ENT_QUOTES, 'UTF-8'), 'jform_optionoperator'.$attrId. $id)
+		. Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operator, ENT_QUOTES, 'UTF-8'), 'jform_optionoperator'.$attrId. $id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
@@ -369,7 +443,7 @@ class PhocacartRenderAdminview
 
 		// Weight
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator_weight]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operatorWeight, ENT_QUOTES, 'UTF-8'), 'jform_optionoperatorweight'.$attrId. $id)
+		. Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $operatorArray, 'pformattr['.$attrId.'][options]['.$id.'][operator_weight]', 'class="input-mini"', 'value', 'text', htmlspecialchars($operatorWeight, ENT_QUOTES, 'UTF-8'), 'jform_optionoperatorweight'.$attrId. $id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
@@ -382,7 +456,7 @@ class PhocacartRenderAdminview
 		$o .= '<div class="col-xs-12 col-sm-2 col-md-2">';
 
 		/*if (is_numeric($attrId) && is_numeric($id)) {
-			JHtml::_('behavior.modal', 'a.modal_jform_optionimage'.$attrId.$id);
+			Joomla\CMS\HTML\HTMLHelper::_('behavior.modal', 'a.modal_jform_optionimage'.$attrId.$id);
 		} else {
 			// Don't render anything for items which will be added by javascript
 			// it is set in javascript addnewrow function
@@ -504,9 +578,9 @@ class PhocacartRenderAdminview
 		$autocomplete = ! $autocomplete ? ' autocomplete="off"' : '';
 		$direction    = $lang->isRTL() ? ' dir="ltr" style="text-align:right"' : '';
 
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
-		JHtml::_('behavior.colorpicker');
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('script', 'system/html5fallback.js', false, true);
+		Joomla\CMS\HTML\HTMLHelper::_('behavior.colorpicker');
 
 		/*$jQ = "jQuery('INPUT[type=minicolors]').on('change', function() {
 					var hex = jQuery(this).val(),
@@ -672,7 +746,7 @@ class PhocacartRenderAdminview
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-2 col-md-2">'
-		. JHtml::_('select.genericlist', $groupArray, 'pformspec['.$id.'][group_id]', 'class="input"', 'value', 'text', (int)$group, 'jform_specgroup'.$id)
+		. Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $groupArray, 'pformspec['.$id.'][group_id]', 'class="input"', 'value', 'text', (int)$group, 'jform_specgroup'.$id)
 		.'</div>'
 
 
@@ -770,9 +844,9 @@ class PhocacartRenderAdminview
 		$autocomplete = ! $autocomplete ? ' autocomplete="off"' : '';
 		$direction    = $lang->isRTL() ? ' dir="ltr" style="text-align:right"' : '';
 
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
-		JHtml::_('behavior.colorpicker');
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('script', 'system/html5fallback.js', false, true);
+		Joomla\CMS\HTML\HTMLHelper::_('behavior.colorpicker');
 
 		/*$jQ = "jQuery('INPUT[type=minicolors]').on('change', function() {
 					var hex = jQuery(this).val(),
@@ -857,8 +931,8 @@ class PhocacartRenderAdminview
 			JFactory::getDocument()->addScript(JURI::root(true).'/',$localesPath);
 		}
 		if ($js == 0) {
-			JHtml::_('jquery.framework');
-			JHtml::_('script', 'system/html5fallback.js', false, true);
+			Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+			Joomla\CMS\HTML\HTMLHelper::_('script', 'system/html5fallback.js', false, true);
 		}
 		$attributes['size'] 		= 30;
 		$attributes['maxlength'] 	= 30;
@@ -935,7 +1009,7 @@ class PhocacartRenderAdminview
 
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('access.level', 'pformdisc['.$id.'][access]', (int)$access, 'class="input input-small"', array(), 'jform_discaccess'.$id)
+		. Joomla\CMS\HTML\HTMLHelper::_('access.level', 'pformdisc['.$id.'][access]', (int)$access, 'class="input input-small"', array(), 'jform_discaccess'.$id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
@@ -947,7 +1021,7 @@ class PhocacartRenderAdminview
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
-		. JHtml::_('select.genericlist', $calcTypeArray, 'pformdisc['.$id.'][calculation_type]', 'class="input input-small"', 'value', 'text', (int)$calculation_type, 'jform_disccalculation_type'.$id)
+		. Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $calcTypeArray, 'pformdisc['.$id.'][calculation_type]', 'class="input input-small"', 'value', 'text', (int)$calculation_type, 'jform_disccalculation_type'.$id)
 		.'</div>'
 
 		.'<div class="col-xs-12 col-sm-1 col-md-1">'
@@ -965,7 +1039,7 @@ class PhocacartRenderAdminview
 		if ($js == 1) {
 
 			if (PhocacartUtils::isJCompatible('3.7')) {
-				$o .= JHtml::_('calendar', $valid_from, 'pformdisc['.$id.'][valid_from]', 'jform_discvalid_from'.$id, '%Y-%m-%d', $attributes);
+				$o .= Joomla\CMS\HTML\HTMLHelper::_('calendar', $valid_from, 'pformdisc['.$id.'][valid_from]', 'jform_discvalid_from'.$id, '%Y-%m-%d', $attributes);
 			} else {
 				// Calender is initialized and cannot access DOM then so we need to render it manually in javascript
 				// and then initialize the calendar in phAddRowDiscount function
@@ -985,7 +1059,7 @@ class PhocacartRenderAdminview
 			}
 
 		} else {
-			$o .= JHtml::_('calendar', $valid_from, 'pformdisc['.$id.'][valid_from]', 'jform_discvalid_from'.$id, '%Y-%m-%d', $attributes);
+			$o .= Joomla\CMS\HTML\HTMLHelper::_('calendar', $valid_from, 'pformdisc['.$id.'][valid_from]', 'jform_discvalid_from'.$id, '%Y-%m-%d', $attributes);
 		}
 		$o .= '</div>';
 
@@ -993,7 +1067,7 @@ class PhocacartRenderAdminview
 		$o .= '<div class="col-xs-12 col-sm-2 col-md-2">';
 		if ($js == 1) {
 			if (PhocacartUtils::isJCompatible('3.7')) {
-				$o .=  JHtml::_('calendar', $valid_to, 'pformdisc['.$id.'][valid_to]', 'jform_discvalid_to'.$id, '%Y-%m-%d', $attributes);
+				$o .=  Joomla\CMS\HTML\HTMLHelper::_('calendar', $valid_to, 'pformdisc['.$id.'][valid_to]', 'jform_discvalid_to'.$id, '%Y-%m-%d', $attributes);
 			} else {
 				$o .= '<div class="input-append">'
 				. '<input title="" name="pformdisc['.$id.'][valid_to]" id="jform_discvalid_to'.$id.'" value="'.htmlspecialchars($quantity_from, ENT_QUOTES, 'UTF-8').'" size="30" maxlength="30" class="input-mini hasTooltip" type="text">'
@@ -1012,7 +1086,7 @@ class PhocacartRenderAdminview
 
 
 		} else {
-			$o .=  JHtml::_('calendar', $valid_to, 'pformdisc['.$id.'][valid_to]', 'jform_discvalid_to'.$id, '%Y-%m-%d', $attributes);
+			$o .=  Joomla\CMS\HTML\HTMLHelper::_('calendar', $valid_to, 'pformdisc['.$id.'][valid_to]', 'jform_discvalid_to'.$id, '%Y-%m-%d', $attributes);
 		}
 		$o .= '</div>';
 
@@ -1069,7 +1143,7 @@ class PhocacartRenderAdminview
 
 
 		$o .= '<div class="col-xs-12 col-sm-3 col-md-3">';
-		$o .= JHtml::_('calendar', $date, 'jform['.$id.'][date]', 'jform_date'.$id, '%Y-%m-%d', $attributes);
+		$o .= Joomla\CMS\HTML\HTMLHelper::_('calendar', $date, 'jform['.$id.'][date]', 'jform_date'.$id, '%Y-%m-%d', $attributes);
 		$o .= '</div>';
 
 		// Set value from database
@@ -1115,7 +1189,7 @@ class PhocacartRenderAdminview
 		// phRowImage is a variable set when clicking select button for additional images
 		//$link 			= 'index.php?option=com_phocacart&amp;view=phocacartmanager'.$group['c'].$managerOutput.'&amp;field='.$this->id . '\'+ (phRowImage) +\'';
 		$html	= array();
-		$html[] = JHtml::_(
+		$html[] = Joomla\CMS\HTML\HTMLHelper::_(
 			'bootstrap.renderModal',
 			$id,
 			array(
@@ -1218,7 +1292,7 @@ class PhocacartRenderAdminview
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
 		$html	= array();
-		$html[] = JHtml::_(
+		$html[] = Joomla\CMS\HTML\HTMLHelper::_(
 			'bootstrap.renderModal',
 			$id,
 			array(
@@ -1273,6 +1347,169 @@ class PhocacartRenderAdminview
 			// but we need to enable it in system so if we go from wizad to each task, it is enabled
 			$urlAjaxEnableWizard 	= 'index.php?option=com_phocacart&task=phocacartwizard.enablewizard&format=json&'. JSession::getFormToken().'=1';
 			PhocacartRenderAdminjs::renderAjaxDoRequestWizardController($urlAjaxEnableWizard, $id, false);
+		}
+	}
+
+
+
+
+	/* CP */
+
+	public function quickIconButton( $link, $text = '', $icon = '', $color = '') {
+
+		$o = '<div class="ph-cp-item">';
+		$o .= ' <div class="ph-cp-item-icon">';
+		$o .= '  <a class="ph-cp-item-icon-link" href="'.$link.'"><span style="background-color: '.$color.'20;"><i style="color: '.$color.';" class="phi '.$icon.' ph-cp-item-icon-link-large"></i></span></a>';
+		$o .= ' </div>';
+
+		$o .= ' <div class="ph-cp-item-title"><a class="ph-cp-item-title-link" href="'.$link.'"><span>'.$text.'</span></a></div>';
+		$o .= '</div>';
+
+		return $o;
+	}
+
+
+	public function getLinks($internalLinksOnly = 0) {
+		$app	= JFactory::getApplication();
+		$option = $app->input->get('option');
+		$oT		= strtoupper($option);
+
+		$links =  array();
+		switch ($option) {
+
+			case 'com_phocacart':
+				$links[]	= array('Phoca Cart site', 'https://www.phoca.cz/phocacart');
+				$links[]	= array('Phoca Cart documentation site', 'https://www.phoca.cz/documentation/category/116-phoca-cart-component');
+				$links[]	= array('Phoca Cart download site', 'https://www.phoca.cz/download/category/100-phoca-cart-component');
+				$links[]	= array('Phoca Cart extensions', 'https://www.phoca.cz/phocacart-extensions');
+			break;
+
+		}
+
+		$links[]	= array('Phoca News', 'https://www.phoca.cz/news');
+		$links[]	= array('Phoca Forum', 'https://www.phoca.cz/forum');
+
+		if ($internalLinksOnly == 1) {
+		    return $links;
+        }
+
+		$components 	= array();
+		$components[]	= array('Phoca Gallery','phocagallery', 'pg');
+		$components[]	= array('Phoca Guestbook','phocaguestbook', 'pgb');
+		$components[]	= array('Phoca Download','phocadownload', 'pd');
+		$components[]	= array('Phoca Documentation','phocadocumentation', 'pdc');
+		$components[]	= array('Phoca Favicon','phocafavicon', 'pfv');
+		$components[]	= array('Phoca SEF','phocasef', 'psef');
+		$components[]	= array('Phoca PDF','phocapdf', 'ppdf');
+		$components[]	= array('Phoca Restaurant Menu','phocamenu', 'prm');
+		$components[]	= array('Phoca Maps','phocamaps', 'pm');
+		$components[]	= array('Phoca Font','phocafont', 'pf');
+		$components[]	= array('Phoca Email','phocaemail', 'pe');
+		$components[]	= array('Phoca Install','phocainstall', 'pi');
+		$components[]	= array('Phoca Template','phocatemplate', 'pt');
+		$components[]	= array('Phoca Panorama','phocapanorama', 'pp');
+		$components[]	= array('Phoca Commander','phocacommander', 'pcm');
+		$components[]	= array('Phoca Photo','phocaphoto', 'ph');
+		$components[]	= array('Phoca Cart','phocacart', 'pc');
+
+		$banners	= array();
+		$banners[]	= array('Phoca Restaurant Menu','phocamenu', 'prm');
+
+		$o = '';
+		$o .= '<p>&nbsp;</p>';
+		$o .= '<h4 style="margin-bottom:5px;">'.JText::_($oT.'_USEFUL_LINKS'). '</h4>';
+		$o .= '<ul>';
+		foreach ($links as $k => $v) {
+			$o .= '<li><a style="text-decoration:underline" href="'.$v[1].'" target="_blank">'.$v[0].'</a></li>';
+		}
+		$o .= '</ul>';
+
+		$o .= '<div>';
+		$o .= '<p>&nbsp;</p>';
+		$o .= '<h4 style="margin-bottom:5px;">'.JText::_($oT.'_USEFUL_TIPS'). '</h4>';
+
+		$m = mt_rand(0, 10);
+		if ((int)$m > 0) {
+			$o .= '<div>';
+			$num = range(0,(count($components) - 1 ));
+			shuffle($num);
+			for ($i = 0; $i<3; $i++) {
+				$numO = $num[$i];
+				$o .= '<div style="float:left;width:33%;margin:0 auto;">';
+				$o .= '<div><a style="text-decoration:underline;" href="https://www.phoca.cz/'.$components[$numO][1].'" target="_blank">'.Joomla\CMS\HTML\HTMLHelper::_('image',  'media/'.$option.'/images/administrator/icon-box-'.$components[$numO][2].'.png', ''). '</a></div>';
+				$o .= '<div style="margin-top:-10px;"><small><a style="text-decoration:underline;" href="https://www.phoca.cz/'.$components[$numO][1].'" target="_blank">'.$components[$numO][0].'</a></small></div>';
+				$o .= '</div>';
+			}
+			$o .= '<div style="clear:both"></div>';
+			$o .= '</div>';
+		} else {
+			$num = range(0,(count($banners) - 1 ));
+			shuffle($num);
+			$numO = $num[0];
+			$o .= '<div><a href="https://www.phoca.cz/'.$banners[$numO][1].'" target="_blank">'.Joomla\CMS\HTML\HTMLHelper::_('image',  'media/'.$option.'/images/administrator/b-'.$banners[$numO][2].'.png', ''). '</a></div>';
+
+		}
+
+		$o .= '<p>&nbsp;</p>';
+		$o .= '<h4 style="margin-bottom:5px;">'.JText::_($oT.'_PLEASE_READ'). '</h4>';
+		$o .= '<div><a style="text-decoration:underline" href="https://www.phoca.cz/phoca-needs-your-help/" target="_blank">'.JText::_($oT.'_PHOCA_NEEDS_YOUR_HELP'). '</a></div>';
+
+		$o .= '</div>';
+		return $o;
+	}
+
+
+	// TABS
+	public function navigation($tabs) {
+
+		if ($this->compatible) {
+			return '';
+		}
+
+		$o = '<ul class="nav nav-tabs">';
+		$i = 0;
+		foreach($tabs as $k => $v) {
+			$cA = 0;
+			if ($i == 0) {
+				$cA = 'class="active"';
+			}
+			$o .= '<li '.$cA.'><a href="#'.$k.'" data-toggle="tab">'. $v.'</a></li>'."\n";
+			$i++;
+		}
+		$o .= '</ul>';
+		return $o;
+	}
+
+
+	public function startTabs($active = 'general') {
+		if ($this->compatible) {
+			return HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => $active));
+		} else {
+			return '<div id="phAdminEdit" class="tab-content">'. "\n";
+		}
+	}
+
+	public function endTabs() {
+		if ($this->compatible) {
+			return HTMLHelper::_('uitab.endTabSet');
+		} else {
+			return '</div>';
+		}
+	}
+
+	public function startTab($id, $name, $active = '') {
+		if ($this->compatible) {
+			return HTMLHelper::_('uitab.addTab', 'myTab', $id, $name);
+		} else {
+			return '<div class="tab-pane '.$active.'" id="'.$id.'">'."\n";
+		}
+	}
+
+	public function endTab() {
+		if ($this->compatible) {
+			return HTMLHelper::_('uitab.endTab');
+		} else {
+			return '</div>';
 		}
 	}
 

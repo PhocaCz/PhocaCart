@@ -122,19 +122,19 @@ class JFormFieldPhocacartCategory extends JFormField
 
 		if ($multiple) {
 			if ($typeMethod == 'allnone') {
-				array_unshift($tree, JHtml::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
-				array_unshift($tree, JHtml::_('select.option', '-1', JText::_('COM_PHOCACART_ALL'), 'value', 'text'));
+				array_unshift($tree, Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
+				array_unshift($tree, Joomla\CMS\HTML\HTMLHelper::_('select.option', '-1', JText::_('COM_PHOCACART_ALL'), 'value', 'text'));
 			}
 		} else {
-			array_unshift($tree, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
+			array_unshift($tree, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
 		}
 
 
 		if (!empty($activeCats)) {
-			return JHtml::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
+			return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
 
 		} else {
-			return JHtml::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+			return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		}
 
 	}

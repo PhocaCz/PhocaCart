@@ -21,7 +21,7 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.date', $direction = 'DESC')
 	{
 		$app = JFactory::getApplication('administrator');
 
@@ -31,7 +31,7 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
 
-		//parent::populateState('a.date', 'desc');
+		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')

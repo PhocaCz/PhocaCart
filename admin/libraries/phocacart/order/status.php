@@ -102,6 +102,7 @@ class PhocacartOrderStatus
 
 		// ORDER INFO
 		$app 		= JFactory::getApplication();
+		$pos		= PhocacartPos::isPos();
 		$order 		= new PhocacartOrderView();
 		$common		= $order->getItemCommon($orderId);
 		$orderNumber= PhocacartOrder::getOrderNumber($orderId, $common->date);
@@ -123,7 +124,6 @@ class PhocacartOrderStatus
 		$stockMovementsV= '';
 
 
-
 		// 1) NOTIFY USER
 		if ($notifyUser == 0) {
 			$notifyUserV = false;
@@ -131,7 +131,13 @@ class PhocacartOrderStatus
 			$notifyUserV = true;
 		} else if ($notifyUser == 99) {
 			if (isset($status['email_customer']) && (int)$status['email_customer'] > 0) {
-				$notifyUserV = true;
+
+				if ((int)$status['email_customer'] == 1) {
+					$notifyUserV = true;
+				} else if ((int)$status['email_customer'] == 2 && !$pos) {
+					$notifyUserV = true;// Don't send email from POS if the send email parameter is set to: Yes (excluding POS)
+				}
+
 			}
 		}
 
@@ -820,7 +826,7 @@ class PhocacartOrderStatus
 			3 => JText::_('COM_PHOCACART_DELIVERY_NOTE')
 		);
 
-		return JHtml::_('select.genericlist',  $data,  'jform[email_send]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[email_send]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 
 	public static function getStockMovementsSelectBox($value) {
@@ -836,7 +842,7 @@ class PhocacartOrderStatus
 			$value = '=';
 		}
 
-		return JHtml::_('select.genericlist',  $data,  'jform[stock_movements]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[stock_movements]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 
 	public static function getChangeUserGroupSelectBox($value) {
@@ -851,7 +857,7 @@ class PhocacartOrderStatus
 			$value = 0;
 		}
 
-		return JHtml::_('select.genericlist',  $data,  'jform[change_user_group]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[change_user_group]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 
 	public static function getChangeChangePointsNeededSelectBox($value) {
@@ -867,7 +873,7 @@ class PhocacartOrderStatus
 			$value = 0;
 		}
 
-		return JHtml::_('select.genericlist',  $data,  'jform[change_points_needed]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[change_points_needed]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 
 	public static function getChangePointsReceivedSelectBox($value) {
@@ -883,7 +889,7 @@ class PhocacartOrderStatus
 			$value = 0;
 		}
 
-		return JHtml::_('select.genericlist',  $data,  'jform[change_points_received]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[change_points_received]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 }
 ?>

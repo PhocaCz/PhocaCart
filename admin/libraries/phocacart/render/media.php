@@ -103,7 +103,7 @@ class PhocacartRenderMedia
 		$oParams['ajaxSearchingFilteringItems'] = (int)$this->p['ajax_searching_filtering_items'];
 
 
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
         //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocacart'.$this->t['min'].'.js');
         //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/phocarequest'.$this->t['min'].'.js');
         //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/filter/jquery.ba-bbq.min.js');
@@ -199,7 +199,7 @@ class PhocacartRenderMedia
 	public function loadBase() {
 
 		if ($this->load) {
-			JHtml::_('jquery.framework', false);
+			Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 
 
 			if ($this->p['load_main_css'] == 1) {
@@ -364,8 +364,15 @@ class PhocacartRenderMedia
 		if ($this->load) {
 			//JHtml::stylesheet('media/com_phocacart/js/swiper/swiper.min.css');
 			//$this->document->addScript(JURI::root(true) . '/media/com_phocacart/js/swiper/swiper.min.js');
+			HTMLHelper::_('jquery.framework', false);
 			HTMLHelper::_('stylesheet', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
 			HTMLHelper::_('script', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'));
+		}
+	}
+
+	public function loadAnimateCss(){
+		if ($this->load) {
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/animate/animate.min.css', array('version' => 'auto'));
 		}
 	}
 

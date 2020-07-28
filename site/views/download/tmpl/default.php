@@ -99,7 +99,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 				echo '<input type="hidden" name="d" value="'.$this->t['token_download'].'" />';
 				echo '<input type="hidden" name="o" value="'.$this->t['token_order'].'" />';
 				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="'.$this->s['i']['download'].'"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
-				echo JHtml::_('form.token');
+				echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 				echo '</form>';
 
 				echo '</div>';

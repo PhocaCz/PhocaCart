@@ -15,18 +15,19 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 	protected $item;
 	protected $form;
 	protected $t;
+	protected $r;
 
 	public function display($tpl = null) {
 
 		$this->t		= PhocacartUtils::setVars('category');
-
+		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 		$user 			= JFactory::getUser();
 		$model			= $this->getModel();
 
-		JHtml::_('behavior.calendar');
+		//Joomla\CMS\HTML\HTMLHelper::_('behavior.calendar');
 		$media = new PhocacartRenderAdminmedia();
 
 		//Data from model

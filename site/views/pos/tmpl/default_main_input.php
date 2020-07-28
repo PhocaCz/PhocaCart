@@ -19,7 +19,7 @@ echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" /
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 //echo '<input type="hidden" name="limitstart" value="0" />';//We use more pages, reset for new date, new customer, new products
 //echo '<input type="hidden" name="start" value="0" />';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 
 if ($this->t['userexists']) {
 	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['user'].' icon-white"></span>  &nbsp;'.$this->t['user']->name.'</button>';
@@ -51,7 +51,7 @@ if ($this->t['pos_shipping_force'] == 0) {
 	echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['shipping-method'].' icon-white"></span> &nbsp;'.$title.'</button>';
 	echo '</form>';
 } else {
@@ -77,7 +77,7 @@ if ($this->t['pos_payment_force'] == 0) {
 	echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent"><span class="'.$this->s['i']['payment-method'].' icon-white"></span> &nbsp;'.$title.'</button>';
 	echo '</form>';
 } else {
@@ -94,7 +94,7 @@ echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 
 //if (!$this->t['paymentexists']) {
 echo '<button class="'.$this->s['c']['btn.btn-success.btn-lg'].' loadMainContent">'.JText::_('COM_PHOCACART_PAYMENT').'</button>';

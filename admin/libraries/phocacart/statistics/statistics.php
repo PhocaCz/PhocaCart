@@ -19,7 +19,7 @@ final class PhocacartStatistics
 	public function __construct() {
 
 		$document	= JFactory::getDocument();
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 		//$document->addScript(JURI::root(true).'/media/com_phocacart/js/chartjs/Chart.min.js');
 		//$document->addScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.js');
 		HTMLHelper::_('script', 'media/com_phocacart/js/chartjs/Chart.min.js', array('version' => 'auto'), array('defer' => true));

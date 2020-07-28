@@ -35,8 +35,8 @@ class PhocacartPriceHistory
 			// Do nothing
 		} else if (isset($history['date']) && isset($history['id'])) {
 
-			$dateDb2 	= JHtml::_('date', $history['date'], 'Y-m-d');
-			$dateNow2	= JHtml::_('date', $dateNow , 'Y-m-d');
+			$dateDb2 	= Joomla\CMS\HTML\HTMLHelper::_('date', $history['date'], 'Y-m-d');
+			$dateNow2	= Joomla\CMS\HTML\HTMLHelper::_('date', $dateNow , 'Y-m-d');
 			if ($dateDb2 == $dateNow2) {
 				$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($price)
 						.' WHERE id = '.(int)$history['id'];
@@ -206,8 +206,8 @@ class PhocacartPriceHistory
 		$c = count($history);
 		$c--;
 		if (isset($history[$c]['date'])) {
-			$dateDb2 	= JHtml::_('date', $history[$c]['date'], 'Y-m-d');
-			$dateNow2	= JHtml::_('date', $dateNow , 'Y-m-d');
+			$dateDb2 	= Joomla\CMS\HTML\HTMLHelper::_('date', $history[$c]['date'], 'Y-m-d');
+			$dateNow2	= Joomla\CMS\HTML\HTMLHelper::_('date', $dateNow , 'Y-m-d');
 			// Date in price history is the same like today's price, so take today's price
 			if ($dateDb2 == $dateNow2 && isset($history[$c])) {
 				unset($history[$c]);
@@ -244,7 +244,7 @@ class PhocacartPriceHistory
 			foreach($history as $k => $v) {
 
 				$dataY[] = '\'' . $v['price'] . '\'';
-				$dataX[] = '\'' . JHtml::_('date', $v['date'] , JText::_('DATE_FORMAT_LC3')) .'\'';
+				$dataX[] = '\'' . Joomla\CMS\HTML\HTMLHelper::_('date', $v['date'] , JText::_('DATE_FORMAT_LC3')) .'\'';
 			}
 		}
 

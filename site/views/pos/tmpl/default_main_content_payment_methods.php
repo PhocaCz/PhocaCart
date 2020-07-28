@@ -39,7 +39,7 @@ if (!empty($this->t['paymentmethods'])) {
 		echo '<span class="ph-payment-title">'.$v->title.'</span>';
 
 		if ($this->t['display_payment_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-payment-desc">'.JHtml::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';
 		}
 		echo '</div>';
 
@@ -89,7 +89,7 @@ if (!empty($this->t['paymentmethods'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 		echo '<input type="hidden" name="redirectsuccess" value="main.content.products" />';
 		echo '<input type="hidden" name="redirecterror" value="main.content.paymentmethods" />';
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 
 
 		echo '<div class="ph-cb"></div>';

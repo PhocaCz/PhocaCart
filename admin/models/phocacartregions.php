@@ -21,6 +21,8 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 				'title', 'a.title',
 				'alias', 'a.alias',
 				'country_title', 'country_title',
+				'code2', 'a.code2',
+				'code3', 'a.code3',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
@@ -30,7 +32,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null) {
+	protected function populateState($ordering = 'a.title', $direction = 'ASC') {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
@@ -44,8 +46,8 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		$countryId = $app->getUserStateFromRequest($this->context.'.filter.country_id', 'filter_country_id', null);
 		$this->setState('filter.country_id', $countryId);
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		//$this->setState('filter.language', $language);
@@ -55,7 +57,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.title', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
@@ -63,7 +65,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		//$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.country_id');
 		$id	.= ':'.$this->getState('filter.region_id');
 
@@ -108,7 +110,7 @@ class PhocaCartCpModelPhocacartRegions extends JModelList
 		$query->join('LEFT', '#__phocacart_tax_regions AS tr ON a.id = tr.region_id');
 
 		// Filter by published state.
-		$published = $this->getState('filter.state');
+		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('a.published = '.(int) $published);
 		}

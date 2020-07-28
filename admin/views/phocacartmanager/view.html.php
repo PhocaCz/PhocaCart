@@ -25,10 +25,12 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 	protected $currentFolder;
 	protected $downloadFolder;
 	protected $t;
+	protected $r;
 
 	public function display($tpl = null) {
 
 		$this->t				= PhocacartUtils::setVars('manager');
+		$this->r				= new PhocacartRenderAdminview();
 		$this->field			= JFactory::getApplication()->input->get('field');
 		$this->fce 				= 'phocaSelectFileName_'.$this->field;
 		$this->manager 			= JFactory::getApplication()->input->get( 'manager', '', 'file' );
@@ -150,7 +152,7 @@ class PhocaCartCpViewPhocaCartManager extends JViewLegacy
 
 
 		parent::display($tpl);
-		echo JHtml::_('behavior.keepalive');
+		echo Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
 	}
 
 	function setFolder($index = 0) {

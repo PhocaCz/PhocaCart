@@ -12,6 +12,7 @@ jimport( 'joomla.application.component.view');
 class PhocaCartViewAccount extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $p;
 	protected $u;
 	protected $s;

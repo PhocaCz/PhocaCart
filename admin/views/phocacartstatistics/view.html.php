@@ -15,12 +15,15 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+	protected $r;
 	protected $d;
+
 
 	function display($tpl = null) {
 
 		$document				= JFactory::getDocument();
 		$this->t				= PhocacartUtils::setVars('statistic');
+		$this->r				= new PhocacartRenderAdminviews();
 		$this->state			= $this->get('State');
 		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
 		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());
@@ -109,7 +112,7 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderAdminmedia();
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/jquery.equalheights.min.js');
 		$document->addScriptDeclaration(
 		//'jQuery(window).load(function(){

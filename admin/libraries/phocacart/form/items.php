@@ -54,8 +54,55 @@ class PhocacartFormItems
 		$fields = $db->loadObjectList();
 
 
+
 		return $fields;
 	}
+
+	/*
+	 * Check if we ask some form field in billing or shipping address
+	 * E.g. if vendor completely skip adding shipping address and user sends no shipping address
+	 * this does not mean that user didn't added data but vendor just didn't asked for them.
+	 */
+
+	public static function isFormFieldActive($type = 'billing') {
+
+	    $db = JFactory::getDBO();
+
+	    $wheres = array();
+
+	    switch($type) {
+
+            case 'account':
+                $wheres[] = " a.display_display_account = 1";
+            break;
+
+	        case 'shipping':
+                $wheres[] = " a.display_shipping = 1";
+            break;
+
+            case 'billing':
+            default:
+                $wheres[] = " a.display_billing = 1";
+            break;
+        }
+
+
+		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
+
+	    $query = 'SELECT a.id'
+				.' FROM #__phocacart_form_fields AS a'
+				. $where
+				.' ORDER BY a.id'
+                .' LIMIT 1';
+		$db->setQuery($query);
+
+		$row = $db->loadResult();
+		if ((int)$row > 0) {
+		    return true;
+        }
+		return false;
+
+    }
 
 	public static function getColumnType($type) {
 
@@ -82,7 +129,7 @@ class PhocacartFormItems
 
 				$pos3 = strpos($tA[1], 'datetime');
 				if ($pos3 === 0) {
-					$t = $tA[1] . 'NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+					$t = $tA[1] . ' NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
 				}
 
 			}

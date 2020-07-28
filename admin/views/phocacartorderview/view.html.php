@@ -12,23 +12,24 @@ jimport( 'joomla.application.component.view' );
 class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 {
 	public function display($tpl = null) {
-		
+
 		$app			= JFactory::getApplication();
 		$this->t		= PhocacartUtils::setVars('orderview');
+		$this->r		= new PhocacartRenderAdminview();
 		$id				= $app->input->get('id', 0, 'int');
 		$type			= $app->input->get('type', 0, 'int');
 		$format			= $app->input->get('format', '', 'string');
-		
+
 		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format);
 		echo $o;
-		
-		
-		
+
+
+
 		$media = new PhocacartRenderAdminmedia();
 
-		parent::display($tpl);	
+		parent::display($tpl);
 	}
-	
+
 }
 ?>

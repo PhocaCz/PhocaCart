@@ -44,7 +44,7 @@ class JFormFieldPhocaSelectItemCategory extends JFormField
 		$productId	= isset($request->id) ? $request->id : 0;
 		$options    = PhocacartCategoryMultiple::getCategories($productId, 2);
 
-		$html[] = JHtml::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value, $this->id);
+		$html[] = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value, $this->id);
 
 
 		return implode("\n", $html);

@@ -14,27 +14,29 @@ phocacart import('phocacart.cart.cartdb');
 phocacart import('phocacart.cart.rendercart');
 phocacart import('phocacart.currency.currency');
 */
- 
+
 class PhocaCartCpViewPhocaCartEditStatus extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $item;
 	protected $itemhistory;
 	protected $id;
 	function display($tpl = null) {
-		
+
 		$app				= JFactory::getApplication();
 		$this->id			= $app->input->get('id', 0, 'int');
-		
+
 		$this->t			= PhocacartUtils::setVars('cart');
+		$this->r 			= new PhocacartRenderAdminviews();
 		$this->item			= $this->get('Data');
 		$this->itemhistory	= $this->get('HistoryData');
-		
-		
+
+
 
 		$media = new PhocacartRenderAdminmedia();
 		PhocacartRenderAdminjs::renderHtmlAfterChange('#jform_status_id', '#phWarningNotify');
-	
+
 		parent::display($tpl);
 	}
 }

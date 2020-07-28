@@ -340,7 +340,7 @@ class PhocacartTag
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();
 
-		$tagsO = JHtml::_('select.genericlist', $tags, $name, 'class="'.$class.'" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$tagsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $tags, $name, 'class="'.$class.'" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $tagsO;
 	}

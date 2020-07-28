@@ -27,5 +27,5 @@ $d = $displayData;
 		</div>
 	</div>
 	<div class="ph-cb"></div>
-	<?php echo JHtml::_('form.token'); ?>
+	<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
 </form>

@@ -1308,6 +1308,12 @@
                 <option value="all">COM_PHOCACART_SEARCH_ALL</option>
 				<option value="exact">COM_PHOCACART_SEARCH_EXACT</option>
             </field>
+			
+			<field name="search_deep" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DEEP_SEARCH_LABEL"
+                   description="COM_PHOCACART_FIELD_DEEP_SEARCH_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
 
 
             <field name="phocahead24" type="phocaheadexpert" default="COM_PHOCACART_ADVANCED_OPTIONS_EXPERTS_ONLY_LABEL" label="" description=""/>
@@ -1703,6 +1709,21 @@
             <field name="order_id_length_prn" default="10" size="18" type="text" label="COM_PHOCACART_FIELD_ORDER_ID_LENGTH_PRN_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_ID_LENGTH_PRN_NUMBER_DESC"/>
 
 
+			
+			
+			<field name="queue_number_prefix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_PREFIX_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_PREFIX_DESC"/>
+            <field name="queue_number_suffix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_SUFFIX_DESC"/>
+			<field name="queue_creating_numbers" type="list" class="btn-group btn-group-yesno" default="A" label="COM_PHOCACART_FIELD_CREATING_QUEUE_NUMBERS_METHOD_LABEL"
+                   description="COM_PHOCACART_FIELD_CREATING_QUEUE_NUMBERS_METHOD_DESC">
+                <option value="A">COM_PHOCACART_STANDARD_AUTO_INCREMENT</option>
+				<option value="Y">COM_PHOCACART_ON_ANNUAL_BASIS</option>
+                <option value="M">COM_PHOCACART_ON_MONTHLY_BASIS</option>
+				<option value="D">COM_PHOCACART_ON_DAILY_BASIS</option>
+            </field>
+			<field name="queue_number_length" default="5" size="18" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_LENGTH_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_LENGTH_DESC"/>
+			
+			
+			
             <field name="pdf_invoice_qr_information" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_INFORMATION_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_INFORMATION_DESC"/>
             <field name="pdf_invoice_qr_code" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_DESC"/>
             <field name="pdf_invoice_signature_image" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_PDF_INVOICE_SIGNATURE_IMAGE_LABEL"
@@ -2130,6 +2151,21 @@
 </field>
 
 
+	<field name="phocahead38" type="phocahead" default="COM_PHOCACART_NEWSLETTER_OPTIONS_PHOCA_EMAIL_LABEL" label="" description=""/>
+
+	<field name="newsletter_enable" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_NEWSLETTER_LABEL" description="COM_PHOCACART_FIELD_ENABLE_NEWSLETTER_DESC">
+		<option value="0">COM_PHOCACART_NO</option>
+		<option value="1">COM_PHOCACART_YES</option>
+	</field>
+
+	<field name="newsletter_activate" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ACTIVATE_NEWSLETTER_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_NEWSLETTER_DESC">
+		<option value="0">COM_PHOCACART_NO</option>
+		<option value="1">COM_PHOCACART_YES</option>
+		<option value="2">COM_PHOCACART_NO_ACTIVATION_EMAIL_SEND</option>
+	</field>
+	
+	<field name="newsletter_mailinglist" type="PhocaCartMailingList" size="" default="" manager="subscriber" multiple="true" label="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_DESC"/>
+		
 		</fieldset>
 
         <fieldset name="permissions_label" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">

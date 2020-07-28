@@ -9,10 +9,10 @@
  */
 defined('_JEXEC') or die();
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
+Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
+Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 
 
 $link		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpointgroup&tmpl=component&id='.(int)$this->id);
@@ -97,7 +97,7 @@ if (!empty($this->t['product'])) {
 		echo '<input type="hidden" name="tmpl" value="component" />';
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-ok ph-icon-white"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		
 		
 		echo '</tr>';

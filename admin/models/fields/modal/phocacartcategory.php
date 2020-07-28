@@ -40,8 +40,8 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 		$modalId = 'Phocacartcategory_' . $this->id;
 
 		// Add the modal field script to the document head.
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/modal-fields.js', array('version' => 'auto', 'relative' => true));
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('script', 'system/modal-fields.js', array('version' => 'auto', 'relative' => true));
 
 		// Script to proxy the select modal function to the modal-fields.js file.
 		if ($allowSelect)
@@ -184,7 +184,7 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 		// Select category modal
 		if ($allowSelect)
 		{
-			$html .= JHtml::_(
+			$html .= Joomla\CMS\HTML\HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalSelect' . $modalId,
 				array(
@@ -200,9 +200,10 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 		}
 
 		// New category modal
+        // phocacartcategory-form => adminForm
 		if ($allowNew)
 		{
-			$html .= JHtml::_(
+			$html .= Joomla\CMS\HTML\HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalNew' . $modalId,
 				array(
@@ -217,24 +218,25 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 					'modalWidth'  => '80',
 					'footer'      => '<a role="button" class="btn" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartcategory\', \'cancel\', \'phocacartcategory-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'add\', \'phocacartcategory\', \'cancel\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
 							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartcategory\', \'save\', \'phocacartcategory-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'add\', \'phocacartcategory\', \'save\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JSAVE') . '</a>'
 							. '<a role="button" class="btn btn-success" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartcategory\', \'apply\', \'phocacartcategory-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'add\', \'phocacartcategory\', \'apply\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JAPPLY') . '</a>',
 				)
 			);
 		}
 
 		// Edit category modal.
+        // phocacartcategory-form => adminForm
 		if ($allowEdit)
 		{
-			$html .= JHtml::_(
+			$html .= Joomla\CMS\HTML\HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalEdit' . $modalId,
 				array(
@@ -249,15 +251,15 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 					'modalWidth'  => '80',
 					'footer'      => '<a role="button" class="btn" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \'' . $this->id
-							. '\', \'edit\', \'phocacartcategory\', \'cancel\', \'phocacartcategory-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. '\', \'edit\', \'phocacartcategory\', \'cancel\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
 							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'edit\', \'phocacartcategory\', \'save\', \'phocacartcategory-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'edit\', \'phocacartcategory\', \'save\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JSAVE') . '</a>'
 							. '<a role="button" class="btn btn-success" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'edit\', \'phocacartcategory\', \'apply\', \'phocacartcategory-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'edit\', \'phocacartcategory\', \'apply\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JAPPLY') . '</a>',
 				)
 			);

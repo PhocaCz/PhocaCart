@@ -11,6 +11,7 @@ jimport( 'joomla.application.component.view');
 class PhocaCartViewPayment extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $p;
 	protected $u;
 

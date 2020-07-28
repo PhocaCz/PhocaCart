@@ -62,12 +62,12 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 
 		$table->title 		= str_replace('_', 'ph-u-ph', $table->title);// only alphabetical characters possible
-		$table->title		= JApplicationHelper::stringURLSafe($table->title);
+		$table->title		= PhocacartText::stringURLSafe($table->title);
 		$table->title		= str_replace('ph-u-ph', '_', $table->title);// only alphabetical characters possible
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= PhocacartText::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = PhocacartText::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -127,7 +127,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 				if (!isset($data['id']) || (isset($data['id']) && $data['id'] == 0)) {
 
 					$type				= PhocacartFormItems::getColumnType($data['type']);
-					$data['title']		= JApplicationHelper::stringURLSafe($data['title']);
+					$data['title']		= PhocacartText::stringURLSafe($data['title']);
 					$data['title']		= strip_tags($data['title']);
 					$db 				= JFactory::getDBO();
 					$config				= JFactory::getConfig();
@@ -140,7 +140,13 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 						.' AND TABLE_NAME = '.$db->quote('#__phocacart_users')
 						.' AND COLUMN_NAME = '.$db->quote($data['title']);*/
 
-						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$db->quote($data['title']);
+						// Manage _ as wildcard - BECAUSE OF LIKE
+						$dataTitle = str_replace('_', '\_', $db->quote($data['title']));
+						$dataTitle = str_replace('\\_', '\_', $dataTitle);
+
+
+						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$dataTitle;
+
 						$db->setQuery($query10);
 						$column1 = $db->loadResult();
 
@@ -155,7 +161,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 						}
 
-						$query20 = 'SHOW COLUMNS FROM #__phocacart_order_users LIKE '.$db->quote($data['title']);
+						$query20 = 'SHOW COLUMNS FROM #__phocacart_order_users LIKE '.$dataTitle;
 						$db->setQuery($query20);
 						$column2 = $db->loadResult();
 
@@ -238,10 +244,14 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 				if (!empty($cidOKTitle)) {
 					foreach($cidOKTitle as $k => $v) {
-						$v		= JApplicationHelper::stringURLSafe($v);
+						$v		= PhocacartText::stringURLSafe($v);
 						$v		= strip_tags($v);
 
-						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$db->quote($v);
+						// Manage _ as wildcard - BECAUSE OF LIKE
+						$dataTitle = str_replace('_', '\_', $db->quote($v));
+						$dataTitle = str_replace('\\_', '\_', $dataTitle);
+
+						$query10 = 'SHOW COLUMNS FROM #__phocacart_users LIKE '.$dataTitle;
 						$db->setQuery($query10);
 						$column1 = $db->loadResult();
 
@@ -251,7 +261,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 							$db->execute();
 						}
 
-						$query20 = 'SHOW COLUMNS FROM #__phocacart_order_users LIKE '.$db->quote($v);
+						$query20 = 'SHOW COLUMNS FROM #__phocacart_order_users LIKE '.$dataTitle;
 						$db->setQuery($query20);
 						$column2 = $db->loadResult();
 

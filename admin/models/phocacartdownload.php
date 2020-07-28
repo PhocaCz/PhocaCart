@@ -13,19 +13,19 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartOrderDownloads', $prefix = 'Table', $config = array()) {
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartdownload', 'phocacartdownload', array('control' => 'jform', 'load_data' => $loadData));
@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartdownload.data', array());
 		if (empty($data)) {
@@ -42,7 +42,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = JFactory::getDate();
@@ -101,7 +101,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 				$table->load($pk);
 				$isNew = false;
 			}
-			
+
 			// Store form parameters of selected method
 			$app		= JFactory::getApplication();
 			$dataPh		= $app->input->get('phform', array(), 'array');
@@ -130,15 +130,15 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
 				$this->setError($table->getError());
 				return false;
 			}
-			
-			
+
+
 
 			// Store the data.
 			if (!$table->store())
@@ -146,8 +146,8 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
-			
-		
+
+
 
 			// Clean the cache.
 			$this->cleanCache();

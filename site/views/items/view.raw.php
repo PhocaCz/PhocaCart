@@ -17,6 +17,7 @@ class PhocaCartViewItems extends JViewLegacy
 	protected $subcategories;
 	protected $items;
 	protected $t;
+	protected $r;
 	protected $p;
 	protected $s;
 

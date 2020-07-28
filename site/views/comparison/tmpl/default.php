@@ -121,11 +121,11 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<div class="ph-center">';
 		$c['remove'] .= '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn"><span class="'.$this->s['i']['remove'].'"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
 		$c['remove'] .= '</div>';
-		$c['remove'] .= JHtml::_('form.token');
+		$c['remove'] .= Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		$c['remove'] .= '</form>';
 		$c['remove'] .= '</td>';
 
-		$c['desc'] .= '<td>'.JHtml::_('content.prepare', $v['description']).'</td>';
+		$c['desc'] .= '<td>'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v['description']).'</td>';
 		$c['man'] .= '<td class="ph-center">'.$v['manufacturer_title'].'</td>';
 
 		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.JText::_($v['stock']).'</td>';}

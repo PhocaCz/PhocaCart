@@ -10,6 +10,9 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\String\StringHelper;
+use Joomla\CMS\Language\Language;
+
 class PhocacartText {
 
 	/*
@@ -49,6 +52,7 @@ class PhocacartText {
 		$body = isset($replace['ordernumber'])				? str_replace('{ordernumber}', $replace['ordernumber'], $body)						: $body;
 		$body = isset($replace['invoicenumber'])			? str_replace('{invoicenumber}', $replace['invoicenumber'], $body)					: $body;
 		$body = isset($replace['receiptnumber'])			? str_replace('{receiptnumber}', $replace['receiptnumber'], $body)					: $body;
+		$body = isset($replace['queuenumber'])			    ? str_replace('{queuenumber}', $replace['queuenumber'], $body)					    : $body;
 		$body = isset($replace['paymentreferencenumber'])	? str_replace('{paymentreferencenumber}', $replace['paymentreferencenumber'], $body): $body;
 		$body = isset($replace['invoiceduedate'])			? str_replace('{invoiceduedate}', $replace['invoiceduedate'], $body)				: $body;
 		$body = isset($replace['invoicedate'])				? str_replace('{invoicedate}', $replace['invoicedate'], $body)						: $body;
@@ -80,6 +84,8 @@ class PhocacartText {
 	}
 
 	public static function completeTextFormFields($body, $bas, $type = 1) {
+
+
 
 		if ($type == 1) {
 			$prefix = 'b_';
@@ -202,6 +208,7 @@ class PhocacartText {
 		$r['ordernumber']			= PhocacartOrder::getOrderNumber($orderId, $common->date, $common->order_number);
 		$r['invoicenumber']			= PhocacartOrder::getInvoiceNumber($orderId, $common->date, $common->invoice_number);
 		$r['receiptnumber']			= PhocacartOrder::getReceiptNumber($orderId, $common->date, $common->receipt_number);
+		$r['queuenumber']			= PhocacartOrder::getQueueNumber($orderId, $common->date, $common->queue_number);
 		$r['paymentreferencenumber']= PhocacartOrder::getPaymentReferenceNumber($orderId, $common->date, $common->invoice_prn);
 		$r['invoiceduedate']		= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'Y-m-d');
 		//$r['invoiceduedateyear']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'Y');
@@ -294,5 +301,49 @@ class PhocacartText {
 
         }
 
+    }
+
+    public static function stringURLSafe($string, $language = '')
+	{
+		// Remove any '-' from the string since they will be used as concatenaters
+		$str = str_replace('-', ' ', $string);
+
+		// Transliterate on the language requested (fallback to current language if not specified)
+		$lang = $language == '' || $language == '*' ? \JFactory::getLanguage() : Language::getInstance($language);
+		$str = $lang->transliterate($str);
+
+		// Trim white spaces at beginning and end of alias and make lowercase
+		$str = trim(StringHelper::strtolower($str));
+
+		// Remove any duplicate whitespace, and ensure all characters are alphanumeric
+		$str = preg_replace('/(\s|[^A-Za-z0-9\-_])+/', '-', $str);
+
+		// Trim dashes at beginning and end of alias
+		$str = trim($str, '-');
+
+		return $str;
+	}
+
+	/*
+	 * Be aware, tag without any attribute will be removed, used e.g. when editor adds first p tag (without attributes)
+	 */
+
+	public static function removeFirstTag($string, $tag = 'p') {
+
+        // First
+        $needle = '<'.$tag.'>';
+        $pos = strpos($string, $needle);
+        if ($pos !== false) {
+            $string = substr_replace($string, '', $pos, strlen($needle));
+        }
+
+        // Last
+        $needle = '</'.$tag.'>';
+        $pos = strrpos($string, $needle);
+        if ($pos !== false) {
+            $string = substr_replace($string, '', $pos, strlen($needle));
+        }
+
+        return $string;
     }
 }

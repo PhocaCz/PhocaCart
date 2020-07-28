@@ -21,7 +21,7 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 				'title', 'a.title',
 				'alias', 'a.alias',
 				'display_billing', 'a.display_billing',
-				'display_shipping', 'a.display_billing',
+				'display_shipping', 'a.display_shipping',
 				'display_account', 'a.display_account',
 				'description', 'a.description',
 				'label', 'a.label',
@@ -32,12 +32,13 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 				'access', 'a.access', 'access_level',
 				'ordering', 'a.ordering',
 				'published','a.published',
+				'required', 'a.required'
 			);
 		}
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null) {
+	protected function populateState($ordering = 'a.title', $direction = 'ASC') {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
@@ -50,8 +51,8 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 
 
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		//$this->setState('filter.language', $language);
@@ -61,7 +62,7 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.title', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
@@ -69,7 +70,7 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.formfield_id');
 
 
@@ -110,7 +111,7 @@ class PhocaCartCpModelPhocaCartFormfields extends JModelList
 
 
 		// Filter by published state.
-		$published = $this->getState('filter.state');
+		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('a.published = '.(int) $published);
 		}

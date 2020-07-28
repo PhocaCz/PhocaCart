@@ -124,7 +124,7 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 	<input type="hidden" name="id" value="id" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="task" value="question.submit" />
-	<?php echo JHtml::_('form.token');?>
+	<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token');?>
 
 </form>
 

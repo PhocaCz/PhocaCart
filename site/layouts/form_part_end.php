@@ -8,6 +8,6 @@
  */
 defined('_JEXEC') or die();
 // <--- FORM START MUST BE ADDED IN OUTPUT TEMPLATE
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 ?>

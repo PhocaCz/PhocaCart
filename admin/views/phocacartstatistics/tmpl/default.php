@@ -8,21 +8,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminviews';
-$r 			=  new $class();
+$r 			= $this->r;
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', $this->t['o']);
 $saveOrder	= $listOrder == 'a.ordering';
-if ($saveOrder) {
-	$saveOrderingUrl = 'index.php?option='.$this->t['o'].'&task='.$this->t['tasks'].'.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
+$saveOrderingUrl = '';
+if ($saveOrder && !empty($this->items)) {
+    $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
 $sortFields = $this->getSortFields();
 
@@ -30,11 +25,11 @@ echo $r->jsJorderTable($listOrder);
 
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-echo $r->startFilter();
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+//echo $r->startFilter();
+//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
 //echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
 //echo $r->selectFilterCategory(PhocaDownloadCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
-echo $r->endFilter();
+//echo $r->endFilter();
 
 echo $r->startMainContainer();
 //echo $r->startFilterBar();
@@ -46,8 +41,8 @@ echo $r->startMainContainer();
 //echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
 
 // DATE FROM - DATE TO
-JHtml::_('jquery.framework');
-JHtml::_('script', 'system/html5fallback.js', false, true);
+Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+Joomla\CMS\HTML\HTMLHelper::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "filter_date_from";
@@ -57,7 +52,7 @@ $attributes = '';
 $valueFrom 	= $this->escape($this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30)));
 
 echo '<div class="ph-inline-param">'. JText::_('COM_PHOCACART_DATE_FROM') . ': ';
-echo  JHtml::_('calendar', $valueFrom, $name, $id, $format, $attributes).'</div>';
+echo  Joomla\CMS\HTML\HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes).'</div>';
 
 //DATE TO
 $name		= "filter_date_to";
@@ -66,14 +61,14 @@ $valueTo 	= $this->escape($this->state->get('filter.date_to', PhocacartDate::get
 
 
 echo '<div class="ph-inline-param">'. JText::_('COM_PHOCACART_DATE_TO') . ': ';
-echo  JHtml::_('calendar', $valueTo, $name, $id, $format, $attributes).'</div>';
+echo  Joomla\CMS\HTML\HTMLHelper::_('calendar', $valueTo, $name, $id, $format, $attributes).'</div>';
 
 echo '<div class="ph-inline-param">';
 //echo '<input type="hidden" name="filter_date_from" value="'.$this->escape($this->state->get('filter.date_from')).'" />'. "\n";
 //echo '<input type="hidden" name="filter_date_to" value="'.$this->escape($this->state->get('filter.date_to')).'" />'. "\n";
 echo '<input type="hidden" name="limitstart" value="0" />'. "\n";
 echo '<input type="hidden" name="limit" value="" />'. "\n";
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '<input class="btn btn-success" type="submit" name="submit" value="'.JText::_('COM_PHOCACART_SELECT').'" /></div>';
 
 

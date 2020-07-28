@@ -40,7 +40,7 @@ class JFormFieldPhocaSelectFilename extends JFormField
 		$h				= 400;
 
 
-		JHtml::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
 
 
 		// Each Group is defined by its $idA

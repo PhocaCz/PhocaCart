@@ -58,7 +58,7 @@ if (!empty($this->items)) {
 	echo '<input type="hidden" name="date" value="'.$this->state->get('date').'" />';
 //}
 
-echo JHtml::_( 'form.token' );
+echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
 echo '</form>';
 
 ?>

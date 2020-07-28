@@ -15,23 +15,25 @@ class PhocaCartCpViewPhocacartUnit extends JViewLegacy
 	protected $item;
 	protected $form;
 	protected $t;
+	protected $r;
 	protected $attributeoption;
 
 	public function display($tpl = null) {
-		
+
 		$this->t		= PhocacartUtils::setVars('unit');
+		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
-		
+
 		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
-		parent::display($tpl);	
+		parent::display($tpl);
 	}
-	
+
 	protected function addToolbar() {
-		
+
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$bar 		= JToolbar::getInstance('toolbar');
@@ -40,17 +42,17 @@ class PhocaCartCpViewPhocacartUnit extends JViewLegacy
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 		$class		= ucfirst($this->t['tasks']).'Helper';
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.unit_id'));
-		
+
 		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
 		JToolbarHelper::title(   JText::_( $this->t['l'] . '_TAG' ).': <small><small>[ ' . $text.' ]</small></small>' , 'modal-window');
-		
+
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
 			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
 			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
 			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
-	
+
 		if (empty($this->item->id))  {
 			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}

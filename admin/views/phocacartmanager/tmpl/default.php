@@ -7,10 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
+Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
+Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 
 $r 			=  new PhocacartRenderAdminview();
 
@@ -63,21 +63,21 @@ echo '<ul class="nav nav-tabs" id="configTabs">';
 
 
 if((int)$this->t['enablemultiple']  >= 0) {
-	$label = JHtml::_( 'image', $this->t['i'].'icon-16-upload-multiple.png','') . '&nbsp;'.JText::_($this->t['l'].'_MULTIPLE_UPLOAD');
+	$label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-upload-multiple.png','') . '&nbsp;'.JText::_($this->t['l'].'_MULTIPLE_UPLOAD');
 	echo '<li><a href="#multipleupload" data-toggle="tab">'.$label.'</a></li>';
 }
 
-$label = JHtml::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
+$label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
 echo '<li><a href="#upload" data-toggle="tab">'.$label.'</a></li>';
 
 
-$label = JHtml::_( 'image', $this->t['i'].'icon-16-folder.png','') . '&nbsp;'.JText::_($this->t['l'].'_CREATE_FOLDER');
+$label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder.png','') . '&nbsp;'.JText::_($this->t['l'].'_CREATE_FOLDER');
 echo '<li><a href="#createfolder" data-toggle="tab">'.$label.'</a></li>';
 
 echo '</ul>';
 
 
-echo '<div class="tab-content">'. "\n";
+echo $r->startTabs();
 
 echo '<div class="tab-pane" id="multipleupload">'. "\n";
 echo $this->loadTemplate('multipleupload');

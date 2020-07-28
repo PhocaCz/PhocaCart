@@ -9,9 +9,9 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.keepalive');
-JHtml::_('behavior.formvalidation');
-//JHtml::_('formbehavior.chosen', 'select');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.formvalidation');
+//Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 
 //load user_profile plugin language
 $lang = JFactory::getLanguage();
@@ -107,7 +107,7 @@ echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-billing-row
 				</label>
 			</div>
 			<div class="controls">
-				<?php echo JHtml::_('select.genericlist', $this->twofactormethods, 'jform[twofactor][method]', array('onchange' => 'Joomla.twoFactorMethodChange()'), 'value', 'text', $this->otpConfig->method, 'jform_twofactor_method', false) ?>
+				<?php echo Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $this->twofactormethods, 'jform[twofactor][method]', array('onchange' => 'Joomla.twoFactorMethodChange()'), 'value', 'text', $this->otpConfig->method, 'jform_twofactor_method', false) ?>
 			</div>
 		</div>
 		<div id="com_users_twofactor_forms_container">
@@ -167,7 +167,7 @@ echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 echo '<input type="hidden" name="task" value="account.saveprofile" />'. "\n";
 echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>'. "\n";
 
 /*
@@ -219,7 +219,7 @@ echo '</form>'. "\n";
 				</label>
 			</div>
 			<div class="controls">
-				<?php echo JHtml::_('select.genericlist', $this->twofactormethods, 'jform[twofactor][method]', array('onchange' => 'Joomla.twoFactorMethodChange()'), 'value', 'text', $this->otpConfig->method, 'jform_twofactor_method', false) ?>
+				<?php echo Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $this->twofactormethods, 'jform[twofactor][method]', array('onchange' => 'Joomla.twoFactorMethodChange()'), 'value', 'text', $this->otpConfig->method, 'jform_twofactor_method', false) ?>
 			</div>
 		</div>
 		<div id="com_users_twofactor_forms_container">
@@ -262,7 +262,7 @@ echo '</form>'. "\n";
 			<input type="hidden" name="task" value="account.saveprofile" />
 			<?php
 			echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-			echo JHtml::_('form.token');
+			echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 			?>
 		</div>
 	</form>

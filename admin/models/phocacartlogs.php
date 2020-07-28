@@ -35,14 +35,15 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 				'date', 'a.date',
 				'ordering', 'a.ordering',
 				'language', 'a.language',
-				'published','a.published'
+				'published','a.published',
+				'user_username'
 			);
 		}
 
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.date', $direction = 'DESC')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -54,8 +55,8 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
@@ -65,7 +66,7 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.date', 'desc');
+		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
@@ -73,7 +74,7 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		//$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.log_id');
 
 		return parent::getStoreId($id);
@@ -115,7 +116,7 @@ class PhocaCartCpModelPhocacartLogs extends JModelList
 		}*/
 
 		// Filter by published state.
-		$published = $this->getState('filter.state');
+		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('a.published = '.(int) $published);
 		}

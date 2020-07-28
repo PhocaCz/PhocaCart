@@ -36,6 +36,7 @@ class PhocacartImage
 			break;
 
 			case 'medium':
+
 			$fileNameThumb 			= $thumb_name_prefix.'_m_'. $title;
 			$thumbName->abs			= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel			= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);

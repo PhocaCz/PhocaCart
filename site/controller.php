@@ -15,6 +15,7 @@ class PhocaCartController extends JControllerLegacy
 	public function display($cachable = false, $urlparams = false)
 	{
 
+	
 		if ( ! JFactory::getApplication()->input->get('view') ) {
 			JFactory::getApplication()->input->set('view', 'categories' );
 		}

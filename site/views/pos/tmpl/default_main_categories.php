@@ -34,7 +34,7 @@ if (!empty($this->t['categories'])) {
 	echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="section" value="'.(int)$this->t['section']->id.'" />';
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 
 	echo '</div>';
 	echo '</form>';

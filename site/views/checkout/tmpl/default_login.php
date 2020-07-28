@@ -66,7 +66,7 @@ if($this->a->login == 0) {
 		echo '<input type="hidden" name="task" value="checkout.setguest" />'. "\n";
 		echo '<input type="hidden" name="id" value="1" />'. "\n";
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		echo '</form>';
 
 	}
@@ -125,7 +125,7 @@ if($this->a->login == 0) {
 	echo '<input type="hidden" name="task" value="checkout.setguest" />'. "\n";
 	echo '<input type="hidden" name="id" value="0" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>';
 
 	echo '</div>';

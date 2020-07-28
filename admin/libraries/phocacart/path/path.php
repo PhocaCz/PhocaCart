@@ -152,6 +152,7 @@ class PhocacartPath
 			$uriL = str_replace(JURI::root(true), '', $uriS);
 			$uriL = ltrim($uriL, '/');
 			$formatLink = JURI::root(false). $uriL;
+
 			//$formatLink = $uriS;
 		} else {
 			$formatLink = JURI::root(false). str_replace(JURI::root(true).'/administrator/', '', $uri->toString());

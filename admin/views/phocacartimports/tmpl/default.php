@@ -8,16 +8,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-$class		= $this->t['n'] . 'RenderAdminviews';
-$r 			=  new $class();
+$r 			= $this->r;
 
-echo '<div id="'.$this->t['tasks'].'"><div class="row-fluid ph-admin-box">';
-echo $r->startFilter();
-echo $r->endFilter();
+echo '<div id="'.$this->t['tasks'].'">';
+//echo $r->startFilter();
+//echo $r->endFilter();
 echo $r->startMainContainer();
 
 
@@ -55,7 +50,7 @@ if ((int)$this->t['count'] > 0) {
 	<input type="file" name="Filedata" id="file_upload" >
 	<input class="btn btn-primary" type="submit" name="submit" value="<?php echo JText::_('COM_PHOCACART_UPLOAD');?>">
 	<input type="hidden" name="task" value="phocacartimport.upload" />
-	<?php echo JHtml::_('form.token'); ?>  
+	<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
   </div>
 </form>
 
@@ -93,6 +88,6 @@ if ((int)$this->t['count'] > 0) {
 
 </div>
 </div>
-<?php 
+<?php
 echo $r->endMainContainer();
-echo '</div></div>';
+echo '</div>';

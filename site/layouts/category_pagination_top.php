@@ -54,6 +54,6 @@ if ($d['t']['show_pagination_top']) {
 }
 echo '</div>';
 echo '<input type="hidden" name="format" value="raw" />';
-echo JHtml::_( 'form.token' );
+echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
 echo '</form>';
 ?>

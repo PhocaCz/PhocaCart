@@ -142,6 +142,7 @@ class PhocaCartModelItems extends JModelLegacy
 		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
 		$p['join_tag_label_filter']			= $params->get( 'join_tag_label_filter', 0 );
 		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
+		$p['search_deep']					= $params->get( 'search_deep', 0);
 
 		$wheres		= array();
 		$wheres[] = ' a.published = 1';

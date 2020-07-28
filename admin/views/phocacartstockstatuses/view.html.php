@@ -15,15 +15,21 @@ class PhocaCartCpViewPhocacartStockStatuses extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+	protected $r;
 	protected $s;
+	public $filterForm;
+    public $activeFilters;
 
 	function display($tpl = null) {
 
 		$this->t			= PhocacartUtils::setVars('stockstatus');
+		$this->r 			= new PhocacartRenderAdminviews();
 		$this->s            = PhocacartRenderStyle::getStyles();
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
+		$this->items			= $this->get('Items');
+		$this->pagination		= $this->get('Pagination');
+		$this->state			= $this->get('State');
+		$this->filterForm   	= $this->get('FilterForm');
+        $this->activeFilters 	= $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {

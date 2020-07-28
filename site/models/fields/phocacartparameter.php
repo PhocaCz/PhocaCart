@@ -25,7 +25,7 @@ class JFormFieldPhocacartParameter extends JFormField
 
 
 
-		return PhocacartParameter::getAllParametersSelectBox($this->name, $this->id, $this->value /*$activeId*/, NULL,'id' );
+		return PhocacartParameter::getAllParametersSelectBox($this->name, $this->id, $this->value /*$activeId*/, 'class="inputbox"','id' );
 	}
 }
 ?>

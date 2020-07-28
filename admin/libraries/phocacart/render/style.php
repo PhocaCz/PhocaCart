@@ -133,9 +133,9 @@ $s['c']['panel-body']               = 'panel-body';
 $s['c']['panel-collapse.collapse']  = 'panel-collapse collapse';
 $s['c']['panel-collapse.collapse.in'] = 'panel-collapse collapse in';
 
-$s['c']['label.label-success']      = 'label label-success';
-$s['c']['label.label-danger']       = 'label label-important label-danger';
-$s['c']['label.label-info']         = 'label label-info';
+$s['c']['label.label-success']      = 'label label-success badge badge-success';
+$s['c']['label.label-danger']       = 'label label-important label-danger badge badge-danger';
+$s['c']['label.label-info']         = 'label label-info badge badge-info';
 
 $s['c']['modal.zoom']               = 'modal zoom';
 $s['c']['modal-dialog']             = 'modal-dialog';

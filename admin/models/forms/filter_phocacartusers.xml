@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+	<fields name="filter">
+		
+		
+	<field name="search" type="text" inputmode="search" label="COM_PHOCACART_SEARCH" description="COM_PHOCACART_SEARCH" hint="JSEARCH_FILTER" />
+
+	
+	<field name="user_id" type="user" label="COM_PHOCACART_FIELD_USER_LABEL" description="COM_PHOCACART_FIELD_USER_DESC" class="input" default="" onchange="adminForm = document.getElementById('adminForm');adminForm.submit();" />
+	
+		<field name="published" type="list" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
+		
+		<option value="">JOPTION_SELECT_PUBLISHED</option>
+		<option value="1">COM_PHOCACART_PUBLISHED</option>
+		<option value="0">COM_PHOCACART_UNPUBLISHED</option>
+		</field>
+
+
+		<!--<field name="language" type="contentlanguage" label="JOPTION_FILTER_LANGUAGE" description="JOPTION_FILTER_LANGUAGE_DESC" onchange="this.form.submit();">
+			<option value="">JOPTION_SELECT_LANGUAGE</option>
+			<option value="*">JALL</option>
+		</field>-->
+		
+		
+		
+		<input type="hidden" name="form_submited" value="1"/>
+	</fields>
+
+	<fields name="list">
+		<field name="fullordering" type="list" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.title ASC" validate="options" >
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="u.name ASC" >COM_PHOCACART_NAME_ASC</option>
+			<option value="u.name DESC" >COM_PHOCACART_NAME_DESC</option>
+			<option value="a.name_first ASC" >COM_PHOCACART_NAME_FIRST_ASC</option>
+			<option value="a.name_first DESC" >COM_PHOCACART_NAME_FIRST_DESC</option>
+			<option value="a.name_last ASC" >COM_PHOCACART_NAME_LAST_ASC</option>
+			<option value="a.name_last DESC" >COM_PHOCACART_NAME_LAST_DESC</option>
+			<option value="a.address_1 ASC" >COM_PHOCACART_ADDRESS_ASC</option>
+			<option value="a.address_1 DESC" >COM_PHOCACART_ADDRESS_DESC</option>
+			<option value="u.email ASC">COM_PHOCACART_EMAIL_FILTER_ASC</option>
+			<option value="u.email DESC">COM_PHOCACART_EMAIL_FILTER_DESC</option>
+			<option value="u.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="u.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field name="limit" type="limitbox" label="COM_PHOCACART_LIST_LIMIT" description="COM_PHOCACART_LIST_LIMIT_DESC" class="input-mini" default="25" onchange="this.form.submit();" />
+	</fields>
+	</fieldset>
+</form>

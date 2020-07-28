@@ -29,6 +29,7 @@ if (!$this->t['ajax']) {
 }
 
 
+
 // ITEMS
 if (!empty($this->items)) {
 
@@ -384,7 +385,7 @@ if (!empty($this->items)) {
 		// DESCRIPTION
 		$dL['description'] = '';
 		if ($this->t['cv_display_description'] == 1 && $v->description != '') {
-			$dL['description'] = '<div class="ph-item-desc">' . JHtml::_('content.prepare', $v->description) . '</div>';
+			$dL['description'] = '<div class="ph-item-desc">' . Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description) . '</div>';
 		}
 
 		// TAGS

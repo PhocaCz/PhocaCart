@@ -131,7 +131,7 @@ class PhocacartCountry
 		$db->setQuery($query);
 		$countries = $db->loadObjectList();
 
-		$countriesO = JHtml::_('select.genericlist', $countries, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$countriesO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $countries, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $countriesO;
 	}

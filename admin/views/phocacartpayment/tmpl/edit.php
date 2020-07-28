@@ -8,28 +8,21 @@
  */
 defined('_JEXEC') or die();
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
 
-
-$r 			=  new PhocacartRenderAdminview();
-?>
-<script type="text/javascript">
+$r 			=  $this->r;
+$js ='
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-		<?php echo $this->form->getField('description')->save(); ?>
-		Joomla.submitform(task, document.getElementById('adminForm'));
-	}
-	else {
-		Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
+	if (task == "'. $this->t['task'] .'.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+		Joomla.submitform(task, document.getElementById("adminForm"));
+	} else {
+		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
-</script><?php
+';
+JFactory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="span10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
 $tabs = array (
 'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
 'amount' 		=> JText::_($this->t['l'].'_AMOUNT_RULE'),
@@ -41,9 +34,9 @@ $tabs = array (
 'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
 
-echo '<div class="tab-content">'. "\n";
+echo $r->startTabs();
 
-echo '<div class="tab-pane active" id="general">'."\n";
+echo $r->startTab('general', $tabs['general'], 'active');
 $formArray = array ('title', 'cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
@@ -55,40 +48,46 @@ $formArray = array ('image', 'ordering', 'access', 'group');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
-echo '</div>';
+echo $r->endTab();
 
 
-echo '<div class="tab-pane" id="amount">'."\n";
+
+echo $r->startTab('amount', $tabs['amount']);
 $formArray = array ('lowest_amount', 'highest_amount', 'active_amount');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="zone">'."\n";
+
+echo $r->startTab('zone', $tabs['zone']);
 $formArray = array ('zone', 'active_zone');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="country">'."\n";
+
+echo $r->startTab('country', $tabs['country']);
 $formArray = array ('country', 'active_country');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="region">'."\n";
+
+echo $r->startTab('region', $tabs['region']);
 $formArray = array ('region', 'active_region');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="shipping">'."\n";
+
+echo $r->startTab('shipping', $tabs['shipping']);
 $formArray = array ('shipping', 'active_shipping');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
 
-echo '<div class="tab-pane" id="method">'."\n";
+
+echo $r->startTab('method', $tabs['method']);
 echo '<div id="ph-extended-params" class="ph-extended-params">'.JText::_('COM_PHOCACART_SELECT_PAYMENT_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="publishing">'."\n";
+echo $r->startTab('publishing', $tabs['publishing']);
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -98,9 +97,9 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo $field->input;
 	echo '</div></div>';
 }
-echo '</div>';
+echo $r->endTab();
 
-echo '</div>';//end tab content
+echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
 echo '<div class="col-xs-12 col-sm-2 col-md-2">';

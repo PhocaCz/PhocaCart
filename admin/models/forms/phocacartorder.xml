@@ -26,9 +26,12 @@
         <field name="receipt_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_DESC"/>
         <field name="invoice_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_DESC"/>
 
+		<field name="queue_number" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_DESC"/>
+
 		<field name="order_number_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_ID_DESC" readonly="readonly" />
         <field name="receipt_number_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_ID_DESC" readonly="readonly" />
         <field name="invoice_number_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_ID_DESC" readonly="readonly" />
+		<field name="queue_number_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_ID_DESC" readonly="readonly" />
 
 
         <field name="invoice_prn" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_DESC"/>

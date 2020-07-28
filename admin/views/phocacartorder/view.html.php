@@ -20,6 +20,7 @@ class PhocaCartCpViewPhocacartOrder extends JViewLegacy
 	protected $fieldsbas;
 	protected $formbas;
 	protected $t;
+	protected $r;
 	protected $u;
 	protected $pr;
 	protected $p;
@@ -31,6 +32,7 @@ class PhocaCartCpViewPhocacartOrder extends JViewLegacy
 		$this->p['order_language_variables']	= $paramsC->get( 'order_language_variables', 0 );
 
 		$this->t		= PhocacartUtils::setVars('order');
+		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');

@@ -7,25 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminview';
-$r 			=  new $class();
-?>
-<script type="text/javascript">
+
+$r 			=  $this->r;
+$js ='
 Joomla.submitbutton = function(task) {
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || task == 'phocacartwizard.backtowizard' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-		<?php echo $this->form->getField('description')->save(); ?>
-		Joomla.submitform(task, document.getElementById('adminForm'));
-	}
-	else {
-		Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
+	if (task == "'. $this->t['task'] .'.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+		Joomla.submitform(task, document.getElementById("adminForm"));
+	} else {
+		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
-</script><?php
+';
+JFactory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
 echo '<div class="span12 form-horizontal">';
@@ -43,9 +37,9 @@ $tabs = array (
 'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
 
-echo '<div class="tab-content">'. "\n";
+echo $r->startTabs();
 
-echo '<div class="tab-pane active" id="general">'."\n";
+echo $r->startTab('general', $tabs['general'], 'active');
 $formArray = array ('title', 'cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
@@ -58,55 +52,64 @@ echo $r->group($this->form, $formArray);
 
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="quantity">'."\n";
+
+echo $r->startTab('quantity', $tabs['quantity']);
 $formArray = array ('minimal_quantity', 'maximal_quantity', 'active_quantity');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="amount">'."\n";
+
+echo $r->startTab('amount', $tabs['amount']);
 $formArray = array ('lowest_amount', 'highest_amount', 'active_amount');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
 
-echo '<div class="tab-pane" id="zone">'."\n";
+echo $r->startTab('zone', $tabs['zone']);
 $formArray = array ('zone', 'active_zone');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="country">'."\n";
+
+echo $r->startTab('country', $tabs['country']);
 $formArray = array ('country', 'active_country');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="region">'."\n";
+
+echo $r->startTab('region', $tabs['region']);
 $formArray = array ('region', 'active_region');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="weight">'."\n";
+
+echo $r->startTab('weight', $tabs['weight']);
 $formArray = array ('lowest_weight', 'highest_weight', 'active_weight');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="size">'."\n";
+
+echo $r->startTab('size', $tabs['size']);
 //$formArray = array ('shortest_length', 'longest_length', 'lowest_width', 'largest_width', 'lowest_height', 'highest_height', 'active_size');
 $formArray = array ('minimal_length', 'maximal_length', 'minimal_width', 'maximal_width', 'minimal_height', 'maximal_height', 'active_size');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="method">'."\n";
+
+echo $r->startTab('method', $tabs['method']);
 echo '<div id="ph-extended-params" class="ph-extended-params">'.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="tracking">'."\n";
+
+echo $r->startTab('tracking', $tabs['tracking']);
 $formArray = array ('tracking_link', 'tracking_description');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="publishing">'."\n";
+
+echo $r->startTab('publishing', $tabs['publishing']);
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -116,9 +119,9 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo $field->input;
 	echo '</div></div>';
 }
-echo '</div>';
+echo $r->endTab();
 
-echo '</div>';//end tab content
+echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
 //echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2

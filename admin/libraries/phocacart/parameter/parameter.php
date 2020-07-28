@@ -17,7 +17,7 @@ class PhocacartParameter
 	/*
 	 * PARAMETERS (group for each parameter values)
 	 */
-	public static function getAllParametersSelectBox($name, $id, $active, $javascript = NULL, $order = 'id' ) {
+	public static function getAllParametersSelectBox($name, $id, $active, $attr = 'class="inputbox"', $order = 'id', $selectText = 0 ) {
 
 		$db = JFactory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
@@ -27,7 +27,11 @@ class PhocacartParameter
 		$db->setQuery($query);
 		$parameters = $db->loadObjectList();
 
-		$paramsO = JHtml::_('select.genericlist', $parameters, $name, 'class="inputbox"'. $javascript, 'value', 'text', $active, $id);
+		if (!empty($parameters) && $selectText == 1) {
+			array_unshift($parameters, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- ' . JText::_('COM_PHOCACART_SELECT_PARAMETER') . ' -', 'value', 'text'));
+		}
+
+		$paramsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $parameters, $name, $attr, 'value', 'text', $active, $id);
 
 		return $paramsO;
 	}
@@ -189,7 +193,7 @@ class PhocacartParameter
 		$db->setQuery($query);
 		$parameters = $db->loadObjectList();
 
-		$parametersO = JHtml::_('select.genericlist', $parameters, $name, $attributes, 'value', 'text', $activeArray, $id);
+		$parametersO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $parameters, $name, $attributes, 'value', 'text', $activeArray, $id);
 
 		return $parametersO;
 	}

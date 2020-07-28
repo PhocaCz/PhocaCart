@@ -261,6 +261,10 @@ class PhocacartSearch
                             $wheresSub[] = 'a.metadesc LIKE ' . $text;
                             $wheresSub[] = 'a.description LIKE ' . $text;
                             $wheresSub[] = 'a.sku LIKE ' . $text;
+                            if ($params['search_deep'] == 1) {
+                              $wheresSub[] = 'a.description_long LIKE ' . $text;
+                              $wheresSub[] = 'a.features LIKE ' . $text;
+                            }
                             $where = '(' . implode(') OR (', $wheresSub) . ')';
                             $left = '';
                         break;
@@ -285,6 +289,10 @@ class PhocacartSearch
                                 $wheresSub[] = 'a.metadesc LIKE ' . $word;
                                 $wheresSub[] = 'a.description LIKE ' . $word;
                                 $wheresSub[] = 'a.sku LIKE ' . $word;
+                                if ($params['search_deep'] == 1) {
+                                    $wheresSub[] = 'a.description_long LIKE ' . $word;
+                                    $wheresSub[] = 'a.features LIKE ' . $word;
+                                }
                                 $wheres[] = implode(' OR ', $wheresSub);
                             }
 

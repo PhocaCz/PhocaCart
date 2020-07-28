@@ -50,9 +50,9 @@ class JFormFieldPhocacartOrderstatus extends JFormField
 					$data[$k]->text = JText::_($v->text);
 				}
 			}
-			array_unshift($data, JHtml::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
-			array_unshift($data, JHtml::_('select.option', '-1', JText::_('COM_PHOCACART_ALL'), 'value', 'text'));
-			return JHtml::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+			array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
+			array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '-1', JText::_('COM_PHOCACART_ALL'), 'value', 'text'));
+			return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 
 		} else {
 			$id = (int) $this->form->getValue('status_id');
@@ -63,11 +63,11 @@ class JFormFieldPhocacartOrderstatus extends JFormField
 
 			$status = PhocacartOrderStatus::getStatus($id);
 			if ($type == 1) {
-                array_unshift($status['data'], JHtml::_('select.option', 0, JText::_('COM_PHOCACART_NO'), 'value', 'text'));
+                array_unshift($status['data'], Joomla\CMS\HTML\HTMLHelper::_('select.option', 0, JText::_('COM_PHOCACART_NO'), 'value', 'text'));
             } else if ($type == 2) {
-				array_unshift($status['data'], JHtml::_('select.option', '', ' - ' . JText::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . ' - ', 'value', 'text'));
+				array_unshift($status['data'], Joomla\CMS\HTML\HTMLHelper::_('select.option', '', ' - ' . JText::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . ' - ', 'value', 'text'));
 			}
-			return JHtml::_('select.genericlist',  $status['data'],  $this->name, $attr , 'value', 'text', $this->value, $this->id );
+			return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $status['data'],  $this->name, $attr , 'value', 'text', $this->value, $this->id );
 		}
 	}
 }

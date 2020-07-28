@@ -15,20 +15,21 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+	protected $r;
     public $filterForm;
     public $activeFilters;
-    protected $sidebar;
 
 	function display($tpl = null) {
 
 		$this->t			= PhocacartUtils::setVars('category');
-		$this->s                = PhocacartRenderStyle::getStyles();
+		$this->r 			= new PhocacartRenderAdminviews();
+		$this->s            = PhocacartRenderStyle::getStyles();
 		$model 				= $this->getModel();
-		$this->items		= $model->getItems();
-		$this->pagination	= $model->getPagination();
-		$this->state		= $model->getState();
-        $this->filterForm   = $this->get('FilterForm');
-		$this->activeFilters = $this->get('ActiveFilters');
+		$this->items			= $this->get('Items');
+		$this->pagination		= $this->get('Pagination');
+		$this->state			= $this->get('State');
+		$this->filterForm   	= $this->get('FilterForm');
+        $this->activeFilters 	= $this->get('ActiveFilters');
 
 
 		// Preprocess the list of items to find ordering divisions.
@@ -126,7 +127,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JHtml::_('bootstrap.renderModal', 'collapseModal');
+			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>

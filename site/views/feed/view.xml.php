@@ -16,6 +16,7 @@ class PhocaCartViewFeed extends JViewLegacy
 {
 
 	protected $t;
+	protected $r;
 
 	function display($tpl = null)
 	{

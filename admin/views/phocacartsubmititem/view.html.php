@@ -15,6 +15,7 @@ class PhocaCartCpViewPhocaCartSubmititem extends JViewLegacy
 	protected $item;
 	protected $form;
 	protected $t;
+	protected $r;
 	protected $p;
 	protected $s;
 	protected $attributes;
@@ -22,6 +23,7 @@ class PhocaCartCpViewPhocaCartSubmititem extends JViewLegacy
 	public function display($tpl = null) {
 
 		$this->t		= PhocacartUtils::setVars('submititem');
+		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');

@@ -14,6 +14,7 @@ class PhocaCartCpViewPhocacartCatalogs extends JViewLegacy
 
 	protected $state;
 	protected $t;
+	protected $r;
 	protected $s;
 	protected $params;
 	protected $items 	= array();

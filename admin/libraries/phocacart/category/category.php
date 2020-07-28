@@ -52,7 +52,7 @@ final class PhocacartCategory
 			$onChO = 'class="inputbox" size="1"';
 		}
 
-		$categories[] = JHtml::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -');
+		$categories[] = Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -');
 		$db->setQuery($query);
 		$catData = $db->loadObjectList();
 
@@ -106,7 +106,7 @@ final class PhocacartCategory
 
 		$categories = array_merge($categories, $catDataTree );
 
-		$category = JHtml::_('select.genericlist',  $categories, 'catid', $onChO, 'value', 'text', $active);
+		$category = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $categories, 'catid', $onChO, 'value', 'text', $active);
 
 		return $category;
 	}

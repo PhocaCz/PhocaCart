@@ -53,7 +53,7 @@ if (!empty($this->items)) {
 
 
 		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'">';
-		echo '<div class="ph-pos-customer-name">'.$v->date.'</div>';
+		echo '<div class="ph-pos-customer-name">'.JHtml::date($v->date, 'DATE_FORMAT_LC6').'</div>';
 		echo '</div>';
 
 
@@ -73,14 +73,14 @@ if (!empty($this->items)) {
 		if (isset($v->unit_title)) {
 			$title = $v->unit_title;
 		}
-		echo '<span class="label label-info">'.$title.'</span>';
+		echo '<span class="label label-info badge badge-info">'.$title.'</span>';
 		echo '</div>';
 		echo '</div>';
 
 
 		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">';
 		echo '<div class="ph-pos-ticket-name">';
-		echo '<span class="label label-warning">'.$v->ticket_id.'</span>';
+		echo '<span class="label label-warning badge badge-warning">'.$v->ticket_id.'</span>';
 		echo '</div>';
 		echo '</div>';
 
@@ -93,7 +93,7 @@ if (!empty($this->items)) {
 		echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 		echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 		echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		echo '<button class="'.$this->s['c']['btn.btn-success'].' loadMainContent">'.JText::_('COM_PHOCACART_VIEW').'</button>';
 		echo '</form>';
 		echo '</div>';

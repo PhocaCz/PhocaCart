@@ -36,14 +36,14 @@ class PhocaCartCpModelPhocaCartHits extends JModelList
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null) {
+	protected function populateState($ordering = 'a.date', $direction = 'DESC') {
 		$app = JFactory::getApplication('administrator');
 
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 	/*	$userId = $app->getUserStateFromRequest($this->context.'.filter.user_id', 'filter_user_id', null);
 		$this->setState('filter.user_id', $userId);
@@ -55,13 +55,13 @@ class PhocaCartCpModelPhocaCartHits extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.date', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
 	{
 		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.published');
 		//$id	.= ':'.$this->getState('filter.product_id');
 		//$id	.= ':'.$this->getState('filter.user_id');
 

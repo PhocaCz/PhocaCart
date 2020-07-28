@@ -149,7 +149,7 @@ if ($this->t['can_display_price']) {
 }
 
 	if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
-		echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->item[0]->description). '</div>';
+		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->item[0]->description). '</div>';
 	}
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');

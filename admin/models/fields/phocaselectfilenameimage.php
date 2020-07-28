@@ -32,7 +32,7 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 		$idA			= 'phImageFile';
 
-		JHtml::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
 
 
         $path = PhocacartPath::getPath($manager);
@@ -55,7 +55,7 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 		$h				= 400;
 
 
-		JHtml::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
 
 		// 1) phocacartform.js - loads click event to run modal window - NO NEED TO DEFINE EVENT HERE
         // 2) phocacartform.js - creates modal window, then loads the iframe with url - NO NEED TO LOAD MODAL WINDOW AND TO BUILD IT HERE

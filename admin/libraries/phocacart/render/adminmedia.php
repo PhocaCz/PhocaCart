@@ -10,49 +10,67 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 class PhocacartRenderAdminmedia
 {
-	public $jquery			= 0;
+
 	protected $document		= false;
+	public $compatible		= false;
+	public $view 			= '';
 
 	public function __construct() {
 
-		$this->document	= JFactory::getDocument();
-		JHtml::_('behavior.tooltip');
-		JHtml::_('jquery.framework', false);
 
-        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/phocacart.js');
+		$app				= JFactory::getApplication();
+		$version 			= new \Joomla\CMS\Version();
+		$this->compatible 	= $version->isCompatible('4.0.0-alpha');
+		$this->document		= JFactory::getDocument();
+		$this->view			= $app->input->get('view');
 
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
 
+		HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacart.js', array('version' => 'auto'));
 
         // FORM
-		$app = JFactory::getApplication();
 		$this->document->addScriptOptions('phLang', array('COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE'), 'COM_PHOCACART_ERROR_TITLE_NOT_SET' => JText::_('COM_PHOCACART_ERROR_TITLE_NOT_SET')));
 		$this->document->addScriptOptions('phVars', array('token' => JSession::getFormToken()));
 		//$this->document->getDocument()->addScriptOptions('phParams', array());
-        $this->document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/phocacartform.js');
+        HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacartform.js', array('version' => 'auto'));
 
-		//JHtml::stylesheet('media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css' );
-		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css' );
-		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacart.css' );
-		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacarttheme.css' );
-		JHtml::stylesheet( 'media/com_phocacart/css/administrator/phocacartcustom.css' );
-		JHtml::stylesheet( 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css' );
-		
-		JHtml::stylesheet( 'media/com_phocacart/duoton/joomla-fonts.css' );
+		//HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacart.css', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacarttheme.css', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacartcustom.css', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css', array('version' => 'auto'));
+
+
+		// CP View - load everywhere because of menu
+		//if ($this->view ==  null) {
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/duoton/joomla-fonts.css', array('version' => 'auto'));
+		//}
+
+
+		if ($this->compatible) {
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/4.css', array('version' => 'auto'));
+		} else {
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/3.css', array('version' => 'auto'));
+		}
+
 
 		if(PhocacartUtils::isJCompatible('3.7')) {
-			JHtml::stylesheet( 'media/com_phocacart/css/administrator/37.css' );
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/37.css', array('version' => 'auto'));
 		}
 
 		$lang = JFactory::getLanguage();
 		if ($lang->isRtl()){
-			JHtml::stylesheet( 'media/com_phocacart/css/administrator/rtl.css' );
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/rtl.css', array('version' => 'auto'));
 		}
 
 		// EDIT IN PLACE
 		$urlText = JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1';
-		$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/jeditable/jquery.jeditable.min.js');
+		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.jeditable.min.js', array('version' => 'auto'));
 
 		$s 	= array();
 		$s[] = ' ';
@@ -86,7 +104,7 @@ class PhocacartRenderAdminmedia
 
 	public function loadOptions($load = 0) {
 		if ($load == 1) {
-			JHtml::stylesheet('media/com_phocacart/css/administrator/phocacartoptions.css' );
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacartoptions.css', array('version' => 'auto'));
 		}
 	}
 }

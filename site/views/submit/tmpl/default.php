@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-//JHtml::_('formbehavior.chosen', 'select');
+//Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 $layoutPC = new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
 $layoutUL = new JLayoutFile('user_login', null, array('component' => 'com_phocacart'));
 $layoutUR = new JLayoutFile('user_register', null, array('component' => 'com_phocacart'));
@@ -274,7 +274,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
     echo '<input type="hidden" name="option" value="com_phocacart" />';
     echo '<input type="hidden" name="task" value="submit.submit" />';
 
-    echo JHtml::_('form.token');
+    echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
     echo '</form>';
 
     echo '</div>';

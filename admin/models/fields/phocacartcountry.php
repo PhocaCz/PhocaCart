@@ -15,6 +15,15 @@ class JFormFieldPhocacartCountry extends JFormField
 	protected function getInput() {
 		
 		$db = JFactory::getDBO();
+		$attr 		= '';
+		$attr		.= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
+		$attr		.= $this->element['maxlength'] ? ' maxlength="'.(int) $this->element['maxlength'].'"' : '';
+		$attr		.= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : '';
+		$attr		.= ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
+		$attr		.= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
+		$multiple	= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$manager	= $this->element['manager'] ? $this->element['manager'] : '';
 
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value'
@@ -23,16 +32,14 @@ class JFormFieldPhocacartCountry extends JFormField
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
-	
-	
-		
+
 		
 		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		
-		
-		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_COUNTRY').' -', 'value', 'text'));
+	
+		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_COUNTRY').' -', 'value', 'text'));
 
-		return JHtml::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

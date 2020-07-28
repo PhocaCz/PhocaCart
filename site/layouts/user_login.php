@@ -7,8 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('behavior.keepalive');
-JHtml::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 
 require_once JPATH_SITE.'/components/com_users/helpers/route.php';
 jimport( 'joomla.application.module.helper' );
@@ -54,6 +54,6 @@ echo '<div class="ph-cb"></div>';
 echo '<input type="hidden" name="option" value="com_users" />'. "\n";
 echo '<input type="hidden" name="task" value="user.login" />'. "\n";
 echo '<input type="hidden" name="return" value="'.$d['t']['actionbase64'].'" />'. "\n";
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 ?>

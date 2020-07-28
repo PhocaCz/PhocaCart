@@ -18,7 +18,7 @@ class JFormFieldPhocaColorText extends JFormField
 		//$managerOutput	= $this->element['manager'] ? '&amp;manager='.(string)$this->element['manager'] : '';
 		//$group 			= PhocacartUtilsSettings::getManagerGroup((string) $this->element['manager']);
 		$textButton		= 'COM_PHOCACART_FORM_SELECT_COLOR';
-		
+
 		$document		= JFactory::getDocument();
 
 		JHTML::stylesheet( 'media/com_phocacart/js/jcp/picker.css' );
@@ -30,7 +30,7 @@ class JFormFieldPhocaColorText extends JFormField
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 
 
-		JHtml::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
 
 		$idA = 'phColorText';
 		$idAC = $idA.'PickerName'. $this->id;

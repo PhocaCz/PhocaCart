@@ -27,13 +27,14 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 				'ordering', 'a.ordering',
 				'published','a.published',
 				'user_id', 'a.user_id',
-				'email', 'a.email'
+				'user_name_selected',
+				'u.email'
 			);
 		}
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = null, $direction = null) {
+	protected function populateState($ordering = 'u.name', $direction = 'ASC') {
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
@@ -41,16 +42,16 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$user = $app->getUserStateFromRequest($this->context.'.filter.user', 'filter_user');
-		$this->setState('filter.user', $user);
+		$user = $app->getUserStateFromRequest($this->context.'.filter.user_id', 'filter_user_id');
+		$this->setState('filter.user_id', $user);
 
 /*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);*/
 
 
 
-		$state = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $state);
+		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+		$this->setState('filter.published', $state);
 
 		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		//$this->setState('filter.language', $language);
@@ -60,17 +61,23 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('u.name', 'asc');
+		parent::populateState($ordering, $direction);
+
+		// Let the parent do the filtering but to close the filter fields we need "" instead of 0 for users
+		$user = $app->getUserStateFromRequest($this->context.'.filter.user_id', 'filter_user_id');
+		if ($user == 0) {
+			$this->setState('filter.user_id', '');
+		}
 	}
 
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.user');
-		//$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.user_id');
+		//$id	.= ':'.$this->getState('filter.access');
+		$id	.= ':'.$this->getState('filter.published');
+		$id	.= ':'.$this->getState('filter.user_id_id');
 		return parent::getStoreId($id);
 	}
 
@@ -125,7 +132,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 
 		// Filter by published state.
-		/*$published = $this->getState('filter.state');
+		/*$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('u.published = '.(int) $published);
 		}
@@ -163,7 +170,8 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		//$query->where('u.name <> '.$db->quote('Super User'));
 		$query->group($groups);
 
-		$user = $this->getState('filter.user');
+		$user = $this->getState('filter.user_id');
+
 		if (!empty($user)){
 			$query->select('u2.name AS user_name_selected');
 			$query->join('LEFT', '#__users AS u2 ON u2.id=a.user_id');

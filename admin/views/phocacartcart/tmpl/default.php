@@ -41,7 +41,7 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 	echo '<input type="hidden" name="option" value="com_phocacart" />';
 	echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_USER_CART').'</button>';
 	echo '</div>';
-	echo JHtml::_('form.token');
+	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 	echo '</form>';
 } else {
 	echo '<div class="ph-cart-info-user">'.JText::_('COM_PHOCACART_NO_ACTIVE_CART_FOR_THIS_USER').'</div>';

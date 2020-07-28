@@ -15,7 +15,7 @@ class JFormFieldPhocaPluginMethod extends JFormField
 	protected function getInput() {
 		
 		$document = JFactory::getDocument();
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 		
 		$plugintype	= 1;
 		if (isset($this->element['plugintype']) && $this->element['plugintype'] > 0) {
@@ -96,7 +96,7 @@ class JFormFieldPhocaPluginMethod extends JFormField
 		} else {
 			$methods = PhocacartPayment::getPaymentPluginMethods();
 		}
-		return JHtml::_('select.genericlist',  $methods,  $this->name, 'class="inputbox" onchange="phLoadParams(this.value);"', 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $methods,  $this->name, 'class="inputbox" onchange="phLoadParams(this.value);"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

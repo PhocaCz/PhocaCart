@@ -14,10 +14,10 @@ defined('_JEXEC') or die;
 
 abstract class PhocacartHtmlFeatured
 {
-	
+
 	public static function featured($value = 0, $i, $canChange = true)
 	{
-		JHtml::_('bootstrap.tooltip');
+		Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 
 		// Array of image, task, title, action
 		$states	= array(

@@ -9,10 +9,10 @@
  */
 defined('_JEXEC') or die();
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
+Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
+Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 
 
 if (!empty($this->itemhistory)) {
@@ -33,14 +33,14 @@ if (!empty($this->itemhistory)) {
 			$userO .= ' <small>('.$v->user_username.')</small>';
 		}
 		echo '<div class="span2 col-sm-2 col-md-2">'.$userO.'</div>';
-		
+
 		$notifyText = JText::_('COM_PHOCACART_NO');
 		if ($v->notify == -1) {
 			$notifyText = JText::_('COM_PHOCACART_NO_ERROR');
 		} else if ($v->notify > 0) {
 			$notifyText = JText::_('COM_PHOCACART_YES');
 		}
-		
+
 		echo '<div class="span2 col-sm-2 col-md-2">'.$notifyText.'</div>';
 		$comment = '';
 		if ($v->comment != '') {
@@ -146,7 +146,7 @@ echo '</div>';
 
 echo '<div class="ph-cb">&nbsp;</div>';
 
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 
 echo '<p>&nbsp;</p>';
@@ -158,9 +158,9 @@ echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_ORDER_HISTORY').'</button>';
 echo '</div>';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '</form>';
 
 
-	
+
 ?>

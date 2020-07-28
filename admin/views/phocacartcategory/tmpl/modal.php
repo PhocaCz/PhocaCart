@@ -11,15 +11,16 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
 
 // @deprecated 4.0 the function parameter, the inline js and the buttons are not needed since 3.7.0.
 $function  = JFactory::getApplication()->input->getCmd('function', 'jEditPhocacartcategory_' . (int) $this->item->id);
 
 // Function to update input title when changed
+// phocacartcategory-form => adminForm
 JFactory::getDocument()->addScriptDeclaration('
 	function jEditPhocacartcategoryModal() {
-		if (window.parent && document.formvalidator.isValid(document.getElementById("phocacartcategory-form"))) {
+		if (window.parent && document.formvalidator.isValid(document.getElementById("adminForm"))) {
 			return window.parent.' . $this->escape($function) . '(document.getElementById("jform_title").value);
 		}
 	}

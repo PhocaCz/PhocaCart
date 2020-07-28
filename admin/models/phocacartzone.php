@@ -13,26 +13,26 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartZone', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= JFactory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartzone', 'phocacartzone', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
@@ -40,7 +40,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -52,7 +52,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 
 		return $data;
 	}
-	
+
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
@@ -85,14 +85,14 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
-	
+
+
 	public function delete(&$cid = array()) {
-		
+
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-			
+
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
@@ -104,31 +104,31 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 					return false;
 				}
 			}
-			
+
 			// 1. DELETE ZONES
 			$query = 'DELETE FROM #__phocacart_zones'
 				. ' WHERE id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 2. DELETE ZONES IN SHIPPING METHOD
 			$query = 'DELETE FROM #__phocacart_shipping_method_zones'
 				. ' WHERE zone_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 3. DELETE ZONES IN PAYMENT METHOD
 			$query = 'DELETE FROM #__phocacart_payment_method_zones'
 				. ' WHERE zone_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 4. DELETE COUNTRIES IN ZONES
 			$query = 'DELETE FROM #__phocacart_zone_countries'
 				. ' WHERE zone_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 			// 5. DELETE REGIONS IN ZONES
 			$query = 'DELETE FROM #__phocacart_zone_regions'
 				. ' WHERE zone_id IN ( '.$cids.' )';
@@ -137,14 +137,14 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 		}
 		return true;
 	}
-	
+
 	public function save($data)
 	{
 		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
-		
 
-		
+
+
 		/*
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
 		{
@@ -168,7 +168,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 				$table->load($pk);
 				$isNew = false;
 			}
-			
+
 			/*
 			// Plugin parameters are converted to params column in payment table (x001)
 			// Store form parameters of selected method
@@ -201,15 +201,15 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
 				$this->setError($table->getError());
 				return false;
 			}
-			
-			
+
+
 
 			// Store the data.
 			if (!$table->store())
@@ -217,24 +217,24 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 				$this->setError($table->getError());
 				return false;
 			}
-			
-			
+
+
 			if ((int)$table->id > 0) {
-				
+
 				if (!isset($data['country'])) {
 					$data['country'] = array();
 				}
-				
+
 				PhocacartCountry::storeCountries($data['country'], (int)$table->id, 'zone');
-				
+
 				if (!isset($data['region'])) {
 					$data['region'] = array();
 				}
-				
+
 				PhocacartRegion::storeRegions($data['region'], (int)$table->id, 'zone');
 
 			}
-		
+
 
 			// Clean the cache.
 			$this->cleanCache();

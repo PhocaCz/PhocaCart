@@ -14,9 +14,9 @@ class JFormFieldPhocaHeadExpert extends JFormField
 {
 	protected $type = 'PhocaHeadExpert';
 	protected function getLabel() { return '';}
-	
+
 	protected function getInput() {
-	
+
 		$tc = 'phocacart';
 		$ts = 'media/com_'.$tc.'/css/administrator/';
 		$ti = 'media/com_'.$tc.'/images/administrator/';
@@ -24,11 +24,11 @@ class JFormFieldPhocaHeadExpert extends JFormField
 		echo '<div style="clear:both;"></div>';
 		$phocaImage	= ( (string)$this->element['phocaimage'] ? $this->element['phocaimage'] : '' );
 		$image 		= '';
-		
+
 		if ($phocaImage != ''){
-			$image 	= JHtml::_('image', $ti . $phocaImage, '' );
+			$image 	= Joomla\CMS\HTML\HTMLHelper::_('image', $ti . $phocaImage, '' );
 		}
-		
+
 		if ($this->element['default']) {
 			if ($image != '') {
 				return '<div class="tab-header ph-options-head-expert">'

@@ -24,7 +24,7 @@ $d = $displayData;
             <?php } else { ?>
                 <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span></a>
             <?php } ?>
-            <?php echo JHtml::_('form.token'); ?>
+            <?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
         </form>
     <?php echo isset($d['button']) && $d['button'] == 1 ? '' : '</div>'; ?>
 </div>

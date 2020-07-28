@@ -18,7 +18,7 @@ if ($this->currentFolder === '' || ($this->currentFolder == $this->downloadFolde
 echo '<tr><td>&nbsp;</td>'
 .'<td class="ph-img-table">'
 .'<a href="'.$link.'" >'
-. JHtml::_( 'image', $this->t['i'].'icon-16-up.png', '').'</a>'
+. Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-up.png', '').'</a>'
 .'</td>'
 .'<td><a href="'.$link.'" >..</a></td>'
 .'</tr>';

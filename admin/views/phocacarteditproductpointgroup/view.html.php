@@ -18,6 +18,7 @@ phocacart import('phocacart.currency.currency');
 class PhocaCartCpViewPhocaCartEditProductPointGroup extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $item;
 	protected $itemhistory;
 	protected $id;
@@ -35,6 +36,7 @@ class PhocaCartCpViewPhocaCartEditProductPointGroup extends JViewLegacy
 		}
 
 		$this->t						= PhocacartUtils::setVars('product');
+		$this->r						= new PhocacartRenderAdminview();
 		$this->t['product']				= PhocacartProduct::getProduct((int)$this->id);
 		$this->t['groups']				= PhocacartGroup::getGroupsById((int)$this->id, 3, 2);
 		$this->t['product_groups']		= PhocacartGroup::getProductPointGroupsById((int)$this->id, 3, 2);

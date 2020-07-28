@@ -40,8 +40,8 @@ class JFormFieldModal_Phocacartitem extends JFormField
 		$modalId = 'Phocacartitem_' . $this->id;
 
 		// Add the modal field script to the document head.
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/modal-fields.js', array('version' => 'auto', 'relative' => true));
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		Joomla\CMS\HTML\HTMLHelper::_('script', 'system/modal-fields.js', array('version' => 'auto', 'relative' => true));
 
 		// Script to proxy the select modal function to the modal-fields.js file.
 		if ($allowSelect)
@@ -184,7 +184,7 @@ class JFormFieldModal_Phocacartitem extends JFormField
 		// Select product modal
 		if ($allowSelect)
 		{
-			$html .= JHtml::_(
+			$html .= Joomla\CMS\HTML\HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalSelect' . $modalId,
 				array(
@@ -200,9 +200,11 @@ class JFormFieldModal_Phocacartitem extends JFormField
 		}
 
 		// New product modal
+
+        // phocacartitem-form => adminForm
 		if ($allowNew)
 		{
-			$html .= JHtml::_(
+			$html .= Joomla\CMS\HTML\HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalNew' . $modalId,
 				array(
@@ -217,24 +219,25 @@ class JFormFieldModal_Phocacartitem extends JFormField
 					'modalWidth'  => '80',
 					'footer'      => '<a role="button" class="btn" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartitem\', \'cancel\', \'phocacartitem-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'add\', \'phocacartitem\', \'cancel\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
 							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartitem\', \'save\', \'phocacartitem-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'add\', \'phocacartitem\', \'save\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JSAVE') . '</a>'
 							. '<a role="button" class="btn btn-success" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartitem\', \'apply\', \'phocacartitem-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'add\', \'phocacartitem\', \'apply\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JAPPLY') . '</a>',
 				)
 			);
 		}
 
 		// Edit product modal.
+        // phocacartitem-form => adminForm
 		if ($allowEdit)
 		{
-			$html .= JHtml::_(
+			$html .= Joomla\CMS\HTML\HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalEdit' . $modalId,
 				array(
@@ -249,15 +252,15 @@ class JFormFieldModal_Phocacartitem extends JFormField
 					'modalWidth'  => '80',
 					'footer'      => '<a role="button" class="btn" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \'' . $this->id
-							. '\', \'edit\', \'phocacartitem\', \'cancel\', \'phocacartitem-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. '\', \'edit\', \'phocacartitem\', \'cancel\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
 							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'edit\', \'phocacartitem\', \'save\', \'phocacartitem-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'edit\', \'phocacartitem\', \'save\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JSAVE') . '</a>'
 							. '<a role="button" class="btn btn-success" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'edit\', \'phocacartitem\', \'apply\', \'phocacartitem-form\', \'jform_id\', \'jform_title\'); return false;">'
+							. $this->id . '\', \'edit\', \'phocacartitem\', \'apply\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
 							. JText::_('JAPPLY') . '</a>',
 				)
 			);

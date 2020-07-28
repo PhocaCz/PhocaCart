@@ -8,12 +8,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
+Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
+Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 
-JHtml::_('behavior.modal', 'a.modal_view_cart');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.modal', 'a.modal_view_cart');
 
 $class		= $this->t['n'] . 'RenderAdminviews';
 $r 			=  new $class();
@@ -23,9 +23,9 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', $this->t['o']);
 $saveOrder	= $listOrder == 'a.ordering';
-if ($saveOrder) {
-	$saveOrderingUrl = 'index.php?option='.$this->t['o'].'&task='.$this->t['tasks'].'.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
+$saveOrderingUrl = '';
+if ($saveOrder && !empty($this->items)) {
+    $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
 $sortFields = $this->getSortFields();
 
@@ -33,13 +33,14 @@ echo $r->jsJorderTable($listOrder);
 
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-echo $r->startFilter();
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+//echo $r->startFilter();
+//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
 //echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
 //echo $r->selectFilterCategory(PhocaDownloadCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
-echo $r->endFilter();
+//echo $r->endFilter();
 
 echo $r->startMainContainer();
+/*
 echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
 							$this->escape($this->state->get('filter.search')));
@@ -53,10 +54,10 @@ echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING'
 echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
 
 echo $r->startFilterBar(2);
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.state'));
+echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
 echo $r->endFilterBar();
 
-echo $r->endFilterBar();
+echo $r->endFilterBar();*/
 
 $idMd = 'phViewCartModal';
 $textButton = 'COM_PHOCACART_VIEW_CART';
@@ -65,27 +66,28 @@ $h = 400;
 $rV = new PhocacartRenderAdminview();
 echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
+echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
-echo $r->thOrdering('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
-echo $r->thCheck('JGLOBAL_CHECK_ALL');
-echo '<th class="ph-name">'.JHtml::_('grid.sort',  	$this->t['l'].'_NAME', 'u.name', $listDirn, $listOrder ).'</th>'."\n";
+echo $r->firstColumnHeader($listDirn, $listOrder);
+echo $r->secondColumnHeader($listDirn, $listOrder);
+echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_NAME', 'u.name', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-status">'.JText::_($this->t['l'].'_STATUS').'</th>'."\n";
 echo '<th class="ph-group">'.JText::_($this->t['l'].'_GROUPS').'</th>'."\n";
-echo '<th class="ph-name">'.JHtml::_('grid.sort',  $this->t['l'].'_FIRST_NAME_LABEL', 'a.name_first', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-name">'.JHtml::_('grid.sort',  $this->t['l'].'_LAST_NAME_LABEL', 'a.name_last', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-address">'.JHtml::_('grid.sort',  $this->t['l'].'_ADDRESS_1_LABEL', 'a.address_1', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-email">'.JHtml::_('grid.sort',  $this->t['l'].'_EMAIL_LABEL', 'a.email', $listDirn, $listOrder ).'</th>'."\n";
-//echo '<th class="ph-published">'.JHtml::_('grid.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.JHtml::_('grid.sort',  		$this->t['l'].'_ID', 'u.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_FIRST_NAME_LABEL', 'a.name_first', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_LAST_NAME_LABEL', 'a.name_last', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-address">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_ADDRESS_1_LABEL', 'a.address_1', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-email">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_EMAIL_LABEL', 'u.email', $listDirn, $listOrder ).'</th>'."\n";
+//echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'u.id', $listDirn, $listOrder ).'</th>'."\n";
 
 
 
 echo $r->endTblHeader();
 
-echo '<tbody>'. "\n";
+echo $r->startTblBody($saveOrder, $saveOrderingUrl, $listDirn);
 
 $originalOrders = array();
 $parentsStr 	= "";
@@ -113,17 +115,14 @@ $linkCartHandler= 'rel="{handler: \'iframe\', size: {x: 580, y: 460}}"';
 
 
 
-$iD = $i % 2;
-echo "\n\n";
-//echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
-echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
+echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
 
-echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
-echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
+        echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
+        echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
 
 $checkO = '';
 if ($item->checked_out) {
-	$checkO .= JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 //if (($canCreate || $canEdit) && (int)$item->id > 0) {
 if ($canCreate || $canEdit) {
@@ -140,12 +139,12 @@ echo $r->td($checkO, "small");
 // Status
 // NOT ACTIVE
 if ((int)$item->id < 1 && (int)$item->cartuserid < 1) {
-	echo $r->td( '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
+	echo $r->td( '<span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
 }
 
 // ORDER MADE
 else if ( (int)$item->orderuserid > 0 ) {
-	$o = '<span class="label label-success">'.JText::_('COM_PHOCACART_ACTIVE_ORDER').'</span>';
+	$o = '<span class="label label-success badge badge-success">'.JText::_('COM_PHOCACART_ACTIVE_ORDER').'</span>';
 	if ((int)$item->cartuserid > 0) {
 		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
@@ -155,7 +154,7 @@ else if ( (int)$item->orderuserid > 0 ) {
 
 // ADDED BILLING AND SHIPPING ADDRESS
 else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '' || $item->city != '' || $item->address_1 != '')) {
-	$o = '<span class="label label-warning label-info">'.JText::_('COM_PHOCACART_ACTIVE').'</span>';
+	$o = '<span class="label label-warning badge badge-warning label-info">'.JText::_('COM_PHOCACART_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
 		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
@@ -167,7 +166,7 @@ else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '
 // ADDED ITEMS TO CART BUT NO ORDER, NO BILLING OR SHIPPING ADDRESS
 else if ( (int)$item->cartuserid > 0 || ($item->name_last != '' || $item->name_first != '' || $item->city != '' || $item->address_1 != '')) {
 
-	$o = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
+	$o = '<span class="label label-warning badge badge-warning label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
 		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
@@ -178,7 +177,7 @@ else if ( (int)$item->cartuserid > 0 || ($item->name_last != '' || $item->name_f
 // ADDED ITEMS TO CART BUT NO ORDER, NO BILLING OR SHIPPING ADDRESS
 else if ( (int)$item->cartuserid > 0) {
 
-	$o = '<span class="label label-warning label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
+	$o = '<span class="label label-warning badge badge-warning label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
 		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
@@ -188,7 +187,7 @@ else if ( (int)$item->cartuserid > 0) {
 
 // OTHER
 else {
-	echo $r->td( '<span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
+	echo $r->td( '<span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
 	//echo $r->td('-', "small");
 }
 
@@ -221,21 +220,21 @@ if ($item->email != $item->user_email) {
 echo $r->td($email, "small");
 echo $r->td($item->user_id, "small");
 
-echo '</tr>'. "\n";
+echo $r->endTr();
 
 		//}
 	}
 }
-echo '</tbody>'. "\n";
+echo $r->endTblBody();
 
 echo $r->tblFoot($this->pagination->getListFooter(), 10);
 echo $r->endTable();
 
 echo '<div class="ph-notes-box"><h3>'.JText::_('COM_PHOCACART_NOTES').'</h3>';
-echo '<div><span class="label label-important label-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span> ... '.JText::_('COM_PHOCACART_NOTE_NOT_ACTIVE').'</div>';
-echo '<div><span class="label label-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span> ... '.JText::_('COM_PHOCACART_NOTE_PARTIALLY_ACTIVE').'</div>';
-echo '<div><span class="label label-info">'.JText::_('COM_PHOCACART_ACTIVE').'</span> ... '.JText::_('COM_PHOCACART_NOTE_ACTIVE').'</div>';
-echo '<div><span class="label label-success">'.JText::_('COM_PHOCACART_ACTIVE_ORDER').'</span> ... '.JText::_('COM_PHOCACART_NOTE_ACTIVE_ORDER').'</div>';
+echo '<div><span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span> ... '.JText::_('COM_PHOCACART_NOTE_NOT_ACTIVE').'</div>';
+echo '<div><span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span> ... '.JText::_('COM_PHOCACART_NOTE_PARTIALLY_ACTIVE').'</div>';
+echo '<div><span class="label label-info badge badge-info">'.JText::_('COM_PHOCACART_ACTIVE').'</span> ... '.JText::_('COM_PHOCACART_NOTE_ACTIVE').'</div>';
+echo '<div><span class="label label-success badge badge-success">'.JText::_('COM_PHOCACART_ACTIVE_ORDER').'</span> ... '.JText::_('COM_PHOCACART_NOTE_ACTIVE_ORDER').'</div>';
 
 if ($emailConflict == 1) {
 	echo '<div>&nbsp;</div>';
@@ -245,7 +244,7 @@ if ($emailConflict == 1) {
 echo '</div>';
 
 
-echo $r->formInputs($listOrder, $listDirn, $originalOrders);
+echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
 ?>

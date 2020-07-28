@@ -383,7 +383,7 @@ class PhocacartUtils
 		$dateF->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
 		$dateN	= $dateF->format('Y-m-d h:i:s', true, false);
 		//$dateN = JHtml::date($v->date, JText::_('DATE_FORMAT_LC2'));*/
-		$dateN = JHtml::_('date', $date, $format);
+		$dateN = Joomla\CMS\HTML\HTMLHelper::_('date', $date, $format);
 		return $dateN;
 	}
 

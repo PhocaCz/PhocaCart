@@ -25,6 +25,7 @@
             description="COM_PHOCACART_FIELD_SELECT_PRODUCT_DESC" 
             required="true"
 			multiple="false"
+			filter="integer"
          />
 		 
 		 <field 
@@ -37,6 +38,7 @@
             description="COM_PHOCACART_FIELD_CATEGORY_DESC" 
             required="true"
 			multiple="false"
+			filter="integer"
 			
          />
 		

@@ -11,6 +11,7 @@ jimport( 'joomla.application.component.view');
 class PhocaCartViewCheckout extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $p;
 	protected $u;
 	protected $gu;
@@ -214,10 +215,15 @@ class PhocaCartViewCheckout extends JViewLegacy
 			} else {
 				// Check if all form items are filled out by user, if yes, don't load the form and save some queries
 				$this->fields	= $this->get('Fields'); // Fields will be loaded in every case
+
+
 				if ($this->a->addressedit == 0) {
 					$this->data	= $this->get('Data');
+
 					$this->t['dataaddressoutput']	= PhocacartUser::getAddressDataOutput($this->data, $this->fields['array'], $this->u);
+
 				}
+
 				//Some required field is not filled out
 				if (isset($this->t['dataaddressoutput']['filled']) && $this->t['dataaddressoutput']['filled'] == 1) {
 					$this->a->addressadded = 1;

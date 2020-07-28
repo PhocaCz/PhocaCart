@@ -701,7 +701,7 @@ class PhocacartFileUpload
             . '<input class="update-folder" type="hidden" name="folderbase" id="folderbase" value="' . PhocacartText::filterValue($currentFolder, 'folderpath') . '" />'
             . ' <button type="submit" class="btn btn-success">' . JText::_('COM_PHOCACART_CREATE_FOLDER') . '</button>'
             . '</div>' . "\n"
-            . JHtml::_('form.token')
+            . Joomla\CMS\HTML\HTMLHelper::_('form.token')
             . '</form>';
         return $folderOutput;
     }

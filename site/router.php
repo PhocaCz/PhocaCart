@@ -31,6 +31,14 @@ class PhocacartRouter extends JComponentRouterBase
 		$params = PhocacartUtils::getComponentParameters();
 		//$advanced = $params->get('sef_advanced_link', 0);
 		$advanced = $params->get('remove_sef_ids', 0);// REMOVE IDs
+		
+		// Preview from administration
+		$app = JFactory::getApplication();
+		$viewFrom = $app->input->get('view');
+		if ($viewFrom == 'phocacartitem') {
+			$advanced = 0;// force displaying IDs in administration preview
+		}
+		
 		// Unset limitstart=0 since it's pointless
 		if (isset($query['limitstart']) && $query['limitstart'] == 0)
 		{
@@ -48,6 +56,8 @@ class PhocacartRouter extends JComponentRouterBase
 			$menuItem = $this->menu->getItem($query['Itemid']);
 			$menuItemGiven = true;
 		}
+		
+		
 
 		// Check again
 		if ($menuItemGiven && isset($menuItem) && $menuItem->component != 'com_phocacart')

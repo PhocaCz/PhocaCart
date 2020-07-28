@@ -49,9 +49,9 @@ class JFormFieldPhocaCartShippingMethod extends JFormField
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();
 
-		array_unshift($methods, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD').' -', 'value', 'text'));
+		array_unshift($methods, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD').' -', 'value', 'text'));
 
-		return JHtml::_('select.genericlist',  $methods,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $methods,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 
 	}
 }

@@ -41,7 +41,7 @@ if (!empty($this->items)) {
 		//echo '<input type="hidden" name="mainboxdata" value="'.$this->t['mainboxdatabase64'].'" />';
 		echo '<input type="hidden" name="redirectsuccess" value="main.content.products" />';
 		echo '<input type="hidden" name="redirecterror" value="main.content.customers" />';
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 
 		if ((int)$this->t['user']->id == (int)$v->id) {
 			echo '<button class="'.$this->s['c']['btn.btn-danger'].' editMainContent">'.JText::_('COM_PHOCACART_DESELECT').'</button>';
@@ -104,6 +104,6 @@ if (!empty($this->items)) {
 	echo '<input type="hidden" name="date" value="'.$this->state->get('date').'" />';
 //}
 
-echo JHtml::_( 'form.token' );
+echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
 echo '</form>';
 ?>

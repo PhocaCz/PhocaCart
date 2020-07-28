@@ -14,6 +14,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 
 	protected $state;
 	protected $t;
+	protected $r;
 	protected $s;
 	protected $params;
 
@@ -21,9 +22,12 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 	protected $total	= array();
 
 
+
+
 	function display($tpl = null) {
 
 		$this->t				= PhocacartUtils::setVars('report');
+		$this->r				= new PhocacartRenderAdminviews();
 		$this->s                = PhocacartRenderStyle::getStyles();
 		$this->state			= $this->get('State');
 		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
@@ -137,7 +141,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),
 			'a.order_number' 	=> JText::_($this->t['l'] . '_ORDER_NUMBER'),
 			'a.currency_code'	=> JText::_($this->t['l'] . '_CURRENCY'),
-			'a.type'			=> JText::_($this->t['l'] . '_TYPE')
+			//'a.type'			=> JText::_($this->t['l'] . '_TYPE')
 		);
 	}
 }

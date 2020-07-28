@@ -31,6 +31,8 @@ class JFormFieldPhocaFormCountry extends JFormField
 
 		$config 	= JComponentHelper::getParams('com_media');
 		//$paramsC 	= PhocacartUtils::getComponentParameters() ;
+		
+		
 
 
 		if (!$app->isClient('administrator')) {
@@ -90,15 +92,22 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$attr .= $this->multiple ? ' multiple' : '';
 		$attr .= $this->required ? ' required aria-required="true"' : '';
 		$attr .= $this->autofocus ? ' autofocus' : '';
+		
+		// Set default value in case, there is no value
+		if (($this->value == 0 || $this->value == '') && isset($this->default) && (int)$this->default > 0) {
+			$this->value = $this->default;
+			$this->form->setValue(str_replace('jform_', '', $this->id), null, $this->default);
+
+		}
 
 		if ((string) $this->readonly == '1' || (string) $this->readonly == 'true' || (string) $this->disabled == '1'|| (string) $this->disabled == 'true') {
 			$attr .= ' disabled="disabled"';
 		}
 		$attr .= $this->onchange ? ' onchange="phUpdateRegion'.$this->id.'(this.value);' . $this->onchange . '" ' : ' onchange="phUpdateRegion'.$this->id.'(this.value);" ';
 
-		array_unshift($data, JHtml::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_COUNTRY').'&nbsp;-', 'value', 'text'));
+		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_COUNTRY').'&nbsp;-', 'value', 'text'));
 
-		return JHtml::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

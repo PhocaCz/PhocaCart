@@ -215,7 +215,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 	if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
-		echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->item[0]->description). '</div>';
+		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->item[0]->description). '</div>';
 	}
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
@@ -594,7 +594,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phdescription" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_DESCRIPTION').'</a></li>';
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phdescription">';
-		$tabO	.= JHtml::_('content.prepare', $x->description_long);
+		$tabO	.= Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $x->description_long);
 		$tabO	.= '</div>';
 		$active = $activeTab = '';
 	}
@@ -604,7 +604,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phfeatures" data-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.JText::_('COM_PHOCACART_FEATURES').'</a></li>';
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phfeatures">';
-		$tabO	.= JHtml::_('content.prepare', $x->features);
+		$tabO	.= Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $x->features);
 		$tabO	.= '</div>';
 		$active = $activeTab = '';
 	}
@@ -740,7 +740,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 			// END ROW
 
-			$tabO	.= JHtml::_('form.token');
+			$tabO	.= Joomla\CMS\HTML\HTMLHelper::_('form.token');
 			$tabO	.= '<input type="hidden" name="catid" value="'.$this->t['catid'].'">';
 			$tabO	.= '<input type="hidden" name="task" value="item.review">';
 			$tabO	.= '<input type="hidden" name="tmpl" value="component" />';

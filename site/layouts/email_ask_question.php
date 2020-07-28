@@ -38,7 +38,7 @@ $displayData 	= null;
 	
 	<tr style="border:0">
 		<td style="border:0"><?php echo JText::_( 'COM_PHOCACART_DATE' ) ?>:</td>
-		<td style="border:0"><?php echo JHtml::_('date',  gmdate('Y-m-d H:i:s'), JText::_( 'DATE_FORMAT_LC2' )) ?></td>
+		<td style="border:0"><?php echo Joomla\CMS\HTML\HTMLHelper::_('date',  gmdate('Y-m-d H:i:s'), JText::_( 'DATE_FORMAT_LC2' )) ?></td>
 	</tr>
 </table>
 

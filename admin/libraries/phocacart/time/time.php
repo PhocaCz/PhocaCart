@@ -20,12 +20,12 @@ class PhocacartTime
 
 			case 2:
 				$t = JText::_('COM_PHOCACART_CLOSING_HOURS');
-				$c = "label label-important label-danger";
+				$c = "label label-important label-danger badge badge-danger";
 			break;
 
 			case 3:
 				$t = JText::_('COM_PHOCACART_CLOSING_DAYS');
-				$c = "label label-important label-danger";
+				$c = "label label-important label-danger badge badge-danger";
 			break;
 			case 1:
 			default:

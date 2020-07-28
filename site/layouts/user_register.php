@@ -7,8 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('behavior.keepalive');
-JHtml::_('bootstrap.tooltip');
+Joomla\CMS\HTML\HTMLHelper::_('behavior.keepalive');
+Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 
 require_once JPATH_SITE.'/components/com_users/helpers/route.php';
 jimport( 'joomla.application.module.helper' );

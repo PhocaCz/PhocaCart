@@ -45,7 +45,7 @@ echo '</div>';
 if ($d['t']['ajax_pagination_category'] == 1) {
 	echo '<input type="hidden" name="format" value="raw" />';
 }
-echo JHtml::_( 'form.token' );
+echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
 echo '</form>';
 
 ?>

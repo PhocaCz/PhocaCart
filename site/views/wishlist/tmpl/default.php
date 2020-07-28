@@ -109,7 +109,7 @@ if (!empty($this->t['items'])) {
 		$link = JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
 		echo '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" role="button" title="'.JText::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.$this->s['i']['search'].'"></span></a>';
 
-		echo JHtml::_('form.token');
+		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 		echo '</form>';
 
 		echo '</div>';

@@ -36,7 +36,7 @@ if (!empty($d['compare'])) {
 				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
 			<?php } ?>
 			</div>
-		<?php echo JHtml::_('form.token'); ?>
+		<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
 		</form>
 	</div>
 </div>

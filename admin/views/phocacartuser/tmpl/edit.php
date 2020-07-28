@@ -7,31 +7,25 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
 
-$class		= $this->t['n'] . 'RenderAdminview';
-$r 			=  new $class();
-?>
-<script type="text/javascript">
+
+$r 			=  $this->r;
+$js ='
 Joomla.submitbutton = function(task) {
-
-	if (task == '<?php echo $this->t['task'] ?>.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-		Joomla.submitform(task, document.getElementById('adminForm'));
-	}
-	else {
-		Joomla.renderMessages({"error": ["<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>"]});
+	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+		Joomla.submitform(task, document.getElementById("adminForm"));
+	} else {
+		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
-</script><?php
+';
+JFactory::getDocument()->addScriptDeclaration($js);
 
 echo '<div id="ph-request-message" style="display:none"></div>';
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="span10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
 $tabs = array (
 'billing' 		=> JText::_($this->t['l'].'_BILLING_OPTIONS'),
 'shipping' 	=> JText::_($this->t['l'].'_SHIPPING_OPTIONS'),
@@ -41,31 +35,34 @@ echo $r->navigation($tabs);
 
 $data = PhocacartUser::getAddressDataForm($this->formspecific, $this->fields['array'], $this->u);
 
-echo '<div class="tab-content">'. "\n";
+echo $r->startTabs();
 
-echo '<div class="tab-pane active" id="billing">'."\n"; 
+
+echo $r->startTab('billing', $tabs['billing'], 'active');
 echo $data['b'];
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="shipping">'."\n"; 
+
+echo $r->startTab('shipping', $tabs['shipping']);
 echo $data['s'];
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="main">'."\n"; 
+
+echo $r->startTab('main', $tabs['main']);
 $formArray = array ('loyalty_card_number');
 echo $r->group($this->form, $formArray);
-echo '</div>';
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="groups">'."\n"; 
 
+echo $r->startTab('groups', $tabs['groups']);
 $formArray = array ('group');
 echo $r->group($this->form, $formArray);
-echo '</div>';
 
-echo '<input type="hidden" name="jform[user_id]" id="jform_user_id" value="'.(int)$this->u->id.'" />'; 
+echo '<input type="hidden" name="jform[user_id]" id="jform_user_id" value="'.(int)$this->u->id.'" />';
+echo $r->endTab();
 
 /*
-echo '<div class="tab-pane" id="publishing">'."\n"; 
+echo $r->startTab('publishing', $tabs['publishing']);
 foreach($this->form->getFieldset('publish') as $field) {
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
@@ -76,8 +73,8 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo '</div></div>';
 }
 echo '</div>';*/
-				
-echo '</div>';//end tab content
+
+echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
 echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2

@@ -99,7 +99,7 @@ class JFormFieldPhocaSelectItem extends JFormField
 		$document = JFactory::getDocument();
 		JHtml::stylesheet('media/com_phocacart/js/administrator/select2/select2.css' );
 		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/select2/select2.js');
-		JHtml::_('jquery.framework', false);
+		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
 $s = array();
 $s[] = 'jQuery(document).ready(function() {';
 $s[] = ' ';
@@ -151,10 +151,11 @@ $s[] = '       id: item[0],';
 $s[] = '       title: item[1]';
 $s[] = '      });';
 $s[] = '    });';
-$s[] = '    jQuery(element).val(\'\');';
+
 if ($multiple == 'false') {
 	$s[] = '    callback(data[0]);';// NOT MULTIPLE
 } else {
+	$s[] = '    jQuery(element).val(\'\');';// Cannot be set when single product because the input will be empty at start (now it is including string but when saving, string will be changed to int)
 	$s[] = '    callback(data);';// MULTIPLE
 }
 $s[] = '   }';

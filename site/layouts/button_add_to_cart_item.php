@@ -30,6 +30,6 @@ $d = $displayData;
 	<?php /* <input type="submit" value="submit" name="submit" role="button" /> */ ?>
 	</div>
 	<div class="ph-cb"></div>
-<?php echo JHtml::_('form.token'); ?>
+<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
 </div>
 

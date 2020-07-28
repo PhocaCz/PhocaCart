@@ -18,6 +18,7 @@ phocacart import('phocacart.currency.currency');
 class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $item;
 	protected $itemhistory;
 	protected $id;
@@ -38,6 +39,7 @@ class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 		}
 
 		$this->t		= PhocacartUtils::setVars('pricehistory');
+		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->state->set('phocacarteditproductpricehistory.id', (int)$this->id);
 		$this->form		= $this->get('Form');
@@ -47,6 +49,7 @@ class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 
 
 		$this->t						= PhocacartUtils::setVars('product');
+		$this->r						= new PhocacartRenderAdminview();
 		$this->t['history']				= PhocacartPriceHistory::getPriceHistoryById((int)$this->id, 0, 1);
 
 

@@ -70,7 +70,7 @@ echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" /
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 echo '<input type="hidden" name="redirectsuccess" value="main.content.order" />';
 echo '<input type="hidden" name="redirecterror" value="main.content.payment" />';
-echo JHtml::_('form.token');
+echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
 echo '<button class="'.$this->s['c']['btn.btn-success.btn-lg'].' btn-extra-lg editMainContent">'.JText::_('COM_PHOCACART_CONFIRM').'</button>';
 
 echo '</div>';

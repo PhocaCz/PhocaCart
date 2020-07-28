@@ -19,7 +19,7 @@ class JFormFieldPhocaCartXmlFeedPlugin extends JFormField
 		//$method	= $this->form->getValue('method');
 		$plugins = PhocacartFeed::getFeedPluginMethods('', 1);
 
-		return JHtml::_('select.genericlist',  $plugins,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $plugins,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

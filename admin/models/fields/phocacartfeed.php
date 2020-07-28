@@ -14,7 +14,7 @@ class JFormFieldPhocacartFeed extends JFormField
 	protected $type 		= 'PhocacartFeed';
 
 	protected function getInput() {
-		
+
 		$db = JFactory::getDBO();
 
        //build the list of categories
@@ -24,18 +24,18 @@ class JFormFieldPhocacartFeed extends JFormField
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
-	
-	
+
+
 	//	$view 	= JFactory::getApplication()->input->get( 'view' );
-		
+
 		//$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 
 		$attr = '';
 		$attr .= $this->required ? ' required aria-required="true"' : '';
 		$attr .= ' class="inputbox"';
 
-		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_XML_FEED').' -', 'value', 'text'));
-		return JHtml::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_XML_FEED').' -', 'value', 'text'));
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

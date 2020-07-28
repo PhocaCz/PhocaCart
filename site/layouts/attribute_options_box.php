@@ -54,13 +54,13 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 			$d2['image_size']			= $d['image_size'];
 			$d2['typeview']				= $d['typeview'];
 
-
+            // EDIT PHOCACARTATTRIBUTE
 			if ($v->type == 1 || $v->type == 2 || $v->type == 3) {
 				echo $layoutAtOS->render($d2);// SELECTBOX, SELECTBOX COLOR, SELECTBOX IMAGE
 			} else if ($v->type == 4 || $v->type == 5 || $v->type == 6) {
 				echo $layoutAtOC->render($d2);// CHECKBOX, CHECKBOX COLOR, CHECKBOX COLOR
-			} else if ($v->type == 7 || $v->type == 8 || $v->type == 9 || $v->type == 10 || $v->type == 11) {
-				echo $layoutAtOT->render($d2);// TEXT
+			} else if ($v->type == 7 || $v->type == 8 || $v->type == 9 || $v->type == 10 || $v->type == 11 || $v->type == 12) {
+				echo $layoutAtOT->render($d2);// TEXT, TEXT (COLOR PICKER)
 			}
 		}
 

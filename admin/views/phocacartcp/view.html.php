@@ -12,13 +12,15 @@ jimport( 'joomla.application.component.view' );
 class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $s;
 
 	function display($tpl = null) {
 
 		$this->t	= PhocacartUtils::setVars();
 		$this->s    = PhocacartRenderStyle::getStyles();
-		$this->views= array(
+		$this->r	= new PhocacartRenderAdminview();
+		/*$this->views= array(
 		'items'			=> array($this->t['l'] . '_PRODUCTS', 'folder-close', '#c1a46d'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', 'folder-open', '#da7400'),
 		'specifications'=> array($this->t['l'] . '_SPECIFICATIONS', 'th-list', '#4e5f81'),
@@ -62,8 +64,8 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'vendors'		=> array($this->t['l'] . '_VENDORS', 'user', '#b30059'),
 		'sections'		=> array($this->t['l'] . '_SECTIONS', 'unchecked', '#b35900'),
 		'units'			=> array($this->t['l'] . '_UNITS', 'modal-window', '#ff9326'),
-		);
-		
+		);*/
+
 		$i = ' icon-';
 		$d = 'duotone ';
 		$this->views= array(
@@ -94,7 +96,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'tags'			=> array($this->t['l'] . '_TAGS', $d.$i .'tag-double', '#CC0033'),
 		'parameters'	=> array($this->t['l'] . '_PARAMETERS', $i .'ellipsis-h', '#0040ff'),
 		'parametervalues'=> array($this->t['l'] . '_PARAMETER_VALUES', $i .'ellipsis-v', '#0040ff'),
-		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', $d.$i .'feed', '#ffb300'),
+		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', $i .'feed', '#ffb300'),
 		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', $i .'heart', '#EA7C7C'),
 		'questions'		=> array($this->t['l'] . '_QUESTIONS', $d.$i .'messaging', '#9900CC'),
 		'times'			=> array($this->t['l'] . '_OPENING_TIMES', $i .'clock-alt', '#73b9ff'),
@@ -234,7 +236,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		.' <input type="hidden" name="tmpl" value="component" />'
 		.' <input type="hidden" name="option" value="com_phocacart" />'
 		.' <button class="btn btn-primary ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_SKIP_WIZARD').'</button>'
-		. JHtml::_('form.token')
+		. Joomla\CMS\HTML\HTMLHelper::_('form.token')
 		. '</form> ';
 		$pageClass = 'ph-wizard-start-page-window';
 

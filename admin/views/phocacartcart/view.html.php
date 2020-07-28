@@ -14,19 +14,21 @@ phocacart import('phocacart.cart.cartdb');
 phocacart import('phocacart.cart.rendercart');
 phocacart import('phocacart.currency.currency');
 */
- 
+
 class PhocaCartCpViewPhocacartCart extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $item;
 	function display($tpl = null) {
-		
+
 		$this->t		= PhocacartUtils::setVars('cart');
+		$this->r		= new PhocacartRenderAdminview();
 		$this->item		= $this->get('Data');
-		
-		
+
+
 		$media = new PhocacartRenderAdminmedia();
-	
+
 		parent::display($tpl);
 	}
 }

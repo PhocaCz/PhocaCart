@@ -15,13 +15,19 @@ class PhocaCartCpViewPhocacartParameterValues extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+	protected $r;
+	public $filterForm;
+    public $activeFilters;
 
 	function display($tpl = null) {
 
 		$this->t			= PhocacartUtils::setVars('parametervalue');
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
+		$this->r 			= new PhocacartRenderAdminviews();
+		$this->items			= $this->get('Items');
+		$this->pagination		= $this->get('Pagination');
+		$this->state			= $this->get('State');
+		$this->filterForm   	= $this->get('FilterForm');
+        $this->activeFilters 	= $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -83,7 +89,6 @@ class PhocaCartCpViewPhocacartParameterValues extends JViewLegacy
 			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
 			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
 			'a.parameter_id' 	=> JText::_($this->t['l'] . '_PARAMETER'),
-			'a.type' 			=> JText::_($this->t['l'] . '_TYPE'),
 			'a.count_products' 	=> JText::_($this->t['l'] . '_PRODUCT_COUNT'),
 			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')

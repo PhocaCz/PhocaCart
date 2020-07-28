@@ -25,7 +25,7 @@ $d = $displayData;
                 <a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['wish-list'] ?>"></span></a>
             <?php } ?>
 
-            <?php echo JHtml::_('form.token'); ?>
+            <?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
         </form>
     </div>
 </div>

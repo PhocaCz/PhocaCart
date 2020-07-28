@@ -12,7 +12,7 @@ defined('_JEXEC') or die();
 class JFormFieldPhocaTax extends JFormField
 {
 	protected $type 		= 'PhocaTax';
-	
+
 	protected function getInput() {
 		$db = JFactory::getDBO();
 
@@ -22,15 +22,15 @@ class JFormFieldPhocaTax extends JFormField
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
-		
+
 		if (!empty($data)) {
 			foreach($data as $k => $v) {
 				$data[$k]->text = JText::_($v->text);
 			}
 		}
-		
-		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_TAX').' -', 'value', 'text'));
-		return JHtml::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+
+		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_TAX').' -', 'value', 'text'));
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

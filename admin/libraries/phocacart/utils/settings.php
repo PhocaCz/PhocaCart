@@ -366,27 +366,27 @@ class PhocacartUtilsSettings
 
         switch ($status) {
             case 'CANCELED':
-                $class = 'label label-warning ph-order-status-canceled';
+                $class = 'label label-warning badge badge-warning ph-order-status-canceled';
             break;
 
             case 'COMPLETED':
-                $class = 'label label-success ph-order-status-completed';
+                $class = 'label label-success badge badge-success ph-order-status-completed';
             break;
 
             case 'CONFIRMED':
-                $class = 'label label-success ph-order-status-confirmed';
+                $class = 'label label-success badge badge-success ph-order-status-confirmed';
             break;
 
             case 'PENDING':
-                $class = 'label label-info label-primary ph-order-status-pending';
+                $class = 'label label-info badge badge-info label-primary ph-order-status-pending';
             break;
 
             case 'REFUNDED':
-                $class = 'label label-important label-danger ph-order-status-refunded';
+                $class = 'label label-important label-danger badge badge-danger ph-order-status-refunded';
             break;
 
             case 'SHIPPED':
-                $class = 'label label-info ph-order-status-shipped';
+                $class = 'label label-info badge badge-info ph-order-status-shipped';
             break;
 
             default:

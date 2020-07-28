@@ -14,6 +14,13 @@ class JFormFieldPhocacartSection extends JFormField
 
 	protected function getInput() {
 		
+		$attr = '';
+        $attr .= $this->element['size'] ? ' size="' . (int)$this->element['size'] . '"' : '';
+        $attr .= $this->element['maxlength'] ? ' maxlength="' . (int)$this->element['maxlength'] . '"' : '';
+        $attr .= $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
+        $attr .= ((string)$this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
+        $attr .= ((string)$this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+        $attr .= $this->element['onchange'] ? ' onchange="' . (string)$this->element['onchange'] . '" ' : ' ';
 		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		
 		$db = JFactory::getDBO();
@@ -26,7 +33,7 @@ class JFormFieldPhocacartSection extends JFormField
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 	
-		$attr = 'class="inputbox"';
+		
 		if ($required) {
 			$attr		.= ' required aria-required="true" ';
 		}
@@ -34,9 +41,9 @@ class JFormFieldPhocacartSection extends JFormField
 		
 		
 		
-		array_unshift($data, JHtml::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_SECTION').' -', 'value', 'text'));
+		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_SECTION').' -', 'value', 'text'));
 
-		return JHtml::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

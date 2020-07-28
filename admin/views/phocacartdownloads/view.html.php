@@ -15,13 +15,19 @@ class PhocaCartCpViewPhocacartDownloads extends JViewLegacy
 	protected $pagination;
 	protected $state;
 	protected $t;
+	protected $r;
+	public $filterForm;
+    public $activeFilters;
 
 	function display($tpl = null) {
 
 		$this->t			= PhocacartUtils::setVars('download');
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
+		$this->r 			= new PhocacartRenderAdminviews();
+		$this->items			= $this->get('Items');
+		$this->pagination		= $this->get('Pagination');
+		$this->state			= $this->get('State');
+		$this->filterForm   	= $this->get('FilterForm');
+        $this->activeFilters 	= $this->get('ActiveFilters');
 
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$this->t['download_days']	= $paramsC->get( 'download_days', 0 );
@@ -78,6 +84,7 @@ class PhocaCartCpViewPhocacartDownloads extends JViewLegacy
 		return array(
 			//'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
 			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
+			'u.name' 			=> JText::_($this->t['l'] . '_USER'),
 			'a.order_id' 		=> JText::_($this->t['l'] . '_ORDER_NUMBER'),
 			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
 			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),

@@ -18,6 +18,7 @@ phocacart import('phocacart.currency.currency');
 class PhocaCartCpViewPhocaCartEditStockAdvanced extends JViewLegacy
 {
 	protected $t;
+	protected $r;
 	protected $item;
 	protected $itemhistory;
 	protected $id;
@@ -35,6 +36,7 @@ class PhocaCartCpViewPhocaCartEditStockAdvanced extends JViewLegacy
 		}
 
 		$this->t						= PhocacartUtils::setVars('cart');
+		$this->r						= new PhocacartRenderAdminview();
 		$this->t['product']				= PhocacartProduct::getProduct((int)$this->id);
 		$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$this->id);
 		$this->t['combinations']		= array();

@@ -44,6 +44,6 @@ if (isset($this->category[0]->title) && $this->category[0]->title != '') {
 echo PhocacartRenderFront::renderHeader(array($title, JText::_('COM_PHOCACART_ITEMS')), '', $this->t['image_items_view']);
 
 if ( isset($this->category[0]->description) && $this->category[0]->description != '') {
-	echo '<div class="ph-desc">'. JHtml::_('content.prepare', $this->category[0]->description). '</div>';
+	echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->category[0]->description). '</div>';
 }
 ?>
