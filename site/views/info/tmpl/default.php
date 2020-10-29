@@ -11,6 +11,10 @@ echo '<div id="ph-pc-info-box" class="pc-info-view'.$this->p->get( 'pageclass_sf
 
 echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_INFO')));
 
+if ( $this->t['info_view_description'] != '') {
+	echo '<div class="ph-desc">'. $this->t['info_view_description']. '</div>';
+}
+
 switch($this->t['infoaction']) {
 
 	case 1:

@@ -27,7 +27,7 @@ class TablePhocacartParameter extends JTable
 			// Joomla! Suffix Parameters
 			'start', 'limitstart', 'tmpl', 'format',
 			// AJAX
-			'option', 'view',
+			'option', 'view', 'typeview', 'task',
 			// AJAX - com_ajax used for ajax refresching modules
 			'module', 'method', 'plugin'
 			);

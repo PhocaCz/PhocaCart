@@ -27,6 +27,8 @@ $attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - 
 $attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item
 $attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)
 $attr[]				= 'data-required="'.$d['required']['required'].'"';
+$attr[]				= 'data-alias="'.htmlspecialchars($v->alias).'"';
+
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
 echo '<select '.implode(' ', $attr).'>';
@@ -89,7 +91,7 @@ foreach ($v->options as $k2 => $v2) {
 		$suffix = '';// hide always
 	}
 
-	echo '<option '.$attrO.' value="'.$v2->id.'">'.htmlspecialchars($v2->title).$suffix.'</option>';
+	echo '<option '.$attrO.' value="'.$v2->id.'" data-value-alias="'.htmlspecialchars($v2->alias).'">'.htmlspecialchars($v2->title).$suffix.'</option>';
 }
 
 echo '</select>';// end select box

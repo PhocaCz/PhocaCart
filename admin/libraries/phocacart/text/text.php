@@ -346,4 +346,19 @@ class PhocacartText {
 
         return $string;
     }
+
+    public static function truncateText($text, $limit, $suffix = '') {
+
+        $length = StringHelper::strlen($text);
+
+        if ((int)$length < (int)$limit) {
+            return $text;
+        }
+
+        $textOnlySpaces = preg_replace('/\s+/', ' ', $text);
+        $textTruncated = StringHelper::substr($textOnlySpaces, 0, StringHelper::strpos($textOnlySpaces, " ", $limit));
+        $textOutput = trim(StringHelper::substr($textTruncated, 0, StringHelper::strrpos($textTruncated, " ")));
+
+        return $textOutput . $suffix;
+    }
 }

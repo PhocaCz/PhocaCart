@@ -130,6 +130,8 @@ class PhocaCartViewItems extends JViewLegacy
 		$this->t['layouttypeactive'] 	= PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
 		$this->t['columns_cat'] 		= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat'] : 1;
 
+
+		$uri->delVar('format');// !!! REMOVE format parameter because return url needs to go to standard html
 		$this->t['action']			= $uri->toString();
 		//$this->t['actionbase64']	= base64_encode(htmlspecialchars($this->t['action']));
 		$this->t['actionbase64']	= base64_encode($this->t['action']);

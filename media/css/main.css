@@ -173,6 +173,7 @@ a.b-thumbnail.active {
 .ph-item-price-box .ph-price-base,
 .ph-item-price-box .ph-tax,
 .ph-item-stock-box .ph-stock,
+.ph-category-stock-box .ph-stock,
 
 .ph-item-size-box .ph-item-length,
 .ph-item-size-box .ph-item-width,
@@ -2128,6 +2129,7 @@ li.ph-currency-list {
     position: relative;
 }
 /* style icon */
+.inner-addon .fa,
 .inner-addon .glyphicon {
   position: absolute;
   padding: 10px;
@@ -2136,8 +2138,8 @@ li.ph-currency-list {
 /* align icon */
 .left-addon .glyphicon  { left:  0px;}
 .right-addon .glyphicon { right: 0px;}
-.left-addon .fa  { left:  10px;}
-.right-addon .fa { right: 10px;}
+.left-addon .fa  { left:  20px;}
+.right-addon .fa { right: 20px;}
 /* add padding  */
 .left-addon input  { padding-left:  30px; width: 100% }
 .right-addon input { padding-right: 30px; width: 100% }

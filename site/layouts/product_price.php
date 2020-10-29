@@ -26,7 +26,7 @@ if (isset($d['discount']) && $d['discount']) {
 <div id="phItemPriceBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">
 	<?php if (isset($d['priceitemsorig']['bruttoformat']) && $d['priceitemsorig']['bruttoformat']) { ?>
-		<div class="ph-price-txt"><?php echo JText::_('COM_PHOCACART_ORIGINAL_PRICE') ?></div>
+		<div class="ph-price-txt ph-price-original-txt"><?php echo JText::_('COM_PHOCACART_ORIGINAL_PRICE') ?></div>
 		<div class="ph-price-original"><?php echo $d['priceitemsorig']['bruttoformat'] ?></div>
 	<?php } ?>
 

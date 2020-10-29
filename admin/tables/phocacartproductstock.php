@@ -12,7 +12,7 @@ class TablePhocacartProductStock extends JTable
 	function __construct( &$db ) {
 		parent::__construct( '#__phocacart_product_stock', 'id', $db );
 	}
-	
+
 	function check(){
 		return true;
 	}

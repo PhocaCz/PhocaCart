@@ -240,8 +240,12 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
         // Remove shipping because shipping methods can change while chaning address
-        PhocacartShipping::removeShipping(0);
-        PhocacartPayment::removePayment(0, 0);// Don't remove coupon by guests
+        $cart					= new PhocacartCartRendercheckout();
+        $cart->setType(array(0, 1));
+        $cart->setFullItems();
+        $cart->updateShipping();// will be decided if shipping or payment will be removed
+        $cart->updatePayment();
+
         $msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
         if ($error != 1) {
             $app->enqueueMessage($msg, 'message');
@@ -266,6 +270,8 @@ class PhocaCartControllerCheckout extends JControllerForm
         $guest = PhocacartUserGuestuser::getGuestUser();
         $msgSuffix = '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
+        $checkPayment = 0;
+
         if (!empty($item['phshippingopt']) && isset($item['phshippingopt'][0]) && (int)$item['phshippingopt'][0] > 0) {
 
             $model = $this->getModel('checkout');
@@ -277,7 +283,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                 } else {
                     $msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
                     $app->enqueueMessage($msg, 'message');
-                    PhocacartPayment::removePayment($guest, 0);// Don't remove coupon by guests
+                    $checkPayment = 1;
                 }
 
             } else {
@@ -287,7 +293,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                 } else {
                     $msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
                     $app->enqueueMessage($msg, 'message');
-                    PhocacartPayment::removePayment($guest, 0);// Don't remove coupon by guests
+                    $checkPayment = 1;
                 }
             }
 
@@ -295,6 +301,21 @@ class PhocaCartControllerCheckout extends JControllerForm
             $msg = JText::_('COM_PHOCACART_NO_SHIPPING_METHOD_SELECTED');
             $app->enqueueMessage($msg . $msgSuffix, 'error');
         }
+
+
+
+
+        // CHECK PAYMENT
+        if ($checkPayment == 1) {
+            //PhocacartPayment::removePayment($guest, 0);// Don't remove coupon by guests
+            $cart = new PhocacartCartRendercheckout();
+            $cart->setInstance(2);//checkout
+            $cart->setType(array(0, 1));
+            $cart->setFullItems();
+            $cart->updatePayment((int)$item['phshippingopt'][0]);// check payment in cart if it is valid
+        }
+
+
         $app->redirect(base64_decode($item['return']));
     }
 
@@ -590,6 +611,7 @@ class PhocaCartControllerCheckout extends JControllerForm
         if (isset($code) && $code != '' && $enable_coupons > 0) {
 
             $coupon = new PhocacartCoupon();
+            $coupon->setType(array(0, 1));
             $coupon->setCoupon(0, $code);
             //$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid - only basic check done, whole check happens in order
             //$couponTrue = $coupon->checkCoupon();// Complete Check - mostly coupon is added at the end so do complete check - can be changed to basic - no items, no categories can be checked

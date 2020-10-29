@@ -1422,7 +1422,7 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 		}
 	}
 
-	// ASSOCIATION
+	// ASSOCIATION/PARAMETERS
 	protected function preprocessForm(JForm $form, $data, $group = 'content'){
 		/*if ($this->canCreateCategory())
 		{

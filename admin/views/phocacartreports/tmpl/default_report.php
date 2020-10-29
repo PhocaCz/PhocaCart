@@ -51,6 +51,5 @@ if (!empty($this->items) && !empty($this->t['date_days'])) {
 		echo '</body></html>';
 	}
 
-	//exit;
 }
 ?>

@@ -641,10 +641,121 @@ final class PhocacartRenderJs
 
 
     /*
-     * Change Price
+     * Change Price, Stock, ID (EAN, SKU, ...)
      * select box (standard, image, color)
      * check box
      */
+   /* public static function renderAjaxChangeProductDataByOptions($id = 0, $typeView = '', $class = '') {
+
+        $paramsC = PhocacartUtils::getComponentParameters();
+        $dynamic_change_price   = $paramsC->get('dynamic_change_price', 0);
+        $dynamic_change_stock   = $paramsC->get('dynamic_change_stock', 0);
+        $dynamic_change_id   = $paramsC->get('dynamic_change_id', 0);
+        $theme                  = $paramsC->get('theme', 'bs3');
+
+        if ($dynamic_change_price == 0 && $dynamic_change_stock == 0 && $dynamic_change_id == 0) {
+            return false;
+        }
+
+
+        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=checkout.changedatabox&format=json&' . JSession::getFormToken() . '=1';
+
+        $s = array();
+        $s[] = 'function phAjaxChangeData' . $typeView . '(phProductId, phDataA1, phDataA2){';
+        $s[] = '	var phUrl 	= "' . $urlAjax . '";';
+        $s[] = '	var phOptions = [];';
+        $s[] = '	phOptions["id"] = phProductId;';
+         $s[] = '	phOptions["id_item_price"] = "#phItemPriceBox' . $typeView . '" + phProductId;';
+         $s[] = '	phOptions["id_item_stock"] = "#phItemStockBox' . $typeView . '" + phProductId;';
+         $s[] = '	phOptions["id_item_id"] = "#phItemIdBox' . $typeView . '" + phProductId;';
+         $s[] = '	phOptions["product_add_to_cart_item"] 		= ".phProductAddToCart' . $typeView . '" + phProductId;';// display or hide add to cart button
+         $s[] = '	phOptions["product_add_to_cart_item_icon"] 	= ".phProductAddToCartIcon' . $typeView . '" + phProductId;';// display or hide add to cart icon
+        $s[] = '	phOptions["view"] = ' . (int)$typeView . ';';
+         $s[] = '	phOptions["method_price"]  = ' . (int)$dynamic_change_price . ';';
+         $s[] = '	phOptions["method_stock"]  = ' . (int)$dynamic_change_stock . ';';
+         $s[] = '	phOptions["method_id"]  = ' . (int)$dynamic_change_id . ';';
+        $s[] = '	phOptions["task"]  = "change";';
+         $s[] = '	phOptions["type"]  = "changedata";';
+        $s[] = '	phOptions["class"]  = "' . $class . '";';
+        $s[] = '	var phData 	= \'id=\'+ phOptions["id"] +\'&\'+ phDataA1 +\'&\'+ phDataA2 +\'&\'+\'class=\'+ phOptions["class"] +\'&\'+\'typeview=\'+ phOptions["view"];';
+        $s[] = '	phDoRequestMethods(phUrl, phData, phOptions);';
+        $s[] = '}';
+        $s[] = ' ';
+
+
+
+        $s[] = 'jQuery(document).ready(function(){  ';
+      /*  $s[] = '    var phSelectboxA             =  "select.phj' . $typeView . '.phjProductAttribute";';
+        $s[] = '    var phSelectboxASelected    =  phSelectboxA + ":selected";';
+        $s[] = '	jQuery(document).on(\'change\', phSelectboxA, function(e){ ';// Select Box
+        //$s[] = '		jQuery(this).off("change");';
+
+        $s[] = '		var phTypeView = jQuery(this).data(\'type-view\');';
+        $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
+        $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
+        $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
+        $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
+        $s[] = '		phAjaxChangeData' . $typeView . '(phProductId, phDataA1, phDataA2);';// If REQUIRED, don't allow to untick image or color "select box" - see jquery.phocaattribute.js
+        $s[] = '	})';*/
+
+        // Checkbox
+        // Unfortunately, we cannot run event:
+        // 1. CHANGE - because of Bootstrap toogle button, this will run 3x ajax (checkbox is hidden and changes when clicking on button)
+        // 2. CLICK directly on checkbox as if Bootstrap toogle button is use, clicked will be icon not the checkbox
+        // So we run click on div box over the checkbox which works and don't run ajax 3x
+        //$s[] = '	jQuery(document).on(\'change\', \'.ph-checkbox-attribute.phj'.$typeView.'.phjProductAttribute :checkbox\', function(){';
+        //$s[] = '	jQuery(document).on(\'click\', \'#phItemPriceBoxForm .ph-checkbox-attribute.ph-item-input-set-attributes\', function(){';
+
+      /*  $s[] = '    var phCheckboxA             =  ".ph-checkbox-attribute.phj' . $typeView . '.phjProductAttribute"';
+       // $s[] = '    var phCheckboxAInputChecked =  phCheckboxA + " input:checked"';
+        $s[] = '	jQuery(document).on(\'click\', phCheckboxA, function(e){';
+        $s[] = '        if (e.target.tagName.toUpperCase() === "LABEL") { return;}';// Prevent from twice running
+        if ($theme == 'bs4') {
+            $s[] = '        if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") { return;}';// Prevent from twice running
+        }
+        $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
+        $s[] = '		var phTypeView = jQuery(this).data(\'type-view\');';
+        $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
+        $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
+        $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
+
+        // If REQUIRED, don't allow to untick all checkboxes
+        $s[] = '		var phRequired = jQuery(this).data("required");';
+        $s[] = '        var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked"';
+        $s[] = '        var phACheckedLength = jQuery(phCheckboxAInputChecked).length;';
+
+        $s[] = '        if (phACheckedLength == 0) {';
+        $s[] = '            var phThisLabel = jQuery(e.target).parent();';// Bootstrap checkboxes - colors, images
+        $s[] = '            phThisLabel.addClass("active");';// Bootstrap checkboxes - colors, images
+        $s[] = '            e.preventDefault();';
+        $s[] = '            return false;';
+        $s[] = '        }';
+
+        $s[] = '		phAjaxChangeData' . $typeView . '(phProductId, phDataA1, phDataA2);';
+        $s[] = '	})';*/
+
+        // Change the price on time view when site is initialized
+        // Because some parameters can be selected as default
+        // Automatically start only in item view, not in category or another view
+        /*if ($option == 'com_phocacart' && $view == 'item') {
+            //$s[] = '		var phProductId = jQuery(\'.phjItemAttribute\').data(\'product-id\')';
+            $s[] = '		var phDataA1 = jQuery("select.phjItemAttribute").serialize();';
+            $s[] = '		var phDataA2 = jQuery(".ph-checkbox-attribute.phjItemAttribute :checkbox").serialize();';
+            $s[] = '		var phpDataA = phDataA1 +\'&\'+ phDataA2;';
+            $s[] = '		phAjaxChangePrice'.$typeView.'('.(int)$id.');';
+        }*/
+/*
+        $s[] = '})';
+        $s[] = ' ';
+        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+    }*/
+
+
+    /*
+     * Change Price
+     * select box (standard, image, color)
+     * check box
+     *//*
     public static function renderAjaxChangeProductPriceByOptions($id = 0, $typeView = '', $class = '') {
 
         $paramsC = PhocacartUtils::getComponentParameters();
@@ -690,12 +801,15 @@ final class PhocacartRenderJs
         $s[] = '		}';
         $s[] = '	})';
         $s[] = '}';
-        $s[] = ' ';*/
+        $s[] = ' ';*//*
 
-        $s[] = '    var phSelectboxA             =  "select.phj' . $typeView . '.phjProductAttribute"';
-        $s[] = '    var phSelectboxASelected    =  phSelectboxA + ":selected"';
-        $s[] = 'jQuery(document).ready(function(){';
-        $s[] = '	jQuery(document).on(\'change\', phSelectboxA, function(e){';// Select Box
+
+        $s[] = 'jQuery(document).ready(function(){  ';
+        $s[] = '    var phSelectboxA             =  "select.phj' . $typeView . '.phjProductAttribute";';
+        $s[] = '    var phSelectboxASelected    =  phSelectboxA + ":selected";';
+
+        $s[] = '	jQuery(document).on(\'change\', phSelectboxA, function(e){ ';// Select Box
+
         //$s[] = '		jQuery(this).off("change");';
         $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
         $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
@@ -748,19 +862,116 @@ final class PhocacartRenderJs
             $s[] = '		var phDataA2 = jQuery(".ph-checkbox-attribute.phjItemAttribute :checkbox").serialize();';
             $s[] = '		var phpDataA = phDataA1 +\'&\'+ phDataA2;';
             $s[] = '		phAjaxChangePrice'.$typeView.'('.(int)$id.');';
-        }*/
+        }*//*
 
         $s[] = '})';
         $s[] = ' ';
         JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-    }
+    }*/
+
+    /*
+     * Change ID (SKU, EAN, ...)
+     * select box (standard, image, color)
+     * check box
+     *//*
+    public static function renderAjaxChangeProductIdByOptions($id = 0, $typeView = '', $class = '') {
+
+        $paramsC = PhocacartUtils::getComponentParameters();
+        $dynamic_change_id      = $paramsC->get('dynamic_change_id', 0);
+        $theme                  = $paramsC->get('theme', 'bs3');
+
+        if ($dynamic_change_id == 0) {
+            return false;
+        }
+
+
+        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=checkout.changeidbox&format=json&' . JSession::getFormToken() . '=1';
+
+        $s = array();
+        $s[] = 'function phAjaxChangeId' . $typeView . '(phProductId, phDataA1, phDataA2){';
+        $s[] = '	var phUrl 	= "' . $urlAjax . '";';
+        $s[] = '	var phOptions = [];';
+        $s[] = '	phOptions["id"] = phProductId;';
+        $s[] = '	phOptions["id_item"] = "#phItemIdBox' . $typeView . '" + phProductId;';
+        $s[] = '	phOptions["view"] = ' . (int)$typeView . ';';
+        $s[] = '	phOptions["method"]  = ' . (int)$dynamic_change_id . ';';
+        $s[] = '	phOptions["task"]  = "change";';
+        $s[] = '	phOptions["type"]  = "changeid";';
+        $s[] = '	phOptions["class"]  = "' . $class . '";';
+        $s[] = '	var phData 	= \'id=\'+ phOptions["id"] +\'&\'+ phDataA1 +\'&\'+ phDataA2 +\'&\'+\'class=\'+ phOptions["class"] +\'&\'+\'typeview=\'+ phOptions["view"];';
+        $s[] = '	phDoRequestMethods(phUrl, phData, phOptions);';
+        $s[] = '}';
+        $s[] = ' ';
+
+        $s[] = 'jQuery(document).ready(function(){  ';
+        $s[] = '    var phSelectboxA             =  "select.phj' . $typeView . '.phjProductAttribute";';
+        $s[] = '    var phSelectboxASelected    =  phSelectboxA + ":selected";';
+        $s[] = '	jQuery(document).on(\'change\', phSelectboxA, function(e){ ';// Select Box
+        //$s[] = '		jQuery(this).off("change");';
+        $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
+        $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
+        $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
+        $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
+        $s[] = '		phAjaxChangeId' . $typeView . '(phProductId, phDataA1, phDataA2);';// If REQUIRED, don't allow to untick image or color "select box" - see jquery.phocaattribute.js
+        $s[] = '	})';
+
+        // Checkbox
+        // Unfortunately, we cannot run event:
+        // 1. CHANGE - because of Bootstrap toogle button, this will run 3x ajax (checkbox is hidden and changes when clicking on button)
+        // 2. CLICK directly on checkbox as if Bootstrap toogle button is use, clicked will be icon not the checkbox
+        // So we run click on div box over the checkbox which works and don't run ajax 3x
+        //$s[] = '	jQuery(document).on(\'change\', \'.ph-checkbox-attribute.phj'.$typeView.'.phjProductAttribute :checkbox\', function(){';
+        //$s[] = '	jQuery(document).on(\'click\', \'#phItemPriceBoxForm .ph-checkbox-attribute.ph-item-input-set-attributes\', function(){';
+
+        $s[] = '    var phCheckboxA             =  ".ph-checkbox-attribute.phj' . $typeView . '.phjProductAttribute"';
+       // $s[] = '    var phCheckboxAInputChecked =  phCheckboxA + " input:checked"';
+        $s[] = '	jQuery(document).on(\'click\', phCheckboxA, function(e){';
+        $s[] = '        if (e.target.tagName.toUpperCase() === "LABEL") { return;}';// Prevent from twice running
+        if ($theme == 'bs4') {
+            $s[] = '        if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") { return;}';// Prevent from twice running
+        }
+        $s[] = '		var phProductId = jQuery(this).data(\'product-id\');';
+        $s[] = '		var phProductGroup = \'.phjAddToCartV' . $typeView . 'P\' + phProductId;';
+        $s[] = '		var phDataA1 = jQuery(phProductGroup).find(\'select\').serialize();';// All Selects
+        $s[] = '		var phDataA2 = jQuery(phProductGroup).find(\':checkbox\').serialize();';// All Checkboxes
+
+        // If REQUIRED, don't allow to untick all checkboxes
+        $s[] = '		var phRequired = jQuery(this).data("required");';
+        $s[] = '        var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked"';
+        $s[] = '        var phACheckedLength = jQuery(phCheckboxAInputChecked).length;';
+
+        $s[] = '        if (phACheckedLength == 0) {';
+        $s[] = '            var phThisLabel = jQuery(e.target).parent();';// Bootstrap checkboxes - colors, images
+        $s[] = '            phThisLabel.addClass("active");';// Bootstrap checkboxes - colors, images
+        $s[] = '            e.preventDefault();';
+        $s[] = '            return false;';
+        $s[] = '        }';
+
+        $s[] = '		phAjaxChangeId' . $typeView . '(phProductId, phDataA1, phDataA2);';
+        $s[] = '	})';
+
+        // Change the price on time view when site is initialized
+        // Because some parameters can be selected as default
+        // Automatically start only in item view, not in category or another view
+        /*if ($option == 'com_phocacart' && $view == 'item') {
+            //$s[] = '		var phProductId = jQuery(\'.phjItemAttribute\').data(\'product-id\')';
+            $s[] = '		var phDataA1 = jQuery("select.phjItemAttribute").serialize();';
+            $s[] = '		var phDataA2 = jQuery(".ph-checkbox-attribute.phjItemAttribute :checkbox").serialize();';
+            $s[] = '		var phpDataA = phDataA1 +\'&\'+ phDataA2;';
+            $s[] = '		phAjaxChangePrice'.$typeView.'('.(int)$id.');';
+        }*//*
+
+        $s[] = '})';
+        $s[] = ' ';
+        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+    }*/
 
 
     /*
      * Change Stock
      * select box (standard, image, color)
      * check box
-     */
+     *//*
     public static function renderAjaxChangeProductStockByOptions($id = 0, $typeView = '', $class = '') {
 
         $paramsC                = PhocacartUtils::getComponentParameters();
@@ -786,7 +997,7 @@ final class PhocacartRenderJs
         $s[] = '	var phTypeView 				= "' . $typeView . '";';
 
         $s[] = '	var phData 	= \'id=\'+phId+\'&\'+phDataA1+\'&\'+phDataA2+\'&\'+\'class=\'+phClass+\'&\'+\'typeview=\'+phTypeView;';
-        */
+        *//*
 
         $s = array();
         $s[] = 'function phAjaxChangeStock' . $typeView . '(phProductId, phDataA1, phDataA2){';
@@ -839,7 +1050,7 @@ final class PhocacartRenderJs
         $s[] = '	})';
         $s[] = '}';
         $s[] = ' ';
-*/
+*//*
         $s[] = 'jQuery(document).ready(function(){';
         $s[] = '	jQuery(document).on(\'change\', \'select.phj' . $typeView . '.phjProductAttribute\', function(){';// select box
         //$s[] = '		jQuery(this).off("change");';
@@ -880,7 +1091,7 @@ final class PhocacartRenderJs
         $s[] = '})';
         $s[] = ' ';
         JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-    }
+    }*/
 
     /*
      * JS equivalent to PhocacartPrice::getPriceFormat();
@@ -921,57 +1132,7 @@ final class PhocacartRenderJs
     }
 
 
-    public static function renderMagnific() {
 
-        $document = JFactory::getDocument();
-        $document->addScript(JURI::base(true) . '/media/com_phocacart/js/magnific/jquery.magnific-popup.min.js');
-        $document->addStyleSheet(JURI::base(true) . '/media/com_phocacart/js/magnific/magnific-popup.css');
-        $s = array();
-        $s[] = 'jQuery(document).ready(function() {';
-        $s[] = '	jQuery(\'#phImageBox\').magnificPopup({';
-        $s[] = '		tLoading: \'' . JText::_('COM_PHOCACART_LOADING') . '\',';
-        $s[] = '		tClose: \'' . JText::_('COM_PHOCACART_CLOSE') . '\',';
-        $s[] = '		delegate: \'a.magnific\',';
-        $s[] = '		type: \'image\',';
-        $s[] = '		mainClass: \'mfp-img-mobile\',';
-        $s[] = '		zoom: {';
-        $s[] = '			enabled: true,';
-        $s[] = '			duration: 300,';
-        $s[] = '			easing: \'ease-in-out\'';
-        $s[] = '		},';
-        $s[] = '		gallery: {';
-        $s[] = '			enabled: true,';
-        $s[] = '			navigateByImgClick: true,';
-        $s[] = '			tPrev: \'' . JText::_('COM_PHOCACART_PREVIOUS') . '\',';
-        $s[] = '			tNext: \'' . JText::_('COM_PHOCACART_NEXT') . '\',';
-        $s[] = '			tCounter: \'' . JText::_('COM_PHOCACART_MAGNIFIC_CURR_OF_TOTAL') . '\'';
-        $s[] = '		},';
-        $s[] = '		image: {';
-        $s[] = '			titleSrc: function(item) {';
-        $s[] = '				return item.el.attr(\'title\');';
-        $s[] = '			},';
-        $s[] = '			tError: \'' . JText::_('COM_PHOCACART_IMAGE_NOT_LOADED') . '\'';
-        $s[] = '		}';
-        $s[] = '	});';
-        $s[] = '});';
-
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
-
-    }
-
-    public static function renderPrettyPhoto() {
-        $document = JFactory::getDocument();
-        JHtml::stylesheet('media/com_phocacart/js/prettyphoto/css/prettyPhoto.css');
-        $document->addScript(JURI::root(true) . '/media/com_phocacart/js/prettyphoto/js/jquery.prettyPhoto.js');
-
-        $s[] = 'jQuery(document).ready(function(){';
-        $s[] = '	jQuery("a[rel^=\'prettyPhoto\']").prettyPhoto({';
-        $s[] = '  social_tools: 0';
-        $s[] = '  });';
-        $s[] = '})';
-
-        $document->addScriptDeclaration(implode("\n", $s));
-    }
 
 
 

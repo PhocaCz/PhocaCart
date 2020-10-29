@@ -208,7 +208,6 @@ if (!empty($d['fullitems'][1])) {
 
 
 		// ATTRIBUTES
-
 		if (!empty($v['attributes'])) {
 
 			echo '<div class="'.$r.'">';

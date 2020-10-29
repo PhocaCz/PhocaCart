@@ -59,6 +59,7 @@ echo '</tbody>'
 
 echo '<div style="border-bottom:1px solid #cccccc;margin-bottom: 10px">&nbsp;</div>';
 
+/*
 echo '<ul class="nav nav-tabs" id="configTabs">';
 
 
@@ -75,24 +76,38 @@ $label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder.p
 echo '<li><a href="#createfolder" data-toggle="tab">'.$label.'</a></li>';
 
 echo '</ul>';
+*/
 
+$activeTab = 'multipleupload';
+if (isset($this->t['tab']) && $this->t['tab'] != '') {
+	$activeTab = $this->t['tab'];
+}
+
+echo $r->startTabs($activeTab);
 
 echo $r->startTabs();
 
-echo '<div class="tab-pane" id="multipleupload">'. "\n";
+$tabs = array();
+$tabs['multipleupload'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-bl duotone icon-upload"></i></span>' . '&nbsp;'.JText::_('COM_PHOCACART_MULTIPLE_UPLOAD');
+$tabs['upload'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-bd duotone icon-upload"></i></span>' . '&nbsp;'.JText::_('COM_PHOCACART_UPLOAD');
+$tabs['createfolder'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-brd duotone icon-folder"></i></span>' . '&nbsp;'.JText::_('COM_PHOCACART_CREATE_FOLDER');
+
+echo $r->navigation($tabs, $activeTab);
+
+echo $r->startTab('multipleupload', $tabs['multipleupload'], $activeTab == 'multipleupload' ? 'active' : '');
 echo $this->loadTemplate('multipleupload');
-echo '</div>'. "\n";
+echo $r->endTab();
 
-echo '<div class="tab-pane" id="upload">'. "\n";
+echo $r->startTab('upload', $tabs['upload'], $activeTab == 'upload' ? 'active' : '');
 echo $this->loadTemplate('upload');
-echo '</div>'. "\n";
+echo $r->endTab();
 
 
-echo '<div class="tab-pane" id="createfolder">'. "\n";
+echo $r->startTab('createfolder', $tabs['createfolder'], $activeTab == 'createfolder' ? 'active' : '');
 echo PhocacartFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $this->currentFolder, 'phocacartmanager', 'manager='.$this->manager.'&amp;tab=createfolder&amp;field='. $this->field );
-echo '</div>'. "\n";
+echo $r->endTab();
 
-echo '</div>'. "\n";
+echo $r->endTabs();
 
 echo '</div>';
 echo '</div>';

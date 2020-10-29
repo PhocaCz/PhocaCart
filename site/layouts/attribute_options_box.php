@@ -74,3 +74,6 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 	echo '</div>';
 	echo '<div class="ph-cb"></div>';
 }
+
+
+

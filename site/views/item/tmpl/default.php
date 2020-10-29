@@ -12,6 +12,7 @@ $layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_ph
 $layoutW 	= new JLayoutFile('button_wishlist', null, array('component' => 'com_phocacart'));
 $layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
 $layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
+$layoutID	= new JLayoutFile('product_id', null, array('component' => 'com_phocacart'));
 $layoutPP	= new JLayoutFile('product_play', null, array('component' => 'com_phocacart'));
 $layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
 $layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
@@ -103,7 +104,12 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			}
 			echo '</div>';
 
-			echo '<a href="' . $link . '" ' . $this->t['image_rel'] . ' class="' . $this->t['image_class'] . ' phjProductHref' . $idName . ' phImageFullHref" data-href="' . $link . '">';
+			$imageS = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'small');
+			$linkS = JURI::base(true) . '/' . $imageS->rel;// Thumbnail
+			if ($this->t['display_webp_images'] == 1) {
+				$linkS = JURI::base(true) . '/' . $imageS->rel_webp;
+			}
+			echo '<a href="' . $link . '" ' . $this->t['image_rel'] . ' class="' . $this->t['image_class'] . ' phjProductHref' . $idName . ' phImageFullHref" data-href="' . $link . '" data-href-s="' . $linkS . '">';
 
 			$d = array();
 			$d['t'] = $this->t;
@@ -183,14 +189,20 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// :L: PRICE
 	$price 				= new PhocacartPrice;// Can be used by options
+
+
+
 	if ($this->t['can_display_price']) {
+
+		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
+
+		// Can change price and also SKU OR EAN (Advanced Stock and Price Management)
+		$price->getPriceItemsChangedByAttributes($priceItems, $this->t['attr_options'], $price, $x);
 
 		$d					= array();
 		$d['s']				= $this->s;
 		$d['type']          = $x->type;// PRODUCTTYPE
-		$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
-
-		$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
+		$d['priceitems']	= $priceItems;
 
 		$d['priceitemsorig']= array();
 		if ($x->price_original != '' && $x->price_original > 0) {
@@ -324,57 +336,20 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 	// END SIZE OPTIONS =========================================
 
-	if (isset($x->sku) && $x->sku != '') {
-		echo '<div class="ph-item-sku-box">';
-		echo '<div class="ph-sku-txt">'.JText::_('COM_PHOCACART_SKU').':</div>';
-		echo '<div class="ph-sku">'.$x->sku.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->upc) && $x->upc != '') {
-		echo '<div class="ph-item-upc-box">';
-		echo '<div class="ph-upc-txt">'.JText::_('COM_PHOCACART_UPC').':</div>';
-		echo '<div class="ph-upc">'.$x->upc.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->ean) && $x->ean != '') {
-		echo '<div class="ph-item-ean-box">';
-		echo '<div class="ph-ean-txt">'.JText::_('COM_PHOCACART_EAN').':</div>';
-		echo '<div class="ph-ean">'.$x->ean.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->jan) && $x->jan != '') {
-		echo '<div class="ph-item-jan-box">';
-		echo '<div class="ph-jan-txt">'.JText::_('COM_PHOCACART_JAN').':</div>';
-		echo '<div class="ph-jan">'.$x->jan.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->isbn) && $x->isbn != '') {
-		echo '<div class="ph-item-isbn-box">';
-		echo '<div class="ph-isbn-txt">'.JText::_('COM_PHOCACART_ISBN').':</div>';
-		echo '<div class="ph-isbn">'.$x->isbn.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->mpn) && $x->mpn != '') {
-		echo '<div class="ph-item-mpn-box">';
-		echo '<div class="ph-mpn-txt">'.JText::_('COM_PHOCACART_MPN').':</div>';
-		echo '<div class="ph-mpn">'.$x->mpn.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-	if (isset($x->serial_number) && $x->serial_number != '') {
-		echo '<div class="ph-item-serial-number-box">';
-		echo '<div class="ph-serial-number-txt">'.JText::_('COM_PHOCACART_SERIAL_NUMBER').':</div>';
-		echo '<div class="ph-serial-number">'.$x->serial_number.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
+	// ID OPTIONS (SKU, EAN, UPC, ...) ==========================
 
-	// END SKU, UPC  ...=========================================
+	$id = new PhocacartId();
+	$id->getIdItemsChangedByAttributes($x, $this->t['attr_options']);
+
+	$dID						= array();
+	$dID['s']					= $this->s;
+	$dID['x']					= $x;
+	$dID['class']			= 'ph-item-id-box';
+	$dID['product_id']	= (int)$x->id;
+	$dID['typeview']		= 'Item';
+	echo $layoutID->render($dID);
+	// END ID OPTIONS ===========================================
+
 
 	// This form can get two events:
 	// when option selected - price or image is changed id=phItemPriceBoxForm

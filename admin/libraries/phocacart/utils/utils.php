@@ -501,6 +501,19 @@ class PhocacartUtils
 			$view 		= $app->input->get('view', '');
 			$option 	= $app->input->get('option', '');
 
+			if ($option == 'com_phocacart' && $view == $viewToCheck) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static function isTypeView($viewToCheck = '') {
+
+		if ($viewToCheck != '') {
+			$app 		= JFactory::getApplication();
+			$view 		= $app->input->get('typeview', '');
+			$option 	= $app->input->get('option', '');
 
 			if ($option == 'com_phocacart' && $view == $viewToCheck) {
 				return true;
@@ -516,7 +529,6 @@ class PhocacartUtils
 			//$task 		= $app->input->get('task','', 'raw');
 			$controller = $app->input->get('controller', '');// Set in POS controllers
 			$option 	= $app->input->get('option', '');
-
 
 			//$taskA		= explode('.', $task);
 

@@ -91,6 +91,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
+		$this->t['dynamic_change_id']	   	= $this->p->get( 'dynamic_change_id', 0 );
 		$this->t['display_price']			= true;//$this->p->get( 'hide_price', 0 );
 		$this->t['display_addtocart']		= true;//$this->p->get( 'hide_addtocart', 0 );
 		$this->t['can_display_price']		= true;
@@ -166,18 +167,22 @@ class PhocaCartViewPos extends JViewLegacy
 		//PhocacartRenderJs::getPriceFormatJavascript($currency->price_decimals, $currency->price_dec_symbol, $currency->price_thousands_sep, $currency->price_currency_symbol, $currency->price_prefix, $currency->price_suffix, $currency->price_format);
 
 
-
+		$media->loadPhocaAttribute(1);
 		if ($this->t['pos_hide_attributes'] == 0) {
 			$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 		}
 
-		if ($this->t['dynamic_change_price'] == 1) {
+		/*if ($this->t['dynamic_change_price'] == 1) {
 			// items == category -> this is why items has class: ph-category-price-box (to have the same styling)
 			PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'Pos', 'ph-category-price-box');// We need to load it here
 		}
 		if ($this->t['dynamic_change_stock'] == 1) {
 			PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'Pos', 'ph-item-stock-box');
-		}
+		}*/
+
+		/*if ($this->t['dynamic_change_id'] == 1 || $this->t['dynamic_change_price'] == 1 || $this->t['dynamic_change_stock'] == 1) {
+			PhocacartRenderJs::renderAjaxChangeProductDataByOptions(0, 'Pos', 'ph-item-data-box');
+		}*/
 
 
 

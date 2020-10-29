@@ -310,8 +310,9 @@ class PhocacartSpecification
 
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
-				$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+
 			}
+			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
 		}
 
 		if (!empty($filterProducts)) {
@@ -327,6 +328,8 @@ class PhocacartSpecification
 				.' ORDER BY '.$orderingText;
 		$db->setQuery($query);
 		$specifications = $db->loadObjectList();
+
+
 
 		$a	= array();
 		if (!empty($specifications)) {

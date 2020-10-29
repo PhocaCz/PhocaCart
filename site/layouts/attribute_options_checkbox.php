@@ -34,6 +34,7 @@ $attr[]				= 'data-attribute-id-name="'. $attributeIdName.'"';// Attribute ID - 
 $attr[]				= 'data-type-view="'. $d['typeview'].'"';// In which view are attributes displayed: Category, Items, Item, Quick Item
 $attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the site (Bootstrap Glyphicons | Font Awesome | ...)
 $attr[]				= 'data-required="'.$d['required']['required'].'"';
+$attr[]				= 'data-alias="'.htmlspecialchars($v->alias).'"';
 
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
@@ -83,17 +84,17 @@ foreach ($v->options as $k2 => $v2) {
 
 	if ($v->type == 4) { // CHECKBOX STANDARD
 
-		echo '<div class="'.$d['s']['c']['checkbox'].' ph-checkbox"><label><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' />'.htmlspecialchars($v2->title).$suffix.'</label></div>';//<br />';
+		echo '<div class="'.$d['s']['c']['checkbox'].' ph-checkbox"><label><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' data-value-alias="'.htmlspecialchars($v2->alias).'" />'.htmlspecialchars($v2->title).$suffix.'</label></div>';//<br />';
 
 	} else if ($v->type == 5 && isset($v2->color) && $v2->color != '') { // CHECKBOX COLOR
 
 		$attrO	.= ' data-color="'.strip_tags($v2->color).'"';
-		echo '<label class="btn phCheckBoxButton phCheckBoxColor '.$active.'" style="background-color: '.strip_tags($v2->color).'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' autocomplete="off"  /><span class="'.$d['s']['i']['ok'].'" title="'.htmlspecialchars($v2->title). $suffix .'"></span></label> ';
+		echo '<label class="btn phCheckBoxButton phCheckBoxColor '.$active.'" style="background-color: '.strip_tags($v2->color).'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' autocomplete="off" data-value-alias="'.htmlspecialchars($v2->alias).'" /><span class="'.$d['s']['i']['ok'].'" title="'.htmlspecialchars($v2->title). $suffix .'"></span></label> ';
 
 	} else if ($v->type == 6 && isset($v2->image_small) && $v2->image_small != '') {// CHECKBOX IMAGE
 
 		$linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v2->image_small;
-		echo '<label class="'.$d['s']['c']['btn'].' phCheckBoxButton phCheckBoxImage '.$active.'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].'  autocomplete="off"  /><span class="'.$d['s']['i']['ok'].'"></span><img src="'.strip_tags($linkI).'" title="'.htmlspecialchars($v2->title). $suffix.'" alt="'.htmlspecialchars($v2->title).'" /></label>';
+		echo '<label class="'.$d['s']['c']['btn'].' phCheckBoxButton phCheckBoxImage '.$active.'"><input type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].'  autocomplete="off" data-value-alias="'.htmlspecialchars($v2->alias).'" /><span class="'.$d['s']['i']['ok'].'"></span><img src="'.strip_tags($linkI).'" title="'.htmlspecialchars($v2->title). $suffix.'" alt="'.htmlspecialchars($v2->title).'" /></label>';
 
 	}
 }

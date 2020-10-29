@@ -73,6 +73,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
+		$this->t['dynamic_change_id']           = $this->p->get('dynamic_change_id', 0);
 		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
         $this->t['display_addtocart']			= $this->p->get( 'display_addtocart', 1 );
 		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
@@ -189,24 +190,34 @@ class PhocaCartViewCategory extends JViewLegacy
 				$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 			}
 
-			if ($this->t['dynamic_change_price'] == 1) {
+			/*if ($this->t['dynamic_change_price'] == 1) {
 				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'Category', 'ph-category-price-box');// We need to load it here
 			}
 			if ($this->t['dynamic_change_stock'] == 1) {
 				PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'Category', 'ph-item-stock-box');
-			}
+			}*/
+
+		/*	if ($this->t['dynamic_change_id'] == 1 || $this->t['dynamic_change_price'] == 1 || $this->t['dynamic_change_stock'] == 1) {
+				PhocacartRenderJs::renderAjaxChangeProductDataByOptions((int)$this->item[0]->id, 'Category', 'ph-category-data-box');
+			}*/
 
 			// CHANGE PRICE FOR ITEM QUICK VIEW
 			if ($this->t['display_quickview'] == 1 || $this->t['category_addtocart'] == 104) {
 				PhocacartRenderJs::renderAjaxQuickViewBox();
 
 				// CHANGE PRICE FOR ITEM QUICK VIEW
-				if ($this->t['dynamic_change_price'] == 1) {
+				/*if ($this->t['dynamic_change_price'] == 1) {
 					PhocacartRenderJs::renderAjaxChangeProductPriceByOptions(0, 'ItemQuick', 'ph-item-price-box');// We need to load it here
 				}
 				if ($this->t['dynamic_change_stock'] == 1) {
 					PhocacartRenderJs::renderAjaxChangeProductStockByOptions(0, 'ItemQuick', 'ph-item-stock-box');
-				}
+				}*/
+
+			/*	if ($this->t['dynamic_change_id'] == 1 || $this->t['dynamic_change_price'] == 1 || $this->t['dynamic_change_stock'] == 1) {
+					PhocacartRenderJs::renderAjaxChangeProductDataByOptions(0, 'ItemQuick', 'ph-item-data-box');
+				}*/
+
+
 				$media->loadPhocaAttribute(1);// We need to load it here
 				$media->loadPhocaSwapImage($this->t['dynamic_change_image']);// We need to load it here in ITEM (QUICK VIEW) VIEW
 			}

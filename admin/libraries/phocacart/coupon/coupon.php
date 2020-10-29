@@ -13,8 +13,13 @@ defined('_JEXEC') or die();
 class PhocacartCoupon
 {
 	protected $coupon;
+	protected $type = array(0,1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
 
 	public function __construct() {}
+
+	public function setType($type = array(0,1)) {
+		$this->type = $type;
+	}
 
 	public function setCoupon($couponId = 0, $couponCode = '') {
 		$db 		    = JFactory::getDBO();
@@ -40,6 +45,9 @@ class PhocacartCoupon
 		$wheres[] 	= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 		$wheres[]	= ' c.published = 1';
 
+		// COUPON Type
+		$wheres[] = " c.type IN (". implode(',', $this->type). ')';
+
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 
 		// MOVECOUPON
@@ -57,13 +65,13 @@ class PhocacartCoupon
 			$columns		=
 			'c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
 			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,'
-			.' c.calculation_type, c.free_shipping, c.free_payment, c.category_filter, c.product_filter,'
+			.' c.calculation_type, c.type, c.free_shipping, c.free_payment, c.category_filter, c.product_filter,'
 			.' co.count AS count, cu.count AS countuser,'
 			.' GROUP_CONCAT(DISTINCT cp.product_id) AS product,' // line of selected products
 			.' GROUP_CONCAT(DISTINCT cc.category_id) AS category'; // line of selected categories
 			$groupsFull		= 'c.id, c.code, c.title, c.valid_from, c.valid_to, c.discount,'
 			.' c.quantity_from, c.available_quantity, c.available_quantity_user, c.total_amount,c.category_filter, c.product_filter,'
-			.' c.calculation_type, c.free_shipping, c.free_payment, co.count, cu.count';
+			.' c.calculation_type, c.type, c.free_shipping, c.free_payment, co.count, cu.count';
 			//.' co.count AS count, cu.count AS countuser';
 			$groupsFast		= 'c.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -128,7 +136,7 @@ class PhocacartCoupon
 			// -----------
 			// BASIC CHECK
 
-			// 1. ACCESS, EXISTS, PUBLISHED, CUSTOMER GROUP
+			// 1. ACCESS, EXISTS, PUBLISHED, CUSTOMER GROUP, TYPE
 			// Checked in SQL
 
 			// 2. VALID DATE FROM TO CHECK

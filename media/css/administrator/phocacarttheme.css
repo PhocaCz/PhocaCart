@@ -406,6 +406,213 @@ a.ph-icon-inside:visited {
   opacity: 0.6;
 }
 
+/* CP Icons, Joomla! Font Icons */
+.ph-cp-item-box {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
+.ph-cp-item-box .ph-cp-item {
+	width: 7rem;
+	margin: 0 0.7em 1.4em 0.7em;
+}
+
+.ph-cp-item-icon {
+	background: #fff;
+	border-radius: 5px;
+	
+	width: 7rem;
+	height: 7rem;
+	text-align: center;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#ffffff);
+    box-shadow: 1px 2px 1px 0 rgba(0,0,0,.15);
+}
+
+.ph-cp-item-icon-link {
+	width: 7rem;
+	height:7rem;
+	display: flex;
+}
+
+.ph-cp-item-icon-link,
+.ph-cp-item-icon-link:hover,
+.ph-cp-item-icon-link:active,
+.ph-cp-item-icon-link:visited,
+.ph-cp-item-icon-link:focus {
+	color: #A6AAB1;
+	text-decoration: none;
+}
+
+.ph-cp-item-icon-link span {
+	border: 0px;
+	box-shadow: none;
+	border-radius: 50%;
+	width: 5rem;
+	height: 5rem;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	text-align: center;
+}
+
+.ph-cp-item-icon-link:hover {
+	border: 0px;
+	box-shadow: none;
+}
+
+.ph-cp-item-icon-link-large {
+	font-size: 2.6rem;
+	width: 2.6rem;
+	height:2.6rem;
+
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ph-cp-item-title {
+	
+	display:block;
+	font-size: 0.95em;
+	margin: 0 auto;
+	margin-top: 0.1em;
+	text-align: center
+}
+
+.ph-cp-item-icon-link-large {
+   text-shadow:
+   -2px -2px 0 #575757,
+    2px -2px 0 #575757,
+    -2px 2px 0 #575757,
+     2px 2px 0 #575757;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+@-moz-document url-prefix() {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+
+.ph-cp-item-icon-link-large:before {
+	font-family: 'JoomlaFont' !important;
+}
+
+.ph-cp-item [class^="icon-"], 
+.ph-cp-item [class*=" icon-"] {
+    display: inline;
+    width: auto;
+    height: auto;
+    margin-right: auto;
+    line-height: 1;
+}
+
+.ph-cp-item [class^="icon-"].duotone:after, .ph-cp-item [class*=" icon-"].duotone:after {
+  opacity: 0.6;
+}
+
+
+.pha-toolbox {
+	width: 4rem;
+}
+.pha-toolbox a {
+	display: inline-block;
+	margin: 0.1em;
+	margin-bottom: 0.3em;
+	padding: 0;
+	font-weight: bold;
+}
+
+.pha-no-underline,
+.pha-no-underline:hover {
+	text-decoration: none;
+}
+
+.ph-cp-item {
+	text-align: center;
+}
+
+.ph-cp-item [class^="icon-"].phi-fs-s, 
+.ph-cp-item [class*=" icon-"].phi-fs-s {
+	font-size: 1rem;
+	width: 1rem;
+	height: 1rem;
+	display: inline-block;
+	margin: auto;
+}
+
+.ph-cp-item [class^="icon-"].phi-fs-m, 
+.ph-cp-item [class*=" icon-"].phi-fs-m {
+	font-size: 1.4rem;
+	width: 1.4rem;
+	height: 1.4rem;
+	display: inline-block;
+	margin: auto;
+}
+.ph-cp-item [class^="icon-"].phi-fs-l, 
+.ph-cp-item [class*=" icon-"].phi-fs-l {
+	font-size: 3.6rem;
+	width: 3.6rem;
+	height: 3.6rem;
+	display: inline-block;
+	margin: auto;
+}
+.phi-fc-bl {color: #3f72af}
+.phi-fc-bd {color: #112d4e}
+.phi-fc-rl {color: #e23e57}
+.phi-fc-rd {color: #CC1020}
+.phi-fc-yl {color: #ffde7d}
+.phi-fc-yd {color: #ffc314}
+.phi-fc-brl{color: #D2BDA9}
+.phi-fc-brd{color: #996633}
+.phi-fc-od {color: #ff9a00}
+.phi-fc-gd {color: #378137}
+.phi-fc-gl {color: #62bc62}
+
+
+.phi-mirror:before,
+.phi-mirror:after {
+	display:inline-block;
+	-moz-transform: scale(-1, 1);
+	-webkit-transform: scale(-1, 1);
+	-o-transform: scale(-1, 1);
+	-ms-transform: scale(-1, 1);
+	transform: scale(-1, 1);
+}
+
+.nav.nav-tabs .ph-cp-item .phi:before,
+.nav.nav-tabs .ph-cp-item .phi:after {
+	margin-top: 0.2em;
+}
+
+
+.js-stools .js-stools-container-bar .btn-wrapper {
+	margin: 0 3px;
+	padding: 3px 0px;
+ }
+
+ .ph-info-item .icon-minus-circle {
+	 color: #a94442;
+ }
+ .ph-info-item .icon-success {
+	 color: #3c763d;
+ }
+
 
 
 /* Chart */
@@ -1085,7 +1292,7 @@ ul.plupload_filelist li .plupload_file_name:before {
     list-style: none;
     border: 5px dashed #d0d0d0;
 	background: #f5f5f5;
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 li.plupload_droptext {

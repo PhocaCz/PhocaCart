@@ -1460,7 +1460,7 @@ class PhocacartRenderAdminview
 
 
 	// TABS
-	public function navigation($tabs) {
+	public function navigation($tabs, $activeTab = '') {
 
 		if ($this->compatible) {
 			return '';
@@ -1470,8 +1470,14 @@ class PhocacartRenderAdminview
 		$i = 0;
 		foreach($tabs as $k => $v) {
 			$cA = 0;
-			if ($i == 0) {
-				$cA = 'class="active"';
+			if ($activeTab != '') {
+				if ($activeTab == $k) {
+					$cA = 'class="active"';
+				}
+			} else {
+				if ($i == 0) {
+					$cA = 'class="active"';
+				}
 			}
 			$o .= '<li '.$cA.'><a href="#'.$k.'" data-toggle="tab">'. $v.'</a></li>'."\n";
 			$i++;

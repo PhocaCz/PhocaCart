@@ -89,7 +89,6 @@ $app 		= JFactory::getApplication();
 $input 		= $app->input;
 $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
-$r 			=  new PhocacartRenderAdminview();
 $isModal    = $input->get('layout') == 'modal' ? true : false;
 $layout     = $isModal ? 'modal' : 'edit';
 $tmpl       = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? 'component' : '';

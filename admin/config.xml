@@ -534,6 +534,11 @@
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
+			
+			<field name="phocahead39" type="phocahead" default="COM_PHOCACART_INFO_VIEW_LABEL" label="" description=""/>
+			
+			<field name="info_view_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
             <field name="phocahead7" type="phocahead" default="COM_PHOCACART_GENERAL_DISPLAY_OPTIONS_LABEL" label="" description=""/>
@@ -614,8 +619,21 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="dynamic_change_image" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_IMAGE_LABEL"
+            <field name="dynamic_change_image" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_IMAGE_LABEL"
                    description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_IMAGE_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+				<option value="2">COM_PHOCACART_YES_ADVANCED_STOCK_MANAGEMENT</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			<field name="dynamic_change_id" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_ID_LABEL"
+                   description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_ID_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			<field name="dynamic_change_url_attributes" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_URL_ATTRIBUTES_LABEL"
+                   description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_URL_ATTRIBUTES_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
@@ -658,8 +676,9 @@
             <field name="cart_metadesc" default="" type="textarea" label="COM_PHOCACART_FIELD_META_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_META_DESCRIPTION_DESC"/>
 
 
-            <field name="image_popup_method" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_IMAGE_POPUP_METHOD_LABEL" description="COM_PHOCACART_FIELD_IMAGE_POPUP_METHOD_DESC">
-                <option value="1">COM_PHOCACART_PRETTYPHOTO</option>
+            <field name="image_popup_method" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_IMAGE_POPUP_METHOD_LABEL" description="COM_PHOCACART_FIELD_IMAGE_POPUP_METHOD_DESC">
+                <option value="0">COM_PHOCACART_NONE</option>
+				<option value="1">COM_PHOCACART_PRETTYPHOTO</option>
                 <option value="2">COM_PHOCACART_MAGNIFIC</option>
             </field>
 
@@ -1020,6 +1039,16 @@
                 <option value="2">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_PUBLISHED</option>
 				<option value="3">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_FOUND_DESPITE_CHECKING_RULES</option>
             </field>
+			
+			<field name="change_remove_shipping_method" default="1" type="list" label="COM_PHOCACART_FIELD_REMOVE_SHIPPING_METHOD_CHANGE_LABEL" description="COM_PHOCACART_FIELD_REMOVE_SHIPPING_METHOD_CHANGE_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+            </field>
+
+            <field name="change_remove_payment_method" default="1" type="list" label="COM_PHOCACART_FIELD_REMOVE_PAYMENT_METHOD_CHANGE_LABEL" description="COM_PHOCACART_FIELD_REMOVE_PAYMENT_METHOD_CHANGE_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+            </field>
 
             <field name="default_order_status_free_download" default="1" type="PhocacartOrderstatus" label="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_LABEL"
                    description="COM_PHOCACART_FIELD_DEFAULT_ORDER_STATUS_FREE_DOWNLOAD_DESC">
@@ -1369,6 +1398,13 @@
 
 			<field name="sql_product_skip_tax" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_TAX_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_TAX_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			
+			<field name="sql_search_skip_id" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SQL_SEARCH_SKIP_ID_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_SQL_SEARCH_SKIP_ID_ATTRIBUTES_DESC">
+                <option value="1">COM_PHOCACART_YES</option>
+				<option value="2">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
+				<option value="3">COM_PHOCACART_POS_ONLY</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 

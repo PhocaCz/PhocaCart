@@ -165,6 +165,16 @@ class PhocacartRenderFront
             $description = preg_replace("/\s\s+/", " ", $description);
             $description = htmlspecialchars(trim($description), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
             $document->setMetadata('description', $description);
+
+        } else if (isset($item->description_long) && strip_tags($item->description_long) != '') {
+
+            $description = str_replace( '<', ' <', $item->description_long);
+            $description = strip_tags($description);
+            $description = preg_replace("/\s\s+/", " ", $description);
+            $description = PhocacartText::truncateText($description, 156, ' ...');// 160 - (" ...")
+            $description = htmlspecialchars(trim($description), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $document->setMetadata('description', $description);
+
         } else if (isset($category->metadesc) && $category->metadesc != '') {
             $document->setMetadata('description', $category->metadesc);
         }  else if (isset($category->description) && strip_tags($category->description) != '') {

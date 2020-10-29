@@ -24,6 +24,9 @@ class PhocaCartViewInfo extends JViewLegacy
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
 		$this->s                    = PhocacartRenderStyle::getStyles();
+		
+		$this->t['info_view_description']			= $this->p->get( 'info_view_description', '' );
+		$this->t['info_view_description']			= PhocacartRenderFront::renderArticle($this->t['info_view_description']);
 
 		$session 				= JFactory::getSession();
 		$this->t['infoaction'] 	= $session->get('infoaction', 0, 'phocaCart');

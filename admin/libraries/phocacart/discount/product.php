@@ -187,7 +187,9 @@ class PhocacartDiscountProduct
         $paramsC                        = PhocacartUtils::getComponentParameters();
         $display_discount_product_views = $paramsC->get('display_discount_product_views', 0);
 
-        if ($display_discount_product_views == 0) {
+        if (isset($params['ignore_view_rule']) && $params['ignore_view_rule'] == 1) {
+           // Different modules like countdown module
+        } else if ($display_discount_product_views == 0) {
             return false;
         }
 
@@ -251,7 +253,7 @@ class PhocacartDiscountProduct
         $wheres[] = " (ga.group_id IN (" . $userGroups . ") OR ga.group_id IS NULL)";// GROUP
 
         // STOCK
-        if (isset($params['item_stock_check']) && $params['item_stock_check'] == 1) {
+        if (isset($params['stock_check']) && $params['stock_check'] == 1) {
             $wheres[] = " p.stock > 0";
         }
 
@@ -271,9 +273,12 @@ class PhocacartDiscountProduct
 
         $where = (count($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '');
 
-        $query = 'SELECT a.id, a.product_id, a.title, a.alias, a.discount, a.access, a.calculation_type, a.quantity_from, a.valid_from, a.valid_to, a.background_image, a.description,'
-            . ' p.title AS product_title, p.alias AS product_alias, p.description AS product_description, p.image AS product_image, p.price AS product_price, p.unit_amount AS product_unit_amount,'
-            . ' p.unit_unit AS product_unit_unit, p.stock AS product_stock, p.stockstatus_a_id AS product_stockstatus_a_id, p.stockstatus_n_id AS product_stockstatus_n_id,'
+        $query = 'SELECT a.id AS discount_id, a.product_id AS discount_product_id, a.title AS discount_title, a.alias AS discount_alias,'
+            . ' a.discount AS discount_discount, a.access AS discount_access, a.calculation_type AS discount_calculation_type,'
+            . ' a.quantity_from AS discount_quantity_from, a.valid_from AS discount_valid_from, a.valid_to AS discount_valid_to,'
+            . ' a.background_image, a.description AS discount_description,'
+            . ' p.id, p.title, p.alias, p.description, p.image, p.price, p.unit_amount,'
+            . ' p.unit_unit, p.stock, p.stockstatus_a_id, p.stockstatus_n_id,'
             . ' c.id AS category_id, c.title AS category_title, c.alias AS category_alias,'
             . ' t.id as tax_id, t.tax_rate AS tax_rate, t.calculation_type AS tax_calculationtype, t.title AS tax_title,'
             . ' MIN(ppg.price) as group_price'
@@ -301,11 +306,89 @@ class PhocacartDiscountProduct
         $db->setQuery($query);
 
 
-        $discounts = $db->loadObjectList();
+        $items = $db->loadObjectList();
 
 
-        if (!empty($discounts) && isset($discounts[0]->id) && (int)$discounts[0]->id > 0) {
-            return $discounts;
+        if (!empty($items) && isset($items[0]->discount_id) && (int)$items[0]->discount_id > 0) {
+            return $items;
+        }
+        return false;
+    }
+
+    /* Module - get all products with featured */
+    public static function getProductsFeatured($params = array()) {
+
+        $db         = JFactory::getDBO();
+        $user       = PhocacartUser::getUser();
+        $userLevels = implode(',', $user->getAuthorisedViewLevels());
+        $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+
+        $wheres = array();
+        //$wheres[]   = "a.product_id = " . (int)$id;
+       // $wheres[] = " a.access IN (" . $userLevels . ")";// ACCESS Discount
+        $wheres[] = " p.access IN (" . $userLevels . ")";// ACCESS Product
+        $wheres[] = " c.access IN (" . $userLevels . ")";// ACCESS Category
+
+        $wheres[] = "p.published = 1";// PUBLISHED Product
+        $wheres[] = "c.published = 1";// PUBLISHED Category
+
+        $wheres[] = " (gp.group_id IN (" . $userGroups . ") OR gp.group_id IS NULL)";
+        $wheres[] = " (gc.group_id IN (" . $userGroups . ") OR gc.group_id IS NULL)";
+       // $wheres[] = " (ga.group_id IN (" . $userGroups . ") OR ga.group_id IS NULL)";// GROUP
+
+        // STOCK
+        if (isset($params['stock_check']) && $params['stock_check'] == 1) {
+            $wheres[] = " p.stock > 0";
+        }
+
+        // LIMIT
+        $limit = 1;
+        if (isset($params['limit'])) {
+            if((int)$params['limit'] == 0) {
+                return false;
+            } else if ((int)$params['limit'] > 0) {
+                $limit = (int)$params['limit'];
+            }
+        }
+
+        $wheres[]    = " p.featured = 1";
+
+        $where = (count($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '');
+
+        $query = 'SELECT p.id, p.description, p.title, p.alias, p.image, p.price, p.unit_amount,'
+            . ' p.unit_unit, p.stock, p.stockstatus_a_id, p.stockstatus_n_id, p.featured_background_image AS background_image,'
+            . ' c.id AS category_id, c.title AS category_title, c.alias AS category_alias,'
+            . ' t.id as tax_id, t.tax_rate AS tax_rate, t.calculation_type AS tax_calculationtype, t.title AS tax_title,'
+            . ' MIN(ppg.price) as group_price'
+            . ' FROM #__phocacart_products AS p'
+
+           // . ' FROM #__phocacart_products AS p'
+          //  . ' LEFT JOIN #__phocacart_product_discounts AS a ON p.id = a.product_id'
+
+            . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = p.id'
+            . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+            . ' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
+            //. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 4'// type 4 is product discount
+            . ' LEFT JOIN #__phocacart_item_groups AS gp ON p.id = gp.item_id AND gp.type = 3'// type 3 is product
+            . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+
+            // user is in more groups, select lowest price by best group
+            . ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON p.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = p.id AND group_id IN (' . $userGroups . ') AND type = 3)'
+            // user is in more groups, select highest points by best group
+            //. ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.product_id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.product_id AND group_id IN (' . $userGroups . ') AND type = 3)'
+
+            . $where
+            . ' GROUP BY p.id'
+            . ' ORDER BY p.id'
+            . ' LIMIT ' . (int)$limit;
+        $db->setQuery($query);
+
+
+        $items = $db->loadObjectList();
+
+
+        if (!empty($items) && isset($items[0]->id) && (int)$items[0]->id > 0) {
+            return $items;
         }
         return false;
     }

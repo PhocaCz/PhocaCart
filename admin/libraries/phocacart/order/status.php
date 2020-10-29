@@ -347,7 +347,7 @@ class PhocacartOrderStatus
 								PhocacartStock::handleStockProduct((int)$v->product_id, $statusId, (int)$v->quantity, $stockMovementsV);
 							}
 						}
-					} else if ((int)$v->stock_calculation == 2) {
+					} else if ((int)$v->stock_calculation == 2 || (int)$v->stock_calculation == 3) {
 
 						// ============================
 						// c) Advanced Stock Management

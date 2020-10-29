@@ -278,14 +278,14 @@ class PhocacartShipping
 
 	}
 
-	public function checkAndGetShippingMethodInsideCart($id, $total) {
+	/*public function checkAndGetShippingMethodInsideCart($id, $total) {
 
 		if ((int)$id > 0 && !empty($total)) {
 			return $this->checkAndGetShippingMethods($id, 0, $total);
 		}
 		return false;
 
-	}
+	}*/
 
 
 	/**
@@ -294,10 +294,10 @@ class PhocacartShipping
 	 * @param number $id
 	 * @return boolean|array
 	 */
-	public function checkAndGetShippingMethod($id = 0) {
+	public function checkAndGetShippingMethod($id = 0, $total = array()) {
 
 		if ((int)$id > 0) {
-			return $this->checkAndGetShippingMethods($id);
+			return $this->checkAndGetShippingMethods($id, 0, $total);
 		}
 		return false;
 
@@ -323,7 +323,6 @@ class PhocacartShipping
 		} else {
 			$totalFinal				= $total;
 		}
-
 		$user					= PhocacartUser::getUser();
 		$data					= PhocacartUser::getUserData((int)$user->id);
 		$fields 				= PhocacartFormUser::getFormXml('', '_phs', 1,1,0);
@@ -570,6 +569,7 @@ class PhocacartShipping
 			}
 		}
 	}
+
 
 	/*
 	 * Important function - when e.g. user changes the address or change the items in cart, the shipping method

@@ -35,21 +35,30 @@ class PhocaCartCpViewPhocaCartEditStockAdvanced extends JViewLegacy
 			return;
 		}
 
+		$this->state	= $this->get('State');
+		$this->state->set('phocacarteditstockadvanced.id', (int)$this->id);
+		$this->form		= $this->get('Form');
+		$this->item		= $this->get('Item');
+
+		$media = new PhocacartRenderAdminmedia();
+
+
 		$this->t						= PhocacartUtils::setVars('cart');
 		$this->r						= new PhocacartRenderAdminview();
-		$this->t['product']				= PhocacartProduct::getProduct((int)$this->id);
+		/*$this->t['product']				= PhocacartProduct::getProduct((int)$this->id);
 		$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$this->id);
 		$this->t['combinations']		= array();
-		$this->t['combinations_stock']	= array();
+		$this->t['combinations_data']	= array();
+
 		if (!empty($this->t['product'])) {
 			PhocacartAttribute::getCombinations( $this->t['product']->id, $this->t['product']->title,  $this->t['attr_options'], $this->t['combinations']);
 			// Load data from database
-			$this->t['combinations_stock'] = PhocacartAttribute::getCombinationsStockByProductId($this->t['product']->id);
+			$this->t['combinations_data'] = PhocacartAttribute::getCombinationsDataByProductId($this->t['product']->id);
 
-		}
+		}*/
 
 
-		$media = new PhocacartRenderAdminmedia();
+
 
 		parent::display($tpl);
 	}

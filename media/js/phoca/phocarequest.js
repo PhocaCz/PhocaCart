@@ -15,7 +15,7 @@ function phAppendContainerRequest() {
 	else {
 		// phContainerRequest exists
 	}
-	
+
 }
 
 /* All popups can share one the same container but Quick View can be displayed together with another popup
@@ -28,7 +28,7 @@ function phAppendContainerRequestQickView() {
 	else {
 		// phContainerRequest exists
 	}
-	
+
 }
 
 function phDoRequestSuccess(data, options) {
@@ -51,14 +51,14 @@ function phDoRequestSuccess(data, options) {
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
 			jQuery("#phAddToCartPopup").modal();
-			
+
 		}
 
 		if (options['method'] == 1) {
 			// If no popup is displayed we can reload the page when we are in specific view. If popup, this will be done when clicking continue
 			if (options['view'] == 1) {
 				startFullOverlay(1);
-				setTimeout(function() {location.reload();}, 0001);
+				setTimeout(function() {location.reload();}, 1);
 			}
 		}
 
@@ -77,13 +77,13 @@ function phDoRequestSuccess(data, options) {
 			} else if (options['task'] == "remove") {
 				jQuery("#phRemoveFromComparePopup").modal();
 			}
-			
+
 		}
 		if (options['method'] == 1) {
 			// If no popup is displayed we can reload the page when we are in specific view. If popup, this will be done when clicking continue
 			if (options['view'] == 1) {
 				startFullOverlay(1);
-				setTimeout(function() {location.reload();}, 0001);
+				setTimeout(function() {location.reload();}, 1);
 			}
 		}
 	} else if (options['type'] == 'wishlist') {
@@ -98,13 +98,13 @@ function phDoRequestSuccess(data, options) {
 			} else if (options['task'] == "remove") {
 				jQuery("#phRemoveFromWishListPopup").modal();
 			}
-			
+
 		}
 		if (options['method'] == 1) {
 			// If no popup is displayed we can reload the page when we are in specific view. If popup, this will be done when clicking continue
 			if (options['view'] == 1) {
 				startFullOverlay(1);
-				setTimeout(function() {location.reload();}, 0001);
+				setTimeout(function() {location.reload();}, 1);
 			}
 		}
 	} else if (options['type'] == 'quickview') {
@@ -129,15 +129,66 @@ function phDoRequestSuccess(data, options) {
 				verticaldown: options["icon_spinner_verticaldown"]
 			})
 		}
-	} else if (options['type'] == 'changeprice') {
-		/* Change Price */
-		jQuery(options["id_item"]).html(data.item);
-	} else if (options['type'] == 'changestock') {
-		/* Change Stock */
+	} else if (options['type'] == 'changedata') {
 
 		
-		if (options['method'] == 1) {
+		/* Change Image */
+		if( data.item.image !== undefined && data.item.image !== '' ) {
 			
+	
+			if (options['method_image'] == 2) {
+				var phProductImg	= '.phjProductImage' + options["id_item_name"];
+				var phProductSource	= '.phjProductSource' + options["id_item_name"];// Webp source
+				var phProductHref	= '.phjProductHref' + options["id_item_name"];
+		
+				
+				// New image found - change to new image
+				jQuery(phProductHref).attr('href', data.item.image);
+				jQuery(phProductImg).attr('src', data.item.image);
+				jQuery(phProductSource).attr('srcset', data.item.image);//webp
+			}
+		}
+
+		/* Change Price */
+		if( data.item.price !== undefined ) {
+			jQuery(options["id_item_price"]).html(data.item.price);
+		}
+		
+		/* Change ID (SKU, EAN, ...) */
+		if( data.item.id !== undefined ) {
+			jQuery(options["id_item_id"]).html(data.item.id);
+		}
+
+		if( data.item.stock !== undefined ) {
+			if (options['method_stock'] == 1) {
+
+				if (data.item.stockvalue < 1) {
+					//jQuery(phProductAddToCart).hide();';
+					jQuery(options["product_add_to_cart_item"]).css('visibility', 'hidden');
+					jQuery(options["product_add_to_cart_item_icon"]).css('display', 'none');
+
+				} else {
+					//jQuery(phProductAddToCart).show();';
+					jQuery(options["product_add_to_cart_item"]).css('visibility', 'visible');
+					jQuery(options["product_add_to_cart_item_icon"]).css('display', 'block');
+				}
+			}
+
+			jQuery(options["id_item_stock"]).html(data.item.stock);
+		}
+
+	} /*else if (options['type'] == 'changeprice') {
+		/* Change Price *//*
+		jQuery(options["id_item"]).html(data.item);
+	}  else if (options['type'] == 'changeid') {
+		/* Change ID (SKU, EAN, ...) *//*
+		jQuery(options["id_item"]).html(data.item);
+	} else if (options['type'] == 'changestock') {
+		/* Change Stock *//*
+
+
+		if (options['method'] == 1) {
+
 			if (data.stock < 1) {
             	//jQuery(phProductAddToCart).hide();';
             	jQuery(options["product_add_to_cart_item"]).css('visibility', 'hidden');
@@ -149,9 +200,9 @@ function phDoRequestSuccess(data, options) {
             	jQuery(options["product_add_to_cart_item_icon"]).css('display', 'block');
             }
 		}
-		
+
 		jQuery(options["id_item"]).html(data.item);
-	}
+	}*/
 }
 
 function phDoRequestError(data, options) {
@@ -167,20 +218,20 @@ function phDoRequestError(data, options) {
 		if (options['method'] != 2) {
 			jQuery(".phItemCartBox").html(data.error);
 		}
-		
+
 		if (options['method'] == 2) {
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
 			jQuery("#phAddToCartPopup").modal();
 
-			
+
 		}
 
 		if (options['method'] == 1) {
 			// If no popup is displayed we can reload the page when we are in specific view. If popup, this will be done when clicking continue
 			if (options['view'] == 1) {
 				startFullOverlay(1);
-				setTimeout(function() {location.reload();}, 0001);
+				setTimeout(function() {location.reload();}, 1);
 			}
 		}
 	}
@@ -237,7 +288,7 @@ jQuery(document).ready(function(){
 	/* Update cart  only in POS */
 	// ::EVENT (CLICK) Change Layout Type Clicking on Grid, Gridlist, List
 	jQuery(document).on("click", "#ph-pc-pos-site form.phItemCartUpdateBoxForm button", function (e) {
-		
+
 		if (typeof phDoSubmitFormAddToCart === "function") {
 			e.preventDefault();
 			var sForm 	= jQuery(this).closest("form");// Find in which form the right button was clicked

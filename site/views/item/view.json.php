@@ -68,6 +68,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['dynamic_change_image']	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
+		$this->t['dynamic_change_id']		= $this->p->get( 'dynamic_change_id', 0 );
 	/*	$this->t['image_popup_method']		= $this->p->get( 'image_popup_method', 1 );
 		$this->t['display_compare']			= $this->p->get( 'display_compare', 0 );
 		$this->t['display_wishlist']		= $this->p->get( 'display_wishlist', 0 );

@@ -1289,6 +1289,10 @@ class PhocacartAttribute
             $current['product_key']   = $key;
             $current['product_title'] = $current['product_title'];
             $current['stock']         = 0;
+            $current['price']         = '';
+            $current['ean']         = '';
+            $current['sku']         = '';
+            $current['image']         = '';
 
 
             /*
@@ -1373,6 +1377,10 @@ class PhocacartAttribute
             $pI[$pIPK]['attributes']      = array();
             $pI[$pIPK]['product_key']     = $pIPK;
             $pI[$pIPK]['stock']           = 0;
+            $pI[$pIPK]['price']           = '';
+            $pI[$pIPK]['sku']               = '';
+            $pI[$pIPK]['ean']               = '';
+            $pI[$pIPK]['image']               = '';
         }
 
         $combinations = array_merge($pI, $pA);
@@ -1380,10 +1388,10 @@ class PhocacartAttribute
 
     }
 
-    public static function getCombinationsStockByProductId($id) {
+    public static function getCombinationsDataByProductId($id) {
         if ($id > 0) {
             $db    = JFactory::getDBO();
-            $query = ' SELECT a.product_id, a.product_key, a.stock'
+            $query = ' SELECT a.product_id, a.product_key, a.stock, a.price, a.sku, a.ean, a.image'
                 . ' FROM #__phocacart_product_stock AS a'
                 . ' WHERE a.product_id = ' . (int)$id
                 . ' ORDER BY a.id';
@@ -1402,6 +1410,21 @@ class PhocacartAttribute
         return false;
     }
 
+    public static function getCombinationsDataByKey($productKey) {
+
+        $db = JFactory::getDBO();
+
+        $query = 'SELECT product_id, product_key, stock, price, sku, ean, image'
+            . ' FROM #__phocacart_product_stock'
+            . ' WHERE product_key = ' . $db->quote($productKey)
+            . ' ORDER BY product_key'
+            . ' LIMIT 1';
+        $db->setQuery($query);
+        $data = $db->loadAssoc();
+
+        return $data;
+    }
+
     public static function getCombinationsStockByKey($productKey) {
 
         $db = JFactory::getDBO();
@@ -1416,6 +1439,25 @@ class PhocacartAttribute
 
         if (isset($stock) && $stock > 0) {
             return $stock;
+        }
+
+        return 0;
+    }
+
+    public static function getCombinationsPriceByKey($productKey) {
+
+        $db = JFactory::getDBO();
+
+        $query = 'SELECT price'
+            . ' FROM #__phocacart_product_stock'
+            . ' WHERE product_key = ' . $db->quote($productKey)
+            . ' ORDER BY product_key'
+            . ' LIMIT 1';
+        $db->setQuery($query);
+        $price = $db->loadResult();
+
+        if (isset($price) && $price > 0) {
+            return $price;
         }
 
         return 0;
@@ -1483,6 +1525,22 @@ class PhocacartAttribute
                         $v['stock'] = '';
                     }
 
+                    if (empty($v['price'])) {
+                        $v['price'] = '';
+                    }
+
+                    if (empty($v['sku'])) {
+                        $v['sku'] = '';
+                    }
+
+                    if (empty($v['ean'])) {
+                        $v['ean'] = '';
+                    }
+
+                    if (empty($v['image'])) {
+                        $v['image'] = '';
+                    }
+
                     if ($v['product_key'] == '') {
                         continue;
                     }
@@ -1509,6 +1567,10 @@ class PhocacartAttribute
                             . ' product_id = ' . (int)$productId . ','
                             . ' product_key = ' . $db->quote($v['product_key']) . ','
                             . ' stock = ' . (int)$v['stock'] . ','
+                            . ' price = ' . $db->quote($v['price']) . ','
+                            . ' sku = ' . $db->quote($v['sku']) . ','
+                            . ' ean = ' . $db->quote($v['ean']) . ','
+                            . ' image = ' . $db->quote($v['image']) . ','
                             . ' WHERE id = ' . (int)$idExists;
                         $db->setQuery($query);
                         $db->execute();
@@ -1517,10 +1579,10 @@ class PhocacartAttribute
 
                     } else {
 
-                        $values = '(' . (int)$productId . ', ' . $db->quote($v['product_key']) . ', ' . $db->quote($v['attributes']) . ', ' . (int)$v['stock'] . ')';
+                        $values = '(' . (int)$productId . ', ' . $db->quote($v['product_key']) . ', ' . $db->quote($v['attributes']) . ', ' . (int)$v['stock'] . ', ' . (int)$v['price']. ', ' . (int)$v['sku']. ', ' . (int)$v['ean']. ', '.$db->quote($v['image']).')';
 
 
-                        $query = ' INSERT INTO #__phocacart_product_stock (product_id, product_key, attributes, stock)'
+                        $query = ' INSERT INTO #__phocacart_product_stock (product_id, product_key, attributes, stock, price, sku, ean, image)'
                             . ' VALUES ' . $values;
                         $db->setQuery($query);
                         $db->execute();

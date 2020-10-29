@@ -326,6 +326,7 @@ class PhocacartStock
 		// 0 ... Main Product
 		// 1 ... Product Variations
 		// 2 ... Advanced Stock Management
+        // 3 ... Advanced Stock And Price Management ( 2 + price)
 
 		if ($item->stock_calculation == 1) {
 
@@ -366,7 +367,7 @@ class PhocacartStock
 				PhocacartLog::add(3, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
 			}
 
-		} else if ($item->stock_calculation == 2) {
+		} else if ($item->stock_calculation == 2 || $item->stock_calculation == 3) {
 
 			// Advanced Stock Management
 			$k		= PhocacartProduct::getProductKey((int)$item->id, $thinAttributes);

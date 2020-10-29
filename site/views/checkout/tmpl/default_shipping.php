@@ -250,6 +250,8 @@ if ($this->a->shippingnotused == 1) {
 
 }  else {
 
+
+
 	$d['status']	= 'pending';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';

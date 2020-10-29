@@ -18,11 +18,15 @@ final class PhocacartStatistics
 
 	public function __construct() {
 
-		$document	= JFactory::getDocument();
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
-		//$document->addScript(JURI::root(true).'/media/com_phocacart/js/chartjs/Chart.min.js');
-		//$document->addScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.js');
-		HTMLHelper::_('script', 'media/com_phocacart/js/chartjs/Chart.min.js', array('version' => 'auto'), array('defer' => true));
+		$app	= JFactory::getApplication();
+		if ($app->isClient('administrator')) {
+			Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
+			HTMLHelper::_('script', 'media/com_phocacart/js/chartjs/Chart.min.js', array('version' => 'auto'), array('defer' => true));
+		} else {
+			$media = PhocacartRenderMedia::getInstance('main');
+			$media->renderChartJs();
+		}
+
 	}
 
 	public function renderChartJsLine($id, $dataA, $dataALabel, $dataB, $dataBLabel, $dataX) {

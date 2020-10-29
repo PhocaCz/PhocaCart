@@ -61,7 +61,7 @@ class PhocacartRenderAdminviews
 
         // CP View
         //if ($this->view ==  null) {
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/duoton/joomla-fonts.css', array('version' => 'auto'));
+        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
         //}
 
         HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/' . str_replace('com_', '', $this->option) . '.css', array('version' => 'auto'));

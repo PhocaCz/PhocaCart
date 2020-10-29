@@ -143,6 +143,13 @@ class PhocaCartModelItems extends JModelLegacy
 		$p['join_tag_label_filter']			= $params->get( 'join_tag_label_filter', 0 );
 		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
 		$p['search_deep']					= $params->get( 'search_deep', 0);
+		$p['sql_search_skip_id']			= $params->get( 'sql_search_skip_id', 1 );
+
+		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (Online Shop)
+		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 2){
+			$p['sql_search_skip_id_specific_type'] = 0;
+
+		}
 
 		$wheres		= array();
 		$wheres[] = ' a.published = 1';
@@ -344,6 +351,10 @@ class PhocaCartModelItems extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
 
+			if ($p['sql_search_skip_id_specific_type'] == 0){
+				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
+			}
+
 
 			if (!$skip['attributes']) {
 			    $lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
@@ -368,6 +379,10 @@ class PhocaCartModelItems extends JModelLegacy
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
 			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
+
+			if ($p['sql_search_skip_id_specific_type'] == 0){
+				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
+			}
 
 			if (!$skip['tax']) {
 				$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';

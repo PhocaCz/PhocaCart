@@ -245,14 +245,14 @@ class PhocacartPayment
 
 	}
 
-	public function checkAndGetPaymentMethodInsideCart($id, $total, $shippingId) {
+/*	public function checkAndGetPaymentMethodInsideCart($id, $total, $shippingId) {
 
 		if ((int)$id > 0 && !empty($total)) {
 			return $this->checkAndGetPaymentMethods($id, 0, $total, $shippingId);
 		}
 		return false;
 
-	}
+	}*/
 
 	/**
 	 * Check current payment method
@@ -260,10 +260,10 @@ class PhocacartPayment
 	 * @param number $id
 	 * @return boolean|array
 	 */
-	public function checkAndGetPaymentMethod($id = 0) {
+	public function checkAndGetPaymentMethod($id = 0, $total = array(), $shippingId = 0) {
 
 		if ($id > 0) {
-			return $this->checkAndGetPaymentMethods($id);
+			return $this->checkAndGetPaymentMethods($id, 0, $total, $shippingId);
 		}
 		return false;
 
@@ -468,7 +468,7 @@ class PhocacartPayment
 
 	/*
 	 * Important function - when e.g. user changes the address or change the items in cart, the payment method
-	 * needs to be removed, because user can get payment advantage when he orders 10 items but after changing
+	 * needs to be removed or revised, because user can get payment advantage when he orders 10 items but after changing
 	 * cart to e.g. one item, payment cannot stay the same, the same happens with countries and region
 	 */
 

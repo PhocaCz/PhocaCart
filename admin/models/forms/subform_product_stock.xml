@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+	
+		<!--<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />-->
+		<field name="product_key" type="hidden" class="readonly hidden" hidden="true" size="40" label="COM_PHOCACART_PRODUCT_KEY" description="COM_PHOCACART_PRODUCT_KEY" />
+		<field name="product_id" type="hidden" class="readonly hidden" hidden="true" size="40" label="COM_PHOCACART_PRODUCT_ID" description="COM_PHOCACART_PRODUCT_ID" />
+		<field name="attributes" type="hidden" class="readonly hidden" hidden="true" size="40" label="COM_PHOCACART_PRODUCT_ATTRIBUTES" description="COM_PHOCACART_PRODUCT_ATTRIBUTES" />
+		
+		
+		<field name="product_title" type="PhocaRawcontent" class="input-mini" size="40" label="COM_PHOCACART_TITLE" description="COM_PHOCACART_TITLE" />
+		<field name="title" type="PhocaRawcontent" class="input-mini" size="40" label="COM_PHOCACART_ATTRIBUTES" description="COM_PHOCACART_ATTRIBUTES" />
+		<field name="stock" type="text" class="input-mini" size="20" label="COM_PHOCACART_IN_STOCK" description="COM_PHOCACART_IN_STOCK" />
+<field name="price" type="text" class="input-mini" size="20" label="COM_PHOCACART_PRICE" description="COM_PHOCACART_PRICE" />
+<field name="sku" type="text" class="input-mini" size="20" label="COM_PHOCACART_SKU" description="COM_PHOCACART_SKU" />
+<field name="ean" type="text" class="input-mini" size="20" label="COM_PHOCACART_EAN" description="COM_PHOCACART_EAN" />
+
+<field name="image" type="phocaselectfilenameimage" manager="productimage" size="40" label="COM_PHOCACART_IMAGE" description="COM_PHOCACART_IMAGE" class="inputbox imageCreateThumbs" />
+
+	</fieldset>
+</form>

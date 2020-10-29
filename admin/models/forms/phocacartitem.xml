@@ -32,6 +32,7 @@
             <option value="0">COM_PHOCACART_NO</option>
         </field>
 
+		<field name="featured_background_image" type="media" label="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" class="inputbox" size="40"/>
         <field name="price" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRICE_LABEL" description="COM_PHOCACART_FIELD_PRICE_DESC"/>
         <field name="price_original" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_DESC"/>
 
@@ -64,6 +65,7 @@
             <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
             <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS</option>
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+			<option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
         </field>
 
 

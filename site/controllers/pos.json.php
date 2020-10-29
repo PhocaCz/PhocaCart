@@ -88,6 +88,10 @@ class PhocaCartControllerPos extends JControllerForm
 			if (isset($productBySku['id']) && (int)$productBySku['id'] > 0 && isset($productBySku['catid']) && (int)$productBySku['catid'] > 0) {
 				$item['id'] = (int)$productBySku['id'];
 				$item['catid'] = (int)$productBySku['catid'];
+
+				if (!empty($productBySku['attributes'])) {
+					$item['attribute'] = $productBySku['attributes'];
+				}
 			} else {
 
 				$response = array(
@@ -105,6 +109,8 @@ class PhocaCartControllerPos extends JControllerForm
 		$cart->setType(array(0,2));
 		$cart->params['display_image'] 			= 1;
 		$cart->params['display_checkout_link'] 	= 0;
+
+
 
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute'], '', array(0,2));
 
@@ -124,24 +130,27 @@ class PhocaCartControllerPos extends JControllerForm
 		}
 
 		$cart->setFullItems();
+		$cart->updateShipping();// will be decided if shipping or payment will be removed
+        $cart->updatePayment();
 
 		// When adding new product - shipping and payment is removed - don't add it again from not updated class (this $cart instance does not include the info about removed shipping and payment)
 		// But there is an exception in case of forced payment or shipping
-		if ((int)$pos_shipping_force > 0) {
+	//	if ((int)$pos_shipping_force > 0) {
 			$shippingId = $cart->getShippingId();
+
 
 			if (isset($shippingId) && (int)$shippingId > 0) {
 				$cart->addShippingCosts($shippingId);
 			}
-		}
+	//	}
 
-		if ((int)$pos_payment_force > 0) {
+	//	if ((int)$pos_payment_force > 0) {
 			$paymentId = $cart->getPaymentId();
 
 			if (isset($paymentId) && (int)$paymentId > 0) {
 				$cart->addPaymentCosts($paymentId);
 			}
-		}
+	//	}
 
 
 		$cart->roundTotalAmount();
@@ -298,6 +307,10 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 			$cart->setFullItems();
+
+			$cart->updateShipping();// will be decided if shipping or payment will be removed
+        	$cart->updatePayment();
+
 			$shippingId 	= $cart->getShippingId();
 			if (isset($shippingId) && (int)$shippingId > 0) {
 				$cart->addShippingCosts($shippingId);
@@ -307,6 +320,7 @@ class PhocaCartControllerPos extends JControllerForm
 			if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0) {
 				$cart->addPaymentCosts($paymentMethod['id']);
 			}
+
 
 			$cart->roundTotalAmount();
 
@@ -349,6 +363,9 @@ class PhocaCartControllerPos extends JControllerForm
 			// Ticket id set by ticket class
 			$cart->setFullItems();
 
+			$cart->updateShipping();// will be decided if shipping or payment will be removed
+        	$cart->updatePayment();
+
 			$shippingId 	= $cart->getShippingId();
 			if (isset($shippingId) && (int)$shippingId > 0) {
 				$cart->addShippingCosts($shippingId);
@@ -358,6 +375,7 @@ class PhocaCartControllerPos extends JControllerForm
 			if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0) {
 				$cart->addPaymentCosts($paymentMethod['id']);
 			}
+
 
 			$cart->roundTotalAmount();
 
@@ -467,8 +485,13 @@ class PhocaCartControllerPos extends JControllerForm
 		if ($updated) {
 
 			// Remove shipping because shipping methods can change while chaning users
-			PhocacartShipping::removeShipping(0);
-			PhocacartPayment::removePayment(0);
+			//PhocacartShipping::removeShippingAfterUpdate(0, 2);
+			//PhocacartPayment::removePayment(0);
+			$cart					= new PhocacartCartRendercheckout();
+        	$cart->setType(array(0,2));
+        	$cart->setFullItems();
+        	$cart->updateShipping();// will be decided if shipping or payment will be removed
+			$cart->updatePayment();
 
 			if ($item['id'] > 0 && $item['loyalty_card_number'] == '') {
 				$msg = JText::_('COM_PHOCACART_SUCCESS_CUSTOMER_SELECTED');
@@ -608,6 +631,7 @@ class PhocaCartControllerPos extends JControllerForm
 		if (isset($item['phcoupon']) && $item['phcoupon'] != '' && $enable_coupons > 0) {
 
 			$coupon = new PhocacartCoupon();
+			$coupon->setType(array(0,2));
 			$coupon->setCoupon(0, $item['phcoupon']);
 
 			$couponTrue = $coupon->checkCoupon(1);// Basic Check - Coupon True does not mean it is valid

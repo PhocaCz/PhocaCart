@@ -229,20 +229,29 @@ class PhocaCartModelPos extends JModelLegacy
 		$lefts		= array();
 
 		// POS FILTER
-		$pos_categories	= $params->get( 'pos_categories', array(-1) );
+		$p 							= array();
+		$p['pos_categories']		= $params->get( 'pos_categories', array(-1) );
+		$p['sql_search_skip_id']	= $params->get( 'sql_search_skip_id', 1 );
+		$p['search_deep']			= $params->get( 'search_deep', 0 );
 
-		if (in_array(-1, $pos_categories)) {
+		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (POS)
+		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 3){
+			$p['sql_search_skip_id_specific_type'] = 0;
+
+		}
+
+		if (in_array(-1, $p['pos_categories'])) {
 			// All categories selected
 
 
-		} else if (in_array(0, $pos_categories)) {
+		} else if (in_array(0, $p['pos_categories'])) {
 			// No category selected - dummy select to not break framework rules
 			$this->setState('limitstart', 0);
 			$this->setState('limit', 0);
 			return 'SELECT id FROM #__phocacart_products WHERE 1 <> 1;';
 		} else {
 			// Only some selected
-			$wheres[] = ' c.id IN ('.implode(',', $pos_categories).')';
+			$wheres[] = ' c.id IN ('.implode(',', $p['pos_categories']).')';
 
 		}
 
@@ -331,7 +340,7 @@ class PhocaCartModelPos extends JModelLegacy
 
 		// =SEARCH=
 		if ($this->getState('search')) {
-			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'));
+			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'), $p);
 			$wheres[]	= '('.$s['where'].')';
 			$lefts[]	= $s['left'];
 
@@ -360,8 +369,12 @@ class PhocaCartModelPos extends JModelLegacy
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
-			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
 
+			if ($p['sql_search_skip_id_specific_type'] == 0){
+				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
+			}
+
+			$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
 			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
 			$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
 
@@ -377,6 +390,10 @@ class PhocaCartModelPos extends JModelLegacy
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+
+			if ($p['sql_search_skip_id_specific_type'] == 0){
+				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
+			}
 			$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
 			//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';

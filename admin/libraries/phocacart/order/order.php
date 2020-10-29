@@ -94,6 +94,7 @@ class PhocacartOrder
         $coupon     = false;
         if (isset($couponCart['id']) && $couponCart['id'] > 0) {
             $couponO = new PhocacartCoupon();
+            $couponO->setType($this->type);
             $couponO->setCoupon((int)$couponCart['id']);
             $coupon = $couponO->getCoupon();
         }

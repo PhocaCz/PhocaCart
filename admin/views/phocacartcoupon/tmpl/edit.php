@@ -33,7 +33,7 @@ echo $r->navigation($tabs);
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('title', 'code', 'discount', 'calculation_type', 'access', 'group');
+$formArray = array ('title', 'code', 'discount', 'calculation_type', 'type', 'access', 'group');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);

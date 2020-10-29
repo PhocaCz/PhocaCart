@@ -9,18 +9,132 @@
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelList
+class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 {
-	protected	$option 		= 'com_phocacart';
+	protected	$option 		        = 'com_phocacart';
+	protected 	$text_prefix	        = 'com_phocacart';
+	public      $typeAlias 		        = 'com_phocacart.phocacartproductstock';
 
 
-	public function save($data, $productId) {
 
-		if (!empty($data)) {
+	public function getTable($type = 'PhocacartProductStock', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	public function getForm($data = array(), $loadData = true) {
+
+		$app	= JFactory::getApplication();
+		$form 	= $this->loadForm('com_phocacart.phocacartproductstock', 'phocacartproductstock', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
+	}
+
+	protected function loadFormData()
+	{
+		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartproductstock.data', array());
+
+		if (empty($data)) {
+			$data = $this->getItem();
+
+		}
+
+		return $data;
+	}
+
+
+	public function getItem($pk = null) {
+
+		$app					= JFactory::getApplication();
+		$productId				= $app->input->get('id', 0, 'int');
+
+
+		if ($item = parent::getItem($pk)) {
+			if ($productId > 0) {
+				$product           = PhocacartProduct::getProduct((int)$productId);
+				$attr_options      = PhocacartAttribute::getAttributesAndOptions((int)$productId);
+				$combinations      = array();
+				$combinations_data = array();
+
+				if (!empty($product)) {
+					PhocacartAttribute::getCombinations($product->id, $product->title, $attr_options, $combinations);
+					// Load data from database
+					$combinations_data = PhocacartAttribute::getCombinationsDataByProductId($product->id);
+
+				}
+
+				if (!empty($combinations)) {
+					ksort($combinations);
+
+					foreach ($combinations as $k => $v) {
+
+						if (isset($combinations_data[$v['product_key']]['stock'])) {
+							$combinations[$v['product_key']]['stock'] = $combinations_data[$v['product_key']]['stock'];
+						}
+
+						if (isset($combinations_data[$v['product_key']]['price'])) {
+							$price                                    = $combinations_data[$v['product_key']]['price'];
+							$combinations[$v['product_key']]['price'] = PhocacartPrice::cleanPrice($price);
+						}
+
+						if (isset($combinations_data[$v['product_key']]['sku'])) {
+							$combinations[$v['product_key']]['sku'] = $combinations_data[$v['product_key']]['sku'];
+						}
+
+						if (isset($combinations_data[$v['product_key']]['ean'])) {
+							$combinations[$v['product_key']]['ean'] = $combinations_data[$v['product_key']]['ean'];
+						}
+
+						if (isset($combinations_data[$v['product_key']]['image'])) {
+							$combinations[$v['product_key']]['image'] = $combinations_data[$v['product_key']]['image'];
+						}
+
+						if (isset($v['product_key'])) {
+							$combinations[$v['product_key']]['product_key'] = $v['product_key'];
+						}
+						if (isset($v['product_id'])) {
+							$combinations[$v['product_key']]['product_id'] = $v['product_id'];
+						}
+						if (isset($v['product_id']) && isset($v['attributes'])) {
+							$combinations[$v['product_key']]['attributes'] = PhocacartProduct::getProductKey($v['product_id'], $v['attributes'], 0);
+						}
+
+
+					}
+
+					$item->set('product_stock', $combinations);
+
+				}
+			}
+		}
+
+		return $item;
+	}
+
+	protected function prepareTable($table) {
+		jimport('joomla.filter.output');
+
+		$table->price 					= PhocacartUtils::replaceCommaWithPoint($table->price);
+
+
+	}
+
+
+	public function save($data/*, $productId*/) {
+
+		$app					= JFactory::getApplication();
+		$productId				= $app->input->get('id', 0, 'int');
+
+
+
+		if (!empty($data['product_stock'])) {
 
 			$notDeleteItems = array();
 
-			foreach($data as $k => $v) {
+			foreach($data['product_stock'] as $k => $v) {
 				$row = $this->getTable('PhocacartProductStock', 'Table');
 
 				if(isset($v['product_key']) && $v['product_key'] != '') {

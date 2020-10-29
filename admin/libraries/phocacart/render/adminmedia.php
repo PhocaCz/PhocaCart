@@ -48,7 +48,7 @@ class PhocacartRenderAdminmedia
 
 		// CP View - load everywhere because of menu
 		//if ($this->view ==  null) {
-			HTMLHelper::_('stylesheet', 'media/com_phocacart/duoton/joomla-fonts.css', array('version' => 'auto'));
+			HTMLHelper::_('stylesheet', 'media/com_phocacart/duotone/joomla-fonts.css', array('version' => 'auto'));
 		//}
 
 

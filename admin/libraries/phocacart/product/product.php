@@ -26,6 +26,8 @@ class PhocacartProduct
         $wheres = array();
         $params = PhocacartUtils::getComponentParameters();
         $user = PhocacartUser::getUser();
+
+
         $userLevels = implode(',', $user->getAuthorisedViewLevels());
         $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 
@@ -325,10 +327,12 @@ class PhocacartProduct
 
         $db = JFactory::getDBO();
         $sku = $db->quote($sku);
-        $typeSku = $db->quoteName('a.' . $typeSku);
+        $typeSkuS = $db->quoteName('a.' . $typeSku);
+        $typeSkuSA = $db->quoteName('ps.' . $typeSku);
 
+        $wheres = array(); // standard product
+        $wheresA = array();// advanced stock management product (EAN, SKU)
 
-        $wheres = array();
         $user = PhocacartUser::getUser();
         $userLevels = implode(',', $user->getAuthorisedViewLevels());
         $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -338,12 +342,17 @@ class PhocacartProduct
         $wheres[] = " (gc.group_id IN (" . $userGroups . ") OR gc.group_id IS NULL)";
         $wheres[] = " a.published = 1";
         $wheres[] = " c.published = 1";
-        $wheres[] = ' ' . $typeSku . ' = ' . $sku;
+
 
         //$wheres[] 	= ' c.type IN ('.implode(',', $type).')';
         if (!empty($type) && is_array($type)) {
             $wheres[] = ' c.type IN (' . implode(',', $type) . ')';
         }
+
+        $wheresA = $wheres;
+
+        $wheres[] = ' ' . $typeSkuS . ' = ' . $sku;
+        $wheresA[] = ' ' . $typeSkuSA . ' = ' . $sku;
 
 
         $query = ' SELECT a.id, c.id as catid'
@@ -358,6 +367,30 @@ class PhocacartProduct
         $db->setQuery($query);
         $products = $db->loadObjectlist();
 
+
+
+        // We didn' find SKU or EAN in standard products
+        // Then try to find it in Advanced Stock Management (only SKU and EAN are active)
+        // POS
+        if (empty($products) && ($typeSku == 'sku' || $typeSku == 'ean')) {
+
+            // Try to find SKU or EAN in Advanced stock management
+
+            $query = ' SELECT a.id, c.id AS catid, ps.attributes AS attributes'
+            . ' FROM #__phocacart_products AS a'
+            . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
+            . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+            . ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id'
+            . ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+            . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+            . ' WHERE ' . implode(' AND ', $wheresA)
+            . ' ORDER BY a.id';
+            //.' LIMIT 1';
+            $db->setQuery($query);
+            $products = $db->loadObjectlist();
+
+        }
+
         if (!empty($products)) {
             foreach ($products as $k => $v) {
                 if (isset($v->id) && (int)$v->id > 0 && isset($v->catid) && (int)$v->catid > 0) {
@@ -366,7 +399,17 @@ class PhocacartProduct
                     if ($access) {
                         // if found some return the first possible - accessible
                         // because of different rights, groups, etc., we need to know catid
-                        return array('id' => (int)$v->id, 'catid' => (int)$v->catid);
+                        $product = array();
+                        $product['id'] = (int)$v->id;
+                        $product['catid'] = (int)$v->catid;
+
+                        if (isset($v->attributes) && $v->attributes != '') {
+                            $product['attributes'] = unserialize($v->attributes);
+                        }
+
+
+                        return $product;
+
                     }
                 }
             }

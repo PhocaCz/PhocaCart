@@ -102,18 +102,20 @@ class PhocacartPos
 
 		// We check if we are located in POS view or POS controller
 		$isView 		= PhocacartUtils::isView('pos');
+		$isTypeView		= PhocacartUtils::isTypeView('Pos');
 		$isController 	= PhocacartUtils::isController('pos');
 
 
 		if (!PhocacartPos::isPosEnabled()){
 
-			if ($isView || $isController) {
+			if ($isView || $isTypeView || $isController) {
 				// Return the error info only in case of POS view or controller
 				$app = JFactory::getApplication();
 				$app->enqueueMessage(JText::_('COM_PHOCACART_POS_IS_DISABLED'), 'error');
 			}
 			return false;
 		}
+
 
 
 		if ($forcePos) {
@@ -124,7 +126,7 @@ class PhocacartPos
 		} else {
 
 
-			if ($isView || $isController) {
+			if ($isView || $isTypeView || $isController) {
 				return true;
 			}
 			return false;

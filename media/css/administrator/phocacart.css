@@ -1400,3 +1400,34 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	color: #fff;
 	padding: 0.3em;
 }
+
+.ph-edit-stock-advanced-box .form-horizontal .controls {
+	margin-left:0;
+}
+
+.ph-edit-stock-advanced-box .control-label {
+	display:none;
+}
+
+#phEditStockAdvancedBox input.input-mini {
+    width: 4em;
+}
+
+#phEditStockAdvancedBox .inputbox.imageCreateThumbs {
+    width: 8em;
+}
+#phEditStockAdvancedBox th small {
+	display:none;
+}
+
+
+#phEditStockAdvancedBox table tr th:first-child,
+#phEditStockAdvancedBox table tr td:first-child,
+#phEditStockAdvancedBox table tr th:nth-child(2),
+#phEditStockAdvancedBox table tr td:nth-child(2),
+#phEditStockAdvancedBox table tr th:nth-child(3),
+#phEditStockAdvancedBox table tr td:nth-child(3),
+#phEditStockAdvancedBox table tr th:last-child,
+#phEditStockAdvancedBox table tr td:last-child {
+    display:none;
+}

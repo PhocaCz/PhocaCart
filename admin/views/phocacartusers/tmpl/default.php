@@ -8,15 +8,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
-
-Joomla\CMS\HTML\HTMLHelper::_('behavior.modal', 'a.modal_view_cart');
-
-$class		= $this->t['n'] . 'RenderAdminviews';
-$r 			=  new $class();
+$r = $this->r;
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));

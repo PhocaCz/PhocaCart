@@ -61,6 +61,7 @@ class PhocaCartViewItem extends JViewLegacy
 		$this->t['dynamic_change_image']    	= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']	    = $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	    = $this->p->get( 'dynamic_change_stock', 0 );
+		$this->t['dynamic_change_id']	   	 	= $this->p->get( 'dynamic_change_id', 0 );
 		$this->t['image_popup_method']	    	= $this->p->get( 'image_popup_method', 1 );
 		$this->t['display_compare']			    = $this->p->get( 'display_compare', 0 );
 		$this->t['display_wishlist']		    = $this->p->get( 'display_wishlist', 0 );
@@ -169,12 +170,16 @@ class PhocaCartViewItem extends JViewLegacy
 			}
 
 			if ($this->t['image_popup_method'] == 2) {
-				PhocacartRenderJs::renderMagnific();
+				$media->renderMagnific();
 				$this->t['image_rel'] 	= 'rel="magnific"';
 				$this->t['image_class']	= 'magnific';
-			} else {
-				PhocacartRenderJs::renderPrettyPhoto();
+			} else if ($this->t['image_popup_method'] == 1) {
+				$media->renderPrettyPhoto();
 				$this->t['image_rel'] = 'rel="prettyPhoto[pc_gal1]"';
+				$this->t['image_class']	= '';
+			} else {
+				// None
+				$this->t['image_rel'] 	= '';
 				$this->t['image_class']	= '';
 			}
 
@@ -182,12 +187,20 @@ class PhocaCartViewItem extends JViewLegacy
 				$media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
 			}
 
+		/*	if ($this->t['dynamic_change_id'] == 1) {
+				PhocacartRenderJs::renderAjaxChangeProductIdByOptions((int)$this->item[0]->id, 'Item', 'ph-item-id-box');
+			}
 			if ($this->t['dynamic_change_price'] == 1) {
 				PhocacartRenderJs::renderAjaxChangeProductPriceByOptions((int)$this->item[0]->id, 'Item', 'ph-item-price-box');
 			}
 			if ($this->t['dynamic_change_stock'] == 1) {
 				PhocacartRenderJs::renderAjaxChangeProductStockByOptions((int)$this->item[0]->id, 'Item', 'ph-item-stock-box');
-			}
+			}*/
+
+			/*if ($this->t['dynamic_change_id'] == 1 || $this->t['dynamic_change_price'] == 1 || $this->t['dynamic_change_stock'] == 1) {
+				PhocacartRenderJs::renderAjaxChangeProductDataByOptions((int)$this->item[0]->id, 'Item', 'ph-item-data-box');
+			}*/
+
 
 			PhocacartRenderJs::renderAjaxAddToCart();
 			//PhocacartRenderJs::renderAjaxUpdateCart();// used only in POS

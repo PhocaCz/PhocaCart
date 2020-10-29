@@ -172,7 +172,7 @@ if (!empty($this->items)) {
 			if($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
 				$dS							= array();
 				$dS['s']	                = $this->s;
-				$dS['class']				= 'ph-item-stock-box';
+				$dS['class']				= 'ph-category-stock-box';
 				$dS['product_id']			= (int)$v->id;
 				$dS['typeview']				= 'Category';
 				$dS['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($stockStatus);

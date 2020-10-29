@@ -8,22 +8,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
+$r = $this->r;
 
-?><script type="text/javascript">
-jQuery(document).ready(function (){
-	jQuery('#phSubmitDownload').on('click', function () {
-		jQuery(".circle").attr('class', 'circle-active');
+$s = 'jQuery(document).ready(function (){
+	jQuery(\'#phSubmitDownload\').on(\'click\', function () {
+		jQuery(".circle").attr(\'class\', \'circle-active\');
 	})
-});
-</script><?php
+});';
+JFactory::getDocument()->addScriptDeclaration($s);
 
 
-$class		= $this->t['n'] . 'RenderAdminviews';
-$r 			=  new $class();
 echo '<div id="'.$this->t['tasks'].'">';
 //echo $r->startFilter();
 //echo $r->endFilter();

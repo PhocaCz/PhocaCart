@@ -261,7 +261,13 @@ class PhocacartSearch
                             $wheresSub[] = 'a.metadesc LIKE ' . $text;
                             $wheresSub[] = 'a.description LIKE ' . $text;
                             $wheresSub[] = 'a.sku LIKE ' . $text;
-                            if ($params['search_deep'] == 1) {
+                            $wheresSub[] = 'a.ean LIKE ' . $text;
+                            // Search EAN, SKU in product attributes (advanced stock management) ... can be different for POS or Online Shop
+                            if (isset($params['sql_search_skip_id_specific_type']) && $params['sql_search_skip_id_specific_type'] == 0) {
+                                $wheresSub[] = 'ps.sku LIKE ' . $text;
+                                $wheresSub[] = 'ps.ean LIKE ' . $text;
+                            }
+                            if (isset($params['search_deep']) && $params['search_deep'] == 1) {
                               $wheresSub[] = 'a.description_long LIKE ' . $text;
                               $wheresSub[] = 'a.features LIKE ' . $text;
                             }
@@ -289,7 +295,12 @@ class PhocacartSearch
                                 $wheresSub[] = 'a.metadesc LIKE ' . $word;
                                 $wheresSub[] = 'a.description LIKE ' . $word;
                                 $wheresSub[] = 'a.sku LIKE ' . $word;
-                                if ($params['search_deep'] == 1) {
+                                $wheresSub[] = 'a.ean LIKE ' . $word;
+                                if (isset($params['sql_search_skip_id_specific_type']) && $params['sql_search_skip_id_specific_type'] == 0) {
+                                    $wheresSub[] = 'ps.sku LIKE ' . $word;
+                                    $wheresSub[] = 'ps.ean LIKE ' . $word;
+                                }
+                                if (isset($params['search_deep']) && $params['search_deep'] == 1) {
                                     $wheresSub[] = 'a.description_long LIKE ' . $word;
                                     $wheresSub[] = 'a.features LIKE ' . $word;
                                 }

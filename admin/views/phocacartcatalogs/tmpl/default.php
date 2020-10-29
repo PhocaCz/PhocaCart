@@ -18,6 +18,5 @@ if (!empty($this->items)) {
 	$d['format']	= $this->t['format'];
 
 	echo $layout->render($d);
-	//exit;
 }
 ?>

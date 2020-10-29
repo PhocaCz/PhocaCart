@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$d                      = $displayData;
+$d = $displayData;
 
 
 if ($d['t']['display_webp_images'] == 1) {

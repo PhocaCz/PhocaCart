@@ -184,6 +184,10 @@ class PhocaCartCpModelPhocacartOrders extends JModelList
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
 				$searchInP =  array();
 
+				$searchInP[] = 'a.id LIKE '. $search;
+				$searchInP[] = 'a.order_number LIKE '. $search;
+				$searchInP[] = 'a.receipt_number LIKE '. $search;
+				$searchInP[] = 'a.invoice_number LIKE '. $search;
 				$searchInP[] = 'a.title LIKE '. $search;
 				$searchInP[] = 'a.alias LIKE '. $search;
 				$searchInP[] = 'a.comment LIKE '. $search;

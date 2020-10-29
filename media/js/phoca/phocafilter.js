@@ -257,7 +257,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 						 b) c=1-category&search=search - nothing will be removed from url to search filtered parameters
  * uniqueValue: c=1-category,c=2category is not unique value, price_from=100 is unique value
  * wait: wait for next parameter before reload and end the action (e.g. price with two values)
- * source: where the request comes, values: 1 filter, 2 search
+ * source: where the request comes, values: 1 filter, 2 search, 3 itemview (specific case)
  */
 
 
@@ -366,6 +366,8 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 	phFilterNewUrlSet	= phStringToArray(phFilterNewUrlSet);
 	phFilterNewUrlSet	= phCleanEmptyParams(phFilterNewUrlSet);
 	phFilterNewUrlSet	= phCleanAloneQuestionMark(phFilterNewUrlSet);
+
+
 	// Wait for next parameter
 	if (wait == 1) {
 		// Don't reload, wait for other parameter
@@ -379,6 +381,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 
 
 		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
+
 			phUpdatePageAndParts(phFilterNewUrlSet, source);// Update Main, Search, Filter
 			phFilterNewUrlSet = '';
 			phFilterNewUrlSetPreviousParamWaiting = 0;
@@ -410,10 +413,19 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
 	var urlItemsViewWithoutParams	= phVars['urlItemsViewWithoutParams'];
 	var phA = 1;
 
-	if (formType == "text") {
+
+	if (formType == 'itemview'){
+		// Specific case for item view (no filtering but setting unique url for product with attributes)
+		if(value === undefined) {
+			value = '';
+		}
+		phA = phSetFilter(param, value, 1, 0, 1, uniqueValue, wait, source);
+	} else if (formType == "text") {
 		//value = phEncode(value);
       	if (formAction == 1) {
-         	phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+
+			 phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+
       	} else {
 
          	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
@@ -464,10 +476,10 @@ function phChangeSearch(param, value, formAction) {
 
 	var filteredProductsOnly = isItemsView;
 	if (formAction == 1) {
-		
+
 		if (phParams['searchOptions'] == 1) {
-			
-	
+
+
 			//jQuery("#phSearchBoxSearchAllProducts:checked").val();
 			//jQuery("#phSearchBoxSearchAllProducts").attr("checked");
 		   if(jQuery("#phSearchBoxSearchAllProducts:checked").length > 0) {
@@ -477,7 +489,7 @@ function phChangeSearch(param, value, formAction) {
 		} else {
 			filteredProductsOnly = 0;// When options are disabled we always search without filtering
 		}
-		
+
 
 		phA = phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly,  1, 0, 2);
 	} else {

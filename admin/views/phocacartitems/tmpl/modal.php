@@ -34,7 +34,7 @@ if (!empty($editor)) {
 /*$searchFilterDesc = $this->filterForm->getFieldAttribute('search', 'description', null, 'filter');
 Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip', '#filter_search', array('title' => JText::_($searchFilterDesc), 'placement' => 'bottom'));
 */
-krumo("test");
+
 
 $iconStates = array(
     -2 => 'icon-trash',
