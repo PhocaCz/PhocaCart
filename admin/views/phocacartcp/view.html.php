@@ -9,6 +9,8 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 
+use Phoca\Render\Adminviews;
+
 class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 {
 	protected $t;
@@ -16,6 +18,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 	protected $s;
 
 	function display($tpl = null) {
+
 
 		$this->t	= PhocacartUtils::setVars();
 		$this->s    = PhocacartRenderStyle::getStyles();

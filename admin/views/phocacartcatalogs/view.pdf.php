@@ -37,6 +37,7 @@ class PhocaCartCpViewPhocacartCatalogs extends JViewLegacy
 
 		$this->items = PhocacartProduct::getProductsByCategories($cidA);
 
+		$this->document->setName(JText::_('COM_PHOCACART_CATALOG'));
 
 		parent::display();
 	}

@@ -51,7 +51,7 @@
 
 .js-stools .btn.btn-danger {
 	color: #fff !important;
-	background-color: #F76397 !important;
+	background-color: #F23855 !important;
 	
 	box-shadow: none !important;
 	text-shadow: none !important;
@@ -65,6 +65,13 @@
 	border-radius: 3px !important;
 }
 
+.btn-toolbar .btn-wrapper .btn {
+	border: 1px solid #3071a9 !important;
+	border-radius: 2px !important;
+}
+
+
+
 .btn:hover, .btn:focus,
 .btn:visited, .btn:active {
 /*	background: #fff !important;
@@ -74,32 +81,61 @@
 
 
 
-
 .btn-toolbar .btn-success,
+.btn-toolbar .btn-wrapper .btn-success,
 .btn-success {
-    background-color: #00B19D !important;
+    background-color: #28AB8E !important;
     background-image: none !important;
     background-repeat: none !important;
-    border-color: #00B19D !important;
-    border: 1px solid #00B19D  !important;
+    border-color: #28AB8E !important;
+    border: 0px solid #28AB8E  !important;
     color: #fff !important;
 	box-shadow: none !important;
 }
 
 .btn-success:hover, .btn-success:focus {
-	 background-color: #00B19D !important;
-	 border-color: #00B19D !important;
-	 border: 1px solid #00B19D  !important;
+	 background-color: #28AB8E !important;
+	 border-color: #28AB8E !important;
+	 border: 0px solid #28AB8E  !important;
 }
 
 .btn-toolbar .btn-success {
-    border: 0px solid #00B19D  !important;
+    border: 0px solid #28AB8E  !important;
 }
 
 .btn-toolbar .btn-success:hover,
 .btn-toolbar .btn-success:focus {
-	 border: 0px solid #00B19D  !important;
+	 border: 0px solid #28AB8E  !important;
 }
+
+.btn-toolbar .button-new.btn-success,
+.btn-toolbar .btn-wrapper .button-new.btn-success,
+.button-new.btn-success {
+    background-color: #3071a9 !important;
+    background-image: none !important;
+    background-repeat: none !important;
+    border-color: #3071a9 !important;
+    border: 0px solid #3071a9  !important;
+    color: #fff !important;
+	box-shadow: none !important;
+}
+
+.button-new.btn-success:hover, .button-new.btn-success:focus {
+	 background-color: #3071a9 !important;
+	 border-color: #3071a9 !important;
+	 border: 0px solid #3071a9  !important;
+}
+
+.btn-toolbar .button-new.btn-success {
+    border: 0px solid #3071a9  !important;
+}
+
+.btn-toolbar .button-new.btn-success:hover,
+.btn-toolbar .button-new.btn-success:focus {
+	 border: 0px solid #3071a9  !important;
+}
+
+
 
 /*
 .alert-warning {
@@ -108,6 +144,7 @@
 }*/
 
 .btn-toolbar .btn-warning,
+.btn-toolbar .btn-wrapper .btn-warning,
 .btn-warning {
 	background-image: none !important;
     background-repeat: none !important;
@@ -142,6 +179,10 @@
 	 /* border: 0px !important; */
 }
 
+.btn-toolbar .btn-wrapper .btn.btn-primary {
+	border: 1px solid #3BAFDA !important;
+}
+
 .btn-toolbar .btn-buy,
 .btn-buy {
 	background-image: none !important;
@@ -172,26 +213,49 @@
     background-repeat: none !important;
     color: #fff !important;
 	box-shadow: none !important;
-	background-color: #F76397 !important;
-	border-color: #F76397 !important;
+	background-color: #F23855 !important;
+	border-color: #F23855 !important;
 	/*border: 0px !important;*/
 	border: 0px !important;
 }
 
 .btn-danger:hover, .btn-danger:focus {
-	 background-color: #F76397 !important;
-	 border-color: #F76397 !important;
-	 /*border: 1px solid #f76397 !important;*/
+	 background-color: #F23855 !important;
+	 border-color: #F23855 !important;
+	 /*border: 1px solid #F23855 !important;*/
 	 border: 0px !important;
 }
 
-.controls .btn-group.btn-group-yesno > .btn.active.btn-danger {
-	border: 2px solid #F76397 !important;
+.btn-toolbar .btn-wrapper .btn.btn-danger {
+	border: 1px solid #F23855 !important;
 }
-.controls .btn-group.btn-group-yesno > .btn.active.btn-success {
-	border: 2px solid #00B19D !important;
+
+/*
+.controls .btn-group.btn-group-yesno > .btn.btn-danger {
+	border: 2px solid #F23855 !important;
 }
-.controls .btn-group.btn-group-yesno > .btn.active.btn-primary {
+.controls .btn-group.btn-group-yesno > .btn.btn-success {
+	border: 2px solid #3071a9 !important;
+}
+.controls .btn-group.btn-group-yesno > .btn.btn-primary {
+	border: 2px solid #3BAFDA !important;
+}*/
+
+.controls .btn-group.btn-group-yesno > .btn.active.btn-success,
+.controls .btn-group.btn-group.radio > .btn.active.btn-success {
+	background: #28AB8E !important;
+}
+
+.controls .btn-group.btn-group-yesno > .btn.active.btn-danger,
+.controls .btn-group.btn-group.radio > .btn.active.btn-danger {
+	border: 2px solid #F23855 !important;
+}
+.controls .btn-group.btn-group-yesno > .btn.active.btn-success,
+.controls .btn-group.btn-group.radio > .btn.active.btn-success {
+	border: 2px solid #28AB8E !important;
+}
+.controls .btn-group.btn-group-yesno > .btn.active.btn-primary,
+.controls .btn-group.btn-group.radio > .btn.active.btn-primary {
 	border: 2px solid #3BAFDA !important;
 }
 
@@ -492,3 +556,110 @@ table.table-striped tr th, table.table-striped tr th a {
     margin-right: 2px;
     line-height: 14px;
 }*/
+
+
+/* Hide boxes in CP */
+
+/*
+.items-item-box,
+.categories-item-box,
+.specifications-item-box,
+.manufacturers-item-box,/*
+.orders-item-box,
+.statuses-item-box,
+.stockstatuses-item-box,
+.shippings-item-box,
+.countries-item-box,
+.regions-item-box,
+.zones-item-box,
+.payments-item-box,
+.currencies-item-box,
+.taxes-item-box,
+.users-item-box,
+.groups-item-box,
+.rewards-item-box,
+.formfields-item-box,
+.reviews-item-box,
+.coupons-item-box,
+.discounts-item-box,
+.downloads-item-box,
+.tags-item-box,
+.parameters-item-box,
+.parametervalues-item-box,
+.feeds-item-box,
+.wishlists-item-box,
+.questions-item-box,
+.times-item-box,
+.submititems-item-box,
+.statistics-item-box,
+.reports-item-box,
+.hits-item-box,
+.imports-item-box,
+.exports-item-box,
+.logs-item-box,
+.info-item-box,
+.extensions-item-box,
+.vendors-item-box,
+.sections-item-box,
+.units-item-box {
+	display: none;
+}
+
+
+/* Hide items in left menu 
+.nav.nav-list li {
+	display: none;
+}
+
+.nav.nav-list li:nth-child(1),
+.nav.nav-list li:nth-child(2), 
+.nav.nav-list li:nth-child(3),
+.nav.nav-list li:nth-child(6)   {
+	display:block;
+}
+
+/*
+.menu-icon-16-pc-menu-item,
+.menu-icon-16-pc-menu-categorie,
+.menu-icon-16-pc-menu-specification,
+.menu-icon-16-pc-menu-manufacturer,/*
+.menu-icon-16-pc-menu-order,
+.menu-icon-16-pc-menu-orderstatus,
+.menu-icon-16-pc-menu-stockstatus,
+.menu-icon-16-pc-menu-shipping,
+.menu-icon-16-pc-menu-country,
+.menu-icon-16-pc-menu-region,
+.menu-icon-16-pc-menu-zone,
+.menu-icon-16-pc-menu-payment,
+.menu-icon-16-pc-menu-currency,
+.menu-icon-16-pc-menu-tax,
+.menu-icon-16-pc-menu-user,
+.menu-icon-16-pc-menu-group,
+.menu-icon-16-pc-menu-reward,
+.menu-icon-16-pc-menu-formfields,
+.menu-icon-16-pc-menu-review,
+.menu-icon-16-pc-menu-coupon,
+.menu-icon-16-pc-menu-discount,
+.menu-icon-16-pc-menu-download,
+.menu-icon-16-pc-menu-tag,
+.menu-icon-16-pc-menu-parameter,
+.menu-icon-16-pc-menu-parametervalue,
+.menu-icon-16-pc-menu-feed,
+.menu-icon-16-pc-menu-wishlist,
+.menu-icon-16-pc-menu-question,
+.menu-icon-16-pc-menu-time,
+.menu-icon-16-pc-menu-submititem,
+.menu-icon-16-pc-menu-statistics,
+.menu-icon-16-pc-menu-report,
+.menu-icon-16-pc-menu-hits,
+.menu-icon-16-pc-menu-import,
+.menu-icon-16-pc-menu-export,
+.menu-icon-16-pc-menu-log,
+.menu-icon-16-pc-menu-info-item-box,
+.menu-icon-16-pc-menu-extension,
+.menu-icon-16-pc-menu-vendor,
+.menu-icon-16-pc-menu-section,
+.menu-icon-16-pc-menu-unit {
+	display: none !important;
+}
+*/

@@ -45,7 +45,8 @@
 }
 
 .ph-rating .br-widget a {
-    background: url('../img/star.png');
+    /*background: url('../img/star.png');*/
+    background: url(../img/star.svg);
     width: 24px;
     height: 24px;
     display: block;
@@ -63,7 +64,8 @@ only screen and (-webkit-min-device-pixel-ratio: 1.5),
 only screen and (min-device-pixel-ratio : 1.5),
 (min-resolution: 192dpi) {
     .ph-rating .br-widget a {
-        background: url('../img/star@2x.png');
+        /*background: url('../img/star@2x.png');*/
+		background: url('../img/star@2x.svg');
         background-size: 24px 48px;
     }
 }

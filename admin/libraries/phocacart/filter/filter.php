@@ -261,6 +261,7 @@ class PhocacartFilter
         $p['manufacturer_alias'] = $pC->get('manufacturer_alias', 'manufacturer');
         $p['manufacturer_alias'] = $p['manufacturer_alias'] != '' ? trim(PhocacartText::filterValue($p['manufacturer_alias'], 'alphanumeric')) : 'manufacturer';
 
+        $p['display_products_all_subcategories'] = $pC->get('display_products_all_subcategories', 0);
 
         // $db = JFactory::getDBO();
         $o = array();
@@ -393,14 +394,31 @@ class PhocacartFilter
             || $this->limit_price_category == 1 || $this->limit_manufacturers_category == 1 || $this->limit_specifications_category == 1) {
             if ((int)$category['id'] > 0) {
                 $activeCategory[] = (int)$category['id'];
+
+                // Display not only products from category but even from its subcategories in parent category
+                if ($p['display_products_all_subcategories'] == 1) {
+                    $categoryChildrenId = PhocacartCategoryMultiple::getCategoryChildrenString((int)$category['id'], (string)$category['id']);
+                    if ($categoryChildrenId !== '') {
+                        $activeCategoryChildren = explode(',', $categoryChildrenId);
+                        foreach ($activeCategoryChildren as $k => $v) {
+                            $activeCategory[] = (int)$v;
+                        }
+                    }
+                }
             }
+
 
             if (!empty($data['getparams'])) {
                 foreach ($data['getparams'] as $k => $v) {
-                    $activeCategory[] = (int)$v;
+
+                    if ((int)$v > 0) {
+                        $activeCategory[] = (int)$v;
+                    }
                 }
             }
+
             $activeCategory = array_unique($activeCategory);
+
             $activeProducts = PhocacartProduct::getProducts(0, 0, 1, 0, true, false, false, 0, $activeCategory, 0, array(0, 1), 'a.id', 'column');
 
             if ($this->limit_attributes_category == 1) {

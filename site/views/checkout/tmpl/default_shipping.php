@@ -6,6 +6,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die();
 
 $layoutI 		= new JLayoutFile('icon_checkout_status', null, array('component' => 'com_phocacart'));
@@ -91,6 +94,34 @@ if ($this->a->shippingnotused == 1) {
 
 		echo '<div class="ph-shipping-title">'.$this->t['shippingmethod']['title'].'</div>';
 
+		// Event
+		if (isset($this->t['shippingmethod']['method']) && $this->t['shippingmethod']['method'] != '') {
+
+			JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['shippingmethod']['method'])));
+			$eventData 					= array();
+			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($this->t['shippingmethod']['method']));
+
+
+			$results = Factory::getApplication()->triggerEvent('PCSgetShippingBrancheInfo', array('com_phocacart.checkout', $this->t['shippingmethod']['method'], $eventData));
+
+			if (!empty($results)) {
+				echo trim(implode("\n", $results));
+			}
+			/*
+			// INSTRUCTINS: test the plugin in event this way:
+
+			protected $name 	= 'plugin_name';
+
+			function PCSgetShippingBrancheInfo($context, $shippingMethod, $eventData) {
+				if (!isset($eventData['pluginname']) || isset($eventData['pluginname']) && $eventData['pluginname'] != $this->name) {
+					return false;
+				}
+			}
+			*/
+
+		}
+
+
 		if ($this->t['display_shipping_desc'] && $this->t['shippingmethod']['description'] != '') {
 			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
 		}
@@ -173,6 +204,19 @@ if ($this->a->shippingnotused == 1) {
 		echo '</label>';
 		echo '</div>';
 
+		// Event
+		if (isset($v->method) && $v->method != '') {
+
+			JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
+			$eventData 					= array();
+			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
+
+			$results = Factory::getApplication()->triggerEvent('PCSgetShippingBranches', array('com_phocacart.checkout', $v, $eventData));
+
+			if (!empty($results)) {
+				echo trim(implode("\n", $results));
+			}
+		}
 
 		if ($this->t['display_shipping_desc'] && $v->description != '') {
 			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';

@@ -421,4 +421,46 @@ class PhocacartCategoryMultiple
 		}
 		return 0;
 	}
+
+
+	public static function getCategoryChildrenString($id, $children = '') {
+
+        $db 	= JFactory::getDBO();
+        $query 	= "SELECT id FROM #__phocacart_categories WHERE parent_id = ".(int)$id;
+        $db->setQuery($query);
+        $categories = $db->loadColumn();
+
+        if (!empty($categories)) {
+            foreach ($categories as $k => $v) {
+
+                if ($children != '') {
+                    $children .= ',';
+                }
+                $children .= $v;
+                $children = self::getCategoryChildrenString($v, $children);
+
+            }
+        }
+
+        return $children;
+
+
+    }
+
+    public static function getCategoryChildrenArray($id) {
+
+        $db 	= JFactory::getDBO();
+        $query 	= "SELECT id FROM #__phocacart_categories WHERE parent_id = ".(int)$id;
+        $db->setQuery($query);
+        $categories = $db->loadColumn();
+
+        $children = array();
+
+        if (!empty($categories)) {
+            foreach ($categories as $k => $v) {
+                $children[$v] = self::getCategoryChildrenArray($v);
+            }
+        }
+        return $children;
+    }
 }

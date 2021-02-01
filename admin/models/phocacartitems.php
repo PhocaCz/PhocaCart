@@ -6,6 +6,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Language\Text;
+
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.modellist' );
 jimport( 'joomla.filesystem.folder' );
@@ -15,9 +18,44 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 {
 	protected $option 	= 'com_phocacart';
 
-	public function __construct($config = array())
-	{
-		if (empty($config['filter_fields'])) {
+	//protected $c 		= false;
+	protected $columns	= array();
+	protected $column_full	= array();
+
+
+
+	public function __construct($config = array()) {
+
+		$paramsC = PhocacartUtils::getComponentParameters();
+		$c = new PhocacartRenderAdmincolumns();
+
+        $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
+        $admin_columns_products = explode(',', $admin_columns_products);
+
+		$options                = array();
+		$options['type']    	= 'data';
+		$options['association'] = JLanguageAssociations::isEnabled();
+
+		if (!empty($admin_columns_products)) {
+			foreach ($admin_columns_products as $k => $v) {
+				$v = PhocacartText::parseDbColumnParameter($v);
+				$data = $c->header($v, $options);
+				if (isset($data['column']) && $data['column'] != '') {
+					$this->columns[] = $data['column'];
+					$this->columns_full[] = $data;
+				}
+			}
+		}
+
+		// Add ordering and fields needed for filtering (search tools)
+		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'published', 'language'), $this->columns);
+
+
+		//$config['filter_fields'][] = 'pc.ordering';
+
+
+
+		/*if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'id', 'a.id',
 				'title', 'a.title',
@@ -45,7 +83,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
                 $config['filter_fields'][] = 'association';
             }
 
-		}
+		}*/
+
 
 		parent::__construct($config);
 	}
@@ -80,6 +119,9 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', null);
 		$this->setState('filter.category_id', $categoryId);
 
+		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
+		$this->setState('filter.manufacturer_id', $categoryId);
+
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
@@ -112,6 +154,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.category_id');
+		$id	.= ':'.$this->getState('filter.manufacturer_id');
         $id .= ':'.$this->getState('filter.language');
 		$id	.= ':'.$this->getState('filter.item_id');
 
@@ -129,7 +172,27 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
-		$columns	= 'DISTINCT a.id, a.title, a.image, a.published, a.checked_out, a.checked_out_time, a.alias, a.featured, a.price, a.price_original, a.language, a.hits, a.sku, a.stock';
+
+
+		// Needed columns everytime
+		$col = array();
+		$col[] = 'a.id';
+		$col[] = 'a.title';
+		$col[] = 'a.alias';
+		$col[] = 'a.alias';
+		$col[] = 'a.checked_out';
+		$col[] = 'a.checked_out_time';
+		$col[] = 'a.published';
+		$col[] = 'a.ordering';
+		$col[] = 'a.featured';
+		$col[] = 'a.language';
+
+
+		$col = array_merge($col, $this->columns);
+		$col = array_unique($col);
+
+
+		$columns	= 'DISTINCT ' .implode(',', $col);
 		// GROUP BY not used
 		//$groupsFull	= $columns . ', ' .'a.tax_id, a.manufacturer_id, a.description, l.title, uc.name, ag.title';
 		//$groupsFast	= 'a.id';
@@ -251,6 +314,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$categoryId = $this->getState('filter.category_id');
 
 
+
 		// Filter by category.
 		if ($orderCol == 'pc.ordering' || is_numeric($categoryId)) {
 			// Ask only when really needed
@@ -263,6 +327,12 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		if (is_numeric($categoryId)) {
 			//$query->where('a.catid = ' . (int) $categoryId);
 			$query->where('pc.category_id = ' . (int) $categoryId);
+		}
+
+		$manufacturerId = $this->getState('filter.manufacturer_id');
+		if (is_numeric($manufacturerId)) {
+			$query->join('LEFT', '#__phocacart_manufacturers AS pm ON pm.id = a.manufacturer_id');
+			$query->where('a.manufacturer_id = ' . (int) $manufacturerId);
 		}
 
 
@@ -350,6 +420,32 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
 
 		return $query;
+	}
+
+	public function getFilterForm($data = array(), $loadData = true)
+	{
+		$form      = parent::getFilterForm($data, $loadData);
+
+		if ($form)  {
+			$field = $form->getField('fullordering', 'list');
+
+			if (!empty($this->columns_full)) {
+				foreach ($this->columns_full as $k => $v) {
+
+					if (isset($v['column']) && $v['column'] != '') {
+						//$field->addOption(Text::_($data['title']. '_ASC'), array('value' => $data['column'] . ' ASC'));
+						//$field->addOption(Text::_($data['title']. '_DESC'), array('value' => $data['column'] . ' DESC'));
+						// Save hundreds of strings in translation
+						// DEBUG Language can mark it as not translated erroneously
+
+						$field->addOption(Text::_($v['title']). ' ' . Text::_('COM_PHOCACART_ASCENDING'), array('value' => $v['column'] . ' ASC'));
+						$field->addOption(Text::_($v['title']). ' ' . Text::_('COM_PHOCACART_DESCENDING'), array('value' => $v['column'] . ' DESC'));
+					}
+				}
+			}
+		}
+
+		return $form;
 	}
 }
 ?>

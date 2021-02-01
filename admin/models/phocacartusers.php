@@ -87,7 +87,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$query	= $db->getQuery(true);
 
 		$columns	= 'a.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city, a.ordering, a.email';
-		$groupsFull	= $columns . ', ' . 'u.id, u.name, u.username, u.email, ou.user_id, c.date, c.user_id, c.vendor_id, c.ticket_id, c.unit_id, c.section_id, uc.name';
+		$groupsFull	= $columns = $columns . ', ' . 'u.id, u.name, u.username, u.email, ou.user_id, c.date, c.user_id, c.vendor_id, c.ticket_id, c.unit_id, c.section_id, uc.name';
 		$groupsFast	= 'a.id';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -101,6 +101,10 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 		// Join over the users for the checked out user.
 
+		// GROUP_CONCAT(c.date ORDER BY c.date) AS cartdate,
+		$query->select('c.date AS cartdate, c.user_id as cartuserid, c.vendor_id as cartvendorid, c.ticket_id as cartticketid, c.unit_id as cartunitid, c.section_id as cartsectionid');
+		$query->join('LEFT', '#__phocacart_cart_multiple AS c ON c.user_id = u.id');
+
 
 		$query->select('u.name AS user_name, u.username AS user_username, u.id as user_id, u.email AS user_email');
 		$query->join('LEFT', '#__phocacart_users AS a ON a.user_id=u.id');
@@ -109,9 +113,19 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$query->join('LEFT', '#__phocacart_orders AS ou ON a.user_id=ou.user_id');
 
 
-		// GROUP_CONCAT(c.date ORDER BY c.date) AS cartdate,
-		$query->select('c.date AS cartdate, c.user_id as cartuserid, c.vendor_id as cartvendorid, c.ticket_id as cartticketid, c.unit_id as cartunitid, c.section_id as cartsectionid');
-		$query->join('LEFT', '#__phocacart_cart_multiple AS c ON c.user_id = u.id');
+
+		$query->select('uv.name AS vendor_name, uv.username AS vendor_username');
+		$query->join('LEFT', '#__users AS uv ON uv.id=c.vendor_id');
+
+
+		$query->select('sc.title AS section_name');
+		$query->join('LEFT', '#__phocacart_sections AS sc ON sc.id=c.section_id');
+
+		$query->select('un.title AS unit_name');
+		$query->join('LEFT', '#__phocacart_units AS un ON un.id=c.unit_id');
+
+
+
 
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');

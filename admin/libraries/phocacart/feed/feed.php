@@ -34,68 +34,14 @@ class PhocacartFeed
 
 	public static function getFeedPluginMethods($namePlugin = '', $returnFormItem = 0) {
 
-		$db 	= JFactory::getDBO();
-		$lang	= JFactory::getLanguage();
-		$client	= JApplicationHelper::getClientInfo(0);
-		$query = 'SELECT a.extension_id , a.name, a.element, a.folder'
-				.' FROM #__extensions AS a'
-				.' WHERE a.type = '.$db->quote('plugin')
-				.' AND a.enabled = 1'
-				.' AND a.folder = ' . $db->quote('pcf');
+		$plugin = array();
+		$plugin['name'] = $namePlugin;
+		$plugin['group'] = 'pcf';
+		$plugin['title'] = 'Phoca Cart Feed';
+		$plugin['selecttitle'] = JText::_('COM_PHOCACART_SELECT_FEED_PLUGIN');
+		$plugin['returnform'] = $returnFormItem;
 
-		if ($namePlugin != '') {
-			$query .= 'AND a.element = '. $db->quote($namePlugin);
-		}
-
-		$query .= ' ORDER BY a.ordering';
-		$db->setQuery($query);
-		$plugins = $db->loadObjectList();
-
-
-		if ($namePlugin == '') {
-			$i 		= 0;
-			$p[0]['text'] 	= '- ' .JText::_('COM_PHOCACART_SELECT_FEED_PLUGIN').' -';
-			$p[0]['value'] 	= '';
-		} else {
-			$i 		= -1;
-		}
-		if (!empty($plugins)) {
-			foreach($plugins as $k => $v) {
-
-				// Load the core and/or local language file(s).
-				$folder 	= 'pcf';
-				$element	= $v->element;
-			$lang->load('plg_'.$folder.'_'.$element, JPATH_ADMINISTRATOR, null, false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, $client->path.'/plugins/'.$folder.'/'.$element, null, false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, $client->path.'/plugins/'.$folder.'/'.$element, $lang->getDefault(), false, false);
-
-				$i++;
-
-				$name = JText::_(strtoupper($v->name) );
-				$name = str_replace('Plugin', '', $name);
-				$name = str_replace('Phoca Cart Payment -', '', $name);
-
-				$p[$i]['text'] = JText::_($name);
-				$p[$i]['value'] = $v->element;
-			}
-
-		}
-
-		if ($returnFormItem == 0) {
-			return $plugins;
-		}
-
-
-		if ($namePlugin != '' && !empty($p[0])) {
-			return $p[0];
-		}
-
-
-		return $p;
-
-
-
+		return PhocacartPlugin::getPluginMethods($plugin);
 	}
 }
 ?>

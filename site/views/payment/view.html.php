@@ -48,7 +48,10 @@ class PhocaCartViewPayment extends JViewLegacy
 				if (isset($paymentO->method)) {
 					//$dispatcher = J EventDispatcher::getInstance();
 					JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
-					\JFactory::getApplication()->triggerEvent('PCPbeforeSetPaymentForm', array(&$proceed, $this->p, $paymentO->params, $o));
+					$eventData 					= array();
+					$proceed 					= '';
+					$eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
+					\JFactory::getApplication()->triggerEvent('PCPbeforeSetPaymentForm', array(&$proceed, $this->p, $paymentO->params, $o, $eventData));
 
 
 				}

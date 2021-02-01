@@ -38,7 +38,11 @@ class PhocaCartViewItems extends JViewLegacy
         $this->t['ajax']       = 0;
 
 
+
         // PARAMS
+
+		$this->t['view']			= 'items';
+		$this->t['items_layout_plugin']	= $this->p->get( 'items_layout_plugin', '');
         $this->t['display_new']   = $this->p->get('display_new', 0);
         $this->t['cart_metakey']  = $this->p->get('cart_metakey', '');
         $this->t['cart_metadesc'] = $this->p->get('cart_metadesc', '');
@@ -68,6 +72,7 @@ class PhocaCartViewItems extends JViewLegacy
         $this->t['dynamic_change_price']        = $this->p->get('dynamic_change_price', 0);
         $this->t['dynamic_change_stock']        = $this->p->get('dynamic_change_stock', 0);
         $this->t['dynamic_change_id']           = $this->p->get('dynamic_change_id', 0);
+        $this->t['remove_select_option_attribute']= $this->p->get( 'remove_select_option_attribute', 1 );
         $this->t['add_compare_method']          = $this->p->get('add_compare_method', 0);
         $this->t['add_wishlist_method']         = $this->p->get('add_wishlist_method', 0);
         $this->t['display_addtocart']           = $this->p->get('display_addtocart', 1);
@@ -107,6 +112,8 @@ class PhocaCartViewItems extends JViewLegacy
         $this->t['lazy_load_categories']          = $this->p->get('lazy_load_categories', 0);    // Subcategories
         $this->t['medium_image_width']            = $this->p->get('medium_image_width', 300);
         $this->t['medium_image_height']           = $this->p->get('medium_image_height', 200);
+        $this->t['small_image_width']             = $this->p->get('small_image_width', 180);
+        $this->t['small_image_height']            = $this->p->get('small_image_height', 120);
         $this->t['display_webp_images']           = $this->p->get('display_webp_images', 0);
         $this->t['category_display_labels']       = $this->p->get('category_display_labels', 2);
         $this->t['category_display_tags']         = $this->p->get('category_display_tags', 0);
@@ -172,7 +179,9 @@ class PhocaCartViewItems extends JViewLegacy
         $touchSpinJs = $media->loadTouchSpin('quantity', $this->s['i']);// only css, js will be loaded in ajax success
         $media->loadPhocaSwapImage($this->t['dynamic_change_image']);
 
+
         if ($this->t['hide_attributes_category'] == 0) {
+            $media->loadPhocaAttribute(1);
             $media->loadPhocaAttributeRequired(1); // Some of the attribute can be required and can be a image checkbox
         }
 
@@ -227,7 +236,23 @@ class PhocaCartViewItems extends JViewLegacy
         $results                               = \JFactory::getApplication()->triggerEvent('PCVonItemsBeforeHeader', array('com_phocacart.items', &$this->items, &$this->p));
         $this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
         // Foreach values are rendered in default foreaches
+
+        // Layout plugins - completely new layout including foreach
+        $this->t['pluginlayout']        = false;
+
+        if ($this->t['items_layout_plugin'] != '') {
+            $this->t['items_layout_plugin']     = PhocacartText::filterValue($this->t['items_layout_plugin'], 'alphanumeric2');
+            $this->t['pluginlayout'] 	        = JPluginHelper::importPlugin('pcl', $this->t['items_layout_plugin']);
+        }
+
+
+		if ($this->t['pluginlayout']) {
+            $this->t['show_switch_layout_type'] = 0;
+        }
         // END Plugins --------------------------------------
+
+
+
 
         parent::display($tpl);
 

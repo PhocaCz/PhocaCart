@@ -6,6 +6,10 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
@@ -117,8 +121,31 @@ class PhocaCartModelCategories extends JModelLegacy
 		. " ORDER BY c.".$categoriesOrdering;*/
 
 
-		$columns	= 'c.id, c.title, c.alias, c.image, c.description, c.icon_class, c.image as image, c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat';
-		$groupsFull	= 'c.id, c.title, c.alias, c.image, c.description, c.icon_class, c.image, c.parent_id';
+		// Views Plugin can load additional columns
+		$additionalColumns = array();
+		$pluginLayout 	= PluginHelper::importPlugin('pcv');
+		if ($pluginLayout) {
+			$pluginOptions 				= array();
+			$eventData 					= array();
+			Factory::getApplication()->triggerEvent('PCVonCategoriesBeforeLoadColumns', array('com_phocacart.categories', &$pluginOptions, $eventData));
+
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+					}
+				}
+			}
+		}
+
+		$baseColumns = array('c.id', 'c.title', 'c.alias', 'c.image', 'c.description', 'c.icon_class');
+
+		$col = array_merge($baseColumns, $additionalColumns);
+		$col = array_unique($col);
+
+
+		$columns	= implode(',', $col) . ', c.parent_id as parentid, COUNT(c.id) AS numdoc, c.parent_id, 0 AS numsubcat';
+		$groupsFull	= implode(',', $col) . ', c.parent_id';
 		$groupsFast	= 'c.id';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -141,7 +168,6 @@ class PhocaCartModelCategories extends JModelLegacy
 						 #__phocacart_categories as s
 						 on s.parent_id = c.id
 					group by c.id";*/
-
 
 		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 

@@ -241,7 +241,7 @@ class PhocaCartViewPos extends JViewLegacy
 		}
 		$this->t['paymentid'] 	= $this->cart->getPaymentId();
 		if (isset($this->t['paymentid']) && (int)$this->t['paymentid'] > 0 && $this->t['paymentedit'] == 0) {
-			$this->cart->addPaymentCosts($this->t['paymentid']);
+			$this->cart->addPaymentCosts($this->t['paymentid']);// validity of payment will be checked
 			$this->t['paymentmethodexists'] = true;
 		}
 

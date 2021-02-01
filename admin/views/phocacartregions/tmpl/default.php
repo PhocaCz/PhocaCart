@@ -94,12 +94,17 @@ if (is_array($this->items)) {
         $linkEdit   = JRoute::_($urlEdit . $item->id);
         $linkTax    = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacartedittax&type=2&tmpl=component&id=' . (int)$item->id);
 
-        $iD = $i % 2;
+        /*$iD = $i % 2;
         echo "\n\n";
         //echo '<tr class="row'.$iD.'" sortable-group-id="0" item-id="'.$item->id.'" parents="0" level="0">'. "\n";
         echo '<tr class="row' . $iD . '" sortable-group-id="' . $item->country_id . '" >' . "\n";
         echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
-        echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id), "small");
+        echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id), "small");*/
+
+        echo $r->startTr($i, isset($item->country_id) ? (int)$item->country_id : 0);
+
+        echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
+        echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
 
         $checkO = '';
         if ($item->checked_out) {

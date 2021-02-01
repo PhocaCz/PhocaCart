@@ -59,6 +59,13 @@ class PhocaCartCpModelPhocacartParameterValues extends JModelList
 
 		// List state information.
 		parent::populateState($ordering, $direction);
+
+
+		$parameterId = $app->getUserStateFromRequest($this->context.'.filter.parameter_id', 'filter_parameter_id');
+
+		if ($parameterId == 0) {
+		   $this->setState('filter.parameter_id', '');
+		}
 	}
 
 	protected function getStoreId($id = '')

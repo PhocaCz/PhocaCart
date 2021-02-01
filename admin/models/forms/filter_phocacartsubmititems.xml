@@ -34,6 +34,10 @@
 			<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
 			<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>
 			<option value="a.published DESC" >COM_PHOCACART_PUBLISHED_DESC</option>
+			<option value="user_username ASC">COM_PHOCACART_USER_ASC</option>
+			<option value="user_username DESC">COM_PHOCACART_USER_DESC</option>
+			<option value="a.date_submit ASC">COM_PHOCACART_DATE_ASC</option>
+			<option value="a.date_submit DESC">COM_PHOCACART_DATE_DESC</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

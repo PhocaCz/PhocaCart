@@ -68,6 +68,8 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 			throw new Exception(implode("\n", $errors), 500);
 			return false;
 		}
+		
+		$this->document->setName(JText::_('COM_PHOCACART_REPORT'));
 
 		parent::display('report');
 	}

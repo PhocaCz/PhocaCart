@@ -29,7 +29,7 @@ class JFormFieldPhocaCartMailingList extends JFormField
         $attr .= ((string)$this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
         $attr .= $this->element['onchange'] ? ' onchange="' . (string)$this->element['onchange'] . '" ' : ' ';
         $multiple = ((string)$this->element['multiple'] == 'true') ? TRUE : FALSE;
-        $manager = $this->element['manager'] ? $this->element['manager'] : '';
+        $manager = $this->element['manager'] ? (string)$this->element['manager'] : '';
 
         $value = $this->value;
 

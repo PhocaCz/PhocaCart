@@ -41,6 +41,6 @@ echo '</div>';//end span10
 echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
-echo PhocacartRenderAdminjs::renderAjaxTopHtml();
+
 ?>
 

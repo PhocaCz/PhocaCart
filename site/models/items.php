@@ -6,6 +6,11 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
@@ -21,16 +26,22 @@ class PhocaCartModelItems extends JModelLegacy
 	protected $pagination			= null;
 	protected $total				= null;
 	protected $ordering				= null;
+	protected $items_layout_plugin	= '';
 
 	public function __construct() {
 		parent::__construct();
 
-		$app				= JFactory::getApplication();
-		$config 			= JFactory::getConfig();
+
+		$app				= Factory::getApplication();
+		$config 			= Factory::getConfig();
 		$paramsC 			= $app->getParams();
 		$item_pagination	= $paramsC->get( 'item_pagination_default', '20' );
 		$item_ordering		= $paramsC->get( 'item_ordering', 1 );
 		$layout_type		= $paramsC->get( 'layout_type', 'grid' );
+
+		// Items View Menu link parameters
+		$items_view_id_cats	= $paramsC->get( 'items_view_id_cats', array() );
+		$this->items_layout_plugin	= $paramsC->get( 'items_layout_plugin', '' );
 
 
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
@@ -54,8 +65,25 @@ class PhocaCartModelItems extends JModelLegacy
 		$this->setState('manufacturer', $app->input->get($manufacturer_alias, '', 'string'));
 		$this->setState('price_from', $app->input->get('price_from', '', 'float'));
 		$this->setState('price_to', $app->input->get('price_to', '', 'float'));
-		$this->setState('c', $app->input->get('c', '', 'string')); // Category More (All Categories)
+
+		// CATEGORIES
+		// 1) there can be set one category per ID
+		// 2) there can be set more categories per c parameter
+		// 3) there can be set more categories by menu link parameters. If menu link parameter is used, then 2) is deactivated
+		//    because if somebody wants to force displaying only some categories, another cannot be displayed e.g. per URL parameters
+		//    E.g. we want to display only category 1 and 3 in items view and user even set c=1,2,3 in URL - so the 2 will be just ignored
+
+		// 1)
 		$this->setState('id', $app->input->get('id', '', 'int')); // Category ID (Active Category)
+
+		// 2) 3)
+		if (!empty($items_view_id_cats)) {
+			$this->setState('c', implode(',', $items_view_id_cats));
+		} else {
+			$this->setState('c', $app->input->get('c', '', 'string')); // Category More (All Categories)
+		}
+
+
 		$this->setState('a', $app->input->get('a', '', 'array')); // Attributes
 		$this->setState('s', $app->input->get('s', '', 'array')); // Specifications
 		$parameters = PhocacartParameter::getAllParameters();
@@ -121,7 +149,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 	protected function getItemListQuery($count = 0) {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -160,7 +188,7 @@ class PhocaCartModelItems extends JModelLegacy
         }
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
@@ -340,6 +368,60 @@ class PhocaCartModelItems extends JModelLegacy
 
 		}
 
+		// Items Layout Plugin can change ordering
+		// Items Layout Plugin can load additional columns
+		$additionalColumns = array();
+		if ($this->items_layout_plugin != '') {
+			$this->items_layout_plugin = PhocacartText::filterValue($this->items_layout_plugin, 'alphanumeric2');
+			$pluginLayout 	= PluginHelper::importPlugin('pcl', $this->items_layout_plugin);
+			if ($pluginLayout) {
+				$pluginOptions 				= array();
+				$eventData 					= array();
+				$eventData['pluginname'] 	= $this->items_layout_plugin;
+				Factory::getApplication()->triggerEvent('PCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+
+				if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
+					$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
+					if ($pluginOrdering != '') {
+						$itemOrdering = $pluginOrdering . ',' . $itemOrdering;
+					}
+				}
+
+				if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+					if (!empty($pluginOptions['columns'])) {
+						foreach ($pluginOptions['columns'] as $k => $v) {
+							$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+						}
+					}
+				}
+			}
+		}
+
+		// Views Plugin can load additional columns
+		$pluginLayout 	= PluginHelper::importPlugin('pcv');
+		if ($pluginLayout) {
+			$pluginOptions 				= array();
+			$eventData 					= array();
+			Factory::getApplication()->triggerEvent('PCVonItemsBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
+
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+					}
+				}
+			}
+		}
+
+		$baseColumns = array('a.id', 'a.title', 'a.image', 'a.alias', 'a.unit_amount', 'a.unit_unit', 'a.description',
+			'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
+			'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity',
+			'a.stockstatus_a_id', 'a.stockstatus_n_id','a.date', 'a.sales', 'a.featured',
+			'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price');
+
+		$col = array_merge($baseColumns, $additionalColumns);
+		$col = array_unique($col);
+
 
 		// Remove empty values:
 		$wheres = array_filter($wheres);
@@ -403,11 +485,9 @@ class PhocaCartModelItems extends JModelLegacy
 			}
 
 
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.upc, a.type, a.points_received, a.price_original,'
-						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
-						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'
+			$columns	= implode(',', $col) . ','
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price,';
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias,';
 
 			if (!$skip['tax']) {
 				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
@@ -431,7 +511,7 @@ class PhocaCartModelItems extends JModelLegacy
 						.' AVG(r.rating) AS rating';
 
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.upc, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text';
+			$groupsFull	= implode(',', $col) ;
 
 			if (!$skip['tax']) {
                 $groupsFull	.= ', t.id, t.tax_rate, t.calculation_type, t.title';
@@ -444,7 +524,6 @@ class PhocaCartModelItems extends JModelLegacy
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 
-
 			$q = ' SELECT '.$columns
 			. ' FROM #__phocacart_products AS a'
 			. implode( ' ', $lefts )
@@ -452,6 +531,7 @@ class PhocaCartModelItems extends JModelLegacy
 			. ' WHERE ' . implode( ' AND ', $wheres )
 			. ' GROUP BY '.$groups
 			. ' ORDER BY '.$itemOrdering;
+
 
 		}
 		//echo "<br><br>" . nl2br(str_replace('#__', 'jos_', $q));
@@ -462,7 +542,7 @@ class PhocaCartModelItems extends JModelLegacy
 	protected function getCategoriesQuery( $categoryId, $subcategories = FALSE ) {
 
 		$wheres		= array();
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$params 	= $app->getParams();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -482,7 +562,7 @@ class PhocaCartModelItems extends JModelLegacy
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 
@@ -514,7 +594,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 	protected function getItemOrdering() {
 		if (empty($this->item_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			//$ordering					= $params->get( 'item_ordering', 1 );
 			$ordering					= $this->getState('itemordering');
@@ -525,7 +605,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 	protected function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
 			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);

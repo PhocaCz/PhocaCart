@@ -226,8 +226,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo $layoutP->render($d);
 	}
 
-	if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
-		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->item[0]->description). '</div>';
+	if ( isset($x->description) && $x->description != '') {
+		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $x->description). '</div>';
 	}
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
@@ -266,16 +266,20 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// STOCK ===================================================
 	// Set stock: product, variations, or advanced stock status
+	// There are classes because AJAX can change the visibility of buttons
+	// Last word when checking if product can be ordered have always checkout
 	$class_btn	= '';
 	$class_icon	= '';
+	
+	$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
+
+	if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
+		$class_btn 					= 'ph-visibility-hidden';
+		$class_icon					= 'ph-display-none';
+	}
 
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
-		$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
-
-		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
-			$class_btn 					= 'ph-visibility-hidden';
-			$class_icon					= 'ph-display-none';
-		}
+		
 
 		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
 			$d							= array();
@@ -368,6 +372,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$d['hide_attributes']		= $this->t['hide_attributes_item'];
 	$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
 	$d['zero_attribute_price']	= $this->t['zero_attribute_price'];
+	$d['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 	$d['pathitem']				= $this->t['pathitem'];
 	$d['init_type']				= 0;
 	$d['price']					= $price;
@@ -381,11 +386,13 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$addToCartHidden = 0;// Button can be hidden based on price
 
 	if ($x->type == 3) {
-		// PRODUCTTYPE - price on demand price cannot be added to cart
+		// PRODUCTTYPE - price on demand product cannot be added to cart
 		$addToCartHidden = 1;
+		
 	} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 		// Don't display Add to Cart in case the price is zero
 		$addToCartHidden = 1;
+		
 	} else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
 
 		$d					= array();
@@ -608,17 +615,18 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 			if (!empty($v)) {
 				foreach($v as $k2 => $v2) {
-					$tabO	.= '<div class="'.$this->s['c']['row'].'">';
-					$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm5.md5'].'">';
-					$tabO	.= '<div class="ph-spec-title">'.$v2['title'].'</div>';
-					$tabO	.= '</div>';
+					if (isset($v2['title']) && isset($v2['value'])) {
+						$tabO .= '<div class="' . $this->s['c']['row'] . '">';
+						$tabO .= '<div class="' . $this->s['c']['col.xs12.sm5.md5'] . '">';
+						$tabO .= '<div class="ph-spec-title">' . $v2['title'] . '</div>';
+						$tabO .= '</div>';
 
-					$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm7.md7'].'">';
-					$tabO	.= '<div class="ph-spec-value">'.$v2['value'].'</div>';
-					$tabO	.= '</div>';
-					$tabO	.= '</div>';
+						$tabO .= '<div class="' . $this->s['c']['col.xs12.sm7.md7'] . '">';
+						$tabO .= '<div class="ph-spec-value">' . $v2['value'] . '</div>';
+						$tabO .= '</div>';
+						$tabO .= '</div>';
+					}
 				}
-
 			}
 		}
 

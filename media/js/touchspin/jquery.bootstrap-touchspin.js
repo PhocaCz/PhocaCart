@@ -29,6 +29,7 @@
       max: 100, // If null, there is no maximum enforced
       initval: '',
       replacementval: '',
+      firstclickvalueifempty: null,
       step: 1,
       decimals: 0,
       stepinterval: 100,
@@ -64,6 +65,7 @@
       max: 'max',
       initval: 'init-val',
       replacementval: 'replacement-val',
+      firstclickvalueifempty: 'first-click-value-if-empty',
       step: 'step',
       decimals: 'decimals',
       stepinterval: 'step-interval',
@@ -91,6 +93,8 @@
       var settings,
         originalinput = $(this),
         originalinput_data = originalinput.data(),
+        _detached_prefix,
+        _detached_postfix,
         container,
         elements,
         value,
@@ -141,7 +145,7 @@
 
         if (value !== '') {
           value = Number(settings.callback_before_calculation(elements.input.val()));
-          elements.input.val(settings.callback_after_calculation(value.toFixed(settings.decimals)));
+          elements.input.val(settings.callback_after_calculation(Number(value).toFixed(settings.decimals)));
         }
       }
 
@@ -184,11 +188,26 @@
 
         // Update postfix and prefix texts if those settings were changed.
         if (newsettings.postfix) {
-          originalinput.parent().find('.bootstrap-touchspin-postfix').text(newsettings.postfix);
+          var $postfix = originalinput.parent().find('.bootstrap-touchspin-postfix');
+
+          if ($postfix.length === 0) {
+            _detached_postfix.insertAfter(originalinput);
+          }
+
+          originalinput.parent().find('.bootstrap-touchspin-postfix .input-group-text').text(newsettings.postfix);
         }
+
         if (newsettings.prefix) {
-          originalinput.parent().find('.bootstrap-touchspin-prefix').text(newsettings.prefix);
+          var $prefix = originalinput.parent().find('.bootstrap-touchspin-prefix');
+
+          if ($prefix.length === 0) {
+            _detached_prefix.insertBefore(originalinput);
+          }
+
+          originalinput.parent().find('.bootstrap-touchspin-prefix .input-group-text').text(newsettings.prefix);
         }
+
+        _hideEmptyPrefixPostfix();
       }
 
       function _buildHtml() {
@@ -218,8 +237,8 @@
 
         var downhtml,
           uphtml,
-          prefixhtml = '<span class="input-group-addon bootstrap-touchspin-prefix input-group-prepend bootstrap-touchspin-injected"><span class="input-group-text">' + settings.prefix + '</span></span>',
-          postfixhtml = '<span class="input-group-addon bootstrap-touchspin-postfix input-group-append bootstrap-touchspin-injected"><span class="input-group-text">' + settings.postfix + '</span></span>';
+          prefixhtml = '<span class="input-group-addon input-group-prepend bootstrap-touchspin-prefix input-group-prepend bootstrap-touchspin-injected"><span class="input-group-text">' + settings.prefix + '</span></span>',
+          postfixhtml = '<span class="input-group-addon input-group-append bootstrap-touchspin-postfix input-group-append bootstrap-touchspin-injected"><span class="input-group-text">' + settings.postfix + '</span></span>';
 
         if (prev.hasClass('input-group-btn') || prev.hasClass('input-group-prepend')) {
           downhtml = '<button class="' + settings.buttondown_class + ' bootstrap-touchspin-down bootstrap-touchspin-injected" type="button">' + settings.buttondown_txt + '</button>';
@@ -258,7 +277,7 @@
         }
 
         if (settings.verticalbuttons) {
-          html = '<div class="input-group ' + inputGroupSize + ' bootstrap-touchspin bootstrap-touchspin-injected"><span class="input-group-addon bootstrap-touchspin-prefix">' + settings.prefix + '</span><span class="input-group-addon bootstrap-touchspin-postfix input-group-prepend"><span class="input-group-text">' + settings.postfix + '</span></span><span class="input-group-btn-vertical"><button class="' + settings.buttondown_class + ' bootstrap-touchspin-up ' + settings.verticalupclass + '" type="button">' + settings.verticalup + '</button><button class="' + settings.buttonup_class + ' bootstrap-touchspin-down ' + settings.verticaldownclass + '" type="button">' + settings.verticaldown + '</button></span></div>';
+          html = '<div class="input-group ' + inputGroupSize + ' bootstrap-touchspin bootstrap-touchspin-injected"><span class="input-group-addon input-group-prepend bootstrap-touchspin-prefix"><span class="input-group-text">' + settings.prefix + '</span></span><span class="input-group-addon bootstrap-touchspin-postfix input-group-append"><span class="input-group-text">' + settings.postfix + '</span></span><span class="input-group-btn-vertical"><button class="' + settings.buttondown_class + ' bootstrap-touchspin-up ' + settings.verticalupclass + '" type="button">' + settings.verticalup + '</button><button class="' + settings.buttonup_class + ' bootstrap-touchspin-down ' + settings.verticaldownclass + '" type="button">' + settings.verticaldown + '</button></span></div>';
         }
         else {
           html = '<div class="input-group bootstrap-touchspin bootstrap-touchspin-injected"><span class="input-group-btn input-group-prepend"><button class="' + settings.buttondown_class + ' bootstrap-touchspin-down" type="button">' + settings.buttondown_txt + '</button></span><span class="input-group-addon bootstrap-touchspin-prefix input-group-prepend"><span class="input-group-text">' + settings.prefix + '</span></span><span class="input-group-addon bootstrap-touchspin-postfix input-group-append"><span class="input-group-text">' + settings.postfix + '</span></span><span class="input-group-btn input-group-append"><button class="' + settings.buttonup_class + ' bootstrap-touchspin-up" type="button">' + settings.buttonup_txt + '</button></span></div>';
@@ -288,11 +307,11 @@
 
       function _hideEmptyPrefixPostfix() {
         if (settings.prefix === '') {
-          elements.prefix.hide();
+          _detached_prefix = elements.prefix.detach();
         }
 
         if (settings.postfix === '') {
-          elements.postfix.hide();
+          _detached_postfix = elements.postfix.detach();
         }
       }
 
@@ -428,7 +447,7 @@
           ev.stopPropagation();
         });
 
-        elements.up.on('mouseout.touchspin touchleave.touchspin touchend.touchspin touchcancel.touchspin', function(ev) {
+        elements.up.on('mouseup.touchspin mouseout.touchspin touchleave.touchspin touchend.touchspin touchcancel.touchspin', function(ev) {
           if (!spinning) {
             return;
           }
@@ -437,7 +456,7 @@
           stopSpin();
         });
 
-        elements.down.on('mouseout.touchspin touchleave.touchspin touchend.touchspin touchcancel.touchspin', function(ev) {
+        elements.down.on('mouseup.touchspin mouseout.touchspin touchleave.touchspin touchend.touchspin touchcancel.touchspin', function(ev) {
           if (!spinning) {
             return;
           }
@@ -524,7 +543,7 @@
           case 'ceil':
             return (Math.ceil(value / settings.step) * settings.step).toFixed(settings.decimals);
           default:
-            return value;
+            return value.toFixed(settings.decimals);
         }
       }
 
@@ -596,18 +615,28 @@
         }
       }
 
+      function valueIfIsNaN() {
+        if(typeof(settings.firstclickvalueifempty) === 'number') {
+          return settings.firstclickvalueifempty;
+        } else {
+          return (settings.min + settings.max) / 2;
+        }
+      }
+
       function upOnce() {
         _checkValue();
 
         value = parseFloat(settings.callback_before_calculation(elements.input.val()));
+
+        var initvalue = value;
+        var boostedstep;
+
         if (isNaN(value)) {
-          value = 0;
-        }
-
-        var initvalue = value,
+          value = valueIfIsNaN();
+        } else {
           boostedstep = _getBoostedStep();
-
-        value = value + boostedstep;
+          value = value + boostedstep;
+        }
 
         if ((settings.max !== null) && (value > settings.max)) {
           value = settings.max;
@@ -626,14 +655,16 @@
         _checkValue();
 
         value = parseFloat(settings.callback_before_calculation(elements.input.val()));
+
+        var initvalue = value;
+        var boostedstep;
+
         if (isNaN(value)) {
-          value = 0;
-        }
-
-        var initvalue = value,
+          value = valueIfIsNaN();
+        } else {
           boostedstep = _getBoostedStep();
-
-        value = value - boostedstep;
+          value = value - boostedstep;
+        }
 
         if ((settings.min !== null) && (value < settings.min)) {
           value = settings.min;
@@ -641,7 +672,7 @@
           stopSpin();
         }
 
-        elements.input.val(settings.callback_after_calculation(value.toFixed(settings.decimals)));
+        elements.input.val(settings.callback_after_calculation(Number(value).toFixed(settings.decimals)));
 
         if (initvalue !== value) {
           originalinput.trigger('change');

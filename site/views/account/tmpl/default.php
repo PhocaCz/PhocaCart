@@ -61,9 +61,11 @@ if ((int)$this->u->id > 0) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' '.$this->s['c']['pull-right'].' ph-right ph-account-check-box">';
 
-	echo '<div class="checkbox">';
-	echo '<label><input type="checkbox" id="phCheckoutBillingSameAsShipping" name="phcheckoutbsas" '.$this->t['dataaddressform']['bsch'].' > '.JText::_('COM_PHOCACART_DELIVERY_AND_BILLING_ADDRESSES_ARE_THE_SAME').'</label>';
-	echo '</div>';
+	if ($this->t['dataaddressform']['s'] != '' && $this->t['$delivery_billing_same_enabled'] != -1) {
+		echo '<div class="checkbox">';
+		echo '<label><input type="checkbox" id="phCheckoutBillingSameAsShipping" name="phcheckoutbsas" ' . $this->t['dataaddressform']['bsch'] . ' > ' . JText::_('COM_PHOCACART_DELIVERY_AND_BILLING_ADDRESSES_ARE_THE_SAME') . '</label>';
+		echo '</div>';
+	}
 
 	echo '</div>';
 

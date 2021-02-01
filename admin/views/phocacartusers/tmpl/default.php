@@ -67,6 +67,7 @@ echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_NAME', 'u.name', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-status">'.JText::_($this->t['l'].'_STATUS').'</th>'."\n";
+echo '<th class="ph-action">' . JText::_($this->t['l'] . '_INFO') . '</th>' . "\n";
 echo '<th class="ph-group">'.JText::_($this->t['l'].'_GROUPS').'</th>'."\n";
 echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_FIRST_NAME_LABEL', 'a.name_first', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_LAST_NAME_LABEL', 'a.name_last', $listDirn, $listOrder ).'</th>'."\n";
@@ -89,6 +90,7 @@ if (is_array($this->items)) {
 
 	$emailConflict	= 0;
 
+
 	foreach ($this->items as $i => $item) {
 		//if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
 			$j++;
@@ -102,7 +104,7 @@ $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
 $linkEdit 		= JRoute::_( $urlEdit. $item->user_id );
-$linkCart 		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartcart&tmpl=component&id='.(int)$item->cartuserid . '&vendorid='.(int)$item->cartvendorid . '&ticketid='.(int)$item->cartticketid . '&unitid='.(int)$item->cartunitid . '&sectionid='.(int)$item->cartsectionid  );
+$linkCart 		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartcart&tmpl=component&userid='.(int)$item->cartuserid . '&vendorid='.(int)$item->cartvendorid . '&ticketid='.(int)$item->cartticketid . '&unitid='.(int)$item->cartunitid . '&sectionid='.(int)$item->cartsectionid  );
 $linkCartHandler= 'rel="{handler: \'iframe\', size: {x: 580, y: 460}}"';
 
 
@@ -130,6 +132,7 @@ echo $r->td($checkO, "small");
 
 // Status
 // NOT ACTIVE
+$active = 0;
 if ((int)$item->id < 1 && (int)$item->cartuserid < 1) {
 	echo $r->td( '<span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_NOT_ACTIVE').'</span>', "small");
 }
@@ -142,6 +145,7 @@ else if ( (int)$item->orderuserid > 0 ) {
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
+	$active = 1;
 }
 
 // ADDED BILLING AND SHIPPING ADDRESS
@@ -152,6 +156,7 @@ else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
+	$active = 1;
 }
 
 
@@ -164,6 +169,7 @@ else if ( (int)$item->cartuserid > 0 || ($item->name_last != '' || $item->name_f
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
+	$active = 1;
 }
 
 // ADDED ITEMS TO CART BUT NO ORDER, NO BILLING OR SHIPPING ADDRESS
@@ -175,6 +181,7 @@ else if ( (int)$item->cartuserid > 0) {
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
+	$active = 1;
 }
 
 // OTHER
@@ -183,6 +190,38 @@ else {
 	//echo $r->td('-', "small");
 }
 
+
+// INFO
+$info = '<div class="ph-order-info-box">';
+if ($active == 1 && isset($item->vendor_id) && (int)$item->vendor_id > 0) {
+
+	// POS
+	if (isset($item->vendor_username) && isset($item->vendor_name)) {
+		$vendorO = $this->escape($item->vendor_name);
+		$vendorO .= ' <small>(' . $item->vendor_username . ')</small>';
+		$info    .= '<span class="label label-success badge badge-success">' . JText::_('COM_PHOCACART_VENDOR') . ': ' . $vendorO . '</span>';
+	}
+
+	if (isset($item->section_name)) {
+		$section = $this->escape($item->section_name);
+		$info    .= '<span class="label label-primary">' . JText::_('COM_PHOCACART_SECTION') . ': ' . $section . '</span>';
+	}
+	if (isset($item->unit_name)) {
+		$unit = $this->escape($item->unit_name);
+		$info .= '<span class="label label-info badge badge-info">' . JText::_('COM_PHOCACART_UNIT') . ': ' . $unit . '</span>';
+	}
+	if (isset($item->ticket_id) && (int)$item->ticket_id > 0) {
+
+		$info .= '<span class="label label-warning badge badge-warning">' . JText::_('COM_PHOCACART_TICKET') . ': ' . $item->ticket_id . '</span>';
+	}
+} else if ($active == 1) {
+	$info = '<span class="label label-info badge badge-info">' . JText::_('COM_PHOCACART_ONLINE_SHOP') . '</span>';
+} else {
+	$info = '';
+}
+$info .= '</div>';
+
+echo $r->td($info, "small");
 
 // GROUP
 if (isset($item->usergroups) && $item->usergroups != '') {
@@ -219,7 +258,7 @@ echo $r->endTr();
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 10);
+echo $r->tblFoot($this->pagination->getListFooter(), 11);
 echo $r->endTable();
 
 echo '<div class="ph-notes-box"><h3>'.JText::_('COM_PHOCACART_NOTES').'</h3>';

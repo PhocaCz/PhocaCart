@@ -165,8 +165,8 @@ $s['c']['hastooltip']               = 'hasTooltipPc';// 'hasTooltip' can create 
 
             case 'bs4':
 
-                $s['c']['col.xs12.sm3.md3']		    = 'col-sm-12 col-md-6 col-lg-4 col-xl-3';
-                $s['c']['col.xs12.sm4.md4']		    = 'col-sm-12 col-md-6 col-lg-4 col-xl-4';
+                $s['c']['col.xs12.sm3.md3']		    = 'col-sm-12 col-md-3 col-lg-3 col-xl-3';
+                $s['c']['col.xs12.sm4.md4']		    = 'col-sm-12 col-md-4 col-lg-4 col-xl-4';
 
                 $s['c']['class-type']		        = 'bs4';
                 $s['c']['modal.zoom']               = 'modal';

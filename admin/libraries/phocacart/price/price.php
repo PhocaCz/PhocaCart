@@ -33,6 +33,35 @@ class PhocacartPrice
         return $this->price_currency_title;
     }
 
+
+    /* Possible Output change for different parts
+       E.g. setting specific price decimals in cart
+    */
+    public function setPriceDecimals($decimals) {
+        $this->price_decimals = (int)$decimals;
+    }
+
+    public function setPriceDecSymbol($symbol) {
+        $this->price_dec_symbol = $symbol;
+    }
+
+    public function setPriceThousandsSep($separator) {
+        $this->price_thousands_sep = $separator;
+    }
+
+    public function setPriceFormat($format) {
+        $this->price_format = (int)$format;
+    }
+
+    public function setPricePrefix($prefix) {
+        $this->price_prefix = $prefix;
+    }
+
+    public function setPriceSuffix($suffix) {
+        $this->price_suffix = $suffix;
+    }
+
+
     public function setCurrency($id = 0, $orderId = 0) {
 
 
@@ -897,6 +926,26 @@ class PhocacartPrice
         }
     }
 
+    public function correctMinusPrice(&$price) {
+
+
+        if (isset($price['brutto']) && $price['brutto'] < 0) {
+            $price['brutto']       = 0;
+            $price['bruttoformat'] = $this->getPriceFormat(0);
+        }
+
+        if (isset($price['netto']) && $price['netto'] < 0) {
+            $price['netto']       = 0;
+            $price['nettoformat'] = $this->getPriceFormat(0);
+        }
+        if (isset($price['tax']) && $price['tax'] < 0) {
+            $price['tax']       = 0;
+            $price['taxformat'] = $this->getPriceFormat(0);
+        }
+
+        return true;
+    }
+
 
     public function getPriceItemsChangedByAttributes(&$priceP, $attributes, $price, &$item, $ajax = 0) {
 
@@ -951,6 +1000,8 @@ class PhocacartPrice
                                         $priceP['netto']  -= $priceA['netto'];
                                         $priceP['brutto'] -= $priceA['brutto'];
                                         $priceP['tax']    -= $priceA['tax'];
+
+                                        //$this->correctMinusPrice($priceP);
 
                                     } else if ($v2->operator == '+') {
                                         $priceP['netto']  += $priceA['netto'];

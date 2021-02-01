@@ -147,9 +147,8 @@ if ($this->t['can_display_price']) {
 	$d['zero_price']		= 1;// Apply zero price if possible
 	echo$layoutP->render($d);
 }
-
-	if ( isset($this->item[0]->description) && $this->item[0]->description != '') {
-		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->item[0]->description). '</div>';
+	if ( isset($x->description) && $x->description != '') {
+		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $x->description). '</div>';
 	}
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
@@ -188,8 +187,10 @@ if ($this->t['can_display_price']) {
 	// Set stock: product, variations, or advanced stock status
 	$class_btn	= '';
 	$class_icon	= '';
+	$this->stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
+
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
-		$this->stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
+
 
 		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$this->stock < 1) {
 			$class_btn 					= 'ph-visibility-hidden';
@@ -242,6 +243,7 @@ $d['s']					    = $this->s;
 $d['attr_options']			= $this->t['attr_options'];
 $d['hide_attributes']		= $this->t['hide_attributes_item'];
 $d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+$d['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 $d['zero_attribute_price']  = $this->t['zero_attribute_price'];
 $d['pathitem']				= $this->t['pathitem'];
 $d['init_type']				= 1;

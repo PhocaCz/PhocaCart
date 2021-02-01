@@ -14,10 +14,28 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 
 	$link	= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartcart&tmpl=component&&id='.(int)$this->item->user_id);
 	$cart	= new PhocacartCartRendercart();
-	
+
 	$cart->setType(array());// all types
 	$cart->setFullItems();
+
+	$this->t['shippingid'] 	= $cart->getShippingId();
+
+
+	if (isset($this->t['shippingid']) && (int)$this->t['shippingid'] > 0 && $this->t['shippingedit'] == 0) {
+		$cart->addShippingCosts($this->t['shippingid']);
+		$this->t['shippingmethodexists'] = true;
+	}
+	$this->t['paymentid'] 	= $cart->getPaymentId();
+	if (isset($this->t['paymentid']) && (int)$this->t['paymentid'] > 0 && $this->t['paymentedit'] == 0) {
+		$cart->addPaymentCosts($this->t['paymentid']);// validity of payment will be checked
+		$this->t['paymentmethodexists'] = true;
+	}
+
 	$cart->roundTotalAmount();
+
+	$cart->getItems();
+	$total                         = $cart->getTotal();
+
 
 	echo '<div class="ph-cart-info-box">';
 	echo $cart->render();
@@ -31,7 +49,7 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 	echo '<div class="ph-cart-info-user">'.JText::_('COM_PHOCACART_USER').': '.$userName.'</div>';
 
 	echo '<form action="'.$link.'" method="post">';
-	echo '<input type="hidden" name="id" value="'.(int)$this->item->user_id.'">';
+	echo '<input type="hidden" name="userid" value="'.(int)$this->item->user_id.'">';
 	echo '<input type="hidden" name="vendorid" value="'.(int)$this->item->vendor_id.'">';
 	echo '<input type="hidden" name="ticketid" value="'.(int)$this->item->ticket_id.'">';
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->item->unit_id.'">';
@@ -47,5 +65,5 @@ if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
 	echo '<div class="ph-cart-info-user">'.JText::_('COM_PHOCACART_NO_ACTIVE_CART_FOR_THIS_USER').'</div>';
 }
 
-	
+
 ?>

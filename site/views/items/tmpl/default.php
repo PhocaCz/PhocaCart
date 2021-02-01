@@ -6,6 +6,10 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die();
 
 $layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_phocacart'));
@@ -30,8 +34,33 @@ if (!$this->t['ajax']) {
 
 
 
-// ITEMS
-if (!empty($this->items)) {
+// ITEMS a) items displayed by layout plugin, b) items displayed common way, c) no items found
+if (!empty($this->items) && $this->t['pluginlayout']) {
+
+	$pluginOptions 				= array();
+	$eventData 					= array();
+	$dLA 						= array();
+	$eventData['pluginname'] 	= $this->t['items_layout_plugin'];
+
+	Factory::getApplication()->triggerEvent('PCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+
+	if (isset($pluginOptions['layouttype']) && $pluginOptions['layouttype'] != '') {
+		$this->t['layouttype'] = PhocacartText::filterValue($pluginOptions['layouttype'], 'alphanumeric5');
+	}
+
+	$lt			= $this->t['layouttype'];
+	$dLA['t'] 	= $this->t;
+	$dLA['s'] 	= $this->s;
+
+	echo '<div id="phItems" class="ph-items '.$lt.'">';
+
+	Factory::getApplication()->triggerEvent('PCLonItemsInsideLayout', array('com_phocacart.items', &$this->items, $dLA, $eventData));
+
+	echo $this->loadTemplate('pagination');
+
+	echo '</div>'. "\n"; // end items
+
+} else if (!empty($this->items)) {
 
 	$price	= new PhocacartPrice;
 	$col 	= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat']);
@@ -230,6 +259,7 @@ if (!empty($this->items)) {
 			$dAb['attr_options']			= $attributesOptions;
 			$dAb['hide_attributes']			= $this->t['hide_attributes_category'];
 			$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+			$dAb['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 			$dAb['zero_attribute_price']	= $this->t['zero_attribute_price'];
 			$dAb['pathitem']				= $this->t['pathitem'];
 			$dAb['product_id']				= (int)$v->id;
@@ -385,7 +415,7 @@ if (!empty($this->items)) {
 		// DESCRIPTION
 		$dL['description'] = '';
 		if ($this->t['cv_display_description'] == 1 && $v->description != '') {
-			$dL['description'] = '<div class="ph-item-desc">' . Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description) . '</div>';
+			$dL['description'] = '<div class="ph-item-desc">' . HTMLHelper::_('content.prepare', $v->description) . '</div>';
 		}
 
 		// TAGS
@@ -400,7 +430,6 @@ if (!empty($this->items)) {
 		if ($this->t['category_display_manufacturer'] > 0 && (int)$v->manufacturerid > 0 && $v->manufacturertitle != '') {
 			$dL['manufacturer'] .= PhocacartManufacturer::getManufacturerRendered((int)$v->manufacturerid, $v->manufacturertitle, $v->manufactureralias, $this->t['manufacturer_alias'], $this->t['category_display_manufacturer'], 0, '');
 		}
-
 
 		if ($lt == 'list') {
 			echo $layoutIL->render($dL);

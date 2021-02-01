@@ -39,11 +39,15 @@ class PhocacartText {
 
 		$body = isset($replace['downloadlink']) 			? str_replace('{downloadlink}', $replace['downloadlink'], $body) 					: $body;
 		$body = isset($replace['orderlink'])				? str_replace('{orderlink}', $replace['orderlink'], $body)							: $body;
+		$body = isset($replace['orderlinktoken'])			? str_replace('{orderlinktoken}', $replace['orderlinktoken'], $body)				: $body;
+		$body = isset($replace['ordertoken'])				? str_replace('{ordertoken}', $replace['ordertoken'], $body)						: $body;
 		$body = isset($replace['trackinglink'])				? str_replace('{trackinglink}', $replace['trackinglink'], $body)					: $body;
+		$body = isset($replace['trackingnumber'])			? str_replace('{trackingnumber}', $replace['trackingnumber'], $body)				: $body;
+        $body = isset($replace['trackingdescription'])		? str_replace('{trackingdescription}', $replace['trackingdescription'], $body)		: $body;
 		$body = isset($replace['shippingtitle'])			? str_replace('{shippingtitle}', $replace['shippingtitle'], $body)					: $body;
         $body = isset($replace['paymenttitle'])			    ? str_replace('{paymenttitle}', $replace['paymenttitle'], $body)					: $body;
 		$body = isset($replace['dateshipped'])				? str_replace('{dateshipped}', $replace['dateshipped'], $body)						: $body;
-		$body = isset($replace['trackingdescription'])		? str_replace('{trackingdescription}', $replace['trackingdescription'], $body)		: $body;
+
 		$body = isset($replace['customercomment'])			? str_replace('{customercomment}', $replace['customercomment'], $body)				: $body;
 		$body = isset($replace['websitename'])				? str_replace('{websitename}', $replace['websitename'], $body)						: $body;
 		$body = isset($replace['websiteurl'])				? str_replace('{websiteurl}', $replace['websiteurl'], $body)						: $body;
@@ -57,6 +61,16 @@ class PhocacartText {
 		$body = isset($replace['invoiceduedate'])			? str_replace('{invoiceduedate}', $replace['invoiceduedate'], $body)				: $body;
 		$body = isset($replace['invoicedate'])				? str_replace('{invoicedate}', $replace['invoicedate'], $body)						: $body;
 		$body = isset($replace['invoicetimeofsupply'])		? str_replace('{invoicetimeofsupply}', $replace['invoicetimeofsupply'], $body)		: $body;
+
+		$body = isset($replace['invoicedueyear'])			? str_replace('{invoicedueyear}', $replace['invoicedueyear'], $body)				: $body;
+		$body = isset($replace['invoiceduemonth'])			? str_replace('{invoiceduemonth}', $replace['invoiceduemonth'], $body)				: $body;
+		$body = isset($replace['invoicedueday'])			? str_replace('{invoicedueday}', $replace['invoicedueday'], $body)					: $body;
+		$body = isset($replace['invoiceyear'])				? str_replace('{invoiceyear}', $replace['invoiceyear'], $body)						: $body;
+		$body = isset($replace['invoicemonth'])				? str_replace('{invoicemonth}', $replace['invoicemonth'], $body)					: $body;
+		$body = isset($replace['invoiceday'])				? str_replace('{invoiceday}', $replace['invoiceday'], $body)						: $body;
+
+		$body = isset($replace['orderdate'])				? str_replace('{orderdate}', $replace['orderdate'], $body)						    : $body;
+
 
 		$body = isset($replace['totaltopay'])				? str_replace('{totaltopay}', $replace['totaltopay'], $body)						: $body;
 
@@ -83,41 +97,94 @@ class PhocacartText {
 		return $body;
 	}
 
-	public static function completeTextFormFields($body, $bas, $type = 1) {
+
+	//public static function completeTextFormFields($body, $bas, $type = 1) {
+    public static function completeTextFormFields($body, $basB, $basS) {
+
+
+	    $bas = array_merge($basB, $basS);
 
 
 
-		if ($type == 1) {
+        /*if ($type == 1) {
 			$prefix = 'b_';
 		} else {
 			$prefix = 's_';
 		}
+		$commonprefix = 'bs_';
+		*/
+
+		// Common prefix means that if you set:
+        // {b_name} ... billing name will be displayed
+        // {s_name} ... shipping name will be displayed
+        // {bs_name} ... first displaying billing name and if it is not available then display shipping name
+        // {sb_name} ... first displaying shipping name and if it is not available then display billing name
+
 
 		if (!empty($bas)) {
-			if (isset($bas['id'])) {unset($bas['id']);}
-			if (isset($bas['order_id'])) {unset($bas['order_id']);}
-			if (isset($bas['user_address_id'])) {unset($bas['user_address_id']);}
-			if (isset($bas['user_token'])) {unset($bas['user_token']);}
-			if (isset($bas['user_groups'])) {unset($bas['user_groups']);}
-			if (isset($bas['ba_sa'])) {unset($bas['ba_sa']);}
-			if (isset($bas['type'])) {unset($bas['type']);}
+			if (isset($basB['id'])) {unset($basB['id']);}
+			if (isset($basB['order_id'])) {unset($basB['order_id']);}
+			if (isset($basB['user_address_id'])) {unset($basB['user_address_id']);}
+			if (isset($basB['user_token'])) {unset($basB['user_token']);}
+			if (isset($basB['user_groups'])) {unset($basB['user_groups']);}
+			if (isset($basB['ba_sa'])) {unset($basB['ba_sa']);}
+			if (isset($basB['type'])) {unset($basB['type']);}
+
+			if (isset($basS['id'])) {unset($basS['id']);}
+			if (isset($basS['order_id'])) {unset($basS['order_id']);}
+			if (isset($basS['user_address_id'])) {unset($basS['user_address_id']);}
+			if (isset($basS['user_token'])) {unset($basS['user_token']);}
+			if (isset($basS['user_groups'])) {unset($basS['user_groups']);}
+			if (isset($basS['ba_sa'])) {unset($basS['ba_sa']);}
+			if (isset($basS['type'])) {unset($basS['type']);}
 
 
 			foreach($bas as $k => $v) {
 
 
+                if (isset($basB[$k]) && $basB[$k] != '') {
 
-				if ($v != '') {
-				    // Replace the values
-					$body = str_replace('{'.$prefix.$k.'}', $v, $body);
-				} else {
-				    // Hide the empty variable (in case the value is empty, don't display variable name)
-                    $body = str_replace('{'.$prefix.$k.'}', '', $body);
+                    $body = str_replace('{b_' . $k . '}', $basB[$k], $body);
+                    $body = str_replace('{bs_' . $k . '}', $basB[$k], $body);
+                } else if (isset($basS[$k]) && $basS[$k] != '') {
+                    // bs_item: the value is not in billing, try to find it in shipping
+                    $body = str_replace('{bs_' . $k . '}', $basS[$k], $body);
                 }
 
 
+                if (isset($basS[$k]) && $basS[$k] != '') {
 
-			}
+                    $body = str_replace('{s_' . $k . '}', $basS[$k], $body);
+                    $body = str_replace('{sb_' . $k . '}', $basS[$k], $body);
+
+                } else if (isset($basB[$k]) && $basB[$k] != '') {
+                    // sb_item: the value is not in shipping, try to find it in billing
+                    $body = str_replace('{sb_' . $k . '}', $basB[$k], $body);
+                }
+
+                // Nothing found - remove from text
+                $body = str_replace('{b_' . $k . '}', '', $body);
+                $body = str_replace('{bs_' . $k . '}', '', $body);
+                $body = str_replace('{s_' . $k . '}', '', $body);
+                $body = str_replace('{sb_' . $k . '}', '', $body);
+
+
+                /*if ($v != '') {
+                    // Replace the values
+                    $body = str_replace('{'.$prefix.$k.'}', $v, $body);
+                    // Replace common values
+                    $body = str_replace('{'.$commonprefix.$k.'}', $v, $body);
+                } else {
+                    // Hide the empty variable (in case the value is empty, don't display variable name)
+                    $body = str_replace('{'.$prefix.$k.'}', '', $body);
+                    if ($type != 1) {
+                        // Don't remove this common variable in billing cycle because we wait if it will be not transformed in shipping cycle
+                        // And if it is not in billing even not in shipping then remove it.
+                        $body = str_replace('{'.$commonprefix.$k.'}', '', $body);
+                    }
+                }*/
+
+            }
 		}
 
 
@@ -136,13 +203,24 @@ class PhocacartText {
 
 
 		$r = array();
+		$r['ordertoken'] = '';
 		// Standard User get standard download page and order page
 		if ($common->user_id > 0) {
 			$r['orderlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute());
 			$r['downloadlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
+
+			// Possible variables in email
+			if (isset($common->order_token) && $common->order_token != '') {
+			    $r['orderlinktoken'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
+				$r['ordertoken'] = $common->order_token;
+			}
+
 		} else {
 			if (isset($common->order_token) && $common->order_token != '') {
-				$r['orderlink'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
+				$r['orderlinktoken'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
+				$r['ordertoken'] = $common->order_token;
+				$r['orderlink'] = $r['orderlinktoken'];
+
 			}
 			$products 	= $order->getItemProducts($orderId);
 
@@ -195,7 +273,8 @@ class PhocacartText {
 		// ---
 
 
-		$r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
+		$r['trackingnumber'] 		= PhocacartOrderView::getTrackingNumber($common);
+        $r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
 		$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
 		$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
 		$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
@@ -214,13 +293,30 @@ class PhocacartText {
 		//$r['invoiceduedateyear']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'Y');
 		//$r['invoiceduedatemonth']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'm');
 		//$r['invoiceduedateday']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'd');
+
+        $dateIdd					= PhocacartDate::splitDate($r['invoiceduedate']);
+        $r['invoicedueyear']	    = $dateIdd['year'];
+		$r['invoiceduemonth']	    = $dateIdd['month'];
+		$r['invoicedueday']	        = $dateIdd['day'];
+
 		$r['invoicedate']			= PhocacartOrder::getInvoiceDate($orderId, $common->invoice_date, 'Y-m-d');
+
+		$dateId 					= PhocacartDate::splitDate($r['invoicedate']);
+        $r['invoiceyear']	        = $dateId['year'];
+		$r['invoicemonth']	        = $dateId['month'];
+		$r['invoiceday']	        = $dateId['day'];
+
+
+
+
 		$r['invoicetimeofsupply']	= PhocacartOrder::getInvoiceDate($orderId, $common->invoice_time_of_supply, 'Y-m-d');
 		$totalToPay					= isset($totalBrutto[0]->amount) ? $totalBrutto[0]->amount : 0;
 		$r['totaltopaynoformat']	= number_format($totalToPay, 2, '.', '');
 		$r['totaltopay']			= $price->getPriceFormat($totalToPay, 0, 1);
         $r['paymenttitle'] 		    = PhocacartOrderView::getPaymentTitle($common);
 		$dateO 						= PhocacartDate::splitDate($common->date);
+
+		$r['orderdate']             = $common->date;
 		$r['orderyear']				= $dateO['year'];
 		$r['ordermonth']			= $dateO['month'];
 		$r['orderday']				= $dateO['day'];
@@ -240,6 +336,8 @@ class PhocacartText {
             $r['vendorname']        = $vendor->name;
             $r['venderusername']    = $vendor->username;
         }
+
+
 		return $r;
 
 	}
@@ -276,6 +374,12 @@ class PhocacartText {
 
             case 'alphanumeric3':
                 return preg_replace("/[^\\w.-]/", '', $string);// Alphanumeric plus _ . -
+            break;
+            case 'alphanumeric4':
+                return preg_replace("/[^\\w.,-]/", '', $string);// Alphanumeric plus _ . , -
+            break;
+            case 'alphanumeric5':
+                return preg_replace("/[^\\w.,]/", '', $string);// Alphanumeric plus _ . ,
             break;
 
             case 'folder':
@@ -360,5 +464,25 @@ class PhocacartText {
         $textOutput = trim(StringHelper::substr($textTruncated, 0, StringHelper::strrpos($textTruncated, " ")));
 
         return $textOutput . $suffix;
+    }
+
+    public static function parseDbColumnParameter($string, &$params = array()) {
+
+
+        $stringA = explode('=', $string);
+
+        if (isset($stringA[1])) {
+
+            $pos = strpos($stringA[1], 'E');
+
+            if ($pos !== false) { $params['edit'] = true;}
+        }
+
+        if (isset($stringA[0])) {
+            return PhocacartText::filterValue($stringA[0], 'alphanumeric2');
+        }
+
+	    return false;
+
     }
 }

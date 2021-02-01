@@ -367,9 +367,11 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 			$this->_db->setQuery($query);
 			$items = $this->_db->loadObjectList();
 
+
+
 			if (isset($items) && count($items)) {
 
-				$table		= $this->getTable('PhocaCartItem');
+
 
 				$msg = array();
 				$addedItems = 0;
@@ -377,6 +379,9 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 				foreach($items as $k => $v) {
 
 					if (isset($v->items_item)) {
+
+						$table		= $this->getTable('PhocaCartItem');
+
 						$data = json_decode($v->items_item, true);
 
 
@@ -400,7 +405,6 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 								if ($iI == 0) {
 									// First image as image
-
 									$dataImage = $vI['name'];
 								} else {
 									// All others as additional images
@@ -428,6 +432,14 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 									if ($folder != '') {
 										$dataImageMove[$iI]['dest'] = $pathImage['orig_abs_ds'] . $folder  . $vI['name'];
+
+									}
+
+									// Update image path
+									if ($iI == 0) {
+										$dataImage = $folder . $dataImage;
+									} else {
+										$dataImageAdditional[$iI]['image'] = $folder  . $vI['name'];
 									}
 
 
@@ -453,6 +465,14 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 									if ($folder != '') {
 										$dataImageMove[$iI]['dest'] = $pathImage['orig_abs_ds'] . $folder .  $vI['name'];
 									}
+
+									// Update image path
+									if ($iI == 0) {
+										$dataImage = $folder . $dataImage;
+									} else {
+										$dataImageAdditional[$iI]['image'] = $folder  . $vI['name'];
+									}
+
 								}
 
 								$dataImageMove[$iI]['src'] = $vI['fullpath'];
@@ -477,10 +497,32 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 						}
 
 
+						// Add default values
+						if (!isset($data['language'])) {
+							$data['language'] = '*';
+						}
+
+						$date = JFactory::getDate()->toSql();
+
+						if (!isset($data['date'])) {
+							$data['date'] = $date;
+						}
+
+						if (!isset($data['date_update'])) {
+							$data['date_update'] = $date;
+						}
+
+						$user = JFactory::getUser();
+						$data['created'] = $date;
+						$data['created_by'] = isset($user->id) ? (int)$user->id: 0;
+						//$data['modified'] = $date;
+						//$data['modified_by'] = isset($user->id) ? (int)$user->id: 0;
+
+
+
+
 						// TEST - REMOVE in STABLE
 						//$table->id = 1189;
-
-
 
 						// Bind the data.
 						if (!$table->bind($data)) {

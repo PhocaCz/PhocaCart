@@ -14,6 +14,7 @@ function phChangeAttributeType(typeView) {
 
 	typeView = typeof typeView !== 'undefined' ? '.phj' + typeView : '';
 
+
 	var phProductAttribute = typeView + '.phjProductAttribute';// Find all select boxes which should be transformed to color or image
 	var phCleanAttribute = typeView + '.phjCleanAttribute';// Clean previously transformed select boxes in case of ajax reload
 
@@ -284,6 +285,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 
 jQuery(document).ready(function() {
 
+
 	phChangeAttributeType();// Change select to color or image, change checkbox to color or image
 	phSetAttributeUrl(0);// Change URL (# attributes) or change attributes by URL at start
 
@@ -317,10 +319,10 @@ jQuery(document).ready(function() {
 	// Checkbox
 	jQuery(document).on('click', phCheckboxA, function(e){
 
-
+		
 		var phParams = Joomla.getOptions('phParamsPC');
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
-			return false;// Interactive Change is disabled
+			return;// Interactive Change is disabled
 		}
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
@@ -342,6 +344,7 @@ jQuery(document).ready(function() {
         var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
         var phACheckedLength = jQuery(phCheckboxAInputChecked).length;
 
+		
         if (phACheckedLength == 0) {
             var phThisLabel = jQuery(e.target).parent();// Bootstrap checkboxes - colors, images
             phThisLabel.addClass("active");// Bootstrap checkboxes - colors, images

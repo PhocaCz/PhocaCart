@@ -42,17 +42,9 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 		echo '<div class="ph-attribute-title">'.$v->title.$req['span'].'</div>';
 		if(!empty($v->options)) {
 
-			$d2							= array();
+			$d2							= $d;
 			$d2['attribute']			= $v;
 			$d2['required']				= $req;
-			$d2['s']                    = $d['s'];
-			$d2['dynamic_change_image'] = $d['dynamic_change_image'];
-			$d2['zero_attribute_price'] = $d['zero_attribute_price'];
-			$d2['pathitem']				= $d['pathitem'];
-			$d2['price']				= $d['price'];
-			$d2['product_id']			= $d['product_id'];
-			$d2['image_size']			= $d['image_size'];
-			$d2['typeview']				= $d['typeview'];
 
             // EDIT PHOCACARTATTRIBUTE
 			if ($v->type == 1 || $v->type == 2 || $v->type == 3) {

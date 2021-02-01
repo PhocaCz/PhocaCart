@@ -48,7 +48,7 @@ if ($this->a->addressedit == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-check-box">';
-	if ($this->t['dataaddressform']['s'] != '') {
+	if ($this->t['dataaddressform']['s'] != '' && $this->t['$delivery_billing_same_enabled'] != -1) {
 		echo '<div class="checkbox">';
 		echo '<label><input type="checkbox" id="phCheckoutBillingSameAsShipping" name="phcheckoutbsas" '.$this->t['dataaddressform']['bsch'].' > '.JText::_('COM_PHOCACART_DELIVERY_AND_BILLING_ADDRESSES_ARE_THE_SAME').'</label>';
 		echo '</div>';

@@ -12,7 +12,13 @@ class JFormFieldPhocaManufacturer extends JFormField
 {
 	protected $type 		= 'PhocaManufacturer';
 
-		protected function getInput() {
+	protected function getInput() {
+			
+			
+		$class		= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
+		$attr		= '';
+		$attr		.= $class . ' ';
+		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
 
 		$db = JFactory::getDBO();
 
@@ -24,7 +30,7 @@ class JFormFieldPhocaManufacturer extends JFormField
 		$data = $db->loadObjectList();
 
 		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

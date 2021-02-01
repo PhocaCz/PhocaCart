@@ -49,13 +49,7 @@ if (isset($image->rel) && $image->rel != '') {
 //echo '</div>';
 //echo '<div class="ph-caption">';
 
-echo '<h3>';
-if ($t['category_name_link'] == 1)
-	echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a>';
-else {
-	echo $v->title;
-}
-echo '</h3>';
+echo PhocacartRenderFront::renderCategoryHeader($t['category_name_link'], $v);
 
 
 if (!empty($v->subcategories) && (int)$t['csv_display_subcategories'] > 0) {

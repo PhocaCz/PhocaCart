@@ -1,5 +1,6 @@
 <?php
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\OrderingField;
 
 /**
@@ -76,6 +77,8 @@ class PhocacartOrder
         $fullItems = $cart->getFullItems();
         $currency  = PhocacartCurrency::getCurrency();
 
+
+
         if (empty($fullItems[0])) {
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
@@ -88,7 +91,7 @@ class PhocacartOrder
         $cart->addShippingCosts($shippingId);
         $shippingC = $cart->getShippingCosts();
         $payment   = $cart->getPaymentMethod();
-        $cart->addPaymentCosts($payment['id']);
+        $cart->addPaymentCosts($payment['id']);// validity of payment will be checked
         $paymentC   = $cart->getPaymentCosts();
         $couponCart = $cart->getCoupon();
         $coupon     = false;
@@ -152,8 +155,9 @@ class PhocacartOrder
         // --------------------
         // CHECK CAPTCHA
         // --------------------
-        $enable_captcha_checkout = PhocacartCaptcha::enableCaptchaCheckout();
-        if ($enable_captcha_checkout) {
+       $pos			            = PhocacartPos::isPosView();
+        $enable_captcha_checkout    = PhocacartCaptcha::enableCaptchaCheckout();
+        if ($enable_captcha_checkout && !$pos) {
             if (!PhocacartCaptchaRecaptcha::isValid()) {
                 if ($order_language == 0) {
                     $pLang->setLanguageBack($defaultLang);
@@ -243,15 +247,6 @@ class PhocacartOrder
         }
 
 
-        // POSSIBLE FEATURE:
-        /*$rights								= new PhocacartAccessRights();
-        $this->t['can_display_addtocart']	= $rights->canDisplayAddtocart();
-
-        if (!$this->t['can_display_addtocart']) {
-            // Can user make an oder whe he/she is not able to add items to cart
-            return false;
-        }*/
-
 
         $db = JFactory::getDBO();
 
@@ -289,7 +284,9 @@ class PhocacartOrder
         //$dispatcher = J EventDispatcher::getInstance();
         $plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
         if ($plugin) {
-            \JFactory::getApplication()->triggerEvent('PCPbeforeSaveOrder', array(&$statusId, (int)$payment['id']));
+            $eventData 					= array();
+            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
+            \JFactory::getApplication()->triggerEvent('PCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
             $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
         } else {
 
@@ -311,8 +308,21 @@ class PhocacartOrder
         $d['amount_change']   = isset($data['amount_change']) ? $data['amount_change'] : 0;
 
         $d['published']              = 1;
+
         $d['shipping_id']            = (int)$shippingId;
+        $shippingParams              = array();
+        if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
+            $shippingParams['method']= htmlspecialchars(strip_tags($shippingC['method']));
+        }
+        $d['params_shipping']        = json_encode($shippingParams);
+
         $d['payment_id']             = (int)$payment['id'];
+        $paymentParams               = array();
+        if ((int)$payment['id'] > 0 && isset($payment['method']) && $payment['method'] != '') {
+            $paymentParams['method'] = htmlspecialchars(strip_tags($payment['method']));
+        }
+        $d['params_payment']         = json_encode($paymentParams);
+
         $d['coupon_id']              = (int)$coupon['id'];
         $d['currency_id']            = (int)$currency->id;
         $d['currency_code']          = $currency->code;
@@ -511,7 +521,7 @@ class PhocacartOrder
 
 
         // GET ID OF ORDER
-        if ($row->id > 0) {
+        if ((int)$row->id > 0) {
 
             // Set Order Billing
             $orderBillingData = $this->saveOrderBilling($row->id, $row->date, $d['status_id']);
@@ -633,7 +643,11 @@ class PhocacartOrder
             if (isset($status['email_customer'])) {
                 $notify = $status['email_customer'];
             }
-            $this->saveOrderHistory($d['status_id'], $notify, $user->id, $row->id);
+
+            // If vendor makes and order in POS e.g. then store his/her as the one who made the change
+            $userReal = JFactory::getUser();
+
+            $this->saveOrderHistory($d['status_id'], $notify, $userReal->id, $row->id);
 
 
             // BE AWARE***********
@@ -1065,6 +1079,18 @@ class PhocacartOrder
 
             }
 
+
+            // EVENT Shipping
+            if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
+
+                JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingC['method'])));
+                $eventData 					= array();
+                $eventData['pluginname'] 	= htmlspecialchars(strip_tags($shippingC['method']));
+                $eventData['id'] 			= (int)$row->id;
+                Factory::getApplication()->triggerEvent('PCSafterSaveOrder', array('com_phocacart.library.order', $eventData));
+            }
+
+
             // CHANGE STATUS
             // STOCK MOVEMENT (including a) Main Product, b) Product Variations method)
 
@@ -1237,9 +1263,59 @@ class PhocacartOrder
 
 
         if (!$checkP) {
+            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
             return false;
         }
 
+
+        // Possible feature - remove this additional check based on mostly design parameters
+
+        // 1) canDisplayAddtocartAdvanced - Product on demand product cannot be ordered
+        // canDisplayAddtocart (is a part of  1) - Display add to cart disabled or only for specific access level or only for specific group (checked previously in checkIfAccessPossible)
+        // 2) canDisplayAddtocartPrice - Product with zero price cannot be added to cart (can be set in options)
+        // 3) canDisplayAddtocartStock - Product witz zero stock cannot be added to cart (can be set in options)
+
+
+        $itemP = PhocacartProduct::getProduct((int)$d['id'], $d['catid']);
+        $d['attributes'] = !empty($d['attributes']) ? $d['attributes'] : array();
+
+        if (!empty($itemP)) {
+            $price  = new PhocacartPrice();
+            $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price);
+
+            $aA     = $d['attributes'];// Sanitanized yet //PhocacartAttribute::sanitizeAttributeArray($d['attributes']);
+            $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $itemP, 1);
+
+
+            $price->correctMinusPrice($priceP);
+            $priceA = isset($priceP['brutto']) ? $priceP['brutto'] : 0;
+
+            // Stock (don't display add to cart when stock is zero)
+            $stockStatus = array();
+            $stock       = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $itemP, 1);
+
+            $rights                      = new PhocacartAccessRights();
+            $can_display_addtocart       = $rights->canDisplayAddtocartAdvanced($itemP);
+            $can_display_addtocart_price = $rights->canDisplayAddtocartPrice($itemP, $priceA);
+            $can_display_addtocart_stock = $rights->canDisplayAddtocartStock($itemP, $stock);
+
+
+            if (!$can_display_addtocart) {
+                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                return false;
+            }
+
+            if (!$can_display_addtocart_price) {
+                $app->enqueueMessage(JText::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                return false;
+            }
+
+            if (!$can_display_addtocart_stock) {
+                $app->enqueueMessage(JText::_('COM_PHOCACART_STOCK_IS_EMPTY'). ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                return false;
+            }
+
+        }
 
         // Additional info
         $d['default_price']    = $d['default_price'];
@@ -1585,6 +1661,7 @@ class PhocacartOrder
 
         // 1) download_file for ordered product
         // 2) download_file for ordered attribute option of each product
+
         $d                     = array();
         $d['order_id']         = (int)$orderId;
         $d['product_id']       = (int)$productId;
@@ -1596,11 +1673,11 @@ class PhocacartOrder
         $d['date']             = gmdate('Y-m-d H:i:s');
         $d['ordering']         = 0;
 
-
         // If Product includes attribute option download file, this means there can be two different products:
         // a) produt without any attribute selected
         // b) product with attribute selected
         // So if set in options and there is a download file for attribute option - the main product download file will be skipped
+
         if ($download_product_attribute_options == 1 && !empty($attributeDownloadFiles)) {
             foreach ($attributeDownloadFiles as $k => $v) {
 

@@ -61,7 +61,7 @@ class PhocacartShipping
 
 		}
 
-		$columns		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access,'
+		$columns		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method,'
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
@@ -71,7 +71,7 @@ class PhocacartShipping
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
-		$groupsFull		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access,'
+		$groupsFull		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method,'
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
@@ -370,15 +370,39 @@ class PhocacartShipping
 
         $country = 0;
 
-        if ($shipping_country_rule == 1) {
-        	if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
-				$country = (int)$dataAddress['bcountry'];
-			}
-		} else {
-        	if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
-				$country = (int)$dataAddress['scountry'];
-			}
+        switch($shipping_country_rule) {
+
+			case 2:
+				if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+					$country = (int)$dataAddress['scountry'];
+				}
+			break;
+
+			case 3:
+				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$country = (int)$dataAddress['bcountry'];
+				} else if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+					$country = (int)$dataAddress['scountry'];
+				}
+			break;
+
+			case 4:
+				if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+					$country = (int)$dataAddress['scountry'];
+				} else if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$country = (int)$dataAddress['bcountry'];
+				}
+			break;
+
+			case 1:
+			default:
+				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$country = (int)$dataAddress['bcountry'];
+				}
+			break;
+
 		}
+
 
 		return $country;
 	}
@@ -390,14 +414,37 @@ class PhocacartShipping
 
         $region = 0;
 
-        if ($shipping_region_rule == 1) {
-        	if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
-				$region = (int)$dataAddress['bregion'];
-			}
-		} else {
-        	if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
-				$region = (int)$dataAddress['sregion'];
-			}
+        switch($shipping_region_rule) {
+
+			case 2:
+				if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+					$region = (int)$dataAddress['sregion'];
+				}
+			break;
+
+			case 3:
+				if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+					$region = (int)$dataAddress['bregion'];
+				} else if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+					$region = (int)$dataAddress['sregion'];
+				}
+			break;
+
+			case 4:
+				if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+					$region = (int)$dataAddress['sregion'];
+				} else if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+					$region = (int)$dataAddress['bregion'];
+				}
+			break;
+
+			case 1:
+			default:
+				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$region = (int)$dataAddress['bcountry'];
+				}
+			break;
+
 		}
 
 		return $region;
@@ -659,59 +706,14 @@ class PhocacartShipping
 	 */
 	public static function getShippingPluginMethods($namePlugin = '') {
 
-		$db 	= JFactory::getDBO();
-		$lang	= JFactory::getLanguage();
-		$client	= JApplicationHelper::getClientInfo(0);
-		$query = 'SELECT a.extension_id , a.name, a.element, a.folder'
-				.' FROM #__extensions AS a'
-				.' WHERE a.type = '.$db->quote('plugin')
-				.' AND a.enabled = 1'
-				.' AND a.folder = ' . $db->quote('pcs');
+		$plugin = array();
+		$plugin['name'] = $namePlugin;
+		$plugin['group'] = 'pcs';
+		$plugin['title'] = 'Phoca Cart Shipping';
+		$plugin['selecttitle'] = JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD');
+		$plugin['returnform'] = 1;
 
-		if ($namePlugin != '') {
-			$query .= 'AND a.element = '. $db->quote($namePlugin);
-		}
-
-		$query .= ' ORDER BY a.ordering';
-		$db->setQuery($query);
-		$plugins = $db->loadObjectList();
-
-
-		if ($namePlugin == '') {
-			$i 		= 0;
-			$p[0]['text'] 	= '- ' .JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD').' -';
-			$p[0]['value'] 	= '';
-		} else {
-			$i 		= -1;
-		}
-		if (!empty($plugins)) {
-			foreach($plugins as $k => $v) {
-
-				// Load the core and/or local language file(s).
-				$folder 	= 'pcs';
-				$element	= $v->element;
-			$lang->load('plg_'.$folder.'_'.$element, JPATH_ADMINISTRATOR, null, false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, $client->path.'/plugins/'.$folder.'/'.$element, null, false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, $client->path.'/plugins/'.$folder.'/'.$element, $lang->getDefault(), false, false);
-
-				$i++;
-
-				$name = JText::_(strtoupper($v->name) );
-				$name = str_replace('Plugin', '', $name);
-				$name = str_replace('Phoca Cart Shipping -', '', $name);
-
-				$p[$i]['text'] = JText::_($name);
-				$p[$i]['value'] = $v->element;
-			}
-
-		}
-
-		if ($namePlugin != '' && !empty($p[0])) {
-			return $p[0];
-		}
-
-		return $p;
+		return PhocacartPlugin::getPluginMethods($plugin);
 
 	}
 

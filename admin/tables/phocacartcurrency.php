@@ -14,12 +14,19 @@ class TablePhocacartCurrency extends JTable
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_currencies', 'id', $db);
 	}
-	
+
 	function check() {
-		if(empty($this->alias)) {
+
+
+	    if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
+
+		if ($this->exchange_rate == 0 || $this->exchange_rate < 0.00000001) {
+            $this->setError( JText::_( 'COM_PHOCACART_ERROR_EXCHANGE_RATE_MUST_BE_GREATER_THAN_ZERO') );
+		    return false;
+        }
 
 		return true;
 	}

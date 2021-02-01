@@ -118,7 +118,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 
 		$query->order($db->escape('a.date ASC'));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));exit;
+		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}
 }

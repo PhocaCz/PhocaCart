@@ -33,6 +33,7 @@ function phAppendContainerRequestQickView() {
 
 function phDoRequestSuccess(data, options) {
 
+
 	if (options['type'] == 'cart') {
 		/* Add to cart, update cart */
 		jQuery(options['class']).html(data.item);
@@ -131,17 +132,17 @@ function phDoRequestSuccess(data, options) {
 		}
 	} else if (options['type'] == 'changedata') {
 
-		
+
 		/* Change Image */
 		if( data.item.image !== undefined && data.item.image !== '' ) {
-			
-	
+
+
 			if (options['method_image'] == 2) {
 				var phProductImg	= '.phjProductImage' + options["id_item_name"];
 				var phProductSource	= '.phjProductSource' + options["id_item_name"];// Webp source
 				var phProductHref	= '.phjProductHref' + options["id_item_name"];
-		
-				
+
+
 				// New image found - change to new image
 				jQuery(phProductHref).attr('href', data.item.image);
 				jQuery(phProductImg).attr('src', data.item.image);
@@ -153,7 +154,7 @@ function phDoRequestSuccess(data, options) {
 		if( data.item.price !== undefined ) {
 			jQuery(options["id_item_price"]).html(data.item.price);
 		}
-		
+
 		/* Change ID (SKU, EAN, ...) */
 		if( data.item.id !== undefined ) {
 			jQuery(options["id_item_id"]).html(data.item.id);
@@ -162,7 +163,8 @@ function phDoRequestSuccess(data, options) {
 		if( data.item.stock !== undefined ) {
 			if (options['method_stock'] == 1) {
 
-				if (data.item.stockvalue < 1) {
+				//if (data.item.stockvalue < 1) {
+				if (data.item.hideaddtocart == 1) {
 					//jQuery(phProductAddToCart).hide();';
 					jQuery(options["product_add_to_cart_item"]).css('visibility', 'hidden');
 					jQuery(options["product_add_to_cart_item_icon"]).css('display', 'none');

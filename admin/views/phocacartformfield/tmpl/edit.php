@@ -38,7 +38,7 @@ echo $r->item($this->form, 'label', '<small>('.JText::_($this->form->getValue('l
 
 echo $r->item($this->form, 'description', '<small>('.JText::_($this->form->getValue('description')).')</small>', 1);
 
-$formArray = array ('type', 'default', 'class', 'required', 'read_only', 'pattern', 'maxlength', /*'additional',*/ 'validate', 'unique', 'ordering', 'access', 'group');
+$formArray = array ('type', 'predefined_values', 'predefined_values_first_option', 'default', 'class', 'required', 'read_only', 'pattern', 'maxlength', /*'additional',*/ 'validate', 'unique', 'ordering', 'access', 'group');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

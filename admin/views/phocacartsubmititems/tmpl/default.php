@@ -60,6 +60,8 @@ echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-title">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-user">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_USER', 'user_username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DATE', 'a.date_submit', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-id">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
@@ -106,6 +108,13 @@ if (is_array($this->items)) {
         echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
 
 
+        $userO = $this->escape($item->user_name);
+        if (isset($item->user_username)) {
+            $userO .= ' <small>('.$item->user_username.')</small>';
+        }
+        echo $r->td($userO, "small");
+
+        echo $r->td($item->date_submit, "small");
         echo $r->td($item->id, "small");
 
         echo $r->endTr();

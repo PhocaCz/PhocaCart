@@ -121,8 +121,7 @@ if (is_array($this->items)) {
 
         echo $r->td(JText::_($item->method), "small");
 
-        echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="shipping_methods:cost:' . (int)$item->id . '">' . PhocacartPrice::cleanPrice($item->cost) . '</span>', "small");
-
+        echo $r->tdEip('shipping_methods:cost:'.(int)$item->id, PhocacartPrice::cleanPrice($item->cost));
 
         $rules = array();
         if ($item->active_amount) {

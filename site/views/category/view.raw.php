@@ -36,6 +36,8 @@ class PhocaCartViewCategory extends JViewLegacy
 
 
 		// PARAMS
+		$this->t['view']					= 'category';
+		$this->t['category_layout_plugin']	= $this->p->get( 'category_layout_plugin', '');
 		$this->t['display_new']				= $this->p->get( 'display_new', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
@@ -65,6 +67,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['dynamic_change_image']		= $this->p->get( 'dynamic_change_image', 0);
 		$this->t['dynamic_change_price']		= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']		= $this->p->get( 'dynamic_change_stock', 0 );
+		$this->t['remove_select_option_attribute']= $this->p->get( 'remove_select_option_attribute', 1 );
 		$this->t['add_compare_method']			= $this->p->get( 'add_compare_method', 0 );
 		$this->t['add_wishlist_method']			= $this->p->get( 'add_wishlist_method', 0 );
 		$this->t['display_addtocart']			= $this->p->get( 'display_addtocart', 1 );
@@ -79,6 +82,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->t['cv_subcategories_layout']		= $this->p->get( 'cv_subcategories_layout', 1 );
 		$this->t['category_askquestion']	 	= $this->p->get( 'category_askquestion', 0 );
 		$this->t['popup_askquestion']		    = $this->p->get( 'popup_askquestion', 1 );
+		$this->t['display_products_all_subcategories'] = $this->p->get('display_products_all_subcategories', 0);
 
 
 		// Rights or catalogue options --------------------------------
@@ -163,6 +167,16 @@ class PhocaCartViewCategory extends JViewLegacy
 			$results = \JFactory::getApplication()->triggerEvent('PCVonCategoryBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
 			$this->t['event']->onCategoryBeforeHeader = trim(implode("\n", $results));
 			// Foreach values are rendered in default foreaches
+
+			// Layout plugins - completely new layout including foreach
+			$this->t['pluginlayout']        = false;
+			if ($this->t['category_layout_plugin'] != '') {
+				$this->t['category_layout_plugin']     = PhocacartText::filterValue($this->t['category_layout_plugin'], 'alphanumeric2');
+				$this->t['pluginlayout'] 	        	= JPluginHelper::importPlugin('pcl', $this->t['category_layout_plugin']);
+			}
+			if ($this->t['pluginlayout']) {
+				$this->t['show_switch_layout_type'] = 0;
+			}
 			// END Plugins --------------------------------------
 
 			parent::display($tpl);

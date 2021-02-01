@@ -121,7 +121,7 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 		});');
 
 		// Most viewed and best-selling products
-		$this->t['most_viewed'] 	= PhocacartProduct::getMostViewedProducts();
+		$this->t['most_viewed'] 	= PhocacartProduct::getMostViewedProducts(0, false, false);
 		$this->t['best_selling'] 	= PhocacartProduct::getBestSellingProducts();
 		$this->t['best_selling2'] 	= PhocacartProduct::getBestSellingProducts(5, $this->t['date_from'], $this->t['date_to']);
 

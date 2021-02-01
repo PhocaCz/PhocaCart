@@ -27,6 +27,9 @@
 <option value="phocaformregion:int(11)">region int(11)</option>
 </field>
 
+
+<field name="predefined_values" type="textarea" label="COM_PHOCACART_FIELD_PREDEFINED_VALUES_LABEL" description="COM_PHOCACART_FIELD_PREDEFINED_VALUES_DESC" class="inputbox" rows="3" cols="30"/>
+<field name="predefined_values_first_option" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PREDEFINED_VALUES_FIRST_OPTION_TITLE_LABEL" description="COM_PHOCACART_FIELD_PREDEFINED_VALUES_FIRST_OPTION_TITLE_DESC" />
 <field name="default" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" />
 <field name="size" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" />
 <field name="cols" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COLS_LABEL" description="COM_PHOCACART_FIELD_COLS_DESC" />

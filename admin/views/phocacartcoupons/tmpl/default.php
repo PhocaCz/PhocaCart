@@ -110,7 +110,7 @@ echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $
 
 echo $r->td($this->escape($item->code), "small");
 //echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->discount)), "small");
-echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="coupons:discount:'.(int)$item->id.'">'.$this->escape(PhocacartPrice::cleanPrice($item->discount)).'</span>', "small");
+echo $r->td('<span class="ph-editinplace-text ph-eip-text ph-eip-price" id="coupons:discount:'.(int)$item->id.'">'.$this->escape(PhocacartPrice::cleanPrice($item->discount)).'</span>', "small");
 echo $r->td($this->escape($item->valid_from), "small");
 echo $r->td($this->escape($item->valid_to), "small");
 

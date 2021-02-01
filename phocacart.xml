@@ -2,12 +2,12 @@
 <extension type="component" method="upgrade" version="3.9">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>29/10/2020</creationDate>
+	<creationDate>01/02/2021</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.5.4</version>
+	<version>3.5.5Beta6</version>
 	<description>COM_PHOCACART_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<projectName>PhocaCart</projectName>
@@ -133,6 +133,6 @@
 	
 
 	<updateservers>
-		<server type="extension" name="COM_PHOCACART" priority="1"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml]]></server>
+		<server type="extension" name="COM_PHOCACART" priority="1"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/dev/manifest.xml]]></server>
 	</updateservers>
 </extension>

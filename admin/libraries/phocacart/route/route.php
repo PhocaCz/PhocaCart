@@ -228,13 +228,15 @@ class PhocacartRoute
 			$needles = array(
 				'item'  => (int) $id,
 				'category' => (int) $catid,
-				'categories' => (int)$activeId
+				'categories' => (int)$activeId,
+				'items' => (int)$catid
 			);
 		} else {
 			$needles = array(
 				'item'  => (int) $id,
 				'category' => (int) $catid,
-				'categories' => ''
+				'categories' => '',
+				'items' => ''
 			);
 		}
 
@@ -255,7 +257,8 @@ class PhocacartRoute
 			'checkout' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=checkout';
@@ -267,7 +270,8 @@ class PhocacartRoute
 			'pos' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=pos';
@@ -295,7 +299,8 @@ class PhocacartRoute
 			'account' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=account';
@@ -308,7 +313,8 @@ class PhocacartRoute
 			'comparison' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=comparison';
@@ -320,7 +326,8 @@ class PhocacartRoute
 			'wishlist' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=wishlist';
@@ -332,7 +339,8 @@ class PhocacartRoute
 			//'payment' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=payment';
@@ -344,7 +352,8 @@ class PhocacartRoute
 			'download' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=download';
@@ -356,7 +365,8 @@ class PhocacartRoute
 			'orders' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=orders';
@@ -368,7 +378,8 @@ class PhocacartRoute
 			'terms' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=terms';
@@ -386,7 +397,8 @@ class PhocacartRoute
 			//'info' => '',
 			'item'  => (int) $id,
 			'category' => (int) $catid,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		$link = 'index.php?option=com_phocacart&view=info';
@@ -396,7 +408,8 @@ class PhocacartRoute
 	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0) {
 		$needles = array(
 			'feed'  => (int) $id,
-			'categories' => ''
+			'categories' => '',
+			'items' => ''
 		);
 
 		if ($idAlias != '') {
@@ -430,14 +443,16 @@ class PhocacartRoute
 				'question'  => '',
 				'item' => (int) $id,
 				'category' => (int) $catid,
-				'categories' => (int)$activeId
+				'categories' => (int)$activeId,
+				'items' => (int)$catid
 			);
 		} else {
 			$needles = array(
 				'question'  => '',
 				'item' => (int) $id,
 				'category' => (int) $catid,
-				'categories' => ''
+				'categories' => '',
+				'items' => ''
 			);
 		}
 

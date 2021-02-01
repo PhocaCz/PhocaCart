@@ -1001,7 +1001,7 @@ hr {
   /*display: none !important;*/
 }
 .show {
-  display: block !important;
+  display: block /*!important*/;
 }
 .invisible {
   visibility: hidden;

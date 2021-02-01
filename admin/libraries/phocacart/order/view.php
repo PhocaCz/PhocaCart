@@ -366,6 +366,15 @@ class PhocacartOrderView
 		return $trackingLink;
 	}
 
+	public static function getTrackingNumber($common) {
+		$trackingNumber = '';
+
+		if (isset($common->tracking_number) && $common->tracking_number != '') {
+			$trackingNumber = $common->tracking_number;
+		}
+		return $trackingNumber;
+	}
+
 	public static function getTrackingDescription($common) {
 		$trackingDescription = '';
 		if (isset($common->tracking_description_custom) && $common->tracking_description_custom != '') {
