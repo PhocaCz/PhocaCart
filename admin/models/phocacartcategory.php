@@ -785,7 +785,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		return array($title, $alias);
 	}
 
-	function recreate($cid = array(), &$message) {
+	function recreate($cid = array(), &$message = '') {
 
 		if (count( $cid )) {
 			\Joomla\Utilities\ArrayHelper::toInteger($cid);

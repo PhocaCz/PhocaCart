@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 abstract class PhocacartHtmlFeatured
 {
 
-	public static function featured($value = 0, $i, $canChange = true)
+	public static function featured($value = 0, $i = 0, $canChange = true)
 	{
 		Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
 

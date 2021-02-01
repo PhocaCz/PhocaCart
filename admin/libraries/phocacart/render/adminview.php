@@ -598,7 +598,7 @@ class PhocacartRenderAdminview extends Adminview
 		return $o;
 	}
 
-
+/*
 	public function additionalSpecificationsRow($id, $idDb, $title, $alias, $value, $alias_value, $group, $image, $image_medium, $image_small, $color, $js = 0, $url, $url2, $url3, $w = 700, $h = 400) {
 
 		$groupArray	= PhocacartSpecification::getGroupArray();
@@ -615,7 +615,7 @@ class PhocacartRenderAdminview extends Adminview
 			. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_REQUIRED') . '</div>'
 			. '<div class="col-xs-12 col-sm-2 col-md-2">'. JText::_('COM_PHOCACART_TYPE') . '</div>'
 			. '<div class="col-xs-12 col-sm-5 col-md-5">&nbsp;</div>'
-			.'</div><div class="ph-cb"></div>'."\n";*/
+			.'</div><div class="ph-cb"></div>'."\n";*//*
 			$o .= $this->headerSpecification();
 		}
 
@@ -739,7 +739,7 @@ class PhocacartRenderAdminview extends Adminview
 					jQuery('BODY').css('backgroundColor', hex);
 
 				});";
-		JFactory::getDocument()->addScriptDeclaration($jQ);*/
+		JFactory::getDocument()->addScriptDeclaration($jQ);*//*
 
 		$html 	= array();
 		$html[] = JText::_('COM_PHOCACART_COLOR') . '<br />';
@@ -768,7 +768,7 @@ class PhocacartRenderAdminview extends Adminview
 
 
 		return $o;
-	}
+	}*/
 
 	public function headerSpecification() {
 		//$o = '<div class="ph-row" id="phrowboxspecificationheader">'."\n"

@@ -188,7 +188,7 @@ class PhocacartFile
 		return strtolower( substr( strrchr( $file_name, "." ), 1 ) );
 	}
 
-	public static function getFileOriginal($filename, $rel = 0, $manager) {
+	public static function getFileOriginal($filename, $rel = 0, $manager = '') {
 		$path	= PhocacartPath::getPath($manager);
 		if ($rel == 1) {
 			return str_replace('//', '/', $path['orig_rel_ds'] . $filename);

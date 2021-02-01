@@ -22,7 +22,7 @@ final class PhocacartCategory
 	public function __construct() {}
 
 
-	public static function CategoryTreeOption($data, $tree, $id=0, $text='', $currentId) {
+	public static function CategoryTreeOption($data, $tree, $id=0, $text='', $currentId = 0) {
 
 		foreach ($data as $key) {
 			$show_text =  $text . $key->text;
@@ -173,7 +173,7 @@ final class PhocacartCategory
 		return self::$categoryP[$id];
 	}
 
-	public static function getPathTree($path = array(), $id = 0, $parent_id = 0, $title, $alias = '') {
+	public static function getPathTree($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
 
 		static $iCT = 0;
 
@@ -257,10 +257,10 @@ final class PhocacartCategory
 			$result[] = '</ul>';
 		}
 
-		return implode($result);
+		return implode("\n", $result);
 	}
 
-	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active, $forceCategoryId = 0) {
+	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active = 0, $forceCategoryId = 0) {
 
 
 		$result = array();
@@ -321,7 +321,7 @@ final class PhocacartCategory
 			$result[] = '</ul>';
 		}
 
-		return implode($result);
+		return implode("\n", $result);
 	}
 
 	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {

@@ -2092,7 +2092,7 @@ class PhocacartOrder
      * Example: auto increment can be 1250 but it is new year so based on year the number will be 1 (even autoincrement will be 1251)
      * Number can start each month/year at 1 because of accounting ... be aware the numbers need to include prefixes
      */
-    public static function getNumberId($type = 'order', $orderId, $date = false) {
+    public static function getNumberId($type = 'order', $orderId = 0, $date = false) {
 
         $paramsC = PhocacartUtils::getComponentParameters();
 

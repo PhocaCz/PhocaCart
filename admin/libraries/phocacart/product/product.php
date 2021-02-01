@@ -256,7 +256,7 @@ class PhocacartProduct
     }
 
 
-    public static function checkIfProductAttributesOptionsExist($id, $idKey, $catid, $type = array(0, 1), $attribs)
+    public static function checkIfProductAttributesOptionsExist($id, $idKey, $catid, $type = array(0, 1), $attribs = array())
     {
 
         $typeS = base64_encode(serialize(ksort($type)));

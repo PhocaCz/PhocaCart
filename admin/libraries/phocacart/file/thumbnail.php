@@ -57,7 +57,7 @@ class PhocacartFileThumbnail
 		return $thumbName;
 	}
 
-	public static function deleteFileThumbnail ($filename, $small=0, $medium=0, $large=0, $manager) {
+	public static function deleteFileThumbnail ($filename, $small=0, $medium=0, $large=0, $manager = '') {
 
 		if ($small == 1) {
 			$fileNameThumbS = PhocacartFileThumbnail::getThumbnailName ($filename, 'small', $manager);
@@ -107,7 +107,7 @@ class PhocacartFileThumbnail
 	 * fileNo	= folder/abc.jpg
 	 * if small, medium, large = 1, create small, medium, large thumbnail
 	 */
-	public static function getOrCreateThumbnail($fileNo, $refreshUrl, $small = 0, $medium = 0, $large = 0, $frontUpload = 0, $manager) {
+	public static function getOrCreateThumbnail($fileNo, $refreshUrl, $small = 0, $medium = 0, $large = 0, $frontUpload = 0, $manager = '') {
 
 	/*	if ($frontUpload) {
 			$returnFrontMessage = '';
@@ -348,7 +348,7 @@ class PhocacartFileThumbnail
 		}
 	}
 
-	public static function createFileThumbnail($fileOriginal, $fileThumbnail, $size, $frontUpload=0, $manager, &$errorMsg) {
+	public static function createFileThumbnail($fileOriginal, $fileThumbnail, $size, $frontUpload=0, $manager = '', &$errorMsg = '') {
 
 		$app		= JFactory::getApplication();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
