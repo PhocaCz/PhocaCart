@@ -60,6 +60,18 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		$layout 				= new JLayoutFile('cart_checkout', null, array('component' => 'com_phocacart'));
 		$d						= array();
 		$d['s']			        = $s;
+
+		/*if($app->isClient('administrator')) {
+			// client = 0, ask phoca cart frontend layouts
+			$d['client'] = 1;//admin
+			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
+
+		} else {
+			$d['client'] = 0;//frontend
+			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
+		}*/
+
+
 		$d['params']			= $pC;
 		$d['fullitems']			= $this->fullitems;
 		$d['total']				= $this->total;

@@ -566,7 +566,8 @@ input.pmreadonly:hover {
 /* Stars */
 span.ph-stars, span.ph-stars span {
     display: block;
-    background: url(../../images/star-small.png) 0 -16px repeat-x;
+    /*background: url(../../images/star-small.png) 0 -16px repeat-x;*/
+	background: url(../../images/star-small.svg) 0 -16px repeat-x;
     width: 80px;
     height: 16px;
 }
@@ -1288,47 +1289,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	vertical-align: middle;
 }
 
-/* edit in place */
 
-.ph-editinplace-text {
-	background: #f5f5f5;
-	position:relative;
-	padding: 0.5em;
-}
-
-.ph-editinplace-text form {
-
-
-	background-color: #fff;
-	border:1px solid #f0f0f0;
-	box-shadow: 2px 2px 0px 0px #d0d0d0;
-	width: 26em;
-	height: 5em;
-	padding: 1em;
-	z-index: 1000;
-	position: absolute;
-	left: -4em;
-}
-
-.ph-editinplace-text form button {
-	margin: 0 0 0 0.5em;
-}
-.ph-editinplace-text form input {
-
-	width: 8em !important;
-	margin: -1px 0 0 0.5em !important;
-
-}
-
-.ph-editinplace-text.ph-eip-price_original form input
-.ph-editinplace-text.ph-eip-price form input {
-
-
-}
-
-.ph-editinplace-text.ph-eip-sku form input {
-
-}
 /*
 .ph-product-attribute-download-title {
 	text-align: right;

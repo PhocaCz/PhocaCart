@@ -43,7 +43,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_PAYMENT_METHODS').'</div>';
 	echo '</div>';
 
-	if (isset($this->t['paymentmethod']) && $this->t['paymentmethod']['title'] != '') {
+	if (isset($this->t['paymentmethod']) && isset($this->t['paymentmethod']['title']) && $this->t['paymentmethod']['title'] != '') {
 
 		//echo '<div class="'.$this->s['c']['row'].'">';
 		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';

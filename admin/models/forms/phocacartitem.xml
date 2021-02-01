@@ -109,12 +109,7 @@
 
         <field name="download_hits" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC"/>
 
-        <field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
-            <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
-            <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
-            <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
-            <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
-        </field>
+        
 
 
         <!--
@@ -189,6 +184,13 @@
         <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
+        </field>
+		
+		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
+            <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
+            <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
+            <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
+            <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
         </field>
 
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">

@@ -57,6 +57,8 @@ class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 
 		echo $o;
 
+		// PDF document name
+		$this->document->setName($title);
 
 
 		//$media = new PhocacartRenderAdminmedia();

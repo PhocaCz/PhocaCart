@@ -121,7 +121,7 @@ if (is_array($this->items)) {
         //$method = PhocacartUtilsSettings::getPaymentMethod($item->method);
         echo $r->td(JText::_($item->method), "small");
 
-        echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="payment_methods:cost:' . (int)$item->id . '">' . PhocacartPrice::cleanPrice($item->cost) . '</span>', "small");
+        echo $r->td('<span class="ph-editinplace-text ph-eip-text ph-eip-price" id="payment_methods:cost:' . (int)$item->id . '">' . PhocacartPrice::cleanPrice($item->cost) . '</span>', "small");
 
         $rules = array();
         if ($item->active_amount) {

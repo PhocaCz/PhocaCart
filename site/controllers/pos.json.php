@@ -148,7 +148,7 @@ class PhocaCartControllerPos extends JControllerForm
 			$paymentId = $cart->getPaymentId();
 
 			if (isset($paymentId) && (int)$paymentId > 0) {
-				$cart->addPaymentCosts($paymentId);
+				$cart->addPaymentCosts($paymentId);// validity of payment will be checked
 			}
 	//	}
 
@@ -204,6 +204,7 @@ class PhocaCartControllerPos extends JControllerForm
 			echo json_encode($response);
 			return;
 		}
+
 
 
 
@@ -271,6 +272,7 @@ class PhocaCartControllerPos extends JControllerForm
 						'popup'	=> $oE,
 						'error' => $d['info_msg']);
 					echo json_encode($response);
+
 					return;
 				}
 
@@ -296,6 +298,7 @@ class PhocaCartControllerPos extends JControllerForm
 						'popup'	=> $oE,
 						'error' => $d['info_msg']);
 					echo json_encode($response);
+
 					return;
 				}
 				/*if ($updated) {
@@ -312,13 +315,14 @@ class PhocaCartControllerPos extends JControllerForm
         	$cart->updatePayment();
 
 			$shippingId 	= $cart->getShippingId();
+
 			if (isset($shippingId) && (int)$shippingId > 0) {
 				$cart->addShippingCosts($shippingId);
 			}
 
 			$paymentMethod 	= $cart->getPaymentMethod();
 			if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0) {
-				$cart->addPaymentCosts($paymentMethod['id']);
+				$cart->addPaymentCosts($paymentMethod['id']);// validity of payment will be checked
 			}
 
 
@@ -355,6 +359,8 @@ class PhocaCartControllerPos extends JControllerForm
 			return;
 		} else {
 
+
+
 			// No action, no id - only refresh the cart (information about ticketid, unitid, sectionid set in cart)
 			$cart	= new PhocacartCartRendercheckout();
 			$cart->setType(array(0,2));
@@ -363,18 +369,31 @@ class PhocaCartControllerPos extends JControllerForm
 			// Ticket id set by ticket class
 			$cart->setFullItems();
 
+
+
+
 			$cart->updateShipping();// will be decided if shipping or payment will be removed
         	$cart->updatePayment();
 
+
+        	$db 	= JFactory::getDBO();
+			$query = ' SELECT shipping FROM #__phocacart_cart_multiple AS a'
+					.' WHERE a.vendor_id = 211';
+			$db->setQuery($query);
+			$vendor = $db->loadObject();
+
+
 			$shippingId 	= $cart->getShippingId();
+
 			if (isset($shippingId) && (int)$shippingId > 0) {
 				$cart->addShippingCosts($shippingId);
 			}
 
 			$paymentMethod 	= $cart->getPaymentMethod();
 			if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0) {
-				$cart->addPaymentCosts($paymentMethod['id']);
+				$cart->addPaymentCosts($paymentMethod['id']);// validity of payment will be checked
 			}
+
 
 
 			$cart->roundTotalAmount();
@@ -395,6 +414,7 @@ class PhocaCartControllerPos extends JControllerForm
 				//$total = $price->getPriceFormat($totalA['fbrutto']); Set in Layout
 				$total = $totalA[0]['brutto'];
 			}
+
 
 
 
@@ -776,7 +796,6 @@ class PhocaCartControllerPos extends JControllerForm
 		$order = new PhocacartOrder();
 		$order->setType(array(0,2));
 		$orderMade = $order->saveOrderMain($item);
-
 
 
 

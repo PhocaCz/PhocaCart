@@ -15,35 +15,43 @@
 .admin.com_phocacart .small{
 	font-size: 96% !important;
 }
-*/
 
 
-.ph-editinplace-text {
-	display: block;
-	min-height: 2.7em;
-	/*font-size: 96% !important;*/
+
+.nav-tabs > li > a {
+    letter-spacing: -0.1em !important;
+    padding: 0.7em 0.4em !important;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Rubik:400,600&subset=latin-ext');
+
+.admin.com_phocacart input,
+.admin.com_phocacart button,
+.admin.com_phocacart select,
+.admin.com_phocacart textarea {
+	font-family: "Rubik", -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+.admin.com_phocacart {
+	font-family: "Rubik", -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+	font-size: 86% !important;
+}
+.admin.com_phocacart .small{
+	font-size: 96% !important;
+}
+*/
 
 #j-main-container {
 	padding: 20px !important;
+	margin: 0 !important;
 }
-
-
-
-
-
-
-
 
 .container-main {
 	background: transparent;
-	margin-top: -11px;
+	margin-top: -12px;
 	padding-left: 0px !important;
 	padding-right: 0px !important;
 	padding-bottom: 11px !important;
 }
-
-
 
 .container-main section#content div.row-fluid {
 	margin: 0px !important;
@@ -54,6 +62,7 @@
 .ph-admin-box {
 	margin: 0px !important;
 	background: #F1F5F9;
+	background: #EDF0F5;
 	padding: 0px !important;
 	display: flex;
   	flex-flow: row;
@@ -661,358 +670,195 @@ a.ph-icon-inside:visited {
 }
 .nav.nav-list li:nth-child(2):before {
 	color: #c1a46d;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13beb";/*archive*/
 }
 .nav.nav-list li:nth-child(3):before {
 	color: #da7400;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c4d";/*folder-open*/
 
 }
+
 .nav.nav-list li:nth-child(4):before {
-
 	color: #4e5f81;
-
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c3a";/*equalizer*/
 }
 
 .nav.nav-list li:nth-child(5):before {
 	color: #ff7d49;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c5b";/*home*/
 
 }
 .nav.nav-list li:nth-child(6):before {
 	color: #0099cc;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c12";/*cart*/
 }
 .nav.nav-list li:nth-child(7):before {
 
 	color: #c1976d;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c34";/*disable-motion*/
 
 }
 .nav.nav-list li:nth-child(8):before {
 	color: #777777;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c27";/*components*/
 }
 .nav.nav-list li:nth-child(9):before {
 	color: #afbb6a;
-    float:left;
-    margin-right: 5px;
-	margin-top: 2px;
-	font-family: 'JoomlaFont' !important;
 	content: "\13c2f";/*cube*/
 }
 .nav.nav-list li:nth-child(10):before {
-	font-family: 'JoomlaFont' !important;
+
 	color: #478CD1;
     content: "\13c52";/*globe*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(11):before {
-	font-family: 'JoomlaFont' !important;
 	color: #01868B;
     content: "\13c52";/*globe*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(12):before {
-	font-family: 'JoomlaFont' !important;
 	color: #a5dee5;
     content: "\13c67";/*location*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(13):before {
-	font-family: 'JoomlaFont' !important;
 	color: #4f9ce2;
     content: "\13afb";/*credit*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(14):before {
-	font-family: 'JoomlaFont' !important;
 	color: #dca300;
     content: "\13cc2";/*tags-squared*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(15):before {
-	font-family: 'JoomlaFont' !important;
 	color: #dd5500;
     content: "\13c0f";/*calendar*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(16):before {
-	font-family: 'JoomlaFont' !important;
 	color: #7faa7f;
     content: "\13cd4";/*users*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(17):before {
-	font-family: 'JoomlaFont' !important;
 	color: #aa7faa;
 	content: "\13c57";/*groups*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(18):before {
-	font-family: 'JoomlaFont' !important;
 	color: #7faaaa;
 	content: "\13bdc";/*vcard*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(19):before {
-	font-family: 'JoomlaFont' !important;
 	color: #ffde00;
     content: "\13c43";/*fields*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(20):before {
-	font-family: 'JoomlaFont' !important;
 	color: #399ed0;
     content: "\13c24";/*comment*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(21):before {
-	font-family: 'JoomlaFont' !important;
 	color: #FF6685;
     content: "\13c51";/*gift*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(22):before {
-	font-family: 'JoomlaFont' !important;
 	color: #aa56fe;
     content: "\13ca8";/*scissors*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
-	font-weight: bold;
 }
 
 .nav.nav-list li:nth-child(23):before {
-	font-family: 'JoomlaFont' !important;
 	color: #33af49;
     content: "\13c35";/*download-alt*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(24):before {
-	font-family: 'JoomlaFont' !important;
 	color: #CC0033;
     content: "\13cc0";/*tag-double*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(25):before {
-	font-family: 'JoomlaFont' !important;
 	color: #0040ff;
 	content: "\13ce3";/*ellipsis-h*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(26):before {
-	font-family: 'JoomlaFont' !important;
 	color: #0040ff;
     content: "\13ce4";/*ellipsis-v*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(27):before {
-	font-family: 'JoomlaFont' !important;
 	color: #ffb300;
     content: "\13c41";/*feed*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(28):before {
-	font-family: 'JoomlaFont' !important;
 	color: #EA7C7C;
     content: "\13c5a";/*heart*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(29):before {
-	font-family: 'JoomlaFont' !important;
 	color: #9900CC;
     content: "\13c73";/*messaging*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(30):before {
-	font-family: 'JoomlaFont' !important;
 	color: #73b9ff;
     content: "\13c21";/*clock-alt*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(31):before {
-	font-family: 'JoomlaFont' !important;
 	color: #7fff73;
     content: "\13d11";/*duplicate-alt*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(32):before {
-	font-family: 'JoomlaFont' !important;
 	color: #c1756d;
     content: "\13c92";/*pie*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(33):before {
-	font-family: 'JoomlaFont' !important;
 	color: #8c0069;
     content: "\13c14";/*chart*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(34):before {
-	font-family: 'JoomlaFont' !important;
 	color: #fb1000;
     content: "\13c78";/*mouse-pointer-highlighter*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(35):before {
-	font-family: 'JoomlaFont' !important;
 	color: #668099;
 	content: "\13cb2";/*sign-in*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 .nav.nav-list li:nth-child(36):before {
-	font-family: 'JoomlaFont' !important;
 	color: #669999;
     content: "\13cb3";/*sign-out*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
+
 }
 
 .nav.nav-list li:nth-child(37):before {
-	font-family: 'JoomlaFont' !important;
 	color: #c0c0c0;
     content: "\13cd1";/*logs*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(38):before {
-	font-family: 'JoomlaFont' !important;
 	color: #3378cc;
     content: "\13c5d";/*info-circle*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(39):before {
-	font-family: 'JoomlaFont' !important;
 	color: #2693ff;
     content: "\13c77";/*modules*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(40):before {
-	font-family: 'JoomlaFont' !important;
 	color: #b30059;
     content: "\13cd4";/*users*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 .nav.nav-list li:nth-child(41):before {
-	font-family: 'JoomlaFont' !important;
 	color: #b35900;
     content: "\13c81";/*nofification-circle*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
+
 }
 
 .nav.nav-list li:nth-child(42):before {
-	font-family: 'JoomlaFont' !important;
 	color: #ff9326;
     content: "\13c72";/*menu*/
-    float:left;
-    margin-right: 5px;
-    margin-top: 2px;
 }
 
 
@@ -1264,7 +1110,7 @@ a.ph-icon-inside:visited {
 }
 
 .col-sm-6, .col-sm-2 {
-	/*border: 1px solid red;*/
+
 }
 
 /* Multiple Upload */
@@ -1278,13 +1124,14 @@ ul.plupload_filelist li.plupload_file_name {
 	width: 35%;
 }
 ul.plupload_filelist li .plupload_file_name:before {
-	font-family: 'Glyphicons Halflings';
+	font-family: 'JoomlaFont' !important;
 	color: #d0d0d0;
     content: "\e022";
 	float: left;
 	margin: 0px 5px 5px 0px;
 	padding-bottom: 2px;
 }
+
 
 .plupload_filelist {
     margin: 0;
@@ -1304,7 +1151,7 @@ li.plupload_droptext {
 }
 
 li.plupload_droptext:before {
-	font-family: 'Glyphicons Halflings';
+	font-family: 'JoomlaFont' !important;
 	color: #d0d0d0;
     content: "\e022 ";
 	font-size: 200%;
@@ -1667,4 +1514,26 @@ table#extensionList tr td {
 
 .ph-cp-item [class^="icon-"].duotone:after, .ph-cp-item [class*=" icon-"].duotone:after {
   opacity: 0.6;
+}
+
+
+.ph-icon-task i:before{
+	font-family: 'JoomlaFont' !important;
+}
+.ph-icon-task i {
+	font-size: 150%;
+}
+
+.ph-icon-task.disabled i,
+.ph-icon-task.disabled i:before,
+.ph-icon-task.disabled i:after {
+	opacity: 0.35;
+}
+
+.duotone.icon-purge:before {
+	color: #CC1020;
+}
+
+.duotone.icon-articles:after {
+	color: #CC1020;
 }

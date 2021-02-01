@@ -82,6 +82,7 @@ class PhocacartReward
 
 		// 2. USER
 		$user 					= PhocacartUser::getUser();
+
 		if ($user->id > 0) {
 			$rewards['usertotal'] = $this->getTotalPointsByUserId($user->id);
 		} else {

@@ -254,7 +254,7 @@ echo $r->endTab();
 
 // DOWNLOAD
 echo $r->startTab('download', $tabs['download']);
-$formArray = array('download_folder', 'download_token', 'download_file', 'download_days', 'type');// , 'download_hits' - it is counted in orders
+$formArray = array('download_folder', 'download_token', 'download_file', 'download_days');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
 
 echo '<h3>' . JText::_($this->t['l'] . '_ADDITIONAL_DOWNLOAD_FILES') . '</h3>';
@@ -345,6 +345,6 @@ if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '
 }
 echo $r->endForm();
 
-echo PhocacartRenderAdminjs::renderAjaxTopHtml();
+
 ?>
 

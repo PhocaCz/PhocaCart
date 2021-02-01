@@ -83,17 +83,26 @@ class PhocacartDate
 
 		$splitDate 		= explode(' ', $date);
 		$dateDate 		= $splitDate[0];
-		$dateTime 		= $splitDate[1];
+		$dateTime		= '';
+		if (isset($splitDate[1])) {
+			$dateTime = $splitDate[1];
+		}
 
 		$splitDate2 	= explode('-', $dateDate);
 		$o['year'] 		= $splitDate2[0];
 		$o['month'] 	= $splitDate2[1];
 		$o['day'] 		= $splitDate2[2];
 
-		$splitDate3 	= explode(':', $dateTime);
-		$o['hour'] 		= $splitDate3[0];
-		$o['minute'] 	= $splitDate3[1];
-		$o['second'] 	= $splitDate3[2];
+		if ($dateTime != '') {
+			$splitDate3  = explode(':', $dateTime);
+			$o['hour']   = $splitDate3[0];
+			$o['minute'] = $splitDate3[1];
+			$o['second'] = $splitDate3[2];
+		} else {
+			$o['hour']   = '00';
+			$o['minute'] = '00';
+			$o['second'] = '00';
+		}
 
 		return $o;
 	}

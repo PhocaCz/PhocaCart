@@ -102,6 +102,18 @@
 
 <field name="item_attribute_value" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_VALUE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ATTRIBUTE_VALUE_ELEMENT_DESC"  />
 
+
+
+<field name="item_specification" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_ELEMENT_DESC"  />
+
+<!--<field name="item_specification_group_name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_GROUP_NAME_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_GROUP_NAME_ELEMENT_DESC"  />-->
+
+<field name="item_specification_name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_NAME_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_NAME_ELEMENT_DESC"  />
+
+<field name="item_specification_value" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_VALUE_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIFICATION_VALUE_ELEMENT_DESC"  />
+
+
+
 <field name="item_condition" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_ELEMENT_DESC"  />
 
 <field name="item_type_feed" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_ELEMENT_DESC"  />
@@ -154,10 +166,18 @@
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
-<field name="display_attributes" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_DESC">
+<field name="display_attributes" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_FEED_DISPLAY_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_FEED_DISPLAY_ATTRIBUTES_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
+
+<!--
+<field name="display_specifications" type="radio"  class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_FEED_DISPLAY_SPECIFICATIONS_LABEL" description="COM_PHOCACART_FIELD_FEED_DISPLAY_SPECIFICATIONS_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>-->
+
+		<field name="specification_groups_id" multiple="true" type="PhocacartSpecificationGroups" default="" label="COM_PHOCACART_FIELD_FEED_SPECIFICATION_GROUPS_LABEL" description="COM_PHOCACART_FIELD_FEED_SPECIFICATION_GROUPS_DESC" class="inputbox"  />
 
 <field name="item_limit" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_LIMIT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_LIMIT_DESC"  />
 

@@ -125,5 +125,5 @@ if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '
 }
 
 echo $r->endForm();
-echo PhocacartRenderAdminjs::renderAjaxTopHtml();
+
 ?>

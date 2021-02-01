@@ -193,7 +193,7 @@ function phOpenCatalog(href){
 
 	}
 
-	protected function processTree( $data, $tree, $id = 0, $text='', $currentId, $level, $parentsTreeString = '', $maxLevel = false) {
+	protected function processTree( $data, $tree, $id = 0, $text='', $currentId = 0, $level = 0, $parentsTreeString = '', $maxLevel = false) {
 
 
 		$countItemsInCat 	= 0;// Ordering

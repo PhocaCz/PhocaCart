@@ -70,7 +70,7 @@ class PhocaCartCpViewPhocacartParameters extends JViewLegacy
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacarttags.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartparameters.delete', $this->t['l'].'_DELETE');
 		}
 		JToolbarHelper::divider();
 		JToolbarHelper::help( 'screen.'.$this->t['c'], true );

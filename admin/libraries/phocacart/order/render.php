@@ -109,6 +109,9 @@ class PhocacartOrderRender
 
 				if ((int)$user->id < 1 && $token == '') {
 					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (1)');
+
+					// Add some debug here including debug_print_backtrace(); too see the flow which comes to this error - if from status or from view
+
 					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if (!isset($d['common']->user_id) && $token == '') {
@@ -143,11 +146,23 @@ class PhocacartOrderRender
 		$d['qrcode']	= '';
 		if ($type == 2 && $format == 'pdf') {
 			$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
-			if (isset($d['bas']['b'])) {
+			/*if (isset($d['bas']['b'])) {
 				$d['qrcode'] 	= PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['b'], 1);
 			}
 			if (isset($d['bas']['s'])) {
 				$d['qrcode'] = PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['s'], 2);
+			}*/
+
+			if (!isset($d['bas']['b'])) {
+				$d['bas']['b'] = array();
+			}
+
+			if (!isset($d['bas']['s'])) {
+				$d['bas']['s'] = array();
+			}
+
+			if (isset($d['bas']['s'])) {
+				$d['qrcode'] = PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['b'], $d['bas']['s']);
 			}
 		}
 		//if ($type == 4 && $format == 'raw') {

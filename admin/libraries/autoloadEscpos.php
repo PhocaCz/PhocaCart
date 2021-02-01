@@ -2,6 +2,7 @@
 /**
  * Users who do not have 'composer' to manage dependencies, include this
  * file to provide auto-loading of the classes in this library. 
+ * require JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/autoloadPhoca.php';
  */
 spl_autoload_register ( function ($class) {
 	/*

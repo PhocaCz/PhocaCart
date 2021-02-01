@@ -540,7 +540,7 @@ class PhocaCartModelPos extends JModelLegacy
 			. ' ORDER BY '.$itemOrdering;
 
 		}
-		//echo "<br><br>" . nl2br(str_replace('#__', 'jos_', $q));exit;
+		//echo "<br><br>" . nl2br(str_replace('#__', 'jos_', $q));
 
 		return $q;
 	}
@@ -825,6 +825,7 @@ class PhocaCartModelPos extends JModelLegacy
 		} else {
 			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_SELECTED'), 'success');
 		}
+
 
 		return true;
 	}

@@ -6,6 +6,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Language\Text;
+
 defined( '_JEXEC' ) or die();
 jimport( 'joomla.application.component.view' );
 
@@ -35,6 +38,17 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$this->filterForm   	= $this->get('FilterForm');
         $this->activeFilters 	= $this->get('ActiveFilters');
 
+
+        // Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			throw new Exception(implode("\n", $errors), 500);
+			return false;
+		}
+
+
+        $paramsC = PhocacartUtils::getComponentParameters();
+        $this->t['admin_columns_products'] = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
+        $this->t['admin_columns_products'] = explode(',', $this->t['admin_columns_products']);
 
 
 		// Multiple categories, ordering
@@ -102,7 +116,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$user  	= JFactory::getUser();
 		$bar 	= JToolbar::getInstance('toolbar');
 
-		JToolbarHelper::title( JText::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
+		JToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
 		if ($canDo->get('core.create')) {
 			JToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
@@ -119,28 +133,28 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			JToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
 			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-			$title = JText::_('JTOOLBAR_BATCH');
+			$title = Text::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 
 			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
-			$title = JText::_('COM_PHOCACART_COPY_ATTRIBUTES');
+			$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModalCA\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'copy_attributes');
 		}
 
-		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){submitbutton(\'phocacartitem.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
+		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){submitbutton(\'phocacartitem.recreate\');}}" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
 		$bar->appendButton('Custom', $dhtml);
 
 		JToolbarHelper::divider();
@@ -149,23 +163,5 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 
-	protected function getSortFields() {
-		return array(
-			'pc.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
-			'a.image' 			=> JText::_($this->t['l'] . '_IMAGE'),
-			'a.hits' 			=> JText::_($this->t['l'] . '_HITS'),
-			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'category_id' 		=> JText::_($this->t['l'] . '_CATEGORY'),
-			'language' 			=> JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.hits' 			=> JText::_($this->t['l'] . '_HITS'),
-			'a.sku' 			=> JText::_($this->t['l'] . '_SKU'),
-			'a.price' 			=> JText::_($this->t['l'] . '_PRICE'),
-			'a.price_original'	=> JText::_($this->t['l'] . '_ORIGINAL_PRICE'),
-			'a.stock' 			=> JText::_($this->t['l'] . '_IN_STOCK'),
-			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
-		);
-	}
 }
 ?>

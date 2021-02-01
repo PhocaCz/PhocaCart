@@ -33,6 +33,7 @@ class PhocacartDiscountCart
 
 			$db 			= JFactory::getDBO();
 			$user 			= PhocacartUser::getUser();
+
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 
@@ -76,7 +77,7 @@ class PhocacartDiscountCart
 	 * amount	... total amount based on all products
 	 */
 
-	public static function getCartDiscount($id = 0, $catid = 0, $quantity, $amount) {
+	public static function getCartDiscount($id = 0, $catid = 0, $quantity = 0, $amount = 0) {
 
 		//$app									= JFactory::getApplication();
 		$paramsC 								= PhocacartUtils::getComponentParameters();

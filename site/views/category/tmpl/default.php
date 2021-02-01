@@ -6,6 +6,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die();
 
 $layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_phocacart'));
@@ -31,9 +34,33 @@ if (!$this->t['ajax']) {
 }
 
 
-// ITEMS
+// ITEMS a) items displayed by layout plugin, b) items displayed common way, c) no items found
+if (!empty($this->items) && $this->t['pluginlayout']) {
 
-if (!empty($this->items)) {
+	$pluginOptions 				= array();
+	$eventData 					= array();
+	$dLA 						= array();
+	$eventData['pluginname'] 	= $this->t['category_layout_plugin'];
+
+	Factory::getApplication()->triggerEvent('PCLonCategoryGetOptions', array('com_phocacart.category', &$pluginOptions, $eventData));
+
+	if (isset($pluginOptions['layouttype']) && $pluginOptions['layouttype'] != '') {
+		$this->t['layouttype'] = PhocacartText::filterValue($pluginOptions['layouttype'], 'alphanumeric5');
+	}
+
+	$lt			= $this->t['layouttype'];
+	$dLA['t'] 	= $this->t;
+	$dLA['s'] 	= $this->s;
+
+	echo '<div id="phItems" class="ph-items '.$lt.'">';
+
+	Factory::getApplication()->triggerEvent('PCLonCategoryInsideLayout', array('com_phocacart.category', &$this->items, $dLA, $eventData));
+
+	echo $this->loadTemplate('pagination');
+
+	echo '</div>'. "\n"; // end items
+
+} else if (!empty($this->items)) {
 
 	$price			= new PhocacartPrice;
 	$col 			= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat']);
@@ -100,7 +127,7 @@ if (!empty($this->items)) {
 			$d['s']				= $this->s;
 			$d['linkqvb']		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 			$d['id']			= (int)$v->id;
-			$d['catid']			= $this->t['categoryid'];
+			$d['catid']				= $this->t['display_products_all_subcategories'] == 1 ? $v->catid : $this->t['categoryid'];
 			$d['return']		= $this->t['actionbase64'];
 			$icon['quickview'] 	= $layoutQVB->render($d);
 		}
@@ -202,11 +229,15 @@ if (!empty($this->items)) {
 
 		if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4 || $this->t['display_addtocart_icon'] == 1) {
 
+
 			// FORM DATA
 			$dF['s']					= $this->s;
 			$dF['linkch']				= $this->t['linkcheckout'];// link to checkout (add to cart)
 			$dF['id']					= (int)$v->id;
-			$dF['catid']				= $this->t['categoryid'];
+			// If in category even products from its subcategories can be displayed then it means that
+			// that current product does not have to be connected with with this category view
+			// so we don't set current category but category based on db
+			$dF['catid']				= $this->t['display_products_all_subcategories'] == 1 ? $v->catid : $this->t['categoryid'];
 			$dF['return']				= $this->t['actionbase64'];
 			$dF['typeview']				= 'Category';
 			$dA['addtocart']			= $this->t['category_addtocart'];
@@ -226,6 +257,7 @@ if (!empty($this->items)) {
 			$dAb['attr_options']			= $attributesOptions;
 			$dAb['hide_attributes']			= $this->t['hide_attributes_category'];
 			$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
+			$dAb['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 			$dAb['zero_attribute_price']	= $this->t['zero_attribute_price'];
 			$dAb['pathitem']				= $this->t['pathitem'];
 			$dAb['product_id']				= (int)$v->id;
@@ -359,7 +391,7 @@ if (!empty($this->items)) {
 
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
-		
+
 		//$dL['product_header'] .= '<div>SKU: '.$v->sku.'</div>';
 		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 

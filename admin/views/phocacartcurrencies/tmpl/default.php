@@ -116,7 +116,7 @@ $this->t['current_currency']['exchange_rate'] = $item->exchange_rate;
 
 $exchangeInfo = PhocacartCurrency::getCurrencyRelation($this->t['current_currency'], $this->t['default_currency']);
 //echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->exchange_rate)) . $exchangeInfo, "small");
-echo $r->td('<span class="ph-editinplace-text ph-eip-price" id="currencies:exchange_rate:'.(int)$item->id.'" data-id="'.(int)$item->id.'">'
+echo $r->td('<span class="ph-editinplace-text ph-eip-text ph-eip-price" id="currencies:exchange_rate:'.(int)$item->id.'" data-id="'.(int)$item->id.'">'
 	. $this->escape(PhocacartPrice::cleanPrice($item->exchange_rate)).'</span>'
 	. '<div class="ph-exchange-info phChangeEditInPlace'.(int)$item->id.'">'.$exchangeInfo.'</div>', "small");
 

@@ -34,6 +34,7 @@ class PhocacartDiscountProduct
 
             $db         = JFactory::getDBO();
             $user       = PhocacartUser::getUser();
+
             $userLevels = implode(',', $user->getAuthorisedViewLevels());
             $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
             $wheres     = array();

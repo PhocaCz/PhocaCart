@@ -427,7 +427,8 @@ class PhocacartRenderFront
             }
 
             foreach ($m as $k => $v) {
-                $mO .= '<li class="' . $v['type'] . ' ">' . $v['message'] . '</li>';
+                // ' alert alert-'.$v['type']
+                $mO .= '<li class="' . $v['type'] . '">' . $v['message'] . '</li>';
             }
             $mO .= '</ul>';
         } else {
@@ -584,6 +585,8 @@ class PhocacartRenderFront
         if ($link == 1) {
             if ($route == 'item') {
                 return '<a href="' . JRoute::_(PhocacartRoute::getItemRoute($item->id, $item->catid, $item->alias, $item->catalias)) . '">' . $item->title . '</a>';
+            } else if ($route == 'category') {
+                return '<a href="' . JRoute::_(PhocacartRoute::getCategoryRoute($item->id, $item->alias)) . '">' . $item->title . '</a>';
             }
         } else {
             return $item->title;
@@ -612,6 +615,31 @@ class PhocacartRenderFront
         $header = PhocacartRenderFront::getLinkedTitle($link, $v, $route);
 
         return '<' . strip_tags($tag) . ' class="ph-product-header ' . strip_tags($additionalClass) . '">' . $header . '</' . strip_tags($tag) . '>';
+    }
+
+
+
+    public static function renderCategoryHeader($link, $v, $route = 'category', $tag = '', $additionalClass = '')
+    {
+
+        $app = JFactory::getApplication();
+        $p = $app->getParams();
+
+        $displayHeader = $p->get('display_category_header', 'h3');
+
+
+        if ($displayHeader == '-1') {
+            return '';
+        }
+
+        if ($tag == '') {
+            $tag = $displayHeader;
+        }
+
+
+        $header = PhocacartRenderFront::getLinkedTitle($link, $v, $route);
+
+        return '<' . strip_tags($tag) . ' class="ph-category-header ' . strip_tags($additionalClass) . '">' . $header . '</' . strip_tags($tag) . '>';
     }
 
     public static function renderArticle($id, $format = 'html', $default = '', $changeLang = 0)

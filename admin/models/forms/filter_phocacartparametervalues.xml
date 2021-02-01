@@ -9,7 +9,7 @@
 	
 	<field name="parameter_id" type="PhocacartParameter" label="COM_PHOCACART_FIELD_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_DESC" class="input" default="" onchange="this.form.submit();" typemethod="1" />
 	
-		<field name="published" type="list" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
+		<field name="published" type="list" default="" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
 		
 		<option value="">JOPTION_SELECT_PUBLISHED</option>
 		<option value="1">COM_PHOCACART_PUBLISHED</option>

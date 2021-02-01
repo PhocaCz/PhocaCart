@@ -72,7 +72,7 @@ class PhocacartPayment
 
 		}
 
-		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description,'
+		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 		.' p.lowest_amount, p.highest_amount, p.default,'
 		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
@@ -80,7 +80,7 @@ class PhocacartPayment
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
 		.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping';
-		$groupsFull		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description,'
+		$groupsFull		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 		.' p.lowest_amount, p.highest_amount, p.default,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type';
@@ -341,14 +341,37 @@ class PhocacartPayment
 
         $country = 0;
 
-        if ($payment_country_rule == 1) {
-        	if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
-				$country = (int)$dataAddress['bcountry'];
-			}
-		} else {
-        	if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
-				$country = (int)$dataAddress['scountry'];
-			}
+        switch($payment_country_rule) {
+
+			case 2:
+				if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+					$country = (int)$dataAddress['scountry'];
+				}
+			break;
+
+			case 3:
+				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$country = (int)$dataAddress['bcountry'];
+				} else if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+					$country = (int)$dataAddress['scountry'];
+				}
+			break;
+
+			case 4:
+				if(isset($dataAddress['scountry']) && (int)$dataAddress['scountry']) {
+					$country = (int)$dataAddress['scountry'];
+				} else if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$country = (int)$dataAddress['bcountry'];
+				}
+			break;
+
+			case 1:
+			default:
+				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$country = (int)$dataAddress['bcountry'];
+				}
+			break;
+
 		}
 
 		return $country;
@@ -361,14 +384,37 @@ class PhocacartPayment
 
         $region = 0;
 
-        if ($payment_region_rule == 1) {
-        	if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
-				$region = (int)$dataAddress['bregion'];
-			}
-		} else {
-        	if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
-				$region = (int)$dataAddress['sregion'];
-			}
+        switch($payment_region_rule) {
+
+			case 2:
+				if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+					$region = (int)$dataAddress['sregion'];
+				}
+			break;
+
+			case 3:
+				if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+					$region = (int)$dataAddress['bregion'];
+				} else if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+					$region = (int)$dataAddress['sregion'];
+				}
+			break;
+
+			case 4:
+				if(isset($dataAddress['sregion']) && (int)$dataAddress['sregion']) {
+					$region = (int)$dataAddress['sregion'];
+				} else if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+					$region = (int)$dataAddress['bregion'];
+				}
+			break;
+
+			case 1:
+			default:
+				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
+					$region = (int)$dataAddress['bcountry'];
+				}
+			break;
+
 		}
 
 		return $region;
@@ -571,59 +617,14 @@ class PhocacartPayment
 
 	public static function getPaymentPluginMethods($namePlugin = '') {
 
-		$db 	= JFactory::getDBO();
-		$lang	= JFactory::getLanguage();
-		$client	= JApplicationHelper::getClientInfo(0);
-		$query = 'SELECT a.extension_id , a.name, a.element, a.folder'
-				.' FROM #__extensions AS a'
-				.' WHERE a.type = '.$db->quote('plugin')
-				.' AND a.enabled = 1'
-				.' AND a.folder = ' . $db->quote('pcp');
+		$plugin = array();
+		$plugin['name'] = $namePlugin;
+		$plugin['group'] = 'pcp';
+		$plugin['title'] = 'Phoca Cart Payment';
+		$plugin['selecttitle'] = JText::_('COM_PHOCACART_SELECT_PAYMENT_METHOD');
+		$plugin['returnform'] = 1;
 
-		if ($namePlugin != '') {
-			$query .= 'AND a.element = '. $db->quote($name);
-		}
-
-		$query .= ' ORDER BY a.ordering';
-		$db->setQuery($query);
-		$plugins = $db->loadObjectList();
-
-
-		if ($namePlugin == '') {
-			$i 		= 0;
-			$p[0]['text'] 	= '- ' .JText::_('COM_PHOCACART_SELECT_PAYMENT_METHOD').' -';
-			$p[0]['value'] 	= '';
-		} else {
-			$i 		= -1;
-		}
-		if (!empty($plugins)) {
-			foreach($plugins as $k => $v) {
-
-				// Load the core and/or local language file(s).
-				$folder 	= 'pcp';
-				$element	= $v->element;
-			$lang->load('plg_'.$folder.'_'.$element, JPATH_ADMINISTRATOR, null, false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, $client->path.'/plugins/'.$folder.'/'.$element, null, false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
-		||	$lang->load('plg_'.$folder.'_'.$element, $client->path.'/plugins/'.$folder.'/'.$element, $lang->getDefault(), false, false);
-
-				$i++;
-
-				$name = JText::_(strtoupper($v->name) );
-				$name = str_replace('Plugin', '', $name);
-				$name = str_replace('Phoca Cart Payment -', '', $name);
-
-				$p[$i]['text'] = JText::_($name);
-				$p[$i]['value'] = $v->element;
-			}
-
-		}
-
-		if ($namePlugin != '' && !empty($p[0])) {
-			return $p[0];
-		}
-
-		return $p;
+		return PhocacartPlugin::getPluginMethods($plugin);
 
 	}
 
@@ -634,14 +635,17 @@ class PhocacartPayment
 
 		if (isset($payment['method'])) {
 			//$dispatcher = J EventDispatcher::getInstance();
-			JPluginHelper::importPlugin('pcp', htmlspecialchars($payment['method']));
+			JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
+			$eventData 					= array();
+			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
 
-			\JFactory::getApplication()->triggerEvent('PCPbeforeProceedToPayment', array(&$proceed, &$message));
+			\JFactory::getApplication()->triggerEvent('PCPbeforeProceedToPayment', array(&$proceed, &$message, $eventData));
 		}
 
 		// Response is not a part of event parameter because of backward compatibility
 		$response['proceed'] = $proceed;
 		$response['message'] = $message;
+
 
 		return $response;
 

@@ -14,6 +14,7 @@ jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 require_once( JPATH_COMPONENT.'/controller.php' );
 JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
+require JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/autoloadPhoca.php';
 jimport('joomla.application.component.controller');
 $controller	= JControllerLegacy::getInstance('phocacartCp');
 $controller->execute(JFactory::getApplication()->input->get('task'));

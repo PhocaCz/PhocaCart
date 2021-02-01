@@ -509,11 +509,15 @@ class PhocacartOrderStatus
 			$body 			= PhocacartText::completeText($body, $r, 1);
 			$bodyOthers 	= PhocacartText::completeText($bodyOthers, $r, 2);
 
-			$body 			= PhocacartText::completeTextFormFields($body, $bas['b'], 1);
-			$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['b'], 1);
+			//$body 			= PhocacartText::completeTextFormFields($body, $bas['b'], 1);
+			//$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['b'], 1);
 
-			$body 			= PhocacartText::completeTextFormFields($body, $bas['s'], 2);
-			$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['s'], 2);
+			//$body 			= PhocacartText::completeTextFormFields($body, $bas['s'], 2);
+			//$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['s'], 2);
+			$body 			= PhocacartText::completeTextFormFields($body, $bas['b'], $bas['s']);
+			$bodyOthers 	= PhocacartText::completeTextFormFields($bodyOthers, $bas['b'], $bas['s']);
+
+
 
 			// PDF
 			$pdfV					= array();
@@ -800,8 +804,10 @@ class PhocacartOrderStatus
 	public static function setHistory($id, $statusId, $notify, $comment) {
 
 		$db 		= JFactory::getDBO();
-		$user 		= PhocacartUser::getUser();
+		//$user 		= PhocacartUser::getUser();
+		$user		= JFactory::getUser();// Logged in user, does not matter if customer|vendor|admin
 		$userId		= 0;
+
 		if (isset($user->id) && (int)$user->id > 0) {
 			$userId = (int)$user->id;
 		}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg width="16" height="32" clip-rule="evenodd" fill-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" version="1.1" viewBox="0 0 135 271" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil1 {fill:#E3E3E3}
+    .fil0 {fill:#45A7D4}
+   ]]>
+  </style>
+ </defs>
+  <polygon class="fil0" points="68 0 86 48 135 52 98 85 110 135 68 108 26 135 38 85 0 52 49 48"/>
+  <polygon class="fil1" points="68 137 86 184 134 188 97 220 109 269 68 243 27 269 38 220 2 188 50 184"/>
+</svg>
+

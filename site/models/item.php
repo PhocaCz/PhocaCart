@@ -6,6 +6,10 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
@@ -185,8 +189,31 @@ class PhocaCartModelItem extends JModelLegacy
 			$wheres[] = " i.stock > 0";
 		}
 
+		// Views Plugin can load additional columns
+		$additionalColumns = array();
+		$pluginLayout 	= PluginHelper::importPlugin('pcv');
+		if ($pluginLayout) {
+			$pluginOptions 				= array();
+			$eventData 					= array();
+			Factory::getApplication()->triggerEvent('PCVonItemBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
 
-		$columns	= 'i.id, i.title, i.alias, i.description, i.features, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.type, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.external_link2, i.external_text2, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.date, i.date_update, i.delivery_date, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+					}
+				}
+			}
+		}
+
+		$baseColumns = array('i.id', 'i.title', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date');
+
+		$col = array_merge($baseColumns, $additionalColumns);
+		$col = array_unique($col);
+
+
+
+		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
 
 		if (!$skip['tax']) {
             $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
@@ -201,7 +228,7 @@ class PhocaCartModelItem extends JModelLegacy
         }
 
 
-		$groupsFull	= 'i.id, i.title, i.alias, i.description, i.features, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.type, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.date, i.date_update, i.delivery_date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.external_link2, i.external_text2, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, c.id, c.title, c.alias, m.id, m.title, m.link';
+		$groupsFull	= implode(',', $col) .',pc.ordering, c.id, c.title, c.alias, m.id, m.title, m.link';
 
         if (!$skip['tax']) {
             $groupsFull .= ', t.id, t.tax_rate, t.calculation_type, t.title';

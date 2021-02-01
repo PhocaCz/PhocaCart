@@ -50,7 +50,6 @@ class PhocacartFormUser
 				$c++;
 			}
 
-
 			if (!empty($f)) {
 				foreach($f as $k => $v) {
 
@@ -73,6 +72,18 @@ class PhocacartFormUser
 						if(isset($v->validate) && $v->validate == 'email') {
 								$type = 'email';
 						}
+
+						// --- PREDEFINED VALUES (limited feature, see documentation)
+						$predefinedValues = '';
+						if(isset($v->predefined_values) && $v->predefined_values != '') {
+							$predefinedValues = array_map('trim', explode(',', $v->predefined_values));
+							$predefinedValues = array_filter($predefinedValues, 'strlen');
+						}
+
+						if (!empty($predefinedValues)) {
+							$type= "list";
+						}
+
 
 						$fB[] = $fS[] = ' type="'.htmlspecialchars($type).'"'
 						. ' label="'.htmlspecialchars($v->label).'"';
@@ -147,7 +158,34 @@ class PhocacartFormUser
 						$fS[] =  ' class="'.htmlspecialchars($class).'"';
 
 
-						$fB[] = $fS[] =  ' />';
+						// --- PREDEFINED VALUES (limited feature, see documentation)
+						// Selectbox is displayed instead of standard types when predefined values are defined
+						if (!empty($predefinedValues)) {
+
+
+							$fB[] = $fS[] =  ' >';
+
+							if (isset($v->predefined_values_first_option) && $v->predefined_values_first_option != '') {
+
+								$fB[] = $fS[] = '<option value="">' . JText::_(htmlspecialchars($v->predefined_values_first_option)). '</option>';
+							}
+
+							foreach ($predefinedValues as $k => $v) {
+								$defaultSelected = '';
+								if (isset($v->default) && $v->default != '') {
+									$defaultSelected = 'selected="selected"';
+								}
+
+								$fB[] = $fS[] =  '<option value="'.htmlspecialchars($v).'" '.$defaultSelected.'>'.htmlspecialchars($v).'</option>';
+							}
+							$fB[] = $fS[] =  '</field>';
+
+						} else {
+
+							$fB[] = $fS[] =  ' />';
+
+						}
+
 
 						$o[] = implode( "", $fB ) . implode( "", $fS );
 

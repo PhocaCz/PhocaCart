@@ -32,9 +32,19 @@ class PhocacartRenderAdminmedia
 
 		HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacart.js', array('version' => 'auto'));
 
-        // FORM
-		$this->document->addScriptOptions('phLang', array('COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE'), 'COM_PHOCACART_ERROR_TITLE_NOT_SET' => JText::_('COM_PHOCACART_ERROR_TITLE_NOT_SET')));
-		$this->document->addScriptOptions('phVars', array('token' => JSession::getFormToken()));
+
+		// FORM
+		// Lang starting with "PHOCA_" - general phoca string used e.g. in general JS libraries
+		$this->document->addScriptOptions('phLang', array(
+			'COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE'),
+			'COM_PHOCACART_ERROR_TITLE_NOT_SET' => JText::_('COM_PHOCACART_ERROR_TITLE_NOT_SET'),
+			'PHOCA_CLICK_TO_EDIT' => JText::_('COM_PHOCACART_CLICK_TO_EDIT'),
+			'PHOCA_CANCEL' => JText::_('COM_PHOCACART_CANCEL'),
+			'PHOCA_SUBMIT' => JText::_('COM_PHOCACART_SUBMIT'),
+			'PHOCA_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION' => JText::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION')
+		));
+		$this->document->addScriptOptions('phVars', array('token' => JSession::getFormToken(), 'urleditinplace' => JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1'));
+
 		//$this->document->getDocument()->addScriptOptions('phParams', array());
         HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacartform.js', array('version' => 'auto'));
 
@@ -71,21 +81,55 @@ class PhocacartRenderAdminmedia
 		// EDIT IN PLACE
 		$urlText = JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1';
 		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.jeditable.min.js', array('version' => 'auto'));
-
+		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.jeditable.autogrow.min.js', array('version' => 'auto'));
+		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.autogrowtextarea.js', array('version' => 'auto'));
+		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.phocajeditable.js', array('version' => 'auto'));
+		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.jeditable.masked.min.js', array('version' => 'auto'));
+		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.maskedinput.min.js', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/js/jeditable/phocajeditable.css', array('version' => 'auto'));
+/*
 		$s 	= array();
 		$s[] = ' ';
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   jQuery(".ph-editinplace-text").editable("'.$urlText.'", {';
 		$s[] = '      tooltip : "'.JText::_('COM_PHOCACART_CLICK_TO_EDIT').'",'; //submit : \'OK\',
 		$s[] = '      select : true,';
+		$s[] = '      type : jQuery(this).hasClass("autogrow") ? "text" : "textarea",';
 		$s[] = '      cancel : "'.JText::_('COM_PHOCACART_CANCEL').'",';
 		$s[] = '      submit : "'.JText::_('COM_PHOCACART_SUBMIT').'",';
 		$s[] = '      cssclass : \'ph-edit-in-place-class\',';
 		$s[] = '      cancelcssclass : \'btn btn-danger\',';
 		$s[] = '      submitcssclass : \'btn btn-success\',';
+
+		//DEBUG
+		//$s[] = '     onblur : function() { ... },';
+
+		$s[] = '     onblur : function() { ... },';
+
  		$s[] = '      intercept : function(jsondata) {';
 		$s[] = '          json = JSON.parse(jsondata);';
- 		$s[] = '          return json.result;';
+
+		$s[] = '		  if (json.status == 0){';
+
+		$s[] = '		     jQuery("#ph-ajaxtop").html(phGetMsg(\' &nbsp; \', 1));';
+		$s[] = '             jQuery("#ph-ajaxtop").show();';
+		$s[] = '             jQuery("#ph-ajaxtop-message").html(phGetMsg(json.error, 0));';
+		$s[] = '             phCloseMsgBoxError();';
+		$s[] = '             this.reset();';
+
+		$s[] = '          } else {';
+
+		$s[] = '             if (json.idcombined && json.resultcombined) {';
+		$s[] = '			    var combinedElement = "#" + phEscapeColon(json.idcombined);';
+		$s[] = '                jQuery(combinedElement).html(json.resultcombined);';
+		$s[] = '                phChangeBackground(combinedElement, 700, "#D4E9E6");';
+		$s[] = '             }';
+
+		$s[] = '             var currentElement = "#" + phEscapeColon(jQuery(this).attr("id"))';
+		$s[] = '             phChangeBackground(currentElement, 700, "#D4E9E6" );';
+		$s[] = '			 return json.result;';
+		$s[] = '          }';
+
     	$s[] = '      },';
 		$s[] = '      placeholder: "",';
 
@@ -99,7 +143,7 @@ class PhocacartRenderAdminmedia
 		$s[] = '})';
 		$s[] = ' ';
 
-		$this->document->addScriptDeclaration(implode("\n", $s));
+		$this->document->addScriptDeclaration(implode("\n", $s));*/
 	}
 
 	public function loadOptions($load = 0) {

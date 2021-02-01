@@ -301,9 +301,14 @@ class PhocacartStock
 	}
 
 
+	/*
+	 * $selectedAttributes ... ajax, checkout, checkout json - attributes are not all attributes assigned to product but only the one selected by e.g. select box
+	 * (including the option that no attribute was selected - in this case the main product is even a variant)
+	 */
 
 
-	public static function getStockItemsChangedByAttributes(&$stockStatus, $attributes, $item, $ajax = 0) {
+
+	public static function getStockItemsChangedByAttributes(&$stockStatus, $attributes, $item, $selectedAttributes = 0) {
 
 		//$paramsC 			= PhocacartUtils::getComponentParameters();
 		//$display_unit_price	= $paramsC->get( 'display_unit_price', 1 );
@@ -314,7 +319,7 @@ class PhocacartStock
 
 		$fullAttributes		= array();// Array of integers only
 		$thinAttributes		= array();// Array of full objects (full options object)
-		if ($ajax == 1) {
+		if ($selectedAttributes == 1) {
 			$fullAttributes = PhocacartAttribute::getAttributeFullValues($attributes);
 			$thinAttributes	= $attributes;//select only default value attributes (selected options) to create product key
 		} else {
@@ -327,6 +332,7 @@ class PhocacartStock
 		// 1 ... Product Variations
 		// 2 ... Advanced Stock Management
         // 3 ... Advanced Stock And Price Management ( 2 + price)
+
 
 		if ($item->stock_calculation == 1) {
 
@@ -344,7 +350,7 @@ class PhocacartStock
 							// Is the options set as default
 							// See: administrator\components\com_phocacart\libraries\phocacart\price\price.php
 							// function getPriceItemsChangedByAttributes - similar behaviour
-							if ($ajax == 1 || ($ajax == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
+							if ($selectedAttributes == 1 || ($selectedAttributes == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
 								$attributeSelected	= 1;
 
 								if (isset($v2->stock) && $v2->stock > 0) {
@@ -361,11 +367,18 @@ class PhocacartStock
 						$stock += $stockProduct;
 					}
 				}
-			}
+			} else {
+			    if ($selectedAttributes == 1) {
+                    // If there are no attributes, the main product is the varaint itself
+                    $stock+= $item->stock;
+                }
+            }
 
-			if ($i > 1 && $ajax != 1) {
+			if ($i > 1 && $selectedAttributes != 1) {
 				PhocacartLog::add(3, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
 			}
+
+
 
 		} else if ($item->stock_calculation == 2 || $item->stock_calculation == 3) {
 
@@ -377,7 +390,6 @@ class PhocacartStock
 			// Main Product
 			$stock = $item->stock;
 		}
-
 
 
 

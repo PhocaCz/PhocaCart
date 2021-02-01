@@ -65,6 +65,8 @@ class PhocaCartViewCheckout extends JViewLegacy
         $this->t['display_apply_coupon_form']         = $this->p->get('display_apply_coupon_form', 1);
         $this->t['display_apply_reward_points_form']  = $this->p->get('display_apply_reward_points_form', 1);
 
+        $this->t['$delivery_billing_same_enabled']     = $this->p->get('delivery_billing_same_enabled', 0);
+
 
         // Message set in Openting Times class
         PhocacartTime::checkOpeningTimes();
@@ -182,6 +184,8 @@ class PhocaCartViewCheckout extends JViewLegacy
             // =======
             // ADDRESS
             // =======
+            $this->t['dataaddressoutput'] = array();
+
             $this->a->addressedit = $app->input->get('addressedit', 0, 'int'); // Edit Address
 
             // GUEST
@@ -362,7 +366,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 
 
             if ((int)$paymentMethodId  > 0 && $this->a->paymentedit == 0) {
-                $this->cart->addPaymentCosts($paymentMethodId);
+                $this->cart->addPaymentCosts($paymentMethodId);// validity of payment will be checked
                 $this->t['paymentmethod'] = $this->cart->getPaymentCosts();
                 $this->a->paymentadded    = 1;
                 $this->a->paymentview     = 1;
@@ -428,7 +432,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 
                         if ($paymentStored == 1) {
                             $paymentId = (int)$this->t['paymentmethods'][0]->id;// will be used for payment - updated now
-                            $this->cart->addPaymentCosts($paymentId);           // add the costs to cart so it has updated information
+                            $this->cart->addPaymentCosts($paymentId);           // add the costs to cart so it has updated information // validity of payment will be checked
                             $this->t['paymentmethod'] = $this->cart->getPaymentCosts();
 
                             $this->a->paymentadded             = 1;

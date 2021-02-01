@@ -10,10 +10,12 @@
 		<fields name="request">
 		<fieldset name="request" addfieldpath="/administrator/components/com_phocacart/models/fields">
 
-			
+
+
+
 		</fieldset>
 	</fields>
-	
+
 	<fields name="params">
 <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields" >
 
@@ -26,7 +28,9 @@
 			<option value="0">COM_PHOCACART_HIDE</option>
 			<option value="1">COM_PHOCACART_DISPLAY</option>
 		</field>
-			
+
+		<field name="items_view_id_cats" type="phocacartcategory" section="com_phocacart" default="0" label="COM_PHOCACART_FIELD_ITEMS_VIEW_FORCE_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_ITEMS_VIEW_FORCE_CATEGORY_DESC" multiple="true" />
+
 
 		</fieldset>
 </fields>

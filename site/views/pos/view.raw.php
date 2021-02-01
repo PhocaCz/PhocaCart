@@ -191,18 +191,20 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->cart->setFullItems();
 		$this->t['shippingid'] 	= $this->cart->getShippingId();
 
+
 		if (isset($this->t['shippingid']) && (int)$this->t['shippingid'] > 0 && $this->t['shippingedit'] == 0) {
 			$this->cart->addShippingCosts($this->t['shippingid']);
 			$this->t['shippingmethodexists'] = true;
 		}
 		$this->t['paymentid'] 	= $this->cart->getPaymentId();
 		if (isset($this->t['paymentid']) && (int)$this->t['paymentid'] > 0 && $this->t['paymentedit'] == 0) {
-			$this->cart->addPaymentCosts($this->t['paymentid']);
+			$this->cart->addPaymentCosts($this->t['paymentid']);// validity of payment will be checked
 			$this->t['paymentmethodexists'] = true;
 		}
 
 		$this->cart->roundTotalAmount();
 		$this->t['total']		= $this->cart->getTotal();
+
 
 		//$this->t['paymentexists'] 	= false;
 		//$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');

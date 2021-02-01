@@ -13,10 +13,16 @@ defined('_JEXEC') or die();
 class PhocacartUserGuestuser
 {
 	public static function getGuestUser() {
+		$app			= JFactory::getApplication();
 		$p 				= PhocacartUtils::getComponentParameters();
 		$guestCheckout	= $p->get( 'guest_checkout', 0 );
 		$session 		= JFactory::getSession();
 		$user			= PhocacartUser::getUser();
+
+		if ($app->getName() == 'administrator') {
+			return false;
+		}
+
 		if ((int)$user->id > 0 || $guestCheckout == 0) {
 			self::cancelGuestUser();
 			return false;

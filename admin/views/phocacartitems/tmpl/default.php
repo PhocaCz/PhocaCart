@@ -7,6 +7,10 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die();
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
@@ -17,7 +21,6 @@ $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $canOrder  = $user->authorise('core.edit.state', $this->t['o']);
-
 
 $saveOrder       = false;
 $saveOrderingUrl = '';
@@ -31,13 +34,15 @@ if ($saveOrder && !empty($this->items)) {
         $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
     }
 }
-$sortFields = $this->getSortFields();
+//$sortFields = $this->getSortFields();
 
+/*
 $nrColumns = 19;
 $assoc     = JLanguageAssociations::isEnabled();
 if ($assoc) {
     $nrColumns = 20;
-}
+}*/
+
 
 echo $r->jsJorderTable($listOrder);
 
@@ -78,24 +83,41 @@ echo $r->startTblHeader();
 echo $r->firstColumnHeader($listDirn, $listOrder, 'pc');
 echo $r->secondColumnHeader($listDirn, $listOrder, 'pc');
 
-echo '<th class="ph-image">' . JText::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
-echo '<th class="ph-sku">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SKU', 'a.sku', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-title">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
-//echo '<th class="ph-parentcattitle">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-parentcattitle">' . JTEXT::_($this->t['l'] . '_CATEGORY') . '</th>' . "\n";
-echo '<th class="ph-price">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.price', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-price_original">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-stock">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IN_STOCK', 'a.stock', $listDirn, $listOrder) . '</th>' . "\n";
-//echo '<th class="ph-hits">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-access">' . JTEXT::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
 
-if ($assoc) {
-    echo '<th class="ph-association">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
+$options                = array();
+$options['listdirn']    = $listDirn;
+$options['listorder']   = $listOrder;
+$options['count']       = 2;
+$options['type']        = 'render';
+$options['association'] = JLanguageAssociations::isEnabled();
+$options['tasks']       = $this->t['tasks'];
+
+$c = new PhocacartRenderAdmincolumns();
+echo $c->renderHeader($this->t['admin_columns_products'], $options);
+
+
+
+/*
+echo '<th class="ph-image">' . Text::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
+echo '<th class="ph-sku">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SKU', 'a.sku', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+//echo '<th class="ph-parentcattitle">'.HTMLHelper::_('searchtools.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-parentcattitle">' . Text::_($this->t['l'] . '_CATEGORY') . '</th>' . "\n";
+echo '<th class="ph-price">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.price', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-price_original">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-stock">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IN_STOCK', 'a.stock', $listDirn, $listOrder) . '</th>' . "\n";
+//echo '<th class="ph-hits">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-access">' . Text::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
+
+if ($options['association']) {
+    echo '<th class="ph-association">' . HTMLHelper::_('searchtools.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
 }
-echo '<th class="ph-language">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-hits">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-id">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-language">' . HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-hits">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+*/
+
 
 echo $r->endTblHeader();
 
@@ -112,8 +134,9 @@ if (is_array($this->items)) {
         //if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
         $j++;
 
-        $urlEdit = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['task'] . '.edit&id=';
+
         $urlTask = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['task'];
+        $urlEdit = $urlTask . '.edit&id=';
         //$orderkey   	= array_search($item->id, $this->ordering[$item->catid]);
         $orderkey     = 0;
         $orderingItem = 0;
@@ -121,6 +144,7 @@ if (is_array($this->items)) {
             $orderkey     = array_search($item->id, $this->ordering[$this->t['catid']]);
             $orderingItem = $orderkey;
         }
+
         $ordering   = ($listOrder == 'pc.ordering');
         $canCreate  = $user->authorise('core.create', $this->t['o']);
         $canEdit    = $user->authorise('core.edit', $this->t['o']);
@@ -128,26 +152,70 @@ if (is_array($this->items)) {
         $canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
         $linkEdit   = JRoute::_($urlEdit . $item->id);
 
+
         //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
-        $canEditCat = $user->authorise('core.edit', $this->t['o']);
-
-
-        //$iD = $i % 2;
-        //echo "\n\n";
-        //echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->category_id.'" item-id="'.$item->id.'" parents="'.$item->category_id.'" level="0">'. "\n";
-        //echo '<tr class="row'.$iD.'" sortable-group-id="'.$this->t['catid'].'" >'. "\n";
-
-        //echo '<td>'.$item->category_id. '/'.$orderkey.'</td>';
+        $canEditCat  = $user->authorise('core.edit', $this->t['o']);
+        $linkEditCat = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit';
 
         echo $r->startTr($i, $this->t['catid']);
 
-
-        //echo $r->tdOrder($canChange, $saveOrder, $orderkey, $orderingItem, false);
-        //echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id), "small");
         echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, false);
         echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, false);
 
 
+        if (!empty($this->t['admin_columns_products'])) {
+            foreach ($this->t['admin_columns_products'] as $k => $v) {
+
+                $columnParams                 = array();
+                $itemColumn                   = array();
+                $itemColumn['i']              = $i;
+                $itemColumn['params']         = array();
+                $itemColumn['params']['edit'] = false;
+                $v                            = PhocacartText::parseDbColumnParameter($v, $itemColumn['params']);
+                $itemColumn['name']           = $v;
+                $itemColumn['value']          = isset($item->{$v}) ? $item->{$v} : '';
+                $itemColumn['id']             = isset($item->id) ? $item->id : 0;
+                $itemColumn['idtoken']        = 'products:' . $v . ':' . (int)$itemColumn['id'];
+                $itemColumn['cancreate']      = $canCreate;
+                $itemColumn['canedit']        = $canEdit;
+                $itemColumn['canchange']      = $canChange;
+                $itemColumn['linkedit']       = $linkEdit;
+                $itemColumn['editclass']      = 'text';
+                $itemColumn['editfilter']     = 'text';
+
+                if ($v == 'title') {
+                    $itemColumn['cancheckin']       = $canCheckin;
+                    $itemColumn['checked_out']      = $item->checked_out;
+                    $itemColumn['checked_out_time'] = $item->checked_out_time;
+                    $itemColumn['editor']           = $item->editor;
+                    $itemColumn['valuealias']       = $item->alias;
+                    $itemColumn['namealias']        = 'alias';
+                    $itemColumn['idtokencombined']  = 'products:alias:' . (int)$itemColumn['id'];
+                }
+
+                if ($v == 'published') {
+                    $itemColumn['valuefeatured'] = $item->featured;
+                    $itemColumn['namefeatured']  = 'featured';
+                }
+
+                if ($v == 'categories') {
+                    $itemColumn['value']            = $this->t['categories'];
+                    $itemColumn['caneditcategory']  = $canEditCat;
+                    $itemColumn['linkeditcategory'] = $linkEditCat;
+                }
+
+                if ($v == 'language') {
+                    $itemColumn['value']                 = new stdClass();
+                    $itemColumn['value']->language       = $item->language;
+                    $itemColumn['value']->language_title = $item->language_title;
+                    $itemColumn['value']->language_image = $item->language_image;
+                }
+
+                echo $c->item($v, $itemColumn, $options);
+            }
+        }
+
+/*
         echo $r->tdImageCart($this->escape($item->image), 'small', 'productimage', 'small ph-items-image-box');
         //echo $r->td($this->escape($item->sku), 'small');
 
@@ -169,12 +237,7 @@ if (is_array($this->items)) {
             '<div class="btn-group">' . Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange)
             . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange) . '</div>',
             "small");
-        /*
-        if ($canEditCat) {
-            $catO = '<a href="'. JRoute::_($linkCat).'">'. $this->escape($item->category_title).'</a>';
-        } else {
-            $catO = $this->escape($item->category_title);
-        }*/
+
         $catO = array();
         if (isset($this->t['categories'][$item->id])) {
             foreach ($this->t['categories'][$item->id] as $k => $v) {
@@ -199,7 +262,7 @@ if (is_array($this->items)) {
 
         echo $r->td($this->escape($item->access_level));
 
-        if ($assoc) {
+        if ($options['association']) {
             if ($item->association) {
                 echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('phocacartitem.association', $item->id));
             } else {
@@ -213,6 +276,9 @@ if (is_array($this->items)) {
 
         echo $r->td($item->id, "small");
 
+*/
+
+
 
         echo $r->endTr();
 
@@ -221,7 +287,7 @@ if (is_array($this->items)) {
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), $nrColumns);
+echo $r->tblFoot($this->pagination->getListFooter(), $options['count']);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');

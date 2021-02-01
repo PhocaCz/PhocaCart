@@ -19,7 +19,7 @@ class PhocacartAccessRights
 
 	public function __construct() {
 
-		$this->user         = JFactory::getUser();
+		$this->user         = PhocacartUser::getUser();
         $this->params 		= PhocacartUtils::getComponentParameters() ;
 
 	}
@@ -74,6 +74,10 @@ class PhocacartAccessRights
 
     }
 
+    /*
+     * Used in view functions and in checkout when adding or updating cart
+     */
+
     public function canDisplayAddtocart() {
 
 
@@ -121,6 +125,89 @@ class PhocacartAccessRights
         }
 
         return true; // As default, display add to cart
+
+    }
+
+    /*
+     * Used in checkout to check products when adding or updating cart
+     */
+
+
+    public function canDisplayAddtocartAdvanced($item) {
+
+	    if ($this->canDisplayAddtocart()) {
+
+
+            if (isset($item->id) && (int)$item->id > 0) {
+
+                if ($item->type == 3) {
+                    // PRODUCTTYPE - price on demand product cannot be added to cart
+                   // PhocacartLog::add(3, 'Warning', $item->id, 'Product could not be added to cart or ordered because its type (Product on demand) does not allow it' . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
+                    return false;
+
+                } else {
+                    return true;
+                }
+
+            }
+        }
+
+	    return false;
+    }
+
+    public function canDisplayAddtocartPrice($item, $price) {
+
+	    if ($this->canDisplayAddtocart()) {
+
+
+            if (isset($item->id) && (int)$item->id > 0) {
+
+                $hide_add_to_cart_zero_price = $this->params->get('hide_add_to_cart_zero_price', 0);
+
+                if ($hide_add_to_cart_zero_price == 1 && $price < 0.01) {
+                   // PhocacartLog::add(3, 'Warning', $item->id, 'Product could not be added to cart or ordered because its price is zero and option \'Hide Add To Cart Button (Zero Price)\' is enabled' . ' ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $item->title);
+                    return false;
+
+                } else {
+                    return true;
+                }
+
+            }
+        }
+
+	    return false;
+    }
+
+    /*
+     * Used for display function - e.g. AJAX
+     * When ajax changes the product variants, product variants with zero stock will not display add to cart button
+     *
+     */
+
+    public function canDisplayAddtocartStock($item, $stock) {
+
+        if (isset($item->id) && (int)$item->id > 0) {
+
+            $item_addtocart              = $this->params->get('item_addtocart', 0);
+            $hide_add_to_cart_stock      = $this->params->get('hide_add_to_cart_stock', 0);
+
+
+            if ((int)$item_addtocart == 1 || (int)$item_addtocart == 4) {
+
+
+                if ($hide_add_to_cart_stock == 1 && (int)$stock < 1) {
+                    return false;
+                }
+
+                return true;
+
+            } else {
+                return true;
+            }
+
+        }
+
+        return false;
 
     }
 

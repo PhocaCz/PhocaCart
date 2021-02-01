@@ -70,6 +70,8 @@ class PhocacartCart
         $dUser       = PhocacartUser::defineUser($this->user, $this->vendor, $this->ticket, $this->unit, $this->section);
         $this->guest = PhocacartUserGuestuser::getGuestUser();
 
+
+
         $this->pos = PhocacartPos::isPos();
 
         $this->coupon['id']                = 0;
@@ -97,9 +99,27 @@ class PhocacartCart
 
         // Admin info - Administrator asks for information about user's cart
         if ($app->getName() == 'administrator') {
-            $id          = $app->input->get('id', 0, 'int');
-            $cartDb      = PhocacartCartDb::getCartDb($id);
-            $this->items = $cartDb['cart'];
+            $userid                        = $app->input->get('userid', 0, 'int');
+            $vendorid                  = $app->input->get('vendorid', 0, 'int');
+            $ticketid                  = $app->input->get('ticketid', 0, 'int');
+            $unitid                    = $app->input->get('unitid', 0, 'int');
+            $sectionid                 = $app->input->get('sectionid', 0, 'int');
+            $cartDb                    = PhocacartCartDb::getCartDb($userid, $vendorid, $ticketid, $unitid, $sectionid);
+            $this->items               = $cartDb['cart'];
+            $this->coupon['id']        = $cartDb['coupon'];
+            $this->coupon['title']     = $cartDb['coupontitle'];
+            $this->coupon['code']      = $cartDb['couponcode'];
+            $this->shipping['id']      = $cartDb['shipping'];
+            $this->shipping['title']   = $cartDb['shippingtitle'];
+            $this->shipping['method']  = $cartDb['shippingmethod'];
+            $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->payment['id']       = $cartDb['payment'];
+            $this->payment['title']    = $cartDb['paymenttitle'];
+            $this->payment['method']   = $cartDb['paymentmethod'];
+            $this->payment['image']    = $cartDb['paymentimage'];
+            $this->reward['used']      = $cartDb['reward'];
+            $this->loyalty_card_number = $cartDb['loyalty_card_number'];
+
             return;
 
         }
@@ -267,6 +287,7 @@ class PhocacartCart
             ///$k = (int)$id . ':';
 
 
+
             $checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 
             if (!$checkP) {
@@ -402,10 +423,13 @@ class PhocacartCart
             $typeUser = 1;
         }
 
-        if ($change_remove_shipping_method == 1) {
-        	PhocacartShipping::removeShipping($typeUser);
-        	return;
-    	}
+
+        // $change_remove_shipping_method is not a POS parameter
+        // In POS we don't remove shpping or payment a priori but we always validate it
+        if (!$this->pos && $change_remove_shipping_method == 1) {
+            PhocacartShipping::removeShipping($typeUser);
+            return;
+        }
 
         if (!isset($this->total[0])) {
             $this->total[0] = array();
@@ -426,8 +450,8 @@ class PhocacartCart
 
     public function updatePayment($shippingId = 0) {
 
-		$paramsC                       = PhocacartUtils::getComponentParameters();
-        $change_remove_payment_method  = $paramsC->get('change_remove_payment_method', 1);
+        $paramsC                      = PhocacartUtils::getComponentParameters();
+        $change_remove_payment_method = $paramsC->get('change_remove_payment_method', 1);
 
 
         $removeCoupon = 0;
@@ -452,10 +476,12 @@ class PhocacartCart
             $typeUser = 1;
         }
 
-        if ($change_remove_payment_method == 1) {
-        	PhocacartPayment::removePayment($typeUser, $removeCoupon);
-        	return;
-    	}
+        // $change_remove_payment_method is not a POS parameter
+        // In POS we don't remove shpping or payment a priori but we always validate it
+        if (!$this->pos && $change_remove_payment_method == 1) {
+            PhocacartPayment::removePayment($typeUser, $removeCoupon);
+            return;
+        }
 
         if (!isset($this->total[0])) {
             $this->total[0] = array();
@@ -641,7 +667,6 @@ class PhocacartCart
                 $this->total[0] = $this->total[4] = $this->total[3] = $this->total[2]
                     = $this->total[5] = $this->total[1];
 
-
                 // --------------------
                 // 5) Reward Points
                 // --------------------
@@ -767,6 +792,7 @@ class PhocacartCart
 
             }
         }
+
     }
 
     /**
@@ -1075,6 +1101,7 @@ class PhocacartCart
                 $this->shipping['costs']['title_lang_suffix2'] = '';
                 $this->shipping['costs']['description']        = $sI->description;
                 $this->shipping['costs']['image']              = $sI->image;
+                $this->shipping['costs']['method']             = $sI->method;
 
                 // Update even the shipping info
                 $this->shipping['id']     = $sI->id;
@@ -1145,6 +1172,7 @@ class PhocacartCart
                 $this->payment['costs']['title_lang_suffix2'] = '';
                 $this->payment['costs']['description']        = $pI->description;
                 $this->payment['costs']['image']              = $pI->image;
+                $this->payment['costs']['method']             = $pI->method;
 
                 // Update even the payment info
                 $this->payment['id']     = $pI->id;

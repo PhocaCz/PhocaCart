@@ -6,6 +6,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die();
 
 $r 			=  new PhocacartRenderAdminview();
@@ -85,6 +88,30 @@ if ($this->itemcommon->coupontitle != '') {
 if ($this->itemcommon->shippingtitle != '') {
 	echo $r->itemText($this->itemcommon->shippingtitle, JText::_('COM_PHOCACART_SHIPPING_METHOD'));
 }
+
+// Event
+if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id > 0 && isset($this->itemcommon->params_shipping)) {
+	//$shipping       = new PhocacartShipping();
+	//$shippingMethod = $shipping->getShippingMethod((int)$this->itemcommon->shipping_id);
+
+	$paramsShipping = json_decode($this->itemcommon->params_shipping, true);
+	if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
+
+		JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($paramsShipping['method'])));
+		$eventData               			= array();
+		$eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsShipping['method']));
+		$eventData['item']['id'] 			= (int)$this->itemcommon->id;
+		$eventData['item']['shipping_id'] 	= (int)$this->itemcommon->shipping_id;
+
+		$results = Factory::getApplication()->triggerEvent('PCSgetShippingBrancheInfoBE', array('com_phocacart.phocacartorder', $eventData));
+
+		if (!empty($results)) {
+			echo trim(implode("\n", $results));
+		}
+
+	}
+}
+
 if ($this->itemcommon->paymenttitle != '') {
 	echo $r->itemText($this->itemcommon->paymenttitle, JText::_('COM_PHOCACART_PAYMENT_METHOD'));
 }

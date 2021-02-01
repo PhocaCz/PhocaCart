@@ -10,67 +10,36 @@
  */
 defined('_JEXEC') or die('Restricted access');
 
+use Phoca\Render\Adminviews;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
-class PhocacartRenderAdminviews
+class PhocacartRenderAdminviews extends Adminviews
 {
-    public $view = '';
-    public $option = '';
-    public $tmpl = '';
-    public $compatible = false;
-    public $sidebar = true;
+    public $view        = '';
+    public $viewtype    = 1;
+    public $option      = '';
+    public $optionLang  = '';
+    public $tmpl        = '';
+    public $compatible  = false;
+    public $sidebar     = true;
 
     public function __construct() {
 
-        $app              = JFactory::getApplication();
-        $version          = new \Joomla\CMS\Version();
-        $this->compatible = $version->isCompatible('4.0.0-alpha');
-        $this->view       = $app->input->get('view');
-        $this->option     = $app->input->get('option');
-        $this->tmpl       = $app->input->get('tmpl');
+        switch($this->view) {
+
+			case 'phocacartcart':
+                $this->viewtype = 2;// Edit
+			break;
+
+			default:
+				$this->viewtype = 1;// Lists
+			break;
+		}
 
 
-        $this->sidebar = Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
-
-
-        switch ($this->view) {
-
-            default:
-
-                Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-                Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-                Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-                if (!$this->compatible) {
-                    Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
-                }
-
-            break;
-        }
-
-        // Modal
-        if ($this->tmpl == 'component') {
-
-            Joomla\CMS\HTML\HTMLHelper::_('behavior.core');
-            Joomla\CMS\HTML\HTMLHelper::_('behavior.polyfill', array('event'), 'lt IE 9');
-            Joomla\CMS\HTML\HTMLHelper::_('script', 'com_phocacart/administrator/admin-phocacartitems-modal.min.js', array('version' => 'auto', 'relative' => true));
-            Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
-            Joomla\CMS\HTML\HTMLHelper::_('bootstrap.popover', '.hasPopover', array('placement' => 'bottom'));
-
-        }
-
-        // CP View
-        //if ($this->view ==  null) {
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
-        //}
-
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/' . str_replace('com_', '', $this->option) . '.css', array('version' => 'auto'));
-
-        if ($this->compatible) {
-            HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/4.css', array('version' => 'auto'));
-        } else {
-            HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/3.css', array('version' => 'auto'));
-        }
+        parent::__construct();
     }
 
     public function startMainContainer($id = 'phAdminView', $class = 'ph-admin-box') {
@@ -105,12 +74,11 @@ class PhocacartRenderAdminviews
             //$o[] = '<div id="j-main-container" class="span10">'."\n";
             $o[] = '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10 ph-admin-box-content ph-admin-manage">' . "\n";
             $o[] = '<div id="ph-system-message-container"></div>' . "\n";// specific container for moving messages from joomla to phoca
-            PhocacartRenderAdminjs::moveSystemMessageFromJoomlaToPhoca();
+            $this->moveSystemMessageFromJoomlaToPhoca();
         }
 
         return implode("\n", $o);
     }
-
 
     public function endMainContainer() {
         $o = array();
@@ -121,73 +89,23 @@ class PhocacartRenderAdminviews
         return implode("\n", $o);
     }
 
-    public function jsJorderTable($listOrder) {
-
-        $js = 'Joomla.orderTable = function() {' . "\n"
-            . '  table = document.getElementById("sortTable");' . "\n"
-            . '  direction = document.getElementById("directionTable");' . "\n"
-            . '  order = table.options[table.selectedIndex].value;' . "\n"
-            . '  if (order != \'' . $listOrder . '\') {' . "\n"
-            . '    dirn = \'asc\';' . "\n"
-            . '	} else {' . "\n"
-            . '    dirn = direction.options[direction.selectedIndex].value;' . "\n"
-            . '  }' . "\n"
-            . '  Joomla.tableOrdering(order, dirn, \'\');' . "\n"
-            . '}' . "\n";
-        JFactory::getDocument()->addScriptDeclaration($js);
-    }
-
-    public function startForm($option, $view, $id = 'adminForm', $name = 'adminForm') {
-        return '<div id="' . $view . '"><form action="' . JRoute::_('index.php?option=' . $option . '&view=' . $view) . '" method="post" name="' . $name . '" id="' . $id . '">' . "\n" . '';
-    }
-
-    public function startFormModal($option, $view, $id = 'adminForm', $name = 'adminForm', $function = '') {
-
-
-        return '<div id="' . $view . '"><form action="' . JRoute::_('index.php?option=' . $option . '&view=' . $view . '&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1') . '" method="post" name="' . $name . '" id="' . $id . '">' . "\n" . '';
-    }
-
-    public function endForm() {
-        return '</form>' . "\n" . '' . "\n";
-    }
-
-    public function startFilter($txtFilter = '') {
-        //$o = '<div id="j-sidebar-container" class="col-xs-12 col-sm-2 col-md-2">'."\n". JHtmlSidebar::render()."\n";
-        $o = '<div class="col-xs-12 col-sm-2 col-md-2 ph-admin-box-menu">' . "\n" . JHtmlSidebar::render() . "\n";
-
-        if ($txtFilter != '') {
-            $o .= '<hr />' . "\n" . '<div class="filter-select ">' . "\n"
-                . '<h4 class="page-header">' . JText::_($txtFilter) . '</h4>' . "\n";
-        } else {
-            $o .= '<div>';
-        }
-
+    public function startMainContainerNoSubmenu() {
+        //return '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10">'. "\n";
+        $o = '<div id="j-main-container" class="col-xs-12 col-sm-12 col-md-12 ph-admin-box-content ph-admin-manage">' . "\n";
+        $o .= '<div id="ph-system-message-container"></div>' . "\n";// specific container for moving messages from joomla to phoca
+        $this->moveSystemMessageFromJoomlaToPhoca();
         return $o;
     }
 
-    public function startFilterNoSubmenu($txtFilter = '') {
 
-        $o = '';
 
-        if ($txtFilter != '') {
-            $o .= '<hr />' . "\n" . '<div class="filter-select ">' . "\n"
-                . '<h4 class="page-header">' . JText::_($txtFilter) . '</h4>' . "\n";
-        } else {
-            $o .= '<div>';
-        }
 
-        return $o;
-    }
-
-    public function endFilter() {
-        return '</div>' . "\n" . '</div>' . "\n";
-    }
-
+    /*
     public function selectFilterPublished($txtSp, $state) {
         return '<div class="btn-group ph-pull-right ph-select-status">' . "\n"
             . '<select name="filter_published" class="inputbox" onchange="this.form.submit()">' . "\n"
             . '<option value="">' . JText::_($txtSp) . '</option>'
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', Joomla\CMS\HTML\HTMLHelper::_('jgrid.publishedOptions', array('archived' => 0, 'trash' => 0)), 'value', 'text', $state, true)
+            . HTMLHelper::_('select.options', HTMLHelper::_('jgrid.publishedOptions', array('archived' => 0, 'trash' => 0)), 'value', 'text', $state, true)
             . '</select></div>' . "\n";
     }
 
@@ -195,7 +113,7 @@ class PhocacartRenderAdminviews
         return '<div class="btn-group ph-pull-right">' . "\n"
             . '<select name="filter_type" class="inputbox" onchange="this.form.submit()">' . "\n"
             . '<option value="">' . JText::_($txtSp) . '</option>'
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', $typeList, 'value', 'text', $type, true)
+            . HTMLHelper::_('select.options', $typeList, 'value', 'text', $type, true)
             . '</select></div>' . "\n";
     }
 
@@ -203,7 +121,7 @@ class PhocacartRenderAdminviews
         return '<div class="btn-group ph-pull-right">' . "\n"
             . '<select name="filter_language" class="inputbox" onchange="this.form.submit()">' . "\n"
             . '<option value="">' . JText::_($txtLng) . '</option>'
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', Joomla\CMS\HTML\HTMLHelper::_('contentlanguage.existing', true, true), 'value', 'text', $state)
+            . HTMLHelper::_('select.options', HTMLHelper::_('contentlanguage.existing', true, true), 'value', 'text', $state)
             . '</select></div>' . "\n";
     }
 
@@ -215,7 +133,7 @@ class PhocacartRenderAdminviews
         if ($txtLng != '') {
             $o .= '<option value="">' . JText::_($txtLng) . '</option>';
         }
-        $o .= Joomla\CMS\HTML\HTMLHelper::_('select.options', $categoryList, 'value', 'text', $state)
+        $o .= HTMLHelper::_('select.options', $categoryList, 'value', 'text', $state)
             . '</select></div>' . "\n";
         return $o;
     }
@@ -228,11 +146,10 @@ class PhocacartRenderAdminviews
         if ($txtLng != '') {
             $o .= '<option value="">' . JText::_($txtLng) . '</option>';
         }
-        $o .= Joomla\CMS\HTML\HTMLHelper::_('select.options', $parameterList, 'value', 'text', $state)
+        $o .= HTMLHelper::_('select.options', $parameterList, 'value', 'text', $state)
             . '</select></div>' . "\n";
         return $o;
     }
-
 
     public function selectFilterLevels($txtLng, $state) {
         $levelList = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5);
@@ -240,7 +157,7 @@ class PhocacartRenderAdminviews
             '<div class="btn-group ph-pull-right">' . "\n"
             . '<select name="filter_level" class="inputbox" onchange="this.form.submit()">' . "\n"
             . '<option value="">' . JText::_($txtLng) . '</option>'
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', $levelList, 'value', 'text', $state)
+            . HTMLHelper::_('select.options', $levelList, 'value', 'text', $state)
             . '</select></div>' . "\n";
     }
 
@@ -248,7 +165,7 @@ class PhocacartRenderAdminviews
         return '<div class="btn-group ph-pull-right ">' . "\n"
             . '<select name="filter_country_id" class="inputbox" onchange="this.form.submit()">' . "\n"
             . '<option value="">' . JText::_($txtLng) . '</option>'
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', $countryList, 'value', 'text', $state)
+            . HTMLHelper::_('select.options', $countryList, 'value', 'text', $state)
             . '</select></div>' . "\n";
     }
 
@@ -257,22 +174,9 @@ class PhocacartRenderAdminviews
         return '<div class="btn-group ph-pull-right ">' . "\n"
             . '<select name="filter_section_id" class="inputbox" onchange="this.form.submit()">' . "\n"
             . '<option value="">' . JText::_($txtLng) . '</option>'
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', $sectionList, 'value', 'text', $state)
+            . HTMLHelper::_('select.options', $sectionList, 'value', 'text', $state)
             . '</select></div>' . "\n";
     }
-
-
-    public function startMainContainerNoSubmenu() {
-        //return '<div id="j-main-container" class="col-xs-12 col-sm-10 col-md-10">'. "\n";
-        $o = '<div id="j-main-container" class="col-xs-12 col-sm-12 col-md-12 ph-admin-box-content ph-admin-manage">' . "\n";
-        $o .= '<div id="ph-system-message-container"></div>' . "\n";// specific container for moving messages from joomla to phoca
-        PhocacartRenderAdminjs::moveSystemMessageFromJoomlaToPhoca();
-        return $o;
-    }
-
-    /*public function endMainContainer() {
-        return '</div>'. "\n";
-    }*/
 
     public function startFilterBar($id = 0) {
         if ((int)$id > 0) {
@@ -317,7 +221,6 @@ class PhocacartRenderAdminviews
 
         return $o;
     }
-
 
     public function inputFilterSearchClear($txtFs, $txtFc, $clearClass = array()) {
 
@@ -367,30 +270,9 @@ class PhocacartRenderAdminviews
             . '<label for="sortTable" class="element-invisible">' . JText::_($txtSb) . '</label>' . "\n"
             . '<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">' . "\n"
             . '<option value="">' . JText::_($txtSb) . '</option>' . "\n"
-            . Joomla\CMS\HTML\HTMLHelper::_('select.options', $sortFields, 'value', 'text', $listOrder) . "\n"
+            . HTMLHelper::_('select.options', $sortFields, 'value', 'text', $listOrder) . "\n"
             . '</select>' . "\n"
             . '</div>' . "\n";
-    }
-
-
-    public function startTable($id) {
-        return '<table class="table table-striped" id="' . $id . '">' . "\n";
-    }
-
-    public function endTable() {
-        return '</table>' . "\n";
-    }
-
-    public function tblFoot($listFooter, $columns) {
-        return '<tfoot>' . "\n" . '<tr><td colspan="' . (int)$columns . '">' . $listFooter . '</td></tr>' . "\n" . '</tfoot>' . "\n";
-    }
-
-    public function startTblHeader() {
-        return '<thead>' . "\n" . '<tr>' . "\n";
-    }
-
-    public function endTblHeader() {
-        return '</tr>' . "\n" . '</thead>' . "\n";
     }
 
     public function thOrdering($txtHo, $listDirn, $listOrder, $prefix = 'a', $empty = false) {
@@ -400,226 +282,22 @@ class PhocacartRenderAdminviews
         }
 
         return '<th class="nowrap center  ph-ordering">' . "\n"
-            . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', '<i class="icon-menu-2"></i>', strip_tags($prefix) . '.ordering', $listDirn, $listOrder, null, 'asc', $txtHo) . "\n"
+            . HTMLHelper::_('searchtools.sort', '<i class="icon-menu-2"></i>', strip_tags($prefix) . '.ordering', $listDirn, $listOrder, null, 'asc', $txtHo) . "\n"
             . '</th>';
     }
 
-    public function thOrderingXML($txtHo, $listDirn, $listOrder, $prefix = 'a', $empty = false) {
-
-        if ($empty) {
-            return '<th class="nowrap center ph-ordering"></th>' . "\n";
-        }
-
-        return '<th class="nowrap center ph-ordering">' . "\n"
-            . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', '', strip_tags($prefix) . '.ordering', $listDirn, $listOrder, null, 'asc', $txtHo, 'icon-menu-2') . "\n"
-            . '</th>';
-        //Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'].'_IN_STOCK', 'a.stock', $listDirn, $listOrder ).'</th>'."\n";
-
-    }
-
-    public function thCheck($txtCh) {
-        return '<th class=" ph-check">' . "\n"
-            . '<input type="checkbox" name="checkall-toggle" value="" title="' . JText::_($txtCh) . '" onclick="Joomla.checkAll(this)" />' . "\n"
-            . '</th>' . "\n";
-    }
-
-    public function tdOrder($canChange, $saveOrder, $orderkey, $ordering = 0, $catOrderingEnabled = true) {
-
-        $o = '<td class="order nowrap center ">' . "\n";
-        if ($canChange) {
-            $disableClassName = '';
-            $disabledLabel    = '';
-            if (!$saveOrder) {
-                $disabledLabel    = JText::_('JORDERINGDISABLED');
-                $disableClassName = 'inactive tip-top';
-            }
-            if (!$catOrderingEnabled && !$saveOrder) {
-                //$disableClassName = 'inactive tip-top';
-                $disabledLabel = JText::_('COM_PHOCACART_SELECT_CATEGORY_TO_ORDER_PRODUCTS');
-            }
-            $o .= '<span class="sortable-handler hasTooltip ' . $disableClassName . '" title="' . $disabledLabel . '"><i class="icon-menu"></i></span>' . "\n";
-        } else {
-            $o .= '<span class="sortable-handler inactive"><i class="icon-menu"></i></span>' . "\n";
-        }
-        $orderkeyPlus = $ordering; //$orderkey + 1;
-        $o            .= '<input type="text" style="display:none" name="order[]" size="5" value="' . $orderkeyPlus . '" />' . "\n"
-            . '</td>' . "\n";
-        return $o;
-    }
-
-    public function tdRating($ratingAvg) {
-        $o            = '<td class="small ">';
-        $voteAvg      = round(((float)$ratingAvg / 0.5)) * 0.5;
-        $voteAvgWidth = 16 * $voteAvg;
-        $o            .= '<ul class="star-rating-small">'
-            . '<li class="current-rating" style="width:' . $voteAvgWidth . 'px"></li>'
-            . '<li><span class="star1"></span></li>';
-
-        for ($ir = 2; $ir < 6; $ir++) {
-            $o .= '<li><span class="stars' . $ir . '"></span></li>';
-        }
-        $o .= '</ul>';
-        $o .= '</td>' . "\n";
-        return $o;
-    }
-
-    public function tdLanguage($lang, $langTitle, $langTitleE) {
-
-        $o = '<td class="small nowrap ">';
-        if ($lang == '*') {
-            $o .= JText::_('JALL');
-        } else {
-            if ($langTitle) {
-                $o .= $langTitleE;
-            } else {
-                $o .= JText::_('JUNDEFINED');;
-            }
-        }
-        $o .= '</td>' . "\n";
-        return $o;
-    }
-
-
-    public function formInputs($listOrder, $listDirn, $originalOrders) {
+     public function formInputs($listOrder, $listDirn, $originalOrders) {
 
         return '<input type="hidden" name="task" value="" />' . "\n"
             . '<input type="hidden" name="boxchecked" value="0" />' . "\n"
             . '<input type="hidden" name="filter_order" value="' . $listOrder . '" />' . "\n"
             . '<input type="hidden" name="filter_order_Dir" value="' . $listDirn . '" />' . "\n"
-            . Joomla\CMS\HTML\HTMLHelper::_('form.token') . "\n"
+            . HTMLHelper::_('form.token') . "\n"
             . '<input type="hidden" name="original_order_values" value="' . implode(',', $originalOrders) . '" />' . "\n";
-    }
-
-    public function formInputsXml($listOrder, $listDirn, $originalOrders) {
-
-        return '<input type="hidden" name="task" value="" />' . "\n"
-            . '<input type="hidden" name="boxchecked" value="0" />' . "\n"
-            //.'<input type="hidden" name="filter_order" value="'.$listOrder.'" />'. "\n"
-            //.'<input type="hidden" name="filter_order_Dir" value="'.$listDirn.'" />'. "\n"
-            . Joomla\CMS\HTML\HTMLHelper::_('form.token') . "\n"
-            . '<input type="hidden" name="original_order_values" value="' . implode(',', $originalOrders) . '" />' . "\n";
-    }
-
-    public function td($value, $class = '') {
-        if ($class != '') {
-            return '<td class="' . $class . '">' . $value . '</td>' . "\n";
-        } else {
-            return '<td>' . $value . '</td>' . "\n";
-        }
-    }
-
-    /* TO DO:
-    * CHANGE PATHS
-    * SET NEW PARAM IN PG: '/media/com_phocacart/images/administrator/'
-    *//*
-	public function tdImage($item, $button, $txtE, $class = '', $avatarAbs = '', $avatarRel = '') {
-		$o = '<td class="'.$class.'">'. "\n";
-		$o .= '<div class="phocagallery-box-file">'. "\n"
-			.' <center>'. "\n"
-			.'  <div class="phocagallery-box-file-first">'. "\n"
-			.'   <div class="phocagallery-box-file-second">'. "\n"
-			.'    <div class="phocagallery-box-file-third">'. "\n"
-			.'     <center>'. "\n";
-
-		if ($avatarAbs != '' && $avatarRel != '') {
-			// AVATAR
-			if (JFile::exists($avatarAbs.$item->avatar)){
-				$o .= '<a class="'. $button->modalname.'"'
-				.' title="'. $button->text.'"'
-				.' href="'.JURI::root().$avatarRel.$item->avatar.'" '
-				.' rel="'. $button->options.'" >'
-				.'<img src="'.JURI::root().$avatarRel.$item->avatar.'?imagesid='.md5(uniqid(time())).'" alt="'.JText::_($txtE).'" />'
-				.'</a>';
-			} else {
-				$o .= Joomla\CMS\HTML\HTMLHelper::_( 'image', '/media/com_phocagallery/images/administrator/phoca_thumb_s_no_image.gif', '');
-			}
-		} else {
-			// PICASA
-			if (isset($item->extid) && $item->extid !='') {
-
-				$resW				= explode(',', $item->extw);
-				$resH				= explode(',', $item->exth);
-				$correctImageRes 	= PhocaGalleryImage::correctSizeWithRate($resW[2], $resH[2], 50, 50);
-				$imgLink			= $item->extl;
-
-				$o .= '<a class="'. $button->modalname.'" title="'.$button->text.'" href="'. $imgLink .'" rel="'. $button->options.'" >'
-				. '<img src="'.$item->exts.'?imagesid='.md5(uniqid(time())).'" width="'.$correctImageRes['width'].'" height="'.$correctImageRes['height'].'" alt="'.JText::_($txtE).'" />'
-				.'</a>'. "\n";
-			} else if (isset ($item->fileoriginalexist) && $item->fileoriginalexist == 1) {
-
-				$imageRes			= PhocaGalleryImage::getRealImageSize($item->filename, 'small');
-				$correctImageRes 	= PhocaGalleryImage::correctSizeWithRate($imageRes['w'], $imageRes['h'], 50, 50);
-				$imgLink			= PhocaGalleryFileThumbnail::getThumbnailName($item->filename, 'large');
-
-				$o .= '<a class="'. $button->modalname.'" title="'. $button->text.'" href="'. JURI::root(). $imgLink->rel.'" rel="'. $button->options.'" >'
-				. '<img src="'.JURI::root().$item->linkthumbnailpath.'?imagesid='.md5(uniqid(time())).'" width="'.$correctImageRes['width'].'" height="'.$correctImageRes['height'].'" alt="'.JText::_($txtE).'" />'
-				.'</a>'. "\n";
-			} else {
-				$o .= Joomla\CMS\HTML\HTMLHelper::_( 'image', 'media/com_phocagallery/images/administrator/phoca_thumb_s_no_image.gif', '');
-			}
-		}
-		$o .= '     </center>'. "\n"
-			.'    </div>'. "\n"
-			.'   </div>'. "\n"
-			.'  </div>'. "\n"
-			.' </center>'. "\n"
-			.'</div>'. "\n";
-		$o .=  '</td>'. "\n";
-		return $o;
-	}*/
-
-
-    public function tdPublishDownUp($publishUp, $publishDown, $langPref) {
-
-        $o  = '';
-        $db = JFactory::getDBO();
-        //$app			= JFactory::getApplication();
-        $nullDate     = $db->getNullDate();
-        $now          = JFactory::getDate();
-        $config       = JFactory::getConfig();
-        $publish_up   = JFactory::getDate($publishUp);
-        $publish_down = JFactory::getDate($publishDown);
-        $tz           = new DateTimeZone($config->get('offset'));
-        $publish_up->setTimezone($tz);
-        $publish_down->setTimezone($tz);
-
-
-        if ($now->toUnix() <= $publish_up->toUnix()) {
-            $text = JText::_($langPref . '_PENDING');
-        } else if (($now->toUnix() <= $publish_down->toUnix() || $publishDown == $nullDate)) {
-            $text = JText::_($langPref . '_ACTIVE');
-        } else if ($now->toUnix() > $publish_down->toUnix()) {
-            $text = JText::_($langPref . '_EXPIRED');
-        }
-
-        $times = '';
-        if (isset($publishUp)) {
-            if ($publishUp == $nullDate) {
-                $times .= JText::_($langPref . '_START') . ': ' . JText::_($langPref . '_ALWAYS');
-            } else {
-                $times .= JText::_($langPref . '_START') . ": " . $publish_up->format("D, d M Y H:i:s");
-            }
-        }
-        if (isset($publishDown)) {
-            if ($publishDown == $nullDate) {
-                $times .= "<br />" . JText::_($langPref . '_FINISH') . ': ' . JText::_($langPref . '_NO_EXPIRY');
-            } else {
-                $times .= "<br />" . JText::_($langPref . '_FINISH') . ": " . $publish_down->format("D, d M Y H:i:s");
-            }
-        }
-
-        if ($times) {
-            $o .= '<td align="center">'
-                . '<span class="editlinktip hasTip" title="' . JText::_($langPref . '_PUBLISH_INFORMATION') . '::' . $times . '">'
-                . '<a href="javascript:void(0);" >' . $text . '</a></span>'
-                . '</td>' . "\n";
-        } else {
-            $o .= '<td></td>' . "\n";
-        }
-        return $o;
     }
 
     // Phoca Cart
+
     public function tdImageCart($filename, $size, $manager, $class = '') {
 
         $thumbnail = PhocacartFileThumbnail::getThumbnailName($filename, $size, $manager);
@@ -630,117 +308,42 @@ class PhocacartRenderAdminviews
             $o = '<td>';
         }
         if (JFile::exists($thumbnail->abs)) {
-            //$o .= Joomla\CMS\HTML\HTMLHelper::_( 'image', $thumbnail->rel . '?imagesid='.md5(uniqid(time())), '');
+            //$o .= HTMLHelper::_( 'image', $thumbnail->rel . '?imagesid='.md5(uniqid(time())), '');
             $o .= '<img src="' . JURI::root() . $thumbnail->rel . '?imagesid=' . md5(uniqid(time())) . '" />';
         }
         $o .= '</td>';
         return $o;
     }
 
-    public function saveOrder($t, $listDirn) {
+    public function headerItems($items, &$options) {
 
-        $saveOrderingUrl = 'index.php?option=' . $t['o'] . '&task=' . $t['tasks'] . '.saveOrderAjax&tmpl=component&' . JSession::getFormToken() . '=1';
-        if ($this->compatible) {
-            HTMLHelper::_('draggablelist.draggable');
-        } else {
-            Joomla\CMS\HTML\HTMLHelper::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
-        }
+		$o = array();
 
-        return $saveOrderingUrl;
-    }
+		if (!empty($items)) {
+			foreach ($items as $k => $v) {
 
-    public function firstColumnHeader($listDirn, $listOrder, $prefix = 'a', $empty = false) {
-        if ($this->compatible) {
-            return '<th class="w-1 text-center ph-check">' . HTMLHelper::_('grid.checkall') . '</td>';
-        } else {
-            return $this->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, $prefix, $empty);
-        }
-    }
+				if (!isset($v['if']) || (isset($v['if']) && $v['if'])) {
 
-    public function secondColumnHeader($listDirn, $listOrder, $prefix = 'a', $empty = false) {
-        if ($this->compatible) {
-            return $this->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, $prefix, $empty);
-        } else {
-            return $this->thCheck('JGLOBAL_CHECK_ALL');
-        }
-    }
+					$class	= PhocacartText::filterValue($v['class'], 'alphanumeric2');
+					$tool 	= isset($v['tool']) && $v['tool'] != '' ? PhocacartText::filterValue($v['tool'], 'alphanumeric5') : '';
+					$title 	= Text::_($v['title']);
+					$column = isset($v['column']) && $v['column'] != '' ? PhocacartText::filterValue($v['column'], 'alphanumeric5') : '';
 
+					if ($tool != '') {
+						$o[] = '<th class="'.$class.'">' . HTMLHelper::_($tool, $title, $column, $options['listdirn'], $options['listorder']) . '</th>';
+					} else {
+						$o[] = '<th class="'.$class.'">' . Text::_($title) . '</th>';
+					}
 
-    public function startTblBody($saveOrder, $saveOrderingUrl, $listDirn) {
+					$options['count']++;
 
-        $o = array();
+				}
+			}
+		}
 
-        if ($this->compatible) {
-            $o[] = '<tbody';
-            if ($saveOrder) {
-                $o[] = ' class="js-draggable" data-url="' . $saveOrderingUrl . '" data-direction="' . strtolower($listDirn) . '" data-nested="true"';
-            }
-            $o[] = '>';
+		return implode("\n", $o);
 
-        } else {
-            $o[] = '<tbody>' . "\n";
-        }
-
-        return implode("", $o);
-    }
-
-    public function endTblBody() {
-        return '</tbody>' . "\n";
-    }
-
-    public function startTr($i, $catid = 0) {
-        $iD = $i % 2;
-        if ($this->compatible) {
-            return '<tr class="row' . $iD . '" data-dragable-group="' . $catid . '">' . "\n";
-        } else {
-
-            return '<tr class="row' . $iD . '" sortable-group-id="' . $catid . '" >' . "\n";
-        }
-    }
-
-    public function endTr() {
-        return '</tr>' . "\n";
-    }
-
-    public function firstColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $catOrderingEnabled = true) {
-        if ($this->compatible) {
-            return $this->td(HTMLHelper::_('grid.id', $i, $itemId), 'text-center');
-        } else {
-            return $this->tdOrder($canChange, $saveOrder, $orderkey, $ordering, $catOrderingEnabled);
-        }
-    }
-
-
-    public function secondColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $catOrderingEnabled = true) {
-
-        if ($this->compatible) {
-
-            $o   = array();
-            $o[] = '<td class="text-center d-none d-md-table-cell">';
-
-            $iconClass = '';
-            if (!$canChange) {
-                $iconClass = ' inactive';
-            } else if (!$saveOrder) {
-                $iconClass = ' inactive" title="' . JText::_('JORDERINGDISABLED');
-            } else if (!$catOrderingEnabled) {
-                $iconClass = ' inactive" title="' . JText::_('COM_PHOCACART_SELECT_CATEGORY_TO_ORDER_PRODUCTS');
-            }
-
-            $o[] = '<span class="sortable-handler' . $iconClass . '"><span class="fas fa-ellipsis-v" aria-hidden="true"></span></span>';
-
-            if ($canChange && $saveOrder) {
-                $o[] = '<input type="text" name="order[]" size="5" value="' . $ordering . '" class="width-20 text-area-order hidden">';
-            }
-
-            $o[] = '</td>';
-
-            return implode("", $o);
-
-        } else {
-            return $this->td(Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $itemId), "small ");
-        }
-    }
+	}
+        */
 }
-
 ?>

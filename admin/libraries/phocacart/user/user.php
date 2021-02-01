@@ -31,6 +31,7 @@ class PhocacartUser
 
 	public static function getUser($id = 0) {
 
+		$app         = JFactory::getApplication();
 		$pUser		= $vendor = $ticket = $unit	= $section = array();
 		$isVendor	= false;
 
@@ -57,6 +58,28 @@ class PhocacartUser
 					// ======= LOGGED JOOMLA! USER IS NOT VENDOR - BUT IN POS WE NEED VENDOR
 					return false;
 				}
+			} else if ($app->getName() == 'administrator') {
+
+				// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR
+				// We want to get information about user's cart in administration
+				$userid    = $app->input->get('userid', 0, 'int');
+				//$vendorid  = $app->input->get('vendorid', 0, 'int');
+				//$ticketid  = $app->input->get('ticketid', 0, 'int');
+				//$unitid    = $app->input->get('unitid', 0, 'int');
+				//$sectionid = $app->input->get('sectionid', 0, 'int');
+
+				// Test if we ask POS user
+				//$userIdPos = PhocacartPos::getUserIdByVendorAndTicket($vendorid, $ticketid, $unitid, $sectionid);
+
+				if ((int)$userid > 0) {
+					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - CUSTOMER FOUND
+					return JFactory::getUser($userid);
+				} else {
+					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - NO CUSTOMER FOUND
+					return JFactory::getUser(0);// Joomla! User is administrator and there is no information about user
+				}
+
+
 			} else {
 				// ======= LOGGED JOOMLA! USER IS CUSTOMER
 				// No POS, return standard Joomla! User
@@ -173,6 +196,11 @@ class PhocacartUser
 		// 3) STANDARD USER WHO ADDED ADDRESS AND PREFERENCES WERE SAVED - now this is only stored preference of the user
 		if ($baSa == 1) {
 			$o['bsch'] = 'checked="checked"';
+		}
+
+		// This feature is completely disabled
+		if ($delivery_billing_same_enabled == -1) {
+			$o['bsch'] = '';
 		}
 
 

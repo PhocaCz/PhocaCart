@@ -122,7 +122,7 @@ class PhocacartSearch
 						$inA[] = (int)$v;
 					}
 				}
-
+                $inA = array_unique($inA);
 				$in = implode(',', $inA);
 			break;
 
@@ -140,6 +140,7 @@ class PhocacartSearch
 						//$v		= str_replace('%2C', ',', $v);
 						$a 		= explode(',', $v);
 						if ($k != '' && $v != '' && !empty($a)) {
+						    $a = array_unique($a);
 							if ($search == 'a') {
 								// Attributes
 								$inA[] = '(at2.alias = '.$db->quote($k). ' AND v2.alias IN ('. '\'' . implode('\',\'', $a). '\'' .'))';

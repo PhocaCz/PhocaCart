@@ -44,7 +44,9 @@ class PhocaCartControllerResponse extends JControllerForm
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin 	= JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			\JFactory::getApplication()->triggerEvent('PCPafterCancelPayment', array($mid, &$message));
+			$eventData 					= array();
+            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
+			\JFactory::getApplication()->triggerEvent('PCPafterCancelPayment', array($mid, &$message, $eventData));
 		}
 
 		$return = PhocacartRoute::getInfoRoute();
@@ -67,7 +69,9 @@ class PhocaCartControllerResponse extends JControllerForm
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			\JFactory::getApplication()->triggerEvent('PCPbeforeCheckPayment', array($pid));
+			$eventData 					= array();
+            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
+			\JFactory::getApplication()->triggerEvent('PCPbeforeCheckPayment', array($pid, $eventData));
 		} else {
 
 			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
@@ -88,7 +92,9 @@ class PhocaCartControllerResponse extends JControllerForm
 		//$dispatcher = J EventDispatcher::getInstance();
 		$plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
 		if ($plugin) {
-			\JFactory::getApplication()->triggerEvent('PCPonPaymentWebhook', array($pid));
+			$eventData 					= array();
+            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
+			\JFactory::getApplication()->triggerEvent('PCPonPaymentWebhook', array($pid, $eventData));
 		} else {
 
 			JLog::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');

@@ -25,6 +25,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->p 								= $app->getParams();
 		$this->s								= PhocacartRenderStyle::getStyles();
 
+		$this->t['view']						= 'categories';
 		$this->t['csv_display_subcategories']	= $this->p->get( 'csv_display_subcategories', 0 );
 		$this->t['categories']					= $model->getCategoriesList($this->t['csv_display_subcategories']);
 		$this->t['csv_display_category_desc']	= $this->p->get( 'csv_display_category_desc', 0 );

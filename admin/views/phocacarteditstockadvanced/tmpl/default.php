@@ -170,6 +170,5 @@ if (!empty($this->t['product'])) {
 	}
 }*/
 
-echo PhocacartRenderAdminjs::renderAjaxTopHtml();
 
 ?>

@@ -8,6 +8,10 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die();
 
 class PhocacartProduct
@@ -55,7 +59,32 @@ class PhocacartProduct
 
         $wheres[] = ' i.id = ' . (int)$productId;
 
-        $columns = 'i.id, i.title, i.alias, i.description, i.features, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.stock_calculation, i.min_quantity, i.min_multiple_quantity, i.stock, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.external_link2, i.external_text2, i.type, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku AS sku, i.upc AS upc, i.ean AS ean, i.jan AS jan, i.isbn AS isbn, i.mpn AS mpn, i.serial_number, i.points_needed, i.points_received, i.download_file, i.download_token, i.download_folder, i.download_days, i.date, i.date_update, i.delivery_date, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.alias as manufactureralias,';
+
+
+        // Views Plugin can load additional columns
+		$additionalColumns = array();
+		$pluginLayout 	= PluginHelper::importPlugin('pcv');
+		if ($pluginLayout) {
+			$pluginOptions 				= array();
+			$eventData 					= array();
+			Factory::getApplication()->triggerEvent('PCVonProductBeforeLoadColumns', array('com_phocacart.product', &$pluginOptions, $eventData));
+
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+					}
+				}
+			}
+		}
+
+		$baseColumns = array('i.id', 'i.title', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days', 'i.date', 'i.date_update', 'i.delivery_date');
+
+		$col = array_merge($baseColumns, $additionalColumns);
+		$col = array_unique($col);
+
+
+        $columns = implode(',', $col) . ',pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.alias as manufactureralias,';
 
 
         if (!$skip['tax']) {
@@ -91,7 +120,7 @@ class PhocacartProduct
             $query .= ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN (' . $userGroups . ') AND type = 3)';
         }
 
-        $groupsFull = 'i.id, i.title, i.alias, i.description, i.features, pc.ordering, i.metatitle, i.metadesc, i.metakey, i.metadata, i.image, i.weight, i.height, i.width, i.length, i.min_multiple_quantity, i.min_quantity_calculation, i.volume, i.description, i.description_long, i.price, i.price_original, i.stockstatus_a_id, i.stockstatus_n_id, i.min_quantity, i.stock_calculation, i.min_multiple_quantity, i.stock, i.date, i.date_update, i.delivery_date, i.sales, i.featured, i.external_id, i.unit_amount, i.unit_unit, i.video, i.external_link, i.external_text, i.external_link2, i.external_text2, i.public_download_file, i.public_download_text, i.public_play_file, i.public_play_text, i.sku, i.upc, i.ean, i.jan, i.isbn, i.mpn, i.serial_number, i.points_needed, i.points_received, i.type, i.download_file, i.download_token, i.download_folder, i.download_days, c.id, c.title, c.alias, m.id, m.title, m.alias';
+        $groupsFull = implode(',', $col) .',pc.ordering, c.id, c.title, c.alias, m.id, m.title, m.alias';
 
         if (!$skip['tax']) {
             $groupsFull .= ', t.id, t.tax_rate, t.calculation_type, t.title';
@@ -164,6 +193,7 @@ class PhocacartProduct
                 $db = JFactory::getDBO();
                 $wheres = array();
                 $user = PhocacartUser::getUser();
+
                 $userLevels = implode(',', $user->getAuthorisedViewLevels());
                 $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
                 $wheres[] = " a.access IN (" . $userLevels . ")";
@@ -201,6 +231,8 @@ class PhocacartProduct
 
                 $product = $db->loadObject();
 
+
+
                 if (isset($product->id) && (int)$product->id > 0) {
                     //return true;
                     self::$productAccess[$id][$catid][$typeS] = true;
@@ -224,7 +256,7 @@ class PhocacartProduct
     }
 
 
-    public static function checkIfProductAttributesOptionsExist($id, $idKey, $catid, $type = array(0, 1), $attribs)
+    public static function checkIfProductAttributesOptionsExist($id, $idKey, $catid, $type = array(0, 1), $attribs = array())
     {
 
         $typeS = base64_encode(serialize(ksort($type)));
@@ -334,6 +366,7 @@ class PhocacartProduct
         $wheresA = array();// advanced stock management product (EAN, SKU)
 
         $user = PhocacartUser::getUser();
+
         $userLevels = implode(',', $user->getAuthorisedViewLevels());
         $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
         $wheres[] = " a.access IN (" . $userLevels . ")";
@@ -521,6 +554,7 @@ class PhocacartProduct
         $db = JFactory::getDBO();
         $wheres = array();
         $user = PhocacartUser::getUser();
+
         $userLevels = implode(',', $user->getAuthorisedViewLevels());
         $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
         $wheres[] = " a.access IN (" . $userLevels . ")";
@@ -562,6 +596,30 @@ class PhocacartProduct
             $wheres[] = 'ah.user_id > 0';
         }
 
+
+        // Views Plugin can load additional columns
+		$additionalColumns = array();
+		$pluginLayout 	= PluginHelper::importPlugin('pcv');
+		if ($pluginLayout) {
+			$pluginOptions 				= array();
+			$eventData 					= array();
+			Factory::getApplication()->triggerEvent('PCVonProductsBeforeLoadColumns', array('com_phocacart.products', &$pluginOptions, $eventData));
+
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+					}
+				}
+			}
+		}
+
+        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed');
+
+
+		$col = array_merge($baseColumns, $additionalColumns);
+		$col = array_unique($col);
+
         /*
          * type_feed - specific type of products used in XML feed (for example by Google products: g:product_type)
          * type_category_feed - specific type of product category used in XML feed (for example by Google products: g:google_product_category)
@@ -573,10 +631,10 @@ class PhocacartProduct
             $groupsFull = $queryColumns;
             $groupsFast = 'a.id';
         } else {
-            $columns = 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.ean, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, a.price, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, a.price_original, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, a.date, a.sales, a.featured, a.external_id, m.title AS manufacturertitle, a.condition, a.points_received, a.points_needed, a.delivery_date, a.type, a.type_feed, a.type_category_feed, a.params_feed,'
+            $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, m.title AS manufacturertitle,'
                 . ' AVG(r.rating) AS rating,'
                 . ' at.required AS attribute_required';
-            $groupsFull = 'a.id, a.title, a.image, a.video, a.alias, a.description, a.description_long, a.sku, a.ean, a.stockstatus_a_id, a.stockstatus_n_id, a.min_quantity, a.min_multiple_quantity, a.stock, a.unit_amount, a.unit_unit, c.id, c.title, c.alias, c.title_feed, c.type_feed, a.price, ppg.price, pptg.points_received, a.price_original, t.id, t.tax_rate, t.calculation_type, t.title, a.date, a.sales, a.featured, a.external_id, m.title, r.rating, at.required, a.condition, a.points_receieved, a.points_needed, a.delivery_date, a.type, a.type_feed, a.type_category_feed, a.params_feed';
+            $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
             $groupsFast = 'a.id';
         }
         $groups = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -686,9 +744,23 @@ class PhocacartProduct
             . ' WHERE pi.product_id = ' . (int)$id
             . ' ORDER BY pi.id';
         $db->setQuery($q);
-        $categories = $db->loadAssocList();
+        $images = $db->loadAssocList();
 
-        return $categories;
+        return $images;
+    }
+
+    public static function getImageByProductId($id)
+    {
+        $db = JFactory::getDBO();
+        $q = 'SELECT p.image'
+            . ' FROM #__phocacart_products AS p'
+            . ' WHERE p.id = ' . (int)$id
+            . ' ORDER BY p.id'
+            . ' LIMIT 1';
+        $db->setQuery($q);
+        $image = $db->loadResult();
+
+        return $image;
     }
 
     public static function getMostViewedProducts($limit = 5, $checkPublished = false, $checkAccess = false, $count = false, $type = array(0, 1))

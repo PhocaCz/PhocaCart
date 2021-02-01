@@ -22,17 +22,20 @@ class PhocaCartCpModelPhocaCartSubmititems extends JModelList
 				'id', 'a.id',
 				'title', 'a.title',
 				'alias', 'a.alias',
+				'date_submit', 'a.date_submit',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'date_submit', 'a.date_submit',
-				'published','a.published'
+				'published','a.published',
+				'user_id','a.user_id',
+				'user_username'
 			);
 		}
 
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = 'a.title', $direction = 'ASC')
+	protected function populateState($ordering = 'a.date_submit', $direction = 'DESC')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -100,6 +103,9 @@ class PhocaCartCpModelPhocaCartSubmititems extends JModelList
 		$query->select($this->getState('list.select', $columns));
 
 		$query->from('`#__phocacart_submit_items` AS a');
+
+		$query->select('u.name AS user_name, u.username AS user_username');
+		$query->join('LEFT', '#__users AS u ON u.id=a.user_id');
 
 		// Join over the language
 		$query->select('l.title AS language_title, l.image AS language_image');

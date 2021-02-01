@@ -21,7 +21,6 @@ $class          = PhocacartRenderFront::completeClass(array($d['s']['c']['img-re
 $src            = JURI::base(true).'/'.$d['image']['image']->rel;
 $srcImg         = JURI::base(true).'/'.$d['image']['image']->rel; // fallback
 
-
 if ($d['t']['display_webp_images'] == 1) {
 
     $srcWebP        = JURI::base(true).'/'.$d['image']['image']->rel_webp;
@@ -44,7 +43,7 @@ if ($d['t']['display_webp_images'] == 1) {
 
 } else {
 
-    if ($d['t']['lazy_load_categories'] == 1) {
+    if (($d['t']['view'] == 'categories' && $d['t']['lazy_load_categories'] == 1) || (($d['t']['view'] == 'category' || $d['t']['view'] == 'items') && $d['t']['lazy_load_category_items'] == 1)) {
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' />';
     } else {
         echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' />';

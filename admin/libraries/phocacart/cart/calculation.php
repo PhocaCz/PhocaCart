@@ -153,6 +153,7 @@ class PhocacartCartCalculation
             $fullItems[$k]['rewardproducttxtsuffix'] = '';
             $fullItems[$k]['points_needed']          = 0;
             $fullItems[$k]['points_received']        = 0;
+            $fullItems[$k]['type']                    = 0;
 
 
             // GROUP QUANTITY
@@ -192,6 +193,7 @@ class PhocacartCartCalculation
                 $fullItems[$k]['alias'] = $itemD->alias;
                 $fullItems[$k]['sku']   = $itemD->sku;
                 $fullItems[$k]['image'] = $itemD->image;
+                $fullItems[$k]['type']  = $itemD->type;
 
 
                 $fullItems[$k]['default_price'] = $itemD->price;
@@ -353,18 +355,47 @@ class PhocacartCartCalculation
                                             // Price
                                             if ($attrib->operator == '-') {
 
+                                                $nettoBefore = $fullItems[$k]['netto'];
                                                 $fullItems[$k]['netto'] -= $priceA['netto'];
-                                                $fullItems[$k]['netto'] < 0 ? $fullItems[$k]['netto'] = 0 : $total['netto'] -= ($priceA['netto'] * $fQ);
+                                                if ($fullItems[$k]['netto'] < 0) {
+                                                    $total['netto'] -= ($nettoBefore * $fQ);
+                                                    $fullItems[$k]['netto'] = 0;
+
+                                                } else {
+                                                    $total['netto'] -= ($priceA['netto'] * $fQ);
+                                                }
+
+                                                $bruttoBefore = $fullItems[$k]['brutto'];
                                                 $fullItems[$k]['brutto'] -= $priceA['brutto'];
-                                                $fullItems[$k]['brutto'] < 0 ? $fullItems[$k]['brutto'] = 0 : $total['brutto'] -= ($priceA['brutto'] * $fQ);
+                                                if ($fullItems[$k]['brutto'] < 0 ) {
+                                                    $total['brutto'] -= ($bruttoBefore * $fQ);
+                                                    $fullItems[$k]['brutto'] = 0;
+                                                } else {
+
+                                                    $total['brutto'] -= ($priceA['brutto'] * $fQ);
+                                                }
+
+                                                $taxBefore = $fullItems[$k]['tax'];
                                                 $fullItems[$k]['tax'] -= $priceA['tax'];
-                                                $fullItems[$k]['tax'] < 0 ? $fullItems[$k]['tax'] = 0 : $total['tax'][$taxKey]['tax'] -= ($priceA['tax'] * $fQ);
+                                                if ($fullItems[$k]['tax'] < 0 ) {
+                                                    $total['tax'][$taxKey]['tax']    -= ($taxBefore * $fQ);
+                                                    $total['tax'][$taxKey]['netto']  -= ($nettoBefore * $fQ);
+                                                    $total['tax'][$taxKey]['brutto'] -= ($bruttoBefore * $fQ);
+                                                    $fullItems[$k]['tax'] = 0;
+                                                } else {
+
+                                                    $total['tax'][$taxKey]['tax']    -= ($priceA['tax'] * $fQ);
+                                                    $total['tax'][$taxKey]['netto']  -= ($priceA['netto'] * $fQ);
+                                                    $total['tax'][$taxKey]['brutto'] -= ($priceA['brutto'] * $fQ);
+                                                }
+
 
                                             } else if ($attrib->operator == '+') {
 
                                                 $fullItems[$k]['brutto']         += $priceA['brutto'];// * multiply in render checkout
                                                 $fullItems[$k]['netto']          += $priceA['netto']; // * multiply in render checkout
                                                 $fullItems[$k]['tax']            += $priceA['tax'];   // * multiply in render checkout
+
                                                 $total['netto']                  += ($priceA['netto'] * $fQ);
                                                 $total['brutto']                 += ($priceA['brutto'] * $fQ);
                                                 $total['tax'][$taxKey]['tax']    += ($priceA['tax'] * $fQ);

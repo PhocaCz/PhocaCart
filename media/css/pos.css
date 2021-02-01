@@ -548,6 +548,8 @@ ph-pos-filter-box {
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #777;
+	max-width: 100rem;
+    overflow:scroll;
 	
 	
 }

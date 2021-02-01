@@ -57,6 +57,9 @@ class PhocaCartViewOrder extends JViewLegacy
 		$this->document->setTitle($title);
 
 		echo $o;
+		
+		// PDF document name
+		$this->document->setName($title);
 
 	}
 

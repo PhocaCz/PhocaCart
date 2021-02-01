@@ -32,11 +32,11 @@ $attr[]				= 'data-alias="'.htmlspecialchars($v->alias).'"';
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
 echo '<select '.implode(' ', $attr).'>';
-if ($d['required']['required'] != 1) {
-
+if ((int)$d['required']['required'] == 1 && (int)$d['remove_select_option_attribute'] == 1) {
 	// If the attribute is requried, there cannot be select option in select box (to select no value)
 	// this is not a problem for "add to cart" button as it just checks for the selected options
 	// but for ajaxes like chaning price or stock in item view, this is why this option is not displayed when attribute required
+} else {
 	echo '<option value="">'. JText::_('COM_PHOCACART_SELECT_OPTION').'</option>';
 }
 

@@ -915,6 +915,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_form_fields` (
   `description` text,
   `id_input` varchar(50) NOT NULL DEFAULT '',
   `type` varchar(50) NOT NULL DEFAULT '',
+  `predefined_values` text,
+  `predefined_values_first_option` varchar(100) NOT NULL DEFAULT '',
   `type_default` tinyint(3) NOT NULL DEFAULT '0',
   `default` varchar(255) NOT NULL DEFAULT '',
   `size` varchar(50) NOT NULL DEFAULT '',
@@ -1023,11 +1025,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `image` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `stock_movements` char(1) NOT NULL DEFAULT '',
-
   `change_user_group` tinyint(1) NOT NULL DEFAULT '0',
   `change_points_needed` tinyint(1) NOT NULL DEFAULT '0',
   `change_points_received` tinyint(1) NOT NULL DEFAULT '0',
-
   `email_customer` tinyint(1) NOT NULL DEFAULT '0',
   `email_others` text,
   `email_text` text,
@@ -1135,6 +1135,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`params` text,
+	
+	`params_shipping` text,
+	`params_payment` text,
 
 	`user_lang` char(7) NOT NULL DEFAULT '',
 	`default_lang` char(7) NOT NULL DEFAULT '',

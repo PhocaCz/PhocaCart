@@ -6,6 +6,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
@@ -21,6 +24,7 @@ class PhocaCartModelCategory extends JModelLegacy
 	protected $pagination			= null;
 	protected $total				= null;
 	protected $ordering				= null;
+	protected $category_layout_plugin	= '';
 
 	public function __construct() {
 		parent::__construct();
@@ -32,6 +36,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$item_ordering			= $paramsC->get( 'item_ordering', 1 );
 		$layout_type			= $paramsC->get( 'layout_type', 'grid' );
 
+		$this->category_layout_plugin	= $paramsC->get( 'category_layout_plugin', '' );
 
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
 		$manufacturer_alias	= $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
@@ -122,8 +127,9 @@ class PhocaCartModelCategory extends JModelLegacy
 		$skip['tax']   			= $params->get('sql_products_skip_tax', 0);
 
 		$p = array();
-		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
-		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
+		$p['hide_products_out_of_stock']			= $params->get( 'hide_products_out_of_stock', 0);
+		$p['switch_image_category_items']			= $params->get( 'switch_image_category_items', 0 );
+		$p['display_products_all_subcategories']	= $params->get( 'display_products_all_subcategories', 0 );
 		$leftImages = '';
 		$selImages = '';
 		if ($p['switch_image_category_items'] == 1) {
@@ -131,9 +137,28 @@ class PhocaCartModelCategory extends JModelLegacy
 			$selImages	= ' GROUP_CONCAT(im.image) as additional_image,';
 		}
 
-		$wheres		= array();
+
+		$wheres			= array();
+		$subWherePcCat 	= '';
+
 		if ((int)$categoryId > 0) {
-			$wheres[]			= " c.id = ".(int)$categoryId;
+
+			// Standard - only products from one category
+			$subWherePcCat 		= ' AND pc.category_id = '.(int)$categoryId;
+
+			// Display products not only from current category but even from all subcategories
+			if ($p['display_products_all_subcategories'] == 1) {
+				$categoryChildrenId = PhocacartCategoryMultiple::getCategoryChildrenString((int)$categoryId, (string)$categoryId);
+				if ($categoryChildrenId !== '') {
+					$wheres[]			= " c.id IN (".$categoryChildrenId.")";
+					$subWherePcCat		= " AND pc.category_id IN (".$categoryChildrenId.")";
+				} else {
+					$wheres[]			= " c.id = ".(int)$categoryId;
+				}
+			} else {
+				$wheres[]			= " c.id = ".(int)$categoryId;
+			}
+
 		}
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
@@ -169,9 +194,67 @@ class PhocaCartModelCategory extends JModelLegacy
 			$wheres[] = " a.stock > 0";
 		}
 
+
+		// Category Layout Plugin can change ordering
+		// Category Layout Plugin can load additional columns
+		$additionalColumns = array();
+		if ($this->category_layout_plugin != '') {
+			$this->category_layout_plugin = PhocacartText::filterValue($this->category_layout_plugin, 'alphanumeric2');
+			$pluginLayout 	= PluginHelper::importPlugin('pcl', $this->category_layout_plugin);
+			if ($pluginLayout) {
+				$pluginOptions 				= array();
+				$eventData 					= array();
+				$eventData['pluginname'] 	= $this->category_layout_plugin;
+				Factory::getApplication()->triggerEvent('PCLonCategoryGetOptions', array('com_phocacart.category', &$pluginOptions, $eventData));
+
+				if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
+					$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
+					if ($pluginOrdering != '') {
+						$itemOrdering = $pluginOrdering . ',' . $itemOrdering;
+					}
+				}
+
+				if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+					if (!empty($pluginOptions['columns'])) {
+						foreach ($pluginOptions['columns'] as $k => $v) {
+							$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+						}
+					}
+				}
+			}
+		}
+
+		// Views Plugin can load additional columns
+		$pluginLayout 	= PluginHelper::importPlugin('pcv');
+		if ($pluginLayout) {
+			$pluginOptions 				= array();
+			$eventData 					= array();
+			Factory::getApplication()->triggerEvent('PCVonCategoryBeforeLoadColumns', array('com_phocacart.category', &$pluginOptions, $eventData));
+
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
+					}
+				}
+			}
+		}
+
+		$baseColumns = array('a.id', 'a.title', 'a.image', 'a.alias', 'a.unit_amount', 'a.unit_unit', 'a.description',
+			'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
+			'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity',
+			'a.stockstatus_a_id', 'a.stockstatus_n_id','a.date', 'a.sales', 'a.featured',
+			'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price');
+
+
+		$col = array_merge($baseColumns, $additionalColumns);
+		$col = array_unique($col);
+
+
+
 		if ($count == 1) {
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
-			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
+			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'.$subWherePcCat;
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
 
@@ -196,7 +279,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		} else {
 
 			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
-			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id AND pc.category_id = '.(int)$categoryId;
+			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'.$subWherePcCat;
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
 			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
@@ -220,11 +303,9 @@ class PhocaCartModelCategory extends JModelLegacy
 			}
 
 
-			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.sku, a.ean, a.upc, a.type, a.points_received, a.price_original,'
-						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
-						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'
+			$columns	= implode(',', $col) . ','
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price,';
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias,';
 
 			if (!$skip['tax']) {
 				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
@@ -248,7 +329,7 @@ class PhocaCartModelCategory extends JModelLegacy
 						.' AVG(r.rating) AS rating';
 
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.sku, a.ean, a.upc, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text';
+			$groupsFull	= implode(',', $col) ;
 
 			if (!$skip['tax']) {
                 $groupsFull	.= ', t.id, t.tax_rate, t.calculation_type, t.title';
@@ -259,6 +340,7 @@ class PhocaCartModelCategory extends JModelLegacy
 
 			$groupsFast	= 'a.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+
 
 			$q = ' SELECT '.$columns
 			. ' FROM #__phocacart_products AS a'
@@ -296,7 +378,6 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
 		$wheres[] = " c.access IN (".$userLevels.")";
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
-		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
 
 		if ($this->getState('filter.language')) {
 			$lang 		= JFactory::getLanguage()->getTag();

@@ -107,5 +107,5 @@ echo '<div id="ph-sandbox-msg" class="alert alert-danger">'.JText::_('COM_PHOCAC
 echo '</div>';//end span2
 echo $r->formInputs($this->t['task']);
 echo $r->endForm();
-echo PhocacartRenderAdminjs::renderAjaxTopHtml();
+
 ?>
