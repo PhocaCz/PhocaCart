@@ -25,9 +25,9 @@
 <field name="feed_plugin" type="PhocaCartXmlFeedPlugin" class="inputbox" label="COM_PHOCACART_FIELD_XML_FEED_PLUGIN_LABEL" description="COM_PHOCACART_FIELD_XML_FEED_PLUGIN_DESC" />
 
 	</fieldset>
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-	
+
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
 	<option value="1">JPUBLISHED</option>
@@ -41,8 +41,8 @@
 
 
 	</fieldset>
-	
-	
+
+
 <fields name="item_params">
 	<fieldset name="item_params" label="COM_PHOCACART_PRODUCT_OPTIONS">
 
@@ -53,7 +53,7 @@
 <field name="item_title_extended" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_TITLE_EXTENDED_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TITLE_EXTENDED_ELEMENT_DESC"  />
 
 <field name="item_sku" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_SKU_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SKU_ELEMENT_DESC"  />
-<field name="item_EAN" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_EAN_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_EAN_ELEMENT_DESC"  />
+<field name="item_ean" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_EAN_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_EAN_ELEMENT_DESC"  />
 
 <field name="item_description_short" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_SHORT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESCRIPTION_ELEMENT_SHORT_DESC"  />
 
@@ -81,7 +81,7 @@
 
 <field name="item_final_price_with_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FINAL_PRICE_WITH_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FINAL_PRICE_WITH_VAT_ELEMENT_DESC"  />
 
-<field name="item_final_price_without_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FINAL_PRICE_WITHOUT_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FINAL_PRICE_WITHOUT_VAT_ELEMENT_DESC"  />	
+<field name="item_final_price_without_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_FINAL_PRICE_WITHOUT_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_FINAL_PRICE_WITHOUT_VAT_ELEMENT_DESC"  />
 
 <field name="item_vat" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_VAT_ELEMENT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_VAT_ELEMENT_DESC"  />
 

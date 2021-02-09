@@ -38,6 +38,7 @@ $cur	= PhocacartCurrency::getDefaultCurrencyCode();
 
 // START FOREACH OF PRODUCTS
 $o['items'] = '';
+$o['params'] = '';
 if (!empty($this->t['products'])) {
     foreach ($this->t['products'] as $k => $v) {
 
@@ -403,10 +404,12 @@ if (!empty($this->t['products'])) {
         // PRODUCT - Specific FEED plugin
         $oIP = array();
         if (!empty($paramsFeedA)) {
+
             foreach ($paramsFeedA as $k => $v) {
 
 
                 if (trim($k) == trim($this->t['feed']['feed_plugin'])) {
+
 
                     if (!empty($v)) {
                         foreach ($v as $k2 => $v2) {
@@ -416,6 +419,7 @@ if (!empty($this->t['products'])) {
                             if ($pos !== false) {
                                 continue;
                             }
+
 
                             if (trim($v2) != '') {
 
@@ -432,7 +436,8 @@ if (!empty($this->t['products'])) {
 
         }
 
-        $o['params'] = implode("\n", $oIP);
+
+        $o['params'] .= implode("\n", $oIP);
 
 
 
@@ -468,6 +473,7 @@ if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
 if (isset($this->t['feed']['footer']) && $this->t['feed']['footer'] != '') {
     $o['footer'] = $this->t['feed']['footer'];
 }
+
 
 
 echo implode( "\n", $o );
