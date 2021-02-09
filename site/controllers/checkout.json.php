@@ -202,6 +202,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                 $priceA = isset($priceP['brutto']) ? $priceP['brutto'] : 0;
 
+
                 if($rights->canDisplayAddtocartAdvanced($item) && $rights->canDisplayAddtocartPrice($item, $priceA)  && $rights->canDisplayAddtocartStock($item, $stock)) {
 		            $oA['hideaddtocart'] = 0;
                 }

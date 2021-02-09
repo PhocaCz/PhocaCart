@@ -192,6 +192,7 @@ class PhocacartAccessRights
             $hide_add_to_cart_stock      = $this->params->get('hide_add_to_cart_stock', 0);
 
 
+
             if ((int)$item_addtocart == 1 || (int)$item_addtocart == 4) {
 
 

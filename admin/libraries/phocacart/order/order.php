@@ -1294,6 +1294,8 @@ class PhocacartOrder
             $stockStatus = array();
 
             $stock       = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $itemP, 2);
+
+
             $rights                      = new PhocacartAccessRights();
             $can_display_addtocart       = $rights->canDisplayAddtocartAdvanced($itemP);
             $can_display_addtocart_price = $rights->canDisplayAddtocartPrice($itemP, $priceA);

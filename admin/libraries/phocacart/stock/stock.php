@@ -321,6 +321,7 @@ class PhocacartStock
 		$thinAttributes		= array();// Array of integers only
 		if ($selectedAttributes == 2) {
 		    // Final order, we get the attributes in different format as by adding them to cart
+            // it is final order, we order the items so we don't check e.g. if default values or not - the values are selected yet
             $fullAttributes = PhocacartAttribute::getAttributeFullValues($attributes);
 			$thinAttributes	= PhocacartAttribute::getAttributesSanitizeOptionArray($attributes);//select only default v a to create product key
         } else if ($selectedAttributes == 1) {
@@ -330,6 +331,8 @@ class PhocacartStock
 			$fullAttributes = $attributes;
 			$thinAttributes = PhocacartAttribute::getAttributesSelectedOnly($attributes);//select only default v a to create product key
 		}
+
+
 
 
 
@@ -357,10 +360,11 @@ class PhocacartStock
 					if (!empty($v->options)) {
 						$i++;
 						foreach($v->options as $k2 => $v2) {
+
 							// Is the options set as default
 							// See: administrator\components\com_phocacart\libraries\phocacart\price\price.php
 							// function getPriceItemsChangedByAttributes - similar behaviour
-							if ($selectedAttributes == 1 || ($selectedAttributes == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
+							if ($selectedAttributes == 1 || $selectedAttributes == 2 || ($selectedAttributes == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
 								$attributeSelected	= 1;
                                 $productAttributeSelected = 1;
 
@@ -413,7 +417,6 @@ class PhocacartStock
 			if ($i > 1 && $selectedAttributes != 1) {
 				PhocacartLog::add(3, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
 			}
-
 
 
 		} else if ($item->stock_calculation == 2 || $item->stock_calculation == 3) {
