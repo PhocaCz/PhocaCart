@@ -704,7 +704,7 @@ if (!empty($d['fullitems'][1])) {
 			if (!($price->roundPrice($d['total'][0]['taxrecapitulation']['rounding']) > -0.01 && $price->roundPrice($d['total'][0]['taxrecapitulation']['rounding'] < 0.01)) == 1) {
 
 				echo '<tr><td>'.JText::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).' '.'</td></tr>';
-				///*$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
+				//- *$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
 				$c = $d['total'][0]['taxrecapitulation']['rounding'];
 			}
 			echo '<tr><td>'.JText::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';

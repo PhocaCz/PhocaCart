@@ -24,9 +24,10 @@ class PhocacartOrder
     protected $type = array(0, 1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
 
     public function __construct() {
-        $this->downloadable_product = 0;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // if there will be at least one downloadable file in order, we will mark it to display
+        $this->downloadable_product = 0;
+        // if there will be at least one downloadable file in order, we will mark it to display
         // right thank you message
-        $this->action_after_order  = 1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      // which action will be done after order - end, procceed to payment, ...
+        $this->action_after_order  = 1;                                                                                                                                                                                            // which action will be done after order - end, procceed to payment, ...
         $this->message_after_order = array();// custom message array made by plugin
 
     }
@@ -1278,7 +1279,6 @@ class PhocacartOrder
 
         $itemP = PhocacartProduct::getProduct((int)$d['id'], $d['catid']);
         $d['attributes'] = !empty($d['attributes']) ? $d['attributes'] : array();
-
         if (!empty($itemP)) {
             $price  = new PhocacartPrice();
             $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price);
@@ -1292,12 +1292,13 @@ class PhocacartOrder
 
             // Stock (don't display add to cart when stock is zero)
             $stockStatus = array();
-            $stock       = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $itemP, 1);
 
+            $stock       = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $itemP, 2);
             $rights                      = new PhocacartAccessRights();
             $can_display_addtocart       = $rights->canDisplayAddtocartAdvanced($itemP);
             $can_display_addtocart_price = $rights->canDisplayAddtocartPrice($itemP, $priceA);
             $can_display_addtocart_stock = $rights->canDisplayAddtocartStock($itemP, $stock);
+
 
 
             if (!$can_display_addtocart) {

@@ -15,6 +15,21 @@ class JFormFieldPhocaTax extends JFormField
 
 	protected function getInput() {
 		$db = JFactory::getDBO();
+		
+		$javascript		= '';
+		$required		= $this->required;// accept dynamically added required
+		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
+		$attr			= '';
+		$attr			.= $class . ' ';
+
+		if ($multiple) {
+			$attr		.= 'size="4" multiple="multiple" ';
+		}
+		if ($required) {
+			$attr		.= 'required aria-required="true" ';
+		}
+		$attr			.= $javascript . ' ';
 
 		$query = 'SELECT a.title AS text, a.id AS value'
 		. ' FROM #__phocacart_taxes AS a'
@@ -30,7 +45,7 @@ class JFormFieldPhocaTax extends JFormField
 		}
 
 		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_TAX').' -', 'value', 'text'));
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

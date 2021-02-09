@@ -96,69 +96,69 @@ class PhocacartFilter
 
         // CATEGORY id
         $cIdIN = '';
-        ///$cIdIK = '';
+        //- $cIdIK = '';
         if ($id > 0) {
             $cIdIN = (int)$id;
-            ///$cIdIK = (int)$cIdIN > 0 ? ':cid:' . $cIdIN : '';
+            //- $cIdIK = (int)$cIdIN > 0 ? ':cid:' . $cIdIN : '';
         }
 
         // CATEGORY
         $cIN = '';
-        ///$cIK = '';
+        //- $cIK = '';
         if ($c != '') {
             $cA = explode(',', $c);
             $cAN = array_unique(array_map('intval', $cA));
             $cIN = implode(',', $cAN);
-            ///$cIK = (int)$cIN > 0 ? ':c:' . $cIN : '';
+            //- $cIK = (int)$cIN > 0 ? ':c:' . $cIN : '';
         }
 
         // TAGS
         $tIN = '';
-        ///$tIK = '';
+        //- $tIK = '';
         if ($tags != '') {
             $tA = explode(',', $tags);
             $tAN = array_unique(array_map('intval', $tA));
             $tIN = implode(',', $tAN);
-           /// $tIK = (int)$tIN > 0 ? ':t:' . $tIN : '';
+           //- $tIK = (int)$tIN > 0 ? ':t:' . $tIN : '';
         }
 
         // LABELS
         $lIN = '';
-        ///$lIK = '';
+        //- $lIK = '';
         if ($labels != '') {
             $lA = explode(',', $labels);
             $lAN = array_unique(array_map('intval', $lA));
             $lIN = implode(',', $lAN);
-            ///$lIK = (int)$lIN > 0 ? ':l:' . $lIN : '';
+            //- $lIK = (int)$lIN > 0 ? ':l:' . $lIN : '';
         }
 
         // MANUFACTURERS
         $mIN = '';
-        ///$mIK = '';
+        //- $mIK = '';
         if ($manufacturers != '') {
             $mA = explode(',', $manufacturers);
             $mAN = array_unique(array_map('intval', $mA));
             $mIN = implode(',', $mAN);
-            ///$mIK = (int)$mIN > 0 ? ':m:' . $mIN : '';
+            //- $mIK = (int)$mIN > 0 ? ':m:' . $mIN : '';
         }
 
         // PRICE
         $pfIN = $pfIK = '';
         if ($price_from !== '') {
             $pfIN = $price_from;
-            ///$pfIK = $pfIN > 0 ? ':pf:' . $pfIN : '';
+            //- $pfIK = $pfIN > 0 ? ':pf:' . $pfIN : '';
         }
 
         $ptIN = $ptIK = '';
         if ($price_to !== '') {
             $ptIN = $price_to;
-            ///$ptIK = $ptIN > 0 ? ':pt:' . $ptIN : '';
+            //- $ptIK = $ptIN > 0 ? ':pt:' . $ptIN : '';
         }
 
 
         // PARAMETERS
         $pA = array();
-       /// $pIK = '';
+       //- $pIK = '';
         if (!empty($parameters)) {
             foreach ($parameters as $k => $v) {
                 $alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
@@ -168,7 +168,7 @@ class PhocacartFilter
                     $pIN = implode(',', array_unique(array_map('intval', explode(',', $parameter))));
 
                     if ((int)$pIN > 0) {
-                        ///$pIK .= ':' . $alias . ':' . $pIN;
+                        //- $pIK .= ':' . $alias . ':' . $pIN;
                         $pA[$alias] = $pIN;
                     }
                 }
@@ -178,7 +178,7 @@ class PhocacartFilter
 
         // ATTRIBUTES
         $aA = array();
-        ///$aIK = '';
+        //- $aIK = '';
         if (!empty($a)) {
             foreach ($a as $k => $v) {
                 $alias = strip_tags($k);
@@ -192,7 +192,7 @@ class PhocacartFilter
                     $aIN = implode(',', $aINA);
 
                     if ($aIN != '') {
-                        ///$aIK .= ':' . $alias . ':' . $aIN;
+                        //- $aIK .= ':' . $alias . ':' . $aIN;
                         $aA[$alias] = "'" . implode("','", $aINA) . "'";
                     }
                 }
@@ -201,7 +201,7 @@ class PhocacartFilter
 
         // SPECIFICATIONS
         $sA = array();
-        ///$sIK = '';
+        //- $sIK = '';
         if (!empty($s)) {
             foreach ($s as $k => $v) {
                 $alias = strip_tags($k);
@@ -215,15 +215,15 @@ class PhocacartFilter
                     $sIN = implode(',', $sINA);
 
                     if ($sIN != '') {
-                        ///$sIK .= ':' . $alias . ':' . $sIN;
+                        //- $sIK .= ':' . $alias . ':' . $sIN;
                         $sA[$alias] = "'" . implode("','", $sINA) . "'";
                     }
                 }
             }
         }
 
-        ///$key = 'k' . $cIdIK . $cIK . $tIK . $lIK . $mIK . $pfIK . $ptIK . $pIK . $aIK . $sIK;
-        ///$key = base64_encode(serialize($key));
+        //- $key = 'k' . $cIdIK . $cIK . $tIK . $lIK . $mIK . $pfIK . $ptIK . $pIK . $aIK . $sIK;
+        //- $key = base64_encode(serialize($key));
 
         // Get all items
         $f = array();

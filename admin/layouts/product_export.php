@@ -128,8 +128,8 @@ $a[] = array('external_key', 'COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_LABEL');
 $a[] = array('external_link', 'COM_PHOCACART_FIELD_EXTERNAL_LINK_LABEL');
 $a[] = array('external_text', 'COM_PHOCACART_FIELD_EXTERNAL_TEXT_LABEL');
 
-$a[] = array('external_link2', 'COM_PHOCACART_FIELD_EXTERNAL_LINK_2_LABEL');///
-$a[] = array('external_text2', 'COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_LABEL');///
+$a[] = array('external_link2', 'COM_PHOCACART_FIELD_EXTERNAL_LINK_2_LABEL');//-
+$a[] = array('external_text2', 'COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_LABEL');//-
 
 
 $a[] = array('access', 'JFIELD_ACCESS_LABEL');
@@ -141,8 +141,8 @@ $a[] = array('video', 'COM_PHOCACART_FIELD_VIDEO_URL_LABEL');
 $a[] = array('public_download_file', 'COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL');
 $a[] = array('public_download_text', 'COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL');
 
-$a[] = array('public_play_file', 'COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_LABEL');///
-$a[] = array('public_play_text', 'COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_LABEL');///
+$a[] = array('public_play_file', 'COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_LABEL');//-
+$a[] = array('public_play_text', 'COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_LABEL');//-
 
 $a[] = array('condition', 'COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL');
 $a[] = array('type_feed', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL');
@@ -150,7 +150,7 @@ $a[] = array('type_category_feed', 'COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FE
 
 $a[] = array('description', 'COM_PHOCACART_FIELD_DESCRIPTION_LABEL');
 $a[] = array('description_long', 'COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL');
-$a[] = array('features', 'COM_PHOCACART_FIELD_FEATURES_LABEL');///
+$a[] = array('features', 'COM_PHOCACART_FIELD_FEATURES_LABEL');//-
 
 $a[] = array('image', 'COM_PHOCACART_FIELD_IMAGE_LABEL');
 
@@ -188,7 +188,7 @@ $a[] = array('min_quantity', 'COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL');
 $a[] = array('min_multiple_quantity', 'COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL');
 $a[] = array('min_quantity_calculation', 'COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL');
 
-$a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');///
+$a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');//-
 
 //$a[] = array('availability', 'COM_PHOCACART_FIELD_AVAILABILITY_LABEL');
 
@@ -197,10 +197,10 @@ if ($export_downloads == 1) {
 	$a[] = array('download_folder', 'COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL');
 	$a[] = array('download_file', 'COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL');
 	$a[] = array('download_hits', 'COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL');
-	$a[] = array('download_days', 'COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_LABEL');///
+	$a[] = array('download_days', 'COM_PHOCACART_FIELD_DOWNLOAD_EXPIRATION_DATE_DAYS_LABEL');//-
 
     // IMAGES (not exist in query)
-    $a[] = array('additional_download_files', 'COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILES');///
+    $a[] = array('additional_download_files', 'COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILES');//-
 }
 $a[] = array('type', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL');
 $a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');
@@ -225,12 +225,12 @@ $a[] = array('published', 'COM_PHOCACART_FIELD_PUBLISHED_LABEL');
 $a[] = array('language', 'JFIELD_LANGUAGE_LABEL');
 
 $a[] = array('date', 'COM_PHOCACART_FIELD_DATE_LABEL');
-$a[] = array('date_update', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');///
+$a[] = array('date_update', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');//-
 
-$a[] = array('created_by', 'COM_PHOCACART_FIELD_CREATED_BY_LABEL');///
-$a[] = array('created', 'COM_PHOCACART_FIELD_CREATED_DATE_LABEL');///
-$a[] = array('modified_by', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');///
-$a[] = array('modified', 'COM_PHOCACART_FIELD_MODIFIED_BY_LABEL');///
+$a[] = array('created_by', 'COM_PHOCACART_FIELD_CREATED_BY_LABEL');//-
+$a[] = array('created', 'COM_PHOCACART_FIELD_CREATED_DATE_LABEL');//-
+$a[] = array('modified_by', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');//-
+$a[] = array('modified', 'COM_PHOCACART_FIELD_MODIFIED_BY_LABEL');//-
 
 
 
@@ -238,19 +238,19 @@ $a[] = array('modified', 'COM_PHOCACART_FIELD_MODIFIED_BY_LABEL');///
 
 // TAGS (not exist in query)
 $a[] = array('tags', 'COM_PHOCACART_TAGS');
-$a[] = array('taglabels', 'COM_PHOCACART_LABELS');///
+$a[] = array('taglabels', 'COM_PHOCACART_LABELS');//-
 
 if($export_parameters == 1){
-    $a[] = array('items_parameter', 'COM_PHOCACART_PARAMETERS');///
+    $a[] = array('items_parameter', 'COM_PHOCACART_PARAMETERS');//-
     $parameters = PhocacartParameter::getAllParameters();
 }
 
 
 $a[] = array('metakey', 'JFIELD_META_KEYWORDS_LABEL');
 $a[] = array('metadesc', 'JFIELD_META_DESCRIPTION_LABEL');
-$a[] = array('metatitle', 'COM_PHOCACART_FIELD_META_TITLE_LABEL');///
-$a[] = array('metadata', 'COM_PHOCACART_METADATA_LABEL');///
-$a[] = array('sales', 'COM_PHOCACART_FIELD_SALES_LABEL');///
+$a[] = array('metatitle', 'COM_PHOCACART_FIELD_META_TITLE_LABEL');//-
+$a[] = array('metadata', 'COM_PHOCACART_METADATA_LABEL');//-
+$a[] = array('sales', 'COM_PHOCACART_FIELD_SALES_LABEL');//-
 
 
 //$a[] = array('allow_upload', 'COM_PHOCACART_FIELD_ALLOW_UPLOAD_LABEL');

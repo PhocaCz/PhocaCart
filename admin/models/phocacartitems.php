@@ -405,7 +405,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 			}
 		}
 
-	///	$query->group($groups);
+	//-	$query->group($groups);
 
 		// Add the list ordering clause.
 		//$orderCol	= $this->state->get('list.ordering', 'title');

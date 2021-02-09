@@ -284,7 +284,7 @@ class PhocacartCart
             // we get idkey as string - from checkout update or remove -  used in CHECKOUT
         } else {
             // we get id as int standard id of product - attributes can be listed in form - used in CATEGORY, ITEM, ITEMS
-            ///$k = (int)$id . ':';
+            //- $k = (int)$id . ':';
 
 
 

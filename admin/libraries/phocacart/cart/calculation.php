@@ -437,6 +437,7 @@ class PhocacartCartCalculation
                                     if ($fullItems[$k]['stockcalculation'] == 1 && (int)$optionsQuantity[$attrib->id] > (int)$attrib->stock) {
                                         $total['stockvalid']         = 0;
                                         $fullItems[$k]['stockvalid'] = 0;
+                                        $stock['valid']              = 0;
                                     }
 
 
@@ -1007,9 +1008,9 @@ class PhocacartCartCalculation
         $bruttoRounded = $price->roundPrice($item['brutto'] * $quantityCorrect);
         $taxRounded    = $price->roundPrice($item['tax'] * $quantityCorrect);
 
-        ///$nettoRounded 		= $item['netto'] * $quantityCorrect;
-        ///$bruttoRounded 		= $item['brutto'] * $quantityCorrect;
-        ///$taxRounded 		= $item['tax'] * $quantityCorrect;
+        //- $nettoRounded 		= $item['netto'] * $quantityCorrect;
+        //- $bruttoRounded 		= $item['brutto'] * $quantityCorrect;
+        //- $taxRounded 		= $item['tax'] * $quantityCorrect;
 
         $nettoRoundedCorrected = $bruttoRounded - $taxRounded;
 

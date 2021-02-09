@@ -29,7 +29,7 @@ class JFormFieldPhocaSelectItemCategory extends JFormField
 
 		// Runs with 'PhocaSelectItem' form field
 		$html 	= array();
-		///$url 	= 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&'. JSession::getFormToken().'=1';
+		//- $url 	= 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&'. JSession::getFormToken().'=1';
 
 		// Possible problem with modal
 		//$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].' typeahead"' : ' class="typeahead"';

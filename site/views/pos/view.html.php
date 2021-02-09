@@ -157,10 +157,10 @@ class PhocaCartViewPos extends JViewLegacy
 		PhocacartRenderJs::renderAjaxUpdateCart();
 		// Moved to JS PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
 
-		////PhocacartRenderJspos::managePos($this->t['action']);
-		////PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
-		////PhocacartRenderJspos::searchPosByType('#phPosSearch');
-		////PhocacartRenderJspos::searchPosByCategory();
+		//- PhocacartRenderJspos::managePos($this->t['action']);
+		//- PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
+		//- PhocacartRenderJspos::searchPosByType('#phPosSearch');
+		//- PhocacartRenderJspos::searchPosByCategory();
 
 		// Tendered
 		//$currency = PhocacartCurrency::getCurrency(); - loaded before filter

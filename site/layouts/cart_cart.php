@@ -54,9 +54,9 @@ if (!empty($d['fullitems'])) {
 	$cP = $d['s']['c']['col.xs12.sm5.md5'];
 	$cA = $d['s']['c']['col.xs12.sm12.md12'];
 
-	///echo '<table class="ph-cart-small-box">';
+	// echo '<table class="ph-cart-small-box">';
 	echo '<div class="ph-cart-small-box">';
-	//echo '<div class="container">';
+	// echo '<div class="container">';
 
 	/*
 	HEAD
@@ -66,9 +66,9 @@ if (!empty($d['fullitems'])) {
 	echo '<td><span class="ph-small">'.JText::_('MOD_PHOCACART_CART_PRICE').'</span></td>';
 	echo '</tr>';*/
 
-	///echo '<tr>';
-	///echo '<td colspan="'.$c2.'" class="ph-small">'. count($d['fullitems']).' '.JText::_('COM_PHOCACART_ITEM_S').'</td>';
-	///echo '<td class="ph-small ph-right">';
+	// echo '<tr>';
+	// echo '<td colspan="'.$c2.'" class="ph-small">'. count($d['fullitems']).' '.JText::_('COM_PHOCACART_ITEM_S').'</td>';
+	// echo '<td class="ph-small ph-right">';
 	if (isset($d['countitems'])) {
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.' ph-small">'. $d['countitems'].' '.JText::_('COM_PHOCACART_ITEM_S').'</div>';
@@ -79,7 +79,7 @@ if (!empty($d['fullitems'])) {
 		echo $price->getPriceFormat($d['total']['brutto']);
 	}
 
-	///echo '</td>';
+	// echo '</td>';
 	//echo '</tr>';
 	echo '</div>';
 	echo '</div>';// end row
@@ -101,7 +101,7 @@ if (!empty($d['fullitems'])) {
 		$priceItem = $price->getPriceFormat($priceItem);
 
 
-		///echo '<tr>';
+		// echo '<tr>';
 		echo '<div class="'.$r.'">';
 		// Display image next to product title
 		if (isset($d['paramsmodule']['display_image']) && $d['paramsmodule']['display_image'] == 1) {
@@ -133,13 +133,13 @@ if (!empty($d['fullitems'])) {
 			}
 		}
 
-		///echo '<td class="ph-small ph-cart-small-quantity">'.$v['quantity'].'x </td>';
-		///echo '<td class="ph-small ph-cart-small-title">';
-		///echo '<a href="'.$link.'">'.$v['title'].'</a>';
-		///echo '</td>';
+		//- echo '<td class="ph-small ph-cart-small-quantity">'.$v['quantity'].'x </td>';
+		//- echo '<td class="ph-small ph-cart-small-title">';
+		//- echo '<a href="'.$link.'">'.$v['title'].'</a>';
+		//- echo '</td>';
 
-		///echo '<td class="ph-small ph-cart-small-price ph-right">'.$priceItem.'</td>';
-		///echo '</tr>';
+		//- echo '<td class="ph-small ph-cart-small-price ph-right">'.$priceItem.'</td>';
+		//- echo '</tr>';
 
 		echo '<div class="'.$cX.' ph-small ph-cart-small-quantity">'.$v['quantity'].'x </div>';
 		echo '<div class="'.$cXT.' ph-small ph-cart-small-title">';
@@ -159,8 +159,8 @@ if (!empty($d['fullitems'])) {
 
 
 		if (!empty($v['attributes'])) {
-			///echo '<tr>';
-			///echo '<td colspan="'.$c3.'"><ul>';
+			//- echo '<tr>';
+			//- echo '<td colspan="'.$c3.'"><ul>';
 			echo '<div class="'.$r.'">';
 			echo '<div class="'.$cA.'"><ul class="ph-cart-attribute-box'.$cS.'">';
 
@@ -179,8 +179,8 @@ if (!empty($d['fullitems'])) {
 
 			}
 
-			///echo '</ul></td>';
-			///echo '</tr>';
+			//- echo '</ul></td>';
+			//- echo '</tr>';
 			echo '</ul></div>';
 			echo '</div>';// end row
 
@@ -188,7 +188,7 @@ if (!empty($d['fullitems'])) {
 		}
 	}
 
-	///echo '<tr><td colspan="'.$c3.'"><div class="ph-hr"></div></td></tr>';
+	//- echo '<tr><td colspan="'.$c3.'"><div class="ph-hr"></div></td></tr>';
 	echo '<div class="'.$r.'">';
 	echo '<div class="'.$cA.'"><div class="ph-hr"></div></div>';
 	echo '</div>';// end row
@@ -196,10 +196,10 @@ if (!empty($d['fullitems'])) {
 
 	// SUBTOTAL NETTO
 	if ($d['total'][1]['netto'] !== 0) {
-		///echo '<tr>';
-		///echo '<td colspan="'.$c2.'" class="ph-small">'.JText::_('COM_PHOCACART_SUBTOTAL').'</td>';
-		///echo '<td class="ph-small ph-right">'.$price->getPriceFormat($d['total']['netto']).'</td>';
-		///echo '</tr>';
+		//- echo '<tr>';
+		//- echo '<td colspan="'.$c2.'" class="ph-small">'.JText::_('COM_PHOCACART_SUBTOTAL').'</td>';
+		//- echo '<td class="ph-small ph-right">'.$price->getPriceFormat($d['total']['netto']).'</td>';
+		//- echo '</tr>';
 		echo '<div class="'.$r.'">';
 		echo '<div class="'.$cT.' ph-small ph-cart-subtotal-netto-txt">'.JText::_('COM_PHOCACART_SUBTOTAL').'</div>';
 		echo '<div class="'.$cP.' ph-small ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($d['total'][1]['netto']).'</div>';
@@ -360,13 +360,13 @@ if (!empty($d['fullitems'])) {
 			}
 		}
 
-		//////////////
+		//-
 /*
 		if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt']) && $pC['nettotxt'] != '') {
-			///echo '<tr>';
-			///echo '<td colspan="'.$c2.'" class="ph-small">'.$pC['nettotxt'].'</td>';
-			///echo '<td class="ph-small ph-right">'.$pC['nettoformat'].'</td>';
-			///echo '</tr>';
+			//- echo '<tr>';
+			//- echo '<td colspan="'.$c2.'" class="ph-small">'.$pC['nettotxt'].'</td>';
+			//- echo '<td class="ph-small ph-right">'.$pC['nettoformat'].'</td>';
+			//- echo '</tr>';
 			echo '<div class="'.$r.'">';
 			echo '<div class="'.$cT.' ph-small ph-cart-netto-txt">'.$pC['nettotxt'].'</div>';
 			echo '<div class="'.$cP.' ph-small ph-right ph-cart-netto">'.$pC['nettoformat'].'</div>';
@@ -374,10 +374,10 @@ if (!empty($d['fullitems'])) {
 		}
 
 		if (isset($pC['taxformat']) && $pC['taxformat'] != '' && isset($pC['taxtxt']) && $pC['taxtxt'] != '') {
-			///echo '<tr>';
-			///echo '<td colspan="'.$c2.'" class="ph-small">'.$pC['taxtxt'].'</td>';
-			///echo '<td class="ph-small ph-right">'.$pC['taxformat'].'</td>';
-			///echo '</tr>';
+			//- echo '<tr>';
+			//- echo '<td colspan="'.$c2.'" class="ph-small">'.$pC['taxtxt'].'</td>';
+			//- echo '<td class="ph-small ph-right">'.$pC['taxformat'].'</td>';
+			//- echo '</tr>';
 			echo '<div class="'.$r.'">';
 			echo '<div class="'.$cT.' ph-small ph-cart-tax-txt">'.$pC['taxtxt'].'</div>';
 			echo '<div class="'.$cP.' ph-small ph-right ph-cart-tax">'.$pC['taxformat'].'</div>';
@@ -385,17 +385,17 @@ if (!empty($d['fullitems'])) {
 		}
 
 		if ((isset($pC['bruttoformat']) && $pC['bruttoformat'] != '' && isset($pC['bruttotxt']) && $pC['bruttotxt'] != '') || $pC['freepayment'] == 1) {
-			///echo '<tr>';
-			///echo '<td colspan="'.$c2.'" class="ph-small">'.$pC['bruttotxt'].'</td>';
-			///echo '<td class="ph-small ph-right">'.$pC['bruttoformat'].'</td>';
-			///echo '</tr>';
+			//- echo '<tr>';
+			//- echo '<td colspan="'.$c2.'" class="ph-small">'.$pC['bruttotxt'].'</td>';
+			//- echo '<td class="ph-small ph-right">'.$pC['bruttoformat'].'</td>';
+			//- echo '</tr>';
 			echo '<div class="'.$r.'">';
 			echo '<div class="'.$cT.' ph-small ph-cart-brutto-txt">'.$pC['bruttotxt'].'</div>';
 			echo '<div class="'.$cP.' ph-small ph-right ph-cart-brutto">'.$pC['bruttoformat'].'</div>';
 			echo '</div>';// end row
 		}
 		*/
-		//////////////
+		//-
 	}
 
 	// ROUNDING | ROUNDING CURRENCY
@@ -429,8 +429,8 @@ if (!empty($d['fullitems'])) {
 
 
 
-	///echo '</table>'. "\n";
-	//echo '</div>'; // end container
+	//- echo '</table>'. "\n";
+	// echo '</div>'; // end container
 	echo '</div>'. "\n"; // end small box
 
 } else {

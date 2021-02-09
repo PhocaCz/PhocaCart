@@ -281,6 +281,56 @@ class PhocaCartModelSubmit extends JModelForm
 		// Items and Items (Contact) are defined in this view
 		// Items (Parameters) will be defined model (when creating the form)
 
+        // ITEMS
+        // Preprocess form before saving - before validate the form - we need to set required fields so validate can check them
+        $submit_item_form_fields 		= $pC->get('submit_item_form_fields', '');
+        $submit_item_form_fields_contact = $pC->get('submit_item_form_fields_contact', '');
+
+        $items = array();
+        if($submit_item_form_fields != '') {
+            $items = array_map('trim', explode(',', $submit_item_form_fields));
+            $items = array_unique($items);
+        }
+
+        $itemsC = array();
+        if($submit_item_form_fields_contact != '') {
+            $itemsC = array_map('trim', explode(',', $submit_item_form_fields_contact));
+            $itemsC = array_unique($itemsC);
+        }
+
+
+        $fieldSets = $form->getFieldsets();
+
+        foreach ($fieldSets as $name => $fieldSet) {
+            if (isset($fieldSet->name) && ($fieldSet->name == 'items_item' || $fieldSet->name == 'items_contact')) {
+                foreach ($form->getFieldset($name) as $field) {
+
+                    $itemsCurrent = array();
+                    if ($fieldSet->name == 'items_item') {
+                        $itemsCurrent = $items;
+                    }
+                    if ($fieldSet->name == 'items_contact') {
+                        $itemsCurrent = $itemsC;
+                    }
+
+                    $isIncluded = 0;
+                    if (in_array($field->fieldname . '*', $itemsCurrent)) {
+                        $isIncluded = 2;// included and required
+                    }
+
+                    if ($isIncluded == 2) {
+
+                        //$field->required = true;
+                        //$field->addAttribute($field->fieldname, 'true');
+                        //$field->__set('required', true);
+                        // BE AWARE - GROUP NEEDS TO BE DEFINED
+                        $form->setFieldAttribute($field->fieldname, 'required', 'true', $fieldSet->name);
+
+                    }
+                }
+            }
+        }
+
 		$submit_item_form_fields_parameters	= $pC->get( 'submit_item_form_fields_parameters', '' );
 
 
@@ -336,7 +386,7 @@ class PhocaCartModelSubmit extends JModelForm
 			}
 		}
 
-
+        bdump($form);
 		parent::preprocessForm($form, $data, $group);
 	}
 

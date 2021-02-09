@@ -309,6 +309,7 @@ jQuery(document).ready(function() {
 		var phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
 		var phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
 		var phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
+
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);
 	})
@@ -319,7 +320,7 @@ jQuery(document).ready(function() {
 	// Checkbox
 	jQuery(document).on('click', phCheckboxA, function(e){
 
-		
+
 		var phParams = Joomla.getOptions('phParamsPC');
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
 			return;// Interactive Change is disabled
@@ -344,7 +345,7 @@ jQuery(document).ready(function() {
         var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
         var phACheckedLength = jQuery(phCheckboxAInputChecked).length;
 
-		
+
         if (phACheckedLength == 0) {
             var phThisLabel = jQuery(e.target).parent();// Bootstrap checkboxes - colors, images
             phThisLabel.addClass("active");// Bootstrap checkboxes - colors, images

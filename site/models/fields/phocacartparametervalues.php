@@ -28,7 +28,8 @@ class JFormFieldPhocaCartParameterValues extends JFormField
 
 		$attr 	= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : ' class="inputbox"';
 		$attr 	.= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
-		$attr 	.= ((string) $this->element['required'] == 'true') ? ' required aria-required="true"' : '';
+		//$attr 	.= ((string) $this->element['required'] == 'true') ? ' required aria-required="true"' : '';
+		$attr 	.= $this->required ? ' required aria-required="true"' : '';
 		$attr 	.= ((string) $this->element['multiple'] == 'true') ? ' multiple="multiple"' : '';
 
 		$activeParameters = array();

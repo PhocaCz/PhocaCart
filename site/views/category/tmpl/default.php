@@ -185,6 +185,8 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$stockStatus 				= array();
 			$stock 						= PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $attributesOptions, $v);
 
+
+
 			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
 				$dA['class_icon']		= 'ph-display-none';// hide icon
@@ -287,12 +289,14 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$icon['addtocart'] = '';// Skip Add to cart icon except Quick View Button
 			$dF = array();// Skip form
 			$addToCartHidden = 1;
+
 		} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $v->price == 0) {
 			// Don't display Add to Cart in case the price is zero
 			$dA = array(); // Skip Standard Add to cart button
 			$icon['addtocart'] = '';// Skip Add to cart icon
 			$dF = array();// Skip form
 			$addToCartHidden = 1;
+
 		} else if ((int)$this->t['category_addtocart'] == 1 || (int)$this->t['category_addtocart'] == 4) {
 			// ADD TO CART BUTTONS - we have data yet
 		} else if ((int)$this->t['category_addtocart'] == 102 && (int)$v->external_id != '') {
@@ -334,6 +338,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$dF = array();// Skip form
 
 		} else {
+
 			// ADD TO CART ICON ONLY (NO BUTTONS)
 			$dA = array(); // Skip Standard Add to cart button
 			// We remove the $dA completely, even for the icon, but the icon has the data already stored in $icon['addtocart']

@@ -343,7 +343,7 @@ var config".$id." = {
 		$db	= JFactory::getDbo();
 		$q	= $db->getQuery(true);
 
-		///// -- $q->select('a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
+		//- $q->select('a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
 		$q->select('DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
 		$q->from('`#__phocacart_orders` AS a');
 
@@ -378,7 +378,7 @@ var config".$id." = {
 			$dateTo 	= $db->Quote($dateTo);
 			$q->where('DATE(a.date) >= '.$dateFrom.' AND DATE(a.date) <= '.$dateTo );
 		}
-		///// -- $q->group('DATE(a.date), a.id');
+		//- $q->group('DATE(a.date), a.id');
 		$q->group('DATE(a.date)');
 
 		$q->order($db->escape('a.date ASC'));
@@ -401,11 +401,11 @@ var config".$id." = {
 
 				if (isset($amount[$v->date_only])) {
 
-					///// -- $amount[$v->date_only] += $v->order_amount;
+					//- $amount[$v->date_only] += $v->order_amount;
 					$amount[$v->date_only] = $v->order_amount;
 				}
 				if (isset($orders[$v->date_only])) {
-					///// -- $orders[$v->date_only] += $v->count_orders;
+					//- $orders[$v->date_only] += $v->count_orders;
 					$orders[$v->date_only] = $v->count_orders;
 				}
 			}

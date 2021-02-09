@@ -17,9 +17,12 @@ use Joomla\CMS\HTML\HTMLHelper;
 class PhocacartRenderAdminview extends Adminview
 {
 	public $view 			= '';
+	public $viewtype		= 2;
 	public $option			= '';
+	public $optionLang  	= '';
 	public $compatible		= false;
 	public $sidebar 		= true;
+	protected $document		= false;
 
 	public function __construct(){
 		parent::__construct();

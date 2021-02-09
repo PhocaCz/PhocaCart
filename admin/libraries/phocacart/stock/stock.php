@@ -317,15 +317,21 @@ class PhocacartStock
 		$stockProduct		= isset($item->stock) ? $item->stock : 0;// stock stored by product
 		$stockAttribute		= 0;// stock stored by each attribute
 
-		$fullAttributes		= array();// Array of integers only
-		$thinAttributes		= array();// Array of full objects (full options object)
-		if ($selectedAttributes == 1) {
+		$fullAttributes		= array();// Array of full objects (full options object)
+		$thinAttributes		= array();// Array of integers only
+		if ($selectedAttributes == 2) {
+		    // Final order, we get the attributes in different format as by adding them to cart
+            $fullAttributes = PhocacartAttribute::getAttributeFullValues($attributes);
+			$thinAttributes	= PhocacartAttribute::getAttributesSanitizeOptionArray($attributes);//select only default v a to create product key
+        } else if ($selectedAttributes == 1) {
 			$fullAttributes = PhocacartAttribute::getAttributeFullValues($attributes);
 			$thinAttributes	= $attributes;//select only default value attributes (selected options) to create product key
 		} else {
 			$fullAttributes = $attributes;
 			$thinAttributes = PhocacartAttribute::getAttributesSelectedOnly($attributes);//select only default v a to create product key
 		}
+
+
 
 		// Stock Calculation
 		// 0 ... Main Product
@@ -340,6 +346,10 @@ class PhocacartStock
 			$i = 0;
 
 			if (!empty($fullAttributes)) {
+
+			    // Is some attribute with its option active (selected). If not, then the main product variant should be set
+			    $productAttributeSelected = 0;
+
 				foreach ($fullAttributes as $k => $v) {
 
 					$attributeSelected	= 0;
@@ -352,6 +362,8 @@ class PhocacartStock
 							// function getPriceItemsChangedByAttributes - similar behaviour
 							if ($selectedAttributes == 1 || ($selectedAttributes == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
 								$attributeSelected	= 1;
+                                $productAttributeSelected = 1;
+
 
 								if (isset($v2->stock) && $v2->stock > 0) {
 									$stockAttribute += (int)$v2->stock;
@@ -364,9 +376,33 @@ class PhocacartStock
 						$stock += $stockAttribute;
 
 					} else {
-						$stock += $stockProduct;
+
+					    // we iterate over attributes not products
+                        // so this is the variant for main product
+
+
+                        // IF there is more than one parameter, this will be always wrong here because
+                        // 1) first attribute not selected, second selected: should we add only second or second plus main product stock?
+                        // Product stock 100
+                        // Product attribute A stock 50
+                        // Product attribute B stock 50
+                        // first attribute not selected = 0, second selected = 50 (we skip to add the main product 100)
+                        // 2) first not selected, second not selected: ok we add only the main product stock
+                        // both have 0 but we select main product which is 100
+
+                        // if we should add main product then:
+                        // $stock += $stockProduct;
 					}
 				}
+
+				if ($productAttributeSelected == 0) {
+				    // We have attributes and their options
+                    // but no one set as default or selected
+                    $stock += $stockProduct;
+                }
+
+
+
 			} else {
 			    if ($selectedAttributes == 1) {
                     // If there are no attributes, the main product is the varaint itself

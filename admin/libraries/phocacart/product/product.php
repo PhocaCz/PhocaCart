@@ -50,11 +50,11 @@ class PhocacartProduct
         //$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
         //$wheres[] 	= " a.published = 1";
         //$wheres[] 	= " c.published = 1";
-        ///$wheres[] 	= ' c.id = '.(int)$catid;
-        /// $typeS = implode(',', $type);
-        ///if (!$skip['category_type']) {
-        ///   $wheres[] = " c.type IN (".$typeS.")";// type: common, onlineshop, pos
-        /// }
+        //- $wheres[] 	= ' c.id = '.(int)$catid;
+        //- $typeS = implode(',', $type);
+        //- if (!$skip['category_type']) {
+        //-   $wheres[] = " c.type IN (".$typeS.")";// type: common, onlineshop, pos
+        //- }
 
 
         $wheres[] = ' i.id = ' . (int)$productId;
@@ -1321,6 +1321,7 @@ class PhocacartProduct
     public static function getProductKey($id, $attributes = array(), $encode = 1)
     {
 
+
         $key = (int)$id . ':';
         if (!empty($attributes)) {
 
@@ -1355,6 +1356,7 @@ class PhocacartProduct
 
                     foreach ($v as $k2 => $v2) {
                         //$attributes[$k][$k2] = (int)$v2;
+
                         $attributes[$k][$k2] = PhocaCartAttribute::setAttributeValue((int)$attributeType, $v2);
 
                         // TEXT attributes

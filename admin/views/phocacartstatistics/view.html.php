@@ -70,11 +70,11 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 
 
 				if (isset($amount[$v->date_only])) {
-					///// -- $amount[$v->date_only] += $v->order_amount;
+					//- $amount[$v->date_only] += $v->order_amount;
 					$amount[$v->date_only] = $v->order_amount;
 				}
 				if (isset($orders[$v->date_only])) {
-					///// -- $orders[$v->date_only] += $v->count_orders;
+					//- $orders[$v->date_only] += $v->count_orders;
 					$orders[$v->date_only] = $v->count_orders;
 				}
 			}

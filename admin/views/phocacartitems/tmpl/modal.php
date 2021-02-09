@@ -192,7 +192,7 @@ if (!empty($this->items)) {
             $lang = '';
         }
 
-        $linkEditBox = '<a class="select-link" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
+        $linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
         $linkEditBox .= $this->escape($item->title);
         $linkEditBox .= '</a>';
         $linkEdit = '';

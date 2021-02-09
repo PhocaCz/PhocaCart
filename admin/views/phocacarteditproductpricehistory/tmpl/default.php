@@ -15,7 +15,7 @@ Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
 Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 
 
-///$link		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricehistory&tmpl=component&id='.(int)$this->id);
+//- $link		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricehistory&tmpl=component&id='.(int)$this->id);
 
 
 echo '<div id="phAdminEditPopup" class="ph-edit-price-history-box">';
@@ -27,9 +27,9 @@ echo '<div class="alert alert-info"><button type="button" class="close" data-dis
 */
 
 
-///echo '<div class="ph-product-price-history-box">';
+//- echo '<div class="ph-product-price-history-box">';
 
-///echo '<form action="'.$link.'" method="post">';
+//- echo '<form action="'.$link.'" method="post">';
 
 
 	/*
