@@ -40,7 +40,7 @@
 
 
 
-<field name="cat_ids" type="phocadiscountcategory" label="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_DESC" multiple="1" class="inputbox" />
+<field name="cat_ids" type="phocadiscountcategory" label="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_DESC" multiple="true" class="inputbox" />
 
 <field name="category_filter" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
 	<option value="1">COM_PHOCACART_INCLUDE</option>
@@ -65,9 +65,9 @@
 
 
 	</fieldset>
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-	
+
 	<field name="valid_from" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_FROM_DESC" filter="JComponentHelper::filterText" />
 
 <field name="valid_to" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_TO_DESC" filter="JComponentHelper::filterText" />

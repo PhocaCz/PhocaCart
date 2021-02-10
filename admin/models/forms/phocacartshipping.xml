@@ -108,7 +108,7 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 </field>
 
 <!-- ZONE -->
-<field name="zone" type="PhocacartZones" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_ZONES_LABEL" description="COM_PHOCACART_FIELD_ZONES_DESC" class="inputbox" size="1" />
+<field name="zone" type="PhocacartZones" table="shipping" multiple="true" label="COM_PHOCACART_FIELD_ZONES_LABEL" description="COM_PHOCACART_FIELD_ZONES_DESC" class="inputbox" size="1" />
 
 <field name="active_zone" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_ZONE_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_ZONE_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -116,7 +116,7 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 </field>
 
 <!-- COUNTRY -->
-<field name="country" type="PhocaCartCountries" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
+<field name="country" type="PhocaCartCountries" table="shipping" multiple="true" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
 
 <field name="active_country" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -124,7 +124,7 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 </field>
 
 <!-- REGION -->
-<field name="region" type="PhocacartRegions" table="shipping" multiple="1" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
+<field name="region" type="PhocacartRegions" table="shipping" multiple="true" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
 
 <field name="active_region" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_REGION_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_REGION_DESC">
 	<option value="1">COM_PHOCACART_YES</option>

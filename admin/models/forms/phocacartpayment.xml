@@ -49,7 +49,7 @@
 </field>
 
 <!-- ZONE -->
-<field name="zone" type="PhocacartZones" table="payment" multiple="1" label="COM_PHOCACART_FIELD_ZONES_LABEL" description="COM_PHOCACART_FIELD_ZONES_DESC" class="inputbox" size="1" />
+<field name="zone" type="PhocacartZones" table="payment" multiple="true" label="COM_PHOCACART_FIELD_ZONES_LABEL" description="COM_PHOCACART_FIELD_ZONES_DESC" class="inputbox" size="1" />
 
 <field name="active_zone" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_ZONE_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_ZONE_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -57,7 +57,7 @@
 </field>
 
 <!-- COUNTRY -->
-<field name="country" type="PhocaCartCountries" table="payment" multiple="1" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
+<field name="country" type="PhocaCartCountries" table="payment" multiple="true" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
 
 <field name="active_country" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_COUNTRY_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -65,7 +65,7 @@
 </field>
 
 <!-- REGION -->
-<field name="region" type="PhocacartRegions" table="payment" multiple="1" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
+<field name="region" type="PhocacartRegions" table="payment" multiple="true" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
 
 <field name="active_region" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_REGION_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_REGION_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -73,7 +73,7 @@
 </field>
 
 <!-- SHIPPING -->
-<field name="shipping" type="PhocacartShipping" table="payment" multiple="1" label="COM_PHOCACART_FIELD_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_DESC" class="inputbox" size="1" />
+<field name="shipping" type="PhocacartShipping" table="payment" multiple="true" label="COM_PHOCACART_FIELD_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_DESC" class="inputbox" size="1" />
 
 <field name="active_shipping" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_SHIPPING_DESC">
 	<option value="1">COM_PHOCACART_YES</option>
@@ -83,8 +83,8 @@
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 	</fieldset>
-	
-	
+
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
@@ -95,8 +95,8 @@
 
 
 
-	
+
 	</fieldset>
 
-	
+
 </form>

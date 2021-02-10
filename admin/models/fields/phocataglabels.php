@@ -31,6 +31,8 @@ class JFormFieldPhocaTaglabels extends JFormField
 		}
 		$attr			.= $javascript . ' ';
 
+
+
 		$activeTags = array();
 		if ((int)$id > 0) {
 			$activeTags	= PhocacartTag::getTagLabels($id, 1);

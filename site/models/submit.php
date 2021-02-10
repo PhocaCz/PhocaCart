@@ -386,7 +386,6 @@ class PhocaCartModelSubmit extends JModelForm
 			}
 		}
 
-        bdump($form);
 		parent::preprocessForm($form, $data, $group);
 	}
 
