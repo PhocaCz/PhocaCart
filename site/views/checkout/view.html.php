@@ -270,7 +270,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                 // It is not possible to edit the method because when switching to edit, the method will be set automatically as wished by enabling the parameter
                 // and redirect outside the editing mode
                 if ($this->t['automatic_shipping_method_setting'] == 1) {
-                    ///$shipping					= new PhocacartShipping();
+                    //- $shipping					= new PhocacartShipping();
                     $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
                     if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1) {
                         $this->a->shippingdisplayeditbutton = 0;
@@ -294,7 +294,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                 $this->a->shippingview  = 0;
                 $this->a->shippingedit  = 1;
                 $scrollTo               = 'phcheckoutshippingedit';
-                ///$shipping					= new PhocacartShipping();
+                //- $shipping					= new PhocacartShipping();
                 //$shipping->setType();
                 $total = $this->cart->getTotal();
 
@@ -349,7 +349,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                 };
 
             }
-            ///}
+            //- }
 
             // =================
             // PAYMENT (VOUCHER)
@@ -484,9 +484,9 @@ class PhocaCartViewCheckout extends JViewLegacy
                     }
                 */
             }
-            ///}
+            //- }
 
-            ///PhocacartRenderJs::renderBillingAndShippingSame();
+            //- PhocacartRenderJs::renderBillingAndShippingSame();
         }
 
         //  Rounding set before checking shipping and payment method

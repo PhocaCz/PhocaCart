@@ -439,6 +439,8 @@ class PhocaCartModelItems extends JModelLegacy
 
 
 			if (!$skip['attributes']) {
+			    // see below for explanation
+				// LEFT JOIN (SELECT id, product_id, MAX(required) AS required FROM jos_phocacart_attributes GROUP BY product_id) AS at ON a.id = at.product_id AND at.id > 0
 			    $lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
             }
 
@@ -471,8 +473,17 @@ class PhocaCartModelItems extends JModelLegacy
 			}
 
 			if (!$skip['attributes']) {
-			    //$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
-			    $lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
+
+				// We need to get information if at least one of the attributes of selected product is required
+
+				// 1) Select more rows - one product is displayed e.g. in two rows
+				//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
+
+				// 2) right solution as it select only the maximal value and if maximal value is 1 then one of product attribute is required
+				// LEFT JOIN (SELECT id, product_id, MAX(required) AS required FROM jos_phocacart_attributes GROUP BY product_id) AS at ON a.id = at.product_id AND at.id > 0
+
+				// 3) faster version of 2)
+				$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
             }
 
 			if (!$skip['group']) {

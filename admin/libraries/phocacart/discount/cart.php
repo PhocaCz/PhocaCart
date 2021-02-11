@@ -29,7 +29,7 @@ class PhocacartDiscountCart
 
 		$id = (int)$id;
 
-		///if( !array_key_exists( $id, self::$cart ) ) {
+		//- if( !array_key_exists( $id, self::$cart ) ) {
 
 			$db 			= JFactory::getDBO();
 			$user 			= PhocacartUser::getUser();
@@ -67,7 +67,7 @@ class PhocacartDiscountCart
 				$discounts = $db->loadObjectList();
 			}
 			self::$cart[$id] = $discounts;
-		///}
+		//- }
 		return self::$cart[$id];
 	}
 

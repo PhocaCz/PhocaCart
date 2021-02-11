@@ -82,7 +82,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				///// -- 'a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
+				//- 'a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
 				'DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
 			)
 		);
@@ -113,7 +113,7 @@ class PhocaCartCpModelPhocacartStatistics extends JModelList
 			$dateTo 	= $db->Quote($dateTo);
 			$query->where('DATE(a.date) >= '.$dateFrom.' AND DATE(a.date) <= '.$dateTo );
 		}
-		///// -- $query->group('DATE(a.date), a.id');
+		//- $query->group('DATE(a.date), a.id');
 		$query->group('DATE(a.date)');
 
 		$query->order($db->escape('a.date ASC'));

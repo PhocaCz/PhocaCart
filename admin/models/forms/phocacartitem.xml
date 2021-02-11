@@ -102,14 +102,14 @@
                description="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_DESC"/>
 
         <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="inputbox" size="40"/>
-		
+
 		<field name="download_days" default="-1" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_DESC"/>
 
         <field name="download_token" type="phocacarttoken" manager="token" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC"/>
 
         <field name="download_hits" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC"/>
 
-        
+
 
 
         <!--
@@ -185,7 +185,7 @@
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
-		
+
 		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
             <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
             <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
@@ -200,9 +200,9 @@
         <field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText"/>
         <field name="date_update" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="JComponentHelper::filterText"/>
 
-        <field name="tags" type="phocatags" multiple="1" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="inputbox" size="1"/>
+        <field name="tags" type="phocatags" multiple="true" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="inputbox" size="1"/>
 
-        <field name="taglabels" type="phocataglabels" multiple="1" label="COM_PHOCACART_FIELD_LABELS_LABEL" description="COM_PHOCACART_FIELD_LABELS_DESC" class="inputbox" size="1"/>
+        <field name="taglabels" type="phocataglabels" multiple="true" label="COM_PHOCACART_FIELD_LABELS_LABEL" description="COM_PHOCACART_FIELD_LABELS_DESC" class="inputbox" size="1"/>
 
         <field name="created" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true"
                showtime="true"/>
@@ -215,11 +215,11 @@
         <field name="modified_by" type="user" class="inputbox" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly"/>
 
 
-        
+
         <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS_LABEL" description="COM_PHOCACART_FIELD_HITS_DESC" />
         <field name="sales" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_SALES_LABEL" description="COM_PHOCACART_FIELD_SALES_DESC" readonly="readonly" />
-        
-		
+
+
     </fieldset>
 
     <fields name="metadata">

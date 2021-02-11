@@ -568,7 +568,7 @@ class PhocacartRenderAdmincolumns
         }
 
         if ($item['params']['edit'] && ($item['cancreate'] || $item['canedit'])) {
-            $o[] = '<span class="ph-editinplace-text ph-eip-' . $item['editclass'] . ' ph-eip-' . $item['name'] . '" id="' . $item['idtoken'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span>';
+            $o[] = '<span class="ph-editinplace-text ph-eip-' . $item['editclass'] . ' ph-eip-' . $item['name'] . ' phIdTitle' . (int)$item['id'] . '" id="' . $item['idtoken'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span>';
 
             if ($admin_eip_title == 3 || $admin_eip_title == 4) {
                 $o[] = '<span class="ph-editinplace-text ph-eip-' . $item['editclass'] . ' ph-eip-' . $item['namealias'] . '" id="' . $item['idtokencombined'] . '">' . PhocacartText::filterValue($item['valuealias'], 'text') . '</span>';
@@ -577,13 +577,13 @@ class PhocacartRenderAdmincolumns
             if (isset($item['linkeditbox']) && $item['linkeditbox'] != '') {
                 $o[] = $item['linkeditbox'];
             } else {
-                $o[] = '<a href="' . JRoute::_($item['linkedit']) . '"><span id="phIdTitle' . $item['name'] . '" class="ph-' . $item['name'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span></a>';
+                $o[] = '<a href="' . JRoute::_($item['linkedit']) . '"><span id="phIdTitle' . (int)$item['id'] . '" class="ph-' . $item['name'] . ' phIdTitle' . (int)$item['id'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span></a>';
             }
             $o[] = '<br /><span class="smallsub">(<span>' . Text::_('COM_PHOCACART_FIELD_ALIAS_LABEL') . ':</span>' . PhocacartText::filterValue($item['valuealias'], 'text') . ')</span>';
 
         } else {
-            // Id needed for displaying Copy Attributes Titles
-            $o[] = '<span id="phIdTitle' . $item['name'] . '" class="ph-' . $item['name'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span>';
+            // Class phIdTitle needed for displaying Copy Attributes Titles
+            $o[] = '<span id="phIdTitle' . (int)$item['id'] . '" class="ph-' . $item['name'] . ' phIdTitle' . (int)$item['id'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span>';
             $o[] = '<br /><span class="smallsub">(<span>' . Text::_('COM_PHOCACART_FIELD_FIELD_ALIAS_LABEL') . ':</span>' . PhocacartText::filterValue($item['valuealias'], 'text') . ')</span>';
         }
 

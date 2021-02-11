@@ -330,7 +330,7 @@ class PhocacartTag
 
 	}
 
-	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0, $class = 'inputbox') {
+	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0, $attributes = '') {
 
 		$db = JFactory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
@@ -340,7 +340,7 @@ class PhocacartTag
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();
 
-		$tagsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $tags, $name, 'class="'.$class.'" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$tagsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $tags, $name, $attributes, 'value', 'text', $activeArray, $id);
 
 		return $tagsO;
 	}

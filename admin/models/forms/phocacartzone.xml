@@ -13,10 +13,10 @@
 <field name="code3" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CODE3_LABEL" description="COM_PHOCACART_FIELD_CODE3_DESC"  />
 
 <!-- COUNTRY -->
-<field name="country" type="PhocaCartCountries" table="zone" multiple="1" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
+<field name="country" type="PhocaCartCountries" table="zone" multiple="true" label="COM_PHOCACART_FIELD_COUNTRIES_LABEL" description="COM_PHOCACART_FIELD_COUNTRIES_DESC" class="inputbox" size="1" />
 
 <!-- REGION -->
-<field name="region" type="PhocacartRegions" table="zone" multiple="1" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
+<field name="region" type="PhocacartRegions" table="zone" multiple="true" label="COM_PHOCACART_FIELD_REGIONS_LABEL" description="COM_PHOCACART_FIELD_REGIONS_DESC" class="inputbox" size="1" />
 
 
 <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40" />
@@ -33,7 +33,7 @@
 	label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
 	class="inputbox" rows="3" cols="30" />
 	</fieldset>
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
 <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
@@ -51,12 +51,12 @@
 <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->
 	</fieldset>
-	
+
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 
 </fieldset>
 </fields>
 
-	
+
 </form>

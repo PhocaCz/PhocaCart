@@ -39,6 +39,8 @@ class PhocaCartViewFeed extends JViewLegacy
                 $iP->loadString($this->t['feed']['item_params']);
             }
 
+
+
             $this->t['pathitem'] = PhocacartPath::getPath('productimage');
 
             // Feed Params

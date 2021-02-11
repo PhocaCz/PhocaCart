@@ -72,7 +72,7 @@
                    layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml"/>
 
         <field name="orders_view_display" type="list" label="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" class="inputbox" size="1"
-               filter="int_array" default="" multiple="1">
+               filter="int_array" default="" multiple="true">
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>

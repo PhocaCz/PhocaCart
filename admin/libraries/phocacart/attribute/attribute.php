@@ -1193,6 +1193,28 @@ class PhocacartAttribute
         return $sAttributes;
     }
 
+    public static function getAttributesSanitizeOptionArray($attributes) {
+
+        $aA = array();
+        if (!empty($attributes)) {
+            foreach ($attributes as $k => $v) {
+
+                if (!empty($v)) {
+                    foreach ($v as $k2 => $v2) {
+
+                        if(isset($v2['oid']) && (int)$v2['oid'] > 0) {
+
+                            $aInt = (int)$k;
+                            $oInt = (int)$k2;
+                            $aA[$aInt][$oInt] = (int)$v2['oid'];
+                        }
+                    }
+                }
+            }
+        }
+        return $aA;
+    }
+
 
     public static function sanitizeAttributeArray($attribute) {
 

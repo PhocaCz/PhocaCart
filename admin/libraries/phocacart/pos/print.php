@@ -360,12 +360,12 @@ class PhocacartPosPrint
 			}
 		}
 
-	///	$connector = new Mike42\Escpos\PrintConnectors\WindowsPrintConnector("COM1");
-	///	$printer = new Printer($connector);
+	//-	$connector = new Mike42\Escpos\PrintConnectors\WindowsPrintConnector("COM1");
+	//-	$printer = new Printer($connector);
 
 
 		//$printer -> setEmphasis(false);
-	///	$printer -> text($o);
+	//-	$printer -> text($o);
 		//$printer -> selectPrintMode(Printer::MODE_FONT_B);
 		/*$printer -> setJustification(Printer::JUSTIFY_LEFT);
 
@@ -394,12 +394,12 @@ class PhocacartPosPrint
 		$printer -> text($o);*/
 
 
-	///	$printer -> setJustification();// Reset
-	///	$printer -> selectPrintMode();// Reset
-	///	$printer -> feed(5);
-	///	$printer -> cut();
+	//-	$printer -> setJustification();// Reset
+	//-	$printer -> selectPrintMode();// Reset
+	//-	$printer -> feed(5);
+	//-	$printer -> cut();
 		//$printer -> pulse();
-	///$printer -> close();
+	//- $printer -> close();
 
 	}
 

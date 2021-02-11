@@ -176,7 +176,7 @@ if (!empty($this->items)) {
 		// Both buttons + icon
 		$dA['id']					= (int)$v->id;
 		$dA['link']					= $link;// link to item (product) view e.g. when there are required attributes - we cannot add it to cart
-		$dA['addtocart']			= $this->t['category_addtocart'];
+		$dA['addtocart']			= 1;// POS has no external, quick view, icon only, etc - just use standard - $this->t['category_addtocart'];
 		$dA['method']				= $this->t['add_cart_method'];
 		$dA['typeview']				= 'Pos';
 

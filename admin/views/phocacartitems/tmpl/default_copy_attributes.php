@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
 		var phTitleString = '';
 		var phCheckedValues = jQuery('input[name="cid[]"]:checked');
 		jQuery.each(phCheckedValues, function( i, v ) {
-			var phIdTitle = '#phIdTitle' + v.value;
+			var phIdTitle = '.phIdTitle' + v.value;
 			phTitleString += '<li>' + jQuery(phIdTitle).html() + '</li>';
 		});
 		jQuery('#phCopyAttributesTo').html('<ul>' + phTitleString + '</ul>');

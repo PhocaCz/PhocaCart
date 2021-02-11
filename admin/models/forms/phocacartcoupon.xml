@@ -44,7 +44,7 @@
 
 <field name="available_quantity_user" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_LABEL" description="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_DESC" />
 
-<field name="cat_ids" type="phocacouponcategory" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" multiple="1" class="inputbox" />
+<field name="cat_ids" type="phocacouponcategory" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" multiple="true" class="inputbox" />
 
 <field name="category_filter" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
 	<option value="1">COM_PHOCACART_INCLUDE</option>
@@ -63,15 +63,15 @@
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 
 <field name="group" type="PhocacartGroups" table="6" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
-		
+
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 
 
 	</fieldset>
-	
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-	
+
 	<field name="valid_from" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="JComponentHelper::filterText" />
 
 <field name="valid_to" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="JComponentHelper::filterText" />

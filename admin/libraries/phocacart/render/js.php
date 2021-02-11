@@ -598,11 +598,11 @@ final class PhocacartRenderJs
         $s[] = '			if (data.status == 1){';
         //$s[] = '				jQuery("#phItemCompareBox").html(data.item);';
         //$s[] = ' 				jQuery("#phQuickViewPopupBody").html(data.popup);'; added in ajax
-        /////$s[] = ' 			jQuery("#phContainer").html(data.popup); ';
+        //- $s[] = ' 			jQuery("#phContainer").html(data.popup); ';
         $s[] = ' 				jQuery(".phjItemQuick.phjProductAttribute").remove(); ';// Clear attributes from dom when ajax reload
         $s[] = ' 				jQuery("body").append(jQuery("#phContainer"));';
         $s[] = ' 				jQuery("#phContainer").html(data.popup); ';
-        /////$s[] = ' 			jQuery("#phQuickViewPopup").modal();';
+        //- $s[] = ' 			jQuery("#phQuickViewPopup").modal();';
         $s[] = ' 				jQuery("body").append(jQuery("#phQuickViewPopup"));';
         $s[] = ' 				jQuery("#phQuickViewPopup").modal();';
         if ($load_chosen > 0) {

@@ -42,6 +42,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                 // Stock (don't display add to cart when stock is zero)
                 $stockStatus = array();
+
                 $stock       = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $itemP, 1);
 
                 $rights                                 = new PhocacartAccessRights();

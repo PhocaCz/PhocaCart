@@ -97,7 +97,7 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				///// -- 'a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
+				//- 'a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
 				//'DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
 				'a.id, a.date, a.order_number, a.currency_id, a.currency_code, a.currency_exchange_rate, a.type, a.payment_id'
 			)
@@ -165,7 +165,7 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		}
 
 
-		///// -- $query->group('DATE(a.date), a.id');
+		//- $query->group('DATE(a.date), a.id');
 		//$query->group('DATE(a.date)');
 		$query->group('a.id');
 

@@ -16,14 +16,27 @@ class JFormFieldPhocaTaglabelsSubmitItems extends JFormField
 	protected function getInput() {
 
 		$id 	= (int) $this->form->getValue('id');
-		$class	= ((string) $this->element['class'] != '') ? $this->element['class'] : 'inputbox';
+		$javascript		= '';
+		$required		= $this->required;// accept dynamically added required
+		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
+		$attr			= '';
+		$attr			.= $class . ' ';
+
+		if ($multiple) {
+			$attr		.= 'size="4" multiple="multiple" ';
+		}
+		if ($required) {
+			$attr		.= 'required aria-required="true" ';
+		}
+		$attr			.= $javascript . ' ';
 
 		$activeTags = array();
 		if ((int)$id > 0) {
 			$activeTags	= PhocacartTag::getTagLabelsSubmitItems($id);
 		}
 
-		return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL, 'id', 1, $class );
+		return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL, 'id', 1, $attr );
 	}
 }
 ?>
