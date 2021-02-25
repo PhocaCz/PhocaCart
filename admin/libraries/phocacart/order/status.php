@@ -25,7 +25,7 @@ class PhocacartOrderStatus
 		if( !array_key_exists( $id, self::$status ) ) {
 
 			$db = JFactory::getDBO();
-			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.email_attachments, a.orders_view_display, a.download FROM #__phocacart_order_statuses AS a'
+			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received, a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer, a.email_text_others, a.email_send, a.email_send_format, a.email_attachments, a.orders_view_display, a.download FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
 			$db->setQuery($query);
@@ -46,6 +46,7 @@ class PhocacartOrderStatus
 				self::$status[$id]['email_footer']				= $s->email_footer;
 				self::$status[$id]['email_text_others']			= $s->email_text_others;
 				self::$status[$id]['email_send']				= $s->email_send;
+				self::$status[$id]['email_send_format']			= $s->email_send_format;
 				self::$status[$id]['email_attachments']			= $s->email_attachments;
 				self::$status[$id]['orders_view_display']		= $s->orders_view_display;
 				self::$status[$id]['download']					= $s->download;
@@ -112,10 +113,10 @@ class PhocacartOrderStatus
 
 		$config		= JFactory::getConfig();
 
-		$app			= JFactory::getApplication();
-		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$app				= JFactory::getApplication();
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		//$invoice_prefix		= $paramsC->get('invoice_prefix', '');
-		$attachment_format	= $paramsC->get('attachment_format', 0 );
+		$email_send_format	= isset($status['email_send_format']) ? $status['email_send_format'] : 0;
 
 		// FIND THE RIGHT VALUES FOR VARIBALES - different if we are in frontend or backend
 		$notifyUserV 	= false;
@@ -556,7 +557,7 @@ class PhocacartOrderStatus
 
 					$orderRender = new PhocacartOrderRender();
 
-					if ($attachment_format == 0 || $attachment_format == 2) {
+					if ($email_send_format == 0 || $email_send_format == 2) {
 						$body .= "<br><br>";
 						$body .= $orderRender->render($orderId, 1, 'mail', $orderToken);
 
@@ -564,7 +565,7 @@ class PhocacartOrderStatus
 						$bodyOthers .= $orderRender->render($orderId, 1, 'mail', $orderToken);
 					}
 
-					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+					if ($pdfV['pdf'] == 1 && ($email_send_format == 1 || $email_send_format == 2)) {
 						$staticData					= array();
 						//$orderNumber				= PhocacartOrder::getOrderNumber($orderId, $common->date);
 						$staticData['option']		= 'com_phocacart';
@@ -589,7 +590,7 @@ class PhocacartOrderStatus
 					if ($invoiceNumber == '') {
 						PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it doesn not exist yet. Check order status settings and billing settings.', $orderId, 'Order ID: '. $orderId.', Status ID: '.$statusId);
 					} else {
-						if ($attachment_format == 0 || $attachment_format == 2) {
+						if ($email_send_format == 0 || $email_send_format == 2) {
 							$body .= "<br><br>";
 							$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
 
@@ -597,7 +598,7 @@ class PhocacartOrderStatus
 							$bodyOthers .= $orderRender->render($orderId, 2, 'mail', $orderToken);
 						}
 
-						if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+						if ($pdfV['pdf'] == 1 && ($email_send_format == 1 || $email_send_format == 2)) {
 							$staticData = array();
 
 							$staticData['option'] = 'com_phocacart';
@@ -617,7 +618,7 @@ class PhocacartOrderStatus
 				case 3:
 					$orderRender = new PhocacartOrderRender();
 
-					if ($attachment_format == 0 || $attachment_format == 2) {
+					if ($email_send_format == 0 || $email_send_format == 2) {
 						$body .= "<br><br>";
 						$body .= $orderRender->render($orderId, 3, 'mail', $orderToken);
 
@@ -625,7 +626,7 @@ class PhocacartOrderStatus
 						$bodyOthers .= $orderRender->render($orderId, 3, 'mail', $orderToken);
 					}
 
-					if ($pdfV['pdf'] == 1 && ($attachment_format == 1 || $attachment_format == 2)) {
+					if ($pdfV['pdf'] == 1 && ($email_send_format == 1 || $email_send_format == 2)) {
 						$staticData					= array();
 						$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
 						$staticData['option']		= 'com_phocacart';

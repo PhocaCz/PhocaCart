@@ -404,8 +404,8 @@ if (!empty($d['bas']['b'])) {
 	$name = array();
 	if ($v['name_degree'] != '') { $name[] = $v['name_degree'];}
 	if ($v['name_first'] != '') { $name[] = $v['name_first'];}
-	if ($v['name_first'] != '') { $name[] = $v['name_middle'];}
-	if ($v['name_first'] != '') { $name[] = $v['name_last'];}
+	if ($v['name_middle'] != '') { $name[] = $v['name_middle'];}
+	if ($v['name_last'] != '') { $name[] = $v['name_last'];}
 	if (!empty($name)) {$ob[] = '<b>' . implode("\n", $name).'</b><br />';}
 	if ($v['address_1'] != '') { $ob[] = $v['address_1'].'<br />';}
 	if ($v['address_2'] != '') { $ob[] = $v['address_2'].'<br />';}
@@ -417,8 +417,8 @@ if (!empty($d['bas']['b'])) {
 	if (!empty($v['regiontitle'])) {$ob[] = $v['regiontitle'].'<br />';}
 	if (!empty($v['countrytitle'])) {$ob[] = $v['countrytitle'].'<br />';}
 	//echo '<br />';
-	if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
-	if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
+	if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT_1_LABEL').': '. $v['vat_1'].'<br />';}
+	if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT_2_LABEL').': '.$v['vat_2'].'<br />';}
 
 	// -----------------------
 	// ORDER | INVOICE | DELIVERY NOTE BILLING ADDRESS DESCRIPTION
@@ -457,8 +457,8 @@ if (!empty($d['bas']['s'])) {
 	$name = array();
 	if ($v['name_degree'] != '') { $name[] = $v['name_degree'];}
 	if ($v['name_first'] != '') { $name[] = $v['name_first'];}
-	if ($v['name_first'] != '') { $name[] = $v['name_middle'];}
-	if ($v['name_first'] != '') { $name[] = $v['name_last'];}
+	if ($v['name_middle'] != '') { $name[] = $v['name_middle'];}
+	if ($v['name_last'] != '') { $name[] = $v['name_last'];}
 	if (!empty($name)) {$os[] = '<b>' . implode("\n", $name).'</b><br />';}
 	if ($v['address_1'] != '') { $os[] = $v['address_1'].'<br />';}
 	if ($v['address_2'] != '') { $os[] = $v['address_2'].'<br />';}

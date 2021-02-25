@@ -68,6 +68,12 @@
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
+        <field name="email_send_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_DESC">
+                <option value="0">COM_PHOCACART_HTML</option>
+                <option value="1">COM_PHOCACART_PDF</option>
+                <option value="2">COM_PHOCACART_BOTH</option>
+            </field>
+
         <field name="email_attachments" type="subform" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_DESC" multiple="true" max="3"
                    layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml"/>
 

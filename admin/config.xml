@@ -1323,11 +1323,11 @@
             <field name="invoice_number_chars" default="12" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LENGTH_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_LENGTH_DESC"/>-->
 
 
-            <field name="attachment_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_DESC">
+            <!--<field name="attachment_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_DESC">
                 <option value="0">COM_PHOCACART_HTML</option>
                 <option value="1">COM_PHOCACART_PDF</option>
                 <option value="2">COM_PHOCACART_BOTH</option>
-            </field>
+            </field>-->
 
             <field name="additional_hits" default="" type="list" label="COM_PHOCACART_FIELD_ADDITIONAL_HITS_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_HITS_DESC" multiple="true">
                 <option value="1">COM_PHOCACART_PRODUCT_VIEW</option>
