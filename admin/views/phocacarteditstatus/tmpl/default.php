@@ -100,8 +100,14 @@ echo '</div>';
 
 
 echo '<div class="row-fluid">';
-echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_EMAIL_SEND_ATTACHMENT_LABEL').'</div>';
 echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getEmailSendSelectBox($this->item['email_send']).'</div>';
+echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
+
+echo '<div class="row-fluid">';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getEmailSendFormatSelectBox($this->item['email_send_format']).'</div>';
 echo '<div class="span6 col-sm-6 col-md-6"></div>';
 echo '</div>';
 

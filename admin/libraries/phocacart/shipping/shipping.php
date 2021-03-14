@@ -94,6 +94,7 @@ class PhocacartShipping
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON s.id = ga.item_id AND ga.type = 7'// type 8 is payment
 				. $where
 				. ' GROUP BY '.$groups
+				. ' ORDER BY s.ordering'
 				. $limit;
 
 		PhocacartUtils::setConcatCharCount();

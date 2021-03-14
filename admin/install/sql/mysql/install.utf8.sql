@@ -1117,6 +1117,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`invoice_due_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`invoice_time_of_supply` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`invoice_prn` varchar(64) NOT NULL DEFAULT '',
+	
+    `required_delivery_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 
 	`invoice_spec_top_desc` text,
 	`invoice_spec_middle_desc` text,

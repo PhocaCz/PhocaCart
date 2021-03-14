@@ -238,7 +238,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 			// Set invoice data in case status can set invoice ID (before notify)
 			PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], $date, (int)$data['status_id'], array('I'));
 
-			$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);
+			$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);// Notify user, notify others, emails send - will be decided in function
 			$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
 
 			// Store the history

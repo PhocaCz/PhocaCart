@@ -105,6 +105,7 @@ class PhocacartPayment
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON p.id = ga.item_id AND ga.type = 8'// type 8 is payment
 				. $where
 				. ' GROUP BY '.$groups
+				. ' ORDER BY p.ordering'
 				. $limit;
 
 

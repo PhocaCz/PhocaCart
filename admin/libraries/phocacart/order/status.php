@@ -92,10 +92,11 @@ class PhocacartOrderStatus
 	 * $notifyUser 0 ... no  1 ... yes 99 ... defined in order status settings
 	 * $notifyOthers   0 ... no  1 ... yes 99 ... defined in order status settings
 	 * $emailSend  0 ... no  1 ... order, 2 ... invoice, 3 ... delivery_note,  99 ... defined in order status settings
+	 * $emailSend  0 ... html  1 ... pdf, 2 ... both,  99 ... defined in order status settings
 	 * $stockMovements  = ... no  + ... plus - ... minus 99 ... defined in order status settings
 	 */
 
-	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99', $changeUserGroup = '99', $changePointsNeeded = '99', $changePointsReceived = '99') {
+	public static function changeStatus( $orderId, $statusId, $orderToken = '', $notifyUser = 99, $notifyOthers = 99, $emailSend = 99, $stockMovements = '99', $changeUserGroup = '99', $changePointsNeeded = '99', $changePointsReceived = '99', $emailSendFormat = '99') {
 
 
 
@@ -172,6 +173,23 @@ class PhocacartOrderStatus
 				$emailSendV = 2;
 			} else if (isset($status['email_send']) && $status['email_send'] == 3) {
 				$emailSendV = 3;
+			}
+		}
+
+		// 3) EMAIL SEND
+		if ($emailSendFormat == 0) {
+			$emailSendFormatV = 0;
+		} else if ($emailSendFormat == 1) {
+			$emailSendFormatV = 1;
+		} else if ($emailSendFormat == 2) {
+			$emailSendFormatV = 2;
+		} else if ($emailSendFormat == 99) {
+			if (isset($status['email_send_format']) && $status['email_send_format'] == 0) {
+				$emailSendFormatV = 0;
+			} else if (isset($status['email_send_format']) && $status['email_send_format'] == 1) {
+				$emailSendFormatV = 1;
+			} else if (isset($status['email_send_format']) && $status['email_send_format'] == 2) {
+				$emailSendFormatV = 2;
 			}
 		}
 
@@ -557,7 +575,7 @@ class PhocacartOrderStatus
 
 					$orderRender = new PhocacartOrderRender();
 
-					if ($email_send_format == 0 || $email_send_format == 2) {
+					if ($emailSendFormatV == 0 || $emailSendFormatV == 2) {
 						$body .= "<br><br>";
 						$body .= $orderRender->render($orderId, 1, 'mail', $orderToken);
 
@@ -565,9 +583,10 @@ class PhocacartOrderStatus
 						$bodyOthers .= $orderRender->render($orderId, 1, 'mail', $orderToken);
 					}
 
-					if ($pdfV['pdf'] == 1 && ($email_send_format == 1 || $email_send_format == 2)) {
+					if ($pdfV['pdf'] == 1 && ($emailSendFormatV == 1 || $emailSendFormatV == 2)) {
 						$staticData					= array();
 						//$orderNumber				= PhocacartOrder::getOrderNumber($orderId, $common->date);
+						$orderNumber				= PhocacartOrder::getOrderNumber($orderId, $common->date, $common->order_number);
 						$staticData['option']		= 'com_phocacart';
 						$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 						$staticData['file']			= '';// Must be empty to not save the pdf to server
@@ -590,7 +609,7 @@ class PhocacartOrderStatus
 					if ($invoiceNumber == '') {
 						PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it doesn not exist yet. Check order status settings and billing settings.', $orderId, 'Order ID: '. $orderId.', Status ID: '.$statusId);
 					} else {
-						if ($email_send_format == 0 || $email_send_format == 2) {
+						if ($emailSendFormatV == 0 || $emailSendFormatV == 2) {
 							$body .= "<br><br>";
 							$body .= $orderRender->render($orderId, 2, 'mail', $orderToken);
 
@@ -598,7 +617,7 @@ class PhocacartOrderStatus
 							$bodyOthers .= $orderRender->render($orderId, 2, 'mail', $orderToken);
 						}
 
-						if ($pdfV['pdf'] == 1 && ($email_send_format == 1 || $email_send_format == 2)) {
+						if ($pdfV['pdf'] == 1 && ($emailSendFormatV == 1 || $emailSendFormatV == 2)) {
 							$staticData = array();
 
 							$staticData['option'] = 'com_phocacart';
@@ -618,7 +637,7 @@ class PhocacartOrderStatus
 				case 3:
 					$orderRender = new PhocacartOrderRender();
 
-					if ($email_send_format == 0 || $email_send_format == 2) {
+					if ($emailSendFormatV == 0 || $emailSendFormatV == 2) {
 						$body .= "<br><br>";
 						$body .= $orderRender->render($orderId, 3, 'mail', $orderToken);
 
@@ -626,9 +645,10 @@ class PhocacartOrderStatus
 						$bodyOthers .= $orderRender->render($orderId, 3, 'mail', $orderToken);
 					}
 
-					if ($pdfV['pdf'] == 1 && ($email_send_format == 1 || $email_send_format == 2)) {
+					if ($pdfV['pdf'] == 1 && ($emailSendFormatV == 1 || $emailSendFormatV == 2)) {
 						$staticData					= array();
-						$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
+						//$orderNumber				= PhocacartOrder::getOrderNumber($orderId);
+						$orderNumber				= PhocacartOrder::getOrderNumber($orderId, $common->date, $common->order_number);
 						$staticData['option']		= 'com_phocacart';
 						$staticData['title']		= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 						$staticData['file']			= '';// Must be empty to not save the pdf to server
@@ -834,6 +854,18 @@ class PhocacartOrderStatus
 		);
 
 		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[email_send]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
+	}
+
+	public static function getEmailSendFormatSelectBox($value) {
+
+		// see: administrator/components/com_phocacart/models/forms/phocacartstatus.xml
+		$data = array(
+			0 => JText::_('COM_PHOCACART_HTML'),
+			1 => JText::_('COM_PHOCACART_PDF'),
+			2 => JText::_('COM_PHOCACART_BOTH')
+		);
+
+		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[email_send_format]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
 
 	public static function getStockMovementsSelectBox($value) {

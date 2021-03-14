@@ -58,9 +58,10 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 
 	public function editStatus($data) {
 
-		$data['id']			= (int)$data['id'];
-		$data['status_id']	= (int)$data['status_id'];
-		$data['email_send']	= (int)$data['email_send'];
+		$data['id']					= (int)$data['id'];
+		$data['status_id']			= (int)$data['status_id'];
+		$data['email_send']			= (int)$data['email_send'];
+		$data['email_send_format']	= (int)$data['email_send_format'];
 		$row 				= $this->getTable('PhocacartOrder', 'Table');
 		$user 				= JFactory::getUser();
 
@@ -106,7 +107,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		// Set invoice data in case status can set invoice ID (before notify)
 		PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], false, (int)$data['status_id'], array('I'));
 
-		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements'], $data['change_user_group'], $data['change_points_needed'], $data['change_points_received']);
+		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements'], $data['change_user_group'], $data['change_points_needed'], $data['change_points_received'], (int)$data['email_send_format']);
 
 		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment_history']);
 
