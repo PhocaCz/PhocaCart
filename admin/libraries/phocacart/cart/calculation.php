@@ -703,6 +703,10 @@ class PhocacartCartCalculation
     // =============
     public function calculateCartDiscounts(&$fullItems, &$fullItemsGroup, &$total, &$cartDiscount) {
 
+        // If there are more cart discounts e.g. separated by different rules
+        // remove the suffix because it will be not valid
+        $discountSuffixItems = array();
+
         foreach ($fullItems as $k => $v) {
 
 
@@ -751,8 +755,17 @@ class PhocacartCartCalculation
                     } else {
                         // PERCENTAGE
                         PhocacartCalculation::calculateDiscountPercentage($discount['discount'], $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
-                        $price                          = new PhocacartPrice();
-                        $total['discountcarttxtsuffix'] = ' (' . $price->cleanPrice($discount['discount']) . ' %)';
+
+                        $discountSuffixItems[$discount['discount']] = $discount['discount'];
+
+                        if (count($discountSuffixItems) > 1) {
+                            // There are different types of discounts, remove the suffix Cart discount (10%) become Cart discount. Because if there is
+                            // e.g. 5% and 10% then the 10% in () will be misleading
+                            $total['discountcarttxtsuffix'] = '';
+                        } else {
+                             $price                          = new PhocacartPrice();
+                            $total['discountcarttxtsuffix'] = ' (' . $price->cleanPrice($discount['discount']) . ' %)';
+                        }
 
                     }
 
