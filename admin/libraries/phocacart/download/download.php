@@ -35,8 +35,8 @@ class PhocacartDownload
 		// In case of full group there can be problem with filtering additional files
 		// so the loading can be divided into download files, additional download files and attributed download files
 
-		$columns	= 'd.id, d.order_id, d.product_id, d.attribute_id, d.option_id, d.order_product_id, d.order_attribute_id, d.order_option_id, d.title, d.alias, d.download_token, d.download_folder, d.download_file, d.download_hits, d.download_days, d.ordering, d.date, d.published, d.type';
-		$groupsFull	= 'd.id, d.order_id, d.product_id, d.attribute_id, d.option_id, d.order_product_id, d.order_attribute_id, d.order_option_id, d.title, d.alias, d.download_token, d.download_folder, d.download_file, d.download_hits, d.download_days, d.ordering, d.date, d.published, d.type';
+		$columns	= 'd.id, d.order_id, d.product_id, d.attribute_id, d.option_id, d.order_product_id, d.order_attribute_id, d.order_option_id, d.title, d.alias, d.download_token, d.download_folder, d.download_file, d.download_hits, d.download_days, d.ordering, d.date, d.published, d.type, o.date AS order_date, o.order_number AS order_number';
+		$groupsFull	= 'd.id, d.order_id, d.product_id, d.attribute_id, d.option_id, d.order_product_id, d.order_attribute_id, d.order_option_id, d.title, d.alias, d.download_token, d.download_folder, d.download_file, d.download_hits, d.download_days, d.ordering, d.date, d.published, d.type, o.date, o.order_number';
 		$groupsFast	= 'd.order_id, d.download_file';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 

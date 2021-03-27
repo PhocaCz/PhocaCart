@@ -35,7 +35,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.$v->title;
 
-			echo '<br /><span class="'.$this->s['c']['label.label-info'].'">'.PhocacartOrder::getOrderNumber($v->order_id).'</span>';
+			echo '<br /><span class="'.$this->s['c']['label.label-info'].'">'.PhocacartOrder::getOrderNumber($v->order_id, $v->order_date, $v->order_number).'</span>';
 			echo '</div>';
 
 			$fileA = explode('/', $v->download_file);

@@ -107,7 +107,7 @@ class PhocacartOrderStatus
 		$pos		= PhocacartPos::isPos();
 		$order 		= new PhocacartOrderView();
 		$common		= $order->getItemCommon($orderId);
-		$orderNumber= PhocacartOrder::getOrderNumber($orderId, $common->date);
+		$orderNumber= PhocacartOrder::getOrderNumber($orderId, $common->date, $common->order_number);
 		$bas		= $order->getItemBaS($orderId, 1);
 		//$totalBrutto= $order->getItemTotal($orderId, 0, 'brutto');
 		$status 	= self::getStatus($statusId);
