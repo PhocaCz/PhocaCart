@@ -1185,7 +1185,7 @@ class PhocacartProduct
             if (isset($data['id']) && (int)$data['id'] > 0) {
                 $found = $table->load((int)$data['id']);
 
-				
+
                 // Such id not found, we need to unset it to get new created by autoincrement
                 if (!$found) {
                     // New row
@@ -1218,8 +1218,8 @@ class PhocacartProduct
             // even the ID is autoincrement (this is why we use non standard method) because
             // standard method cannot add IDs into autoincrement
             $db = JFactory::getDBO();
-			
-			
+
+
             if (!$db->insertObject('#__phocacart_products', $table, 'id')) {
                 throw new Exception($table->getError());
                 return false;
@@ -1593,6 +1593,17 @@ class PhocacartProduct
 
         }
 
+    }
+
+    public static function getProductCount()
+    {
+
+        $db = JFactory::getDBO();
+        $query = 'SELECT COUNT(*) FROM #__phocacart_products';
+        $db->setQuery($query);
+        $count = $db->loadResult();
+
+        return $count;
     }
 
 }

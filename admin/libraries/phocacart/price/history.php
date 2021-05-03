@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 class PhocacartPriceHistory
 {
 
-	public static function storePriceHistoryById($productId, $price) {
+	public static function storePriceHistoryById($productId, $price, $type = 0) {
 
 		$date		= JFactory::getDate();
 		$dateNow 	= $date->toSql();
@@ -23,11 +23,14 @@ class PhocacartPriceHistory
 		$query = 'SELECT a.id, a.price, a.date'
 				.' FROM #__phocacart_product_price_history AS a'
 			    .' WHERE a.product_id = '.(int) $productId
-				.' AND a.date = (SELECT MAX(date) FROM #__phocacart_product_price_history WHERE product_id = '.(int)$productId.')'
+                .' AND a.type IN (0,1)' // All except the bulk price history
+				.' AND a.date = (SELECT MAX(date) FROM #__phocacart_product_price_history WHERE product_id = '.(int)$productId.' AND type IN (0,1))'
 				.' ORDER BY a.id';
 
 		$db->setQuery($query);
 		$history = $db->loadAssoc();
+
+
 
 		$price		= PhocacartUtils::replaceCommaWithPoint($price);
 
@@ -38,19 +41,19 @@ class PhocacartPriceHistory
 			$dateDb2 	= Joomla\CMS\HTML\HTMLHelper::_('date', $history['date'], 'Y-m-d');
 			$dateNow2	= Joomla\CMS\HTML\HTMLHelper::_('date', $dateNow , 'Y-m-d');
 			if ($dateDb2 == $dateNow2) {
-				$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($price)
+				$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($price) . ', type = '.(int)$type
 						.' WHERE id = '.(int)$history['id'];
 				$db->setQuery($query);
 				$db->execute();
 			} else {
-				$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price)'
-					.' VALUES ('.(int)$productId.', NOW(), '.$db->quote($price).');';
+				$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price, type)'
+					.' VALUES ('.(int)$productId.', NOW(), '.$db->quote($price).', '.(int)$type.');';
 				$db->setQuery($query);
 				$db->execute();
 			}
 		} else if (empty($history)) {
-			$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price)'
-					.' VALUES ('.(int)$productId.', NOW(), '.$db->quote($price).');';
+			$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price, type)'
+					.' VALUES ('.(int)$productId.', NOW(), '.$db->quote($price).', '.(int)$type.');';
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -64,7 +67,7 @@ class PhocacartPriceHistory
 	 * automatic - when the same price then is is not written to database - we ask for latest date so we can compare and detect
 	 *             that the latest price is the same and in such case we don't add it to the database
 	 */
-	public static function storePriceHistoryCustomById($data, $productId) {
+	public static function storePriceHistoryCustomById($data, $productId, $type = 0) {
 
 		$db 				= JFactory::getDBO();
 		$notDeleteIds 		= array();
@@ -83,6 +86,7 @@ class PhocacartPriceHistory
 					$query = 'SELECT a.id'
 					.' FROM #__phocacart_product_price_history AS a'
 					.' WHERE a.product_id = '.(int) $productId
+                    .' AND a.type IN (0,1)' // All except the bulk price history
 					.' AND DATE_FORMAT(a.date, \'%Y-%m-%d\') = DATE_FORMAT('.$db->quote($dateDb).', \'%Y-%m-%d\')'
 					.' ORDER BY a.id';
 					$db->setQuery($query);
@@ -95,7 +99,8 @@ class PhocacartPriceHistory
 								$query = ' DELETE '
 								.' FROM #__phocacart_product_price_history'
 								.' WHERE product_id = '. (int)$productId
-								.' AND id = '.(int)$v2['id'];
+								.' AND id = '.(int)$v2['id']
+                                .' AND type IN (0,1)';
 								$db->setQuery($query);
 								$db->execute();
 							}
@@ -103,7 +108,7 @@ class PhocacartPriceHistory
 					}
 
 					if (isset($history[0]['id']) && (int)$history[0]['id']) {
-						$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($v['price']) . ', ordering = '.$i
+						$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($v['price']) . ', type = '.(int)$type. ', ordering = '.$i
 						.' WHERE id = '.(int)$history[0]['id'];
 						$db->setQuery($query);
 						$db->execute();
@@ -113,8 +118,8 @@ class PhocacartPriceHistory
 
 					} else {
 
-						$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price, ordering)'
-							.' VALUES ('.(int)$productId.', '.$db->quote($dateDb).', '.$db->quote($v['price']).', '.$i.');';
+						$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price, type, ordering)'
+							.' VALUES ('.(int)$productId.', '.$db->quote($dateDb).', '.$db->quote($v['price']).', '.(int)$v['type'].', '.$i.');';
 						$db->setQuery($query);
 						$db->execute();
 
@@ -133,12 +138,14 @@ class PhocacartPriceHistory
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_price_history'
 						.' WHERE product_id = '. (int)$productId
-						.' AND id NOT IN ('.$notDeleteIdsString.')';
+						.' AND id NOT IN ('.$notDeleteIdsString.')'
+                        .' AND type IN (0,1)';
 
 			} else {
 				$query = ' DELETE '
 						.' FROM #__phocacart_product_price_history'
-						.' WHERE product_id = '. (int)$productId;
+						.' WHERE product_id = '. (int)$productId
+                        .' AND type IN (0,1)';
 			}
 			$db->setQuery($query);
 			$db->execute();
@@ -150,13 +157,31 @@ class PhocacartPriceHistory
 
 		    $query = ' DELETE '
 						.' FROM #__phocacart_product_price_history'
-						.' WHERE product_id = '. (int)$productId;
+						.' WHERE product_id = '. (int)$productId
+                        .' AND type IN (0,1)';
 		    $db->setQuery($query);
 			$db->execute();
 
 			return true;
         }
 		return false;
+	}
+
+	public static function storePriceHistoryBulkPriceById($productId, $price, $priceOriginal, $bulkId, $currentPrice, $currentPriceOriginal, $type) {
+
+	    $db         = JFactory::getDBO();
+		$date		= JFactory::getDate();
+		$dateNow 	= $date->toSql();
+
+
+
+		$query = ' INSERT INTO #__phocacart_product_price_history (product_id, date, price, price_original, bulk_id, current_price, current_price_original, type)'
+					.' VALUES ('.(int)$productId.', NOW(), '.$db->quote($price).', '.$db->quote($priceOriginal).', '.(int)$bulkId.', '.$db->quote($currentPrice).', '.$db->quote($currentPriceOriginal).', '.(int)$type.');';
+		$db->setQuery($query);
+		$db->execute();
+
+
+		return true;
 	}
 
 	public static function getPriceHistoryById($productId, $limit = 10, $admin = 0) {
@@ -169,6 +194,7 @@ class PhocacartPriceHistory
 		$query = 'SELECT a.id, a.product_id, a.price, a.date'
 				.' FROM #__phocacart_product_price_history AS a'
 			    .' WHERE a.product_id = '.(int) $productId
+                .' AND a.type IN (0,1)' // All except the bulk price history
 				.' ORDER BY a.date DESC';// set latest e.g. 10 items
 		if ((int)$limit > 0 ) {
 			$query .= ' LIMIT '.(int)$limit;

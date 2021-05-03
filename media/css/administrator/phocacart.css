@@ -1157,7 +1157,7 @@ td,
 }
 
 .ph-modal-header {
-	margin: 20px 5px 5px 5px;
+	margin: 20px 5px 5px 0px;
 }
 
 .ph-header-table {
@@ -1391,4 +1391,35 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 #phEditStockAdvancedBox table tr th:last-child,
 #phEditStockAdvancedBox table tr td:last-child {
     display:none;
+}
+
+
+
+
+
+#phocacarttools .ph-admin-box-content {
+	background-color: #fff;
+}
+.phAjaxOutputBox {
+	height: 45vh;
+	width: 100%;
+	border: 1px solid #ddd;
+	overflow-x: auto;
+	
+}
+
+.phAjaxOutputBox .alert {
+	margin-bottom: 2px;
+}
+
+.ph-bulk-price-title {
+	font-weight: bold;
+}
+
+.ph-bulk-price-arrow {
+	background-color: #ff8000;
+	font-weight: bold;
+	color: #fff;
+	padding-left: 1em;
+	padding-right: 1em;
 }

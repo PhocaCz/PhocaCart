@@ -191,7 +191,7 @@ class PhocacartEmail
 {
 
 
-	public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachment = null, $attachmentString = '', $attachmentFilename = '', $replyTo = null, $replyToName = null) {
+	public static function sendEmail($from = '', $fromName = '', $recipient = '', $subject = '', $body = '', $mode = false, $cc = array(), $bcc = array(), $attachment = null, $attachmentString = '', $attachmentFilename = '', $replyTo = null, $replyToName = null) {
 
 	//public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachment = null, $replyTo = null, $replyToName = null) {
 

@@ -20,6 +20,7 @@ class PhocacartRouter extends JComponentRouterBase
 {
 	public function build(&$query) {
 
+
 		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos', 'submit');
 		$viewsId		= array('category', 'item', 'items', 'feed');
 		$viewsNotOwnId	= array('question');
@@ -35,6 +36,9 @@ class PhocacartRouter extends JComponentRouterBase
 		// Preview from administration
 		$app = JFactory::getApplication();
 		$viewFrom = $app->input->get('view');
+
+
+
 		if ($viewFrom == 'phocacartitem') {
 			$advanced = 0;// force displaying IDs in administration preview
 		}
@@ -73,6 +77,7 @@ class PhocacartRouter extends JComponentRouterBase
 		else
 		{
 			// We need to have a view in the query or it is an invalid URL
+
 			return $segments;
 		}
 
@@ -101,6 +106,8 @@ class PhocacartRouter extends JComponentRouterBase
 			}
 
 			unset($query['id']);
+
+
 
 			return $segments;
 		}
@@ -389,10 +396,14 @@ class PhocacartRouter extends JComponentRouterBase
 			$segments[$i] = str_replace(':', '-', $segments[$i]);
 		}
 
+
+
 		return $segments;
 	}
 
 	public function parse(&$segments) {
+
+
 
 
 		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos', 'submit');

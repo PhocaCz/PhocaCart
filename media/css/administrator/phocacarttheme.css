@@ -861,6 +861,12 @@ a.ph-icon-inside:visited {
     content: "\13c72";/*menu*/
 }
 
+.nav.nav-list li:nth-child(43):before {
+	color: #f310de;
+    content: "\13b06";/*disable-motion*/
+}
+
+
 
 
 
@@ -1536,4 +1542,8 @@ table#extensionList tr td {
 
 .duotone.icon-articles:after {
 	color: #CC1020;
+}
+
+.ph-action-row {
+	white-space:nowrap;
 }

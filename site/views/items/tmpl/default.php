@@ -389,6 +389,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
 
+		//$dL['product_header'] .= '<div>SKU: '.$v->sku.'</div>';
+		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
+
 		// Events
 		$results = \JFactory::getApplication()->triggerEvent('PCVonItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
 		$dL['event']['onCategoryItemsItemAfterAddToCart'] = trim(implode("\n", $results));

@@ -88,3 +88,4 @@ DROP TABLE IF EXISTS `#__phocacart_sections`;
 DROP TABLE IF EXISTS `#__phocacart_units`;
 DROP TABLE IF EXISTS `#__phocacart_opening_times`;
 DROP TABLE IF EXISTS `#__phocacart_submit_items`;
+DROP TABLE IF EXISTS `#__phocacart_bulk_prices`;

@@ -24,6 +24,7 @@ class PhocaCartViewFeed extends JViewLegacy
         $app  = JFactory::getApplication();
         $id   = $app->input->get('id', 0, 'int');
         $this->t['feed'] = PhocacartFeed::getFeed((int)$id);
+		
 
 
         if ($this->t['feed']) {

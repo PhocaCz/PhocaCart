@@ -81,8 +81,17 @@ function phUpdatePageAndParts(url, source) {
 	if (phVars['basePath'] == 'undefined' || phVars['basePath'] == '') {
 		ds = '';
 	}
-	window.history.pushState({},"", url);// update URL
 
+
+	// Firefox problem
+	// FROM:
+	//window.history.pushState({},"", url);// update URL
+	// TO:
+	if (url == '') {
+		window.history.pushState({},"", location.pathname);// update URL
+	} else {
+		window.history.pushState({},"", url);// update URL
+	}
 	
 
 	if (url != '') {

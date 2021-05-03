@@ -45,6 +45,12 @@ class com_phocacartInstallerScript
 
         $folder[7][0]	=	'plugins/pcv' ; // View
         $folder[7][1]	= 	JPATH_ROOT . '/' . $folder[7][0];
+		
+		$folder[7][0]	=	'plugins/pcf' ; // Feed
+        $folder[7][1]	= 	JPATH_ROOT . '/' . $folder[8][0];
+		
+		$folder[7][0]	=	'plugins/pcl' ; // Layout
+        $folder[7][1]	= 	JPATH_ROOT . '/' . $folder[9][0];
 
 		$msg = '';
 		foreach ($folder as $k => $v) {

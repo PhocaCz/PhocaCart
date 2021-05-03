@@ -329,7 +329,9 @@ if ($d['type'] == 1) {
 
     $o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_DUE_DATE').'</b>: '.PhocacartOrder::getInvoiceDueDate($d['common']->id, $d['common']->date, $d['common']->invoice_due_date, 'DATE_FORMAT_LC4').'</div>';
 	$o[] = '<div><b>'.JText::_('COM_PHOCACART_PAYMENT_REFERENCE_NUMBER').'</b>: '.PhocacartOrder::getPaymentReferenceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_prn).'</div>';
-
+	// Display order number in invoice because order number can be different to invoice number
+	$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
+	
 } else if ($d['type'] == 3) {
 	$o[] = '<div><h1>'.JText::_('COM_PHOCACART_DELIVERY_NOTE').'</h1></div>';
 	$o[] = '<div style="margin:0;"><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';

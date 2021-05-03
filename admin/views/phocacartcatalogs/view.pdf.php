@@ -23,7 +23,6 @@ class PhocaCartCpViewPhocacartCatalogs extends JViewLegacy
 	function display($tpl = null) {
 
 
-
 		$this->t				= PhocacartUtils::setVars('catalog');
 		$this->s                = PhocacartRenderStyle::getStyles();
 		$this->state			= $this->get('State');

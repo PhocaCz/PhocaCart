@@ -406,6 +406,8 @@ class PhocacartRoute
 	}
 
 	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0) {
+
+
 		$needles = array(
 			'feed'  => (int) $id,
 			'categories' => '',
@@ -420,7 +422,10 @@ class PhocacartRoute
 		if ($noSEF == 1) {
 			return $link;
 		}
-		return self::_buildLink($link, $needles);
+		$xml = self::_buildLink($link, $needles);
+
+
+		return $xml;
 	}
 
 

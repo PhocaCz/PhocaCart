@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+
+    <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
+
+        <field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
+
+        <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+
+
+
+        <field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+
+
+        <field name="description" type="textarea" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
+			   
+		<field name="status" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_STATUS_LABEL" description="COM_PHOCACART_FIELD_STATUS_DESC" size="1" default="0" readonly="true">
+	<option value="1">COM_PHOCACART_ACTIVE</option>
+	<option	value="0">COM_PHOCACART_INACTIVE</option>
+</field>	   
+
+
+    </fieldset>
+
+	<fields name="params">
+	<fieldset name="params" label="COM_PHOCACART_CONDITION">
+
+	<field name="amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_DESC"/>
+
+	<field name="operator" type="list" label="COM_PHOCACART_FIELD_OPERATOR_PRICE_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_PRICE_DESC" default="-">
+            <option value="+">+</option>
+            <option value="-">-</option>
+        </field>
+
+
+		<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="1">
+	<option value="1">COM_PHOCACART_PERCENTAGE</option>
+	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
+</field>
+
+<field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" class="inputbox" multiple="true" />
+
+
+
+<field name="calculation_rounding" type="list" default="2" label="COM_PHOCACART_FIELD_CALCULATION_ROUNDING_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_ROUNDING_DESC">
+                <option value="-1">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_YES_0_DIGITS</option>
+                <option value="1">COM_PHOCACART_YES_1_DIGITS</option>
+                <option value="2">COM_PHOCACART_YES_2_DIGITS</option>
+            </field>
+			
+<field name="original_price_change_run" type="list" default="0" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_CHANGE_RUN_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_CHANGE_RUN_OPTIONS_DESC">
+                <option value="0">COM_PHOCACART_NO_CHANGE</option>
+                <option value="1">COM_PHOCACART_CURRENT_PRICE_BECOMES_NEW_ORIGINAL_PRICE</option>
+                <option value="2">COM_PHOCACART_ORIGINAL_PRICE_WILL_BE_EMPTIED</option>
+            </field>
+			
+			<field name="save_price_history_run" type="list" label="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_RUN_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_RUN_OPTIONS_DESC" class="inputbox" size="1" default="1">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option	value="0">COM_PHOCACART_NO</option>
+</field>
+			
+			<field name="original_price_change_revert" type="list" default="1" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_CHANGE_REVERT_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_CHANGE_REVERT_OPTIONS_DESC">
+                <option value="0">COM_PHOCACART_NO_CHANGE</option>
+                <option value="1">COM_PHOCACART_ORIGINAL_PRICE_WILL_BE_SET_BACK</option>
+                <option value="2">COM_PHOCACART_ORIGINAL_PRICE_WILL_BE_EMPTIED</option>
+            </field>
+			
+			<field name="save_price_history_revert" type="list" label="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_REVERT_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_REVERT_OPTIONS_DESC" class="inputbox" size="1" default="1">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option	value="0">COM_PHOCACART_NO</option>
+</field>
+			
+
+
+			
+
+</fieldset>
+</fields>
+
+
+
+
+</form>
