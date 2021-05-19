@@ -1,7 +1,5 @@
 -- 3.5.7
 ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_send_format` int(2) NOT NULL DEFAULT '0';
-
-
 ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `bulk_id` int(11) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `price_original` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `current_price` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';

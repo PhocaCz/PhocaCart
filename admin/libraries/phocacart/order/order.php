@@ -164,6 +164,8 @@ class PhocacartOrder
                     $pLang->setLanguageBack($defaultLang);
                 }
                 $msg = JText::_('COM_PHOCACART_WRONG_CAPTCHA') . $msgSuffix;
+
+
                 $app->enqueueMessage($msg, 'error');
                 return false;
                 // What happens when the CAPTCHA was entered incorrectly

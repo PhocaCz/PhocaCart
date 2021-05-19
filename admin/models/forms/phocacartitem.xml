@@ -63,7 +63,7 @@
         <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC"/>
         <field name="stock_calculation" type="list" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_DESC" class="inputbox" size="1" default="0">
             <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
-            <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS</option>
+            <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
 			<option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
         </field>
@@ -74,7 +74,7 @@
 
         <field name="min_quantity_calculation" default="0" type="list" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_DESC">
             <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
-            <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS</option>
+            <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
         </field>
 

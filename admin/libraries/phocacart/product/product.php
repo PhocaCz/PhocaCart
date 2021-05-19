@@ -542,7 +542,7 @@ class PhocacartProduct
     * checkPrice - check if the product has price or not ( > 0 )
     */
 
-    public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0, $type = array(0, 1), $queryColumns = '', $return = '')
+    public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0, $type = array(0, 1), $queryColumns = '', $return = '', $filterLang = false )
     {
 
 
@@ -595,6 +595,14 @@ class PhocacartProduct
             $wheres[] = 'ah.user_id = ' . (int)$user->id;
             $wheres[] = 'ah.user_id > 0';
         }
+
+        // Filter langauge
+        if ($filterLang) {
+            $lang 		= Factory::getLanguage()->getTag();
+            $wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
+            $wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
+        }
+
 
 
         // Views Plugin can load additional columns

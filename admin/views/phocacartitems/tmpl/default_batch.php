@@ -10,8 +10,8 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Layout\LayoutHelper;
 
-$published = $this->state->get('filter.published');
-$published = (int) $this->state->get('filter.published');
+//$published = $this->state->get('filter.published');
+$published = (int)$this->state->get('filter.published');
 ?>
 <div class="modal hide fade" id="collapseModal">
 	<div class="modal-header">

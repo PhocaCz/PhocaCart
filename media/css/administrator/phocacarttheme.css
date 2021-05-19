@@ -430,7 +430,7 @@ a.ph-icon-inside:visited {
 .ph-cp-item-icon {
 	background: #fff;
 	border-radius: 5px;
-	
+
 	width: 7rem;
 	height: 7rem;
 	text-align: center;
@@ -438,7 +438,7 @@ a.ph-icon-inside:visited {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	
+
 	border: 0;
 	background-image: linear-gradient(-45deg,#ffffff,#ffffff);
     box-shadow: 1px 2px 1px 0 rgba(0,0,0,.15);
@@ -489,7 +489,7 @@ a.ph-icon-inside:visited {
 }
 
 .ph-cp-item-title {
-	
+
 	display:block;
 	font-size: 0.95em;
 	margin: 0 auto;
@@ -522,7 +522,7 @@ a.ph-icon-inside:visited {
 	font-family: 'JoomlaFont' !important;
 }
 
-.ph-cp-item [class^="icon-"], 
+.ph-cp-item [class^="icon-"],
 .ph-cp-item [class*=" icon-"] {
     display: inline;
     width: auto;
@@ -556,7 +556,7 @@ a.ph-icon-inside:visited {
 	text-align: center;
 }
 
-.ph-cp-item [class^="icon-"].phi-fs-s, 
+.ph-cp-item [class^="icon-"].phi-fs-s,
 .ph-cp-item [class*=" icon-"].phi-fs-s {
 	font-size: 1rem;
 	width: 1rem;
@@ -565,7 +565,7 @@ a.ph-icon-inside:visited {
 	margin: auto;
 }
 
-.ph-cp-item [class^="icon-"].phi-fs-m, 
+.ph-cp-item [class^="icon-"].phi-fs-m,
 .ph-cp-item [class*=" icon-"].phi-fs-m {
 	font-size: 1.4rem;
 	width: 1.4rem;
@@ -573,7 +573,7 @@ a.ph-icon-inside:visited {
 	display: inline-block;
 	margin: auto;
 }
-.ph-cp-item [class^="icon-"].phi-fs-l, 
+.ph-cp-item [class^="icon-"].phi-fs-l,
 .ph-cp-item [class*=" icon-"].phi-fs-l {
 	font-size: 3.6rem;
 	width: 3.6rem;
@@ -863,7 +863,7 @@ a.ph-icon-inside:visited {
 
 .nav.nav-list li:nth-child(43):before {
 	color: #f310de;
-    content: "\13b06";/*disable-motion*/
+    content: "\13c20";/*click*/
 }
 
 
@@ -1418,7 +1418,7 @@ table#extensionList tr td {
 .ph-cp-item-icon {
 	background: #fff;
 	border-radius: 5px;
-	
+
 	width: 7rem;
 	height: 7rem;
 	text-align: center;
@@ -1426,7 +1426,7 @@ table#extensionList tr td {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	
+
 	border: 0;
 	background-image: linear-gradient(-45deg,#ffffff,#ffffff);
     box-shadow: 1px 2px 1px 0 rgba(0,0,0,.15);
@@ -1477,7 +1477,7 @@ table#extensionList tr td {
 }
 
 .ph-cp-item-title {
-	
+
 	display:block;
 	font-size: 0.95em;
 	margin: 0 auto;

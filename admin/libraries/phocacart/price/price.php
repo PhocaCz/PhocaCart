@@ -450,18 +450,27 @@ class PhocacartPrice
 
         $priceO             = array();
         $priceO['costinfo'] = '';
+        $priceO['costinfoprice'] = '';
+        $priceO['costinfopriceadditional'] = '';
 
         if ($calculationType == 1 && isset($total['brutto'])) {
             $priceO['costinfo'] = $this->roundPrice($price) . ' %';
             $price              = $total['brutto'] * $price / 100;
+
+            $priceO['costinfoprice'] = $price;
+        } else {
+            $priceO['costinfoprice'] = $price;
         }
 
         if ($priceAdditional > 0) {
             $price              = $price + $priceAdditional;
             $priceO['costinfo'] .= ' + ' . $this->getPriceFormat($priceAdditional);
+
+            $priceO['costinfopriceadditional'] = $priceAdditional;
         }
 
         $priceO['costinfo'] = $priceO['costinfo'] != '' ? '(' . $priceO['costinfo'] . ')' : '';
+        //$priceO['costinfo'] = $priceO['costinfo'] != '' ? '' . $priceO['costinfo'] . '' : '';
         if ($round == 1) {
             $price = $this->roundPrice($price, 'shipping');
         }
@@ -690,19 +699,28 @@ class PhocacartPrice
 
         $priceO             = array();
         $priceO['costinfo'] = '';
+        $priceO['costinfoprice'] = '';
+        $priceO['costinfopriceadditional'] = '';
 
         if ($calculationType == 1 && isset($total['brutto'])) {
 
             $priceO['costinfo'] = $this->roundPrice($price) . ' %';
             $price              = $total['brutto'] * $price / 100;
+
+            $priceO['costinfoprice'] = $price;
+        } else {
+            $priceO['costinfoprice'] = $price;
         }
 
         if ($priceAdditional > 0) {
             $price              = $price + $priceAdditional;
             $priceO['costinfo'] .= ' + ' . $this->getPriceFormat($priceAdditional);
+
+            $priceO['costinfopriceadditional'] = $priceAdditional;
         }
 
         $priceO['costinfo'] = $priceO['costinfo'] != '' ? '(' . $priceO['costinfo'] . ')' : '';
+        //$priceO['costinfo'] = $priceO['costinfo'] != '' ? '' . $priceO['costinfo'] . '' : '';
         if ($round == 1) {
             $price = $this->roundPrice($price, 'payment');
         }

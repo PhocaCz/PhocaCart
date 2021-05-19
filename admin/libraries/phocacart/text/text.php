@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Language\Text;
 use Joomla\String\StringHelper;
 use Joomla\CMS\Language\Language;
 
@@ -201,12 +202,15 @@ class PhocacartText {
 		$price->setCurrency($common->currency_code, $orderId);
 		$totalBrutto	= $order->getItemTotal($orderId, 0, 'brutto');
 
+		$download_guest_access = $pC->get('download_guest_access', 0);
+
 
 		$r = array();
 		$r['ordertoken'] = '';
-		// Standard User get standard download page and order page
+
 		if ($common->user_id > 0) {
-			$r['orderlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute());
+			// Standard User get standard download page and order page
+		    $r['orderlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute());
 			$r['downloadlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
 
 			// Possible variables in email
@@ -216,6 +220,8 @@ class PhocacartText {
 			}
 
 		} else {
+
+		    // Guests
 			if (isset($common->order_token) && $common->order_token != '') {
 				$r['orderlinktoken'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
 				$r['ordertoken'] = $common->order_token;
@@ -226,24 +232,40 @@ class PhocacartText {
 
 
 			$downloadO 	= '';
-			if(!empty($products) && isset($common->order_token) && $common->order_token != '') {
+			if(!empty($products) && isset($common->order_token) && $common->order_token != '' && $download_guest_access > 0) {
 				$downloadO	= '<p>&nbsp;</p><h4>'.JText::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
 				foreach ($products as $k => $v) {
 
-				    // Main Product Download File
-					if (isset($v->download_published) && $v->download_published == 1 && isset($v->download_file) && $v->download_file != '' && isset($v->download_folder) && $v->download_folder != '') {
-						$downloadO .= '<div><strong>'.$v->title.'</strong></div>';
-						$downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v->download_token);
-						$downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
-					}
+				    if (!empty($v->downloads)) {
+                        $downloadO .= '<div><strong>'.$v->title.'</strong></div>';
+				        foreach ($v->downloads as $k2 => $v2) {
+
+
+                            // Main Product Download File
+                            if (isset($v2->published) && $v2->published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '' && isset($v2->download_token) && $v2->download_token != '') {
+
+                                $title = str_replace($v2->download_folder, '', $v2->download_file);
+                                $title = str_replace('/', '', $title);
+                                $downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v2->download_token);
+                                $downloadO .= '<div>'.Text::_('COM_PHOCACART_DOWNLOAD').': <a href="'.$downloadLink.'">'.$title.'</a></div>';
+                                $downloadO .= '<div><small>'.Text::_('COM_PHOCACART_DOWNLOAD_LINK').': <a href="'.$downloadLink.'">'.$downloadLink.'</a></small><hr></div>';
+                            }
+
+				        }
+                    }
 
 					// Product Attribute Option Download File
                     if (!empty($v->attributes)) {
                         foreach ($v->attributes as $k2 => $v2) {
                             if (isset($v2->download_published) && $v2->download_published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '') {
+
+                                $title = str_replace($v2->download_folder, '', $v2->download_file);
+                                $title = str_replace('/', '', $title);
+
                                 $downloadO .= '<div><strong>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</strong></div>';
                                 $downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v2->download_token);
-                                $downloadO .= '<div><a href="'.$downloadLink.'">'.$downloadLink.'</a></div>';
+                                $downloadO .= '<div>'.Text::_('COM_PHOCACART_DOWNLOAD').': <a href="'.$downloadLink.'">'.$title.'</a></div>';
+                                $downloadO .= '<div><small>'.Text::_('COM_PHOCACART_DOWNLOAD_LINK').': <a href="'.$downloadLink.'">'.$downloadLink.'</a></small><hr></div>';
                             }
                         }
                     }
@@ -253,6 +275,7 @@ class PhocacartText {
 
 
 			$r['downloadlink'] = $downloadO;
+
 		}
 
 

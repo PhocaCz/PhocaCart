@@ -89,12 +89,14 @@ if ($this->itemcommon->shippingtitle != '') {
 	echo $r->itemText($this->itemcommon->shippingtitle, JText::_('COM_PHOCACART_SHIPPING_METHOD'));
 }
 
-// Event
+
+
 if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id > 0 && isset($this->itemcommon->params_shipping)) {
 	//$shipping       = new PhocacartShipping();
 	//$shippingMethod = $shipping->getShippingMethod((int)$this->itemcommon->shipping_id);
 
 	$paramsShipping = json_decode($this->itemcommon->params_shipping, true);
+
 	if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
 
 		JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($paramsShipping['method'])));
@@ -103,7 +105,7 @@ if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id
 		$eventData['item']['id'] 			= (int)$this->itemcommon->id;
 		$eventData['item']['shipping_id'] 	= (int)$this->itemcommon->shipping_id;
 
-		$results = Factory::getApplication()->triggerEvent('PCSgetShippingBrancheInfoBE', array('com_phocacart.phocacartorder', $eventData));
+		$results = Factory::getApplication()->triggerEvent('PCSgetShippingBrancheInfoAdmin', array('com_phocacart.phocacartorder', $eventData));
 
 		if (!empty($results)) {
 			echo trim(implode("\n", $results));

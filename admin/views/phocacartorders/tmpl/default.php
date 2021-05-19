@@ -201,10 +201,11 @@ if (is_array($this->items)) {
 
         if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 
+            $formatPDF = '&format=pdf';
             $view .= '<div class="ph-action-row">';
-            $view      .= '<a href="' . $linkOrderView  . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span><br /><span class="ph-icon-success-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
-            $view      .= ' <a href="' . $linkInvoiceView  . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
-            $view      .= ' <a href="' . $linkDelNoteView  . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= '<a href="' . $linkOrderView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span><br /><span class="ph-icon-success-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= ' <a href="' . $linkInvoiceView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= ' <a href="' . $linkDelNoteView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
 
             $view .= '</div>';
         }
@@ -216,7 +217,7 @@ if (is_array($this->items)) {
         $amount = (isset($item->total_amount_currency) && $item->total_amount_currency > 0) ? $price->getPriceFormat($item->total_amount_currency, 0, 1) : $price->getPriceFormat($item->total_amount);
         echo $r->td($amount, "small ph-right ph-p-r-med ph-no-wrap");
 
-        echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)));
+        echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)), "small");
 
         echo $r->td(JHtml::date($item->date, JText::_('DATE_FORMAT_LC5')), "small");
         echo $r->td(JHtml::date($item->modified, JText::_('DATE_FORMAT_LC5')), "small");

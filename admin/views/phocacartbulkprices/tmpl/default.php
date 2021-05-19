@@ -71,6 +71,7 @@ echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-title2">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-desc">'.Text::_('COM_PHOCACART_DESCRIPTION').'</th>'."\n";
+echo '<th class="ph-desc">'.Text::_('COM_PHOCACART_CALCULATION').'</th>'."\n";
 echo '<th class="ph-status">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_STATUS', 'a.status', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-action">'.Text::_('COM_PHOCACART_ACTION').'</th>'."\n";
 echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
@@ -121,6 +122,20 @@ echo $r->td($checkO, "small");
 
 
 echo $r->td($item->description, "small");
+
+$registry = new JRegistry;
+$registry->loadString($item->params);
+$item->params = $registry;
+$amount = $item->params->get('amount', '');
+$operator = $item->params->get('operator', '');
+$calculation_price = $item->params->get('calculation_type', '');
+
+if ($calculation_price == 1) {
+	$calculation_price = '%';
+} else {
+	$calculation_price = '';
+}
+echo $r->td($operator . $amount . $calculation_price, "small");
 
 $status = '';
 if ($item->status == 1) {

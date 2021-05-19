@@ -7,7 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$published = $this->state->get('filter.published');
+//$published = $this->state->get('filter.published');
+$published = (int)$this->state->get('filter.published');
 ?>
 <script type="text/javascript">
 
