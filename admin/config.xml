@@ -1130,6 +1130,11 @@
                 <option value="1">COM_PHOCACART_HIGHEST_DISCOUNT</option>
                 <option value="2">COM_PHOCACART_HIGHEST_QUANTITY</option>
             </field>
+			
+			<field name="discount_subtotal_amount" default="1" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISCOUNT_SUBTOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_SUBTOTAL_AMOUNT_DESC">
+                <option value="1">COM_PHOCACART_SUBTOTAL_REDUCED_BY_OTHER_TYPES_OF_DISCOUNTS</option>
+                <option value="2">COM_PHOCACART_FIXED_SUBTOTAL</option>
+            </field>
 
             <field name="phocahead21" type="phocahead" default="COM_PHOCACART_CONFIG_PRODUCT_DISCOUNT_OPTIONS_LABEL" label="" description=""/>
 

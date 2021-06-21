@@ -2,12 +2,12 @@
 <extension type="component" method="upgrade" version="3.9">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>19/05/2021</creationDate>
+	<creationDate>21/06/2021</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.5.7Beta9</version>
+	<version>3.5.7Beta14</version>
 	<description>COM_PHOCACART_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<projectName>PhocaCart</projectName>

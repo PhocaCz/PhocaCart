@@ -134,8 +134,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 		// :L: PRICE
 		$dP = array();
-		$dP['type'] = $v->type;// PRODUCTTYPE
 		if ($this->t['can_display_price']) {
+
+			$dP['type'] = $v->type;// PRODUCTTYPE
 			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);

@@ -1242,113 +1242,242 @@ class PhocacartAttribute
     }
 
 
-    /*
-     * based on: stackoverflow.com/questions/1256117/algorithm-that-will-take-numbers-or-words-and-find-all-possible-combinations
-     * by Adi Bradfield
-     */
+
 
     public static function makeCombination($array, $requiredArray) {
 
-        $bits     = count($array); //bits of binary number equal to number of words in query;
-        $dec      = 1;             //Convert decimal number to binary with set number of bits, and split into array
-        $arrayNew = array();
 
-        while ($dec < pow(2, $bits)) {
+        $method         = 0;
+        $workingArray   = array();
+        $arrayNew       = array();
 
-            $binary = str_split(str_pad(decbin($dec), $bits, '0', STR_PAD_LEFT));
+        if (!empty($array)) {
+            foreach ($array as $k => $v) {
+                if (isset($v['multiple']) && $v['multiple']) {
+                    // One of the attribute is multiple - we need to use method 1 which can be hard on the memory
+                    $method = 1;
+                    break;
+                }
 
-            $current          = array();
-            $current['title'] = '';
-            $current['valid'] = 1;
-            $cannotCobminate  = array();
+                if (isset($v['required']) && $v['required'] == 0) {
+                    // One of the attribute is not required - we need to use method 1 which can be hard on the memory
+                    $method = 1;
+                    break;
+                }
 
-            $i = 0;
-
-            while ($i < ($bits)) {
-
-
-                if ($binary[$i] == 1) {
-
-                    $current['product_id']    = $array[$i]['pid'];
-                    $current['product_title'] = $array[$i]['ptitle'];
-
-                    // Attribute, Option ID
-                    $aid = $array[$i]['aid'];
-                    $oid = $array[$i]['oid'];
-
-                    // Title
-                    if (isset($current['title']) && $current['title'] != '') {
-                        $current['title'] .= ' <span class="ph-attribute-option-item">' . $array[$i]['atitle'] . ': ' . $array[$i]['otitle'] . '</span>';
-                    } else {
-                        $current['title'] = '<span class="ph-attribute-option-item">' . $array[$i]['atitle'] . ': ' . $array[$i]['otitle'] . '</span>';
-                    }
+                // Working array can be used only by 2. Method (no multiple, all required)
+                $aid = (int)$v['aid'];
+                $oid = (int)$v['oid'];
+                $workingArray[$aid][$oid] = $v;
+            }
+        }
 
 
-                    $current['attributes'][$aid][$oid] = (int)$oid;
 
 
-                    // Options inside one select cannot be combinated togeter
-                    if (!$array[$i]['multiple']) {
-                        if (isset($cannotCobminate[$aid]) && $cannotCobminate[$aid] > 0) {
-                            // there is one option selected from select box,
-                            // this attribute cannot be combinated in this form
-                            $current['valid'] = 0;
+        if ($method == 1) {
+
+            /* ==== 1. Method ====
+               - This method takes so much memory and time (because it counts all possible combinations of each attribute)
+               - a) can be used by select boxes
+               - b) can be used by checkboxes
+               - c) can be used by not required attibutes
+            */
+            /*
+             * based on: stackoverflow.com/questions/1256117/algorithm-that-will-take-numbers-or-words-and-find-all-possible-combinations
+             * by Adi Bradfield
+             */
+
+
+            $bits     = count($array); //bits of binary number equal to number of words in query;
+            $dec      = 1;             //Convert decimal number to binary with set number of bits, and split into array
+
+
+            while ($dec < pow(2, $bits)) {
+
+                $binary = str_split(str_pad(decbin($dec), $bits, '0', STR_PAD_LEFT));
+
+                $current          = array();
+                $current['title'] = '';
+                $current['valid'] = 1;
+                $cannotCobminate  = array();
+
+                $i = 0;
+
+                while ($i < ($bits)) {
+
+
+                    if ($binary[$i] == 1) {
+
+
+
+                        $current['product_id']    = $array[$i]['pid'];
+                        $current['product_title'] = $array[$i]['ptitle'];
+
+                        // Attribute, Option ID
+                        $aid = $array[$i]['aid'];
+                        $oid = $array[$i]['oid'];
+
+                        // Title
+                        if (isset($current['title']) && $current['title'] != '') {
+                            $current['title'] .= ' <span class="ph-attribute-option-item">' . $array[$i]['atitle'] . ': ' . $array[$i]['otitle'] . '</span>';
                         } else {
-                            $cannotCobminate[$aid] = 1;
+                            $current['title'] = '<span class="ph-attribute-option-item">' . $array[$i]['atitle'] . ': ' . $array[$i]['otitle'] . '</span>';
+                        }
+
+
+                        $current['attributes'][$aid][$oid] = (int)$oid;
+
+
+                        // Options inside one select cannot be combinated togeter
+                        if (!$array[$i]['multiple']) {
+                            if (isset($cannotCobminate[$aid]) && $cannotCobminate[$aid] > 0) {
+                                // there is one option selected from select box,
+                                // this attribute cannot be combinated in this form
+                                $current['valid'] = 0;
+                            } else {
+                                $cannotCobminate[$aid] = 1;
+                            }
+                        }
+
+                    }
+                    $i++;
+
+                }
+
+
+                // Define
+
+                $key                      = PhocacartProduct::getProductKey($current['product_id'], $current['attributes']);
+                $current['product_id']    = $current['product_id'];
+                $current['product_key']   = $key;
+                $current['product_title'] = $current['product_title'];
+                $current['stock']         = 0;
+                $current['price']         = '';
+                $current['ean']           = '';
+                $current['sku']           = '';
+                $current['image']         = '';
+
+
+
+                // DEBUG
+               /* echo "Iteration: $dec <table cellpadding=\"5\" border=\"1\"><tr>";
+                foreach($binary as $b){
+                    echo "<td>$b</td>";
+                }
+                echo "</tr><tr>";
+                foreach($array as $l){
+                    echo "<td>".$l['otitle']."</td>";
+                }
+                echo "</tr></table>Output: ";
+                foreach($current as $c){
+                   // echo $c." ";
+                }
+                echo "<br><br>";*/
+
+
+                if (!empty($requiredArray)) {
+                    foreach ($requiredArray as $k => $v) {
+                        if (!array_key_exists($v, $current['attributes'])) {
+                            $current['valid'] = 0;
                         }
                     }
-
                 }
-                $i++;
 
+
+                // Add only such attribute combinations which are possible (two options from select box is not possible)
+                if ($current['valid'] == 1) {
+                    $arrayNew[$key] = $current;
+                }
+                $dec++;
             }
+        } else {
 
-
-            // Define
-
-            $key                      = PhocacartProduct::getProductKey($current['product_id'], $current['attributes']);
-            $current['product_id']    = $current['product_id'];
-            $current['product_key']   = $key;
-            $current['product_title'] = $current['product_title'];
-            $current['stock']         = 0;
-            $current['price']         = '';
-            $current['ean']         = '';
-            $current['sku']         = '';
-            $current['image']         = '';
-
-
-            /*
-            // DEBUG
-            echo "Iteration: $dec <table cellpadding=\"5\" border=\"1\"><tr>";
-            foreach($binary as $b){
-                echo "<td>$b</td>";
-            }
-            echo "</tr><tr>";
-            foreach($array as $l){
-                echo "<td>".$l['otitle']."</td>";
-            }
-            echo "</tr></table>Output: ";
-            foreach($current as $c){
-               // echo $c." ";
-            }
-            echo "<br><br>";
+            /* ==== 2. Method ====
+               - This methods is faster than method 1 but can be used for select boxes only.
+               - a) can be used by select boxes
+               - b) CANNOT be used by checkboxes
+               - c) CANNOT be used by not required attibutes
             */
 
-            if (!empty($requiredArray)) {
-                foreach ($requiredArray as $k => $v) {
-                    if (!array_key_exists($v, $current['attributes'])) {
-                        $current['valid'] = 0;
+
+            // https://gist.github.com/cecilemuller/4688876
+            $result = array(array());
+
+            if (!empty($workingArray)) {
+
+                foreach ($workingArray as $property => $property_values) {
+                    $tmp = array();
+                    foreach ($result as $result_item) {
+                        foreach ($property_values as $property_value) {
+                            $tmp[] = array_merge($result_item, array($property => $property_value));
+                        }
+                    }
+                    $result = $tmp;
+                }
+
+                if (!empty($result)) {
+                    foreach ($result as $k => $v) {
+
+                        if (!empty($v)) {
+
+                            $current          = array();
+                            $current['title'] = '';
+                            $current['valid'] = 1;
+
+                            foreach ($v as $k2 => $v2) {
+
+                                $current['product_id']    = $v2['pid'];
+                                $current['product_title'] = $v2['ptitle'];
+
+                                // Attribute, Option ID
+                                $aid = (int)$v2['aid'];
+                                $oid = (int)$v2['oid'];
+
+                                // Title
+                                if (isset($current['title']) && $current['title'] != '') {
+                                    $current['title'] .= ' <span class="ph-attribute-option-item">' . $v2['atitle'] . ': ' . $v2['otitle'] . '</span>';
+                                } else {
+                                    $current['title'] = '<span class="ph-attribute-option-item">' . $v2['atitle'] . ': ' . $v2['otitle'] . '</span>';
+                                }
+
+                                $current['attributes'][$aid][$oid] = $oid;
+
+                            }
+
+                            // Define
+                            $key                      = PhocacartProduct::getProductKey($current['product_id'], $current['attributes']);
+                            $current['product_id']    = $current['product_id'];
+                            $current['product_key']   = $key;
+                            $current['product_title'] = $current['product_title'];
+                            $current['stock']         = 0;
+                            $current['price']         = '';
+                            $current['ean']           = '';
+                            $current['sku']           = '';
+                            $current['image']         = '';
+
+
+
+                            if (!empty($requiredArray)) {
+                                foreach ($requiredArray as $k3 => $v3) {
+                                    if (!array_key_exists($v3, $current['attributes'])) {
+                                        $current['valid'] = 0;
+                                    }
+                                }
+                            }
+
+
+                            // Add only such attribute combinations which are possible (two options from select box is not possible)
+                            if ($current['valid'] == 1) {
+                                $arrayNew[$key] = $current;
+                            }
+
+                        }
                     }
                 }
             }
-
-
-            // Add only such attribute combinations which are possible (two options from select box is not possible)
-            if ($current['valid'] == 1) {
-                $arrayNew[$key] = $current;
-            }
-            $dec++;
         }
+        ;
         return $arrayNew;
     }
 

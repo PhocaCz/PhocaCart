@@ -710,7 +710,7 @@ class PhocacartCartCalculation
         foreach ($fullItems as $k => $v) {
 
 
-            $discount = PhocacartDiscountCart::getCartDiscount($v['id'], $v['catid'], $total['quantity'], $total['netto']);
+            $discount = PhocacartDiscountCart::getCartDiscount($v['id'], $v['catid'], $total['quantity'], $total['netto'], $total['subtotalnetto']);
 
             // First check if there is even some discount
             if ($discount) {
@@ -864,7 +864,7 @@ class PhocacartCartCalculation
 
         foreach ($fullItems as $k => $v) {
 
-            $validCoupon = $couponO->checkCoupon(0, $v['id'], $v['catid'], $total['quantity'], $total['netto']);
+            $validCoupon = $couponO->checkCoupon(0, $v['id'], $v['catid'], $total['quantity'], $total['netto'], $total['subtotalnetto']);
 
 
             if ($validCoupon) {

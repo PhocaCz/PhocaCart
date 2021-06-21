@@ -157,6 +157,8 @@ if (is_array($this->items)) {
         $canEditCat  = $user->authorise('core.edit', $this->t['o']);
         $linkEditCat = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit';
 
+
+
         echo $r->startTr($i, $this->t['catid']);
 
         echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, false);

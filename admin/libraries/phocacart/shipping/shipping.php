@@ -22,6 +22,7 @@ class PhocacartShipping
 	}
 
 	public function setType($type = array(0,1)) {
+
 		$this->type = $type;
 	}
 
@@ -50,8 +51,11 @@ class PhocacartShipping
 		$wheres[] = " s.access IN (".$userLevels.")";
 		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
 
-		$wheres[] = " s.type IN (". implode(',', $this->type). ')';
 
+		if (!empty($this->type) && is_array($this->type)) {
+			// if type is empty, then all types are asked
+			$wheres[] = " s.type IN (" . implode(',', $this->type) . ')';
+		}
 		if ((int)$id > 0) {
 			$wheres[] =  's.id = '.(int)$id;
 			$limit = ' LIMIT 1';
@@ -100,7 +104,10 @@ class PhocacartShipping
 		PhocacartUtils::setConcatCharCount();
 		$db->setQuery($query);
 
+
+
 		$shippings = $db->loadObjectList();
+
 
 		/*if (empty($shippings)) {
 			return false;
@@ -441,8 +448,8 @@ class PhocacartShipping
 
 			case 1:
 			default:
-				if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
-					$region = (int)$dataAddress['bcountry'];
+				if(isset($dataAddress['bregion']) && (int)$dataAddress['bregion']) {
+					$region = (int)$dataAddress['bregion'];
 				}
 			break;
 

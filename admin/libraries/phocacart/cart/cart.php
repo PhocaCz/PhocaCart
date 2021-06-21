@@ -269,6 +269,7 @@ class PhocacartCart
      * 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
      */
     public function setType($type = array(0, 1)) {
+
         $this->type = $type;
     }
 
@@ -607,10 +608,19 @@ class PhocacartCart
                     $checkP = PhocacartProduct::checkIfAccessPossible((int)$itemId, (int)$v['catid'], $this->type);
 
                     if (!$checkP) {
-                        $app->enqueueMessage(
+
+                        if ($app->getName() == 'administrator') {
+                            $app->enqueueMessage(
+                            JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CUSTOMER_CART_NOT_EXISTS') . ' '
+                            . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CUSTOMER_CART') . ' '
+                            . JText::_('COM_PHOCACART_CUSTOMER_WILL_BE_INFORMED_OF_SITUATION_DURING_NEXT_VISIT_TO_STORE'), 'warning');
+                        } else {
+                            $app->enqueueMessage(
                             JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
                             . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
                             . JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+                        }
+
                         unset($this->items[$k]);
                         $this->updateItemsFromCheckout($k, 0);
                         // In case this all happens when order is made - stop the order and inform user
@@ -657,6 +667,10 @@ class PhocacartCart
                 $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
 
                 //$calc->round($this->total[1]);
+
+                // Fixed subtotal amount
+                $this->total[1]['subtotalnetto'] = $this->total[1]['netto'];
+                $this->total[1]['subtotalbrutto'] = $this->total[1]['brutto'];
 
                 $this->fullitems[0] = $this->fullitems[4] = $this->fullitems[3] = $this->fullitems[2]
                     = $this->fullitems[5] = $this->fullitems[1];

@@ -60,8 +60,9 @@ class PhocacartPayment
 		$wheres[] = " p.access IN (".$userLevels.")";
 		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
 
-		$wheres[] = " p.type IN (". implode(',', $this->type). ')';
-
+		if (!empty($this->type) && is_array($this->type)) {
+			$wheres[] = " p.type IN (" . implode(',', $this->type) . ')';
+		}
 
 		if ((int)$id > 0) {
 			$wheres[] =  'p.id = '.(int)$id;

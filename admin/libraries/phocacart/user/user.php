@@ -537,6 +537,7 @@ class PhocacartUser
 					.' ORDER BY u.type ASC';
 			$db->setQuery($query);
 			$data = $db->loadObjectList();
+
 			return $data;
 		}
 		return false;

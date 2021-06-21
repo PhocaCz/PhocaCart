@@ -106,16 +106,35 @@ class PhocacartFormUser
 
 						if (isset($v->read_only)) {
 							//if ($app->isClient('administrator')) {
-								// in admin allow to change the readonly input forms
+							// in admin allow to change the readonly input forms
 							//} else {
-								if($v->read_only == 1) {
-									$fB[] = $fS[] =  ' readonly="true"';
+							if ($v->read_only == 1) {
+								// Read only everwhere
+								$fB[]  = $fS[] = ' readonly="true"';
+								$class .= ' readonly';
+							} else if ($v->read_only == 3) {
+								// Read only everwhere except administration
+								if ($app->isClient('administrator')) {
+								} else {
+									$fB[]  = $fS[] = ' readonly="true"';
 									$class .= ' readonly';
-								} else if ($v->read_only == 2 && $guest == 0) {
-									$fB[] = $fS[] =  ' readonly="true"';
-									$class .= ' readonly';
-
 								}
+
+							} else if ($v->read_only == 2 && $guest == 0) {
+								// Read only for NO guests only
+								$fB[] = $fS[] =  ' readonly="true"';
+								$class .= ' readonly';
+
+							} else if ($v->read_only == 4 && $guest == 0) {
+								// Read only for NO guests only everwhere except administration
+								if ($app->isClient('administrator')) {
+
+								} else {
+									$fB[]  = $fS[] = ' readonly="true"';
+									$class .= ' readonly';
+								}
+
+							}
 							//}
 						}
 
