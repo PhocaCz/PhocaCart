@@ -27,6 +27,22 @@ class PhocaCartControllerResponse extends JControllerForm
 		//$session->set('infoaction', 4, 'phocaCart');
 		// NO message here, we have set the message during order and it stays unchanged as it is in session
 		// the message will be deleted after it will be displayed in view
+
+		$type 		= $app->input->get('type', '', 'string');
+		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
+
+		$message	= array();
+		//$dispatcher = J EventDispatcher::getInstance();
+		$plugin 	= JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
+		if ($plugin) {
+			$eventData 					= array();
+            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
+			\JFactory::getApplication()->triggerEvent('PCPafterRecievePayment', array($mid, &$message, $eventData));
+		}
+
+		if (!empty($message)) {
+			$session->set('infomessage', $message, 'phocaCart');
+		}
 		$app->redirect($return);
 	}
 
@@ -60,7 +76,6 @@ class PhocaCartControllerResponse extends JControllerForm
 	// Robot gets info
 	public function paymentnotify() {
 
-
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
 		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
@@ -84,6 +99,7 @@ class PhocaCartControllerResponse extends JControllerForm
 
 
 	public function paymentwebhook() {
+
 		$app 	= JFactory::getApplication();
 		$type 	= $app->input->get('type', '', 'string');
 		$pid 	= $app->input->get('pid', 0, 'int'); // payment id

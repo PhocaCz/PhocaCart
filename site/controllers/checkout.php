@@ -885,6 +885,7 @@ class PhocaCartControllerCheckout extends JControllerForm
         $order     = new PhocacartOrder();
         $orderMade = $order->saveOrderMain($item);
 
+
         if (!$orderMade) {
             $msg = '';
             if (!PhocacartUtils::issetMessage()) {
@@ -895,9 +896,31 @@ class PhocaCartControllerCheckout extends JControllerForm
             return true;
         } else {
 
-            $cart = new PhocacartCart();
-            $cart->emptyCart();
-            PhocacartUserGuestuser::cancelGuestUser();
+            // Lets decide Payment plugin if the cart will be emptied or not
+            $cart           = new PhocacartCart();
+            $paymentMethod 	= $cart->getPaymentMethod();
+            $pluginData     = array();
+            $pluginData['emptycart'] = true;
+            if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0) {
+
+                $payment		= new PhocacartPayment();
+                $paymentO       = $payment->getPaymentMethod((int)$paymentMethod['id']);
+
+                if (isset($paymentO->method)) {
+                    JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
+                    $eventData 					= array();
+                    $proceed 					= '';
+                    $eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
+                    JFactory::getApplication()->triggerEvent('PCPbeforeEmptyCartAfterOrder', array(&$proceed, &$pluginData, $pC, $paymentO->params, $order, $eventData));
+                }
+            }
+
+            if ($pluginData['emptycart'] === true) {
+                $cart->emptyCart();
+                PhocacartUserGuestuser::cancelGuestUser();
+            }
+
+
 
             $action  = $order->getActionAfterOrder(); // Which action should be done
             $message = $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
