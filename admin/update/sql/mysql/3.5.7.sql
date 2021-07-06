@@ -5,6 +5,8 @@ ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `price_original` DEC
 ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `current_price` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `current_price_original` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `type` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `active_zip` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `zip` text;
 
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_bulk_prices` (

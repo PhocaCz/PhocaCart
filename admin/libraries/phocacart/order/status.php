@@ -930,5 +930,24 @@ class PhocacartOrderStatus
 
 		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  'jform[change_points_received]', 'class="inputbox"', 'value', 'text', $value, $data[$value] );
 	}
+
+	public static function getOrderStatuses() {
+
+		$db 		= JFactory::getDBO();
+		$query = 'SELECT a.title AS text, a.id AS value'
+				. ' FROM #__phocacart_order_statuses AS a'
+				. ' WHERE a.published = 1'
+				. ' ORDER BY a.ordering';
+		$db->setQuery( $query );
+		$data = $db->loadObjectList();
+
+		if (!empty($data)) {
+			foreach ($data as $k => $v) {
+				$v->text = JText::_($v->text);
+			}
+		}
+
+		return $data;
+	}
 }
 ?>

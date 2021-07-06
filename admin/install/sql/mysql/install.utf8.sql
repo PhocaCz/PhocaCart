@@ -525,6 +525,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods` (
   `active_country` tinyint(1) NOT NULL DEFAULT '0',
   `active_region` tinyint(1) NOT NULL DEFAULT '0',
   `active_zone` tinyint(1) NOT NULL DEFAULT '0',
+  `zip` text,
+  `active_zip` tinyint(1) NOT NULL DEFAULT '0',
   `method` varchar(100) NOT NULL DEFAULT '',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `privacy` tinyint(1) NOT NULL default '0',

@@ -54,6 +54,9 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		$shopType = $app->getUserStateFromRequest($this->context.'.filter.shop_type', 'filter_shop_type', '');
 		$this->setState('filter.shop_type', $shopType);
 
+		$orderStatus = $app->getUserStateFromRequest($this->context.'.filter.order_status', 'filter_order_status', '');
+		$this->setState('filter.order_status', $orderStatus);
+
 		//$order = $app->getUserStateFromRequest($this->context.'.filter.order', 'filter_order', '');
 		//$this->setState('filter.order', $order);
 
@@ -85,6 +88,7 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		$id	.= ':'.$this->getState('filter.date_to');
 		$id	.= ':'.$this->getState('filter.currency');
 		$id	.= ':'.$this->getState('filter.shop_type');
+		$id	.= ':'.$this->getState('filter.order_status');
 
 		return parent::getStoreId($id);
 	}
@@ -162,6 +166,11 @@ class PhocaCartCpModelPhocacartReports extends JModelList
 		$shopType = $this->getState('filter.shop_type', 0);
 		if ($shopType > 0) {
 			$query->where('a.type = '.(int)$shopType );
+		}
+
+		$orderStatus = $this->getState('filter.order_status', 0);
+		if ($orderStatus > 0) {
+			$query->where('a.status_id = '.(int)$orderStatus );
 		}
 
 

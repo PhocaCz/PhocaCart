@@ -30,6 +30,7 @@ $tabs = array (
 'zone' 			=> JText::_($this->t['l'].'_ZONE_RULE'),
 'country' 		=> JText::_($this->t['l'].'_COUNTRY_RULE'),
 'region' 		=> JText::_($this->t['l'].'_REGION_RULE'),
+'zip' 			=> JText::_($this->t['l'].'_ZIP_RULE'),
 'weight' 		=> JText::_($this->t['l'].'_WEIGHT_RULE'),
 'size' 			=> JText::_($this->t['l'].'_SIZE_RULE'),
 'method' 		=> JText::_($this->t['l'].'_SHIPPING_METHOD_OPTIONS'),
@@ -84,6 +85,10 @@ $formArray = array ('region', 'active_region');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 
+echo $r->startTab('zip', $tabs['zip']);
+$formArray = array ('zip', 'active_zip');
+echo $r->group($this->form, $formArray);
+echo $r->endTab();
 
 echo $r->startTab('weight', $tabs['weight']);
 $formArray = array ('lowest_weight', 'highest_weight', 'active_weight');

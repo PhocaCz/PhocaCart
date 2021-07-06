@@ -33,7 +33,7 @@ class PhocacartShipping
 	 * Always test for the id before using this function
 	 */
 
-	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $weight, $length, $width, $height, $id = 0, $selected = 0) {
+	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $zip, $weight, $length, $width, $height, $id = 0, $selected = 0) {
 
 		$app			= JFactory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
@@ -65,8 +65,8 @@ class PhocacartShipping
 
 		}
 
-		$columns		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method,'
-		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
+		$columns		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method, s.zip,'
+		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
 		.' s.highest_weight, s.default,'
@@ -75,8 +75,8 @@ class PhocacartShipping
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
-		$groupsFull		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method,'
-		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region,'
+		$groupsFull		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method, s.zip,'
+		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
 		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height,'
@@ -122,7 +122,6 @@ class PhocacartShipping
 		if (!empty($shippings)) {
 			foreach($shippings as $k => $v) {
 
-
 				$v->active = 0;
 				$v->selected = 0;
 				$a = 0;
@@ -130,6 +129,7 @@ class PhocacartShipping
 				$z = 0;
 				$c = 0;
 				$r = 0;
+				$zi = 0;
 				$w = 0;
 				$s = 0;
 				// Amount Rule
@@ -203,6 +203,20 @@ class PhocacartShipping
 					$r = 1;
 				}
 
+				// ZIP Rule
+				if($v->active_zip == 1) {
+					if (isset($v->zip) && $v->zip != '') {
+						$zips = array_map('trim', explode(',', $v->zip));
+
+						if (in_array((int)$zip, $zips)) {
+							$zi = 1;
+
+						}
+					}
+				} else {
+					$zi = 1;
+				}
+
 				// Weight Rule
 				if($v->active_weight == 1) {
 					if (($weight >= $v->lowest_weight || $weight == $v->lowest_weight)
@@ -248,12 +262,13 @@ class PhocacartShipping
 
 
 				// No rule was set for shipping, it will be displayed at all events
-				if($v->active_amount == 0 && $v->active_quantity == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_weight == 0) {
+				if($v->active_amount == 0 && $v->active_quantity == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_zip == 0 && $v->active_weight == 0) {
 					$v->active = 1;
 				}
 
 				// if some of the rules is not valid, all the payment is NOT valid
-				if ($a == 0 || $q == 0 || $z == 0 || $c == 0 || $r == 0 || $w == 0 || $s == 0) {
+
+				if ($a == 0 || $q == 0 || $z == 0 || $c == 0 || $r == 0 || $zi == 0 || $w == 0 || $s == 0) {
 					$v->active = 0;
 				} else {
 					$v->active = 1;
@@ -351,6 +366,7 @@ class PhocacartShipping
 
 		$country 	= $this->getUserCountryShipping($dataAddress);
 		$region 	= $this->getUserRegionShipping($dataAddress);
+		$zip 		= $this->getUserZipShipping($dataAddress);
 		/*$country = 0;
 		if(isset($dataAddress['bcountry']) && (int)$dataAddress['bcountry']) {
 			$country = (int)$dataAddress['bcountry'];
@@ -361,7 +377,7 @@ class PhocacartShipping
 			$region = (int)$dataAddress['bregion'];
 		}*/
 
-		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
+		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $zip, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
 
 
 		if (!empty($shippingMethods)) {
@@ -457,6 +473,51 @@ class PhocacartShipping
 
 		return $region;
 	}
+
+	public static function getUserZipShipping($dataAddress) {
+
+		$pC = PhocacartUtils::getComponentParameters();
+        $shipping_zip_rule = $pC->get('shipping_zip_rule', 1);
+
+        $zip = 0;
+
+        switch($shipping_zip_rule) {
+
+			case 2:
+				if(isset($dataAddress['szip']) && $dataAddress['szip']) {
+					$zip = $dataAddress['szip'];
+				}
+			break;
+
+			case 3:
+				if(isset($dataAddress['bzip']) && $dataAddress['bzip']) {
+					$zip = $dataAddress['bzip'];
+				} else if(isset($dataAddress['szip']) && $dataAddress['szip']) {
+					$zip = $dataAddress['szip'];
+				}
+			break;
+
+			case 4:
+				if(isset($dataAddress['szip']) && $dataAddress['szip']) {
+					$zip = $dataAddress['szip'];
+				} else if(isset($dataAddress['bzip']) && $dataAddress['bzip']) {
+					$zip = $dataAddress['bzip'];
+				}
+			break;
+
+			case 1:
+			default:
+				if(isset($dataAddress['bzip']) && $dataAddress['bzip']) {
+					$zip = $dataAddress['bzip'];
+				}
+			break;
+
+		}
+
+		return $zip;
+	}
+
+
 
 	public function getShippingMethod($shippingId) {
 

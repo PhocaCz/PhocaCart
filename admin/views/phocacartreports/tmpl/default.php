@@ -122,6 +122,16 @@ echo '<div class="ph-inline-param">'. "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
+$listOrderStatus	= $this->escape($this->state->get('filter.order_status'));
+$orderStatuses 		= PhocacartOrderStatus::getOrderStatuses();
+array_unshift($orderStatuses, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '' . JText::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . '', 'value', 'text'));
+echo '<div class="ph-inline-param">'. "\n"
+.'<label for="sortTable" class="element-invisible">'.JText::_('COM_PHOCACART_SELECT_ORDER_STATUS').'</label>'. "\n"
+.'<select name="filter_order_status" id="orderStatusTable" class="input-medium">'. "\n"
+. Joomla\CMS\HTML\HTMLHelper::_('select.options', $orderStatuses, 'value', 'text', $listOrderStatus). "\n"
+.'</select>'. "\n"
+.'</div>'. "\n";
+
 
 echo '</div>';
 

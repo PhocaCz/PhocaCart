@@ -131,6 +131,13 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 	<option value="0">COM_PHOCACART_NO</option>
 </field>
 
+<!-- ZIP -->
+<field name="zip" type="textarea" label="COM_PHOCACART_FIELD_SHIPPING_ZIP_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_ZIP_DESC" class="inputbox" size="1" />
+
+<field name="active_zip" type="radio" class="btn-group" default="0" label="COM_PHOCACART_FIELD_ACTIVE_ZIP_LABEL" description="COM_PHOCACART_FIELD_ACTIVE_ZIP_DESC">
+	<option value="1">COM_PHOCACART_YES</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
 
 
 <field name="metakey" type="textarea"
