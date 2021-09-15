@@ -8,6 +8,38 @@ ALTER TABLE `#__phocacart_product_price_history` ADD COLUMN `type` tinyint(1) NO
 ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `active_zip` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `zip` text;
 
+ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `description_info` text;
+ALTER TABLE `#__phocacart_payment_methods` ADD COLUMN `description_info` text;
+
+ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `required` tinyint(1) NOT NULL DEFAULT '0';
+
+
+ALTER TABLE `#__phocacart_products` ADD COLUMN `gift_types` text;
+
+
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_title` varchar(255) NOT NULL DEFAULT '';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_description` text;
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_image` varchar(255) NOT NULL DEFAULT '';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_recipient_name` varchar(100) NOT NULL default '';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_recipient_email` varchar(50) NOT NULL default '';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_sender_name` varchar(100) NOT NULL default '';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_sender_message` text;
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_type` tinyint(1) NOT NULL DEFAULT '-1';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_order_id` int(11) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_product_id` int(11) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_order_product_id` int(11) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `coupon_type` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_coupons` ADD COLUMN `gift_class_name` varchar(50) NOT NULL default '';
+
+
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `activate_gift` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_gift` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_subject_gift_sender` varchar(255) NOT NULL DEFAULT '';
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_text_gift_sender` text;
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_subject_gift_recipient` varchar(255) NOT NULL DEFAULT '';
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_text_gift_recipient` text;
+ALTER TABLE `#__phocacart_order_statuses` ADD COLUMN `email_gift_format` tinyint(1) NOT NULL DEFAULT '0';
+
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_bulk_prices` (
   `id` int(11) NOT NULL auto_increment,

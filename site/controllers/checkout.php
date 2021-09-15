@@ -922,14 +922,16 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 
-            $action  = $order->getActionAfterOrder(); // Which action should be done
-            $message = $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
+            $action     = $order->getActionAfterOrder(); // Which action should be done
+            $message    = $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
+            $dataOrder  = $order->getDataAfterOrder();// Order ID, Token, payment ID, shipping ID ... different data for info view
 
             $session = JFactory::getSession();
             if ($action == 4 || $action == 3) {
                 // Ordered OK, but now we proceed to payment
                 $session->set('infoaction', $action, 'phocaCart');
                 $session->set('infomessage', $message, 'phocaCart');
+                $session->set('infodata', $dataOrder, 'phocaCart');
                 $app->redirect(JRoute::_(PhocacartRoute::getPaymentRoute(), false));
                 return true;
                 // This message should stay
@@ -945,6 +947,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                 $session->set('infoaction', $action, 'phocaCart');
                 $session->set('infomessage', $message, 'phocaCart');
+                $session->set('infodata', $dataOrder, 'phocaCart');
                 $app->redirect(JRoute::_(PhocacartRoute::getInfoRoute(), false));
                 return true;
             }

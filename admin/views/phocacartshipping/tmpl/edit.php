@@ -53,6 +53,8 @@ echo $r->group($this->form, $formArray);
 
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
+$formArray = array('description_info');
+echo $r->group($this->form, $formArray, 1);
 echo $r->endTab();
 
 

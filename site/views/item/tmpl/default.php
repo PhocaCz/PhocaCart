@@ -54,7 +54,6 @@ $x = isset($this->item[0]) ? $this->item[0]: 0;
 
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
-
 	$idName			= 'VItemP'.(int)$x->id;
 	echo '<div class="'.$this->s['c']['row'].'">';
 
@@ -191,7 +190,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$price 				= new PhocacartPrice;// Can be used by options
 
 
-
+	$priceItems = array();
 	if ($this->t['can_display_price']) {
 
 		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
@@ -270,7 +269,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// Last word when checking if product can be ordered have always checkout
 	$class_btn	= '';
 	$class_icon	= '';
-	
+
 	$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
 
 	if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
@@ -279,7 +278,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
-		
+
 
 		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
 			$d							= array();
@@ -377,8 +376,10 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$d['init_type']				= 0;
 	$d['price']					= $price;
 	$d['product_id']			= (int)$x->id;
+	$d['gift_types']			= $x->gift_types;
 	$d['image_size']			= 'large';
 	$d['typeview']				= 'Item';
+	$d['priceitems']			= $priceItems;
 	echo $layoutAB->render($d);
 
 
@@ -388,11 +389,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	if ($x->type == 3) {
 		// PRODUCTTYPE - price on demand product cannot be added to cart
 		$addToCartHidden = 1;
-		
+
 	} else if ($this->t['hide_add_to_cart_zero_price'] == 1 && $x->price == 0) {
 		// Don't display Add to Cart in case the price is zero
 		$addToCartHidden = 1;
-		
+
 	} else if ((int)$this->t['item_addtocart'] == 1 || (int)$this->t['item_addtocart'] == 4) {
 
 		$d					= array();
@@ -553,8 +554,9 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	echo '<div class="ph-cb"></div>';
 
-	echo $this->t['event']->onItemBeforeEndPricePanel;
+	echo $this->t['event']->onItemBeforeEndPricePanel;// View Plugin
 
+	echo $this->t['event']->PCPonItemBeforeEndPricePanel;// Payment Plugin
 
 	echo '</div>';// end item_row_item_box_price
 	echo '</div>';// end item_row_item_c2

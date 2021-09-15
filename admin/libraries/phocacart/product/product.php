@@ -78,7 +78,7 @@ class PhocacartProduct
 			}
 		}
 
-		$baseColumns = array('i.id', 'i.title', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days', 'i.date', 'i.date_update', 'i.delivery_date');
+		$baseColumns = array('i.id', 'i.title', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types');
 
 		$col = array_merge($baseColumns, $additionalColumns);
 		$col = array_unique($col);
@@ -622,7 +622,7 @@ class PhocacartProduct
 			}
 		}
 
-        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed');
+        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
 
 
 		$col = array_merge($baseColumns, $additionalColumns);
@@ -1367,10 +1367,15 @@ class PhocacartProduct
 
                     foreach ($v as $k2 => $v2) {
                         //$attributes[$k][$k2] = (int)$v2;
+                        $optionType = 0;
+                        // Ask for optionType but only by GIFT attribute (20) ATTRIBUTETYPE
+                        if ($attributeType == 20) {
+                            $optionType = PhocacartAttribute::getOptionType((int)$k2);
 
-                        $attributes[$k][$k2] = PhocaCartAttribute::setAttributeValue((int)$attributeType, $v2);
+                        }
+                        $attributes[$k][$k2] = PhocaCartAttribute::setAttributeValue((int)$attributeType, $v2, false, false, $optionType);
 
-                        // TEXT attributes
+                        // TEXT or GIFT attributes
                         if ($attributes[$k][$k2] == '') {
                             unset($attributes[$k][$k2]);
                         }

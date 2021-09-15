@@ -26,6 +26,7 @@
     <option value="10">COM_PHOCACART_ATTR_TYPE_TEXTAREA_1024</option>
     <option value="11">COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048</option>
 	<option value="12">COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER</option>
+	<option value="20">COM_PHOCACART_ATTR_TYPE_GIFT</option>
 </field>
 
 <field name="options" type="subform" label="COM_PHOCACART_FIELD_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_OPTIONS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_options.xml"/>

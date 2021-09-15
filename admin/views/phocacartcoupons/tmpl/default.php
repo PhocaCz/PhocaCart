@@ -60,6 +60,7 @@ echo '<th class="ph-code">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $
 echo '<th class="ph-discount">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_DISCOUNT', 'a.discount', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_VALID_FROM', 'a.valid_from', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_VALID_TO', 'a.valid_to', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_COUPON_TYPE', 'a.coupon_type', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-status">'.JText::_($this->t['l'].'_STATUS').'</th>'."\n";
 echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
@@ -114,6 +115,36 @@ echo $r->td('<span class="ph-editinplace-text ph-eip-text ph-eip-price" id="coup
 echo $r->td($this->escape($item->valid_from), "small");
 echo $r->td($this->escape($item->valid_to), "small");
 
+$couponType = '';
+if ($item->coupon_type == 2) {
+	$couponType = '<span class="label label-warning badge badge-warning">' . JText::_('COM_PHOCACART_GIFT_VOUCHER') . '</span>';
+	if (isset($item->gift_order_id) && (int)$item->gift_order_id > 0) {
+		$couponType .= '<br><small>'.JText::_('COM_PHOCACART_ORDER_ID'). ': '. $item->gift_order_id. '</small>';
+	}
+
+	// ACTION
+	$linkCouponView   		= JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacartcouponview&tmpl=component&id=' . (int)$item->id . '');
+	$linkCouponViewHandler 	= 'onclick="window.open(this.href, \'couponview\', \'width=780,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';
+
+	$couponType .= '<div class="ph-action-row">';
+
+	$couponType .= '<a href="' . $linkCouponView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkCouponViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_COUPON') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span></a>';
+
+	if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
+
+		$couponType .= ' ';
+		$formatPDF = '&format=pdf';
+		$couponType .= '<a href="' . $linkCouponView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkCouponViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_COUPON') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span><br /><span class="ph-icon-success-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+
+	}
+	$couponType .= '</div>';
+
+} else {
+	$couponType = '<span class="label label-success badge badge-success">' . JText::_('COM_PHOCACART_GIFT_COUPON') .  '</span>';
+}
+echo $r->td($couponType, "small");
+
+
 $status = PhocacartDate::getActiveDate($item->valid_from, $item->valid_to, 1);
 if ($item->published == 0) {
 	$status = '<span class="label label-default">'.JText::_('COM_PHOCACART_UNPUBLISHED').'</span>';
@@ -128,7 +159,7 @@ echo $r->endTr();
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 10);
+echo $r->tblFoot($this->pagination->getListFooter(), 11);
 echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);

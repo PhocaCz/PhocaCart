@@ -8,6 +8,9 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -278,6 +281,24 @@ class PhocacartShipping
 					if (isset($shippings[$i])) {
 						unset($shippings[$i]);
 					}
+				} else {
+					// Shipping is active but shipping method plugin can deactivate it
+					$pluginShipping 	= PluginHelper::importPlugin('pcs');
+					if ($pluginShipping) {
+
+						PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
+						$eventData 					= array();
+                    	$active 					= true;
+						$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
+                    	Factory::getApplication()->triggerEvent('PCSbeforeShowPossibleShippingMethod', array(&$active, $v, $eventData));
+
+                    	if ($active == false) {
+                    		if (isset($shippings[$i])) {
+								unset($shippings[$i]);
+							}
+						}
+					}
+
 				}
 
 				// Try to set default for frontend form
@@ -809,6 +830,61 @@ class PhocacartShipping
 			return true;
 		}
 
+
+		return false;
+	}
+
+	public static function getInfoDescriptionById($id) {
+
+		if ((int)$id > 0) {
+			$db =JFactory::getDBO();
+
+			$query = 'SELECT a.description_info'
+					.' FROM #__phocacart_shipping_methods AS a'
+					.' WHERE a.published = 1'
+					.' AND a.type IN (0,2)'// IT IS A POS (0 common, 2 POS)
+					.' AND a.id = '.(int)$id
+					.' ORDER BY id LIMIT 1';
+			$db->setQuery($query);
+			return $db->loadResult();
+		}
+	}
+
+
+	/**
+	 * @param $methodName
+	 * @param int $return 1 ... Association list, 2 ... Object list, 3 ... ID (be aware when setting 3, only first ID will be returned even more methods with the same method name can exist)
+	 * @param bool $onlyPublished
+	 * @return mixed
+	 */
+
+	protected function getShippingMethodIdByMethodName($methodName, $return = 3, $onlyPublished = false) {
+
+		$db = JFactory::getDBO();
+		$query = ' SELECT s.id'
+		.' FROM #__phocacart_shipping_methods AS s'
+		.' WHERE s.method = '.$db->quote($methodName);
+
+		if ($onlyPublished) {
+			$query .= ' AND s.published = 1';
+		}
+
+		$query .= ' ORDER BY s.id';
+
+		if ($return == 3) {
+			$query .= ' LIMIT 1';
+		}
+
+		$db->setQuery($query);
+
+		if ($return == 1) {
+			return $db->loadAssocList();
+		} else if ($return == 2) {
+			return $db->loadObjectList();
+		} else if ($return == 3) {
+			$result = (array) $db->loadObject();
+			return $result["id"];
+		}
 
 		return false;
 	}

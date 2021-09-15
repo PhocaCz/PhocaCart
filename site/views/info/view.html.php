@@ -24,19 +24,24 @@ class PhocaCartViewInfo extends JViewLegacy
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
 		$this->s                    = PhocacartRenderStyle::getStyles();
-		
+
 		$this->t['info_view_description']			= $this->p->get( 'info_view_description', '' );
 		$this->t['info_view_description']			= PhocacartRenderFront::renderArticle($this->t['info_view_description']);
 
 		$session 				= JFactory::getSession();
 		$this->t['infoaction'] 	= $session->get('infoaction', 0, 'phocaCart');
 		$this->t['infomessage'] = $session->get('infomessage', array(), 'phocaCart');
+		$this->t['infodata'] 	= $session->get('infodata', array(), 'phocaCart');
+
 		$session->set('infoaction', 0, 'phocaCart');
 		$session->set('infomessage', array(), 'phocaCart');
+		$session->set('infodata', array(), 'phocaCart');// order_id, order_token, payment_id, payment_method, shipping_id, shipping_method, user_id
+
 
 		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
 		$media->loadSpec();
+
 
 		$this->_prepareDocument();
 		parent::display($tpl);

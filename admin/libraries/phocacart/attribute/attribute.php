@@ -52,7 +52,7 @@ class PhocacartAttribute
         $db = JFactory::getDBO();
 
 
-        $query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value';
+        $query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type';
         $query .= ' FROM #__phocacart_attribute_values AS a'
             . ' WHERE a.attribute_id = ' . (int)$attributeId
             . ' ORDER BY a.ordering';
@@ -84,6 +84,8 @@ class PhocacartAttribute
                     $optionsSubform['options' . $i]['download_token']  = (string)$v['download_token'];
                     $optionsSubform['options' . $i]['color']           = (string)$v['color'];
                     $optionsSubform['options' . $i]['default_value']   = (int)$v['default_value'];
+                    $optionsSubform['options' . $i]['required']        = (int)$v['required'];
+                    $optionsSubform['options' . $i]['type']            = (int)$v['type'];
 
                     $i++;
                 }
@@ -112,7 +114,10 @@ class PhocacartAttribute
             '9' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_256'), ''),
             '10' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_1024'), ''),
             '11' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048'), ''),
-            '12' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER'), '')
+            '12' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER'), ''),
+            '20' => array(JText::_('COM_PHOCACART_ATTR_TYPE_GIFT'), '')
+
+
         );
 
         if ((int)$returnId > 0 && (int)$returnValue > 0) {
@@ -132,9 +137,9 @@ class PhocacartAttribute
         return $o;
     }
 
-    public static function getAttributeLength($type) {
+    public static function getAttributeLength($type, $typeOption = 0) {
 
-        // EDIT PHOCACARTATTRIBUTE
+        // EDIT PHOCACARTATTRIBUTE ATTRIBUTETYPE
 
         switch ($type) {
             case 7:
@@ -161,6 +166,24 @@ class PhocacartAttribute
                 return 7;
             break;
 
+            // GIFT
+            case 20:
+
+                if ($typeOption == 20) { return 100;} // recipient name
+                if ($typeOption == 21) { return 50;} // recipient email
+                if ($typeOption == 22) { return 100;} // sender name
+                if ($typeOption == 23) {
+
+                    $paramsC 					= PhocacartUtils::getComponentParameters();
+		            $gift_sender_message_length	= $paramsC->get( 'gift_sender_message_length', 500 );
+
+                    return (int)$gift_sender_message_length;
+                } // sender message
+                if ($typeOption == 24) { return 3;} // gift type
+                return 0;
+            break;
+
+
             default:
                 return 0;
             break;
@@ -174,9 +197,10 @@ class PhocacartAttribute
      * encoded - is urlencoded yet
      * display - are we asking it for display (we only want to display text attributes value not checkbox or selectboxes which include
      *           numbers (their values are displayed other way
+     * type of option
      */
 
-    public static function setAttributeValue($type, $value, $encoded = false, $display = false) {
+    public static function setAttributeValue($type, $value, $encoded = false, $display = false, $typeOption = 0) {
 
 
         switch ($type) {
@@ -186,12 +210,14 @@ class PhocacartAttribute
             case 10:
             case 11:
 			case 12:
+            case 20:
+
                 if ($encoded || $display) {
                     $value = urldecode($value);
                 }
 
                 $value = strip_tags($value);
-                return urlencode(substr($value, 0, self::getAttributeLength($type)));
+                return urlencode(substr($value, 0, self::getAttributeLength($type, $typeOption)));
             break;
 
             default:
@@ -409,6 +435,15 @@ class PhocacartAttribute
                             if (empty($v2['color'])) {
                                 $v2['color'] = '';
                             }
+
+                            if (empty($v2['required'])) {
+                                $v2['required'] = '0';
+                            }
+                            if (empty($v2['type'])) {
+                                $v2['type'] = '0';
+                            }
+
+
                             //if (empty($v2['default_value'])) 	{$v2['default_value'] 	= '';}
 
 
@@ -495,6 +530,8 @@ class PhocacartAttribute
                                     . ' download_token = ' . $db->quote($v2['download_token']) . ','
                                     . ' color = ' . $db->quote($v2['color']) . ','
                                     . ' default_value = ' . (int)$defaultValue . ','
+                                    . ' required = ' . (int)$v2['required'] . ','
+                                    . ' type = ' . (int)$v2['type'] . ','
                                     . ' ordering = ' . (int)$j
                                     . ' WHERE id = ' . (int)$idExists;
 
@@ -526,10 +563,12 @@ class PhocacartAttribute
                                     . $db->quote($v2['download_token']) . ','
                                     . $db->quote($v2['color']) . ', '
                                     . (int)$defaultValue . ','
+                                    . (int)$v2['required'] . ', '
+                                    . (int)$v2['type'] . ', '
                                     . (int)$j . ')';
 
 
-                                $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, ordering)'
+                                $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, required, type, ordering)'
                                     . ' VALUES ' . $options;
 
                                 $db->setQuery($query);
@@ -814,8 +853,8 @@ class PhocacartAttribute
         $orderingText = PhocacartOrdering::getOrderingText($ordering, 5);
 
 
-        $columns    = 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
-        $groupsFull = 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, attralias, at.id, at.title, at.alias, at.type';
+        $columns    = 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
+        $groupsFull = 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type attralias, at.id, at.title, at.alias, at.type';
         $groupsFast = 'v.id';
         $groups     = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -882,6 +921,8 @@ class PhocacartAttribute
                         $a[$v->attralias]['options'][$v->alias]->download_token  = $v->download_token;
                         $a[$v->attralias]['options'][$v->alias]->color           = $v->color;
                         $a[$v->attralias]['options'][$v->alias]->default_value   = $v->default_value;
+                        $a[$v->attralias]['options'][$v->alias]->required        = $v->required;
+                        $a[$v->attralias]['options'][$v->alias]->type            = $v->type;
                     } else {
                         $a[$v->attralias]['options'] = array();
                     }
@@ -895,7 +936,7 @@ class PhocacartAttribute
 
     public static function getAttributeValue($id, $attributeId) {
         $db    = JFactory::getDBO();
-        $query = ' SELECT a.id, a.title, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value,'
+        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
             . ' aa.id as aid, aa.title as atitle, aa.type as atype'
             . ' FROM #__phocacart_attribute_values AS a'
             . ' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
@@ -1009,22 +1050,57 @@ class PhocacartAttribute
         $wheres   = array();
         $wheres[] = ' a.id = ' . (int)$productId;
         $db       = JFactory::getDBO();
-        $query    = ' SELECT at.id, at.type'
+
+        // 1) Select required attributes
+        $query    = ' SELECT at.id, at.type, "1" AS required_type, "" AS options'
             . ' FROM #__phocacart_products AS a'
             . ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
             . ' WHERE ' . implode(' AND ', $wheres)
             . ' ORDER BY a.id';
         $db->setQuery($query);
-        $attributes = $db->loadAssocList();
+        $attributes = $db->loadAssocList('id');
 
-        // correct empty attributes
+
+        // Select required options of specific attributes of attributes which are not required (so $attributes and $attributesOptions will no cover each other)
+        $query    = ' SELECT av.id as option_id, at.id, at.type, "2" AS required_type, "" as options'
+            . ' FROM #__phocacart_products AS a'
+            . ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 0'
+            . ' LEFT JOIN #__phocacart_attribute_values AS av ON at.id = av.attribute_id AND av.id > 0 AND av.required = 1'
+            . ' WHERE ' . implode(' AND ', $wheres)
+            . ' ORDER BY a.id';
+        $db->setQuery($query);
+        $attributesOptions = $db->loadAssocList();
+
+
+        // correct empty attributes and add attributes which have required options but are not required themselves
         if (!empty($attributes)) {
+
+            if (!empty($attributesOptions)) {
+
+                foreach($attributesOptions as $k => $v) {
+
+                    if (isset($v['id']) && $v['id'] > 0) {
+                        $idA = $v['id'];
+                        $idO = $v['option_id'];
+                        $attributes[$idA]['id']              = $idA;
+                        $attributes[$idA]['options'][$idO]   = $v['option_id'];
+                        $attributes[$idA]['required_type']   = $v['required_type'];
+                        $attributes[$idA]['type']            = $v['type'];
+                    }
+
+                }
+
+            }
+
+
             foreach ($attributes as $k => $v) {
                 if (!$v['id'] && !$v['type']) {
                     unset($attributes[$k]);
                 }
             }
         }
+
+
         return $attributes;
     }
 
@@ -1048,7 +1124,7 @@ class PhocacartAttribute
 
     public static function checkRequiredAttributes($id, $attributes) {
 
-        // PHOCARTATTRIBUTE
+        // PHOCARTATTRIBUTE ATTRIBUTETYPE
 
         // Covert all attribute values from strings to array
         if (!empty($attributes)) {
@@ -1062,13 +1138,13 @@ class PhocacartAttribute
         // $attributes - attributes sent per form when adding product to cart
         // $requiredAttributes - all required attributes for selected product
         // Get all required attributes for this product
+        // Or required options of not required attributes (specific case for text, textarea, gift, etc. attributes where only one option can be required, not whole attribute)
         $requiredAttributes = PhocacartAttribute::getAllRequiredAttributesByProduct($id);
 
 
         $msgA          = array();
         $passAll       = true;
         $passAttribute = array();
-
 
         if (!empty($requiredAttributes)) {
             foreach ($requiredAttributes as $k2 => $v2) {
@@ -1088,30 +1164,63 @@ class PhocacartAttribute
 
                                     foreach ($v3 as $k4 => $v4) {
 
-                                        // EDIT PHOCACARTATTRIBUTE
-                                        if (isset($v2['type']) && ($v2['type'] == 7 || $v2['type'] == 8 || $v2['type'] == 9 || $v2['type'] == 10 || $v2['type'] == 11 || $v2['type'] == 12)) {
 
-                                            // ATTRIBUTE TYPE = TEXT
+                                        if (isset($v2['type']) && ($v2['type'] == 7 || $v2['type'] == 8 || $v2['type'] == 9 || $v2['type'] == 10 || $v2['type'] == 11 || $v2['type'] == 12 || $v2['type'] == 20)) {
+                                            // -------------------------------------
+                                            // ATTRIBUTE TYPE = TEXT, TEXTAREA, GIFT
+                                            // -------------------------------------
 
-                                            // There is reverse testing to select or checkbox
-                                            // In select or checkbox we can wait for some of the option will be selected
-                                            // but by text all input text fields in one attribute must be required
-                                            if (isset($v4['ovalue']) && urldecode($v4['ovalue'] != '')) {
-                                                // Order product - we found value in order of products - OK
-                                                $passAttribute[$k3] = 1;
-                                                //break 2;
-                                            } else if (!is_array($v4) && urldecode($v4 != '')) {
-                                                // Order product - we found value in order of products - OK
-                                                $passAttribute[$k3] = 1;
-                                                //break 2;
+                                            // 1) FIRST test required options (not required attribute)
+                                            // required options in attributes which are not required
+                                            // because there can be required whole attribute but only one option
+                                            if ($v2['required_type'] == 2 && !empty($v2['options'])) {
+
+                                               // Is current option required - is current option ID included in required option field?
+                                               if (in_array($k4, $v2['options'])) {
+
+                                                   if (isset($v4['ovalue']) && urldecode($v4['ovalue'] != '')) {
+                                                        // Order product - we found value in order of products - OK
+                                                        $passAttribute[$k3] = 1;
+                                                        //break 2;
+                                                    } else if (!is_array($v4) && urldecode($v4 != '')) {
+                                                        // Order product - we found value in order of products - OK
+                                                        $passAttribute[$k3] = 1;
+                                                        //break 2;
+                                                    } else {
+                                                        $passAll = false;
+                                                        break 2;
+                                                    }
+
+                                               } else {
+                                                   // It is not in required field, set is as OK (can be overriden in loop by other option for this attribute)
+                                                   $passAttribute[$k3] = 1;
+                                               }
+
                                             } else {
-                                                $passAll = false;
-                                                break 2;
+                                                // 2) SECOND test required attribute
+
+                                                // There is reverse testing to select or checkbox
+                                                // In select or checkbox we can wait for some of the option will be selected
+                                                // but by text all input text fields in one attribute must be required
+                                                if (isset($v4['ovalue']) && urldecode($v4['ovalue'] != '')) {
+                                                    // Order product - we found value in order of products - OK
+                                                    $passAttribute[$k3] = 1;
+                                                    //break 2;
+                                                } else if (!is_array($v4) && urldecode($v4 != '')) {
+                                                    // Order product - we found value in order of products - OK
+                                                    $passAttribute[$k3] = 1;
+                                                    //break 2;
+                                                } else {
+                                                    $passAll = false;
+                                                    break 2;
+                                                }
+
                                             }
 
                                         } else {
-
+                                            // ---------------------------------
                                             // ATTRIBUTE TYPE = CHECKBOX, SELECT
+                                            // ---------------------------------
 
                                             if (isset($v4['oid']) && $v4['oid'] > 0) {
                                                 // Order product - we found value in order of products - OK
@@ -1146,6 +1255,7 @@ class PhocacartAttribute
                     $passAll = false;
                 }
             }
+
         }
 
 
@@ -1770,6 +1880,21 @@ class PhocacartAttribute
         $wheres[] = ' id = ' . (int)$id;
         $query    = ' SELECT type'
             . ' FROM #__phocacart_attributes'
+            . ' WHERE ' . implode(' AND ', $wheres)
+            . ' ORDER BY id LIMIT 1';
+        $db->setQuery($query);
+        $type = $db->loadResult();
+
+        return $type;
+    }
+
+    public static function getOptionType($id) {
+
+        $db       = JFactory::getDBO();
+        $wheres   = array();
+        $wheres[] = ' id = ' . (int)$id;
+        $query    = ' SELECT type'
+            . ' FROM #__phocacart_attribute_values'
             . ' WHERE ' . implode(' AND ', $wheres)
             . ' ORDER BY id LIMIT 1';
         $db->setQuery($query);

@@ -535,4 +535,86 @@ class PhocacartCoupon
 
 		return false;
 	}
+
+
+	public static function generateCouponCode() {
+
+	    $pC                   = PhocacartUtils::getComponentParameters();
+        $gift_code_length     = $pC->get('gift_code_length', 8);
+        $gift_code_characters = $pC->get('gift_code_characters', '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+        $db =JFactory::getDBO();
+        // Limit attempts for generating coupon code - to protect before infinite loop
+        for ($i = 0; $i < 7; $i++) {
+
+            $o = "";
+            for ($j = 0; $j < (int)$gift_code_length; $j++) {
+                $o .= $gift_code_characters[mt_rand(0, strlen($gift_code_characters)-1)];
+            }
+
+            $query = ' SELECT code FROM #__phocacart_coupons WHERE code = '.$db->quote((string)$o).' ORDER BY id LIMIT 1';
+			$db->setQuery($query);
+			$code = $db->loadResult();
+
+			// Generated code does not exist in database
+			if(empty($code)) {
+			    return $o;
+            }
+			echo $o;
+
+        }
+
+        // After 5 attempts no success, return timestamp + random
+        $date = new DateTime();
+        $random = PhocacartUtils::getRandomString(mt_rand(6, 10));
+        return $date->getTimestamp() . strtoupper($random);
+
+
+
+
+
+    }
+
+    public static function getGiftsByOrderId($orderId) {
+
+		$db =JFactory::getDBO();
+		$query = 'SELECT c.id, c.title, c.code, c.discount, c.valid_from, c.valid_to, c.type, c.published,'
+            .' c.gift_order_id, c.gift_product_id, c.gift_order_product_id, c.coupon_type, c.gift_class_name,'
+            .' c.gift_title, c.gift_description, c.gift_image, c.gift_recipient_name, c.gift_recipient_email, c.gift_sender_name, c.gift_sender_message, c.gift_type'
+		    .' FROM #__phocacart_coupons AS c'
+		    .' WHERE c.gift_order_id = '.(int)$orderId
+		    .' ORDER BY c.id';
+		$db->setQuery($query);
+
+		$gifts = $db->loadAssocList();
+
+		return $gifts;
+	}
+
+	public static function getGiftByCouponId($couponId) {
+
+		$db =JFactory::getDBO();
+		$query = 'SELECT c.id, c.title, c.code, c.discount, c.valid_from, c.valid_to, c.type, c.published,'
+            .' c.gift_order_id, c.gift_product_id, c.gift_order_product_id, c.coupon_type, c.gift_class_name,'
+            .' c.gift_title, c.gift_description, c.gift_image, c.gift_recipient_name, c.gift_recipient_email, c.gift_sender_name, c.gift_sender_message, c.gift_type'
+		    .' FROM #__phocacart_coupons AS c'
+		    .' WHERE c.id = '.(int)$couponId
+		    .' ORDER BY c.id';
+		$db->setQuery($query);
+
+		$gift = $db->loadAssoc();
+
+		return $gift;
+	}
+
+	public static function activateAllGiftsByOrderId($orderId) {
+	    $db 	= JFactory::getDBO();
+
+		$query = 'UPDATE #__phocacart_coupons SET'
+		.' published = 1'
+		.' WHERE gift_order_id = '.(int)$orderId;
+		$db->setQuery($query);
+		$db->execute();
+		return true;
+    }
 }

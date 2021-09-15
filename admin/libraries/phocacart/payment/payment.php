@@ -8,6 +8,9 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -24,6 +27,9 @@ defined('_JEXEC') or die();
  *
  */
 
+/**
+ * Class PhocacartPayment
+ */
 class PhocacartPayment
 {
 	protected $type = array(0,1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
@@ -125,16 +131,16 @@ class PhocacartPayment
 			foreach($payments as $k => $v) {
 
 
-				$v->active = 0;
+				$v->active   = 0;
 				$v->selected = 0;
-				$a = 0;
-				$z = 0;
-				$c = 0;
-				$r = 0;
-				$s = 0;
+				$a           = 0;
+				$z           = 0;
+				$c           = 0;
+				$r           = 0;
+				$s           = 0;
 
 				// Amount Rule
-				if($v->active_amount == 1) {
+				if ($v->active_amount == 1) {
 
 					if ($payment_amount_rule == 0 || $payment_amount_rule == 2) {
 						// No tax, brutto
@@ -155,8 +161,8 @@ class PhocacartPayment
 
 				// Zone Rule
 
-				if($v->active_zone == 1) {
-					if (isset($v->zone) && $v->zone != '')  {
+				if ($v->active_zone == 1) {
+					if (isset($v->zone) && $v->zone != '') {
 						$zones = explode(',', $v->zone);
 
 						if (PhocacartZone::isCountryOrRegionIncluded($zones, (int)$country, (int)$region)) {
@@ -169,7 +175,7 @@ class PhocacartPayment
 				}
 
 				// Country Rule
-				if($v->active_country == 1) {
+				if ($v->active_country == 1) {
 					if (isset($v->country) && $v->country != '') {
 						$countries = explode(',', $v->country);
 
@@ -182,7 +188,7 @@ class PhocacartPayment
 				}
 
 				// Region Rule
-				if($v->active_region == 1) {
+				if ($v->active_region == 1) {
 					if (isset($v->region) && $v->region != '') {
 						$regions = explode(',', $v->region);
 
@@ -190,12 +196,12 @@ class PhocacartPayment
 							$r = 1;
 						}
 					}
-				}  else {
+				} else {
 					$r = 1;
 				}
 
 				// Shipping Rule
-				if($v->active_shipping == 1) {
+				if ($v->active_shipping == 1) {
 					if (isset($v->shipping) && $v->shipping != '') {
 						$shippings = explode(',', $v->shipping);
 
@@ -208,7 +214,7 @@ class PhocacartPayment
 				}
 
 				// No rule was set for shipping, it will be displayed at all events
-				if($v->active_amount == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_shipping == 0) {
+				if ($v->active_amount == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_shipping == 0) {
 					$v->active = 1;
 				}
 
@@ -224,6 +230,23 @@ class PhocacartPayment
 				if ($v->active == 0) {
 					if (isset($payments[$i])) {
 						unset($payments[$i]);
+					}
+				} else {
+					// Payment is active but payment method plugin can deactivate it
+					$pluginPayment 	= PluginHelper::importPlugin('pcp');
+					if ($pluginPayment) {
+
+						PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($v->method)));
+						$eventData 					= array();
+                    	$active 					= true;
+						$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
+                    	Factory::getApplication()->triggerEvent('PCPbeforeShowPossiblePaymentMethod', array(&$active, $v, $eventData));
+
+                    	if ($active == false) {
+                    		if (isset($payments[$i])) {
+								unset($payments[$i]);
+							}
+						}
 					}
 				}
 
@@ -676,6 +699,60 @@ class PhocacartPayment
 			return true;
 		}
 
+
+		return false;
+	}
+
+	public static function getInfoDescriptionById($id) {
+
+		if ((int)$id > 0) {
+			$db =JFactory::getDBO();
+
+			$query = 'SELECT a.description_info'
+					.' FROM #__phocacart_payment_methods AS a'
+					.' WHERE a.published = 1'
+					.' AND a.type IN (0,2)'// IT IS A POS (0 common, 2 POS)
+					.' AND a.id = '.(int)$id
+					.' ORDER BY id LIMIT 1';
+			$db->setQuery($query);
+			return $db->loadResult();
+		}
+	}
+
+	/**
+	 * @param $methodName
+	 * @param int $return 1 ... Association list, 2 ... Object list, 3 ... ID (be aware when setting 3, only first ID will be returned even more methods with the same method name can exist)
+	 * @param bool $onlyPublished
+	 * @return mixed
+	 */
+
+	protected function getPaymentMethodIdByMethodName($methodName, $return = 3, $onlyPublished = false) {
+
+		$db = JFactory::getDBO();
+		$query = ' SELECT p.id'
+		.' FROM #__phocacart_payment_methods AS p'
+		.' WHERE p.method = '.$db->quote($methodName);
+
+		if ($onlyPublished) {
+			$query .= ' AND p.published = 1';
+		}
+
+		$query .= ' ORDER BY p.id';
+
+		if ($return == 3) {
+			$query .= ' LIMIT 1';
+		}
+
+		$db->setQuery($query);
+
+		if ($return == 1) {
+			return $db->loadAssocList();
+		} else if ($return == 2) {
+			return $db->loadObjectList();
+		} else if ($return == 3) {
+			$result = (array) $db->loadObject();
+			return $result["id"];
+		}
 
 		return false;
 	}

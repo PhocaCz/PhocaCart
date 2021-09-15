@@ -19,21 +19,19 @@ class PhocacartText {
 	/*
 	 * type ... 1 customers - email sent to customer - set in email or in different text parts of e.g. invoice
 	 * type ... 2 others - email sent to all others
+	 *
 	 */
 
 	public static function completeText($body, $replace, $type = 1) {
 
 
-		if ($type == 2) {
-			$body = isset($replace['name']) ? str_replace('{name}', $replace['name'], $body) : $body;
-			//$body = isset($replace['name_others']) ? str_replace('{nameothers}', $replace['name_others'], $body) : $body;
-		} else {
-			$body = isset($replace['name']) ? str_replace('{name}', $replace['name'], $body) : $body;
-		}
+		$body = isset($replace['name']) ? str_replace('{name}', $replace['name'], $body) : $body;
 
-		if ($type == 2) {
+		if ($type == 3) {
+		    $body = isset($replace['email_gift_recipient']) ? str_replace('{emailgiftrecipient}', $replace['email_gift_recipient'], $body) : $body;
+        } else if ($type == 2) {
 			$body = isset($replace['email_others']) ? str_replace('{emailothers}', $replace['email_others'], $body) : $body;
-		} else {
+		} else if ($type == 1){
 			$body = isset($replace['email']) ? str_replace('{email}', $replace['email'], $body) : $body;
 		}
 

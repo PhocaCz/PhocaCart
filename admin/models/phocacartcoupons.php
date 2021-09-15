@@ -23,6 +23,7 @@ class PhocaCartCpModelPhocacartCoupons extends JModelList
 				'discount', 'a.discount',
 				'valid_from', 'a.valid_from',
 				'valid_to', 'a.valid_to',
+				'coupon_type', 'a.coupon_type',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',

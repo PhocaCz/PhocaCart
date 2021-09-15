@@ -27,6 +27,7 @@ echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
 $tabs = array (
 'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
 'rules' 		=> JText::_($this->t['l'].'_RULES'),
+'gift' 		=> JText::_($this->t['l'].'_GIFT_VOUCHER_OPTIONS'),
 'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
 
@@ -35,9 +36,20 @@ echo $r->startTabs();
 echo $r->startTab('general', $tabs['general'], 'active');
 $formArray = array ('title', 'code', 'discount', 'calculation_type', 'type', 'access', 'group');
 echo $r->group($this->form, $formArray);
+
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
 echo $r->endTab();
+
+
+echo $r->startTab('gift', $tabs['general']);
+$formArray = array ('gift_title', 'gift_recipient_name', 'gift_recipient_email', 'gift_sender_name', 'gift_sender_message', 'gift_type', 'gift_class_name', 'gift_order_id', 'gift_product_id', 'gift_order_product_id');
+echo $r->group($this->form, $formArray);
+
+$formArray = array('gift_description');
+echo $r->group($this->form, $formArray, 1);
+echo $r->endTab();
+
 
 
 echo $r->startTab('rules', $tabs['rules']);

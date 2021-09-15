@@ -1614,6 +1614,12 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 			
+			<field name="phocahead40" type="phocahead" default="COM_PHOCACART_GIFT_VOUCHER_OPTIONS_LABEL" label="" description=""/>
+			
+			<field name="gift_code_length" type="text" default="8" label="COM_PHOCACART_FIELD_GIFT_CODE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_GIFT_CODE_LENGTH_DESC"/>
+			<field name="gift_code_characters" type="text" default="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" label="COM_PHOCACART_FIELD_GIFT_CODE_CHARACTERS_LABEL" description="COM_PHOCACART_FIELD_GIFT_CODE_CHARACTERS_DESC"/>
+			<field name="gift_sender_message_length" type="text" default="500" label="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LENGTH_DESC"/>
+			
 			
 			<field name="phocahead38" type="phocahead" default="COM_PHOCACART_PRINTED_CATALOG_OPTIONS_LABEL" label="" description=""/>
 

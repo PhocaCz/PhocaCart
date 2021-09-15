@@ -62,6 +62,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		$data['status_id']			= (int)$data['status_id'];
 		$data['email_send']			= (int)$data['email_send'];
 		$data['email_send_format']	= (int)$data['email_send_format'];
+		$data['email_gift']			= (int)$data['email_gift'];
 		$row 				= $this->getTable('PhocacartOrder', 'Table');
 		$user 				= JFactory::getUser();
 

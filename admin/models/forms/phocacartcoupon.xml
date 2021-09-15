@@ -28,6 +28,11 @@
 	<option value="2">COM_PHOCACART_POS_ONLY</option>
 </field>
 
+<field name="coupon_type" type="list" label="COM_PHOCACART_FIELD_COUPON_TYPE_LABEL" description="COM_PHOCACART_FIELD_COUPON_TYPE_DESC" class="inputbox" size="1" default="0">
+	<option	value="0">COM_PHOCACART_DEFAULT</option>
+	<option value="2">COM_PHOCACART_GIFT_VOUCHER</option>
+</field>
+
 <field name="free_shipping" type="list" label="COM_PHOCACART_FIELD_FREE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_FREE_SHIPPING_DESC" class="inputbox" size="1" default="0">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>
@@ -66,6 +71,25 @@
 
 <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
+<field name="gift_title" type="text" label="COM_PHOCACART_FIELD_GIFT_TITLE_LABEL" description="COM_PHOCACART_FIELD_GIFT_TITLE_DESC" class="inputbox" size="40"/>
+
+
+<field name="gift_description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_DESC"/>
+
+<field name="gift_image" type="media" label="COM_PHOCACART_FIELD_GIFT_IMAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_IMAGE_DESC" class="inputbox" size="40"/>
+
+<field name="gift_recipient_name" type="text" label="COM_PHOCACART_FIELD_GIFT_RECIPIENT_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_RECIPIENT_NAME_DESC" class="inputbox" size="40"/>
+<field name="gift_recipient_email" type="text" label="COM_PHOCACART_FIELD_GIFT_RECIPIENT_EMAIL_LABEL" description="COM_PHOCACART_FIELD_GIFT_RECIPIENT_EMAIL_DESC" class="inputbox" size="40"/>
+<field name="gift_sender_name" type="text" label="COM_PHOCACART_FIELD_GIFT_SENDER_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_NAME_DESC" class="inputbox" size="40"/>
+<field name="gift_sender_message" type="textarea" label="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_DESC" class="inputbox" size="40"/>
+
+
+<field name="gift_type" type="text" label="COM_PHOCACART_FIELD_GIFT_TYPE_LABEL" description="COM_PHOCACART_FIELD_GIFT_TYPE_DESC" size="40"/>
+<field name="gift_class_name" type="text" label="COM_PHOCACART_FIELD_GIFT_CLASS_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_CLASS_NAME_DESC" size="40"/>
+<field name="gift_order_id" type="text" label="COM_PHOCACART_FIELD_ORDER_ID_LABEL" description="COM_PHOCACART_FIELD_ORDER_ID_DESC" size="40" readonly="true" class="readonly"/>
+<field name="gift_product_id" type="text" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" size="40" readonly="true" class="readonly"/>
+<field name="gift_order_product_id" type="text" label="COM_PHOCACART_FIELD_ORDER_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_ORDER_PRODUCT_ID_DESC" size="40" readonly="true" class="readonly"/>
 
 
 	</fieldset>

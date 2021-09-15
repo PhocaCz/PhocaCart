@@ -191,6 +191,7 @@
             <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
             <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
             <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
+			<option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
         </field>
 
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
@@ -218,6 +219,13 @@
 
         <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS_LABEL" description="COM_PHOCACART_FIELD_HITS_DESC" />
         <field name="sales" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_SALES_LABEL" description="COM_PHOCACART_FIELD_SALES_DESC" readonly="readonly" />
+		
+
+		
+		
+		<field name="gift_types" type="subform" label="COM_PHOCACART_FIELD_GIFT_VOUCHER_TYPE_LABEL" description="COM_PHOCACART_FIELD_GIFT_VOUCHER_TYPE_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
+               formsource="administrator/components/com_phocacart/models/forms/subform_gifttypes.xml" class="phSubformGiftTypes"/>
+			
 
 
     </fieldset>

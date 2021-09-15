@@ -16,6 +16,7 @@ class PhocaCartCpViewPhocacartCoupons extends JViewLegacy
 	protected $state;
 	protected $t;
 	protected $r;
+	protected $s;
 	public $filterForm;
     public $activeFilters;
 
@@ -23,6 +24,7 @@ class PhocaCartCpViewPhocacartCoupons extends JViewLegacy
 
 		$this->t			= PhocacartUtils::setVars('coupon');
 		$this->r 			= new PhocacartRenderAdminviews();
+		$this->s             = PhocacartRenderStyle::getStyles();
 		$this->items			= $this->get('Items');
 		$this->pagination		= $this->get('Pagination');
 		$this->state			= $this->get('State');
@@ -41,6 +43,9 @@ class PhocaCartCpViewPhocacartCoupons extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderAdminmedia();
+
+		$this->t['plugin-pdf']    = PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+        $this->t['component-pdf'] = PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -86,6 +91,7 @@ class PhocaCartCpViewPhocacartCoupons extends JViewLegacy
 			'a.discount' 		=> JText::_($this->t['l'] . '_DISCOUNT'),
 			'a.valid_from' 		=> JText::_($this->t['l'] . '_VALID_FROM'),
 			'a.valid_to' 		=> JText::_($this->t['l'] . '_VALLID_TO'),
+			'a.coupon_type' 	=> JText::_($this->t['l'] . '_COUPON_TYPE'),
 			'a.id' 				=> JText::_('JGRID_HEADING_ID')
 		);
 	}

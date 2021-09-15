@@ -21,6 +21,7 @@ class PhocacartOrder
     public $downloadable_product;
     public $action_after_order;
     public $message_after_order;
+    public $data_after_order;
     protected $type = array(0, 1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
 
     public function __construct() {
@@ -29,6 +30,7 @@ class PhocacartOrder
         // right thank you message
         $this->action_after_order  = 1;                                                                                                                                                                                            // which action will be done after order - end, procceed to payment, ...
         $this->message_after_order = array();// custom message array made by plugin
+        $this->data_after_order     = array();
 
     }
 
@@ -389,7 +391,7 @@ class PhocacartOrder
         }
 
         $sOCh = array();// Shipping Options Checkout
-        // PRODUCTTYPE
+        // PRODUCTTYPE - Digital products are even gift vouchers
         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
         $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 
@@ -583,6 +585,25 @@ class PhocacartOrder
                         $this->saveOrderDownloads($orderProductId, $v['id'], $v['catid'], $row->id);
                     }
 
+
+                    if ($orderProductId > 0) {
+                        // DOWNLOAD - we are here because we need Product ID and Order Product ID - both are different ids
+
+                        if (!isset($v['attributes'])) {
+                            $v['attributes'] = false;
+                        }
+                        // User can buy gift coupons
+                        // When user buys one the same coupon (quantity > 1) we need to create more coupons from one "product"
+                        if (isset($v['quantity'])) {
+                            for ($i = 1; $i <= (int)$v['quantity']; $i++) {
+                                $this->saveOrderGiftCoupons($orderProductId, $v, $row->id, $k, $fullItems);
+                            }
+                        }
+
+
+                    }
+
+
                     if ($orderProductId > 0) {
                         // UPDATE the number of sales of one product - to save sql queries in frontend
                         $this->updateNumberOfSalesOfProduct($orderProductId, $v['id'], $row->id);
@@ -605,6 +626,7 @@ class PhocacartOrder
 
                     }
                 }
+
             }
 
 
@@ -1136,6 +1158,25 @@ class PhocacartOrder
                 }
 
             }
+
+
+            $this->data_after_order['order_id']     = (int)$row->id;
+            $this->data_after_order['order_token']  = $row->order_token;
+            $this->data_after_order['user_id']      = (int)$row->user_id;
+            $this->data_after_order['shipping_id']  = (int)$row->shipping_id;
+            $this->data_after_order['payment_id']   = (int)$row->payment_id;
+
+            $this->data_after_order['shipping_method']   = '';
+            $shippingMethod = json_decode($row->params_shipping);
+            if (isset($shippingMethod->method)) {
+               $this->data_after_order['shipping_method']   = $shippingMethod->method;
+            }
+            $this->data_after_order['payment_method']   = '';
+            $paymentMethod = json_decode($row->params_payment);
+            if (isset($paymentMethod->method)) {
+               $this->data_after_order['payment_method']   = $paymentMethod->method;
+            }
+
 
             //return true;
             if ($order_language == 0) {
@@ -1852,6 +1893,167 @@ class PhocacartOrder
     }
 
 
+
+    public function saveOrderGiftCoupons($orderProductId, $v, $orderId, $k, $fullItems) {
+
+        $app = JFactory::getApplication();
+        $db = JFactory::getDBO();
+        $d  = array();
+
+        if (!isset($v['type'])) {
+            return false;
+        }
+
+        if ($v['type'] != 4) {
+            // Product type != Gift Voucher
+            return false;
+        }
+
+        if (isset($v['brutto']) && $v['brutto'] > 0) {
+            $d['discount'] = $v['brutto'];
+        } else {
+            return false;
+        }
+
+
+
+
+        $d['calculation_type']      = 0; // Fixed amount
+        $d['type']                  = 0; // Coupon type (COMMON, ONLINE SHOP, POS)
+        $d['coupon_type']           = 2; // Coupon type (DEFAULT COUPON | GIFT VOUCHER)
+        $d['gift_type']             = -1; // Possible gift voucher type (BIRTHDAY, PRESENT, FESTIVE ...)
+        $d['gift_order_id']         = (int)$orderId;
+        $d['gift_product_id']       = (int)$v['id'];
+        $d['gift_order_product_id'] = (int)$orderProductId;
+        $d['gift_recipient_name']   = '';
+        $d['gift_recipient_email']  = '';
+        $d['gift_sender_name']      = '';
+        $d['gift_sender_message']   = '';
+        $d['available_quantity']    = 1;
+        $d['published']             = 0;// will be published by order status
+        $d['access']                = 1;
+        $d['title']                 = JText::_('COM_PHOCACART_GIFT_VOUCHER');
+        $d['alias']                 = PhocacartUtils::getAliasName($d['title']);
+        $d['code']                  = PhocacartCoupon::generateCouponCode();
+
+        $product = PhocacartProduct::getProduct((int)$v['id'], (int)$v['catid'], $this->type);
+
+        if (!empty($v['attributes'])) {
+            // Attributes
+            foreach ($v['attributes'] as $k2 => $v2) {
+
+                if (!empty($v2)) {
+                    // Options
+                    foreach ($v2 as $k3 => $v3) {
+
+                        // Check if attribute is type GIFT
+                        if (!isset($v3['atype']) || (isset($v3['atype']) && $v3['atype'] != 20)) {
+                            // if not continue with another attribute (not option)
+                            continue 2;
+                        }
+
+                        if(isset($v3['otype'])) {
+                            switch($v3['otype']) {
+
+                                case 20:
+                                    $d['gift_recipient_name'] = urldecode($v3['ovalue']);
+                                break;
+
+                                case 21:
+                                    $d['gift_recipient_email'] = '';
+                                    $v3['ovalue'] = urldecode($v3['ovalue']);
+                                    if(JMailHelper::isEmailAddress($v3['ovalue'])){
+                                        $d['gift_recipient_email'] = $v3['ovalue'];
+                                    }
+                                break;
+
+                                case 22:
+                                    $d['gift_sender_name'] = urldecode($v3['ovalue']);
+                                break;
+
+                                case 23:
+                                    $d['gift_sender_message'] = urldecode($v3['ovalue']);
+                                break;
+
+                                case 24:
+                                    $d['gift_type'] = urldecode($v3['ovalue']);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($product->gift_types)) {
+            $registry = new JRegistry;
+            $registry->loadString($product->gift_types);
+            $giftTypes = $registry->toArray();
+
+            if(isset($d['gift_type'])) {
+
+                $giftType = 'gift_types' . (int)$d['gift_type'];
+                if (isset($giftTypes[$giftType])) {
+                    $giftTypeA = $giftTypes[$giftType];
+
+                    if (isset($giftTypeA['title'])) {
+                        $d['gift_title'] = $giftTypeA['title'];
+                    }
+
+                    if (isset($giftTypeA['description'])) {
+                        $d['gift_description'] = $giftTypeA['description'];
+                    }
+
+                    if (isset($giftTypeA['image'])) {
+                        $d['gift_image'] = $giftTypeA['image'];
+                    }
+
+                    if (isset($giftTypeA['expiration_date'])) {
+                        $d['valid_to'] = $giftTypeA['expiration_date'];
+                    }
+
+                    if (isset($giftTypeA['class_name'])) {
+                        $d['gift_class_name'] = $giftTypeA['class_name'];
+                    }
+
+                    if (isset($giftTypeA['title']) && $giftTypeA['title'] != '') {
+                        $d['title'] = $d['title'] . ' - ' . $giftTypeA['title'];
+                    }
+                }
+            }
+
+        }
+
+
+        $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_coupons');
+        $max           = $db->loadResult();
+        $d['ordering'] = $max + 1;
+
+        $row = JTable::getInstance('PhocacartCoupon', 'Table', array());
+        if (!$row->bind($d)) {
+            //throw new Exception($db->getErrorMsg());
+            $msg = JText::_($db->getErrorMsg());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        if (!$row->check()) {
+            //throw new Exception($row->getError());
+            $msg = JText::_($row->getErrorMsg());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        if (!$row->store()) {
+            //throw new Exception($row->getError());
+            $msg = JText::_($row->getErrorMsg());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        return true;
+    }
+
     public function saveOrderProductDiscounts($orderProductId, $productId, $orderId, $k, $fullItems) {
 
         $db = JFactory::getDBO();
@@ -2019,6 +2221,10 @@ class PhocacartOrder
 
     public function getMessageAfterOrder() {
         return $this->message_after_order;
+    }
+
+    public function getDataAfterOrder() {
+        return $this->data_after_order;
     }
 
 

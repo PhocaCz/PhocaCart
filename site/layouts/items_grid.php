@@ -34,7 +34,6 @@ echo '<div class="'.PhocacartRenderFront::completeClass(array($s['c']['thumbnail
 echo '<div class="ph-item-content '.$d['lt'].'">';
 
 
-
 echo '<div class="'.$s['c']['cat_item_grid'].' ph-category-action-box-icons '.$d['lt'].'">';
 // :L: IMAGE
 echo '<a href="'.$d['link'].'">';
