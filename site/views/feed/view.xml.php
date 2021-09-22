@@ -26,6 +26,7 @@ class PhocaCartViewFeed extends JViewLegacy
         $this->t['feed'] = PhocacartFeed::getFeed((int)$id);
 
 
+
         if ($this->t['feed']) {
             $fP = new JRegistry;
             $iP = new JRegistry;
@@ -129,6 +130,7 @@ class PhocaCartViewFeed extends JViewLegacy
                 $categoriesList = 5;
             }
 
+            // Possible feature - accept languages
             $this->t['products'] = PhocacartProduct::getProducts(0, (int)$this->p['item_limit'], $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList);
 
             parent::display($tpl);

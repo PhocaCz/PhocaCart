@@ -68,6 +68,12 @@
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
+        <field name="email_send_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_DESC">
+                <option value="0">COM_PHOCACART_HTML</option>
+                <option value="1">COM_PHOCACART_PDF</option>
+                <option value="2">COM_PHOCACART_BOTH</option>
+            </field>
+
         <field name="email_attachments" type="subform" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_DESC" multiple="true" max="3"
                    layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml"/>
 
@@ -79,6 +85,36 @@
         </field>
 
         <field name="ordering" type="PhocacartOrdering" table="status" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+
+
+		<field name="activate_gift" type="list" label="COM_PHOCACART_FIELD_ACTIVATE_GIFT_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_GIFT_DESC" class="inputbox" size="1" default="0">
+			<option value="1">COM_PHOCACART_YES</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
+		
+		
+		<field name="email_gift" type="list" label="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_DESC" class="inputbox" size="1" default="0">
+            <option value="1">COM_PHOCACART_YES_BUYER</option>
+			<option value="2">COM_PHOCACART_YES_RECIPIENT</option>
+			<option value="3">COM_PHOCACART_YES_BUYER_AND_RECIPIENT</option>
+            <option value="0">COM_PHOCACART_NO_ONE</option>
+        </field>
+
+		<field name="email_subject_gift_sender" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC"/>
+
+        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
+		
+		<field name="email_subject_gift_recipient" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC"/>
+
+        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
+
+		<field name="email_gift_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_DESC">
+                <option value="0">COM_PHOCACART_HTML</option>
+                <option value="1">COM_PHOCACART_PDF</option>
+                <option value="2">COM_PHOCACART_BOTH</option>
+            </field>
 
         <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>

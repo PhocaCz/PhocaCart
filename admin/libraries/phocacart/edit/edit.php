@@ -206,7 +206,14 @@ class PhocacartEdit
 			}
 
 
+			// Update product price history and product group price
+			if ($tableDbName == 'PhocaCartItem' && $column == 'price') {
 
+				// Update price history
+				PhocacartPriceHistory::storePriceHistoryById((int)$idRow, $data['price']);
+				// Update group price
+				PhocacartGroup::updateGroupProductPriceById((int)$idRow, $data['price']);
+			}
 			/*
 			$db	= JFactory::getDBO();
 			$q	= 'UPDATE '.$tableDb.' SET '.$db->quoteName($column).' = '.$db->quote($options['value']).' WHERE id = '.(int)$idRow;

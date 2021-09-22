@@ -308,6 +308,9 @@ class PhocacartCartCalculation
                     //$total['countdigitalproducts']++;
                 } else if ($itemD->type == 3) {
                     $total['countpriceondemandproducts']++;
+                } else if ($itemD->type == 4) {
+                    // Gift Vouchers are even digital products
+                    $total['countdigitalproducts']++;
                 }
 
                 // ==========
@@ -448,7 +451,9 @@ class PhocacartCartCalculation
                                     $fullItems[$k]['attributes'][$attrib->aid][$k3]['oid']    = $attrib->id;// Option Id
                                     $fullItems[$k]['attributes'][$attrib->aid][$k3]['otitle'] = $attrib->title;
                                     $fullItems[$k]['attributes'][$attrib->aid][$k3]['oimage'] = $attrib->image;
-                                    $fullItems[$k]['attributes'][$attrib->aid][$k3]['ovalue'] = PhocacartAttribute::setAttributeValue($attrib->atype, $v3, false, true);
+                                    $fullItems[$k]['attributes'][$attrib->aid][$k3]['ovalue'] = PhocacartAttribute::setAttributeValue($attrib->atype, $v3, false, true, $attrib->type);
+                                    $fullItems[$k]['attributes'][$attrib->aid][$k3]['otype']  = $attrib->type;
+
                                     //$fullItems[$k]['attributes'][$attrib->aid][$k3]['odownloadfile']= $attrib->download_file;
 
                                 }
@@ -703,10 +708,14 @@ class PhocacartCartCalculation
     // =============
     public function calculateCartDiscounts(&$fullItems, &$fullItemsGroup, &$total, &$cartDiscount) {
 
+        // If there are more cart discounts e.g. separated by different rules
+        // remove the suffix because it will be not valid
+        $discountSuffixItems = array();
+
         foreach ($fullItems as $k => $v) {
 
 
-            $discount = PhocacartDiscountCart::getCartDiscount($v['id'], $v['catid'], $total['quantity'], $total['netto']);
+            $discount = PhocacartDiscountCart::getCartDiscount($v['id'], $v['catid'], $total['quantity'], $total['netto'], $total['subtotalnetto']);
 
             // First check if there is even some discount
             if ($discount) {
@@ -751,8 +760,17 @@ class PhocacartCartCalculation
                     } else {
                         // PERCENTAGE
                         PhocacartCalculation::calculateDiscountPercentage($discount['discount'], $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
-                        $price                          = new PhocacartPrice();
-                        $total['discountcarttxtsuffix'] = ' (' . $price->cleanPrice($discount['discount']) . ' %)';
+
+                        $discountSuffixItems[$discount['discount']] = $discount['discount'];
+
+                        if (count($discountSuffixItems) > 1) {
+                            // There are different types of discounts, remove the suffix Cart discount (10%) become Cart discount. Because if there is
+                            // e.g. 5% and 10% then the 10% in () will be misleading
+                            $total['discountcarttxtsuffix'] = '';
+                        } else {
+                             $price                          = new PhocacartPrice();
+                            $total['discountcarttxtsuffix'] = ' (' . $price->cleanPrice($discount['discount']) . ' %)';
+                        }
 
                     }
 
@@ -851,7 +869,7 @@ class PhocacartCartCalculation
 
         foreach ($fullItems as $k => $v) {
 
-            $validCoupon = $couponO->checkCoupon(0, $v['id'], $v['catid'], $total['quantity'], $total['netto']);
+            $validCoupon = $couponO->checkCoupon(0, $v['id'], $v['catid'], $total['quantity'], $total['netto'], $total['subtotalnetto']);
 
 
             if ($validCoupon) {

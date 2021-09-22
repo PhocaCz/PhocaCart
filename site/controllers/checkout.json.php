@@ -136,6 +136,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                     $layoutP     = new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
 
                     $oA['price'] = $layoutP->render($d);
+                    $oA['priceitems'] = $d['priceitems'];
                 }
 
 

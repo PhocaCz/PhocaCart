@@ -32,7 +32,7 @@ class PhocacartImageMagic
 	* @param int $typeOut IMAGETYPE_type vystupniho obrazku
 	* @return bool Chyba kdyz vrati false
 	*/
-	public static function imageMagic($fileIn, $fileOut = null, $width = null, $height = null, $crop = null, $typeOut = null, $watermarkParams = array(), $frontUpload = 0, $manager, &$errorMsg) {
+	public static function imageMagic($fileIn, $fileOut = null, $width = null, $height = null, $crop = null, $typeOut = null, $watermarkParams = array(), $frontUpload = 0, $manager = '', &$errorMsg = '') {
 
 		$params 			= PhocacartUtils::getComponentParameters();
 		$jfile_thumbs		= $params->get( 'jfile_thumbs', 1 );

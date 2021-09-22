@@ -121,6 +121,7 @@ function phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2){
     var phOptions 	= [];
     phOptions["id"] = phProductId;
     phOptions["id_item_price"] = "#phItemPriceBox" + phTypeView + phProductId;
+	phOptions["id_item_price_gift"] = "#phItemPriceGiftBox" + phTypeView + phProductId;
     phOptions["id_item_stock"] = "#phItemStockBox" + phTypeView + phProductId;
 	phOptions["id_item_id"] = "#phItemIdBox" + phTypeView + phProductId;
 	phOptions["id_item_name"] = "V" + phTypeView + 'P' + phProductId;
@@ -164,6 +165,13 @@ function phSetAttributeUrl(phSetValueByUser) {
 	var phTypeView 			= '';
 	var phProductId 		= '';
 
+	// Change base64 return url - add attribute suffix to the URL so when products will be added to cart without running ajax
+	// then it will be redirected back to the site with selected attribute
+	var attributeForm   = jQuery(phProductAttribute).closest("form");
+	var attributeFormReturn = attributeForm.find("input[name=return]");
+	var attributeFormReturnValue = Base64.decode(attributeFormReturn.val());
+	
+
 	// Find all attributes in Item View
 	jQuery(phProductAttribute).each(function() {
 
@@ -176,6 +184,8 @@ function phSetAttributeUrl(phSetValueByUser) {
 		var valueAlias 		= '';// One value for selectbox
 		var valuesAlias 	= '';// One or more values for checkbox
 		var phSelectNameIdT	= '#phItemHiddenAttribute' + jQuery(this).data('attribute-id-name');
+		
+		
 
 
 		if (phSetValueByUser == 1) {
@@ -276,9 +286,19 @@ function phSetAttributeUrl(phSetValueByUser) {
 	// Update URL after #
 	if (phSetValueByUser == 0 && phHashNew != '') {
 		phHashNew = '#' + phHashNew;
+		
+		// Update even form return value to be returned back with selected attribute
+		if(attributeFormReturnValue != '') {
+			attributeFormReturn.val(Base64.encode(attributeFormReturnValue + phHashNew));
+		}
 		window.history.pushState({},"", phHashNew);
 	} else if (phSetValueByUser == 1) {
 		phHashNew = '#' + phHashNew;
+		
+		// Update even form return value to be returned back with selected attribute
+		if(attributeFormReturnValue != '') {
+			attributeFormReturn.val(Base64.encode(attributeFormReturnValue + phHashNew));
+		}
 		window.history.pushState({},"", phHashNew);
 	}
 }
@@ -356,4 +376,33 @@ jQuery(document).ready(function() {
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);
     })
+
+
+	// Gift coupon
+	jQuery('.phAOGift').on('input', function() {
+		var phAOType = '.' + jQuery(this).data('type');
+
+
+		if (phAOType == '.phAOGiftType') {
+			
+			var title = jQuery(this).data('title');
+			jQuery('.phAOGiftTitle').text(title);
+			var image = jQuery(this).data('image');
+			jQuery('.phAOGiftImage').attr('src', image);
+			var date = jQuery(this).data('date');
+			jQuery('.phAOGiftDate').text(date);
+			
+			var description = jQuery(this).data('description');
+			description = Base64.decode(description);
+			jQuery('.phAOGiftDescription').html(description);
+
+			var className = jQuery(this).data('class-name');
+			jQuery(phAOType).attr('class', 'phAOGiftType ph-gift-voucher-box ' + className);
+
+		} else {
+			jQuery(phAOType).text(jQuery(this).val());
+		}
+
+	});
+
 })

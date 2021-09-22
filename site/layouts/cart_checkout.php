@@ -412,7 +412,6 @@ if (!empty($d['fullitems'][1])) {
 
 
 
-
 	// SUBTOTAL NETTO
 	if ($d['total'][1]['netto'] !== 0) {
 

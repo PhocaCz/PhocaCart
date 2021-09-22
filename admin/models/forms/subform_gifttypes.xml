@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+
+		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />
+
+		<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="false" />
+
+<field name="image" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC"/>
+<field name="image_small" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL" description="COM_PHOCACART_FIELD_IMAGE_SMALL_DESC"/>
+
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_DESC"/>
+			   
+
+		<field name="expiration_date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_GIFT_EXPIRATION_DATE_LABEL" description="COM_PHOCACART_FIELD_GIFT_EXPIRATION_DATE_DESC"  translateformat="true" showtime="false"/>
+
+<field name="class_name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CLASS_NAME_LABEL" description="COM_PHOCACART_FIELD_CLASS_NAME_DESC" required="false" />
+
+
+
+
+	</fieldset>
+</form>

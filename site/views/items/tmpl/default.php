@@ -139,14 +139,17 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 		// :L: PRICE
 		$dP = array();
-		$dP['type'] = $v->type;// PRODUCTTYPE
-
+		$priceItems = array();
 		if ($this->t['can_display_price']) {
 
-			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
+			$dP['type'] = $v->type;// PRODUCTTYPE
+
+			$priceItems	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();
+			$dP['priceitems']	= $priceItems;
+
 			if ($v->price_original != '' && $v->price_original > 0) {
 				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype);
 			}
@@ -262,10 +265,13 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$dAb['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 			$dAb['zero_attribute_price']	= $this->t['zero_attribute_price'];
 			$dAb['pathitem']				= $this->t['pathitem'];
+
 			$dAb['product_id']				= (int)$v->id;
+			$dAb['gift_types']				= $v->gift_types;
 			$dAb['image_size']				= $image['size'];
 			$dAb['typeview']				= 'Items';
 			$dAb['price']					= $price;
+			$dAb['priceitems']				= $priceItems;
 
 			// Attribute is required and we don't display it in category/items view, se we need to redirect to detail view
 			$dA['selectoptions']	= 0;
@@ -388,6 +394,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
+
+		//$dL['product_header'] .= '<div>SKU: '.$v->sku.'</div>';
+		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 
 		// Events
 		$results = \JFactory::getApplication()->triggerEvent('PCVonItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));

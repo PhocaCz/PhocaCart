@@ -56,6 +56,7 @@ $l['et']	= array('COM_PHOCACART_EXTENSIONS', 'phocacartextensions');
 $l['ve']	= array('COM_PHOCACART_VENDORS', 'phocacartvendors');
 $l['se']	= array('COM_PHOCACART_SECTIONS', 'phocacartsections');
 $l['un']	= array('COM_PHOCACART_UNITS', 'phocacartunits');
+$l['bp']	= array('COM_PHOCACART_BULK_PRICE_EDITOR', 'phocacartbulkprices');
 
 // Submenu view
 

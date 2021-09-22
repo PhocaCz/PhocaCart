@@ -9,7 +9,7 @@
 
 defined('JPATH_BASE') or die;
 
-$s = PhocacartRenderStyle::getStyles();
+//$s = PhocacartRenderStyle::getStyles();
 
 $icon = empty($displayData['icon']) ? 'generic' : preg_replace('#\.[^ .]*$#', '', $displayData['icon']);
 ?>

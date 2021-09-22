@@ -465,6 +465,7 @@ class PhocacartRenderMedia
     public function loadPhocaAttribute($load = 0) {
         if ($load == 1 && $this->load) {
             //$this->document->addScript(JURI::root(true).'/media/com_phocacart/js/phoca/jquery.phocaattribute'.$this->t['min'].'.js');
+            HTMLHelper::_('script', 'media/com_phocacart/js/base64/base64' . $this->t['min'] . '.js', array('version' => 'auto'), $this->scriptAtributeInline);
             HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaattribute' . $this->t['min'] . '.js', array('version' => 'auto'), $this->scriptAtributeInline);
         }
     }

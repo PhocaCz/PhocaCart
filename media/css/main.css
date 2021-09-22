@@ -2388,3 +2388,23 @@ img.ph-lazyload:not([src]) {
 #phQuickViewPopup {
 	z-index: 1050;
 }
+
+
+/* Gift Voucher */
+#ph-pc-item-box .form-check.ph-radio-gift-box {
+	flex-direction: column;
+	display: inline-flex;
+	padding: 0.3em;
+	min-width: 50%;
+}
+.ph-radio-gift-image {
+	padding: 0.3em;
+}
+.ph-radio-gift-title {
+	font-size: 0.75em;
+}
+
+.ph-gift-box-form div label {
+	text-align: left;
+	justify-content:left;
+}

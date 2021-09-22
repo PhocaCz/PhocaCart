@@ -203,7 +203,7 @@ if ($export_downloads == 1) {
     $a[] = array('additional_download_files', 'COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILES');//-
 }
 $a[] = array('type', 'COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL');
-$a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');
+//$a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');
 
 $a[] = array('length', 'COM_PHOCACART_FIELD_LENGTH_LABEL');
 $a[] = array('width', 'COM_PHOCACART_FIELD_WIDTH_LABEL');
@@ -229,8 +229,8 @@ $a[] = array('date_update', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');//-
 
 $a[] = array('created_by', 'COM_PHOCACART_FIELD_CREATED_BY_LABEL');//-
 $a[] = array('created', 'COM_PHOCACART_FIELD_CREATED_DATE_LABEL');//-
-$a[] = array('modified_by', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');//-
-$a[] = array('modified', 'COM_PHOCACART_FIELD_MODIFIED_BY_LABEL');//-
+$a[] = array('modified_by', 'COM_PHOCACART_FIELD_MODIFIED_BY_LABEL');//-
+$a[] = array('modified', 'COM_PHOCACART_FIELD_UPDATE_DATE_LABEL');//-
 
 
 

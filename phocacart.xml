@@ -2,12 +2,12 @@
 <extension type="component" method="upgrade" version="3.9">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>11/02/2021</creationDate>
+	<creationDate>22/09/2021</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>3.5.6</version>
+	<version>3.5.7</version>
 	<description>COM_PHOCACART_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<projectName>PhocaCart</projectName>
@@ -103,7 +103,8 @@
 				<menu img="class:extensions" alt="COM_PHOCACART_EXTENSIONS" view="phocacartextensions" link="option=com_phocacart&amp;view=phocacartextensions">COM_PHOCACART_EXTENSIONS</menu>
 				<menu img="class:vendors" alt="COM_PHOCACART_VENDORS" view="phocacartvendors" link="option=com_phocacart&amp;view=phocacartvendors">COM_PHOCACART_VENDORS</menu>
 				<menu img="class:sections" alt="COM_PHOCACART_SECTIONS" view="phocacartsections" link="option=com_phocacart&amp;view=phocacartsections">COM_PHOCACART_SECTIONS</menu>
-				<menu img="class:units" alt="COM_PHOCACART_UNITS" view="phocacartextunits" link="option=com_phocacart&amp;view=phocacartextunits">COM_PHOCACART_UNITS</menu>
+				<menu img="class:units" alt="COM_PHOCACART_UNITS" view="phocacartunits" link="option=com_phocacart&amp;view=phocacartunits">COM_PHOCACART_UNITS</menu>
+				<menu img="class:bulkprices" alt="COM_PHOCACART_BULK_PRICE_EDITOR" view="phocacartbulkprices" link="option=com_phocacart&amp;view=phocacartbulkprices">COM_PHOCACART_BULK_PRICE_EDITOR</menu>
 			</submenu>
 
 		<files folder="admin">

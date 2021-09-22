@@ -244,7 +244,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
 			'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity',
 			'a.stockstatus_a_id', 'a.stockstatus_n_id','a.date', 'a.sales', 'a.featured',
-			'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price');
+			'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price', 'a.gift_types');
 
 
 		$col = array_merge($baseColumns, $additionalColumns);
@@ -361,7 +361,6 @@ class PhocaCartModelCategory extends JModelLegacy
 			. ' GROUP BY '.$groups
 			. ' ORDER BY '.$itemOrdering;
 		}
-
 
 		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
 

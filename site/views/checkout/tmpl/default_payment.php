@@ -171,6 +171,9 @@ if ($this->a->paymentnotused == 1) {
 			}
 
 			if ($priceI['costinfo'] != '') {
+				// Possible variables:
+				// $priceI['costinfoprice'] ... raw price without price additional
+				// $priceI['costinfopriceadditional'] ... raw additional price
 				echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-payment-cost-info-txt"></div>';
 				echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-right ph-checkout-payment-cost-info">'.$priceI['costinfo'].'</div>';
 

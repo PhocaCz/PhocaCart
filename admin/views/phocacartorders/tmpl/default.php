@@ -73,9 +73,10 @@ echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo '<th class="ph-order">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ORDER_NUMBER', 'order_number', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-user">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_USER', 'user_username', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-status">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_STATUS', 'a.status_id', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-action">' . JText::_($this->t['l'] . '_INFO') . '</th>' . "\n";
+echo '<th class="ph-info">' . JText::_($this->t['l'] . '_INFO') . '</th>' . "\n";
 echo '<th class="ph-action">' . JText::_($this->t['l'] . '_ACTION') . '</th>' . "\n";
 echo '<th class="ph-total-center">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TOTAL', 'total_amount', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-invoice">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_INVOICE_NUMBER', 'invoice_number', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-date">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DATE_ADDED', 'a.date', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-date">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DATE_MODIFIED', 'a.modified', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
@@ -190,19 +191,23 @@ if (is_array($this->items)) {
 
         echo $r->td($info, "small");
         // ACTION
-        $view = '<a href="' . $linkOrderView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span></a>';
+        $view = '<div class="ph-action-row">';
+
+        $view .= '<a href="' . $linkOrderView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span></a>';
         $view .= ' <a href="' . $linkInvoiceView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span></a>';
         $view .= ' <a href="' . $linkDelNoteView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span></a>';
 
+        $view .= '</div>';
 
         if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 
             $formatPDF = '&format=pdf';
-            $view      .= '<br />';
-            $view      .= '<a href="' . $linkOrderView . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span><br /><span class="ph-icon-success-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
-            $view      .= ' <a href="' . $linkInvoiceView . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
-            $view      .= ' <a href="' . $linkDelNoteView . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view .= '<div class="ph-action-row">';
+            $view      .= '<a href="' . $linkOrderView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span><br /><span class="ph-icon-success-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= ' <a href="' . $linkInvoiceView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= ' <a href="' . $linkDelNoteView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . JText::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">' . JText::_('COM_PHOCACART_PDF') . '</span></a>';
 
+            $view .= '</div>';
         }
         echo $r->td($view, "small");
 
@@ -211,6 +216,8 @@ if (is_array($this->items)) {
 
         $amount = (isset($item->total_amount_currency) && $item->total_amount_currency > 0) ? $price->getPriceFormat($item->total_amount_currency, 0, 1) : $price->getPriceFormat($item->total_amount);
         echo $r->td($amount, "small ph-right ph-p-r-med ph-no-wrap");
+
+        echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)), "small");
 
         echo $r->td(JHtml::date($item->date, JText::_('DATE_FORMAT_LC5')), "small");
         echo $r->td(JHtml::date($item->modified, JText::_('DATE_FORMAT_LC5')), "small");

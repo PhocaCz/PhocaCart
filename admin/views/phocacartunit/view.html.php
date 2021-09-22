@@ -44,7 +44,7 @@ class PhocaCartCpViewPhocacartUnit extends JViewLegacy
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.unit_id'));
 
 		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
-		JToolbarHelper::title(   JText::_( $this->t['l'] . '_TAG' ).': <small><small>[ ' . $text.' ]</small></small>' , 'modal-window');
+		JToolbarHelper::title(   JText::_( $this->t['l'] . '_UNIT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'modal-window');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 $d 		        = $displayData;
 $price 	        = new PhocacartPrice();
 $taxes 	        = PhocacartTax::getAllTaxesIncludingCountryRegion();
@@ -216,3 +217,5 @@ echo '<p>&nbsp;</p>';
 if ($d['format'] == 'raw') {
     echo '</body></html>';
 }
+
+

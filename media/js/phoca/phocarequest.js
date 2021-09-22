@@ -153,6 +153,9 @@ function phDoRequestSuccess(data, options) {
 		/* Change Price */
 		if( data.item.price !== undefined ) {
 			jQuery(options["id_item_price"]).html(data.item.price);
+			// Change also Gift voucher if displayed
+			jQuery(options["id_item_price_gift"]).html(data.item.priceitems.bruttoformat);
+			
 		}
 
 		/* Change ID (SKU, EAN, ...) */

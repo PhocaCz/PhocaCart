@@ -137,6 +137,10 @@ if (is_array($this->items)) {
             $rules[] = '<span class="label label-success badge badge-success label-success">' . JText::_('COM_PHOCACART_SHIPPING_RULE') . '</span>';
         }
 
+        if ($item->active_zone) {
+            $rules[] = '<span class="label label-primary badge badge-primary label-primary">' . JText::_('COM_PHOCACART_ZONE_RULE') . '</span>';
+        }
+
 
         echo $r->td(implode(" ", $rules), "small");
 

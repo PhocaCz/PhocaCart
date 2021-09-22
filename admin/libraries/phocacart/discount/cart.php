@@ -74,20 +74,21 @@ class PhocacartDiscountCart
 	/*
 	 * id ... id of current checked product
 	 * quantity ... total quantity of all products
-	 * amount	... total amount based on all products
+	 * amount	... total amount based on all products (affected by sales, discounts, etc.)
+	 * subtotalAmount ... total amount based on all products (not affected by sales, discounts, etc.)
 	 */
 
-	public static function getCartDiscount($id = 0, $catid = 0, $quantity = 0, $amount = 0) {
+	public static function getCartDiscount($id = 0, $catid = 0, $quantity = 0, $amount = 0, $subtotalAmount = 0) {
 
 		//$app									= JFactory::getApplication();
 		$paramsC 								= PhocacartUtils::getComponentParameters();
 		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
+		$discount_subtotal_amount				= $paramsC->get( 'discount_subtotal_amount', 1 );
+
 
 		// Cart discount applies to all cart, so we don't need to load it for each product
 		// 1 mean id of cart, not id of product
 		$discounts 	= self::getCartDiscountsById(1, 1);
-
-
 
 
 		if (!empty($discounts)) {
@@ -112,9 +113,16 @@ class PhocacartDiscountCart
 
 				// 3. VALID TOTAL AMOUNT
 				if (isset($v['total_amount'])) {
+
+				    $currentAmount = $amount;
+				    if ($discount_subtotal_amount == 2) {
+				        $currentAmount = $subtotalAmount;
+                    }
+
+
 					if ($v['total_amount'] == 0) {
 						// OK we don't check the total amount as zero means, no total amount limit
-					} else if ($v['total_amount'] > 0 && $amount < $v['total_amount']) {
+					} else if ($v['total_amount'] > 0 && $currentAmount < $v['total_amount']) {
 						unset($discounts[$k]);
 						continue;
 					}

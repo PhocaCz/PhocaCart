@@ -251,6 +251,7 @@ class PhocaCartViewCheckout extends JViewLegacy
             $shipping              = new PhocacartShipping();
             $country               = $shipping->getUserCountryShipping($this->t['dataaddressoutput']);
             $region                = $shipping->getUserRegionShipping($this->t['dataaddressoutput']);
+            $zip 	                = $shipping->getUserZipShipping($this->t['dataaddressoutput']);
             $this->a->shippingadded = 0;
             $this->a->shippingedit = $app->input->get('shippingedit', 0, 'int'); // Edit Shipping
             $shippingId            = $this->cart->getShippingId();               // Shipping stored in cart or not?
@@ -271,7 +272,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                 // and redirect outside the editing mode
                 if ($this->t['automatic_shipping_method_setting'] == 1) {
                     //- $shipping					= new PhocacartShipping();
-                    $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
+                    $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
                     if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1) {
                         $this->a->shippingdisplayeditbutton = 0;
                     }
@@ -299,7 +300,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                 $total = $this->cart->getTotal();
 
 
-                $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
+                $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 
 
                 // If there is only one valid shipping method and it is set in parameter we can directly store this method so user does not need to add it

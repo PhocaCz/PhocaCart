@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 $layoutAtOS	= new JLayoutFile('attribute_options_select', null, array('component' => 'com_phocacart'));
 $layoutAtOC	= new JLayoutFile('attribute_options_checkbox', null, array('component' => 'com_phocacart'));
 $layoutAtOT	= new JLayoutFile('attribute_options_text', null, array('component' => 'com_phocacart'));
+$layoutAtOG	= new JLayoutFile('attribute_options_gift', null, array('component' => 'com_phocacart'));
 
 $d 				= $displayData;
 $displayData 	= null;
@@ -20,6 +21,7 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 
 	echo '<div class="ph-item-attributes-box" id="phItemAttributesBox">';
 	echo '<h4>'.JText::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';
+
 
 	foreach ($d['attr_options'] as $k => $v) {
 
@@ -46,13 +48,15 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 			$d2['attribute']			= $v;
 			$d2['required']				= $req;
 
-            // EDIT PHOCACARTATTRIBUTE
+            // EDIT PHOCACARTATTRIBUTE ATTRIBUTETYPE
 			if ($v->type == 1 || $v->type == 2 || $v->type == 3) {
 				echo $layoutAtOS->render($d2);// SELECTBOX, SELECTBOX COLOR, SELECTBOX IMAGE
 			} else if ($v->type == 4 || $v->type == 5 || $v->type == 6) {
 				echo $layoutAtOC->render($d2);// CHECKBOX, CHECKBOX COLOR, CHECKBOX COLOR
 			} else if ($v->type == 7 || $v->type == 8 || $v->type == 9 || $v->type == 10 || $v->type == 11 || $v->type == 12) {
 				echo $layoutAtOT->render($d2);// TEXT, TEXT (COLOR PICKER)
+			} else if ($v->type == 20) {
+				echo $layoutAtOG->render($d2);// GIFT
 			}
 		}
 

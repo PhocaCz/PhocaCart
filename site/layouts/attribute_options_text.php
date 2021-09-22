@@ -39,6 +39,9 @@ echo '<div ' . implode(' ', $attr) . '>';
 }*/
 
 foreach ($v->options as $k2 => $v2) {
+	// Extends required part for some specific parameters
+	$req = PhocacartRenderJs::renderRequiredParts((int)$v->id, (int)$v2->required );
+	$d['required'] = $req;												  
     if ($v2->operator == '=') {
         $operator = '';
     } else {
@@ -62,10 +65,13 @@ foreach ($v->options as $k2 => $v2) {
 
     $maxLength = ' maxlength="' . PhocacartAttribute::getAttributeLength($v->type) . '"';
 
-    echo '<div><label class="' . $d['s']['c']['btn'] . ' phTextAttributeInput ' . $active . '" style="background-color: ' . strip_tags($v2->color) . '">' . htmlspecialchars($v2->title) . $suffix . '</label><br />';
+	echo '<div class="'. $d['s']['c']['row'].' ph-gift-box-form">';															   
+    echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'"><label class="' . $d['s']['c']['btn'] . ' phTextAttributeInput ' . $active . '" style="background-color: ' . strip_tags($v2->color) . '">' . htmlspecialchars($v2->title) . $suffix . $d['required']['span'] . '</label></div>';
+	echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'">';																					  
     switch ($v->type) {
         case 10:
         case 11:
+		case 23: // GIFT SENDER MESSAGE
 
             echo '<textarea class="ph-attribute-textarea" name="attribute[' . $v->id . '][' . $v2->id . ']" ' . $d['required']['attribute'] . $maxLength . '></textarea>';
 
@@ -95,6 +101,7 @@ foreach ($v->options as $k2 => $v2) {
         break;
     }
     echo '</div>';
+	echo '</div>';
 }
 
 

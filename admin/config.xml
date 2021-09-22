@@ -896,6 +896,13 @@
 				<option value="3">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS_IF_EMPTY_SHIPPING_ADDRESS</option>
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
+			
+			<field name="shipping_zip_rule" type="list" default="1" label="COM_PHOCACART_FIELD_ZIP_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_ZIP_RULE_SHIPPING_DESC">
+                <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
+                <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
+				<option value="3">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS_IF_EMPTY_SHIPPING_ADDRESS</option>
+                <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
+            </field>
 
             <field name="tax_calculation_payment" type="list" default="0" label="COM_PHOCACART_FIELD_TAX_CALCULATION_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_TAX_CALCULATION_PAYMENT_DESC">
                 <option value="2">COM_PHOCACART_TAX_INCLUSIVE_PRICE</option>
@@ -1130,6 +1137,11 @@
                 <option value="1">COM_PHOCACART_HIGHEST_DISCOUNT</option>
                 <option value="2">COM_PHOCACART_HIGHEST_QUANTITY</option>
             </field>
+			
+			<field name="discount_subtotal_amount" default="1" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISCOUNT_SUBTOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_SUBTOTAL_AMOUNT_DESC">
+                <option value="1">COM_PHOCACART_SUBTOTAL_REDUCED_BY_OTHER_TYPES_OF_DISCOUNTS</option>
+                <option value="2">COM_PHOCACART_FIXED_SUBTOTAL</option>
+            </field>
 
             <field name="phocahead21" type="phocahead" default="COM_PHOCACART_CONFIG_PRODUCT_DISCOUNT_OPTIONS_LABEL" label="" description=""/>
 
@@ -1323,11 +1335,11 @@
             <field name="invoice_number_chars" default="12" size="4" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LENGTH_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_LENGTH_DESC"/>-->
 
 
-            <field name="attachment_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_DESC">
+            <!--<field name="attachment_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_TYPE_DESC">
                 <option value="0">COM_PHOCACART_HTML</option>
                 <option value="1">COM_PHOCACART_PDF</option>
                 <option value="2">COM_PHOCACART_BOTH</option>
-            </field>
+            </field>-->
 
             <field name="additional_hits" default="" type="list" label="COM_PHOCACART_FIELD_ADDITIONAL_HITS_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_HITS_DESC" multiple="true">
                 <option value="1">COM_PHOCACART_PRODUCT_VIEW</option>
@@ -1601,6 +1613,12 @@
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
+			
+			<field name="phocahead40" type="phocahead" default="COM_PHOCACART_GIFT_VOUCHER_OPTIONS_LABEL" label="" description=""/>
+			
+			<field name="gift_code_length" type="text" default="8" label="COM_PHOCACART_FIELD_GIFT_CODE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_GIFT_CODE_LENGTH_DESC"/>
+			<field name="gift_code_characters" type="text" default="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" label="COM_PHOCACART_FIELD_GIFT_CODE_CHARACTERS_LABEL" description="COM_PHOCACART_FIELD_GIFT_CODE_CHARACTERS_DESC"/>
+			<field name="gift_sender_message_length" type="text" default="500" label="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LENGTH_DESC"/>
 			
 			
 			<field name="phocahead38" type="phocahead" default="COM_PHOCACART_PRINTED_CATALOG_OPTIONS_LABEL" label="" description=""/>

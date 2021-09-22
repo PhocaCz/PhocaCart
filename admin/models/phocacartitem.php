@@ -81,6 +81,12 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 				$item->params_feed = $registry->toArray();
 			}
 
+			if (isset($item->gift_types)) {
+				$registry = new JRegistry;
+				$registry->loadString($item->gift_types);
+				$item->gift_types = $registry->toArray();
+			}
+
 			// Make the numbers more readable
 			// it has no influence on saving it to db
 			$item->price 			= PhocacartPrice::cleanPrice($item->price);
@@ -234,6 +240,17 @@ class PhocaCartCpModelPhocaCartItem extends JModelAdmin
 			}
 		} else {
 			$data['params_feed'] = '';
+		}
+
+
+		if (!empty($data['gift_types'])) {
+			$registry 	= new JRegistry($data['gift_types']);
+			$dataGiftTypes 	= $registry->toString();
+			if($dataGiftTypes != '') {
+				$data['gift_types'] = $dataGiftTypes;
+			}
+		} else {
+			$data['gift_types'] = '';
 		}
 
 

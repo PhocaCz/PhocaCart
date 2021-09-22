@@ -885,6 +885,7 @@ class PhocaCartControllerCheckout extends JControllerForm
         $order     = new PhocacartOrder();
         $orderMade = $order->saveOrderMain($item);
 
+
         if (!$orderMade) {
             $msg = '';
             if (!PhocacartUtils::issetMessage()) {
@@ -895,18 +896,42 @@ class PhocaCartControllerCheckout extends JControllerForm
             return true;
         } else {
 
-            $cart = new PhocacartCart();
-            $cart->emptyCart();
-            PhocacartUserGuestuser::cancelGuestUser();
+            // Lets decide Payment plugin if the cart will be emptied or not
+            $cart           = new PhocacartCart();
+            $paymentMethod 	= $cart->getPaymentMethod();
+            $pluginData     = array();
+            $pluginData['emptycart'] = true;
+            if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0) {
 
-            $action  = $order->getActionAfterOrder(); // Which action should be done
-            $message = $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
+                $payment		= new PhocacartPayment();
+                $paymentO       = $payment->getPaymentMethod((int)$paymentMethod['id']);
+
+                if (isset($paymentO->method)) {
+                    JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
+                    $eventData 					= array();
+                    $proceed 					= '';
+                    $eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
+                    JFactory::getApplication()->triggerEvent('PCPbeforeEmptyCartAfterOrder', array(&$proceed, &$pluginData, $pC, $paymentO->params, $order, $eventData));
+                }
+            }
+
+            if ($pluginData['emptycart'] === true) {
+                $cart->emptyCart();
+                PhocacartUserGuestuser::cancelGuestUser();
+            }
+
+
+
+            $action     = $order->getActionAfterOrder(); // Which action should be done
+            $message    = $order->getMessageAfterOrder();// Custom message by payment plugin Payment/Download, Payment/No Download ...
+            $dataOrder  = $order->getDataAfterOrder();// Order ID, Token, payment ID, shipping ID ... different data for info view
 
             $session = JFactory::getSession();
             if ($action == 4 || $action == 3) {
                 // Ordered OK, but now we proceed to payment
                 $session->set('infoaction', $action, 'phocaCart');
                 $session->set('infomessage', $message, 'phocaCart');
+                $session->set('infodata', $dataOrder, 'phocaCart');
                 $app->redirect(JRoute::_(PhocacartRoute::getPaymentRoute(), false));
                 return true;
                 // This message should stay
@@ -922,6 +947,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                 $session->set('infoaction', $action, 'phocaCart');
                 $session->set('infomessage', $message, 'phocaCart');
+                $session->set('infodata', $dataOrder, 'phocaCart');
                 $app->redirect(JRoute::_(PhocacartRoute::getInfoRoute(), false));
                 return true;
             }

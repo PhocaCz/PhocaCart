@@ -42,6 +42,8 @@
 			<option value="a.valid_from DESC" >COM_PHOCACART_VALID_FROM_DESC</option>
 			<option value="a.valid_to ASC" >COM_PHOCACART_VALID_TO_ASC</option>
 			<option value="a.valid_to DESC" >COM_PHOCACART_VALID_TO_DESC</option>
+			<option value="a.coupon_type ASC" >COM_PHOCACART_COUPON_TYPE_ASC</option>
+			<option value="a.coupon_type DESC" >COM_PHOCACART_COUPON_TYPE_DESC</option>
 			<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>
 			<option value="a.published DESC" >COM_PHOCACART_PUBLISHED_DESC</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>

@@ -154,6 +154,12 @@ $s['c']['form-control']             = 'form-control';
 $s['c']['form-inline']              = 'form-inline';
 $s['c']['form-horizontal']          = 'form-horizontal';
 $s['c']['form-horizontal.form-validate']    = 'form-horizontal form-validate';
+
+$s['c']['form-check']               = 'form-check';
+$s['c']['form-check-input']         = 'form-check-input';
+$s['c']['form-check-label']         = 'form-check-label';
+
+
 $s['c']['checkbox']	                = 'checkbox';
 $s['c']['inputbox']	                = 'inputbox';
 $s['c']['inputbox.form-control']    = 'inputbox form-control';

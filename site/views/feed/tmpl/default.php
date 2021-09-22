@@ -242,13 +242,12 @@ if (!empty($this->t['products'])) {
             $oI['item_manufacturer'] = $l.$this->p['item_manufacturer'].$r.htmlspecialchars($v->manufacturertitle).$e.$this->p['item_manufacturer'].$r;
         }
 
-        // STOCK
+        // STOCK (Product edit - Stock Options - In Stock)
         if ($this->p['item_stock'] != '' && isset($v->stock) && $v->stock != '') {
             $oI['item_stock'] = $l.$this->p['item_stock'].$r.$v->stock.$e.$this->p['item_stock'].$r;
         }
 
-        // STOCK DELIVERY_DATE
-
+        // STOCK DELIVERY_DATE (Product edit - Stock Options - Stock Status)
         if ($this->p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
 
 
@@ -260,12 +259,12 @@ if (!empty($this->t['products'])) {
             }
         }
 
-        // STOCK DELIVERY_DATE - REAL DATE
+        // STOCK DELIVERY_DATE - REAL DATE (Product edit - Stock Options - Product Delivery Date)
         if ($this->p['item_delivery_date_date'] != '' && isset($v->delivery_date) && $v->delivery_date != '' && $v->delivery_date != '0000-00-00 00:00:00') {
             $oI['item_delivery_date_date'] = $l.$this->p['item_delivery_date_date'].$r.$v->delivery_date.$e.$this->p['item_delivery_date_date'].$r;
         }
 
-        // STOCK DELIVERY_DATE FEED
+        // STOCK DELIVERY_DATE FEED (Stock Status Edit - Title (XML Feed))
         if ($this->p['feed_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
             $stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
 
@@ -437,7 +436,7 @@ if (!empty($this->t['products'])) {
         }
 
 
-        $o['params'] .= implode("\n", $oIP);
+        $oI['params'] .= implode("\n", $oIP);
 
 
 

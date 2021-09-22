@@ -58,7 +58,6 @@ echo '<p>&nbsp;</p>';
 
 $link	= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditstatus&tmpl=component&id='.(int)$this->id);
 
-
 echo '<form action="'.$link.'" method="post">';
 echo '<input type="hidden" name="jform[id]" value="'.(int)$this->id.'">';
 echo '<input type="hidden" name="task" value="phocacarteditstatus.editstatus">';
@@ -100,8 +99,14 @@ echo '</div>';
 
 
 echo '<div class="row-fluid">';
-echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_EMAIL_ATTACHMENT_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_EMAIL_SEND_ATTACHMENT_LABEL').'</div>';
 echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getEmailSendSelectBox($this->item['email_send']).'</div>';
+echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
+
+echo '<div class="row-fluid">';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getEmailSendFormatSelectBox($this->item['email_send_format']).'</div>';
 echo '<div class="span6 col-sm-6 col-md-6"></div>';
 echo '</div>';
 
@@ -136,7 +141,13 @@ echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_REWAR
 echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getChangePointsReceivedSelectBox($this->item['change_points_received']).'</div>';
 echo '<div class="span6 col-sm-6 col-md-6"></div>';
 echo '</div>';
-
+/*
+echo '<div class="row-fluid">';
+echo '<div class="span3 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_FIELD_REWARD_EMAIL_SEND_GIFT_VOUCHERS_LABEL').'</div>';
+echo '<div class="span3 col-sm-3 col-md-3">'.PhocacartOrderStatus::getEmailSendGiftSelectBox($this->item['email_gift']).'</div>';
+echo '<div class="span6 col-sm-6 col-md-6"></div>';
+echo '</div>';
+*/
 echo '<div class="row-fluid">';
 echo '<div class="span3 col-sm-3 col-md-3 ph-tax-edit-button"><button class="btn btn-success btn-sm ph-btn"><span class="icon-edit"></span> '.JText::_('COM_PHOCACART_EDIT_STATUS').'</button></div>';
 echo '<div class="span3 col-sm-3 col-md-3"></div>';

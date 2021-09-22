@@ -277,10 +277,17 @@
 			},
 			"41": {
 				"image": "class:units",
-				"view": "phocacartextunits",
-				"link": "option=com_phocacart&amp;view=phocacartextunits",
+				"view": "phocacartunits",
+				"link": "option=com_phocacart&amp;view=phocacartunits",
 				"title": "COM_PHOCACART_UNITS"
+			},
+			"42": {
+				"image": "class:bulkprices",
+				"view": "phocacartbulkprices",
+				"link": "option=com_phocacart&amp;view=phocacartbulkprices",
+				"title": "COM_PHOCACART_BULK_PRICE_EDITOR"
 			}
+			
 		}
 	},
 	"projectDocumentationLinks": {

@@ -45,7 +45,9 @@
 <field name="read_only" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_READ_ONLY_LABEL" description="COM_PHOCACART_FIELD_READ_ONLY_DESC" >
 <option value="0">COM_PHOCACART_NO</option>
 <option value="1">COM_PHOCACART_YES</option>
+<option value="3">COM_PHOCACART_YES_EXCEPT_FOR_ORDER_EDITING_IN_ADMINISTRATION</option>
 <option value="2">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS</option>
+<option value="4">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS_EXCEPT_FOR_ORDER_EDITING_IN_ADMINISTRATION</option>
 </field>
 
 <field name="validate" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_VALIDATE_LABEL" description="COM_PHOCACART_FIELD_VALIDATE_DESC" />

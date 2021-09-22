@@ -78,6 +78,7 @@ class PhocacartCaptchaRecaptcha
 				curl_close($ch);
 			}
 
+
 			//$resultString = print r($result, true);
 			//PhocacartLog::add(3, 'Ask a Question - Captcha Result', 0, $resultString);
 			if (!$result) {

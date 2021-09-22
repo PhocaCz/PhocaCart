@@ -20,7 +20,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
 	//protected $c 		= false;
 	protected $columns	= array();
-	protected $column_full	= array();
+	protected $columns_full	= array();
 
 
 
@@ -31,6 +31,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
         $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
         $admin_columns_products = explode(',', $admin_columns_products);
+
+
 
 		$options                = array();
 		$options['type']    	= 'data';
@@ -190,6 +192,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
 		$col = array_merge($col, $this->columns);
 		$col = array_unique($col);
+
 
 
 		$columns	= 'DISTINCT ' .implode(',', $col);

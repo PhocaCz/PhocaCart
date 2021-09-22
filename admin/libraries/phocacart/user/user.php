@@ -278,8 +278,11 @@ class PhocacartUser
 		$sNameO		= '';// join first, middle, last name and degree
 		$o['bregion'] 	= '';// Return for shipping method (save database query)
 		$o['bcountry']	= '';// Return for shipping method (save database query)
+		$o['bzip']		= '';// Return for shipping method (save database query)
+
 		$o['sregion'] 	= '';// Return for shipping method (save database query)
 		$o['scountry']	= '';// Return for shipping method (save database query)
+		$o['szip']		= '';// Return for shipping method (save database query)
 
 		// ba_sa = 0: billing and shipping addresses are NOT the same
 		// ba_sa = 1: billing and shipping addresses are same (don't check shipping fields)
@@ -354,6 +357,9 @@ class PhocacartUser
 							$o['bregion']	= (int)$value;// Return region and country
                             $regionTitle = isset($data[0]->regiontitle) ? $data[0]->regiontitle : PhocacartRegion::getRegionById((int)$value);
 							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
+						} else if ($v->title == 'zip') {
+							$o['bzip']	= $value;// Return region and country or zip
+							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						} else {
 							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						}
@@ -386,6 +392,9 @@ class PhocacartUser
 							$o['sregion']	= (int)$value;// Return region and country
                             $regionTitle = isset($data[1]->regiontitle) ? $data[1]->regiontitle : PhocacartRegion::getRegionById((int)$value);
 							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
+						} else if ($v->title == 'zip') {
+							$o['szip']	= $value;// Return region and country or zip
+							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						} else {
 							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						}
@@ -537,6 +546,7 @@ class PhocacartUser
 					.' ORDER BY u.type ASC';
 			$db->setQuery($query);
 			$data = $db->loadObjectList();
+
 			return $data;
 		}
 		return false;

@@ -115,6 +115,7 @@ class PhocaCartCpViewPhocaCartCp extends JViewLegacy
 		'vendors'		=> array($this->t['l'] . '_VENDORS', $d.$i .'users', '#b30059'),
 		'sections'		=> array($this->t['l'] . '_SECTIONS', $d.$i .'notification-circle', '#b35900'),
 		'units'			=> array($this->t['l'] . '_UNITS', $d.$i .'menu', '#ff9326'),
+		'bulkprices'			=> array($this->t['l'] . '_BULK_PRICE_EDITOR', $d.$i .'click', '#f310de')
 		);
 
 	/*

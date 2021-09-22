@@ -240,6 +240,12 @@ class PhocaCartViewItem extends JViewLegacy
 
 		$results = \JFactory::getApplication()->triggerEvent('PCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
+
+		// Some payment plugins want to display specific information in detail view
+		JPluginHelper::importPlugin('pcp');
+		$results = \JFactory::getApplication()->triggerEvent('PCPonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->PCPonItemBeforeEndPricePanel = trim(implode("\n", $results));
+
 		// END Plugins --------------------------------------
 
 

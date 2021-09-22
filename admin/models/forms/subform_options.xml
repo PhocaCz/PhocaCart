@@ -42,6 +42,19 @@
             <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
-
+		
+		
+		<field name="required" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_DESC" default="0" >
+			<option value="1">COM_PHOCACART_YES</option>
+			<option value="0">COM_PHOCACART_NO</option>
+		</field>
+		<field name="type" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_DESC" default="1" >
+			<option value="0">COM_PHOCACART_ATTR_TYPE_DEFAULT</option>
+			<option value="20">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_NAME</option>
+			<option value="21">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_EMAIL</option>
+			<option value="22">COM_PHOCACART_ATTR_TYPE_GIFT_SENDER_NAME</option>
+			<option value="23">COM_PHOCACART_ATTR_TYPE_GIFT_SENDER_MESSAGE</option>
+			<option value="24">COM_PHOCACART_ATTR_TYPE_GIFT_TYPE</option>
+		</field>
     </fieldset>
 </form>

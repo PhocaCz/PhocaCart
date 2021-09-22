@@ -43,7 +43,7 @@ class PhocaCartCpViewPhocaCartEditStockAdvanced extends JViewLegacy
 		$media = new PhocacartRenderAdminmedia();
 
 
-		$this->t						= PhocacartUtils::setVars('cart');
+		$this->t						= PhocacartUtils::setVars('editstockadvanced');
 		$this->r						= new PhocacartRenderAdminview();
 		/*$this->t['product']				= PhocacartProduct::getProduct((int)$this->id);
 		$this->t['attr_options']		= PhocacartAttribute::getAttributesAndOptions((int)$this->id);
