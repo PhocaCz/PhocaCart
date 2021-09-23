@@ -1081,8 +1081,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `email_subject_others` varchar(255) NOT NULL DEFAULT '',
   `email_send` int(2) NOT NULL DEFAULT '0',
   `email_send_format` int(2) NOT NULL DEFAULT '0',
-  `activate_gift` int(2) NOT NULL DEFAULT '0',
-  `activate_gift` tinyint(1) NOT NULL DEFAULT '0'
+  `activate_gift` tinyint(1) NOT NULL DEFAULT '0',
   `email_gift` tinyint(1) NOT NULL DEFAULT '0',
   `email_subject_gift_sender` varchar(255) NOT NULL DEFAULT '',
   `email_text_gift_sender` text,
