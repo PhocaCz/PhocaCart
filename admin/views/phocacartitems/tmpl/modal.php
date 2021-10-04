@@ -192,7 +192,11 @@ if (!empty($this->items)) {
             $lang = '';
         }
 
-        $linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
+      //  $linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
+
+        $linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" onclick="if (window.parent) window.parent.'.$this->escape($onclick).'(\''. $item->id.'\', \''. $this->escape(addslashes($item->title)).'\', null, \''. $this->escape($linkLang).'\', \''. $this->escape($lang).'\', null);">';
+
+
         $linkEditBox .= $this->escape($item->title);
         $linkEditBox .= '</a>';
         $linkEdit = '';

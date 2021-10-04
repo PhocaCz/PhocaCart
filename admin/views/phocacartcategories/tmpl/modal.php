@@ -163,7 +163,11 @@ if (is_array($this->items)) {
 			$checkO .= ' <span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
 			echo $r->td($checkO, "small");
 			*/
-			$linkBox = '<a class="select-link" href="javascript:void(0)" data-function="'.$this->escape($onclick).'" data-id="'.$item->id.'" data-title="'.$this->escape($item->title).'" data-uri="'. $this->escape($linkLang).'" data-language="'.$this->escape($lang).'">';
+			//$linkBox = '<a class="select-link" href="javascript:void(0)" data-function="'.$this->escape($onclick).'" data-id="'.$item->id.'" data-title="'.$this->escape($item->title).'" data-uri="'. $this->escape($linkLang).'" data-language="'.$this->escape($lang).'">';
+
+			$linkBox = '<a class="select-link" href="javascript:void(0)" onclick="if (window.parent) window.parent.'.$this->escape($function).'(\''. $item->id.'\', \''. $this->escape(addslashes($item->title)).'\', null, \''. $this->escape($linkLang).'\', \''. $this->escape($lang).'\', null);">';
+
+
 			$linkBox .= $this->escape($item->title);
 			$linkBox .= '</a>';
 
