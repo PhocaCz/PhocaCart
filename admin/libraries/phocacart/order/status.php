@@ -776,7 +776,7 @@ class PhocacartOrderStatus
 		// BUILD EMAIL for GIFT buyer and GIFT recipients
 		// ------------------------
 
-		$layoutG	= new JLayoutFile('gift_voucher', null, array('component' => 'com_phocacart'));
+		$layoutG	= new JLayoutFile('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
 
 		$bodyRecipient 			= array();// body for all recipients - each recipient has own body
 		$attachmentRecipient 	= array();// attachment for all recipients - each recipient has own attachment (for example PDF with generaded coupons)
