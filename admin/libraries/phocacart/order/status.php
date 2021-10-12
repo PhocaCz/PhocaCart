@@ -932,6 +932,13 @@ class PhocacartOrderStatus
 						$bodyRecipient[$recipientUnique]['output'] .= $layputOutput;
 						$bodyRecipient[$recipientUnique]['output'] .= '<div>&nbsp;</div>';
 					}
+				} else {
+					// We don't send the voucher in email body but e.g. only as PDF so we still need to initiate mail body for recipient
+					if (!isset($bodyRecipient[$recipientUnique])) {
+						$bodyRecipient[$recipientUnique]                     = array();// Each recipient will have own body
+						$bodyRecipient[$recipientUnique]['body_initialized'] = true;
+						$bodyRecipient[$recipientUnique]['output']           = '';
+					}
 				}
 
 				if ($pdfV['pdf'] == 1 && ($status['email_gift_format'] == 1 || $status['email_gift_format'] == 2)) {
@@ -1002,10 +1009,12 @@ class PhocacartOrderStatus
 
 
 			// Send mail to all recipients
+
+
 			if (!empty($recipientsEmails)) {
 				foreach ($recipientsEmails as $k => $v) {
 
-					if (isset($bodyRecipient[$k]['output']) && $bodyRecipient[$k]['output'] != '') {
+					if (isset($bodyRecipient[$k]['output']) /*&& $bodyRecipient[$k]['output'] != '' - body (built by voucher) can be empty if we set the voucher in PDF only*/) {
 
 						$sitename           = $config->get('sitename');
 						$recipientEmptyBody = 0;
