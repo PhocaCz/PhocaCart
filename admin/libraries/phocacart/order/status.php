@@ -925,6 +925,7 @@ class PhocacartOrderStatus
 					if (!isset($bodyRecipient[$recipientUnique])) {
 						$bodyRecipient[$recipientUnique]                     = array();// Each recipient will have own body
 						$bodyRecipient[$recipientUnique]['body_initialized'] = true;
+						$bodyRecipient[$recipientUnique]['data'] 			 = $v;
 						$bodyRecipient[$recipientUnique]['output']           = '';
 					}
 
@@ -937,6 +938,7 @@ class PhocacartOrderStatus
 					if (!isset($bodyRecipient[$recipientUnique])) {
 						$bodyRecipient[$recipientUnique]                     = array();// Each recipient will have own body
 						$bodyRecipient[$recipientUnique]['body_initialized'] = true;
+						$bodyRecipient[$recipientUnique]['data'] 			 = $v;
 						$bodyRecipient[$recipientUnique]['output']           = '';
 					}
 				}
@@ -1021,17 +1023,21 @@ class PhocacartOrderStatus
 						if ($status['email_text_gift_recipient'] == '') {
 							$recipientEmptyBody = 1;
 						}
-						$recipientBody = $status['email_text_gift_sender'];
+						$recipientBody = $status['email_text_gift_recipient'];
 
 						$r                         = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas);
 						$r['email_gift_recipient'] = $v;// Overwrites the $r
+						$r['name_gift_recipient'] 	= isset($bodyRecipient[$k]['data']['gift_recipient_name']) ? $bodyRecipient[$k]['data']['gift_recipient_name'] : '';
+						$r['name_gift_sender'] 		= isset($bodyRecipient[$k]['data']['gift_sender_name']) ? $bodyRecipient[$k]['data']['gift_sender_name'] : '';
+						$r['valid_to_gift'] 		= isset($bodyRecipient[$k]['data']['valid_to']) ? JHtml::date($bodyRecipient[$k]['data']['valid_to'], JText::_('DATE_FORMAT_LC1')) : '';
+
 
 						if (isset($attachmentRecipient[$k]['count']) && (int)$attachmentRecipient[$k]['count'] > 1) {
 							$giftVoucherText = JText::_('COM_PHOCACART_GIFT_VOUCHERS');
 						}
 
 						if ($status['email_subject_gift_recipient'] != '') {
-							$recipientSubject = PhocacartText::completeText($status['email_subject_gift_sender'], $r, 3);
+							$recipientSubject = PhocacartText::completeText($status['email_subject_gift_recipient'], $r, 3);
 						} else if ($status['title'] != '') {
 							$recipientSubject = $sitename . ' - ' . $status['title'] . ' ' . JText::_('COM_PHOCACART_ORDER_NR') . ': ' . $r['ordernumber'] . ' - ' . $giftVoucherText;
 						}
@@ -1043,10 +1049,13 @@ class PhocacartOrderStatus
 							$bas['s'] = array();
 						}
 
-						if (isset($bodyRecipient[$k]['output']) && $bodyRecipient[$k]['output'] != '') {
-							$recipientBody = PhocacartText::completeText($bodyRecipient[$k]['output'], $r, 3);
+						if (isset($bodyRecipient[$k]['output']) /*&& $bodyRecipient[$k]['output'] != ''*/) {
+							$recipeintBody = $recipientBody . $bodyRecipient[$k]['output'];
+							$recipientBody = PhocacartText::completeText($recipientBody, $r, 3);
 							$recipientBody = PhocacartText::completeTextFormFields($recipientBody, $bas['b'], $bas['s']);
 						}
+
+						
 						$recipientAttachmentContent = '';
 						$recipientAttachmentName    = '';
 

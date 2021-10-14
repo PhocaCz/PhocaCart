@@ -29,6 +29,9 @@ class PhocacartText {
 
 		if ($type == 3) {
 		    $body = isset($replace['email_gift_recipient']) ? str_replace('{emailgiftrecipient}', $replace['email_gift_recipient'], $body) : $body;
+		    $body = isset($replace['name_gift_recipient']) ? str_replace('{namegiftrecipient}', $replace['name_gift_recipient'], $body) : $body;
+		    $body = isset($replace['name_gift_sender']) ? str_replace('{namegiftbuyer}', $replace['name_gift_sender'], $body) : $body;
+		    $body = isset($replace['valid_to_gift']) ? str_replace('{giftvalidto}', $replace['valid_to_gift'], $body) : $body;
         } else if ($type == 2) {
 			$body = isset($replace['email_others']) ? str_replace('{emailothers}', $replace['email_others'], $body) : $body;
 		} else if ($type == 1){
