@@ -2,7 +2,11 @@
 <extension type="component" method="upgrade" version="4.0">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
+<<<<<<< HEAD
 	<creationDate>30/11/2021</creationDate>
+=======
+	<creationDate>14/10/2021</creationDate>
+>>>>>>> 48dc7473218aa2b85ae41e594191fce5bb60a490
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>

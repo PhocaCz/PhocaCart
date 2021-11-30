@@ -31,10 +31,16 @@ class PhocacartText {
 
 		if ($type == 3) {
 		    $body = isset($replace['email_gift_recipient']) ? str_replace('{emailgiftrecipient}', $replace['email_gift_recipient'], $body) : $body;
+<<<<<<< HEAD
         $body = isset($replace['name_gift_recipient']) ? str_replace('{namegiftrecipient}', $replace['name_gift_recipient'], $body) : $body;
         $body = isset($replace['name_gift_sender']) ? str_replace('{namegiftbuyer}', $replace['name_gift_sender'], $body) : $body;
         // Valid To variable is limited only to first gift card, because when the variable is replaced by first gift card, it cannot be set for next gift cards
         $body = isset($replace['valid_to_gift']) ? str_replace('{giftvalidto}', $replace['valid_to_gift'], $body) : $body;
+=======
+		    $body = isset($replace['name_gift_recipient']) ? str_replace('{namegiftrecipient}', $replace['name_gift_recipient'], $body) : $body;
+		    $body = isset($replace['name_gift_sender']) ? str_replace('{namegiftbuyer}', $replace['name_gift_sender'], $body) : $body;
+		    $body = isset($replace['valid_to_gift']) ? str_replace('{giftvalidto}', $replace['valid_to_gift'], $body) : $body;
+>>>>>>> 48dc7473218aa2b85ae41e594191fce5bb60a490
         } else if ($type == 2) {
 			$body = isset($replace['email_others']) ? str_replace('{emailothers}', $replace['email_others'], $body) : $body;
 		} else if ($type == 1){

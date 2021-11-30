@@ -1039,7 +1039,11 @@ class PhocacartOrderStatus
 						$r['email_gift_recipient'] = $v;// Overwrites the $r
 						$r['name_gift_recipient'] 	= isset($bodyRecipient[$k]['data']['gift_recipient_name']) ? $bodyRecipient[$k]['data']['gift_recipient_name'] : '';
 						$r['name_gift_sender'] 		= isset($bodyRecipient[$k]['data']['gift_sender_name']) ? $bodyRecipient[$k]['data']['gift_sender_name'] : '';
+<<<<<<< HEAD
 						$r['valid_to_gift'] 		= isset($bodyRecipient[$k]['data']['valid_to']) ? HTMLHelper::date($bodyRecipient[$k]['data']['valid_to'], Text::_('DATE_FORMAT_LC1')) : '';
+=======
+						$r['valid_to_gift'] 		= isset($bodyRecipient[$k]['data']['valid_to']) ? JHtml::date($bodyRecipient[$k]['data']['valid_to'], JText::_('DATE_FORMAT_LC1')) : '';
+>>>>>>> 48dc7473218aa2b85ae41e594191fce5bb60a490
 
 
 						if (isset($attachmentRecipient[$k]['count']) && (int)$attachmentRecipient[$k]['count'] > 1) {
@@ -1065,7 +1069,11 @@ class PhocacartOrderStatus
 							$recipientBody = PhocacartText::completeTextFormFields($recipientBody, $bas['b'], $bas['s']);
 						}
 
+<<<<<<< HEAD
 
+=======
+						
+>>>>>>> 48dc7473218aa2b85ae41e594191fce5bb60a490
 						$recipientAttachmentContent = '';
 						$recipientAttachmentName    = '';
 
