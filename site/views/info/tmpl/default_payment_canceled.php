@@ -7,16 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 // PAYMENT CANCELED
-echo '<div class="alert alert-error">';
-
 if (isset($this->t['infomessage']['payment_canceled']) && $this->t['infomessage']['payment_canceled'] != '') {
-	echo $this->t['infomessage']['payment_canceled'];
+	$msg = $this->t['infomessage']['payment_canceled'];
 } else {
-	echo JText::_('COM_PHOCACART_PAYMENT_CANCELED');
-	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_CANCELED_ADDITIONAL_INFO');
+	$msg = Text::_('COM_PHOCACART_PAYMENT_CANCELED');
+	$msg .= '</br>' . Text::_('COM_PHOCACART_ORDER_PAYMENT_CANCELED_ADDITIONAL_INFO');
 }
 
-echo '</div>';
+echo $layoutAl->render(array('type' => 'error', 'text' => $msg));
 ?>

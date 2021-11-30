@@ -2,7 +2,7 @@
 <form>
 <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
 	<fields name="filter">
-		<field name="category_id" type="phocacartextensions" label="COM_PHOCACART_EXTENSIONS_LABEL" description="COM_PHOCACART_EXTENSIONS_DESC" onchange="this.form.submit();" default="modules" />	
+		<field name="category_id" type="phocacartextensions" class="form-select" label="COM_PHOCACART_EXTENSIONS_LABEL" description="COM_PHOCACART_EXTENSIONS_DESC" onchange="this.form.submit();" default="modules" />	
 		<input type="hidden" name="form_submited" value="1"/>
 	</fields>
 	</fieldset>

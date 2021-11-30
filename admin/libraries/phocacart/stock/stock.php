@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
 class PhocacartStock
 {
@@ -16,7 +19,7 @@ class PhocacartStock
 
 
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($available == 1) {
 			$statusMethod = 'p.stockstatus_a_id';// Status when product is in stock A(P > 0), or stock is not checked
@@ -46,7 +49,7 @@ class PhocacartStock
 
 		// A > 0 OR Not checking
 		// N = 0
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$stock_checking			    = $paramsC->get( 'stock_checking', 0 );
 		$display_stock_status	    = $paramsC->get( 'display_stock_status', 1 );
@@ -85,8 +88,8 @@ class PhocacartStock
 					if($stockStatusIdA > 0) {
 						$data = self::getStockStatusData($stockStatusIdA, 1);
 						if (!empty($data) && $data[0]->title != '') {
-							$stock['stock_status'] 		= JText::_($data[0]->title);
-							$stock['stock_status_feed'] = JText::_($data[0]->title_feed);
+							$stock['stock_status'] 		= Text::_($data[0]->title);
+							$stock['stock_status_feed'] = Text::_($data[0]->title_feed);
 						}
 						if (!empty($data) && $data[0]->image != '') {
 							$stock['status_image'] = $data[0]->image;
@@ -104,8 +107,8 @@ class PhocacartStock
 					if($stockStatusIdN > 0) {
 						$data = self::getStockStatusData($stockStatusIdN, 0);
 						if (!empty($data) && $data[0]->title != '') {
-							$stock['stock_status'] 		= JText::_($data[0]->title);
-							$stock['stock_status_feed'] = JText::_($data[0]->title_feed);
+							$stock['stock_status'] 		= Text::_($data[0]->title);
+							$stock['stock_status_feed'] = Text::_($data[0]->title_feed);
 						}
 						if (!empty($data) && $data[0]->image != '') {
 							$stock['status_image'] = $data[0]->image;
@@ -124,8 +127,8 @@ class PhocacartStock
 				if($stockStatusIdA > 0) {
 					$data = self::getStockStatusData($stockStatusIdA, 1);
 					if (!empty($data) && $data[0]->title != '') {
-						$stock['stock_status'] 		= JText::_($data[0]->title);
-						$stock['stock_status_feed'] = JText::_($data[0]->title_feed);
+						$stock['stock_status'] 		= Text::_($data[0]->title);
+						$stock['stock_status_feed'] = Text::_($data[0]->title_feed);
 					}
 					if (!empty($data) && $data[0]->image != '') {
 						$stock['status_image'] = $data[0]->image;
@@ -180,7 +183,7 @@ class PhocacartStock
 		}
 
 		if ($stockStatus['status_image']) {
-			$o .= '<img src="'.JURI::base(true).'/'.$stockStatus['status_image'].'" alt="" class="'.$s['c']['img-responsive'].' ph-image" />';
+			$o .= '<img src="'.Uri::base(true).'/'.$stockStatus['status_image'].'" alt="" class="'.$s['c']['img-responsive'].' ph-image" />';
 		}
 
 		// LINK
@@ -195,7 +198,7 @@ class PhocacartStock
 	/* Handling of stock */
 	public static function handleStockProduct($productId, $orderStatusId, $quantity, $stockMovement = '') {
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$negative_stocks	= $paramsC->get( 'negative_stocks', 1 );
 
@@ -208,12 +211,12 @@ class PhocacartStock
 		}
 
 		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'UPDATE #__phocacart_products SET stock = stock + '.(int)$quantity.' WHERE id = '.(int)$productId;
 			$db->setQuery($query);
 			$db->execute();
 		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			if ($negative_stocks == 0) {
 				// we cannot have negative values in stock
@@ -231,7 +234,7 @@ class PhocacartStock
 
 	public static function handleStockAttributeOption($optionId, $orderStatusId, $quantity, $stockMovement = '') {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$negative_stocks		= $paramsC->get( 'negative_stocks', 1 );
 
@@ -244,12 +247,12 @@ class PhocacartStock
 		}
 
 		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'UPDATE #__phocacart_attribute_values SET stock = stock + '.(int)$quantity.' WHERE id = '.(int)$optionId;
 			$db->setQuery($query);
 			$db->execute();
 		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			if ($negative_stocks == 0) {
 				// we cannot have negative values in stock
@@ -266,7 +269,7 @@ class PhocacartStock
 
 	public static function handleStockProductKey($productKey, $orderStatusId, $quantity, $stockMovement = '') {
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$negative_stocks	= $paramsC->get( 'negative_stocks', 1 );
 
@@ -279,12 +282,12 @@ class PhocacartStock
 		}
 
 		if (isset($status['stock_movements']) && $status['stock_movements'] == '+') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'UPDATE #__phocacart_product_stock SET stock = stock + '.(int)$quantity.' WHERE product_key = '.$db->quote($productKey);
 			$db->setQuery($query);
 			$db->execute();
 		} else if (isset($status['stock_movements']) && $status['stock_movements'] == '-') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			if ($negative_stocks == 0) {
 				// we cannot have negative values in stock
@@ -415,7 +418,7 @@ class PhocacartStock
             }
 
 			if ($i > 1 && $selectedAttributes != 1) {
-				PhocacartLog::add(3, 'Warning', $item->id, JText::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
+				PhocacartLog::add(3, 'Warning', $item->id, Text::_('COM_PHOCACART_INAPPROPRIATE_METHOD_STOCK_CALCULATION_PRODUCT_VARIATIONS') . ' ' . Text::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
 			}
 
 

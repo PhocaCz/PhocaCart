@@ -51,6 +51,7 @@ class PhocacartLoader extends JLoader
 				// if the file exists or set it to false if not
 
 				$filename = $base.'/'.$path.'.php';
+
 				if (is_file($filename)) {
 					$rs   = (bool) include $filename;
 				} else {

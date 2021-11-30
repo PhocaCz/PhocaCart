@@ -9,8 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Version;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Session\Session;
+
 
 class PhocacartRenderAdminmedia
 {
@@ -22,13 +27,13 @@ class PhocacartRenderAdminmedia
 	public function __construct() {
 
 
-		$app				= JFactory::getApplication();
-		$version 			= new \Joomla\CMS\Version();
+		$app				= Factory::getApplication();
+		$version 			= new Version();
 		$this->compatible 	= $version->isCompatible('4.0.0-alpha');
-		$this->document		= JFactory::getDocument();
+		$this->document		= Factory::getDocument();
 		$this->view			= $app->input->get('view');
 
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		HTMLHelper::_('jquery.framework');
 
 		HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacart.js', array('version' => 'auto'));
 
@@ -36,24 +41,24 @@ class PhocacartRenderAdminmedia
 		// FORM
 		// Lang starting with "PHOCA_" - general phoca string used e.g. in general JS libraries
 		$this->document->addScriptOptions('phLang', array(
-			'COM_PHOCACART_CLOSE' => JText::_('COM_PHOCACART_CLOSE'),
-			'COM_PHOCACART_ERROR_TITLE_NOT_SET' => JText::_('COM_PHOCACART_ERROR_TITLE_NOT_SET'),
-			'PHOCA_CLICK_TO_EDIT' => JText::_('COM_PHOCACART_CLICK_TO_EDIT'),
-			'PHOCA_CANCEL' => JText::_('COM_PHOCACART_CANCEL'),
-			'PHOCA_SUBMIT' => JText::_('COM_PHOCACART_SUBMIT'),
-			'PHOCA_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION' => JText::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION')
+			'COM_PHOCACART_CLOSE' => Text::_('COM_PHOCACART_CLOSE'),
+			'COM_PHOCACART_ERROR_TITLE_NOT_SET' => Text::_('COM_PHOCACART_ERROR_TITLE_NOT_SET'),
+			'PHOCA_CLICK_TO_EDIT' => Text::_('COM_PHOCACART_CLICK_TO_EDIT'),
+			'PHOCA_CANCEL' => Text::_('COM_PHOCACART_CANCEL'),
+			'PHOCA_SUBMIT' => Text::_('COM_PHOCACART_SUBMIT'),
+			'PHOCA_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION' => Text::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION')
 		));
-		$this->document->addScriptOptions('phVars', array('token' => JSession::getFormToken(), 'urleditinplace' => JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1'));
+		$this->document->addScriptOptions('phVars', array('token' => Session::getFormToken(), 'urleditinplace' => Uri::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. Session::getFormToken().'=1'));
 
 		//$this->document->getDocument()->addScriptOptions('phParams', array());
         HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacartform.js', array('version' => 'auto'));
 
 		//HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons.min.css', array('version' => 'auto'));
-		HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css', array('version' => 'auto'));
+		//HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap-grid.min.css', array('version' => 'auto'));
 		HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacart.css', array('version' => 'auto'));
 		HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacarttheme.css', array('version' => 'auto'));
-		HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacartcustom.css', array('version' => 'auto'));
-		HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css', array('version' => 'auto'));
+		//HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/phocacartcustom.css', array('version' => 'auto'));
+		//HTMLHelper::_('stylesheet', 'media/com_phocacart/bootstrap/css/bootstrap.glyphicons-icons-only.min.css', array('version' => 'auto'));
 
 
 		// CP View - load everywhere because of menu
@@ -62,24 +67,24 @@ class PhocacartRenderAdminmedia
 		//}
 
 
-		if ($this->compatible) {
+		//if ($this->compatible) {
 			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/4.css', array('version' => 'auto'));
-		} else {
-			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/3.css', array('version' => 'auto'));
-		}
+		//} else {
+		//	HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/3.css', array('version' => 'auto'));
+		//}
 
 
-		if(PhocacartUtils::isJCompatible('3.7')) {
-			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/37.css', array('version' => 'auto'));
-		}
+		//if(PhocacartUtils::isJCompatible('3.7')) {
+			//HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/37.css', array('version' => 'auto'));
+		//}
 
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getLanguage();
 		if ($lang->isRtl()){
 			HTMLHelper::_('stylesheet', 'media/com_phocacart/css/administrator/rtl.css', array('version' => 'auto'));
 		}
 
 		// EDIT IN PLACE
-		$urlText = JURI::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. JSession::getFormToken().'=1';
+		$urlText = Uri::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. Session::getFormToken().'=1';
 		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.jeditable.min.js', array('version' => 'auto'));
 		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.jeditable.autogrow.min.js', array('version' => 'auto'));
 		HTMLHelper::_('script', 'media/com_phocacart/js/jeditable/jquery.autogrowtextarea.js', array('version' => 'auto'));
@@ -95,8 +100,8 @@ class PhocacartRenderAdminmedia
 		$s[] = '      tooltip : "'.JText::_('COM_PHOCACART_CLICK_TO_EDIT').'",'; //submit : \'OK\',
 		$s[] = '      select : true,';
 		$s[] = '      type : jQuery(this).hasClass("autogrow") ? "text" : "textarea",';
-		$s[] = '      cancel : "'.JText::_('COM_PHOCACART_CANCEL').'",';
-		$s[] = '      submit : "'.JText::_('COM_PHOCACART_SUBMIT').'",';
+		$s[] = '      cancel : "'.Text::_('COM_PHOCACART_CANCEL').'",';
+		$s[] = '      submit : "'.Text::_('COM_PHOCACART_SUBMIT').'",';
 		$s[] = '      cssclass : \'ph-edit-in-place-class\',';
 		$s[] = '      cancelcssclass : \'btn btn-danger\',';
 		$s[] = '      submitcssclass : \'btn btn-success\',';
@@ -136,7 +141,7 @@ class PhocacartRenderAdminmedia
 		// Possible information for parts on the site which will be not changed by chaning the value (for example currency view - currency rate)
 		$s[] = '      callback: function() {';
 		$s[] = '      	var chEIP = ".phChangeEditInPlace" + jQuery(this).attr("data-id");';
-		$s[] = '      	jQuery(chEIP).html("'.JText::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION').'")';
+		$s[] = '      	jQuery(chEIP).html("'.Text::_('COM_PHOCACART_PLEASE_RELOAD_PAGE_TO_SEE_UPDATED_INFORMATION').'")';
 		$s[] = '      },';
 
 		$s[] = '   })';

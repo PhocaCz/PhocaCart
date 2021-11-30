@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
 
 class PhocacartOrderView
 {
@@ -18,8 +20,8 @@ class PhocacartOrderView
 
 		/*$db				= JFactory::getDBO();
 		$config['dbo'] 	= $db;
-		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-		$table	= JTable::getInstance('PhocacartOrderUsers', 'Table', $config);
+		Table::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+		$table	= Table::getInstance('PhocacartOrderUsers', 'Table', $config);
 		$tableS	= JTable::getInstance('PhocacartOrderUsers', 'Table', $config);*/
 
 
@@ -72,8 +74,8 @@ class PhocacartOrderView
 			return $properties;
 		}
 
-		//$itemS 	= \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
-		//$item 	= \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
+		//$itemS 	= JArrayHelper::toObject($propertiesS, 'JObject');
+		//$item 	= JArrayHelper::toObject($properties, 'JObject');
 		$item		= new JObject();//stdClass();
 
 		if(!empty($properties['b']) && is_object($item)) {
@@ -96,7 +98,7 @@ class PhocacartOrderView
 
 	/*public function getRegion($countryId, $regionId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT u.id, c.title AS countrytitle, r.title AS regiontitle'
 				.' FROM #__phocacart_order_users AS u'
 				.' LEFT JOIN #__phocacart_countries AS c ON c.id = u.country'
@@ -109,7 +111,7 @@ class PhocacartOrderView
 
 	public function getItemUser($orderId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT u.*,'
 				.' c.title AS countrytitle, r.title AS regiontitle, c.code2 AS countrycode'
 				.' FROM #__phocacart_order_users AS u'
@@ -126,10 +128,11 @@ class PhocacartOrderView
 
 	public function getItemCommon($orderId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT o.*,'
-				.' u.id AS user_id, o.vendor_id AS vendor_id, u.name AS user_name, u.username AS user_username, p.title AS paymenttitle,'
-				.' s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription,'
+				.' u.id AS user_id, o.vendor_id AS vendor_id, u.name AS user_name, u.username AS user_username,'
+				.' p.title AS paymenttitle, p.description_info AS paymentdescriptioninfo,'
+				.' s.title AS shippingtitle, s.description_info AS shippingdescriptioninfo, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription,'
 				.' c.title AS coupontitle, cu.title AS currencytitle, d.title AS discounttitle, os.orders_view_display as ordersviewdisplay,'
 				.' uv.username as vendor_username, uv.name as vendor_name,'
 				.' sc.title as section_name, un.title as unit_name'
@@ -154,7 +157,7 @@ class PhocacartOrderView
 
 	public function getItemProducts($orderId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		//$query = 'SELECT DISTINCT p.*, pd.download_token, pd.download_file, pd.download_folder, pd.published as download_published, pd.type as download_type'
 		//		.' FROM #__phocacart_orders AS o'
 		$query = 'SELECT DISTINCT p.*'
@@ -215,7 +218,7 @@ class PhocacartOrderView
 	public function getItemDownloads($orderId, $orderProductId) {
 
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		// BE AWARE
 		// productid is ID of Product Ordered not of product
 		// productquantity is QUANTITY of Product Ordered not of product
@@ -239,7 +242,7 @@ class PhocacartOrderView
 	public function getItemAttributes($orderId, $orderProductId) {
 
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		// BE AWARE
 		// productid is ID of Product Ordered not of product
 		// productquantity is QUANTITY of Product Ordered not of product
@@ -267,7 +270,7 @@ class PhocacartOrderView
 
 	public function getItemProductDiscounts($orderId, $onlyPublished = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$q = 'SELECT d.*'
 			.' FROM #__phocacart_orders AS o'
 			.' LEFT JOIN #__phocacart_order_product_discounts AS d ON o.id = d.order_id'
@@ -319,7 +322,7 @@ class PhocacartOrderView
 
 	public function getItemTotal($orderId, $onlyPublished = 0, $type = '') {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$q = ' SELECT t.*'
 			.' FROM #__phocacart_orders AS o'
 			.' LEFT JOIN #__phocacart_order_total AS t ON o.id = t.order_id'
@@ -338,7 +341,7 @@ class PhocacartOrderView
 
 	public function getItemTaxRecapitulation($orderId, $type = '') {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$q = ' SELECT t.*, o.currency_id AS currency_id, o.currency_exchange_rate AS currency_exchange_rate'
 			.' FROM #__phocacart_orders AS o'
 			.' LEFT JOIN #__phocacart_order_tax_recapitulation AS t ON o.id = t.order_id'
@@ -400,6 +403,22 @@ class PhocacartOrderView
 			$paymentTitle = $common->paymenttitle;
 		}
 		return $paymentTitle;
+	}
+
+	public static function getShippingDescriptionInfo($common) {
+		$shippingDI = '';
+		if (isset($common->shippingdescriptioninfo) && $common->shippingdescriptioninfo != '') {
+			$shippingDI = $common->shippingdescriptioninfo;
+		}
+		return $shippingDI;
+	}
+
+	public static function getPaymentDescriptionInfo($common) {
+		$paymentDI = '';
+		if (isset($common->paymentdescriptioninfo) && $common->paymentdescriptioninfo != '') {
+			$paymentDI = $common->paymentdescriptioninfo;
+		}
+		return $paymentDI;
 	}
 
 	public static function getDateShipped($common) {

@@ -9,6 +9,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
@@ -42,7 +48,7 @@ class PhocacartFile
 	public static function getFileSize($manager, $filename, $readable = 1) {
 
 		$path			= PhocacartPath::getPath($manager);
-		$fileNameAbs	= JPath::clean($path['orig_abs'] . '/' . $filename);
+		$fileNameAbs	= Path::clean($path['orig_abs'] . '/' . $filename);
 
 		if ($readable == 1) {
 			return self::getFileSizeReadable(filesize($fileNameAbs));
@@ -54,8 +60,8 @@ class PhocacartFile
 	public static function getFileTime($manager, $filename, $function, $format = "d. M Y") {
 
 		$path			= PhocaDownloadPath::getPath($manager);
-		$fileNameAbs	= JPath::clean($path['orig_abs'] . '/' . $filename);
-		if (JFile::exists($fileNameAbs)) {
+		$fileNameAbs	= Path::clean($path['orig_abs'] . '/' . $filename);
+		if (File::exists($fileNameAbs)) {
 			switch($function) {
 				case 2:
 					$fileTime = filectime($fileNameAbs);
@@ -69,7 +75,7 @@ class PhocacartFile
 				break;
 			}
 
-			$fileTime = JHtml::Date($fileTime, $format);
+			$fileTime = HTMLHelper::Date($fileTime, $format);
 		} else {
 			$fileTime = '';
 		}
@@ -193,17 +199,17 @@ class PhocacartFile
 		if ($rel == 1) {
 			return str_replace('//', '/', $path['orig_rel_ds'] . $filename);
 		} else {
-			return JPath::clean($path['orig_abs_ds'] . $filename);
+			return Path::clean($path['orig_abs_ds'] . $filename);
 		}
 	}
 
 	public static function createDownloadFolder($folder) {
 
 		$path = PhocacartPath::getPath('productfile');
-		if (!JFolder::exists($path['orig_abs_ds'] . $folder )) {
-			if (JFolder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
+		if (!Folder::exists($path['orig_abs_ds'] . $folder )) {
+			if (Folder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
 				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-				JFile::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
+				File::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
 				return true;
 			} else {
 				return false;
@@ -214,10 +220,10 @@ class PhocacartFile
 
 	public static function createUploadFolder($folder) {
 		$path = PhocacartPath::getPath('submititem');
-		if (!JFolder::exists($path['orig_abs_ds'] . $folder )) {
-			if (JFolder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
+		if (!Folder::exists($path['orig_abs_ds'] . $folder )) {
+			if (Folder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
 				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-				JFile::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
+				File::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
 				return true;
 			} else {
 				return false;
@@ -228,7 +234,7 @@ class PhocacartFile
 
 	public static function existsFileOriginal($filename, $manager) {
 		$fileOriginal = self::getFileOriginal($filename, 0, $manager);
-		if (JFile::exists($fileOriginal)) {
+		if (File::exists($fileOriginal)) {
 			return true;
 		} else {
 			return false;
@@ -241,19 +247,19 @@ class PhocacartFile
 			foreach($folders as $k => $v) {
 
 				$path = PhocacartPath::getPath($manager);
-				if(JFolder::exists($path['orig_abs_ds'] . $v)) {
-					if(JFolder::delete($path['orig_abs_ds'] . $v)) {
+				if(Folder::exists($path['orig_abs_ds'] . $v)) {
+					if(Folder::delete($path['orig_abs_ds'] . $v)) {
 
 						if ($manager == 'attributefile') {
-							JFactory::getApplication()->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_ATTRIBUTE_OPTION_DOWNLOAD_FOLDER_DELETED'). ': ' . $v, 'success');
+							Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_ATTRIBUTE_OPTION_DOWNLOAD_FOLDER_DELETED'). ': ' . $v, 'success');
 						} else {
-							JFactory::getApplication()->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_PRODUCT_DOWNLOAD_FOLDER_DELETED'). ': ' . $v, 'success');
+							Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_PRODUCT_DOWNLOAD_FOLDER_DELETED'). ': ' . $v, 'success');
 						}
 					} else {
 						if ($manager == 'attributefile') {
-							JFactory::getApplication()->enqueueMessage(JText::_('COM_PHOCACART_ERROR_REMOVE_ATTRIBUTE_OPTION_DOWNLOAD_FOLDER'). ': ' . $v, 'error');
+							Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_ERROR_REMOVE_ATTRIBUTE_OPTION_DOWNLOAD_FOLDER'). ': ' . $v, 'error');
 						} else {
-							JFactory::getApplication()->enqueueMessage(JText::_('COM_PHOCACART_ERROR_REMOVE_PRODUCT_DOWNLOAD_FOLDER'). ': ' . $v, 'error');
+							Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_ERROR_REMOVE_PRODUCT_DOWNLOAD_FOLDER'). ': ' . $v, 'error');
 						}
 					}
 				}

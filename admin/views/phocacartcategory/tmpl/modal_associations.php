@@ -8,5 +8,6 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\Layout\LayoutHelper;
 
-echo JLayoutHelper::render('joomla.edit.associations', $this);
+echo LayoutHelper::render('joomla.edit.associations', $this);

@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Text;
 jimport('joomla.filter.input');
 
-class TablePhocaCartFormfield extends JTable
+class TablePhocaCartFormfield extends Table
 {
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_form_fields', 'id', $db);
@@ -28,7 +31,7 @@ class TablePhocaCartFormfield extends JTable
 	public function displayItem($pks = null, $state = 1, $userId = 0, $column = 'display_billing') {
 		$k = $this->_tbl_key;
 
-		\Joomla\Utilities\ArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 		$userId = (int) $userId;
 		$state  = (int) $state;
 
@@ -36,7 +39,7 @@ class TablePhocaCartFormfield extends JTable
 			if ($this->$k) {
 				$pks = array($this->$k);
 			} else {
-				$this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
+				$this->setError(Text::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
 				return false;
 			}
 		}

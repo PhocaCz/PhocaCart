@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewDownload extends JViewLegacy
+class PhocaCartViewDownload extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -19,7 +24,7 @@ class PhocaCartViewDownload extends JViewLegacy
 
 	function display($tpl = null)
 	{
-		$app								= JFactory::getApplication();
+		$app								= Factory::getApplication();
 		//$model								= $this->getModel();
 		//$document							= JFactory::getDocument();
 		$this->s                            = PhocacartRenderStyle::getStyles();
@@ -39,10 +44,10 @@ class PhocaCartViewDownload extends JViewLegacy
 		$this->t['download_days']			= $this->p->get( 'download_days', 0 );
 		$this->t['download_count']			= $this->p->get( 'download_count', 0 );
 
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 						= Uri::getInstance();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute());
+		$this->t['linkdownload']	= Route::_(PhocacartRoute::getDownloadRoute());
 
 		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
@@ -55,7 +60,7 @@ class PhocaCartViewDownload extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_DOWNLOAD'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_DOWNLOAD'));
 	}
 }
 ?>

@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Router\Route;
 
-$layoutV	= new JLayoutFile('button_category_view', null, array('component' => 'com_phocacart'));
-$layoutI	= new JLayoutFile('category_image', null, array('component' => 'com_phocacart'));
+$layoutV	= new FileLayout('button_category_view', null, array('component' => 'com_phocacart'));
+$layoutI	= new FileLayout('category_image', null, array('component' => 'com_phocacart'));
 
 $d 		= $displayData;
 $v		= $d['v'];
@@ -17,7 +19,7 @@ $t		= $d['t'];
 $s      = $d['s'];
 
 $image 	= PhocacartImage::getThumbnailName($t['path'], $v->image, $d['image_size']);
-$link	= JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
+$link	= Route::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias));
 
 //echo '<div class="ph-image-box">';
 $dI	= array();
@@ -59,7 +61,7 @@ if (!empty($v->subcategories) && (int)$t['csv_display_subcategories'] > 0) {
 		if ($j == (int)$t['csv_display_subcategories']) {
 			break;
 		}
-		$link2	= JRoute::_(PhocacartRoute::getCategoryRoute($v2->id, $v2->alias));
+		$link2	= Route::_(PhocacartRoute::getCategoryRoute($v2->id, $v2->alias));
 		echo '<li><a href="'.$link2.'">'.$v2->title.'</a></li>';
 		$j++;
 	}

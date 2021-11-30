@@ -62,19 +62,27 @@ foreach ($d['items'] as $k => $v) {
 
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $dParamAttr; ?>">
-	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
-		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $title ?></a>
-		</h4>
-	</div>
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $dParamAttr; ?>" <?php echo $d['s']['a']['accordion'] ?>>
+
+    <?php if ($d['s']['c']['class-type'] != 'uikit') { ?>
+        <div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
+            <h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $title ?></a>
+            </h4>
+        </div>
+    <?php } ?>
 
 	<div id="collapse<?php echo $dParamAttr; ?>" class="<?php echo $d['collapse_class'] ?>" role="tabpanel" aria-labelledby="heading<?php echo $dParamAttr; ?>">
-		<div class="<?php echo $d['s']['c']['panel-body'] ?> ph-panel-body-color">
-				<div class="ph-mod-color-box">
-			    <?php echo $output ?>
-                </div>
+
+        <?php if ($d['s']['c']['class-type'] == 'uikit') { ?>
+            <a href="#" class="<?php echo $d['s']['c']['panel-title'] ?>"><?php echo $title ?></a>
+        <?php } ?>
+
+        <div class="<?php echo $d['s']['c']['panel-body'] ?> ph-panel-body-color">
+            <div class="ph-mod-color-box">
+            <?php echo $output ?>
+            </div>
 		</div>
 	</div>
 </div>

@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocacartUsers extends JModelList
+class PhocaCartCpModelPhocacartUsers extends ListModel
 {
 	protected $option 	= 'com_phocacart';
 
@@ -36,7 +38,7 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 
 	protected function populateState($ordering = 'u.name', $direction = 'ASC') {
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
@@ -87,12 +89,12 @@ class PhocaCartCpModelPhocacartUsers extends JModelList
 		$query	= $db->getQuery(true);
 
 		$columns	= 'a.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city, a.ordering, a.email';
-		$groupsFull	= $columns = $columns . ', ' . 'u.id, u.name, u.username, u.email, ou.user_id, c.date, c.user_id, c.vendor_id, c.ticket_id, c.unit_id, c.section_id, uc.name';
-		$groupsFast	= 'a.id';
+		$groupsFull	= 'u.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city, a.ordering, a.email' . ', ' . 'c.date, c.user_id, c.vendor_id, c.ticket_id, c.unit_id, c.section_id, uc.name';
+		$groupsFast	= 'u.id';
 		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 
-		$query->select($this->getState('list.select', 'DISTINCT' . ' ' .$columns));
+		$query->select($this->getState('list.select', '' . ' ' .$columns));
 		$query->from('`#__users` AS u');
 
 		// Join over the language

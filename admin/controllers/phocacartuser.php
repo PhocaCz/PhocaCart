@@ -7,6 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartCommon {
 
@@ -15,10 +19,10 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 	{
 
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$app   = JFactory::getApplication();
-		$lang  = JFactory::getLanguage();
+		$app   = Factory::getApplication();
+		$lang  = Factory::getLanguage();
 		$model = $this->getModel();
 		$table = $model->getTable();
 		$data  = $this->input->post->get('jform', array(), 'array');
@@ -52,11 +56,11 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 			/*if ($checkin && $model->checkin($data[$key]) === false)
 			{
 				// Check-in failed. Go back to the item and display a notice.
-				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+				$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
 				$this->setMessage($this->getError(), 'error');
 
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend($recordId, $urlVar), false
 					)
@@ -73,11 +77,11 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 		// Access check.
 		if (!$this->allowSave($data, $key))
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
 			$this->setMessage($this->getError(), 'error');
 
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_list
 					. $this->getRedirectToListAppend(), false
 				)
@@ -124,7 +128,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 			// Redirect back to the edit screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $urlVar), false
 				)
@@ -166,8 +170,8 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 				foreach($items as $k => $v) {
 					if ($v->required == 1) {
 						if (isset($billing[$v->title]) && $billing[$v->title] == '') {
-							$msg = JText::_('COM_PHOCACART_FILL_OUT_THIS_FIELD') . ': '.JText::_($v->label)
-							. ' <small>('.JText::_('COM_PHOCACART_BILLING_ADDRESS').')</small>';
+							$msg = Text::_('COM_PHOCACART_FILL_OUT_THIS_FIELD') . ': '.Text::_($v->label)
+							. ' <small>('.Text::_('COM_PHOCACART_BILLING_ADDRESS').')</small>';
 							$app->enqueueMessage($msg, 'error');
 							$error = 1;
 						}
@@ -182,8 +186,8 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 							$billing['ba_sa'] = 0;
 							$shipping['ba_sa'] = 0;
 							if (isset($shipping[$v->title]) && $shipping[$v->title] == '') {
-								$msg = JText::_('COM_PHOCACART_FILL_OUT_THIS_FIELD') . ': '.JText::_($v->label)
-								. ' <small>('.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').')</small>';
+								$msg = Text::_('COM_PHOCACART_FILL_OUT_THIS_FIELD') . ': '.Text::_($v->label)
+								. ' <small>('.Text::_('COM_PHOCACART_SHIPPING_ADDRESS').')</small>';
 								$app->enqueueMessage($msg, 'error');
 								$error = 1;
 							}
@@ -192,11 +196,11 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 				}
 			} else {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NO_FORM_LOADED'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NO_FORM_LOADED'), 'error');
 				$error = 1;
 			}*/
 		} else {
-			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list. $this->getRedirectToListAppend(), false));
+			$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list. $this->getRedirectToListAppend(), false));
 			return false;
 		}
 		/*if ($error == 1) {
@@ -206,9 +210,9 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 		if (!empty($billing)) {
 			//$model 	= $this->getModel('checkout');
 			if(!$model->save($billing)) {
-				$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+				$msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 				$this->setMessage($msg, 'error');
-				$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
+				$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
 				return false;
 			} else {
 				//$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
@@ -221,9 +225,9 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 		if (!empty($shipping)) {
 			//$model 	= $this->getModel('checkout');
 			if(!$model->save($shipping, 1)) {
-				$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+				$msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 				$this->setMessage($msg, 'error');
-				$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
+				$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
 				return false;
 			} else {
 				//$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
@@ -235,7 +239,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 		// Remove shipping because shipping methods can change while chaning address
 		/*PhocacartShipping::removeShipping();
-		$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+		$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 		$app->enqueueMessage($msg, 'success');
 		$app->redirect(base64_decode($item['return']));*/
 
@@ -250,10 +254,10 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 			$app->setUserState($context . '.data', $validData);
 
 			// Redirect back to the edit screen.
-			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
+			$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
 			$this->setMessage($this->getError(), 'error');
 
-			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
+			$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
 
 			return false;
 		}*/
@@ -265,11 +269,11 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 			$app->setUserState($context . '.data', $validData);
 
 			// Check-in failed, so go back to the record and display a notice.
-			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+			$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
 			$this->setMessage($this->getError(), 'error');
 
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $urlVar), false
 				)
@@ -281,7 +285,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 
 		$this->setMessage(
-			JText::_(
+			Text::_(
 				($lang->hasKey($this->text_prefix . ($recordId == 0 && $app->isClient('site') ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
 					? $this->text_prefix
 					: 'JLIB_APPLICATION') . ($recordId == 0 && $app->isClient('site') ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
@@ -304,7 +308,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 				// Redirect back to the edit screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend($recordId, $urlVar), false
 					)
@@ -318,7 +322,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 				// Redirect back to the edit screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend(null, $urlVar), false
 					)
@@ -332,7 +336,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 				// Redirect to the list screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_list
 						. $this->getRedirectToListAppend(), false
 					)

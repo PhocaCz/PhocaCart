@@ -45,7 +45,7 @@ function phUpdateUrlParameter(param, value, urlChange) {
 
 /* Update input box after change */
 function phDoSubmitFormUpdateInputBox(sFormData, phUrlAjax) {
-	
+
 	phRequest = jQuery.ajax({
 	   type: "POST",
 	   url: phUrlAjax,
@@ -96,19 +96,19 @@ function phPosCurrentData(forcepage, format, id) {
 	} else {
 	   var page 	= jQuery("#phPosPaginationBox input[name=page]").val();
 	}
-	
+
 	if (typeof format !== "undefined") {
 	   var formatSuffix = format;
 	} else {
 	   var formatSuffix = "raw";
 	}
-	
+
 	if (typeof id !== "undefined") {
 	   var idSuffix 	= "&id="+id;
 	} else {
 	   var idSuffix 	= "";
 	}
-	
+
 	var ticketid	= jQuery("#phPosPaginationBox input[name=ticketid]").val();
 	var unitid		= jQuery("#phPosPaginationBox input[name=unitid]").val();
 	var sectionid	= jQuery("#phPosPaginationBox input[name=sectionid]").val();
@@ -148,6 +148,11 @@ function phPosManagePageFocus(page) {
 				jQuery("#phPosCard").focus();
 			}
 		} else if (page == "main.content.paymentmethods") {
+			var hasFocusSearch = jQuery("#phPosSearch").is(":focus");
+			if (!hasFocusSearch) {
+				jQuery("#phcoupon").focus();
+			}
+		} else if (page == "main.content.applybenefits") {
 			var hasFocusSearch = jQuery("#phPosSearch").is(":focus");
 			if (!hasFocusSearch) {
 				jQuery("#phcoupon").focus();
@@ -198,6 +203,13 @@ function phPosManagePage() {
 		jQuery(".ph-pos-sku-product-box").hide();
 		jQuery(".ph-pos-date-order-box").show();
 	} else if (page == "main.content.paymentmethods") { // PAYMENT METHODS
+		jQuery(".ph-pos-checkbox-box").hide();//categories
+		jQuery(".ph-pos-search-box").hide();
+		jQuery(".ph-pos-card-user-box").hide();
+		jQuery(".ph-pos-sku-product-box").hide();
+		jQuery(".ph-pos-date-order-box").hide();
+		phPosManagePageFocus(page);// Focus on start
+	} else if (page == "main.content.applybenefits") { // Apply Coupon
 		jQuery(".ph-pos-checkbox-box").hide();//categories
 		jQuery(".ph-pos-search-box").hide();
 		jQuery(".ph-pos-card-user-box").hide();
@@ -288,21 +300,25 @@ function phScrollPosCart(phPosCart) {
 	   phPosCart.animate({scrollTop: phPosCartHeight}, 1500 );
 	}
 }
-	
+
 function phConfirm(submitForm, dataPost, txt) {
 
 	//var phLang 	= Joomla.getOptions('phLangPC');
 	//var phLangOk = phLang['COM_PHOCACART_OK'];
 	//var phLangCancel = phLang['COM_PHOCACART_CANCEL'];
 
-	
+
 	jQuery("#phDialogConfirm .modal-body" ).html( txt );
-	jQuery('#phDialogConfirm').modal();
-	jQuery('#phDialogConfirm').modal({ keyboard: false });
-	jQuery('#phDialogConfirm').modal('show') ;
+
+	var modal = new bootstrap.Modal(document.getElementById("phDialogConfirm"), { keyboard: false });
+	modal.show();
+
+	//jQuery('#phDialogConfirm').modal();
+	//jQuery('#phDialogConfirm').modal({ keyboard: false });
+	//jQuery('#phDialogConfirm').modal('show') ;
 
 
-	
+
 	jQuery("#phDialogConfirmSave").on("click", function(e){
 		phPosCloseTicketFormConfirmed = true;
 		if (submitForm != "") {
@@ -359,11 +375,16 @@ jQuery(document).ready(function(){
 		   bJsCount++;
 		}
 	 })
-	 
+
 	 if (bJsCount > 1){
 		jQuery("#phPosWarningMsgBox").text(phLang['COM_PHOCACART_WARNING_BOOTSTRAP_JS_LOADED_MORE_THAN_ONCE']);
 		jQuery("#phPosWarningMsgBox").show();
 	 }
+
+	 // Close Metismenu when button iside Metismenu is clicked and no reload (ajax)
+	 /*jQuery(document).on("click", ".closeMM", function (e) {
+		jQuery(".phPOSMMButton").trigger("click");
+	 })*/
 
 	 /* Load main content by links - e.g. in input box we call list of customers, payment methods or shipping methods */
 	jQuery(document).on("click", ".loadMainContent", function (e) {
@@ -389,7 +410,7 @@ jQuery(document).ready(function(){
 		e.preventDefault();
 	});
 
-	/* 
+	/*
 	* Unfortunately we have form without buttons so we need to run the form without click too
     * to not submit more forms at once we will use ID :-(
 	*/
@@ -418,7 +439,7 @@ jQuery(document).ready(function(){
 	jQuery(document).on("submit", "#phPosCloseTicketForm", function (e) {
 		var txt = jQuery(this).data("txt");
 		if(!phPosCloseTicketFormConfirmed) {
-			
+
 			phConfirm("#phPosCloseTicketForm", "", txt);
 			e.preventDefault();
 			return false;
@@ -427,7 +448,6 @@ jQuery(document).ready(function(){
 			return true;
 		}
 	});
-
 
 	/*
 	 * Get all checkboxes of categories which are active and add them to url bar and filter the categories
@@ -439,14 +459,15 @@ jQuery(document).ready(function(){
 	 *
 	 * Test checkbox
 	 * components\com_phocacart\views\pos\tmpl\default_main_categories.php
-	 * data-toggle="buttons" - changes the standard checkbox to graphical checkbox
+	 * data-bs-toggle="buttons" - changes the standard checkbox to graphical checkbox
 	 *
 	 */
 	jQuery(document).on("change", "#phPosCategoriesBox .phPosCategoryCheckbox", function() {
 
 		var phParams 	= Joomla.getOptions('phParamsPC');
 		var posFilterCategory = phParams['posFilterCategory'];
-		
+
+
 		if (posFilterCategory == 2) {
 			// Multiple categories can be displayed - can be active
 			var phA = [];
@@ -468,7 +489,7 @@ jQuery(document).ready(function(){
 			// Current checkbox was deselected
 			if (jQuery(this).prop("checked") == false) {
 			cValue = "";
-			}; 
+			};
 		}
 
       	var phData 	= "category=" + cValue + "&" + phPosCurrentData();
@@ -512,7 +533,7 @@ jQuery(document).ready(function(){
 		if (phType == "-1") {// -1 type is print (1 order, 2 invoice, 3 delivery note, 4 receipt)
 
 			if (posServerPrint == 2 || posServerPrint == 3) {
-			
+
 				// - 1 AND 4 PC PRINT FOR ALL DOCUMENTS EXCEPT 4 (Receipt) - Receipt will be printend by SERVER PRINT
 				if (phTypeCurrent == "4") {
 					var phUrlAjaxPrint = phAddSuffixToUrl(phUrlAjax, "id=" + phOrder + "&type=" + phTypeCurrent + "&pos=1&printserver=1");

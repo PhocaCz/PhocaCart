@@ -14,6 +14,10 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
+use Joomla\Registry\Registry;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 class PhocacartShipping
 {
@@ -38,7 +42,7 @@ class PhocacartShipping
 
 	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $zip, $weight, $length, $width, $height, $id = 0, $selected = 0) {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 
@@ -46,7 +50,7 @@ class PhocacartShipping
 		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 
 		$wheres	  		= array();
 		// ACCESS
@@ -290,7 +294,7 @@ class PhocacartShipping
 						$eventData 					= array();
                     	$active 					= true;
 						$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
-                    	Factory::getApplication()->triggerEvent('PCSbeforeShowPossibleShippingMethod', array(&$active, $v, $eventData));
+                    	Factory::getApplication()->triggerEvent('onPCSbeforeShowPossibleShippingMethod', array(&$active, $v, $eventData));
 
                     	if ($active == false) {
                     		if (isset($shippings[$i])) {
@@ -546,7 +550,7 @@ class PhocacartShipping
 		//$paramsC 		= PhocacartUtils::getComponentParameters();
 		//$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.method, s.params, s.description, s.image,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
@@ -561,7 +565,7 @@ class PhocacartShipping
 
 
 		if (isset($shipping->params)) {
-			$registry = new JRegistry;
+			$registry = new Registry;
 			//$registry->loadString($shipping->params);
 			if (isset($shipping->params)) {
      			$registry->loadString($shipping->params);
@@ -580,7 +584,7 @@ class PhocacartShipping
 			$c = 'payment_id';
 		}
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT p.shipping_id';
@@ -610,7 +614,7 @@ class PhocacartShipping
 	public function storeShippingRegistered($shippingId, $userId)
 	{
 
-		$row = JTable::getInstance('PhocacartCart', 'Table');
+		$row = Table::getInstance('PhocacartCart', 'Table');
 
 
 		if ((int)$userId > 0) {
@@ -625,20 +629,20 @@ class PhocacartShipping
 			$data['user_id'] = (int)$userId;
 
 			if (!$row->bind($data)) {
-				$this->setError($this->_db->getErrorMsg());
+				$this->setError($row->getError());
 				return false;
 			}
 
 			$row->date = gmdate('Y-m-d H:i:s');
 
 			if (!$row->check()) {
-				$this->setError($this->_db->getErrorMsg());
+				$this->setError($row->getError());
 				return false;
 			}
 
 
 			if (!$row->store()) {
-				$this->setError($this->_db->getErrorMsg());
+				$this->setError($row->getError());
 				return false;
 			}
 			return (int)$shippingId;
@@ -653,7 +657,7 @@ class PhocacartShipping
 	 */
 	public static function getAllShippingMethodsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = array() ) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_shipping_methods AS a';
@@ -665,8 +669,24 @@ class PhocacartShipping
 		$methods = $db->loadObjectList();
 
 
-		$methodsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $methods, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$methodsO = HTMLHelper::_('select.genericlist', $methods, $name, 'class="form-select" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+
 		return $methodsO;
+	}
+
+	public static function getAllShippingMethods($order = 'id', $type = array() ) {
+		$db = Factory::getDBO();
+
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_shipping_methods AS a';
+
+		$query .= !empty($type) && is_array($type) ? ' WHERE a.type IN ('. implode(',', $type). ')' : '';
+		$query .= ' ORDER BY a.'. $order;
+
+		$db->setQuery($query);
+		$methods = $db->loadObjectList();
+
+		return $methods;
 	}
 
 	/* used as payment rule*/
@@ -678,7 +698,7 @@ class PhocacartShipping
 		}
 
 		if ((int)$id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM '.$t
 					. ' WHERE '.$c.' = '. (int)$id;
@@ -718,12 +738,12 @@ class PhocacartShipping
 
 		if ($type == 0 || $type == 1) {
 
-			$session 		= JFactory::getSession();
+			$session 		= Factory::getSession();
 			$session->set('guestshipping', false, 'phocaCart');
 		}
 
 		if ($type == 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$user = array();
 			$vendor = array();
 			$ticket = array();
@@ -733,7 +753,7 @@ class PhocacartShipping
 
 			$pos_shipping_force = 0;
 			if (PhocacartPos::isPos()) {
-				$app = JFactory::getApplication();
+				$app = Factory::getApplication();
 				$paramsC = PhocacartUtils::getComponentParameters();
 				$pos_shipping_force = $paramsC->get('pos_shipping_force', 0);
 				if ((int)$pos_shipping_force > 0) {
@@ -769,7 +789,7 @@ class PhocacartShipping
 		$skip_shipping_method	= $paramsC->get( 'skip_shipping_method', 0 );
 
 		// 1) TEST IF ANY SHIPPING METHOD EXISTS
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT a.id'
 				.' FROM #__phocacart_shipping_methods AS a'
 				.' WHERE a.published = 1'
@@ -800,7 +820,7 @@ class PhocacartShipping
 		$plugin['name'] = $namePlugin;
 		$plugin['group'] = 'pcs';
 		$plugin['title'] = 'Phoca Cart Shipping';
-		$plugin['selecttitle'] = JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD');
+		$plugin['selecttitle'] = Text::_('COM_PHOCACART_SELECT_SHIPPING_METHOD');
 		$plugin['returnform'] = 1;
 
 		return PhocacartPlugin::getPluginMethods($plugin);
@@ -815,7 +835,7 @@ class PhocacartShipping
 	public static function isShippingMethodActive($id) {
 
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		$query = 'SELECT a.id'
 				.' FROM #__phocacart_shipping_methods AS a'
@@ -837,7 +857,7 @@ class PhocacartShipping
 	public static function getInfoDescriptionById($id) {
 
 		if ((int)$id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 
 			$query = 'SELECT a.description_info'
 					.' FROM #__phocacart_shipping_methods AS a'
@@ -860,7 +880,7 @@ class PhocacartShipping
 
 	protected function getShippingMethodIdByMethodName($methodName, $return = 3, $onlyPublished = false) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = ' SELECT s.id'
 		.' FROM #__phocacart_shipping_methods AS s'
 		.' WHERE s.method = '.$db->quote($methodName);

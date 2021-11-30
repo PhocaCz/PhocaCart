@@ -10,6 +10,8 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
 
 
 abstract class PhocacartHelperAssociation
@@ -19,13 +21,13 @@ abstract class PhocacartHelperAssociation
 	{
 
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 		$view   = $view === null ? $jinput->get('view') : $view;
 		$id     = empty($id) ? $jinput->getInt('id') : $id;
 
 		if ($view === 'item') {
 			if ($id) {
-				$associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', $id, 'id', 'alias', false);
+				$associations = Associations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', $id, 'id', 'alias', false);
 
 				$return = array();
 
@@ -56,7 +58,7 @@ abstract class PhocacartHelperAssociation
 			}
 		} else if($view === 'category') {
 			if ($id) {
-				$associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $id, 'id', 'alias', false);
+				$associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $id, 'id', 'alias', false);
 
 				$return = array();
 

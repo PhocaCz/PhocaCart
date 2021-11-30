@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\FileLayout;
 
 class PhocacartCartRendercheckout extends PhocacartCart
 {
@@ -26,18 +30,18 @@ class PhocacartCartRendercheckout extends PhocacartCart
 
 	public function render() {
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$s                      = PhocacartRenderStyle::getStyles();
 		$pC 					= PhocacartUtils::getComponentParameters();
-		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 					= Uri::getInstance();
 		$url['action']			= $uri->toString();
 		$url['actionbase64']	= base64_encode($url['action']);
 		$pos					= PhocacartPos::isPos();
 
 		if ($pos) {
-			$url['linkcheckout']	= JRoute::_(PhocacartRoute::getPosRoute());
+			$url['linkcheckout']	= Route::_(PhocacartRoute::getPosRoute());
 		} else {
-			$url['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute());
+			$url['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute());
 		}
 
 
@@ -57,18 +61,18 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		}
 
 
-		$layout 				= new JLayoutFile('cart_checkout', null, array('component' => 'com_phocacart'));
+		$layout 				= new FileLayout('cart_checkout', null, array('component' => 'com_phocacart'));
 		$d						= array();
 		$d['s']			        = $s;
 
 		/*if($app->isClient('administrator')) {
 			// client = 0, ask phoca cart frontend layouts
 			$d['client'] = 1;//admin
-			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
+			$layout 				= new FileLayout('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
 
 		} else {
 			$d['client'] = 0;//frontend
-			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
+			$layout 				= new FileLayout('cart_cart', null, array('component' => 'com_phocacart'));
 		}*/
 
 

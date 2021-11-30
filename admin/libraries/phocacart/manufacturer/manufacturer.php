@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 
 class PhocacartManufacturer
 {
@@ -16,7 +18,7 @@ class PhocacartManufacturer
 
 	public static function getAllManufacturers($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array(), $limitCount = -1) {
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 4);
 
 		$wheres		= array();
@@ -77,7 +79,7 @@ class PhocacartManufacturer
 
 	public static function getManufacturers($itemId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT a.id';
@@ -103,7 +105,7 @@ class PhocacartManufacturer
 
 	public static function getManufacturersByIds($cids) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
         if ($cids != '') {//cids is string separated by comma
 
             $query = 'SELECT a.id FROM #__phocacart_manufacturers AS a'
@@ -125,7 +127,7 @@ class PhocacartManufacturer
 
 			$link = PhocacartRoute::getItemsRoute();
 			$link = $link . PhocacartRoute::getItemsRouteSuffix($manufacturerAlias, $id, $alias);
-			return '<a href="'.JRoute::_($link).'" >'.$title.'</a>';
+			return '<a href="'.Route::_($link).'" >'.$title.'</a>';
 		} else {
 			return $title;
 		}
@@ -133,7 +135,7 @@ class PhocacartManufacturer
 
 	public static function getActiveManufacturers($items, $ordering, $manufacturerAlias = 'manufacturer') {
 
-	    $db     = JFactory::getDbo();
+	    $db     = Factory::getDbo();
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 4);//m

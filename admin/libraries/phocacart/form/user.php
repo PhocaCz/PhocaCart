@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartFormUser
 {
@@ -20,7 +22,7 @@ class PhocacartFormUser
 
 		if(self::$form === false){
 
-			$app	= JFactory::getApplication();
+			$app	= Factory::getApplication();
 			$o = array();
 			$oFb = array();
 			$oFs = array();
@@ -186,7 +188,7 @@ class PhocacartFormUser
 
 							if (isset($v->predefined_values_first_option) && $v->predefined_values_first_option != '') {
 
-								$fB[] = $fS[] = '<option value="">' . JText::_(htmlspecialchars($v->predefined_values_first_option)). '</option>';
+								$fB[] = $fS[] = '<option value="">' . Text::_(htmlspecialchars($v->predefined_values_first_option)). '</option>';
 							}
 
 							foreach ($predefinedValues as $k => $v) {

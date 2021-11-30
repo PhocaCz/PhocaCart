@@ -14,7 +14,6 @@ hr {
 	margin:5px 0;
 	display:block;
 	text-shadow: 0 1px 0 #ffffff;
-	margin-left: -180px;
 	font-size: 110%;
 }
 
@@ -26,12 +25,17 @@ hr {
 	margin:5px 0;
 	display:block;
 	text-shadow: 0 1px 0 #ffffff;
-	margin-left: -180px;
 	font-size: 110%;
 }
 
+@media (min-width: 992px) {
+    .ph-options-head,
+    .ph-options-head-expert {
+        margin-left: -240px;
+    }
+}
 
-/* 3.3.0 */
+
 .ph-options-head {
 	background-image: linear-gradient(-90deg, #129ED9,#0a5c80);
 	color: #fff;

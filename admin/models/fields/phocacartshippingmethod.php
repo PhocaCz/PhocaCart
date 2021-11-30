@@ -7,8 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaCartShippingMethod extends JFormField
+class JFormFieldPhocaCartShippingMethod extends FormField
 {
 	protected $type 		= 'PhocacartShippingMethod';
 
@@ -19,7 +23,7 @@ class JFormFieldPhocaCartShippingMethod extends JFormField
 		$required 	= $this->element['required'];
 
 
-		$attr = 'class="inputbox"';
+		$attr = 'class="form-select"';
 		if ($required) {
 			$attr		.= ' required aria-required="true" ';
 		}
@@ -38,7 +42,7 @@ class JFormFieldPhocaCartShippingMethod extends JFormField
 			break;
 		}
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 
 		$query = 'SELECT a.id AS value, a.title AS text'
@@ -49,9 +53,8 @@ class JFormFieldPhocaCartShippingMethod extends JFormField
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();
 
-		array_unshift($methods, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD').' -', 'value', 'text'));
-
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $methods,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		array_unshift($methods, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_SHIPPING_METHOD').' -', 'value', 'text'));
+		return HTMLHelper::_('select.genericlist',  $methods,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 
 	}
 }

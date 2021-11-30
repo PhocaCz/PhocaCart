@@ -10,41 +10,101 @@
  */
 
 defined('JPATH_BASE') or die;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 
 use Joomla\CMS\Language\LanguageHelper;
 
 
-class JFormFieldModal_Phocacartcategory extends JFormField
+class JFormFieldModal_Phocacartcategory extends FormField
 {
 
 	protected $type = 'Modal_Phocacartcategory';
+	protected $allowSelect = true;
+	protected $allowClear = true;
+	protected $allowNew = false;
+	protected $allowEdit = false;
+	protected $allowPropagate = false;
+
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'allowSelect':
+			case 'allowClear':
+			case 'allowNew':
+			case 'allowEdit':
+			case 'allowPropagate':
+				return $this->$name;
+		}
+
+		return parent::__get($name);
+	}
+
+	public function __set($name, $value)
+	{
+		switch ($name)
+		{
+			case 'allowSelect':
+			case 'allowClear':
+			case 'allowNew':
+			case 'allowEdit':
+			case 'allowPropagate':
+				$value = (string) $value;
+				$this->$name = !($value === 'false' || $value === 'off' || $value === '0');
+				break;
+
+			default:
+				parent::__set($name, $value);
+		}
+	}
+
+	public function setup(\SimpleXMLElement $element, $value, $group = null)
+	{
+		$return = parent::setup($element, $value, $group);
+
+		if ($return)
+		{
+			$this->allowSelect = ((string) $this->element['select']) !== 'false';
+			$this->allowClear = ((string) $this->element['clear']) !== 'false';
+			$this->allowPropagate = ((string) $this->element['propagate']) === 'true';
+
+			// Creating/editing menu items is not supported in frontend.
+			$isAdministrator = Factory::getApplication()->isClient('administrator');
+			$this->allowNew = $isAdministrator ? ((string) $this->element['new']) === 'true' : false;
+			$this->allowEdit = $isAdministrator ? ((string) $this->element['edit']) === 'true' : false;
+		}
+
+		return $return;
+	}
 
 
 	protected function getInput()
 	{
-		$allowNew       = ((string) $this->element['new'] == 'true');
-		$allowEdit      = ((string) $this->element['edit'] == 'true');
-		$allowClear     = ((string) $this->element['clear'] != 'false');
-		$allowSelect    = ((string) $this->element['select'] != 'false');
-		$allowPropagate = ((string) $this->element['propagate'] == 'true');
 
-		$languages = LanguageHelper::getContentLanguages(array(0, 1));
+        $clientId    = (int) $this->element['clientid'];
+		$languages   = LanguageHelper::getContentLanguages(array(0, 1), false);
 
 		// Load language
-		JFactory::getLanguage()->load('com_phocacart', JPATH_ADMINISTRATOR);
+		Factory::getLanguage()->load('com_phocacart', JPATH_ADMINISTRATOR);
 
-		// The active category id field.
-		$value = (int) $this->value > 0 ? (int) $this->value : '';
+		// The active article id field.
+		$value = (int) $this->value ?: '';
 
 		// Create the modal id.
 		$modalId = 'Phocacartcategory_' . $this->id;
 
+		/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+
 		// Add the modal field script to the document head.
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
-		Joomla\CMS\HTML\HTMLHelper::_('script', 'system/modal-fields.js', array('version' => 'auto', 'relative' => true));
+		$wa->useScript('field.modal-fields');
 
 		// Script to proxy the select modal function to the modal-fields.js file.
-		if ($allowSelect)
+		if ($this->allowSelect)
 		{
 			static $scriptSelect = null;
 
@@ -55,22 +115,24 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 
 			if (!isset($scriptSelect[$this->id]))
 			{
-				JFactory::getDocument()->addScriptDeclaration("
-				function jSelectPhocacartcategory_" . $this->id . "(id, title, object) {
+				$wa->addInlineScript("
+				window.jSelectPhocacartcategory_" . $this->id . " = function (id, title, object) {
 					window.processModalSelect('Phocacartcategory', '" . $this->id . "', id, title, '', object);
-				}
-				");
+				}",
+					[],
+					['type' => 'module']
+				);
 
-				JText::script('JGLOBAL_ASSOCIATIONS_PROPAGATE_FAILED');
+				Text::script('JGLOBAL_ASSOCIATIONS_PROPAGATE_FAILED');
 
 				$scriptSelect[$this->id] = true;
 			}
 		}
 
 		// Setup variables for display.
-		$linkCategories = 'index.php?option=com_phocacart&amp;view=phocacartcategories&amp;layout=modal&amp;tmpl=component&amp;' . JSession::getFormToken() . '=1';
-		$linkCategory  = 'index.php?option=com_phocacart&amp;view=phocacartcategory&amp;layout=modal&amp;tmpl=component&amp;' . JSession::getFormToken() . '=1';
-		$modalTitle   = JText::_('COM_PHOCACART_CHANGE_CATEGORY');
+		$linkCategories = 'index.php?option=com_phocacart&amp;view=phocacartcategories&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkCategory  = 'index.php?option=com_phocacart&amp;view=phocacartcategory&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$modalTitle   = Text::_('COM_PHOCACART_CHANGE_CATEGORY');
 
 		if (isset($this->element['language']))
 		{
@@ -85,7 +147,7 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 
 		if ($value)
 		{
-			$db    = JFactory::getDbo();
+			$db    = Factory::getDbo();
 			$query = $db->getQuery(true)
 				->select($db->quoteName('title'))
 				->from($db->quoteName('#__phocacart_categories'))
@@ -98,93 +160,116 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 			}
 			catch (RuntimeException $e)
 			{
-                throw new Exception($e->getMessage(), 500);
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 			}
 		}
 
-		$title = empty($title) ? JText::_('COM_PHOCACART_SELECT_A_CATEGORY') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+		// Placeholder if option is present or not
+		if (empty($title))
+		{
+			if ($this->element->option && (string) $this->element->option['value'] == '')
+			{
+				$title_holder = Text::_($this->element->option);
+			}
+			else
+			{
+				$title_holder = Text::_('COM_PHOCACART_SELECT_A_CATEGORY');
+			}
+		}
 
-		// The current category display field.
-		$html  = '<span class="input-append">';
-		$html .= '<input class="input-medium" id="' . $this->id . '_name" type="text" value="' . $title . '" disabled="disabled" size="35" />';
+		$title = empty($title) ? $title_holder : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+
+		// The current product display field.
+		//$html  = '<span class="input-append input-group">';
+		//$html .= '<input class="input-medium" id="' . $this->id . '_name" type="text" value="' . $title . '" disabled="disabled" size="35" />';
+
+		// The current menu item display field.
+		$html  = '';
+
+		if ($this->allowSelect || $this->allowNew || $this->allowEdit || $this->allowClear)
+		{
+			$html .= '<span class="input-group">';
+		}
+
+		$html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" disabled="disabled" size="35">';
 
 		// Select category button
-		if ($allowSelect)
+		if ($this->allowSelect)
 		{
-			$html .= '<a'
-				. ' class="btn hasTooltip' . ($value ? ' hidden' : '') . '"'
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? ' hidden' : '') . '"'
 				. ' id="' . $this->id . '_select"'
-				. ' data-toggle="modal"'
-				. ' role="button"'
-				. ' href="#ModalSelect' . $modalId . '"'
-				. ' title="' . JHtml::tooltipText('COM_PHOCACART_CHANGE_CATEGORY') . '">'
-				. '<span class="icon-file" aria-hidden="true"></span> ' . JText::_('JSELECT')
-				. '</a>';
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalSelect' . $modalId . '">'
+				. '<span class="icon-file" aria-hidden="true"></span> ' . Text::_('JSELECT')
+				. '</button>';
 		}
 
 		// New category button
-		if ($allowNew)
+		if ($this->allowNew)
 		{
-			$html .= '<a'
-				. ' class="btn hasTooltip' . ($value ? ' hidden' : '') . '"'
+			$html .= '<button'
+				. ' class="btn btn-secondary' . ($value ? ' hidden' : '') . '"'
 				. ' id="' . $this->id . '_new"'
-				. ' data-toggle="modal"'
-				. ' role="button"'
-				. ' href="#ModalNew' . $modalId . '"'
-				. ' title="' . JHtml::tooltipText('COM_PHOCACART_NEW_CATEGORY') . '">'
-				. '<span class="icon-new" aria-hidden="true"></span> ' . JText::_('JACTION_CREATE')
-				. '</a>';
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalNew' . $modalId . '" >'
+				. '<span class="icon-plus" aria-hidden="true"></span> ' . Text::_('JACTION_CREATE')
+				. '</button>';
 		}
 
 		// Edit category button
-		if ($allowEdit)
+		if ($this->allowEdit)
 		{
-			$html .= '<a'
-				. ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
 				. ' id="' . $this->id . '_edit"'
-				. ' data-toggle="modal"'
-				. ' role="button"'
-				. ' href="#ModalEdit' . $modalId . '"'
-				. ' title="' . JHtml::tooltipText('COM_PHOCACART_EDIT_CATEGORY') . '">'
-				. '<span class="icon-edit" aria-hidden="true"></span> ' . JText::_('JACTION_EDIT')
-				. '</a>';
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalEdit' . $modalId . '">'
+				. '<span class="icon-pen-square" aria-hidden="true"></span> ' . Text::_('JACTION_EDIT')
+				. '</button>';
 		}
 
 		// Clear category button
-		if ($allowClear)
+		if ($this->allowClear)
 		{
-			$html .= '<a'
-				. ' class="btn' . ($value ? '' : ' hidden') . '"'
+			$html .= '<button'
+				. ' class="btn btn-secondary' . ($value ? '' : ' hidden') . '"'
 				. ' id="' . $this->id . '_clear"'
-				. ' href="#"'
+				. ' type="button"'
 				. ' onclick="window.processModalParent(\'' . $this->id . '\'); return false;">'
-				. '<span class="icon-remove" aria-hidden="true"></span>' . JText::_('JCLEAR')
-				. '</a>';
+				. '<span class="icon-times" aria-hidden="true"></span> ' . Text::_('JCLEAR')
+				. '</button>';
 		}
 
 		// Propagate category button
-		if ($allowPropagate && count($languages) > 2)
+		if ($this->allowPropagate && count($languages) > 2)
 		{
 			// Strip off language tag at the end
 			$tagLength = (int) strlen($this->element['language']);
 			$callbackFunctionStem = substr("jSelectPhocacartcategory_" . $this->id, 0, -$tagLength);
 
-			$html .= '<a'
-			. ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
+			$html .= '<button'
+			. ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
+			. ' type="button"'
 			. ' id="' . $this->id . '_propagate"'
-			. ' href="#"'
-			. ' title="' . JHtml::tooltipText('JGLOBAL_ASSOCIATIONS_PROPAGATE_TIP') . '"'
+			. ' title="' . Text::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_TIP') . '"'
 			. ' onclick="Joomla.propagateAssociation(\'' . $this->id . '\', \'' . $callbackFunctionStem . '\');">'
-			. '<span class="icon-refresh" aria-hidden="true"></span>' . JText::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_BUTTON')
-			. '</a>';
+			. '<span class="icon-sync" aria-hidden="true"></span> ' . Text::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_BUTTON')
+			. '</button>';
 		}
 
-		$html .= '</span>';
+		if ($this->allowSelect || $this->allowNew || $this->allowEdit || $this->allowClear)
+		{
+			$html .= '</span>';
+		}
 
 		// Select category modal
-		if ($allowSelect)
+		if ($this->allowSelect)
 		{
-			$html .= Joomla\CMS\HTML\HTMLHelper::_(
+			$html .= HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalSelect' . $modalId,
 				array(
@@ -192,75 +277,70 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 					'url'         => $urlSelect,
 					'height'      => '400px',
 					'width'       => '800px',
-					'bodyHeight'  => '70',
-					'modalWidth'  => '80',
-					'footer'      => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+										. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
 				)
 			);
 		}
 
 		// New category modal
         // phocacartcategory-form => adminForm
-		if ($allowNew)
+		if ($this->allowNew)
 		{
-			$html .= Joomla\CMS\HTML\HTMLHelper::_(
+			$html .= HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalNew' . $modalId,
 				array(
-					'title'       => JText::_('COM_PHOCACART_NEW_CATEGORY'),
+					'title'       => Text::_('COM_PHOCACART_NEW_CATEGORY'),
 					'backdrop'    => 'static',
 					'keyboard'    => false,
 					'closeButton' => false,
 					'url'         => $urlNew,
 					'height'      => '400px',
 					'width'       => '800px',
-					'bodyHeight'  => '70',
-					'modalWidth'  => '80',
-					'footer'      => '<a role="button" class="btn" aria-hidden="true"'
-							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartcategory\', \'cancel\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
-							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
-							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
-							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartcategory\', \'save\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
-							. JText::_('JSAVE') . '</a>'
-							. '<a role="button" class="btn btn-success" aria-hidden="true"'
-							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'add\', \'phocacartcategory\', \'apply\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
-							. JText::_('JAPPLY') . '</a>',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary"'
+							. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'phocacartcategory\', \'cancel\', \'adminForm\'); return false;">'
+							. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
+							. '<button type="button" class="btn btn-primary"'
+							. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'phocacartcategory\', \'save\', \'adminForm\'); return false;">'
+							. Text::_('JSAVE') . '</button>'
+							. '<button type="button" class="btn btn-success"'
+							. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'phocacartcategory\', \'apply\', \'adminForm\'); return false;">'
+							. Text::_('JAPPLY') . '</button>',
 				)
 			);
 		}
 
 		// Edit category modal.
         // phocacartcategory-form => adminForm
-		if ($allowEdit)
+		if ($this->allowEdit)
 		{
-			$html .= Joomla\CMS\HTML\HTMLHelper::_(
+			$html .= HTMLHelper::_(
 				'bootstrap.renderModal',
 				'ModalEdit' . $modalId,
 				array(
-					'title'       => JText::_('COM_PHOCACART_EDIT_CATEGORY'),
+					'title'       => Text::_('COM_PHOCACART_EDIT_CATEGORY'),
 					'backdrop'    => 'static',
 					'keyboard'    => false,
 					'closeButton' => false,
 					'url'         => $urlEdit,
 					'height'      => '400px',
 					'width'       => '800px',
-					'bodyHeight'  => '70',
-					'modalWidth'  => '80',
-					'footer'      => '<a role="button" class="btn" aria-hidden="true"'
-							. ' onclick="window.processModalEdit(this, \'' . $this->id
-							. '\', \'edit\', \'phocacartcategory\', \'cancel\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
-							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
-							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
-							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'edit\', \'phocacartcategory\', \'save\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
-							. JText::_('JSAVE') . '</a>'
-							. '<a role="button" class="btn btn-success" aria-hidden="true"'
-							. ' onclick="window.processModalEdit(this, \''
-							. $this->id . '\', \'edit\', \'phocacartcategory\', \'apply\', \'adminForm\', \'jform_id\', \'jform_title\'); return false;">'
-							. JText::_('JAPPLY') . '</a>',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary"'
+							. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'phocacartcategory\', \'cancel\', \'adminForm\'); return false;">'
+							. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
+							. '<button type="button" class="btn btn-primary"'
+							. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'phocacartcategory\', \'save\', \'adminForm\'); return false;">'
+							. Text::_('JSAVE') . '</button>'
+							. '<button type="button" class="btn btn-success"'
+							. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'phocacarcategory\', \'apply\', \'adminForm\'); return false;">'
+							. Text::_('JAPPLY') . '</button>',
 				)
 			);
 		}
@@ -268,8 +348,18 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 		// Note: class='required' for client side validation.
 		$class = $this->required ? ' class="required modal-value"' : '';
 
+		// Placeholder if option is present or not when clearing field
+		if ($this->element->option && (string) $this->element->option['value'] == '')
+		{
+			$title_holder = Text::_($this->element->option);
+		}
+		else
+		{
+			$title_holder = Text::_('COM_PHOCACART_SELECT_A_CATEGORY');
+		}
+
 		$html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int) $this->required . '" name="' . $this->name
-			. '" data-text="' . htmlspecialchars(JText::_('COM_PHOCACART_SELECT_A_CATEGORY', true), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '" />';
+			. '" data-text="' . htmlspecialchars($title_holder, ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
 
 		return $html;
 	}
@@ -283,6 +373,6 @@ class JFormFieldModal_Phocacartcategory extends JFormField
 	 */
 	protected function getLabel()
 	{
-		return str_replace($this->id, $this->id . '_id', parent::getLabel());
+		return str_replace($this->id, $this->id . '_name', parent::getLabel());
 	}
 }

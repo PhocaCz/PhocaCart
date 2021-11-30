@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 
 use Joomla\Utilities\ArrayHelper;
 
@@ -20,12 +22,12 @@ class PhocaCartCpControllerPhocacartPayments extends PhocaCartCpControllerPhocaC
 	
 	public function setDefault() {
 		
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$pks = $this->input->post->get('cid', array(), 'array');
 		try {
 			if (empty($pks)) {
-				throw new Exception(JText::_('COM_PHOCACART_NO_ITEM_SELECTED'));
+				throw new Exception(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
 			}
 			$pks = ArrayHelper::toInteger($pks);
 
@@ -33,7 +35,7 @@ class PhocaCartCpControllerPhocacartPayments extends PhocaCartCpControllerPhocaC
 			$id = array_shift($pks);
 			$model = $this->getModel();
 			$model->setDefault($id);
-			$this->setMessage(JText::_('COM_PHOCACART_SUCCESS_DEFAULT_SET'));
+			$this->setMessage(Text::_('COM_PHOCACART_SUCCESS_DEFAULT_SET'));
 		} catch (Exception $e) {
 			throw new Exception($e->getMessage(), 500);
 		}
@@ -43,12 +45,12 @@ class PhocaCartCpControllerPhocacartPayments extends PhocaCartCpControllerPhocaC
 	
 	public function unsetDefault(){
 		
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$pks = $this->input->post->get('cid', array(), 'array');
 		try {
 			if (empty($pks)) {
-				throw new Exception(JText::_('COM_PHOCACART_NO_ITEM_SELECTED'));
+				throw new Exception(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
 			}
 			$pks = ArrayHelper::toInteger($pks);
 
@@ -56,7 +58,7 @@ class PhocaCartCpControllerPhocacartPayments extends PhocaCartCpControllerPhocaC
 			$id = array_shift($pks);
 			$model = $this->getModel();
 			$model->unsetDefault($id);
-			$this->setMessage(JText::_('COM_PHOCACART_SUCCESS_DEFAULT_UNSET'));
+			$this->setMessage(Text::_('COM_PHOCACART_SUCCESS_DEFAULT_UNSET'));
 		} catch (Exception $e) {
 			throw new Exception($e->getMessage(), 500);
 		}

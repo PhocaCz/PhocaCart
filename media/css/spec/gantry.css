@@ -5,11 +5,84 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
- 
+
+/* 
 #phContainerPopup .modal-body {
 	height: calc(95vh - 120px);
 }
 
 #phContainerPopup .modal-body iframe{
 	height: 95%;
+}
+*/
+
+/* Top Modules */
+.ph-main-nav-top-box .g-content {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    justify-content:flex-end;
+}
+
+.ph-main-nav-top-box .platform-content {
+    margin: 0;
+    padding:0;
+}
+
+.g-main-nav.ph-main-nav-mod .g-toplevel > li > .g-menu-item-container {
+    white-space:nowrap;
+}
+
+.ph-dropdown-currency,
+.ph-dropdown-wishlist,
+.ph-dropdown-compare,
+.ph-dropdown-cart {
+	min-width: 35%;
+}
+
+.ph-item-currency-box,
+.ph-item-wishlist-box,
+.ph-item-compare-box,
+.ph-item-cart-box  {
+	margin: 1em;
+}
+
+.ph-item-cart-box  {
+	margin: 1.5em;
+}
+.ph-item-currency-box  {
+	margin: 1em;
+}
+
+@media screen and (max-width: 768px) {
+	.ph-dropdown-currency,
+	.ph-dropdown-wishlist,
+	.ph-dropdown-compare,
+	.ph-dropdown-cart {
+		min-width: 80%;
+	}
+}
+
+.ph-main-nav-mod .g-menu-item-container {
+	white-space: nowrap;
+}
+
+.g-main-nav .g-toplevel > li.g-parent .g-menu-parent-indicator {
+	/*display: none;*/
+}
+
+
+
+.ph-checkout-icon-spec-pending {
+    padding: 0.3em;
+    margin: 2px -6px 2px 2px;
+}
+.ph-checkout-icon-spec-finished {
+    padding: 0.3em;
+    margin: 2px -6px 2px 2px;
+}
+
+.ph-pagination-top #limittop,
+.ph-pagination #limit{
+	width: 5em;
 }

@@ -9,12 +9,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartFeed
 {
 	public static function getFeed($id) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$q = ' SELECT a.id, a.title, a.item_params, a.feed_params, a.feed_plugin, a.header, a.footer, a.root, a.item'
 			.' FROM #__phocacart_feeds AS a'
@@ -38,7 +40,7 @@ class PhocacartFeed
 		$plugin['name'] = $namePlugin;
 		$plugin['group'] = 'pcf';
 		$plugin['title'] = 'Phoca Cart Feed';
-		$plugin['selecttitle'] = JText::_('COM_PHOCACART_SELECT_FEED_PLUGIN');
+		$plugin['selecttitle'] = Text::_('COM_PHOCACART_SELECT_FEED_PLUGIN');
 		$plugin['returnform'] = $returnFormItem;
 
 		return PhocacartPlugin::getPluginMethods($plugin);

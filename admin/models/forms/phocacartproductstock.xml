@@ -5,7 +5,7 @@
 
 <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
 
-<field name="product_stock" type="subform" label="COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT" description="COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT" multiple="true" buttons="false" layout="joomla.form.field.subform.repeatable-table" formsource="administrator/components/com_phocacart/models/forms/subform_product_stock.xml"/>	
+<field name="product_stock" fieldname="product_stock" type="subform" label="COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT" description="COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT" multiple="true" buttons="false" layout="joomla.form.field.subform.repeatable-table" formsource="administrator/components/com_phocacart/models/forms/subform_product_stock.xml"/>	
 	
 	
 	</fieldset>

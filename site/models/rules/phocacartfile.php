@@ -7,18 +7,23 @@
  */
 
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Form\FormRule;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\String\StringHelper;
 //JFormHelper::loadRuleClass('email');
 
-class JFormRulePhocaCartFile extends JFormRule
+class JFormRulePhocaCartFile extends FormRule
 {
 
-	public function test(SimpleXMLElement $element, $value, $group = null, JRegistry $input = null, JForm $form = null)
+	public function test(SimpleXMLElement $element, $value, $group = null, Registry $input = null, Form $form = null)
 	{
 
 
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		//E_ERROR, E_WARNING, E_NOTICE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE.
 		$info = array();
 		$info['field'] = 'phocacart_email';
@@ -27,7 +32,7 @@ class JFormRulePhocaCartFile extends JFormRule
 		//EMAIL FORMAT
 		if(!parent::test($element, $value, $group, $input, $form)){
 
-			$app->enqueueMessage(JText::_('COM_PHOCACART_BAD_EMAIL' ), 'warning');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_BAD_EMAIL' ), 'warning');
 			return false;
 		}
 
@@ -35,9 +40,9 @@ class JFormRulePhocaCartFile extends JFormRule
 		$banned = $params->get('banned_email');
 		foreach(explode(';', $banned) as $item){
 			if (trim($item) != '') {
-				if (\Joomla\String\StringHelper::stristr($item, $value) !== false){
+				if (StringHelper::stristr($item, $value) !== false){
 
-					$app->enqueueMessage(JText::_('COM_PHOCACART_BAD_EMAIL' ), 'warning');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_BAD_EMAIL' ), 'warning');
 					return false;
 				}
 			}

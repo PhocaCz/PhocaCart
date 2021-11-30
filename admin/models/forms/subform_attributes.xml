@@ -4,16 +4,16 @@
 
 		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />
 
-		<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+		<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL"  required="true" />
 
-<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL"  />
 
-<field name="required" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_REQUIRED_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_DESC" default="0" >
-	<option value="1">COM_PHOCACART_YES</option>
+<field name="required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL"  default="0" >
 	<option value="0">COM_PHOCACART_NO</option>
+    <option value="1">COM_PHOCACART_YES</option>
 </field>
 
-<field name="type" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" default="1" >
+<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TYPE_LABEL" default="1" >
 	<option value="1">COM_PHOCACART_ATTR_TYPE_SELECT</option>
 	<option value="2">COM_PHOCACART_ATTR_TYPE_COLOR_SELECT</option>
 	<option value="3">COM_PHOCACART_ATTR_TYPE_IMAGE_SELECT</option>
@@ -29,7 +29,7 @@
 	<option value="20">COM_PHOCACART_ATTR_TYPE_GIFT</option>
 </field>
 
-<field name="options" type="subform" label="COM_PHOCACART_FIELD_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_OPTIONS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_options.xml"/>
+<field name="options" fieldname="options" type="subform" label="COM_PHOCACART_FIELD_OPTIONS_LABEL" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_options.xml"/>
 
 	</fieldset>
 </form>

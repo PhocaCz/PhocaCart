@@ -10,8 +10,13 @@
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutI 		= new JLayoutFile('icon_checkout_status', null, array('component' => 'com_phocacart'));
+$layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
 $d['s']			= $this->s;
 $d['suffix']	= $this->t['icon_suffix'];
@@ -31,7 +36,7 @@ if ($this->a->shippingnotused == 1) {
 
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutshippingview">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutshippingview">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.Text::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div>';
 
 
@@ -42,7 +47,7 @@ if ($this->a->shippingnotused == 1) {
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-shipping-row" id="phShippingMethods" >';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
+	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
 	echo '</div>';
 
 
@@ -89,7 +94,7 @@ if ($this->a->shippingnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
 
 		if (isset($this->t['shippingmethod']['image']) && $this->t['shippingmethod']['image'] != '') {
-			echo '<div class="ph-shipping-image"><img src="'.JURI::base(true) .'/'. $this->t['shippingmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['shippingmethod']['title'])).'" /></div>';
+			echo '<div class="ph-shipping-image"><img src="'.Uri::base(true) .'/'. $this->t['shippingmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['shippingmethod']['title'])).'" /></div>';
 		}
 
 		echo '<div class="ph-shipping-title">'.$this->t['shippingmethod']['title'].'</div>';
@@ -97,12 +102,12 @@ if ($this->a->shippingnotused == 1) {
 		// Event
 		if (isset($this->t['shippingmethod']['method']) && $this->t['shippingmethod']['method'] != '') {
 
-			JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['shippingmethod']['method'])));
+			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['shippingmethod']['method'])));
 			$eventData 					= array();
 			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($this->t['shippingmethod']['method']));
 
 
-			$results = Factory::getApplication()->triggerEvent('PCSgetShippingBrancheInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $eventData));
+			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBrancheInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $eventData));
 
 			if (!empty($results)) {
 				echo trim(implode("\n", $results));
@@ -123,7 +128,7 @@ if ($this->a->shippingnotused == 1) {
 
 
 		if ($this->t['display_shipping_desc'] && $this->t['shippingmethod']['description'] != '') {
-			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
+			echo '<div class="ph-checkout-shipping-desc">'.HTMLHelper::_('content.prepare', $this->t['shippingmethod']['description']).'</div>';
 		}
 
 		echo '</div>';
@@ -131,7 +136,7 @@ if ($this->a->shippingnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'">';
         if ($this->a->shippingdisplayeditbutton) {
             echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-shipping-edit">';
-            echo '<button class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn"><span class="' . $this->s['i']['edit'] . '"></span> ' . JText::_('COM_PHOCACART_EDIT_SHIPPING') . '</button>';
+            echo '<button class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn"><span class="' . $this->s['i']['edit'] . '"></span> ' . Text::_('COM_PHOCACART_EDIT_SHIPPING') . '</button>';
             echo '</div>';
         }
 		echo '</div>';
@@ -148,7 +153,7 @@ if ($this->a->shippingnotused == 1) {
 	//echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 	//echo '</div>';// end checkout box row
 
@@ -163,7 +168,7 @@ if ($this->a->shippingnotused == 1) {
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 
 	// Header
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutshippingedit">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutshippingedit">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.Text::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div>';
 
 
@@ -174,7 +179,7 @@ if ($this->a->shippingnotused == 1) {
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-shipping-row" id="phShippingMethods" >';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
+	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
 	echo '</div>';
 
 
@@ -192,12 +197,12 @@ if ($this->a->shippingnotused == 1) {
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
 
-		echo '<div class="radio">';
-		echo '<label><input type="radio" name="phshippingopt" id="phshippingopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
+		echo '<div class="'.$this->s['c']['controls'] .'">';
+		echo '<label><input type="radio" class="'.$this->s['c']['inputbox.radio'].'" name="phshippingopt" id="phshippingopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
 
 
 		if ($v->image != '') {
-			echo '<span class="ph-shipping-image"><img src="'.JURI::base(true) .'/'. $v->image.'" alt="'.htmlspecialchars(strip_tags($v->title)).'" /></span>';
+			echo '<span class="ph-shipping-image"><img src="'.Uri::base(true) .'/'. $v->image.'" alt="'.htmlspecialchars(strip_tags($v->title)).'" /></span>';
 		}
 
 		echo '<span class="ph-shipping-title">'.$v->title.'</span>';
@@ -207,11 +212,11 @@ if ($this->a->shippingnotused == 1) {
 		// Event
 		if (isset($v->method) && $v->method != '') {
 
-			JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
+			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
 			$eventData 					= array();
 			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
 
-			$results = Factory::getApplication()->triggerEvent('PCSgetShippingBranches', array('com_phocacart.checkout', $v, $eventData));
+			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranches', array('com_phocacart.checkout', $v, $eventData));
 
 			if (!empty($results)) {
 				echo trim(implode("\n", $results));
@@ -219,7 +224,7 @@ if ($this->a->shippingnotused == 1) {
 		}
 
 		if ($this->t['display_shipping_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-shipping-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-shipping-desc">'.HTMLHelper::_('content.prepare', $v->description).'</div>';
 		}
 		echo '</div>';
 
@@ -232,7 +237,7 @@ if ($this->a->shippingnotused == 1) {
 		} else if ($this->t['zero_shipping_price'] == 2 && $priceI['zero'] == 1) {
 			// Display free text
 			echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-free-txt"></div>';
-			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-free">'.JText::_('COM_PHOCACART_FREE').'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-shipping-free">'.Text::_('COM_PHOCACART_FREE').'</div>';
 		} else {
 			if ($priceI['nettoformat'] == $priceI['bruttoformat']) {
 
@@ -266,7 +271,7 @@ if ($this->a->shippingnotused == 1) {
 		echo '</div>';// end radio
 
 		echo '</div>';// end row second column
-		echo '<div class="ph-cb"></div>';
+		echo '<div class="ph-cb grid"></div>';
 
 	}
 
@@ -279,7 +284,7 @@ if ($this->a->shippingnotused == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-shipping-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['save'].'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['save'].'"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
 	echo '</div>';
 	echo '</div>';
 
@@ -291,7 +296,7 @@ if ($this->a->shippingnotused == 1) {
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 
@@ -302,7 +307,7 @@ if ($this->a->shippingnotused == 1) {
 	$d['status']	= 'pending';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.JText::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.Text::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div>';
 }
 

@@ -7,15 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 
 if (!empty($d['wishlist'])) {
 	foreach ($d['wishlist'] as $k => $v) {
 		// Try to find the best menu link
 		if (isset($v->catid2) && (int)$v->catid2 > 0 && isset($v->catalias2) && $v->catalias2 != '') {
-			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
+			$linkProduct 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
 		} else {
-			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$linkProduct 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 		}
 
 ?>
@@ -30,19 +33,19 @@ if (!empty($d['wishlist'])) {
 			<input type="hidden" name="return" value="<?php echo $d['actionbase64']; ?>" />
 			<div class="ph-pull-right">
 			<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-				<div class="ph-category-item-wishlist"><a href="javascript:void(0)" onclick="phItemRemoveWishListFormAjax('phWishListRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
+				<div class="ph-category-item-wishlist"><a href="javascript:void(0)" onclick="phItemRemoveWishListFormAjax('phWishListRemove<?php echo (int)$v->id; ?>');" title="<?php echo Text::_('COM_PHOCACART_REMOVE_FROM_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
 			<?php } else { ?>
-				<div class="ph-category-item-wishlist"><a href="javascript:void(0)" onclick="document.getElementById('phWishListRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
+				<div class="ph-category-item-wishlist"><a href="javascript:void(0)" onclick="document.getElementById('phWishListRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_REMOVE_FROM_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
 			<?php } ?>
 			</div>
-		<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+		<?php echo HTMLHelper::_('form.token'); ?>
 		</form>
 	</div>
 </div>
 <?php
 	}
 } else {
-	echo '<div>'.JText::_('COM_PHOCACART_WISH_LIST_IS_EMPTY').'</div>';
+	echo '<div>'.Text::_('COM_PHOCACART_WISH_LIST_IS_EMPTY').'</div>';
 }
 ?>
-<div class="ph-small ph-right ph-u ph-cart-link-wishlist"><a href="<?php echo $d['linkwishlist']; ?>"><?php echo JText::_('COM_PHOCACART_VIEW_WISH_LIST'); ?></a></div>
+<div class="ph-small ph-right ph-u ph-cart-link-wishlist"><a href="<?php echo $d['linkwishlist']; ?>"><?php echo Text::_('COM_PHOCACART_VIEW_WISH_LIST'); ?></a></div>

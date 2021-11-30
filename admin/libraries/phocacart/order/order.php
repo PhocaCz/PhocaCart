@@ -13,6 +13,13 @@ use Joomla\CMS\Form\Field\OrderingField;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Mail\MailHelper;
+use Joomla\Registry\Registry;
+use Joomla\CMS\HTML\HTMLHelper;
 
 JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
@@ -54,7 +61,7 @@ class PhocacartOrder
 
 
         // LANGUAGES
-        $lang     = JFactory::getLanguage();
+        $lang     = Factory::getLanguage();
         $userLang = $lang->getTag();// Get language user uses in frontend
 
         $pLang       = new PhocacartLanguage();
@@ -66,9 +73,9 @@ class PhocacartOrder
         }
 
 
-        $uri    = \Joomla\CMS\Uri\Uri::getInstance();
+        $uri    = Uri::getInstance();
         $action = $uri->toString();
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
 
         $user  = PhocacartUser::getUser();
         $guest = PhocacartUserGuestuser::getGuestUser();
@@ -86,7 +93,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY');
+            $msg = Text::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY');
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -125,7 +132,7 @@ class PhocacartOrder
         // --------------------
 
         if (isset($coupon['id']) && (int)$coupon['id'] > 0 && $cart->getCouponValid() == false) {
-            $msg = JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT') . $msgSuffix;
+            $msg = Text::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT') . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             PhocacartPayment::removePayment(0, 1);
             return false;
@@ -149,7 +156,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_GUEST_CHECKOUT_DISABLED') . $msgSuffix;
+            $msg = Text::_('COM_PHOCACART_GUEST_CHECKOUT_DISABLED') . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -165,7 +172,7 @@ class PhocacartOrder
                 if ($order_language == 0) {
                     $pLang->setLanguageBack($defaultLang);
                 }
-                $msg = JText::_('COM_PHOCACART_WRONG_CAPTCHA') . $msgSuffix;
+                $msg = Text::_('COM_PHOCACART_WRONG_CAPTCHA') . $msgSuffix;
 
 
                 $app->enqueueMessage($msg, 'error');
@@ -188,11 +195,11 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_NOT_MET_UPDATE_CART_BEFORE_ORDERING');
+            $msg = Text::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_NOT_MET_UPDATE_CART_BEFORE_ORDERING');
             $msg .= '<br />';
-            $msg .= JText::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_IS') . ': ' . $priceFm;
+            $msg .= Text::_('COM_PHOCACART_MINIMUM_ORDER_AMOUNT_IS') . ': ' . $priceFm;
             $msg .= '<br />';
-            $msg .= JText::_('COM_PHOCACART_YOUR_ORDER_AMOUNT_IS') . ': ' . $priceFb . $msgSuffix;
+            $msg .= Text::_('COM_PHOCACART_YOUR_ORDER_AMOUNT_IS') . ': ' . $priceFb . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -206,7 +213,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
+            $msg = Text::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -219,7 +226,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
+            $msg = Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -232,7 +239,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
+            $msg = Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -253,7 +260,7 @@ class PhocacartOrder
 
 
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         //JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
@@ -287,11 +294,11 @@ class PhocacartOrder
 
 
         //$dispatcher = J EventDispatcher::getInstance();
-        $plugin = JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
+        $plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
         if ($plugin) {
             $eventData 					= array();
             $eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
-            \JFactory::getApplication()->triggerEvent('PCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
+            Factory::getApplication()->triggerEvent('onPCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
             $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
         } else {
 
@@ -427,7 +434,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_SHIPPING_METHOD');
+            $msg = Text::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_SHIPPING_METHOD');
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -482,21 +489,21 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_PAYMENT_METHOD');
+            $msg = Text::_('COM_PHOCACART_PLEASE_SELECT_RIGHT_PAYMENT_METHOD');
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
 
-        $row = JTable::getInstance('PhocacartOrder', 'Table', array());
+        $row = Table::getInstance('PhocacartOrder', 'Table', array());
 
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
+            //throw new Exception($row->getError());
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_($db->getErrorMsg()) . $msgSuffix;
+            $msg = Text::_($row->getError()) . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -510,7 +517,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_($row->getErrorMsg()) . $msgSuffix;
+            $msg = Text::_($row->getErrorMsg()) . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -520,7 +527,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = JText::_($row->getErrorMsg()) . $msgSuffix;
+            $msg = Text::_($row->getErrorMsg()) . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -620,7 +627,7 @@ class PhocacartOrder
                         $this->cleanTable('phocacart_order_discounts', $row->id);
                         $this->cleanTable('phocacart_order_coupons', $row->id);
 
-                        $msg = JText::_('COM_PHOCACART_ORDER_NOT_EXECUTED_PRODUCT_NOT_ACCESSIBLE_OR_REQUIRED_ATTRIBUTE_OPTION_NOT_SELECTED');
+                        $msg = Text::_('COM_PHOCACART_ORDER_NOT_EXECUTED_PRODUCT_NOT_ACCESSIBLE_OR_REQUIRED_ATTRIBUTE_OPTION_NOT_SELECTED');
                         $app->enqueueMessage($msg, 'error');
                         return false;
 
@@ -633,10 +640,10 @@ class PhocacartOrder
             // DISCOUNTS
             $this->cleanTable('phocacart_order_discounts', $row->id);
             if ($total[2]['dnetto'] > 0) {
-                $this->saveOrderDiscounts(JText::_('COM_PHOCACART_PRODUCT_DISCOUNT'), $total[2], $row->id);
+                $this->saveOrderDiscounts(Text::_('COM_PHOCACART_PRODUCT_DISCOUNT'), $total[2], $row->id);
             }
             if ($total[3]['dnetto'] > 0) {
-                $this->saveOrderDiscounts(JText::_('COM_PHOCACART_CART_DISCOUNT'), $total[3], $row->id);
+                $this->saveOrderDiscounts(Text::_('COM_PHOCACART_CART_DISCOUNT'), $total[3], $row->id);
             }
 
             // COUPONS
@@ -671,7 +678,7 @@ class PhocacartOrder
             }
 
             // If vendor makes and order in POS e.g. then store his/her as the one who made the change
-            $userReal = JFactory::getUser();
+            $userReal = Factory::getUser();
 
             $this->saveOrderHistory($d['status_id'], $notify, $userReal->id, $row->id);
 
@@ -694,7 +701,7 @@ class PhocacartOrder
 
 
                 if (isset($total[1]['netto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_SUBTOTAL');
+                    $d2['title']              = Text::_('COM_PHOCACART_SUBTOTAL');
                     $d2['title_lang']         = 'COM_PHOCACART_SUBTOTAL';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -709,7 +716,7 @@ class PhocacartOrder
 
                 // Reward Discount
                 if (isset($total[5]['dnetto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_REWARD_DISCOUNT') . $total[5]['rewardproducttxtsuffix'];
+                    $d2['title']              = Text::_('COM_PHOCACART_REWARD_DISCOUNT') . $total[5]['rewardproducttxtsuffix'];
                     $d2['title_lang']         = 'COM_PHOCACART_REWARD_DISCOUNT';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = $total[5]['rewardproducttxtsuffix'];
@@ -722,7 +729,7 @@ class PhocacartOrder
                     $ordering++;
                 }
                 if (isset($total[5]['dbrutto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_REWARD_DISCOUNT') . $total[5]['rewardproducttxtsuffix'];
+                    $d2['title']              = Text::_('COM_PHOCACART_REWARD_DISCOUNT') . $total[5]['rewardproducttxtsuffix'];
                     $d2['title_lang']         = 'COM_PHOCACART_REWARD_DISCOUNT';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = $total[5]['rewardproducttxtsuffix'];
@@ -737,7 +744,7 @@ class PhocacartOrder
 
                 // Product Discount
                 if (isset($total[2]['dnetto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_PRODUCT_DISCOUNT');
+                    $d2['title']              = Text::_('COM_PHOCACART_PRODUCT_DISCOUNT');
                     $d2['title_lang']         = 'COM_PHOCACART_PRODUCT_DISCOUNT';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -750,7 +757,7 @@ class PhocacartOrder
                     $ordering++;
                 }
                 if (isset($total[2]['dbrutto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_PRODUCT_DISCOUNT');
+                    $d2['title']              = Text::_('COM_PHOCACART_PRODUCT_DISCOUNT');
                     $d2['title_lang']         = 'COM_PHOCACART_PRODUCT_DISCOUNT';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -778,7 +785,7 @@ class PhocacartOrder
 
                 // Cart Discount
                 if (isset($total[3]['dnetto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_CART_DISCOUNT') . $total[3]['discountcarttxtsuffix'];
+                    $d2['title']              = Text::_('COM_PHOCACART_CART_DISCOUNT') . $total[3]['discountcarttxtsuffix'];
                     $d2['title_lang']         = 'COM_PHOCACART_CART_DISCOUNT';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = $total[3]['discountcarttxtsuffix'];
@@ -791,7 +798,7 @@ class PhocacartOrder
                     $ordering++;
                 }
                 if (isset($total[3]['dbrutto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_CART_DISCOUNT') . $total[3]['discountcarttxtsuffix'];
+                    $d2['title']              = Text::_('COM_PHOCACART_CART_DISCOUNT') . $total[3]['discountcarttxtsuffix'];
                     $d2['title_lang']         = 'COM_PHOCACART_CART_DISCOUNT';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = $total[3]['discountcarttxtsuffix'];
@@ -819,7 +826,7 @@ class PhocacartOrder
 
                 // Coupon Discount
                 if (isset($total[4]['dnetto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_COUPON');
+                    $d2['title']              = Text::_('COM_PHOCACART_COUPON');
                     $d2['title_lang']         = 'COM_PHOCACART_COUPON';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -838,7 +845,7 @@ class PhocacartOrder
                     $ordering++;
                 }
                 if (isset($total[4]['dbrutto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_COUPON');
+                    $d2['title']              = Text::_('COM_PHOCACART_COUPON');
                     $d2['title_lang']         = 'COM_PHOCACART_COUPON';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -991,7 +998,7 @@ class PhocacartOrder
 
                 // Rounding
                 if (isset($total[0]['rounding'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_ROUNDING');
+                    $d2['title']              = Text::_('COM_PHOCACART_ROUNDING');
                     $d2['title_lang']         = 'COM_PHOCACART_ROUNDING';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -1007,7 +1014,7 @@ class PhocacartOrder
 
                 // Brutto
                 if (isset($total[0]['brutto'])) {
-                    $d2['title']              = JText::_('COM_PHOCACART_TOTAL');
+                    $d2['title']              = Text::_('COM_PHOCACART_TOTAL');
                     $d2['title_lang']         = 'COM_PHOCACART_TOTAL';
                     $d2['title_lang_suffix']  = '';
                     $d2['title_lang_suffix2'] = '';
@@ -1063,7 +1070,7 @@ class PhocacartOrder
                     $d3['amount_brutto']          = 0;
                     $d3['amount_brutto_currency'] = 0;
 
-                    $d3['title']                  = JText::_('COM_PHOCACART_ROUNDING');
+                    $d3['title']                  = Text::_('COM_PHOCACART_ROUNDING');
                     $d3['title_lang']             = 'COM_PHOCACART_ROUNDING';
                     $d3['title_lang_suffix']      = '';
                     $d3['title_lang_suffix2']     = '';
@@ -1075,7 +1082,7 @@ class PhocacartOrder
                     $orderingTC++;
 
 
-                    $d3['title']                  = JText::_('COM_PHOCACART_ROUNDING') . ' (' . JText::_('COM_PHOCACART_INCL_TAX_RECAPITULATION_ROUNDING') . ')';
+                    $d3['title']                  = Text::_('COM_PHOCACART_ROUNDING') . ' (' . Text::_('COM_PHOCACART_INCL_TAX_RECAPITULATION_ROUNDING') . ')';
                     $d3['title_lang']             = 'COM_PHOCACART_ROUNDING';
                     $d3['title_lang_suffix']      = 'COM_PHOCACART_INCL_TAX_RECAPITULATION_ROUNDING';
                     $d3['title_lang_suffix2']     = '';
@@ -1086,7 +1093,7 @@ class PhocacartOrder
                     $this->saveOrderTaxRecapitulation($d3);
                     $orderingTC++;
 
-                    $d3['title']              = JText::_('COM_PHOCACART_TOTAL');
+                    $d3['title']              = Text::_('COM_PHOCACART_TOTAL');
                     $d3['title_lang']         = 'COM_PHOCACART_TOTAL';
                     $d3['title_lang_suffix']  = '';
                     $d3['title_lang_suffix2'] = '';
@@ -1109,11 +1116,11 @@ class PhocacartOrder
             // EVENT Shipping
             if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
 
-                JPluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingC['method'])));
+                PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingC['method'])));
                 $eventData 					= array();
                 $eventData['pluginname'] 	= htmlspecialchars(strip_tags($shippingC['method']));
                 $eventData['id'] 			= (int)$row->id;
-                Factory::getApplication()->triggerEvent('PCSafterSaveOrder', array('com_phocacart.library.order', $eventData));
+                Factory::getApplication()->triggerEvent('onPCSafterSaveOrder', array('com_phocacart.library.order', $eventData));
             }
 
 
@@ -1131,7 +1138,7 @@ class PhocacartOrder
 
             // Proceed or not proceed to payment gateway - depends on payment method
             // By every new order - clean the proceed payment session
-            $session = JFactory::getSession();
+            $session = Factory::getSession();
             $session->set('proceedpayment', array(), 'phocaCart');
 
             $response                  = PhocacartPayment::proceedToPaymentGateway($payment);
@@ -1250,8 +1257,8 @@ class PhocacartOrder
     public function saveOrderUsers($d, $orderId) {
 
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
         $d = (array)$d;
         if (!isset($d['id'])) {
@@ -1266,12 +1273,12 @@ class PhocacartOrder
 
 
         unset($d['id']);// we do new autoincrement
-        $row = JTable::getInstance('PhocacartOrderUsers', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderUsers', 'Table', array());
 
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1279,7 +1286,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1287,7 +1294,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1299,16 +1306,16 @@ class PhocacartOrder
 
     public function saveOrderProducts($d, $orderId) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
-        $row = JTable::getInstance('PhocacartOrderProducts', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderProducts', 'Table', array());
 
         $checkP = PhocacartProduct::checkIfAccessPossible($d['id'], $d['catid'], $this->type);
 
 
         if (!$checkP) {
-            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
             return false;
         }
 
@@ -1348,17 +1355,17 @@ class PhocacartOrder
 
 
             if (!$can_display_addtocart) {
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
                 return false;
             }
 
             if (!$can_display_addtocart_price) {
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
                 return false;
             }
 
             if (!$can_display_addtocart_stock) {
-                $app->enqueueMessage(JText::_('COM_PHOCACART_STOCK_IS_EMPTY'). ' - ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
                 return false;
             }
 
@@ -1395,8 +1402,8 @@ class PhocacartOrder
 
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1404,7 +1411,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1412,7 +1419,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1438,7 +1445,7 @@ class PhocacartOrder
                 if (!empty($v)) {
                     foreach ($v as $k2 => $v2) {
 
-                        $row2                   = JTable::getInstance('PhocacartOrderAttributes', 'Table', array());
+                        $row2                   = Table::getInstance('PhocacartOrderAttributes', 'Table', array());
                         $d2                     = array();
                         $d2['order_id']         = (int)$orderId;
                         $d2['product_id']       = (int)$d['product_id'];
@@ -1457,15 +1464,15 @@ class PhocacartOrder
                         // $stockA = PhocacartStock::handleStockAttributeOption($d2['option_id'], $d['status_id'], $d['quantity'] );
 
                         if (!$row2->bind($d2)) {
-                            //throw new Exception($db->getErrorMsg());
-                            $msg = JText::_($db->getErrorMsg());
+                            //throw new Exception($row2->getError());
+                            $msg = Text::_($row2->getError());
                             $app->enqueueMessage($msg, 'error');
                             return false;
                         }
 
                         if (!$row2->check()) {
                             //throw new Exception($row2->getError());
-                            $msg = JText::_($row2->getErrorMsg());
+                            $msg = Text::_($row2->getError());
                             $app->enqueueMessage($msg, 'error');
                             return false;
                         }
@@ -1473,7 +1480,7 @@ class PhocacartOrder
 
                         if (!$row2->store()) {
                             //throw new Exception($row2->getError());
-                            $msg = JText::_($row2->getErrorMsg());
+                            $msg = Text::_($row2->getErrorMsg());
                             $app->enqueueMessage($msg, 'error');
                             return false;
                         }
@@ -1498,8 +1505,8 @@ class PhocacartOrder
 
     public function saveOrderCoupons($coupon, $totalC, $orderId) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
         $d              = array();
         $d['order_id']  = (int)$orderId;
@@ -1512,18 +1519,18 @@ class PhocacartOrder
         $d['netto']  = $totalC['dnetto'];
         $d['brutto'] = $totalC['dbrutto'];
 
-        $row = JTable::getInstance('PhocacartOrderCoupons', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderCoupons', 'Table', array());
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1531,7 +1538,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1541,8 +1548,8 @@ class PhocacartOrder
 
     public function saveOrderDiscounts($discountTitle, $totalD, $orderId, $type = 0) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
         $d             = array();
         $d['order_id'] = (int)$orderId;
@@ -1551,18 +1558,18 @@ class PhocacartOrder
         $d['amount'] = $totalD['dnetto'];// get the value from total
         $d['netto']  = $totalD['dnetto'];
         $d['brutto'] = $totalD['dbrutto'];
-        $row         = JTable::getInstance('PhocacartOrderDiscounts', 'Table', array());
+        $row         = Table::getInstance('PhocacartOrderDiscounts', 'Table', array());
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1570,7 +1577,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1579,22 +1586,22 @@ class PhocacartOrder
 
     public function saveOrderTotal($d) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
-        $row = JTable::getInstance('PhocacartOrderTotal', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderTotal', 'Table', array());
 
         //$d['published']				= 1;
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1602,7 +1609,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1612,22 +1619,22 @@ class PhocacartOrder
 
     public function saveOrderTaxRecapitulation($d) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
-        $row = JTable::getInstance('PhocacartOrderTaxRecapitulation', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderTaxRecapitulation', 'Table', array());
 
         //$d['published']				= 1;
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1635,7 +1642,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1645,10 +1652,10 @@ class PhocacartOrder
 
     public function saveOrderHistory($statusId, $notify, $userId, $orderId) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
-        $row = JTable::getInstance('PhocacartOrderHistory', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderHistory', 'Table', array());
 
         $d                    = array();
         $d['order_status_id'] = (int)$statusId;
@@ -1659,15 +1666,15 @@ class PhocacartOrder
 
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1675,7 +1682,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1684,8 +1691,8 @@ class PhocacartOrder
 
     public function saveOrderDownloads($orderProductId, $productId, $catId, $orderId) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
         $pC                                 = PhocacartUtils::getComponentParameters();
         $download_product_attribute_options = $pC->get('download_product_attribute_options', 0);
@@ -1693,7 +1700,7 @@ class PhocacartOrder
         $isDownloadableProduct          = 0;
         $forceOnlyDownloadFileAttribute = 0;
 
-        $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
+        $row = Table::getInstance('PhocacartOrderDownloads', 'Table', array());
 
 
         //$productItem 	= new PhocacartProduct();
@@ -1751,29 +1758,29 @@ class PhocacartOrder
             $d['download_file']   = $product->download_file;
             $d['type']            = 1;
 
-            $db = JFactory::getDbo();
+            $db = Factory::getDbo();
             //$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads WHERE catid = '.(int)$orderId);
             $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads');
             $max           = $db->loadResult();
             $d['ordering'] = $max + 1;
 
             if (!$row->bind($d)) {
-                //throw new Exception($db->getErrorMsg());
-                $msg = JText::_($db->getErrorMsg());
+                //throw new Exception($row->getError());
+                $msg = Text::_($row->getError());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
 
             if (!$row->check()) {
                 //throw new Exception($row->getError());
-                $msg = JText::_($row->getErrorMsg());
+                $msg = Text::_($row->getErrorMsg());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
 
             if (!$row->store()) {
                 //throw new Exception($row->getError());
-                $msg = JText::_($row->getErrorMsg());
+                $msg = Text::_($row->getErrorMsg());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
@@ -1805,26 +1812,26 @@ class PhocacartOrder
 
                     $d['title'] = $product->title;
 
-                    $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
+                    $row = Table::getInstance('PhocacartOrderDownloads', 'Table', array());
 
 
                     if (!$row->bind($d)) {
-                        //throw new Exception($db->getErrorMsg());
-                        $msg = JText::_($db->getErrorMsg());
+                        //throw new Exception($row->getError());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->check()) {
                         //throw new Exception($row->getError());
-                        $msg = JText::_($row->getErrorMsg());
+                        $msg = Text::_($row->getErrorMsg());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->store()) {
                         //throw new Exception($row->getError());
-                        $msg = JText::_($row->getErrorMsg());
+                        $msg = Text::_($row->getErrorMsg());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
@@ -1857,25 +1864,25 @@ class PhocacartOrder
                     $d['order_option_id'] = $v['order_option_id'];
                     $d['title']           = $product->title . ' (' . $v['attribute_title'] . ': ' . $v['option_title'] . ')';
 
-                    $row = JTable::getInstance('PhocacartOrderDownloads', 'Table', array());
+                    $row = Table::getInstance('PhocacartOrderDownloads', 'Table', array());
 
                     if (!$row->bind($d)) {
-                        //throw new Exception($db->getErrorMsg());
-                        $msg = JText::_($db->getErrorMsg());
+                        //throw new Exception($row->getError());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->check()) {
                         //throw new Exception($row->getError());
-                        $msg = JText::_($row->getErrorMsg());
+                        $msg = Text::_($row->getErrorMsg());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->store()) {
                         //throw new Exception($row->getError());
-                        $msg = JText::_($row->getErrorMsg());
+                        $msg = Text::_($row->getErrorMsg());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
@@ -1896,8 +1903,8 @@ class PhocacartOrder
 
     public function saveOrderGiftCoupons($orderProductId, $v, $orderId, $k, $fullItems) {
 
-        $app = JFactory::getApplication();
-        $db = JFactory::getDBO();
+        $app = Factory::getApplication();
+        $db = Factory::getDBO();
         $d  = array();
 
         if (!isset($v['type'])) {
@@ -1932,7 +1939,7 @@ class PhocacartOrder
         $d['available_quantity']    = 1;
         $d['published']             = 0;// will be published by order status
         $d['access']                = 1;
-        $d['title']                 = JText::_('COM_PHOCACART_GIFT_VOUCHER');
+        $d['title']                 = Text::_('COM_PHOCACART_GIFT_VOUCHER');
         $d['alias']                 = PhocacartUtils::getAliasName($d['title']);
         $d['code']                  = PhocacartCoupon::generateCouponCode();
 
@@ -1962,7 +1969,7 @@ class PhocacartOrder
                                 case 21:
                                     $d['gift_recipient_email'] = '';
                                     $v3['ovalue'] = urldecode($v3['ovalue']);
-                                    if(JMailHelper::isEmailAddress($v3['ovalue'])){
+                                    if(MailHelper::isEmailAddress($v3['ovalue'])){
                                         $d['gift_recipient_email'] = $v3['ovalue'];
                                     }
                                 break;
@@ -1986,7 +1993,7 @@ class PhocacartOrder
         }
 
         if (!empty($product->gift_types)) {
-            $registry = new JRegistry;
+            $registry = new Registry;
             $registry->loadString($product->gift_types);
             $giftTypes = $registry->toArray();
 
@@ -2029,24 +2036,24 @@ class PhocacartOrder
         $max           = $db->loadResult();
         $d['ordering'] = $max + 1;
 
-        $row = JTable::getInstance('PhocacartCoupon', 'Table', array());
+        $row = Table::getInstance('PhocacartCoupon', 'Table', array());
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2056,7 +2063,7 @@ class PhocacartOrder
 
     public function saveOrderProductDiscounts($orderProductId, $productId, $orderId, $k, $fullItems) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         // REWARD DIVIDED INTO PRODUCTS
         if (isset($fullItems[5][$k]['rewardproduct']) && $fullItems[5][$k]['rewardproduct'] == 1) {
@@ -2150,10 +2157,10 @@ class PhocacartOrder
 
     public function saveRewardPoints($userId, $points, $orderBillingData, $published = 0, $type = 0) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
-        $row = JTable::getInstance('PhocacartRewardPoint', 'Table', array());
+        $row = Table::getInstance('PhocacartRewardPoint', 'Table', array());
 
         $d              = array();
         $d['date']      = $orderBillingData['date'];//gmdate('Y-m-d H:i:s');
@@ -2161,20 +2168,20 @@ class PhocacartOrder
         $d['points']    = (int)$points;
         $d['user_id']   = (int)$userId;
         $d['order_id']  = (int)$orderBillingData['id'];
-        $d['title']     = JText::_('COM_PHOCACART_ORDER_NUMBER') . ' ' . self::getOrderNumber($d['order_id'], $d['date'], $orderBillingData['order_number']) . ' (' . $d['date'] . ')';
+        $d['title']     = Text::_('COM_PHOCACART_ORDER_NUMBER') . ' ' . self::getOrderNumber($d['order_id'], $d['date'], $orderBillingData['order_number']) . ' (' . $d['date'] . ')';
         $d['type']      = (int)$type;
 
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2182,7 +2189,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2194,7 +2201,7 @@ class PhocacartOrder
 
         // We store the number of sales of one product directly to product table
         // because of saving SQL queries in frontend, to not run sql query for each product
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = ' SELECT SUM(quantity) FROM #__phocacart_order_products'
             . ' WHERE product_id = ' . (int)$productId
             . ' LIMIT 0,1';
@@ -2230,7 +2237,7 @@ class PhocacartOrder
 
     private function cleanTable($table, $orderId) {
         if ($table != '') {
-            $db    = JFactory::getDBO();
+            $db    = Factory::getDBO();
             $query = ' DELETE FROM #__' . $table . ' WHERE order_id = ' . (int)$orderId;
             $db->setQuery($query);
             $db->execute();
@@ -2241,7 +2248,7 @@ class PhocacartOrder
 
     private function deleteOrder($orderId) {
         //if ($table != '') {
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = ' DELETE FROM #__phocacart_orders WHERE id = ' . (int)$orderId;
         $db->setQuery($query);
         $db->execute();
@@ -2254,7 +2261,7 @@ class PhocacartOrder
 
     public static function getOrderStatus($statusId) {
 
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = ' SELECT a.title FROM #__phocacart_order_statuses WHERE id = ' . (int)$statusId . ' ORDER BY a.title';
         $db->setQuery($query);
         $status = $db->loadAssoc();
@@ -2262,7 +2269,7 @@ class PhocacartOrder
 
     public static function getOrderDate($orderId) {
 
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = ' SELECT date FROM #__phocacart_orders WHERE id = ' . (int)$orderId . ' LIMIT 1';
         $db->setQuery($query);
 
@@ -2272,7 +2279,7 @@ class PhocacartOrder
     }
 
     public static function getOrderBillingData($orderId) {
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = ' SELECT id, date, order_number, receipt_number, invoice_number, invoice_prn, invoice_date, invoice_due_date'
             . ' FROM #__phocacart_orders WHERE id = ' . (int)$orderId . ' LIMIT 1';
         $db->setQuery($query);
@@ -2283,7 +2290,7 @@ class PhocacartOrder
     }
 
     public static function getOrderCustomerData($orderId) {
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = ' SELECT *'
             . ' FROM #__phocacart_order_users WHERE order_id = ' . (int)$orderId . ' ORDER BY type ASC LIMIT 2';
         $db->setQuery($query);
@@ -2339,7 +2346,7 @@ class PhocacartOrder
                 $date  = !$date ? self::getOrderDate($orderId) : $date;
                 $time  = strtotime($date);
                 $year  = date("Y", $time);
-                $db    = JFactory::getDBO();
+                $db    = Factory::getDBO();
                 $query = ' SELECT MAX(' . $column . ') FROM #__phocacart_orders WHERE YEAR(date) = ' . (int)$year . ' ORDER BY date LIMIT 1';
 
                 $db->setQuery($query);
@@ -2360,7 +2367,7 @@ class PhocacartOrder
                 $year  = date("Y", $time);
                 $month = date("m", $time);
 
-                $db    = JFactory::getDBO();
+                $db    = Factory::getDBO();
                 $query = ' SELECT MAX(' . $column . ') FROM #__phocacart_orders WHERE YEAR(date) = ' . (int)$year . ' AND MONTH(date) = ' . (int)$month . ' ORDER BY date LIMIT 1';
                 $db->setQuery($query);
 
@@ -2381,7 +2388,7 @@ class PhocacartOrder
                 $month = date("m", $time);
                 $day   = date("d", $time);
 
-                $db    = JFactory::getDBO();
+                $db    = Factory::getDBO();
                 $query = ' SELECT MAX(' . $column . ') FROM #__phocacart_orders WHERE YEAR(date) = ' . (int)$year . ' AND MONTH(date) = ' . (int)$month . ' AND DAY(date) = ' . (int)$day . ' ORDER BY date LIMIT 1';
                 $db->setQuery($query);
 
@@ -2557,7 +2564,7 @@ class PhocacartOrder
         }
 
 
-        $app                 = JFactory::getApplication();
+        $app                 = Factory::getApplication();
         $paramsC             = PhocacartUtils::getComponentParameters();
         $prn_number_format   = $paramsC->get('prn_number_format', '{prefix}{year}{orderid}{suffix}');
         $prn_number_prefix   = $paramsC->get('prn_number_prefix', '');
@@ -2659,7 +2666,7 @@ class PhocacartOrder
 
         if ($dueDate) {
             if ($formatOutput != '') {
-                return JHtml::date($dueDate, $formatOutput);
+                return HTMLHelper::date($dueDate, $formatOutput);
             }
             return $dueDate;// the due date is stored in database yet
         }
@@ -2675,7 +2682,7 @@ class PhocacartOrder
         //return $dateTime->format('Y-m-d h:m:s');
         // default format output: 'DATE_FORMAT_LC4'
         if ($formatOutput != '') {
-            return JHtml::date($dateTime->format('Y-m-d h:m:s'), $formatOutput);
+            return HTMLHelper::date($dateTime->format('Y-m-d h:m:s'), $formatOutput);
         } else {
             return $dateTime->format('Y-m-d h:m:s');
         }
@@ -2688,7 +2695,7 @@ class PhocacartOrder
         $dateTime = new DateTime($date);
 
         if ($formatOutput != '') {
-            return JHtml::date($dateTime->format('Y-m-d h:m:s'), $formatOutput);
+            return HTMLHelper::date($dateTime->format('Y-m-d h:m:s'), $formatOutput);
         } else {
             return $dateTime->format('Y-m-d h:m:s');
         }
@@ -2705,7 +2712,7 @@ class PhocacartOrder
 
     public static function getItemsTotal($oIdS = '') {
 
-        $db     = JFactory::getDBO();
+        $db     = Factory::getDBO();
         $wheres = array();
         if ($oIdS != '') {
             $wheres[] = 'a.order_id IN (' . $oIdS . ')';
@@ -2727,7 +2734,7 @@ class PhocacartOrder
 
     public static function getItemsTaxRecapitulation($oIdS = '') {
 
-        $db     = JFactory::getDBO();
+        $db     = Factory::getDBO();
         $wheres = array();
         if ($oIdS != '') {
             $wheres[] = 'a.order_id IN (' . $oIdS . ')';
@@ -2757,8 +2764,8 @@ class PhocacartOrder
 
     public static function storeOrderReceiptInvoiceId($id, $date, $statusId, $docs = array()) {
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
 
         $d       = array();
         $d['id'] = $id;
@@ -2769,7 +2776,7 @@ class PhocacartOrder
         $date      = !$date ? self::getOrderDate($id) : $date;
         $d['date'] = $date;
         // Don't change the date of order but change date for oder, receipt or delivery note number
-        $dateNow = JFactory::getDate()->toSql();
+        $dateNow = Factory::getDate()->toSql();
 
         // Will we create an invoice?
         $paramsC                       = PhocacartUtils::getComponentParameters();
@@ -2897,12 +2904,12 @@ class PhocacartOrder
         // overwrite existing variables with empty values
         // This is why dome $d array keys are not defined
         // E.g. if this method is called by chaning status, order and receipt keys are inactive
-        $row = JTable::getInstance('PhocacartOrder', 'Table', array());
+        $row = Table::getInstance('PhocacartOrder', 'Table', array());
 
 
         if (!$row->bind($d)) {
-            //throw new Exception($db->getErrorMsg());
-            $msg = JText::_($db->getErrorMsg());
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2910,7 +2917,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2918,7 +2925,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = JText::_($row->getErrorMsg());
+            $msg = Text::_($row->getErrorMsg());
             $app->enqueueMessage($msg, 'error');
             return false;
         }

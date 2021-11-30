@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Component\ComponentHelper;
 
 
 
@@ -24,28 +28,28 @@ class PhocacartNewsletter {
         if($comPhocaemail) {
 
 
-            $lang = JFactory::getLanguage();
+            $lang = Factory::getLanguage();
             $lang->load('com_phocaemail');
 
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemail.php')) {
+            if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemail.php')) {
                 require_once(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemail.php');
             }
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemailutils.php')) {
+            if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemailutils.php')) {
                 require_once(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemailutils.php');
             }
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemailsendnewsletteremail.php')) {
+            if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemailsendnewsletteremail.php')) {
                 require_once(JPATH_ADMINISTRATOR . '/components/com_phocaemail/helpers/phocaemailsendnewsletteremail.php');
             }
 
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/tables/phocaemailsubscriber.php')) {
+            if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocaemail/tables/phocaemailsubscriber.php')) {
                 require_once(JPATH_ADMINISTRATOR . '/components/com_phocaemail/tables/phocaemailsubscriber.php');
             }
-            JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocaemail/tables');
+            Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocaemail/tables');
 
 
-            $app = JFactory::getApplication();
-            $db = JFactory::getDBO();
-            $pE = JComponentHelper::getParams('com_phocaemail');
+            $app = Factory::getApplication();
+            $db = Factory::getDBO();
+            $pE = ComponentHelper::getParams('com_phocaemail');
             $pC = PhocacartUtils::getComponentParameters();
 
             $newsletter_enable = $pC->get('newsletter_enable', 0);
@@ -123,22 +127,22 @@ class PhocacartNewsletter {
             }
 
 
-            $row = JTable::getInstance('phocaemailsubscriber', 'Table', array());
+            $row = Table::getInstance('phocaemailsubscriber', 'Table', array());
 
 
 
             if (!$row->bind($data)) {
-                $db->setError($db->getErrorMsg());
+                $db->setError($row->getError());
                 return false;
             }
 
             if (!$row->check()) {
-                $db->setError($db->getErrorMsg());
+                $db->setError($row->getError());
                 return false;
             }
 
             if (!$row->store()) {
-                $db->setError($db->getErrorMsg());
+                $db->setError($row->getError());
                 return false;
             }
 
@@ -164,7 +168,7 @@ class PhocacartNewsletter {
 	public static function updateNewsletterInfoByUser($userId, $newsletter = 0) {
 
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' UPDATE #__phocacart_users'
 				.' SET newsletter = '.(int)$newsletter
 				.' WHERE user_id = '.(int)$userId;

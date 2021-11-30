@@ -8,8 +8,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
 
-$layout 	= new JLayoutFile('catalog', null, array('component' => 'com_phocacart'));
+$layout 	= new FileLayout('catalog', null, array('component' => 'com_phocacart'));
 if (!empty($this->items)) {
 	$d				= array();
 	$d['s']         = $this->s;

@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 
 // Specific function for CSV
@@ -22,8 +24,8 @@ if (!function_exists('str_putcsv')) {
 }
 
 // Params of component
-$db 							= JFactory::getDBO();
-$user							= JFactory::getUser();
+$db 							= Factory::getDBO();
+$user							= Factory::getUser();
 $paramsC 						= PhocacartUtils::getComponentParameters();
 $import_export_type				= $paramsC->get( 'import_export_type', 0 );
 $export_attributes				= $paramsC->get( 'export_attributes', 1 );
@@ -273,8 +275,8 @@ unset($a);
 // Header
 if (!empty($d['productcolumns'])){
 	foreach($d['productcolumns'] as $k => $v) {
-		$iCN[] = JText::_($v[0]);
-		$iCV[] = JText::_($v[1]);
+		$iCN[] = Text::_($v[0]);
+		$iCV[] = Text::_($v[1]);
 
 	}
 }
@@ -332,7 +334,7 @@ if (!empty($d['products'])){
 
 						$title = '';
 						if ($export_add_title == 1) {
-							$title = ' title="'.strip_tags(JText::_($iCV[$k2])).'"';
+							$title = ' title="'.strip_tags(Text::_($iCV[$k2])).'"';
 						}
 
 						if (isset($v[$col])) {
@@ -358,7 +360,7 @@ if (!empty($d['products'])){
 
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
@@ -399,7 +401,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -434,7 +436,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -501,7 +503,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -549,7 +551,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -625,7 +627,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -666,7 +668,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -699,7 +701,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -733,7 +735,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -769,7 +771,7 @@ if (!empty($d['products'])){
                                     if ($xml) {
                                         $title = '';
                                         if ($export_add_title == 1) {
-                                            $title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+                                            $title = ' title="'.strip_tags(Text::_($v2[1])).'"';
                                         }
                                         $iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
                                     }
@@ -826,7 +828,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -870,7 +872,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -915,7 +917,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -961,7 +963,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}
@@ -1006,7 +1008,7 @@ if (!empty($d['products'])){
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {
-											$title = ' title="'.strip_tags(JText::_($v2[1])).'"';
+											$title = ' title="'.strip_tags(Text::_($v2[1])).'"';
 										}
 										$iP[] = $t1 . '<'.strip_tags($v2[0]).$title.'>';
 									}

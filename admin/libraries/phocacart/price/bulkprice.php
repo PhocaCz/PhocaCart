@@ -12,6 +12,8 @@
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 
 class PhocacartPriceBulkprice
 {
@@ -20,14 +22,14 @@ class PhocacartPriceBulkprice
 
 
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.* FROM #__phocacart_bulk_prices AS a WHERE a.id = '.(int)$id .' LIMIT 1';
 		$db->setQuery( $query );
 		$item = $db->loadObject();
 
 		if (isset($item->id) && (int)$item->id > 0 && isset($item->params) && $item->params != '') {
 
-		    $registry = new JRegistry;
+		    $registry = new Registry;
 		    $registry->loadString($item->params);
 			$item->params = $registry;
 
@@ -108,7 +110,7 @@ class PhocacartPriceBulkprice
 		if ($newPrice != $price) {
 
 		    // Set new price
-            $db    = JFactory::getDBO();
+            $db    = Factory::getDBO();
             $query = 'UPDATE #__phocacart_products SET price = ' . $db->quote($newPrice) . ' WHERE id = ' . (int)$productId;
             $db->setQuery($query);
             $db->execute();
@@ -125,7 +127,7 @@ class PhocacartPriceBulkprice
     public static function setNewOriginalPrice($productId, $price_original, $price, $params) {
 
 
-	    $db = JFactory::getDBO();
+	    $db = Factory::getDBO();
 	    $original_price_change_run                 = $params->get('original_price_change_run', 0);
 
 
@@ -166,7 +168,7 @@ class PhocacartPriceBulkprice
 	public static function setRevertPrice($productId, $bulkId, $price, $params) {
 
         $newPrice   = $price;
-        $db         = JFactory::getDBO();
+        $db         = Factory::getDBO();
         $wheres 	= array();
 
         $wheres[]	= ' p.product_id = '.(int)$productId;
@@ -196,7 +198,7 @@ class PhocacartPriceBulkprice
     public static function setRevertOriginalPrice($productId, $bulkId, $priceOriginal, $params) {
 
         $newPrice   = $priceOriginal;
-        $db         = JFactory::getDBO();
+        $db         = Factory::getDBO();
         $wheres 	= array();
 
         $wheres[]	= ' p.product_id = '.(int)$productId;
@@ -226,7 +228,7 @@ class PhocacartPriceBulkprice
 
     public static function setStatus($id, $status) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'UPDATE #__phocacart_bulk_prices SET status = '.(int)$status.' WHERE id = '.(int)$id;
 		$db->setQuery($query);
         $db->execute();
@@ -235,7 +237,7 @@ class PhocacartPriceBulkprice
 
 	public static function removePriceHistoryItem($id) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = ' DELETE '
         .' FROM #__phocacart_product_price_history'
         .' WHERE bulk_id = '. (int)$id
@@ -247,7 +249,7 @@ class PhocacartPriceBulkprice
 
 	public static function removePriceHistoryItems($cid) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		ArrayHelper::toInteger($cid);
 		$cids = implode( ',', $cid );

@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $paramsC 					= PhocacartUtils::getComponentParameters();
 $zero_price_text			= $paramsC->get( 'zero_price_text', '' );
 $zero_price_label			= $paramsC->get( 'zero_price_label', '' );
@@ -26,14 +27,14 @@ if (isset($d['discount']) && $d['discount']) {
 <div id="phItemPriceBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">
 	<?php if (isset($d['priceitemsorig']['bruttoformat']) && $d['priceitemsorig']['bruttoformat']) { ?>
-		<div class="ph-price-txt ph-price-original-txt"><?php echo JText::_('COM_PHOCACART_ORIGINAL_PRICE') ?></div>
+		<div class="ph-price-txt ph-price-original-txt"><?php echo Text::_('COM_PHOCACART_ORIGINAL_PRICE') ?></div>
 		<div class="ph-price-original"><?php echo $d['priceitemsorig']['bruttoformat'] ?></div>
 	<?php } ?>
 
 	<?php /*
 	if ($d['priceitemsorig']['brutto'] > $d['priceitems']['brutto']) {
 		if (isset($d['priceitemsorig']['bruttoformat']) && $d['priceitemsorig']['bruttoformat']) { ?>
-			<div class="ph-price-txt"><?php echo JText::_('COM_PHOCACART_ORIGINAL_PRICE') ?></div>
+			<div class="ph-price-txt"><?php echo Text::_('COM_PHOCACART_ORIGINAL_PRICE') ?></div>
 			<div class="ph-price-original"><?php echo $d['priceitemsorig']['bruttoformat'] ?></div>
 	<?php }
 	} */ ?>
@@ -52,7 +53,7 @@ if (isset($d['discount']) && $d['discount']) {
     $priceBrutto    = '';
 
     $displayPrice   = 1;// At start display price = yes. If there will be some condition which will hide the price then use the information e.g. for discount prices (even disable them)
-
+    $displayLabel   = 1;
     if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0 && ($d['priceitems']['netto'] != $d['priceitems']['brutto'])) {
 		$labelNetto = '<div class="ph-price-txt ph-price-netto-txt '.$classPS.'-txt">'. $d['priceitems']['nettotxt'].'</div>';
 		$priceNetto = '<div class="ph-price-netto '.$classPS.'">'.$d['priceitems']['nettoformat'].'</div>';
@@ -70,17 +71,16 @@ if (isset($d['discount']) && $d['discount']) {
 
 
     if (isset($d['priceitems']['brutto']) && $d['priceitems']['brutto'] == 0 && isset($d['zero_price']) && $d['zero_price'] == 1) {
-        $labelNetto     = '';
-        $labelTax       = '';
-        $priceNetto     = '';
-        $priceTax       = '';
+
 
 		// Text and Label instead of zero price
 		// Label - Nothing | Custom Text | Standard "Price" String (ONLY IN CASE THE PRICE IS ZERO)
         if ($zero_price_label == '0') {
 			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt"></div>';
+			$displayLabel   = 0;
 		} else if ($zero_price_label != '') {
-			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt">'.JText::_($zero_price_label).'</div>';
+			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt">'.Text::_($zero_price_label).'</div>';
+			$displayLabel   = 0;
 		} else {
 			$labelBrutto = '<div class="ph-price-txt '.$classPS.'-txt">'.$d['priceitems']['bruttotxt'].'</div>';
 		}
@@ -90,36 +90,47 @@ if (isset($d['discount']) && $d['discount']) {
 			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'>-txt"></div>';
 			$displayPrice   = 0;
 		} else if ($zero_price_text != '') {
-			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.JText::_($zero_price_text).'</div>';
+			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.Text::_($zero_price_text).'</div>';
 			$displayPrice   = 0;
 		} else {
 			$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.$d['priceitems']['bruttoformat'].'</div>';
 		}
 
+
+
     }
 
     if (isset($d['type']) && $d['type'] == 3) {
 
-        $labelNetto     = '';
-        $labelTax       = '';
-        $priceNetto     = '';
-        $priceTax       = '';
+
 
         if ($price_on_demand_label == '0') {
             $labelBrutto    = '<div class="ph-price-txt '.$classPS.'-txt"></div>';
-            $displayPrice   = 0;
+            //$displayPrice   = 0;
+            $displayLabel   = 0;
         } else if ($price_on_demand_label != '') {
-            $labelBrutto    = '<div class="ph-price-txt '.$classPS.'-txt">'.JText::_($price_on_demand_label).'</div>';
-            $displayPrice   = 0;
+            $labelBrutto    = '<div class="ph-price-txt '.$classPS.'-txt">'.Text::_($price_on_demand_label).'</div>';
+            //$displayPrice   = 0;
+            $displayLabel   = 0;
         }
 
         if ($price_on_demand_text == '0') {
             $priceBrutto    = '<div class="ph-price-brutto '.$classPS.'-txt"></div>';
             $displayPrice   = 0;
         } else if ($price_on_demand_text != '') {
-            $priceBrutto    = '<div class="ph-price-brutto '.$classPS.'-txt">'.JText::_($price_on_demand_text).'</div>';
+            $priceBrutto    = '<div class="ph-price-brutto '.$classPS.'-txt">'.Text::_($price_on_demand_text).'</div>';
             $displayPrice   = 0;
         }
+    }
+
+    if ($displayLabel == 0) {
+        $labelNetto     = '';
+        $labelTax       = '';
+    }
+
+    if ($displayPrice == 0) {
+        $priceNetto     = '';
+        $priceTax       = '';
     }
 
 
@@ -178,7 +189,7 @@ if (isset($d['discount']) && $d['discount']) {
 
 
 	<?php if ($d['priceitems']['baseformat']) { ?>
-		<div class="ph-price-txt"><?php echo JText::_('COM_PHOCACART_UNIT_PRICE') ?></div>
+		<div class="ph-price-txt"><?php echo Text::_('COM_PHOCACART_UNIT_PRICE') ?></div>
 		<div class="ph-price-base"><?php echo $d['priceitems']['baseformat'] ?></div>
 	<?php } ?>
 

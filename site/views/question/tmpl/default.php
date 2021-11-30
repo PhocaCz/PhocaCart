@@ -7,12 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutPC 	= new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
+$layoutPC 	= new FileLayout('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
 
 
-echo '<div id="ph-pc-question-box" class="pc-question-view'.$this->p->get( 'pageclass_sfx' ).'">';
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_ASK_A_QUESTION')));
+echo '<div id="ph-pc-question-box" class="pc-view pc-question-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_ASK_A_QUESTION')));
 
 
 if ( isset($this->item[0]->title) && $this->item[0]->title != '') {
@@ -26,14 +31,14 @@ if (isset($this->item[0])) {
 	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
 	$x = $this->item[0];
 
-	$link = JRoute::_(PhocacartRoute::getItemRoute($x->id, $x->catid, $x->alias, $x->catalias));
+	$link = Route::_(PhocacartRoute::getItemRoute($x->id, $x->catid, $x->alias, $x->catalias));
 	// IMAGE
 	echo '<div class="ph-item-image-full-box ph-item-image-full-left-box">';
 	$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'medium');
 
 	if (isset($image->rel) && $image->rel != '') {
 		echo '<a href="'.$link.'" >';
-		echo '<img src="'.JURI::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' img-thumbnail ph-image-full ph-img-block"';
+		echo '<img src="'.Uri::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' img-thumbnail ph-image-full ph-img-block"';
 		if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
 			echo ' style="width:'.$this->t['image_width'].'px;height:'.$this->t['image_height'].'px"';
 		}
@@ -56,6 +61,13 @@ $hiddenfield =	' 		<div class="'.$this->s['c']['control-group'].' '.$this->p->ge
 if ( isset($this->t['question_description']) && $this->t['question_description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['question_description']. '</div>';
 }
+
+
+$name = str_replace('form-control', $this->s['c']['inputbox.form-control'], $this->form->getInput('name'));
+$email = str_replace('form-control', $this->s['c']['inputbox.form-control'], $this->form->getInput('email'));
+$phone = str_replace('form-control', $this->s['c']['inputbox.form-control'], $this->form->getInput('phone'));
+$message = str_replace('form-control', $this->s['c']['inputbox.textarea'], $this->form->getInput('message'));
+
 ?>
 
 
@@ -68,22 +80,22 @@ if ( isset($this->t['question_description']) && $this->t['question_description']
 
 <div class="<?php echo $this->s['c']['control-group'] ?>">
 	<div class="<?php echo $this->s['c']['control-label'] ?>"><?php echo $this->form->getLabel('name'); ?></div>
-	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $this->form->getInput('name');
+	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $name;
 	if($this->p->get('hidden_field_position')==1){echo $hiddenfield;}  ?></div>
 </div>
 <div class="<?php echo $this->s['c']['control-group'] ?>">
 	<div class="<?php echo $this->s['c']['control-label'] ?>"><?php echo $this->form->getLabel('email'); ?></div>
-	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $this->form->getInput('email');
+	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $email;
 	if($this->p->get('hidden_field_position')==2){echo $hiddenfield;}  ?></div>
 </div>
 <div class="<?php echo $this->s['c']['control-group'] ?>">
 	<div class="<?php echo $this->s['c']['control-label'] ?>"><?php echo $this->form->getLabel('phone'); ?></div>
-	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $this->form->getInput('phone');
+	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $phone;
 	if($this->p->get('hidden_field_position')==3){echo $hiddenfield;}  ?></div>
 </div>
 <div class="<?php echo $this->s['c']['control-group'] ?>">
 	<div class="<?php echo $this->s['c']['control-label'] ?>"><?php echo $this->form->getLabel('message'); ?></div>
-	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $this->form->getInput('message');
+	<div class="<?php echo $this->s['c']['controls'] ?>"><?php echo $message;
 	if($this->p->get('hidden_field_position')==4){echo $hiddenfield;}  ?></div>
 </div>
 
@@ -99,7 +111,7 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 	$d['label_text']	= $this->t['question_privacy_checkbox_label_text'];
 	$d['id']			= 'phAskQuestionPrivacyCheckbox';
 	$d['name']			= 'privacy';
-	$d['class']			= $this->s['c']['pull-right'] . ' '. $this->s['c']['checkbox'] . ' ph-askquestion-checkbox-confirm';
+	$d['class']			= $this->s['c']['pull-right'] . ' '. $this->s['c']['inputbox.checkbox'] . ' ph-askquestion-checkbox-confirm';
 	$d['display']		= $this->t['display_question_privacy_checkbox'];
 
 	echo '<div class="ph-cb"></div>';
@@ -111,7 +123,7 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 <div class="btn-toolbar">
 	<div class="btn-group">
 		<button type="submit" class="<?php echo $this->s['c']['btn.btn-primary'] ?>">
-			<span class="<?php echo $this->s['i']['submit'] ?>"></span> <?php echo JText::_('COM_PHOCACART_SUBMIT');?></button>
+			<span class="<?php echo $this->s['i']['submit'] ?>"></span> <?php echo Text::_('COM_PHOCACART_SUBMIT');?></button>
 	</div>
 </div>
 
@@ -124,7 +136,7 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 	<input type="hidden" name="id" value="id" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="task" value="question.submit" />
-	<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token');?>
+	<?php echo HTMLHelper::_('form.token');?>
 
 </form>
 

@@ -7,35 +7,40 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocacartCategory extends PhocaCartCpControllerPhocaCartCommon
 {
 	public function batch($model = null) {
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		$model	= $this->getModel('phocacartcategory', '', array());
-		$this->setRedirect(JRoute::_('index.php?option=com_phocacart&view=phocacartcategories'.$this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_phocacart&view=phocacartcategories'.$this->getRedirectToListAppend(), false));
 		return parent::batch($model);
 	}
 
 	function recreate() {
-		$app	= JFactory::getApplication();
-		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
-		\Joomla\Utilities\ArrayHelper::toInteger($cid);
+		$app	= Factory::getApplication();
+		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		ArrayHelper::toInteger($cid);
 
 		$message = '';
 
 		if (count( $cid ) < 1) {
-			$message = JText::_( 'COM_PHOCACART_SELECT_ITEM_RECREATE' );
+			$message = Text::_( 'COM_PHOCACART_SELECT_ITEM_RECREATE' );
 			$app->enqueueMessage($message, 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartcategories');
 		}
 
 		$model = $this->getModel( 'phocacartcategory' );
 		if(!$model->recreate($cid, $message)) {
-			$message = PhocacartUtils::setMessage($message, JText::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
+			$message = PhocacartUtils::setMessage($message, Text::_( 'COM_PHOCACART_ERROR_THUMBS_REGENERATING' ));
 			$app->enqueueMessage($message, 'error');
 		} else {
-			$message = PhocacartUtils::setMessage($message, JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' ));
+			$message = PhocacartUtils::setMessage($message, Text::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' ));
 			$app->enqueueMessage($message, 'message');
 		}
 
@@ -43,13 +48,13 @@ class PhocaCartCpControllerPhocacartCategory extends PhocaCartCpControllerPhocaC
 	}
 
 	function countproducts() {
-		$app	= JFactory::getApplication();
-		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
-		\Joomla\Utilities\ArrayHelper::toInteger($cid);
+		$app	= Factory::getApplication();
+		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		ArrayHelper::toInteger($cid);
 		$redirect = 'index.php?option=com_phocacart&view=phocacartcategories';
 
 		if (count( $cid ) < 1) {
-			$app->enqueueMessage(JText::_( 'COM_PHOCACART_SELECT_ITEM_COUNT_PRODUCTS' ), 'error');
+			$app->enqueueMessage(Text::_( 'COM_PHOCACART_SELECT_ITEM_COUNT_PRODUCTS' ), 'error');
 			$app->redirect($redirect);
 		}
 

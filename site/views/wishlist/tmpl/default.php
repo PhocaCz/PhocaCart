@@ -7,33 +7,39 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
+$layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
-echo '<div id="ph-pc-wishlist-box" class="pc-wishlist-view'.$this->p->get( 'pageclass_sfx' ).'">';
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_WISH_LIST')));
+echo '<div id="ph-pc-wishlist-box" class="pc-view pc-wishlist-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_WISH_LIST')));
 
 if (!empty($this->t['items'])) {
 
 	echo '<div class="'.$this->s['c']['row'].'">';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_IMAGE').'</b></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.Text::_('COM_PHOCACART_IMAGE').'</b></div>';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'"><b>'.JText::_('COM_PHOCACART_PRODUCT').'</b></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'"><b>'.Text::_('COM_PHOCACART_PRODUCT').'</b></div>';
 
 	if (isset($this->t['value']['stock']) && $this->t['value']['stock'] == 1)	{
-		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_AVAILABILITY').'</b></div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.Text::_('COM_PHOCACART_AVAILABILITY').'</b></div>';
 	} else {
 		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"></div>';
 	}
 
 	if ($this->t['can_display_price']) {
-		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_PRICE').'</b></div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.Text::_('COM_PHOCACART_PRICE').'</b></div>';
 	} else {
 		echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"></div>';
 	}
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.JText::_('COM_PHOCACART_ACTION').'</b></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'"><b>'.Text::_('COM_PHOCACART_ACTION').'</b></div>';
 
 	echo '</div>';
 
@@ -49,9 +55,9 @@ if (!empty($this->t['items'])) {
 		echo '<div class="'.$this->s['c']['row'].'">';
 
 		if (isset($v['catid2']) && (int)$v['catid2'] > 0 && isset($v['catalias2']) && $v['catalias2'] != '') {
-			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
+			$link 	= Route::_(PhocacartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
 		} else {
-			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
+			$link 	= Route::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
 		}
 
 		$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v['image'], 'small');
@@ -63,8 +69,8 @@ if (!empty($this->t['items'])) {
             $d						= array();
             $d['t']					= $this->t;
             $d['s']					= $this->s;
-            $d['src']				= JURI::base(true).'/'.$image->rel;
-            $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
+            $d['src']				= Uri::base(true).'/'.$image->rel;
+            $d['srcset-webp']		= Uri::base(true).'/'.$image->rel_webp;
             $d['alt-value']			= PhocaCartImage::getAltTitle($v['title'], $image->rel);
             $d['class']				= $this->s['c']['img-responsive'];
 
@@ -80,7 +86,7 @@ if (!empty($this->t['items'])) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' phVMiddle">'.$v['title'].'</div>';
 
 		if (isset($this->t['value']['stock']) && $this->t['value']['stock'] == 1)	{
-			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle">'.JText::_($v['stock']).'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle">'.Text::_($v['stock']).'</div>';
 		} else {
 			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' phVMiddle"></div>';
 		}
@@ -100,16 +106,16 @@ if (!empty($this->t['items'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		//echo '<div class="ph-center">';
-		echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" title="'.JText::_('COM_PHOCACART_REMOVE').'"><span class="'.$this->s['i']['remove'].'"></span></button>';
+		echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" title="'.Text::_('COM_PHOCACART_REMOVE').'"><span class="'.$this->s['i']['remove'].'"></span></button>';
 		//echo '</div>';
 
 
 		echo ' ';
 
-		$link = JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
-		echo '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary'].' ph-btn" role="button" title="'.JText::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.$this->s['i']['search'].'"></span></a>';
+		$link = Route::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
+		echo '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary'].' ph-btn" role="button" title="'.Text::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.$this->s['i']['search'].'"></span></a>';
 
-		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+		echo HTMLHelper::_('form.token');
 		echo '</form>';
 
 		echo '</div>';
@@ -140,7 +146,7 @@ if (!empty($this->t['items'])) {
 	echo $this->loadTemplate('login');
 
 } else {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_THERE_ARE_NO_PRODUCTS_IN_YOUR_WISH_LIST').'</div>';
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_THERE_ARE_NO_PRODUCTS_IN_YOUR_WISH_LIST')));
 }
 
 

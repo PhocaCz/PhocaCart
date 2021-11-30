@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 
 echo PhocacartTicket::renderNavigation($this->t['vendor']->id, $this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id);
@@ -22,12 +24,12 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 
-$msg = JText::_('COM_PHOCACART_TICKET_NR') . ': <b>'.(int)$this->t['ticket']->id . '</b><br />'
-	. JText::_('COM_PHOCACART_WARNING_CLOSE_CURRENT_TICKET') . '<br />'
-	. '<span class="ph-warning">'.JText::_('COM_PHOCACART_WARNING_CART_WILL_BE_CLOSED_ALL_DATA_WILL_BE_REMOVED') . '</span>';
+$msg = Text::_('COM_PHOCACART_TICKET_NR') . ': <b>'.(int)$this->t['ticket']->id . '</b><br />'
+	. Text::_('COM_PHOCACART_WARNING_CLOSE_CURRENT_TICKET') . '<br />'
+	. '<span class="ph-warning">'.Text::_('COM_PHOCACART_WARNING_CART_WILL_BE_CLOSED_ALL_DATA_WILL_BE_REMOVED') . '</span>';
 
 echo '<form id="phPosCloseTicketForm" class="form-inline" style="display:inline" action="'.$this->t['action'].'" method="post" data-txt="'.htmlspecialchars($msg).'">';
 echo '<button class="'.$this->s['c']['btn.btn-danger'].' ph-pos-btn-ticket" ><span class="'.$this->s['i']['minus'].' icon-white"></span></button>';
@@ -38,7 +40,7 @@ echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->i
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 
 echo '</div>';// end ph-add-remove-tickets

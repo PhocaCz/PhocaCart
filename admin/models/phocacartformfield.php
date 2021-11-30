@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Log\Log;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
+class PhocaCartCpModelPhocaCartFormfield extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -28,12 +34,12 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 	public function getTable($type = 'PhocaCartFormfield', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartformfield', 'phocacartformfield', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -44,7 +50,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartformfield.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartformfield.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -56,8 +62,8 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 
@@ -76,7 +82,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_form_fields');
 				$max = $db->loadResult();
 
@@ -95,7 +101,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 
 		//$dispatcher	= JDispatcher::getInstance();
-		$user		= JFactory::getUser();
+		$user		= Factory::getUser();
 		$table		= $this->getTable('phocacartformfield');
 		$pks		= (array) $pks;
 
@@ -103,7 +109,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			if ($table->load($pk)) {
 				if (!$this->canEditState($table)) {
 					unset($pks[$i]);
-					$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 				}
 			}
 		}
@@ -129,8 +135,8 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 					$type				= PhocacartFormItems::getColumnType($data['type']);
 					$data['title']		= PhocacartText::stringURLSafe($data['title']);
 					$data['title']		= strip_tags($data['title']);
-					$db 				= JFactory::getDBO();
-					$config				= JFactory::getConfig();
+					$db 				= Factory::getDBO();
+					$config				= Factory::getConfig();
 					$dbName 			= $config->get('db', '');
 
 
@@ -186,22 +192,22 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 
 	public function delete(&$cid = array()) {
 
-		$app	= JFactory::getApplication();
-		$db 	= JFactory::getDBO();
+		$app	= Factory::getApplication();
+		$db 	= Factory::getDBO();
 
 		$result = false;
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING);
+					Log::add($error, Log::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 					return false;
 				}
 			}
@@ -215,7 +221,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			$db->setQuery( $query );
 
 			if (!($rows = $db->loadObjectList())) {
-				throw new Exception( JText::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
+				throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
 				return false;
 			}
 
@@ -238,7 +244,7 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 				. ' WHERE id IN ( '.$cidsOK.' )';
 				$db->setQuery( $query2 );
 				if (!$db->execute()) {
-					$this->setError($this->_db->getErrorMsg());
+					$this->setError($row->getError());
 					return false;
 				};
 
@@ -278,12 +284,12 @@ class PhocaCartCpModelPhocaCartFormfield extends JModelAdmin
 			$msg = '';
 			if (!empty($cidError)) {
 				$cidErrorString = implode( ", ", $cidError );
-				$msg .= JText::plural( 'COM_PHOCACART_ERROR_DELETE_DEFAULT_FORM_FIELDS', $cidErrorString );
+				$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_DEFAULT_FORM_FIELDS', $cidErrorString );
 			}
 			if (!empty($cidOKTitle)) {
 				$cidOKTitleString = implode( ", ", $cidOKTitle );
 				if ($msg != '') { $msg .= "<br />";}
-				$msg .= JText::plural( 'COM_PHOCACART_SUCCESS_FORM_FIELDS_DELETED', $cidOKTitleString );
+				$msg .= Text::plural( 'COM_PHOCACART_SUCCESS_FORM_FIELDS_DELETED', $cidOKTitleString );
 			}
 
 			$link = 'index.php?option=com_phocacart&view=phocacartformfields';

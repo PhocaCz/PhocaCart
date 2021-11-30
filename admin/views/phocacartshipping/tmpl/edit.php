@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 
 $r 			=  $this->r;
@@ -15,7 +17,7 @@ Joomla.submitbutton = function(task) {
 	if (task == "'. $this->t['task'] .'.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
 		Joomla.submitform(task, document.getElementById("adminForm"));
 	} else {
-		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+		Joomla.renderMessages({"error": ["'. Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
 ';
@@ -24,24 +26,27 @@ echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm'
 // First Column
 echo '<div class="span12 form-horizontal">';
 $tabs = array (
-'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
-'amount' 		=> JText::_($this->t['l'].'_AMOUNT_RULE'),
-'quantity' 		=> JText::_($this->t['l'].'_QUANTITY_RULE'),
-'zone' 			=> JText::_($this->t['l'].'_ZONE_RULE'),
-'country' 		=> JText::_($this->t['l'].'_COUNTRY_RULE'),
-'region' 		=> JText::_($this->t['l'].'_REGION_RULE'),
-'zip' 			=> JText::_($this->t['l'].'_ZIP_RULE'),
-'weight' 		=> JText::_($this->t['l'].'_WEIGHT_RULE'),
-'size' 			=> JText::_($this->t['l'].'_SIZE_RULE'),
-'method' 		=> JText::_($this->t['l'].'_SHIPPING_METHOD_OPTIONS'),
-'tracking' 		=> JText::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
-'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
+'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
+'amount' 		=> Text::_($this->t['l'].'_AMOUNT_RULE'),
+'quantity' 		=> Text::_($this->t['l'].'_QUANTITY_RULE'),
+'zone' 			=> Text::_($this->t['l'].'_ZONE_RULE'),
+'country' 		=> Text::_($this->t['l'].'_COUNTRY_RULE'),
+'region' 		=> Text::_($this->t['l'].'_REGION_RULE'),
+'zip' 			=> Text::_($this->t['l'].'_ZIP_RULE'),
+'weight' 		=> Text::_($this->t['l'].'_WEIGHT_RULE'),
+'size' 			=> Text::_($this->t['l'].'_SIZE_RULE'),
+'method' 		=> Text::_($this->t['l'].'_SHIPPING_METHOD_OPTIONS'),
+'tracking' 		=> Text::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
+'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
+
+$formArray = array ('title');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('title', 'cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
+$formArray = array ('cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');
@@ -106,7 +111,7 @@ echo $r->endTab();
 
 
 echo $r->startTab('method', $tabs['method']);
-echo '<div id="ph-extended-params" class="ph-extended-params">'.JText::_('COM_PHOCACART_SELECT_SHIPPING_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
+echo '<div id="ph-extended-params" class="ph-extended-params">'.Text::_('COM_PHOCACART_SELECT_SHIPPING_METHOD_TO_DISPLAY_PARAMETERS').'</div>';
 echo $r->endTab();
 
 
@@ -131,7 +136,7 @@ echo $r->endTab();
 echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
-//echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
+////echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs($this->t['task']);
 echo $r->endForm();
 

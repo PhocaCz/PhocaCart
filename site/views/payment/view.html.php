@@ -7,8 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
-class PhocaCartViewPayment extends JViewLegacy
+class PhocaCartViewPayment extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -18,13 +23,13 @@ class PhocaCartViewPayment extends JViewLegacy
 	function display($tpl = null) {
 
 
-		$document					= JFactory::getDocument();
-		$app						= JFactory::getApplication();
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$document					= Factory::getDocument();
+		$app						= Factory::getApplication();
+		$uri 						= Uri::getInstance();
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
 
-		$session 					= JFactory::getSession();
+		$session 					= Factory::getSession();
 		$this->t['proceedpayment'] 	= $session->get('proceedpayment', array(), 'phocaCart');
 
 		$order 			= new PhocacartOrderView();
@@ -47,11 +52,11 @@ class PhocaCartViewPayment extends JViewLegacy
 
 				if (isset($paymentO->method)) {
 					//$dispatcher = J EventDispatcher::getInstance();
-					JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
+					PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
 					$eventData 					= array();
 					$proceed 					= '';
 					$eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
-					\JFactory::getApplication()->triggerEvent('PCPbeforeSetPaymentForm', array(&$proceed, $this->p, $paymentO->params, $o, $eventData));
+					Factory::getApplication()->triggerEvent('onPCPbeforeSetPaymentForm', array(&$proceed, $this->p, $paymentO->params, $o, $eventData));
 
 
 				}
@@ -73,7 +78,7 @@ class PhocaCartViewPayment extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_PAYMENT'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_PAYMENT'));
 	}
 }
 ?>

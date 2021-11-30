@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartVendor
 {
@@ -17,7 +18,7 @@ class PhocacartVendor
 		
 		if (!empty($vendor) && isset($vendor->id) && (int)$vendor->id > 0) {
 			
-			$db 	= JFactory::getDBO();
+			$db 	= Factory::getDBO();
 			$query = ' SELECT a.id, a.title, a.image FROM #__phocacart_vendors AS a'
 					.' WHERE a.user_id = '.(int)$vendor->id
 					.' AND a.published = 1'

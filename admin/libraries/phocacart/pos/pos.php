@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartPos
 {
@@ -16,8 +18,8 @@ class PhocacartPos
 
 		// User ID, section ID and unit ID can be null (deselect user)
 		if ((int)$vendorId > 0 && (int)$ticketId > 0) {
-			$db 	= JFactory::getDBO();
-			$date 	= JFactory::getDate();
+			$db 	= Factory::getDBO();
+			$date 	= Factory::getDate();
 			$now	= $date->toSql();
 
 			/*$app					= JFactory::getApplication();
@@ -44,7 +46,7 @@ class PhocacartPos
 	public static function getUserIdByVendorAndTicket($vendorId, $ticketId, $unitId, $sectionId) {
 
 		if ((int)$vendorId > 0 && (int)$ticketId > 0) {
-			$db 	= JFactory::getDBO();
+			$db 	= Factory::getDBO();
 
 			$query = ' SELECT user_id FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
@@ -65,7 +67,7 @@ class PhocacartPos
 	public static function getCardByVendorAndTicket($vendorId, $ticketId, $unitId, $sectionId, $userId = 0) {
 
 		if ((int)$vendorId > 0 && (int)$ticketId > 0) {
-			$db 	= JFactory::getDBO();
+			$db 	= Factory::getDBO();
 
 			$query = ' SELECT loyalty_card_number FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
@@ -110,8 +112,8 @@ class PhocacartPos
 
 			if ($isView || $isTypeView || $isController) {
 				// Return the error info only in case of POS view or controller
-				$app = JFactory::getApplication();
-				$app->enqueueMessage(JText::_('COM_PHOCACART_POS_IS_DISABLED'), 'error');
+				$app = Factory::getApplication();
+				$app->enqueueMessage(Text::_('COM_PHOCACART_POS_IS_DISABLED'), 'error');
 			}
 			return false;
 		}
@@ -150,7 +152,7 @@ class PhocacartPos
 	public static function getUserByVendorAndTicket($vendorId, $ticketId) {
 
 		if ((int)$vendorId > 0 && (int)$ticketId > 0) {
-			$db 	= JFactory::getDBO();
+			$db 	= Factory::getDBO();
 
 			$query = ' SELECT a.user_id, u.id, u.name, u.user_name, u.email FROM #__phocacart_cart_multiple AS a'
 				.' LEFT JOIN #__users AS u ON a_user_id = u.id'
@@ -167,7 +169,7 @@ class PhocacartPos
 
 	public static function renderPosPage() {
 
-		$document		= JFactory::getDocument();
+		$document		= Factory::getDocument();
 		$pC 			= PhocacartUtils::getComponentParameters();
 
 
@@ -257,7 +259,7 @@ class PhocacartPos
 
 	public static function getPreferredSku() {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$pos_preffered_sku		= $paramsC->get( 'pos_preferred_sku', 'sku' );
 
@@ -265,15 +267,15 @@ class PhocacartPos
 		$a['name'] 	= $pos_preffered_sku;
 		switch ($pos_preffered_sku) {
 
-			case 'upc':				$a['title'] 	= JText::_('COM_PHOCACART_FIELD_UPC_LABEL'); break;
-			case 'ean':				$a['title'] 	= JText::_('COM_PHOCACART_FIELD_EAN_LABEL'); break;
-			case 'jan':				$a['title'] 	= JText::_('COM_PHOCACART_FIELD_JAN_LABEL'); break;
-			case 'isbn':			$a['title'] 	= JText::_('COM_PHOCACART_FIELD_ISBN_LABEL'); break;
-			case 'mpn':				$a['title'] 	= JText::_('COM_PHOCACART_FIELD_MPN_LABEL'); break;
-			case 'serial_number':	$a['title'] 	= JText::_('COM_PHOCACART_FIELD_SERIAL_NUMBER_LABEL'); break;
-			case 'registration_key':$a['title'] 	= JText::_('COM_PHOCACART_FIELD_REGISTRATION_KEY_LABEL'); break;
+			case 'upc':				$a['title'] 	= Text::_('COM_PHOCACART_FIELD_UPC_LABEL'); break;
+			case 'ean':				$a['title'] 	= Text::_('COM_PHOCACART_FIELD_EAN_LABEL'); break;
+			case 'jan':				$a['title'] 	= Text::_('COM_PHOCACART_FIELD_JAN_LABEL'); break;
+			case 'isbn':			$a['title'] 	= Text::_('COM_PHOCACART_FIELD_ISBN_LABEL'); break;
+			case 'mpn':				$a['title'] 	= Text::_('COM_PHOCACART_FIELD_MPN_LABEL'); break;
+			case 'serial_number':	$a['title'] 	= Text::_('COM_PHOCACART_FIELD_SERIAL_NUMBER_LABEL'); break;
+			case 'registration_key':$a['title'] 	= Text::_('COM_PHOCACART_FIELD_REGISTRATION_KEY_LABEL'); break;
 
-			default: case 'sku':	$a['title'] 	= JText::_('COM_PHOCACART_FIELD_SKU_LABEL'); break;
+			default: case 'sku':	$a['title'] 	= Text::_('COM_PHOCACART_FIELD_SKU_LABEL'); break;
 
 		}
 

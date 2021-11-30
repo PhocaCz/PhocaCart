@@ -8,8 +8,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 $r         = $this->r;
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -47,21 +51,21 @@ echo $r->endFilterBar();
 echo $r->endFilterBar();*/
 
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder, 'a', true);
 echo $r->secondColumnHeader($listDirn, $listOrder, 'a', true);
-echo '<th class="ph-product">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRODUCT', 'a.product_id', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-item">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ITEM', 'a.item', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-user">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_USER', 'a.user_id', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-ip">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IP', 'a.ip', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-date">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DATE', 'a.date', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-hits">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-type">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TYPE', 'a.type', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-id">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-product">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRODUCT', 'a.product_id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-item">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ITEM', 'a.item', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-user">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_USER', 'a.user_id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-ip">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IP', 'a.ip', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-date">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DATE', 'a.date', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-hits">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-type">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TYPE', 'a.type', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
 
@@ -90,7 +94,7 @@ if (is_array($this->items)) {
         $canEdit		= $user->authorise('core.edit', $this->t['o']);
         $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
         $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-        $linkEdit 		= JRoute::_( $urlEdit. $item->id );
+        $linkEdit 		= Route::_( $urlEdit. $item->id );
 
         //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
         $canEditCat	= $user->authorise('core.edit', $this->t['o']);*/

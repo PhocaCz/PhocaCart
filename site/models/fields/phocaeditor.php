@@ -7,8 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Editor\Editor;
 
-class JFormFieldPhocaEditor extends JFormField
+class JFormFieldPhocaEditor extends FormField
 {
 
 	public $type = 'PhocaEditor';
@@ -72,7 +76,7 @@ class JFormFieldPhocaEditor extends JFormField
 	});' . "\n";
 			$js .=	'</script>';
 			
-			$js2 = "\t<script type=\"text/javascript\" src=\"".JURI::root()."media/editors/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
+			$js2 = "\t<script type=\"text/javascript\" src=\"".Uri::root()."media/editors/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
 			
 			
 			$js = '<script type="text/javascript">
@@ -103,9 +107,9 @@ class JFormFieldPhocaEditor extends JFormField
 					// URL
 					relative_urls : true,
 					remove_script_host : false,
-					document_base_url : "'.JURI::base().'",
+					document_base_url : "'.Uri::base().'",
 					// Layout
-					content_css : "'.JURI::base().'templates/system/css/editor.css",
+					content_css : "'.Uri::base().'templates/system/css/editor.css",
 					//importcss_append: true,
 					// Advanced Options
 					resize: "both",
@@ -115,10 +119,10 @@ class JFormFieldPhocaEditor extends JFormField
 				});
 				</script>';
 			
-			$js2 = "\t<script type=\"text/javascript\" src=\"".JURI::root()."media/editors/tinymce/tinymce.min.js\"></script>\n";
+			$js2 = "\t<script type=\"text/javascript\" src=\"".Uri::root()."media/editors/tinymce/tinymce.min.js\"></script>\n";
 			
 			
-			$document	= JFactory::getDocument();
+			$document	= Factory::getDocument();
 			$document->addCustomTag($js2);
 			$document->addCustomTag($js);
 			
@@ -164,7 +168,7 @@ class JFormFieldPhocaEditor extends JFormField
 				$types = explode('|', $type);
 
 				// Get the database object.
-				$db = JFactory::getDBO();
+				$db = Factory::getDBO();
 
 				// Iterate over teh types looking for an existing editor.
 				foreach ($types as $element)
@@ -192,7 +196,7 @@ class JFormFieldPhocaEditor extends JFormField
 			// Create the JEditor instance based on the given editor.
 			if (is_null($editor))
 			{
-				$conf = JFactory::getConfig();
+				$conf = Factory::getConfig();
 				$editor = $conf->get('editor');
 			}
 			//PHOCAEDIT
@@ -201,7 +205,7 @@ class JFormFieldPhocaEditor extends JFormField
 			}
 			// END PHOCAEDIT
 			
-			$this->editor = JEditor::getInstance($editor);
+			$this->editor = Editor::getInstance($editor);
 		}
 
 		return $this->editor;

@@ -7,9 +7,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 jimport('joomla.application.component.view');
 
-class PhocaCartViewCheckout extends JViewLegacy
+class PhocaCartViewCheckout extends HtmlView
 {
     protected $t;
     protected $r;
@@ -27,9 +33,9 @@ class PhocaCartViewCheckout extends JViewLegacy
     function display($tpl = null) {
 
 
-        $document = JFactory::getDocument();
-        $app      = JFactory::getApplication();
-        $uri      = \Joomla\CMS\Uri\Uri::getInstance();
+        $document = Factory::getDocument();
+        $app      = Factory::getApplication();
+        $uri      = Uri::getInstance();
         $this->u  = PhocacartUser::getUser();
         $this->p  = $app->getParams();
         $this->a  = new PhocacartAccess();
@@ -39,7 +45,7 @@ class PhocaCartViewCheckout extends JViewLegacy
 
         $this->t['action']       = $uri->toString();
         $this->t['actionbase64'] = base64_encode($this->t['action']);
-        $this->t['linkcheckout'] = JRoute::_(PhocacartRoute::getCheckoutRoute());
+        $this->t['linkcheckout'] = Route::_(PhocacartRoute::getCheckoutRoute());
 
         $this->t['checkout_desc']              = $this->p->get('checkout_desc', '');
         $this->t['checkout_desc']              = PhocacartRenderFront::renderArticle($this->t['checkout_desc']);
@@ -83,8 +89,8 @@ class PhocaCartViewCheckout extends JViewLegacy
         $this->t['display_checkout_toc_checkbox'] = $this->p->get('display_checkout_toc_checkbox', 2);
         if ($this->t['display_checkout_toc_checkbox'] > 0) {
             $this->t['terms_conditions_custom_label_text'] = $this->p->get('terms_conditions_custom_label_text', 0);
-            $linkTerms                                     = JRoute::_(PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));
-            $defaultText                                   = JText::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE') . ' <a href="' . $linkTerms . '" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS') . '</a>';
+            $linkTerms                                     = Route::_(PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));
+            $defaultText                                   = Text::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE') . ' <a href="' . $linkTerms . '" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . Text::_('COM_PHOCACART_TERMS_AND_CONDITIONS') . '</a>';
             $this->t['terms_conditions_label_text']        = PhocacartRenderFront::renderArticle((int)$this->t['terms_conditions_custom_label_text'], 'html', $defaultText);
         }
 
@@ -164,7 +170,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                 }
 
                 if ($this->t['rewards']['usertotal'] > 0) {
-                    $this->t['rewards']['text']  = '<small>(' . JText::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS') . ': ' . (int)$this->t['rewards']['usertotal'] . ', ' . JText::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE') . ': ' . (int)$this->t['rewards']['needed'] . ')</small>';
+                    $this->t['rewards']['text']  = '<small>(' . Text::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS') . ': ' . (int)$this->t['rewards']['usertotal'] . ', ' . Text::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE') . ': ' . (int)$this->t['rewards']['needed'] . ')</small>';
                     $this->t['rewards']['apply'] = true;
                 }
             }
@@ -478,7 +484,7 @@ class PhocaCartViewCheckout extends JViewLegacy
                             }
 
                             if ($this->t['rewards']['usertotal'] > 0) {
-                                $this->t['rewards']['text'] = '<small>('.JText::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS').': '.(int)$this->t['rewards']['usertotal'].', '.JText::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE').': '.(int)$this->t['rewards']['needed'].')</small>';
+                                $this->t['rewards']['text'] = '<small>('.Text::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS').': '.(int)$this->t['rewards']['usertotal'].', '.Text::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE').': '.(int)$this->t['rewards']['needed'].')</small>';
                                 $this->t['rewards']['apply'] 	= true;
                             }
                         }
@@ -532,6 +538,7 @@ class PhocaCartViewCheckout extends JViewLegacy
         $media->loadChosen();
         $media->loadWindowPopup();
 
+
         $media->loadTouchSpin('quantity', $this->s['i']);
         //PhocacartRenderJs::renderAjaxUpdateCart(); used only in POS
 
@@ -566,26 +573,26 @@ class PhocaCartViewCheckout extends JViewLegacy
 
         // Plugins ------------------------------------------
         $this->t['total'] = $total;
-        JPluginHelper::importPlugin('pcv');
+        PluginHelper::importPlugin('pcv');
         //$this->t['dispatcher']	= J EventDispatcher::getInstance();
         $this->t['event'] = new stdClass;
 
-        $results                               = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results                               = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterCart = trim(implode("\n", $results));
 
-        $results                                = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results                                = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterLogin = trim(implode("\n", $results));
 
-        $results                                  = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterAddress = trim(implode("\n", $results));
 
-        $results                                   = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results                                   = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterShipping = trim(implode("\n", $results));
 
-        $results                                  = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterPayment = trim(implode("\n", $results));
 
-        $results                                  = \JFactory::getApplication()->triggerEvent('PCVonCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
 
         // END Plugins --------------------------------------
@@ -599,7 +606,7 @@ class PhocaCartViewCheckout extends JViewLegacy
     }
 
     protected function _prepareDocument() {
-        PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_CHECKOUT'));
+        PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_CHECKOUT'));
     }
 }
 

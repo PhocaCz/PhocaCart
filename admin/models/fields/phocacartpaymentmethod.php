@@ -7,8 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaCartPaymentMethod extends JFormField
+class JFormFieldPhocaCartPaymentMethod extends FormField
 {
 	protected $type 		= 'PhocacartPaymentMethod';
 
@@ -18,7 +22,7 @@ class JFormFieldPhocaCartPaymentMethod extends JFormField
 		$type 		= (int) $this->element['typemethod'];
 		$required 	= $this->element['required'];
 
-		$attr = 'class="inputbox"';
+		$attr = 'class="form-select"';
 		if ($required) {
 			$attr		.= ' required aria-required="true" ';
 		}
@@ -37,7 +41,7 @@ class JFormFieldPhocaCartPaymentMethod extends JFormField
 			break;
 		}
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 
 		$query = 'SELECT a.id AS value, a.title AS text'
@@ -48,9 +52,9 @@ class JFormFieldPhocaCartPaymentMethod extends JFormField
 		$db->setQuery($query);
 		$methods = $db->loadObjectList();
 
-		array_unshift($methods, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_PAYMENT_METHOD').' -', 'value', 'text'));
+		array_unshift($methods, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_PAYMENT_METHOD').' -', 'value', 'text'));
 
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $methods,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		return HTMLHelper::_('select.genericlist',  $methods,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 
 	}
 }

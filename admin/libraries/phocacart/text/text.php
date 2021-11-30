@@ -9,8 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
-
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 use Joomla\String\StringHelper;
 use Joomla\CMS\Language\Language;
 
@@ -29,6 +31,10 @@ class PhocacartText {
 
 		if ($type == 3) {
 		    $body = isset($replace['email_gift_recipient']) ? str_replace('{emailgiftrecipient}', $replace['email_gift_recipient'], $body) : $body;
+        $body = isset($replace['name_gift_recipient']) ? str_replace('{namegiftrecipient}', $replace['name_gift_recipient'], $body) : $body;
+        $body = isset($replace['name_gift_sender']) ? str_replace('{namegiftbuyer}', $replace['name_gift_sender'], $body) : $body;
+        // Valid To variable is limited only to first gift card, because when the variable is replaced by first gift card, it cannot be set for next gift cards
+        $body = isset($replace['valid_to_gift']) ? str_replace('{giftvalidto}', $replace['valid_to_gift'], $body) : $body;
         } else if ($type == 2) {
 			$body = isset($replace['email_others']) ? str_replace('{emailothers}', $replace['email_others'], $body) : $body;
 		} else if ($type == 1){
@@ -44,7 +50,9 @@ class PhocacartText {
 		$body = isset($replace['trackingnumber'])			? str_replace('{trackingnumber}', $replace['trackingnumber'], $body)				: $body;
         $body = isset($replace['trackingdescription'])		? str_replace('{trackingdescription}', $replace['trackingdescription'], $body)		: $body;
 		$body = isset($replace['shippingtitle'])			? str_replace('{shippingtitle}', $replace['shippingtitle'], $body)					: $body;
+        $body = isset($replace['shippingdescriptioninfo'])	? str_replace('{shippingdescriptioninfo}', $replace['shippingdescriptioninfo'], $body): $body;
         $body = isset($replace['paymenttitle'])			    ? str_replace('{paymenttitle}', $replace['paymenttitle'], $body)					: $body;
+        $body = isset($replace['paymentdescriptioninfo'])	? str_replace('{paymentdescriptioninfo}', $replace['paymentdescriptioninfo'], $body): $body;
 		$body = isset($replace['dateshipped'])				? str_replace('{dateshipped}', $replace['dateshipped'], $body)						: $body;
 
 		$body = isset($replace['customercomment'])			? str_replace('{customercomment}', $replace['customercomment'], $body)				: $body;
@@ -195,7 +203,7 @@ class PhocacartText {
 
 
 		$pC				= PhocacartUtils::getComponentParameters();
-		$config 		= JFactory::getConfig();
+		$config 		= Factory::getConfig();
 		$price			= new PhocacartPrice();
 		$price->setCurrency($common->currency_code, $orderId);
 		$totalBrutto	= $order->getItemTotal($orderId, 0, 'brutto');
@@ -231,7 +239,7 @@ class PhocacartText {
 
 			$downloadO 	= '';
 			if(!empty($products) && isset($common->order_token) && $common->order_token != '' && $download_guest_access > 0) {
-				$downloadO	= '<p>&nbsp;</p><h4>'.JText::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
+				$downloadO	= '<p>&nbsp;</p><h4>'.Text::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
 				foreach ($products as $k => $v) {
 
 				    if (!empty($v->downloads)) {
@@ -298,11 +306,12 @@ class PhocacartText {
         $r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
 		$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
 		$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
+        $r['shippingdescriptioninfo'] 		= PhocacartOrderView::getShippingDescriptionInfo($common);
 		$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
 		$r['customercomment'] 		= $common->comment;
 		$r['currencycode'] 			= $common->currency_code;
 		$r['websitename']			= $config->get( 'sitename' );
-		$r['websiteurl']			= JURI::root();
+		$r['websiteurl']			= Uri::root();
 
 		$r['orderid']				= $orderId;
 		$r['ordernumber']			= PhocacartOrder::getOrderNumber($orderId, $common->date, $common->order_number);
@@ -335,13 +344,14 @@ class PhocacartText {
 		$r['totaltopaynoformat']	= number_format($totalToPay, 2, '.', '');
 		$r['totaltopay']			= $price->getPriceFormat($totalToPay, 0, 1);
         $r['paymenttitle'] 		    = PhocacartOrderView::getPaymentTitle($common);
+        $r['paymentdescriptioninfo'] 		= PhocacartOrderView::getPaymentDescriptionInfo($common);
 		$dateO 						= PhocacartDate::splitDate($common->date);
 
 		$r['orderdate']             = $common->date;
 		$r['orderyear']				= $dateO['year'];
 		$r['ordermonth']			= $dateO['month'];
 		$r['orderday']				= $dateO['day'];
-		$r['ordernumbertxt']		= JText::_('COM_PHOCACART_ORDER_NR');
+		$r['ordernumbertxt']		= Text::_('COM_PHOCACART_ORDER_NR');
 
 
 		$r['bankaccountnumber']		= $pC->get( 'bank_account_number', '' );
@@ -353,7 +363,7 @@ class PhocacartText {
         $r['vendorname']            = '';
         $r['venderusername']        = '';
         if ((int)$common->vendor_id > 0) {
-            $vendor                 = JFactory::getUser((int)$common->vendor_id);
+            $vendor                 = Factory::getUser((int)$common->vendor_id);
             $r['vendorname']        = $vendor->name;
             $r['venderusername']    = $vendor->username;
         }
@@ -434,7 +444,7 @@ class PhocacartText {
 		$str = str_replace('-', ' ', $string);
 
 		// Transliterate on the language requested (fallback to current language if not specified)
-		$lang = $language == '' || $language == '*' ? \JFactory::getLanguage() : Language::getInstance($language);
+		$lang = $language == '' || $language == '*' ? JFactory::getLanguage() : Language::getInstance($language);
 		$str = $lang->transliterate($str);
 
 		// Trim white spaces at beginning and end of alias and make lowercase

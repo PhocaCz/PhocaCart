@@ -7,12 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\FileLayout;
+
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 
-echo '<div id="ph-pc-download-box" class="pc-download-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo '<div id="ph-pc-download-box" class="pc-view pc-download-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_DOWNLOAD')));
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_DOWNLOAD')));
 
 if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_order'] != '')) {
 	if (!empty($this->t['files'])) {
@@ -20,10 +25,10 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 		//echo '<div class="ph-download-files">';
 
 		echo '<div class="'.$this->s['c']['row'].' ph-download-header-box-row ph-vertical-align">';
-		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_TITLE').'</div>';
-		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_FILENAME').'</div>';
-		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.JText::_('COM_PHOCACART_STATUS').'</div>';
-		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">'.JText::_('COM_PHOCACART_DOWNLOAD').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.Text::_('COM_PHOCACART_TITLE').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.Text::_('COM_PHOCACART_FILENAME').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.Text::_('COM_PHOCACART_STATUS').'</div>';
+		echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">'.Text::_('COM_PHOCACART_DOWNLOAD').'</div>';
 		echo '<div class="ph-cb"></div>';
 		echo '</div>';
 
@@ -48,7 +53,7 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 			$downloadPossible = 0;
 			$status = '';
 			if((int)$this->t['download_count'] > 0 && ((int)$this->t['download_count'] == (int)$v->download_hits || (int)$this->t['download_count'] < (int)$v->download_hits)) {
-				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.JText::_('COM_PHOCACART_MAXIMUM_DOWNLOADS_REACHED'). '</span><br />';
+				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.Text::_('COM_PHOCACART_MAXIMUM_DOWNLOADS_REACHED'). '</span><br />';
 
 			}
 
@@ -58,27 +63,27 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 			}
 
 			if($downloadDays != 0 && !PhocacartDownload::isActive($v->date, $downloadDays)) {
-				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.JText::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span><br />';
+				$status .= '<span class="'.$this->s['c']['label.label-danger'].'">'.Text::_('COM_PHOCACART_DOWNLOAD_DATE_EXPIRED'). '</span><br />';
 
 			}
 
 			if ($status == '') {
-				$status = '<span class="'.$this->s['c']['label.label-success'].'">'.JText::_('COM_PHOCACART_ACTIVE'). '</span><br />';
+				$status = '<span class="'.$this->s['c']['label.label-success'].'">'.Text::_('COM_PHOCACART_ACTIVE'). '</span><br />';
 
 				$rem	= (int)$this->t['download_count'] - (int)$v->download_hits;
 				if ((int)$rem > 0) {
 					$status .= ' <span class="ph-small"><b>'.$rem. '</b> ';
 					if ($rem == 1) {
-						$status .= JText::_('COM_PHOCACART_DOWNLOAD'). ' ';
+						$status .= Text::_('COM_PHOCACART_DOWNLOAD'). ' ';
 					} else {
-						$status .= JText::_('COM_PHOCACART_DOWNLOADS'). ' ';
+						$status .= Text::_('COM_PHOCACART_DOWNLOADS'). ' ';
 					}
-					$status .= JText::_('COM_PHOCACART_REMAINING'). '</span>';
+					$status .= Text::_('COM_PHOCACART_REMAINING'). '</span>';
 				}
 
 				$dateValid = PhocacartDownload::validUntil($v->date, $downloadDays);
 				if ($dateValid) {
-					$status .= '<br /> <span class="ph-small">'.JText::_('COM_PHOCACART_DOWNLOAD_VALID_UNTIL'). ': ';
+					$status .= '<br /> <span class="ph-small">'.Text::_('COM_PHOCACART_DOWNLOAD_VALID_UNTIL'). ': ';
 					$status .= ' '.$dateValid.'<span>';
 				}
 
@@ -98,8 +103,8 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 				echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 				echo '<input type="hidden" name="d" value="'.$this->t['token_download'].'" />';
 				echo '<input type="hidden" name="o" value="'.$this->t['token_order'].'" />';
-				echo '<button type="submit" class="btn btn-primary ph-btn"><span class="'.$this->s['i']['download'].'"></span> '.JText::_('COM_PHOCACART_DOWNLOAD').'</button>';
-				echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+				echo '<button type="submit" class="'.$this->s['c']['btn.btn-primary'].' ph-btn"><span class="'.$this->s['i']['download'].'"></span> '.Text::_('COM_PHOCACART_DOWNLOAD').'</button>';
+				echo HTMLHelper::_('form.token');
 				echo '</form>';
 
 				echo '</div>';
@@ -114,11 +119,13 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 
 		//echo '</div>';// end download files
 	} else {
-		echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_THERE_ARE_NO_FILES_TO_DOWNLOAD').'</div>';
+
+		echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_THERE_ARE_NO_FILES_TO_DOWNLOAD')));
 	}
 
 } else {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_NOT_LOGGED_IN_PLEASE_LOGIN').'</div>';
+
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_NOT_LOGGED_IN_PLEASE_LOGIN')));
 }
 
 

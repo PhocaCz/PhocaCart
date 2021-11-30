@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 final class PhocacartStatisticsHits
 {
 	
@@ -22,7 +23,7 @@ final class PhocacartStatisticsHits
 			return false;
 		}
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$additional_hits	= $paramsC->get( 'additional_hits', array() );
 		
@@ -34,9 +35,9 @@ final class PhocacartStatisticsHits
 		
 		
 		$user 	= PhocacartUser::getUser();
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$ip		= PhocacartUtils::getIp();
-		$date 	= JFactory::getDate();
+		$date 	= Factory::getDate();
 		$item	= array();
 		
 		$q = 'SELECT a.id, a.hits'
@@ -92,7 +93,7 @@ final class PhocacartStatisticsHits
 			return false;
 		}
 		
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$additional_hits	= $paramsC->get( 'additional_hits', array() );
 		
@@ -103,9 +104,9 @@ final class PhocacartStatisticsHits
 			
 		
 		$user 	= PhocacartUser::getUser();
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$ip		= PhocacartUtils::getIp();
-		$date 	= JFactory::getDate();
+		$date 	= Factory::getDate();
 		$item	= array();
 		
 		$q = 'SELECT a.id, a.hits'

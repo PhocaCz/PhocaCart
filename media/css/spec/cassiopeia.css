@@ -1,0 +1,56 @@
+.grid-child.container-below-top {
+    justify-content: end;
+    align-items: center;
+}
+
+/* metisMenu */
+.ph-cart-module-box .mm-collapsing,
+.ph-cart-module-box .mm-collapse{
+    position: absolute;
+    right: 0;
+}
+.ph-cart-collapse-button {
+    text-decoration: none;
+}
+.container-header .metismenu>li>button.ph-cart-collapse-button:before {
+    height: 0;
+}
+.ph-cart-count-sup {
+    top: -0.3em;
+}
+
+.ph-cart-item-box {
+    min-width: 15em;
+}
+
+.ph-cart-module-box .metismenu.mod-menu .metismenu-item {
+    padding: 0.5em 0.3em;
+}
+
+.ph-cart-module-box .metismenu.mod-menu .metismenu-item.level-2 {
+    padding: 0.5em 1em;
+}
+
+/* BS Dropdown */
+.ph-cart-module-box .dropdown button.dropdown-toggle {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+}
+
+.ph-cart-module-box .dropdown button.dropdown-toggle:focus,
+.ph-cart-module-box .dropdown button.dropdown-toggle:active:focus {
+    box-shadow: none;
+}
+
+.ph-cart-module-box .dropdown-menu {
+    padding: 1em;
+}
+
+.phItemCurrencyBox .ph-currency-list {
+    display: box-inline;
+    list-style-type: none;
+    margin-left: 0;
+}

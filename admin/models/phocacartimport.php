@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartImport extends JModelAdmin
+class PhocaCartCpModelPhocaCartImport extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -17,8 +19,8 @@ class PhocaCartCpModelPhocaCartImport extends JModelAdmin
 	
 	public static function getFileType() {
 		
-		$db		= JFactory::getDbo();
-		$user	= JFactory::getUser();
+		$db		= Factory::getDbo();
+		$user	= Factory::getUser();
 		$q 		= 'SELECT file_type'
 				.' FROM #__phocacart_import'
 			    .' WHERE user_id = '.(int) $user->id
@@ -32,8 +34,8 @@ class PhocaCartCpModelPhocaCartImport extends JModelAdmin
 	public static function getUploadedProducts($limitOffset = 0, $limitCount = 1) {
 	
 
-		$db 	= JFactory::getDBO();
-		$user	= JFactory::getUser();
+		$db 	= Factory::getDBO();
+		$user	= Factory::getUser();
 		
 		$q 	= 'SELECT item'
 			.' FROM #__phocacart_import'
@@ -52,8 +54,8 @@ class PhocaCartCpModelPhocaCartImport extends JModelAdmin
 	public static function getUploadedProductColumns() {
 	
 
-		$db 	= JFactory::getDBO();
-		$user	= JFactory::getUser();
+		$db 	= Factory::getDBO();
+		$user	= Factory::getUser();
 		
 		$q 	= 'SELECT item'
 			.' FROM #__phocacart_import'

@@ -9,6 +9,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
 jimport('joomla.application.component.helper');
 
 
@@ -16,7 +22,7 @@ class PhocacartRoute
 {
 	public static function getCategoriesRoute($lang = array()) {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -66,7 +72,7 @@ class PhocacartRoute
 		}
 
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -100,7 +106,7 @@ class PhocacartRoute
 
 	public static function getCategoryRouteByTag($tagId) {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -121,7 +127,7 @@ class PhocacartRoute
 			);
 		}
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'
 		.' FROM #__phocacart_tags AS a'
@@ -145,7 +151,7 @@ class PhocacartRoute
 	*/
 	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '') {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -204,7 +210,7 @@ class PhocacartRoute
 
 	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array(), $forceView = 0) {
 
-		$app 			= JFactory::getApplication();
+		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
 		$option			= $app->input->get( 'option', '', 'string' );
@@ -229,7 +235,8 @@ class PhocacartRoute
 				'item'  => (int) $id,
 				'category' => (int) $catid,
 				'categories' => (int)$activeId,
-				'items' => (int)$catid
+				'items' => (int)$activeId
+
 			);
 		} else {
 			$needles = array(
@@ -248,6 +255,8 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
+
+
 		return self::_buildLink($link, $needles, $lang);
 		//return self::_buildLink($link, $needles). '#'.$idAlias;
 	}
@@ -262,6 +271,7 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=checkout';
+
 		return self::_buildLink($link, $needles);
 	}
 
@@ -418,10 +428,11 @@ class PhocacartRoute
 			$id = $id . ':' . $idAlias;
 		}
 
-		$link = 'index.php?option=com_phocacart&view=feed&format=xml&id='. $id;
+		$link = 'index.php?option=com_phocacart&view=feed&id='. $id.'&format=xml';
 		if ($noSEF == 1) {
 			return $link;
 		}
+
 		$xml = self::_buildLink($link, $needles);
 
 
@@ -431,7 +442,7 @@ class PhocacartRoute
 
 	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '') {
 
-		$app 			= JFactory::getApplication();
+		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
 		$option			= $app->input->get( 'option', '', 'string' );
@@ -469,12 +480,18 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=question';
-		if ($id != 0) {
-			$link .= '&id='. $id;
-		}
 		if ($catid != 0) {
 			$link .= '&catid='. $catid;
 		}
+
+		if ($id != 0) {
+			$link .= '&productid='. $id;
+		}
+
+		if ($id != 0) {
+			$link .= '&id='. $id;
+		}
+
 		if ($suffix != '') {
 			$link .= '&'.$suffix;
 		}
@@ -494,6 +511,8 @@ class PhocacartRoute
 				$link .= '&Itemid='.$item->id;
 			}
 		}
+
+
 		return $link;
 	}
 
@@ -501,11 +520,11 @@ class PhocacartRoute
 
 	protected static function _findItem($needles, $notCheckId = 0, $lang = array())
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$menus	= $app->getMenu('site', array());
 		//$items	= $menus->getItems('component', 'com_phocacart');
 
-		$component 		= JComponentHelper::getComponent('com_phocacart');
+		$component 		= ComponentHelper::getComponent('com_phocacart');
 		$attributes 	= array('component_id');
 		$values     	= array($component->id);
 
@@ -536,14 +555,19 @@ class PhocacartRoute
 
 		$match = null;
 
-
 		foreach($needles as $needle => $id)
 		{
 
 			if ($notCheckId == 0) {
 				foreach($items as $item) {
 
-					if ((@$item->query['view'] == $needle) && (@$item->query['id'] == $id)) {
+					// Unifiy $item->query['id']
+					$queryId = '';
+					if (isset($item->query['id']) && $item->query['id'] != null && $item->query['id'] != 0) {
+						$queryId = $item->query['id'];
+					}
+
+					if ((@$item->query['view'] == $needle) && ($queryId == $id)) {
 						$match = $item;
 						break;
 					}
@@ -600,7 +624,7 @@ class PhocacartRoute
 
 	public static function isItemsView() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$option	= $app->input->get( 'option', '', 'string' );
 		$view	= $app->input->get( 'view', '', 'string' );
 
@@ -619,7 +643,7 @@ class PhocacartRoute
 			// 1) We don't want to include category in filter, e.g. mod_phocacart_filter does not
 			// allow to include category filtering (deselecting category)
 			// so don't include category
-			$urlItemsView	= JRoute::_(PhocacartRoute::getItemsRoute());
+			$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute());
 
 		} else {
 			// 2) We want to include category filter and user stays on page where category is active
@@ -627,14 +651,14 @@ class PhocacartRoute
 			//
 			// 3) But if user stays on site where there is no active category, he gets ID = 0 (id of category)
 			// so no filtering of category will be done - it is active but user didn't stay on category active page
-			$urlItemsView	= JRoute::_(PhocacartRoute::getItemsRoute($a['id'], $a['alias']));
+			$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute($a['id'], $a['alias']));
 
 		}
 
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JURI::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -642,11 +666,11 @@ class PhocacartRoute
 
 	public static function getJsItemsRouteWithoutParams() {
 
-		$urlItemsView	= JRoute::_(PhocacartRoute::getItemsRoute());
+		$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute());
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JURI::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -659,7 +683,7 @@ class PhocacartRoute
 	 */
 	public static function getIdForItemsRoute() {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
 
@@ -716,7 +740,7 @@ class PhocacartRoute
 
 	public static function isFilterActive() {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
 
@@ -744,13 +768,13 @@ class PhocacartRoute
 
 	public static function getFullUrl($url) {
 
-		$url = JRoute::_($url);
+		$url = Route::_($url);
 
-		$frontendUrl 	= str_replace(JURI::root(true).'/administrator/', '',$url);
-		$frontendUrl 	= str_replace(JURI::root(true), '', $frontendUrl);
+		$frontendUrl 	= str_replace(Uri::root(true).'/administrator/', '',$url);
+		$frontendUrl 	= str_replace(Uri::root(true), '', $frontendUrl);
 		$frontendUrl 	= str_replace('\\', '/', $frontendUrl);
-		//$frontendUrl 	= JURI::root(false). str_replace('//', '/', $frontendUrl);
-		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', JURI::root(false). $frontendUrl);
+		//$frontendUrl 	= JUri::root(false). str_replace('//', '/', $frontendUrl);
+		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', Uri::root(false). $frontendUrl);
 
 		return $frontendUrl;
 	}

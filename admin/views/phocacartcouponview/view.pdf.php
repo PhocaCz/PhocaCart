@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
+class PhocaCartCpViewPhocacartCouponView extends HtmlView
 {
 
 	protected $t;
@@ -18,7 +24,7 @@ class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
 	public function display($tpl = null) {
 
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$this->t		= PhocacartUtils::setVars('couponview');
 		$this->r		= new PhocacartRenderAdminview();
 		$id				= $app->input->get('id', 0, 'int');
@@ -32,7 +38,7 @@ class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
 		$pdfV['pdf']           = 0;
 
 		if ($pdfV['plugin-pdf'] == 1 && $pdfV['component-pdf'] == 1) {
-			if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_phocapdf/helpers/phocapdfrender.php')) {
+			if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocapdf/helpers/phocapdfrender.php')) {
 				require_once(JPATH_ADMINISTRATOR . '/components/com_phocapdf/helpers/phocapdfrender.php');
 			} else {
 				PhocacartLog::add(2, 'Coupon View - ERROR (PDF Class)', (int)$orderId, 'Render PDF file could not be found in system');
@@ -44,7 +50,7 @@ class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
 
 		if ($pdfV['pdf'] == 1) {
 			
-				$layoutG	= new JLayoutFile('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
+				$layoutG	= new FileLayout('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
 
 				$price 		= new PhocacartPrice();
 				$gift 		= PhocacartCoupon::getGiftByCouponId($id);
@@ -72,8 +78,8 @@ class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
 				$d['product_id'] = $gift['gift_product_id'];
 
 				$d['discount']   = $price->getPriceFormat($gift['discount']);
-				$d['valid_from'] = JHtml::date($gift['valid_from'], JText::_('DATE_FORMAT_LC3'));
-				$d['valid_to']   = JHtml::date($gift['valid_to'], JText::_('DATE_FORMAT_LC3'));
+				$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+				$d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
 				$d['format']     = 'pdf';
 
 				$d['pdf_instance'] = $pdf;// we need tcpdf instance in output to use different tcpdf functions

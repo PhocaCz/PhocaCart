@@ -8,14 +8,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('dropdown.init');
+//JHtml::_('formbehavior.chosen', 'select');
 
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 //$userId		= $user->get('id');
 $listOrder			= $this->escape($this->state->get('list.ordering'));
 $listDirn			= $this->escape($this->state->get('list.direction'));
@@ -55,19 +58,19 @@ if ($listDirn == 'asc') {$ascDir = 'selected="selected"';}
 if ($listDirn == 'desc') {$descDir = 'selected="selected"';}
 /*
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="directionTable" class="element-invisible">' .JText::_('JFIELD_ORDERING_DESC').'</label>'. "\n"
+.'<label for="directionTable" class="element-invisible">' .Text::_('JFIELD_ORDERING_DESC').'</label>'. "\n"
 .'<select name="filter_order_Dir" id="directionTable" class="input-medium">'. "\n"
-.'<option value="">' .JText::_('JFIELD_ORDERING_DESC').'</option>'. "\n"
-.'<option value="asc" '.$ascDir.'>' . JText::_('JGLOBAL_ORDER_ASCENDING').'</option>'. "\n"
-.'<option value="desc" '.$descDir.'>' . JText::_('JGLOBAL_ORDER_DESCENDING').'</option>'. "\n"
+.'<option value="">' .Text::_('JFIELD_ORDERING_DESC').'</option>'. "\n"
+.'<option value="asc" '.$ascDir.'>' . Text::_('JGLOBAL_ORDER_ASCENDING').'</option>'. "\n"
+.'<option value="desc" '.$descDir.'>' . Text::_('JGLOBAL_ORDER_DESCENDING').'</option>'. "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="sortTable" class="element-invisible">'.JText::_('JGLOBAL_SORT_BY').'</label>'. "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('JGLOBAL_SORT_BY').'</label>'. "\n"
 .'<select name="filter_order" id="sortTable" class="input-medium">'. "\n"
-.'<option value="">'.JText::_('JGLOBAL_SORT_BY').'</option>'. "\n"
-. Joomla\CMS\HTML\HTMLHelper::_('select.options', $sortFields, 'value', 'text', $listOrder). "\n"
+.'<option value="">'.Text::_('JGLOBAL_SORT_BY').'</option>'. "\n"
+. HTMLHelper::_('select.options', $sortFields, 'value', 'text', $listOrder). "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";*/
 
@@ -76,12 +79,12 @@ $sF = array();
 if (!empty($sortFields)) {
     foreach($sortFields as $k => $v) {
         $newK = $k . ' ASC';
-        $newV = $v . ' '. JText::_('COM_PHOCACART_ASCENDING');
+        $newV = $v . ' '. Text::_('COM_PHOCACART_ASCENDING');
 
         $sF[$newK] = $newV;
 
         $newK = $k . ' DESC';
-        $newV = $v . ' '. JText::_('COM_PHOCACART_DESCENDING');
+        $newV = $v . ' '. Text::_('COM_PHOCACART_DESCENDING');
 
         $sF[$newK] = $newV;
     }
@@ -90,10 +93,10 @@ $lO = $listOrder . ' '. strtoupper($listDirn);
 
 
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="sortTable" class="element-invisible">'.JText::_('JGLOBAL_SORT_BY').'</label>'. "\n"
-.'<select id="list_fullordering" name="list[fullordering]">'. "\n"
-.'<option value="">'.JText::_('JGLOBAL_SORT_BY').'</option>'. "\n"
-. Joomla\CMS\HTML\HTMLHelper::_('select.options', $sF, 'value', 'text', $lO). "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('JGLOBAL_SORT_BY').'</label>'. "\n"
+.'<select class="form-select" id="list_fullordering" name="list[fullordering]">'. "\n"
+.'<option value="">'.Text::_('JGLOBAL_SORT_BY').'</option>'. "\n"
+. HTMLHelper::_('select.options', $sF, 'value', 'text', $lO). "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
@@ -104,11 +107,11 @@ $listCurrency	= $this->escape($this->state->get('filter.currency'));
 $currencies 	= PhocacartCurrency::getAllCurrencies();
 
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="sortTable" class="element-invisible">'.JText::_('COM_PHOCACART_SELECT_CURRENCY').'</label>'. "\n"
-.'<select name="filter_currency" id="currencyTable" class="input-medium">'. "\n"
-.'<option value="">'.JText::_('COM_PHOCACART_SELECT_CURRENCY').'</option>'. "\n";
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_CURRENCY').'</label>'. "\n"
+.'<select class="form-select" name="filter_currency" id="currencyTable" class="input-medium">'. "\n"
+.'<option value="">'.Text::_('COM_PHOCACART_SELECT_CURRENCY').'</option>'. "\n";
 if (!empty($currencies)) {
-    echo Joomla\CMS\HTML\HTMLHelper::_('select.options', $currencies, 'value', 'text', $listCurrency). "\n";
+    echo HTMLHelper::_('select.options', $currencies, 'value', 'text', $listCurrency). "\n";
 }
 echo '</select>'. "\n"
 .'</div>'. "\n";
@@ -116,30 +119,30 @@ echo '</select>'. "\n"
 $listShopType	= $this->escape($this->state->get('filter.shop_type'));
 $shopTypes 		= PhocacartUtilsSettings::getShopTypes();
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="sortTable" class="element-invisible">'.JText::_('COM_PHOCACART_SELECT_CURRENCY').'</label>'. "\n"
-.'<select name="filter_shop_type" id="shopTypeTable" class="input-medium">'. "\n"
-. Joomla\CMS\HTML\HTMLHelper::_('select.options', $shopTypes, 'value', 'text', $listShopType). "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_CURRENCY').'</label>'. "\n"
+.'<select class="form-select" name="filter_shop_type" id="shopTypeTable" class="input-medium">'. "\n"
+. HTMLHelper::_('select.options', $shopTypes, 'value', 'text', $listShopType). "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
 $listOrderStatus	= $this->escape($this->state->get('filter.order_status'));
 $orderStatuses 		= PhocacartOrderStatus::getOrderStatuses();
-array_unshift($orderStatuses, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '' . JText::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . '', 'value', 'text'));
+array_unshift($orderStatuses, HTMLHelper::_('select.option', '', '' . Text::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . '', 'value', 'text'));
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="sortTable" class="element-invisible">'.JText::_('COM_PHOCACART_SELECT_ORDER_STATUS').'</label>'. "\n"
-.'<select name="filter_order_status" id="orderStatusTable" class="input-medium">'. "\n"
-. Joomla\CMS\HTML\HTMLHelper::_('select.options', $orderStatuses, 'value', 'text', $listOrderStatus). "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_ORDER_STATUS').'</label>'. "\n"
+.'<select class="form-select" name="filter_order_status" id="orderStatusTable" class="input-medium">'. "\n"
+. HTMLHelper::_('select.options', $orderStatuses, 'value', 'text', $listOrderStatus). "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
 
 echo '</div>';
 
-echo '<div style="clear:both"></div>';
+echo '<div style="clear:both">&nbsp;</div>';
 
 // DATE FROM - DATE TO
-Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
-Joomla\CMS\HTML\HTMLHelper::_('script', 'system/html5fallback.js', false, true);
+JHtml::_('jquery.framework');
+JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "filter_date_from";
@@ -148,8 +151,8 @@ $format 	= '%Y-%m-%d';
 $attributes = '';
 $valueFrom 	= $this->escape($this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30)));
 
-echo '<div class="ph-inline-param">'. JText::_('COM_PHOCACART_DATE_FROM') . ': ';
-echo  Joomla\CMS\HTML\HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes).'</div>';
+echo '<div class="ph-inline-param">'. Text::_('COM_PHOCACART_DATE_FROM') . ': ';
+echo  HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes).'</div>';
 
 //DATE TO
 $name		= "filter_date_to";
@@ -157,8 +160,8 @@ $id			= 'filter_date_to';
 $valueTo 	= $this->escape($this->state->get('filter.date_to', PhocacartDate::getCurrentDate()));
 
 
-echo '<div class="ph-inline-param">'. JText::_('COM_PHOCACART_DATE_TO') . ': ';
-echo  Joomla\CMS\HTML\HTMLHelper::_('calendar', $valueTo, $name, $id, $format, $attributes).'</div>';
+echo '<div class="ph-inline-param">'. Text::_('COM_PHOCACART_DATE_TO') . ': ';
+echo  HTMLHelper::_('calendar', $valueTo, $name, $id, $format, $attributes).'</div>';
 
 
 
@@ -167,8 +170,8 @@ echo '<div class="ph-inline-param">';
 //echo '<input type="hidden" name="filter_date_to" value="'.$this->escape($this->state->get('filter.date_to')).'" />'. "\n";
 echo '<input type="hidden" name="limitstart" value="0" />'. "\n";
 echo '<input type="hidden" name="limit" value="" />'. "\n";
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
-echo '<input class="btn btn-success" type="submit" name="submit" value="'.JText::_('COM_PHOCACART_SELECT').'" /></div>';
+echo HTMLHelper::_('form.token');
+echo '<input class="btn btn-success" type="submit" name="submit" value="'.Text::_('COM_PHOCACART_SELECT').'" /></div>';
 
 
 //echo $r->endFilterBar();
@@ -176,9 +179,9 @@ echo '<input class="btn btn-success" type="submit" name="submit" value="'.JText:
 
 
 
-echo '<p>&nbsp;</p>';
+echo '<div class="ph-cb"></div>';
 
-echo '<div class="row-fluid ph-admin-stat-row">';
+echo '<div class="ph-admin-stat-row">';
 echo $this->loadTemplate('report');
 echo '</div>';// end row
 
@@ -187,7 +190,7 @@ echo '<input type="hidden" name="task" value="" />'. "\n"
 //.'<input type="hidden" name="filter_order_Dir" value="'.$listDirn.'" />'. "\n"
 //.'<input type="hidden" name="filter_currency" value="'.$listCurrency.'" />'. "\n"
 //.'<input type="hidden" name="filter_shop_type" value="'.$listShopType.'" />'. "\n"
-. Joomla\CMS\HTML\HTMLHelper::_('form.token'). "\n";
+. HTMLHelper::_('form.token'). "\n";
 echo $r->endMainContainer();
 echo $r->endForm();
 ?>

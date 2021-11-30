@@ -10,8 +10,11 @@
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
 
-class PhocaCartCpControllerPhocacartEditinplace extends JControllerForm
+class PhocaCartCpControllerPhocacartEditinplace extends FormController
 {
 
 
@@ -19,16 +22,16 @@ class PhocaCartCpControllerPhocacartEditinplace extends JControllerForm
     public function editinplacetext() {
 
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>',
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>',
 				'result' => '');
 			echo json_encode($response);
 			exit;
 		}
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$value		= $app->input->get('value', '', 'raw');
 		$id			= $app->input->get('id', '', 'string');
 

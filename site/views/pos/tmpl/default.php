@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 
 echo '<div id="ph-pc-pos-site">';
 
@@ -21,13 +22,13 @@ echo '<div id="phDialogConfirm" class="modal fade" tabindex="-1" role="dialog">'
 echo '<div class="modal-dialog" role="document">';
 echo '<div class="modal-content">';
 echo '<div class="modal-header">';
-echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-echo '<h4 class="modal-title">'. JText::_('COM_PHOCACART_CONFIRM').'</h4>';
+echo '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+echo '<h4 class="modal-title">'. Text::_('COM_PHOCACART_CONFIRM').'</h4>';
 echo '</div>';
 echo '<div class="modal-body"></div>';
 echo '<div class="modal-footer">';
-echo '<button type="button" class="btn btn-default" data-dismiss="modal">'. JText::_('COM_PHOCACART_CANCEL').'</button>';
-echo '<button id="phDialogConfirmSave" type="button" class="btn btn-success">'. JText::_('COM_PHOCACART_OK').'</button>';
+echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'. Text::_('COM_PHOCACART_CANCEL').'</button>';
+echo '<button id="phDialogConfirmSave" type="button" class="btn btn-success">'. Text::_('COM_PHOCACART_OK').'</button>';
 echo '</div>';
 echo '</div>';
 echo '</div>';
@@ -66,7 +67,7 @@ echo '</div>';
 echo '<div class="ph-pos-main-content">';
 
 // HEADER - NOT AJAX
-echo '<div id="ph-pc-pos-box" class="pc-pos-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo '<div id="ph-pc-pos-box" class="pc-view pc-pos-view'.$this->p->get( 'pageclass_sfx' ).'">';
 echo '<div id="phPosContentBox">';
 echo $this->loadTemplate('main_content_products');// divided into more different views - as default main will display products
 

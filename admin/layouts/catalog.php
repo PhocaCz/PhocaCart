@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 $d 		        = $displayData;
 $price 	        = new PhocacartPrice();
@@ -25,13 +28,13 @@ $p['printed_catalog_display_price_label'] 	    = $d['params']->get( 'printed_cat
 
 
 if ($p['printed_catalog_enable'] == 0) {
-    echo JText::_('COM_PHOCACART_ERROR_CREATING_PRINTED_CATALOG_DISABLED');
+    echo Text::_('COM_PHOCACART_ERROR_CREATING_PRINTED_CATALOG_DISABLED');
     exit;
 }
 
 
-$document = JFactory::getDocument();
-$document->setTitle(JText::_($p['printed_catalog_document_title']));
+$document = Factory::getDocument();
+$document->setTitle(Text::_($p['printed_catalog_document_title']));
 
 
 $s = '<style>';
@@ -59,7 +62,7 @@ if ($d['format'] == 'pdf'){
 } else if ($d['format'] == 'html'){
     $document->addCustomTag($s);
 } else if ($d['format'] == 'raw') {
-    echo '<html><head><title>'.JText::_('COM_PHOCACART_CATALOG').'</title>'.$s.'</head><body>';
+    echo '<html><head><title>'.Text::_('COM_PHOCACART_CATALOG').'</title>'.$s.'</head><body>';
 }
 
 
@@ -105,7 +108,7 @@ foreach($d['items'] as $k => $v) {
 	if ($v['image'] != '') {
 
 	    $image 	= PhocacartImage::getThumbnailName($pathItem, $v['image'], 'small');
-	    echo '<img class="ph-catalog-img" src="'. JURI::root(true) . '/' . $image->rel.'" alt="'.PhocacartText::filterValue($v['title'], 'text').'" />';
+	    echo '<img class="ph-catalog-img" src="'. Uri::root(true) . '/' . $image->rel.'" alt="'.PhocacartText::filterValue($v['title'], 'text').'" />';
     }
 	echo '</td>';
 

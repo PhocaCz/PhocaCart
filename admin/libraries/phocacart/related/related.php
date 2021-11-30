@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartRelated
 {
@@ -16,7 +17,7 @@ class PhocacartRelated
 
 
 		if ((int)$productId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_product_related'
 					. ' WHERE product_a = '. (int)$productId;
@@ -54,7 +55,7 @@ class PhocacartRelated
 	public static function getRelatedItemsById($productId, $select = 0, $frontend = 0)
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $wheres = array();
         $wheres[] = 't.product_a = ' . (int)$productId;
         $catid = 0;
@@ -166,7 +167,7 @@ class PhocacartRelated
 	}
 
 	public static function correctProductId($productIdChange) {
-		$db 		= JFactory::getDBO();
+		$db 		= Factory::getDBO();
 		if (!empty($productIdChange)) {
 			foreach($productIdChange as $new => $old) {
 				if ($new == $old) {

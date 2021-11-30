@@ -7,16 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 // ORDER PROCESSED - STANDARD PRODUCTS (ORDER/NO DOWNLOAD)
-echo '<div class="alert alert-success">';
-
 if (isset($this->t['infomessage']['order_nodownload']) && $this->t['infomessage']['order_nodownload'] != '') {
-	echo $this->t['infomessage']['order_nodownload'];
+	$msg = $this->t['infomessage']['order_nodownload'];
 } else {
-	echo JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
-	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PROCESSED_ADDITIONAL_INFO');
+	$msg = Text::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
+	$msg .= '</br>' . Text::_('COM_PHOCACART_ORDER_PROCESSED_ADDITIONAL_INFO');
 }
-
-echo '</div>';
+echo $layoutAl->render(array('type' => 'success', 'text' => $msg));
 ?>

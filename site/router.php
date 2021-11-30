@@ -1,837 +1,346 @@
 <?php
 /**
  * @package     Joomla.Site
- * @subpackage  com_phocacart
+ * @subpackage  com_phocagallery
  *
- * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
-/*
-if (! class_exists('PhocacartLoader')) {
+use Joomla\CMS\Component\Router\RouterView;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Component\Router\RouterViewConfiguration;
+use Joomla\CMS\Component\Router\Rules\MenuRules;
+use Joomla\CMS\Component\Router\Rules\StandardRules;
+use Joomla\CMS\Component\Router\Rules\NomenuRules;
+use Joomla\CMS\Factory;
+use Joomla\Database\ParameterType;
+
+if (! class_exists('PhocaCartLoader')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
 }
-phocacart import('phocacart.category.category');
-*/
-JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
 
-class PhocacartRouter extends JComponentRouterBase
+class PhocacartRouter extends RouterView
 {
-	public function build(&$query) {
+	protected $noIDs = false;
 
+	public function __construct($app = null, $menu = null)
+	{
 
-		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos', 'submit');
-		$viewsId		= array('category', 'item', 'items', 'feed');
+	    $viewsNoId 		= array('checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit');
+	    $viewsId		= array('feed');
 		$viewsNotOwnId	= array('question');
-		$viewsAll	= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
 
-		$segments = array();
-
-		// Get a menu item based on Itemid or currently active
-		$params = PhocacartUtils::getComponentParameters();
-		//$advanced = $params->get('sef_advanced_link', 0);
-		$advanced = $params->get('remove_sef_ids', 0);// REMOVE IDs
-
-		// Preview from administration
-		$app = JFactory::getApplication();
-		$viewFrom = $app->input->get('view');
-
-
-
-		if ($viewFrom == 'phocacartitem') {
-			$advanced = 0;// force displaying IDs in administration preview
-		}
-
-		// Unset limitstart=0 since it's pointless
-		if (isset($query['limitstart']) && $query['limitstart'] == 0)
-		{
-			unset($query['limitstart']);
-		}
-
-		// We need a menu item.  Either the one specified in the query, or the current active one if none specified
-		if (empty($query['Itemid']))
-		{
-			$menuItem = $this->menu->getActive();
-			$menuItemGiven = false;
-		}
-		else
-		{
-			$menuItem = $this->menu->getItem($query['Itemid']);
-			$menuItemGiven = true;
-		}
-
-
-
-		// Check again
-		if ($menuItemGiven && isset($menuItem) && $menuItem->component != 'com_phocacart')
-		{
-			$menuItemGiven = false;
-			unset($query['Itemid']);
-		}
-
-		if (isset($query['view']))
-		{
-			$view = $query['view'];
-		}
-		else
-		{
-			// We need to have a view in the query or it is an invalid URL
-
-			return $segments;
-		}
-
-
-
-		// Are we dealing with an item or category that is attached to a menu item?
-	/*	if (($menuItem instanceof stdClass)
-			&& $menuItem->query['view'] == $query['view']
-			&& isset($query['id'])
-			&& $menuItem->query['id'] == (int) $query['id'])
-		{*/
-
-		if (($menuItem instanceof stdClass)
-			&& $menuItem->query['view'] == $query['view']
-			&& isset($query['view']) && in_array($query['view'], $viewsNoId)
-			) {
-
-			unset($query['view']);
-
-			if (isset($query['catid'])){
-				unset($query['catid']);
-			}
-
-			if (isset($query['layout'])){
-				unset($query['layout']);
-			}
-
-			unset($query['id']);
-
-
-
-			return $segments;
-		}
-
-
-		// Category
-		// Item
-		if ($view == 'category' || $view == 'item'){
-			if (!$menuItemGiven){
-				$segments[] = $view;
-			}
-
-
-			unset($query['view']);
-
-
-
-			if ($view == 'item')
-			{
-				if (isset($query['id']) && isset($query['catid']) && $query['catid'])
-				{
-					$catid = $query['catid'];
-
-
-
-					// Make sure we have the id and the alias
-					if (strpos($query['id'], ':') === false)
-					{
-
-
-						$db = JFactory::getDbo();
-						$dbQuery = $db->getQuery(true)
-							->select('alias')
-							->from('#__phocacart_products')
-							->where('id=' . (int) $query['id']);
-						$db->setQuery($dbQuery);
-						$alias = $db->loadResult();
-						$query['id'] = $query['id'] . ':' . $alias;
-
-					}
-				}
-				else
-				{
-					// We should have these two set for this view.  If we don't, it is an error
-
-					return $segments;
-				}
-			} else {
-				if (isset($query['id']))
-				{
-					$catid = $query['id'];
-				}
-				else
-				{
-					// We should have id set for this view.  If we don't, it is an error
-					return $segments;
-				}
-			}
-
-			if ($menuItemGiven && isset($menuItem->query['id']))
-			{
-				$mCatid = $menuItem->query['id'];
-			}
-			else
-			{
-				$mCatid = 0;
-			}
-
-			//$categories = JCategories::getInstance('Content');
-			//$category = $categories->get($catid);
-			$category = PhocacartCategory::getCategoryById($catid);
-
-
-			if (!$category)
-			{
-				// We couldn't find the category we were given.  Bail.
-				return $segments;
-			}
-
-
-			$path = PhocacartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
-
-
-			$array = array();
-
-			foreach ($path as $id)
-			{
-				$id = $id['id']. ':'.$id['alias'];
-				if ((int) $id == (int) $mCatid)
-				{
-					break;
-				}
-
-				list($tmp, $id) = explode(':', $id, 2);
-
-				$array[] = $id;
-			}
-
-			$array = array_reverse($array);
-
-			if (!$advanced && count($array))
-			{
-				$array[0] = (int) $catid . ':' . $array[0];
-			}
-
-			$segments = array_merge($segments, $array);
-
-			if ($view == 'item')
-			{
-				if ($advanced)
-				{
-					list($tmp, $id) = explode(':', $query['id'], 2);
-				}
-				else
-				{
-					$id = $query['id'];
-				}
-
-				$segments[] = $id;
-			}
-
-			unset($query['id']);
-			unset($query['catid']);
-		}
-
-		// Question
-		if ($view == 'question'){
-			if (!$menuItemGiven){
-				$segments[] = $view;
-			}
-
-			if (isset($query['view'])) {
-				$segments[]	= $query['view'];
-				unset($query['view']);
-			}
-			//unset($query['view']);
-
-			if (isset($query['id']) && isset($query['catid']) && $query['catid']) {
-				$catid = $query['catid'];
-
-				// Make sure we have the id and the alias
-				if (strpos($query['id'], ':') === false) {
-
-
-					$db = JFactory::getDbo();
-					$dbQuery = $db->getQuery(true)
-						->select('alias')
-						->from('#__phocacart_products')
-						->where('id=' . (int) $query['id']);
-					$db->setQuery($dbQuery);
-					$alias = $db->loadResult();
-					$query['id'] = $query['id'] . ':' . $alias;
-
-				}
-			} else {
-				// We should have these two set for this view.  If we don't, it is an error
-
-				return $segments;
-			}
-
-			if ($menuItemGiven && isset($menuItem->query['id'])) {
-				$mCatid = $menuItem->query['id'];
-			}
-			else
-			{
-				$mCatid = 0;
-			}
-
-			$category = PhocacartCategory::getCategoryById($catid);
-
-
-			if (!$category) {
-				// We couldn't find the category we were given.  Bail.
-				return $segments;
-			}
-
-
-			$path = PhocacartCategory::getPath(array(), (int)$category->id, (int)$category->parent_id, $category->title, $category->alias);
-
-
-			$array = array();
-
-			foreach ($path as $id)
-			{
-				$id = $id['id']. ':'.$id['alias'];
-				if ((int) $id == (int) $mCatid)
-				{
-					break;
-				}
-
-				list($tmp, $id) = explode(':', $id, 2);
-
-				$array[] = $id;
-			}
-
-			$array = array_reverse($array);
-
-			if (!$advanced && count($array))
-			{
-				$array[0] = (int) $catid . ':' . $array[0];
-			}
-
-			$segments = array_merge($segments, $array);
-
-
-			if ($advanced)
-			{
-				list($tmp, $id) = explode(':', $query['id'], 2);
-			}
-			else
-			{
-				$id = $query['id'];
-			}
-
-			$segments[] = $id;
-
-
-			unset($query['id']);
-			unset($query['catid']);
-		}
-		/*
-		if ($view == 'question') {
-
-			if (!$menuItemGiven){
-				$segments[] = $view;
-			}
-			if (isset($query['view'])) {
-				$segments[]	= $query['view'];
-				unset($query['view']);
-			}
-			if (isset($query['catid'])) {
-				$segments[]	= $query['catid'];
-				unset($query['catid']);
-			}
-			if (isset($query['id'])) {
-				$segments[]	= $query['id'];
-				unset($query['id']);
-			}
-		}*/
-
-		if (!isset($query['id'])) { // Check if a id was specified.
-			if (isset($query['view']) && in_array($query['view'], $viewsNoId)) {
-				$segments[]	= $query['view']; // Every View without ID
-				unset($query['view']);
-			}
-
-		} else {
-			if (isset($query['view']) && in_array($query['view'], $viewsId)) {
-
-				$segments[]	= $query['view']; // Every View with ID except (category and item): items, feed
-				$segments[]	= $query['id'];
-				unset($query['id']);
-				unset($query['view']);
-			}
-
-		}
-
-
-
-		/*
-		 * If the layout is specified and it is the same as the layout in the menu item, we
-		 * unset it so it doesn't go into the query string.
-		 */
-		if (isset($query['layout']))
-		{
-			if ($menuItemGiven && isset($menuItem->query['layout']))
-			{
-				if ($query['layout'] == $menuItem->query['layout'])
-				{
-					unset($query['layout']);
-				}
-			}
-			else
-			{
-				if ($query['layout'] == 'default')
-				{
-					unset($query['layout']);
-				}
-			}
-		}
-
-		$total = count($segments);
-
-		for ($i = 0; $i < $total; $i++)
-		{
-			$segments[$i] = str_replace(':', '-', $segments[$i]);
-		}
-
-
-
-		return $segments;
-	}
-
-	public function parse(&$segments) {
-
-
-
-
-		$viewsNoId 		= array('categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'items', 'wishlist', 'pos', 'submit');
-		$viewsId		= array('category', 'item', 'items', 'feed');
-		$viewsNotOwnId	= array('question');
-		$viewsAll		= array_merge($viewsNoId, $viewsId, $viewsNotOwnId);
-
-		// question - can be an ID page (id of product) but without ID page - direct link
-
-		$total = count($segments);
-		$vars = array();
-
-		// Get the active menu item.
-		$item = $this->menu->getActive();
-		$params = PhocacartUtils::getComponentParameters();
-		//$advanced = $params->get('sef_advanced_link', 0);
-		$advanced = $params->get('remove_sef_ids', 0);// REMOVE IDs
-		$db = JFactory::getDbo();
-
-		if($advanced == 1){
-
-            $segmentId = '';
-            $segmentCatid = '';
-            // As default first part is category but it can even be view
-            // If it is a view, shift they key to next part
-            $segmentCatidKey = 0;
-
-            for ($i = 0; $i < $total; $i++){
-
-                if(isset($segments[$i]) && $i == 0 && in_array($segments[$i], $viewsNotOwnId)) {
-                    $segmentCatidKey = 1;// First part is a view (e.g. Quick View), shift the key to next part
-                    $vars['view'] = $segments[$i];
-                    continue;
+		$params = ComponentHelper::getParams('com_phocacart');
+		$this->noIDs = (bool)$params->get('remove_sef_ids');
+
+
+        // Is the main menu type categories view or items view - does categories view exist?
+		$component 		    = ComponentHelper::getComponent('com_phocacart');
+		$attributes 	    = array('component_id');
+		$values     	    = array($component->id);
+		$items              = $menu->getItems($attributes, $values);
+		$isCategoriesView   = false;
+		$isItemsView        = false;
+		if (!empty($items)) {
+		    foreach($items as $k => $v) {
+		        if(isset($v->query['view']) && $v->query['view'] == 'categories') {
+		            $isCategoriesView = true;
+                } else if(isset($v->query['view']) && $v->query['view'] == 'items') {
+		            $isItemsView = true;
                 }
-
-                $segmentCatidTemp = '';
-                $query = $db->getQuery(true)
-                    ->select($db->quoteName(array('id')))
-                    ->from($db->quoteName('#__phocacart_categories'))
-                    ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
-                $db->setQuery($query);
-                $segmentCatidTemp = $db->loadResult();
-                if(!empty($segmentCatidTemp)) {
-                    $segmentCatid = $segmentCatidTemp;
-                    continue;
-                }
-
-                //we found or did not find the category ID, we will check it later
-                if (empty($segmentId)){
-
-                    //$segmentProductId = '';
-                    $query = $db->getQuery(true)
-                        ->select($db->quoteName(array('id')))
-                        ->from($db->quoteName('#__phocacart_products'))
-                        ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
-                    $db->setQuery($query);
-                    $segmentId = $db->loadResult();
-
-                    if(!empty($segmentId)) {
-
-                        $segments[$i] = $segmentId.'-'.$segments[$i];
-                    }
-                }
-
             }
-
-            if(!empty($segmentCatid)) {
-                //we found one or more category IDS, and add the last ID to the beginning of the line (to the first segment)
-                $segments[$segmentCatidKey] = $segmentCatid.'-'.$segments[$segmentCatidKey];
-            }
-            //disable advanced mode and then the router works as before
-            $advanced = 0;
         }
 
-		/*if($advanced == 1){
+		if ($isItemsView && !$isCategoriesView) {
 
-		    $segmentId = '';
-            $segmentCatid = '';
+		    // Items view exist but Categories view not
+            // Then items view is the alternative to categories view
+		    $categories = new RouterViewConfiguration('items');
+		    $categories->setKey('id');
+		    $categories->setName('items');
+		    $this->registerView($categories);
 
-            for ($i = 0; $i < $total; $i++){
+        } else {
 
-                if(isset($segments[$i]) && $i == 0 && in_array($segments[$i], $viewsNotOwnId)) {
-                    $vars['view'] = $segments[$i];
-                    continue;
-                }
+		    // In all other cases standard router is done
+		    $categories = new RouterViewConfiguration('categories');
+		    $categories->setKey('id');
+		    $this->registerView($categories);
 
-                if(empty($segmentCatid)){
+		    $items = new RouterViewConfiguration('items');
+		    //$items->setKey('id');
+		    $items->setParent($categories, 'parent_id');
+		    $items->setName('items');
+		    $this->registerView($items);
 
-                    $query = $db->getQuery(true)
-                        ->select($db->quoteName(array('id')))
-                        ->from($db->quoteName('#__phocacart_categories'))
-                        ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
-                    $db->setQuery($query);
-                    $segmentCatid = $db->loadResult();
-                    if(!empty($segmentCatid)) {
-                        $segments[$i] = $segmentCatid.'-'.$segments[$i];
-                        continue;
-                    }
+        }
 
-                }
 
-                if (empty($segmentId)){
+		$category = new RouterViewConfiguration('category');
+		$category->setKey('id')->setParent($categories, 'parent_id')->setNestable();
+		$this->registerView($category);
 
-                    //$segmentProductId = '';
-                    $query = $db->getQuery(true)
-                        ->select($db->quoteName(array('id')))
-                        ->from($db->quoteName('#__phocacart_products'))
-                        ->where($db->quoteName('alias') . ' = ' . $db->quote($segments[$i]));
-                    $db->setQuery($query);
-                    $segmentId = $db->loadResult();
 
-                    if(!empty($segmentId)) {
-                        $segments[$i] = $segmentId.'-'.$segments[$i];
-                    }
-                }
+	/*	$categoriesQ = new RouterViewConfiguration('categoriesq');
+		$categoriesQ->setKey('id');
+		$this->registerView($categoriesQ);
 
-            }
-            $advanced = 0;
+		$categoryQ = new RouterViewConfiguration('categoryq');
+		$categoryQ->setKey('id')->setParent($categories, 'parent_id')->setNestable();
+		$this->registerView($categoryQ);*/
+
+
+
+
+		//$itemq = new RouterViewConfiguration('question');
+		//$itemq->setKey('qid')->setParent($category, 'catid');//->setNestable();
+		//$this->registerView($itemq);
+
+
+		//$q = new RouterViewConfiguration('question2');
+		//$this->registerView($q);
+
+		//$question = new RouterViewConfiguration('question');
+		//$question->setKey('id')->setParent($q)->setParent($category, 'catid');//->setNestable();
+		//$question->setName('question');
+		//$this->registerView($question);
+
+/*		$items = new RouterViewConfiguration('items');
+		$items->setParent($categories, 'parent_id');
+		$items->setName('items');
+		$this->registerView($items);
+*/
+		$item = new RouterViewConfiguration('item');
+		$item->setKey('id')->setParent($category, 'catid');//->setNestable();
+		$this->registerView($item);
+
+
+
+
+		$question = new RouterViewConfiguration('question');
+		$question->setName('question');
+		$question->setParent($categories, 'parent_id');
+		$question->setParent($category, 'catid');
+		$question->setParent($item, 'productid');
+		$question->setKey('id');// ID is not used by question but we need it because of SEF url (id is transformed to suffix "question" and product id replaces the ID in process
+                                // Question is managed by product id, not by question id
+		$this->registerView($question);
+
+        foreach ($viewsId as $k => $v) {
+            $it = new RouterViewConfiguration($v);
+		    $it->setParent($categories);
+		    $it->setName($v);
+		    $it->setKey('id');
+		    $this->registerView($it);
+        }
+
+        foreach ($viewsNoId as $k => $v) {
+            $it = new RouterViewConfiguration($v);
+            $it->setParent($categories, 'parent_id');
+		    $it->setName($v);
+		    $this->registerView($it);
+        }
+
+       /* foreach ($viewsNotOwnId as $k => $v) {
+           $it = new RouterViewConfiguration($v);
+
+		    //$it->setParent($categories);
+		    //$it->setParent($category, 'catid');
+            //$it->setParent($item, 'id');
+		    $it->setName($v);
+            //$it->setKey('id');
+            //$it->setKey('qid');
+
+            $this->registerView($it);
         }*/
 
-		for ($i = 0; $i < $total; $i++) {
-		    $segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);
-		}
+		parent::__construct($app, $menu);
+
+		phocacartimport('phocacart.path.routerrules');
+		phocacartimport('phocacart.category.category');
+		$this->attachRule(new MenuRules($this));
+		$this->attachRule(new PhocaCartRouterrules($this));
+		$this->attachRule(new StandardRules($this));
+		$this->attachRule(new NomenuRules($this));
+	}
 
 
-		// Count route segments
-		$count = count($segments);
+	/*public function getCategoriesqSegment($id, $query) {
+		return $this->getCategorySegment($id, $query);
+	}
+	public function getCategoryqSegment($id, $query) {
+		return $this->getCategorySegment($id, $query);
+	}*/
 
+	public function getCategoriesSegment($id, $query) {
+		return $this->getCategorySegment($id, $query);
+	}
 
-		/*
-		 * Standard routing for items.  If we don't pick up an Itemid then we get the view from the segments
-		 * the first segment is the view and the last segment is the id of the item or category.
-		 */
-		if (!isset($item)) {
-			$vars['view'] = $segments[0];
+	public function getItemsSegment($id, $query) {
+		return $this->getCategorySegment($id, $query);
+	}
 
-			// Called if no menu item created
-			$vars['id'] = $segments[$count - 1];
+	public function getCategorySegment($id, $query) {
+	    $category = PhocaCartCategory::getCategoryById($id);
 
-			unset($segments[0]);
-			return $vars;
-		}
+		if (isset($category->id)) {
+		    $path = PhocaCartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $category->title, $category->alias);
+		    //$path = array_reverse($path, true);
+		    //$path = array_reverse($category->getPath(), true);
+			$path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
 
-
-		// First handle views without ID
-		if ($count == 1) {
-			if(isset($segments[0]) && in_array($segments[0], $viewsNoId)) {
-					$vars['view']  = $segments[0];
-				unset($segments[0]);
-				return $vars;
-			}
-
-			// Question can include ID/CATID but can be without ID/CATID
-
-			if(isset($segments[0]) && in_array($segments[0], $viewsNotOwnId)) {
-					$vars['view']  = $segments[0];
-
-				return $vars;
-			}
-		}
-
-
-
-		/*
-		 * If there is only one segment, then it points to either an item or a category.
-		 * We test it first to see if it is a category.  If the id and alias match a category,
-		 * then we assume it is a category.  If they don't we assume it is an item
-		 */
-
-		if ($count == 1) {
-			// We check to see if an alias is given.  If not, we assume it is an item CATEGORY BETTER
-			// Mostly handling of wrong URl: categories/wrong-alias ( return category = 0, no category found)
-			//                               category/wrong-alias (return item = 0, no product found)
-			if (strpos($segments[0], ':') === false)
-			{
-				if (isset($item->query['view']) && $item->query['view'] == 'category') {
-					$vars['view'] = 'item';
-				} else if (isset($item->query['view']) && $item->query['view'] == 'categories') {
-					$vars['view'] = 'category';
-				} else {
-					$vars['view'] = 'categories';
-				}
-
-				$vars['id'] = (int) $segments[0];
-
-				return $vars;
-			}
-
-			list($id, $alias) = explode(':', $segments[0], 2);
-
-			// First we check if it is a category
-			//- $category = JCategories::getInstance('Content')->get($id);
-			$category = PhocacartCategory::getCategoryById($id);
-
-
-			if ($category && $category->alias == $alias)
-			{
-				$vars['view'] = 'category';
-				$vars['id'] = $id;
-				unset($segments[0]);
-				return $vars;
-			} else {
-				// TO DO specify catid - load from libraries
-				$query = $db->getQuery(true)
-					->select($db->quoteName(array('alias', 'catid')))
-					->from($db->quoteName('#__phocacart_products'))
-					->where($db->quoteName('id') . ' = ' . (int) $id);
-				$db->setQuery($query);
-				$item1 = $db->loadObject();
-
-
-				if ($item1) {
-					if ($item1->alias == $alias) {
-
-						$vars['view'] 	= 'item';
-						$vars['id'] 	= (int) $id;
-						$vars['catid']	 = (int) $item1->catid;
-
-						// We have direct link to category view and item1->catid is null
-						if ((int) $vars['catid'] == 0 && isset($item->query['id']) && $item->query['id'] > 0) {
-							$vars['catid'] = (int)$item->query['id'];
-						}
-
-
-						return $vars;
-					}
+			if ($this->noIDs) {
+				foreach ($path as &$segment){
+					list($id, $segment) = explode(':', $segment, 2);
 				}
 			}
+			return $path;
+		}
+		return array();
+	}
+
+	public function getItemSegment($id, $query) {
+
+		if (!strpos($id, ':')) {
+			$db = Factory::getDbo();
+			$dbquery = $db->getQuery(true);
+			$dbquery->select($dbquery->qn('alias'))
+				->from($dbquery->qn('#__phocacart_products'))
+				->where('id = ' . $dbquery->q($id));
+			$db->setQuery($dbquery);
+			$id .= ':' . $db->loadResult();
 		}
 
-		/*
-		 * If there was more than one segment, then we can determine where the URL points to
-		 * because the first segment will have the target category id prepended to it.  If the
-		 * last segment has a number prepended, it is an item, otherwise, it is a category.
-		 */
-
-
-		if (!$advanced) {
-
-			$view 	= '';
-			$id 	= 0;
-			$catid 	= 0;
-			if ($count == 3) {
-
-				// Second part can be category/subcategory string
-				$second = explode(':', $segments[1]);
-
-				if (isset($second[0]) && (int)$second[0] > 0) {
-					// Question
-					$view 		= $segments[0];
-					$cat_id 	= (int)$segments[1];
-					$item_id 	= (int)$segments[2];
-
-				} else {
-					$view 		= 'item';// can be category, right view will be solved after
-					$cat_id 	= (int)$segments[0];
-					// $segments[1] is a part of category/subcategory string
-					$item_id 	= (int)$segments[2];
-
-				}
-
-			} else {
-				// Item
-				$view		= '';
-				$cat_id 	= (int)$segments[0];
-				$item_id 	= (int)$segments[$count - 1];
-
-			}
-
-
-			if ($cat_id > 0) {
-				if ($item_id > 0) {
-					if ($view != '') {
-						$vars['view'] = $view;
-					} else {
-						$vars['view'] = 'item';
-					}
-
-					$vars['catid'] = $cat_id;
-					$vars['id'] = $item_id;
-
-
-				} else {
-					$vars['view'] = 'category';
-					$vars['id'] = $cat_id;
-				}
-			} else {
-				if ($item_id > 0)
-				{
-					if ($count == 3) {
-						$vars['view'] 	= $view;
-						$vars['catid'] 	= $cat_id;
-						$vars['id'] 	= $item_id;
-					} else {
-						// Other than category or item view with ID (items, feed)
-						$vars['view'] = $segments[0];
-						$vars['id'] = $item_id;
-					}
-				}
-			}
-
-		/*	if (empty($vars) && count($segments) > 1) {
-
-				throw new Exception(JText::_('Nothing found'), 404);
-				return false;
-			}
-		*/
-
-			unset($segments[0]);
-			unset($segments[1]);
-			return $vars;
+		if ($this->noIDs) {
+			list($void, $segment) = explode(':', $id, 2);
+			return array($void => $segment);
 		}
-/*
-		// We get the category id from the menu item and search from there
-		if (isset($item->query['id'])) {
-			$id = $item->query['id'];
-		} else {
 
-			if ($count == 3) {
-				// Question
+		return array((int) $id => $id);
+	}
 
-				$id 	= (int)$segments[$count - 2];
+	public function getQuestionSegment($id, $query) {
 
-			} else {
-				// Item
-				$id 	= (int)$segments[0];
+        // Specidific case
+        // catid - category id
+        // productid - product id
+        // id - question id ( will be always 'question')
+        return array((int) $id => 'question');
+
+	}
+
+
+	public function getQuestionId($segment, $query) {
+	    return $query['id'];// We need ID of product id
+    }
+
+	public function getCategoryId($segment, $query) {
+
+
+	    if ($this->noIDs)  {
+	        $db = Factory::getDbo();
+			$dbquery = $db->getQuery(true);
+			$dbquery->select($db->quoteName('id'))
+				->from($db->quoteName('#__phocacart_categories'))
+				->where(
+					[
+						$db->quoteName('alias') . ' = :alias',
+						$db->quoteName('parent_id') . ' = :parent_id',
+					]
+				)
+				->bind(':alias', $segment)
+				->bind(':parent_id', $query['id'], ParameterType::INTEGER);
+			$db->setQuery($dbquery);
+
+			return (int) $db->loadResult();
+		}
+
+	    if (isset($query['id'])) {
+
+		    $category = false;
+		    if ((int)$query['id'] > 0) {
+                $category = PhocaCartCategory::getCategoryById($query['id']);
+            } else if ((int)$segment > 0) {
+		        $category = PhocaCartCategory::getCategoryById((int)$segment);
+                if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
+                    // We don't have root category with 0 so we need to start with segment one
+                    return (int)$category->id;
+                }
+            }
+
+			if ($category) {
+                if (!empty($category->subcategories)){
+
+                    foreach ($category->subcategories as $child) {
+                        if ($this->noIDs) {
+                            if ($child->alias == $segment) {
+                                return $child->id;
+                            }
+                        } else {
+                            // We need to check full alias because ID can be same for Category and Item
+                            $fullAlias = (int)$child->id . '-'.$child->alias;
+                            if ($fullAlias == $segment) {
+                                return $child->id;
+                            }
+                        }
+                    }
+                }
 			}
 		}
 
+		return false;
+	}
 
+	public function getCategoriesId($segment, $query) {
+		return $this->getCategoryId($segment, $query);
+	}
 
+	public function getItemsId($segment, $query) {
+		return $this->getCategoryId($segment, $query);
+	}
 
-		$category = PhocacartCategory::getCategoryById($id);
+	public function getItemId($segment, $query)
+	{
 
-		if (!$category)
-		{
-			throw new Exception(JText::_('COM_PHOCACART_ERROR_PARENT_CATEGORY_NOT_FOUND'), 404);
-			return $vars;
+		if ($this->noIDs) {
+			$db = Factory::getDbo();
+		    $query = 'SELECT a.id';
+		    $query .= ' FROM #__phocacart_products AS a'
+				.' LEFT JOIN #__phocacart_product_categories AS pc ON a.id = pc.product_id'
+			    .' WHERE a.alias = '.$db->q($segment);
+		    $db->setQuery($query);
+			return (int) $db->loadResult();
 		}
+		return (int) $segment;
+	}
+	/*
+	public function build(&$query)
+	{
 
-		$categories = PhocacartCategory::getChildren($category->id);
-		$vars['catid'] = $id;
-		$vars['id'] = $id;
-		$found = 0;
+		return parent::build($query);
+	}
+*/
+	public function parse(&$segments)
+	{
 
-		foreach ($segments as $segment) {
-			$segment = str_replace(':', '-', $segment);
-
-			foreach ($categories as $category)
-			{
-				if ($category->alias == $segment)
-				{
-					$vars['id'] = $category->id;
-					$vars['catid'] = $category->id;
-					$vars['view'] = 'category';
-					$categories = PhocacartCategory::getChildren($category->id);
-					$found = 1;
-
-					break;
-				}
-			}
-
-			if ($found == 0)
-			{
-				if ($advanced)
-				{
-					$db = JFactory::getDbo();
-					$query = $db->getQuery(true)
-						->select($db->quoteName('id'))
-						->from('#__phocacart_item')
-						->where($db->quoteName('catid') . ' = ' . (int) $vars['catid'])
-						->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
-					$db->setQuery($query);
-					$cid = $db->loadResult();
-				}
-				else
-				{
-					$cid = $segment;
-				}
-
-				$vars['id'] = $cid;
-				$vars['view'] = 'item';
-			}
-
-			$found = 0;
-		}*/
-
-
-
-		return $vars;
+		return parent::parse($segments);
 	}
 }
 
-/**
- * Content router functions
- *
- * These functions are proxys for the new router interface
- * for old SEF extensions.
- *
- * @param   array  &$query  An array of URL arguments
- *
- * @return  array  The URL arguments to use to assemble the subsequent URL.
- *
- * @deprecated  4.0  Use Class based routers instead
- */
-function PhocaCartBuildRoute(&$query)
-{
-	$router = new PhocacartRouter;
+function PhocaCartBuildRoute(&$query) {
+
+	$app = Factory::getApplication();
+	$router = new PhocaCartRouter($app, $app->getMenu());
 
 	return $router->build($query);
 }
 
-/**
- * Parse the segments of a URL.
- *
- * This function is a proxy for the new router interface
- * for old SEF extensions.
- *
- * @param   array  $segments  The segments of the URL to parse.
- *
- * @return  array  The URL attributes to be used by the application.
- *
- * @since   3.3
- * @deprecated  4.0  Use Class based routers instead
- */
-function PhocaCartParseRoute($segments)
-{
-	$router = new PhocacartRouter;
+function PhocaCartParseRoute($segments) {
+
+	$app = Factory::getApplication();
+	$router = new PhocaCartRouter($app, $app->getMenu());
 
 	return $router->parse($segments);
 }

@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Text;
 
 $o		= array();
 $l		= '<';
@@ -47,7 +49,7 @@ if (!empty($this->t['products'])) {
          $paramsFeedA = array();
         if (isset($v->params_feed) && $v->params_feed != '') {
 
-            $registry = new JRegistry;
+            $registry = new Registry;
             $registry->loadString($v->params_feed);
             $paramsFeedA = $registry->toArray();
 
@@ -383,7 +385,7 @@ if (!empty($this->t['products'])) {
             if ($this->p['item_reward_points_name'] != '' && $this->p['item_reward_points_value'] != '') {
                 $oIRP[] = $l.$this->p['item_reward_points'].$r;
 
-                $oIRP[] = $l.$this->p['item_reward_points_name'].$r.JText::_('COM_PHOCACART_FEED_TXT_PRODUCT_REWARD_POINTS').$e.$this->p['item_reward_points_name'].$r;
+                $oIRP[] = $l.$this->p['item_reward_points_name'].$r.Text::_('COM_PHOCACART_FEED_TXT_PRODUCT_REWARD_POINTS').$e.$this->p['item_reward_points_name'].$r;
                 $oIRP[] = $l.$this->p['item_reward_points_value'].$r.(int)$v->points_received.$e.$this->p['item_reward_points_value'].$r;
                 // Possible RATION value
 
@@ -436,7 +438,7 @@ if (!empty($this->t['products'])) {
         }
 
 
-        $oI['params'] .= implode("\n", $oIP);
+        $oI['params'] = implode("\n", $oIP);
 
 
 

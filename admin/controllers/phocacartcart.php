@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocacartCart extends PhocaCartCpControllerPhocaCartCommons
 {
@@ -17,8 +20,8 @@ class PhocaCartCpControllerPhocacartCart extends PhocaCartCpControllerPhocaCartC
 
 	function emptycart() {
 
-		$app	= JFactory::getApplication();
-		if (!JSession::checkToken('request')) {
+		$app	= Factory::getApplication();
+		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
@@ -33,16 +36,16 @@ class PhocaCartCpControllerPhocacartCart extends PhocaCartCpControllerPhocaCartC
 			$model = $this->getModel( 'phocacartcart' );
 
 			if(!$model->emptycart($userid, $vendorid, $ticketid, $unitid, $sectionid)) {
-				$message = JText::_( 'COM_PHOCACART_ERROR_EMPTY_CART' );
+				$message = Text::_( 'COM_PHOCACART_ERROR_EMPTY_CART' );
 				$app->enqueueMessage($message, 'error');
 			} else {
-				$message = JText::_( 'COM_PHOCACART_SUCCESS_EMPTY_CART' );
+				$message = Text::_( 'COM_PHOCACART_SUCCESS_EMPTY_CART' );
 				$app->enqueueMessage($message, 'message');
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacartcart&tmpl=component&userid='.(int)$userid);
 		} else {
 
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartcart&tmpl=component');
 		}
 	}

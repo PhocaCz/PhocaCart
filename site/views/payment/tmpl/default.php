@@ -7,9 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-echo '<div id="ph-pc-payment-box" class="pc-payment-view'.$this->p->get( 'pageclass_sfx' ).'">';
+use Joomla\CMS\Language\Text;
+echo '<div id="ph-pc-payment-box" class="pc-view pc-payment-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_PAYMENT')));
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_PAYMENT')));
 
 echo $this->t['o'];
 

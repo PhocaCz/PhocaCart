@@ -7,6 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Layout\FileLayout;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCartCommon {
 
@@ -14,34 +19,34 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 
 	public function upload() {
 
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		$app		= JFactory::getApplication();
-		$db 		= JFactory::getDBO();
-		$user 		= JFactory::getUser();
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		$app		= Factory::getApplication();
+		$db 		= Factory::getDBO();
+		$user 		= Factory::getUser();
 		$userId		= $user->id;
 		$redirect	= 'index.php?option=com_phocacart&view=phocacartimports';
 		//$file		= JFactory::getApplication()->input->files->get( 'Filedata', null, 'raw');
-		$file		= JFactory::getApplication()->input->files->get( 'Filedata');
+		$file		= Factory::getApplication()->input->files->get( 'Filedata');
 
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$fgets_line_length		= $paramsC->get( 'fgets_line_length', 24576 );
 
 
 
-		if (!JFile::exists($file['tmp_name'])) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_FILE_NOT_EXIST'), 'error');
+		if (!File::exists($file['tmp_name'])) {
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FILE_NOT_EXIST'), 'error');
 			$app->redirect($redirect);
 		}
 
 		if (!isset($file['name'])) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_FILE_NOT_EXIST'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FILE_NOT_EXIST'), 'error');
 			$app->redirect($redirect);
 		}
 
-		$ext =  JFile::getExt($file['name']);
+		$ext =  File::getExt($file['name']);
 
 		if ($ext != 'csv' && $ext != 'txt' && $ext != 'xml') {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_FILE_TYPE_NOT_SUPPORTED'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FILE_TYPE_NOT_SUPPORTED'), 'error');
 			$app->redirect($redirect);
 		}
 
@@ -116,7 +121,7 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 			$db->setQuery($q);
 			$db->execute();
 
-			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'), 'success');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'), 'success');
 		}
 
 		$app->redirect($redirect);
@@ -126,13 +131,13 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 	public function import() {
 
 
-		if (!JSession::checkToken('request')) {
-			$response = array('status' => '0', 'error' => '<div class="alert alert-error">' . JText::_('JINVALID_TOKEN') . '</div>');
+		if (!Session::checkToken('request')) {
+			$response = array('status' => '0', 'error' => '<div class="alert alert-error">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$this->t['import_export_pagination']	= $paramsC->get( 'import_export_pagination', 20 );
 
@@ -159,7 +164,7 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 
 		// IMPORTANT - Layout of component is frontend, but to override it - administration template must be used
 		// line cca: 588: libraries/cms/layout/file.php
-		$layout	= new JLayoutFile('product_import', null, array('client' => 0, 'component' => 'com_phocacart'));
+		$layout	= new FileLayout('product_import', null, array('client' => 0, 'component' => 'com_phocacart'));
 		/*if ($this->t['import_export_type'] == 0) {
 			$d['type'] = 'csv';
 		} else {

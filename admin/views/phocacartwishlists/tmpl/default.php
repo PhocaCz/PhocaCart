@@ -8,8 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -47,18 +52,18 @@ echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-name">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-product">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_PRODUCT', 'productname', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-category">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CATEGORY', 'cattitle', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-name">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-product">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_PRODUCT', 'productname', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-category">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CATEGORY', 'cattitle', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -81,7 +86,7 @@ $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= JRoute::_( $urlEdit. $item->id );
+$linkEdit 		= Route::_( $urlEdit. $item->id );
 
 
 
@@ -92,7 +97,7 @@ echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
 
 $checkO = '';
 if ($item->checked_out) {
-	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 
 // Name
@@ -100,7 +105,7 @@ if ($item->checked_out) {
 
 // Name
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->name) .' <small>('.$this->escape($item->username).')</small>'.'</a>';
+	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->name) .' <small>('.$this->escape($item->username).')</small>'.'</a>';
 } else {
 	$checkO .= $this->escape( $item->name ) .' <small>('.$this->escape($item->username).')</small>';
 }
@@ -120,11 +125,11 @@ echo $r->td($this->escape($item->cattitle), "small");
 
 //echo $r->td($this->escape($item->ip), "small");
 
-//echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
+//echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 //echo $r->td(PhocacartUtils::wordDeleteWhole($item->message, 50), "small");
 
-echo $r->td(JHtml::date($item->date, JText::_('DATE_FORMAT_LC5')), "small");
+echo $r->td(HTMLHelper::date($item->date, Text::_('DATE_FORMAT_LC5')), "small");
 
 echo $r->td($item->id, "small");
 

@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartZone extends JViewLegacy
+class PhocaCartCpViewPhocacartZone extends HtmlView
 {
 	protected $state;
 	protected $item;
@@ -27,7 +33,7 @@ class PhocaCartCpViewPhocacartZone extends JViewLegacy
 		$this->item		= $this->get('Item');
 
 		$media = new PhocacartRenderAdminmedia();
-		JHtml::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
+		HTMLHelper::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -36,32 +42,32 @@ class PhocaCartCpViewPhocacartZone extends JViewLegacy
 	protected function addToolbar() {
 
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-		$bar 		= JToolbar::getInstance('toolbar');
-		$user		= JFactory::getUser();
+		Factory::getApplication()->input->set('hidemainmenu', true);
+		$bar 		= Toolbar::getInstance('toolbar');
+		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 		$class		= ucfirst($this->t['tasks']).'Helper';
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.zone_id'));
 
-		$text = $isNew ? JText::_( $this->t['l'] . '_NEW' ) : JText::_($this->t['l'] . '_EDIT');
-		JToolbarHelper::title(   JText::_( $this->t['l'] . '_ZONE' ).': <small><small>[ ' . $text.' ]</small></small>' , 'globe');
+		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ZONE' ).': <small><small>[ ' . $text.' ]</small></small>' , 'globe');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
-			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
-			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
+			ToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
+			ToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
+			ToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
 
 		if (empty($this->item->id))  {
-			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
+			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
 ?>

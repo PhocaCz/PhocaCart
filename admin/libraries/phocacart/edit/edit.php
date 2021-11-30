@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Table\Table;
 class PhocacartEdit
 {
 	public static function store(&$options) {
@@ -142,11 +143,11 @@ class PhocacartEdit
 
 
 			// TEST CHECKOUT
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 
 			// Get an instance of the row to checkout.
-			JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
-			$table = JTable::getInstance($tableDbName, 'Table');
+			Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
+			$table = Table::getInstance($tableDbName, 'Table');
 
 			if (!$table->load($idRow)) {
 				$options['msg'] = $table->getError();
@@ -170,7 +171,7 @@ class PhocacartEdit
 
 			// DATA
 			$data = array();
-			$db	= JFactory::getDBO();
+			$db	= Factory::getDBO();
 			$data[$column]  = $options['value'];
 
 			if ($column == 'title') {
@@ -215,7 +216,7 @@ class PhocacartEdit
 				PhocacartGroup::updateGroupProductPriceById((int)$idRow, $data['price']);
 			}
 			/*
-			$db	= JFactory::getDBO();
+			$db	= Factory::getDBO();
 			$q	= 'UPDATE '.$tableDb.' SET '.$db->quoteName($column).' = '.$db->quote($options['value']).' WHERE id = '.(int)$idRow;
 
 			$db->setQuery($q);

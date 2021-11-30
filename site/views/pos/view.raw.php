@@ -7,11 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartViewPos extends JViewLegacy
+class PhocaCartViewPos extends HtmlView
 {
 	protected $category;
 	protected $subcategories;
@@ -24,11 +31,13 @@ class PhocaCartViewPos extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$app						= JFactory::getApplication();
-		$document					= JFactory::getDocument();
+		$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+
+		$app						= Factory::getApplication();
+		$document					= Factory::getDocument();
 		$this->p 					= $app->getParams();
 		$this->s					= PhocacartRenderStyle::getStyles();
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 						= Uri::getInstance();
 		$model						= $this->getModel();
 		$this->state				= $this->get('State');
 		$this->t['action']			= $uri->toString();
@@ -47,7 +56,7 @@ class PhocaCartViewPos extends JViewLegacy
 
 
 
-		$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
+		$this->t['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute(0));
 		$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
 
 		$this->t['currency_array']		= PhocacartCurrency::getCurrenciesArray();
@@ -73,7 +82,7 @@ class PhocaCartViewPos extends JViewLegacy
 
 		// 1) CHECK - VENDOR LOGGED IN
 		if (!isset($this->t['vendor']->id) || (isset($this->t['vendor']->id) && (int)$this->t['vendor']->id < 1 )) {
-			echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS'). '</div>';
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS'), 'pos' => 1));
 			exit;
 		}
 
@@ -122,6 +131,8 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 
+		$this->t['pos_display_apply_benefits']  = $this->p->get( 'pos_display_apply_benefits', 0 );
+
 
 		$this->t['pos_input_autocomplete_output'] = '';
 		if ($this->t['pos_input_autocomplete'] == 0) {
@@ -137,7 +148,7 @@ class PhocaCartViewPos extends JViewLegacy
 
 		// 2) CHECK TICKET
 		if ((int)$this->t['ticket']->id < 1) {
-			echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST'). '</div>';
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST'), 'pos' => 1));
 			exit;
 		}
 
@@ -164,7 +175,7 @@ class PhocaCartViewPos extends JViewLegacy
 			$this->t['unit']->id = 0;
 		}
 
-		$this->t['linkpos']				= JRoute::_(PhocacartRoute::getPosRoute($this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id));
+		$this->t['linkpos']				= Route::_(PhocacartRoute::getPosRoute($this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id));
 
 
 
@@ -244,6 +255,7 @@ class PhocaCartViewPos extends JViewLegacy
 			break;
 
 			case 'main.content.paymentmethods':
+			case 'main.content.applybenefits':
 
 				$payment 					= new PhocacartPayment();
 				$payment->setType(array(0,2));// 0 all, 1 online shop, 2 pos
@@ -270,13 +282,18 @@ class PhocaCartViewPos extends JViewLegacy
 						}
 
 						if ($this->t['rewards']['usertotal'] > 0) {
-							$this->t['rewards']['text'] = '<small>('.JText::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS').': '.(int)$this->t['rewards']['usertotal'].', '.JText::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE').': '.(int)$this->t['rewards']['needed'].')</small>';
+							$this->t['rewards']['text'] = '<small>('.Text::_('COM_PHOCACART_AVAILABLE_REWARD_POINTS').': '.(int)$this->t['rewards']['usertotal'].', '.Text::_('COM_PHOCACART_MAXIMUM_REWARD_POINTS_TO_USE').': '.(int)$this->t['rewards']['needed'].')</small>';
 							$this->t['rewards']['apply'] 	= true;
 						}
 					}
 				}
 
-				parent::display('main_content_payment_methods');
+				if ($this->t['page'] == 'main.content.applybenefits') {
+					parent::display('main_content_applybenefits');
+				} else {
+					parent::display('main_content_payment_methods');
+				}
+
 			break;
 
 			case 'main.content.payment':
@@ -318,7 +335,7 @@ class PhocaCartViewPos extends JViewLegacy
 				$this->t['ordering']		= $model->getOrdering();
 				$this->t['action']			= $uri->toString();
 				$this->t['actionbase64']	= base64_encode($this->t['action']);
-				$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
+				$this->t['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute(0));
 				//$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute(0));
 				//$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute(0));
 				//$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';

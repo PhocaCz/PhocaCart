@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 
 /* TYPES
@@ -37,9 +40,9 @@ class PhocacartGroup
 
 	private static $group			= array();
 
-	public static function getAllGroupsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $attributes = 'class="inputbox" size="4" multiple="multiple"' ) {
+	public static function getAllGroupsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $attributes = 'class="form-select" size="4" multiple="multiple"' ) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_groups AS a'
 				. ' ORDER BY '. $order;
@@ -48,13 +51,28 @@ class PhocacartGroup
 		$groups = $db->loadObjectList();
 
 		foreach($groups as $k => $v) {
-			$groups[$k]->text = JText::_($v->text);
+			$groups[$k]->text = Text::_($v->text);
 		}
 
 
-		$groupsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $groups, $name, $attributes . ' '. $javascript, 'value', 'text', $activeArray, $id);
+		$groupsO = HTMLHelper::_('select.genericlist', $groups, $name, $attributes . ' '. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $groupsO;
+	}
+
+	public static function getAllGroups($order = 'id'){
+		$db = Factory::getDBO();
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_groups AS a'
+				. ' ORDER BY '. $order;
+		$db->setQuery($query);
+
+		$groups = $db->loadObjectList();
+
+		foreach($groups as $k => $v) {
+			$groups[$k]->text = Text::_($v->text);
+		}
+		return $groups;
 	}
 
 	/*
@@ -70,7 +88,7 @@ class PhocacartGroup
 
 		if( !array_key_exists( (string)$key, self::$group )) {
 			if ((int)$id > 0) {
-				$db = JFactory::getDBO();
+				$db = Factory::getDBO();
 
 				$query = 'SELECT a.id, a.title, a.alias, a.type, a.published, a.display_price, a.display_addtocart, a.display_attributes'
 						.' FROM #__phocacart_groups AS a'
@@ -133,7 +151,7 @@ class PhocacartGroup
 
 	public static function getDefaultGroup($select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT a.id';
@@ -164,7 +182,7 @@ class PhocacartGroup
 
 
 		if ((int)$id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_item_groups'
 					. ' WHERE item_id = '. (int)$id;
@@ -220,7 +238,7 @@ class PhocacartGroup
 
 	public static function getGroupRules() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.type, a.minimum_sum'
 				.' FROM #__phocacart_groups AS a'
@@ -236,7 +254,7 @@ class PhocacartGroup
 
 	public static function changeUserGroupByRule($userId) {
 
-		$app						= JFactory::getApplication();
+		$app						= Factory::getApplication();
 		$paramsC 					= PhocacartUtils::getComponentParameters();
 		$user_group_change_rule		= $paramsC->get('user_group_change_rule', 0);
 
@@ -309,7 +327,7 @@ class PhocacartGroup
 
 	public static function getProductPriceGroupsById($productId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.product_id, a.group_id, a.price'
 				.' FROM #__phocacart_product_price_groups AS a'
@@ -331,7 +349,7 @@ class PhocacartGroup
 
 	public static function getProductPointGroupsById($productId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.product_id, a.group_id, a.points_received'
 				.' FROM #__phocacart_product_point_groups AS a'
@@ -357,8 +375,8 @@ class PhocacartGroup
 
 		if (!empty($data)) {
 
-			$app	= JFactory::getApplication();
-			$db 	= JFactory::getDBO();
+			$app	= Factory::getApplication();
+			$db 	= Factory::getDBO();
 
 			$notDeleteItems = array();
 
@@ -449,8 +467,8 @@ class PhocacartGroup
 
 		if (!empty($data)) {
 
-			$app	= JFactory::getApplication();
-			$db 	= JFactory::getDBO();
+			$app	= Factory::getApplication();
+			$db 	= Factory::getDBO();
 
 			$notDeleteItems = array();
 
@@ -546,7 +564,7 @@ class PhocacartGroup
 
 	public static function updateGroupProductPriceById($productId, $price, $groupId = 1) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 
 		$query = 'UPDATE #__phocacart_product_price_groups SET'
 		.' price = '.$db->quote($price)
@@ -558,7 +576,7 @@ class PhocacartGroup
 
 	public static function updateGroupProductRewardPointsById($productId, $pointsReceived, $groupId = 1) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 
 		$query = 'UPDATE #__phocacart_product_point_groups SET'
 		.' points_received = '.(int)$pointsReceived

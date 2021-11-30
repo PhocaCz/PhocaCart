@@ -7,9 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Log\Log;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
+class PhocaCartCpModelPhocaCartStatus extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -23,11 +30,11 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocaCartStatus', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartstatus', 'phocacartstatus', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -36,7 +43,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartstatus.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartstatus.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 		}
@@ -45,16 +52,16 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -63,7 +70,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_statuses');
 				$max = $db->loadResult();
 
@@ -78,8 +85,8 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 
 		if (isset($table->type) && isset($table->published) && $table->type == 1 && $table->published == 0) {
 			$table->published = 1;
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
+			$app = Factory::getApplication();
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 		}
 	}
 
@@ -87,7 +94,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 
 
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			//$cids = implode( ',', $cid );
 			//$app 	= JFactory::getApplication();
 			$error 	= 0;
@@ -109,7 +116,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 			}
 		}
 		if ($error) {
-			$this->setError(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
+			$this->setError(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
 			//$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
 			return false;
 		} else {
@@ -121,10 +128,10 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 	public function publish(&$pks, $value = 1)
 	{
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$table = $this->getTable();
 		$pks = (array) $pks;
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		$error 	= 0;
 		foreach ($pks as $i => $pk){
@@ -136,13 +143,13 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 				if (!$this->canEditState($table)){
 					// Prune items that you can't change.
 					unset($pks[$i]);
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), Log::WARNING, 'jerror');
 					return false;
 				}
 
 				// If the table is checked out by another user, drop it and report to the user trying to change its state.
 				if (property_exists($table, 'checked_out') && $table->checked_out && ($table->checked_out != $user->id)){
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'), JLog::WARNING, 'jerror');
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'), Log::WARNING, 'jerror');
 					// Prune items that you can't change.
 					unset($pks[$i]);
 					return false;
@@ -170,7 +177,7 @@ class PhocaCartCpModelPhocaCartStatus extends JModelAdmin
 		if ($error) {
 
 			//$this->setError(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			return true;
 		} else {
 			return true;

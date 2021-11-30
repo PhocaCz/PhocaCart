@@ -8,8 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -48,18 +53,18 @@ echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-title">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_PARAMETER', 'a.parameter_id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-productcount">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'].'_PRODUCT_COUNT', 'a.count_products', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_PARAMETER', 'a.parameter_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-productcount">'.HTMLHelper::_('searchtools.sort', $this->t['l'].'_PRODUCT_COUNT', 'a.count_products', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -82,9 +87,9 @@ $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= JRoute::_( $urlEdit. $item->id );
+$linkEdit 		= Route::_( $urlEdit. $item->id );
 $urlEditP		= 'index.php?option='.$this->t['o'].'&task=phocacartparameter.edit&id=';
-$linkEditP		= JRoute::_( $urlEditP. $item->parameter_id );
+$linkEditP		= Route::_( $urlEditP. $item->parameter_id );
 
 /*
 $iD = $i % 2;
@@ -93,7 +98,7 @@ echo "\n\n";
 //echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parameter_id.'" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
-echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id), "small");
+echo $r->td(HTMLHelper::_('grid.id', $i, $item->id), "small");
 */
 
 echo $r->startTr($i, isset($item->parameter_id) ? (int)$item->parameter_id : 0);
@@ -103,19 +108,19 @@ echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->o
 
 $checkO = '';
 if ($item->checked_out) {
-	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->title).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }
-$checkO .= ' <span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
+$checkO .= ' <span class="smallsub">(<span>'.Text::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
 echo $r->td($checkO, "small");
 
 $paramO = '';
 if ($canCreate || $canEdit) {
-	$paramO .= '<a href="'. JRoute::_($linkEditP).'">'. $this->escape($item->parameter_title).'</a>';
+	$paramO .= '<a href="'. Route::_($linkEditP).'">'. $this->escape($item->parameter_title).'</a>';
 } else {
 	$paramO .= $this->escape($item->parameter_title);
 }
@@ -124,13 +129,13 @@ echo $r->td($paramO, "small");
 
 $pC = '<div class="center">'.$item->count_products;
 if (PhocacartUtils::validateDate($item->count_date)) {
-    $pC .= '<br><small class="nowrap">('.Joomla\CMS\HTML\HTMLHelper::_('date', $item->count_date, 'd-m-Y H:i').')</small>';
+    $pC .= '<br><small class="nowrap">('.HTMLHelper::_('date', $item->count_date, 'd-m-Y H:i').')</small>';
 }
 $pC .= '</div>';
 echo $r->td($pC, "small");
 
 
-echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 
 echo $r->td($item->id, "small");

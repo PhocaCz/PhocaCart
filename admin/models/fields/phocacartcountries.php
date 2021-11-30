@@ -7,25 +7,26 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
 
-class JFormFieldPhocaCartCountries extends JFormField
+class JFormFieldPhocaCartCountries extends FormField
 {
 	protected $type 		= 'PhocaCartCountries';
 
 	protected function getInput() {
-		
+
 		$id = (int) $this->form->getValue('id');
-		
+
 		if (isset($this->element['table'])) {
-			switch (strtolower($this->element['table'])) {	
+			switch (strtolower($this->element['table'])) {
 				case "payment":
 					$table = 'payment';
 				break;
-				
+
 				case "zone":
 					$table = 'zone';
 				break;
-				
+
 				case "shipping":
 				default:
 					$table = 'shipping';
@@ -39,8 +40,15 @@ class JFormFieldPhocaCartCountries extends JFormField
 		if ((int)$id > 0) {
 			$activeCountries	= PhocacartCountry::getCountries($id, 1, $table);
 		}
-			
-		return PhocacartCountry::getAllCountriesSelectBox($this->name.'[]', $this->id, $activeCountries, NULL,'id' );
+
+		$countries             = PhocacartCountry::getAllCountries();
+		$data               = $this->getLayoutData();
+		$data['options']    = (array)$countries;
+		$data['value']      = $activeCountries;
+
+        return $this->getRenderer($this->layout)->render($data);
+
+		//return PhocacartCountry::getAllCountriesSelectBox($this->name.'[]', $this->id, $activeCountries, NULL,'id' );
 	}
 }
 ?>

@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-echo '<div id="ph-pc-response-box" class="pc-response-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo '<div id="ph-pc-response-box" class="pc-view pc-response-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 echo PhocacartRenderFront::renderHeader();
 

@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
 
 class PhocacartSearch
 {
@@ -26,10 +29,10 @@ class PhocacartSearch
 	public function renderSearch($options = array()) {
 
 		$o						= array();
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$s 			            = PhocacartRenderStyle::getStyles();
-		$layout 	            = new JLayoutFile('form_search', null, array('component' => 'com_phocacart'));
-		$layoutAP 	            = new JLayoutFile('form_search_active_parameters', null, array('component' => 'com_phocacart'));
+		$layout 	            = new FileLayout('form_search', null, array('component' => 'com_phocacart'));
+		$layoutAP 	            = new FileLayout('form_search_active_parameters', null, array('component' => 'com_phocacart'));
 
 
         // SEARCH FORM
@@ -38,7 +41,7 @@ class PhocacartSearch
 		$data['id'] 			    = 'phSearchBox';// AJAX ID
 		$data['param'] 			    = 'search';
 		$data['getparams']		    = PhocacartText::filterValue($app->input->get('search', '', 'string'), 'text');
-		$data['title']			    = JText::_('COM_PHOCACART_SEARCH');
+		$data['title']			    = Text::_('COM_PHOCACART_SEARCH');
 		//$category				    = PhocacartRoute::getIdForItemsRoute();
 		//$data['getparams'][]	    = $category['idalias'];
 		$data['activefilter']	    = PhocacartRoute::isFilterActive();
@@ -107,7 +110,7 @@ class PhocacartSearch
 		$in 	= '';
 		$where 	= '';
 		$left	= '';
-		$db		= JFactory::getDBO();
+		$db		= Factory::getDBO();
 
 		switch($type) {
 			case 'int':

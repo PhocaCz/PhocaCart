@@ -9,12 +9,19 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
 
 class PhocacartRenderFront
 {
     public static function renderNewIcon($date, $size = 1)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $params = $app->getParams();
         $new = $params->get('display_new', 0);
 
@@ -27,7 +34,7 @@ class PhocacartRenderFront
             $dateExists = $dateToday - $dateAdded;
             $dateNew = (int)$new * 24 * 60 * 60;
             if ($dateExists < $dateNew) {
-                $o .= '<div class="ph-corner-icon-wrapper ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-new">' . JText::_('COM_PHOCACART_LABEL_TXT_NEW') . '</div></div>';
+                $o .= '<div class="ph-corner-icon-wrapper ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-new">' . Text::_('COM_PHOCACART_LABEL_TXT_NEW') . '</div></div>';
 
 
             }
@@ -37,7 +44,7 @@ class PhocacartRenderFront
 
     public static function renderHotIcon($sales, $size = 1)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $params = $app->getParams();
         $hot = $params->get('display_hot', 0);
 
@@ -46,7 +53,7 @@ class PhocacartRenderFront
             $o .= '';
         } else {
             if ($sales > $hot || $sales == $hot) {
-                $o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-hot">' . JText::_('COM_PHOCACART_HOT') . '</div></div>';
+                $o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-hot">' . Text::_('COM_PHOCACART_HOT') . '</div></div>';
             }
         }
         return $o;
@@ -54,7 +61,7 @@ class PhocacartRenderFront
 
     public static function renderFeaturedIcon($featured, $size = 1)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $params = $app->getParams();
         $feat = $params->get('display_featured', '');
 
@@ -62,7 +69,7 @@ class PhocacartRenderFront
         if ($featured == 0 || $feat == '') {
             $o .= '';
         } else {
-            $o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-featured">' . JText::_($feat) . '</div></div>';
+            $o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-featured">' . Text::_($feat) . '</div></div>';
         }
         return $o;
     }
@@ -70,7 +77,7 @@ class PhocacartRenderFront
     public static function prepareDocument($document, $params, $category = false, $item = false, $header = '')
     {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $menus = $app->getMenu();
         $menu = $menus->getActive();
         $pathway = $app->getPathway();
@@ -98,7 +105,7 @@ class PhocacartRenderFront
         if ($menu) {
             $params->def('page_heading', $params->get('page_title', $menu->title));
         } else {
-            $params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
+            $params->def('page_heading', Text::_('JGLOBAL_ARTICLES'));
         }
 
         $title = $params->get('page_title', '');
@@ -118,7 +125,7 @@ class PhocacartRenderFront
         } else if (empty($title)) {
             $title = htmlspecialchars_decode($app->get('sitename'));
         } else if ($app->get('sitename_pagetitles', 0) == 1) {
-            $titleInclSiteName = JText::sprintf('JPAGETITLE', htmlspecialchars_decode($app->get('sitename')), $title);
+            $titleInclSiteName = Text::sprintf('JPAGETITLE', htmlspecialchars_decode($app->get('sitename')), $title);
             if ($nameInTitle == 1 && isset($name->title) && $name->title != '' && $title != $name->title) {
                 $title = $titleInclSiteName . ' - ' . $name->title;
             } else {
@@ -130,7 +137,7 @@ class PhocacartRenderFront
                     $title = $title . ' - ' . $name->title;
                 }
             }
-            $title = JText::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->get('sitename')));
+            $title = Text::sprintf('JPAGETITLE', $title, htmlspecialchars_decode($app->get('sitename')));
         }
 
         if ($type == 'category' && isset($category->metatitle) && $category->metatitle != '') {
@@ -148,11 +155,11 @@ class PhocacartRenderFront
             $pathItem		= PhocacartPath::getPath('productimage');
             $thumbnail      = PhocacartImage::getThumbnailName($pathItem, $item->image, 'large');
             if (isset($thumbnail->rel)) {
-                $document->setMetadata('og:image', JURI::base(true) . '/' .$thumbnail->rel);
+                $document->setMetadata('og:image', Uri::base(true) . '/' .$thumbnail->rel);
             }
         } else if (isset($category->image) && $category->image != '') {
             $pathItem		= PhocacartPath::getPath('categoryimage');
-            $document->setMetadata('og:image', JURI::base(true) . $pathItem['orig_rel_ds'] .$category->image);
+            $document->setMetadata('og:image', Uri::base(true) . $pathItem['orig_rel_ds'] .$category->image);
         }*/
 
 
@@ -206,13 +213,13 @@ class PhocacartRenderFront
 
 
         if (isset($category->metadata)) {
-            $registry = new JRegistry;
+            $registry = new Registry;
             $registry->loadString($category->metadata);
             $category->metadata = $registry->toArray();
         }
 
         if (isset($item->metadata)) {
-            $registry = new JRegistry;
+            $registry = new Registry;
             $registry->loadString($item->metadata);
             $category->metadata = $registry->toArray();
         }
@@ -251,10 +258,13 @@ class PhocacartRenderFront
 
             if (!empty($path)) {
                 $path = array_reverse($path);
+
                 foreach ($path as $k => $v) {
+
+
                     if (!in_array((int)$v['id'], $pIdA)) {
                         // Don't duplicate breadcrumbs
-                        $pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
+                        $pathway->addItem($v['title'], Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
                         //$pathway->addItem($v['title'], PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
                     }
                 }
@@ -270,7 +280,7 @@ class PhocacartRenderFront
                     $countCurPath = count($curpath)-1;
 
                     if(!isset($curpath[$countCurPath]) || ($category->parenttitle != $curpath[$countCurPath])){
-                        $pathway->addItem($category->parenttitle, JRoute::_(PhocacartRoute::getCategoryRoute($category->parentid, $category->parentalias)));
+                        $pathway->addItem($category->parenttitle, Route::_(PhocacartRoute::getCategoryRoute($category->parentid, $category->parentalias)));
                     }
                 }
             }*/
@@ -308,7 +318,7 @@ class PhocacartRenderFront
                 foreach ($path as $k => $v) {
                     if (!in_array((int)$v['id'], $pIdA)) {
                         // Don't duplicate breadcrumbs
-                        $pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
+                        $pathway->addItem($v['title'], Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
                         //$pathway->addItem($v['title'], PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
                     }
                 }
@@ -319,14 +329,14 @@ class PhocacartRenderFront
             if (!empty($path)) {
                 $path = array_reverse($path);
                 foreach ($path as $k => $v) {
-                    $pathway->addItem($v['title'], JRoute::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
+                    $pathway->addItem($v['title'], Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias'])));
 
                 }
             }*/
 
             /*	if (isset($category->id) && isset($category->title) && isset($category->alias)) {
                     if ($category->id > 0) {
-                        $pathway->addItem($category->title, JRoute::_(PhocacartRoute::getCategoryRoute($category->id, $category->alias)));
+                        $pathway->addItem($category->title, Route::_(PhocacartRoute::getCategoryRoute($category->id, $category->alias)));
                     }
                 }*/
 
@@ -352,7 +362,7 @@ class PhocacartRenderFront
     public static function renderHeader($headers = array(), $tag = '', $imageMeta = '')
     {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         //$menus		= $app->getMenu();
         //$menu 		= $menus->getActive();
         $p = $app->getParams();
@@ -415,7 +425,7 @@ class PhocacartRenderFront
 
     public static function renderMessageQueue($msg = '', $type = '')
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $m = $app->getMessageQueue();
         $mO = '';
 
@@ -460,7 +470,7 @@ class PhocacartRenderFront
 
         $o = '';
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         $width = $paramsC->get('video_width', 0);
         $height = $paramsC->get('video_height', 0);
@@ -584,9 +594,9 @@ class PhocacartRenderFront
 
         if ($link == 1) {
             if ($route == 'item') {
-                return '<a href="' . JRoute::_(PhocacartRoute::getItemRoute($item->id, $item->catid, $item->alias, $item->catalias)) . '">' . $item->title . '</a>';
+                return '<a href="' . Route::_(PhocacartRoute::getItemRoute($item->id, $item->catid, $item->alias, $item->catalias)) . '">' . $item->title . '</a>';
             } else if ($route == 'category') {
-                return '<a href="' . JRoute::_(PhocacartRoute::getCategoryRoute($item->id, $item->alias)) . '">' . $item->title . '</a>';
+                return '<a href="' . Route::_(PhocacartRoute::getCategoryRoute($item->id, $item->alias)) . '">' . $item->title . '</a>';
             }
         } else {
             return $item->title;
@@ -597,7 +607,7 @@ class PhocacartRenderFront
     public static function renderProductHeader($link, $v, $route = 'item', $tag = '', $additionalClass = '')
     {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $p = $app->getParams();
 
         $displayHeader = $p->get('display_product_header', 'h3');
@@ -622,7 +632,7 @@ class PhocacartRenderFront
     public static function renderCategoryHeader($link, $v, $route = 'category', $tag = '', $additionalClass = '')
     {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $p = $app->getParams();
 
         $displayHeader = $p->get('display_category_header', 'h3');
@@ -646,7 +656,7 @@ class PhocacartRenderFront
     {
         $o = '';
         if ((int)$id > 0) {
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
             $query = 'SELECT a.introtext, a.fulltext FROM #__content AS a WHERE id = ' . (int)$id;
             $db->setQuery((string)$query);
             $a = $db->loadObject();
@@ -657,12 +667,12 @@ class PhocacartRenderFront
                 $o = '{emailcloak=off}' . $o;
             }
 
-            $o = Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $o);
+            $o = HTMLHelper::_('content.prepare', $o);
 
             if ($changeLang == 1) {
-                JPluginHelper::importPlugin('system');
-                JPluginHelper::importPlugin('plgSystemMultilanguagesck');
-                \JFactory::getApplication()->triggerEvent('onChangeText', array(&$o));
+                PluginHelper::importPlugin('system');
+                PluginHelper::importPlugin('plgSystemMultilanguagesck');
+                Factory::getApplication()->triggerEvent('onChangeText', array(&$o));
             }
 
             if ($format == 'pdf' || $format == 'text') {
@@ -689,18 +699,18 @@ class PhocacartRenderFront
     public static function getConfirmOrderText($orderValue = 0)
     {
 
-        $cFT = JText::_('COM_PHOCACART_CONFIRM_ORDER');
+        $cFT = Text::_('COM_PHOCACART_CONFIRM_ORDER');
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $p = $app->getParams();
         $confirm_order_text = $p->get('cofirm_order_text', '');
         $confirm_order_text_zero = $p->get('cofirm_order_text_zero', '');
 
         if ($confirm_order_text != '' && $orderValue > 0) {
-            $cFT = JText::_($confirm_order_text);
+            $cFT = Text::_($confirm_order_text);
         }
         if ($confirm_order_text_zero != '' && $orderValue == 0) {
-            $cFT = JText::_($confirm_order_text_zero);
+            $cFT = Text::_($confirm_order_text_zero);
         }
 
         return $cFT;

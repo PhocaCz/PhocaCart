@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditProductPriceHistory extends JModelAdmin
+class PhocaCartCpModelPhocaCartEditProductPriceHistory extends AdminModel
 {
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
@@ -18,12 +21,12 @@ class PhocaCartCpModelPhocaCartEditProductPriceHistory extends JModelAdmin
 
 	public function getTable($type = 'PhocacartProductPriceHistory', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartpricehistory', 'phocacartpricehistory', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form)) {
@@ -34,7 +37,7 @@ class PhocaCartCpModelPhocaCartEditProductPriceHistory extends JModelAdmin
 
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartpricehistory.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartpricehistory.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -74,7 +77,7 @@ class PhocaCartCpModelPhocaCartEditProductPriceHistory extends JModelAdmin
 
 	public function save($data/*, $productId*/) {
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$productId				= $app->input->get('id', 0, 'int');
 
 

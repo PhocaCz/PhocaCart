@@ -7,17 +7,22 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\Form\FormRule;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
-class JFormRulePhocacartCaptcha extends JFormRule
+class JFormRulePhocacartCaptcha extends FormRule
 {
-	public function test(SimpleXMLElement $element, $value, $group = null, JRegistry $input = null, JForm $form = null)
+	public function test(SimpleXMLElement $element, $value, $group = null, Registry $input = null, Form $form = null)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		//E_ERROR, E_WARNING, E_NOTICE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE.
 		$info = array();
 		$info['field'] = 'question_captcha';
 		$params = PhocacartUtils::getComponentParameters();
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$namespace = 'phccrt'.$params->get('session_suffix');
 
 		// Possible parameters in Options for different captchas
@@ -29,7 +34,7 @@ class JFormRulePhocacartCaptcha extends JFormRule
 				if (!PhocacartCaptchaRecaptcha::isValid()) {
 
 					// What happens when the CAPTCHA was entered incorrectly
-					$app->enqueueMessage(JText::_('COM_PHOCACART_WRONG_CAPTCHA' ), 'warning');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_WRONG_CAPTCHA' ), 'warning');
 					return false;
 				}
 

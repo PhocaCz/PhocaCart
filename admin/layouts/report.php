@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d 		= $displayData;
 $price 	= new PhocacartPrice();
 $taxes 	= PhocacartTax::getAllTaxesIncludingCountryRegion();
@@ -107,7 +108,7 @@ if ($d['format'] == 'raw' || $d['format'] == 'pdf') {
 	}
 
 	echo '<div '.$cRDate.'>';
-	echo JText::_('COM_PHOCACART_DATE') . ': ';
+	echo Text::_('COM_PHOCACART_DATE') . ': ';
 	echo $d['date_from'] . ' - ' . $d['date_to'];
 	echo '</div>';
 
@@ -118,25 +119,25 @@ if ($d['format'] == 'raw' || $d['format'] == 'pdf') {
 // HEADER
 echo '<table '.$cRT.'>';
 echo '<tr '.$cRTRH.'>';
-echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_DATE').'</th>';
-echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ORDER_NUMBER').'</th>';
-echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_CUSTOMER').'</th>';
-echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_PAYMENT').'</th>';
-echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_CURRENCY').'</th>';
+echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_DATE').'</th>';
+echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_ORDER_NUMBER').'</th>';
+echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_CUSTOMER').'</th>';
+echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_PAYMENT').'</th>';
+echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_CURRENCY').'</th>';
 if ($p['report_display_tax'] == 1) {
 	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>'; // TRC
-	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>';
+	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>';
 	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_TAX').'</th>'; // TRC
-	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_TAX').'</th>';
+	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_TAX').'</th>';
 }
 if ($p['report_display_rounding'] == 1) {
 	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ROUNDING').'</th>'; // TRC
-	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ROUNDING').'</th>';
+	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_ROUNDING').'</th>';
 }
 if ($p['report_display_tax'] == 1) {
-	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_INCLUDING_TAX').'</th>';
+	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_INCLUDING_TAX').'</th>';
 } else {
-	echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT').'</th>';
+	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT').'</th>';
 }
 
 echo '</tr>';
@@ -158,7 +159,7 @@ foreach($d['items'] as $k => $v) {
 	// Customer
 	echo '<td '.$cRC.'>';
 	echo isset($v->user_company) && $v->user_company != '' ? $v->user_company . '<br>' : '';
-	echo isset($v->user_vat_1) && $v->user_vat_1 != '' ? '('.JText::_('COM_PHOCACART_VAT_NUMBER').': ' . $v->user_vat_1 . ')<br>' : '';
+	echo isset($v->user_vat_1) && $v->user_vat_1 != '' ? '('.Text::_('COM_PHOCACART_VAT_NUMBER').': ' . $v->user_vat_1 . ')<br>' : '';
 	echo '<span '.$cRB.'>' . $v->user_name_first . ' ' . $v->user_name_last . '</span><br>';
 
 	echo isset($v->user_address_1) && $v->user_address_1 != '' ? $v->user_address_1 . '<br>' : '';
@@ -289,7 +290,7 @@ if (!empty($d['total'])) {
 			echo '<tr '.$cRTotalR.' id="phReportTotalRow'.$i.'">';
 
 			echo '<td '.$cRTotalC1.' colspan="5">';
-			echo '' . JText::_('COM_PHOCACART_TOTAL'). ' ';
+			echo '' . Text::_('COM_PHOCACART_TOTAL'). ' ';
 			echo '('. $price->getPriceCurrencyTitle(). ')';
 			echo '</td>';
 

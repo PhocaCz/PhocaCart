@@ -7,9 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
 jimport('joomla.filter.input');
 
-class TablePhocacartLog extends JTable
+class TablePhocacartLog extends Table
 {
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_logs', 'id', $db);

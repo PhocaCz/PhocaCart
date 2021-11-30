@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 
 class PhocacartParameter
 {
@@ -17,9 +21,9 @@ class PhocacartParameter
 	/*
 	 * PARAMETERS (group for each parameter values)
 	 */
-	public static function getAllParametersSelectBox($name, $id, $active, $attr = 'class="inputbox"', $order = 'id', $selectText = 0 ) {
+	public static function getAllParametersSelectBox($name, $id, $active, $attr = 'class="form-select"', $order = 'id', $selectText = 0 ) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_parameters AS a'
 				//.' WHERE a.type ='.(int)$type
@@ -27,14 +31,16 @@ class PhocacartParameter
 		$db->setQuery($query);
 		$parameters = $db->loadObjectList();
 
-		if (!empty($parameters) && $selectText == 1) {
-			array_unshift($parameters, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- ' . JText::_('COM_PHOCACART_SELECT_PARAMETER') . ' -', 'value', 'text'));
+		//if (!empty($parameters) && $selectText == 1) {
+		if ($selectText == 1) {
+			array_unshift($parameters, HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_PARAMETER') . ' -', 'value', 'text'));
 		}
 
-		$paramsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $parameters, $name, $attr, 'value', 'text', $active, $id);
+		$paramsO = HTMLHelper::_('select.genericlist', $parameters, $name, $attr, 'value', 'text', $active, $id);
 
 		return $paramsO;
 	}
+
 
 	public static function getAllParameters($key = 'id', $ordering = 1, $lang = '') {
 
@@ -44,7 +50,7 @@ class PhocacartParameter
 		if( !array_key_exists( (string)$keyP, self::$parameter )) {
 
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$orderingText = PhocacartOrdering::getOrderingText($ordering, 12);
 
 			$wheres = array();
@@ -76,7 +82,7 @@ class PhocacartParameter
 			try {
 				$items = $db->loadObjectList($key);
 			} catch (Exception $e) {
-				JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()), 'error');
+				Factory::getApplication()->enqueueMessage(Text::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()), 'error');
 				return;
 			}
 			/*
@@ -100,7 +106,7 @@ class PhocacartParameter
 	 */
 	public static function getParameterValues($itemId, $parameterId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT r.parameter_value_id';
@@ -133,7 +139,7 @@ class PhocacartParameter
 	 */
 	public static function getParameterValuesSubmitItems($itemId, $parameterId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.items_parameter';
 		$query .= ' FROM #__phocacart_submit_items AS a'
@@ -159,7 +165,7 @@ class PhocacartParameter
 
 	public static function getParameterValuesByIds($cids) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
         if ($cids != '') {//cids is string separated by comma
 
             $query = 'SELECT pvr.parameter_value_id FROM #__phocacart_parameter_values AS a'
@@ -182,7 +188,7 @@ class PhocacartParameter
 	 */
 	public static function getAllParameterValuesSelectBox($name, $id, $parameterId, $activeArray, $attributes = '', $order = 'a.id') {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_parameter_values AS a'
 				.' LEFT JOIN #__phocacart_parameters AS p ON a.parameter_id = p.id'
@@ -193,15 +199,35 @@ class PhocacartParameter
 		$db->setQuery($query);
 		$parameters = $db->loadObjectList();
 
-		$parametersO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $parameters, $name, $attributes, 'value', 'text', $activeArray, $id);
+		$parametersO = HTMLHelper::_('select.genericlist', $parameters, $name, $attributes, 'value', 'text', $activeArray, $id);
 
 		return $parametersO;
+	}
+
+	/*
+	 * PARAMETER VALUES (stored in products) Field PhocacartParameterValues
+	 * administrator/components/com_phocacart/models/phocacartitem.php 1547 // Load Parameter Values for Parameters
+	 */
+	public static function getAllParameterValuesList($parameterId, $order = 'a.id') {
+
+		$db = Factory::getDBO();
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_parameter_values AS a'
+				.' LEFT JOIN #__phocacart_parameters AS p ON a.parameter_id = p.id'
+				.' WHERE p.id = '.(int) $parameterId
+				.' ORDER BY '. $order;
+
+
+		$db->setQuery($query);
+		$parameters = $db->loadObjectList();
+
+		return $parameters;
 	}
 
 	public static function storeParameterValues($parameterValuesArray, $itemId, $parameterId) {
 
 		if ((int)$itemId > 0 && (int)$parameterId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_parameter_values_related'
 					.' WHERE item_id = '. (int)$itemId
@@ -251,7 +277,7 @@ class PhocacartParameter
 
 
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 13);
 
 
@@ -316,7 +342,7 @@ class PhocacartParameter
 	public static function options($type = 0) {
 
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value'
@@ -333,7 +359,7 @@ class PhocacartParameter
     public static function getActiveParameterValues($items, $ordering) {
 
 
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 13);//pv
@@ -382,13 +408,14 @@ class PhocacartParameter
 							$title = '';
 							if ($v->link_type == 1) {
 								if ($v2->id > 0 && $v->alias != '' && $v2->alias != '') {
-									$title = '<a href="'.JRoute::_(PhocacartRoute::getItemsRoute('', '', PhocacartText::filterValue($v->alias, 'alphanumeric'), PhocacartText::filterValue((int)$v2->id . '-' . $v2->alias, 'text'))).'">'.$v2->title.'</a>';
+									$title = '<a href="'.Route::_(PhocacartRoute::getItemsRoute('', '', PhocacartText::filterValue($v->alias, 'alphanumeric'), PhocacartText::filterValue((int)$v2->id . '-' . $v2->alias, 'text'))).'">'.$v2->title.'</a>';
 								}
 
 							} else {
 								$title = $v2->title;
 							}
-							$o2[$k] = '<span class="'.$s['c']['label.label-info'] .'">'.$title.'</span>';
+
+							$o2[$k2] = '<span class="'.$s['c']['label.label-info'] .'">'.$title.'</span>';
 						}
 						$o[] = implode($separator, $o2);
 						$o[] = '<div class="ph-cb"></div>';

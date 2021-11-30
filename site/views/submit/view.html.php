@@ -7,9 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewSubmit extends JViewLegacy
+class PhocaCartViewSubmit extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -22,11 +26,11 @@ class PhocaCartViewSubmit extends JViewLegacy
 
 	public function display($tpl = null) {
 
-		$app								= JFactory::getApplication();
-		$document							= JFactory::getDocument();
-		$session 							= JFactory::getSession();
+		$app								= Factory::getApplication();
+		$document							= Factory::getDocument();
+		$session 							= Factory::getSession();
 
-		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 								= Uri::getInstance();
 		$this->t['action']					= $uri->toString();
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
 		$this->u							= PhocacartUser::getUser();
@@ -38,7 +42,7 @@ class PhocaCartViewSubmit extends JViewLegacy
 
 		if ($this->t['enable_submit_item'] == 0) {
 			//throw new Exception(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 500);
-			$app->enqueueMessage(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 'error');
 			return false;
 		}
 
@@ -74,7 +78,7 @@ class PhocaCartViewSubmit extends JViewLegacy
 			$this->t['enable_submit_item'] = $this->p->get('enable_submit_item', 0);
 			if ($this->t['enable_submit_item'] == 0) {
 				//throw new Exception(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 403);
-				$app->enqueueMessage(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 'error');
 				return false;
 			}
 
@@ -115,7 +119,7 @@ class PhocaCartViewSubmit extends JViewLegacy
 
 			if ($tmpl == 'component') {
 
-				$buffer = JFactory::getApplication()->sendHeaders();
+				$buffer = Factory::getApplication()->sendHeaders();
 
 				$document->addCustomTag("<style type=\"text/css\"> \n"
 					. " #ph-pc-question-box {
@@ -140,7 +144,7 @@ class PhocaCartViewSubmit extends JViewLegacy
 
 	protected function _prepareDocument() {
 
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_SUBMIT_ITEM'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_SUBMIT_ITEM'));
 	}
 }
 ?>

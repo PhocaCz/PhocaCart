@@ -8,9 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 
 $r               = $this->r;
-$user            = JFactory::getUser();
+$user            = Factory::getUser();
 $userId          = $user->get('id');
 $listOrder       = $this->escape($this->state->get('list.ordering'));
 $listDirn        = $this->escape($this->state->get('list.direction'));
@@ -55,17 +59,17 @@ $h          = 400;
 $rV         = new PhocacartRenderAdminview();
 echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-section">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SECTION', 'section_title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-id">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-section">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SECTION', 'section_title', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
 
@@ -88,8 +92,8 @@ if (is_array($this->items)) {
         $canEdit    = $user->authorise('core.edit', $this->t['o']);
         $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
         $canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-        $linkEdit   = JRoute::_($urlEdit . $item->id);
-        $linkTax    = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacartedittax&type=2&tmpl=component&id=' . (int)$item->id);
+        $linkEdit   = Route::_($urlEdit . $item->id);
+        $linkTax    = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacartedittax&type=2&tmpl=component&id=' . (int)$item->id);
 
         echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
 
@@ -98,7 +102,7 @@ if (is_array($this->items)) {
 
         $checkO = '';
         if ($item->checked_out) {
-            $checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
+            $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
         }
 
         if (isset($item->image) && $item->image != '') {
@@ -106,7 +110,7 @@ if (is_array($this->items)) {
         }
 
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="' . JRoute::_($linkEdit) . '">' . $item->title . '</a>';
+            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $item->title . '</a>';
         } else {
             $checkO .= $this->escape($item->title);
         }
@@ -114,7 +118,7 @@ if (is_array($this->items)) {
 
         echo $r->td($item->section_title, "small");
 
-        echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
+        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
 
 
         echo $r->td($item->id, "small");

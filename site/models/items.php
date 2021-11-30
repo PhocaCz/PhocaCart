@@ -12,9 +12,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelItems extends JModelLegacy
+class PhocaCartModelItems extends BaseDatabaseModel
 {
 
 	protected $item 				= null;
@@ -378,7 +379,7 @@ class PhocaCartModelItems extends JModelLegacy
 				$pluginOptions 				= array();
 				$eventData 					= array();
 				$eventData['pluginname'] 	= $this->items_layout_plugin;
-				Factory::getApplication()->triggerEvent('PCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+				Factory::getApplication()->triggerEvent('onPCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
 
 				if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
 					$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
@@ -402,7 +403,7 @@ class PhocaCartModelItems extends JModelLegacy
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonItemsBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonItemsBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {

@@ -8,8 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 $r               = $this->r;
-$user            = JFactory::getUser();
+$user            = Factory::getUser();
 $userId          = $user->get('id');
 $listOrder       = $this->escape($this->state->get('list.ordering'));
 $listDirn        = $this->escape($this->state->get('list.direction'));
@@ -46,7 +51,7 @@ echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('fi
 echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 
 echo $r->startTable('categoryList');
 
@@ -54,12 +59,12 @@ echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-movements ph-center">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_STOCK_MOVEMENTS', 'a.stock_movements', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-download ph-center">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DOWNLOAD', 'a.download', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-type ph-center">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DEFAULT', 'a.type', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-id ph-center">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-movements ph-center">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_STOCK_MOVEMENTS', 'a.stock_movements', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-download ph-center">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DOWNLOAD', 'a.download', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-type ph-center">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DEFAULT', 'a.type', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-id ph-center">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
 
@@ -82,7 +87,7 @@ if (is_array($this->items)) {
         $canEdit    = $user->authorise('core.edit', $this->t['o']);
         $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
         $canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-        $linkEdit   = JRoute::_($urlEdit . $item->id);
+        $linkEdit   = Route::_($urlEdit . $item->id);
 
 
         echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
@@ -92,30 +97,30 @@ if (is_array($this->items)) {
 
         $checkO = '';
         if ($item->checked_out) {
-            $checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
+            $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
         }
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="' . JRoute::_($linkEdit) . '">' . $this->escape(JText::_($item->title)) . '</a>' . ' <small>(' . $this->escape($item->title) . ')</small>';
+            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape(Text::_($item->title)) . '</a>' . ' <small>(' . $this->escape($item->title) . ')</small>';
         } else {
-            $checkO .= $this->escape(JText::_($item->title)) . ' <small>(' . $this->escape($item->title) . ')</small>';
+            $checkO .= $this->escape(Text::_($item->title)) . ' <small>(' . $this->escape($item->title) . ')</small>';
         }
         echo $r->td($checkO, "small");
 
 
-        echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
+        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
 
 
         echo $r->td($this->escape($item->stock_movements), "small ph-center");
 
         if ($item->download == 1) {
-            $download = '<span class="label label-success badge badge-success">' . JText::_('COM_PHOCACART_YES') . '</span>';
+            $download = '<span class="label label-success badge bg-success">' . Text::_('COM_PHOCACART_YES') . '</span>';
         } else {
-            $download = '<span class="label label-important label-danger badge badge-danger">' . JText::_('COM_PHOCACART_NO') . '</span>';
+            $download = '<span class="label label-important label-danger badge bg-danger">' . Text::_('COM_PHOCACART_NO') . '</span>';
         }
         echo $r->td($download, "small ph-center");
 
         if ($item->type == 1) {
-            $default = '<a data-original-title="' . JText::_('COM_PHOCACART_DEFAULT') . '" class="btn btn-micro disabled jgrid hasTooltip" title="' . JText::_('COM_PHOCACART_DEFAULT') . '"><i class="icon-featured"></i></a>';
+            $default = '<a data-original-title="' . Text::_('COM_PHOCACART_DEFAULT') . '" class="btn btn-micro disabled jgrid hasTooltip" title="' . Text::_('COM_PHOCACART_DEFAULT') . '"><i class="icon-featured"></i></a>';
             echo $r->td($default, "small ph-center");
         } else {
             echo $r->td('', "small");

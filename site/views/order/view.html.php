@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewOrder extends JViewLegacy
+class PhocaCartViewOrder extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -18,7 +21,7 @@ class PhocaCartViewOrder extends JViewLegacy
 	protected $s;
 	public function display($tpl = null) {
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$this->p 			= $app->getParams();
 		$this->s            = PhocacartRenderStyle::getStyles();
 		$id					= $app->input->get('id', 0, 'int');
@@ -42,7 +45,7 @@ class PhocaCartViewOrder extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ORDER'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_ORDER'));
 	}
 }
 ?>

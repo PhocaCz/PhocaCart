@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
 jimport('joomla.form.formfield');
 
-class JFormFieldPhocaSelectFilenameImage extends JFormField
+class JFormFieldPhocaSelectFilenameImage extends FormField
 {
 	public $type = 'PhocaSelectFileNameImage';
 
@@ -32,30 +37,30 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 		$idA			= 'phImageFile';
 
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		HTMLHelper::_('jquery.framework');
 
 
         $path = PhocacartPath::getPath($manager);
         if ($this->value && file_exists($path['orig_abs_ds'] . $this->value)) {
-            $src = JUri::root() . $path['orig_rel_ds'] . $this->value;
+            $src = Uri::root() . $path['orig_rel_ds'] . $this->value;
         } else {
             $src = '';
         }
 
 
 		$pathImage 		= Juri::root() . $path['orig_rel_ds'];
-		$url 			= 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
+		$url 			= 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. Session::getFormToken().'=1';
 		$dataManager 	= ' data-manager="'.$manager.'"';
 		$dataPathImage	= ' data-pathimage="'.strip_tags(addslashes($pathImage)).'"';
 		$dataRequestUrl	= ' data-requesturl="'.$url.'"';
-		$dataRequestMsg = ' data-requestmsg="'.strip_tags(addslashes(JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'))).'"';
+		$dataRequestMsg = ' data-requestmsg="'.strip_tags(addslashes(Text::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'))).'"';
 
 
 		$w				= 700;
 		$h				= 400;
 
 
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		HTMLHelper::_('jquery.framework');
 
 		// 1) phocacartform.js - loads click event to run modal window - NO NEED TO DEFINE EVENT HERE
         // 2) phocacartform.js - creates modal window, then loads the iframe with url - NO NEED TO LOAD MODAL WINDOW AND TO BUILD IT HERE
@@ -63,8 +68,9 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 		$idAC = $idA.'ModalName'. $this->id;
 
 
-		$imgPreview = $src != '' ? '<img src="'.$src.'" alt="" />' : '<span class="glyphicon glyphicon-ban-circle ban-circle"></span>';
-        $html[] = '<div class="input-prepend input-append">';
+		$imgPreview = $src != '' ? '<img src="'.$src.'" alt="" />' : '<span class="faw fa fa-ban"></span>';
+
+        $html[] = '<div class="input-prepend input-append input-group">';
 
         $html[] = '<span class="btn btn-primary btn-prepend ph-tooltip">'
             . '<span class="icon-eye icon-white"></span>'
@@ -75,9 +81,9 @@ class JFormFieldPhocaSelectFilenameImage extends JFormField
 			. ' value="' . $this->value . '"' . $size . $class . $dataManager . $dataPathImage . $dataRequestUrl . $dataRequestMsg .' />';
 
 		// data-id does not work by dynamically added form fields so we need to get the id which is stored in input before the button
-		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-title="' . JText::_($textButton) . '" data-id="' . $this->id . '" data-src="'.$link.'"  data-height='.$w.' data-width='.$h.'">'
+		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-title="' . Text::_($textButton) . '" data-id="' . $this->id . '" data-src="'.$link.'"  data-height='.$w.' data-width='.$h.'">'
 			. '<span class="icon-list icon-white"></span> '
-			. JText::_($textButton) . '</a>';
+			. Text::_($textButton) . '</a>';
 
 		$html[] = '</div>';
 

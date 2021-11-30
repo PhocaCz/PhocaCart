@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
+class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 {
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
@@ -19,12 +25,12 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 
 	public function getTable($type = 'PhocacartProductStock', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartproductstock', 'phocacartproductstock', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form)) {
@@ -35,7 +41,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartproductstock.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartproductstock.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -48,16 +54,57 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 
 	public function getItem($pk = null) {
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$productId				= $app->input->get('id', 0, 'int');
 
 
-		if ($item = parent::getItem($pk)) {
+
+		// TO DO BE AWARE
+		// Remove this part when this problem will be solved
+		// https://github.com/joomla/joomla-cms/issues/35811
+
+
+		// START TEMP CODE
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
+		$table = $this->getTable();
+
+		if ($pk > 0)
+		{
+			// Attempt to load the row.
+			$return = $table->load($pk);
+
+			// Check for a table object error.
+			if ($return === false && $table->getError())
+			{
+				$this->setError($table->getError());
+
+				return false;
+			}
+		}
+
+		// Convert to the \JObject before adding other data.
+		$properties = $table->getProperties(1);
+		$item = ArrayHelper::toObject($properties, '\JObject');
+
+
+		if (property_exists($item, 'params'))
+		{
+			$registry = new Registry($item->params);
+			$item->params = $registry->toArray();
+		}
+		// END TEMP CODE
+
+		// FROM:
+		//if ($item) {
+		//TO:
+		//if ($item = parent::getItem($pk)) {
+		if ($item) {
 			if ($productId > 0) {
 				$product           = PhocacartProduct::getProduct((int)$productId);
 				$attr_options      = PhocacartAttribute::getAttributesAndOptions((int)$productId);
 				$combinations      = array();
 				$combinations_data = array();
+
 
 				if (!empty($product)) {
 					PhocacartAttribute::getCombinations($product->id, $product->title, $attr_options, $combinations);
@@ -111,6 +158,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 			}
 		}
 
+
 		return $item;
 	}
 
@@ -125,7 +173,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 
 	public function save($data/*, $productId*/) {
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$productId				= $app->input->get('id', 0, 'int');
 
 
@@ -144,19 +192,21 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 				}
 
 				$v['stock'] = PhocacartUtils::getIntFromString($v['stock']);
+				$v['price'] = PhocacartUtils::getDecimalFromString($v['price']);
 
 				if (!$row->bind($v)) {
-					$this->setError($this->_db->getErrorMsg());
+					$this->setError($row->getError());
 					return false;
 				}
 
 				if (!$row->check()) {
-					$this->setError($this->_db->getErrorMsg());
+					$this->setError($row->getError());
 					return false;
 				}
 
+
 				if (!$row->store()) {
-					$this->setError($this->_db->getErrorMsg());
+					$this->setError($row->getError());
 					return false;
 				}
 
@@ -187,12 +237,13 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 	}
 
 
+
 	/*public function getData() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.status_id'
 		. ' FROM #__phocacart_orders AS a'
 		. ' WHERE a.id = '.(int)$id
@@ -202,7 +253,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 		if (isset($item->status_id) && (int)$item->status_id > 0) {
 			$status = PhocacartOrderStatus::getStatus($item->status_id);
 
-			$status['select'] = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
+			$status['select'] = HTMLHelper::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="form-control"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
 		}
 		return array();
@@ -211,11 +262,11 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 	/*
 	public function getHistoryData() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 
 		if ((int)$id > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'SELECT h.*,'
 			. ' u.name AS user_name, u.username AS user_username,'
 			. ' o.title as statustitle'
@@ -250,7 +301,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 		//$row->bind($data);
 
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
@@ -258,18 +309,18 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 
 
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		// Store the table to the database
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		// Store the history
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		// EMAIL
 		$notifyUser 	= 0;
@@ -295,7 +346,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends JModelAdmin
 
 		if ((int)$id > 0) {
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'DELETE FROM #__phocacart_order_history WHERE order_id = '.(int)$id;
 			$db->setQuery( $query );
 

@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Uri\Uri;
 $d                      = $displayData;
 $productIdName			= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
 $altValue               = PhocaCartImage::getAltTitle($d['title'], $d['image']['image']->original);
@@ -26,12 +27,11 @@ if ($d['t']['lazy_load_category_items'] == 1) {
 }
 
 
-$src            = JURI::base(true).'/'.$d['image']['image']->rel;
-$srcImg         = JURI::base(true).'/'.$d['image']['image']->rel; // fallback
-$dataImg        = JURI::base(true).'/'.$d['image']['default']->rel; // switch - back to default
+$src            = Uri::base(true).'/'.$d['image']['image']->rel;
+$srcImg         = JUri::base(true).'/'.$d['image']['image']->rel; // fallback
+$dataImg        = JUri::base(true).'/'.$d['image']['default']->rel; // switch - back to default
 
 $srcPlaceHolder = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 '.(int)$d['t']['medium_image_width'] .' '.(int)$d['t']['medium_image_height'] .'\'%3E%3C/svg%3E';
-
 
 
 echo '<div class="phIBoxOH '. $d['layouttype'] . '">';
@@ -39,9 +39,9 @@ echo '<div class="phIBox '.$classLazyLoad.'">';
 
 if ($d['t']['display_webp_images'] == 1) {
 
-    $srcWebP        = JURI::base(true).'/'.$d['image']['image']->rel_webp;
-    $srcSetWebP     = JURI::base(true).'/'.$d['image']['image']->rel_webp;
-    $dataImgWebP    = JURI::base(true).'/'.$d['image']['default']->rel_webp;
+    $srcWebP        = Uri::base(true).'/'.$d['image']['image']->rel_webp;
+    $srcSetWebP     = Uri::base(true).'/'.$d['image']['image']->rel_webp;
+    $dataImgWebP    = Uri::base(true).'/'.$d['image']['default']->rel_webp;
 
     if ($d['t']['lazy_load_category_items'] == 1) {
 
@@ -68,7 +68,7 @@ if ($d['t']['display_webp_images'] == 1) {
 
         // Switch
         if (isset($d['image']['second']->rel_webp) && $d['image']['second']->rel_webp != '') {
-            $switchImg      = JURI::base(true).'/'.$d['image']['second']->rel_webp; // switch
+            $switchImg      = JUri::base(true).'/'.$d['image']['second']->rel_webp; // switch
             echo '<span class="phIRBox"><img src="'. $switchImg.'" alt="'.$altValue.'" class="'.$classSwitch.'" '. $d['image']['style'].' /></span>';
         }
 
@@ -86,7 +86,7 @@ if ($d['t']['display_webp_images'] == 1) {
 
         // Switch
         if (isset($d['image']['second']->rel) && $d['image']['second']->rel != '') {
-            $switchImg      = JURI::base(true).'/'.$d['image']['second']->rel; // switch
+            $switchImg      = JUri::base(true).'/'.$d['image']['second']->rel; // switch
             echo '<span class="phIRBox"><img src="'. $switchImg.'" alt="'.$altValue.'" class="'.$classSwitch.'" '. $d['image']['style'].' /></span>';
         }
 
@@ -102,17 +102,17 @@ echo '</div>';// end phIBoxOH
  *
  *     //$class  = 'ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName;
 data-src="'. $src.'" - is in webp source for
-    //echo '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 640 428\'%3E%3C/svg%3E" data-src="'. JURI::base(true).'/'.$d['image']->rel.'" alt="'.$altValue.'" class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JURI::base(true).'/'.$d['default_image']->rel.'" />';
+    //echo '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 640 428\'%3E%3C/svg%3E" data-src="'. JUri::base(true).'/'.$d['image']->rel.'" alt="'.$altValue.'" class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JUri::base(true).'/'.$d['default_image']->rel.'" />';
 
-		//echo '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 640 428\'%3E%3C/svg%3E"  data-src="'. JURI::base(true).'/'.$d['image']->rel.'" alt="'.$altValue.'" class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JURI::base(true).'/'.$d['default_image']->rel.'" />';
+		//echo '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 640 428\'%3E%3C/svg%3E"  data-src="'. JUri::base(true).'/'.$d['image']->rel.'" alt="'.$altValue.'" class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JUri::base(true).'/'.$d['default_image']->rel.'" />';
 
 echo '<picture>';
 
 
 
-echo '<source type="image/webp" alt="'.$altValue.'"  data-src="'. JURI::base(true).'/'.$d['image']->rel_webp.'" alt="'.$altValue.'"  data-srcset="'. JURI::base(true).'/'.$d['image']->rel_webp.'" alt="'.$altValue.'"  class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JURI::base(true).'/'.$d['default_image']->rel.'" />';
+echo '<source type="image/webp" alt="'.$altValue.'"  data-src="'. Uri::base(true).'/'.$d['image']->rel_webp.'" alt="'.$altValue.'"  data-srcset="'. Uri::base(true).'/'.$d['image']->rel_webp.'" alt="'.$altValue.'"  class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. Uri::base(true).'/'.$d['default_image']->rel.'" />';
 
-echo '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 640 428\'%3E%3C/svg%3E" data-src="'. JURI::base(true).'/'.$d['image']->rel.'" alt="'.$altValue.'" class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JURI::base(true).'/'.$d['default_image']->rel.'" />';
+echo '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 640 428\'%3E%3C/svg%3E" data-src="'. JUri::base(true).'/'.$d['image']->rel.'" alt="'.$altValue.'" class="ph-lazy img-responsive ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName.'" '.$d['image']['style'].' data-image="'. JUri::base(true).'/'.$d['default_image']->rel.'" />';
 
 echo '</picture>';
 */

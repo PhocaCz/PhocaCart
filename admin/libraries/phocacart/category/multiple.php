@@ -9,12 +9,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartCategoryMultiple
 {
 	public static function getCategories($productId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT c.category_id';
@@ -41,7 +43,7 @@ class PhocacartCategoryMultiple
 
 	public static function getCategoriesByIds($cids) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
         if ($cids != '') {//cids is string separated by comma
 
             $query = 'SELECT c.category_id FROM #__phocacart_categories AS a'
@@ -63,7 +65,7 @@ class PhocacartCategoryMultiple
 
 	public static function getAllCategories($filter = 0, $type = array(0,1)) {
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 		$user			= PhocacartUser::getUser();
 		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -115,7 +117,7 @@ class PhocacartCategoryMultiple
 	}
 
 	public static function deleteCategoriesFromProduct($categoryArray, $productId) {
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		if (!empty($categoryArray)) {
 			foreach($categoryArray as $k => $v) {
 				$query = ' DELETE '
@@ -134,7 +136,7 @@ class PhocacartCategoryMultiple
 
 		if ((int)$productId > 0) {
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			/*$query = ' DELETE '
 					.' FROM #__phocacart_product_categories'
 					. ' WHERE product_id = '. (int)$productId;
@@ -168,9 +170,9 @@ class PhocacartCategoryMultiple
                 if (!empty($unpublishedCats)) {
                     $count = count($unpublishedCats);
                     if ($count > 1) {
-                        $msg = JText::_('COM_PHOCACART_BE_AWARE_FOLLOWING_SELECTED_CATEGORIES_OR_THEIR_PARENT_CATEGORIES_ARE_NOT_PUBLISHED') . ': ';
+                        $msg = Text::_('COM_PHOCACART_BE_AWARE_FOLLOWING_SELECTED_CATEGORIES_OR_THEIR_PARENT_CATEGORIES_ARE_NOT_PUBLISHED') . ': ';
                     } else {
-                        $msg = JText::_('COM_PHOCACART_BE_AWARE_FOLLOWING_SELECTED_CATEGORY_OR_ITS_PARENT_CATEGORY_IS_NOT_PUBLISHED'). ': ';
+                        $msg = Text::_('COM_PHOCACART_BE_AWARE_FOLLOWING_SELECTED_CATEGORY_OR_ITS_PARENT_CATEGORY_IS_NOT_PUBLISHED'). ': ';
                     }
                     $msg .= '<ul>';
                     foreach ($unpublishedCats as $k => $v) {
@@ -178,7 +180,7 @@ class PhocacartCategoryMultiple
                     }
                     $msg .= '</ul>';
 
-                    JFactory::getApplication()->enqueueMessage($msg, 'warning');
+                    Factory::getApplication()->enqueueMessage($msg, 'warning');
                 }
             } catch (RuntimeException $e) {
                 // No error, because this is just additional info
@@ -238,7 +240,7 @@ class PhocacartCategoryMultiple
 	}
 
 	public static function getNextOrder($pId, $cId) {
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$where	= 'category_id ='.(int)$cId;
 		$query 	= $db->getQuery(true)
 			->select('MAX(ordering)')
@@ -258,7 +260,7 @@ class PhocacartCategoryMultiple
 		$categories = '';
 		if (!empty($productsA)) {
 			$productsS = implode(',', $productsA);
-			$db 	= JFactory::getDBO();
+			$db 	= Factory::getDBO();
 			$query = ' SELECT pc.product_id, c.id, c.alias, c.title FROM #__phocacart_categories AS c'
 					.' LEFT JOIN #__phocacart_product_categories AS pc ON c.id = pc.category_id'
 					.' WHERE pc.product_id IN ('.$productsS.')';
@@ -269,7 +271,7 @@ class PhocacartCategoryMultiple
 	}
 
 	public static function getAllCategoriesByProduct($productId) {
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		// Select stored categories for this ID
 		$query = 'SELECT a.category_id'
 		.' FROM #__phocacart_product_categories AS a'
@@ -285,7 +287,7 @@ class PhocacartCategoryMultiple
 	*
 	public static function removeDuplicates() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = ' ALTER IGNORE TABLE '
 		.' #__phocacart_product_categories'
@@ -305,7 +307,7 @@ class PhocacartCategoryMultiple
 
 	public static function setCurrentCategory($items) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$catid	= $app->input->get('catid', 0, 'int');
 
 		if (!empty($items) && (int)$catid > 0) {
@@ -335,7 +337,7 @@ class PhocacartCategoryMultiple
 
 	public static function getCategoryByProduct($id, $catid) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query 	=
 			 ' SELECT c.id AS catid, c.title AS cattitle, c.alias AS catalias'
 			.' FROM #__phocacart_categories AS c'
@@ -408,7 +410,7 @@ class PhocacartCategoryMultiple
 
 	public static function getCurrentCategoryId() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id 	= $app->input->get('id', 0, 'int');
 		$catid 	= $app->input->get('catid', 0, 'int');
 		$view	= $app->input->get('view', '', 'string');
@@ -425,7 +427,7 @@ class PhocacartCategoryMultiple
 
 	public static function getCategoryChildrenString($id, $children = '') {
 
-        $db 	= JFactory::getDBO();
+        $db 	= Factory::getDBO();
         $query 	= "SELECT id FROM #__phocacart_categories WHERE parent_id = ".(int)$id;
         $db->setQuery($query);
         $categories = $db->loadColumn();
@@ -449,7 +451,7 @@ class PhocacartCategoryMultiple
 
     public static function getCategoryChildrenArray($id) {
 
-        $db 	= JFactory::getDBO();
+        $db 	= Factory::getDBO();
         $query 	= "SELECT id FROM #__phocacart_categories WHERE parent_id = ".(int)$id;
         $db->setQuery($query);
         $categories = $db->loadColumn();

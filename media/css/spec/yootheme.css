@@ -1,0 +1,165 @@
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Cart
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+
+.pc-view .modal-backdrop {
+    z-index: 1040 !important;
+}
+
+.ph-category-action-buttons.grid .ph-pull-left,
+.ph-category-action-buttons.grid .ph-pull-right {
+    text-align: center;
+    margin: 0.5em;
+    float: none;
+}
+
+.uk-grid .ph-cb.grid {
+    display: none;
+}
+
+
+/* Top modules */
+.ph-cart-module-box .uk-dropdown {
+    min-width: 26em;
+}
+
+.ph-item-module-box ul li a,
+.ph-item-module-box ul li a:hover,
+.ph-item-module-box div a,
+.ph-item-module-box div a:hover {
+    color: #000;
+}
+.ph-item-module-box .row {
+    margin: 0;
+    padding: 0;
+}
+.ph-item-module-box ul,
+.ph-item-module-box .row div {
+    margin: 0;
+    padding: 0;
+}
+
+
+.ph-pagination-top .uk-select,
+.ph-pagination .uk-select {
+    width: auto;
+}
+
+.ph-input-sm {
+    width: 3em;
+}
+
+.ph-checkout-cart-box .row.uk-grid .ph-vertical-align-row {
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+
+#ph-pc-checkout-box .row.ph-checkout-box-row {
+    margin-top: 1em !important;
+}
+
+#ph-pc-checkout-box .ph-checkout-box-action>div {
+    padding: 1em;
+}
+
+.pc-modal.uk-modal .row.uk-grid>div {
+    padding: 0;
+}
+.pc-modal .uk-modal-title {
+    font-size: 1.1em;
+    margin: 0;
+}
+
+.pc-view .uk-form-horizontal .uk-form-controls {
+    margin-left: 1em;
+}
+
+.ph-checkout-icon-spec-finished,
+.ph-checkout-icon-spec-pending {
+    margin: 2px;
+}
+
+span.visually-hidden {
+    display: none;
+}
+
+.ph-account-address-save,
+.ph-account-check-box {
+    padding: 1em;
+}
+
+.pc-view #member-profile fieldset {
+    margin-right: 1em;
+    border: 1px solid #f0f0f0;
+}
+
+
+
+
+/* Additional Buttons*/
+.uk-modal .uk-button-success,
+.tm-page .uk-button-success {
+    background: #acacac;
+    border: 1px solid transparent;
+    color: #fff;
+}
+.uk-modal .uk-button-success:hover,
+.tm-page .uk-button-success:hover {
+    background: #fff;
+    color: #a0a0a0;
+    border: 1px solid #a0a0a0;
+}
+
+.uk-modal .uk-button-warning,
+.tm-page .uk-button-warning {
+    background: #ffc107;
+    border: 1px solid transparent;
+    color: #fff;
+}
+.uk-modal .uk-button-warning:hover,
+.tm-page .uk-button-warning:hover {
+    background: #fff;
+    color: #e0a800;
+    border: 1px solid #e0a800;
+}
+
+.uk-modal .uk-button-info,
+.tm-page .uk-button-info {
+    background: #17a2b8;
+    border: 1px solid transparent;
+    color: #fff;
+}
+.uk-modal .uk-button-info:hover,
+.tm-page .uk-button-info:hover {
+    background: #fff;
+    color: #138496;
+    border: 1px solid #138496;
+}
+
+
+
+span.ph-stars, span.ph-stars span {
+    background: url(../../images/star-small-yellow.svg) 0 -16px repeat-x;
+}
+span.ph-stars span {
+    background-position: 0 0;
+}
+
+.ph-rating .br-widget a {
+    background: url(../../images/star-yellow.svg);
+}
+
+.uk-accordion {
+    margin-top: 1em;
+}
+
+.ph-account-box-header-pas h3, .ph-account-box-header h3, .ph-checkout-box-header-pas h3, .ph-checkout-box-header h3 {
+    padding-bottom: 0;
+}
+
+
+

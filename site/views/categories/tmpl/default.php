@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die();
 
-echo '<div id="ph-pc-categories-box" class="pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo '<div id="ph-pc-categories-box" class="pc-view pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 echo $this->t['event']->onCategoriesBeforeHeader;
 echo PhocacartRenderFront::renderHeader(array(), '', $this->t['image_categories_view']);

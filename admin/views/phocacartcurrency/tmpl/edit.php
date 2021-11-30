@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 
 $r 			=  $this->r;
@@ -15,23 +17,44 @@ Joomla.submitbutton = function(task) {
 	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
 		Joomla.submitform(task, document.getElementById("adminForm"));
 	} else {
-		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+		Joomla.renderMessages({"error": ["'. Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
 ';
 JFactory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array (
-'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
-'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
+'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
+'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
+
+$formArray = array ('title');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('title', 'code', 'exchange_rate', 'price_format', 'price_currency_symbol', 'price_dec_symbol', 'price_decimals', 'price_thousands_sep', 'price_suffix', 'price_prefix', 'image', 'ordering');
+
+
+if ((int)$this->item->id > 0) {
+
+	$this->t['current_currency'] = array();
+	$this->t['current_currency']['id'] = $this->item->id;
+	$this->t['current_currency']['code'] = $this->item->code;
+	$this->t['current_currency']['exchange_rate'] = $this->item->exchange_rate;
+
+	$exchangeInfo = PhocacartCurrency::getCurrencyRelation($this->t['current_currency'], $this->t['default_currency']);
+
+	if ($exchangeInfo != '') {
+		echo '<div class="ph-float-right ph-admin-additional-box ph-box-info"><small>'. $exchangeInfo.'</small></div>';
+	}
+}
+
+
+
+$formArray = array ('code', 'exchange_rate', 'price_format', 'price_currency_symbol', 'price_dec_symbol', 'price_decimals', 'price_thousands_sep', 'price_suffix', 'price_prefix', 'image', 'ordering');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 
@@ -50,19 +73,9 @@ echo $r->endTab();
 echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
-echo '<div class="col-xs-12 col-sm-2 col-md-2">';
-if ((int)$this->item->id > 0) {
-	$this->t['current_currency'] = array();
-	$this->t['current_currency']['id'] = $this->item->id;
-	$this->t['current_currency']['code'] = $this->item->code;
-	$this->t['current_currency']['exchange_rate'] = $this->item->exchange_rate;
+//echo '<div class="col-xs-12 col-sm-2 col-md-2">';
 
-	$exchangeInfo = PhocacartCurrency::getCurrencyRelation($this->t['current_currency'], $this->t['default_currency']);
-	if ($exchangeInfo != '') {
-		echo '<div class="alert alert-info"><small>'. $exchangeInfo.'</small></div>';
-	}
-}
-echo '</div>';//end span2
+//echo '</div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
 ?>

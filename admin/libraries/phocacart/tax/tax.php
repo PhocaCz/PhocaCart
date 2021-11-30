@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartTax
 {
@@ -17,7 +18,7 @@ class PhocacartTax
 
 
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT t.id, t.title, t.tax_rate'
 			. ' FROM #__phocacart_taxes as t'
 			//. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
@@ -32,7 +33,7 @@ class PhocacartTax
 	public static function getAllTaxesIncludingCountryRegion() {
 
 			// Tax key = IDTAX:IDCOUNTRYTAX:IDREGIONTAX
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q 	= 'SELECT CONCAT_WS(\':\', t.id, 0, 0) as tkey, t.id, t.title, t.tax_rate, t.calculation_type FROM #__phocacart_taxes AS t ORDER BY t.ordering ASC';
 			$db->setQuery($q) ;
 			$itemsT = $db->loadAssocList('tkey');
@@ -58,7 +59,7 @@ class PhocacartTax
 
 
 		if ((int)$countryId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT t.id, t.title, t.ordering, t.tax_rate, tc.id as tcr_id, tc.title as tcr_title, tc.alias as tcr_alias, tc.tax_rate as tcr_tax_rate'
 			. ' FROM #__phocacart_taxes as t'
 			. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
@@ -77,7 +78,7 @@ class PhocacartTax
 
 
 		if ((int)$regionId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT t.id, t.title, t.ordering, t.tax_rate, tr.id as tcr_id, tr.title as tcr_title, tr.alias as tcr_alias, tr.tax_rate as tcr_tax_rate'
 			. ' FROM #__phocacart_taxes as t'
 			. ' LEFT JOIN #__phocacart_tax_regions AS tr ON tr.tax_id = t.id AND tr.region_id = '.(int)$regionId
@@ -103,7 +104,7 @@ class PhocacartTax
 
 
 		if ((int)$taxId > 0 && $countryId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT tc.id, tc.title, tc.tax_rate'
 			. ' FROM #__phocacart_tax_countries as tc'
 			. ' WHERE tc.country_id = '.(int)$countryId
@@ -153,7 +154,7 @@ class PhocacartTax
 		// when such tax will be newly recreated it gets the same ID as it has previously - which will unique tax rates for country in history
 		// even if the tax rate changes it uniques the tax type for each country/region
 		if ((int)$taxId > 0 && $regionId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT tr.id, tr.title, tr.tax_rate'
 			. ' FROM #__phocacart_tax_regions as tr'
 			. ' WHERE tr.region_id = '.(int)$regionId
@@ -248,7 +249,7 @@ class PhocacartTax
 
 		$user 				= PhocacartUser::getUser();
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate	= $paramsC->get( 'dynamic_tax_rate', 0 );
 
@@ -260,7 +261,7 @@ class PhocacartTax
 		}
 
 		if (isset($user->id) && (int)$user->id > 0 && (int)$dynamic_tax_rate > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT country'
 			. ' FROM #__phocacart_users'
 			. ' WHERE user_id = '.(int)$user->id
@@ -282,7 +283,7 @@ class PhocacartTax
 		// 2. Possible improvement get country by IP (but possible problem)
 
 		$user 				= PhocacartUser::getUser();
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$dynamic_tax_rate	= $paramsC->get( 'dynamic_tax_rate', 0 );
 
@@ -294,7 +295,7 @@ class PhocacartTax
 		}
 
 		if (isset($user->id) && (int)$user->id > 0 && (int)$dynamic_tax_rate > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$q = 'SELECT region'
 			. ' FROM #__phocacart_users'
 			. ' WHERE user_id = '.(int)$user->id

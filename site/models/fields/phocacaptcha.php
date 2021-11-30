@@ -6,15 +6,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
 
-class JFormFieldPhocacaptcha extends JFormField
+class JFormFieldPhocacaptcha extends FormField
 {
 	protected $type 		= 'phocacaptcha';
 
 	protected function getInput() {
 
-		$document	= JFactory::getDocument();
-		$session 	= JFactory::getSession();
+		$document	= Factory::getDocument();
+		$session 	= Factory::getSession();
 		$params     = PhocacartUtils::getComponentParameters();
 		$string 	= bin2hex(openssl_random_pseudo_bytes(10));
 		$namespace	= 'pc'.$params->get('session_suffix', $string);

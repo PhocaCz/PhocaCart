@@ -7,9 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Component\ComponentHelper;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartCategory extends JViewLegacy
+class PhocaCartCpViewPhocacartCategory extends HtmlView
 {
 	protected $state;
 	protected $item;
@@ -24,10 +31,10 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
-		$user 			= JFactory::getUser();
+		$user 			= Factory::getUser();
 		$model			= $this->getModel();
 
-		//Joomla\CMS\HTML\HTMLHelper::_('behavior.calendar');
+		//JHtml::_('behavior.calendar');
 		$media = new PhocacartRenderAdminmedia();
 
 		//Data from model
@@ -53,7 +60,7 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 
 		// ASSOCIATION
 		// If we are forcing a language in modal (used for associations).
-		if ($this->getLayout() === 'modal' && $forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'cmd')) {
+		if ($this->getLayout() === 'modal' && $forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'cmd')) {
 			// Set the language field to the forcedLanguage and disable changing it.
 			$this->form->setValue('language', null, $forcedLanguage);
 			$this->form->setFieldAttribute('language', 'readonly', 'true');
@@ -74,22 +81,22 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 	protected function addToolbar() {
 
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-		$bar 		= JToolbar::getInstance('toolbar');
-		$user		= JFactory::getUser();
+		Factory::getApplication()->input->set('hidemainmenu', true);
+		$bar 		= Toolbar::getInstance('toolbar');
+		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 		$class		= ucfirst($this->t['tasks']).'Helper';
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.category_id'));
 
-		$text = $isNew ? JText::_( $this->t['l'].'_NEW' ) : JText::_($this->t['l'].'_EDIT');
-		JToolbarHelper::title(   JText::_( $this->t['l'].'_CATEGORY' ).': <small><small>[ ' . $text.' ]</small></small>' , 'folder-open');
+		$text = $isNew ? Text::_( $this->t['l'].'_NEW' ) : Text::_($this->t['l'].'_EDIT');
+		ToolbarHelper::title(   Text::_( $this->t['l'].'_CATEGORY' ).': <small><small>[ ' . $text.' ]</small></small>' , 'folder-open');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
-			JToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
-			JToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
+			ToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
+			ToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
+			ToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 
 		}
 		// If an existing item, can save to a copy.
@@ -97,22 +104,22 @@ class PhocaCartCpViewPhocacartCategory extends JViewLegacy
 			//JToolbarHelper::custom($this->t['c'].'cat.save2copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		}
 
-		if (!$isNew && JLanguageAssociations::isEnabled() && JComponentHelper::isEnabled('com_associations')) {
-			JToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
+		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
+			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
 		}
 
 		if (empty($this->item->id))  {
-			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
+			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 
 
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}

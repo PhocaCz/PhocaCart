@@ -7,6 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCartCommons
 {
@@ -23,14 +27,14 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
 	public function featured()
 	{
 		// Check for request forgeries
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$app	= JFactory::getApplication();
-		$user   = JFactory::getUser();
+		$app	= Factory::getApplication();
+		$user   = Factory::getUser();
 		$ids    = $this->input->get('cid', array(), 'array');
 		$values = array('featured' => 1, 'unfeatured' => 0);
 		$task   = $this->getTask();
-		$value  = \Joomla\Utilities\ArrayHelper::getValue($values, $task, 0, 'int');
+		$value  = ArrayHelper::getValue($values, $task, 0, 'int');
 
 		// Access checks.
 		foreach ($ids as $i => $id)
@@ -39,13 +43,13 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
 			{
 				// Prune items that you can't change.
 				unset($ids[$i]);
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 				$this->setMessage($this->getError(), 'error');
 			}
 		}
 
 		if (empty($ids)) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NO_ITEMS_SELECTED'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NO_ITEMS_SELECTED'), 'error');
 		} else {
 
 			$model = $this->getModel();

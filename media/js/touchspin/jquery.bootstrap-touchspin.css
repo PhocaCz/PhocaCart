@@ -70,4 +70,13 @@
 	font-size: 0.7em;
 }
 
+.phItemCartUpdateBoxForm .btn.bootstrap-touchspin-down,
+.phItemCartUpdateBoxForm .btn.bootstrap-touchspin-up {
+    padding: initial;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0;
+}
+
+
 

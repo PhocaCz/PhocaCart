@@ -12,5 +12,5 @@ $displayData 	= null;
 $required		= $d['display'] == 2 ? 'required="" aria-required="true"' : '';
 ?>
 <div class="<?php echo $d['class'] ?>">
-	<label><input type="<?php echo $d['s']['c']['checkbox'] ?>" id="<?php echo $d['name'] ?>" name="<?php echo $d['name'] ?>" <?php echo $required ?> /><?php echo $d['label_text'] ?></label>
+	<label><input type="checkbox" class="<?php echo $d['s']['c']['inputbox.checkbox'] ?>" id="<?php echo $d['name'] ?>" name="<?php echo $d['name'] ?>" <?php echo $required ?> /><?php echo $d['label_text'] ?></label>
 </div>

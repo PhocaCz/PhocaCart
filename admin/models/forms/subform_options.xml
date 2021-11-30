@@ -4,51 +4,50 @@
 
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true"/>
 
-        <field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+        <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL"  required="true" />
 
-        <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+        <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
 
-        <field name="operator" type="list" label="COM_PHOCACART_FIELD_OPERATOR_PRICE_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_PRICE_DESC" default="+">
+        <field name="operator" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPERATOR_PRICE_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_PRICE_DESC" default="+">
             <option value="+">+</option>
             <option value="-">-</option>
         </field>
 
-        <field name="amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_AMOUNT_DESC"/>
-        <field name="stock" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_LABEL" description="COM_PHOCACART_FIELD_STOCK_DESC"/>
+        <field name="amount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_AMOUNT_LABEL" />
+        <field name="stock" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_LABEL" />
 
-        <field name="operator_weight" type="list" label="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_DESC" default="+">
+        <field name="operator_weight" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_DESC" default="+">
             <option value="+">+</option>
             <option value="-">-</option>
         </field>
-        <field name="weight" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_WEIGHT_DESC"/>
+        <field name="weight" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" />
 
-        <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox imageCreateThumbs" size="40"/>
+        <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  class="form-control inputbox imageCreateThumbs" size="40"/>
 
-        <field name="image_medium" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL" description="COM_PHOCACART_FIELD_IMAGE_MEDIUM_DESC"
-               class="inputbox imageCreateThumbs" size="40"/>
+        <field name="image_medium" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL" 
+               class="form-control inputbox imageCreateThumbs" size="40"/>
 
-        <field name="image_small" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL" description="COM_PHOCACART_FIELD_IMAGE_SMALL_DESC" class="inputbox imageCreateThumbs"
+        <field name="image_small" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL"  class="form-control inputbox imageCreateThumbs"
                size="40"/>
 
-        <field name="download_folder" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL" readonly="true" description="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_DESC" class="inputbox"
+        <field name="download_folder" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL" readonly="true"  class="form-control"
                size="40"/>
-        <field name="download_token" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC" class="inputbox" size="40"/>
-        <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="inputbox" size="40"/>
+        <field name="download_token" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" class="form-control" size="40"/>
+        <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" class="form-control" size="40"/>
 
-        <field name="color" type="phocacolortext" label="COM_PHOCACART_FIELD_COLOR_LABEL" description="COM_PHOCACART_FIELD_COLOR_DESC" class="inputbox" size="40" default=""/>
+        <field name="color" type="color" label="COM_PHOCACART_FIELD_COLOR_LABEL"  class="form-control" size="40" default=""/>
 
-        <field name="default_value" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DEFAULT_LABEL"
-               description="COM_PHOCACART_FIELD_DEFAULT_DESC">
+        <field name="default_value" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DEFAULT_LABEL">
             <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
-		
-		
-		<field name="required" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_DESC" default="0" >
+
+
+		<field name="required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_DESC" default="0" >
 			<option value="1">COM_PHOCACART_YES</option>
 			<option value="0">COM_PHOCACART_NO</option>
 		</field>
-		<field name="type" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_DESC" default="1" >
+		<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_DESC" default="1" >
 			<option value="0">COM_PHOCACART_ATTR_TYPE_DEFAULT</option>
 			<option value="20">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_NAME</option>
 			<option value="21">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_EMAIL</option>

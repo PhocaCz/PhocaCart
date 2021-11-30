@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 class PhocacartLog
 {
 	/* type - type : e.g warning, error, etc.
@@ -24,7 +26,7 @@ class PhocacartLog
 
 	public static function add( $type = 0, $title = '', $typeid = 0, $description = '') {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$enable_logging		= $paramsC->get( 'enable_logging', 0 );// 0 disable, 1 all, 2 error only
 
@@ -53,9 +55,9 @@ class PhocacartLog
 		$description .= $descSuffix;
 
 		if ((int)$type > 0 && $title != '' ) {
-			$uri			= \Joomla\CMS\Uri\Uri::getInstance();
+			$uri			= Uri::getInstance();
 			$user			= PhocacartUser::getUser();
-			$db				= JFactory::getDBO();
+			$db				= Factory::getDBO();
 			$ip 			= $_SERVER["REMOTE_ADDR"];
 			$incoming_page	= htmlspecialchars($uri->toString());
 			$userid			= 0;

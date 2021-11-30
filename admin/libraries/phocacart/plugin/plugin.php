@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
 
 class PhocacartPlugin
 {
@@ -20,13 +23,13 @@ class PhocacartPlugin
 		if (!isset($plugin['name'])) {$p[0] = false;return $p;}
 		if (!isset($plugin['group'])) {$p[0] = false;return $p;}
 		if (!isset($plugin['title'])) {$plugin['title'] = '';}
-		if (!isset($plugin['selectitle'])) {$plugin['selectitle'] = JText::_('COM_PHOCACART_SELECT_PLUGIN');}
+		if (!isset($plugin['selectitle'])) {$plugin['selectitle'] = Text::_('COM_PHOCACART_SELECT_PLUGIN');}
 		if (!isset($plugin['returnform'])) {$plugin['returnform'] = 1;}
 		
 
-		$db 	= JFactory::getDBO();
-		$lang	= JFactory::getLanguage();
-		$client	= JApplicationHelper::getClientInfo(0);
+		$db 	= Factory::getDBO();
+		$lang	= Factory::getLanguage();
+		$client	= ApplicationHelper::getClientInfo(0);
 		$query = 'SELECT a.extension_id , a.name, a.element, a.folder'
 				.' FROM #__extensions AS a'
 				.' WHERE a.type = '.$db->quote('plugin')
@@ -62,11 +65,11 @@ class PhocacartPlugin
 
 				$i++;
 
-				$name = JText::_(strtoupper($v->name) );
+				$name = Text::_(strtoupper($v->name) );
 				$name = str_replace('Plugin', '', $name);
 				$name = str_replace($plugin['title'] . ' -', '', $name);
 
-				$p[$i]['text'] = JText::_($name);
+				$p[$i]['text'] = Text::_($name);
 				$p[$i]['value'] = $v->element;
 			}
 

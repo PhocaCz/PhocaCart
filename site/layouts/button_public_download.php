@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
 <form action="<?php echo $d['linkdownload']; ?>" method="post" id="phPublicDownload<?php echo (int)$d['id']; ?>" class="phItemPublicDownloadBoxForm">
@@ -21,11 +23,11 @@ $d = $displayData;
 		if ($d['title'] != '') {
 			echo ' '. $d['title'];
 		} else {
-			echo ' '. JText::_('COM_PHOCACART_DOWNLOAD');
+			echo ' '. Text::_('COM_PHOCACART_DOWNLOAD');
 		}
 		?></button>
 		</div>
 	</div>
 	<div class="ph-cb"></div>
-	<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

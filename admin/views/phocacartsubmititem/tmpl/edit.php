@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 
 $r 			=  $this->r;
@@ -15,26 +17,29 @@ Joomla.submitbutton = function(task) {
 	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
 		Joomla.submitform(task, document.getElementById("adminForm"));
 	} else {
-		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+		Joomla.renderMessages({"error": ["'. Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
 ';
 JFactory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array(
-    'general' => JText::_($this->t['l'] . '_GENERAL_OPTIONS'),
-    'item' => JText::_($this->t['l'] . '_PRODUCT_INFORMATION'),
-    'contact' => JText::_($this->t['l'] . '_CONTACT_INFORMATION'));
+    'general' => Text::_($this->t['l'] . '_GENERAL_OPTIONS'),
+    'item' => Text::_($this->t['l'] . '_PRODUCT_INFORMATION'),
+    'contact' => Text::_($this->t['l'] . '_CONTACT_INFORMATION'));
 echo $r->navigation($tabs);
+
+$formArray = array ('title', 'alias');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
 
 
 // GENERAL OPTIONS
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array('title', 'user_id', 'ip', 'date_submit', 'published', 'ordering', 'upload_folder', 'upload_token');
+$formArray = array('user_id', 'ip', 'date_submit', 'published', 'ordering', 'upload_folder', 'upload_token');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

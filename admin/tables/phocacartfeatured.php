@@ -8,12 +8,13 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
 
 /**
  * @package     Joomla.Administrator
  * @subpackage  com_content
  */
-class TablePhocacartFeatured extends JTable
+class TablePhocacartFeatured extends Table
 {
 	/**
 	 * @param   JDatabaseDriver  A database connector object

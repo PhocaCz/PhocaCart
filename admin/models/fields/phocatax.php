@@ -9,12 +9,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined('_JEXEC') or die();
-class JFormFieldPhocaTax extends JFormField
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+class JFormFieldPhocaTax extends FormField
 {
 	protected $type 		= 'PhocaTax';
 
 	protected function getInput() {
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.title AS text, a.id AS value'
 		. ' FROM #__phocacart_taxes AS a'
@@ -25,12 +29,12 @@ class JFormFieldPhocaTax extends JFormField
 
 		if (!empty($data)) {
 			foreach($data as $k => $v) {
-				$data[$k]->text = JText::_($v->text);
+				$data[$k]->text = Text::_($v->text);
 			}
 		}
 
-		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_TAX').' -', 'value', 'text'));
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		array_unshift($data, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_TAX').' -', 'value', 'text'));
+		return HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="form-select"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

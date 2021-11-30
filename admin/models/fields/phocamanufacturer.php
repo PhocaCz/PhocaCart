@@ -7,20 +7,24 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaManufacturer extends JFormField
+class JFormFieldPhocaManufacturer extends FormField
 {
 	protected $type 		= 'PhocaManufacturer';
 
 	protected function getInput() {
-			
-			
-		$class		= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
+
+
+		$class		= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
 		$attr		= '';
 		$attr		.= $class . ' ';
 		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.title AS text, a.id AS value'
 		. ' FROM #__phocacart_manufacturers AS a'
@@ -29,8 +33,8 @@ class JFormFieldPhocaManufacturer extends JFormField
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
 
-		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		array_unshift($data, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
+		return HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

@@ -9,9 +9,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartHits extends JModelList
+class PhocaCartCpModelPhocaCartHits extends ListModel
 {
 	protected $option 	= 'com_phocacart';
 
@@ -37,7 +39,7 @@ class PhocaCartCpModelPhocaCartHits extends JModelList
 	}
 
 	protected function populateState($ordering = 'a.date', $direction = 'DESC') {
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);

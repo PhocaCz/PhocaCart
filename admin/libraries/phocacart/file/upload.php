@@ -9,6 +9,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Client\ClientHelper;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
@@ -18,7 +27,7 @@ class PhocacartFileUpload
     {
 
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         $chunkMethod = $paramsC->get('multiple_upload_chunk', 0);
         $uploadMethod = $paramsC->get('multiple_upload_method', 4);
@@ -36,20 +45,20 @@ class PhocacartFileUpload
         header("Pragma: no-cache");
 
         // Invalid Token
-        JSession::checkToken('request') or jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 100,
-            'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-            'details' => JTEXT::_('COM_PHOCACART_INVALID_TOKEN'))));
+        Session::checkToken('request') or jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 100,
+            'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+            'details' => Text::_('COM_PHOCACART_INVALID_TOKEN'))));
 
         // Set FTP credentials, if given
-        $ftp = JClientHelper::setCredentialsFromRequest('ftp');
+        $ftp = ClientHelper::setCredentialsFromRequest('ftp');
 
 
         //$file 			= JFactory::getApplication()->input->get( 'file', '', 'files', 'array' );
-        $file = JFactory::getApplication()->input->files->get('file', null, 'raw');
-        $chunk = JFactory::getApplication()->input->get('chunk', 0, '', 'int');
-        $chunks = JFactory::getApplication()->input->get('chunks', 0, '', 'int');
-        $folder = JFactory::getApplication()->input->get('folder', '', '', 'path');
-        $manager = JFactory::getApplication()->input->get('manager', 'file', '', 'string');
+        $file = Factory::getApplication()->input->files->get('file', null, 'raw');
+        $chunk = Factory::getApplication()->input->get('chunk', 0, '', 'int');
+        $chunks = Factory::getApplication()->input->get('chunks', 0, '', 'int');
+        $folder = Factory::getApplication()->input->get('folder', '', '', 'path');
+        $manager = Factory::getApplication()->input->get('manager', 'file', '', 'string');
 
 
         $path = PhocacartPath::getPath($manager);// we use viewback to get right path
@@ -57,7 +66,7 @@ class PhocacartFileUpload
 
         // Make the filename safe
         if (isset($file['name'])) {
-            $file['name'] = JFile::makeSafe($file['name']);
+            $file['name'] = File::makeSafe($file['name']);
         }
         if (isset($folder) && $folder != '') {
             $folder = $folder . '/';
@@ -96,10 +105,10 @@ class PhocacartFileUpload
                 // parts uploaded by the new file - so this is why we are using temp file in Chunk method
                 $stream = JFactory::getStream();// Chunk Files
                 $tempFolder = 'pcpluploadtmpfolder' . '/';
-                $filepathImgFinal = JPath::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
-                $filepathImgTemp = JPath::clean($path['orig_abs_ds'] . $folder . $tempFolder . strtolower($file['name']));
-                $filepathFolderFinal = JPath::clean($path['orig_abs_ds'] . $folder);
-                $filepathFolderTemp = JPath::clean($path['orig_abs_ds'] . $folder . $tempFolder);
+                $filepathImgFinal = Path::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
+                $filepathImgTemp = Path::clean($path['orig_abs_ds'] . $folder . $tempFolder . strtolower($file['name']));
+                $filepathFolderFinal = Path::clean($path['orig_abs_ds'] . $folder);
+                $filepathFolderTemp = Path::clean($path['orig_abs_ds'] . $folder . $tempFolder);
                 $maxFileAge = 60 * 60; // Temp file age in seconds
                 $lastChunk = $chunk + 1;
                 $realSize = 0;
@@ -108,7 +117,7 @@ class PhocacartFileUpload
                 // Get the real size - if chunk is uploaded, it is only a part size, so we must compute all size
                 // If there is last chunk we can computhe the whole size
                 if ($lastChunk == $chunks) {
-                    if (JFile::exists($filepathImgTemp) && JFile::exists($file['tmp_name'])) {
+                    if (File::exists($filepathImgTemp) && File::exists($file['tmp_name'])) {
                         $realSize = filesize($filepathImgTemp) + filesize($file['tmp_name']);
                     }
                 }
@@ -124,18 +133,18 @@ class PhocacartFileUpload
 
                 // Files should be overwritten
                 if ($overwriteExistingFiles == 1) {
-                    JFile::delete($filepathImgFinal);
+                    File::delete($filepathImgFinal);
                 }
 
-                if (JFile::exists($filepathImgFinal)) {
+                if (File::exists($filepathImgFinal)) {
                     if ($lastChunk == $chunks) {
-                        @JFolder::delete($filepathFolderTemp);
+                        @Folder::delete($filepathFolderTemp);
                     }
 
 
                     jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 108,
-                        'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                        'details' => JTEXT::_('COM_PHOCACART_FILE_ALREADY_EXISTS'))));
+                        'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                        'details' => Text::_('COM_PHOCACART_FILE_ALREADY_EXISTS'))));
 
                 }
 
@@ -143,34 +152,34 @@ class PhocacartFileUpload
 
                     // If there is some error, remove the temp folder with temp files
                     if ($lastChunk == $chunks) {
-                        @JFolder::delete($filepathFolderTemp);
+                        @Folder::delete($filepathFolderTemp);
                     }
                     jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 104,
-                        'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                        'details' => JTEXT::_($errUploadMsg))));
+                        'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                        'details' => Text::_($errUploadMsg))));
                 }
 
                 // Ok create temp folder and add chunks
-                if (!JFolder::exists($filepathFolderTemp)) {
-                    @JFolder::create($filepathFolderTemp);
+                if (!Folder::exists($filepathFolderTemp)) {
+                    @Folder::create($filepathFolderTemp);
                 }
 
                 // Remove old temp files
-                if (JFolder::exists($filepathFolderTemp)) {
-                    $dirFiles = JFolder::files($filepathFolderTemp);
+                if (Folder::exists($filepathFolderTemp)) {
+                    $dirFiles = Folder::files($filepathFolderTemp);
                     if (!empty($dirFiles)) {
                         foreach ($dirFiles as $fileS) {
                             $filePathImgS = $filepathFolderTemp . $fileS;
                             // Remove temp files if they are older than the max age
                             if (preg_match('/\\.tmp$/', $fileS) && (filemtime($filepathImgTemp) < time() - $maxFileAge)) {
-                                @JFile::delete($filePathImgS);
+                                @File::delete($filePathImgS);
                             }
                         }
                     }
                 } else {
                     jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 100,
-                        'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                        'details' => JTEXT::_('COM_PHOCACART_ERROR_FOLDER_UPLOAD_NOT_EXISTS'))));
+                        'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                        'details' => Text::_('COM_PHOCACART_ERROR_FOLDER_UPLOAD_NOT_EXISTS'))));
                 }
 
                 // Look for the content type header
@@ -196,21 +205,21 @@ class PhocacartFileUpload
                                 }
                             } else {
                                 jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 101,
-                                    'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                                    'details' => JTEXT::_('COM_PHOCACART_ERROR_OPEN_INPUT_STREAM'))));
+                                    'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                                    'details' => Text::_('COM_PHOCACART_ERROR_OPEN_INPUT_STREAM'))));
                             }
                             $stream->close();
                             //fclose($out);
-                            @JFile::delete($file['tmp_name']);
+                            @File::delete($file['tmp_name']);
                         } else {
                             jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 102,
-                                'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                                'details' => JTEXT::_('COM_PHOCACART_ERROR_OPEN_OUTPUT_STREAM'))));
+                                'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                                'details' => Text::_('COM_PHOCACART_ERROR_OPEN_OUTPUT_STREAM'))));
                         }
                     } else {
                         jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 103,
-                            'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                            'details' => JTEXT::_('COM_PHOCACART_ERROR_MOVE_UPLOADED_FILE'))));
+                            'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                            'details' => Text::_('COM_PHOCACART_ERROR_MOVE_UPLOADED_FILE'))));
                     }
                 } else {
                     // Open temp file
@@ -226,15 +235,15 @@ class PhocacartFileUpload
                             }
                         } else {
                             jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 101,
-                                'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                                'details' => JTEXT::_('COM_PHOCACART_ERROR_OPEN_INPUT_STREAM'))));
+                                'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                                'details' => Text::_('COM_PHOCACART_ERROR_OPEN_INPUT_STREAM'))));
                         }
                         $stream->close();
                         //fclose($out);
                     } else {
                         jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 102,
-                            'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                            'details' => JTEXT::_('COM_PHOCACART_ERROR_OPEN_OUTPUT_STREAM'))));
+                            'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                            'details' => Text::_('COM_PHOCACART_ERROR_OPEN_OUTPUT_STREAM'))));
                     }
                 }
 
@@ -243,29 +252,29 @@ class PhocacartFileUpload
                 if ($lastChunk == $chunks) {
 
                     /*if(($imginfo = getimagesize($filepathImgTemp)) === FALSE) {
-                        JFolder::delete($filepathFolderTemp);
+                        Folder::delete($filepathFolderTemp);
                         jexit(json_encode(array( 'jsonrpc' => '2.0', 'result' => 'error', 'code' => 110,
-                        'message' => JText::_('COM_PHOCACART_ERROR').': ',
-                        'details' => JTEXT::_('COM_PHOCACART_WARNING_INVALIDIMG'))));
+                        'message' => Text::_('COM_PHOCACART_ERROR').': ',
+                        'details' => Text::_('COM_PHOCACART_WARNING_INVALIDIMG'))));
                     }*/
 
                     // Files should be overwritten
                     if ($overwriteExistingFiles == 1) {
-                        JFile::delete($filepathImgFinal);
+                        File::delete($filepathImgFinal);
                     }
 
-                    if (!JFile::move($filepathImgTemp, $filepathImgFinal)) {
+                    if (!File::move($filepathImgTemp, $filepathImgFinal)) {
 
-                        JFolder::delete($filepathFolderTemp);
+                        Folder::delete($filepathFolderTemp);
 
                         jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 109,
-                            'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                            'details' => JTEXT::_('COM_PHOCACART_ERROR_UNABLE_TO_MOVE_FILE') . '<br />'
-                                . JText::_('COM_PHOCACART_CHECK_PERMISSIONS_OWNERSHIP'))));
+                            'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                            'details' => Text::_('COM_PHOCACART_ERROR_UNABLE_TO_MOVE_FILE') . '<br />'
+                                . Text::_('COM_PHOCACART_CHECK_PERMISSIONS_OWNERSHIP'))));
                     }
 
 
-                    JFolder::delete($filepathFolderTemp);
+                    Folder::delete($filepathFolderTemp);
                 }
 
                 if ((int)$frontEnd > 0) {
@@ -273,37 +282,37 @@ class PhocacartFileUpload
                 }
 
                 jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'OK', 'code' => 200,
-                    'message' => JText::_('COM_PHOCACART_SUCCESS') . ': ',
-                    'details' => JTEXT::_('COM_PHOCACART_FILES_UPLOADED'))));
+                    'message' => Text::_('COM_PHOCACART_SUCCESS') . ': ',
+                    'details' => Text::_('COM_PHOCACART_FILES_UPLOADED'))));
 
 
             } else {
                 // No Chunk Method
 
 
-                $filepathImgFinal = JPath::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
-                $filepathFolderFinal = JPath::clean($path['orig_abs_ds'] . $folder);
+                $filepathImgFinal = Path::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
+                $filepathFolderFinal = Path::clean($path['orig_abs_ds'] . $folder);
 
 
                 if (!PhocacartFileUpload::canUpload($file, $errUploadMsg, $manager, $frontEnd, $chunkMethod, 0)) {
                     jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 104,
-                        'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                        'details' => JTEXT::_($errUploadMsg))));
+                        'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                        'details' => Text::_($errUploadMsg))));
                 }
 
-                if (JFile::exists($filepathImgFinal) && $overwriteExistingFiles == 0) {
+                if (File::exists($filepathImgFinal) && $overwriteExistingFiles == 0) {
                     jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 108,
-                        'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                        'details' => JTEXT::_('COM_PHOCACART_FILE_ALREADY_EXISTS'))));
+                        'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                        'details' => Text::_('COM_PHOCACART_FILE_ALREADY_EXISTS'))));
                 }
 
 
-                if (!JFile::upload($file['tmp_name'], $filepathImgFinal, false, true)) {
+                if (!File::upload($file['tmp_name'], $filepathImgFinal, false, true)) {
                     PhocacartLog::add(2, 'Error uploading file - JFile upload Ajax', 0, 'File: ' . $file['name'] . ', File Path: ' . $filepathImgFinal);
                     jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 109,
-                        'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                        'details' => JTEXT::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE') . '<br />'
-                            . JText::_('COM_PHOCACART_CHECK_PERMISSIONS_OWNERSHIP'))));
+                        'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                        'details' => Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE') . '<br />'
+                            . Text::_('COM_PHOCACART_CHECK_PERMISSIONS_OWNERSHIP'))));
                 }
 
                 if ((int)$frontEnd > 0) {
@@ -311,8 +320,8 @@ class PhocacartFileUpload
                 }
 
                 jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'OK', 'code' => 200,
-                    'message' => JText::_('COM_PHOCACART_SUCCESS') . ': ',
-                    'details' => JTEXT::_('COM_PHOCACART_IMAGES_UPLOADED'))));
+                    'message' => Text::_('COM_PHOCACART_SUCCESS') . ': ',
+                    'details' => Text::_('COM_PHOCACART_IMAGES_UPLOADED'))));
 
 
             }
@@ -321,8 +330,8 @@ class PhocacartFileUpload
             PhocacartLog::add(2, 'Error uploading file - Filename does not exist', 0, 'File: File does not exist - Multiple Upload ');
 
             jexit(json_encode(array('jsonrpc' => '2.0', 'result' => 'error', 'code' => 104,
-                'message' => JText::_('COM_PHOCACART_ERROR') . ': ',
-                'details' => JTEXT::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'))));
+                'message' => Text::_('COM_PHOCACART_ERROR') . ': ',
+                'details' => Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'))));
         }
 
     }
@@ -331,7 +340,7 @@ class PhocacartFileUpload
     public static function realSingleUpload($frontEnd = 0)
     {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         //	$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
         //	$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 1 );
@@ -339,23 +348,23 @@ class PhocacartFileUpload
         $overwriteExistingFiles = $paramsC->get('overwrite_existing_files', 0);
 
 
-        JSession::checkToken('request') or jexit('ERROR: ' . JTEXT::_('COM_PHOCACART_INVALID_TOKEN'));
+        Session::checkToken('request') or jexit('ERROR: ' . Text::_('COM_PHOCACART_INVALID_TOKEN'));
         $app->allowCache(false);
 
 
-        $file = JFactory::getApplication()->input->files->get('Filedata', null, 'raw');
+        $file = Factory::getApplication()->input->files->get('Filedata', null, 'raw');
         //$file 			= J R equest::getVar( 'Filedata', '', 'files', 'array' );
-        $folder = JFactory::getApplication()->input->get('folder', '', '', 'path');
-        $format = JFactory::getApplication()->input->get('format', 'html', '', 'cmd');
+        $folder = Factory::getApplication()->input->get('folder', '', '', 'path');
+        $format = Factory::getApplication()->input->get('format', 'html', '', 'cmd');
         $return = JFactory::getApplication()->input->get('return-url', null, 'post', 'base64');//includes field
-        $viewBack = JFactory::getApplication()->input->get('viewback', '', '', '');
-        $manager = JFactory::getApplication()->input->get('manager', 'file', '', 'string');
-        $tab = JFactory::getApplication()->input->get('tab', '', '', 'string');
-        $field = JFactory::getApplication()->input->get('field');
+        $viewBack = Factory::getApplication()->input->get('viewback', '', '', '');
+        $manager = Factory::getApplication()->input->get('manager', 'file', '', 'string');
+        $tab = Factory::getApplication()->input->get('tab', '', '', 'string');
+        $field = Factory::getApplication()->input->get('field');
         $errUploadMsg = '';
         $folderUrl = $folder;
         $tabUrl = '';
-        $component = JFactory::getApplication()->input->get('option', '', '', 'string');
+        $component = Factory::getApplication()->input->get('option', '', '', 'string');
 
         $path = PhocacartPath::getPath($manager);// we use viewback to get right path
 
@@ -370,11 +379,11 @@ class PhocacartFileUpload
             $tabUrl = '&tab=' . (string)$tab;
         }
 
-        $ftp = JClientHelper::setCredentialsFromRequest('ftp');
+        $ftp = ClientHelper::setCredentialsFromRequest('ftp');
 
         // Make the filename safe
         if (isset($file['name'])) {
-            $file['name'] = JFile::makeSafe($file['name']);
+            $file['name'] = File::makeSafe($file['name']);
         }
 
 
@@ -385,17 +394,17 @@ class PhocacartFileUpload
 
         // All HTTP header will be overwritten with js message
         if (isset($file['name'])) {
-            $filepath = JPath::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
+            $filepath = Path::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
 
             if (!PhocacartFileUpload::canUpload($file, $errUploadMsg, $manager, $frontEnd)) {
 
                 if ($errUploadMsg == 'COM_PHOCACART_WARNFILETOOLARGE') {
-                    $errUploadMsg = JText::_($errUploadMsg) . ' (' . PhocacartFile::getFileSizeReadable($file['size']) . ')';
+                    $errUploadMsg = Text::_($errUploadMsg) . ' (' . PhocacartFile::getFileSizeReadable($file['size']) . ')';
                 } /* else if ($errUploadMsg == 'COM_PHOCACART_WARNING_FILE_TOOLARGE_RESOLUTION') {
 					$imgSize		= phocacartImage::getImageSize($file['tmp_name']);
-					$errUploadMsg 	= JText::_($errUploadMsg) . ' ('.(int)$imgSize[0].' x '.(int)$imgSize[1].' px)';
+					$errUploadMsg 	= Text::_($errUploadMsg) . ' ('.(int)$imgSize[0].' x '.(int)$imgSize[1].' px)';
 				} */ else {
-                    $errUploadMsg = JText::_($errUploadMsg);
+                    $errUploadMsg = Text::_($errUploadMsg);
                 }
 
 
@@ -410,27 +419,27 @@ class PhocacartFileUpload
                 }
             }
 
-            if (JFile::exists($filepath) && $overwriteExistingFiles == 0) {
+            if (File::exists($filepath) && $overwriteExistingFiles == 0) {
                 if ($return) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_FILE_ALREADY_EXISTS'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_FILE_ALREADY_EXISTS'), 'error');
                     $app->redirect(base64_decode($return) . '&manager=' . (string)$manager . '&folder=' . $folderUrl);
                     exit;
                 } else {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_FILE_ALREADY_EXISTS'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_FILE_ALREADY_EXISTS'), 'error');
                     $app->redirect($componentUrl);
                     exit;
                 }
             }
 
-            if (!JFile::upload($file['tmp_name'], $filepath, false, true)) {
+            if (!File::upload($file['tmp_name'], $filepath, false, true)) {
 
                 PhocacartLog::add(2, 'Error uploading file - JFile upload', 0, 'File: ' . $file['name'] . ', File Path: ' . $filepath);
                 if ($return) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
                     $app->redirect(base64_decode($return) . '&manager=' . (string)$manager . '&folder=' . $folderUrl);
                     exit;
                 } else {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
                     $app->redirect($componentUrl);
                     exit;
                 }
@@ -442,18 +451,18 @@ class PhocacartFileUpload
 
 
                 if ($return) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'));
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'));
                     $app->redirect(base64_decode($return) . '&manager=' . (string)$manager . '&folder=' . $folderUrl);
                     exit;
                 } else {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'));
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'));
                     $app->redirect($componentUrl);
                     exit;
                 }
             }
         } else {
             PhocacartLog::add(2, 'Error uploading file - Filename does not exist', 0, 'File: File does not exist (Single Upload)');
-            $msg = JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE');
+            $msg = Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE');
             if ($return) {
                 $app->enqueueMessage($msg);
                 $app->redirect(base64_decode($return) . '&manager=' . (string)$manager . '&folder=' . $folderUrl);
@@ -526,13 +535,13 @@ class PhocacartFileUpload
         }
         // Not safe file
         jimport('joomla.filesystem.file');
-        if ($file['name'] !== JFile::makesafe($file['name'])) {
+        if ($file['name'] !== File::makesafe($file['name'])) {
             $err = 'COM_PHOCACART_WARNFILENAME';
             return false;
         }
 
 
-        $format = strtolower(JFile::getExt($file['name']));
+        $format = strtolower(File::getExt($file['name']));
         if ($ignoreUploadCh == 1) {
 
         } else {
@@ -600,12 +609,12 @@ class PhocacartFileUpload
             }
 
             if ((int)$maxUserUploadSize > 0 && (int) $allFile['size'] > $maxUserUploadSize) {
-                $err = JText::_('COM_PHOCACART_WARNUSERFILESTOOLARGE');
+                $err = Text::_('COM_PHOCACART_WARNUSERFILESTOOLARGE');
                 return false;
             }
 
             if ((int) $allFile['count'] > $maxUserUploadCount) {
-                $err = JText::_('COM_PHOCACART_WARNUSERFILESTOOMUCH');
+                $err = Text::_('COM_PHOCACART_WARNUSERFILESTOOMUCH');
                 return false;
             }
         }*/
@@ -652,7 +661,7 @@ class PhocacartFileUpload
         }
 
         // XSS Check
-        $xss_check = JFile::read($file['tmp_name'], false, 256);
+        $xss_check = file_get_contents($file['tmp_name'], false, null, -1, 256);
         $html_tags = PhocacartUtilsSettings::getHTMLTagsUpload();
         foreach ($html_tags as $tag) { // A tag is '<tagname ', so we need to add < and a space or '<tagname>'
             if (stristr($xss_check, '<' . $tag . ' ') || stristr($xss_check, '<' . $tag . '>')) {
@@ -668,16 +677,16 @@ class PhocacartFileUpload
     public static function renderFTPaccess()
     {
 
-        $ftpOutput = '<fieldset title="' . JText::_('COM_PHOCACART_FTP_LOGIN_LABEL') . '">'
-            . '<legend>' . JText::_('COM_PHOCACART_FTP_LOGIN_LABEL') . '</legend>'
-            . JText::_('COM_PHOCACART_FTP_LOGIN_DESC')
+        $ftpOutput = '<fieldset title="' . Text::_('COM_PHOCACART_FTP_LOGIN_LABEL') . '">'
+            . '<legend>' . Text::_('COM_PHOCACART_FTP_LOGIN_LABEL') . '</legend>'
+            . Text::_('COM_PHOCACART_FTP_LOGIN_DESC')
             . '<table class="adminform nospace">'
             . '<tr>'
-            . '<td width="120"><label for="username">' . JText::_('JGLOBAL_USERNAME') . ':</label></td>'
+            . '<td width="120"><label for="username">' . Text::_('JGLOBAL_USERNAME') . ':</label></td>'
             . '<td><input type="text" id="username" name="username" class="input_box" size="70" value="" /></td>'
             . '</tr>'
             . '<tr>'
-            . '<td width="120"><label for="password">' . JText::_('JGLOBAL_PASSWORD') . ':</label></td>'
+            . '<td width="120"><label for="password">' . Text::_('JGLOBAL_PASSWORD') . ':</label></td>'
             . '<td><input type="password" id="password" name="password" class="input_box" size="70" value="" /></td>'
             . '</tr></table></fieldset>';
         return $ftpOutput;
@@ -690,18 +699,18 @@ class PhocacartFileUpload
             $attribs = '&amp;' . $attribs;
         }
 
-        $folderOutput = '<form action="' . JURI::base()
+        $folderOutput = '<form action="' . Uri::base()
             . 'index.php?option=com_phocacart&task=phocacartupload.createfolder&amp;' . $sessName . '=' . $sessId . '&amp;'
-            . JSession::getFormToken() . '=1&amp;viewback=' . $viewBack . '&amp;'
+            . Session::getFormToken() . '=1&amp;viewback=' . $viewBack . '&amp;'
             . 'folder=' . PhocacartText::filterValue($currentFolder, 'folderpath') . $attribs . '" name="folderForm" id="folderForm" method="post" class="form-inline" >' . "\n"
 
-            . '<h4>' . JText::_('COM_PHOCACART_FOLDER') . '</h4>' . "\n"
+            . '<h4>' . Text::_('COM_PHOCACART_FOLDER') . '</h4>' . "\n"
             . '<div class="path">'
-            . '<input class="inputbox" type="text" id="foldername" name="foldername"  />'
+            . '<input class="form-control" type="text" id="foldername" name="foldername"  />'
             . '<input class="update-folder" type="hidden" name="folderbase" id="folderbase" value="' . PhocacartText::filterValue($currentFolder, 'folderpath') . '" />'
-            . ' <button type="submit" class="btn btn-success">' . JText::_('COM_PHOCACART_CREATE_FOLDER') . '</button>'
+            . ' <button type="submit" class="btn btn-success">' . Text::_('COM_PHOCACART_CREATE_FOLDER') . '</button>'
             . '</div>' . "\n"
-            . Joomla\CMS\HTML\HTMLHelper::_('form.token')
+            . HTMLHelper::_('form.token')
             . '</form>';
         return $folderOutput;
     }
@@ -716,7 +725,7 @@ class PhocacartFileUpload
 		$submit_item_upload_image_count = $pC->get('submit_item_upload_image_count', 1);
 
 
-		$app        = JFactory::getApplication();
+		$app        = Factory::getApplication();
         $path       = PhocacartPath::getPath('submititem');
         $folder     = $data['upload_folder'];
 
@@ -735,12 +744,12 @@ class PhocacartFileUpload
                     if (!PhocacartFileUpload::canUpload( $v, $errUploadMsg, 'submitimage', 1 )) {
 
                         if ($errUploadMsg == 'COM_PHOCACART_WARNFILETOOLARGE') {
-                            $errUploadMsg 	= JText::_($errUploadMsg) . ' ('.PhocacartFile::getFileSizeReadable($v['size']).')';
+                            $errUploadMsg 	= Text::_($errUploadMsg) . ' ('.PhocacartFile::getFileSizeReadable($v['size']).')';
                         } /* else if ($errUploadMsg == 'COM_PHOCACART_WARNING_FILE_TOOLARGE_RESOLUTION') {
                             $imgSize		= phocacartImage::getImageSize($file['tmp_name']);
-                            $errUploadMsg 	= JText::_($errUploadMsg) . ' ('.(int)$imgSize[0].' x '.(int)$imgSize[1].' px)';
+                            $errUploadMsg 	= Text::_($errUploadMsg) . ' ('.(int)$imgSize[0].' x '.(int)$imgSize[1].' px)';
                         } */ else {
-							$errUploadMsg 	= JText::_($errUploadMsg);
+							$errUploadMsg 	= Text::_($errUploadMsg);
 
 							if ($errUploadMsg != '') {
 								if (isset($v['name']) && $v['name'] != '') {
@@ -757,7 +766,7 @@ class PhocacartFileUpload
 
                     // Specific check for specific form field types
                     if ((int)$submit_item_upload_image_maxsize > 0 && (int)$v['size'] > (int)$submit_item_upload_image_maxsize ) {
-                        $app->enqueueMessage(JText::_('COM_PHOCACART_WARNFILETOOLARGE'), 'error');
+                        $app->enqueueMessage(Text::_('COM_PHOCACART_WARNFILETOOLARGE'), 'error');
                         return false;
                     }
 
@@ -771,22 +780,22 @@ class PhocacartFileUpload
                     $ext                = PhocacartFile::getExtension($v['name']);
                     $fileNameToken	    = PhocacartUtils::getToken('folder');
                     $fileNameTokenExt	= $fileNameToken . '.'.$ext;
-                    $folderPath         = JPath::clean($path['orig_abs_ds'] . $folder);
-                    $filePath           = JPath::clean($path['orig_abs_ds'] . $folder . '/'. $fileNameTokenExt);
+                    $folderPath         = Path::clean($path['orig_abs_ds'] . $folder);
+                    $filePath           = Path::clean($path['orig_abs_ds'] . $folder . '/'. $fileNameTokenExt);
 
                     PhocacartFile::createUploadFolder('');// Create Main Upload Folder if not exists
                     PhocacartFile::createUploadFolder($folder);
 
 
-					if (JFile::exists($filePath)) {
-						$app->enqueueMessage( JText::_('COM_PHOCACART_FILE_ALREADY_EXISTS'), 'error');
+					if (File::exists($filePath)) {
+						$app->enqueueMessage( Text::_('COM_PHOCACART_FILE_ALREADY_EXISTS'), 'error');
 						return false;
 					}
 
-					if (!JFile::upload($v['tmp_name'], $filePath, false, true)) {
+					if (!File::upload($v['tmp_name'], $filePath, false, true)) {
 
 						PhocacartLog::add(2, 'Error uploading file - JFile upload (Submit Item)', 0, 'File: '.strip_tags(htmlspecialchars($v['name'])).', File Path: '.$filePath );
-						$app->enqueueMessage( JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
+						$app->enqueueMessage( Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE'), 'error');
 						return false;
 					} else {
 
@@ -802,7 +811,7 @@ class PhocacartFileUpload
 					}
                 } else {
 					PhocacartLog::add(2, 'Error uploading file - Filename does not exist (Submit Item)', 0, 'File: File does not exist (Submit Item)' );
-					$msg = JText::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE');
+					$msg = Text::_('COM_PHOCACART_ERROR_UNABLE_TO_UPLOAD_FILE');
 					$app->enqueueMessage($msg);
 					return false;
 				}

@@ -9,14 +9,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartUserGuestuser
 {
 	public static function getGuestUser() {
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$p 				= PhocacartUtils::getComponentParameters();
 		$guestCheckout	= $p->get( 'guest_checkout', 0 );
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		$user			= PhocacartUser::getUser();
 
 		if ($app->getName() == 'administrator') {
@@ -34,7 +35,7 @@ class PhocacartUserGuestuser
 	public static function setGuestUser($guest = false) {
 		$p 				= PhocacartUtils::getComponentParameters();
 		$guestCheckout	= $p->get( 'guest_checkout', 0 );
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		if ($guest && $guestCheckout == 1) {
 			$session->set('guest', true, 'phocaCart');
 		} else {
@@ -44,7 +45,7 @@ class PhocacartUserGuestuser
 	}
 
 	public static function storeAddress($data) {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		if (!empty($data)) {
 			$session->set('guestaddress', $data, 'phocaCart');
 			return true;
@@ -53,13 +54,13 @@ class PhocacartUserGuestuser
 	}
 
 	public static function getAddress() {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$address = $session->get('guestaddress', false, 'phocaCart');
 		return $address;
 	}
 
 	public static function storeShipping($shippingId) {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		if ((int)$shippingId > 0) {
 			$session->set('guestshipping', $shippingId, 'phocaCart');
 			return true;
@@ -68,13 +69,13 @@ class PhocacartUserGuestuser
 	}
 
 	public static function getShipping() {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$shipping = $session->get('guestshipping', false, 'phocaCart');
 		return $shipping;
 	}
 
 	public static function storePayment($paymentId) {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 
 		if ((int)$paymentId > 0) {
 			$session->set('guestpayment', $paymentId, 'phocaCart');
@@ -84,13 +85,13 @@ class PhocacartUserGuestuser
 	}
 
 	public static function getPayment() {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$payment = $session->get('guestpayment', false, 'phocaCart');
 		return $payment;
 	}
 
 	public static function storeLoyaltyCardNumber($number) {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 
 		if ($number != '') {
 			$session->set('guestloyaltycardnumber', $number, 'phocaCart');
@@ -100,12 +101,12 @@ class PhocacartUserGuestuser
 	}
 
 	public static function getLoyaltyCardNumber() {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$loyaltyCardNumber = $session->get('guestloyaltycardnumber', false, 'phocaCart');
 		return $loyaltyCardNumber;
 	}
 	public static function storeCoupon($couponId) {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		if ((int)$couponId > 0) {
 			$session->set('guestcoupon', $couponId, 'phocaCart');
 			return true;
@@ -117,13 +118,13 @@ class PhocacartUserGuestuser
 	}
 
 	public static function getCoupon() {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$couponId = $session->get('guestcoupon', false, 'phocaCart');
 		return $couponId;
 	}
 
 	public static function getUserAddressGuest() {
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$address = $session->get('guestaddress', false, 'phocaCart');
 		$data = array();
 		$data = PhocacartUser::convertAddressTwo($address, 0);
@@ -133,7 +134,7 @@ class PhocacartUserGuestuser
 	public static function cancelGuestUser() {
 
 
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		$session->set('guest', false, 'phocaCart');
 		$session->set('guestaddress', false, 'phocaCart');
 		$session->set('guestshipping', false, 'phocaCart');

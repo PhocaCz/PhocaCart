@@ -7,10 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
-class JFormFieldPhocacartOrdering extends JFormField
+class JFormFieldPhocacartOrdering extends FormField
 {
 
 	protected $type = 'PhocacartOrdering';
@@ -54,6 +56,12 @@ class JFormFieldPhocacartOrdering extends JFormField
 					$whereLabel	=	'';
 					$whereValue	=	'';
 					$table		=	'#__phocacart_regions';
+				break;
+
+				case "zone":
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_zones';
 				break;
 
 				case "currency":
@@ -136,6 +144,18 @@ class JFormFieldPhocacartOrdering extends JFormField
                     $table		=	'#__phocacart_categories';
                 break;
 
+                case "section":
+                    $whereLabel	=	'';
+                    $whereValue	=	'';
+                    $table		=	'#__phocacart_sections';
+                break;
+
+                case "unit":
+                    $whereLabel	=	'';
+                    $whereValue	=	'';
+                    $table		=	'#__phocacart_units';
+                break;
+
 			}
 		} else {
 			$whereLabel	=	'catid';
@@ -162,12 +182,12 @@ class JFormFieldPhocacartOrdering extends JFormField
 
 		// Create a read-only list (no name) with a hidden input to store the value.
 		if ((string) $this->element['readonly'] == 'true') {
-			$html[] = Joomla\CMS\HTML\HTMLHelper::_('list.ordering', '', $query, trim($attr), $this->value, $id ? 0 : 1);
+			$html[] = HTMLHelper::_('list.ordering', '', $query, trim($attr), $this->value, $id ? 0 : 1);
 			$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$this->value.'"/>';
 		}
 		// Create a regular list.
 		else {
-			$html[] = Joomla\CMS\HTML\HTMLHelper::_('list.ordering', $this->name, $query, trim($attr), $this->value, $id ? 0 : 1);
+			$html[] = HTMLHelper::_('list.ordering', $this->name, $query, trim($attr), $this->value, $id ? 0 : 1);
 
 		}
 

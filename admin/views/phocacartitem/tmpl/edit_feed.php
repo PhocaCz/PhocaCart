@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 
 $fieldSets = $this->form->getFieldsets();
 
@@ -47,7 +48,7 @@ foreach($fieldSets as $name => $fieldSet) {
 if ($o != '') {
     echo $o;
 } else {
-    echo '<div class="alert alert-info">'.JText::_('COM_PHOCACART_NO_ACTIVE_FEED_PLUGIN_FOUND').'</div>';
+    echo '<div class="alert alert-info">'.Text::_('COM_PHOCACART_NO_ACTIVE_FEED_PLUGIN_FOUND').'</div>';
 }
 
 

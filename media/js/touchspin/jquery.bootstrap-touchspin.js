@@ -91,6 +91,7 @@
     return this.each(function() {
 
       var settings,
+        originalinput_name = 'input[name=' + $(this).attr('name') + ']', /* PHOCAEDIT */
         originalinput = $(this),
         originalinput_data = originalinput.data(),
         _detached_prefix,
@@ -285,6 +286,8 @@
 
         container = $(html).insertBefore(originalinput);
 
+        
+
         $('.bootstrap-touchspin-prefix', container).after(originalinput);
 
         if (originalinput.hasClass('input-sm')) {
@@ -299,7 +302,7 @@
         elements = {
           down: $('.bootstrap-touchspin-down', container),
           up: $('.bootstrap-touchspin-up', container),
-          input: $('input', container),
+          input: $(originalinput_name, container), /* PHOCAEDIT*/
           prefix: $('.bootstrap-touchspin-prefix', container).addClass(settings.prefix_extraclass),
           postfix: $('.bootstrap-touchspin-postfix', container).addClass(settings.postfix_extraclass)
         };
@@ -688,6 +691,8 @@
         originalinput.trigger('touchspin.on.startspin');
         originalinput.trigger('touchspin.on.startdownspin');
 
+        
+
         downDelayTimeout = setTimeout(function() {
           downSpinTimer = setInterval(function() {
             spincount++;
@@ -704,6 +709,8 @@
 
         originalinput.trigger('touchspin.on.startspin');
         originalinput.trigger('touchspin.on.startupspin');
+
+        
 
         upDelayTimeout = setTimeout(function() {
           upSpinTimer = setInterval(function() {

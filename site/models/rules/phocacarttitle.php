@@ -7,14 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormRule;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
-class JFormRulePhocaCartTitle extends JFormRule
+class JFormRulePhocaCartTitle extends FormRule
 {
 
 	public function test(&$element, $value, $group = null, &$input = null, &$form = null)
 	{
 		
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		//E_ERROR, E_WARNING, E_NOTICE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE.
 		//$info = array();
 		//$info['field'] = 'guestbook_title';
@@ -23,7 +26,7 @@ class JFormRulePhocaCartTitle extends JFormRule
 		
 		//}
 	
-		$app->enqueueMessage(JText::_('COM_PHOCACART_BAD_SUBJECT' ), 'warning');
+		$app->enqueueMessage(Text::_('COM_PHOCACART_BAD_SUBJECT' ), 'warning');
 		return false;
 		
 

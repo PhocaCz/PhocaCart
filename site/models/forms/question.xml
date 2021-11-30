@@ -5,18 +5,18 @@
 
 <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly" filter="integer" />
 
-<field name="user_id" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" filter="integer" />
+<field name="user_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" filter="integer" />
 
-<field name="product_id" type="hidden" class="inputbox" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" filter="integer" />
-<field name="category_id" type="hidden" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CATEGORY_ID_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ID_DESC" filter="integer" />
+<field name="product_id" type="hidden" class="form-control" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" filter="integer" />
+<field name="category_id" type="hidden" class="form-control" size="40" label="COM_PHOCACART_FIELD_CATEGORY_ID_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ID_DESC" filter="integer" />
 
-<field name="name" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_NAME_LABEL" description="COM_PHOCACART_FIELD_F_NAME_DESC" filter="string" />
+<field name="name" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_F_NAME_LABEL" description="COM_PHOCACART_FIELD_F_NAME_DESC" filter="string" />
 
-<field name="email" type="email" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_EMAIL_LABEL" description="COM_PHOCACART_FIELD_F_EMAIL_DESC" validate="phocacartemail" filter="string" />
+<field name="email" type="email" class="form-control" size="40" label="COM_PHOCACART_FIELD_F_EMAIL_LABEL" description="COM_PHOCACART_FIELD_F_EMAIL_DESC" validate="phocacartemail" filter="string" />
 
-<field name="phone" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_PHONE_LABEL" description="COM_PHOCACART_FIELD_F_PHONE_DESC" filter="string" />
+<field name="phone" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_F_PHONE_LABEL" description="COM_PHOCACART_FIELD_F_PHONE_DESC" filter="string" />
 
-<field name="phone_mobile" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_F_MOBILE_PHONE_LABEL" description="COM_PHOCACART_FIELD_F_MOBILE_PHONE_DESC"  filter="string" />
+<field name="phone_mobile" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_F_MOBILE_PHONE_LABEL" description="COM_PHOCACART_FIELD_F_MOBILE_PHONE_DESC"  filter="string" />
 
 <field name="message" type="textarea" class="inputbox ph-question-message"  label="COM_PHOCACART_FIELD_F_MESSAGE_LABEL" description="COM_PHOCACART_FIELD_F_MESSAGE_DESC" filter="string" rows="7" cols="45" />
 
@@ -31,26 +31,26 @@
 			preicon=""
 			posticon=""
 			posthref=""
-			class="inputbox"
+			class="form-control"
 		/>
 
-<field name="ip" type="hidden" class="inputbox" size="40" label="COM_PHOCACART_FIELD_IP_LABEL" description="COM_PHOCACART_FIELD_IP_DESC" filter="string" />
+<field name="ip" type="hidden" class="form-control" size="40" label="COM_PHOCACART_FIELD_IP_LABEL" description="COM_PHOCACART_FIELD_IP_DESC" filter="string" />
 
-<field name="ordering" type="PhocacartOrdering" table="region" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" filter="integer" />
+<field name="ordering" type="PhocacartOrdering" table="region" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" filter="integer" />
 
 	</fieldset>
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1" filter="string" >
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-control" size="1" default="1" filter="string" >
 	<option value="1">JPUBLISHED</option>
 	<option	value="0">JUNPUBLISHED</option>
 </field>
 
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox" filter="string">
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control" filter="string">
 	<option value="*">JALL</option>
 </field>
 
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="server-utc" />
+<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="server-utc" />
 
 	</fieldset>
 

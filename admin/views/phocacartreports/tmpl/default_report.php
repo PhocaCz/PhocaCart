@@ -8,8 +8,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
 
-$layout 	= new JLayoutFile('report', null, array('component' => 'com_phocacart'));
+$layout 	= new FileLayout('report', null, array('component' => 'com_phocacart'));
 if (!empty($this->items) && !empty($this->t['date_days'])) {
 	$d				= array();
 	$d['s']         = $this->s;
@@ -44,7 +46,7 @@ if (!empty($this->items) && !empty($this->t['date_days'])) {
 
 	}*/
 	if ($d['format'] == 'raw') {
-		echo '<html><head><title>'.JText::_('COM_PHOCACART_REPORT').'</title></head><body>';
+		echo '<html><head><title>'.Text::_('COM_PHOCACART_REPORT').'</title></head><body>';
 	}
 	echo $layout->render($d);
 	if ($d['format'] == 'raw') {

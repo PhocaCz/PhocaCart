@@ -7,14 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCartCommon {
 
 	function download() {
 
-		$db		= JFactory::getDBO();
-		$user	= JFactory::getUser();
-		$app	= JFactory::getApplication();
+		$db		= Factory::getDBO();
+		$user	= Factory::getUser();
+		$app	= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$import_export_type	= $paramsC->get( 'import_export_type', 0 );
 		$prefix = '';
@@ -90,7 +92,7 @@ class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCar
 
 
 		} else {
-			$message = JText::_( 'COM_PHOCACART_THERE_IS_NO_FILE_READY_TO_DOWNLOAD_EXPORT_PRODUCTS_FIRST' );
+			$message = Text::_( 'COM_PHOCACART_THERE_IS_NO_FILE_READY_TO_DOWNLOAD_EXPORT_PRODUCTS_FIRST' );
 			$app->enqueueMessage($message, 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartexports');
 			return;

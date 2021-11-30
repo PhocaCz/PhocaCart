@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 
 class PhocacartFilter
 {
@@ -66,7 +69,7 @@ class PhocacartFilter
     public function getActiveFilterValues() {
 
 
-        $app                    = JFactory::getApplication();
+        $app                    = Factory::getApplication();
         $paramsC                = PhocacartUtils::getComponentParameters();
         $manufacturer_alias     = $paramsC->get('manufacturer_alias', 'manufacturer');
         $manufacturer_alias     = $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric')) : 'manufacturer';
@@ -255,7 +258,7 @@ class PhocacartFilter
 
     public function renderList()
     {
-        $document	= JFactory::getDocument();
+        $document	= Factory::getDocument();
         $p = array();
         $pC = PhocacartUtils::getComponentParameters();
         $p['manufacturer_alias'] = $pC->get('manufacturer_alias', 'manufacturer');
@@ -272,16 +275,16 @@ class PhocacartFilter
 
         $s = PhocacartRenderStyle::getStyles();
         //$app		= JFactory::getApplication();
-        $layout = new JLayoutFile('form_filter_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
-        $layout2 = new JLayoutFile('form_filter_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
-        $layout3 = new JLayoutFile('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
-        $layout4 = new JLayoutFile('form_filter_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
-        $layout5 = new JLayoutFile('form_filter_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
+        $layout = new FileLayout('form_filter_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
+        $layout2 = new FileLayout('form_filter_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
+        $layout3 = new FileLayout('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
+        $layout4 = new FileLayout('form_filter_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
+        $layout5 = new FileLayout('form_filter_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
 
 
         $language = '';
         if ($this->filter_language == 1) {
-            $lang = JFactory::getLanguage();
+            $lang = Factory::getLanguage();
             $language = $lang->getTag();
         }
 
@@ -314,7 +317,7 @@ class PhocacartFilter
         $data = array();
         $data['s'] = $s;
         $data['param'] = 'id';
-        $data['title'] = JText::_('COM_PHOCACART_CATEGORY');
+        $data['title'] = Text::_('COM_PHOCACART_CATEGORY');
         //$category			= PhocacartRoute::getIdForItemsRoute();
 
 
@@ -340,7 +343,7 @@ class PhocacartFilter
         $data = array();
         $data['s'] = $s;
         $data['param'] = 'c';
-        $data['title'] = JText::_('COM_PHOCACART_CATEGORY');
+        $data['title'] = Text::_('COM_PHOCACART_CATEGORY');
         $data['getparams'] = $this->getArrayParamValues($data['param'], 'string');
         $data['nrinalias'] = 1;
         $data['formtype'] = 'checked';
@@ -451,11 +454,11 @@ class PhocacartFilter
         $data['param'] = 'price_from';
         $data['param2'] = 'price_to';
         $data['id'] = 'phPriceFromTo';
-        $data['title'] = JText::_('COM_PHOCACART_PRICE');
-        $data['title1'] = JText::_('COM_PHOCACART_PRICE_FROM');
-        $data['title2'] = JText::_('COM_PHOCACART_PRICE_TO');
-        $data['titleset'] = JText::_('COM_PHOCACART_SET_PRICE');
-        $data['titleclear'] = JText::_('COM_PHOCACART_CLEAR_PRICE');
+        $data['title'] = Text::_('COM_PHOCACART_PRICE');
+        $data['title1'] = Text::_('COM_PHOCACART_PRICE_FROM');
+        $data['title2'] = Text::_('COM_PHOCACART_PRICE_TO');
+        $data['titleset'] = Text::_('COM_PHOCACART_SET_PRICE');
+        $data['titleclear'] = Text::_('COM_PHOCACART_CLEAR_PRICE');
         $data['getparams'] = $this->getArrayParamValues($data['param'], 'string');// string because of setting '' when no value set
         $data['getparams2'] = $this->getArrayParamValues($data['param2'], 'string');
         $data['formtype'] = 'text';
@@ -518,7 +521,7 @@ class PhocacartFilter
             $oParams['filterPriceFrom'] = (float)$price_from[0];
             $oParams['filterPriceTo'] = (float)$price_to[0];
             $oLang  = array();
-            $oLang['COM_PHOCACART_PRICE'] = JText::_('COM_PHOCACART_PRICE');
+            $oLang['COM_PHOCACART_PRICE'] = Text::_('COM_PHOCACART_PRICE');
 
             $document->addScriptOptions('phParamsPC', $oParams);
             $document->addScriptOptions('phLangPC', $oLang);
@@ -529,7 +532,7 @@ class PhocacartFilter
         $data = array();
         $data['s'] = $s;
         $data['param'] = $p['manufacturer_alias'];
-        $data['title'] = $this->manufacturer_title != '' ? JText::_($this->manufacturer_title) : JText::_('COM_PHOCACART_MANUFACTURERS');
+        $data['title'] = $this->manufacturer_title != '' ? Text::_($this->manufacturer_title) : Text::_('COM_PHOCACART_MANUFACTURERS');
         $data['getparams'] = $this->getArrayParamValues($data['param'], 'string');
         $data['nrinalias'] = 1;
         $data['formtype'] = 'checked';
@@ -553,7 +556,7 @@ class PhocacartFilter
         $data = array();
         $data['s'] = $s;
         $data['param'] = 'tag';
-        $data['title'] = JText::_('COM_PHOCACART_TAGS');
+        $data['title'] = Text::_('COM_PHOCACART_TAGS');
         $data['getparams'] = $this->getArrayParamValues($data['param'], 'string');
         $data['nrinalias'] = 1;
         $data['formtype'] = 'checked';
@@ -578,7 +581,7 @@ class PhocacartFilter
         $data = array();
         $data['s'] = $s;
         $data['param'] = 'label';
-        $data['title'] = JText::_('COM_PHOCACART_LABELS');
+        $data['title'] = Text::_('COM_PHOCACART_LABELS');
         $data['getparams'] = $this->getArrayParamValues($data['param'], 'string');
         $data['nrinalias'] = 1;
         $data['formtype'] = 'checked';
@@ -737,7 +740,7 @@ class PhocacartFilter
     {
 
         // Make array from GET parameter values which are stored in string separated by comma
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         if ($type == 'int') {
             $paramString = $app->input->get($param, 0, $type);

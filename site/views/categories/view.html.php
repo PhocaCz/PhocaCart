@@ -7,9 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Plugin\PluginHelper;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewCategories extends JViewLegacy
+class PhocaCartViewCategories extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -19,9 +23,9 @@ class PhocaCartViewCategories extends JViewLegacy
 	public function display($tpl = null) {
 
 
-		$app									= JFactory::getApplication();
+		$app									= Factory::getApplication();
 		$model									= $this->getModel();
-		$document								= JFactory::getDocument();
+		$document								= Factory::getDocument();
 		$this->p 								= $app->getParams();
 		$this->s								= PhocacartRenderStyle::getStyles();
 
@@ -46,7 +50,7 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 
 		$this->t['image_categories_view']			= $this->p->get( 'image_categories_view', '' );
-		$this->t['image_categories_view']			= $this->t['image_categories_view'] != '' ? JURI::base(true) . '/'. $this->t['image_categories_view'] : '';
+		$this->t['image_categories_view']			= $this->t['image_categories_view'] != '' ? Uri::base(true) . '/'. $this->t['image_categories_view'] : '';
 
 
 		$this->t['class_row_flex']              = $this->p->get('equal_height', 1)  == 1 ? 'ph-row-flex' : '';
@@ -62,11 +66,12 @@ class PhocaCartViewCategories extends JViewLegacy
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
 
 		// Plugins ------------------------------------------
-		JPluginHelper::importPlugin('pcv');
+		PluginHelper::importPlugin('pcv');
 		//$this->t['dispatcher'] 	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 
-		$results = \JFactory::getApplication()->triggerEvent('PCVonCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
+
 
 		$this->t['event']->onCategoriesBeforeHeader = trim(implode("\n", $results));
 		// END Plugins --------------------------------------

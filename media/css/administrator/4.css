@@ -1,0 +1,55 @@
+.com_phocacart a[target=_blank]:before {
+	content: "" !important;
+}
+
+#toolbar a.btn.btn-small i {
+	margin-inline-end: .5rem;
+}
+
+.ph-extension-info-box {
+	background: #fff;
+	padding: 1em;
+} 
+
+.ph-extension-links-box {
+	margin-top: 1em;
+	padding: 1em;
+	background: #fff;
+}
+
+.ph-extension-info-box {
+
+	padding-bottom: 2em;
+}
+
+.tpl-bettum.com_phocacart .ph-extension-info-box,
+.tpl-bettum.com_phocacart .ph-extension-links-box {
+
+	background: #505050;
+
+}
+
+.tpl-bettum.com_phocacart .ph-cpanel-logo {
+	background: #000;
+	padding-left: 1em;
+	margin-bottom: 1em;
+}
+
+
+.tpl-bettum.com_phocacart .ph-cp-item-icon {
+    background: transparent;
+}
+
+.tpl-bettum.com_phocacart .phi {
+
+	color: #fff !important;
+
+}
+
+.com_phocacart .table > :not(caption) > * > * {
+    padding: 0.75rem 0.25rem;
+}
+
+.com_phocacart .ph-multiple-table > :not(caption) > * > * {
+	padding: 0.15rem 0.25rem;
+}

@@ -10,9 +10,13 @@
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
 jimport('joomla.application.component.view');
 
-class PhocaCartCpViewPhocaCartTools extends JViewLegacy
+class PhocaCartCpViewPhocaCartTools extends HtmlView
 {
     protected $t;
     protected $r;
@@ -48,7 +52,7 @@ class PhocaCartCpViewPhocaCartTools extends JViewLegacy
 
 
         $media = new PhocacartRenderAdminmedia();
-        JHtml::stylesheet($this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css');
+        HTMLHelper::stylesheet($this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css');
 
         HTMLHelper::_('jquery.framework', false);
         //PhocacartRenderJs::renderOverlayOnSubmit('phFormUpload');
@@ -64,12 +68,12 @@ class PhocaCartCpViewPhocaCartTools extends JViewLegacy
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.export'));
 
-        JToolbarHelper::title(JText::_($this->t['l'] . '_ADVANCED_TOOLS'), 'tool');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_ADVANCED_TOOLS'), 'tool');
 
 
         // This button is unnecessary but it is displayed because Joomla! design bug
-        $bar   = JToolbar::getInstance('toolbar');
-        $dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="' . JText::_('COM_PHOCACART_CONTROL_PANEL') . '"></i> ' . JText::_('COM_PHOCACART_CONTROL_PANEL') . '</a>';
+        $bar   = Toolbar::getInstance('toolbar');
+        $dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="' . Text::_('COM_PHOCACART_CONTROL_PANEL') . '"></i> ' . Text::_('COM_PHOCACART_CONTROL_PANEL') . '</a>';
         $bar->appendButton('Custom', $dhtml);
 
 
@@ -77,8 +81,8 @@ class PhocaCartCpViewPhocaCartTools extends JViewLegacy
 
         }
 
-        JToolbarHelper::divider();
-        JToolbarHelper::help('screen.' . $this->t['c'], true);
+        ToolbarHelper::divider();
+        ToolbarHelper::help('screen.' . $this->t['c'], true);
     }
 
     protected function getSortFields() {

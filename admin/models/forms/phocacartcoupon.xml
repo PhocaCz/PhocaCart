@@ -5,84 +5,84 @@
 
 <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
 
-<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
 
-<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
-<field name="code" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_COUPON_CODE_LABEL" description="COM_PHOCACART_FIELD_COUPON_CODE_DESC"  required="true" />
+<field name="code" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_COUPON_CODE_LABEL" description="COM_PHOCACART_FIELD_COUPON_CODE_DESC"  required="true" />
 
-<field name="discount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_DESC" />
+<field name="discount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_DESC" />
 
-<field name="total_amount" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_TOTAL_AMOUNT_DESC" />
+<field name="total_amount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_TOTAL_AMOUNT_DESC" />
 
-<field name="quantity_from" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_DESC" />
+<field name="quantity_from" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_DESC" />
 
-<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="inputbox" size="1" default="1">
+<field name="calculation_type" type="list" class="form-select" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" size="1" default="1">
 	<option value="1">COM_PHOCACART_PERCENTAGE</option>
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>
 
-<field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" class="inputbox" size="1" default="0">
+<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" size="1" default="0">
 	<option	value="0">COM_PHOCACART_COMMON</option>
 	<option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
 	<option value="2">COM_PHOCACART_POS_ONLY</option>
 </field>
 
-<field name="coupon_type" type="list" label="COM_PHOCACART_FIELD_COUPON_TYPE_LABEL" description="COM_PHOCACART_FIELD_COUPON_TYPE_DESC" class="inputbox" size="1" default="0">
+<field name="coupon_type" type="list" class="form-select" label="COM_PHOCACART_FIELD_COUPON_TYPE_LABEL" description="COM_PHOCACART_FIELD_COUPON_TYPE_DESC" size="1" default="0">
 	<option	value="0">COM_PHOCACART_DEFAULT</option>
 	<option value="2">COM_PHOCACART_GIFT_VOUCHER</option>
 </field>
 
-<field name="free_shipping" type="list" label="COM_PHOCACART_FIELD_FREE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_FREE_SHIPPING_DESC" class="inputbox" size="1" default="0">
-	<option value="1">COM_PHOCACART_YES</option>
+<field name="free_shipping" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FREE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_FREE_SHIPPING_DESC" size="1" default="0">
 	<option	value="0">COM_PHOCACART_NO</option>
+    <option value="1">COM_PHOCACART_YES</option>
 </field>
 
-<field name="free_payment" type="list" label="COM_PHOCACART_FIELD_FREE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_FREE_PAYMENT_DESC" class="inputbox" size="1" default="0">
-	<option value="1">COM_PHOCACART_YES</option>
+<field name="free_payment" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FREE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_FREE_PAYMENT_DESC" size="1" default="0">
 	<option	value="0">COM_PHOCACART_NO</option>
+    <option value="1">COM_PHOCACART_YES</option>
 </field>
 
 
 
-<field name="available_quantity" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_DESC" />
+<field name="available_quantity" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_DESC" />
 
-<field name="available_quantity_user" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_LABEL" description="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_DESC" />
+<field name="available_quantity_user" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_LABEL" description="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_DESC" />
 
-<field name="cat_ids" type="phocacouponcategory" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" multiple="true" class="inputbox" />
+<field name="cat_ids" type="phocacouponcategory" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" multiple="true" layout="joomla.form.field.list-fancy-select" />
 
-<field name="category_filter" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
-	<option value="1">COM_PHOCACART_INCLUDE</option>
+<field name="category_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
+    <option	value="0">COM_PHOCACART_EXCLUDE</option>
+    <option value="1">COM_PHOCACART_INCLUDE</option>
+</field>
+
+<field name="product_ids" type="phocacouponproduct" label="COM_PHOCACART_FIELD_COUPON_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_COUPON_PRODUCT_DESC" layout="joomla.form.field.list-fancy-select" />
+
+<field name="product_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PRODUCT_FILTER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FILTER_DESC" size="1" default="1">
 	<option	value="0">COM_PHOCACART_EXCLUDE</option>
+    <option value="1">COM_PHOCACART_INCLUDE</option>
 </field>
 
-<field name="product_ids" type="phocacouponproduct" label="COM_PHOCACART_FIELD_COUPON_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_COUPON_PRODUCT_DESC" class="inputbox" />
+<field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-<field name="product_filter" type="radio"  class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_PRODUCT_FILTER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FILTER_DESC" size="1" default="1">
-	<option value="1">COM_PHOCACART_INCLUDE</option>
-	<option	value="0">COM_PHOCACART_EXCLUDE</option>
-</field>
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1" />
 
-<field name="ordering" type="PhocacartOrdering" table="product" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="6"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
-<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
-<field name="group" type="PhocacartGroups" table="6" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
-
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
-
-<field name="gift_title" type="text" label="COM_PHOCACART_FIELD_GIFT_TITLE_LABEL" description="COM_PHOCACART_FIELD_GIFT_TITLE_DESC" class="inputbox" size="40"/>
+<field name="gift_title" type="text" label="COM_PHOCACART_FIELD_GIFT_TITLE_LABEL" description="COM_PHOCACART_FIELD_GIFT_TITLE_DESC" class="form-control" size="40"/>
 
 
-<field name="gift_description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+<field name="gift_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_DESC"/>
 
-<field name="gift_image" type="media" label="COM_PHOCACART_FIELD_GIFT_IMAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_IMAGE_DESC" class="inputbox" size="40"/>
+<field name="gift_image" type="media" label="COM_PHOCACART_FIELD_GIFT_IMAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_IMAGE_DESC" class="form-control" size="40"/>
 
-<field name="gift_recipient_name" type="text" label="COM_PHOCACART_FIELD_GIFT_RECIPIENT_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_RECIPIENT_NAME_DESC" class="inputbox" size="40"/>
-<field name="gift_recipient_email" type="text" label="COM_PHOCACART_FIELD_GIFT_RECIPIENT_EMAIL_LABEL" description="COM_PHOCACART_FIELD_GIFT_RECIPIENT_EMAIL_DESC" class="inputbox" size="40"/>
-<field name="gift_sender_name" type="text" label="COM_PHOCACART_FIELD_GIFT_SENDER_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_NAME_DESC" class="inputbox" size="40"/>
-<field name="gift_sender_message" type="textarea" label="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_DESC" class="inputbox" size="40"/>
+<field name="gift_recipient_name" type="text" label="COM_PHOCACART_FIELD_GIFT_RECIPIENT_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_RECIPIENT_NAME_DESC" class="form-control" size="40"/>
+<field name="gift_recipient_email" type="text" label="COM_PHOCACART_FIELD_GIFT_RECIPIENT_EMAIL_LABEL" description="COM_PHOCACART_FIELD_GIFT_RECIPIENT_EMAIL_DESC" class="form-control" size="40"/>
+<field name="gift_sender_name" type="text" label="COM_PHOCACART_FIELD_GIFT_SENDER_NAME_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_NAME_DESC" class="form-control" size="40"/>
+<field name="gift_sender_message" type="textarea" label="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_DESC" class="form-control" size="40"/>
 
 
 <field name="gift_type" type="text" label="COM_PHOCACART_FIELD_GIFT_TYPE_LABEL" description="COM_PHOCACART_FIELD_GIFT_TYPE_DESC" size="40"/>
@@ -96,16 +96,16 @@
 
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
-	<field name="valid_from" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="JComponentHelper::filterText" />
+	<field name="valid_from" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="JComponentHelper::filterText" />
 
-<field name="valid_to" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="JComponentHelper::filterText" />
+<field name="valid_to" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="JComponentHelper::filterText" />
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
 	<option value="1">JPUBLISHED</option>
 	<option	value="0">JUNPUBLISHED</option>
 </field>
 
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
 	<option value="*">JALL</option>
 </field>
 

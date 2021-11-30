@@ -7,21 +7,22 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
 
-class JFormFieldPhocacartZones extends JFormField
+class JFormFieldPhocacartZones extends FormField
 {
 	protected $type 		= 'PhocacartZones';
 
 	protected function getInput() {
-		
+
 		$id = (int) $this->form->getValue('id');
-		
+
 		if (isset($this->element['table'])) {
-			switch (strtolower($this->element['table'])) {	
+			switch (strtolower($this->element['table'])) {
 				case "payment":
 					$table = 'payment';
 				break;
-				
+
 				case "shipping":
 				default:
 					$table = 'shipping';
@@ -35,8 +36,15 @@ class JFormFieldPhocacartZones extends JFormField
 		if ((int)$id > 0) {
 			$activeZones	= PhocacartZone::getZones($id, 1, $table);
 		}
-			
-		return PhocacartZone::getAllZonesSelectBox($this->name.'[]', $this->id, $activeZones, NULL,'id' );
+
+		$zones              = PhocacartZone::getAllZones();
+		$data               = $this->getLayoutData();
+		$data['options']    = (array)$zones;
+		$data['value']      = $activeZones;
+
+        return $this->getRenderer($this->layout)->render($data);
+
+		//return PhocacartZone::getAllZonesSelectBox($this->name.'[]', $this->id, $activeZones, NULL,'id' );
 	}
 }
 ?>

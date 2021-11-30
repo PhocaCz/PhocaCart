@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Language\Text;
 
 class PhocacartUtilsException
 {
@@ -16,7 +17,7 @@ class PhocacartUtilsException
 	public static function renderErrorInfo ($msg, $jText = false){
 	
 		if ($jText) {
-			return '<div class="alert alert-error">'.JText::_($msg).'</div>';
+			return '<div class="alert alert-error">'.Text::_($msg).'</div>';
 		} else {
 			return '<div class="alert alert-error">'.$msg.'</div>';
 		}

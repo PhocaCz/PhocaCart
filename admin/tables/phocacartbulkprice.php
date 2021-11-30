@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
 jimport('joomla.filter.input');
 
-class TablePhocacartBulkprice extends JTable
+class TablePhocacartBulkprice extends Table
 {
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_bulk_prices', 'id', $db);
@@ -22,7 +24,7 @@ class TablePhocacartBulkprice extends JTable
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
 
-		$this->date = JFactory::getDate()->toSql();
+		$this->date = Factory::getDate()->toSql();
 		
 		
 		return true;

@@ -9,6 +9,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 /*
@@ -29,25 +35,25 @@ class PhocacartFileThumbnail
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$thumb_name_prefix = $paramsC->get('thumb_name_prefix', 'phoca_thumb');
 
-		$thumbName	= new JObject();
+		$thumbName	= new CMSObject();
 
 		switch ($size) {
 			case 'large':
 			$fileNameThumb 	= $thumb_name_prefix.'_l_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->abs	= Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;
 
 			case 'medium':
 			$fileNameThumb 	= $thumb_name_prefix.'_m_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->abs	= Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;
 
 			default:
 			case 'small':
 			$fileNameThumb 	= $thumb_name_prefix.'_s_'. $title;
-			$thumbName->abs	= JPath::clean(str_replace($title, 'thumbs/'  . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+			$thumbName->abs	= Path::clean(str_replace($title, 'thumbs/'  . $fileNameThumb, $path['orig_abs_ds'] . $filename));
 			$thumbName->rel	= str_replace ($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
 			break;
 		}
@@ -61,40 +67,40 @@ class PhocacartFileThumbnail
 
 		if ($small == 1) {
 			$fileNameThumbS = PhocacartFileThumbnail::getThumbnailName ($filename, 'small', $manager);
-			if (JFile::exists($fileNameThumbS->abs)) {
-				JFile::delete($fileNameThumbS->abs);
+			if (File::exists($fileNameThumbS->abs)) {
+				File::delete($fileNameThumbS->abs);
 			}
 
 			//WEBP COPY
 			$webpCopyS = PhocacartFile::changeFileExtension($fileNameThumbS->abs, 'webp');
-			if (JFile::exists($webpCopyS)) {
-				JFile::delete($webpCopyS);
+			if (File::exists($webpCopyS)) {
+				File::delete($webpCopyS);
 			}
 		}
 
 		if ($medium == 1) {
 			$fileNameThumbM = PhocacartFileThumbnail::getThumbnailName ($filename, 'medium', $manager);
-			if (JFile::exists($fileNameThumbM->abs)) {
-				JFile::delete($fileNameThumbM->abs);
+			if (File::exists($fileNameThumbM->abs)) {
+				File::delete($fileNameThumbM->abs);
 			}
 
 			//WEBP COPY
 			$webpCopyM = PhocacartFile::changeFileExtension($fileNameThumbM->abs, 'webp');
-			if (JFile::exists($webpCopyM)) {
-				JFile::delete($webpCopyM);
+			if (File::exists($webpCopyM)) {
+				File::delete($webpCopyM);
 			}
 		}
 
 		if ($large == 1) {
 			$fileNameThumbL = PhocacartFileThumbnail::getThumbnailName ($filename, 'large', $manager);
-			if (JFile::exists($fileNameThumbL->abs)) {
-				JFile::delete($fileNameThumbL->abs);
+			if (File::exists($fileNameThumbL->abs)) {
+				File::delete($fileNameThumbL->abs);
 			}
 
 			//WEBP COPY
 			$webpCopyL = PhocacartFile::changeFileExtension($fileNameThumbL->abs, 'webp');
-			if (JFile::exists($webpCopyL)) {
-				JFile::delete($webpCopyL);
+			if (File::exists($webpCopyL)) {
+				File::delete($webpCopyL);
 			}
 		}
 		return true;
@@ -119,7 +125,7 @@ class PhocacartFileThumbnail
 			$onlyThumbnailInfo = 1;
 		}
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		//$additional_thumbnails 					= $paramsC->get( 'additional_thumbnails',0 );
 
@@ -137,7 +143,7 @@ class PhocacartFileThumbnail
 		$file['path_with_name_relative']		= $path['orig_rel_ds'] . str_replace($origPathServer, '', $file['name_original']);
 		$file['path_with_name_relative_no']		= str_replace($origPathServer, '', $file['name_original']);
 
-		$file['path_without_name']				= str_replace('\\', '/', JPath::clean($origPath.'/'));
+		$file['path_without_name']				= str_replace('\\', '/', Path::clean($origPath.'/'));
 		$file['path_without_name_relative']		= $path['orig_rel_ds'] . str_replace($origPathServer, '', $file['path_without_name']);
 		$file['path_without_name_relative_no']	= str_replace($origPathServer, '', $file['path_without_name']);
 		$file['path_without_name_thumbs'] 		= $file['path_without_name'] .'thumbs';
@@ -145,7 +151,7 @@ class PhocacartFileThumbnail
 		$file['path_without_name_thumbs_no'] 	= str_replace($file['name'], '', $file['name_original'] .'thumbs');*/
 
 
-		$ext = strtolower(JFile::getExt($file['name']));
+		$ext = strtolower(File::getExt($file['name']));
 		switch ($ext) {
 			case 'jpg':
 			case 'png':
@@ -196,7 +202,7 @@ class PhocacartFileThumbnail
 				}
 
 				// Folder must exist
-				if (JFolder::exists($file['path_without_file_name_thumb'])) {
+				if (Folder::exists($file['path_without_file_name_thumb'])) {
 
 					$errorMsgS = $errorMsgM = $errorMsgL = '';
 					//Small thumbnail
@@ -248,7 +254,7 @@ class PhocacartFileThumbnail
 						}
 						// because the errors in this case is the same
 
-						$returnFrontMessage = JText::_('COM_PHOCACART_ERROR_CREATING_THUMBNAIL') . ' (' . $creatingError . ')';
+						$returnFrontMessage = Text::_('COM_PHOCACART_ERROR_CREATING_THUMBNAIL') . ' (' . $creatingError . ')';
 					} else if ($errorMsgS == '' && $errorMsgM == '' && $errorMsgL == '') {
 						$returnFrontMessage = 'Success';
 					} else if ($errorMsgS == '' && $errorMsgM == '' && $errorMsgL == 'ThumbnailExists') {
@@ -268,9 +274,9 @@ class PhocacartFileThumbnail
 					}
 
 					if ($returnFrontMessage == 'Success') {
-						return '<span class="ph-result-txt ph-success-txt">' . JText::_('COM_PHOCACART_THUMBNAIL_CREATED'). '</span>';
+						return '<span class="ph-result-txt ph-success-txt">' . Text::_('COM_PHOCACART_THUMBNAIL_CREATED'). '</span>';
 					} else if ($returnFrontMessage == 'SuccessThumbnailExists') {
-						return '<span class="ph-result-txt ph-success-txt">' . JText::_('COM_PHOCACART_THUMBNAIL_EXISTS') . '</span>';
+						return '<span class="ph-result-txt ph-success-txt">' . Text::_('COM_PHOCACART_THUMBNAIL_EXISTS') . '</span>';
 					} else {
 						return '<span class="ph-result-txt ph-error-txt">' . $returnFrontMessage . '</span>';
 					}
@@ -294,7 +300,7 @@ class PhocacartFileThumbnail
 
 	public static function createThumbnailFolder($folderOriginal, $folderThumbnail, &$errorMsg) {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$enable_thumb_creation = $paramsC->get( 'enable_thumb_creation', 1 );
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
@@ -303,36 +309,36 @@ class PhocacartFileThumbnail
 		// disable or enable the thumbnail creation
 		if ($enable_thumb_creation == 1) {
 
-			if (JFolder::exists($folderOriginal)) {
+			if (Folder::exists($folderOriginal)) {
 				if (strlen($folderThumbnail) > 0) {
-					$folderThumbnail = JPath::clean($folderThumbnail);
-					if (!JFolder::exists($folderThumbnail) && !JFile::exists($folderThumbnail)) {
+					$folderThumbnail = Path::clean($folderThumbnail);
+					if (!Folder::exists($folderThumbnail) && !File::exists($folderThumbnail)) {
 						switch((int)$folder_permissions) {
 							case 777:
-								JFolder::create($folderThumbnail, 0777 );
+								Folder::create($folderThumbnail, 0777 );
 							break;
 							case 705:
-								JFolder::create($folderThumbnail, 0705 );
+								Folder::create($folderThumbnail, 0705 );
 							break;
 							case 666:
-								JFolder::create($folderThumbnail, 0666 );
+								Folder::create($folderThumbnail, 0666 );
 							break;
 							case 644:
-								JFolder::create($folderThumbnail, 0644 );
+								Folder::create($folderThumbnail, 0644 );
 							break;
 							case 755:
 							Default:
-								JFolder::create($folderThumbnail, 0755 );
+								Folder::create($folderThumbnail, 0755 );
 							break;
 						}
 
 						//JFolder::create($folderThumbnail, $folder_permissions );
 						if (isset($folderThumbnail)) {
 							$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-							JFile::write($folderThumbnail."/index.html", $data);
+							File::write($folderThumbnail."/index.html", $data);
 						}
 						// folder was not created
-						if (!JFolder::exists($folderThumbnail)) {
+						if (!Folder::exists($folderThumbnail)) {
 							$errorMsg = 'ErrorCreatingFolder';
 							return false;
 						}
@@ -350,7 +356,7 @@ class PhocacartFileThumbnail
 
 	public static function createFileThumbnail($fileOriginal, $fileThumbnail, $size, $frontUpload=0, $manager = '', &$errorMsg = '') {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$enable_thumb_creation 		= $paramsC->get( 'enable_thumb_creation', 1);
 		$watermarkParams['create']	= $paramsC->get( 'create_watermark', 0 );// Watermark
@@ -385,16 +391,16 @@ class PhocacartFileThumbnail
 		if ($enable_thumb_creation == 1) {
 			$fileResize	= PhocacartFileThumbnail::getThumbnailResize($size);
 
-			if (JFile::exists($fileOriginal)) {
+			if (File::exists($fileOriginal)) {
 				//file doesn't exist, create thumbnail
 
 				$doThumbnail = false;
-				if(!JFile::exists($fileThumbnail)) {
+				if(!File::exists($fileThumbnail)) {
 					$doThumbnail = true;
 				}
 
 				// WEBP COPY
-				if($create_webp_copy && !JFile::exists(PhocacartFile::changeFileExtension($fileThumbnail, 'webp'))) {
+				if($create_webp_copy && !File::exists(PhocacartFile::changeFileExtension($fileThumbnail, 'webp'))) {
 					$doThumbnail = true;
 					self::deleteFileThumbnail($fileOriginal, 1, 1, 1, $manager);
 				}

@@ -7,27 +7,31 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 
-class JFormFieldPhocacartFile extends JFormField
+
+class JFormFieldPhocacartFile extends FormField
 {
 	protected $type 		= 'PhocacartFile';
 
 	protected function getInput()
 	{
 
-		$document = JFactory::getDocument();
-		$document->addScript(JURI::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
-		JHtml::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
+		$document = Factory::getDocument();
+		$document->addScript(Uri::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
+		HTMLHelper::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
 
 		$pC = PhocacartUtils::getComponentParameters();
 		$s = PhocacartRenderStyle::getStyles();
 		$submit_item_upload_image_maxsize = $pC->get('submit_item_upload_image_maxsize', 512000);
 		$submit_item_upload_image_count = $pC->get('submit_item_upload_image_count', 1);
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$option = $app->input->get('option');
 		$view 	= $app->input->get('view');
 
@@ -54,7 +58,7 @@ class JFormFieldPhocacartFile extends JFormField
 						$o[] = '<div class="'.$s['c']['control-group'].'">';
 						$o[] = '<div class="'.$s['c']['control-label'].'">'.$this->form->getLabel($this->name).'</div>';
 						$o[] = '<div class="'.$s['c']['controls'].'">';
-						$o[] = '<input type="text" name="jform[image]['.$k.'][name]" id="jform_image" value="'.$v['name'].'" class="inputbox" size="40">';
+						$o[] = '<input type="text" name="jform[image]['.$k.'][name]" id="jform_image" value="'.$v['name'].'" class="form-control" size="40">';
 						$o[] = '</div>';
 						$o[] = '</div>';
 					}
@@ -62,7 +66,7 @@ class JFormFieldPhocacartFile extends JFormField
 						$o[] = '<div class="'.$s['c']['control-group'].'">';
 						$o[] = '<div class="'.$s['c']['control-label'].'">'.$this->form->getLabel($this->name).'</div>';
 						$o[] = '<div class="'.$s['c']['controls'].'">';
-						$o[] = '<input type="text" name="jform[image]['.$k.'][size]" id="jform_image" value="'.$v['size'].'" class="inputbox" size="40">';
+						$o[] = '<input type="text" name="jform[image]['.$k.'][size]" id="jform_image" value="'.$v['size'].'" class="form-control" size="40">';
 						$o[] = '</div>';
 						$o[] = '</div>';
 					}
@@ -70,7 +74,7 @@ class JFormFieldPhocacartFile extends JFormField
 						$o[] = '<div class="'.$s['c']['control-group'].'">';
 						$o[] = '<div class="'.$s['c']['control-label'].'">'.$this->form->getLabel($this->name).'</div>';
 						$o[] = '<div class="'.$s['c']['controls'].'">';
-						$o[] = '<input type="text" name="jform[image]['.$k.'][nametoken]" id="jform_image" value="'.$v['nametoken'].'" class="inputbox" size="40">';
+						$o[] = '<input type="text" name="jform[image]['.$k.'][nametoken]" id="jform_image" value="'.$v['nametoken'].'" class="form-control" size="40">';
 						$o[] = '</div>';
 						$o[] = '</div>';
 					}
@@ -78,7 +82,7 @@ class JFormFieldPhocacartFile extends JFormField
 						$o[] = '<div class="'.$s['c']['control-group'].'">';
 						$o[] = '<div class="'.$s['c']['control-label'].'">'.$this->form->getLabel($this->name).'</div>';
 						$o[] = '<div class="'.$s['c']['controls'].'">';
-						$o[] = '<input type="text" name="jform[image]['.$k.'][fullpath]" id="jform_image" value="'.$v['fullpath'].'" class="inputbox" size="40">';
+						$o[] = '<input type="text" name="jform[image]['.$k.'][fullpath]" id="jform_image" value="'.$v['fullpath'].'" class="form-control" size="40">';
 						$o[] = '</div>';
 						$o[] = '</div>';
 					}
@@ -111,8 +115,8 @@ class JFormFieldPhocacartFile extends JFormField
 			$o = array();
 			$o[] = '<div class="tower-file">';
 			$o[] = '<input type="file" id="'.$id.'" name="'.$this->name.'[]" multiple '.$accepts.' '. $requInput.' />';
-			$o[] = '<label for="'.$id.'" class="'.$s['c']['btn.btn-primary'].'"><span class="'.$s['i']['upload'].'"></span> '.JText::_('COM_PHOCACART_SELECT_FILES').'</label>';
-			$o[] = '<button type="button" class="tower-file-clear '.$s['c']['btn.btn-secondary'].' align-top"><span class="'.$s['i']['clear'].'"></span> '.JText::_('COM_PHOCACART_CLEAR').'</button>';
+			$o[] = '<label for="'.$id.'" class="'.$s['c']['btn.btn-primary'].'"><span class="'.$s['i']['upload'].'"></span> '.Text::_('COM_PHOCACART_SELECT_FILES').'</label>';
+			$o[] = '<button type="button" class="tower-file-clear '.$s['c']['btn.btn-secondary'].' align-top"><span class="'.$s['i']['clear'].'"></span> '.Text::_('COM_PHOCACART_CLEAR').'</button>';
 			$o[] = '</div>';
 
 			$o[] = '<script type="text/javascript">';
@@ -121,13 +125,13 @@ class JFormFieldPhocacartFile extends JFormField
 			$o[] = '   fileSizeLimit: '.(int)$submit_item_upload_image_maxsize.',';
 			$o[] = '   iconClass: "'.$s['i']['upload'].'",';
 			$o[] = '   lang: {';
-			$o[] = '      "COM_PHOCACART_ERROR_TOO_MANY_FILES_SELECTED": "'.JText::_('COM_PHOCACART_ERROR_TOO_MANY_FILES_SELECTED'). '",';
-			$o[] = '      "COM_PHOCACART_MAXIMUM_NUMBER_FILES_SELECTED_IS": "'.JText::_('COM_PHOCACART_MAXIMUM_NUMBER_FILES_SELECTED_IS'). '",';
-			$o[] = '      "COM_PHOCACART_WARNFILETOOLARGE": "'.JText::_('COM_PHOCACART_WARNFILETOOLARGE'). '",';
-			$o[] = '      "COM_PHOCACART_FILE_SIZE": "'.JText::_('COM_PHOCACART_FILE_SIZE'). '",';
-			$o[] = '      "COM_PHOCACART_FILE_SIZE_LIMIT": "'.JText::_('COM_PHOCACART_FILE_SIZE_LIMIT'). '",';
-			$o[] = '      "COM_PHOCACART_ERROR": "'.JText::_('COM_PHOCACART_ERROR'). '",';
-			$o[] = '      "COM_PHOCACART_FILES_SELECTED": "'.JText::_('COM_PHOCACART_FILES_SELECTED'). '"';
+			$o[] = '      "COM_PHOCACART_ERROR_TOO_MANY_FILES_SELECTED": "'.Text::_('COM_PHOCACART_ERROR_TOO_MANY_FILES_SELECTED'). '",';
+			$o[] = '      "COM_PHOCACART_MAXIMUM_NUMBER_FILES_SELECTED_IS": "'.Text::_('COM_PHOCACART_MAXIMUM_NUMBER_FILES_SELECTED_IS'). '",';
+			$o[] = '      "COM_PHOCACART_WARNFILETOOLARGE": "'.Text::_('COM_PHOCACART_WARNFILETOOLARGE'). '",';
+			$o[] = '      "COM_PHOCACART_FILE_SIZE": "'.Text::_('COM_PHOCACART_FILE_SIZE'). '",';
+			$o[] = '      "COM_PHOCACART_FILE_SIZE_LIMIT": "'.Text::_('COM_PHOCACART_FILE_SIZE_LIMIT'). '",';
+			$o[] = '      "COM_PHOCACART_ERROR": "'.Text::_('COM_PHOCACART_ERROR'). '",';
+			$o[] = '      "COM_PHOCACART_FILES_SELECTED": "'.Text::_('COM_PHOCACART_FILES_SELECTED'). '"';
 			$o[] = '   }';
 			$o[] = '});';
 			$o[] = '</script>';

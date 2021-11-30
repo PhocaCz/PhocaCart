@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Filesystem\File;
 
 require JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/autoloadEscpos.php';
 use Mike42\Escpos\Printer;
@@ -227,7 +229,7 @@ class PhocacartPosPrint
 
 		$o = '';
 		if ($img != '') {
-			$o .= '<img src="'.JURI::root(false). ''.$img.'" data-src="'.$img.'" />'. $this->lineEnd;
+			$o .= '<img src="'.Uri::root(false). ''.$img.'" data-src="'.$img.'" />'. $this->lineEnd;
 		}
 		return $o;
 	}
@@ -330,7 +332,7 @@ class PhocacartPosPrint
 						$src = $xpath->evaluate("string(//img/@data-src)");
 						$srcAbs = JPATH_ROOT . '/' . $src;
 
-						if (JFile::exists($srcAbs)) {
+						if (File::exists($srcAbs)) {
 							$printer->setJustification(Printer::JUSTIFY_CENTER);
 							$image = EscposImage::load($srcAbs, false);
 							$printer->bitImage($image);

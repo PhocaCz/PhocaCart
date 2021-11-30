@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Application\CMSApplication;
 
 class PhocacartPath
 {
@@ -18,7 +22,7 @@ class PhocacartPath
 
 
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		// Folder where to stored files for download
 		$productImagePath		= $paramsC->get( 'product_image_path', 'images/phocacartproducts' );
@@ -39,22 +43,22 @@ class PhocacartPath
 		$path['media_abs_front_ds']			= JPATH_ROOT . '/media/com_phocacart/images/' ;
 
 		if ($group['f'] == 8) {
-			$attachmentFolder 				= JPath::clean($attachmentFolder);
+			$attachmentFolder 				= Path::clean($attachmentFolder);
 			$path['orig_abs'] 				= JPATH_ROOT . '/' . $attachmentFolder;
 			$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $attachmentFolder . '/';
 
-			$attachmentFolderRel 			= JPath::clean($attachmentFolder);
+			$attachmentFolderRel 			= Path::clean($attachmentFolder);
 			$path['orig_rel'] 				= '../' . $attachmentFolderRel;
 			$path['orig_rel_ds'] 			= '../' . $attachmentFolderRel .'/';
 			$path['orig_rel_path'] 			= Juri::root() . $attachmentFolderRel;
 			$path['orig_rel_path_ds'] 		= Juri::root() . $attachmentFolderRel .'/';
 
 		} else if ($group['f'] == 6) {
-			$downloadFolderPublic 			= JPath::clean($downloadFolderPublic);
+			$downloadFolderPublic 			= Path::clean($downloadFolderPublic);
 			$path['orig_abs'] 				= JPATH_ROOT . '/' . $downloadFolderPublic;
 			$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $downloadFolderPublic . '/';
 
-			$downloadFolderPublicRel 		= JPath::clean($downloadFolderPublic);
+			$downloadFolderPublicRel 		= Path::clean($downloadFolderPublic);
 			$path['orig_rel'] 				= '../' . $downloadFolderPublicRel;
 			$path['orig_rel_ds'] 			= '../' . $downloadFolderPublicRel .'/';
 			$path['orig_rel_path'] 			= Juri::root() . $downloadFolderPublicRel;
@@ -75,18 +79,18 @@ class PhocacartPath
 		}  else if ($group['f'] == 7) {
 			// Standard Path - Upload
 			if ($absolutePathUpload != '') {
-				$uploadFolder 				    = JPath::clean($absolutePathUpload);
+				$uploadFolder 				    = Path::clean($absolutePathUpload);
 				$path['orig_abs'] 				= $uploadFolder;
-				$path['orig_abs_ds'] 			= JPath::clean($path['orig_abs'] . '/');
+				$path['orig_abs_ds'] 			= Path::clean($path['orig_abs'] . '/');
 				$path['orig_rel'] 				= '';
 				$path['orig_rel_ds'] 			= '';
 
 			} else {
-				$uploadFolder 				    = JPath::clean($uploadFolder);
+				$uploadFolder 				    = Path::clean($uploadFolder);
 				$path['orig_abs'] 				= JPATH_ROOT . '/' . $uploadFolder;
 				$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $uploadFolder . '/';
 
-				$uploadFolderRel 				= JPath::clean($uploadFolder);
+				$uploadFolderRel 				= Path::clean($uploadFolder);
 				$path['orig_rel_ds'] 			= '../' . $uploadFolderRel;
 				$path['orig_rel_ds'] 			= '../' . $uploadFolderRel .'/';
 				$path['orig_rel_path'] 			= Juri::root() . $uploadFolderRel;
@@ -95,18 +99,18 @@ class PhocacartPath
 		} else if ($group['f'] == 3) {
 			// Standard Path - Download
 			if ($absolutePath != '') {
-				$downloadFolder 				= JPath::clean($absolutePath);
+				$downloadFolder 				= Path::clean($absolutePath);
 				$path['orig_abs'] 				= $downloadFolder;
-				$path['orig_abs_ds'] 			= JPath::clean($path['orig_abs'] . '/');
+				$path['orig_abs_ds'] 			= Path::clean($path['orig_abs'] . '/');
 				$path['orig_rel'] 				= '';
 				$path['orig_rel_ds'] 			= '';
 
 			} else {
-				$downloadFolder 				= JPath::clean($downloadFolder);
+				$downloadFolder 				= Path::clean($downloadFolder);
 				$path['orig_abs'] 				= JPATH_ROOT . '/' . $downloadFolder;
 				$path['orig_abs_ds'] 			= JPATH_ROOT . '/' . $downloadFolder . '/';
 
-				$downloadFolderRel 				= JPath::clean($downloadFolder);
+				$downloadFolderRel 				= Path::clean($downloadFolder);
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel;
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel .'/';
 				$path['orig_rel_path'] 			= Juri::root() . $downloadFolderRel;
@@ -126,7 +130,7 @@ class PhocacartPath
 		// TO DO - create a singleton
 		$option 						= 'com_phocacart';
 		$instance 						= new StdClass();
-		$baseFront						= JURI::root(true);
+		$baseFront						= Uri::root(true);
 		$instance->media_css_abs		= JPATH_ROOT . '/' .  'media'. '/' .  $option . '/' .  'css' . '/';
 		$instance->media_img_abs		= JPATH_ROOT . '/' .  'media'. '/' .  $option . '/' .  'images' . '/';
 		$instance->media_js_abs			= JPATH_ROOT . '/' .  'media'. '/' .  $option . '/' .  'js' . '/';
@@ -141,7 +145,7 @@ class PhocacartPath
 	}
 
 	public static function getRightPathLink($link) {
-		$app    		= JApplicationCms::getInstance('site');
+		$app    		= CMSApplication::getInstance('site');
 		$router 		= $app->getRouter();
 		$uri 			= $router->build($link);
 		$uriS			= $uri->toString();
@@ -149,13 +153,13 @@ class PhocacartPath
 		$pos 			= strpos($uriS, 'administrator');
 
 		if ($pos === false) {
-			$uriL = str_replace(JURI::root(true), '', $uriS);
+			$uriL = str_replace(Uri::root(true), '', $uriS);
 			$uriL = ltrim($uriL, '/');
-			$formatLink = JURI::root(false). $uriL;
+			$formatLink = Uri::root(false). $uriL;
 
 			//$formatLink = $uriS;
 		} else {
-			$formatLink = JURI::root(false). str_replace(JURI::root(true).'/administrator/', '', $uri->toString());
+			$formatLink = Uri::root(false). str_replace(Uri::root(true).'/administrator/', '', $uri->toString());
 		}
 
 

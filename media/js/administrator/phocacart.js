@@ -363,3 +363,38 @@ function phDoRequestWizardParent(url, s) {
 }
 
 
+// Add icons to submenu
+jQuery(document).ready(function() {
+
+	var getUrlParameter = function getUrlParameter(sParam, url) {
+		var sPageURL = url,
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+	
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+	
+			if (sParameterName[0] === sParam) {
+				return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
+		return false;
+	};
+
+	jQuery('.item-level-3').find('a').each(function() {
+		var view = getUrlParameter('view', jQuery(this).attr('href'));
+		view = String(view);
+		if(view.includes('phocacart')) {
+			var className = view.replace('phocacart', '');
+			jQuery(this).addClass('ph-submenu ph-submenu-' + className);
+		}
+
+		if (jQuery(this).attr('href') == 'index.php?option=com_phocacart') {
+			jQuery(this).addClass('ph-submenu ph-submenu-cp');
+		}
+	});
+
+})
+
+

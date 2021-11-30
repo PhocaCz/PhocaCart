@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d  = $displayData;
 
 echo '<div class="ph-cb"></div>';
@@ -16,27 +18,27 @@ if ($d['t']['show_pagination']) {
 
     echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].' ph-center-pagination">';
 	if ($d['t']['display_item_ordering']) {
-		echo $d['t']['display_pagination_labels']  == 1 ? JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;' : '';
-        echo str_replace( 'class="inputbox"', 'class="'.$d['s']['c']['inputbox.form-control'].' chosen-select" style="width: 16em" aria-label="'.JText::_('COM_PHOCACART_ORDER_FRONT').'"', $d['t']['ordering']);
+		echo $d['t']['display_pagination_labels']  == 1 ? Text::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;' : '';
+        echo str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select" style="width: 16em" aria-label="'.Text::_('COM_PHOCACART_ORDER_FRONT').'"', $d['t']['ordering']);
 	}
 	echo '</div>';
 
     echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].' ph-center-pagination">';
 	if ($d['t']['show_pagination_limit'] ) {
-		echo $d['t']['display_pagination_labels'] == 1 ? JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' : '';
-        echo str_replace( 'class="inputbox"', 'class="'.$d['s']['c']['inputbox.form-control'].' chosen-select" aria-label="'.JText::_('COM_PHOCACART_DISPLAY_NUM').'"', $d['t']['pagination']->getLimitBox());
+		echo $d['t']['display_pagination_labels'] == 1 ? Text::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' : '';
+        echo str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select" aria-label="'.Text::_('COM_PHOCACART_DISPLAY_NUM').'"', $d['t']['pagination']->getLimitBox());
 	}
     echo '</div>';
 
 	echo '<div class="ph-cb"></div>';
 
 	// .phPaginationBox used for AJAX pagination
-	echo '<div class="'.$d['s']['c']['col.xs12.sm12.md12'].' ph-center-pagination pagination phPaginationBox">'. str_replace( 'class="inputbox"', 'class="'.$d['s']['c']['inputbox.form-control'].' chosen-select"', $d['t']['pagination']->getPagesLinks()) . '</div>';
+	echo '<div class="'.$d['s']['c']['col.xs12.sm12.md12'].' ph-center-pagination pagination phPaginationBox">'. str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select"', $d['t']['pagination']->getPagesLinks()) . '</div>';
 
     echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$d['s']['c']['col.xs12.sm12.md12'].' ph-center-pagination ph-pagination-mt pagination">';
-	echo str_replace( 'class="inputbox"', 'class="'.$d['s']['c']['inputbox.form-control'].' chosen-select"', $d['t']['pagination']->getPagesCounter());
+	echo str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select"', $d['t']['pagination']->getPagesCounter());
 	echo '</div>';
 
     echo '<div class="ph-cb"></div>';
@@ -45,7 +47,7 @@ echo '</div>';
 if ($d['t']['ajax_pagination_category'] == 1) {
 	echo '<input type="hidden" name="format" value="raw" />';
 }
-echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
+echo HTMLHelper::_( 'form.token' );
 echo '</form>';
 
 ?>

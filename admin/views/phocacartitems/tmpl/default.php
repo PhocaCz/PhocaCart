@@ -12,11 +12,15 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $r         = $this->r;
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -38,7 +42,7 @@ if ($saveOrder && !empty($this->items)) {
 
 /*
 $nrColumns = 19;
-$assoc     = JLanguageAssociations::isEnabled();
+$assoc     = Associations::isEnabled();
 if ($assoc) {
     $nrColumns = 20;
 }*/
@@ -71,7 +75,7 @@ echo $r->endFilterBar();
 echo $r->endFilterBar();
 */
 //echo $r->startFilterBar();
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 //echo $r->endFilterBar();
 
 echo $r->startTable('categoryList');
@@ -89,7 +93,7 @@ $options['listdirn']    = $listDirn;
 $options['listorder']   = $listOrder;
 $options['count']       = 2;
 $options['type']        = 'render';
-$options['association'] = JLanguageAssociations::isEnabled();
+$options['association'] = Associations::isEnabled();
 $options['tasks']       = $this->t['tasks'];
 
 $c = new PhocacartRenderAdmincolumns();
@@ -150,7 +154,7 @@ if (is_array($this->items)) {
         $canEdit    = $user->authorise('core.edit', $this->t['o']);
         $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
         $canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-        $linkEdit   = JRoute::_($urlEdit . $item->id);
+        $linkEdit   = Route::_($urlEdit . $item->id);
 
 
         //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
@@ -225,18 +229,18 @@ if (is_array($this->items)) {
 
         $checkO = '';
         if ($item->checked_out) {
-            $checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
+            $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
         }
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="' . JRoute::_($linkEdit) . '"><span id="phIdTitle' . $item->id . '">' . $this->escape($item->title) . '</span></a>';
+            $checkO .= '<a href="' . Route::_($linkEdit) . '"><span id="phIdTitle' . $item->id . '">' . $this->escape($item->title) . '</span></a>';
         } else {
             $checkO .= '<span id="phIdTitle' . $item->id . '">' . $this->escape($item->title) . '</span>';// Id needed for displaying Copy Attributes Titles
         }
-        $checkO .= '<br /><span class="smallsub">(<span>' . JText::_($this->t['l'] . '_FIELD_ALIAS_LABEL') . ':</span>' . $this->escape($item->alias) . ')</span>';
+        $checkO .= '<br /><span class="smallsub">(<span>' . Text::_($this->t['l'] . '_FIELD_ALIAS_LABEL') . ':</span>' . $this->escape($item->alias) . ')</span>';
         echo $r->td($checkO, "small");
 
         echo $r->td(
-            '<div class="btn-group">' . Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange)
+            '<div class="btn-group">' . HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange)
             . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange) . '</div>',
             "small");
 
@@ -244,8 +248,8 @@ if (is_array($this->items)) {
         if (isset($this->t['categories'][$item->id])) {
             foreach ($this->t['categories'][$item->id] as $k => $v) {
                 if ($canEditCat) {
-                    $linkCat = JRoute::_('index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit&id=' . (int)$v['id']);
-                    $catO[]  = '<a href="' . JRoute::_($linkCat) . '">' . $this->escape($v['title']) . '</a>';
+                    $linkCat = Route::_('index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit&id=' . (int)$v['id']);
+                    $catO[]  = '<a href="' . Route::_($linkCat) . '">' . $this->escape($v['title']) . '</a>';
                 } else {
                     $catO[] = $this->escape($v['title']);
                 }
@@ -266,14 +270,14 @@ if (is_array($this->items)) {
 
         if ($options['association']) {
             if ($item->association) {
-                echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('phocacartitem.association', $item->id));
+                echo $r->td(HTMLHelper::_('phocacartitem.association', $item->id));
             } else {
                 echo $r->td('');
             }
         }
 
         //echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
-        echo $r->td(JLayoutHelper::render('joomla.content.language', $item));
+        echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
         echo $r->td($item->hits, "small");
 
         echo $r->td($item->id, "small");

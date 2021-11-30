@@ -7,15 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 
-class JFormFieldPhocacartFeed extends JFormField
+class JFormFieldPhocacartFeed extends FormField
 {
 	protected $type 		= 'PhocacartFeed';
 
 	protected function getInput() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
        //build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value'
@@ -32,10 +36,10 @@ class JFormFieldPhocacartFeed extends JFormField
 
 		$attr = '';
 		$attr .= $this->required ? ' required aria-required="true"' : '';
-		$attr .= ' class="inputbox"';
+		$attr .= ' class="form-select"';
 
-		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_XML_FEED').' -', 'value', 'text'));
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		array_unshift($data, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_XML_FEED').' -', 'value', 'text'));
+		return HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

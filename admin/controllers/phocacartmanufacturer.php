@@ -7,17 +7,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocacartManufacturer extends PhocaCartCpControllerPhocaCartCommon {
 
     function countproducts() {
-		$app	= JFactory::getApplication();
-		$cid 	= JFactory::getApplication()->input->get( 'cid', array(), '', 'array' );
-		\Joomla\Utilities\ArrayHelper::toInteger($cid);
+		$app	= Factory::getApplication();
+		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		ArrayHelper::toInteger($cid);
 		$redirect = 'index.php?option=com_phocacart&view=phocacartmanufacturers';
 
 		if (count( $cid ) < 1) {
-			$app->enqueueMessage(JText::_( 'COM_PHOCACART_SELECT_ITEM_COUNT_PRODUCTS' ), 'error');
+			$app->enqueueMessage(Text::_( 'COM_PHOCACART_SELECT_ITEM_COUNT_PRODUCTS' ), 'error');
 			$app->redirect($redirect);
 		}
 

@@ -9,12 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartImageAdditional
 {
 	public static function getImagesByProductId($productId, $return = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.image';
 		$query .= ' FROM #__phocacart_product_images AS a'
@@ -47,7 +48,7 @@ class PhocacartImageAdditional
 	public static function storeImagesByProductId($productId, $imageArray, $new = 0) {
 
 		if ((int)$productId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 
 			$notDeleteImages   = array();// Select all images which will be not deleted
             $i                  = 1;

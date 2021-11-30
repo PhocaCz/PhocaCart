@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocaCartEditTax extends PhocaCartCpControllerPhocaCartCommons
 {
@@ -17,12 +20,12 @@ class PhocaCartCpControllerPhocaCartEditTax extends PhocaCartCpControllerPhocaCa
 	
 	function edittax() {
 	
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		//$id		= $app->input->get('id', 0, 'int');
 		$jform	= $app->input->get('jform', array(), 'array');
 		
@@ -34,22 +37,22 @@ class PhocaCartCpControllerPhocaCartEditTax extends PhocaCartCpControllerPhocaCa
 			$model = $this->getModel( 'phocacartedittax' );
 			
 			if(!$model->editTax($jform)) {
-				$message = JText::_( 'COM_PHOCACART_ERROR_UPDATE_TAX_INFORMATION' );
+				$message = Text::_( 'COM_PHOCACART_ERROR_UPDATE_TAX_INFORMATION' );
 				$app->enqueueMessage($message, 'error');
 			} else {
-				$message = JText::_( 'COM_PHOCACART_SUCCESS_UPDATE_TAX_INFORMATION' );
+				$message = Text::_( 'COM_PHOCACART_SUCCESS_UPDATE_TAX_INFORMATION' );
 				$app->enqueueMessage($message, 'message');
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacartedittax&type='.(int)$jform['type'].'&tmpl=component&id='.(int)$jform['id']);
 		} else {
 		
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartedittax&type='.(int)$jform['type'].'&tmpl=component');
 		}
 	}
 
 	function emptyinformation() {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$jform	= $app->input->get('jform', array(), 'array');
 		
 		if (!isset($jform['type'])) {
@@ -59,16 +62,16 @@ class PhocaCartCpControllerPhocaCartEditTax extends PhocaCartCpControllerPhocaCa
 			$model = $this->getModel( 'phocacartedittax' );
 			
 			if(!$model->emptyInformation($jform['id'], $jform['type'])) {
-				$message = JText::_( 'COM_PHOCACART_ERROR_EMPTY_TAX_INFORMATION' );
+				$message = Text::_( 'COM_PHOCACART_ERROR_EMPTY_TAX_INFORMATION' );
 				$app->enqueueMessage($message, 'error');
 			} else {
-				$message = JText::_( 'COM_PHOCACART_SUCCESS_EMPTY_TAX_INFORMATION' );
+				$message = Text::_( 'COM_PHOCACART_SUCCESS_EMPTY_TAX_INFORMATION' );
 				$app->enqueueMessage($message, 'message');
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacartedittax&type='.(int)$jform['type'].'&tmpl=component&id='.(int)$jform['id']);
 		} else {
 		
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartedittax&type='.(int)$jform['type'].'&tmpl=component');
 		}
 	}

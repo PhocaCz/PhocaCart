@@ -7,13 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d = $displayData;
 
 ?>
 <div id="phItemStockBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">
-		<div class="ph-stock-txt"><?php echo JText::_('COM_PHOCACART_AVAILABILITY'); ?>:</div>
-		<div class="ph-stock"><?php echo JText::_($d['stock_status_output']); ?></div>
+		<div class="ph-stock-txt"><?php echo Text::_('COM_PHOCACART_AVAILABILITY'); ?>:</div>
+		<div class="ph-stock"><?php echo Text::_($d['stock_status_output']); ?></div>
 	</div>
 </div>
 <div class="ph-cb"></div>

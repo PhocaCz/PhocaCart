@@ -9,12 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartRegion
 {
 	public static function getRegionById($regionId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT title FROM #__phocacart_regions WHERE id = '.(int) $regionId. ' ORDER BY title LIMIT 1';
 		$db->setQuery($query);
 		$region = $db->loadColumn();
@@ -26,7 +27,7 @@ class PhocacartRegion
 
 	public static function getRegionsByCountry($countryId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		$query = 'SELECT a.id, a.title FROM #__phocacart_regions AS a'
 			    .' WHERE a.country_Id = '.(int) $countryId
@@ -54,7 +55,7 @@ class PhocacartRegion
 			$c = 'zone_id';
 		}
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT r.region_id';
@@ -88,12 +89,13 @@ class PhocacartRegion
 		}
 
 		if ((int)$id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM '.$t
 					. ' WHERE '.$c.' = '. (int)$id;
 			$db->setQuery($query);
 			$db->execute();
+
 
 			if (!empty($regionsArray)) {
 
@@ -102,6 +104,8 @@ class PhocacartRegion
 
 				foreach($regionsArray as $k => $v) {
 					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					// No multidimensional in J4
+					$values[] = ' ('.(int)$id.', '.(int)$v.')';
 				}
 
 				if (!empty($values)) {
@@ -109,6 +113,8 @@ class PhocacartRegion
 
 					$query = ' INSERT INTO '.$t.' ('.$c.', region_id)'
 								.' VALUES '.(string)$valuesString;
+
+
 
 					$db->setQuery($query);
 					$db->execute();
@@ -120,7 +126,7 @@ class PhocacartRegion
 
 	public static function getAllRegionsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		/*$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_countries AS a'
 				. ' ORDER BY '. $order;
@@ -136,7 +142,7 @@ class PhocacartRegion
 		$regions = $db->loadObjectList();
 
 
-		//$regionsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $regions, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		//$regionsO = JHtml::_('select.genericlist', $regions, $name, 'class="form-control" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
 
 		// Try to do 1 SQL Query and 1 Foreach
@@ -147,7 +153,7 @@ class PhocacartRegion
 		$countRegions = count($regions);
 
 		$regionsO	= '';
-		$regionsO .= '<select id="'.$id.'" name="'.$name.'" class="inputbox" size="4" multiple="multiple">';
+		$regionsO .= '<select id="'.$id.'" name="'.$name.'" class="form-control" size="4" multiple="multiple">';
 
 
 		$i = 0;
@@ -180,11 +186,82 @@ class PhocacartRegion
 
 		return $regionsO;
 	}
+
+	public static function getAllRegions($order = 'id' ) {
+
+		$db =Factory::getDBO();
+		/*$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_countries AS a'
+				. ' ORDER BY '. $order;
+		$query = 'SELECT a.id AS value, a.title AS text, a.country_id as countrid'
+				.' FROM #__phocacart_regions AS a'
+				. ' ORDER BY '. $order;*/
+
+		$query = 'SELECT a.id AS value, a.title AS text, a.country_id as cid, c.title as countrytext'
+				.' FROM #__phocacart_regions AS a'
+				.' LEFT JOIN #__phocacart_countries AS c ON c.id = a.country_id'
+				.' ORDER BY c.id, a.'. $order;
+		$db->setQuery($query);
+		$regions = $db->loadObjectList();
+
+		foreach($regions as $k => $v) {
+			$v->text = $v->countrytext . ' - ' . $v->text;
+
+		}
+		return $regions;
+
+/*
+		//$regionsO = JHtml::_('select.genericlist', $regions, $name, 'class="form-control" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+
+
+		// Try to do 1 SQL Query and 1 Foreach
+		$prev = 0;// the id of previous item
+		$usedFirst = 0;// first time opened the optgroup, so we can close it next time when cid is differnt to prev
+		$open = 0;// if we reach the end of foreach, we discover if the tag is open, if yet, close it.
+
+		$countRegions = count($regions);
+
+		$regionsO	= '';
+		$regionsO .= '<select id="'.$id.'" name="'.$name.'" class="form-control" size="4" multiple="multiple">';
+
+
+		$i = 0;
+		foreach($regions as $k => $v) {
+			$selected = '';
+			if (in_array((int)$v->value, $activeArray)) {
+				$selected = 'selected="selected"';
+			}
+
+			// Groups
+			if ((int)$v->cid > 0 && $v->cid != $prev) {
+				if ($usedFirst == 1) {
+					$regionsO .= '</optgroup>';
+					$open		= 0;
+				}
+
+				$regionsO .= '<optgroup label="'.$v->countrytext.'">';
+				$prev 		= (int)$v->cid;// we prepare previous version
+				$usedFirst	= 1;// we have used the optgroup first time
+				$open		= 1;
+			}
+			$regionsO .= '<option value="'.(int)$v->value.'" '.$selected.'>'.$v->text.'</option>';
+
+			$i++;
+			if ((int)$v->cid > 0 && $i == $countRegions && $open == 1) {
+				$regionsO .= '</optgroup>';
+			}
+		}
+		$regionsO .= '</select>';
+
+		return $regionsO;*/
+	}
+
+
 	/*
 	public static function displayRegions($shippingId, $popupLink = 0) {
 
 		$o 		= '';
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$params = PhocacartUtils::getComponentParameters() ;
 
 		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'

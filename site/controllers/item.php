@@ -7,14 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
-class PhocaCartControllerItem extends JControllerForm
+class PhocaCartControllerItem extends FormController
 {
 	public function review() {
 
-		JSession::checkToken() or jexit( 'Invalid Token' );
+		Session::checkToken() or jexit( 'Invalid Token' );
 		//$paramsC 			= PhocacartUtils::getComponentParameters();
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$paramsC 			= $app->getParams();
 		$approve_review 	= $paramsC->get( 'approve_review',0 );
 		$u					= PhocacartUser::getUser();
@@ -28,13 +32,13 @@ class PhocaCartControllerItem extends JControllerForm
 
 		$errMsg = array();// Error message in this controller
 		if ((int)$item['rating'] < 1) {
-			$errorMsg[] = JText::_('COM_PHOCACART_PLEASE_ADD_RATING');
+			$errorMsg[] = Text::_('COM_PHOCACART_PLEASE_ADD_RATING');
 		}
 		if ($item['name'] == '') {
-			$errorMsg[] = JText::_('COM_PHOCACART_PLEASE_ADD_YOUR_NAME');
+			$errorMsg[] = Text::_('COM_PHOCACART_PLEASE_ADD_YOUR_NAME');
 		}
 		if ($item['review'] == '') {
-			$errorMsg[] = JText::_('COM_PHOCACART_PLEASE_ADD_YOUR_REVIEW');
+			$errorMsg[] = Text::_('COM_PHOCACART_PLEASE_ADD_YOUR_REVIEW');
 		}
 		if (!empty($errorMsg)) {
 			$app->enqueueMessage(implode( '<br />', $errorMsg ), 'warning');
@@ -45,16 +49,16 @@ class PhocaCartControllerItem extends JControllerForm
 		$added = PhocacartReview::addReview($error, $approve_review, $item['id'], $u->id, $item['name'], $item['rating'], $item['review']);
 
 		if ($added) {
-			$msg = JText::_('COM_PHOCACART_THANK_YOU_FOR_YOUR_REVIEW');
+			$msg = Text::_('COM_PHOCACART_THANK_YOU_FOR_YOUR_REVIEW');
 			if ($approve_review == 1) {
-				$msg .= '. '. JText::_('COM_PHOCACART_REVIEW_NEED_TO_BE_APPROVED_BEFORE_DISPLAYING').'.';
+				$msg .= '. '. Text::_('COM_PHOCACART_REVIEW_NEED_TO_BE_APPROVED_BEFORE_DISPLAYING').'.';
 			}
 			$app->enqueueMessage($msg, 'message');
 		} else {
 			if ($error == 1) {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_YOU_HAVE_ALREADY_REVIEWED_THIS_PRODUCT'), 'warning');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_YOU_HAVE_ALREADY_REVIEWED_THIS_PRODUCT'), 'warning');
 			} else {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_REVIEW_NOT_ADDED'), 'warning');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_REVIEW_NOT_ADDED'), 'warning');
 			}
 		}
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));

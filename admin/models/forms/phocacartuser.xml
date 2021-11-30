@@ -5,8 +5,8 @@
 <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
 
 	<field name="user_id" type="user" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
-	<field name="group" type="PhocacartGroups" table="1" class="inputbox" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
-	
-	<field name="loyalty_card_number" type="text" table="1" class="inputbox" size="40" label="COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_LABEL" description="COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_DESC"  />
+	<field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="1"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
+
+	<field name="loyalty_card_number" type="text" table="1" class="form-control" size="40" label="COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_LABEL" description="COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_DESC"  />
 </fieldset>
 </form>

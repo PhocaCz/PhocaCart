@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartStatuses extends JViewLegacy
+class PhocaCartCpViewPhocaCartStatuses extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -53,38 +56,38 @@ class PhocaCartCpViewPhocaCartStatuses extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.status_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_ORDER_STATUSES' ), 'time' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_ORDER_STATUSES' ), 'time' );
 
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			ToolbarHelper::divider();
+			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartstatuses.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartstatuses.delete', $this->t['l'].'_DELETE');
 		}
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
-			'a.stock_movements' => JText::_($this->t['l'] . '_STOCK_MOVEMENTS'),
-			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'a.download'		=> JText::_($this->t['l']. '_DOWNLOAD'),
-			'a.type'			=> JText::_($this->t['l']. '_DEFAULT'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
+			'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
+			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
+			'a.stock_movements' => Text::_($this->t['l'] . '_STOCK_MOVEMENTS'),
+			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
+			'a.download'		=> Text::_($this->t['l']. '_DOWNLOAD'),
+			'a.type'			=> Text::_($this->t['l']. '_DEFAULT'),
+			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

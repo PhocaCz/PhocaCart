@@ -8,11 +8,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 
 
 //- $link		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricehistory&tmpl=component&id='.(int)$this->id);
@@ -21,8 +24,8 @@ Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
 echo '<div id="phAdminEditPopup" class="ph-edit-price-history-box">';
 
 /*
-echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>'
-	. '<ul><li>'.JText::_('COM_PHOCACART_TO_SEE_ALL_CUSTOMER_GROUPS_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
+echo '<div class="alert alert-info"><button type="button" class="close" data-bs-dismiss="alert">&times;</button>'
+	. '<ul><li>'.Text::_('COM_PHOCACART_TO_SEE_ALL_CUSTOMER_GROUPS_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
 	.'</ul></div>';
 */
 
@@ -35,9 +38,9 @@ echo '<div class="alert alert-info"><button type="button" class="close" data-dis
 	/*
 echo '<div class="ph-product-price-history-box">';
 
-echo '<div class="row-fluid ph-row">'."\n";
-echo '<div class="col-xs-12 col-sm-3 col-md-3">'.JText::_('COM_PHOCACART_DATE').'</div>';
-echo '<div class="col-xs-12 col-sm-2 col-md-2">'.JText::_('COM_PHOCACART_PRICE').'</div>';
+echo '<div class="row ph-row">'."\n";
+echo '<div class="col-xs-12 col-sm-3 col-md-3">'.Text::_('COM_PHOCACART_DATE').'</div>';
+echo '<div class="col-xs-12 col-sm-2 col-md-2">'.Text::_('COM_PHOCACART_PRICE').'</div>';
 echo '<div class="col-xs-12 col-sm-1 col-md-1"></div>';
 echo '<div class="col-xs-12 col-sm-6 col-md-6"></div>';
 echo '</div>';
@@ -62,7 +65,7 @@ if (!empty($this->t['history'])) {
 	PhocacartRenderAdminjs::renderJsManageRowPricehistory(0, $newRow);
 
 }
-echo $r->addRowButton(JText::_('COM_PHOCACART_ADD_PRICE'), 'pricehistory');
+echo $r->addRowButton(Text::_('COM_PHOCACART_ADD_PRICE'), 'pricehistory');
 	//echo '</td></tr>';
 
 
@@ -74,8 +77,8 @@ echo '<input type="hidden" name="id" value="'.(int)$this->id.'">';
 echo '<input type="hidden" name="task" value="phocacarteditproductpricehistory.save">';
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
-echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-ok ph-icon-white"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-ok ph-icon-white"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
+echo HTMLHelper::_('form.token');
 echo '</div>';
 
 echo '<div class="col-xs-12 col-sm-1 col-md-1"></div>';
@@ -85,7 +88,7 @@ echo '<div class="col-xs-12 col-sm-6 col-md-6"></div>';
 */
 
 
-$app 		= JFactory::getApplication();
+$app 		= Factory::getApplication();
 $input 		= $app->input;
 $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
@@ -100,7 +103,7 @@ echo $r->startForm($this->t['o'], $this->t['task'], (int)$this->id, 'adminForm',
 echo '<div class="span12 form-horizontal">';
 
 echo '<div class="tab-pane" id="price_history">'. "\n";
-echo '<h3>'.JText::_($this->t['l'].'_PRICE_HISTORY').'</h3>';
+echo '<h3>'.Text::_($this->t['l'].'_PRICE_HISTORY').'</h3>';
 $formArray = array ('price_history');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
@@ -110,8 +113,8 @@ echo '<input type="hidden" name="id" value="'.(int)$this->id.'">';
 echo '<input type="hidden" name="task" value="phocacarteditproductpricehistory.save">';
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
-echo '<button class="btn btn-success btn-sm ph-btn pull-right ph-right"><span class="icon-ok ph-icon-white"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo '<button class="btn btn-success btn-sm ph-btn pull-right ph-right"><span class="icon-ok ph-icon-white"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
+echo HTMLHelper::_('form.token');
 
 echo '</div>';
 

@@ -9,6 +9,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 
 class PhocacartImage
 {
@@ -30,7 +35,7 @@ class PhocacartImage
         switch ($size) {
             case 'large':
                 $fileNameThumb       = $thumb_name_prefix . '_l_' . $title;
-                $thumbName->abs      = JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+                $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
             break;
@@ -38,7 +43,7 @@ class PhocacartImage
             case 'medium':
 
                 $fileNameThumb       = $thumb_name_prefix . '_m_' . $title;
-                $thumbName->abs      = JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+                $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
             break;
@@ -46,7 +51,7 @@ class PhocacartImage
             default:
             case 'small':
                 $fileNameThumb       = $thumb_name_prefix . '_s_' . $title;
-                $thumbName->abs      = JPath::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
+                $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
             break;
@@ -102,7 +107,7 @@ class PhocacartImage
     }
 
     public static function getAdditionalImages($itemId) {
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $query = 'SELECT i.image FROM #__phocacart_product_images AS i'
             . ' LEFT JOIN #__phocacart_products AS p ON p.id = i.product_id'
             . ' WHERE p.id = ' . (int)$itemId
@@ -115,7 +120,15 @@ class PhocacartImage
 
     public static function getImage($image, $path = '', $width = '', $height = '') {
 
-        if (JFile::exists(JPATH_ROOT . '/' . $image)) {
+
+        //$imageHTMLHelper::cleanImageURL($image);
+
+        $imgClean = HTMLHelper::cleanImageURL($image);
+        if ($imgClean->url != '') {
+           $image =  $imgClean->url;
+        }
+
+        if (File::exists(JPATH_ROOT . '/' . $image)) {
             $style = ' style="';
             if ($width != '') {
                 $style .= 'width: ' . $width . ';';
@@ -129,7 +142,7 @@ class PhocacartImage
                 $path = $path . '/';
             }
 
-            return '<img src="' . JURI::root(true) . '/' . $path . $image . '"' . $style . 'alt=""/>';
+            return '<img src="' . Uri::root(true) . '/' . $path . $image . '"' . $style . 'alt=""/>';
         } else {
             return false;
         }
@@ -291,13 +304,13 @@ class PhocacartImage
             if (isset($dataASM['image']) && $dataASM['image'] != '') {
 
                 $image       = PhocacartImage::getThumbnailName($pathItem, $dataASM['image'], $imageSize);
-                $item->image = JURI::base(true) . '/' . $image->rel;
+                $item->image = Uri::base(true) . '/' . $image->rel;
 
             } else {
 
                 // No image found - back to product image
                 $image       = PhocacartImage::getThumbnailName($pathItem, $item->image, $imageSize);
-                $item->image = JURI::base(true) . '/' . $image->rel;
+                $item->image = Uri::base(true) . '/' . $image->rel;
             }
 
         } else {

@@ -7,6 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
 
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCartCommon {
@@ -14,13 +18,13 @@ class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCar
 
 	public function export() {
 
-		if (!JSession::checkToken('request')) {
-			$response = array('status' => '0', 'error' => '<div class="alert alert-error">' . JText::_('JINVALID_TOKEN') . '</div>');
+		if (!Session::checkToken('request')) {
+			$response = array('status' => '0', 'error' => '<div class="alert alert-error">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$this->t['import_export_pagination']	= $paramsC->get( 'import_export_pagination', 20 );
 		//$this->t['import_export_type']			= $paramsC->get( 'import_export_type', 0 );
@@ -46,8 +50,8 @@ class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCar
 
 
 		// line cca: 588: libraries/cms/layout/file.php
-		//$layout	= new JLayoutFile('product_export', null, array('client' => 0));
-		$layout	= new JLayoutFile('product_export', null, array('component' => 'com_phocacart'));
+		//$layout	= new FileLayout('product_export', null, array('client' => 0));
+		$layout	= new FileLayout('product_export', null, array('component' => 'com_phocacart'));
 		/*if ($this->t['import_export_type'] == 0) {
 			$d['type'] = 'csv';
 		} else {

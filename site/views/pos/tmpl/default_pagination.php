@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 
@@ -24,24 +26,24 @@ if (!empty($this->items)) {
 	//if ($this->p->get('display_item_ordering')) {
 		$col = 7;
 		echo '<div class="'.$this->s['c']["col.xs12.sm{$col}.md{$col}"].' ph-center-pagination">';
-		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select" style="width: 16em"', $this->t['ordering']);
+		echo Text::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select" style="width: 16em"', $this->t['ordering']);
 		echo '</div>';
 	//}
 
 	//if ($this->p->get('show_pagination_limit')) {
 		$col = 5;
 		echo '<div class="'.$this->s['c']["col.xs12.sm{$col}.md{$col}"].' ph-center-pagination">';
-		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getLimitBox(1));
+		echo Text::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getLimitBox(1));
 		echo '</div>';
 	//}
 
 	echo '<div class="ph-cb"></div>';
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination pagination  phPaginationBox">'. str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination pagination  phPaginationBox">'. str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
 
 	echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination ph-pagination-mt pagination">';
-	echo str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesCounter());
+	echo str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesCounter());
 	echo '</div>';
 
 	echo '<div class="ph-cb"></div>';
@@ -58,7 +60,7 @@ if (!empty($this->items)) {
 	echo '<input type="hidden" name="date" value="'.$this->state->get('date').'" />';
 //}
 
-echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
+echo HTMLHelper::_( 'form.token' );
 echo '</form>';
 
 ?>

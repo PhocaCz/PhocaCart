@@ -12,9 +12,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
-echo '<div id="ph-pc-info-box" class="pc-info-view'.$this->p->get( 'pageclass_sfx' ).'">';
+use Joomla\CMS\Language\Text;
+echo '<div id="ph-pc-info-box" class="pc-view pc-info-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_INFO')));
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_INFO')));
 
 if ( $this->t['info_view_description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['info_view_description']. '</div>';
@@ -67,7 +68,7 @@ if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['ship
 		PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['infodata']['shipping_method'])));
 		$eventData               = array();
 		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['shipping_method']));
-		$results = Factory::getApplication()->triggerEvent('PCSonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
+		$results = Factory::getApplication()->triggerEvent('onPCSonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
 		if (isset($results[0]['content']) && $results[0]['content'] != '') {
 			echo '<div class="ph-info-shipping-content">'.$results[0]['content'].'</div>';
 		}
@@ -92,7 +93,7 @@ if (isset($this->t['infodata']['payment_method']) && $this->t['infodata']['payme
 		PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($this->t['infodata']['payment_method'])));
 		$eventData               = array();
 		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['payment_method']));
-		$results = Factory::getApplication()->triggerEvent('PCPonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
+		$results = Factory::getApplication()->triggerEvent('onPCPonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
 		if (isset($results[0]['content']) && $results[0]['content'] != '') {
 			echo '<div class="ph-info-payment-content">'.$results[0]['content'].'</div>';
 		}

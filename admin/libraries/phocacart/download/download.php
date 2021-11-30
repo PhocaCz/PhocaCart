@@ -9,6 +9,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Utilities\ArrayHelper;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 /*
@@ -19,7 +25,7 @@ class PhocacartDownload
 {
 	public static function getDownloadFiles($userId, $tokenDownload = '', $tokenOrder = '') {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$wheres		= array();
 
 		if ((int)$userId < 1 && $tokenDownload != '' && $tokenOrder != '') {
@@ -57,7 +63,7 @@ class PhocacartDownload
 
 	public static function getDownloadFile($id) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT d.*, u.id as userid, o.order_token'
 				.' FROM #__phocacart_order_downloads AS d'
 				.' LEFT JOIN #__phocacart_orders AS o ON o.id = d.order_id'
@@ -71,12 +77,12 @@ class PhocacartDownload
 	}
 
 	public static function validUntil($date, $days) {
-		$db				= JFactory::getDBO();
+		$db				= Factory::getDBO();
 
 		$nullDate 		= $db->getNullDate();
-		$now			= JFactory::getDate();
-		$config			= JFactory::getConfig();
-		$orderDate 		= JFactory::getDate($date);
+		$now			= Factory::getDate();
+		$config			= Factory::getConfig();
+		$orderDate 		= Factory::getDate($date);
 		$tz 			= new DateTimeZone($config->get('offset'));
 		$orderDate->setTimezone($tz);
 
@@ -86,7 +92,7 @@ class PhocacartDownload
 			// NO LIMIT
 			return false;
 		} else {
-			return JHtml::date($expireDate, JText::_('DATE_FORMAT_LC2'));
+			return HTMLHelper::date($expireDate, Text::_('DATE_FORMAT_LC2'));
 		}
 
 
@@ -95,12 +101,12 @@ class PhocacartDownload
 	public static function isActive($date, $days) {
 
 		$o				= '';
-		$db				= JFactory::getDBO();
+		$db				= Factory::getDBO();
 
 		$nullDate 		= $db->getNullDate();
-		$now			= JFactory::getDate();
-		$config			= JFactory::getConfig();
-		$orderDate 		= JFactory::getDate($date);
+		$now			= Factory::getDate();
+		$config			= Factory::getConfig();
+		$orderDate 		= Factory::getDate($date);
 		$tz 			= new DateTimeZone($config->get('offset'));
 		$orderDate->setTimezone($tz);
 
@@ -120,7 +126,7 @@ class PhocacartDownload
 
 		$file 	= self::getDownloadFile((int)$id);
 		$user	= PhocacartUser::getUser();
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 
 
 		$tokenDownload			= $app->input->post->get('d', '', 'string');
@@ -174,7 +180,7 @@ class PhocacartDownload
 
 		$absOrRelFile = $pathFile['orig_abs_ds'] . $file->download_file;
 
-		if (!JFile::exists($absOrRelFile)) {
+		if (!File::exists($absOrRelFile)) {
 			return false;
 		}
 
@@ -201,7 +207,7 @@ class PhocacartDownload
 
 
 		if ($fileSize == 0 ) {
-			die(JText::_('COM_PHOCACART_FILE_SIZE_EMPTY'));
+			die(Text::_('COM_PHOCACART_FILE_SIZE_EMPTY'));
 			exit;
 		}
 
@@ -210,7 +216,7 @@ class PhocacartDownload
 
 		// test for protocol and set the appropriate headers
 		jimport( 'joomla.environment.uri' );
-		$_tmp_uri 		= JURI::getInstance( JURI::current() );
+		$_tmp_uri 		= Uri::getInstance( Uri::current() );
 		$_tmp_protocol 	= $_tmp_uri->getScheme();
 		if ($_tmp_protocol == "https") {
 			// SSL Support
@@ -287,7 +293,7 @@ class PhocacartDownload
 	}
 
 	protected static function hit($id) {
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = $db->getQuery(true)
 			->update('#__phocacart_order_downloads')
 			->set($db->quoteName('download_hits') . ' = (' . $db->quoteName('download_hits') . ' + 1)')
@@ -300,7 +306,7 @@ class PhocacartDownload
 
 	public static function setStatusByOrder($orderId, $status) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' UPDATE #__phocacart_order_downloads'
 				.' SET published = '.(int)$status
 				.' WHERE order_id = '.(int)$orderId;
@@ -330,7 +336,7 @@ class PhocacartDownload
 
 		// test for protocol and set the appropriate headers
 		jimport( 'joomla.environment.uri' );
-		$_tmp_uri 		= JURI::getInstance( JURI::current() );
+		$_tmp_uri 		= Uri::getInstance( Uri::current() );
 		$_tmp_protocol 	= $_tmp_uri->getScheme();
 		if ($_tmp_protocol == "https") {
 			// SSL Support
@@ -358,7 +364,7 @@ class PhocacartDownload
 
 	public static function getDownloadFilePublic($id) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT a.public_download_file'
 				.' FROM #__phocacart_products AS a'
 				.' WHERE a.id = '.(int)$id
@@ -372,7 +378,7 @@ class PhocacartDownload
 	public static function downloadPublic($id) {
 
 		$file 	= self::getDownloadFilePublic((int)$id);
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 
 
 
@@ -383,7 +389,7 @@ class PhocacartDownload
 
 		$absOrRelFile = $pathFile['orig_abs_ds'] . $file->public_download_file;
 
-		if (!JFile::exists($absOrRelFile)) {
+		if (!File::exists($absOrRelFile)) {
 			return false;
 		}
 
@@ -403,7 +409,7 @@ class PhocacartDownload
 
 
 		if ($fileSize == 0 ) {
-			die(JText::_('COM_PHOCACART_FILE_SIZE_EMPTY'));
+			die(Text::_('COM_PHOCACART_FILE_SIZE_EMPTY'));
 			exit;
 		}
 
@@ -412,7 +418,7 @@ class PhocacartDownload
 
 		// test for protocol and set the appropriate headers
 		jimport( 'joomla.environment.uri' );
-		$_tmp_uri 		= JURI::getInstance( JURI::current() );
+		$_tmp_uri 		= Uri::getInstance( Uri::current() );
 		$_tmp_protocol 	= $_tmp_uri->getScheme();
 		if ($_tmp_protocol == "https") {
 			// SSL Support
@@ -488,10 +494,10 @@ class PhocacartDownload
     public static function getProductDownloadFolderByProducts($cid) {
 
 	    // Admin information for deleting folders when products are deleted
-        $db 	= JFactory::getDBO();
+        $db 	= Factory::getDBO();
 
         if (count( $cid )) {
-            \Joomla\Utilities\ArrayHelper::toInteger($cid);
+            ArrayHelper::toInteger($cid);
             $cids = implode( ',', $cid );
 
             $query = ' SELECT download_folder FROM #__phocacart_products WHERE id IN ( '.$cids.' ) ORDER BY id';
@@ -504,10 +510,10 @@ class PhocacartDownload
     public static function getAttributeOptionDownloadFolderByProducts($cid) {
 
         // Admin information for deleting folders when products are deleted
-        $db 	= JFactory::getDBO();
+        $db 	= Factory::getDBO();
 
         if (count( $cid )) {
-            \Joomla\Utilities\ArrayHelper::toInteger($cid);
+            ArrayHelper::toInteger($cid);
             $cids = implode( ',', $cid );
 
             $query = ' SELECT av.download_folder FROM #__phocacart_attribute_values AS av'

@@ -7,17 +7,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
 
-class PhocaCartControllerSubmit extends JControllerForm
+class PhocaCartControllerSubmit extends FormController
 {
 
 	function submit() {
 
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		$session = JFactory::getSession();
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		$session = Factory::getSession();
 
-		$app    = JFactory::getApplication();
-		$uri 	= \Joomla\CMS\Uri\Uri::getInstance();
+		$app    = Factory::getApplication();
+		$uri 	= Uri::getInstance();
 		$user 	= PhocacartUser::getUser();
 
 		$params 									= PhocacartUtils::getComponentParameters() ;
@@ -38,26 +44,26 @@ class PhocaCartControllerSubmit extends JControllerForm
 		}
 
 		if ($enable_submit_item == 0) {
-			throw new Exception(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 500);
+			throw new Exception(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 500);
 			return false;
 		}
 
 		if (!PhocacartSubmit::isAllowedToSubmit()) {
-			throw new Exception(JText::_('COM_PHOCACART_SUBMIT_ITEM_NOT_ALLOWED'), 500);
+			throw new Exception(Text::_('COM_PHOCACART_SUBMIT_ITEM_NOT_ALLOWED'), 500);
 			return false;
 		}
 
 		$namespace  		= 'phccrt' . $params->get('session_suffix');
 		$data  				= $this->input->post->get('jform', array(), 'array');
-		$file 				= JFactory::getApplication()->input->files->get( 'jform', null, 'raw');
+		$file 				= Factory::getApplication()->input->files->get( 'jform', null, 'raw');
 		$item['privacy']	= $this->input->get( 'privacy', false, 'string'  );
 
 		$data['privacy'] 	= $item['privacy'] ? 1 : 0;
 
 		if ($display_submit_item_privacy_checkbox == 2 && $data['privacy'] == 0) {
-			$msg = JText::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_PRIVACY_TERMS_AND_CONDITIONS');
+			$msg = Text::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_PRIVACY_TERMS_AND_CONDITIONS');
 			$app->enqueueMessage($msg, 'error');
-			$app->redirect(JRoute::_($uri));
+			$app->redirect(Route::_($uri));
 			return false;
 
 		}
@@ -76,7 +82,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 			PhocacartLog::add(3, 'Submit Item - Not valid session', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
 			//jexit(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'));
 
-			throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
+			throw new Exception(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 			return false;
 		}
 
@@ -98,7 +104,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 				$session->clear('time', $namespace);
 
 				PhocacartLog::add(3, 'Submit Item - Hidden Field Error', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
-				throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
+				throw new Exception(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 				return false;
 			}
 
@@ -108,7 +114,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 				$session->clear('time', $namespace);
 
 				PhocacartLog::add(3, 'Submit Item - Hidden Field Filled', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
-				throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
+				throw new Exception(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 				return false;
 			}
 
@@ -119,11 +125,11 @@ class PhocaCartControllerSubmit extends JControllerForm
 		if($session->getState() != 'active'){
 			// Save the data in the session.
 			$app->setUserState('com_phocacart.submit.data', $data);
-			$message = JText::_( 'COM_PHOCACART_SESSION_INVALID' );
+			$message = Text::_( 'COM_PHOCACART_SESSION_INVALID' );
 			$app->enqueueMessage($message, 'error');
 
 			PhocacartLog::add(3, 'Submit Item - Session not active', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username.', Message: '.$message);
-			$app->redirect(JRoute::_($uri));
+			$app->redirect(Route::_($uri));
 			return false;
 		}
 
@@ -139,7 +145,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 			$session->clear('time', $namespace);
 
 			PhocacartLog::add(3, 'Submit Item - No Phoca Cart part', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
-			throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
+			throw new Exception(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 			return false;
 		}
 
@@ -152,11 +158,11 @@ class PhocaCartControllerSubmit extends JControllerForm
 			if($params->get('enable_time_check_submit_item', 0) && $delta <= (int)$params->get('enable_time_check_submit_item', 0)) {
 
 				$app->setUserState('com_phocacart.submit.data', $data);
-				$message = JText::_( 'COM_PHOCACART_SUBMIT_TOO_FAST' );
+				$message = Text::_( 'COM_PHOCACART_SUBMIT_TOO_FAST' );
 				$app->enqueueMessage($message, 'error');
 
 				PhocacartLog::add(3, 'Submit Item - Submit too fast', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username.', Message: '.$message . ', Time: '. $delta . ' sec.');
-				$app->redirect(JRoute::_($uri));
+				$app->redirect(Route::_($uri));
 				return false;
             }
         }
@@ -177,7 +183,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 				$session->clear('time', $namespace);
 
 				PhocacartLog::add(3, 'Submit Item - IP Ban', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
-				throw new Exception(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
+				throw new Exception(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 				return false;
 			}
 		}
@@ -224,8 +230,8 @@ class PhocaCartControllerSubmit extends JControllerForm
 
 					PhocacartLog::add(2, 'Submit Item - Validate errors', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
 
-					$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 'error');
-					$app->redirect(JRoute::_($uri));
+					$app->enqueueMessage(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 'error');
+					$app->redirect(Route::_($uri));
 					return false;
 				} else {
 
@@ -255,7 +261,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 						if (isset($data[$v]) && stripos($data[$v], trim($item)) !== false) {
 							$continueValidate = false;
 							PhocacartLog::add(3, 'Submit Item - Forbidden Word Filder - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
-							$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
+							$app->enqueueMessage(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
 						}
 					}
 				}
@@ -266,7 +272,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 						if (isset($data[$v]) && stripos($data[$v], trim($item)) !== false) {
 							$continueValidate = false;
 							PhocacartLog::add(3, 'Submit Item - Forbidden Word Filder - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
-							$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
+							$app->enqueueMessage(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
 						}
 					}
 				}
@@ -285,7 +291,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 						if (isset($data[$v]) && stripos($data[$v], trim($item)) !== false) {
 							$continueValidate = false;
 							PhocacartLog::add(3, 'Submit Item - Forbidden Whole Word Filder - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
-							$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
+							$app->enqueueMessage(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
 						}
 					}
 				}
@@ -296,7 +302,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 						if (isset($data[$v]) && stripos($data[$v], trim($item)) !== false) {
 							$continueValidate = false;
 							PhocacartLog::add(3, 'Submit Item - Forbidden Whole Word Filder - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
-							$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
+							$app->enqueueMessage(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'warning');
 						}
 					}
 				}
@@ -324,7 +330,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 			if (!$imageUploaded) {
 				$continueValidate = false;
 				//PhocacartLog::add(3, 'Submit Item - Image not added - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
-				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_IMAGE_NOT_SUBMITTED' ), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_IMAGE_NOT_SUBMITTED' ), 'error');
 			}
 		} else {
 			// Remove empty form
@@ -346,7 +352,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 			// Save the data in the session.
 			$app->setUserState('com_phocacart.submit.data', $data);
 			// Log added before
-			$app->redirect(JRoute::_($uri));
+			$app->redirect(Route::_($uri));
 			return false;
 		}
 
@@ -358,7 +364,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 		$msg = '';
 		if ($model->store($data, $file)) {
 
-			$msg = JText::_( 'COM_PHOCACART_THANK_YOU_FOR_SUBMITTING_YOUR_ITEM' );
+			$msg = Text::_( 'COM_PHOCACART_THANK_YOU_FOR_SUBMITTING_YOUR_ITEM' );
 		} else {
 			$app->setUserState('com_phocacart.submit.data', '');
 			$session->clear('time', $namespace);
@@ -367,7 +373,7 @@ class PhocaCartControllerSubmit extends JControllerForm
 
 			//throw new Exception($model->getError(), 500);
 			//return false;
-			$app->redirect(JRoute::_($uri));
+			$app->redirect(Route::_($uri));
 			return false;
 		}
 

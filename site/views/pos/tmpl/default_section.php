@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 echo '<div id="ph-pc-pos-site">';
 
@@ -52,9 +54,9 @@ if (!empty($this->items)) {
 							$uOClass = 'ph-pos-ticket-true';
 							$uCount = $count;
 							if ($count == 1) {
-								$uO .= '('.$count.' '.JText::_('COM_PHOCACART_ITEM').')';
+								$uO .= '('.$count.' '.Text::_('COM_PHOCACART_ITEM').')';
 							} else if ($count > 1) {
-								$uO .= '('.$count.' '.JText::_('COM_PHOCACART_ITEMS').')';
+								$uO .= '('.$count.' '.Text::_('COM_PHOCACART_ITEMS').')';
 							} else {
 								$uOClass = 'ph-pos-ticket-false';
 							}
@@ -75,7 +77,7 @@ if (!empty($this->items)) {
 	}
 
 } else {
-	echo '<div>'.JText::_('COM_PHOCACART_NO_UNIT_FOUND').'</div>';
+	echo '<div>'.Text::_('COM_PHOCACART_NO_UNIT_FOUND').'</div>';
 }
 
 echo '</div>'; // end row
@@ -90,7 +92,7 @@ echo '<div class="row ">';
 $linkEdit = PhocacartRoute::getPosRoute(1, 0, $this->t['section']->id);
 
 echo '<div class="ph-unit-section">';
-echo '<a class="btn btn-success" href="'.$linkEdit.'">'.JText::_('COM_PHOCACART_SELECT_THIS_SECTION').'</a>';
+echo '<a class="btn btn-success" href="'.$linkEdit.'">'.Text::_('COM_PHOCACART_SELECT_THIS_SECTION').'</a>';
 echo '</div>';
 
 echo '</div>';// end row
@@ -104,7 +106,7 @@ echo '<input type="hidden" name="page" value="'.$this->t['page'].'" />';
 echo '<input type="hidden" name="ticketid" value="'.$this->t['ticket']->id.'" />';
 echo '<input type="hidden" name="unitid" value="'.$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" />';
-echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
+echo HTMLHelper::_( 'form.token' );
 echo '</form>';
 
 echo '</div>';// end ph-pos-main-page

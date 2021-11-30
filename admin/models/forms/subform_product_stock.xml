@@ -15,7 +15,7 @@
 <field name="sku" type="text" class="input-mini" size="20" label="COM_PHOCACART_SKU" description="COM_PHOCACART_SKU" />
 <field name="ean" type="text" class="input-mini" size="20" label="COM_PHOCACART_EAN" description="COM_PHOCACART_EAN" />
 
-<field name="image" type="phocaselectfilenameimage" manager="productimage" size="40" label="COM_PHOCACART_IMAGE" description="COM_PHOCACART_IMAGE" class="inputbox imageCreateThumbs" />
+<field name="image" type="phocaselectfilenameimage" manager="productimage" size="40" label="COM_PHOCACART_IMAGE" description="COM_PHOCACART_IMAGE" class="form-control inputbox imageCreateThumbs" />
 
 	</fieldset>
 </form>

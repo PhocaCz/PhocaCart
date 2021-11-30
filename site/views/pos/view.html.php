@@ -7,11 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartViewPos extends JViewLegacy
+class PhocaCartViewPos extends HtmlView
 {
 	protected $category;
 	protected $subcategories;
@@ -24,11 +31,12 @@ class PhocaCartViewPos extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$app						= JFactory::getApplication();
-		$document					= JFactory::getDocument();
+
+		$app						= Factory::getApplication();
+		$document					= Factory::getDocument();
 		$this->p 					= $app->getParams();
 		$this->s					= PhocacartRenderStyle::getStyles();
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 						= Uri::getInstance();
 		$model						= $this->getModel();
 		$this->state				= $this->get('State');
 		$this->t['action']			= $uri->toString();
@@ -46,7 +54,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['category']		= $app->input->get('category', '', 'string');// list of active categories
 
 
-		$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0));
+		$this->t['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute(0));
 		$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
 
 		$this->t['currency_array']	= PhocacartCurrency::getCurrenciesArray();
@@ -70,11 +78,12 @@ class PhocaCartViewPos extends JViewLegacy
 		// 1) CHECK - VENDOR LOGGED IN
 		if (!isset($this->t['vendor']->id) || (isset($this->t['vendor']->id) && (int)$this->t['vendor']->id < 1 )) {
 			//$this->t['infotext'] = JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS');
-			//$this->t['infotype'] = 'alert-error alert-danger';
+			//$this->t['infotype'] = 'error';
 			//parent::display('info');
 
 			$returnUrl  						= 'index.php?option=com_users&view=login&return='.$this->t['actionbase64'];
-			$app->redirect(JRoute::_($returnUrl, false), JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS'));
+			$app->enqueueMessage(Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS'), 'error');
+			$app->redirect(Route::_($returnUrl, false));
 			return;
 
 		}
@@ -122,7 +131,7 @@ class PhocaCartViewPos extends JViewLegacy
 		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
-
+		$this->t['pos_display_apply_benefits']  = $this->p->get( 'pos_display_apply_benefits', 0 );
 
 		$this->t['pos_input_autocomplete_output'] = '';
 		if ($this->t['pos_input_autocomplete'] == 0) {
@@ -148,10 +157,13 @@ class PhocaCartViewPos extends JViewLegacy
 		// MEDIA
 		$media = PhocacartRenderMedia::getInstance('main');
 		$media->loadBase();
-		$media->loadBootstrap();
+		//$media->loadBootstrap();
 		$media->loadChosen();
 		//$this->t['class-row-flex'] 	= $media->loadEqualHeights();
 		$this->t['class_thumbnail'] = 'ph-pos-thumbnail';
+
+
+
 
 		PhocacartRenderJs::renderAjaxAddToCart();
 		PhocacartRenderJs::renderAjaxUpdateCart();
@@ -188,8 +200,8 @@ class PhocaCartViewPos extends JViewLegacy
 
 		// 2) CHECK TICKET
 		if ((int)$this->t['ticket']->id < 1) {
-			$this->t['infotext'] = JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST');
-			$this->t['infotype'] = 'alert-error alert-danger';
+			$this->t['infotext'] = Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST');
+			$this->t['infotype'] = 'error';
 			parent::display('info');
 			return true;
 
@@ -209,7 +221,7 @@ class PhocaCartViewPos extends JViewLegacy
 			$this->t['unit']->id = 0;
 		}
 
-		$this->t['linkpos']				= JRoute::_(PhocacartRoute::getPosRoute($this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id));
+		$this->t['linkpos']				= Route::_(PhocacartRoute::getPosRoute($this->t['ticket']->id, $this->t['unit']->id, $this->t['section']->id));
 
 
 		// 5) CHECK - USER
@@ -296,7 +308,7 @@ class PhocaCartViewPos extends JViewLegacy
 					}
 					$s[] = '})';
 					$s[] = ' ';
-					JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+					Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 				}
 
 				parent::display('section');
@@ -325,9 +337,8 @@ class PhocaCartViewPos extends JViewLegacy
 					}
 					$s[] = '})';
 					$s[] = ' ';
-					JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+					Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 				}
-
 				parent::display($tpl);
 			break;
 		}

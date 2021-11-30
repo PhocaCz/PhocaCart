@@ -8,8 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -46,24 +51,24 @@ echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title-small">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_NAME', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-required">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_REQUIRED', 'a.required', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-label">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_LABEL', 'a.label', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-type">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-type ph-center">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_DEFAULT', 'a.type_default', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_FORM_DISPLAY_BILLING', 'a.display_billing', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_FORM_DISPLAY_SHIPPING', 'a.display_shipping', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_FORM_DISPLAY_ACCOUNT', 'a.display_account', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-access">'.JTEXT::_($this->t['l'].'_ACCESS').'</th>'."\n";
-echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title-small">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_NAME', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-required">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_REQUIRED', 'a.required', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-label">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_LABEL', 'a.label', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type ph-center">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_DEFAULT', 'a.type_default', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_FORM_DISPLAY_BILLING', 'a.display_billing', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_FORM_DISPLAY_SHIPPING', 'a.display_shipping', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-published">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_FORM_DISPLAY_ACCOUNT', 'a.display_account', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-access">'.Text::_($this->t['l'].'_ACCESS').'</th>'."\n";
+echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -86,7 +91,7 @@ $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= JRoute::_( $urlEdit. $item->id );
+$linkEdit 		= Route::_( $urlEdit. $item->id );
 
 
 
@@ -97,25 +102,25 @@ echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
 
 $checkO = '';
 if ($item->checked_out) {
-	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->title).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }
 echo $r->td($checkO, "small");
 
 
-echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td(PhocacartHtmlJgrid::displayRequired( $item->required, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($item->label . '<br /><small>('.JText::_($this->escape($item->label)).')</small>', "small");
+echo $r->td($item->label . '<br /><small>('.Text::_($this->escape($item->label)).')</small>', "small");
 echo $r->td($item->type, "small");
 
 if ($item->type_default == 1) {
-	$default = '<a data-original-title="'.JText::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip" title="'.JText::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
+	$default = '<a data-original-title="'.Text::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip" title="'.Text::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
 	echo $r->td($default, "small ph-center");
 } else {
 	echo $r->td('', "small");
@@ -126,7 +131,7 @@ echo $r->td(PhocacartHtmlJgrid::displayBilling( $item->display_billing, $i, $thi
 echo $r->td(PhocacartHtmlJgrid::displayShipping( $item->display_shipping, $i, $this->t['tasks'].'.', $canChange), "small");
 echo $r->td(PhocacartHtmlJgrid::displayAccount( $item->display_account, $i, $this->t['tasks'].'.', $canChange), "small");
 
-echo $r->td($this->escape($item->access_level));
+echo $r->td($this->escape($item->access_level), 'small');
 
 echo $r->td($item->id, "small");
 

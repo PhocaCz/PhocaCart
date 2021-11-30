@@ -7,18 +7,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocacartRegion extends PhocaCartCpControllerPhocaCartCommon {
 
 
 	function importregions() {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$model = $this->getModel( 'phocacartregion' );
 		if(!$model->importregions()) {
-			$message = JText::_( 'COM_PHOCACART_ERROR_REGIONS_IMPORT' );
+			$message = Text::_( 'COM_PHOCACART_ERROR_REGIONS_IMPORT' );
 			$app->enqueueMessage($message, 'error');
 		} else {
-			$message = JText::_( 'COM_PHOCACART_SUCCESS_REGIONS_IMPORT' );
+			$message = Text::_( 'COM_PHOCACART_SUCCESS_REGIONS_IMPORT' );
 			$app->enqueueMessage($message, 'message');
 		}
 

@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
 
 $currList 	= array();
@@ -16,7 +18,7 @@ if (!empty($this->t['currency_array'])) {
 		$image = '';
 
 		if (isset($v->image) && $v->image != '') {
-			$image = '<img class="ph-currency-image-list" src="'.JURI::base(true). '/' . $v->image.'" alt="'.$v->code.'" />';
+			$image = '<img class="ph-currency-image-list" src="'.Uri::base(true). '/' . $v->image.'" alt="'.$v->code.'" />';
 		}
 
 		if ($v->active == 1) {
@@ -37,6 +39,6 @@ echo '<input type="hidden" name="task" value="checkout.currency">';
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
 echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 echo '</div>';

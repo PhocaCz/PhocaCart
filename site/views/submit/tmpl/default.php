@@ -7,14 +7,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-//Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
-$layoutPC = new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
-$layoutUL = new JLayoutFile('user_login', null, array('component' => 'com_phocacart'));
-$layoutUR = new JLayoutFile('user_register', null, array('component' => 'com_phocacart'));
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
+//JHtml::_('formbehavior.chosen', 'select');
+$layoutPC = new FileLayout('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
+$layoutUL = new FileLayout('user_login', null, array('component' => 'com_phocacart'));
+$layoutUR = new FileLayout('user_register', null, array('component' => 'com_phocacart'));
 
 
-echo '<div id="ph-pc-submit-item-box" class="pc-submit-item-view' . $this->p->get('pageclass_sfx') . '">';
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_SUBMIT_ITEM')));
+echo '<div id="ph-pc-submit-item-box" class="pc-view pc-submit-item-view' . $this->p->get('pageclass_sfx') . '">';
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_SUBMIT_ITEM')));
 
 
 if (isset($this->t['submit_item_description']) && $this->t['submit_item_description'] != '') {
@@ -204,7 +210,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
     /*
     if (!empty($this->t['items_contact'])) {
 
-        echo '<div class="ph-submititem-header-contact">'.JText::_('COM_PHOCACART_CONTACT_INFORMATION').'</div>';
+        echo '<div class="ph-submititem-header-contact">'.Text::_('COM_PHOCACART_CONTACT_INFORMATION').'</div>';
         foreach ($this->t['items_contact'] as $k => $v) {
 
             $field = trim($v);
@@ -248,7 +254,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
         $d['label_text'] = $this->t['submit_item_privacy_checkbox_label_text'];
         $d['id'] = 'phSubmitItemPrivacyCheckbox';
         $d['name'] = 'privacy';
-        $d['class'] = $this->s['c']['pull-left'] . ' ' . $this->s['c']['checkbox'] . ' ph-submititem-checkbox-confirm';
+        $d['class'] = $this->s['c']['pull-left'] . ' ' . $this->s['c']['inputbox.checkbox'] . ' ph-submititem-checkbox-confirm';
         $d['display'] = $this->t['display_submit_item_privacy_checkbox'];
 
         echo '<div class="ph-cb"></div>';
@@ -263,7 +269,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
     echo '<div class="btn-toolbar">';
     echo '<div class="btn-group">';
     echo '<button type="submit" class="' . $this->s['c']['btn.btn-primary'] . '">';
-    echo '<span class="' . $this->s['i']['submit'] . '"></span> ' . JText::_('COM_PHOCACART_SUBMIT') . '</button>';
+    echo '<span class="' . $this->s['i']['submit'] . '"></span> ' . Text::_('COM_PHOCACART_SUBMIT') . '</button>';
     echo '</div>';
     echo '</div>';
 
@@ -274,7 +280,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
     echo '<input type="hidden" name="option" value="com_phocacart" />';
     echo '<input type="hidden" name="task" value="submit.submit" />';
 
-    echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+    echo HTMLHelper::_('form.token');
     echo '</form>';
 
     echo '</div>';
@@ -284,16 +290,16 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
 
     require_once JPATH_SITE . '/components/com_users/helpers/route.php';
     jimport('joomla.application.module.helper');
-    $module = JModuleHelper::getModule('mod_login');
-    $mP = new JRegistry();
+    $module = ModuleHelper::getModule('mod_login');
+    $mP = new Registry();
     $mP->loadString($module->params);
 
-    $lang = JFactory::getLanguage();
+    $lang = Factory::getLanguage();
     $lang->load('mod_login');
 
     echo '<div class="' . $this->s['c']['row'] . ' ph-account-box-row" >';
     //echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="'.$this->s['i']['remove-circle'].' ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
-    echo '<div class="' . $this->s['c']['col.xs12.sm12.md12'] . ' ph-account-box-header" id="phaccountloginedit"><h3>' . JText::_('COM_PHOCACART_LOGIN_REGISTER') . '</h3></div>';
+    echo '<div class="' . $this->s['c']['col.xs12.sm12.md12'] . ' ph-account-box-header" id="phaccountloginedit"><h3>' . Text::_('COM_PHOCACART_LOGIN_REGISTER') . '</h3></div>';
     echo '</div>';
 
 

@@ -7,18 +7,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$layoutI	= new JLayoutFile('product_image', null, array('component' => 'com_phocacart'));
-$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
-$layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
-$layoutV	= new JLayoutFile('button_product_view', null, array('component' => 'com_phocacart'));
-$layoutPFS	= new JLayoutFile('form_part_start_add_to_cart_list', null, array('component' => 'com_phocacart'));
-$layoutPFE	= new JLayoutFile('form_part_end', null, array('component' => 'com_phocacart'));
-$layoutA	= new JLayoutFile('button_add_to_cart_list', null, array('component' => 'com_phocacart'));
-$layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
-$layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
-$layoutA4 	= new JLayoutFile('button_quickview', null, array('component' => 'com_phocacart'));
-$layoutBSH	= new JLayoutFile('button_submit_hidden', null, array('component' => 'com_phocacart'));
-$layoutQ	= new JLayoutFile('button_ask_question', null, array('component' => 'com_phocacart'));
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+$layoutI	= new FileLayout('product_image', null, array('component' => 'com_phocacart'));
+$layoutP	= new FileLayout('product_price', null, array('component' => 'com_phocacart'));
+$layoutAB	= new FileLayout('attribute_options_box', null, array('component' => 'com_phocacart'));
+$layoutV	= new FileLayout('button_product_view', null, array('component' => 'com_phocacart'));
+$layoutPFS	= new FileLayout('form_part_start_add_to_cart_list', null, array('component' => 'com_phocacart'));
+$layoutPFE	= new FileLayout('form_part_end', null, array('component' => 'com_phocacart'));
+$layoutA	= new FileLayout('button_add_to_cart_list', null, array('component' => 'com_phocacart'));
+$layoutA2	= new FileLayout('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
+$layoutA3	= new FileLayout('button_external_link', null, array('component' => 'com_phocacart'));
+$layoutA4 	= new FileLayout('button_quickview', null, array('component' => 'com_phocacart'));
+$layoutBSH	= new FileLayout('button_submit_hidden', null, array('component' => 'com_phocacart'));
+$layoutQ	= new FileLayout('button_ask_question', null, array('component' => 'com_phocacart'));
 
 $d 		= $displayData;
 $t		= $d['t'];
@@ -78,9 +80,9 @@ if (!empty($d['review'])) { echo $d['review'];}
 if (!empty($d['description'])) { echo  $d['description'];}
 
 // TAGS
-if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.JText::_('COM_PHOCACART_TAGS'). '</span>: ' .  $d['tags'] . '</div>';}
+if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.Text::_('COM_PHOCACART_TAGS'). '</span>: ' .  $d['tags'] . '</div>';}
 // MANUFACTURER
-if (!empty($d['manufacturer'])) { echo '<div class="ph-manufacturer-box">'  . '<span class="ph-manufacturer-box-header">'.JText::_('COM_PHOCACART_MANUFACTURER'). '</span>: ' .  $d['manufacturer'] . '</div>';}
+if (!empty($d['manufacturer'])) { echo '<div class="ph-manufacturer-box">'  . '<span class="ph-manufacturer-box-header">'.Text::_('COM_PHOCACART_MANUFACTURER'). '</span>: ' .  $d['manufacturer'] . '</div>';}
 
 // VIEW PRODUCT BUTTON
 echo '<div class="ph-item-action-box ph-caption ph-category-action-box-buttons '.$d['lt'].'">';

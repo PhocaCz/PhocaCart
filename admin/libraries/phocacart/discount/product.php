@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartDiscountProduct
 {
@@ -32,7 +33,7 @@ class PhocacartDiscountProduct
 
         if (!array_key_exists($id, self::$product)) {
 
-            $db         = JFactory::getDBO();
+            $db         = Factory::getDBO();
             $user       = PhocacartUser::getUser();
 
             $userLevels = implode(',', $user->getAuthorisedViewLevels());
@@ -74,7 +75,7 @@ class PhocacartDiscountProduct
 
     public static function getProductDiscount($id = 0, $groupQuantity = 0, $productQuantity = 0, $params = array()) {
 
-        $app                                  = JFactory::getApplication();
+        $app                                  = Factory::getApplication();
         $paramsC                              = PhocacartUtils::getComponentParameters();
         $discount_product_variations_quantity = $paramsC->get('discount_product_variations_quantity', 1);
         $discount_priority                    = $paramsC->get('discount_priority', 1);
@@ -235,7 +236,7 @@ class PhocacartDiscountProduct
     /* Module - get all products with discounts */
     public static function getProductsDiscounts($params = array()) {
 
-        $db         = JFactory::getDBO();
+        $db         = Factory::getDBO();
         $user       = PhocacartUser::getUser();
         $userLevels = implode(',', $user->getAuthorisedViewLevels());
         $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -319,7 +320,7 @@ class PhocacartDiscountProduct
     /* Module - get all products with featured */
     public static function getProductsFeatured($params = array()) {
 
-        $db         = JFactory::getDBO();
+        $db         = Factory::getDBO();
         $user       = PhocacartUser::getUser();
         $userLevels = implode(',', $user->getAuthorisedViewLevels());
         $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -400,7 +401,7 @@ class PhocacartDiscountProduct
 
     public static function getDiscountsById($productId, $return = 0) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $query = 'SELECT a.id, a.title, a.alias, a.discount, a.access, a.discount, a.calculation_type, a.quantity_from, a.valid_from, a.valid_to, a.description, a.background_image'
             . ' FROM #__phocacart_product_discounts AS a'
@@ -454,7 +455,7 @@ class PhocacartDiscountProduct
     public static function storeDiscountsById($productId, $discsArray, $new = 0) {
 
         if ((int)$productId > 0) {
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
 
             /*$query = ' DELETE '
                     .' FROM #__phocacart_product_discounts'
@@ -513,7 +514,7 @@ class PhocacartDiscountProduct
                     if ($v['valid_to'] == '0000-00-00' || $v['valid_to'] == '0000-00-00 00:00:00') {
 
                     } else {
-                        $v['valid_to'] = str_replace('00:00:00', '23:59:59', JFactory::getDate($v['valid_to'])->toSql());
+                        $v['valid_to'] = str_replace('00:00:00', '23:59:59', Factory::getDate($v['valid_to'])->toSql());
                     }
 
 
@@ -635,7 +636,7 @@ class PhocacartDiscountProduct
     public static function storeDiscountsById($productId, $discsArray) {
 
         if ((int)$productId > 0) {
-            $db =JFactory::getDBO();
+            $db =Factory::getDBO();
 
             $query = ' DELETE '
                     .' FROM #__phocacart_product_discounts'

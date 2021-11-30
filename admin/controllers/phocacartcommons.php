@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.controlleradmin');
 
-class PhocaCartCpControllerPhocaCartCommons extends JControllerAdmin
+class PhocaCartCpControllerPhocaCartCommons extends AdminController
 {
 	protected	$option 		= 'com_phocacart';
 
@@ -32,14 +35,14 @@ class PhocaCartCpControllerPhocaCartCommons extends JControllerAdmin
 		//print r($order);
 		
 		
-		\Joomla\Utilities\ArrayHelper::toInteger($pks);
-		\Joomla\Utilities\ArrayHelper::toInteger($order);
+		ArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($order);
 		$model = $this->getModel();
 		$return = $model->saveorder($pks, $order);
 	
 		
 		if ($return) { echo "1";}
-		JFactory::getApplication()->close();
+		Factory::getApplication()->close();
 	}
 }
 ?>

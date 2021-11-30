@@ -8,6 +8,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $r 			= $this->r;
 
 echo '<div id="'.$this->t['tasks'].'">';
@@ -16,12 +20,12 @@ echo '<div id="'.$this->t['tasks'].'">';
 echo $r->startMainContainer();
 
 
-$url 	= JRoute::_('index.php?option=com_phocacart&view=phocacartimports');
+$url 	= Route::_('index.php?option=com_phocacart&view=phocacartimports');
 $c1 = $c2 = 'circle';
 if ((int)$this->t['count'] > 0) {
 	$c1 = 'circle-active';
-	$url2 	= 'index.php?option=com_phocacart&task=phocacartimport.import&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-	PhocacartRenderAdminjs::renderImportExportItems($url2, 'phMessageBox', 'phFormImport', (int)$this->t['count_pagination'], JText::_('COM_PHOCACART_ALL_PRODUCTS_IMPORTED'));
+	$url2 	= 'index.php?option=com_phocacart&task=phocacartimport.import&format=json&tmpl=component&'. Session::getFormToken().'=1';
+	PhocacartRenderAdminjs::renderImportExportItems($url2, 'phMessageBox', 'phFormImport', (int)$this->t['count_pagination'], Text::_('COM_PHOCACART_ALL_PRODUCTS_IMPORTED'));
 }
 ?>
 
@@ -41,16 +45,16 @@ if ((int)$this->t['count'] > 0) {
 <div class="col-xs-12 col-sm-6 col-md-6">
 <div class="import-export-box">
 <div class="<?php echo $c1; ?>">1</div>
-<h2><?php echo JText::_('COM_PHOCACART_UPLOAD'); ?></h2>
-<div class="import-export-desc"><?php echo JText::_('COM_PHOCACART_SELECT_FILE_TO_IMPORT_ITEMS'); ?> (CSV, XML)</div>
+<h2><?php echo Text::_('COM_PHOCACART_UPLOAD'); ?></h2>
+<div class="import-export-desc"><?php echo Text::_('COM_PHOCACART_SELECT_FILE_TO_IMPORT_ITEMS'); ?> (CSV, XML)</div>
 <p>&nbsp;</p>
 <form class="form-inline" id="phFormUpload" action="<?php echo $url; ?>" enctype="multipart/form-data" method="post" data-message="phMessageBox">
   <div class="form-group">
-	<label for="file_upload"><?php echo JText::_('COM_PHOCACART_FILE'); ?>:</label>
+	<label for="file_upload"><?php echo Text::_('COM_PHOCACART_FILE'); ?>:</label>
 	<input type="file" name="Filedata" id="file_upload" >
-	<input class="btn btn-primary" type="submit" name="submit" value="<?php echo JText::_('COM_PHOCACART_UPLOAD');?>">
+	<input class="btn btn-primary" type="submit" name="submit" value="<?php echo Text::_('COM_PHOCACART_UPLOAD');?>">
 	<input type="hidden" name="task" value="phocacartimport.upload" />
-	<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
   </div>
 </form>
 
@@ -61,20 +65,20 @@ if ((int)$this->t['count'] > 0) {
 <?php if ((int)$this->t['count'] > 0) { ?>
 <div class="import-export-box">
 <div class="<?php echo $c2; ?>">2</div>
-<h2><?php echo JText::_('COM_PHOCACART_IMPORT'); ?></h2>
+<h2><?php echo Text::_('COM_PHOCACART_IMPORT'); ?></h2>
 
-<div class="import-export-desc"><?php echo JText::_('COM_PHOCACART_THERE_ARE_ITEMS_READY_TO_IMPORT'); ?>: <?php echo $this->t['count']; ?><br /><?php echo JText::_('COM_PHOCACART_CLICK_IMPORT_BUTTON_TO_IMPORT_THEM_TO_SHOP'); ?></div>
-<div class="alert alert-warning"><?php echo JText::_('COM_PHOCACART_BE_AWARE_IMPORT_CAN_OVERWRITE_CURRENT_ITEMS_IN_SHOP'); ?></div>
+<div class="import-export-desc"><?php echo Text::_('COM_PHOCACART_THERE_ARE_ITEMS_READY_TO_IMPORT'); ?>: <?php echo $this->t['count']; ?><br /><?php echo Text::_('COM_PHOCACART_CLICK_IMPORT_BUTTON_TO_IMPORT_THEM_TO_SHOP'); ?></div>
+<div class="alert alert-warning"><?php echo Text::_('COM_PHOCACART_BE_AWARE_IMPORT_CAN_OVERWRITE_CURRENT_ITEMS_IN_SHOP'); ?></div>
 <p>&nbsp;</p>
 <form class="form-inline" id="phFormImport" action="<?php echo $url2; ?>" method="post" data-message="phMessageBox">
   <div class="form-group">
-	<label for="file_import"><?php echo JText::_('COM_PHOCACART_IMPORT'); ?>:</label>
-  <input class="btn btn-primary" type="submit" name="submit" value="<?php echo JText::_('COM_PHOCACART_IMPORT');?>">
+	<label for="file_import"><?php echo Text::_('COM_PHOCACART_IMPORT'); ?>:</label>
+  <input class="btn btn-primary" type="submit" name="submit" value="<?php echo Text::_('COM_PHOCACART_IMPORT');?>">
   </div>
 </form>
 
 <div class="progress progress-striped active" >
-    <div id="phProgressBar" class="bar"></div>
+    <div id="phProgressBar" class="progress-bar"></div>
 </div>
 
 

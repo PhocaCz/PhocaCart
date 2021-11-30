@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewComparison extends JViewLegacy
+class PhocaCartViewComparison extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -18,7 +23,7 @@ class PhocaCartViewComparison extends JViewLegacy
 
 	function display($tpl = null)
 	{
-		$app								= JFactory::getApplication();
+		$app								= Factory::getApplication();
 		//$model								= $this->getModel();
 		//$document							= JFactory::getDocument();
 		$this->s                            = PhocacartRenderStyle::getStyles();
@@ -36,10 +41,10 @@ class PhocaCartViewComparison extends JViewLegacy
 		$rights							= new PhocacartAccessRights();
 		$this->t['can_display_price']	= $rights->canDisplayPrice();
 
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 						= Uri::getInstance();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute());
+		$this->t['linkcomparison']	= Route::_(PhocacartRoute::getComparisonRoute());
 
 		$compare = new PhocacartCompare();
 		$this->t['items'] = $compare->getFullItems();
@@ -105,7 +110,7 @@ class PhocaCartViewComparison extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_COMPARISON'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_COMPARISON'));
 	}
 }
 ?>

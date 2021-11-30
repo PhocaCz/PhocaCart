@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelOrders extends JModelLegacy
+class PhocaCartModelOrders extends BaseDatabaseModel
 {
 	protected $orders 				= null;
 	protected $orders_ordering		= null;
@@ -19,8 +21,8 @@ class PhocaCartModelOrders extends JModelLegacy
 	public function __construct() {
 		parent::__construct();
 
-		$app		= JFactory::getApplication();
-		$config 	= JFactory::getConfig();
+		$app		= Factory::getApplication();
+		$config 	= Factory::getConfig();
 		//$paramsC 	= PhocacartUtils::getComponentParameters() ;
 		$paramsC 	= $app->getParams();
 		$defaultP	= $paramsC->get( 'default_pagination', '20' );
@@ -28,8 +30,8 @@ class PhocaCartModelOrders extends JModelLegacy
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', JFactory::getApplication()->input->get('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', JFactory::getApplication()->input->get('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', Factory::getApplication()->input->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', Factory::getApplication()->input->get('filter_order_Dir', 'ASC'));
 
 	}
 
@@ -59,7 +61,7 @@ class PhocaCartModelOrders extends JModelLegacy
 
 	protected function getOrderListQuery() {
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$params 			= $app->getParams();
 		$u					= PhocacartUser::getUser();
 		$token				= $app->input->get('o', '', 'string');
@@ -93,7 +95,7 @@ class PhocaCartModelOrders extends JModelLegacy
 
 	protected function getOrderOrdering() {
 		if (empty($this->orders_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'order_ordering', 8 );
 			$this->orders_ordering 		= PhocacartOrdering::getOrderingText($ordering, 2);

@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Component\ComponentHelper;
 
 class PhocacartUtilsOptions
 {
@@ -45,15 +47,15 @@ class PhocacartUtilsOptions
 
 		if( !array_key_exists( $elementOption, self::$options ) ) {
 
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 
 			if ($client == 'A') {
-				self::$options[$elementOption] = JComponentHelper::getParams('com_phocacart');
+				self::$options[$elementOption] = ComponentHelper::getParams('com_phocacart');
 			} else {
 				if ($option == 'com_phocacart') {
 					self::$options[$elementOption] =  $app->getParams();
 				} else {
-					self::$options[$elementOption] = JComponentHelper::getParams('com_phocacart');
+					self::$options[$elementOption] = ComponentHelper::getParams('com_phocacart');
 				}
 			}
 

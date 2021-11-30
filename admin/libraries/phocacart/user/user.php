@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartUser
 {
@@ -24,19 +25,19 @@ class PhocacartUser
 	/*public function __construct($pos) {
 
 
-		$this->user		= JFactory::getUser();
+		$this->user		= Factory::getUser();
 		$this->pos		= $pos;
 	}*/
 
 
 	public static function getUser($id = 0) {
 
-		$app         = JFactory::getApplication();
+		$app         = Factory::getApplication();
 		$pUser		= $vendor = $ticket = $unit	= $section = array();
 		$isVendor	= false;
 
 		if ((int)$id > 0) {
-			$jUser = JFactory::getUser($id);
+			$jUser = Factory::getUser($id);
 			return $jUser;
 		} else {
 			if (PhocacartPos::isPos()) {
@@ -73,7 +74,7 @@ class PhocacartUser
 
 				if ((int)$userid > 0) {
 					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - CUSTOMER FOUND
-					return JFactory::getUser($userid);
+					return Factory::getUser($userid);
 				} else {
 					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - NO CUSTOMER FOUND
 					return JFactory::getUser(0);// Joomla! User is administrator and there is no information about user
@@ -83,7 +84,7 @@ class PhocacartUser
 			} else {
 				// ======= LOGGED JOOMLA! USER IS CUSTOMER
 				// No POS, return standard Joomla! User
-				$jUser = JFactory::getUser();
+				$jUser = Factory::getUser();
 				return $jUser;
 			}
 		}
@@ -95,7 +96,7 @@ class PhocacartUser
 
 		$pos		= PhocacartPos::isPos($forcePos);
 
-		$user		= JFactory::getUser();
+		$user		= Factory::getUser();
 		$vendor 	= array();
 		$vendor		= new stdClass();
 		$vendor->id = 0;
@@ -129,7 +130,7 @@ class PhocacartUser
 					$unit->id 		= $ticketA['unitid'];
 					$section->id 	= $ticketA['sectionid'];
 					$userId 		= PhocacartPos::getUserIdByVendorAndTicket($vendor->id, $ticket->id, $unit->id, $section->id);
-					$user			= JFactory::getUser($userId);
+					$user			= Factory::getUser($userId);
 					return true;
 				} else {
 					$vendor = array();
@@ -147,7 +148,7 @@ class PhocacartUser
 
 	public static function getUserIdByCard($card) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = ' SELECT a.user_id FROM #__phocacart_users AS a'
 			    .' WHERE a.loyalty_card_number = '.$db->quote($card)
@@ -170,7 +171,7 @@ class PhocacartUser
 		$o['bsch']		= '';// B S Checked? Is the billing address the same like shipping address
 		$o['filled']	= 1; // Is every form input filled out
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 
 		$s = PhocacartRenderStyle::getStyles();
 
@@ -220,10 +221,22 @@ class PhocacartUser
 					}
 
 					if (!$app->isClient('administrator')) {
+
+						// change general xml class to general variable
+						$input = str_replace('form-control', $s['c']['inputbox.form-control'], $form->getInput($v->title . $billingSuffix));
+						$input = str_replace('form-select', $s['c']['inputbox.form-select'], $input);
+
+
 						$o['b'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
 						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $billingSuffix).'</div>';
-						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$form->getInput($v->title . $billingSuffix).'</div>';
+						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$input.'</div>';
 						$o['b'] .= '</div>' . "\n";
+
+						/*
+						$form->setFieldAttribute($v->title, 'hint', ' ');
+						$o['b'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
+						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$form->getInput($v->title . $billingSuffix) . '' .$form->getLabel($v->title . $billingSuffix).'</div>';
+						$o['b'] .= '</div>' . "\n";*/
 
 					} else {
 						// Admin uses obsolete bootstrap
@@ -247,10 +260,22 @@ class PhocacartUser
 					}
 
 					if (!$app->isClient('administrator')) {
+
+						// change general xml class to general variable
+						$input = str_replace('form-control', $s['c']['inputbox.form-control'], $form->getInput($v->title . $shippingSuffix));
+						$input = str_replace('form-select', $s['c']['inputbox.form-select'], $input);
+
 						$o['s'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
 						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $shippingSuffix).'</div>';
-						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$form->getInput($v->title . $shippingSuffix).'</div>';
+						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$input.'</div>';
 						$o['s'] .= '</div>' . "\n";
+
+						/*
+						$form->setFieldAttribute($v->title, 'hint', ' ');
+						$o['s'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
+						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$form->getInput($v->title . $shippingSuffix) . '' .$form->getLabel($v->title . $shippingSuffix).'</div>';
+						$o['s'] .= '</div>' . "\n";*/
+
 					} else {
 						// Admin uses obsolete bootstrap
 						$o['s'] .= '<div class="control-group">';
@@ -416,7 +441,7 @@ class PhocacartUser
 
 	public static function getUserAddress($userId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = ' (SELECT * FROM #__phocacart_users AS a'
 			    .' WHERE a.user_id = '.(int) $userId
@@ -510,7 +535,7 @@ class PhocacartUser
 
 		$total = 0;
 		if ($userId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			$query = 'SELECT SUM(a.amount) FROM #__phocacart_order_total AS a'
 				.' LEFT JOIN #__phocacart_orders AS o ON a.order_id = o.id'
@@ -530,7 +555,7 @@ class PhocacartUser
 
 	public static function getUserData($userId = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ((int)$userId == 0) {
 			$user 	= PhocacartUser::getUser();

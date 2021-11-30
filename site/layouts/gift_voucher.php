@@ -20,6 +20,8 @@
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
 $d               = $displayData;
 
 $color1 = '#A3464B';// Main
@@ -98,8 +100,8 @@ if ($d['format'] == 'html') {
 
 
 // FIX image paths MAIL
-$d['gift_description'] 	= str_replace('src="', 'src="'. JURI::root(), $d['gift_description']);
-$d['gift_image'] 		= JURI::root() .  $d['gift_image'];
+$d['gift_description'] 	= str_replace('src="', 'src="'. Uri::root(), $d['gift_description']);
+$d['gift_image'] 		= Uri::root() .  $d['gift_image'];
 
 // ------------------------
 // |     HTML | EMAIL     |
@@ -146,8 +148,8 @@ if ($d['format'] == 'html' || $d['format'] == 'mail') {
 	echo '<div'.$s['ph-gift-voucher-col1'].' class="'.$c['ph-gift-voucher-col1'].'">'. "\n";
 
 	echo '<div'.$s['ph-gift-voucher-head'].' class="'.$c['ph-gift-voucher-head'].'">'. "\n";
-	echo '<div'.$s['ph-gift-voucher-head-top'].' class="'.$c['ph-gift-voucher-head-top'].'">'.JText::_('COM_PHOCACART_TXT_GIFT_VOUCHER_GIFT').'</div>';
-	echo '<div'.$s['ph-gift-voucher-head-bottom'].' class="'.$c['ph-gift-voucher-head-bottom'].'">'.JText::_('COM_PHOCACART_TXT_GIFT_VOUCHER_VOUCHER').'</div>';
+	echo '<div'.$s['ph-gift-voucher-head-top'].' class="'.$c['ph-gift-voucher-head-top'].'">'.Text::_('COM_PHOCACART_TXT_GIFT_VOUCHER_GIFT').'</div>';
+	echo '<div'.$s['ph-gift-voucher-head-bottom'].' class="'.$c['ph-gift-voucher-head-bottom'].'">'.Text::_('COM_PHOCACART_TXT_GIFT_VOUCHER_VOUCHER').'</div>';
 	echo '</div>';// end ph-gift-voucher-head
 
 	echo '</div>'. "\n";// end ph-gift-voucher-col1
@@ -161,10 +163,10 @@ if ($d['format'] == 'html' || $d['format'] == 'mail') {
 	echo '<div'.$s['ph-gift-voucher-price'].' id="phItemPriceGiftBox'. $d['typeview'] . (int)$d['product_id'].'" class="'.$c['ph-gift-voucher-price'].'">' . $d['discount'].'</div>'. "\n";
 
 	if ($d['gift_sender_name'] != '') {
-		echo '<div'.$s['ph-gift-voucher-from'].' class="'.$c['ph-gift-voucher-from'].'">'.JText::_('COM_PHOCACART_FROM').': <span class="phAOSenderName">'.$d['gift_sender_name'].'</span></div>'. "\n";
+		echo '<div'.$s['ph-gift-voucher-from'].' class="'.$c['ph-gift-voucher-from'].'">'.Text::_('COM_PHOCACART_FROM').': <span class="phAOSenderName">'.$d['gift_sender_name'].'</span></div>'. "\n";
 	}
 	if ($d['gift_recipient_name'] != '') {
-		echo '<div'.$s['ph-gift-voucher-to'].' class="'.$c['ph-gift-voucher-to'].'">'.JText::_('COM_PHOCACART_TO').':  <span class="phAORecipientName">'.$d['gift_recipient_name'].'</span></div>'. "\n";
+		echo '<div'.$s['ph-gift-voucher-to'].' class="'.$c['ph-gift-voucher-to'].'">'.Text::_('COM_PHOCACART_TO').':  <span class="phAORecipientName">'.$d['gift_recipient_name'].'</span></div>'. "\n";
 	}
 	if ($d['gift_sender_message'] != '') {
 		echo '<div'.$s['ph-gift-voucher-message'].' class="'.$c['ph-gift-voucher-message'].' phAOSenderMessage">'.$d['gift_sender_message'].'</div>'. "\n";
@@ -175,7 +177,7 @@ if ($d['format'] == 'html' || $d['format'] == 'mail') {
 	}
 
 	if ($d['valid_to'] != '') {
-		echo '<div'.$s['ph-gift-voucher-date-to'].' class="'.$c['ph-gift-voucher-date-to'].'">'.JText::_('COM_PHOCACART_VALID_TILL').': <span class="phAOGiftDate">'.$d['valid_to'].'</span></div>'. "\n";
+		echo '<div'.$s['ph-gift-voucher-date-to'].' class="'.$c['ph-gift-voucher-date-to'].'">'.Text::_('COM_PHOCACART_VALID_TILL').': <span class="phAOGiftDate">'.$d['valid_to'].'</span></div>'. "\n";
 	}
 
 	echo '</div>'. "\n";// end ph-gift-voucher-col2
@@ -247,8 +249,8 @@ if ($d['format'] == 'pdf') {
 		$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svg, $x='', $y='', $w='', $h='', $link='', $align='', $palign='', $border=0, $fitonpage=true));
 		echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="ImageSVG" params="'.$params.'" /></div>';
 		echo '<div'.$s['ph-gift-voucher-head'].' class="'.$c['ph-gift-voucher-head'].'"><div style="font-size: 10px">&nbsp;</div>'. "\n";
-		echo '<div'.$s['ph-gift-voucher-head-top'].' class="'.$c['ph-gift-voucher-head-top'].'">'.JText::_('COM_PHOCACART_TXT_GIFT_VOUCHER_GIFT').'</div>';
-		echo '<div'.$s['ph-gift-voucher-head-bottom'].' class="'.$c['ph-gift-voucher-head-bottom'].'">'.JText::_('COM_PHOCACART_TXT_GIFT_VOUCHER_VOUCHER').'</div>';
+		echo '<div'.$s['ph-gift-voucher-head-top'].' class="'.$c['ph-gift-voucher-head-top'].'">'.Text::_('COM_PHOCACART_TXT_GIFT_VOUCHER_GIFT').'</div>';
+		echo '<div'.$s['ph-gift-voucher-head-bottom'].' class="'.$c['ph-gift-voucher-head-bottom'].'">'.Text::_('COM_PHOCACART_TXT_GIFT_VOUCHER_VOUCHER').'</div>';
 		echo '</div>';// end ph-gift-voucher-head
 
 		echo '</td>'. "\n";// end ph-gift-voucher-col1
@@ -266,10 +268,10 @@ if ($d['format'] == 'pdf') {
 		echo '<div'.$s['ph-gift-voucher-price'].' id="phItemPriceGiftBox'. $d['typeview'] . (int)$d['product_id'].'" class="'.$c['ph-gift-voucher-price'].'">' . $d['discount'].'</div>'. "\n";
 
 		if ($d['gift_sender_name'] != '') {
-			echo '<div'.$s['ph-gift-voucher-from'].' class="'.$c['ph-gift-voucher-from'].'">'.JText::_('COM_PHOCACART_FROM').': <span class="phAOSenderName">'.$d['gift_sender_name'].'</span></div>'. "\n";
+			echo '<div'.$s['ph-gift-voucher-from'].' class="'.$c['ph-gift-voucher-from'].'">'.Text::_('COM_PHOCACART_FROM').': <span class="phAOSenderName">'.$d['gift_sender_name'].'</span></div>'. "\n";
 		}
 		if ($d['gift_recipient_name'] != '') {
-			echo '<div'.$s['ph-gift-voucher-to'].' class="'.$c['ph-gift-voucher-to'].'">'.JText::_('COM_PHOCACART_TO').':  <span class="phAORecipientName">'.$d['gift_recipient_name'].'</span></div>'. "\n";
+			echo '<div'.$s['ph-gift-voucher-to'].' class="'.$c['ph-gift-voucher-to'].'">'.Text::_('COM_PHOCACART_TO').':  <span class="phAORecipientName">'.$d['gift_recipient_name'].'</span></div>'. "\n";
 		}
 		if ($d['gift_sender_message'] != '') {
 			echo '<div'.$s['ph-gift-voucher-message'].' class="'.$c['ph-gift-voucher-message'].' phAOSenderMessage">'.$d['gift_sender_message'].'</div>'. "\n";
@@ -280,7 +282,7 @@ if ($d['format'] == 'pdf') {
 		}
 
 		if ($d['valid_to'] != '') {
-			echo '<div'.$s['ph-gift-voucher-date-to'].' class="'.$c['ph-gift-voucher-date-to'].'">'.JText::_('COM_PHOCACART_VALID_TILL').': <span class="phAOGiftDate">'.$d['valid_to'].'</span></div>'. "\n";
+			echo '<div'.$s['ph-gift-voucher-date-to'].' class="'.$c['ph-gift-voucher-date-to'].'">'.Text::_('COM_PHOCACART_VALID_TILL').': <span class="phAOGiftDate">'.$d['valid_to'].'</span></div>'. "\n";
 		}
 		echo '<div>&nbsp;</div>';
 

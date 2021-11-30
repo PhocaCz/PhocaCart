@@ -8,8 +8,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 $r         = $this->r;
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -50,22 +56,22 @@ echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title-small">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-default">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DEFAULT', 'a.default', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-method">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PAYMENT_METHOD', 'a.method', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-price">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.cost', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-rule">' . JText::_($this->t['l'] . '_ACTIVE_RULE_S') . '</th>' . "\n";
-echo $adminDesc->isActive() ? '<th class="ph-description-small">' . JText::_($this->t['l'] . '_DESCRIPTION') . '</th>' . "\n" : '';
-echo '<th class="ph-access">' . JTEXT::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
-echo '<th class="ph-id">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-title-small">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-default">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DEFAULT', 'a.default', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-method">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PAYMENT_METHOD', 'a.method', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-price">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.cost', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-rule">' . Text::_($this->t['l'] . '_ACTIVE_RULE_S') . '</th>' . "\n";
+echo $adminDesc->isActive() ? '<th class="ph-description-small">' . Text::_($this->t['l'] . '_DESCRIPTION') . '</th>' . "\n" : '';
+echo '<th class="ph-access">' . Text::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
+echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
 
@@ -88,7 +94,7 @@ if (is_array($this->items)) {
         $canEdit    = $user->authorise('core.edit', $this->t['o']);
         $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
         $canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-        $linkEdit   = JRoute::_($urlEdit . $item->id);
+        $linkEdit   = Route::_($urlEdit . $item->id);
 
 
         echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
@@ -98,47 +104,47 @@ if (is_array($this->items)) {
 
         $checkO = '';
         if ($item->checked_out) {
-            $checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
+            $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
         }
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="' . JRoute::_($linkEdit) . '">' . $this->escape($item->title) . '</a>';
+            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape($item->title) . '</a>';
         } else {
             $checkO .= $this->escape($item->title);
         }
         echo $r->td($checkO, "small");
 
 
-        echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
+        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
 
         if ($item->default == '0' || $item->default == '1') {
-            $default = Joomla\CMS\HTML\HTMLHelper::_('jgrid.isdefault', $item->default, $i, $this->t['tasks'] . '.', $canChange);
+            $default = HTMLHelper::_('jgrid.isdefault', $item->default, $i, $this->t['tasks'] . '.', $canChange);
 
         } else if ($canChange) {
-            $default = '<a href="' . JRoute::_('index.php?option=com_phocacart&task=' . $this->t['tasks'] . '.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1') . '">';
+            $default = '<a href="' . Route::_('index.php?option=com_phocacart&task=' . $this->t['tasks'] . '.unsetDefault&cid[]=' . $item->id . '&' . Session::getFormToken() . '=1') . '">';
         }
         echo $r->td($default, "small");
 
         //$method = PhocacartUtilsSettings::getPaymentMethod($item->method);
-        echo $r->td(JText::_($item->method), "small");
+        echo $r->td(Text::_($item->method), "small");
 
         echo $r->td('<span class="ph-editinplace-text ph-eip-text ph-eip-price" id="payment_methods:cost:' . (int)$item->id . '">' . PhocacartPrice::cleanPrice($item->cost) . '</span>', "small");
 
         $rules = array();
         if ($item->active_amount) {
-            $rules[] = '<span class="label label-important label-danger badge badge-danger">' . JText::_('COM_PHOCACART_AMOUNT_RULE') . '</span>';
+            $rules[] = '<span class="label label-important label-danger badge bg-danger">' . Text::_('COM_PHOCACART_AMOUNT_RULE') . '</span>';
         }
         if ($item->active_country) {
-            $rules[] = '<span class="label label-warning badge badge-warning label-warning">' . JText::_('COM_PHOCACART_COUNTRY_RULE') . '</span>';
+            $rules[] = '<span class="label label-warning badge bg-warning label-warning">' . Text::_('COM_PHOCACART_COUNTRY_RULE') . '</span>';
         }
         if ($item->active_region) {
-            $rules[] = '<span class="label label-info badge badge-info label-info">' . JText::_('COM_PHOCACART_REGION_RULE') . '</span>';
+            $rules[] = '<span class="label label-info badge bg-info label-info">' . Text::_('COM_PHOCACART_REGION_RULE') . '</span>';
         }
         if ($item->active_shipping) {
-            $rules[] = '<span class="label label-success badge badge-success label-success">' . JText::_('COM_PHOCACART_SHIPPING_RULE') . '</span>';
+            $rules[] = '<span class="label label-success badge bg-success label-success">' . Text::_('COM_PHOCACART_SHIPPING_RULE') . '</span>';
         }
 
         if ($item->active_zone) {
-            $rules[] = '<span class="label label-primary badge badge-primary label-primary">' . JText::_('COM_PHOCACART_ZONE_RULE') . '</span>';
+            $rules[] = '<span class="label label-primary badge bg-primary label-primary">' . Text::_('COM_PHOCACART_ZONE_RULE') . '</span>';
         }
 
 

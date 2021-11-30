@@ -8,8 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -34,10 +39,11 @@ echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
 echo $r->startMainContainer();
 
 if($this->t['enable_logging'] == 0) {
-	echo '<div class="alert alert-info">';
-	echo '<button type="button" class="close" data-dismiss="alert">×</button>';
+	echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+	//echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
 	//echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
-	echo '<div class="alert-message">'.JText::_('COM_PHOCACART_LOGGING_IS_DISABLED_AT_THE_MOMENT').'</div>';
+	echo '<div class="alert-message">'.Text::_('COM_PHOCACART_LOGGING_IS_DISABLED_AT_THE_MOMENT').'</div>';
+	echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button>';
 	echo '</div>';
 }
 
@@ -56,21 +62,21 @@ echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-type">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-title">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-user">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_USER', 'user_username', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-ip">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-incoming-page">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_INCOMING_PAGE', 'a.incoming_page', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-description">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_MESSAGE', 'a.description', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-user">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_USER', 'user_username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-ip">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_IP', 'a.ip', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-incoming-page">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_INCOMING_PAGE', 'a.incoming_page', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-description">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_MESSAGE', 'a.description', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -93,7 +99,7 @@ $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= JRoute::_( $urlEdit. $item->id );
+$linkEdit 		= Route::_( $urlEdit. $item->id );
 
 
 
@@ -103,15 +109,15 @@ echo "\n\n";
 echo '<tr class="row'.$iD.'" sortable-group-id="0" >'. "\n";
 echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 //echo $r->tdOrder(0, $saveOrder, $orderkey);// ORDERING DISABLED
-echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id), "small");
+echo $r->td(HTMLHelper::_('grid.id', $i, $item->id), "small");
 
 echo $r->td($item->date, "small");
 /*$checkO = '';
 if ($item->checked_out) {
-	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->title).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }*/
@@ -119,17 +125,17 @@ if ($canCreate || $canEdit) {
 $item->type = 4;
 switch($item->type) {
 	case 2:
-		$type = '<span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_ERROR').'</span>';
+		$type = '<span class="label label-important label-danger badge bg-danger">'.Text::_('COM_PHOCACART_ERROR').'</span>';
 	break;
 	case 3:
-		$type = '<span class="label label-warning badge badge-warning">'.JText::_('COM_PHOCACART_WARNING').'</span>';
+		$type = '<span class="label label-warning badge bg-warning">'.Text::_('COM_PHOCACART_WARNING').'</span>';
 	break;
 	case 4:
-		$type = '<span class="label label-info badge badge-info">'.JText::_('COM_PHOCACART_NOTICE').'</span>';
+		$type = '<span class="label label-info badge bg-info">'.Text::_('COM_PHOCACART_NOTICE').'</span>';
 	break;
 	case 1:
 	default:
-		$type = '<span class="label label-default">'.JText::_('COM_PHOCACART_GENERAL').'</span>';
+		$type = '<span class="label label-default">'.Text::_('COM_PHOCACART_GENERAL').'</span>';
 	break;
 
 }
@@ -139,7 +145,7 @@ $checkO = $this->escape($item->title);
 echo $r->td('<b>'.$checkO.'</b>', "small");
 
 //echo $r->td(JHtml::date($v->date, JText::_('DATE_FORMAT_LC5')), "small");
-//echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
+//echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($item->user_username, "small");
 echo $r->td($item->ip, "small");

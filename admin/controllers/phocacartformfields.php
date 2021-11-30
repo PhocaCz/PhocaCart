@@ -7,6 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Router\Route;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhocaCartCommons
 {
@@ -27,21 +32,21 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 	}
 	
 	function displaybilling() {
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displaybilling' => 1, 'hidebilling' => 0);
 		$task 	= $this->getTask();
-		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= ArrayHelper::getValue($data, $task, 0, 'int');
 
 		
 		
 		if (empty($cid)) {
-			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
+			$app->enqueueMessage(Text::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_billing')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -50,26 +55,26 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 				} else if ($value == 0) {
 					$ntext = $this->text_prefix.'_N_ITEMS_HIDDEN';
 				} 
-				$this->setMessage(JText::plural($ntext, count($cid)));
+				$this->setMessage(Text::plural($ntext, count($cid)));
 			}
 		}
-		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
+		$this->setRedirect(Route::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 	}
 	
 	function displayshipping() {
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayshipping' => 1, 'hideshipping' => 0);
 		$task 	= $this->getTask();
-		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= ArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid)) {
-			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
+			$app->enqueueMessage(Text::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_shipping')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -78,26 +83,26 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 				} else if ($value == 0) {
 					$ntext = $this->text_prefix.'_N_ITEMS_HIDDEN';
 				} 
-				$this->setMessage(JText::plural($ntext, count($cid)));
+				$this->setMessage(Text::plural($ntext, count($cid)));
 			}
 		}
-		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
+		$this->setRedirect(Route::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 	}
 	
 	function enablerequired() {
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('enablerequired' => 1, 'disablerequired' => 0);
 		$task 	= $this->getTask();
-		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= ArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid)) {
-			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
+			$app->enqueueMessage(Text::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'required')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -106,27 +111,27 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 				} else if ($value == 0) {
 					$ntext = $this->text_prefix.'_N_ITEMS_MADE_NOT_REQUIRED';
 				} 
-				$this->setMessage(JText::plural($ntext, count($cid)));
+				$this->setMessage(Text::plural($ntext, count($cid)));
 			}
 		}
-		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
+		$this->setRedirect(Route::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 	}
 	
 	function displayaccount() {
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$cid	= $app->input->get('cid', array(), '', 'array');
 		$data	= array('displayaccount' => 1, 'hideaccount' => 0);
 		$task 	= $this->getTask();
-		$value	= \Joomla\Utilities\ArrayHelper::getValue($data, $task, 0, 'int');
+		$value	= ArrayHelper::getValue($data, $task, 0, 'int');
 
 	
 		if (empty($cid)) {
-			$app->enqueueMessage(JText::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
+			$app->enqueueMessage(Text::_($this->text_prefix.'_NO_ITEM_SELECTED'), 'error');
 		} else {
 			$model = $this->getModel();
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			if (!$model->displayItem($cid, $value, 'display_account')) {
 				$app->enqueueMessage($model->getError(), 'error');
 			} else {
@@ -135,10 +140,10 @@ class PhocaCartCpControllerPhocaCartFormfields extends PhocaCartCpControllerPhoc
 				} else if ($value == 0) {
 					$ntext = $this->text_prefix.'_N_ITEMS_HIDDEN';
 				} 
-				$this->setMessage(JText::plural($ntext, count($cid)));
+				$this->setMessage(Text::plural($ntext, count($cid)));
 			}
 		}
-		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
+		$this->setRedirect(Route::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 	}
 }
 ?>

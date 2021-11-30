@@ -11,22 +11,25 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 
-$layoutC 	= new JLayoutFile('button_compare', null, array('component' => 'com_phocacart'));
-$layoutW 	= new JLayoutFile('button_wishlist', null, array('component' => 'com_phocacart'));
-$layoutQVB 	= new JLayoutFile('button_quickview', null, array('component' => 'com_phocacart'));
-$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
-$layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
-$layoutR	= new JLayoutFile('product_rating', null, array('component' => 'com_phocacart'));
-$layoutAI	= new JLayoutFile('button_add_to_cart_icon', null, array('component' => 'com_phocacart'));
-$layoutIL	= new JLayoutFile('items_list', null, array('component' => 'com_phocacart'));
-$layoutIGL	= new JLayoutFile('items_gridlist', null, array('component' => 'com_phocacart'));
-$layoutIG	= new JLayoutFile('items_grid', null, array('component' => 'com_phocacart'));
-$layoutAAQ	= new JLayoutFile('popup_container_iframe', null, array('component' => 'com_phocacart'));
+$layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
+$layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
+$layoutQVB 	= new FileLayout('button_quickview', null, array('component' => 'com_phocacart'));
+$layoutS	= new FileLayout('product_stock', null, array('component' => 'com_phocacart'));
+$layoutPOQ	= new FileLayout('product_order_quantity', null, array('component' => 'com_phocacart'));
+$layoutR	= new FileLayout('product_rating', null, array('component' => 'com_phocacart'));
+$layoutAI	= new FileLayout('button_add_to_cart_icon', null, array('component' => 'com_phocacart'));
+$layoutIL	= new FileLayout('items_list', null, array('component' => 'com_phocacart'));
+$layoutIGL	= new FileLayout('items_gridlist', null, array('component' => 'com_phocacart'));
+$layoutIG	= new FileLayout('items_grid', null, array('component' => 'com_phocacart'));
+$layoutAAQ	= new FileLayout('popup_container_iframe', null, array('component' => 'com_phocacart'));
 
 // HEADER - NOT AJAX
 if (!$this->t['ajax']) {
-	echo '<div id="ph-pc-category-box" class="pc-category-view'.$this->p->get( 'pageclass_sfx' ).'">';
+	echo '<div id="ph-pc-category-box" class="pc-view pc-category-view'.$this->p->get( 'pageclass_sfx' ).'">';
 	echo $this->loadTemplate('header');
 	echo $this->loadTemplate('pagination_top');
 	echo '<div id="phItemsBox">';
@@ -42,7 +45,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 	$dLA 						= array();
 	$eventData['pluginname'] 	= $this->t['items_layout_plugin'];
 
-	Factory::getApplication()->triggerEvent('PCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+	Factory::getApplication()->triggerEvent('onPCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
 
 	if (isset($pluginOptions['layouttype']) && $pluginOptions['layouttype'] != '') {
 		$this->t['layouttype'] = PhocacartText::filterValue($pluginOptions['layouttype'], 'alphanumeric5');
@@ -54,7 +57,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
 
-	Factory::getApplication()->triggerEvent('PCLonItemsInsideLayout', array('com_phocacart.items', &$this->items, $dLA, $eventData));
+	Factory::getApplication()->triggerEvent('onPCLonItemsInsideLayout', array('com_phocacart.items', &$this->items, $dLA, $eventData));
 
 	echo $this->loadTemplate('pagination');
 
@@ -77,7 +80,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$this->t['categoryid'] = (int)$v->catid;
 
 		$label 		= PhocacartRenderFront::getLabel($v->date, $v->sales, $v->featured);
-		$link 		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+		$link 		= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 
 
 		// Image data
@@ -130,7 +133,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		if ($this->t['display_quickview'] == 1) {
 			$d				= array();
 			$d['s']			= $this->s;
-			$d['linkqvb']	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$d['linkqvb']	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 			$d['id']		= (int)$v->id;
 			$d['catid']		= $this->t['categoryid'];
 			$d['return']	= $this->t['actionbase64'];
@@ -146,7 +149,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 			$priceItems	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
 
-			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
+			$price->getPriceItemsChangedByAttributes($priceItems, $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();
 			$dP['priceitems']	= $priceItems;
 
@@ -214,7 +217,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			if($stockStatus['min_quantity']) {
 				$dPOQ						= array();
 				$dPOQ['s']	                = $this->s;
-				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
+				$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
@@ -222,7 +225,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			if($stockStatus['min_multiple_quantity']) {
 				$dPOQ						= array();
 				$dPOQ['s']	                = $this->s;
-				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
+				$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_multiple_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
@@ -330,7 +333,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			// QUICK VIEW
 			$dA4				= array();
 			$dA4['s']			= $this->s;
-			$dA4['linkqvb']		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$dA4['linkqvb']		= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 			$dA4['id']			= (int)$v->id;
 			$dA4['catid']		= $this->t['categoryid'];
 			$dA4['return']		= $this->t['actionbase64'];
@@ -365,7 +368,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 				$popupAskAQuestion	= (int)$this->t['popup_askquestion'];
 				$tmpl				= 'tmpl=component';
 			}
-			$dQ['link']			=  JRoute::_(PhocacartRoute::getQuestionRoute($v->id, $v->catid, $v->alias, $v->catalias, $tmpl));
+			$dQ['link']			=  Route::_(PhocacartRoute::getQuestionRoute($v->id, $v->catid, $v->alias, $v->catalias, $tmpl));
 			$dQ['return']		= $this->t['actionbase64'];
 		}
 
@@ -399,7 +402,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 
 		// Events
-		$results = \JFactory::getApplication()->triggerEvent('PCVonItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
 		$dL['event']['onCategoryItemsItemAfterAddToCart'] = trim(implode("\n", $results));
 
 		// LABELS
@@ -467,7 +470,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 	echo '</div>'. "\n"; // end items
 } else {
 
-	echo '<div class="ph-no-items-found">'.JText::_('COM_PHOCACART_NO_ITEMS_FOUND').'</div>';
+	echo '<div class="ph-no-items-found">'.Text::_('COM_PHOCACART_NO_ITEMS_FOUND').'</div>';
 }
 
 
@@ -483,7 +486,7 @@ if (!$this->t['ajax']) {
 		echo '<div id="phContainerPopup">';
 		$d						= array();
 		$d['id']				= 'phAskAQuestionPopup';
-		$d['title']				= JText::_('COM_PHOCACART_ASK_A_QUESTION');
+		$d['title']				= Text::_('COM_PHOCACART_ASK_A_QUESTION');
 		$d['icon']				= $this->s['i']['question-sign'];
 		$d['t']					= $this->t;
 		$d['s']					= $this->s;

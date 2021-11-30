@@ -7,22 +7,26 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
+class PhocaCartCpViewPhocaCartParamA extends HtmlView
 {
 	
 	function display($tpl = null){
 			
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="alert alert-error">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="alert alert-error">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 		
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$method		= $app->input->get( 'method', '', 'string'  );
 		$id			= $app->input->get( 'id', '', 'int'  );
 		$type		= $app->input->get( 'type', '', 'int'  ); // 1) payment plugin 2) shipping plugin
@@ -79,7 +83,7 @@ class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
 				
 				$o .= '<div class="tab-pane" id="'. $name.'">';
 				if (isset($fieldSet->description) && !empty($fieldSet->description)) {
-					$o .= '<p class="tab-description">'.JText::_($fieldSet->description).'</p>';
+					$o .= '<p class="tab-description">'.Text::_($fieldSet->description).'</p>';
 				}
 				
 				$i = 0;
@@ -107,9 +111,9 @@ class PhocaCartCpViewPhocaCartParamA extends JViewLegacy
 		if ($i == 0 || $o == '') {
 			
 			if ($type == 2) {
-				$message = '<div class="ph-extended-params-inbox">' . JText::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_SHIPPING_METHOD') . '</div>';
+				$message = '<div class="ph-extended-params-inbox">' . Text::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_SHIPPING_METHOD') . '</div>';
 			} else {
-				$message = '<div class="ph-extended-params-inbox">' . JText::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_PAYMENT_METHOD') . '</div>';
+				$message = '<div class="ph-extended-params-inbox">' . Text::_('COM_PHOCACART_THERE_ARE_NO_PARAMETERS_FOR_THIS_PAYMENT_METHOD') . '</div>';
 			}
 		} else {
 			$message = '<div class="ph-extended-params-inbox">' . $o . '</div>';

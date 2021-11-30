@@ -7,17 +7,21 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 use Joomla\CMS\Uri\Uri;
 
-class PhocaCartControllerPos extends JControllerForm
+class PhocaCartControllerPos extends FormController
 {
 
 	public function addticket() {
 
-		JSession::checkToken() or jexit( 'Invalid Token' );
-		$app 				= JFactory::getApplication();
-		$session 			= JFactory::getSession();
+		Session::checkToken() or jexit( 'Invalid Token' );
+		$app 				= Factory::getApplication();
+		$session 			= Factory::getSession();
 		$item				= array();
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		$item['unitid']		= $this->input->get( 'unitid', 0, 'int'  );
@@ -55,9 +59,9 @@ class PhocaCartControllerPos extends JControllerForm
 
 	public function removeticket() {
 
-		JSession::checkToken() or jexit( 'Invalid Token' );
-		$app 				= JFactory::getApplication();
-		$session 			= JFactory::getSession();
+		Session::checkToken() or jexit( 'Invalid Token' );
+		$app 				= Factory::getApplication();
+		$session 			= Factory::getSession();
 		$item				= array();
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
 		$item['ticketid']	= $this->input->get( 'ticketid', 0, 'int'  );
@@ -91,8 +95,8 @@ class PhocaCartControllerPos extends JControllerForm
 	 */
 	public function add() {
 
-		JSession::checkToken() or jexit( 'Invalid Token' );
-		$app				= JFactory::getApplication();
+		Session::checkToken() or jexit( 'Invalid Token' );
+		$app				= Factory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['catid']		= $this->input->get( 'catid', 0, 'int' );
@@ -106,9 +110,9 @@ class PhocaCartControllerPos extends JControllerForm
 		$added	= $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
 
 		if ($added) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART'), 'message');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART'), 'message');
 		} else {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
 		}
 		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));*/
 

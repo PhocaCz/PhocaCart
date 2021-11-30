@@ -9,12 +9,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined('_JEXEC') or die();
-class JFormFieldPhocaStockstatus extends JFormField
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+class JFormFieldPhocaStockstatus extends FormField
 {
 	protected $type 		= 'PhocaStockstatus';
 	
 	protected function getInput() {
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$man	= (string) $this->element['manager'];
 		
@@ -34,12 +38,12 @@ class JFormFieldPhocaStockstatus extends JFormField
 		
 		if (!empty($data)) {
 			foreach($data as $k => $v) {
-				$v->text = JText::_($v->text);
+				$v->text = Text::_($v->text);
 			}
 		}
 		
-		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', '- '.JText::_('COM_PHOCACART_SELECT_STOCK_STATUS').' -', 'value', 'text'));
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		array_unshift($data, HTMLHelper::_('select.option', '0', '- '.Text::_('COM_PHOCACART_SELECT_STOCK_STATUS').' -', 'value', 'text'));
+		return HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="form-select"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

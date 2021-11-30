@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
 /*
 phocacart import('phocacart.cart.cart');
 phocacart import('phocacart.price.price');
@@ -56,17 +58,17 @@ class PhocacartCartRendercart extends PhocacartCart
 			}
 		}*/
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$d		= array();
 		$d['s'] = $s;
 		if($app->isClient('administrator')) {
 			// client = 0, ask phoca cart frontend layouts
 			$d['client'] = 1;//admin
-			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
+			$layout 				= new FileLayout('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
 
 		} else {
 			$d['client'] = 0;//frontend
-			$layout 				= new JLayoutFile('cart_cart', null, array('component' => 'com_phocacart'));
+			$layout 				= new FileLayout('cart_cart', null, array('component' => 'com_phocacart'));
 		}
 
 		$d['paramsmodule']		= $this->params; // Module Parameters

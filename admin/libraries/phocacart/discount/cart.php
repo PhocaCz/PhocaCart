@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartDiscountCart
 {
@@ -31,7 +32,7 @@ class PhocacartDiscountCart
 
 		//- if( !array_key_exists( $id, self::$cart ) ) {
 
-			$db 			= JFactory::getDBO();
+			$db 			= Factory::getDBO();
 			$user 			= PhocacartUser::getUser();
 
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
@@ -271,7 +272,7 @@ class PhocacartDiscountCart
 
 	public static function storeDiscountProductsById($itemString, $discountId) {
 		if ((int)$discountId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_discount_products'
 					. ' WHERE discount_id = '. (int)$discountId;
@@ -305,7 +306,7 @@ class PhocacartDiscountCart
 	public static function storeDiscountCatsById($catArray, $discountId) {
 
 		if ((int)$discountId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_discount_categories'
 					. ' WHERE discount_id = '. (int)$discountId;
@@ -334,7 +335,7 @@ class PhocacartDiscountCart
 
 	public static function getDiscountProductsById($discounId, $select = 0) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT di.discount_id';
@@ -364,7 +365,7 @@ class PhocacartDiscountCart
 
 	public static function getDiscountCatsById($discounId, $select = 0) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT di.discount_id';

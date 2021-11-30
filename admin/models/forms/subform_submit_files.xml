@@ -3,10 +3,10 @@
     <fieldset>
 
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly"/>
-        <field name="name" type="text" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" class="inputbox" size="40"/>
-        <field name="size" type="text" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" class="inputbox" size="40"/>
-        <field name="nametoken" type="text" label="COM_PHOCACART_FIELD_NAME_TOKEN_LABEL" description="COM_PHOCACART_FIELD_NAME_TOKEN_DESC" class="inputbox" size="40"/>
-        <field name="fullpath" type="text" label="COM_PHOCACART_FIELD_FULL_PATH_LABEL" description="COM_PHOCACART_FIELD_FULL_PATH_DESC" class="inputbox" size="40"/>
+        <field name="name" type="text" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" class="form-control" size="40"/>
+        <field name="size" type="text" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" class="form-control" size="40"/>
+        <field name="nametoken" type="text" label="COM_PHOCACART_FIELD_NAME_TOKEN_LABEL" description="COM_PHOCACART_FIELD_NAME_TOKEN_DESC" class="form-control" size="40"/>
+        <field name="fullpath" type="text" label="COM_PHOCACART_FIELD_FULL_PATH_LABEL" description="COM_PHOCACART_FIELD_FULL_PATH_DESC" class="form-control" size="40"/>
 
     </fieldset>
 </form>

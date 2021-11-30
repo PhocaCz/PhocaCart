@@ -7,9 +7,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.view');
 
-class PhocaCartCpViewPhocaCartFormfields extends JViewLegacy
+class PhocaCartCpViewPhocaCartFormfields extends HtmlView
 {
     protected $items;
     protected $pagination;
@@ -53,44 +56,44 @@ class PhocaCartCpViewPhocaCartFormfields extends JViewLegacy
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.formfield_id'));
 
-        JToolbarHelper::title(JText::_($this->t['l'] . '_FORM_FIELDS'), 'list-alt');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_FORM_FIELDS'), 'list-alt');
 
         if ($canDo->get('core.create')) {
-            JToolbarHelper::addNew($this->t['task'] . '.add', 'JTOOLBAR_NEW');
+            ToolbarHelper::addNew($this->t['task'] . '.add', 'JTOOLBAR_NEW');
         }
 
         if ($canDo->get('core.edit')) {
-            JToolbarHelper::editList($this->t['task'] . '.edit', 'JTOOLBAR_EDIT');
+            ToolbarHelper::editList($this->t['task'] . '.edit', 'JTOOLBAR_EDIT');
         }
         if ($canDo->get('core.edit.state')) {
 
-            JToolbarHelper::divider();
-            JToolbarHelper::custom($this->t['tasks'] . '.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-            JToolbarHelper::custom($this->t['tasks'] . '.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+            ToolbarHelper::divider();
+            ToolbarHelper::custom($this->t['tasks'] . '.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+            ToolbarHelper::custom($this->t['tasks'] . '.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
         }
 
         if ($canDo->get('core.delete')) {
-            JToolbarHelper::deleteList($this->t['l'] . '_WARNING_DELETE_ITEMS_MAY_MEAN_DELETING_USER_DATA', 'phocacartformfields.delete', $this->t['l'] . '_DELETE');
+            ToolbarHelper::deleteList($this->t['l'] . '_WARNING_DELETE_ITEMS_MAY_MEAN_DELETING_USER_DATA', 'phocacartformfields.delete', $this->t['l'] . '_DELETE');
         }
 
 
-        JToolbarHelper::divider();
-        JToolbarHelper::help('screen.' . $this->t['c'], true);
+        ToolbarHelper::divider();
+        ToolbarHelper::help('screen.' . $this->t['c'], true);
     }
 
     protected function getSortFields() {
         return array(
-            'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-            'a.title' => JText::_($this->t['l'] . '_NAME'),
-            'a.label' => JText::_($this->t['l'] . '_LABEL'),
-            'a.type' => JText::_($this->t['l'] . '_TYPE'),
-            'a.type_default' => JText::_($this->t['l'] . '_DEFAULT'),
-            'a.display_billing' => JText::_($this->t['l'] . '_FORM_DISPLAY_BILLING'),
-            'a.display_shipping' => JText::_($this->t['l'] . '_FORM_DISPLAY_SHIPPING'),
-            'a.display_account' => JText::_($this->t['l'] . '_FORM_DISPLAY_ACCOUNT'),
-            'a.published' => JText::_($this->t['l'] . '_PUBLISHED'),
-            'a.required' => JText::_($this->t['l'] . '_REQUIRED'),
-            'a.id' => JText::_('JGRID_HEADING_ID')
+            'a.ordering' => Text::_('JGRID_HEADING_ORDERING'),
+            'a.title' => Text::_($this->t['l'] . '_NAME'),
+            'a.label' => Text::_($this->t['l'] . '_LABEL'),
+            'a.type' => Text::_($this->t['l'] . '_TYPE'),
+            'a.type_default' => Text::_($this->t['l'] . '_DEFAULT'),
+            'a.display_billing' => Text::_($this->t['l'] . '_FORM_DISPLAY_BILLING'),
+            'a.display_shipping' => Text::_($this->t['l'] . '_FORM_DISPLAY_SHIPPING'),
+            'a.display_account' => Text::_($this->t['l'] . '_FORM_DISPLAY_ACCOUNT'),
+            'a.published' => Text::_($this->t['l'] . '_PUBLISHED'),
+            'a.required' => Text::_($this->t['l'] . '_REQUIRED'),
+            'a.id' => Text::_('JGRID_HEADING_ID')
         );
     }
 }

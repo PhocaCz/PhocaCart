@@ -7,8 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_CUSTOMERS').'</div>';
+echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_CUSTOMERS').'</div>';
 
 if (!empty($this->items)) {
 
@@ -41,12 +43,12 @@ if (!empty($this->items)) {
 		//echo '<input type="hidden" name="mainboxdata" value="'.$this->t['mainboxdatabase64'].'" />';
 		echo '<input type="hidden" name="redirectsuccess" value="main.content.products" />';
 		echo '<input type="hidden" name="redirecterror" value="main.content.customers" />';
-		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+		echo HTMLHelper::_('form.token');
 
 		if ((int)$this->t['user']->id == (int)$v->id) {
-			echo '<button class="'.$this->s['c']['btn.btn-danger'].' editMainContent">'.JText::_('COM_PHOCACART_DESELECT').'</button>';
+			echo '<button class="'.$this->s['c']['btn.btn-danger'].' editMainContent">'.Text::_('COM_PHOCACART_DESELECT').'</button>';
 		} else {
-			echo '<button class="'.$this->s['c']['btn.btn-success'].' editMainContent">'.JText::_('COM_PHOCACART_SELECT').'</button>';
+			echo '<button class="'.$this->s['c']['btn.btn-success'].' editMainContent">'.Text::_('COM_PHOCACART_SELECT').'</button>';
 		}
 		echo '</form>';
 
@@ -54,7 +56,7 @@ if (!empty($this->items)) {
 		echo '</div>';// end row
 	}
 } else {
-	echo '<div class="ph-pos-no-items">'.JText::_('COM_PHOCACART_NO_CUSTOMER_FOUND').'</div>';
+	echo '<div class="ph-pos-no-items">'.Text::_('COM_PHOCACART_NO_CUSTOMER_FOUND').'</div>';
 }
 
 //echo $this->loadTemplate('pagination');
@@ -70,24 +72,24 @@ if (!empty($this->items)) {
 	//if ($this->p->get('display_item_ordering')) {
 		$col = 7;
 		echo '<div class="'.$this->s['c']["col.xs12.sm{$col}.md{$col}"].' ph-center-pagination">';
-		echo JText::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select" style="width: 16em"', $this->t['ordering']);
+		echo Text::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;'. str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select" style="width: 16em"', $this->t['ordering']);
 		echo '</div>';
 	//}
 
 	//if ($this->p->get('show_pagination_limit')) {
 		$col = 5;
 		echo '<div class="'.$this->s['c']["col.xs12.sm{$col}.md{$col}"].' ph-center-pagination">';
-		echo JText::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getLimitBox(1));
+		echo Text::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' . str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getLimitBox(1));
 		echo '</div>';
 	//}
 
 	echo '<div class="ph-cb"></div>';
-	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination pagination  phPaginationBox">'. str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
+	echo '<div class="col-xs-12 col-sm-12 col-md-12 ph-center-pagination pagination  phPaginationBox">'. str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesLinks()) . '</div>';
 
 	echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination ph-pagination-mt pagination">';
-	echo str_replace( 'class="inputbox"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesCounter());
+	echo str_replace( 'class="form-control"', 'class="'.$this->s['c']['inputbox'].' '.$this->s['c']['form-control'].' chosen-select"', $this->t['pagination']->getPagesCounter());
 	echo '</div>';
 
 	echo '<div class="ph-cb"></div>';
@@ -104,6 +106,6 @@ if (!empty($this->items)) {
 	echo '<input type="hidden" name="date" value="'.$this->state->get('date').'" />';
 //}
 
-echo Joomla\CMS\HTML\HTMLHelper::_( 'form.token' );
+echo HTMLHelper::_( 'form.token' );
 echo '</form>';
 ?>

@@ -7,7 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
 // <--- FORM START MUST BE ADDED IN OUTPUT TEMPLATE
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 ?>

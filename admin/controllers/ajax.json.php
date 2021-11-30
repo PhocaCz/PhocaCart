@@ -8,6 +8,13 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Response\JsonResponse;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Table\Table;
 
 use Joomla\CMS\Language\LanguageHelper;
 
@@ -16,7 +23,7 @@ use Joomla\CMS\Language\LanguageHelper;
  *
  * @since  3.9.0
  */
-class PhocaCartCpControllerAjax extends JControllerLegacy
+class PhocaCartCpControllerAjax extends BaseController
 {
 	/**
 	 * Method to fetch associations of a contact
@@ -34,13 +41,13 @@ class PhocaCartCpControllerAjax extends JControllerLegacy
 	{
 
 
-		if (!JSession::checkToken('get'))
+		if (!Session::checkToken('get'))
 		{
-			echo new JResponseJson(null, JText::_('JINVALID_TOKEN'), true);
+			echo new JResponseJson(null, Text::_('JINVALID_TOKEN'), true);
 		}
 		else
 		{
-			$input = JFactory::getApplication()->input;
+			$input = Factory::getApplication()->input;
 
 			$assocId = $input->getInt('assocId', 0);
 			$view = $input->get('view', '');
@@ -49,7 +56,7 @@ class PhocaCartCpControllerAjax extends JControllerLegacy
 
 			if ($assocId == 0)
 			{
-				echo new JResponseJson(null, JText::sprintf('JLIB_FORM_VALIDATE_FIELD_INVALID', 'assocId'), true);
+				echo new JResponseJson(null, Text::sprintf('JLIB_FORM_VALIDATE_FIELD_INVALID', 'assocId'), true);
 
 				return;
 			}
@@ -57,12 +64,12 @@ class PhocaCartCpControllerAjax extends JControllerLegacy
 			$excludeLang = $input->get('excludeLang', '', 'STRING');
 
             if ($view == 'phocacartcategory') {
-                $associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', (int)$assocId, 'id', 'alias', false);
+                $associations = Associations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', (int)$assocId, 'id', 'alias', false);
             } else if ($view == 'phocacartitem') {
 
-                $associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', (int)$assocId, 'id', 'alias', false);
+                $associations = Associations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', (int)$assocId, 'id', 'alias', false);
             } else {
-                echo new JResponseJson(null, JText::_('COM_PHOCACART_ERROR_NO_VIEW_SET'), true);
+                echo new JResponseJson(null, Text::_('COM_PHOCACART_ERROR_NO_VIEW_SET'), true);
                 return;
             }
 
@@ -72,15 +79,15 @@ class PhocaCartCpControllerAjax extends JControllerLegacy
 
 
 			// Add the title to each of the associated records
-			JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
-			$table = JTable::getInstance('PhocaCartItem', 'Table');
+			Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
+			$table = Table::getInstance('PhocaCartItem', 'Table');
 
             if ($view == 'phocacartcategory') {
-                $table = JTable::getInstance('PhocaCartItem', 'Table');
+                $table = Table::getInstance('PhocaCartItem', 'Table');
             } else if ($view == 'phocacartitem') {
-                $table = JTable::getInstance('PhocaCartCategory', 'Table');
+                $table = Table::getInstance('PhocaCartCategory', 'Table');
             } else {
-                echo new JResponseJson(null, JText::_('COM_PHOCACART_ERROR_NO_VIEW_SET'), true);
+                echo new JResponseJson(null, Text::_('COM_PHOCACART_ERROR_NO_VIEW_SET'), true);
                 return;
             }
 
@@ -95,19 +102,19 @@ class PhocaCartCpControllerAjax extends JControllerLegacy
 
 			if (count($associations) == 0)
 			{
-				$message = JText::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_MESSAGE_NONE');
+				$message = Text::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_MESSAGE_NONE');
 			}
 			elseif ($countContentLanguages > count($associations) + 2)
 			{
 				$tags    = implode(', ', array_keys($associations));
-				$message = JText::sprintf('JGLOBAL_ASSOCIATIONS_PROPAGATE_MESSAGE_SOME', $tags);
+				$message = Text::sprintf('JGLOBAL_ASSOCIATIONS_PROPAGATE_MESSAGE_SOME', $tags);
 			}
 			else
 			{
-				$message = JText::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_MESSAGE_ALL');
+				$message = Text::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_MESSAGE_ALL');
 			}
 
-			echo new JResponseJson($associations, $message);
+			echo new JsonResponse($associations, $message);
 		}
 	}
 }

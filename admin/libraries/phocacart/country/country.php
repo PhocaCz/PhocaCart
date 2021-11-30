@@ -9,13 +9,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Filesystem\File;
 jimport('joomla.application.component.model');
 
 class PhocacartCountry
 {
 	public static function getCountryById($countryId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT title FROM #__phocacart_countries WHERE id = '.(int) $countryId. ' ORDER BY title LIMIT 1';
 		$db->setQuery($query);
 		$country = $db->loadColumn();
@@ -27,7 +31,7 @@ class PhocacartCountry
 
 	public static function options() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.title AS text, a.id AS value'
 		. ' FROM #__phocacart_countries AS a'
 		. ' WHERE a.published = 1'
@@ -51,7 +55,7 @@ class PhocacartCountry
 			$c = 'zone_id';
 		}
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT c.country_id';
@@ -93,7 +97,7 @@ class PhocacartCountry
 		}
 
 		if ((int)$id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM '.$t
 					. ' WHERE '.$c.' = '. (int)$id;
@@ -124,16 +128,28 @@ class PhocacartCountry
 
 	public static function getAllCountriesSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_countries AS a'
 				. ' ORDER BY '. $order;
 		$db->setQuery($query);
 		$countries = $db->loadObjectList();
 
-		$countriesO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $countries, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$countriesO = HTMLHelper::_('select.genericlist', $countries, $name, 'class="form-control" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $countriesO;
+	}
+
+	public static function getAllCountries($order = 'id' ) {
+
+		$db =Factory::getDBO();
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_countries AS a'
+				. ' ORDER BY '. $order;
+		$db->setQuery($query);
+		$countries = $db->loadObjectList();
+
+		return $countries;
 	}
 
 	public static function getCountryFlag($code = '', $frontend = 0, $image = '', $width = '', $height = '') {
@@ -153,12 +169,12 @@ class PhocacartCountry
 			$abs	= JPATH_ROOT . $link;
 
 			if ($frontend == 1) {
-				$rel	= JURI::base(true) . $link;
+				$rel	= Uri::base(true) . $link;
 			} else {
-				$rel	= str_replace('/administrator', '', JURI::base(true)) . $link;
+				$rel	= str_replace('/administrator', '', Uri::base(true)) . $link;
 			}
 
-			if(JFile::exists($abs)) {
+			if(File::exists($abs)) {
 				return '<img src="'.$rel.'" alt="" />';
 			}
 		}

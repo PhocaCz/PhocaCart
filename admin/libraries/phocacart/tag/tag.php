@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 
 class PhocacartTag
 {
@@ -20,7 +24,7 @@ class PhocacartTag
 	 */
 	public static function getTags($itemId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT r.tag_id';
@@ -51,7 +55,7 @@ class PhocacartTag
 	 */
 	public static function getTagsSubmitItems($itemId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.items_item';
 		$query .= ' FROM #__phocacart_submit_items AS a'
 				.' WHERE a.id = '.(int) $itemId
@@ -71,7 +75,7 @@ class PhocacartTag
 
 	public static function getTagsByIds($cids) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
         if ($cids != '') {//cids is string separated by comma
 
             $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
@@ -98,7 +102,7 @@ class PhocacartTag
 	 */
 	public static function getTagLabels($itemId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT r.tag_id';
@@ -129,7 +133,7 @@ class PhocacartTag
 	 */
 	public static function getTagLabelsSubmitItems($itemId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.items_item';
 		$query .= ' FROM #__phocacart_submit_items AS a'
 				.' WHERE a.id = '.(int) $itemId
@@ -149,7 +153,7 @@ class PhocacartTag
 
 	public static function getTagsLabelsByIds($cids) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
         if ($cids != '') {//cids is string separated by comma
 
             $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
@@ -204,7 +208,7 @@ class PhocacartTag
         }
 
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
 
 
@@ -268,7 +272,7 @@ class PhocacartTag
 
 
 		if ((int)$itemId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_tags_related'
 					. ' WHERE item_id = '. (int)$itemId;
@@ -301,7 +305,7 @@ class PhocacartTag
 
 
 		if ((int)$itemId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_taglabels_related'
 					. ' WHERE item_id = '. (int)$itemId;
@@ -330,9 +334,20 @@ class PhocacartTag
 
 	}
 
+	public static function getAllTagsList($order = 'id', $type = 0){
+	    $db = Factory::getDBO();
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_tags AS a'
+				.' WHERE a.type ='.(int)$type
+				.' ORDER BY '. $order;
+		$db->setQuery($query);
+		$tags = $db->loadObjectList();
+		return $tags;
+    }
+
 	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0, $attributes = '') {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_tags AS a'
 				.' WHERE a.type ='.(int)$type
@@ -340,7 +355,7 @@ class PhocacartTag
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();
 
-		$tagsO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $tags, $name, $attributes, 'value', 'text', $activeArray, $id);
+		$tagsO = HTMLHelper::_('select.genericlist', $tags, $name, $attributes, 'value', 'text', $activeArray, $id);
 
 		return $tagsO;
 	}
@@ -368,7 +383,7 @@ class PhocacartTag
         } else {
 	        return '';
         }
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$p 		= PhocacartUtils::getComponentParameters();
 		$s      = PhocacartRenderStyle::getStyles();
 		$tl		= $p->get( 'tags_links', 0 );
@@ -436,7 +451,7 @@ class PhocacartTag
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
                     }
 
-					$o[$i] .= '<a href="'.JRoute::_($link).'">'.$dO.'</a>';
+					$o[$i] .= '<a href="'.Route::_($link).'">'.$dO.'</a>';
 				}
 
 				if ($type == 2 || $type == 3) {
@@ -459,11 +474,11 @@ class PhocacartTag
 		switch ($type) {
 
 			case 1:
-				return JText::_('COM_PHOCACART_TAG_LABEL');
+				return Text::_('COM_PHOCACART_TAG_LABEL');
 			break;
 
 			default:
-				return JText::_('COM_PHOCACART_TAG');
+				return Text::_('COM_PHOCACART_TAG');
 			break;
 
 		}
@@ -472,7 +487,7 @@ class PhocacartTag
 
 	public static function getActiveTags($items, $ordering) {
 
-	    $db     = JFactory::getDbo();
+	    $db     = Factory::getDbo();
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t
@@ -492,7 +507,7 @@ class PhocacartTag
 
     public static function getActiveLabels($items, $ordering) {
 
-	    $db     = JFactory::getDbo();
+	    $db     = Factory::getDbo();
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t

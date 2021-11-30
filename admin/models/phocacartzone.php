@@ -7,9 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartZone extends JModelAdmin
+class PhocaCartCpModelPhocacartZone extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -28,12 +37,12 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 
 	public function getTable($type = 'PhocacartZone', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartzone', 'phocacartzone', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -44,7 +53,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartzone.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartzone.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -56,14 +65,14 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -72,7 +81,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_zones');
 				$max = $db->loadResult();
 
@@ -90,17 +99,17 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 	public function delete(&$cid = array()) {
 
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING);
+					Log::add($error, Log::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 					return false;
 				}
 			}
@@ -157,7 +166,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 		$isNew = true;
 
 		// Include the content plugins for the on save events.
-		JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Allow an exception to be thrown.
 		try
@@ -172,9 +181,9 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 			/*
 			// Plugin parameters are converted to params column in payment table (x001)
 			// Store form parameters of selected method
-			$app		= JFactory::getApplication();
+			$app		= Factory::getApplication();
 			$dataPh		= $app->input->get('phform', array(), 'array');
-			$registry 	= new JRegistry($dataPh['params']);
+			$registry 	= new Registry($dataPh['params']);
 			//$registry 	= new JRegistry($dataPh);
 			$dataPhNew 	= $registry->toString();
 			if($dataPhNew != '') {
@@ -201,7 +210,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
@@ -240,7 +249,7 @@ class PhocaCartCpModelPhocacartZone extends JModelAdmin
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			\JFactory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
 		}
 		catch (Exception $e)
 		{

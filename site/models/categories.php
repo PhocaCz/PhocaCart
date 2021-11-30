@@ -11,9 +11,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelCategories extends JModelLegacy
+class PhocaCartModelCategories extends BaseDatabaseModel
 {
 	protected $categories 			= null;
 	protected $categories_ordering	= null;
@@ -21,7 +22,7 @@ class PhocaCartModelCategories extends JModelLegacy
 
 	public function __construct() {
 		parent::__construct();
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$this->setState('filter.language',$app->getLanguageFilter());
 	}
 
@@ -74,7 +75,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		$user 				= PhocacartUser::getUser();
 		$userLevels			= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups 		= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$params 			= $app->getParams();
 
 
@@ -127,7 +128,7 @@ class PhocaCartModelCategories extends JModelLegacy
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonCategoriesBeforeLoadColumns', array('com_phocacart.categories', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonCategoriesBeforeLoadColumns', array('com_phocacart.categories', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
@@ -176,7 +177,7 @@ class PhocaCartModelCategories extends JModelLegacy
 
 	public function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params 					= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
 			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);

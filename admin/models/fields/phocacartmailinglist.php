@@ -7,8 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaCartMailingList extends JFormField
+class JFormFieldPhocaCartMailingList extends FormField
 {
     protected $type = 'PhocaCartMailingList';
 
@@ -38,7 +41,7 @@ class JFormFieldPhocaCartMailingList extends JFormField
         if ($comPhocaemail) {
 
             $order = 'ordering ASC';
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
             $query = 'SELECT a.id AS value, a.title AS text'
                 . ' FROM #__phocaemail_lists AS a'
                 . ' WHERE a.published = 1'
@@ -60,9 +63,15 @@ class JFormFieldPhocaCartMailingList extends JFormField
             $name = $this->name;
         }
 
-        $html = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $lists, $name, $attr, 'value', 'text', $value, 'id');
+		$data               = $this->getLayoutData();
+		$data['options']    = (array)$lists;
+		$data['value']      = $value;
 
-        return $html;
+		return $this->getRenderer($this->layout)->render($data);
+
+        //$html = HTMLHelper::_('select.genericlist', $lists, $name, $attr, 'value', 'text', $value, 'id');
+
+        //return $html;
 
     }
 }

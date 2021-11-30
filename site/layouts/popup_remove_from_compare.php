@@ -7,16 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d = $displayData;
-$d['comparison_view_href'] = 'data-dismiss="modal"';
+$d['comparison_view_href'] = $d['s']['a']['data-bs-dismiss-modal'];
 if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
 	$d['comparison_view_href'] = 'href="'.$d['link_comparison'].'"';
 }
-$d['comparison_view_href']    = 'data-dismiss="modal"';
-$d['close']                 = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' ><span aria-hidden="true">&times;</span></button>';
+$d['comparison_view_href']    = $d['s']['a']['data-bs-dismiss-modal'];;
+$d['close']                 = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' >/button>';
 if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
 	$d['comparison_view_href'] = 'href="'.$d['link_comparison'].'"';
-	$d['close']             = '<a role="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' ><span aria-hidden="true">&times;</span></a>';
+	$d['close']             = '<a role="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' ></a>';
 }
 
 ?>
@@ -24,9 +25,8 @@ if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
     <div class="<?php echo $d['s']['c']['modal-dialog'] ?>">
       <div class="<?php echo $d['s']['c']['modal-content'] ?>">
         <div class="<?php echo $d['s']['c']['modal-header'] ?>">
-          <?php echo $d['s']['c']['class-type'] != 'bs4' ? $d['close'] : '' ?>
-		  <h4><span class="<?php echo $d['s']['i']['info-sign'] ?>"></span> <?php echo $d['info_msg'] ?></h4>
-            <?php echo $d['s']['c']['class-type'] == 'bs4' ? $d['close'] : '' ?>
+		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><span class="<?php echo $d['s']['i']['info-sign'] ?>"></span> <?php echo $d['info_msg'] ?></h5>
+             <?php echo $d['close'] ?>
 
         </div>
         <div class="<?php echo $d['s']['c']['modal-body'] ?>">
@@ -37,11 +37,11 @@ if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
 
 		<div class="<?php echo $d['s']['c']['row'] ?>">
 			<div class="<?php echo $d['s']['c']['col.xs12.sm6.md6'] ?> ph-center">
-			<a class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn" role="button" <?php echo $d['comparison_view_href']; ?> ><span class="<?php echo $d['s']['i']['shopping-cart'] ?>"></span> <?php echo JText::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
+			<a class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn" role="button" <?php echo $d['comparison_view_href']; ?> ><span class="<?php echo $d['s']['i']['shopping-cart'] ?>"></span> <?php echo Text::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
 			</div>
 
 			<div class="<?php echo $d['s']['c']['col.xs12.sm6.md6'] ?> ph-center">
-			<a class="<?php echo $d['s']['c']['btn.btn-success'] ?> ph-btn" role="button" href="<?php echo $d['link_comparison']; ?>" ><span class="<?php echo $d['s']['i']['int-link'] ?>"></span> <?php echo JText::_('COM_PHOCACART_PROCEED_TO_COMPARISON_LIST'); ?></a>
+			<a class="<?php echo $d['s']['c']['btn.btn-success'] ?> ph-btn" role="button" href="<?php echo $d['link_comparison']; ?>" ><span class="<?php echo $d['s']['i']['int-link'] ?>"></span> <?php echo Text::_('COM_PHOCACART_PROCEED_TO_COMPARISON_LIST'); ?></a>
 			</div>
 		</div>
         </div>

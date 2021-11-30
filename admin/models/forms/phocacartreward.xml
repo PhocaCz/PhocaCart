@@ -5,29 +5,29 @@
 
 <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
 
-<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
 
-<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
-<field name="points" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_REWARD_POINTS_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_DESC" />
+<field name="points" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_REWARD_POINTS_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_DESC" />
 
 <field name="user_id" type="user" default="0" label="COM_PHOCACART_USER_ID_LABEL" description="COM_PHOCACART_USER_ID_DESC" required="true"  />
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_APPROVED_LABEL" description="COM_PHOCACART_FIELD_APPROVED_DESC" class="inputbox" size="1" default="1">
+<field name="published" type="list" label="COM_PHOCACART_FIELD_APPROVED_LABEL" description="COM_PHOCACART_FIELD_APPROVED_DESC" class="form-control" size="1" default="1">
 	<option value="1">COM_PHOCACART_APPROVED</option>
 	<option	value="0">COM_PHOCACART_NOT_APPROVED</option>
 </field>
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 
 
 
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
+<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
 
 	</fieldset>
-	
+
 <fields name="metadata">
 <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 <!--
@@ -51,5 +51,5 @@
 </fieldset>
 </fields>
 
-	
+
 </form>

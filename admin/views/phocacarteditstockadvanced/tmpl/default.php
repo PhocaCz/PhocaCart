@@ -8,23 +8,27 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
-
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
+/*
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
+*/
 
 echo '<div id="phEditStockAdvancedBox" class="ph-edit-stock-advanced-box">';
 
-echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>'
-	. '<ul><li>'.JText::_('COM_PHOCACART_TO_SEE_ALL_ATTRIBUTES_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
-	. '<li>'. JText::_('COM_PHOCACART_CHECK_LIST_EVERY_TIME_ATTRIBUTES_CHANGE').'</li>'
-	. '<li><b>'. JText::_('COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT').'</b>: '.JText::_('COM_PHOCACART_ONLY_STOCK_VALUES_ARE_ACTIVE').'</li>'
-	. '<li><b>'. JText::_('COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT').'</b>: '.JText::_('COM_PHOCACART_STOCK_VALUES_AND_PRICE_VALUES_ARE_ACTIVE').'. '.JText::_('COM_PHOCACART_PRICE_VALUES_OVERWRITE_CUSTOMER_GROUP_PRICES').'</li>'
-	.'</ul></div>';
+echo '<div class="alert alert-info alert-dismissible fade show" role="alert">'
+	. '<ul><li>'.Text::_('COM_PHOCACART_TO_SEE_ALL_ATTRIBUTES_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
+	. '<li>'. Text::_('COM_PHOCACART_CHECK_LIST_EVERY_TIME_ATTRIBUTES_CHANGE').'</li>'
+	. '<li><b>'. Text::_('COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT').'</b>: '.Text::_('COM_PHOCACART_ONLY_STOCK_VALUES_ARE_ACTIVE').'</li>'
+	. '<li><b>'. Text::_('COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT').'</b>: '.Text::_('COM_PHOCACART_STOCK_VALUES_AND_PRICE_VALUES_ARE_ACTIVE').'. '.Text::_('COM_PHOCACART_PRICE_VALUES_OVERWRITE_CUSTOMER_GROUP_PRICES').'</li>'
+	.'</ul><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button></div>';
 
-$app 		= JFactory::getApplication();
+$app 		= Factory::getApplication();
 $input 		= $app->input;
 $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
@@ -49,8 +53,8 @@ echo '<input type="hidden" name="id" value="'.(int)$this->id.'">';
 echo '<input type="hidden" name="task" value="phocacarteditstockadvanced.save">';
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
-echo '<button class="btn btn-success btn-sm ph-btn pull-right ph-right"><span class="icon-ok ph-icon-white"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo '<button class="btn btn-success btn-sm ph-btn pull-right ph-right"><span class="icon-ok ph-icon-white"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
+echo HTMLHelper::_('form.token');
 
 echo '</div>';
 
@@ -63,16 +67,16 @@ echo '</div>';// end ph-edit-stock-advanced-box
 $formArray = array ('product_stock');
 
 
-$link		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditstockadvanced&tmpl=component&id='.(int)$this->id);
+$link		= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditstockadvanced&tmpl=component&id='.(int)$this->id);
 
 
 echo '<div class="ph-edit-stock-advanced-box">';
 
-echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>'
-	. '<ul><li>'.JText::_('COM_PHOCACART_TO_SEE_ALL_ATTRIBUTES_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
-	. '<li>'. JText::_('COM_PHOCACART_CHECK_LIST_EVERY_TIME_ATTRIBUTES_CHANGE').'</li>'
-	. '<li><b>'. JText::_('COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT').'</b>: '.JText::_('COM_PHOCACART_ONLY_STOCK_VALUES_ARE_ACTIVE').'</li>'
-	. '<li><b>'. JText::_('COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT').'</b>: '.JText::_('COM_PHOCACART_STOCK_VALUES_AND_PRICE_VALUES_ARE_ACTIVE').'. '.JText::_('COM_PHOCACART_PRICE_VALUES_OVERWRITE_CUSTOMER_GROUP_PRICES').'</li>'
+echo '<div class="alert alert-info"><button type="button" class="close" data-bs-dismiss="alert">&times;</button>'
+	. '<ul><li>'.Text::_('COM_PHOCACART_TO_SEE_ALL_ATTRIBUTES_LISTED_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST') . '</li>'
+	. '<li>'. Text::_('COM_PHOCACART_CHECK_LIST_EVERY_TIME_ATTRIBUTES_CHANGE').'</li>'
+	. '<li><b>'. Text::_('COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT').'</b>: '.Text::_('COM_PHOCACART_ONLY_STOCK_VALUES_ARE_ACTIVE').'</li>'
+	. '<li><b>'. Text::_('COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT').'</b>: '.Text::_('COM_PHOCACART_STOCK_VALUES_AND_PRICE_VALUES_ARE_ACTIVE').'. '.Text::_('COM_PHOCACART_PRICE_VALUES_OVERWRITE_CUSTOMER_GROUP_PRICES').'</li>'
 	.'</ul></div>';
 
 if (!empty($this->t['product'])) {
@@ -87,14 +91,14 @@ if (!empty($this->t['product'])) {
 		echo '<table class="ph-attribute-option-box">';
 
 		echo '<tr>';
-		echo '<th>'.JText::_('COM_PHOCACART_TITLE').'</th>';
-		echo '<th>'.JText::_('COM_PHOCACART_ATTRIBUTES').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_TITLE').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_ATTRIBUTES').'</th>';
 		//echo '<th>'.JText::_('COM_PHOCACART_PRODUCT_KEY').'</th>';
-		echo '<th>'.JText::_('COM_PHOCACART_IN_STOCK').'</th>';
-		echo '<th>'.JText::_('COM_PHOCACART_PRICE').'</th>';
-		echo '<th>'.JText::_('COM_PHOCACART_SKU').'</th>';
-		echo '<th>'.JText::_('COM_PHOCACART_EAN').'</th>';
-		echo '<th>'.JText::_('COM_PHOCACART_IMAGE').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_IN_STOCK').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_PRICE').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_SKU').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_EAN').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_IMAGE').'</th>';
 		echo '</tr>';
 
 
@@ -160,8 +164,8 @@ if (!empty($this->t['product'])) {
 		echo '<input type="hidden" name="task" value="phocacarteditstockadvanced.save">';
 		echo '<input type="hidden" name="tmpl" value="component" />';
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
-		echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-ok ph-icon-white"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
-		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+		echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-ok ph-icon-white"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
+		echo HTMLHelper::_('form.token');
 
 
 		echo '</tr>';

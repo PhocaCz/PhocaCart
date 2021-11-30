@@ -7,13 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Language\Associations;
 
 // ASSOCIATION
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 
 
-$app        = JFactory::getApplication();
+$app        = Factory::getApplication();
 $input      = $app->input;
 $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
@@ -37,7 +41,7 @@ function phCheckRequestStatus(i, task) {
 		if (task == "'. $this->t['task'] .'.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
 			Joomla.submitform(task, document.getElementById("adminForm"));
 		} else {
-			Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+			Joomla.renderMessages({"error": ["'. Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 		}
 	}
 }
@@ -49,7 +53,7 @@ Joomla.submitbutton = function(task) {
 JFactory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
-$assoc = JLanguageAssociations::isEnabled();
+$assoc = Associations::isEnabled();
 // In case of modal
 $isModal    = $input->get('layout') == 'modal' ? true : false;
 $layout     = $isModal ? 'modal' : 'edit';
@@ -61,21 +65,24 @@ $this->ignore_fieldsets = array('details', 'item_associations', 'jmetadata');
 // phocacartcategory-form => adminForm
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm', '', $layout, $tmpl);
 // First Column
-echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array (
-'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
-'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'),
-'metadata'		=> JText::_($this->t['l'].'_METADATA_OPTIONS'));
+'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
+'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'),
+'metadata'		=> Text::_($this->t['l'].'_METADATA_OPTIONS'));
 if (!$isModal && $assoc) {
-    $tabs['associations']          = JText::_($this->t['l'].'_ASSOCIATIONS');
+    $tabs['associations']          = Text::_($this->t['l'].'_ASSOCIATIONS');
 }
 
 echo $r->navigation($tabs);
 
+$formArray = array ('title', 'alias');
+echo $r->groupHeader($this->form, $formArray);
+
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('title', 'alias', 'image', 'icon_class', 'parent_id', 'type', 'ordering', 'access', 'group', 'title_feed', 'type_feed');
+$formArray = array ('image', 'icon_class', 'parent_id', 'type', 'ordering', 'access', 'group', 'title_feed', 'type_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
@@ -103,7 +110,7 @@ echo $this->loadTemplate('metadata');
 echo $r->endTab();
 
 // ASSOCIATION
-$assoc = JLanguageAssociations::isEnabled();
+$assoc = Associations::isEnabled();
 
 if (!$isModal && $assoc) {
 	echo $r->startTab('associations', $tabs['associations']);
@@ -117,10 +124,10 @@ if (!$isModal && $assoc) {
 echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
-echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
+//echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs($this->t['task']);
 
-if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
     echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
 }
 

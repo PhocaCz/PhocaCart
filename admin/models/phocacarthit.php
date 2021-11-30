@@ -9,16 +9,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartHit extends JModelAdmin
+class PhocaCartCpModelPhocaCartHit extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 	public $typeAlias 			= 'com_phocacart.phocacarthit';
 	
 	protected function canDelete($record){
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
 			// catid not used
@@ -36,7 +39,7 @@ class PhocaCartCpModelPhocaCartHit extends JModelAdmin
 	public function delete(&$cid = array()) {
 		
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$error 	= 0;
 			if (!empty($cid)) {
 				foreach ($cid as $k => $v) {

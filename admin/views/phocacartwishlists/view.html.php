@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartWishlists extends JViewLegacy
+class PhocaCartCpViewPhocaCartWishlists extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -54,14 +57,14 @@ class PhocaCartCpViewPhocaCartWishlists extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.question_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_WISH_LISTS' ), 'heart' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_WISH_LISTS' ), 'heart' );
 
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
@@ -71,21 +74,21 @@ class PhocaCartCpViewPhocaCartWishlists extends JViewLegacy
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartwishlists.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartwishlists.delete', $this->t['l'].'_DELETE');
 		}
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'username' 			=> JText::_($this->t['l'] . '_USER'),
-			'productname' 		=> JText::_($this->t['l'] . '_PRODUCT'),
-			'cattitle' 			=> JText::_($this->t['l'] . '_CATEGORY'),
+			'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
+			'username' 			=> Text::_($this->t['l'] . '_USER'),
+			'productname' 		=> Text::_($this->t['l'] . '_PRODUCT'),
+			'cattitle' 			=> Text::_($this->t['l'] . '_CATEGORY'),
 			//'a.ip'	 			=> JText::_($this->t['l'] . '_IP'),
-			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
+			'a.date' 			=> Text::_($this->t['l'] . '_DATE'),
+			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

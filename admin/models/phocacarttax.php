@@ -7,9 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartTax extends JModelAdmin
+class PhocaCartCpModelPhocacartTax extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -28,12 +35,12 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 	
 	public function getTable($type = 'PhocacartTax', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 	
 	public function getForm($data = array(), $loadData = true) {
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacarttax', 'phocacarttax', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -44,7 +51,7 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacarttax.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacarttax.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -63,14 +70,14 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 		
 	
@@ -83,7 +90,7 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_taxes');
 				$max = $db->loadResult();
 
@@ -101,17 +108,17 @@ class PhocaCartCpModelPhocacartTax extends JModelAdmin
 		
 		
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING);
+					Log::add($error, Log::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 					return false;
 				}
 			}

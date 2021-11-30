@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 /*
 phocacart import('phocacart.user.user');
@@ -65,8 +67,8 @@ class PhocacartCart
     public function __construct() {
 
 
-        $app         = JFactory::getApplication();
-        $session     = JFactory::getSession();
+        $app         = Factory::getApplication();
+        $session     = Factory::getSession();
         $dUser       = PhocacartUser::defineUser($this->user, $this->vendor, $this->ticket, $this->unit, $this->section);
         $this->guest = PhocacartUserGuestuser::getGuestUser();
 
@@ -204,7 +206,7 @@ class PhocacartCart
                 // and we have stored items in session now
                 if (!empty($sessionItems)) {
                     // inform users and clean session
-                    $message = JText::_('COM_PHOCACART_CART_UPDATED_BASED_ON_YOUR_PREVIOUS_VISIT');
+                    $message = Text::_('COM_PHOCACART_CART_UPDATED_BASED_ON_YOUR_PREVIOUS_VISIT');
                     $app->enqueueMessage($message, 'message');
                     $session->set('cart', array(), 'phocaCart');
                     $session->set('guestcoupon', array(), 'phocaCart');
@@ -279,7 +281,7 @@ class PhocacartCart
      */
     public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         if ($idKey != '') {
             // we get idkey as string - from checkout update or remove -  used in CHECKOUT
@@ -292,10 +294,10 @@ class PhocacartCart
             $checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 
             if (!$checkP) {
-                //$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
+                //$uri 			= JUri::getInstance();
                 //$action			= $uri->toString();
 
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
                 return false;
             }
 
@@ -308,10 +310,10 @@ class PhocacartCart
 
 
             if (!$checkedA) {
-                //$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
+                //$uri 			= JUri::getInstance();
                 //$action			= $uri->toString();
 
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
 
 
                 return false;
@@ -353,7 +355,7 @@ class PhocacartCart
             //$this->updateSubTotal();
             return true;
         } else {
-            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_QUANTITY_WAS_NOT_SET'), 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_QUANTITY_WAS_NOT_SET'), 'error');
         }
         return false;
     }
@@ -382,7 +384,7 @@ class PhocacartCart
      */
     protected function updateItems() {
 
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
 
         if ($this->pos && (int)$this->vendor->id > 0) {
 
@@ -506,9 +508,9 @@ class PhocacartCart
      */
     protected function updateItemsDb() {
 
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $items = serialize($this->items);
-        $date  = JFactory::getDate();
+        $date  = Factory::getDate();
         $now   = $date->toSql();
 
         // Update multiple cart (include vendor, ticket)
@@ -587,7 +589,7 @@ class PhocacartCart
         if (empty($this->fullitems)) {
             if (!empty($this->items)) {
 
-                $app                      = JFactory::getApplication();
+                $app                      = Factory::getApplication();
                 $paramsC                  = PhocacartUtils::getComponentParameters();
                 $tax_calculation          = $paramsC->get('tax_calculation', 0);
                 $check_product_attributes = $paramsC->get('check_product_attributes', array(3));
@@ -611,14 +613,14 @@ class PhocacartCart
 
                         if ($app->getName() == 'administrator') {
                             $app->enqueueMessage(
-                            JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CUSTOMER_CART_NOT_EXISTS') . ' '
-                            . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CUSTOMER_CART') . ' '
-                            . JText::_('COM_PHOCACART_CUSTOMER_WILL_BE_INFORMED_OF_SITUATION_DURING_NEXT_VISIT_TO_STORE'), 'warning');
+                            Text::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CUSTOMER_CART_NOT_EXISTS') . ' '
+                            . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CUSTOMER_CART') . ' '
+                            . Text::_('COM_PHOCACART_CUSTOMER_WILL_BE_INFORMED_OF_SITUATION_DURING_NEXT_VISIT_TO_STORE'), 'warning');
                         } else {
                             $app->enqueueMessage(
-                            JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
-                            . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
-                            . JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+                            Text::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
+                            . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
+                            . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                         }
 
                         unset($this->items[$k]);
@@ -642,9 +644,9 @@ class PhocacartCart
                             $checkA = PhocacartProduct::checkIfProductAttributesOptionsExist((int)$itemId, $k, (int)$v['catid'], $this->type, $attribs);
                             if (!$checkA) {
                                 $app->enqueueMessage(
-                                    JText::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
-                                    . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
-                                    . JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+                                    Text::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
+                                    . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
+                                    . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                                 unset($this->items[$k]);
                                 $this->updateItemsFromCheckout($k, 0);
                                 // In case this all happens when order is made - stop the order and inform user
@@ -1011,7 +1013,7 @@ class PhocacartCart
     }
 
     public function getRewardPointsReceived() {
-        return sset($this->total[0]['points_received']) ? $this->total[0]['points_received'] : 0;
+        return isset($this->total[0]['points_received']) ? $this->total[0]['points_received'] : 0;
     }
 
     public function getRewardPointsUsed() {
@@ -1201,7 +1203,7 @@ class PhocacartCart
     }
 
     public function emptyCart() {
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
         $session->set('cart', array(), 'phocaCart');
         //if((int)$this->user->id > 0) {
         // this function to empty cart database is not use in POS, so always set ticketid, unitid and sectionid to 1
@@ -1247,8 +1249,8 @@ class PhocacartCart
 
     public function removeCouponDb() {
 
-        $db   = JFactory::getDBO();
-        $date = JFactory::getDate();
+        $db   = Factory::getDBO();
+        $date = Factory::getDate();
         $now  = $date->toSql();
 
         $query = 'UPDATE #__phocacart_cart_multiple'

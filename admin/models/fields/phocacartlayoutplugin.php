@@ -10,10 +10,12 @@
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
 
 JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
 
-class JFormFieldPhocaCartLayoutPlugin extends JFormField
+class JFormFieldPhocaCartLayoutPlugin extends FormField
 {
 	protected $type 		= 'PhocaCartLayoutPlugin';
 
@@ -26,7 +28,7 @@ class JFormFieldPhocaCartLayoutPlugin extends JFormField
 		$plugin['name'] = '';
 		$plugin['group'] = 'pcl';
 		$plugin['title'] = 'Phoca Cart Layout';
-		$plugin['selecttitle'] = JText::_('COM_PHOCACART_SELECT_LAYOUT_PLUGIN');
+		$plugin['selecttitle'] = Text::_('COM_PHOCACART_SELECT_LAYOUT_PLUGIN');
 		$plugin['returnform'] = 1;
 
 		$plugins 	= PhocacartPlugin::getPluginMethods($plugin);
@@ -48,7 +50,7 @@ class JFormFieldPhocaCartLayoutPlugin extends JFormField
 			}
 		}
 
-		return HTMLHelper::_('select.genericlist',  $pluginsA,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return HTMLHelper::_('select.genericlist',  $pluginsA,  $this->name, 'class="form-select"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

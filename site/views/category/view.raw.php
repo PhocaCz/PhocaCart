@@ -7,11 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Plugin\PluginHelper;
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartViewCategory extends JViewLegacy
+class PhocaCartViewCategory extends HtmlView
 {
 	protected $category;
 	protected $subcategories;
@@ -23,12 +31,14 @@ class PhocaCartViewCategory extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$app						= JFactory::getApplication();
+
+		$layoutAl 					= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+		$app						= Factory::getApplication();
 		$this->p 					= $app->getParams();
 		$this->s					= PhocacartRenderStyle::getStyles();
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 						= Uri::getInstance();
 		$model						= $this->getModel();
-		$document					= JFactory::getDocument();
+		$document					= Factory::getDocument();
 		$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );
 		$this->t['limitstart']		= $app->input->get( 'limitstart', 0, 'int' );
 		$this->t['ajax'] 			= 1;
@@ -129,7 +139,7 @@ class PhocaCartViewCategory extends JViewLegacy
 		$this->category						= $model->getCategory($this->t['categoryid']);
 
 		if (empty($this->category)) {
-			echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_NO_CATEGORY_FOUND').'</div>';
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_NO_CATEGORY_FOUND')));
 		} else {
 			$this->subcategories		= $model->getSubcategories($this->t['categoryid']);
 			$this->items				= $model->getItemList($this->t['categoryid']);
@@ -145,9 +155,9 @@ class PhocaCartViewCategory extends JViewLegacy
 			$this->t['action']			= $uri->toString();
 			//$this->t['actionbase64']	= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']	= base64_encode($this->t['action']);
-			$this->t['linkcheckout']	= JRoute::_(PhocacartRoute::getCheckoutRoute(0, (int)$this->t['categoryid']));
-			$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute(0, (int)$this->t['categoryid']));
-			$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute(0, (int)$this->t['categoryid']));
+			$this->t['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute(0, (int)$this->t['categoryid']));
+			$this->t['linkcomparison']	= Route::_(PhocacartRoute::getComparisonRoute(0, (int)$this->t['categoryid']));
+			$this->t['linkwishlist']	= Route::_(PhocacartRoute::getWishListRoute(0, (int)$this->t['categoryid']));
 			$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
 			$this->t['pathcat'] 		= PhocacartPath::getPath('categoryimage');
 			$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');
@@ -161,10 +171,10 @@ class PhocaCartViewCategory extends JViewLegacy
 			$model->hit((int)$this->t['categoryid']);
 
 			// Plugins ------------------------------------------
-			JPluginHelper::importPlugin('pcv');
+			PluginHelper::importPlugin('pcv');
 			//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 			$this->t['event']		= new stdClass;
-			$results = \JFactory::getApplication()->triggerEvent('PCVonCategoryBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
+			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
 			$this->t['event']->onCategoryBeforeHeader = trim(implode("\n", $results));
 			// Foreach values are rendered in default foreaches
 
@@ -172,7 +182,7 @@ class PhocaCartViewCategory extends JViewLegacy
 			$this->t['pluginlayout']        = false;
 			if ($this->t['category_layout_plugin'] != '') {
 				$this->t['category_layout_plugin']     = PhocacartText::filterValue($this->t['category_layout_plugin'], 'alphanumeric2');
-				$this->t['pluginlayout'] 	        	= JPluginHelper::importPlugin('pcl', $this->t['category_layout_plugin']);
+				$this->t['pluginlayout'] 	        	= PluginHelper::importPlugin('pcl', $this->t['category_layout_plugin']);
 			}
 			if ($this->t['pluginlayout']) {
 				$this->t['show_switch_layout_type'] = 0;

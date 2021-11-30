@@ -10,10 +10,11 @@ var phFilterNewUrlSet							= '';
 var phFilterNewUrlRemove						= '';
 var phFilterNewUrlSetPreviousParamWaiting		= 0;
 var phFilterNewUrlRemovePreviousParamWaiting	= 0;
-
+/*
 function phReplaceAll(find, replace, str) {
   return str.replace(new RegExp(find, 'gi'), replace);
 }
+*/
 
 function phEscapeRegExp(string) {
     return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
@@ -95,7 +96,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 
 	var phParams = Joomla.getOptions('phParamsPC');
-
+	
 
 	/*
 	 * If there is empty phFilterNewUrlRemove, this means:
@@ -118,6 +119,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 	var paramsTypeStringNew	= {};
 	var mergeMode = 0;
+
 
 	/* Handle pagination - when changing filter, set pagination to zero - to start */
 	if (typeof paramsAll['start'] !== 'undefined') {
@@ -187,15 +189,18 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 	var url;
 
-
 	if ((isItemsView == 1 && filteredProductsOnly != 1) || isItemsView != 1) {
 		url = urlItemsView;// skip all parameters (a) search all products in items view or b) no items view
+
+		if (url == '') {
+			url = document.location.pathname;
+		}
+
 		document.location = url;
 		return 1;
 	} else {
 		url = location.search;// complete url with selected parameters
 	}
-
 
 
 	// Set new url or take the one from previous parameter
@@ -220,6 +225,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 
 	// Wait for next parameter
+
 	if (wait == 1) {
 		// Don't reload, wait for other parameter
 		phFilterNewUrlRemovePreviousParamWaiting = 1;
@@ -237,6 +243,9 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 			return 2;
 		} else {
 			//document.location = phFilterNewUrlSet;
+			if (phFilterNewUrlRemove == '') {
+				phFilterNewUrlRemove = document.location.pathname;
+			}
 			document.location = phFilterNewUrlRemove;
 		}
 		phFilterNewUrlRemove = '';

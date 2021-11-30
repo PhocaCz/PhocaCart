@@ -7,6 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 if (! class_exists('PhocacartCategory')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/category.php');
@@ -15,22 +19,22 @@ if (! class_exists('PhocacartCategoryMultiple')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/multiple.php');
 }
 
-$lang = JFactory::getLanguage();
+$lang = Factory::getLanguage();
 $lang->load('com_phocacart');
 
-class JFormFieldPhocacartCategory extends JFormField
+class JFormFieldPhocacartCategory extends FormField
 {
 	protected $type 		= 'PhocacartCategory';
 
 	protected function getInput() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$javascript		= '';
 		//$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		$required		= $this->required;// accept dynamically added required
 		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
-		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
+		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
 		$typeMethod		= $this->element['typemethod'];
 		$categoryType	= $this->element['categorytype'];// 0 all, 1 ... online shop, 2 ... pos
 		$attr		= '';
@@ -108,7 +112,7 @@ class JFormFieldPhocacartCategory extends JFormField
 		$data = $db->loadObjectList();
 
 		// TO DO - check for other views than category edit
-		$view 	= JFactory::getApplication()->input->get( 'view' );
+		$view 	= Factory::getApplication()->input->get( 'view' );
 		$catId	= -1;
 		if ($view == 'phocacartcategory') {
 			$id 	= $this->form->getValue('id'); // id of current category
@@ -126,19 +130,19 @@ class JFormFieldPhocacartCategory extends JFormField
 
 		if ($multiple) {
 			if ($typeMethod == 'allnone') {
-				array_unshift($tree, Joomla\CMS\HTML\HTMLHelper::_('select.option', '0', JText::_('COM_PHOCACART_NONE'), 'value', 'text'));
-				array_unshift($tree, Joomla\CMS\HTML\HTMLHelper::_('select.option', '-1', JText::_('COM_PHOCACART_ALL'), 'value', 'text'));
+				array_unshift($tree, HTMLHelper::_('select.option', '0', Text::_('COM_PHOCACART_NONE'), 'value', 'text'));
+				array_unshift($tree, HTMLHelper::_('select.option', '-1', Text::_('COM_PHOCACART_ALL'), 'value', 'text'));
 			}
 		} else {
-			array_unshift($tree, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '- '.JText::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
+			array_unshift($tree, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
 		}
 
 
 		if (!empty($activeCats)) {
-			return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
+			return HTMLHelper::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $activeCats, $this->id );
 
 		} else {
-			return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+			return HTMLHelper::_('select.genericlist',  $tree,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		}
 
 	}
