@@ -1168,7 +1168,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`invoice_due_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`invoice_time_of_supply` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`invoice_prn` varchar(64) NOT NULL DEFAULT '',
-	
+
     `required_delivery_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 
 	`invoice_spec_top_desc` text,
@@ -1181,7 +1181,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`terms` tinyint(1) NOT NULL default '0',
 	`privacy` tinyint(1) NOT NULL default '0',
 	`newsletter` tinyint(1) NOT NULL default '0',
-	
+
 	`published` tinyint(1) NOT NULL DEFAULT '0',
 	`checked_out` int(11) unsigned NOT NULL DEFAULT '0',
 	`checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -1189,7 +1189,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`params` text,
-	
+
 	`params_shipping` text,
 	`params_payment` text,
 
@@ -1775,7 +1775,7 @@ INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `
 
 (7, 'COM_PHOCACART_STATUS_FAILED', 'E', '0', '7', '=', '1', '0', '1', '2', '2', '[1]'),
 (8, 'COM_PHOCACART_STATUS_DENIED', 'D', '0', '8', '=', '1', '0', '1', '2', '2', '[1]'),
-(9, 'COM_PHOCACART_STATUS_CANCELLED_REVERSAL', 'CRV', '0', '9', '=', '1', '0', '1', '2', '2', '[1]'),
+(9, 'COM_PHOCACART_STATUS_CANCELED_REVERSAL', 'CRV', '0', '9', '=', '1', '0', '1', '2', '2', '[1]'),
 (10, 'COM_PHOCACART_STATUS_REVERSED', 'RV', '0', '10', '=', '1', '0', '1', '2', '2', '[1]');
 
 -- -
