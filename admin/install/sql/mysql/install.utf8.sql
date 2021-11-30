@@ -1066,6 +1066,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_statuses` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `image` varchar(255) NOT NULL DEFAULT '',
+  `code` char(5) NOT NULL DEFAULT '',
   `description` text,
   `stock_movements` char(1) NOT NULL DEFAULT '',
   `change_user_group` tinyint(1) NOT NULL DEFAULT '0',
@@ -1764,13 +1765,19 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_submit_items` (
 
 
 -- Data
-INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`) VALUES
-(1, 'COM_PHOCACART_STATUS_PENDING', '1', '1', '-', '1', '0', '0', '1', '0', '[1]'),
-(2, 'COM_PHOCACART_STATUS_CONFIRMED', '1', '2', '=', '1', '0', '1', '1', '1', '[1,3]'),
-(3, 'COM_PHOCACART_STATUS_CANCELED', '1', '3', '+', '1', '0', '1', '2', '2', '[1]'),
-(4, 'COM_PHOCACART_STATUS_SHIPPED', '1', '4', '=', '1', '0', '1', '1', '1', '[1,2,3]'),
-(5, 'COM_PHOCACART_STATUS_REFUNDED', '1', '5', '=', '1', '0', '1', '2', '2', '[1]'),
-(6, 'COM_PHOCACART_STATUS_COMPLETED', '1', '6', '=', '1', '1', '1', '1', '1', '[1,2,3]');
+INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`) VALUES
+(1, 'COM_PHOCACART_STATUS_PENDING', 'P', '1', '1', '-', '1', '0', '0', '1', '0', '[1]'),
+(2, 'COM_PHOCACART_STATUS_CONFIRMED', 'C', '1', '2', '=', '1', '0', '1', '1', '1', '[1,3]'),
+(3, 'COM_PHOCACART_STATUS_CANCELED', 'CL', '1', '3', '+', '1', '0', '1', '2', '2', '[1]'),
+(4, 'COM_PHOCACART_STATUS_SHIPPED', 'S', '1', '4', '=', '1', '0', '1', '1', '1', '[1,2,3]'),
+(5, 'COM_PHOCACART_STATUS_REFUNDED', 'RF', '1', '5', '=', '1', '0', '1', '2', '2', '[1]'),
+(6, 'COM_PHOCACART_STATUS_COMPLETED', 'CE', '1', '6', '=', '1', '1', '1', '1', '1', '[1,2,3]'),
+
+(7, 'COM_PHOCACART_STATUS_FAILED', 'E', '0', '7', '=', '1', '0', '1', '2', '2', '[1]'),
+(8, 'COM_PHOCACART_STATUS_DENIED', 'D', '0', '8', '=', '1', '0', '1', '2', '2', '[1]'),
+(9, 'COM_PHOCACART_STATUS_CANCELLED_REVERSAL', 'CRV', '0', '9', '=', '1', '0', '1', '2', '2', '[1]'),
+(10, 'COM_PHOCACART_STATUS_REVERSED', 'RV', '0', '10', '=', '1', '0', '1', '2', '2', '[1]');
+
 -- -
 INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`) VALUES (NULL, 'COM_PHOCACART_STATUS_OUT_OF_STOCK', '1', '1');
 INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`) VALUES (NULL, 'COM_PHOCACART_STATUS_IN_STOCK', '1', '2');

@@ -578,8 +578,14 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$opt['active'] = $this->s['c']['tabactive'];
 
 	if ($this->s['c']['class-type'] != 'uikit') {
-		HTMLHelper::_('bootstrap.framework');
+		//HTMLHelper::_('bootstrap.framework');
+
+		Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->useScript('bootstrap.tab');
 		Factory::getDocument()->addScriptOptions('bootstrap.tabs', array('PcItemTab' => $opt));
+
 	}
 
 

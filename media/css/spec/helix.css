@@ -6,6 +6,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+.com-phocacart.view-items .modal-backdrop,
+.pc-view .modal-backdrop {
+    z-index: 1040 !important;
+}
+
 /* BS Dropdown */
 .ph-cart-module-box .dropdown button.dropdown-toggle {
     border: 0;

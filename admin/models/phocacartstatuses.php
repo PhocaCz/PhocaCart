@@ -33,7 +33,7 @@ class PhocaCartCpModelPhocaCartStatuses extends ListModel
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = 'a.title', $direction = 'ASC') {
+	protected function populateState($ordering = 'a.ordering', $direction = 'ASC') {
 		// Initialise variables.
 		$app = Factory::getApplication('administrator');
 
