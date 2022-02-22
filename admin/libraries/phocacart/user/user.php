@@ -208,16 +208,26 @@ class PhocacartUser
 		if (!empty($fields)) {
 			foreach($fields as $k => $v) {
 
+
+
 				if ($v->display_billing == 1 || ($app->isClient('administrator') && $v->title == 'id')){
 
 					$value = $form->getValue($v->title);// If form input is required but it is empty, this is wrong
+
+					if($v->type == 'checkbox:text') {
+						// Checkbox field can have set default value e.g. to 1 - that in default it is enabled
+						// so such checkbox is set as checked as default so if we stored that it is disabled, we need to remove checked
+						if(!$value || $value == false || $value == 0 || $value == null || is_null($value)) {
+							$form->setFieldAttribute($v->title. $billingSuffix, 'checked', 'false');
+						}
+					}
 
 					if ($v->required == 1 && $value == '') {
 						$o['filled'] = 0;
 					}
 
 					if ($v->title == 'email' && $guestUser == 0) {
-						$form->setValue($v->title, null, $user->email );
+						$form->setValue($v->title. $billingSuffix, null, $user->email );
 					}
 
 					if (!$app->isClient('administrator')) {
@@ -250,13 +260,28 @@ class PhocacartUser
 
 				if ($v->display_shipping == 1 || ($app->isClient('administrator') && $v->title == 'id')) {
 
-					$value = $form->getValue($v->title);				    // Form input value is required but it is empty
+					$value = $form->getValue($v->title.$shippingSuffix);// Form input value is required but it is empty
+
+
+					if($v->type == 'checkbox:text') {
+
+
+						// Checkbox field can have set default value e.g. to 1 - that in default it is enabled
+						// so such checkbox is set as checked as default so if we stored that it is disabled, we need to remove checked
+						if(!$value || $value == false || $value == 0 || $value == null || is_null($value)) {
+
+
+							$form->setFieldAttribute($v->title.$shippingSuffix, 'checked', 'false');
+
+						}
+					}
+
 					if ($v->required == 1 && $value == '' && $baSa == 0) {  // and we have set that the shipping address
 						$o['filled'] = 0;									// is other than billing
 					}
 
 					if ($v->title == 'email' && $guestUser == 0) {
-						$form->setValue($v->title, null, $user->email );
+						$form->setValue($v->title.$shippingSuffix, null, $user->email );
 					}
 
 					if (!$app->isClient('administrator')) {
@@ -457,6 +482,18 @@ class PhocacartUser
 		$address = $db->loadObjectList();
 		return $address;
 
+	}
+
+	public static function getAllCheckboxesFromFormFields() {
+
+		$db = Factory::getDBO();
+
+		$query = ' SELECT title, published, display_billing, display_shipping, display_account  FROM #__phocacart_form_fields AS a'
+			    .' WHERE a.published = 1'
+				.' AND a.type = '.$db->quote('checkbox:text');
+		$db->setQuery($query);
+		$checkboxes = $db->loadObjectList();
+		return $checkboxes;
 	}
 
 	public static function convertAddressTwo($data, $array = 1) {

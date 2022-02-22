@@ -45,7 +45,7 @@ class PhocacartRenderMedia
         //$params = $app->getParams();// We call media from modules too
         $params                                    = PhocacartUtils::getComponentParameters();
         $this->p['load_bootstrap']                 = $params->get('load_bootstrap', 1);
-        $this->p['load_chosen']                    = $params->get('load_chosen', 1);
+        $this->p['load_chosen']                    = $params->get('load_chosen', 0);
         $this->p['load_main_css']                  = $params->get('load_main_css', 1);
         $this->p['load_spec_css']                  = $params->get('load_spec_css', '');
         $this->p['load_rtl_css']                   = $params->get('load_rtl_css', 0);
@@ -230,6 +230,8 @@ class PhocacartRenderMedia
         $this->document->addScriptOptions('phLangPC', $oLang);
         $this->document->addScriptOptions('phVarsPC', $oVars);
         $this->document->addScriptOptions('phParamsPC', $oParams);
+
+
 
         // Bootstrap 3 Modal transition
         /*if ($this->p['theme'] == 'bs3') {

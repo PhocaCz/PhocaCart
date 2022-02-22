@@ -1977,3 +1977,70 @@ a[target=_blank]::before {
 	font-size: 26px;
 }
 
+
+/* Two rows joined, Shipping Info, Payment Info */
+/*
+.ph-tr-prefix {
+	border-bottom: 1px solid transparent;
+}
+.ph-tr-prefix td {
+	border-bottom: 1px solid transparent;
+}
+.ph-tr-suffix {
+	border-top: 1px solid transparent;
+}
+.ph-tr-suffix td {
+	border-top: 1px solid transparent;
+}*/
+.table-striped.join > tbody > tr.ph-tr-suffix:nth-child(4n) > *,
+.table-striped.join > tbody > tr:nth-child(4n-1) > *{
+    --table-accent-bg: #fff;
+    color: var(--table-striped-color);
+}
+.table-striped.join > tbody > tr:nth-child(4n-2) > *,
+.table-striped.join > tbody > tr:nth-child(4n-3) > * {
+    --table-accent-bg: var(--table-striped-bg);
+    color: var(--table-striped-color);
+	
+}
+
+.table-striped.join > tbody > tr:nth-child(4n-1) > * {
+	border-bottom: 1px solid #fff;
+	padding-bottom: 0;
+}
+.table-striped.join > tbody > tr:nth-child(4n-3) > * {
+	border-bottom: 1px solid var(--table-striped-bg);
+	padding-bottom: 0;
+}
+
+.ph-order-info-box h4 {
+	text-decoration: underline;
+	font-size: 100%;
+}
+.ph-order-info-box {
+	display: flex;
+	flex: 1 1 50%;
+	font-size: 80%;
+}
+.ph-order-info-box .form-control {
+	font-size:100%;
+	max-width: 6em;
+	padding: 0.2em;
+	text-align: center;
+	margin: 0.1em;
+}
+.ph-order-info-box label {
+	font-size: 100%;
+}
+.ph-order-info-box-payment,
+.ph-order-info-box-shipping {
+	min-width: 50%;
+	padding: 0 0.5em 0 0.5em;
+}
+
+.ph-order-info-box-label {
+	min-width: 4em;
+	display: inline-block;
+}
+
+

@@ -1,5 +1,3 @@
-use Joomla\CMS\Form\FormRule;
-use Joomla\CMS\Language\Text;
 <?php
 /**
  * Joomla! Content Management System
@@ -15,6 +13,8 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Form\Form;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
+use Joomla\CMS\Form\FormRule;
+use Joomla\CMS\Language\Text;
 
 
 class JFormRuleAlphanumeric extends FormRule

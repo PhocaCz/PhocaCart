@@ -316,7 +316,7 @@ class PhocacartDownload
 	}
 
 
-	public static function downloadContent($content, $prefix = '', $suffix = '') {
+	public static function downloadContent($content, $prefix = '', $suffix = '', $forceName = '', $forceMimeType = '') {
 
 		$pC 				= PhocacartUtils::getComponentParameters();
 		$import_export_type	= $pC->get( 'import_export_type', 0 );
@@ -328,6 +328,13 @@ class PhocacartDownload
 			$mimeType	= 'application/xml';
 			$name		= "phocacartproductexport.xml";
 		}
+
+        if ($forceName != '') {
+            $name = $forceName;
+        }
+        if ($forceMimeType != '') {
+            $mimeType = $forceMimeType;
+        }
 
 		$content = $prefix . $content . $suffix;
 
@@ -361,6 +368,8 @@ class PhocacartDownload
 		return true;
 		//exit;
 	}
+
+
 
 	public static function getDownloadFilePublic($id) {
 

@@ -77,7 +77,7 @@ class PhocacartShipping
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
 		.' s.highest_weight, s.default,'
-		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
 		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
@@ -86,7 +86,7 @@ class PhocacartShipping
 		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
 		.' s.active_weight, s.active_size,'
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height,'
+		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
 		.' s.highest_weight, s.default,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type';
 		$groupsFast		= 's.id';
@@ -740,6 +740,7 @@ class PhocacartShipping
 
 			$session 		= Factory::getSession();
 			$session->set('guestshipping', false, 'phocaCart');
+			$session->set('guestshippingparams', false, 'phocaCart');
 		}
 
 		if ($type == 0) {
@@ -761,8 +762,17 @@ class PhocacartShipping
 				}
 			}
 
-			$query = 'UPDATE #__phocacart_cart_multiple SET shipping = ' . (int)$pos_shipping_force
-				. ' WHERE user_id = ' . (int)$user->id
+
+
+			$query = 'UPDATE #__phocacart_cart_multiple SET shipping = ' . (int)$pos_shipping_force;
+
+			// Remove shipping params too
+			if ((int)$pos_shipping_force == 0) {
+				$query .= ', params_shipping = \'\'';
+			}
+
+
+				$query .= ' WHERE user_id = ' . (int)$user->id
 				. ' AND vendor_id = ' . (int)$vendor->id
 				. ' AND ticket_id = ' . (int)$ticket->id
 				. ' AND unit_id = ' . (int)$unit->id

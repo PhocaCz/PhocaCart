@@ -474,7 +474,7 @@ class PhocacartTag
 		switch ($type) {
 
 			case 1:
-				return Text::_('COM_PHOCACART_TAG_LABEL');
+				return Text::_('COM_PHOCACART_LABEL');
 			break;
 
 			default:

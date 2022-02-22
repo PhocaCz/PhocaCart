@@ -12,6 +12,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 
 $d = new PhocacartPrice();
@@ -19,6 +20,18 @@ $d->setCurrency(1, 6);
 
 $b = new PhocacartPrice();
 $b->setCurrency(1, 0);
+
+$shipping = new PhocacartShipping();
+$payment = new PhocacartPayment();
+
+// Display additional info about shipping or payment
+// For this we need additional tr table rows so we need to change table CSS
+$tableClass = '';
+if ($this->t['filter-ps-opened'] == 1) {
+    $tableClass= 'join';
+}
+
+$cols = 13;// number of columns
 
 
 $r               = $this->r;
@@ -69,7 +82,7 @@ $rV = new PhocacartRenderAdminview();
 echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
 
-echo $r->startTable('orderList');
+echo $r->startTable('orderList', $tableClass);
 
 echo $r->startTblHeader();
 
@@ -123,7 +136,10 @@ if (is_array($this->items)) {
         $linkOrderViewHandler = 'onclick="window.open(this.href, \'orderview\', \'width=780,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';
 
 
-        echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
+        // Specific multiselect in media/com_phocacart/js/administrator/phocacart.js for orders view where two columns are together
+        // ph-row-multiselect (active row for select) vs. ph-row-no-multiselect (row which is inactive, only has some additional info)
+        // the checkbox for selecting row has class: ph-select-row in Adminviews.php in method firstColumn
+        echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0, $item->id, -1, '', 'ph-row-multiselect ');
 
         echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
         echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
@@ -194,6 +210,12 @@ if (is_array($this->items)) {
         }
         $info .= '</div>';
 
+
+
+
+
+
+
         echo $r->td($info, "small");
         // ACTION
         $view = '<div class="ph-action-row">';
@@ -231,7 +253,100 @@ if (is_array($this->items)) {
 
         echo $r->td($item->id, "small");
 
+
+
+
+
         echo $r->endTr();
+
+
+        // Display additional information about shipping and paymnet
+        if ($this->t['filter-ps-opened'] == 1) {
+
+            // Specific multiselect in media/com_phocacart/js/administrator/phocacart.js for orders view where two columns are together
+            // ph-row-multiselect (active row for select) vs. ph-row-no-multiselect (row which is inactive, only has some additional info)
+            // the checkbox for selecting row has class: ph-select-row in Adminviews.php in method firstColumn
+            echo $r->startTr($i, $item->id, 0, -1, '', 'ph-row-no-multiselect');
+
+            echo '<td colspan="'.$cols.'"><div class="ph-order-info-box">';
+
+
+            if ($item->shipping_id > 0) {
+
+                $paramsShipping = json_decode($item->params_shipping, true);
+                echo '<div class="ph-order-info-box-shipping">';
+                echo '<h4>'. Text::_('COM_PHOCACART_SHIPPING_INFORMATION'). '</h4>';
+
+
+
+                $titleExistsS = 0;
+                if (isset($paramsShipping['title']) && $paramsShipping['title'] != '') {
+                    echo '<div><b>' . Text::_('COM_PHOCACART_SHIPPING_METHOD') . '</b>: ' . $paramsShipping['title'] . '</div>';
+                    $titleExistsS = 1;
+                }
+                if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
+
+
+
+                    $shippingInfo             = $shipping->getShippingMethod($item->shipping_id);
+                    if ($titleExistsS == 0 && isset($shippingInfo->title) && $shippingInfo->title != '') {
+                        echo '<div><b>' . Text::_('COM_PHOCACART_SHIPPING_METHOD') . '</b>: ' . $shippingInfo->title . '</div>';
+                    }
+
+
+                    PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($paramsShipping['method'])));
+                    $eventData               			= array();
+                    $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsShipping['method']));
+                    $results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $shippingInfo, $eventData));
+
+                    if (!empty($results)) {
+                        echo trim(implode("\n", $results));
+                    }
+                }
+                echo  '</div>';
+            }
+
+            if ($item->payment_id > 0) {
+
+                $paramsPayment = json_decode($item->params_payment, true);
+
+                echo '<div class="ph-order-info-box-payment">';
+                echo '<h4>'. Text::_('COM_PHOCACART_PAYMENT_INFORMATION'). '</h4>';
+
+                $titleExistsP = 0;
+                if (isset($paramsPayment['title']) && $paramsPayment['title'] != '') {
+                    echo '<div><b>' . Text::_('COM_PHOCACART_PAYMENT_METHOD') . '</b>: ' . $paramsPayment['title'] . '</div>';
+                    $titleExistsP = 1;
+                }
+
+                if (isset($paramsPayment['method']) && $paramsPayment['method'] != '') {
+
+                    $paymentInfo             = $payment->getPaymentMethod($item->payment_id);
+                    if ($titleExistsP == 0 && isset($paymentInfo->title) && $paymentInfo->title != '') {
+                        echo '<div><b>' . Text::_('COM_PHOCACART_PAYMENT_METHOD') . '</b>: ' . $paymentInfo->title . '</div>';
+                    }
+
+                    PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paramsPayment['method'])));
+                    $eventData               			= array();
+                    $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsPayment['method']));
+                    $results = Factory::getApplication()->triggerEvent('onPCPgetPaymentBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $paymentInfo, $eventData));
+
+                    if (!empty($results)) {
+                        echo trim(implode("\n", $results));
+                    }
+
+                }
+                echo  '</div>';
+            }
+
+
+            echo  '</div></td>';
+            echo $r->endTr();
+        }
+
+
+
+
 
         //}
     }

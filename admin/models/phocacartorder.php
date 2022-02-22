@@ -89,6 +89,10 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 	protected function prepareTable($table) {
 		$table->currency_exchange_rate 			= PhocacartUtils::replaceCommaWithPoint($table->currency_exchange_rate);
+
+		if ($table->tracking_date_shipped == '0' || $table->tracking_date_shipped == '') {
+			$table->tracking_date_shipped = '0000-00-00 00:00:00';
+		}
 	}
 
 
@@ -135,9 +139,8 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 				}
 			}
 
-
 			$billingO 	= $this->storeOrderAddress($billing);
-			$shippingO 	= $this->storeOrderAddress($shipping);
+			$shippingO 	= $this->storeOrderAddress($shipping, 1, $data['id']);
 		}
 
 		// Products
@@ -200,6 +203,10 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
+
+
+
+
 
 		$currentStatus 	= 0;
 		$newStatus 		= $data['status_id'];
@@ -362,8 +369,23 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		}
 	}
 
-	public function storeOrderAddress($d) {
+	public function storeOrderAddress($d, $type = 0, $orderId = 0) {
 		$row = Table::getInstance('PhocacartOrderUsers', 'Table', array());
+
+
+		// it can happen that shipping (delivery) address was not created yet
+		if ($type == 1) {
+			if (!isset($d['id']) || (isset($d['id']) && (int)$d['id'] < 1)) {
+				if ((int)$orderId < 1) {
+					return false;
+				}
+
+				$d['order_id'] = (int)$orderId;
+				$d['type'] = 1;
+			}
+		}
+
+
 
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
@@ -373,6 +395,13 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		if (!$row->check()) {
 			throw new Exception($row->getError());
 			return false;
+		}
+
+		if ($row->country == '') {
+			$row->country = 0;
+		}
+		if ($row->region == '') {
+			$row->region = 0;
 		}
 
 		if (!$row->store()) {

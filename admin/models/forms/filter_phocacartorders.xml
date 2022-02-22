@@ -17,6 +17,14 @@
 		<field name="status_id" default="" type="PhocacartOrderstatus" typemethod="2" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC"  onchange="this.form.submit();">
 			</field>
 
+            <field name="payment_id" default="" type="PhocacartPaymentMethod" typemethod="2" label="COM_PHOCACART_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_PAYMENT_METHOD_DESC"  onchange="this.form.submit();">
+			</field>
+
+        <field name="shipping_id" default="" type="PhocacartShippingMethod" typemethod="2" label="COM_PHOCACART_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_SHIPPING_METHOD_DESC"  onchange="this.form.submit();">
+			</field>
+
+
+
 		
 		
 		<input type="hidden" name="form_submited" value="1"/>

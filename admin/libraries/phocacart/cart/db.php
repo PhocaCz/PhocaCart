@@ -26,7 +26,7 @@ class PhocacartCartDb
 		if(!isset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId])){
 
 			$db 	= Factory::getDBO();
-			$query = ' SELECT c.cart, c.shipping, c.payment, c.coupon, c.reward, c.loyalty_card_number,'
+			$query = ' SELECT c.cart, c.shipping, c.params_shipping, c.payment, c.params_payment, c.coupon, c.reward, c.loyalty_card_number,'
 					.' s.title as shippingtitle, s.method as shippingmethod, s.image as shippingimage, p.title as paymenttitle, p.method as paymentmethod, p.image as paymentimage,'
 					.' co.title as coupontitle, co.code as couponcode'
 					.' FROM #__phocacart_cart_multiple AS c'
@@ -81,6 +81,8 @@ class PhocacartCartDb
 				$cartDb['couponcode'] 			= '';
 				$cartDb['reward']				= '';
 				$cartDb['loyalty_card_number']	= '';
+				$cartDb['params_shipping']		= array();
+				$cartDb['params_payment']		= array();
 				self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId] = $cartDb;
 			}
 

@@ -172,6 +172,29 @@ class PhocaCartCpModelPhocacartUser extends AdminModel
 			}
 		}
 
+		// Get all checkboxes, because they are not sent in POST if they are set to not checked CHECKBOXMISSING
+		$checkboxes = PhocacartUser::getAllCheckboxesFromFormFields();
+
+		if (!empty($checkboxes)) {
+			foreach($checkboxes as $k => $v) {
+				if ($v->display_billing == 1) {
+					$title = $v->title;
+
+					if(!isset($data[$title])) {
+						$data[$title] = false;
+					}
+				}
+
+				if ($v->display_shipping == 1) {
+					$title = $v->title. '_phs';
+
+					if(!isset($data[$title])) {
+						$data[$title] = false;
+					}
+				}
+			}
+		}
+		// ---
 
 		if (!$row->bind($data)) {
 			$this->setError($row->getError());

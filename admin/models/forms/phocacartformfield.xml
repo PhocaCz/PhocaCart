@@ -25,6 +25,9 @@
 <option value="calendar:datetime">calendar - datetime</option>
 <option value="phocaformcountry:int(11)">country int(11)</option>
 <option value="phocaformregion:int(11)">region int(11)</option>
+<option value="list:text">list - text</option>
+<option value="checkbox:text">checkbox - text</option>
+<option value="radio:text">radio - text</option>
 </field>
 
 

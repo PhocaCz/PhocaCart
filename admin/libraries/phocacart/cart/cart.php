@@ -88,12 +88,14 @@ class PhocacartCart
         $this->shipping['method']          = '';
         $this->shipping['costs']           = 0;
         $this->shipping['image']           = '';
+        $this->shipping['params_shipping'] = array();// For example shipping branch info
         $this->payment['id']               = 0;
         $this->payment['title']            = '';
         $this->payment['method']           = '';
         $this->payment['costs']            = 0;
         $this->payment['calculation_type'] = 0;
         $this->payment['image']            = '';
+        $this->payment['params_payment']    = array();
         $this->stock['valid']              = 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
         $this->minqty['valid']             = 1;// check minimum order quantity
         $this->minmultipleqty['valid']     = 1;// check minimum multiple order quantity
@@ -115,10 +117,12 @@ class PhocacartCart
             $this->shipping['title']   = $cartDb['shippingtitle'];
             $this->shipping['method']  = $cartDb['shippingmethod'];
             $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->shipping['params_shipping']   = $cartDb['params_shipping'];
             $this->payment['id']       = $cartDb['payment'];
             $this->payment['title']    = $cartDb['paymenttitle'];
             $this->payment['method']   = $cartDb['paymentmethod'];
             $this->payment['image']    = $cartDb['paymentimage'];
+            $this->payment['params_payment']   = $cartDb['params_payment'];
             $this->reward['used']      = $cartDb['reward'];
             $this->loyalty_card_number = $cartDb['loyalty_card_number'];
 
@@ -140,10 +144,12 @@ class PhocacartCart
             $this->shipping['title']   = $cartDb['shippingtitle'];
             $this->shipping['method']  = $cartDb['shippingmethod'];
             $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->shipping['params_shipping']   = $cartDb['params_shipping'];
             $this->payment['id']       = $cartDb['payment'];
             $this->payment['title']    = $cartDb['paymenttitle'];
             $this->payment['method']   = $cartDb['paymentmethod'];
             $this->payment['image']    = $cartDb['paymentimage'];
+            $this->payment['params_payment']   = $cartDb['params_payment'];
             $this->reward['used']      = $cartDb['reward'];
             $this->loyalty_card_number = $cartDb['loyalty_card_number'];
 
@@ -168,10 +174,12 @@ class PhocacartCart
             $this->shipping['title']   = $cartDb['shippingtitle'];
             $this->shipping['method']  = $cartDb['shippingmethod'];
             $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->shipping['params_shipping']   = $cartDb['params_shipping'];
             $this->payment['id']       = $cartDb['payment'];
             $this->payment['title']    = $cartDb['paymenttitle'];
             $this->payment['method']   = $cartDb['paymentmethod'];
             $this->payment['image']    = $cartDb['paymentimage'];
+            $this->payment['params_payment']   = $cartDb['params_payment'];
             $this->reward['used']      = $cartDb['reward'];
             $this->loyalty_card_number = $cartDb['loyalty_card_number'];
             $sessionItems              = $session->get('cart', array(), 'phocaCart');
@@ -217,6 +225,10 @@ class PhocacartCart
             $this->items = $session->get('cart', array(), 'phocaCart');
 
             $this->shipping['id'] = $session->get('guestshipping', false, 'phocaCart');
+
+            $this->shipping['params_shipping'] = $session->get('guestshippingparams', false, 'phocaCart');
+
+
             if ((int)$this->shipping['id'] > 0) {
                 $shippingObject = new PhocacartShipping();
                 $shippingObject->setType($this->type);
@@ -227,6 +239,7 @@ class PhocacartCart
             }
 
             $this->payment['id'] = $session->get('guestpayment', false, 'phocaCart');
+            $this->payment['params_payment'] = $session->get('guestpaymentparams', false, 'phocaCart');
             if ((int)$this->payment['id'] > 0) {
                 $paymentObject = new PhocacartPayment();
                 $paymentObject->setType($this->type);
@@ -905,6 +918,7 @@ class PhocacartCart
         $payment['method'] = $this->payment['method'];
         $payment['id']     = $this->payment['id'];
         $payment['image']  = $this->payment['image'];
+        $payment['params_payment']  = $this->payment['params_payment'];
 
         // E.g. guest checkout
         if (isset($payment['id']) && (int)$payment['id'] > 0 && $payment['title'] == '' && $payment['method'] == '') {
@@ -936,6 +950,7 @@ class PhocacartCart
         $shipping['method'] = $this->shipping['method'];
         $shipping['id']     = $this->shipping['id'];
         $shipping['image']  = $this->shipping['image'];
+        $shipping['params_shipping']  = $this->shipping['params_shipping'];
 
 
         // E.g. guest checkout
@@ -1119,6 +1134,8 @@ class PhocacartCart
                 $this->shipping['costs']['image']              = $sI->image;
                 $this->shipping['costs']['method']             = $sI->method;
 
+                $this->shipping['costs']['params_shipping']    = !empty($this->shipping['params_shipping']) ? $this->shipping['params_shipping'] : array();
+
                 // Update even the shipping info
                 $this->shipping['id']     = $sI->id;
                 $this->shipping['title']  = $sI->title;
@@ -1189,6 +1206,8 @@ class PhocacartCart
                 $this->payment['costs']['description']        = $pI->description;
                 $this->payment['costs']['image']              = $pI->image;
                 $this->payment['costs']['method']             = $pI->method;
+
+                $this->payment['costs']['params_payment']    = !empty($this->payment['params_payment']) ? $this->payment['params_payment'] : array();
 
                 // Update even the payment info
                 $this->payment['id']     = $pI->id;

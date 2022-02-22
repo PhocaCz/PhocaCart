@@ -52,14 +52,16 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 						 .str_replace('&amp;', '&', $group['c']).'&folder='.$parent.'&tab='.(string)$tab.'&field='.$field;
 			$path	= PhocacartPath::getPath($manager);// we use viewback to get right path
 		} else {
-			$app->redirect('index.php?option=com_phocacart', Text::_('COM_PHOCACART_ERROR_CONTROLLER_MANAGER_NOT_SET'));
+            $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_CONTROLLER_MANAGER_NOT_SET'), 'error');
+			$app->redirect('index.php?option=com_phocacart');
 			exit;
 		}
 
 		Factory::getApplication()->input->set('folder', $parent);
 
 		if (($folderCheck !== null) && ($folderNew !== $folderCheck)) {
-			$app->redirect($link, Text::_('COM_PHOCACART_WARNING_DIRNAME'));
+            $app->enqueueMessage(Text::_('COM_PHOCACART_WARNING_DIRNAME'), 'error');
+			$app->redirect($link);
 		}
 
 		if (strlen($folderNew) > 0) {
@@ -90,12 +92,15 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
 					File::write($folder."/index.html", $data);
 				} else {
-					$app->redirect($link, Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING'));
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING'), 'error');
+					$app->redirect($link);
 				}
 
-				$app->redirect($link, Text::_('COM_PHOCACART_SUCCESS_FOLDER_CREATING'));
+                $app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_FOLDER_CREATING'), 'success');
+				$app->redirect($link);
 			} else {
-				$app->redirect($link, Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING_EXISTS'));
+                $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING_EXISTS'), 'error');
+				$app->redirect($link);
 			}
 			//JFactory::getApplication()->input->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
 		}

@@ -13,3 +13,9 @@
 --(8, 'COM_PHOCACART_STATUS_DENIED', 'D', '0', '8', '=', '1', '0', '1', '2', '2', '[1]'),
 --(9, 'COM_PHOCACART_STATUS_CANCELED_REVERSAL', 'CRV', '0', '9', '=', '1', '0', '1', '2', '2', '[1]'),
 --(10, 'COM_PHOCACART_STATUS_REVERSED', 'RV', '0', '10', '=', '1', '0', '1', '2', '2', '[1]');
+
+
+-- 4.0.0 Beta ==> RC
+-- ALTER TABLE `#__phocacart_cart_multiple` ADD COLUMN `params_shipping` text;
+-- ALTER TABLE `#__phocacart_cart_multiple` ADD COLUMN `params_payment` text;
+-- ALTER TABLE `#__phocacart_orders` ADD COLUMN `unit_size` varchar(50) NOT NULL DEFAULT '';

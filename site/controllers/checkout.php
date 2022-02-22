@@ -126,6 +126,8 @@ class PhocaCartControllerCheckout extends FormController
         $item['jform']          = $this->input->get('jform', array(), 'array');
         $item['phcheckoutbsas'] = $this->input->get('phcheckoutbsas', false, 'string');
 
+
+
         $paramsC                       = PhocacartUtils::getComponentParameters();
         $delivery_billing_same_enabled = $paramsC->get('delivery_billing_same_enabled', 0);
 
@@ -144,6 +146,32 @@ class PhocaCartControllerCheckout extends FormController
             $billing     = array();
             $shipping    = array();
             $shippingPhs = array();// shipping including postfix
+
+
+
+            // Get all checkboxes, because they are not sent in POST if they are set to not checked CHECKBOXMISSING
+            $checkboxes = PhocacartUser::getAllCheckboxesFromFormFields();
+
+            if (!empty($checkboxes)) {
+                foreach($checkboxes as $k => $v) {
+                    if ($v->display_billing == 1) {
+                        $title = $v->title;
+
+                        if(!isset($item['jform'][$title])) {
+                            $item['jform'][$title] = false;
+                        }
+                    }
+
+                    if ($v->display_shipping == 1) {
+                        $title = $v->title. '_phs';
+
+                        if(!isset($item['jform'][$title])) {
+                            $item['jform'][$title] = false;
+                        }
+                    }
+                }
+            }
+            // ---
 
             $bas         = PhocacartUser::convertAddressTwo($item['jform']);
             $billing     = $bas[0];
@@ -179,6 +207,18 @@ class PhocaCartControllerCheckout extends FormController
                         $form->setFieldAttribute($field->fieldname, 'unique', 'false');
                     }
 
+                    if (strtolower($field->type) == 'checkbox') {
+                        // when checkbox is unchecked, it is not sent in form
+                        // so we need to create it with false
+                        $fieldName = $field->fieldname;
+                        if(!isset($item['jform'][$fieldName])) {
+
+                            $item['jform'][$fieldName] = false;
+                        }
+                    }
+
+
+
 
                     if (isset($billing[$name])) {
                         // such field exists in billing, require it if set in rules, validate
@@ -208,6 +248,10 @@ class PhocaCartControllerCheckout extends FormController
                         $form->setFieldAttribute($field->fieldname, 'required', 'false');
                         $form->setFieldAttribute($field->fieldname, 'validate', '');
 
+                    }
+
+                    if ((int)$field->maxLength > 0) {
+                        $form->setFieldAttribute($field->fieldname, 'validate', 'PhocaCartMaxlength');
                     }
                 }
             } else {
@@ -263,6 +307,7 @@ class PhocaCartControllerCheckout extends FormController
             }
 
         } else {
+
 
             if (!empty($billing)) {
                 if (!$model->saveAddress($billing)) {
@@ -320,17 +365,20 @@ class PhocaCartControllerCheckout extends FormController
         $item                  = array();
         $item['return']        = $this->input->get('return', '', 'string');
         $item['phshippingopt'] = $this->input->get('phshippingopt', array(), 'array');
+        $item['phshippingmethodfield'] = $this->input->get('phshippingmethodfield', array(), 'array');
         $guest                 = PhocacartUserGuestuser::getGuestUser();
         $msgSuffix             = '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
         $checkPayment = 0;
+
+
 
         if (!empty($item['phshippingopt']) && isset($item['phshippingopt'][0]) && (int)$item['phshippingopt'][0] > 0) {
 
             $model = $this->getModel('checkout');
 
             if ($guest) {
-                if (!$model->saveShippingGuest((int)$item['phshippingopt'][0])) {
+                if (!$model->saveShippingGuest((int)$item['phshippingopt'][0], $item['phshippingmethodfield'])) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                 } else {
@@ -340,7 +388,7 @@ class PhocaCartControllerCheckout extends FormController
                 }
 
             } else {
-                if (!$model->saveShipping((int)$item['phshippingopt'][0])) {
+                if (!$model->saveShipping((int)$item['phshippingopt'][0], $item['phshippingmethodfield'])) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                 } else {

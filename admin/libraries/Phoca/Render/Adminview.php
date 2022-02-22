@@ -245,12 +245,12 @@ class Adminview
 
 					$o .=
 
-					//	'<div class="control-group">'."\n"
-					 '<div class="control-label">'. $form->getLabel($value) . $descriptionOutput . '</div>'."\n"
+						'<div class="control-group-clear">'."\n"
+					 .'<div class="control-label">'. $form->getLabel($value) . $descriptionOutput . '</div>'."\n"
 					//. '<div class="clearfix"></div>'. "\n"
 					. '<div>' . $form->getInput($value). '</div>'."\n"
-					. '<div class="clearfix"></div>' . "\n";
-					//. '</div>'. "\n";
+					. '<div class="clearfix"></div>' . "\n"
+					. '</div>'. "\n";
 
 				}
 			} else {
@@ -312,7 +312,7 @@ class Adminview
 
 		$o = '';
 		$o .= '<div class="control-group">'."\n";
-		$o .= '<div class="control-label">'. $label . $descriptionOutput . '</div>'."\n"
+		$o .= '<div class="control-label"><label>'. $label .'</label>'. $descriptionOutput . '</div>'."\n"
 		. '<div class="controls">' . $item.'</div>'."\n"
 		. '</div>' . "\n";
 		return $o;
@@ -321,7 +321,7 @@ class Adminview
 	public function itemText($item, $label, $class = '') {
 		$o = '';
 		$o .= '<div class="control-group ph-control-group-text">'."\n";
-		$o .= '<div class="control-label">'. $label . '</div>'."\n"
+		$o .= '<div class="control-label"><label>'. $label . '</label></div>'."\n"
 		. '<div class="controls '.$class.'">' . $item.'</div>'."\n"
 		. '</div>' . "\n";
 		return $o;

@@ -560,5 +560,42 @@ class PhocacartUtils
 
 		return false;
 	}
+
+	public static function convertWeightToKg($weight, $unit){
+
+        if ($unit == 'kg') {
+            return $weight;
+        } else if ($unit == 'g') {
+            return $weight/1000;
+        } else if ($unit == 'lb') {
+            return $weight*0.45359237;
+        } else if ($unit == 'oz') {
+            return $weight*0.0283495231;
+        } else {
+            return $weight;
+        }
+
+	}
+
+	public static function convertWeightFromKg($weight, $unit){
+
+        if ($unit == 'kg') {
+            return $weight;
+        } else if ($unit == 'g') {
+            return $weight*1000;
+        } else if ($unit == 'lb') {
+            return $weight/0.45359237;
+        } else if ($unit == 'oz') {
+            return $weight/0.0283495231;
+        } else {
+            return $weight;
+        }
+
+	}
+
+	public static function getNumberFromText($text) {
+
+		return (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
+	}
 }
 ?>

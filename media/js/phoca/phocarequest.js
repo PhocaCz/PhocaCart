@@ -319,6 +319,8 @@ jQuery(document).ready(function(){
 	// :: EVENT (SUBMIT) Item View
 	//jQuery(".phItemCartBoxForm").on(\'submit\', function (e) {// Not working when form is added by ajax
 	jQuery(document).on("submit", "form.phItemCartBoxForm", function (e) { // Works with forms added by ajax
+
+		
 		if (typeof phDoSubmitFormAddToCart === "function") {
 			e.preventDefault();
 			var sFormData = jQuery(this).serialize();

@@ -2255,3 +2255,7 @@ img.ph-lazyload:not([src]) {
 .ph-item-parameter-box .badge {
     margin: 0.2em;
 }
+
+.ph-disabled {
+    opacity: 0.25;
+}

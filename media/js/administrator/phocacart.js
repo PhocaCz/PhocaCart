@@ -52,6 +52,16 @@ jQuery(document).ready(function() {
 	})
 })
 
+/* Event - specific multiselect in orders view because of two rows at once */
+jQuery(document).on("click", "tr.ph-row-multiselect", function() {
+	el = jQuery(this).find('.ph-select-row input:checkbox.form-check-input')[0];
+	el.checked = ! el.checked;
+	Joomla.isChecked(el.checked);
+});
+jQuery(document).on("click", '.ph-select-row input:checkbox.form-check-input', function(e) {
+	e.stopPropagation();
+})
+
 
 
 

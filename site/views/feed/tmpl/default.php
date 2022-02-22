@@ -71,7 +71,7 @@ if (!empty($this->t['products'])) {
         }
 
         if ($this->p['item_title'] != '' && isset($v->title) && $v->title != '') {
-            $oI['item_article'] = $l.$this->p['item_title'].$r.htmlspecialchars($v->title).$e.$this->p['item_title'].$r;
+            $oI['item_title'] = $l.$this->p['item_title'].$r.htmlspecialchars($v->title).$e.$this->p['item_title'].$r;
         }
 
         if ($this->p['item_title_extended'] != '' && isset($v->title) && $v->title != '') {

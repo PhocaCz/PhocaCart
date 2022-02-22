@@ -92,7 +92,7 @@ function phUpdatePageAndParts(url, source) {
 	} else {
 		window.history.pushState({},"", url);// update URL
 	}
-	
+
 
 	if (url != '') {
 		// Remove format and set the raw
@@ -108,7 +108,7 @@ function phUpdatePageAndParts(url, source) {
 	urlModule = phRemoveParamFromUrl('module', urlModule);
 
 	urlModule = urlModule.substring(urlModule.indexOf('?') + 1);
-	
+
 	var urlSearchModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_search';
 	var urlFilterModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_filter';
 
@@ -116,15 +116,15 @@ function phUpdatePageAndParts(url, source) {
 	if (urlModule.indexOf("?") == 0) {
 		urlSearchModule = urlSearchModule + '&' +urlModule.substr(1);
 		urlFilterModule = urlFilterModule + '&' +urlModule.substr(1);
-		
+
 	} else if (urlModule.indexOf("&") == 0) {
 		urlSearchModule = urlSearchModule + urlModule;
 		urlFilterModule = urlFilterModule + urlModule;
-		
+
 	} else {
 		urlSearchModule = urlSearchModule + '&' + urlModule;
 		urlFilterModule = urlFilterModule + '&' + urlModule;
-		
+
 	}
 
 	if (typeof phParamsS != 'undefined' && phVars['mod_phocacart_search'] == 1 && phParamsS['displayActiveParameters'] == 1) {
@@ -221,6 +221,8 @@ function phDisableRequirement() {
 			jQuery(".phShippingFormFieldsRequired").trigger("chosen:updated");
 			jQuery(".phShippingFormFields").trigger("chosen:updated");
 		}
+
+		jQuery('#phShippingAddress').addClass('ph-disabled');
 	} else {
 		jQuery(".phShippingFormFieldsRequired").prop('aria-required', 'true');
 		jQuery(".phShippingFormFieldsRequired").prop('required', 'true');
@@ -232,6 +234,7 @@ function phDisableRequirement() {
 			jQuery(".phShippingFormFieldsRequired").trigger("chosen:updated");
 			jQuery(".phShippingFormFields").trigger("chosen:updated");
 		}
+		jQuery('#phShippingAddress').removeClass('ph-disabled');
 	}
 }
 
@@ -282,20 +285,20 @@ function phEventChangeFormPagination(sForm, sItem) {
 }
 
 function phNumberFormat (number, decimals, decPoint, thousandsSep) {
-  
+
 	number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
 	var n = !isFinite(+number) ? 0 : +number
 	var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
 	var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
 	var dec = (typeof decPoint === 'undefined') ? '.' : decPoint
 	var s = ''
-  
+
 	var toFixedFix = function (n, prec) {
 	  var k = Math.pow(10, prec)
 	  return '' + (Math.round(n * k) / k)
 		.toFixed(prec)
 	}
-  
+
 	// @to do: for IE parseFloat(0.55).toFixed(0) = 0;
 	s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.')
 	if (s[0].length > 3) {
@@ -305,7 +308,7 @@ function phNumberFormat (number, decimals, decPoint, thousandsSep) {
 	  s[1] = s[1] || ''
 	  s[1] += new Array(prec - s[1].length + 1).join('0')
 	}
-  
+
 	return s.join(dec)
 }
 

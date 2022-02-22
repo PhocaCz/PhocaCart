@@ -93,6 +93,7 @@ class PhocacartText {
 		$body = isset($replace['iban'])						? str_replace('{iban}', $replace['iban'], $body)									: $body;
 		$body = isset($replace['bicswift'])					? str_replace('{bicswift}', $replace['bicswift'], $body)							: $body;
 		$body = isset($replace['totaltopaynoformat'])		? str_replace('{totaltopaynoformat}', $replace['totaltopaynoformat'], $body)		: $body;
+        $body = isset($replace['totaltopaynoformatcomma'])	? str_replace('{totaltopaynoformatcomma}', $replace['totaltopaynoformatcomma'], $body)	: $body;
 		$body = isset($replace['currencycode'])				? str_replace('{currencycode}', $replace['currencycode'], $body)		            : $body;
 
         $body = isset($replace['openingtimesinfo'])			? str_replace('{openingtimesinfo}', $replace['openingtimesinfo'], $body)		    : $body;
@@ -342,6 +343,7 @@ class PhocacartText {
 		$r['invoicetimeofsupply']	= PhocacartOrder::getInvoiceDate($orderId, $common->invoice_time_of_supply, 'Y-m-d');
 		$totalToPay					= isset($totalBrutto[0]->amount) ? $totalBrutto[0]->amount : 0;
 		$r['totaltopaynoformat']	= number_format($totalToPay, 2, '.', '');
+        $r['totaltopaynoformatcomma']	= number_format($totalToPay, 2, ',', '');
 		$r['totaltopay']			= $price->getPriceFormat($totalToPay, 0, 1);
         $r['paymenttitle'] 		    = PhocacartOrderView::getPaymentTitle($common);
         $r['paymentdescriptioninfo'] 		= PhocacartOrderView::getPaymentDescriptionInfo($common);

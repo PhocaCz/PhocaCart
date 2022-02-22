@@ -1259,19 +1259,28 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$table 	= $this->getTable('PhocacartProductCategories', 'Table');
 
 		// CURRENT CATEGORY
-		$app 			= Factory::getApplication('administrator');
-		$filter 	= $app->input->post->get('filter', array(), 'array');
+		$app 			= Factory::getApplication();
+		/*$filter 	= $app->input->post->get('filter', array(), 'array');
 
 		$currentCatid = 0;
 		if (isset($filter['category_id'])) {
 			$currentCatid = (int)$filter['category_id'];
-		}
+		}*/
+		// Joomla BUG: https://github.com/joomla/joomla-cms/issues/36346 $this->t['catid']
+        // Add catid to the URL instead of sending in POST
+        // administrator/components/com_phocacart/views/phocacartitems/tmpl/default.php 37
 
+		$catid 	= $app->input->get('catid', 0, 'int');
+
+		$currentCatid = 0;
+		if ((int)$catid > 0) {
+			$currentCatid = (int)$catid;
+		}
 
 		$tableClassName = get_class($table);
 		$contentType = new UCMType;
 		$type = $contentType->getTypeByTable($tableClassName);
-		$tagsObserver = $table->getObserverOfClass('Tags');
+		//$tagsObserver = $table->getObserverOfClass('Tags');
 		$conditions = array();
 
 
@@ -1304,7 +1313,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 				if ($type)
 				{
-					$this->createTagsHelper($tagsObserver, $type, $pk, $type->type_alias, $table);
+					//$this->createTagsHelper($tagsObserver, $type, $pk, $type->type_alias, $table);
 				}
 
 				if (!$table->store())

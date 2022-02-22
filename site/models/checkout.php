@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Object\CMSObject;
@@ -156,12 +157,18 @@ class PhocaCartModelCheckout extends FormModel
 		}
 		//$row->bind($data);
 
+
 		if (!$row->bind($data)) {
 			$this->setError($row->getError());
 			return false;
 		}
 
+
+
+
+
 		$row->date = gmdate('Y-m-d H:i:s');
+
 
 		if (!$row->check()) {
 			$this->setError($row->getError());
@@ -176,7 +183,7 @@ class PhocaCartModelCheckout extends FormModel
 		return $row->id;
 	}
 
-	public function saveShipping($shippingId) {
+	public function saveShipping($shippingId, $shippingParams = array()) {
 
 		$app	= Factory::getApplication();
 		$user 	= PhocacartUser::getUser();
@@ -209,6 +216,24 @@ class PhocaCartModelCheckout extends FormModel
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_SHIPPING_METHOD_CANNOT_BE_SET'), 'error');
 			return false;
 		}
+
+
+		// Store information from Shipping method e.g. info about Branch (but test all the params)
+		$data['params_shipping'] = '';
+		if (!empty($shippingParams)){
+
+			if (isset($isValidShipping[0]->method) && $isValidShipping[0]->method != ''){
+
+				PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($isValidShipping[0]->method)));
+				$eventData 					= array();
+				$eventData['pluginname'] 	= htmlspecialchars(strip_tags($isValidShipping[0]->method));
+				$results 					= Factory::getApplication()->triggerEvent('onPCScheckShippingBranchFormFields', array('com_phocacart.checkout', &$shippingParams, $isValidShipping[0], $eventData));
+				$data['params_shipping']	= json_encode($shippingParams);
+
+			}
+		}
+
+
 
 		if (!$row->bind($data)) {
 			$this->setError($row->getError());
@@ -557,15 +582,57 @@ class PhocaCartModelCheckout extends FormModel
 		return false;
 	}
 
-	public function saveShippingGuest($shippingId) {
+	public function saveShippingGuest($shippingId, $shippingParams = array()) {
+
+		$app = Factory::getApplication();
+		$shipping 			= new PhocacartShipping();
+		$isValidShipping	= $shipping->checkAndGetShippingMethod($shippingId);
+
+		if (!$isValidShipping) {
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
+			return false;
+		}
 
 		if (PhocacartUserGuestuser::storeShipping((int)$shippingId)) {
+
+			// Store information from Shipping method e.g. info about Branch (but test all the params)
+
+			$dataShippingParams = '';
+			if (!empty($shippingParams)){
+
+				if (isset($isValidShipping[0]->method) && $isValidShipping[0]->method != ''){
+
+					PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($isValidShipping[0]->method)));
+					$eventData 					= array();
+					$eventData['pluginname'] 	= htmlspecialchars(strip_tags($isValidShipping[0]->method));
+
+					$results 					= Factory::getApplication()->triggerEvent('onPCScheckShippingBranchFormFields', array('com_phocacart.checkout', &$shippingParams, $isValidShipping[0], $eventData));
+					$dataShippingParams	= json_encode($shippingParams);
+
+
+				}
+			}
+
+			PhocacartUserGuestuser::storeShippingParams($dataShippingParams);
+
+
+
+
 			return true;
 		}
 		return false;
 	}
 
 	public function savePaymentAndCouponGuest($paymentId, $couponId) {
+
+		$app = Factory::getApplication();
+		$payment 			= new PhocacartPayment();
+		//$payment->setType();
+		$isValidPayment		= $payment->checkAndGetPaymentMethod($paymentId);
+		if (!$isValidPayment) {
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
+			return false;
+		}
 
 		if ($couponId === -1) {
 			// we ignore storing the coupon (it is not a part of payment form)

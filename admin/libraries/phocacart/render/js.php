@@ -46,6 +46,7 @@ final class PhocacartRenderJs
 
             $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
 
+
             $s = array();
             $s[] = 'function phDoSubmitFormAddToCart(sFormData) {';
             $s[] = '	var phUrl 	= "' . $urlAjax . '";';
@@ -553,7 +554,7 @@ final class PhocacartRenderJs
         $style 					= PhocacartRenderStyle::getStyles();
         $paramsC 				= PhocacartUtils::getComponentParameters();
         $dynamic_change_price 	= $paramsC->get('dynamic_change_price', 1);
-        $load_chosen 			= $paramsC->get('load_chosen', 1);
+        $load_chosen 			= $paramsC->get('load_chosen', 0);
         $quantity_input_spinner = $paramsC->get('quantity_input_spinner', 0);
 
         // needed because of phChangeAttributeType() - is included

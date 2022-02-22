@@ -162,4 +162,43 @@ span.ph-stars span {
 }
 
 
+.ph-corner-icon-featured {
+    background-color: #E6B863;
+}
+.ph-corner-icon-bio {
+    background-color: #407060;
+}
+.ph-corner-icon-no-sugar {
+    background-color: #5c1d27;
+}
+
+.uk-logo>:where(img,svg,video) {
+    display: block;
+    margin-top: -6.5em;
+    height: 2.5em;
+
+}
+
+.uk-navbar-left {
+    border-right: 0 !important;
+}
+
+#tm-main {
+    /*padding-top: 0;*/
+}
+
+#phPriceFilterRange .ui-widget-header {
+    background: #acacac;
+}
+
+#phPriceFilterRange.ui-slider-horizontal .ui-slider-handle {
+
+    background: #acacac;
+
+}
+
+img {
+    filter: grayscale(15%);
+  }
+
 

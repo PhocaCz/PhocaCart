@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.view');
@@ -37,6 +38,12 @@ class PhocaCartCpViewPhocacartOrders extends HtmlView
         $this->state         = $this->get('State');
         $this->filterForm    = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
+
+
+        $this->t['filter-ps-opened'] = 0;
+        if ((int)$this->state->get('filter.shipping_id') > 0 || (int)$this->state->get('filter.payment_id') > 0) {
+               $this->t['filter-ps-opened'] = 1;
+        }
 
 
         // Check for errors.
@@ -88,6 +95,16 @@ class PhocaCartCpViewPhocacartOrders extends HtmlView
         if ($canDo->get('core.delete')) {
             ToolbarHelper::deleteList($this->t['l'] . '_WARNING_DELETE_ITEMS', 'phocacartorders.delete', $this->t['l'] . '_DELETE');
         }
+
+
+
+        if ((int)$this->state->get('filter.shipping_id') > 0) {
+            //ToolbarHelper::custom($this->t['tasks'] . '.exportshipping', 'share.png', 'share.png', 'COM_PHOCACART_EXPORT_SHIPPING', true);
+            $bar 	= Toolbar::getInstance('toolbar');
+            $dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_EXPORT_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_INFO_SHIPPING_EXPORT').'\')){Joomla.submitbutton(\'phocacartorders.exportshipping\');}}" ><i class="icon-share" title="'.Text::_('COM_PHOCACART_EXPORT_SHIPPING').'"></i> '.Text::_('COM_PHOCACART_EXPORT_SHIPPING').'</button></joomla-toolbar-button>';
+		$bar->appendButton('Custom', $dhtml);
+        }
+
         ToolbarHelper::divider();
         ToolbarHelper::help('screen.' . $this->t['c'], true);
     }

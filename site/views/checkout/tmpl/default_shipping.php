@@ -100,6 +100,12 @@ if ($this->a->shippingnotused == 1) {
 		echo '<div class="ph-shipping-title">'.$this->t['shippingmethod']['title'].'</div>';
 
 		// Event
+		$paramsShipping = array();
+		if (isset($this->t['shippingmethod']['params_shipping']) && !empty($this->t['shippingmethod']['params_shipping'])) {
+
+			$paramsShipping = json_decode($this->t['shippingmethod']['params_shipping'], true);
+		}
+
 		if (isset($this->t['shippingmethod']['method']) && $this->t['shippingmethod']['method'] != '') {
 
 			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['shippingmethod']['method'])));
@@ -107,7 +113,7 @@ if ($this->a->shippingnotused == 1) {
 			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($this->t['shippingmethod']['method']));
 
 
-			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBrancheInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $eventData));
+			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $paramsShipping, $eventData));
 
 			if (!empty($results)) {
 				echo trim(implode("\n", $results));
@@ -117,7 +123,7 @@ if ($this->a->shippingnotused == 1) {
 
 			protected $name 	= 'plugin_name';
 
-			function PCSgetShippingBrancheInfo($context, $shippingMethod, $eventData) {
+			function PCSgetShippingBranchInfo($context, $shippingMethod, $eventData) {
 				if (!isset($eventData['pluginname']) || isset($eventData['pluginname']) && $eventData['pluginname'] != $this->name) {
 					return false;
 				}

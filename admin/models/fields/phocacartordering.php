@@ -96,6 +96,12 @@ class JFormFieldPhocacartOrdering extends FormField
 					$table		=	'#__phocacart_attributes';
 				break;
 
+                case "specificationgroup":
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_specification_groups';
+				break;
+
 				case "formfield":
 					$whereLabel	=	'';
 					$whereValue	=	'';

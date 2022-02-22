@@ -108,7 +108,7 @@ if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id
 		$eventData['item']['id'] 			= (int)$this->itemcommon->id;
 		$eventData['item']['shipping_id'] 	= (int)$this->itemcommon->shipping_id;
 
-		$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBrancheInfoAdmin', array('com_phocacart.phocacartorder', $eventData));
+		$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminEdit', array('com_phocacart.phocacartorder', $this->itemcommon, $eventData));
 
 		if (!empty($results)) {
 			echo trim(implode("\n", $results));

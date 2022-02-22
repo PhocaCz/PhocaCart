@@ -126,11 +126,11 @@ if (!isset($item->level)) {
 	$item->level = 0;
 }
 
-$iD = $i % 2;
+//$iD = $i % 2;
 //echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
-echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" item-id="'.$item->id.'" parents="'.$parentsStr.'" level="'. $item->level.'">'. "\n";
+//echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" item-id="'.$item->id.'" parents="'.$parentsStr.'" level="'. $item->level.'">'. "\n";
 
-
+echo $r->startTr($i, isset($item->parent_id) ? (int)$item->parent_id : 0, $item->id, $item->level, $parentsStr);
 //echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
 //echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);

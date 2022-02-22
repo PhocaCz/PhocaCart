@@ -731,10 +731,11 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>-->
 
-            <field name="display_discount_product_views" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"
+            <field name="display_discount_product_views" type="list"  default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_DESC">
 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
+                <option value="2">COM_PHOCACART_YES_QUANTITY_RULE_IGNORED</option>
             </field>
 
             <field name="display_discount_cart_product_views" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CART_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"

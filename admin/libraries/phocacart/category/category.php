@@ -348,6 +348,35 @@ final class PhocacartCategory
 		return implode("\n", $result);
 	}
 
+	public static function nestedToUlSimple($data, $currentCatid = 0) {
+		$result = array();
+
+		if (!empty($data) && count($data) > 0) {
+			$result[] = '<ul>';
+			foreach ($data as $k => $v) {
+				$link 		= Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
+
+				// Current Category is selected
+				if ($currentCatid == $v['id']) {
+					$result[] = sprintf(
+						'<li class="ph-active" >%s%s</li>',
+						'<a href="'.$link.'">' . $v['title']. '</a>',
+						self::nestedToUlSimple($v['children'], $currentCatid)
+					);
+				} else {
+					$result[] = sprintf(
+						'<li>%s%s</li>',
+						'<a href="'.$link.'">' . $v['title']. '</a>',
+						self::nestedToUlSimple($v['children'], $currentCatid)
+					);
+				}
+			}
+			$result[] = '</ul>';
+		}
+
+		return implode("\n", $result);
+	}
+
 	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active = 0, $forceCategoryId = 0) {
 
 
@@ -414,7 +443,7 @@ final class PhocacartCategory
 		return implode("\n", $result);
 	}
 
-	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '') {
+	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '', $format = 'js') {
 
 		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide. 'l'. $lang);
 		if( empty(self::$categoryF[$cis])) {
@@ -459,8 +488,14 @@ final class PhocacartCategory
 
 			$items 						= $db->loadAssocList();
 			$tree 						= self::categoryTree($items);
+
 			$currentCatid				= self::getActiveCategoryId();
-			self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);
+			if ($format == 'simple') {
+				self::$categoryF[$cis] = self::nestedToUlSimple($tree, $currentCatid);
+			} else {
+				self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);
+			}
+
 		}
 
 		return self::$categoryF[$cis];
@@ -519,6 +554,7 @@ final class PhocacartCategory
 		$view			= $app->input->get( 'view', '', 'string' );
 		$catid			= $app->input->get( 'catid', '', 'int' ); // ID in items view is category id
 		$id				= $app->input->get( 'id', '', 'int' );
+		$c				= $app->input->get( 'c', '', 'string' );// Category ID in items view - filter options (does not work with ajax)
 
 		if ($option == 'com_phocacart' && ($view == 'items' || $view == 'category')) {
 
@@ -532,6 +568,19 @@ final class PhocacartCategory
 				return $catid;
 			}
 		}
+
+		// If in filtering only one category is selected, make active the selected category in e.g. tree (not working in ajax)
+		if ($option == 'com_phocacart' && $view == 'items') {
+
+			if ($c != '') {
+				$cA = explode(',', $c);
+				if (isset($cA[0]) && count($cA) == 1) {
+					return (int)$cA[0];
+				}
+
+			}
+		}
+
 		return 0;
 	}
 

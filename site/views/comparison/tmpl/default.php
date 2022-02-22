@@ -142,6 +142,7 @@ if (!empty($this->t['items'])) {
 		if ($this->t['value']['weight'] == 1)	{ $c['weight'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['weight']).' '.$this->t['unit_weight'].'</td>';}
 		if ($this->t['value']['volume'] == 1)	{ $c['volume'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['volume']).' '.$this->t['unit_volume'].'</td>';}
 
+
 		if ($this->t['value']['attrib'] == 1) 	{
 			$c['attrib'] 	.= '<td>';
 			if(!empty($v['attr_options'])) {
@@ -191,6 +192,9 @@ if (!empty($this->t['items'])) {
 	foreach($c as $k => $v) {
 		echo $v;
 	}
+
+
+
 	foreach($this->t['spec'] as $k => $v) {
 		if($k != '') {
 			echo '<tr><td><b><u>'.$k.'</u></b></td><td colspan="'.$count.'"></td></tr>';
@@ -198,15 +202,57 @@ if (!empty($this->t['items'])) {
 				foreach($v as $k2 => $v2) {
 					echo '<tr><td><b>'.$k2.'</b></td>';
 
+
 					if ($count == 1) {
-						if (isset($v2[0])) { echo '<td class="ph-center">'.$v2[0].'</td>';} else {echo '<td></td>';}
+						if (isset($v2[0])) {
+							$v2V = $v2[0];
+							if (is_array($v2[0])) {
+								$v2V = implode ('<br>', $v2[0]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
 					} else if ($count == 2) {
-						if (isset($v2[0])) { echo '<td class="ph-center">'.$v2[0].'</td>';} else {echo '<td></td>';}
-						if (isset($v2[1])) { echo '<td class="ph-center">'.$v2[1].'</td>';} else {echo '<td></td>';}
+
+						if (isset($v2[0])) {
+							$v2V = $v2[0];
+							if (is_array($v2[0])) {
+								$v2V = implode ('<br>', $v2[0]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
+						if (isset($v2[1])) {
+							$v2V = $v2[1];
+							if (is_array($v2[1])) {
+								$v2V = implode ('<br>', $v2[1]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
 					} else {
-						if (isset($v2[0])) { echo '<td class="ph-center">'.$v2[0].'</td>';} else {echo '<td></td>';}
-						if (isset($v2[1])) { echo '<td class="ph-center">'.$v2[1].'</td>';} else {echo '<td></td>';}
-						if (isset($v2[2])) { echo '<td class="ph-center">'.$v2[2].'</td>';} else {echo '<td></td>';}
+						if (isset($v2[0])) {
+							$v2V = $v2[0];
+							if (is_array($v2[0])) {
+								$v2V = implode ('<br>', $v2[0]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
+						if (isset($v2[1])) {
+							$v2V = $v2[1];
+							if (is_array($v2[1])) {
+								$v2V = implode ('<br>', $v2[1]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
+						if (isset($v2[2])) {
+							$v2V = $v2[2];
+							if (is_array($v2[2])) {
+								$v2V = implode ('<br>', $v2[2]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
 					}
 
 					echo'</tr>';

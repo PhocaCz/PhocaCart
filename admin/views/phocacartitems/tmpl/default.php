@@ -26,18 +26,23 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $canOrder  = $user->authorise('core.edit.state', $this->t['o']);
 
-$saveOrder       = false;
-$saveOrderingUrl = '';
+$saveOrder              = false;
+$saveOrderingUrl        = '';
+$saveOrderCatSelected   = false;
+
+// Is ordering selected as ordering?
 if ($this->t['ordering'] && !empty($this->ordering)) {
     $saveOrder = $listOrder == 'pc.ordering';
-    /*$saveOrderingUrl = '';
-if ($saveOrder && !empty($this->items)) {
-    $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
-}*/
+
+    // Joomla BUG: https://github.com/joomla/joomla-cms/issues/36346 $this->t['catid']
+    // Add catid to the URL instead of sending in POST
+
     if ($saveOrder && !empty($this->items)) {
-        $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
+        $saveOrderingUrl = $r->saveOrder($this->t, $listDirn, $this->t['catid']);
     }
+    $saveOrderCatSelected = true;
 }
+
 //$sortFields = $this->getSortFields();
 
 /*
@@ -165,8 +170,8 @@ if (is_array($this->items)) {
 
         echo $r->startTr($i, $this->t['catid']);
 
-        echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, false);
-        echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, false);
+        echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, $saveOrderCatSelected);
+        echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $orderingItem, $saveOrderCatSelected);
 
 
         if (!empty($this->t['admin_columns_products'])) {

@@ -55,9 +55,12 @@ class PhocacartOrder
         $stock_checking       = $pC->get('stock_checking', 0);
         $unit_weight          = $pC->get('unit_weight', '');
         $unit_volume          = $pC->get('unit_volume', '');
+        $unit_size              = $pC->get('unit_size', '');
         $order_language       = $pC->get('order_language', 0);
         $skip_shipping_method = $pC->get('skip_shipping_method', 0);
         $skip_payment_method  = $pC->get('skip_payment_method', 0);
+
+
 
 
         // LANGUAGES
@@ -248,6 +251,7 @@ class PhocacartOrder
         // CHECK IF PRODUCT OR ATTRIBUTES EXIST
         // --------------------
         $productsRemoved = $cart->getProductsRemoved();
+
         if (!empty($productsRemoved)) {
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
@@ -323,16 +327,44 @@ class PhocacartOrder
 
         $d['shipping_id']            = (int)$shippingId;
         $shippingParams              = array();
+
+        if ((int)$shippingId > 0 && isset($shippingC['params_shipping']) && !empty($shippingC['params_shipping']) && $shippingC['params_shipping'] != '') {
+            $shippingParams = json_decode($shippingC['params_shipping'], true);
+        }
+
         if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
             $shippingParams['method']= htmlspecialchars(strip_tags($shippingC['method']));
         }
+
+        if ((int)$shippingId > 0 && isset($shippingC['title']) && $shippingC['title'] != '') {
+            $shippingParams['title'] = htmlspecialchars(strip_tags($shippingC['title']));
+        }
+
+        $shippingParams['total_weight']     = $total[0]['weight'];
+        $shippingParams['total_length']     = $total[0]['length'];
+        $shippingParams['total_width']      = $total[0]['width'];
+        $shippingParams['total_height']     = $total[0]['height'];
+        $shippingParams['total_volume']     = $total[0]['volume'];
+
+
+
         $d['params_shipping']        = json_encode($shippingParams);
 
         $d['payment_id']             = (int)$payment['id'];
         $paymentParams               = array();
-        if ((int)$payment['id'] > 0 && isset($payment['method']) && $payment['method'] != '') {
+        if ((int)$payment['id'] > 0 && isset($paymentC['params_payment']) && !empty($paymentC['params_payment']) && $paymentC['params_payment'] != '') {
+            $paymentParams = json_decode($paymentC['params_payment'], true);
+        }
+
+        if ((int)$payment['id'] > 0 && isset($paymentC['method']) && $payment['method'] != '') {
             $paymentParams['method'] = htmlspecialchars(strip_tags($payment['method']));
         }
+
+        if ((int)$payment['id'] > 0 && isset($paymentC['title']) && $payment['title'] != '') {
+            $paymentParams['title'] = htmlspecialchars(strip_tags($payment['title']));
+        }
+
+
         $d['params_payment']         = json_encode($paymentParams);
 
         $d['coupon_id']              = (int)$coupon['id'];
@@ -346,6 +378,7 @@ class PhocacartOrder
         $d['tax_calculation']        = $pC->get('tax_calculation', 0);
         $d['unit_weight']            = $unit_weight;
         $d['unit_volume']            = $unit_volume;
+        $d['unit_size']              = $unit_size;
         $d['discount_id']            = $cart->getCartDiscountId();
 
         $d['vendor_id']           = $cart->getVendorId();
@@ -356,6 +389,7 @@ class PhocacartOrder
 
         $d['user_lang']    = $userLang;
         $d['default_lang'] = $defaultLang;
+
 
 
         // --------------------
@@ -1286,7 +1320,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1294,7 +1328,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1662,7 +1696,7 @@ class PhocacartOrder
         $d['notify']          = (int)$notify;
         $d['user_id']         = (int)$userId;
         $d['order_id']        = (int)$orderId;
-        $d['date']            = gmdate('Y-m-d H:i:s');;
+        $d['date']            = gmdate('Y-m-d H:i:s');
 
 
         if (!$row->bind($d)) {

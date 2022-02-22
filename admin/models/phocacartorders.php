@@ -33,7 +33,9 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 				'ordering', 'a.ordering',
 				'language', 'a.language',
 				//z'hits', 'a.hits',
-				'published','a.published'
+				'published','a.published',
+				'payment_id', 'a.payment_id',
+				'shipping_id', 'a.shipping_id'
 			);
 		}
 
@@ -61,6 +63,12 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 		$status = $app->getUserStateFromRequest($this->context.'.filter.status_id', 'filter_status_id', '');
 		$this->setState('filter.status_id', $status);
 
+		$payment = $app->getUserStateFromRequest($this->context.'.filter.payment_id', 'filter_payment_id', '');
+		$this->setState('filter.payment_id', $payment);
+
+		$shipping = $app->getUserStateFromRequest($this->context.'.filter.shipping_id', 'filter_shipping_id', '');
+		$this->setState('filter.shipping_id', $shipping);
+
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
@@ -80,6 +88,8 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.order_id');
 		$id	.= ':'.$this->getState('filter.status_id');
+		$id	.= ':'.$this->getState('filter.payment_id');
+		$id	.= ':'.$this->getState('filter.shipping_id');
 
 		return parent::getStoreId($id);
 	}
@@ -167,6 +177,24 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 
 			if ($status != '' && $status > 0) {
 				$query->where('a.status_id = '.$status);
+			}
+
+		}
+
+		$payment = (int)$this->getState('filter.payment_id');
+		if (!empty($payment)) {
+
+			if ($payment != '' && $payment > 0) {
+				$query->where('a.payment_id = '.$payment);
+			}
+
+		}
+
+		$shipping = (int)$this->getState('filter.shipping_id');
+		if (!empty($shipping)) {
+
+			if ($shipping != '' && $shipping > 0) {
+				$query->where('a.shipping_id = '.$shipping);
 			}
 
 		}

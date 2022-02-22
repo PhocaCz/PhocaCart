@@ -39,9 +39,10 @@ class JFormFieldPhocacartSpecificationGroups extends FormField
 			$attributes	= PhocacartSpecification::getGroupArray();
 		//}
 
+
 		if (!$multiple) {
-			array_unshift($activeAttributes, HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text'));
-			return HTMLHelper::_('select.genericlist',  $activeAttributes,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+			array_unshift($attributes, HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text'));
+			return HTMLHelper::_('select.genericlist',  $attributes,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		} else {
 
 

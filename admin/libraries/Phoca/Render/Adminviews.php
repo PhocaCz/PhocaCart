@@ -63,7 +63,15 @@ class Adminviews
              default:*/
 
 				HTMLHelper::_('bootstrap.tooltip');
-				HTMLHelper::_('behavior.multiselect');
+                if ($this->view == 'phocacartorders') {
+                    // Specific multiselect in media/com_phocacart/js/administrator/phocacart.js for orders view where two columns are together
+                    // ph-row-multiselect (active row for select) vs. ph-row-no-multiselect (row which is inactive, only has some additional info)
+                    // the checkbox for selecting row has class: ph-select-row in Adminviews.php in method firstColumn
+                } else {
+                    HTMLHelper::_('behavior.multiselect');
+                }
+
+                //HTMLHelper::_('script', 'media/' . $this->option . '/js/administrator/multiselect.min.js', array('version' => 'auto'));
 				HTMLHelper::_('dropdown.init');
 				if (!$this->compatible) {
 					HTMLHelper::_('formbehavior.chosen', 'select');
@@ -201,8 +209,8 @@ class Adminviews
         Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }
 
-    public function startTable($id) {
-        return '<table class="table table-striped" id="' . $id . '">' . "\n";
+    public function startTable($id, $class = '') {
+        return '<table class="table table-striped '.$class.'" id="' . $id . '">' . "\n";
     }
 
     public function endTable() {
@@ -379,9 +387,20 @@ class Adminviews
     }
 
 
-    public function saveOrder($t, $listDirn) {
+    public function saveOrder($t, $listDirn, $catid = 0) {
+
+
 
         $saveOrderingUrl = 'index.php?option=' . $t['o'] . '&task=' . $t['tasks'] . '.saveOrderAjax&tmpl=component&' . Session::getFormToken() . '=1';
+
+        // Joomla BUG: https://github.com/joomla/joomla-cms/issues/36346 $this->t['catid']
+        // Add catid to the URL instead of sending in POST
+        // administrator/components/com_phocacart/views/phocacartitems/tmpl/default.php 37
+        if ((int)$catid > 0) {
+            $saveOrderingUrl .= '&catid='.(int)$catid;
+        }
+        // ---
+
         if ($this->compatible) {
             HTMLHelper::_('draggablelist.draggable');
         } else {
@@ -430,7 +449,7 @@ class Adminviews
         return '</tbody>' . "\n";
     }
 
-    public function startTr($i, $catid = 0, $id = 0) {
+    public function startTr($i, $catid = 0, $id = 0, $level = -1, $parentsString = '', $class = '') {
         $i2 = $i % 2;
 
         $dataItemId  = '';
@@ -446,12 +465,19 @@ class Adminviews
         }
 
         $dataParents = '';
-        if ($catid > 0) {
+        if ($parentsString != '') {
+            $dataParents = ' data-parents="'.$parentsString.'"';
+        } else if ($catid > 0) {
             $dataParents = ' data-parents="'.(int)$catid.'"';
         }
 
+        $dataLevel = '';
+        if ($level > -1) {
+            $dataLevel = ' data-parents="'.(int)$level.'"';
+        }
 
-        return '<tr class="row' . $i2 . '"'.$dataItemId.$dataItemCatid.$dataParents.' data-transitions>' . "\n";
+
+        return '<tr for="cb'.$i.'" class="'.$class.'row' . $i2  . '"'.$dataItemId.$dataItemCatid.$dataParents.$dataLevel.' data-transitions>' . "\n";
 
     }
 
@@ -468,15 +494,15 @@ class Adminviews
         return "";
     }
 
-    public function firstColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $catOrderingEnabled = true) {
+    public function firstColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected = true) {
         if ($this->compatible) {
-            return $this->td(HTMLHelper::_('grid.id', $i, $itemId), 'text-center');
+            return $this->td(HTMLHelper::_('grid.id', $i, $itemId), 'text-center ph-select-row');
         } else {
-            return $this->tdOrder($canChange, $saveOrder, $orderkey, $ordering, $catOrderingEnabled);
+            return $this->tdOrder($canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected);
         }
     }
 
-    public function secondColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $catOrderingEnabled = true) {
+    public function secondColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected = true, $catid = 0) {
 
         if ($this->compatible) {
 
@@ -486,16 +512,17 @@ class Adminviews
             $iconClass = '';
             if (!$canChange) {
                 $iconClass = ' inactive';
+            } else if (!$saveOrderCatSelected) {
+                $iconClass = ' inactive" title="' . Text::_($this->optionLang . '_SELECT_CATEGORY_TO_ORDER_ITEMS');
             } else if (!$saveOrder) {
                 $iconClass = ' inactive" title="' . Text::_('JORDERINGDISABLED');
-            } else if (!$catOrderingEnabled) {
-                $iconClass = ' inactive" title="' . Text::_($this->optionLang . '_SELECT_CATEGORY_TO_ORDER_ITEMS');
             }
 
             $o[] = '<span class="sortable-handler' . $iconClass . '"><span class="fas fa-ellipsis-v" aria-hidden="true"></span></span>';
 
             if ($canChange && $saveOrder) {
                 $o[] = '<input type="text" name="order[]" size="5" value="' . $ordering . '" class="width-20 text-area-order hidden">';
+
             }
 
             $o[] = '</td>';

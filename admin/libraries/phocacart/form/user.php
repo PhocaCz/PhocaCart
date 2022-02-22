@@ -67,8 +67,16 @@ class PhocacartFormUser
 
 						$tA 	= explode(":", $v->type);
 						$type 	= 'text';
+						$typeSuffix = '';
 						if (isset($tA[0]) && $tA[0] != '') {
 							$type = $tA[0];
+						}
+						if (isset($tA[1]) && $tA[1] != '') {
+							$typeSuffix = $tA[1];
+						}
+						$typeLimit = '';
+						if ($typeSuffix != '') {
+							$typeLimit = (int)PhocacartUtils::getNumberFromText($typeSuffix);
 						}
 
 						if(isset($v->validate) && $v->validate == 'email') {
@@ -83,7 +91,14 @@ class PhocacartFormUser
 						}
 
 						if (!empty($predefinedValues)) {
-							$type= "list";
+							//$type= "list";
+							//$type= "radio";
+							//$type = 'checkbox';
+
+							if ($type != 'list' && $type != 'radio' && $type != 'checkbox') {
+								$type = 'checkbox';
+							}
+
 						}
 
 
@@ -100,6 +115,10 @@ class PhocacartFormUser
 						}
 						if (isset($v->default) && $v->default != '') {
 							$fB[] = $fS[] =  ' default="'.htmlspecialchars($v->default).'"';
+						}
+
+						if ($type == 'checkbox' && isset($v->default) && $v->default == '1') {
+							$fB[] = $fS[] = ' checked="checked"';
 						}
 
 						// 0 not read only
@@ -154,6 +173,12 @@ class PhocacartFormUser
 
 						if (isset($v->maxlength) && (int)$v->maxlength > 0) {
 							$fB[] = $fS[] =  ' maxlength="'.(int)$v->maxlength.'"';
+						} else {
+							// e.g. we limit varchar(100)
+							if($type == 'text' && $typeLimit > 0) {
+								$fB[] = $fS[] =  ' maxlength="'.$typeLimit.'"';
+							}
+
 						}
 
 						if (isset($v->unique) &&  $v->unique == 1) {

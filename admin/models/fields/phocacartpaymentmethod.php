@@ -27,6 +27,8 @@ class JFormFieldPhocaCartPaymentMethod extends FormField
 			$attr		.= ' required aria-required="true" ';
 		}
 
+		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
+
 		switch ($type) {
 			case 2:
 				$typeIn = 'a.type IN (0,2)';

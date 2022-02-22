@@ -421,14 +421,14 @@ class PhocacartCartCalculation
                                         $total['weight']         += ($attrib->weight * $fullItems[$k]['quantity']);
                                     }
 
-                                    // Volume - not used now
-                                    /*	if ($attrib->operator_volume == '-') {
-                                            $fullItems[$k]['volume'] 	-= $attrib->volume;
-                                            $fullItems[$k]['volume'] < 0 ? $fullItems[$k]['volume'] = 0 : $total['volume']			-= ($attrib->volume * $fullItems[$k]['quantity']);
-                                        }  else if ($attrib->operator_volume == '+') {
-                                            $fullItems[$k]['volume'] 	+= $attrib->volume;
-                                            $total['volume']			+= ($attrib->volume * $fullItems[$k]['quantity']);
-                                        } */
+                                    // Volume
+                                    if ($attrib->operator_volume == '-') {
+                                        $fullItems[$k]['volume'] 	-= $attrib->volume;
+                                        $fullItems[$k]['volume'] < 0 ? $fullItems[$k]['volume'] = 0 : $total['volume']	-= ($attrib->volume * $fullItems[$k]['quantity']);
+                                    }  else if ($attrib->operator_volume == '+') {
+                                        $fullItems[$k]['volume'] 	+= $attrib->volume;
+                                        $total['volume']			+= ($attrib->volume * $fullItems[$k]['quantity']);
+                                    }
 
 
                                     if (isset($optionsQuantity[$attrib->id])) {

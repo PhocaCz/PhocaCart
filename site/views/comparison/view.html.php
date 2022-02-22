@@ -83,8 +83,9 @@ class PhocaCartViewComparison extends HtmlView
 						unset($newV2[0]);
 						if (!empty($newV2)) {
 							foreach($newV2 as $k3 => $v3) {
-								$this->t['spec'][$v2[0]][$v3['title']][$k] = $v3['value'];
+								//$this->t['spec'][$v2[0]][$v3['title']][$k] = $v3['value'];
 								//$this->t['spec'][$k2][$k3][$k3] = $v3['value'];
+								$this->t['spec'][$v2[0]][$v3['title']][$k][$k3] = $v3['value'];
 							}
 						}
 

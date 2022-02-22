@@ -186,8 +186,8 @@ class PhocacartDiscountProduct
     public static function getProductDiscountPrice($productId, &$priceItems, $params = array()) {
 
 
-        $paramsC                        = PhocacartUtils::getComponentParameters();
-        $display_discount_product_views = $paramsC->get('display_discount_product_views', 0);
+        $paramsC                            = PhocacartUtils::getComponentParameters();
+        $display_discount_product_views         = $paramsC->get('display_discount_product_views', 0);// 0 ... disabled, 1 ... enabled, 2 ... enabled - quantity rule is ignored
 
         if (isset($params['ignore_view_rule']) && $params['ignore_view_rule'] == 1) {
            // Different modules like countdown module
@@ -195,7 +195,12 @@ class PhocacartDiscountProduct
             return false;
         }
 
+        if ($display_discount_product_views == 2) {
+            $params['ignore_quantity_rule'] = 1;
+        }
+
         $discount = self::getProductDiscount($productId, 1, 1, $params);
+
 
         if (isset($discount['discount']) && isset($discount['calculation_type'])) {
 

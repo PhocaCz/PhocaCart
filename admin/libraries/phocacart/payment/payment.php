@@ -84,7 +84,7 @@ class PhocacartPayment
 
 		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
-		.' p.lowest_amount, p.highest_amount, p.default,'
+		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
 		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
@@ -92,7 +92,7 @@ class PhocacartPayment
 		.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping';
 		$groupsFull		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
-		.' p.lowest_amount, p.highest_amount, p.default,'
+		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type';
 		$groupsFast		= 'p.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -552,6 +552,7 @@ class PhocacartPayment
 
 			$session 		= Factory::getSession();
 			$session->set('guestpayment', false, 'phocaCart');
+			$session->set('guestpaymentparams', false, 'phocaCart');
 			if ($removeCoupon == 1) {
 				$session->set('guestcoupon', false, 'phocaCart');
 			}
@@ -585,6 +586,11 @@ class PhocacartPayment
 			}
 
 			$set[]  = 'payment = '.(int)$pos_payment_force;
+
+			// Remove shipping params too
+			if ((int)$pos_payment_force == 0) {
+				$set[]  = 'params_payment = \'\'';
+			}
 
 			$sets = implode(', ', $set);
 
@@ -758,6 +764,50 @@ class PhocacartPayment
 		}
 
 		return false;
+	}
+
+	/* Used as shipping rule */
+
+	public static function getAllPaymentMethods($order = 'id', $type = array() ) {
+		$db = Factory::getDBO();
+
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_payment_methods AS a';
+
+		$query .= !empty($type) && is_array($type) ? ' WHERE a.type IN ('. implode(',', $type). ')' : '';
+		$query .= ' ORDER BY a.'. $order;
+
+		$db->setQuery($query);
+		$methods = $db->loadObjectList();
+
+		return $methods;
+	}
+
+	public static function getPaymentMethods($paymentId, $select = 0, $table = 'shipping') {
+
+		if ($table == 'shipping') {
+			$t = '#__phocacart_payment_method_shipping';
+			$c = 'payment_id';
+		}
+
+		$db =Factory::getDBO();
+
+		if ($select == 1) {
+			$query = 'SELECT p.shipping_id';
+		} else {
+			$query = 'SELECT a.*';
+		}
+		$query .= ' FROM #__phocacart_shipping_methods AS a'
+				.' LEFT JOIN '.$t.' AS p ON a.id = p.shipping_id'
+			    .' WHERE p.'.$c.' = '.(int) $paymentId;
+		$db->setQuery($query);
+		if ($select == 1) {
+			$items = $db->loadColumn();
+		} else {
+			$items = $db->loadObjectList();
+		}
+
+		return $items;
 	}
 }
 ?>

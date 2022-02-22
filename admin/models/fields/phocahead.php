@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die;
+
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;

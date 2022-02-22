@@ -44,11 +44,11 @@ class JFormFieldPhocaFormCountry extends FormField
 
 		if (!$app->isClient('administrator')) {
 			$paramsC 	= $app->getParams();
-			$load_chosen= $paramsC->get( 'load_chosen', 1 );
+			$load_chosen= $paramsC->get( 'load_chosen', 0 );
 			$s[] 	= '   var url = \''.Uri::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. Session::getFormToken().'=1\';';
 		} else {
 			$paramsC 	= PhocacartUtils::getComponentParameters();
-			$load_chosen= $paramsC->get( 'load_chosen', 1 );
+			$load_chosen= $paramsC->get( 'load_chosen', 0 );
 			$s[] 	= '   var url = \''.Uri::base(true).'/index.php?option=com_phocacart&task=phocacartuser.setregion&format=json&'. Session::getFormToken().'=1\';';
 		}
 
