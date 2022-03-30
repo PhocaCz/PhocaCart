@@ -116,7 +116,11 @@ if ($this->a->shippingnotused == 1) {
 			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $paramsShipping, $eventData));
 
 			if (!empty($results)) {
-				echo trim(implode("\n", $results));
+				foreach ($results as $k => $v) {
+					if ($v != false && isset($v['content']) && $v['content'] != '') {
+						echo $v['content'];
+					}
+				}
 			}
 			/*
 			// INSTRUCTINS: test the plugin in event this way:
@@ -224,8 +228,15 @@ if ($this->a->shippingnotused == 1) {
 
 			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranches', array('com_phocacart.checkout', $v, $eventData));
 
-			if (!empty($results)) {
+			/*if (!empty($results)) {
 				echo trim(implode("\n", $results));
+			}*/
+			if (!empty($results)) {
+				foreach ($results as $k => $v) {
+					if ($v != false && isset($v['content']) && $v['content'] != '') {
+						echo $v['content'];
+					}
+				}
 			}
 		}
 

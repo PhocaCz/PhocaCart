@@ -69,8 +69,15 @@ if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['ship
 		$eventData               = array();
 		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['shipping_method']));
 		$results = Factory::getApplication()->triggerEvent('onPCSonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
-		if (isset($results[0]['content']) && $results[0]['content'] != '') {
+		/*if (isset($results[0]['content']) && $results[0]['content'] != '') {
 			echo '<div class="ph-info-shipping-content">'.$results[0]['content'].'</div>';
+		}*/
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo '<div class="ph-info-shipping-content">'.$v['content'].'</div>';
+				}
+			}
 		}
 	}
 }
@@ -90,12 +97,20 @@ if (isset($this->t['infodata']['payment_method']) && $this->t['infodata']['payme
 	$pluginPayment = PluginHelper::importPlugin('pcp');
 	if ($pluginPayment) {
 
+
+
 		PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($this->t['infodata']['payment_method'])));
 		$eventData               = array();
 		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['payment_method']));
+
 		$results = Factory::getApplication()->triggerEvent('onPCPonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
-		if (isset($results[0]['content']) && $results[0]['content'] != '') {
-			echo '<div class="ph-info-payment-content">'.$results[0]['content'].'</div>';
+
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo '<div class="ph-info-payment-content">'.$v['content'].'</div>';
+				}
+			}
 		}
 	}
 }

@@ -28,8 +28,8 @@
         <field name="external_text2" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_DESC"/>
 
         <field name="featured" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FEATURED_LABEL" description="COM_PHOCACART_FIELD_FEATURED_DESC" default="0">
-            <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
         </field>
 
 		<field name="featured_background_image" type="media" label="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" class="form-control" size="40"/>

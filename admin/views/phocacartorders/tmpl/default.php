@@ -299,8 +299,15 @@ if (is_array($this->items)) {
                     $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsShipping['method']));
                     $results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $shippingInfo, $eventData));
 
-                    if (!empty($results)) {
+                    /*if (!empty($results)) {
                         echo trim(implode("\n", $results));
+                    }*/
+                    if (!empty($results)) {
+                        foreach ($results as $k => $v) {
+                            if ($v != false && isset($v['content']) && $v['content'] != '') {
+                                echo $v['content'];
+                            }
+                        }
                     }
                 }
                 echo  '</div>';
@@ -331,8 +338,15 @@ if (is_array($this->items)) {
                     $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsPayment['method']));
                     $results = Factory::getApplication()->triggerEvent('onPCPgetPaymentBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $paymentInfo, $eventData));
 
-                    if (!empty($results)) {
+                    /*if (!empty($results)) {
                         echo trim(implode("\n", $results));
+                    }*/
+                    if (!empty($results)) {
+                        foreach ($results as $k => $v) {
+                            if ($v != false && isset($v['content']) && $v['content'] != '') {
+                                echo $v['content'];
+                            }
+                        }
                     }
 
                 }

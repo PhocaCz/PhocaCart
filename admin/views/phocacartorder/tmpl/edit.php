@@ -110,8 +110,16 @@ if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id
 
 		$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminEdit', array('com_phocacart.phocacartorder', $this->itemcommon, $eventData));
 
-		if (!empty($results)) {
+		/*if (!empty($results)) {
 			echo trim(implode("\n", $results));
+		}*/
+
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo $v['content'];
+				}
+			}
 		}
 
 	}

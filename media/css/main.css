@@ -2005,6 +2005,10 @@ table.pc-tax-recapitulation tr td {
     justify-content: center;
 }
 
+.ph-plg-product-info .row-item .ph-image {
+    display: block;
+}
+
 .ph-plg-product-info-title {
     font-weight: bold;
 }

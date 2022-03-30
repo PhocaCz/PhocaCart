@@ -735,7 +735,7 @@ class PhocacartPayment
 	 * @return mixed
 	 */
 
-	protected function getPaymentMethodIdByMethodName($methodName, $return = 3, $onlyPublished = false) {
+	public static function getPaymentMethodIdByMethodName($methodName, $return = 3, $onlyPublished = false) {
 
 		$db = Factory::getDBO();
 		$query = ' SELECT p.id'

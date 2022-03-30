@@ -409,7 +409,7 @@ class PhocacartUser
 							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
 						} else if ($v->title == 'zip') {
 							$o['bzip']	= $value;// Return region and country or zip
-							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
+							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						} else {
 							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						}

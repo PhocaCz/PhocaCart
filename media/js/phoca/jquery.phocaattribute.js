@@ -10,6 +10,7 @@
 /* SELECT BOXES */
 /* Changes Selects to color or image attributes*/
 
+
 function phChangeAttributeType(typeView) {
 
 	typeView = typeof typeView !== 'undefined' ? '.phj' + typeView : '';

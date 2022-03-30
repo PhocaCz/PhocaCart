@@ -278,6 +278,7 @@ function phDoRequestError(data, options) {
 	}
 }
 
+
 /*
  * type ... compare
  * view ... is compare view or not
