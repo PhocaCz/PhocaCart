@@ -225,7 +225,6 @@ class PhocacartRoute
 		if ($catidCurrent > 0) {
 			$catid = $catidCurrent;
 		}*/
-
 		$activeId 	= 0;
 		if (isset($active->id)){
 			$activeId    = $active->id;
@@ -526,6 +525,13 @@ class PhocacartRoute
 				}
 
 			}*/
+
+			if (Multilanguage::isEnabled()) {
+				if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
+					$link .= '&lang='.$lang[0];
+				}
+
+			}
 
 
 
