@@ -796,6 +796,11 @@
 				<option value="0">COM_PHOCACART_NO</option>
             </field>
 
+            <field name="render_canonical_url" type="list" default="0" label="COM_PHOCACART_FIELD_RENDER_CANONICAL_URL_LABEL" description="COM_PHOCACART_FIELD_RENDER_CANONICAL_URL_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_PRODUCT_VIEW</option>
+            </field>
+
             <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
 
 
@@ -851,8 +856,8 @@
             </field>
 
 			<field name="load_rtl_css" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_LOAD_RTL_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_RTL_CSS_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
             <!--<field name="load_bootstrap" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_LABEL" description="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_DESC">
@@ -1044,8 +1049,8 @@
 
             <field name="hide_products_out_of_stock" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 
@@ -1304,16 +1309,16 @@
             </field>
 
 			<field name="create_webp_copy" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_LABEL" description="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 
 			<field name="phocahead36" type="phocahead" default="COM_PHOCACART_HEAD_COPY_PASTE_IMAGES_OPTIONS_LABEL" label="" description=""/>
 
 			<field name="copypaste_enable" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGES_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 			<field name="copypaste_width" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_WIDTH_DESC"/>
@@ -1321,8 +1326,8 @@
             <field name="copypaste_height" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_HEIGHT_DESC"/>
 
 			<field name="copypaste_overwrite_file" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_OVERWRITE_FILE_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_OVERWRITE_FILE_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 			<field name="copypaste_folder_creation" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_CREATING_FOLDER_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_CREATING_FOLDER_DESC">
@@ -1376,6 +1381,9 @@
             </field>
 
 
+
+
+
 			<field name="phocahead34" type="phocahead" default="COM_PHOCACART_SEARCH_AND_FILTER_OPTIONS_LABEL" label="" description=""/>
 
             <field name="search_matching_option" type="list" default="any" label="COM_PHOCACART_FIELD_SEARCH_MATCHING_OPTION_LABEL"
@@ -1394,8 +1402,15 @@
 
 			<field name="search_deep" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DEEP_SEARCH_LABEL"
                    description="COM_PHOCACART_FIELD_DEEP_SEARCH_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+            </field>
+
+            <field name="search_custom_fields" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SEARCH_CUSTOM_FIELDS_LABEL"
+                   description="COM_PHOCACART_FIELD_SEARCH_CUSTOM_FIELDS_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+
             </field>
 
 
@@ -1414,8 +1429,8 @@
 
             <field name="display_products_all_subcategories" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCTS_FROM_ALL_SUBCATEGORIES_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PRODUCTS_FROM_ALL_SUBCATEGORIES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 			<field name="sql_only_full_group_by" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_ONLY_FULL_GROUP_BY_LABEL"
@@ -1677,6 +1692,11 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
+             <field name="custom_fields_enable" type="radio" label="JGLOBAL_CUSTOM_FIELDS_ENABLE_LABEL" layout="joomla.form.field.radio.switcher" default="1">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
         </fieldset>
 
 
@@ -1922,7 +1942,7 @@
 
             <field name="pos_payment_force" type="PhocaCartPayMentMethod" typemethod="2" label="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_LABEL" description="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_DESC"
                    class="form-control" size="1"/>
-            
+
             <field name="pos_display_apply_benefits" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_APPLY_BENEFITS_BUTTON_POS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_APPLY_BENEFITS_BUTTON_POS_DESC"
                    class="inputbox" size="1">
            <option value="0">COM_PHOCACART_NO</option>
@@ -2120,7 +2140,7 @@
                    description="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
-                
+
             </field>
 
             <field name="enable_hidden_field_question" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_QUESTION_LABEL"
@@ -2180,7 +2200,7 @@
                    description="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_SUBMIT_ITEM_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
-                
+
             </field>
 
             <field name="enable_hidden_field_submit_item" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_SUBMIT_ITEM_LABEL"
@@ -2300,6 +2320,8 @@
 	</field>
 
 	<field name="newsletter_mailinglist" type="PhocaCartMailingList" size="" default="" manager="subscriber" layout="joomla.form.field.list-fancy-select"  multiple="true" label="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_DESC"/>
+
+
 
 		</fieldset>
 

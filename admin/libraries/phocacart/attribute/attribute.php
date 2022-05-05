@@ -941,7 +941,7 @@ class PhocacartAttribute
 
     public static function getAttributeValue($id, $attributeId) {
         $db    = Factory::getDBO();
-        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
+        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
             . ' aa.id as aid, aa.title as atitle, aa.type as atype'
             . ' FROM #__phocacart_attribute_values AS a'
             . ' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'

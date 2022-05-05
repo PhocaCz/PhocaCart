@@ -112,6 +112,8 @@ class PhocacartSearch
 		$left	= '';
 		$db		= Factory::getDBO();
 
+
+
 		switch($type) {
 			case 'int':
 
@@ -275,8 +277,22 @@ class PhocacartSearch
                               $wheresSub[] = 'a.description_long LIKE ' . $text;
                               $wheresSub[] = 'a.features LIKE ' . $text;
                             }
-                            $where = '(' . implode(') OR (', $wheresSub) . ')';
+
+
                             $left = '';
+
+                            // Custom Fields
+                            if (isset($params['search_custom_fields']) && $params['search_custom_fields'] == 1) {
+                                $user        = Factory::getUser();
+                                $groups      = implode(',', $user->getAuthorisedViewLevels());
+                                $query       = $db->getQuery(true);
+                                $wheresSub[] = 'jf.value LIKE ' . $text;
+                                $left        .= ' LEFT JOIN #__fields_values AS jf ON jf.item_id = ' . $query->castAsChar('a.id');
+                                $left        .= ' LEFT JOIN #__fields AS f ON f.id = jf.field_id and f.context = ' . $db->q('com_phocacart.phocacartitem') . ' and f.state = 1 and f.access IN (' . $groups . ')';
+                            }
+
+                            $where = '(' . implode(') OR (', $wheresSub) . ')';
+
                         break;
 
                         case 'all':
@@ -285,6 +301,9 @@ class PhocacartSearch
 
                             $words = explode(' ', $in);
                             $wheres = array();
+
+
+
                             foreach ($words as $word) {
 
                                 if (!$word = trim($word)) {
@@ -308,11 +327,29 @@ class PhocacartSearch
                                     $wheresSub[] = 'a.description_long LIKE ' . $word;
                                     $wheresSub[] = 'a.features LIKE ' . $word;
                                 }
+
+
+
+                                // Custom Fields
+                                $left = '';// don't repeat left
+
+                                // Custom Fields
+                                if (isset($params['search_custom_fields']) && $params['search_custom_fields'] == 1) {
+
+                                    $user        = Factory::getUser();
+                                    $groups      = implode(',', $user->getAuthorisedViewLevels());
+                                    $query       = $db->getQuery(true);
+                                    $wheresSub[] = 'jf.value LIKE ' . $word;
+                                    $left        .= ' LEFT JOIN #__fields_values AS jf ON jf.item_id = ' . $query->castAsChar('a.id');
+                                    $left        .= ' LEFT JOIN #__fields AS f ON f.id = jf.field_id and f.context = ' . $db->q('com_phocacart.phocacartitem') . ' and f.state = 1 and f.access IN (' . $groups . ')';
+                                }
+
+
                                 $wheres[] = implode(' OR ', $wheresSub);
                             }
 
                             $where = '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
-                            $left = '';
+
 
                         break;
                     }
@@ -328,7 +365,6 @@ class PhocacartSearch
 		$a			= array();
 		$a['where'] = $where;
 		$a['left']	= $left;
-
 
 		return $a;
 

@@ -141,7 +141,7 @@ class JFormFieldPhocacartCategory extends ListField
 				array_unshift($tree, HTMLHelper::_('select.option', '-1', Text::_('COM_PHOCACART_ALL'), 'value', 'text'));
 			}
 		} else {
-			array_unshift($tree, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
+			array_unshift($tree, HTMLHelper::_('select.option', '0', '- '.Text::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
 		}
 
 

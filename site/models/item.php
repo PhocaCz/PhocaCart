@@ -215,7 +215,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 
 
-		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
+		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, i.catid AS preferred_catid, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
 
 		if (!$skip['tax']) {
             $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';

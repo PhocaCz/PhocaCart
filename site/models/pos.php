@@ -237,6 +237,7 @@ class PhocaCartModelPos extends BaseDatabaseModel
 		$p['pos_categories']		= $params->get( 'pos_categories', array(-1) );
 		$p['sql_search_skip_id']	= $params->get( 'sql_search_skip_id', 1 );
 		$p['search_deep']			= $params->get( 'search_deep', 0 );
+		$p['search_custom_fields']	= $params->get( 'search_custom_fields', 0 );
 
 		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (POS)
 		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 3){
@@ -424,7 +425,7 @@ class PhocaCartModelPos extends BaseDatabaseModel
 
 			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.type,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,'
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid, a.price, MIN(ppg.price) as group_price,'
 						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
 						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,'
 						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'

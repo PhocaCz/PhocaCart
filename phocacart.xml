@@ -2,7 +2,7 @@
 <extension type="component" method="upgrade" version="4.0">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>30/03/2022</creationDate>
+	<creationDate>05/05/2022</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
@@ -87,6 +87,8 @@
 				<menu img="class:tags" alt="COM_PHOCACART_TAGS" view="phocacarttags" link="option=com_phocacart&amp;view=phocacarttags">COM_PHOCACART_TAGS</menu>
 				<menu img="class:parameters" alt="COM_PHOCACART_PARAMETERS" view="phocacartparameters" link="option=com_phocacart&amp;view=phocacartparameters">COM_PHOCACART_PARAMETERS</menu>
 				<menu img="class:parametervalues" alt="COM_PHOCACART_PARAMETER_VALUES" view="phocacartparametervalues" link="option=com_phocacart&amp;view=phocacartparametervalues">COM_PHOCACART_PARAMETER_VALUES</menu>
+				<menu img="class:fieldgroups" alt="JGLOBAL_FIELD_GROUPS" view="phocacartfieldgroups" link="option=com_fields&amp;view=groups&amp;context=com_phocacart.phocacartitem">JGLOBAL_FIELD_GROUPS</menu>
+				<menu img="class:fields" alt="JGLOBAL_FIELDS" view="phocacartfields" link="option=com_fields&amp;context=com_phocacart.phocacartitem">JGLOBAL_FIELDS</menu>
 				<menu img="class:feeds" alt="COM_PHOCACART_XML_FEEDS" view="phocacartfeeds" link="option=com_phocacart&amp;view=phocacartfeeds">COM_PHOCACART_XML_FEEDS</menu>
 				<menu img="class:wishlists" alt="COM_PHOCACART_WISH_LISTS" view="phocacartwishlists" link="option=com_phocacart&amp;view=phocacartwishlists">COM_PHOCACART_WISH_LISTS</menu>
 				<menu img="class:questions" alt="COM_PHOCACART_QUESTIONS" view="phocacartquestions" link="option=com_phocacart&amp;view=phocacartquestions">COM_PHOCACART_QUESTIONS</menu>

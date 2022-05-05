@@ -430,6 +430,13 @@ class PhocacartUtils
 		return $int;
 	}
 
+	public static function getNullFromEmpty($value = '') {
+		if ($value  == '') {
+			return 0;
+		}
+		return $value;
+	}
+
 	public static function getDateFromString($string) {
 
 

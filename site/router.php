@@ -117,8 +117,6 @@ class PhocacartRouter extends RouterView
 		$this->registerView($item);
 
 
-
-
 		$question = new RouterViewConfiguration('question');
 		$question->setName('question');
 		$question->setParent($categories, 'parent_id');
@@ -175,7 +173,9 @@ class PhocacartRouter extends RouterView
 	}*/
 
 	public function getCategoriesSegment($id, $query) {
-		return $this->getCategorySegment($id, $query);
+
+
+        return $this->getCategorySegment($id, $query);
 	}
 
 	public function getItemsSegment($id, $query) {
@@ -183,10 +183,13 @@ class PhocacartRouter extends RouterView
 	}
 
 	public function getCategorySegment($id, $query) {
+
 	    $category = PhocaCartCategory::getCategoryById($id);
+
 
 		if (isset($category->id)) {
 		    $path = PhocaCartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $category->title, $category->alias);
+
 		    //$path = array_reverse($path, true);
 		    //$path = array_reverse($category->getPath(), true);
 			$path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
@@ -239,6 +242,11 @@ class PhocacartRouter extends RouterView
 	public function getCategoryId($segment, $query) {
 
 
+        if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'categories') {
+            $query['id'] = 0;
+        }
+
+
 	    if ($this->noIDs)  {
 	        $db = Factory::getDbo();
 			$dbquery = $db->getQuery(true);
@@ -257,9 +265,10 @@ class PhocacartRouter extends RouterView
 			return (int) $db->loadResult();
 		}
 
+        $category = false;
 	    if (isset($query['id'])) {
 
-		    $category = false;
+
 		    if ((int)$query['id'] > 0) {
                 $category = PhocaCartCategory::getCategoryById($query['id']);
             } else if ((int)$segment > 0) {
@@ -288,7 +297,20 @@ class PhocacartRouter extends RouterView
                     }
                 }
 			}
-		}
+		} else {
+
+            // --- under test
+            // We don't have query ID because of e.g. language
+            // Should not happen because of modifications in build function here: administrator/components/com_phocacart/libraries/phocacart/path/routerrules.php
+            /*if ((int)$segment > 0) {
+		        $category = PhocaCartCategory::getCategoryById((int)$segment);
+                if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
+                    // We don't have root category with 0 so we need to start with segment one
+                    return (int)$category->id;
+                }
+            }*/
+            // under test
+        }
 
 		return false;
 	}
@@ -315,17 +337,16 @@ class PhocacartRouter extends RouterView
 		}
 		return (int) $segment;
 	}
-	/*
-	public function build(&$query)
-	{
 
-		return parent::build($query);
-	}
-*/
-	public function parse(&$segments)
-	{
+
+	public function parse(&$segments){
 
 		return parent::parse($segments);
+	}
+
+    public function build(&$query) {
+
+		return parent::build($query);
 	}
 }
 
@@ -333,7 +354,6 @@ function PhocaCartBuildRoute(&$query) {
 
 	$app = Factory::getApplication();
 	$router = new PhocaCartRouter($app, $app->getMenu());
-
 	return $router->build($query);
 }
 
@@ -341,6 +361,5 @@ function PhocaCartParseRoute($segments) {
 
 	$app = Factory::getApplication();
 	$router = new PhocaCartRouter($app, $app->getMenu());
-
 	return $router->parse($segments);
 }

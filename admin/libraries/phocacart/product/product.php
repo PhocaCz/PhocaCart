@@ -821,7 +821,7 @@ class PhocacartProduct
 
         } else {
 
-            $q = 'SELECT a.id, a.title, a.alias, SUM(a.hits) AS hits, GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle'
+            $q = 'SELECT a.id, a.title, a.alias, SUM(a.hits) AS hits, GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, a.catid AS preferred_catid'
                 . ' FROM #__phocacart_products AS a'
                 . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
                 . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';

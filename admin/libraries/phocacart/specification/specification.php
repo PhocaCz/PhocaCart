@@ -327,6 +327,7 @@ class PhocacartSpecification
 				. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 				.' GROUP BY '.$groups
 				.' ORDER BY '.$orderingText;
+
 		$db->setQuery($query);
 		$specifications = $db->loadObjectList();
 

@@ -115,6 +115,10 @@ echo '<div class="ph-cp-item-box">';
 $link	= 'index.php?option='.$this->t['o'].'&view=';
 foreach ($this->views as $k => $v) {
 	$linkV	= $link . $this->t['c'] . $k;
+    if (isset($v[3]) && $v[3] != '') {
+        //external link
+        $linkV = $v[3];
+    }
 	echo $r->quickIconButton( $linkV, Text::_($v[0]), $v[1], $v[2], $k);
 }
 echo '</div>';

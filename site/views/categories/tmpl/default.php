@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 
+
 echo '<div id="ph-pc-categories-box" class="pc-view pc-categories-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 echo $this->t['event']->onCategoriesBeforeHeader;

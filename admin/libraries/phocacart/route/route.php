@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
@@ -255,6 +256,8 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
+
+
 
 
 		return self::_buildLink($link, $needles, $lang);
@@ -510,7 +513,24 @@ class PhocacartRoute
 			if (isset($item->id) && ((int)$item->id > 0)) {
 				$link .= '&Itemid='.$item->id;
 			}
+
+
+			/*if (Multilanguage::isEnabled()) {
+				$app    = Factory::getApplication();
+				$menu   = $app->getMenu();
+				$itemId = $app->input->get('Itemid', 0, '', 'int');
+				$item   = $menu->getItem($itemId);
+				$lang   = !is_null($item) && $item->language != '*' ? '&lang=' . $item->language : '';
+				if ($lang != '') {
+					$link .= $lang;
+				}
+
+			}*/
+
+
+
 		}
+
 
 
 		return $link;
@@ -531,6 +551,8 @@ class PhocacartRoute
 		// Find menu items of current language
 		$items = $menus->getItems($attributes, $values);
 
+
+
 		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
 		if (!empty($lang)) {
 			$attributes[] 	= 'language';
@@ -543,6 +565,21 @@ class PhocacartRoute
 			if ($itemsLang) {
 				$items = $itemsLang;
 			}
+		} else if (Multilanguage::isEnabled()) {
+
+			// Just prioritize the current language menu item
+			$langCurrent = Factory::getLanguage();
+			$langTag = $langCurrent->getTag();
+
+			if ($langTag != '' && $langTag != '*') {
+				$attributes[] 	= 'language';
+				$values[]     	= $langTag;
+				$itemsLang 		= $menus->getItems($attributes, $values);
+				if ($itemsLang) {
+					$items = $itemsLang;
+				}
+			}
+
 		}
 
 
@@ -587,6 +624,7 @@ class PhocacartRoute
 		}
 
 		if (!$match) {
+
 			// Nothing found, try to set back "categories menu link" so e.g. menu links in module to some category
 			// gets no ID from another category which do have a menu link
 			// Category A have menu link
@@ -778,6 +816,69 @@ class PhocacartRoute
 
 		return $frontendUrl;
 	}
+
+
+	public static function getProductCanonicalLink($id, $catid, $idAlias, $catidAlias, $preferredCatid = 0 ) {
+
+		if ((int)$preferredCatid > 0) {
+
+			$db    = Factory::getDBO();
+			$query = 'SELECT c.id, c.alias'
+				. ' FROM #__phocacart_categories AS c'
+				. ' WHERE c.id = ' . (int)$preferredCatid
+				. ' ORDER BY c.id';
+
+			$db->setQuery($query, 0, 1);
+			$catO = $db->loadObject();
+			if (isset($catO->id) && isset($catO->alias)) {
+				return self::getItemRoute($id, $catO->id, $idAlias, $catO->alias);
+			}
+		}
+
+		return self::getItemRoute($id, $catid, $idAlias, $catidAlias);
+	}
+
+
+/*
+		$app 		= Factory::getApplication();
+		$menu 		= $app->getMenu();
+		$active 	= $menu->getActive();
+		$option		= $app->input->get( 'option', '', 'string' );
+
+		$activeId 	= 0;
+		if (isset($active->id)){
+			$activeId    = $active->id;
+		}
+		if ((int)$activeId > 0 && $option == 'com_phocacart') {
+			$needles 	= array(
+				'category' => '',
+				'categories' => (int)$activeId
+			);
+		} else {
+			$needles = array(
+				'category' => '',
+				'categories' => ''
+			);
+		}
+
+		$db = Factory::getDBO();
+
+		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'
+		.' FROM #__phocacart_tags AS a'
+		.' WHERE a.id = '.(int)$tagId
+		.' ORDER BY a.id';
+
+		$db->setQuery($query, 0, 1);
+		$tag = $db->loadObject();
+
+
+		if (isset($tag->id)) {
+			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid='.(int)$tag->id;
+		} else {
+			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid=0';
+		}
+		return self::_buildLink($link, $needles);*/
+
 	/*
 	public static function getCompleteAlias($id, $alias = '') {
 

@@ -18,9 +18,16 @@ class PhocaCartController extends BaseController
 	{
 
 	
+
 		if ( ! Factory::getApplication()->input->get('view') ) {
 			Factory::getApplication()->input->set('view', 'categories' );
 		}
+
+			if ( ! Factory::getApplication()->input->get('id') ) {
+			Factory::getApplication()->input->set('id', 0 );
+		}
+
+
 		/*if (JFactory::getApplication()->input->get('view') && JFactory::getApplication()->input->get('view') == 'feed') {
 			// Default view for Feed is XML
 			// Don't forget, this settings needs to have set router.php too - in method PhocacartParseRoute()

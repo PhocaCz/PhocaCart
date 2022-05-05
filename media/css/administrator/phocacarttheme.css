@@ -586,6 +586,14 @@ a.ph-submenu:before {
 	color: #0040ff;
     content: "\13ce4";/*ellipsis-v*/
 }
+.nav a.ph-submenu.ph-submenu-fieldgroups:before {
+	color: #ff4000;
+	content: "\13ce3";/*ellipsis-h*/
+}
+.nav a.ph-submenu.ph-submenu-fields:before {
+	color: #ff4000;
+    content: "\13ce4";/*ellipsis-v*/
+}
 .nav a.ph-submenu.ph-submenu-feeds:before {
 	color: #ffb300;
     content: "\13c41";/*feed*/

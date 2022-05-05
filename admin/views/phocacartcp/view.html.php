@@ -105,6 +105,8 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'tags'			=> array($this->t['l'] . '_TAGS', $d.$i .'tag-double', '#CC0033'),
 		'parameters'	=> array($this->t['l'] . '_PARAMETERS', $i .'ellipsis-h', '#0040ff'),
 		'parametervalues'=> array($this->t['l'] . '_PARAMETER_VALUES', $i .'ellipsis-v', '#0040ff'),
+		'fieldgroups'	=> array('JGLOBAL_FIELD_GROUPS', $i .'ellipsis-h', '#ff4000', 'index.php?option=com_fields&view=groups&context=com_phocacart.phocacartitem'),
+		'fields'		=> array('JGLOBAL_FIELDS', $i .'ellipsis-v', '#ff4000', 'index.php?option=com_fields&context=com_phocacart.phocacartitem'),
 		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', $i .'feed', '#ffb300'),
 		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', $i .'heart', '#EA7C7C'),
 		'questions'		=> array($this->t['l'] . '_QUESTIONS', $d.$i .'messaging', '#9900CC'),

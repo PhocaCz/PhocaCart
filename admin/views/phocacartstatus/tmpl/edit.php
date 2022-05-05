@@ -41,7 +41,7 @@ echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
 
-$formArray = array ( 'stock_movements', 'change_user_group', 'change_points_needed', 'change_points_received', 'download');
+$formArray = array ( 'stock_movements', 'change_user_group', 'change_points_needed', 'change_points_received', 'download', 'orders_view_display');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('ordering');
@@ -69,7 +69,7 @@ echo $r->group($this->form, $formArray);
 $formArray = array( 'email_text_others');
 echo $r->group($this->form, $formArray, 1);
 
-$formArray = array ('email_send', 'email_send_format', 'orders_view_display', 'email_attachments');
+$formArray = array ('email_send', 'email_send_format', 'email_attachments');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

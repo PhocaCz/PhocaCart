@@ -424,6 +424,14 @@ class PhocacartFilter
 
             $activeProducts = PhocacartProduct::getProducts(0, 0, 1, 0, true, false, false, 0, $activeCategory, 0, array(0, 1), 'a.id', 'column');
 
+            // When there are no products in category (no products or not published products)
+            // then we cannot send empty $activeProducts to the filter functions, example:
+            // PhocacartSpecification::getAllSpecificationsAndValues($this->ordering_specification, $this->check_available_products, $language, $activeProductsSpecifications);
+            // as then this is completely ignored and all items are listed
+            if(empty($activeProducts)) {
+               $activeProducts = array(0);
+            }
+
             if ($this->limit_attributes_category == 1) {
                 $activeProductsAttributes = $activeProducts;
             }
@@ -444,6 +452,7 @@ class PhocacartFilter
             }
             if ($this->limit_specifications_category == 1) {
                 $activeProductsSpecifications = $activeProducts;
+
             }
 
         }

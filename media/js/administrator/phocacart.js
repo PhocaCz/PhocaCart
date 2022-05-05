@@ -381,10 +381,10 @@ jQuery(document).ready(function() {
 			sURLVariables = sPageURL.split('&'),
 			sParameterName,
 			i;
-	
+
 		for (i = 0; i < sURLVariables.length; i++) {
 			sParameterName = sURLVariables[i].split('=');
-	
+
 			if (sParameterName[0] === sParam) {
 				return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
 			}
@@ -399,6 +399,20 @@ jQuery(document).ready(function() {
 			var className = view.replace('phocacart', '');
 			jQuery(this).addClass('ph-submenu ph-submenu-' + className);
 		}
+
+		/* Link to custom fields and custom field groups */
+		var context = getUrlParameter('context', jQuery(this).attr('href'));
+		context = String(context);
+		if(context == 'com_phocacart.phocacartitem') {
+			if (view == 'groups') {
+				var className = 'fieldgroups';
+			} else {
+				var className = 'fields';
+			}
+
+			jQuery(this).addClass('ph-submenu ph-submenu-' + className);
+		}
+
 
 		if (jQuery(this).attr('href') == 'index.php?option=com_phocacart') {
 			jQuery(this).addClass('ph-submenu ph-submenu-cp');

@@ -186,102 +186,114 @@
 				"title": "COM_PHOCACART_PARAMETER_VALUES"
 			},
 			"26": {
+				"image": "class:fieldgroups",
+				"view": "phocacartfieldgroups",
+				"link": "option=com_fields&amp;view=groups&amp;context=com_phocacart.phocacartitem",
+				"title": "JGLOBAL_FIELD_GROUPS"
+			},
+			"27": {
+				"image": "class:fields",
+				"view": "phocacartfields",
+				"link": "option=com_fields&amp;context=com_phocacart.phocacartitem",
+				"title": "JGLOBAL_FIELDS"
+			},
+			"28": {
 				"image": "class:feeds",
 				"view": "phocacartfeeds",
 				"link": "option=com_phocacart&amp;view=phocacartfeeds",
 				"title": "COM_PHOCACART_XML_FEEDS"
 			},
-			"27": {
+			"29": {
 				"image": "class:wishlists",
 				"view": "phocacartwishlists",
 				"link": "option=com_phocacart&amp;view=phocacartwishlists",
 				"title": "COM_PHOCACART_WISH_LISTS"
 			},
-			"28": {
+			"30": {
 				"image": "class:questions",
 				"view": "phocacartquestions",
 				"link": "option=com_phocacart&amp;view=phocacartquestions",
 				"title": "COM_PHOCACART_QUESTIONS"
 			},
-			"29": {
+			"31": {
 				"image": "class:times",
 				"view": "phocacarttimes",
 				"link": "option=com_phocacart&amp;view=phocacarttimes",
 				"title": "COM_PHOCACART_OPENING_TIMES"
 			},
-			"30": {
+			"32": {
 				"image": "class:submititems",
 				"view": "phocacartsubmititems",
 				"link": "option=com_phocacart&amp;view=phocacartsubmititems",
 				"title": "COM_PHOCACART_SUBMITTED_ITEMS"
 			},
-			"31": {
+			"33": {
 				"image": "class:statistics",
 				"view": "phocacartstatistics",
 				"link": "option=com_phocacart&amp;view=phocacartstatistics",
 				"title": "COM_PHOCACART_STATISTICS"
 			},
-			"32": {
+			"34": {
 				"image": "class:reports",
 				"view": "phocacartreports",
 				"link": "option=com_phocacart&amp;view=phocacartreports",
 				"title": "COM_PHOCACART_REPORTS"
 			},
-			"33": {
+			"35": {
 				"image": "class:hits",
 				"view": "phocacarthits",
 				"link": "option=com_phocacart&amp;view=phocacarthits",
 				"title": "COM_PHOCACART_HITS"
 			},
-			"34": {
+			"36": {
 				"image": "class:imports",
 				"view": "phocacartimports",
 				"link": "option=com_phocacart&amp;view=phocacartimports",
 				"title": "COM_PHOCACART_IMPORT"
 			},
-			"35": {
+			"37": {
 				"image": "class:exports",
 				"view": "phocacartexports",
 				"link": "option=com_phocacart&amp;view=phocacartexports",
 				"title": "COM_PHOCACART_EXPORT"
 			},
-			"36": {
+			"38": {
 				"image": "class:logs",
 				"view": "phocacartlogs",
 				"link": "option=com_phocacart&amp;view=phocacartlogs",
 				"title": "COM_PHOCACART_SYSTEM_LOG"
 			},
-			"37": {
+			"39": {
 				"image": "class:extensions",
 				"view": "phocacartextensions",
 				"link": "option=com_phocacart&amp;view=phocacartextensions",
 				"title": "COM_PHOCACART_EXTENSIONS"
 			},
-			"38": {
+			"40": {
 				"image": "class:vendors",
 				"view": "phocacartvendors",
 				"link": "option=com_phocacart&amp;view=phocacartvendors",
 				"title": "COM_PHOCACART_VENDORS"
 			},
-			"39": {
+			"41": {
 				"image": "class:sections",
 				"view": "phocacartsections",
 				"link": "option=com_phocacart&amp;view=phocacartsections",
 				"title": "COM_PHOCACART_SECTIONS"
 			},
-			"40": {
+			"42": {
 				"image": "class:units",
 				"view": "phocacartunits",
 				"link": "option=com_phocacart&amp;view=phocacartunits",
 				"title": "COM_PHOCACART_UNITS"
 			},
-			"41": {
+			"43": {
 				"image": "class:bulkprices",
 				"view": "phocacartbulkprices",
 				"link": "option=com_phocacart&amp;view=phocacartbulkprices",
 				"title": "COM_PHOCACART_BULK_PRICE_EDITOR"
 			},
-			"42": {
+			"44": {
 				"image": "class:info",
 				"view": "phocacartinfo",
 				"link": "option=com_phocacart&amp;view=phocacartinfo",

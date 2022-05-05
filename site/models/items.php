@@ -173,6 +173,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
 		$p['search_deep']					= $params->get( 'search_deep', 0);
 		$p['sql_search_skip_id']			= $params->get( 'sql_search_skip_id', 1 );
+		$p['search_custom_fields']			= $params->get( 'search_custom_fields', 0 );
 
 		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (Online Shop)
 		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 2){
@@ -499,7 +500,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 			$columns	= implode(',', $col) . ','
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias,';
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid,';
 
 			if (!$skip['tax']) {
 				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';

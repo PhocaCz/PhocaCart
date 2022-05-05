@@ -13,6 +13,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 
 $layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
@@ -850,6 +851,53 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$tabO	.= '</div>';
 		$tabO	.= '</div>';
 
+	}
+
+	// TABS CUSTOM FIELDS
+	$cFG = [];
+	$fields = FieldsHelper::getFields('com_phocacart.phocacartitem', $x, true);
+	if (!empty($fields)) {
+		foreach ($fields as $k => $v) {
+			$groupId = isset($v->group_id) ? (int)$v->group_id : 0;
+			if (isset($v->id) && (int)$v->id > 0) {
+				$fieldId = (int)$v->id;
+				$cFG[$groupId]['id'] = $fieldId;
+				$cFG[$groupId]['title'] = isset($v->group_title) ? $v->group_title : '';
+				$cFG[$groupId]['data'][$fieldId] = $v;
+			}
+		}
+
+		if (!empty($cFG)){
+			foreach ($cFG as $k => $v) {
+
+				$alias = 'field-'.$k;
+				$title = $v['title'];
+
+				$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#'.$alias.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.$title.'</a></li>';
+				$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="'.$alias.'">';
+
+				$tabO	.= '<div class="'.$this->s['c']['row'].'">';
+
+				if (!empty($v['data'])) {
+					foreach ($v['data'] as $k2 => $v2) {
+						$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-cf-title">';
+						$tabO	.= isset($v2->title) ? $v2->title : '';
+						$tabO	.= '</div>';
+
+						$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-cf-value">';
+						$tabO	.= isset($v2->value) ? $v2->value : '';
+						$tabO	.= '</div>';
+					}
+				}
+
+				$tabO	.= '</div>';
+
+
+				$tabO	.= '</div>';
+				$active = $activeTab = '';
+
+			}
+		}
 	}
 
 	// TABS PLUGIN

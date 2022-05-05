@@ -240,7 +240,7 @@ class PhocacartWishlist
 		if ($full == 1) {
 
 			$columns		= 'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
-			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
+			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
 			//.' a.length, a.width, a.height, a.weight, a.volume,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			//.' m.title as manufacturer_title'
@@ -271,7 +271,7 @@ class PhocacartWishlist
 		} else {
 
 			$columns		= 'a.id as id, a.title as title, a.alias as alias,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories';
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid';
 			$groupsFull		= 'a.id, a.title, a.alias';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;

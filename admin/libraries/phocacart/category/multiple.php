@@ -357,12 +357,27 @@ class PhocacartCategoryMultiple
 
 			if ($object) {
 				foreach ($items as $k => &$v) {
+
 					if (isset($v->count_categories) && (int)$v->count_categories > 1) {
 
 
-						$catid	= explode(',', $v->catid);
+
+                        // preferred catid set
+                        if (isset($v->preferred_catid) && (int)$v->preferred_catid > 0) {
+                            $catidA	        = explode(',', $v->catid);
+                            $cattitleA	    = explode(',', $v->cattitle);
+                            $cataliasA	    = explode(',', $v->catalias);
+                            $key            = array_search((int)$v->preferred_catid, $catidA);
+                            $v->catid	    = $catidA[$key];
+                            $v->cattitle 	= $cattitleA[$key];
+                            $v->catalias 	= $cataliasA[$key];
+                            continue;
+                        }
+
+                        $catid	= explode(',', $v->catid);
 						$id 	= (int)$v->id;
 						$catid	= (int)$catid[0];
+
 						if (isset($categories[$id]['catid']) && isset($catid) && (int)$categories[$id]['catid'] == $catid){
 							continue;
 
@@ -385,8 +400,21 @@ class PhocacartCategoryMultiple
 				foreach ($items as $k => &$v) {
 					if (isset($v['count_categories']) && (int)$v['count_categories'] > 1) {
 
-						$id 	= (int)$v['id'];
+                        // preferred catid set
+                        if (isset($v['preferred_catid']) && (int)$v['preferred_catid'] > 0) {
+                            $catidA	    = explode(',', $v['catid']);
+                            $cattitleA	= explode(',', $v['cattitle']);
+                            $cataliasA	= explode(',', $v['catalias']);
+                            $key = array_search((int)$v['preferred_catid'], $catidA);
+                            $v['catid'] 	= $catidA[$key];
+                            $v['cattitle'] 	= $cattitleA[$key];
+                            $v['catalias'] 	= $cataliasA[$key];
+                            continue;
+                        }
+
+                        $id 	= (int)$v['id'];
 						$catid	= (int)$v['catid'];
+
 						if (isset($categories[$id]['catid']) && isset($catid) && (int)$categories[$id]['catid'] == $catid){
 							continue;
 

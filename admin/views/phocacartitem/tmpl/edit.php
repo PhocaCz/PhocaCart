@@ -11,11 +11,16 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
 // ASSOCIATION
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
+
+
+// Custom fields
+$this->useCoreUI = true;
 
 $app   = Factory::getApplication();
 $input = $app->input;
@@ -92,6 +97,7 @@ $tabs['reward']         = Text::_($this->t['l'] . '_REWARD_POINTS');
 $tabs['publishing']     = Text::_($this->t['l'] . '_PUBLISHING_OPTIONS');
 $tabs['feed']           = Text::_($this->t['l'] . '_FEED_OPTIONS');
 $tabs['metadata']       = Text::_($this->t['l'] . '_METADATA_OPTIONS');
+//$tabs['fields']       = T ext::_($this->t['l'] . '_FIELDS');
 if (!$isModal && $assoc) {
     $tabs['associations'] = Text::_($this->t['l'] . '_ASSOCIATIONS');
 }
@@ -168,7 +174,7 @@ echo '</div>';
 
 // $formArray = array('title', 'alias',
 
-$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
+$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
@@ -348,6 +354,27 @@ if (!$isModal && $assoc) {
     echo '<div class="hidden">' . $this->loadTemplate('associations') . '</div>';
 }
 
+
+
+// Display custom field parameters and ignore current fieldsetsw including all feed fieldsets
+
+$ignoreField = [];
+$ignoreField[] = 'metadata';
+$ignoreField[] = 'publish';
+$ignoreField[] = 'item_associations';
+$ignoreField[] = 'items_parameter';
+$currentFields = $this->form->getFieldsets();
+if (!empty($currentFields)) {
+    foreach ($currentFields as $k => $v) {
+        if (isset($v->name) && strpos($v->name, 'feed_') !== false) {
+            $ignoreField[] = $v->name;
+        }
+    }
+}
+
+
+$this->ignore_fieldsets = $ignoreField;
+echo JLayoutHelper::render('joomla.edit.params', $this);
 
 echo $r->endTabs();
 echo '</div>';//end span10

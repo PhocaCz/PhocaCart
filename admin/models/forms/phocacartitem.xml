@@ -38,11 +38,10 @@
 
         <field name="tax_id" type="phocatax" class="form-control" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
 
-        <!--
-        <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" class="form-control" required="true" />-->
 
         <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" layout="joomla.form.field.list-fancy-select" />
 
+        <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" class="form-control" />
 
         <field name="manufacturer_id" type="phocamanufacturer" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC" class="form-select"/>
 

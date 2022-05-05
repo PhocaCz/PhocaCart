@@ -8,6 +8,23 @@
 	
 		<name>COM_PHOCACART_CATEGORIES_LAYOUT</name>
 		<description>COM_PHOCACART_CATEGORIES_LAYOUT_DESC</description>
+
+        <fields name="request">
+		<fieldset name="request" addfieldpath="/administrator/components/com_phocacart/models/fields">
+
+            <!--
+            Possible solution for
+            Joomla problem in:
+            - libraries/src/Component/Router/Rules/StandardRules.php
+			- public function build(&$query, &$segments)
+            - elseif ((int) $item->query[$view->key] === (int) $id)
+            Sometimes Roter does not get ID (even there is no ID for categories view) and returns error.
+            Ideally it should be handled in the code, but unfortunately there is no access
+
+            <field name="id" type="hidden" default="0" label="COM_PHOCACART_ID" description="COM_PHOCACART_ID"  />
+            -->
+		</fieldset>
+	</fields>
 		
 		<fields name="params">
 <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields" >

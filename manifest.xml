@@ -34,7 +34,7 @@
 		<maintainer><![CDATA[ Phoca.cz ]]></maintainer>
 		<maintainerurl>https://www.phoca.cz/</maintainerurl>
 		<section>Updates</section>
-		<targetplatform name="joomla" version="4.[0]"/>
+		<targetplatform name="joomla" version="4.[012]"/>
 		<client>administrator</client>
 	</update>
 </updates>

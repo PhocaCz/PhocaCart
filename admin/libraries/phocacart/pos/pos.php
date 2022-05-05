@@ -261,11 +261,11 @@ class PhocacartPos
 
 		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
-		$pos_preffered_sku		= $paramsC->get( 'pos_preferred_sku', 'sku' );
+		$pos_preferred_sku		= $paramsC->get( 'pos_preferred_sku', 'sku' );
 
 		$a 			= array();
-		$a['name'] 	= $pos_preffered_sku;
-		switch ($pos_preffered_sku) {
+		$a['name'] 	= $pos_preferred_sku;
+		switch ($pos_preferred_sku) {
 
 			case 'upc':				$a['title'] 	= Text::_('COM_PHOCACART_FIELD_UPC_LABEL'); break;
 			case 'ean':				$a['title'] 	= Text::_('COM_PHOCACART_FIELD_EAN_LABEL'); break;

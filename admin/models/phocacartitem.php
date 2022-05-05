@@ -176,6 +176,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$table->download_hits			= PhocacartUtils::getIntFromString($table->download_hits);
 		$table->points_received			= PhocacartUtils::getIntFromString($table->points_received);
 		$table->points_needed			= PhocacartUtils::getIntFromString($table->points_needed);
+		$table->unit_amount				= PhocacartUtils::getNullFromEmpty($table->unit_amount);
+
+
+
 
 
 		if ($table->delivery_date == '0' || $table->delivery_date == '') {
@@ -280,6 +284,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 
+
+
 		// Include the content plugins for the on save events.
 		PluginHelper::importPlugin('content');
 
@@ -332,23 +338,34 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 		// Trigger the onContentBeforeSave event.
-		/* $result = JFactory::getApplication()->triggerEvent('$this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
+		/*$result = JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
 		if (in_array(false, $result, true)) {
 			$this->setError($table->getError());
 			return false;
-		} */
+		}*/
+		// Trigger the before event.
+		PluginHelper::importPlugin($this->events_map['save']);
+
+		$result = $app->triggerEvent($this->event_before_save, array('com_phocacart.phocacartitem', $table, $isNew, $data));
+
+		if (\in_array(false, $result, true))
+		{
+			$this->setError($table->getError());
+
+			return false;
+		}
 
 
 		// Trigger the before event.
 		PluginHelper::importPlugin('pca');
-		$result = Factory::getApplication()->triggerEvent('onPCAonItemBeforeSave', array('com_phocacart.item', &$table, $isNew, $data));
+		$result = Factory::getApplication()->triggerEvent('onPCAonItemBeforeSave', array('com_phocacart.phocacartitem', &$table, $isNew, $data));
 		// Store the data.
 		if (in_array(false, $result, true) || !$table->store()) {
 			$this->setError($table->getError());
 			return false;
 		}
 		// Trigger the after save event.
-		Factory::getApplication()->triggerEvent('onPCAonItemAfterSave', array('com_phocacart.item', &$table, $isNew, $data));
+		Factory::getApplication()->triggerEvent('onPCAonItemAfterSave', array('com_phocacart.phocacartitem', &$table, $isNew, $data));
 
 
 
@@ -480,8 +497,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$cache = Factory::getCache($this->option);
 		$cache->clean();
 
-		// Trigger the onContentAfterSave event.
-		//JFactory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
+		// Trigger the onContentAfterSave event. CUSTOM FIELDS
+		$app->triggerEvent($this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {

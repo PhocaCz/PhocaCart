@@ -84,6 +84,7 @@ class PhocacartRenderFront
         $title = null;
         $metakey = $params->get('cart_metakey', '');
         $metadesc = $params->get('cart_metadesc', '');
+        $render_canonical_url = $params->get('render_canonical_url', 0);
         $nameInTitle = 1;// TO DO possible parameter Category or Title name
 
         $viewCurrent = $app->input->get('view');
@@ -147,6 +148,10 @@ class PhocacartRenderFront
             $title = $item->metatitle;
         }
 
+        if ($type == 'item' && $render_canonical_url == 1) {
+            $canonical = PhocacartRoute::getProductCanonicalLink($item->id, $item->catid, $item->alias, $item->catalias, $item->preferred_catid);
+            $document->addHeadLink(htmlspecialchars($canonical), 'canonical');
+        }
 
         $document->setTitle($title);
 

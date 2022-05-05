@@ -2263,3 +2263,13 @@ img.ph-lazyload:not([src]) {
 .ph-disabled {
     opacity: 0.25;
 }
+
+.ph-cf-title {
+    font-weight: bold;
+}
+.ph-cf-title:after {
+    content: ":";
+}
+.ph-spec-title:after {
+    content: ":";
+}
