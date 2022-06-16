@@ -79,8 +79,11 @@ class PhocacartFormUser
 							$typeLimit = (int)PhocacartUtils::getNumberFromText($typeSuffix);
 						}
 
-						if(isset($v->validate) && $v->validate == 'email') {
+						if(isset($v->validate)) {
+							if($v->validate == 'email')
 								$type = 'email';
+							if($v->validate == 'tel')
+								$type = 'tel';
 						}
 
 						// --- PREDEFINED VALUES (limited feature, see documentation)
