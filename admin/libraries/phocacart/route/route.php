@@ -62,6 +62,21 @@ class PhocacartRoute
 		return $link;
 	}
 
+	public static function cleanUrlItemsView ($url) {
+		$config 					= JFactory::getConfig();
+		$sef						= $config->get('sef', 1);
+
+		if ($sef) {
+			$url  = str_replace(':', '-', $url);
+		}
+		$url  = str_replace('?id=0', '', $url);
+		$url  = str_replace('id=0', '', $url);
+		return $url;
+
+	}
+
+
+
 	public static function getCategoryRoute($catid, $catidAlias = '', $lang = array()) {
 
 
@@ -701,6 +716,7 @@ class PhocacartRoute
 
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
+
 		// Cause URL problems
 		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
@@ -741,27 +757,41 @@ class PhocacartRoute
 			$a['id']		= $app->input->get( 'id', '', 'int' );
 			$category 		= PhocacartCategory::getCategoryById($a['id']);
 
-			$a['idalias']	= $app->input->get( 'id', '', 'string' );
-			$a['alias']		= self::getAliasFromId($a['idalias']);
-			$a['idalias']	= str_replace(':', '-', $a['idalias']);
-			if (isset($category->alias)) {
-				$a['idalias']	= $a['id'] .'-'. $category->alias;
-				$a['alias']		= $category->alias;
+			if (!$category) {
+				$a['alias'] = '';
+				$a['idalias'] = '';
+			} else {
+				$a['idalias'] = $app->input->get('id', '', 'string');
+				$a['alias']   = self::getAliasFromId($a['idalias']);
+				$a['idalias'] = str_replace(':', '-', $a['idalias']);
+				if (isset($category->alias)) {
+					$a['idalias'] = $a['id'] . '-' . $category->alias;
+					$a['alias']   = $category->alias;
+				}
 			}
 
 		} else if ($option == 'com_phocacart' && ($view == 'item')) {
 			$a['id']		= $app->input->get( 'catid', '', 'int' );
 			$category 		= PhocacartCategory::getCategoryById($a['id']);
 
-			$a['idalias']	= $app->input->get( 'catid', '', 'string' );
-			$a['alias']		= self::getAliasFromId($a['idalias']);
-			$a['idalias']	= str_replace(':', '-', $a['idalias']);
-			if (isset($category->alias)) {
-				$a['idalias']	= $a['id'] .'-'. $category->alias;
-				$a['alias']		= $category->alias;
+			if (!$category) {
+				$a['alias'] = '';
+				$a['idalias'] = '';
+			} else {
+				$a['idalias']	= $app->input->get( 'catid', '', 'string' );
+				$a['alias']		= self::getAliasFromId($a['idalias']);
+				$a['idalias']	= str_replace(':', '-', $a['idalias']);
+				if (isset($category->alias)) {
+					$a['idalias']	= $a['id'] .'-'. $category->alias;
+					$a['alias']		= $category->alias;
+				}
 			}
 
 		}
+
+
+
+
 
 		return $a;
 	}

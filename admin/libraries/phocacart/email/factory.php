@@ -17,6 +17,13 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 
+
+
+if (!class_exists('PhocaCartLoader')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
+}
+JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
+
 phocacartimport('phocacart.email.mail');
 
 class PhocacartEmailFactory extends Factory{

@@ -1,0 +1,5 @@
+-- ALTER TABLE `#__phocacart_hits` CHANGE `ip` `ip` VARCHAR(46) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+-- ALTER TABLE `#__phocacart_logs` CHANGE `ip` `ip` VARCHAR(46) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+-- ALTER TABLE `#__phocacart_wishlists` CHANGE `ip` `ip` VARCHAR(46) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+-- ALTER TABLE `#__phocacart_questions` CHANGE `ip` `ip` VARCHAR(46) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+-- ALTER TABLE `#__phocacart_submit_items` CHANGE `ip` `ip` VARCHAR(46) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';

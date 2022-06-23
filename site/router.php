@@ -32,7 +32,7 @@ class PhocacartRouter extends RouterView
 	    $viewsId		= array('feed');
 		$viewsNotOwnId	= array('question');
 
-		$params = ComponentHelper::getParams('com_phocacart');
+		$params = ComponentHelper::getParams('com_phocacart');;
 		$this->noIDs = (bool)$params->get('remove_sef_ids');
 
 

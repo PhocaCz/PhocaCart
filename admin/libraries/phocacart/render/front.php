@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -662,9 +663,78 @@ class PhocacartRenderFront
         $o = '';
         if ((int)$id > 0) {
             $db = Factory::getDBO();
-            $query = 'SELECT a.introtext, a.fulltext FROM #__content AS a WHERE id = ' . (int)$id;
+
+            $query = $db->getQuery(true);
+
+            //$query = 'SELECT a.introtext, a.fulltext FROM #__content AS a WHERE id = ' . (int)$id;
+
+            $query = $db->getQuery(true)
+                    ->select('a.introtext, a.fulltext')
+                    ->from($db->quoteName('#__content', 'a'))
+                    ->where(
+                        [
+                            $db->quoteName('a.id') . ' = ' . (int)$id
+                        ]
+                    );
+
+
+
+
+            /*if (Associations::isEnabled())
+            {
+                $subQuery = $db->getQuery(true)
+                    ->select('COUNT(' . $db->quoteName('asso1.id') . ') > 1')
+                    ->from($db->quoteName('#__associations', 'asso1'))
+                    ->join('INNER', $db->quoteName('#__associations', 'asso2'), $db->quoteName('asso1.key') . ' = ' . $db->quoteName('asso2.key'))
+                    ->where(
+                        [
+                            $db->quoteName('asso1.id') . ' = ' . $db->quoteName('a.id'),
+                            $db->quoteName('asso1.context') . ' = ' . $db->quote('com_content.item'),
+                        ]
+                    );
+
+                $query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
+            }*/
+
             $db->setQuery((string)$query);
+
             $a = $db->loadObject();
+
+
+            // Associated article by language - lang, assoc
+            if (Associations::isEnabled())
+            {
+                $itemAssociations = array();
+
+                if ($id != null)
+                {
+                    $associations = JLanguageAssociations::getAssociations('com_content', '#__content', 'com_content.item', $id);
+
+
+                    $lang = Factory::getLanguage();
+                    $language = $lang->getTag();
+                    if (isset($language) && $language != '*' && $language != '') {
+                        foreach ($associations as $tag => $association) {
+                           if ($language == $tag && isset($association->id)) {
+
+                                $query = $db->getQuery(true)
+                                ->select('a.introtext, a.fulltext')
+                                ->from($db->quoteName('#__content', 'a'))
+                                ->where(
+                                    [
+                                        $db->quoteName('a.id') . ' = ' . (int)$association->id
+                                    ]
+                                );
+
+                                $db->setQuery((string)$query);
+                                $a = $db->loadObject();
+                            }
+
+                        }
+                    }
+                }
+            }
+
             $o = $a->introtext . $a->fulltext;
 
             // Disable emailclock for PDF | MAIL
@@ -693,6 +763,8 @@ class PhocacartRenderFront
             }
 
         }
+
+
 
         // If no text is set by article and there is default value
         if ($o == '' && $default != '') {

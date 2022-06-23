@@ -85,6 +85,7 @@ class PhocacartCountry
 	public static function storeCountries($countriesArray, $id, $table = 'shipping') {
 
 
+
 		if ($table == 'shipping') {
 			$t = '#__phocacart_shipping_method_countries';
 			$c = 'shipping_id';
@@ -110,7 +111,9 @@ class PhocacartCountry
 				$valuesString 	= '';
 
 				foreach($countriesArray as $k => $v) {
-					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					//$values[] = ' ('.(int)$id.', '.(int)$v[0].')'; NEW FORM
+					// No multidimensional in J4
+					$values[] = ' ('.(int)$id.', '.(int)$v.')';
 				}
 
 				if (!empty($values)) {

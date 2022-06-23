@@ -83,6 +83,10 @@ class PhocacartFormUser
 								$type = 'email';
 						}
 
+						if(isset($v->validate) && $v->validate == 'tel') {
+								$type = 'tel';
+						}
+
 						// --- PREDEFINED VALUES (limited feature, see documentation)
 						$predefinedValues = '';
 						if(isset($v->predefined_values) && $v->predefined_values != '') {

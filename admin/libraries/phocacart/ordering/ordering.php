@@ -185,6 +185,12 @@ class PhocacartOrdering
 
 					case 19:$orderingOutput = 'a.sku ASC';break;
 					case 20:$orderingOutput = 'a.sku DESC';break;
+
+					case 23:$orderingOutput	= 'a.stock ASC';break;
+					case 24:$orderingOutput	= 'a.stock DESC';break;
+					case 25:$orderingOutput	= 'a.featured ASC';break;
+					case 26:$orderingOutput	= 'a.featured DESC';break;
+
 					case 99:$orderingOutput	= 'RAND()';break;
 					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
 				}
@@ -275,7 +281,11 @@ class PhocacartOrdering
 				13 => Text::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8679;",
 				14 => Text::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8681;",
 				15 => Text::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8679;",
-				16 => Text::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8681;"
+				16 => Text::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8681;",
+				23 => Text::_('COM_PHOCACART_STOCK'). " &nbsp;" .  "&#8679;",
+				24 => Text::_('COM_PHOCACART_STOCK'). " &nbsp;" .  "&#8681;",
+				25 => Text::_('COM_PHOCACART_FEATURED'). " &nbsp;" .  "&#8679;",
+				26 => Text::_('COM_PHOCACART_FEATURED'). " &nbsp;" .  "&#8681;"
 			);
 
 		} else {
@@ -297,7 +307,11 @@ class PhocacartOrdering
 				13 => Text::_('COM_PHOCACART_MOST_POPULAR_ASC'),
 				14 => Text::_('COM_PHOCACART_MOST_POPULAR_DESC'),
 				15 => Text::_('COM_PHOCACART_MOST_VIEWED_ASC'),
-				16 => Text::_('COM_PHOCACART_MOST_VIEWED_DESC')
+				16 => Text::_('COM_PHOCACART_MOST_VIEWED_DESC'),
+				23 => Text::_('COM_PHOCACART_STOCK_ASC'),
+				24 => Text::_('COM_PHOCACART_STOCK_DESC'),
+				25 => Text::_('COM_PHOCACART_FEATURED_ASC'),
+				26 => Text::_('COM_PHOCACART_FEATURED_DESC')
 			);
 		}
 

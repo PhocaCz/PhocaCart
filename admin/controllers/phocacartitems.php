@@ -15,15 +15,17 @@ require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCartCommons
 {
 	public function __construct($config = array()) {
+
 		parent::__construct($config);
 		$this->registerTask('unfeatured',	'featured');
 	}
-	
+
 	public function &getModel($name = 'PhocaCartItem', $prefix = 'PhocaCartCpModel', $config = array()) {
+
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
 	}
-	
+
 	public function featured()
 	{
 		// Check for request forgeries

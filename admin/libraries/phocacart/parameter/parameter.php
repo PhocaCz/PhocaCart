@@ -289,7 +289,7 @@ class PhocacartParameter
 		$wheres[]	= ' pp.published = 1';// Parameter (parameter group)
 		$wheres[]	= ' pv.published = 1';// Parameter Value
 
-
+		$productTableAdded = 0;
 
 		if ($onlyAvailableProducts == 1) {
 
@@ -299,6 +299,7 @@ class PhocacartParameter
 
 			$lefts[] = ' #__phocacart_parameter_values_related AS pr ON pr.parameter_value_id = pv.id';
 			$lefts[] = ' #__phocacart_products AS p ON pr.item_id = p.id';
+			$productTableAdded = 1;
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
@@ -309,12 +310,17 @@ class PhocacartParameter
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('pv.language', $lang);
 				$lefts[] 	= ' #__phocacart_parameter_values_related AS pr ON pr.parameter_value_id = pv.id';
 				$lefts[] 	= ' #__phocacart_products AS p ON pr.item_id = p.id';
+				$productTableAdded = 1;
 			}
 		}
 
 		if (!empty($filterProducts)) {
 			$productIds = implode (',', $filterProducts);
 			$wheres[]	= 'p.id IN ('.$productIds.')';
+			if ($productTableAdded == 0) {
+                $lefts[] 	= ' #__phocacart_parameter_values_related AS pr ON pr.parameter_value_id = pv.id';
+				$lefts[] 	= ' #__phocacart_products AS p ON pr.item_id = p.id';
+            }
 		}
 
 		if ($limitCount > -1) {

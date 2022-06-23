@@ -423,6 +423,7 @@ final class PhocacartCategory
 				$jsSet = '';
 
 				if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
+
 					// Category View - force the category parameter if set in parameters
 					$jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1,  \'text\', 0, 1, 1);'; // ADD IS FIXED ( use "text" as formType - it cannot by managed by checkbox, it is fixed - always 1 - does not depends on checkbox, it is fixed 1
 				}
@@ -449,6 +450,11 @@ final class PhocacartCategory
 		if( empty(self::$categoryF[$cis])) {
 			/* phocacart import('phocacart.ordering.ordering');*/
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
+
+			if ($itemOrdering != '') {
+				$itemOrdering = 'c.parent_id, '. $itemOrdering;
+			}
+
 			$db 			= Factory::getDBO();
 			$wheres			= array();
 			$user 			= PhocacartUser::getUser();
@@ -478,7 +484,7 @@ final class PhocacartCategory
 			$groupsFast		= 'c.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
-			$query = 'SELECT c.id, c.title, c.alias, c.parent_id'
+			$query = 'SELECT c.id, c.ordering, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
@@ -487,6 +493,7 @@ final class PhocacartCategory
 			$db->setQuery( $query );
 
 			$items 						= $db->loadAssocList();
+
 			$tree 						= self::categoryTree($items);
 
 			$currentCatid				= self::getActiveCategoryId();
@@ -507,6 +514,11 @@ final class PhocacartCategory
 		if( empty(self::$categoryA[$cis])) {
 			/*phocacart import('phocacart.ordering.ordering');*/
 			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
+
+			if ($itemOrdering != '') {
+				$itemOrdering = 'c.parent_id, '. $itemOrdering;
+			}
+
 			$db 			= Factory::getDBO();
 			$wheres			= array();
 			$user 			= PhocacartUser::getUser();

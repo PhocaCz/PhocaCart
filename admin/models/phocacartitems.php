@@ -29,6 +29,8 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 	public function __construct($config = array()) {
 
+
+
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$c = new PhocacartRenderAdmincolumns();
 
@@ -124,8 +126,10 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', null);
 		$this->setState('filter.category_id', $categoryId);
 
-		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
-		$this->setState('filter.manufacturer_id', $categoryId);
+
+
+		$manId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
+		$this->setState('filter.manufacturer_id', $manId);
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);

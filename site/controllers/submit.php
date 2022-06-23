@@ -214,6 +214,45 @@ class PhocaCartControllerSubmit extends FormController
 		}
 
 
+
+		// IMAGE VALIDATION (need to be run before joomla validation)
+		if ($imageRequired) {
+			$imageUploaded = false;
+
+			if (!empty($file['items_item']['image'])) {
+				foreach ($file['items_item']['image'] as $k => $v) {
+					if (isset($v['name']) && $v['name'] != '' && isset($v['tmp_name']) && $v['tmp_name'] != '' && isset($v['error']) && (int)$v['error'] < 1) {
+						$imageUploaded = true;
+						break;
+					}
+				}
+			}
+
+			if (!$imageUploaded) {
+				$continueValidate = false;
+				//PhocacartLog::add(3, 'Submit Item - Image not added - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
+				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_IMAGE_NOT_SUBMITTED' ), 'error');
+			}
+
+			// Used only for validation rules
+			$data['items_item']['image'] = true;
+
+		} else {
+			// Remove empty form
+
+			if (!empty($file['items_item']['image'])) {
+				foreach ($file['items_item']['image'] as $k => $v) {
+					if (isset($v['name']) && $v['name'] != '' && isset($v['tmp_name']) && $v['tmp_name'] != '' && isset($v['error']) && (int)$v['error'] < 1) {
+
+					} else {
+						unset($file['items_item']['image'][$k]);
+					}
+				}
+			}
+
+		}
+
+
 		$validate 			= $model->validate($form, $data);// includes preprocessForm so it includes parameters too
 
 		if ($validate === false) {
@@ -315,37 +354,7 @@ class PhocaCartControllerSubmit extends FormController
 		$data['phq_captcha'] = '';
 
 
-		// IMAGE VALIDATION
-		if ($imageRequired) {
-			$imageUploaded = false;
 
-			if (!empty($file['items_item']['image'])) {
-				foreach ($file['items_item']['image'] as $k => $v) {
-					if (isset($v['name']) && $v['name'] != '' && isset($v['tmp_name']) && $v['tmp_name'] != '' && isset($v['error']) && (int)$v['error'] < 1) {
-						$imageUploaded = true;
-						break;
-					}
-				}
-			}
-			if (!$imageUploaded) {
-				$continueValidate = false;
-				//PhocacartLog::add(3, 'Submit Item - Image not added - '.$v, 0, 'Word: '.$item.', IP: '. $data['ip'].', User ID: '.$user->id);
-				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_IMAGE_NOT_SUBMITTED' ), 'error');
-			}
-		} else {
-			// Remove empty form
-
-			if (!empty($file['items_item']['image'])) {
-				foreach ($file['items_item']['image'] as $k => $v) {
-					if (isset($v['name']) && $v['name'] != '' && isset($v['tmp_name']) && $v['tmp_name'] != '' && isset($v['error']) && (int)$v['error'] < 1) {
-
-					} else {
-						unset($file['items_item']['image'][$k]);
-					}
-				}
-			}
-
-		}
 
 
 		if ($continueValidate == false) {

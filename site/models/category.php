@@ -364,6 +364,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 			. ' ORDER BY '.$itemOrdering;
 		}
 
+
 		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
 
 		return $q;

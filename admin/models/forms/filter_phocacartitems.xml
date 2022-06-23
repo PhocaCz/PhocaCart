@@ -13,7 +13,7 @@
 		<option value="0">COM_PHOCACART_UNPUBLISHED</option>
 		</field>
 
-		<field name="category_id" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="JOPTION_FILTER_CATEGORY" description="JOPTION_FILTER_CATEGORY_DESC" onchange="this.form.submit();" />
+		<field name="category_id" typemethod="filter" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="JOPTION_FILTER_CATEGORY" description="JOPTION_FILTER_CATEGORY_DESC" onchange="this.form.submit();" />
 
 		<field name="manufacturer_id" type="PhocaManufacturer" label="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" description="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" onchange="this.form.submit();" />
 

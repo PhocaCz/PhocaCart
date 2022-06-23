@@ -297,6 +297,8 @@ class PhocacartSpecification
 		$wheres[]	= ' sg.published = 1';
 		$lefts[] 	= ' #__phocacart_specification_groups AS sg ON s.group_id = sg.id';
 
+		$productTableAdded = 0;
+
 		if ($onlyAvailableProducts == 1) {
 
 			if ($lang != '' && $lang != '*') {
@@ -305,6 +307,7 @@ class PhocacartSpecification
 
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
+			$productTableAdded = 0;
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
 		} else {
@@ -314,11 +317,15 @@ class PhocacartSpecification
 
 			}
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+			$productTableAdded = 0;
 		}
 
 		if (!empty($filterProducts)) {
 			$productIds = implode (',', $filterProducts);
 			$wheres[]	= 'p.id IN ('.$productIds.')';
+			if ($productTableAdded == 0) {
+                $lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+            }
 		}
 
 		$query = 'SELECT '.$columns

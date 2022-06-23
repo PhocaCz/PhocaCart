@@ -12,13 +12,13 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 final class PhocacartStatisticsHits
 {
-	
+
 	public function __construct() {
 
 	}
 
 	public static function productHit($productId = 0) {
-		
+
 		if ($productId == 0) {
 			return false;
 		}
@@ -26,20 +26,20 @@ final class PhocacartStatisticsHits
 		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$additional_hits	= $paramsC->get( 'additional_hits', array() );
-		
-		
+
+
 		// 1 ... product view
 		if (!in_array(1, $additional_hits)) {
 			return false;
 		}
-		
-		
+
+
 		$user 	= PhocacartUser::getUser();
 		$db		= Factory::getDbo();
 		$ip		= PhocacartUtils::getIp();
 		$date 	= Factory::getDate();
 		$item	= array();
-		
+
 		$q = 'SELECT a.id, a.hits'
 			.' FROM #__phocacart_hits AS a';
 		if (isset($user->id) && (int)$user->id > 0) {
@@ -51,7 +51,7 @@ final class PhocacartStatisticsHits
 		    .' LIMIT 1';
 		$db->setQuery($q);
 		$item = $db->loadAssoc();
-		
+
 		$q = '';
 		if (empty($item)){
 			if (isset($user->id) && (int)$user->id > 0) {
@@ -66,14 +66,14 @@ final class PhocacartStatisticsHits
 		} else if (isset($item['id']) && (int)$item['id'] > 0) {
 			$hits = (int)$item['hits'] + 1;
 			if (isset($user->id) && (int)$user->id > 0) {
-				
+
 				$q = 'UPDATE #__phocacart_hits SET hits = '.(int)$hits.', date = '.$db->quote($date)
 				.' WHERE product_id = '.(int)$productId
 				.' AND user_id = '.(int)$user->id;
 				$db->setQuery($q);
 				$db->execute();
 				return true;
-			
+
 			} else if (isset($ip) && $ip != '') {
 				$q = 'UPDATE #__phocacart_hits SET hits = '.(int)$hits.', date = '.$db->quote($date)
 				.' WHERE product_id = '.(int)$productId
@@ -82,33 +82,33 @@ final class PhocacartStatisticsHits
 				$db->execute();
 				return true;
 			}
-			
+
 		}
 		return false;
 	}
-	
+
 	public static function searchHit($search = '') {
-		
+
 		if ($search == '') {
 			return false;
 		}
-		
+
 		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$additional_hits	= $paramsC->get( 'additional_hits', array() );
-		
+
 		// 2 ... search term
 		if (!in_array(2, $additional_hits)) {
 			return false;
 		}
-			
-		
+
+
 		$user 	= PhocacartUser::getUser();
 		$db		= Factory::getDbo();
 		$ip		= PhocacartUtils::getIp();
 		$date 	= Factory::getDate();
 		$item	= array();
-		
+
 		$q = 'SELECT a.id, a.hits'
 			.' FROM #__phocacart_hits AS a';
 		if (isset($user->id) && (int)$user->id > 0) {
@@ -120,7 +120,7 @@ final class PhocacartStatisticsHits
 		    .' LIMIT 1';
 		$db->setQuery($q);
 		$item = $db->loadAssoc();
-		
+
 		$q = '';
 		if (empty($item)){
 			if (isset($user->id) && (int)$user->id > 0) {
@@ -135,14 +135,14 @@ final class PhocacartStatisticsHits
 		} else if (isset($item['id']) && (int)$item['id'] > 0) {
 			$hits = (int)$item['hits'] + 1;
 			if (isset($user->id) && (int)$user->id > 0) {
-				
+
 				$q = 'UPDATE #__phocacart_hits SET hits = '.(int)$hits.', date = '.$db->quote($date)
 				.' WHERE item = '.$db->quote($db->escape($search))
 				.' AND user_id = '.(int)$user->id;
 				$db->setQuery($q);
 				$db->execute();
 				return true;
-			
+
 			} else if (isset($ip) && $ip != '') {
 				$q = 'UPDATE #__phocacart_hits SET hits = '.(int)$hits.', date = '.$db->quote($date)
 				.' WHERE item = '.$db->quote($db->escape($search))
@@ -151,7 +151,7 @@ final class PhocacartStatisticsHits
 				$db->execute();
 				return true;
 			}
-			
+
 		}
 		return false;
 	}

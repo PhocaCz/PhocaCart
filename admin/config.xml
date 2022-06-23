@@ -179,6 +179,11 @@
                 <option value="14">COM_PHOCACART_MOST_POPULAR_DESC</option>
 				<option value="15">COM_PHOCACART_MOST_VIEWED_ASC</option>
                 <option value="16">COM_PHOCACART_MOST_VIEWED_DESC</option>
+                <option value="23">COM_PHOCACART_STOCK_ASC</option>
+                <option value="24">COM_PHOCACART_STOCK_DESC</option>
+                <option value="25">COM_PHOCACART_FEATURED_ASC</option>
+                <option value="26">COM_PHOCACART_FEATURED_DESC</option>
+
             </field>
 
 			<field name="item_ordering_values" default="1,2,3,4,5,6,7,8,21,22,9,10,19,20" size="18" type="text" label="COM_PHOCACART_FIELD_PRODUCT_ORDERING_VALUES_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ORDERING_VALUES_DESC"/>

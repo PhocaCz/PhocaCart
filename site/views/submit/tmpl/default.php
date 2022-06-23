@@ -288,7 +288,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
 
 } else {
 
-    require_once JPATH_SITE . '/components/com_users/helpers/route.php';
+   // require_once JPATH_SITE . '/components/com_users/helpers/route.php';
     jimport('joomla.application.module.helper');
     $module = ModuleHelper::getModule('mod_login');
     $mP = new Registry();

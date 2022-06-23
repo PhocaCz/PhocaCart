@@ -194,6 +194,10 @@ class PhocaCartModelSubmit extends FormModel
 		$data['upload_token'] 			= PhocacartUtils::getToken();
 		$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
+		/*
+		if (isset($data['catid'])) {
+			$data['catid'] = (int)$data['catid'];
+		}*/
 
 		$folderPath         = Path::clean($path['orig_abs_ds'] . $data['upload_folder']);
 
