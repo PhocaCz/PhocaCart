@@ -472,13 +472,27 @@ table#extensionList tr td {
 
 /* Icons next to menu items - menu icons */
 a.ph-submenu:before {
-
 	color: #A6AAB1;
     float:left;
     margin-right: 5px;
 	margin-top: 2px;
 	font-family: 'JoomlaFont' !important;
 	content: "\13c5b";/*home*/
+}
+
+.item-level-1 > a.ph-submenu:before {
+	font-size: 1.2em;
+	margin: 0 .85rem;
+}
+
+.nav a.ph-submenu.ph-submenu-back:before {
+	color: #fff;
+	content: "\13bf1";/*arrow-left*/
+}
+
+.nav a.ph-submenu.ph-submenu-phocacart:before {
+	color: #fff;
+	content: "\13c12";/*cart*/
 }
 
 .nav a.ph-submenu.ph-submenu-cp:before {
