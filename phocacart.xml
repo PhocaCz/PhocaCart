@@ -2,7 +2,7 @@
 <extension type="component" method="upgrade" version="4.0">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>23/06/2022</creationDate>
+	<creationDate>24/06/2022</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
@@ -61,7 +61,7 @@
 		<menu img="class:cp" alt="COM_PHOCACART" link="option=com_phocacart">COM_PHOCACART</menu>
 
 			<submenu>
-				<menu img="class:cp" alt="COM_PHOCACART_CONTROLPANEL" view="phocacartcp" link="option=com_phocacart">COM_PHOCACART_CONTROLPANEL</menu>
+				<menu img="class:cp" alt="COM_PHOCACART_CONTROLPANEL" view="phocacartcp" link="option=com_phocacart&amp;view=phocacartcp">COM_PHOCACART_CONTROLPANEL</menu>
 				<menu img="class:items" alt="COM_PHOCACART_PRODUCTS" view="phocacartitems" link="option=com_phocacart&amp;view=phocacartitems">COM_PHOCACART_PRODUCTS</menu>
 				<menu img="class:categories" alt="COM_PHOCACART_CATEGORIES" view="phocacartcategories" link="option=com_phocacart&amp;view=phocacartcategories">COM_PHOCACART_CATEGORIES</menu>
 				<menu img="class:specifications" alt="COM_PHOCACART_SPECIFICATIONS" view="phocacartspecifications" link="option=com_phocacart&amp;view=phocacartspecifications">COM_PHOCACART_SPECIFICATIONS</menu>
