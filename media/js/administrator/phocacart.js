@@ -419,6 +419,40 @@ jQuery(document).ready(function() {
 		}
 	});
 
+	const container = jQuery('.main-nav-container');
+	if (container) {
+		const menu = container.children('ul');
+		if (menu) {
+			const submenu = menu.find('a[href="index.php?option=com_phocacart"] + ul');
+			console.log(submenu);
+			if (submenu) {
+				const phSubmenu = submenu.clone();
+				phSubmenu.attr('class', 'nav flex-column main-nav metismenu child-open ph-menu');
+				phSubmenu.find('li').each(function() {
+					jQuery(this).removeClass('item-level-3').addClass('item-level-1');
+				});
+
+				phSubmenu.prepend(jQuery('<li class="item item-level-1"><a href="#" class="no-dropdown ph-submenu ph-submenu-back"><span class="sidebar-item-title">' + Joomla.JText._('COM_PHOCACART_MENU_BACK') + '</span></a></li>'));
+				const phMenuSwitch = phSubmenu.find('.ph-submenu-back');
+				phMenuSwitch.click(function(e) {
+					e.preventDefault();
+					menu.css('display', 'block');
+					phSubmenu.css('display', 'none');
+				});
+
+				menu.prepend(jQuery('<li class="item item-level-1"><a href="#" class="no-dropdown ph-submenu ph-submenu-phocacart"><span class="sidebar-item-title">' + Joomla.JText._('COM_PHOCACART_MENU_PHOCACART') + '</span></a></li>'));
+				const menuSwitch = menu.find('.ph-submenu-phocacart');
+				menuSwitch.click(function(e) {
+					e.preventDefault();
+					phSubmenu.css('display', 'block');
+					menu.css('display', 'none');
+				});
+
+				container.append(phSubmenu);
+				menu.css('display', 'none');
+			}
+		}
+	}
 })
 
 
