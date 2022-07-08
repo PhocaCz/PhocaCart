@@ -439,6 +439,10 @@ class PhocacartPrice
         $rounding = $rounding_calculation; // 1 ... up, 2 ... down
 
 
+        if (!$price) {
+            $price = 0;
+        }
+
         $priceR = round($price, $this->price_decimals, $rounding);
 
         return $priceR;

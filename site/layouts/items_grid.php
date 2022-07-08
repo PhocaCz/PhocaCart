@@ -27,6 +27,8 @@ $t		= $d['t'];
 $s      = $d['s'];
 $col    = $d['col'];
 
+
+
 echo '<div class="'.$s['c']['row-item'].' '.$s['c']["col.xs12.sm{$col}.md{$col}"].'">';
 echo '<div class="ph-item-box '.$d['lt'].'">';
 

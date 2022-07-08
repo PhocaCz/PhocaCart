@@ -38,7 +38,9 @@ if ($d['t']['show_pagination']) {
     echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$d['s']['c']['col.xs12.sm12.md12'].' ph-center-pagination ph-pagination-mt pagination">';
-	echo str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select"', $d['t']['pagination']->getPagesCounter());
+	if ($d['t']['pagination']->getPagesCounter()) {
+		echo str_replace('class="form-control"', 'class="' . $d['s']['c']['inputbox.form-select'] . ' chosen-select"', $d['t']['pagination']->getPagesCounter());
+	}
 	echo '</div>';
 
     echo '<div class="ph-cb"></div>';

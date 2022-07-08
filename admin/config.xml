@@ -29,7 +29,7 @@
             <field name="image_height_cats" default="" size="10" type="text" label="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORIES_VIEW_DESC"/>
 
             <field name="display_view_category_button" type="list" class="form-select" default="1" label="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_DESC">
-<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_ICON_ONLY</option>
             </field>
@@ -2297,7 +2297,7 @@
 
 			<field name="upload_maxsize" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
 
-			<field name="upload_maxsize_frontend" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
+			<field name="upload_maxsize_frontend" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_FRONTEND_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_FRONTEND_DESC"/>
 
 			<field name="ignore_file_types_check" default="0" type="list" label="COM_PHOCACART_IGNORE_FILE_TYPES_CHECK_LABEL" description="COM_PHOCACART_IGNORE_FILE_TYPES_CHECK_DESC" >
 	<!--<option value="1">COM_PHOCACART_YES_UPLOAD_PARAM</option>
@@ -2330,9 +2330,8 @@
 
 		</fieldset>
 
-        <fieldset name="permissions_label" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
-            <field name="rules" type="rules" component="com_phocacart" filter="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component" description=""/>
-
+        <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
+            <field name="rules" type="rules" component="com_phocacart" filter="rules" validate="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component"/>
         </fieldset>
 
     </fields>

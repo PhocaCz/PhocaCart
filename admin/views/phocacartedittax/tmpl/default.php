@@ -50,11 +50,11 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 
 			echo '<div class="span2 col-sm-2 col-md-2">';
 
-			echo '<input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][title]" value="'.htmlspecialchars($v->tcr_title).'">';
+			echo '<input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][title]" value="'.htmlspecialchars((string)$v->tcr_title).'">';
 			echo '<input type="hidden" name="jform['.(int)$v->id.'][tax_id]" value="'.(int)$v->id.'">';
 			echo '</div>';
 
-			echo '<div class="span2 col-sm-2 col-md-2"><input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][alias]" value="'.htmlspecialchars($v->tcr_alias).'"></div>';
+			echo '<div class="span2 col-sm-2 col-md-2"><input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][alias]" value="'.htmlspecialchars((string)$v->tcr_alias).'"></div>';
 
 			// cleanPrice method add 0 to empty values which is wrong in this case as we have:
 			// VAT = 0 (valid VAT)

@@ -407,7 +407,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 		$dL['icon']				= $icon;// Icons
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
-
+        $dL['item']             = $v;
 		//$dL['product_header'] .= '<div>SKU: '.$v->sku.'</div>';
 		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 
