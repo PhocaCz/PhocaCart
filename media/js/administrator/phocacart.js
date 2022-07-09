@@ -424,7 +424,6 @@ jQuery(document).ready(function() {
 		const menu = container.children('ul');
 		if (menu) {
 			const submenu = menu.find('a[href="index.php?option=com_phocacart"] + ul');
-			console.log(submenu);
 			if (submenu) {
 				const phSubmenu = submenu.clone();
 				phSubmenu.attr('class', 'nav flex-column main-nav metismenu child-open ph-menu');

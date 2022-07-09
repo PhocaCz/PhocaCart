@@ -580,11 +580,13 @@ function phPriceFilterRange() {
 		}
 		jQuery("#phPriceFilterPrice").html("" + phLang['COM_PHOCACART_PRICE'] + ": " + phGetPriceFormat(from) + " - " + phGetPriceFormat(to));
 	})
-
 }
 
 function phClearField(field) {
 	jQuery(field).val('');
+	if (field == '#phPriceFromTopricefrom' || field == '#phPriceFromTopriceto') {
+		phPriceFilterRange ();
+	}
 }
 
 
