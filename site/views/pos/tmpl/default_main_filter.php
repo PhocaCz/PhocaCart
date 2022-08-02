@@ -19,7 +19,7 @@ echo '<div class="ph-pos-filter-box">';
 echo '<div class="ph-pos-date-order-box" id="phPosDateOrdersBox">';
 echo '<form id="phPosDateOrdersForm" class="form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
-JHtml::_('script', 'system/html5fallback.js', false, true);
+//JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "date";
@@ -38,7 +38,11 @@ $valueFrom 	= $this->escape($this->state->get('filter.date', PhocacartDate::getC
 
 $calendar = HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes);
 $calendarIcon = $this->s['i']['calendar'];
-$calendar = str_replace('icon-calendar', $calendarIcon .' icon-calendar', $calendar);
+
+
+$find = '<span class="icon-calendar" aria-hidden="true"></span>';
+$replace = PhocacartRenderIcon::icon($this->s['i']['calendar'].' icon-calendar', 'aria-hidden="true"');
+$calendar = str_replace($find, $replace, $calendar);
 
 echo '<div class="ph-inline-param">'. $calendar.'</div>';
 
@@ -58,7 +62,8 @@ echo '</div>';
 echo '<div class="ph-pos-sku-product-box" id="phPosSkuProductBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+//echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+echo PhocacartRenderIcon::icon($this->s['i']['barcode'], '', '', ' ');
 
 echo '<form id="phPosSkuProductForm" class="phItemCartBoxForm phjAddToCart phjPos phjAddToCartVPosPSku form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -84,7 +89,8 @@ echo '</div>';
 echo '<div class="ph-pos-card-user-box" id="phPosCartUserBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+//echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+echo PhocacartRenderIcon::icon($this->s['i']['barcode'], '', '', ' ');
 
 echo '<form id="phPosCardUserForm" class="phjAddToCartVPosPCard form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -109,7 +115,8 @@ echo '</div>';
 // SEARCH
 echo '<div class="ph-pos-search-box" id="phPosSearchBox">';
 echo '<div class="inner-addon right-addon">';
-echo ' <i class="'.$this->s['i']['search'].'"></i>';
+//echo ' <i class="'.$this->s['i']['search'].'"></i>';
+echo PhocacartRenderIcon::icon($this->s['i']['search'], '', '', ' ');
 echo '	<input type="text" name="phpossearch" id="phPosSearch" value="'.htmlspecialchars($this->t['search']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.Text::_('COM_PHOCACART_SEARCH').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 echo '</div>';
 echo '</div>';

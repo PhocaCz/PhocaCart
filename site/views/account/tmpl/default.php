@@ -79,7 +79,7 @@ if ((int)$this->u->id > 0) {
 	//echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' '.$this->s['c']['pull-right'].' ph-right ph-account-address-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['save'].'"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') . Text::_('COM_PHOCACART_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
 

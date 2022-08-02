@@ -328,11 +328,13 @@ class Adminviews
             . '<input type="hidden" name="original_order_values" value="' . implode(',', $originalOrders) . '" />' . "\n";
     }
 
-    public function td($value, $class = '') {
+    public function td($value, $class = '', $tag = 'td') {
+
+        // th for columns which cannot be hidden (Joomla feature);
         if ($class != '') {
-            return '<td class="' . $class . '">' . $value . '</td>' . "\n";
+            return '<'.$tag.' class="' . $class . '">' . $value . '</'.$tag.'>' . "\n";
         } else {
-            return '<td>' . $value . '</td>' . "\n";
+            return '<'.$tag.'>' . $value . '</'.$tag.'>' . "\n";
         }
     }
 

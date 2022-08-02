@@ -106,7 +106,7 @@ if (is_array($this->items)) {
         } else {
             $checkO .= $this->escape($item->title);
         }
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         $pC = '<div class="center">' . $item->count_products;
         if (PhocacartUtils::validateDate($item->count_date)) {

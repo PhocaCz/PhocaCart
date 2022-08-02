@@ -103,14 +103,14 @@ if ($this->u->id > 0 || ($this->t['token_download'] != '' && $this->t['token_ord
 				echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 				echo '<input type="hidden" name="d" value="'.$this->t['token_download'].'" />';
 				echo '<input type="hidden" name="o" value="'.$this->t['token_order'].'" />';
-				echo '<button type="submit" class="'.$this->s['c']['btn.btn-primary'].' ph-btn"><span class="'.$this->s['i']['download'].'"></span> '.Text::_('COM_PHOCACART_DOWNLOAD').'</button>';
+				echo '<button type="submit" class="'.$this->s['c']['btn.btn-primary'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['download'], '', ' ') .Text::_('COM_PHOCACART_DOWNLOAD').'</button>';
 				echo HTMLHelper::_('form.token');
 				echo '</form>';
 
 				echo '</div>';
 
 			} else {
-				echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center"><span class="'.$this->s['i']['ban'].' ph-red"></span></div>';
+				echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].' ph-center">'.PhocacartRenderIcon::icon($d['s']['i']['ban'] . ' ph-red').'</div>';
 			}
 
 			echo '</div>';// end row

@@ -22,9 +22,9 @@ $d = $displayData;
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
             <?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-                <a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo $d['s']['i']['compare'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_COMPARE'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['compare']) ?></a>
             <?php } else { ?>
-                <a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo $d['s']['i']['compare'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_COMPARE'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['compare']) ?></a>
             <?php } ?>
 
             <?php echo HTMLHelper::_('form.token'); ?>

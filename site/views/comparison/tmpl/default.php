@@ -125,7 +125,10 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<input type="hidden" name="option" value="com_phocacart" />';
 		$c['remove'] .= '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		$c['remove'] .= '<div class="ph-center">';
-		$c['remove'] .= '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn"><span class="'.$this->s['i']['remove'].'"></span> '.Text::_('COM_PHOCACART_REMOVE').'</button>';
+		$c['remove'] .= '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn">';
+		//$c['remove'] .= ' '<span class="' . $this->s['i']['remove'] . '"></span>';
+		$c['remove'] .= PhocacartRenderIcon::icon($this->s['i']['remove']);
+		$c['remove'] .= '</button>';
 		$c['remove'] .= '</div>';
 		$c['remove'] .= HTMLHelper::_('form.token');
 		$c['remove'] .= '</form>';
@@ -162,7 +165,7 @@ if (!empty($this->t['items'])) {
 		}
 
 		$c2['link'] .= '<td class="ph-center">';
-		$c2['link'] .= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm']. ' ph-btn" role="button"><span class="'.$this->s['i']['search'].'"></span> '.Text::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+		$c2['link'] .= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm']. ' ph-btn" role="button">'.PhocacartRenderIcon::icon($this->s['i']['search'], '', ' ') .Text::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 		$c2['link'] .= '</td>';
 
 	}

@@ -168,7 +168,7 @@ if (is_array($this->items)) {
 				$checkO .= $this->escape($item->title);
 			}
 			$checkO .= ' <span class="smallsub">(<span>'.Text::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
-			echo $r->td($checkO, "small");
+			echo $r->td($checkO, "small", 'th');
 			*/
 			//$linkBox = '<a class="select-link" href="javascript:void(0)" data-function="'.$this->escape($onclick).'" data-id="'.$item->id.'" data-title="'.$this->escape($item->title).'" data-uri="'. $this->escape($linkLang).'" data-language="'.$this->escape($lang).'">';
 

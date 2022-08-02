@@ -112,7 +112,7 @@ if (is_array($this->items)) {
             $checkO .= $this->escape($item->productname);
         }
 
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         // Category
         $item->cattitle = !isset($item->cattitle) ? Text::_('COM_PHOCACART_NO_PRODUCT') : $item->cattitle;

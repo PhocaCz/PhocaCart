@@ -164,7 +164,7 @@ if (!empty($d['fullitems'][1])) {
 				$imageOutput = $layoutI->render($d2);
 			}
 		} else {
-			$imageOutput = '<div class="ph-no-image"><span class="'.$d['s']['i']['ban'].'"</span></div>';
+			$imageOutput = '<div class="ph-no-image">'.PhocacartRenderIcon::icon($d['s']['i']['ban']).'</div>';
 		}
 
 		echo '<div class="'.$r.$cV.'">';
@@ -193,9 +193,9 @@ if (!empty($d['fullitems'][1])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$d['actionbase64'].'" />';
 		//UPDATE
-		echo ' <button class="'.$d['s']['c']['btn.btn-success.btn-sm'].' ph-btn" type="submit" name="action" value="update"><span title="'.Text::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'" class="'.$d['s']['i']['refresh'].'"></span></button>';
+		echo ' <button class="'.$d['s']['c']['btn.btn-success.btn-sm'].' ph-btn" type="submit" name="action" value="update">'.PhocacartRenderIcon::icon($d['s']['i']['refresh'], 'title="'.Text::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'"').'</button>';
 		//DELETE
-		echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete"><span title="'.Text::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'" class="'.$d['s']['i']['trash'].'"></span></button>';
+		echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete">'.PhocacartRenderIcon::icon($d['s']['i']['trash'], 'title="'.Text::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'"').'</button>';
 		echo HTMLHelper::_('form.token');
 		echo '</div>';
 		echo '</form>';
@@ -728,7 +728,7 @@ if (!empty($d['fullitems'][1])) {
 } else {
 
 	if ($d['pos']) {
-		echo '<div class="ph-cart-icon"><span class="'.$d['s']['i']['shopping-cart'].'"></span></div>';
+		echo '<div class="ph-cart-icon">'.PhocacartRenderIcon::icon($d['s']['i']['shopping-cart']) .'</div>';
 	}
 	echo '<div class="ph-cart-empty">'.Text::_('COM_PHOCACART_SHOPPING_CART_IS_EMPTY').'</div>';
 }

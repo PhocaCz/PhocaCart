@@ -103,7 +103,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 	 * So by sure, phFilterNewUrlSet is cleaned (except id of category which is set in urlItemsView)
 	*/
 	phFilterNewUrlSet = urlItemsView;
-	
+
 
 	/*
 	 * If there is empty phFilterNewUrlRemove, this means:
@@ -299,7 +299,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 	value = phFilterValue(value);
 
 	/* Array -> String */
-	
+
 	param 			= phArrayToString(param);
 	var queryString	= jQuery.param.querystring();
 	queryString		= phArrayToString(queryString);
@@ -310,7 +310,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 	if (phFilterNewUrlSet !== '' || phFilterNewUrlSetPreviousParamWaiting == 1) {
 		phFilterNewUrlSet	= phArrayToString(phFilterNewUrlSet);// wait back from () to [] so it can be read by querystring
 		paramsAll = jQuery.deparam.querystring(phFilterNewUrlSet);
-		
+
 
 	} else {
 		paramsAll = jQuery.deparam.querystring(queryString);
@@ -332,13 +332,13 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 
 	if (uniqueValue == 1) {
 		paramsTypeStringNew[param] = value;// { param:value};// unique value - always overwrite old value
-		
+
 	} else if (value === '') {
-		
+
 	} else if (typeof paramsAll[param] !== 'undefined') {
 
 		var paramsTypeString 	= paramsAll[param];
-		
+
 
 		var paramsTypeArray		= paramsTypeString.split(',');
 		paramsTypeArray 		= phCleanArray(paramsTypeArray);
@@ -356,7 +356,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 			paramsTypeStringNew[param] = paramsTypeString;//{ param:paramsTypeString};// Unchanged
 		}
 	} else {
-		
+
 		paramsTypeStringNew[param] = value;//{ param:value};
 	}
 
@@ -368,7 +368,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 		url = location.search;// complete url with selected parameters
 	}
 
-	
+
 	// Set new url or take the one from previous parameter
 	if (phFilterNewUrlSet !== '' || phFilterNewUrlSetPreviousParamWaiting == 1) {
 		url = phFilterNewUrlSet;
@@ -378,10 +378,10 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 	/* Array -> String */
 	url		= phArrayToString(url);
 
-	
+
 	phFilterNewUrlSet = jQuery.param.querystring( url, paramsTypeStringNew, mergeMode);// one parameter only
 
-	
+
 
 	phFilterNewUrlSet = phReplaceAll('%2C', ',', phFilterNewUrlSet);
 	phFilterNewUrlSet 	= phReplaceAll('%2C', ',', phFilterNewUrlSet);
@@ -389,12 +389,12 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 	phFilterNewUrlSet 	= phReplaceAll('%5D', ']', phFilterNewUrlSet);
 	phFilterNewUrlSet 	= phReplaceAll('%3A', ':', phFilterNewUrlSet);
 	/* String -> Array */
-	
+
 	phFilterNewUrlSet	= phStringToArray(phFilterNewUrlSet);
-	
+
 	phFilterNewUrlSet	= phCleanEmptyParams(phFilterNewUrlSet);
 	phFilterNewUrlSet	= phCleanAloneQuestionMark(phFilterNewUrlSet);
-	
+
 
 	// Wait for next parameter
 	if (wait == 1) {
@@ -411,13 +411,13 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
 
 			phUpdatePageAndParts(phFilterNewUrlSet, source);// Update Main, Search, Filter
-			
+
 			phFilterNewUrlSet = '';
 			phFilterNewUrlSetPreviousParamWaiting = 0;
 			return 2;
 		} else {
 
-			
+
 			document.location = phFilterNewUrlSet;
 		}
 
@@ -455,7 +455,7 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
 		//value = phEncode(value);
       	if (formAction == 1) {
 
-			
+
 			 phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
 
       	} else {
@@ -482,7 +482,7 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
    	} else {
 
       	if (formAction.checked) {
-			  
+
 
          	phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	} else {
@@ -598,10 +598,20 @@ jQuery(document).ready(function () {
     .on('shown.bs.collapse', function() {
 		jQuery(this).parent().find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
 		jQuery(this).parent().find(".fa-caret-right").removeClass("fa-caret-right").addClass("fa-caret-down");
+		/* SVG */
+		var useT = jQuery(this).parent().find("svg use");
+		var link = useT.attr('xlink:href');
+		link = link.replace('#pc-si-triangle-right', '#pc-si-triangle-bottom');
+		useT.attr('xlink:href', link);
     })
     .on('hidden.bs.collapse', function() {
         jQuery(this).parent().find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
         jQuery(this).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
+		/* SVG */
+		var useT = jQuery(this).parent().find("svg use");
+		var link = useT.attr('xlink:href');
+		link = link.replace('#pc-si-triangle-bottom', '#pc-si-triangle-right');
+		useT.attr('xlink:href', link);
 	});
 
 

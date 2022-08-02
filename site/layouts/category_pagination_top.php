@@ -45,9 +45,20 @@ if ($d['t']['show_pagination_top']) {
     echo '<div class="'.$d['s']['c']['col.xs12.sm4.md4'].' ph-pag-top-row">';
 	if ($d['t']['show_switch_layout_type']) {
 
-		echo '<button type="button" aria-label="'.Text::_('COM_PHOCACART_GRID').'" class="'.$d['s']['c']['btn.btn-default'].' phItemSwitchLayoutType grid '.$d['t']['layouttypeactive'][0].'" data-layouttype="grid"><span class="'.$d['s']['i']['grid'].'"></span></button> ';
-		echo '<button type="button" aria-label="'.Text::_('COM_PHOCACART_GRID_LIST').'" class="'.$d['s']['c']['btn.btn-default'].' phItemSwitchLayoutType gridlist '.$d['t']['layouttypeactive'][1].'" data-layouttype="gridlist"><span class="'.$d['s']['i']['gridlist'].'"></span></button> ';
-		echo '<button type="button" aria-label="'.Text::_('COM_PHOCACART_LIST').'" class="'.$d['s']['c']['btn.btn-default'].' phItemSwitchLayoutType list '.$d['t']['layouttypeactive'][2].'" data-layouttype="list"><span class="'.$d['s']['i']['list'].'"></span></button>';
+		echo '<button type="button" aria-label="'.Text::_('COM_PHOCACART_GRID').'" class="'.$d['s']['c']['btn.btn-default'].' phItemSwitchLayoutType grid '.$d['t']['layouttypeactive'][0].'" data-layouttype="grid">';
+		//echo '<span class="'.$d['s']['i']['grid'].'"></span>';
+		echo PhocacartRenderIcon::icon($d['s']['i']['grid']);
+		echo '</button> ';
+
+		echo '<button type="button" aria-label="'.Text::_('COM_PHOCACART_GRID_LIST').'" class="'.$d['s']['c']['btn.btn-default'].' phItemSwitchLayoutType gridlist '.$d['t']['layouttypeactive'][1].'" data-layouttype="gridlist">';
+		//echo '<span class="'.$d['s']['i']['gridlist'].'"></span>';
+		echo PhocacartRenderIcon::icon($d['s']['i']['gridlist']);
+		echo '</button> ';
+
+		echo '<button type="button" aria-label="'.Text::_('COM_PHOCACART_LIST').'" class="'.$d['s']['c']['btn.btn-default'].' phItemSwitchLayoutType list '.$d['t']['layouttypeactive'][2].'" data-layouttype="list">';
+		//echo '<span class="'.$d['s']['i']['list'].'"></span>';
+		echo PhocacartRenderIcon::icon($d['s']['i']['list']);
+		echo '</button>';
 
 	}
     echo '</div>';

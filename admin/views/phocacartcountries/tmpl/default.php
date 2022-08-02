@@ -119,7 +119,7 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 //$tax = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
 $tax = '';

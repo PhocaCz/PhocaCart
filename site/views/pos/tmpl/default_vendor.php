@@ -46,14 +46,14 @@ echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.
 echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 echo HTMLHelper::_('form.token');
-echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent ph-pos-btn-dropdown"><span class="'.$this->s['i']['shopping-cart'].' icon-white"></span> &nbsp;'.Text::_('COM_PHOCACART_ORDERS').'</button>';
+echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent ph-pos-btn-dropdown">'.PhocacartRenderIcon::icon($this->s['i']['shopping-cart'] . ' icon-white', '', ' &nbsp;') .Text::_('COM_PHOCACART_ORDERS').'</button>';
 echo '</form>';
 
 
 // LOGOUT
 echo '<div class="ph-dropdown-header">'.Text::_('COM_PHOCACART_LOGOUT').'</div>';
 echo '<form action="'. JRoute::_('index.php?option=com_users&task=user.logout').'" method="post">';
-echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].'  ph-pos-btn-dropdown"><span class="'.$this->s['i']['log-out'].' icon-white"></span> '.Text::_('JLOGOUT').'</button>';
+echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].'  ph-pos-btn-dropdown">'.PhocacartRenderIcon::icon($this->s['i']['log-out'] . ' icon-white', '', ' &nbsp;') .Text::_('JLOGOUT').'</button>';
 echo '<input type="hidden" name="return" value="'. base64_encode(PhocacartRoute::getPosRoute()).'" />';
 echo HTMLHelper::_('form.token');
 echo '</form>';

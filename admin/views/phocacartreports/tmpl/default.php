@@ -142,7 +142,7 @@ echo '<div style="clear:both">&nbsp;</div>';
 
 // DATE FROM - DATE TO
 JHtml::_('jquery.framework');
-JHtml::_('script', 'system/html5fallback.js', false, true);
+//JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "filter_date_from";

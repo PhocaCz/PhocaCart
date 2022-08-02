@@ -105,7 +105,7 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape(Text::_($item->title));
 }
 $checkO .= ' <small>('.$this->escape($item->title).')</small>';
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 

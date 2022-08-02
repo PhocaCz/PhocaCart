@@ -123,7 +123,7 @@ if ($this->t['display_question_privacy_checkbox'] > 0) {
 <div class="btn-toolbar">
 	<div class="btn-group">
 		<button type="submit" class="<?php echo $this->s['c']['btn.btn-primary'] ?>">
-			<span class="<?php echo $this->s['i']['submit'] ?>"></span> <?php echo Text::_('COM_PHOCACART_SUBMIT');?></button>
+			<?php echo PhocacartRenderIcon::icon($d['s']['i']['submit'], '', ' ') . Text::_('COM_PHOCACART_SUBMIT');?></button>
 	</div>
 </div>
 

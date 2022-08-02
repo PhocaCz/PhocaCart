@@ -146,7 +146,10 @@ if ($this->a->shippingnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'">';
         if ($this->a->shippingdisplayeditbutton) {
             echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-shipping-edit">';
-            echo '<button class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn"><span class="' . $this->s['i']['edit'] . '"></span> ' . Text::_('COM_PHOCACART_EDIT_SHIPPING') . '</button>';
+            echo '<button class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn">';
+			//echo '<span class="' . $this->s['i']['edit'] . '"></span> ';
+			echo PhocacartRenderIcon::icon($this->s['i']['edit'], '', ' ');
+			echo Text::_('COM_PHOCACART_EDIT_SHIPPING') . '</button>';
             echo '</div>';
         }
 		echo '</div>';
@@ -301,7 +304,7 @@ if ($this->a->shippingnotused == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-shipping-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['save'].'"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
 	echo '</div>';
 	echo '</div>';
 

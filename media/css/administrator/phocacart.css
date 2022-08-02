@@ -2044,3 +2044,68 @@ a[target=_blank]::before {
 }
 
 
+/* Hide objects in edit - administration - Product edit example */
+
+/* Entire tab *//*
+#phocacartitem joomla-tab-element#general, #phocacartitem joomla-tab button[aria-controls="general"],
+#phocacartitem joomla-tab-element#image, #phocacartitem joomla-tab button[aria-controls="image"],
+#phocacartitem joomla-tab-element#attributes, #phocacartitem joomla-tab button[aria-controls="attributes"],
+#phocacartitem joomla-tab-element#specifications, #phocacartitem joomla-tab button[aria-controls="specifications"],
+#phocacartitem joomla-tab-element#related, #phocacartitem joomla-tab button[aria-controls="related"],
+#phocacartitem joomla-tab-element#stock, #phocacartitem joomla-tab button[aria-controls="stock"],
+#phocacartitem joomla-tab-element#discount, #phocacartitem joomla-tab button[aria-controls="discount"],
+#phocacartitem joomla-tab-element#download, #phocacartitem joomla-tab button[aria-controls="download"],
+#phocacartitem joomla-tab-element#size, #phocacartitem joomla-tab button[aria-controls="size"],
+#phocacartitem joomla-tab-element#reward, #phocacartitem joomla-tab button[aria-controls="reward"],
+#phocacartitem joomla-tab-element#publishing, #phocacartitem joomla-tab button[aria-controls="publishing"],
+#phocacartitem joomla-tab-element#feed, #phocacartitem joomla-tab button[aria-controls="feed"],
+#phocacartitem joomla-tab-element#metadata, #phocacartitem joomla-tab button[aria-controls="metadata"] { 
+	display: none;
+}
+
+/* Individual parameters *//*
+#phocacartitem .ph-par-title,
+#phocacartitem .ph-par-alias,
+#phocacartitem .ph-par-price,
+#phocacartitem .ph-par-price_original,
+#phocacartitem .ph-par-tax_id,
+#phocacartitem .ph-par-catid_multiple,
+#phocacartitem .ph-par-catid,
+#phocacartitem .ph-par-manufacturer_id,
+#phocacartitem .ph-par-sku,
+#phocacartitem .ph-par-upc,
+#phocacartitem .ph-par-ean,
+#phocacartitem .ph-par-jan,
+#phocacartitem .ph-par-mpn,
+#phocacartitem .ph-par-isbn,
+#phocacartitem .ph-par-serial_number,
+#phocacartitem .ph-par-registration_key,
+#phocacartitem .ph-par-external_id,
+#phocacartitem .ph-par-external_key,
+#phocacartitem .ph-par-external_link,
+#phocacartitem .ph-par-external_text,
+#phocacartitem .ph-par-external_link2,
+#phocacartitem .ph-par-external_text2,
+#phocacartitem .ph-par-access,
+#phocacartitem .ph-par-group,
+#phocacartitem .ph-par-featured,
+#phocacartitem .ph-par-featured_background_image,
+#phocacartitem .ph-par-video,
+#phocacartitem .ph-par-public_download_file,
+#phocacartitem .ph-par-public_download_text,
+#phocacartitem .ph-par-public_play_file,
+#phocacartitem .ph-par-public_play_text,
+#phocacartitem .ph-par-condition,
+#phocacartitem .ph-par-type_feed,
+#phocacartitem .ph-par-type_category_feed,
+#phocacartitem .ph-par-description,
+#phocacartitem .ph-par-description_long,
+#phocacartitem .ph-par-features { 
+	display: none;
+}
+
+/* Additional box *//*
+#phocacartitem joomla-tab-element#general .ph-admin-additional-box {
+	display: none;
+}
+*/

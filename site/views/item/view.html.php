@@ -59,6 +59,7 @@ class PhocaCartViewItem extends HtmlView
 
 
 		// PARAMS
+		$this->t['skip_category_view'] 		    = $this->p->get( 'skip_category_view', 0 );
 		$this->t['tax_calculation'] 		    = $this->p->get( 'tax_calculation', 0 );
 		$this->t['cart_metakey'] 			    = $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			    = $this->p->get( 'cart_metadesc', '' );
@@ -129,6 +130,7 @@ class PhocaCartViewItem extends HtmlView
 
 			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
+
 			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags'], ' ');
 			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels'], ' ');
 			$this->t['stock_status']		= array();

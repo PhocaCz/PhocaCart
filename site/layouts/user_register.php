@@ -35,7 +35,7 @@ $usersConfig = ComponentHelper::getParams('com_users');
 		echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
 		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration').'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
 
-		echo '<a class="'.$d['s']['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login" href="'. Route::_('index.php?option=com_users&view=registration').'"><span class="'.$d['s']['i']['user'].'"></span>  '.Text::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
+		echo '<a class="'.$d['s']['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login" href="'. Route::_('index.php?option=com_users&view=registration').'">'.PhocacartRenderIcon::icon($d['s']['i']['user'], '', ' ') .Text::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
 
 	}
 	//echo '</ul>'. "\n";

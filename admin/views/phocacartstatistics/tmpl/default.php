@@ -45,7 +45,7 @@ echo $r->startMainContainer();
 
 // DATE FROM - DATE TO
 JHtml::_('jquery.framework');
-JHtml::_('script', 'system/html5fallback.js', false, true);
+//JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "filter_date_from";
@@ -55,6 +55,7 @@ $attributes = '';
 $valueFrom 	= $this->escape($this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30)));
 
 echo '<div class="ph-inline-param">'. Text::_('COM_PHOCACART_DATE_FROM') . ': ';
+
 echo  HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes).'</div>';
 
 //DATE TO

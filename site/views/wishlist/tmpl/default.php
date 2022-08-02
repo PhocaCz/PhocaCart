@@ -106,14 +106,17 @@ if (!empty($this->t['items'])) {
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		//echo '<div class="ph-center">';
-		echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" title="'.Text::_('COM_PHOCACART_REMOVE').'"><span class="'.$this->s['i']['remove'].'"></span></button>';
+		echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn" title="'.Text::_('COM_PHOCACART_REMOVE').'">';
+		//echo '<span class="'.$this->s['i']['remove'].'"></span>';
+		echo PhocacartRenderIcon::icon($d['s']['i']['remove']);
+		echo '</button>';
 		//echo '</div>';
 
 
 		echo ' ';
 
 		$link = Route::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
-		echo '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary'].' ph-btn" role="button" title="'.Text::_('COM_PHOCACART_VIEW_PRODUCT').'"><span class="'.$this->s['i']['search'].'"></span></a>';
+		echo '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary'].' ph-btn" role="button" title="'.Text::_('COM_PHOCACART_VIEW_PRODUCT').'">'.PhocacartRenderIcon::icon($d['s']['i']['search']).'</a>';
 
 		echo HTMLHelper::_('form.token');
 		echo '</form>';

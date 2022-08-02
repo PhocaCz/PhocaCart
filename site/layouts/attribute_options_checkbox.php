@@ -91,12 +91,18 @@ foreach ($v->options as $k2 => $v2) {
 	} else if ($v->type == 5 && isset($v2->color) && $v2->color != '') { // CHECKBOX COLOR
 
 		$attrO	.= ' data-color="'.strip_tags($v2->color).'"';
-		echo '<label class="btn phCheckBoxButton phCheckBoxColor '.$active.'" style="background-color: '.strip_tags($v2->color).'"><input class="'.$d['s']['c']['inputbox.checkbox'].'" type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' autocomplete="off" data-value-alias="'.htmlspecialchars($v2->alias).'" /><span class="'.$d['s']['i']['ok'].'" title="'.htmlspecialchars($v2->title). $suffix .'"></span></label> ';
+		echo '<label class="btn phCheckBoxButton phCheckBoxColor '.$active.'" style="background-color: '.strip_tags($v2->color).'"><input class="'.$d['s']['c']['inputbox.checkbox'].'" type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].' autocomplete="off" data-value-alias="'.htmlspecialchars($v2->alias).'" />';
+		//echo '<span class="'.$d['s']['i']['ok'].'" title="'.htmlspecialchars($v2->title). $suffix .'"></span>';
+		echo PhocacartRenderIcon::icon($d['s']['i']['ok-strong'], 'title="'.htmlspecialchars($v2->title). $suffix .'"');
+		echo '</label> ';
 
 	} else if ($v->type == 6 && isset($v2->image_small) && $v2->image_small != '') {// CHECKBOX IMAGE
 
 		$linkI 		= Uri::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v2->image_small;
-		echo '<label class="'.$d['s']['c']['btn'].' phCheckBoxButton phCheckBoxImage '.$active.'"><input class="'.$d['s']['c']['inputbox.checkbox'].'" type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].'  autocomplete="off" data-value-alias="'.htmlspecialchars($v2->alias).'" /><span class="'.$d['s']['i']['ok'].'"></span><img src="'.strip_tags($linkI).'" title="'.htmlspecialchars($v2->title). $suffix.'" alt="'.htmlspecialchars($v2->title).'" /></label>';
+		echo '<label class="'.$d['s']['c']['btn'].' phCheckBoxButton phCheckBoxImage '.$active.'"><input class="'.$d['s']['c']['inputbox.checkbox'].'" type="checkbox" '.$attrO.' name="attribute['.$v->id.']['.$v2->id.']" value="'.$v2->id.'" '.$d['required']['attribute'].'  autocomplete="off" data-value-alias="'.htmlspecialchars($v2->alias).'" />';
+		//echo '<span class="'.$d['s']['i']['ok'].'"></span>';
+		echo PhocacartRenderIcon::icon($d['s']['i']['ok-strong']);
+		echo '<img src="'.strip_tags($linkI).'" title="'.htmlspecialchars($v2->title). $suffix.'" alt="'.htmlspecialchars($v2->title).'" /></label>';
 
 	}
 }

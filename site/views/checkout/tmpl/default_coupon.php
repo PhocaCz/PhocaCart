@@ -28,11 +28,14 @@ if ($this->t['enable_coupons'] > 0 && !$this->t['cartempty']) {
 		// Make the following input only a design input without name and value - the value for removing is set as empty in hidden field
 		// name="phcouponremove" is abstract - not used, named to be ignored when saving form but displayed including the coupon code
 		echo '<input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-coupon" type="text" name="phcouponremove" id="phcoupon" value="' . $this->t['couponcodevalue'] . '" >';
-		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn"><span class="' . $this->s['i']['remove'] . '"></span> ' . Text::_('COM_PHOCACART_REMOVE_COUPON') . '</button>';
+		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn">';
+		//echo '<span class="' . $this->s['i']['remove'] . '"></span>';
+		echo PhocacartRenderIcon::icon($this->s['i']['remove'], '', ' ');
+		echo Text::_('COM_PHOCACART_REMOVE_COUPON') . '</button>';
 	} else {
 		// ADD COUPON
 		echo '<input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-coupon" type="text" name="phcoupon" id="phcoupon" value="' . $this->t['couponcodevalue'] . '" >';
-		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn"><span class="' . $this->s['i']['save'] . '"></span> ' . Text::_('COM_PHOCACART_APPLY_COUPON') . '</button>';
+		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') . Text::_('COM_PHOCACART_APPLY_COUPON') . '</button>';
 	}
 
 	echo '<input type="hidden" name="task" value="checkout.savecoupon" />'. "\n";

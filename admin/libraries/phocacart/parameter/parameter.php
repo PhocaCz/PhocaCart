@@ -433,6 +433,32 @@ class PhocacartParameter
 	    return implode('', $o);
 	}
 
+	public static function getParameterValuesByProductId($id) {
+
+		$db = Factory::getDBO();
+
+        $query = 'SELECT v.title as parametervaluetitle, p.id as parameterid, p.title as parametertitle, p.alias as parameteralias FROM #__phocacart_parameter_values AS v'
+            //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
+            . ' LEFT JOIN #__phocacart_parameter_values_related AS pvr ON v.id = pvr.parameter_value_id'
+            . ' LEFT JOIN #__phocacart_parameters AS p ON p.id = pvr.parameter_id'
+            . ' WHERE pvr.item_id = '.(int)$id
+            . ' ORDER BY pvr.item_id';
+        $db->setQuery($query);
+        $params = $db->loadAssocList();
+        $paramsA = [];
+        $i = 0;
+        if (!empty($params)) {
+            foreach($params as $k => $v) {
+                if (isset($v['parameteralias']) && $v['parameteralias'] != '') {
+                    $id = $v['parameteralias'];
+                    $paramsA[$id][] = $v['parametervaluetitle'];
+                }
+            }
+        }
+
+        return $paramsA;
+	}
+
 
 }
 ?>

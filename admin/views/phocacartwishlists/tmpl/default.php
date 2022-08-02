@@ -109,7 +109,7 @@ if ($canCreate || $canEdit) {
 } else {
 	$checkO .= $this->escape( $item->name ) .' <small>('.$this->escape($item->username).')</small>';
 }
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 
 echo $r->td($this->escape($item->productname), "small");

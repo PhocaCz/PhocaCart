@@ -21,10 +21,10 @@ $d = $displayData;
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
             <?php if (isset($d['button']) && $d['button'] == 1) { ?>
-                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span> <?php echo Text::_('COM_PHOCACART_QUICK_VIEW'); ?></a>
+                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><?php echo PhocacartRenderIcon::icon($d['s']['i']['quick-view'], '', ' ') ?><?php echo Text::_('COM_PHOCACART_QUICK_VIEW'); ?></a>
 
             <?php } else { ?>
-                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-bs-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-bs-toggle="tooltip" data-placement="top"><?php echo PhocacartRenderIcon::icon($d['s']['i']['quick-view']) ?></a>
             <?php } ?>
             <?php echo HTMLHelper::_('form.token'); ?>
         </form>

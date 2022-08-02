@@ -115,15 +115,18 @@ class JFormFieldPhocacartFile extends FormField
 			$o = array();
 			$o[] = '<div class="tower-file">';
 			$o[] = '<input type="file" id="'.$id.'" name="'.$this->name.'[]" multiple '.$accepts.' '. $requInput.' />';
-			$o[] = '<label for="'.$id.'" class="'.$s['c']['btn.btn-primary'].'"><span class="'.$s['i']['upload'].'"></span> '.Text::_('COM_PHOCACART_SELECT_FILES').'</label>';
-			$o[] = '<button type="button" class="tower-file-clear '.$s['c']['btn.btn-secondary'].' align-top"><span class="'.$s['i']['clear'].'"></span> '.Text::_('COM_PHOCACART_CLEAR').'</button>';
+			$o[] = '<label for="'.$id.'" class="'.$s['c']['btn.btn-primary'].'">'.PhocacartRenderIcon::icon($s['i']['upload'], '', ' ') .Text::_('COM_PHOCACART_SELECT_FILES').'</label>';
+			$o[] = '<button type="button" class="tower-file-clear '.$s['c']['btn.btn-secondary'].' align-top">';
+			//$o[] = '<span class="'.$s['i']['clear'].'"></span> ';
+			$o[] = PhocacartRenderIcon::icon($s['i']['clear'], '', ' ');
+			$o[] = Text::_('COM_PHOCACART_CLEAR').'</button>';
 			$o[] = '</div>';
 
 			$o[] = '<script type="text/javascript">';
 			$o[] = 'jQuery("#'.$id.'").phFileInput({';
 			$o[] = '   fileCount: '.(int)$submit_item_upload_image_count.',';
 			$o[] = '   fileSizeLimit: '.(int)$submit_item_upload_image_maxsize.',';
-			$o[] = '   iconClass: "'.$s['i']['upload'].'",';
+			$o[] = '   iconClass: "'.addslashes(PhocacartRenderIcon::icon($s['i']['upload'])).'",';
 			$o[] = '   lang: {';
 			$o[] = '      "COM_PHOCACART_ERROR_TOO_MANY_FILES_SELECTED": "'.Text::_('COM_PHOCACART_ERROR_TOO_MANY_FILES_SELECTED'). '",';
 			$o[] = '      "COM_PHOCACART_MAXIMUM_NUMBER_FILES_SELECTED_IS": "'.Text::_('COM_PHOCACART_MAXIMUM_NUMBER_FILES_SELECTED_IS'). '",';

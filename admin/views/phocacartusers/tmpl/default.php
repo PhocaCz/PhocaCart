@@ -133,7 +133,7 @@ if ($canCreate || $canEdit) {
 if (isset($item->user_username)) {
 	$checkO .= ' <small>('.$item->user_username.')</small>';
 }
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 // Status
 // NOT ACTIVE

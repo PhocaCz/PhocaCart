@@ -307,7 +307,7 @@ class PhocacartSpecification
 
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
-			$productTableAdded = 0;
+			$productTableAdded = 1;
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
 		} else {
@@ -317,7 +317,7 @@ class PhocacartSpecification
 
 			}
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
-			$productTableAdded = 0;
+			$productTableAdded = 1;
 		}
 
 		if (!empty($filterProducts)) {

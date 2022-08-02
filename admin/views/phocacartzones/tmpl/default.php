@@ -119,7 +119,7 @@ if (is_array($this->items)) {
         } else {
             $checkO .= $this->escape($item->title);
         }
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         $countries = PhocacartCountry::getCountries($item->id, 0, 'zone');
         $cA        = array();

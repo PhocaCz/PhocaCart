@@ -17,19 +17,19 @@ class PhocaCartCpModelPhocacartVendor extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartVendor', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartvendor', 'phocacartvendor', array('control' => 'jform', 'load_data' => $loadData));
@@ -38,7 +38,7 @@ class PhocaCartCpModelPhocacartVendor extends AdminModel
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartvendor.data', array());
 		if (empty($data)) {
@@ -46,16 +46,16 @@ class PhocaCartCpModelPhocacartVendor extends AdminModel
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = Factory::getDate();
 		$user = Factory::getUser();
 
-		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
+		$table->title		= htmlspecialchars_decode((string)$table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 		$table->user_id 	= PhocacartUtils::getIntFromString($table->user_id);
-		
+
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}

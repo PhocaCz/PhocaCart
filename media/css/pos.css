@@ -391,6 +391,7 @@ body#phocaPosSite {
     position: relative;
 }
 /* style icon */
+.inner-addon svg,
 .inner-addon .glyphicon,
 .inner-addon .fa {
   position: absolute;
@@ -398,13 +399,20 @@ body#phocaPosSite {
   pointer-events: none;
   color: #e3e3e3;
 }
+
+.inner-addon svg {
+	padding: 0.6em 0.3em 0 0;
+}
+
 /* align icon */
+.left-addon svg,
 .left-addon .glyphicon {
 	left:  0px;
 }
 .left-addon .fa {
 	left:  10px;
 }
+.right-addon svg,
 .right-addon .glyphicon{
 	right: 0px;
 }
@@ -477,6 +485,9 @@ ph-pos-filter-box {
     color: transparent;
     margin: 0px;
 }
+#ph-pc-pos-site .ph-category-add-to-cart-box.fullbutton.grid div .btn svg {
+	stroke: transparent;
+}
 
 
 .col-md-2,
@@ -540,6 +551,11 @@ ph-pos-filter-box {
 
 }
 
+/* Hide standard checkbox */
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory input[type='checkbox']{
+    display: none;
+}
+
 #ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory  {
 	flex-grow:9999;
 	border-left: 1px solid #c0c0c0;
@@ -556,7 +572,8 @@ ph-pos-filter-box {
 	text-transform: uppercase;
 	color: #777;
 	max-width: 100rem;
-    overflow:scroll;
+    /*overflow:scroll;*/
+	margin: 0;
 
 
 }
@@ -577,6 +594,7 @@ ph-pos-filter-box {
 	background: #00a3d9;
 	color: #fff;
 }
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory svg,
 #ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory span.glyphicon,
 #ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory span.fa{
     display: inline-block;
@@ -592,6 +610,12 @@ ph-pos-filter-box {
 	box-shadow: none;
 	opacity: 0;
 }
+
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory svg {
+	stroke-width: 5em;
+}
+
+#ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory.active svg,
 #ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory.active span.glyphicon,
 #ph-pc-pos-site .btn.phCheckBoxButton.phCheckBoxCategory.active span.fa {
 	border: 0px solid #00a3d9;
@@ -1016,6 +1040,10 @@ input[type="number"] {
 
 .btn {
 	border-radius: 2px !important;
+}
+
+.phOrderPrintBtn .pc-si {
+	margin: 0;
 }
 
 @media print {

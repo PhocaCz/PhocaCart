@@ -16,7 +16,7 @@ $d['close'] = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"
     <div class="<?php echo $d['s']['c']['modal-dialog'] ?>">
       <div class="<?php echo $d['s']['c']['modal-content'] ?>">
         <div class="<?php echo $d['s']['c']['modal-header'] ?>">
-            <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><span class="<?php echo $d['s']['i']['info-sign'] ?>"></span> <?php echo Text::_('COM_PHOCACART_ERROR'); ?></h5>
+            <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['info-sign'], '', ' ') . Text::_('COM_PHOCACART_ERROR'); ?></h5>
             <?php echo $d['close'] ?>
         </div>
         <div class="<?php echo $d['s']['c']['modal-body'] ?>">

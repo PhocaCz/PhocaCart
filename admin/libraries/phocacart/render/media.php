@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
@@ -118,7 +119,7 @@ class PhocacartRenderMedia
         $oParams['ajaxSearchingFilteringItems'] = (int)$this->p['ajax_searching_filtering_items'];
         $oParams['theme']                       = $this->p['theme'];
         if($oVars['isPOS']) {
-            $oParams['theme'] = 'bs5';// media\com_phocacart\js\phoca\jquery.phocaattribute.js line 319
+            $oParams['theme'] = 'svg';// media\com_phocacart\js\phoca\jquery.phocaattribute.js line 319
         }
         $oVars['view']                          = $this->view;
 
@@ -232,6 +233,31 @@ class PhocacartRenderMedia
         $this->document->addScriptOptions('phParamsPC', $oParams);
 
 
+        // Loaded this way because of possible override by template
+        if ($this->format == 'raw' || $this->format == 'json') {
+
+        } else if ($oParams['theme'] == 'svg') {
+            $this->document->addHeadLink(HTMLHelper::image('com_phocacart/svg-definitions.svg', '', [], true, 1), 'preload', 'rel', ['as' => 'image', 'type' => 'image/svg+xml']);
+        }
+
+        //HTMLHelper::_('image', 'com_phocacart/svg-definitions.css', array('version' => 'auto', 'relative' => true), array('rel' => 'preload','as' => 'image', 'type' => 'image/svg+xml'));
+
+
+
+        //$this->wa->registerAndUseStyle('com_phocacart.svg', 'svg-definitions.css', array('version' => 'auto', 'relative' => true), array('rel' => 'preload','as' => 'image', 'type' => 'image/svg+xml'));
+
+       // $wa = $app->getDocument()->getWebAssetManager();
+        //$a = $wa->getAsset('style', 'com_phocacart.svg');
+
+
+        // Get path for the svg-definitions.svg - this can be path to media folder:
+        // com_phocacart: media/com_phocacart/images/svg-definitions.svg
+        // or override in template: media/templates/site/cassiopeia/images/com_phocacart/svg-definitions.svg
+        //$path = HTMLHelper::image('com_phocacart/svg-definitions.svg', '', [], true, 1);
+
+
+
+
 
         // Bootstrap 3 Modal transition
         /*if ($this->p['theme'] == 'bs3') {
@@ -265,7 +291,8 @@ class PhocacartRenderMedia
                 //JHtml::stylesheet('media/com_phocacart/css/main.css');
                 //HTMLHelper::_('stylesheet', 'media/com_phocacart/css/main.css', array('version' => 'auto'));
 
-                $this->wa->registerAndUseStyle('com_phocacart.main', 'media/com_phocacart/css/main.css', array('version' => 'auto'));
+                $this->wa->registerAndUseStyle('com_phocacart.main', 'com_phocacart/main.css');// Because of ordering of CSS items (user.css from template should load as last)
+                //$this->wa->registerAndUseStyle('com_phocacart.main', 'media/com_phocacart/css/main.css');
             }
 
             //$this->loadBootstrap();
@@ -419,14 +446,26 @@ class PhocacartRenderMedia
         $js  .= '   verticalbuttons: true,';
 
 
-        if ($this->p['quantity_input_spinner'] == 2) {
+       /* if ($this->p['quantity_input_spinner'] == 2) {
 
             $js .= '   verticalup: \'<span class="' . $icons['chevron-up'] . '"></span>\',';
             $js .= '   verticaldown: \'<span class="' . $icons['chevron-down'] . '"></span>\',';
         } else {
             $js .= '   verticalup: \'<span class="' . $icons['plus'] . '"></span>\',';
             $js .= '   verticaldown: \'<span class="' . $icons['minus'] . '"></span>\',';
+        }*/
+
+        if ($this->p['quantity_input_spinner'] == 2) {
+
+            $js .= '   verticalup: \''.PhocacartRenderIcon::icon($icons['chevron-up']).'\',';
+            $js .= '   verticaldown: \''.PhocacartRenderIcon::icon($icons['chevron-down']).'\',';
+        } else {
+            $js .= '   verticalup: \''.PhocacartRenderIcon::icon($icons['plus']).'\',';
+            $js .= '   verticaldown: \''.PhocacartRenderIcon::icon($icons['minus']).'\',';
         }
+
+
+
         //$js .= '   verticalupclass: "'.PhocacartRenderIcon::getClass('chevron-up').'",';
         //$js .= '   verticaldownclass: "'.PhocacartRenderIcon::getClass('chevron-down').'"';
         $js  .= ' })';

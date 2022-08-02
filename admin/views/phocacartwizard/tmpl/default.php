@@ -57,7 +57,7 @@ if ($this->page == 0) { ?>
 
 				<div><?php echo Text::_('COM_PHOCACART_WIZARD_DOWNLOAD_DEMO_DATA'); ?>:</div>
 
-				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="<?php $this->s['i']['download']?> icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn"href="https://www.phoca.cz/download/category/100-phoca-cart-component" target="_blank"><span class="fa fa-download fa-fw icon-download"></span> <?php echo JText::_('COM_PHOCACART_DOWNLOAD'); ?></a></div>
 
 				<ol>
 					<li><?php echo Text::_('COM_PHOCACART_WIZARD_INSTALL_BOTH_PACKAGES'); ?></li>

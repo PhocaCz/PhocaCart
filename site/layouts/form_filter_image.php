@@ -72,7 +72,7 @@ $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader']
     <?php if ($d['s']['c']['class-type'] != 'uikit') { ?>
         <div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
             <h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
-                <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><?php echo PhocacartRenderIcon::icon($d['triangle_class']) ?></a>
                 <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $title ?></a>
             </h4>
         </div>

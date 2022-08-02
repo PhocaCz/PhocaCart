@@ -49,7 +49,10 @@ class PhocacartOrderRender
 			$layout->addIncludePath(JPATH_SITE . '/templates/'.$defaultTemplate.'/html/layouts/com_phocacart');
 		}
 
-		HTMLHelper::stylesheet('media/com_phocacart/css/main.css' );
+		$app = Factory::getApplication();
+        $wa = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.main', 'com_phocacart/main.css', array('version' => 'auto'));
+		//HTMLHelper::stylesheet('media/com_phocacart/css/main.css' );
 
 		$app 			= Factory::getApplication();
 		$order			= new PhocacartOrderView();

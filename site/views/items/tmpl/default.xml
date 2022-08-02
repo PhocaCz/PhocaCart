@@ -19,12 +19,14 @@
 	<fields name="params">
 <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields" >
 
-		<field name="show_pagination" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_DESC">
+		<field name="show_pagination" type="radio"  class="btn-group btn-group-yesno"  label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_DESC">
+			<option value="">JGLOBAL_USE_GLOBAL</option>
 			<option value="0">COM_PHOCACART_HIDE</option>
 			<option value="1">COM_PHOCACART_DISPLAY</option>
 		</field>
 
-		<field name="show_pagination_top" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_DESC">
+		<field name="show_pagination_top" type="radio"  class="btn-group btn-group-yesno"  label="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_DESC">
+			<option value="">JGLOBAL_USE_GLOBAL</option>
 			<option value="0">COM_PHOCACART_HIDE</option>
 			<option value="1">COM_PHOCACART_DISPLAY</option>
 		</field>

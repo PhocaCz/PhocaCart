@@ -200,7 +200,7 @@ class Adminview
 
 				$o .= '<div class="col-12 col-md-'.(int)$md.'">';
 
-				$o .= '<div class="control-group">'."\n"
+				$o .= '<div class="control-group ph-par-'.$v.'">'."\n"
 				. '<div class="control-label">'. $form->getLabel($v) . '</div>'."\n"
 				. '<div class="clearfix"></div>'. "\n"
 				. '<div>' . $value. '</div>'."\n"
@@ -245,7 +245,7 @@ class Adminview
 
 					$o .=
 
-						'<div class="control-group-clear">'."\n"
+						'<div class="control-group-clear ph-par-'.$value.'">'."\n"
 					 .'<div class="control-label">'. $form->getLabel($value) . $descriptionOutput . '</div>'."\n"
 					//. '<div class="clearfix"></div>'. "\n"
 					. '<div>' . $form->getInput($value). '</div>'."\n"
@@ -263,7 +263,7 @@ class Adminview
 					}
 
 					//$o .= $form->renderField($value) ;
-					$o .= '<div class="control-group">'."\n"
+					$o .= '<div class="control-group ph-par-'.$value.'">'."\n"
 					. '<div class="control-label">'. $form->getLabel($value)  . $descriptionOutput . '</div>'
 					. '<div class="controls">' . $form->getInput($value). '</div>'."\n"
 					. '</div>' . "\n";
@@ -294,7 +294,7 @@ class Adminview
 		}
 
 
-		$o .= '<div class="control-group">'."\n";
+		$o .= '<div class="control-group '.$item.'">'."\n";
 		$o .= '<div class="control-label">'. $form->getLabel($item) . $descriptionOutput . '</div>'."\n"
 		. '<div class="controls">' . $value.'</div>'."\n"
 		. '</div>' . "\n";

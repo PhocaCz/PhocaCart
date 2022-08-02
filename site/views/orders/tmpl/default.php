@@ -74,15 +74,15 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$linkOrderViewHandler= 'onclick="phWindowPopup(this.href, \'orderview\', 2, 1.3);return false;"';
 
 			if (in_array(1, $displayDocument)) {
-				$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['order'] . ' ph-icon-order"></span></a>';
+				$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['order']. ' ph-icon-order', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '</a>';
 			}
 
 			if (in_array(2, $displayDocument) && $v->invoice_number != '') {
-				$view .= ' <a href="' . $linkInvoiceView . '" class="' . $this->s['c']['btn.btn-danger.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['invoice'] . ' ph-icon-invoice"></span></a>';
+				$view .= ' <a href="' . $linkInvoiceView . '" class="' . $this->s['c']['btn.btn-danger.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['invoice']. ' ph-icon-invoice', 'title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '"') . '</a>';
 			}
 
 			if (in_array(3, $displayDocument)) {
-				$view .= ' <a href="' . $linkDelNoteView . '" class="' . $this->s['c']['btn.btn-warning.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['del-note'] . ' ph-icon-del-note"></span></a>';
+				$view .= ' <a href="' . $linkDelNoteView . '" class="' . $this->s['c']['btn.btn-warning.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['del-note']. ' ph-icon-del-note', 'title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '"') . '</a>';
 			}
 			if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 
@@ -90,15 +90,15 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 				$view .= '<br />';
 
 				if (in_array(1, $displayDocument)) {
-					$view .= '<a href="' . $linkOrderView . $formatPDF . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['order'] . ' ph-icon-order"></span><br /><span class="ph-icon-pdf-text">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+					$view .= '<a href="' . $linkOrderView . $formatPDF . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['order']. ' ph-icon-order', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '<br /><span class="ph-icon-pdf-text">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
 				}
 
 				if (in_array(2, $displayDocument) && $v->invoice_number != '') {
-					$view .= ' <a href="' . $linkInvoiceView . $formatPDF . '" class="' . $this->s['c']['btn.btn-danger.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['invoice'] . ' ph-icon-invoice"></span><br /><span class="ph-icon-pdf-text">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+					$view .= ' <a href="' . $linkInvoiceView . $formatPDF . '" class="' . $this->s['c']['btn.btn-danger.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['invoice']. ' ph-icon-invoice', 'title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '"') . '<br /><span class="ph-icon-pdf-text">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
 				}
 
 				if (in_array(3, $displayDocument)) {
-					$view .= ' <a href="' . $linkDelNoteView . $formatPDF . '" class="' . $this->s['c']['btn.btn-warning.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['del-note'] . ' ph-icon-del-note"></span><br /><span class="ph-icon-pdf-text">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+					$view .= ' <a href="' . $linkDelNoteView . $formatPDF . '" class="' . $this->s['c']['btn.btn-warning.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['del-note']. ' ph-icon-del-note', 'title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '"') . '<br /><span class="ph-icon-pdf-text">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
 				}
 
 				//$view .= '<div class="ph-icon-pdf-text-box"><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span><span class="ph-icon-pdf-text">'.JText::_('COM_PHOCACART_PDF').'</span></div>';

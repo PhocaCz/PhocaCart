@@ -103,7 +103,7 @@ if (is_array($this->items)) {
         } else {
             $checkO .= $this->escape(Text::_($item->title)) . ' <small>(' . $this->escape($item->title) . ')</small>';
         }
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
 
         echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");

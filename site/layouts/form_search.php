@@ -40,7 +40,7 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 <?php if ($d['display_inner_icon'] == 1) { ?>
 
-    <div class="inner-addon right-addon"><i class="<?php echo $d['s']['i']['search'] ?>"></i><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>"/></div>
+    <div class="inner-addon right-addon"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>"/></div>
 
 <?php } else { ?>
     <input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" />
@@ -52,7 +52,7 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 <?php } ?>
 
         <span class="input-group-btn">
-        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'] . $d['paramname'] . 'Btn'; ?>"><span class="<?php echo $d['s']['i']['search'] ?>"></span></button><button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>"><span class="<?php echo $d['s']['i']['clear'] ?>"></span></button></span>
+        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'] . $d['paramname'] . 'Btn'; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?></button><button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button></span>
 
 <?php if ($d['hide_buttons'] == 1) { ?>
     </div>

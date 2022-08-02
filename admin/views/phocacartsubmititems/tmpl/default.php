@@ -107,7 +107,7 @@ if (is_array($this->items)) {
             $checkO .= $this->escape($item->title);
         }
         //$checkO .= ' <span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
 

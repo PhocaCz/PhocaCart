@@ -578,13 +578,23 @@ final class PhocacartRenderJs
         $s[] = '	phOptions["type"]  = "quickview";';
         $s[] = '	phOptions["load_chosen"]  = ' . (int)$load_chosen . ';';
         $s[] = '	phOptions["quantity_input_spinner"]  = ' . (int)$quantity_input_spinner . ';';
-        if ((int)$quantity_input_spinner == 2) {
+      /*  if ((int)$quantity_input_spinner == 2) {
             $s[] = '	phOptions["icon_spinner_verticalup"] =  \'<span class="' . $style['i']['chevron-up'] . '"></span>\';';
             $s[] = '	phOptions["icon_spinner_verticaldown"] =  \'<span class="' . $style['i']['chevron-down'] . '"></span>\';';
         } else {
             $s[] = '	phOptions["icon_spinner_verticalup"] =  \'<span class="' . $style['i']['plus'] . '"></span>\';';
             $s[] = '	phOptions["icon_spinner_verticaldown"] =  \'<span class="' . $style['i']['minus'] . '"></span>\';';
         }
+*/
+        if ((int)$quantity_input_spinner == 2) {
+            $s[] = '	phOptions["icon_spinner_verticalup"] =  \''.PhocacartRenderIcon::icon($style['i']['chevron-up']).'\';';
+            $s[] = '	phOptions["icon_spinner_verticaldown"] =  \''.PhocacartRenderIcon::icon($style['i']['chevron-down']).'\';';
+        } else {
+            $s[] = '	phOptions["icon_spinner_verticalup"] =  \''.PhocacartRenderIcon::icon($style['i']['plus']).'\';';
+            $s[] = '	phOptions["icon_spinner_verticaldown"] =  \''.PhocacartRenderIcon::icon($style['i']['minus']).'\';';
+        }
+
+
         $s[] = '	var phData = jQuery(phItem).serialize();';
         $s[] = '	phDoRequestMethods(phUrl, phData, phOptions);';
         $s[] = '}';

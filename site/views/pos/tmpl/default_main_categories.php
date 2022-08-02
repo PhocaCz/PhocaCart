@@ -25,7 +25,10 @@ if (!empty($this->t['categories'])) {
 			$attrO	= ' checked="checked"';
 		}
 
-		echo '<label class="'.$this->s['c']['btn'].' phCheckBoxButton phCheckBoxCategory '.$active.'" ><input type="checkbox" '.$attrO.' class="'.$this->s['c']['inputbox.checkbox'].' phPosCategoryCheckbox" name="c['.$v->id.']" value="'.$v->id.'" autocomplete="off"  /><span class="'.$this->s['i']['ok'].'" title="'.htmlspecialchars($v->title).''.'"></span> '.htmlspecialchars($v->title).'</label> ';
+		echo '<label class="'.$this->s['c']['btn'].' phCheckBoxButton phCheckBoxCategory '.$active.'" ><input type="checkbox" '.$attrO.' class="'.$this->s['c']['inputbox.checkbox'].' phPosCategoryCheckbox" name="c['.$v->id.']" value="'.$v->id.'" autocomplete="off"  />';
+		//echo '<span class="'.$this->s['i']['ok'].'" title="'.htmlspecialchars($v->title).''.'"></span>';
+		echo PhocacartRenderIcon::icon($this->s['i']['ok-strong'], 'title="'.htmlspecialchars($v->title).'"', ' ');
+		echo htmlspecialchars($v->title).'</label> ';
 
 	}
 

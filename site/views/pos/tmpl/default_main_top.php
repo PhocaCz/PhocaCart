@@ -17,7 +17,10 @@ echo PhocacartSection::renderTitleAndBackButton($this->t['section']->id, $this->
 echo '<div class="ph-add-remove-tickets">';
 echo '<form id="phPosAddTicketForm" class="form-inline" style="display:inline" action="'.$this->t['action'].'" method="post">';
 
-echo '<button class="'.$this->s['c']['btn.btn-success'].' ph-pos-btn-ticket" /><span class="'.$this->s['i']['plus'].' icon-white"></span></button>';
+echo '<button class="'.$this->s['c']['btn.btn-success'].' ph-pos-btn-ticket" />';
+//echo '<span class="'.$this->s['i']['plus'].' icon-white"></span>';
+echo PhocacartRenderIcon::icon($this->s['i']['plus'] . ' icon-white');
+echo '</button>';
 echo '<input type="hidden" name="task" value="pos.addticket">';
 echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'">';
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'">';
@@ -32,7 +35,10 @@ $msg = Text::_('COM_PHOCACART_TICKET_NR') . ': <b>'.(int)$this->t['ticket']->id 
 	. '<span class="ph-warning">'.Text::_('COM_PHOCACART_WARNING_CART_WILL_BE_CLOSED_ALL_DATA_WILL_BE_REMOVED') . '</span>';
 
 echo '<form id="phPosCloseTicketForm" class="form-inline" style="display:inline" action="'.$this->t['action'].'" method="post" data-txt="'.htmlspecialchars($msg).'">';
-echo '<button class="'.$this->s['c']['btn.btn-danger'].' ph-pos-btn-ticket" ><span class="'.$this->s['i']['minus'].' icon-white"></span></button>';
+echo '<button class="'.$this->s['c']['btn.btn-danger'].' ph-pos-btn-ticket" >';
+//echo '<span class="'.$this->s['i']['minus'].' icon-white"></span>'
+echo PhocacartRenderIcon::icon($this->s['i']['minus'] . ' icon-white');
+echo '</button>';
 echo '<input type="hidden" name="task" value="pos.removeticket">';
 echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'">';
 echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'">';

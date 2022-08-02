@@ -18,7 +18,7 @@ $d['close'] = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"
     <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c']['modal-lg'] ?>">
       <div class="<?php echo $s['c']['modal-content'] ?>">
         <div class="<?php echo $s['c']['modal-header'] ?>">
-		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span> <?php echo $d['title'];  ?></h5>
+		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['icon'], '', ' ') .  $d['title'];  ?></h5>
             <?php echo $d['close'] ?>
         </div>
         <div class="<?php echo $s['c']['modal-body'] ?>">

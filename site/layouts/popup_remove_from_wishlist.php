@@ -21,7 +21,7 @@ if (isset($d['wishlist_view']) && $d['wishlist_view'] == 1) {
     <div class="<?php echo $d['s']['c']['modal-dialog'] ?>">
       <div class="<?php echo $d['s']['c']['modal-content'] ?>">
         <div class="<?php echo $d['s']['c']['modal-header'] ?>">
-		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><span class="<?php echo $d['s']['i']['info-sign'] ?>"></span> <?php echo $d['info_msg'] ?></h5>
+		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['info-sign'], '', ' ') . $d['info_msg'] ?></h5>
              <?php echo $d['close'] ?>
         </div>
         <div class="<?php echo $d['s']['c']['modal-body'] ?>">
@@ -32,11 +32,11 @@ if (isset($d['wishlist_view']) && $d['wishlist_view'] == 1) {
 
 		<div class="<?php echo $d['s']['c']['row'] ?>">
 			<div class="<?php echo $d['s']['c']['col.xs12.sm6.md6'] ?> ph-center">
-			<a class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn" role="button" <?php echo $d['wishlist_view_href']; ?> ><span class="<?php echo $d['s']['i']['shopping-cart'] ?>"></span> <?php echo Text::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
+			<a class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn" role="button" <?php echo $d['wishlist_view_href']; ?> ><?php echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart'], '', ' ') . Text::_('COM_PHOCACART_CONTINUE_SHOPPING'); ?></a>
 			</div>
 
 			<div class="<?php echo $d['s']['c']['col.xs12.sm6.md6'] ?> ph-center">
-			<a class="<?php echo $d['s']['c']['btn.btn-success'] ?> ph-btn" role="button" href="<?php echo $d['link_wishlist']; ?>" ><span class="<?php echo $d['s']['i']['int-link'] ?>"></span> <?php echo Text::_('COM_PHOCACART_PROCEED_TO_WISH_LIST'); ?></a>
+			<a class="<?php echo $d['s']['c']['btn.btn-success'] ?> ph-btn" role="button" href="<?php echo $d['link_wishlist']; ?>" ><?php echo PhocacartRenderIcon::icon($d['s']['i']['int-link'], '', ' ') . Text::_('COM_PHOCACART_PROCEED_TO_WISH_LIST'); ?></a>
 			</div>
 		</div>
         </div>

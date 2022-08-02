@@ -126,41 +126,63 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
 		}
+
 		if ($canDo->get('core.edit')) {
 			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 
+		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action')->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
+
+
+
+
 		if ($canDo->get('core.edit.state')) {
-			ToolbarHelper::divider();
-			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-			ToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
+			///ToolbarHelper::divider();
+			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
+			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
+			$childBar->standardButton('featured')->text('JFEATURE')->task($this->t['tasks'].'.featured')->listCheck(true);
+			$childBar->standardButton('unfeatured')->text('JUNFEATURE')->task($this->t['tasks'].'.unfeatured')->listCheck(true);
+			//ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			//ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			//ToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			$childBar->delete($this->t['tasks'].'delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
+			//ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-			$title = Text::_('JTOOLBAR_BATCH');
+
+			/*$title = Text::_('JTOOLBAR_BATCH');
 			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModal\" class=\"btn btn-small\">
 						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
 						$title</button></joomla-toolbar-button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$bar->appendButton('Custom', $dhtml, 'batch');*/
+
+			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal')->listCheck(true);
 
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
-			$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
+			/*$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
 			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModalCA\" class=\"btn btn-small\">
 						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
 						$title</button></joomla-toolbar-button>";
-			$bar->appendButton('Custom', $dhtml, 'copy_attributes');
+			$bar->appendButton('Custom', $dhtml, 'copy_attributes');*/
+
+			$childBar->popupButton('copy_attributes')->text('COM_PHOCACART_COPY_ATTRIBUTES')->selector('collapseModalCA')->icon('icon-list')->listCheck(true);
 		}
 
-		$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){Joomla.submitbutton(\'phocacartitem.recreate\');}}" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button></joomla-toolbar-button>';
-		$bar->appendButton('Custom', $dhtml);
+		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){Joomla.submitbutton(\'phocacartitem.recreate\');}}';
+		//$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="'.$onClick.'" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button></joomla-toolbar-button>';
+		//$bar->appendButton('Custom', $dhtml);
+
+
+		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image');
 
 		ToolbarHelper::divider();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );

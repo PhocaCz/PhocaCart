@@ -457,7 +457,7 @@ jQuery(document).ready(function(){
 	 * changeUrlParameter()
 	 * editPos()
 	 *
-	 * Test checkbox
+	 * Test checkbox (BOOTSTRAP VERSION IS OBSOLETE)
 	 * components\com_phocacart\views\pos\tmpl\default_main_categories.php
 	 * data-bs-toggle="buttons" - changes the standard checkbox to graphical checkbox
 	 *
@@ -468,21 +468,35 @@ jQuery(document).ready(function(){
 		var posFilterCategory = phParams['posFilterCategory'];
 
 
+		
+
 		if (posFilterCategory == 2) {
 			// Multiple categories can be displayed - can be active
 			var phA = [];
+			
+			// DESIGN - Remove active from all categories and add only for selected
+			jQuery("label.phCheckBoxCategory").removeClass("active");
+			
 			jQuery("input.phPosCategoryCheckbox:checkbox:checked").each(function () {
 				phA.push(jQuery(this).val());
+				jQuery(this).parent("label").addClass("active");
 			})
 			var cValue = phA.join(",");
 		} else {
 			// Only one category can be displayed
 			// Deselect all checkboxed except the one selected - can be active
 			var cValue = jQuery(this).val();
+			
+			// DESIGN Mark this category active
+			jQuery(this).parent().addClass("active");
+
 			jQuery("input.phPosCategoryCheckbox:checkbox:checked").each(function () {
+				
 				if (cValue != jQuery(this).val() ) {
 					jQuery(this).prop("checked", false);
-					jQuery("label.phCheckBoxCategory").removeClass("active");
+					jQuery(this).parent("label").removeClass("active");
+				} else {
+
 				}
 			})
 
@@ -498,7 +512,6 @@ jQuery(document).ready(function(){
       	phRenderPage(phData, phUrl);
       	jQuery(".ph-pos-message-box").html("");// clear message box
    });
-
 
    /*
 	 * Search by key type - typing of charcters into the search field FIND MEMBER KEYUP

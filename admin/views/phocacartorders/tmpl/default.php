@@ -153,7 +153,7 @@ if (is_array($this->items)) {
         } else {
             $checkO .= $this->escape($item->title);
         }
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         if ($item->user_id > 0) {
             $userO = $this->escape($item->user_name);
@@ -220,9 +220,9 @@ if (is_array($this->items)) {
         // ACTION
         $view = '<div class="ph-action-row">';
 
-        $view .= '<a href="' . $linkOrderView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span></a>';
-        $view .= ' <a href="' . $linkInvoiceView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span></a>';
-        $view .= ' <a href="' . $linkDelNoteView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span></a>';
+        $view .= '<a href="' . $linkOrderView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['search'] . '  ph-icon-success', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '</a>';
+        $view .= ' <a href="' . $linkInvoiceView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['list-alt'] . '  ph-icon-danger', 'title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '"') . '</a>';
+        $view .= ' <a href="' . $linkDelNoteView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['barcode'] . '  ph-icon-warning', 'title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '"') . '</a>';
 
         $view .= '</div>';
 
@@ -230,9 +230,9 @@ if (is_array($this->items)) {
 
             $formatPDF = '&format=pdf';
             $view .= '<div class="ph-action-row">';
-            $view      .= '<a href="' . $linkOrderView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '" class="' . $this->s['i']['search'] . ' ph-icon-success"></span><br /><span class="ph-icon-success-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
-            $view      .= ' <a href="' . $linkInvoiceView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '" class="' . $this->s['i']['list-alt'] . ' ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
-            $view      .= ' <a href="' . $linkDelNoteView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '><span title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '" class="' . $this->s['i']['barcode'] . ' ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= '<a href="' . $linkOrderView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['search'] . '  ph-icon-success', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '<br /><span class="ph-icon-success-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= ' <a href="' . $linkInvoiceView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['list-alt'] . '  ph-icon-danger', 'title="' . Text::_('COM_PHOCACART_VIEW_INVOICE') . '"') . '<br /><span class="ph-icon-danger-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+            $view      .= ' <a href="' . $linkDelNoteView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['barcode'] . '  ph-icon-warning', 'title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '"') . '<br /><span class="ph-icon-warning-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
 
             $view .= '</div>';
         }

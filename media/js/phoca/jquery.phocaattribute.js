@@ -87,6 +87,7 @@ function phChangeAttributeType(typeView) {
 
 
 			// Change on Click event
+			
 			jQuery(phClassId).on('click', function(e) {
 
 				e.preventDefault();// Bootstrap modal (close and open again duplicates events)
@@ -227,7 +228,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 
 				if (arrayValues !== undefined || arrayValues.length != 0) {
 
-					// clea all selected values first
+					// clear all selected values first
 					jQuery("#" + attributeId + " option").removeAttr("selected");// Select box
 					jQuery(phSelectNameIdT + " div").removeClass('on'); // Select Color or Image
 					jQuery("#" + attributeId + " input").removeAttr("checked");// Check box
@@ -336,24 +337,65 @@ jQuery(document).ready(function() {
 	})
 
 
+	/* CHECKBOXES */
+
+	/* Only design function - display icon instead of checkbox */
 	var phCheckboxA             =  ".ph-checkbox-attribute.phjProductAttribute";
-    // var phCheckboxAInputChecked =  phCheckboxA + " input:checked";
-	// Checkbox
 	jQuery(document).on('click', phCheckboxA, function(e){
 
+		var phParams = Joomla.getOptions('phParamsPC');
+		
+
+
+		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
+        
+		if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
+			if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
+		} else if (phParams['theme'] == 'svg') {
+			if (e.target.tagName.toUpperCase() === "SVG" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
+		}
+
+		 // If REQUIRED, don't allow to untick all checkboxes
+		 //var phRequired = jQuery(this).data("required");
+		 var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
+		 var phACheckedLength = jQuery(phCheckboxAInputChecked).length;
+		 if (phACheckedLength == 0) {
+			 var phThisLabel = jQuery(e.target).parent();//  checkboxes - colors, images
+			 phThisLabel.addClass("active");//  checkboxes - colors, images
+			 e.preventDefault();
+			 return false;
+		}
+		
+		var phCheckboxAInput =  "#" + jQuery(this).attr("id") + " input[type='checkbox']";
+		var allInputs = jQuery(phCheckboxAInput);
+
+		if (allInputs.length > 0) {
+			allInputs.each(function(i) {
+				var phThisLabel = jQuery(this).parent();
+				if (jQuery(this).is(':checked')) {
+
+					phThisLabel.addClass("active");// Checkboxes - colors, images
+				} else {
+					phThisLabel.removeClass("active");// Checkboxes - colors, images
+				}
+			})
+		}
+	})
+
+	/* Interactive change */
+	jQuery(document).on('click', phCheckboxA, function(e){
 
 		var phParams = Joomla.getOptions('phParamsPC');
-		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
+		
+		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {	
 			return;// Interactive Change is disabled
 		}
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
-        if (phParams['theme'] == 'bs4') {
-
+        
+		if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
 			if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
 		}
-
-
 
 		var phProductId = jQuery(this).data('product-id');
         var phTypeView = jQuery(this).data('type-view');
@@ -361,18 +403,7 @@ jQuery(document).ready(function() {
         var phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
         var phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
 
-        // If REQUIRED, don't allow to untick all checkboxes
-        var phRequired = jQuery(this).data("required");
-        var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
-        var phACheckedLength = jQuery(phCheckboxAInputChecked).length;
-
-
-        if (phACheckedLength == 0) {
-            var phThisLabel = jQuery(e.target).parent();// Bootstrap checkboxes - colors, images
-            phThisLabel.addClass("active");// Bootstrap checkboxes - colors, images
-            e.preventDefault();
-            return false;
-        }
+       
 
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);

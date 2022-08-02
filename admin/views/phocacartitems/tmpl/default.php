@@ -242,7 +242,7 @@ if (is_array($this->items)) {
             $checkO .= '<span id="phIdTitle' . $item->id . '">' . $this->escape($item->title) . '</span>';// Id needed for displaying Copy Attributes Titles
         }
         $checkO .= '<br /><span class="smallsub">(<span>' . Text::_($this->t['l'] . '_FIELD_ALIAS_LABEL') . ':</span>' . $this->escape($item->alias) . ')</span>';
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         echo $r->td(
             '<div class="btn-group">' . HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange)

@@ -114,7 +114,7 @@ if (is_array($this->items)) {
         } else {
             $checkO .= $this->escape($item->title);
         }
-        echo $r->td($checkO, "small");
+        echo $r->td($checkO, "small", 'th');
 
         echo $r->td($item->section_title, "small");
 

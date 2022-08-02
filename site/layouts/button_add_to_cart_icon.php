@@ -20,7 +20,8 @@ if ($d['selectoptions'] == 1) {
 
 	echo '<div class="ph-category-item-addtocart">';
 	echo '<a href="'.$d['link'].'" title="'. JText::_('COM_PHOCACART_CHOOSE_VARIANT') /* JText::_('COM_PHOCACART_SELECT_OPTIONS') */.'" data-bs-toggle="tooltip" data-placement="top">';
-	echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span>';
+	//echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span>';
+    echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart']);
 	echo '</a>';
 	echo '</div>';
 
@@ -30,7 +31,8 @@ if ($d['selectoptions'] == 1) {
 	$onClick = 'onclick="jQuery(\'#phCartAddToCartButton'.(int)$d['id'].'\').find(\':submit\').click();return false;"';
 
 	echo '<div class="ph-category-item-addtocart phProductAddToCartIcon'.$d['typeview'].(int)$d['id'].' '.$d['class_icon'].'"><a href="javascript:void(0);" '.$onClick.' title="'.Text::_('COM_PHOCACART_ADD_TO_CART').'" data-bs-toggle="tooltip" data-placement="top">';
-	echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span>';
+	//echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span>';
+    echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart']);
 	echo '</a>';
 	echo '</div>';
 }

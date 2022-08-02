@@ -27,7 +27,9 @@ if (isset($this->category[0]->parentid) && ($this->t['display_back'] == 1 || $th
 	if ($linkUp && $linkUpText) {
 		echo '<div class="ph-top">'
 		.'<a class="'.$this->s['c']['btn.btn-secondary'].'" title="'.$linkUpText.'" href="'. $linkUp.'" >'
-        .'<span class="'.$this->s['i']['back-category'].'"></span> '.Text::_($linkUpText).'</a>'
+        //.'<span class="'.$this->s['i']['back-category'].'"></span> '
+		. PhocacartRenderIcon::icon($this->s['i']['back-category'], '', ' ')
+		.Text::_($linkUpText).'</a>'
         .'</div>';
 	}
 }

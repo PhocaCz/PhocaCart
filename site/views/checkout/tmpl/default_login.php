@@ -66,7 +66,7 @@ if($this->a->login == 0) {
 		echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_GUEST_CHECKOUT').'</div>'. "\n";
 
 		echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].'" role="form" id="phCheckoutAddGuest">';
-		echo '<button type="submit" tabindex="0" name="Submit" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login"><span class="'.$this->s['i']['user'].'"></span> '. Text::_('COM_PHOCACART_GUEST_CHECKOUT') .'</button>'. "\n";
+		echo '<button type="submit" tabindex="0" name="Submit" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login">'.PhocacartRenderIcon::icon($d['s']['i']['user'], '', ' ') . Text::_('COM_PHOCACART_GUEST_CHECKOUT') .'</button>'. "\n";
 
 		echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 		echo '<input type="hidden" name="task" value="checkout.setguest" />'. "\n";
@@ -119,7 +119,7 @@ if($this->a->login == 0) {
 		// Automatic guest checkout cannot be cancelled
 	} else {
 		echo '<div class="'.$this->s['c']['pull-right'].'">';
-		echo '<button type="submit" tabindex="0" name="Submit" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login"><span class="'.$this->s['i']['user'].'"></span> '. Text::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button>';
+		echo '<button type="submit" tabindex="0" name="Submit" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login">'.PhocacartRenderIcon::icon($d['s']['i']['user'], '', ' ') . Text::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button>';
 		echo '</div>'. "\n";
 	}
 

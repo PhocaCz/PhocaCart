@@ -14,12 +14,15 @@ $d = $displayData;
 <?php
 if ($d['display_view_product_button'] == 1) {
 
-	?><a href="<?php echo $d['link']; ?>" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><span class="<?php echo $d['s']['i']['view-product'] ?>"></span> <?php echo Text::_('COM_PHOCACART_VIEW_PRODUCT'); ?></a><?php
+	?><a href="<?php echo $d['link']; ?>" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><?php
+
+	echo PhocacartRenderIcon::icon($d['s']['i']['view-product'], '', ' ');
+	echo Text::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 
 } else if ($d['display_view_product_button'] == 2) {
 
-	?><a href="<?php echo $d['link']; ?>" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button" title="<?php echo Text::_('COM_PHOCACART_VIEW_PRODUCT'); ?>"><span class="<?php echo $d['s']['i']['view-product'] ?>"></span></a><?php
-
+	?><a href="<?php echo $d['link']; ?>" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button" title="<?php echo Text::_('COM_PHOCACART_VIEW_PRODUCT'); ?>"><?php
+	echo PhocacartRenderIcon::icon($d['s']['i']['view-product'], '', ' ').'</a>';
 } ?>
 </div>
 

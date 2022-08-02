@@ -15,6 +15,6 @@ $document->addScript('https://paddle.s3.amazonaws.com/checkout/checkout.js');
 
 ?>
 <div class="<?php echo $d['s']['c']['pull-right'];?> ph-item-buy-now-box">
-	<button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'];?> ph-btn paddle_button" data-product="<?php echo $d['external_id']; ?>" data-theme="green"><span class="<?php echo $d['s']['i']['shopping-cart']; ?>"></span> <?php echo Text::_('COM_PHOCACART_BUY_NOW'); ?></button>
+	<button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'];?> ph-btn paddle_button" data-product="<?php echo $d['external_id']; ?>" data-theme="green"><?php echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart'], '', ' ') . Text::_('COM_PHOCACART_BUY_NOW'); ?></button>
 </div>
 <div class="ph-cb"></div>

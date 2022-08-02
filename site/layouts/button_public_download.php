@@ -19,11 +19,11 @@ $d = $displayData;
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 	<div class="ph-pull-right">
 		<div class="ph-category-item-public-download">
-		<button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn"><span class="<?php echo $d['s']['i']['download'] ?>"></span><?php
+		<button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn"><?php echo PhocacartRenderIcon::icon($d['s']['i']['download'], '', ' ') ?><?php
 		if ($d['title'] != '') {
-			echo ' '. $d['title'];
+			echo $d['title'];
 		} else {
-			echo ' '. Text::_('COM_PHOCACART_DOWNLOAD');
+			echo Text::_('COM_PHOCACART_DOWNLOAD');
 		}
 		?></button>
 		</div>

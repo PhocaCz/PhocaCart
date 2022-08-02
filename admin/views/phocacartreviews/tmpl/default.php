@@ -106,7 +106,7 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->productname);
 }
 
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 
 
@@ -126,7 +126,7 @@ if ($canCreate || $canEdit) {
 	$checkO .= $this->escape($item->name);
 }
 $checkO .= $nameSuffix;
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 
 echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");

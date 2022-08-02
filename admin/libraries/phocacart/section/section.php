@@ -32,7 +32,9 @@ class PhocacartSection
 
 			$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
 			$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
-	        $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+	       // $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span>';
+            $o .= PhocacartRenderIcon::icon($s['i']['back-category'].' icon-white', 'aria-hidden="true"');
+            $o .= '</a>';
 	        $o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else if (isset($section->title) && $section->title != '') {
@@ -43,7 +45,9 @@ class PhocacartSection
 
 			$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
 			$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
-	        $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+	        //$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span>';
+            $o .= PhocacartRenderIcon::icon($s['i']['back-category'].' icon-white', 'aria-hidden="true"');
+            $o .= '</a>';
 	        $o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else {
@@ -55,7 +59,9 @@ class PhocacartSection
 					$linkSection 		= Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', (int)$v->id));
 					$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
 					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
-					$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+					//$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span>';
+                    $o .= PhocacartRenderIcon::icon($s['i']['back-category'].' icon-white', 'aria-hidden="true"');
+                    $o .= '</a>';
 					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.Text::_('COM_PHOCACART_SECTIONS').'</a>';
 					$o .= '</div>';
 					break;

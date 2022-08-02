@@ -129,11 +129,11 @@ $wa->useScript('keepalive')
 		<div class="com-users-profile__edit-submit control-group">
 			<div class="<?php echo $this->s['c']['controls'] ?>">
 				<button type="submit" class="<?php echo $this->s['c']['btn.btn-primary'] ?> validate" name="task" value="profile.save">
-					<span class="<?php echo $this->s['i']['ok'] ?>" aria-hidden="true"></span>
+					<?php echo PhocacartRenderIcon::icon($d['s']['i']['ok'], 'aria-hidden="true"') ?>
 					<?php echo Text::_('JSAVE'); ?>
 				</button>
 				<button type="submit" class="<?php echo $this->s['c']['btn.btn-danger'] ?>" name="task" value="profile.cancel" formnovalidate>
-					<span class="<?php echo $this->s['i']['clear'] ?>" aria-hidden="true"></span>
+					<?php echo PhocacartRenderIcon::icon($d['s']['i']['clear'], 'aria-hidden="true"') ?>
 					<?php echo Text::_('JCANCEL'); ?>
 				</button>
 				<input type="hidden" name="option" value="com_users">

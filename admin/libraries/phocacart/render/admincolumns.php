@@ -591,7 +591,7 @@ class PhocacartRenderAdmincolumns
             $o[] = '<br /><span class="smallsub">(<span>' . Text::_('COM_PHOCACART_FIELD_FIELD_ALIAS_LABEL') . ':</span>' . PhocacartText::filterValue($item['valuealias'], 'text') . ')</span>';
         }
 
-        return $this->r->td(implode("\n", $o), 'small');
+        return $this->r->td(implode("\n", $o), 'small', 'th');
 
 
     }

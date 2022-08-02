@@ -269,7 +269,9 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
     echo '<div class="btn-toolbar">';
     echo '<div class="btn-group">';
     echo '<button type="submit" class="' . $this->s['c']['btn.btn-primary'] . '">';
-    echo '<span class="' . $this->s['i']['submit'] . '"></span> ' . Text::_('COM_PHOCACART_SUBMIT') . '</button>';
+    //echo '<span class="' . $this->s['i']['submit'] . '"></span> '
+    echo PhocacartRenderIcon::icon($this->s['i']['submit'], '', ' ');
+    echo Text::_('COM_PHOCACART_SUBMIT') . '</button>';
     echo '</div>';
     echo '</div>';
 

@@ -50,7 +50,7 @@ class PhocacartRenderAdminview extends Adminview
 			// BACK TO WIZARD (can be called everywhere)
 			$bar = Toolbar::getInstance( 'toolbar' );
 			$dhtml = '<joomla-toolbar-button><button onclick="Joomla.submitbutton(\'phocacartwizard.backtowizard\');" class="btn btn-small btn-warning">
-	<span id="ph-icon-wizard" class="icon-dummy '.$s['i']['edit'].' ph-icon-wizard fas fa fa-hat-wizard"></span>'.Text::_('COM_PHOCACART_BACK_TO_WIZARD').'</button></joomla-toolbar-button>';
+	<span id="ph-icon-wizard" class="icon-dummy fa fa-edit fa-fw ph-icon-wizard fas fa fa-hat-wizard"></span>'.Text::_('COM_PHOCACART_BACK_TO_WIZARD').'</button></joomla-toolbar-button>';
 
 			$bar->appendButton('Custom', $dhtml, 'wizard');
 		} else if ($type == 'start') {
@@ -58,7 +58,7 @@ class PhocacartRenderAdminview extends Adminview
 			// this button is starded by javascript in function modalWindowDynamic libraries\phocacart\render\adminview.php
 			$bar = Toolbar::getInstance( 'toolbar' );
 			$dhtml = '<joomla-toolbar-button><a href="'.$url.'" id="'.$id.'" class="'.$class.'" data-bs-target="#'.$idMd.'" data-bs-toggle="modal" data-src="'.$url.'" data-width="'.$w.'" data-heigth="'.$h.'">
-	<span id="ph-icon-wizard" class="icon-dummy '.$s['i']['edit'].' ph-icon-wizard fas fa fa-hat-wizard"></span>'.Text::_('COM_PHOCACART_START_WIZARD').'</a></joomla-toolbar-button>';
+	<span id="ph-icon-wizard" class="icon-dummy fa fa-edit fa-fw ph-icon-wizard fas fa fa-hat-wizard"></span>'.Text::_('COM_PHOCACART_START_WIZARD').'</a></joomla-toolbar-button>';
 			$bar->appendButton('Custom', $dhtml, 'wizard');
 
 			// We have displayed the modal with wizard
@@ -1376,7 +1376,7 @@ class PhocacartRenderAdminview extends Adminview
 			// BACK TO WIZARD (can be called everywhere)
 			$bar = Toolbar::getInstance( 'toolbar' );
 			$dhtml = '<button onclick="Joomla.submitbutton(\'phocacartwizard.backtowizard\');" class="btn btn-small btn-warning">
-	<span id="ph-icon-wizard" class="icon-dummy '.$s['i']['edit'].' ph-icon-wizard"></span>'.Text::_('COM_PHOCACART_BACK_TO_WIZARD').'</button>';
+	<span id="ph-icon-wizard" class="icon-dummy fa fa-edit fa-fw ph-icon-wizard"></span>'.Text::_('COM_PHOCACART_BACK_TO_WIZARD').'</button>';
 
 			$bar->appendButton('Custom', $dhtml, 'wizard');
 		} else if ($type == 'start') {
@@ -1384,7 +1384,7 @@ class PhocacartRenderAdminview extends Adminview
 			// this button is starded by javascript in function modalWindowDynamic libraries\phocacart\render\adminview.php
 			$bar = Toolbar::getInstance( 'toolbar' );
 			$dhtml = '<button id="'.$id.'" class="'.$class.'" data-bs-target="#'.$idMd.'" data-toggle="modal" data-src="'.$url.'" data-width="'.$w.'" data-heigth="'.$h.'">
-	<span id="ph-icon-wizard" class="icon-dummy '.$s['i']['edit'].' ph-icon-wizard"></span>'.Text::_('COM_PHOCACART_START_WIZARD').'</button>';
+	<span id="ph-icon-wizard" class="icon-dummy fa fa-edit fa-fw ph-icon-wizard"></span>'.Text::_('COM_PHOCACART_START_WIZARD').'</button>';
 			$bar->appendButton('Custom', $dhtml, 'wizard');
 
 			// We have displayed the modal with wizard

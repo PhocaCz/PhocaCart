@@ -9,7 +9,6 @@
 defined('_JEXEC') or die();
 $d = $displayData;
 
-
 if ($d['t']['display_webp_images'] == 1) {
 
     echo '<picture>';

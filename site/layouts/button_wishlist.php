@@ -22,9 +22,9 @@ $d = $displayData;
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
             <?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-                <a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['wish-list'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['wish-list']) ?></a>
             <?php } else { ?>
-                <a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['wish-list'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['wish-list']) ?></a>
             <?php } ?>
 
             <?php echo HTMLHelper::_('form.token'); ?>

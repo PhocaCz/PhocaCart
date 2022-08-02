@@ -302,7 +302,10 @@ if (!empty($this->items)) {
 	echo '</div>'. "\n"; // end items
 } else {
 	echo '<div id="phItems" class="ph-items '.$this->s['c']['grid'].'">';
-	echo '<div class="ph-pos-no-items-icon"><span class="'.$this->s['i']['ban'].'"></span></div>';
+	echo '<div class="ph-pos-no-items-icon">';
+	//echo '<span class="'.$this->s['i']['ban'].'"></span>';
+	echo PhocacartRenderIcon::icon($this->s['i']['ban']);
+	echo '</div>';
 	echo '<div class="ph-pos-no-items">'.Text::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
 
 	echo $this->loadTemplate('pagination');// empty pagination only needed variables

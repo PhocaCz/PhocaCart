@@ -119,13 +119,13 @@ class PhocaCartCpViewPhocacartStatistics extends HtmlView
 		}
 
 		$media = new PhocacartRenderAdminmedia();
-		HTMLHelper::_('jquery.framework', false);
+		/*HTMLHelper::_('jquery.framework', false);
 		$document->addScript(Uri::root(true).'/media/com_phocacart/js/administrator/jquery.equalheights.min.js');
 		$document->addScriptDeclaration(
 		//'jQuery(window).load(function(){
 		'jQuery(window).on(\'load\', function(){
 			jQuery(\'.ph-admin-stat-box\').equalHeights();
-		});');
+		});');*/
 
 		// Most viewed and best-selling products
 		$this->t['most_viewed'] 	= PhocacartProduct::getMostViewedProducts(0, false, false);
