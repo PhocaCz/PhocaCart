@@ -133,13 +133,13 @@ if ($item->coupon_type == 2) {
 
 	$couponType .= '<div class="ph-action-row">';
 
-	$couponType .= '<a href="' . $linkCouponView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkCouponViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['search']. ' ph-icon-success', 'title="' . Text::_('COM_PHOCACART_VIEW_COUPON') . '"') . '</a>';
+	$couponType .= '<a href="' . $linkCouponView . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkCouponViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['search']. ' ph-icon-success', 'title="' . Text::_('COM_PHOCACART_VIEW_COUPON') . '"', '', '', 'fa5') . '</a>';
 
 	if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
 
 		$couponType .= ' ';
 		$formatPDF = '&format=pdf';
-		$couponType .= '<a href="' . $linkCouponView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkCouponViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['search']. ' ph-icon-success', 'title="' . Text::_('COM_PHOCACART_VIEW_COUPON') . '"') . '<br /><span class="ph-icon-success-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
+		$couponType .= '<a href="' . $linkCouponView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkCouponViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['search']. ' ph-icon-success', 'title="' . Text::_('COM_PHOCACART_VIEW_COUPON') . '"', '', '', 'fa5') . '<br /><span class="ph-icon-success-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
 
 	}
 	$couponType .= '</div>';

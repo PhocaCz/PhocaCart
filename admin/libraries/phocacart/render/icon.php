@@ -16,11 +16,14 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartRenderIcon
 {
 
-	public static function icon($class, $attributes = '', $suffix = '', $prefix = '') {
+	public static function icon($class, $attributes = '', $suffix = '', $prefix = '', $forceIconType = '') {
 
 		$pC 						= PhocacartUtils::getComponentParameters();
 		$icon_type			= $pC->get( 'icon_type', 'fa5');
 
+		if ($forceIconType != '') {
+			$icon_type			= $forceIconType;
+		}
 
 		$o = '';
 

@@ -2020,6 +2020,7 @@ a[target=_blank]::before {
 .ph-order-info-box {
 	display: flex;
 	flex: 1 1 50%;
+	flex-wrap: wrap;
 	font-size: 80%;
 }
 .ph-order-info-box .form-control {

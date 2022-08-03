@@ -39,7 +39,7 @@ echo $r->groupHeader($this->form, $formArray);
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('code', 'discount', 'calculation_type', 'type', 'access', 'group');
+$formArray = array ('code', 'discount', 'calculation_type', 'type', 'coupon_type', 'access', 'group');
 echo $r->group($this->form, $formArray);
 
 $formArray = array('description');
