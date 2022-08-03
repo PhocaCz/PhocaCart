@@ -31,7 +31,7 @@ $x = $this->item[0];
     <div class="<?php echo $this->s['c']['modal-dialog'] ?> <?php echo $this->s['c']['modal-lg'] ?>">
       <div class="<?php echo $this->s['c']['modal-content'] ?>">
         <div class="<?php echo $this->s['c']['modal-header'] ?>">
-		 <h5 class="<?php echo $this->s['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['quick-view'], '', ' ') . Text::_('COM_PHOCACART_QUICK_VIEW'); ?></h5>
+		 <h5 class="<?php echo $this->s['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($this->s['i']['quick-view'], '', ' ') . Text::_('COM_PHOCACART_QUICK_VIEW'); ?></h5>
             <?php echo $close ?>
         </div>
         <div class="<?php echo $this->s['c']['modal-body'] ?>"><?php
