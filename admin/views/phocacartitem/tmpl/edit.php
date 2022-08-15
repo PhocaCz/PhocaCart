@@ -43,8 +43,8 @@ function phCheckRequestStatus(i, task) {
             phCheckRequestStatus(i, task);
         }, 1000);
     } else {
-    
-        
+
+
         if (task != "'. $this->t['task'].'.cancel" && task != "phocacartwizard.backtowizard" && document.getElementById("jform_catid_multiple").value == "") {
             alert("'. $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(Text::_('COM_PHOCACART_ERROR_CATEGORY_NOT_SELECTED')).'");
         } else if (task == "' . $this->t['task'] . '.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
@@ -184,6 +184,8 @@ $formArray = array('features');
 echo $r->group($this->form, $formArray, 1);
 //$formArray = array ('upc', 'ean', 'jan', 'mpn', 'isbn');
 //echo $r->group($this->form, $formArray);
+$formArray = array ('special_parameter', 'special_image');
+echo $r->group($this->form, $formArray);
 
 
 // ASSOCIATION
@@ -318,7 +320,7 @@ echo $r->endTab();
 echo $r->startTab('publishing', $tabs['publishing']);
 foreach ($this->form->getFieldset('publish') as $field) {
 
-    echo '<div class="control-group">';
+    echo '<div class="control-group ph-par-'.$field->fieldname.'">';
     if (!$field->hidden) {
         echo '<div class="control-label">' . $field->label . '</div>';
     }
@@ -375,6 +377,8 @@ if (!empty($currentFields)) {
 
 $this->ignore_fieldsets = $ignoreField;
 echo JLayoutHelper::render('joomla.edit.params', $this);
+
+
 
 echo $r->endTabs();
 echo '</div>';//end span10

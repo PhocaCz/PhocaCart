@@ -206,7 +206,7 @@ class PhocacartText {
 		$pC				= PhocacartUtils::getComponentParameters();
 		$config 		= Factory::getConfig();
 		$price			= new PhocacartPrice();
-		$price->setCurrency($common->currency_code, $orderId);
+		$price->setCurrency($common->currency_id, $orderId);
 		$totalBrutto	= $order->getItemTotal($orderId, 0, 'brutto');
 
 		$download_guest_access = $pC->get('download_guest_access', 0);

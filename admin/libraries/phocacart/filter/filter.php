@@ -61,6 +61,8 @@ class PhocacartFilter
 
     public $check_available_products = 1;
 
+    public $ignore_zero_price = 0;
+
     public $ajax                    = 0;
 
 
@@ -506,8 +508,8 @@ class PhocacartFilter
 
             $price_from = $this->getArrayParamValues('price_from', 'string');
             $price_to = $this->getArrayParamValues('price_to', 'string');
-            $min = PhocacartProduct::getProductPrice(2, $this->check_available_products, $language, $activeProductsPrice);// min price
-            $max = PhocacartProduct::getProductPrice(1, $this->check_available_products, $language, $activeProductsPrice);// max price
+            $min = PhocacartProduct::getProductPrice(2, $this->check_available_products, $language, $activeProductsPrice, $this->ignore_zero_price);// min price
+            $max = PhocacartProduct::getProductPrice(1, $this->check_available_products, $language, $activeProductsPrice, $this->ignore_zero_price);// max price
 
             if (!$min) {
                 $min = 0;

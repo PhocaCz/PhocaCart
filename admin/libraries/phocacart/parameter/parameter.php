@@ -433,11 +433,11 @@ class PhocacartParameter
 	    return implode('', $o);
 	}
 
-	public static function getParameterValuesByProductId($id) {
+	public static function getParameterValuesByProductId($id, $includeAlias = 0) {
 
 		$db = Factory::getDBO();
 
-        $query = 'SELECT v.title as parametervaluetitle, p.id as parameterid, p.title as parametertitle, p.alias as parameteralias FROM #__phocacart_parameter_values AS v'
+        $query = 'SELECT v.title as parametervaluetitle, v.alias as parametervaluealias, p.id as parameterid, p.title as parametertitle, p.alias as parameteralias FROM #__phocacart_parameter_values AS v'
             //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
             . ' LEFT JOIN #__phocacart_parameter_values_related AS pvr ON v.id = pvr.parameter_value_id'
             . ' LEFT JOIN #__phocacart_parameters AS p ON p.id = pvr.parameter_id'
@@ -446,12 +446,21 @@ class PhocacartParameter
         $db->setQuery($query);
         $params = $db->loadAssocList();
         $paramsA = [];
-        $i = 0;
+
         if (!empty($params)) {
+			$i = 0;
             foreach($params as $k => $v) {
+
                 if (isset($v['parameteralias']) && $v['parameteralias'] != '') {
                     $id = $v['parameteralias'];
-                    $paramsA[$id][] = $v['parametervaluetitle'];
+
+					if ($includeAlias == 1) {
+						$paramsA[$id][$i]['title'] = $v['parametervaluetitle'];
+						$paramsA[$id][$i]['alias'] = $v['parametervaluealias'];
+					} else {
+						$paramsA[$id][] = $v['parametervaluetitle'];
+					}
+					$i++;
                 }
             }
         }

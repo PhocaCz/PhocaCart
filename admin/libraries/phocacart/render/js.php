@@ -1180,7 +1180,7 @@ final class PhocacartRenderJs
 
         $s[] = 'jQuery(function() {';
         $s[] = '   if (jQuery("#ph-msg-ns").length > 0){';
-        $s[] = '      jQuery(document).scrollTop( jQuery("#system-message").offset().top );';
+        $s[] = '      jQuery(document).scrollTop( jQuery("#ph-msg-ns").parent().offset().top );';
         //$s[] = '      jQuery(\'html,body\').animate({scrollTop: jQuery("#system-message").offset().top}, 1500 );';
 
         if ($scrollTo != '') {

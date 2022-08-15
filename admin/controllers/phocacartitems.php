@@ -16,6 +16,7 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
 {
 	public function __construct($config = array()) {
 
+
 		parent::__construct($config);
 		$this->registerTask('unfeatured',	'featured');
 	}

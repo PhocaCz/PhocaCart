@@ -294,14 +294,14 @@ class Adminview
 		}
 
 
-		$o .= '<div class="control-group '.$item.'">'."\n";
+		$o .= '<div class="control-group ph-par-'.$item.'">'."\n";
 		$o .= '<div class="control-label">'. $form->getLabel($item) . $descriptionOutput . '</div>'."\n"
 		. '<div class="controls">' . $value.'</div>'."\n"
 		. '</div>' . "\n";
 		return $o;
 	}
 
-	public function itemLabel($item, $label, $description = '') {
+	public function itemLabel($item, $label, $description = '', $name = '') {
 
 
 		$description = Text::_($description);
@@ -311,16 +311,18 @@ class Adminview
 		}
 
 		$o = '';
-		$o .= '<div class="control-group">'."\n";
+		$o .= '<div class="control-group ph-par-'.$name.'">'."\n";
 		$o .= '<div class="control-label"><label>'. $label .'</label>'. $descriptionOutput . '</div>'."\n"
 		. '<div class="controls">' . $item.'</div>'."\n"
 		. '</div>' . "\n";
 		return $o;
 	}
 
-	public function itemText($item, $label, $class = '') {
+	public function itemText($item, $label, $class = '', $name = '') {
+		
+
 		$o = '';
-		$o .= '<div class="control-group ph-control-group-text">'."\n";
+		$o .= '<div class="control-group ph-par-ph-text-'.$name.' ph-control-group-text">'."\n";
 		$o .= '<div class="control-label"><label>'. $label . '</label></div>'."\n"
 		. '<div class="controls '.$class.'">' . $item.'</div>'."\n"
 		. '</div>' . "\n";

@@ -84,6 +84,8 @@
 
         <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs" size="40"/>
 
+        <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_PARAMETER_DESC" class="form-control"/>
+        <field name="special_image" type="media" label="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_IMAGE_DESC" class="form-control" size="40"/>
 
         <field name="public_download_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_DESC"
                class="form-control" size="40"/>

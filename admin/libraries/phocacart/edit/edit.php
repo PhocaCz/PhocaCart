@@ -55,7 +55,7 @@ class PhocacartEdit
 			'upc', 'ean', 'jan', 'isbn', 'mpn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link',
 			'external_text', 'external_link2', 'external_text2', 'min_quantity', 'min_multiple_quantity', 'unit_amount', 'unit_unit',
 			'length', 'width', 'height', 'weight', 'volume', 'points_needed', 'points_received', 'description', 'description_long', 'features',
-			'video', 'type_feed', 'type_category_feed', 'metakey', 'metadesc','metatitle'
+			'video', 'type_feed', 'type_category_feed', 'metakey', 'metadesc','metatitle', 'special_parameter'
 		);
 
 
@@ -89,6 +89,7 @@ class PhocacartEdit
 
 		if (isset($idA[1])) {
 			$columnTest = $idA[1];
+
 			if (in_array($columnTest, $allowedColumns)) {
 				$column = PhocacartText::filterValue($columnTest, 'alphanumeric2');
 			}

@@ -69,6 +69,7 @@ echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array (
 'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
 'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'),
+'feed'           => Text::_($this->t['l'] . '_FEED_OPTIONS'),
 'metadata'		=> Text::_($this->t['l'].'_METADATA_OPTIONS'));
 if (!$isModal && $assoc) {
     $tabs['associations']          = Text::_($this->t['l'].'_ASSOCIATIONS');
@@ -86,6 +87,8 @@ $formArray = array ('image', 'icon_class', 'parent_id', 'type', 'ordering', 'acc
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
+$formArray = array ('special_parameter', 'special_image');
+echo $r->group($this->form, $formArray);
 
 // ASSOCIATION
 $this->form->setFieldAttribute('id', 'type', 'hidden');
@@ -103,6 +106,11 @@ foreach($this->form->getFieldset('publish') as $field) {
 	echo $field->input;
 	echo '</div></div>';
 }
+echo $r->endTab();
+
+// FEED
+echo $r->startTab('feed', $tabs['feed']);
+echo $this->loadTemplate('feed');
 echo $r->endTab();
 
 echo $r->startTab('metadata', $tabs['metadata']);

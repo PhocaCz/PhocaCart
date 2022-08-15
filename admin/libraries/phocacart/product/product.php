@@ -642,7 +642,8 @@ class PhocacartProduct
             $groupsFull = $queryColumns;
             $groupsFast = 'a.id';
         } else {
-            $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, m.title AS manufacturertitle,'
+            $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
+             . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, m.title AS manufacturertitle,'
                 . ' AVG(r.rating) AS rating,'
                 . ' at.required AS attribute_required';
             $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
@@ -664,6 +665,9 @@ class PhocacartProduct
             // add to 2 type_category_feed - used in XML FEED
             $q .= ', GROUP_CONCAT(c.title SEPARATOR "|") AS categories';
             $q .= ', GROUP_CONCAT(c.type_feed SEPARATOR "|") AS feedcategories';
+
+            // Possible feature but in all known feeds we use only one category
+            //$q .= ', GROUP_CONCAT(c.params_feed SEPARATOR "|") AS feedcategoriesparams';
         }
 
         // Possible DISTINCT
@@ -1452,8 +1456,7 @@ class PhocacartProduct
     }
 
 
-    public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array())
-    {
+    public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array(), $ignoreZeroPrice = 0) {
 
         switch ($type) {
 
@@ -1471,7 +1474,11 @@ class PhocacartProduct
         $db = Factory::getDBO();
 
         $wheres = array();
-        $lefts = array();
+        $lefts  = array();
+
+        if ($ignoreZeroPrice == 1){
+            $wheres[] = 'p.price > 0';
+        }
 
         $wheres[] = ' p.published = 1';
 

@@ -139,7 +139,7 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 		}
 
 		if ($canDo->get('core.delete')) {
-			$childBar->delete($this->t['tasks'].'delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
+			$childBar->delete($this->t['tasks'].'.delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
 			//ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
 

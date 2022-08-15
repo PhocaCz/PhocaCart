@@ -161,7 +161,7 @@ class PhocacartOrdering
 
 			default://PRODUCTS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'pc.ordering DESC';break;
+					case 2:$orderingOutput	= 'c.id, pc.ordering DESC';break;
 					case 3:$orderingOutput	= 'a.title ASC';break;
 					case 4:$orderingOutput	= 'a.title DESC';break;
 					case 5:$orderingOutput	= 'a.price ASC';break;
@@ -192,7 +192,7 @@ class PhocacartOrdering
 					case 26:$orderingOutput	= 'a.featured DESC';break;
 
 					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
+					case 1:default:$orderingOutput = 'c.id, pc.ordering ASC';break;
 				}
 			break;
 		}

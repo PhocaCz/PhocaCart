@@ -387,6 +387,11 @@ class PhocacartRenderAdmincolumns
         return $this->renderHeaderColumn($data, $options);
     }
 
+    public function special_parameterHeader(&$options) {
+        $data = array('class' => 'ph-special_parameter', 'title' => 'COM_PHOCACART_FIELD_SPECIAL_PARAMETER_LABEL', 'tool' => 'searchtools.sort', 'column' => 'a.special_parameter');
+        return $this->renderHeaderColumn($data, $options);
+    }
+
 
 
 
@@ -499,6 +504,13 @@ class PhocacartRenderAdmincolumns
 
     public function metadesc($item, &$options) {
         // textarea in features instead of text like e.g. by title, sku, price
+        $item['editclass']  = 'autogrow';
+        $item['editfilter'] = 'html';
+        return $this->commonColumn($item, $options);
+    }
+
+    public function special_parameter($item, &$options) {
+        // textarea in description instead of text like e.g. by title, sku, price
         $item['editclass']  = 'autogrow';
         $item['editfilter'] = 'html';
         return $this->commonColumn($item, $options);
@@ -699,6 +711,7 @@ type_feed
 type_category_feed
 metakey
 metadesc
+special_parameter
 phoca_action
 */
 ?>

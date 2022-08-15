@@ -44,7 +44,6 @@ class PhocaCartViewFeed extends HtmlView
             }
 
 
-
             $this->t['pathitem'] = PhocacartPath::getPath('productimage');
 
             // Feed Params

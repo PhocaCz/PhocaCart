@@ -27,6 +27,9 @@
         <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
+        <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_DESC" class="form-control"/>
+        <field name="special_image" type="media" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_DESC" class="form-control" size="40"/>
+
         <field name="image" type="phocaselectfilenameimage" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40"/>
 
 		<field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" class="form-control" size="40" />

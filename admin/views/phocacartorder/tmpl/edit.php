@@ -44,7 +44,7 @@ echo $r->startTabs();
 
 echo $r->startTab('order', $tabs['order'], 'active');
 
-echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id, $this->itemcommon->date, $this->itemcommon->order_number), Text::_('COM_PHOCACART_ORDER_NUMBER'));
+echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id, $this->itemcommon->date, $this->itemcommon->order_number), Text::_('COM_PHOCACART_ORDER_NUMBER'), '', 'order_number');
 
 
 $user = $this->itemcommon->user_name;
@@ -52,9 +52,9 @@ if ($this->itemcommon->user_username != '') {
 	$user .= ' <small>('.$this->itemcommon->user_username.')</small>';
 }
 if ($user != '') {
-	echo $r->itemText($user, Text::_('COM_PHOCACART_USER'));
+	echo $r->itemText($user, Text::_('COM_PHOCACART_USER'), '', 'user');
 } else {
-	echo $r->itemText('<span class="label label-info badge bg-info">'.Text::_('COM_PHOCACART_GUEST').'</span>', Text::_('COM_PHOCACART_USER'));
+	echo $r->itemText('<span class="label label-info badge bg-info">'.Text::_('COM_PHOCACART_GUEST').'</span>', Text::_('COM_PHOCACART_USER'), '', 'guest');
 }
 
 if (isset($this->itemcommon->vendor_name) && $this->itemcommon->vendor_name != '') {
@@ -62,34 +62,34 @@ if (isset($this->itemcommon->vendor_name) && $this->itemcommon->vendor_name != '
 	if ($this->itemcommon->vendor_username != '') {
 		$vendor .= ' <small>('.$this->itemcommon->vendor_username.')</small>';
 	}
-	echo $r->itemText($vendor, Text::_('COM_PHOCACART_VENDOR'));
+	echo $r->itemText($vendor, Text::_('COM_PHOCACART_VENDOR'), '', 'vendor');
 }
 if (isset($this->itemcommon->section_name) && $this->itemcommon->section_name != '') {
-	echo $r->itemText($this->itemcommon->section_name, Text::_('COM_PHOCACART_SECTION'));
+	echo $r->itemText($this->itemcommon->section_name, Text::_('COM_PHOCACART_SECTION'), '', 'section');
 }
 if (isset($this->itemcommon->unit_name) && $this->itemcommon->unit_name != '') {
-	echo $r->itemText($this->itemcommon->unit_name, Text::_('COM_PHOCACART_UNIT'));
+	echo $r->itemText($this->itemcommon->unit_name, Text::_('COM_PHOCACART_UNIT'), '', 'unit');
 }
 if (isset($this->itemcommon->ticket_id) && $this->itemcommon->ticket_id != '') {
-	echo $r->itemText($this->itemcommon->ticket_id, Text::_('COM_PHOCACART_TICKET'));
+	echo $r->itemText($this->itemcommon->ticket_id, Text::_('COM_PHOCACART_TICKET'), '', 'ticket');
 }
 
 
-echo $r->itemText($this->itemcommon->ip, Text::_('COM_PHOCACART_USER_IP'));
-echo $r->itemText($this->itemcommon->user_agent, Text::_('COM_PHOCACART_USER_AGENT'));
-echo $r->itemText(HTMLHelper::date($this->itemcommon->date, Text::_('DATE_FORMAT_LC2')), Text::_('COM_PHOCACART_DATE'));
+echo $r->itemText($this->itemcommon->ip, Text::_('COM_PHOCACART_USER_IP'), '', 'user_ip');
+echo $r->itemText($this->itemcommon->user_agent, Text::_('COM_PHOCACART_USER_AGENT'), '', 'user_agent');
+echo $r->itemText(HTMLHelper::date($this->itemcommon->date, Text::_('DATE_FORMAT_LC2')), Text::_('COM_PHOCACART_DATE'), '', 'date');
 if ($this->itemcommon->currencytitle != '') {
-	echo $r->itemText($this->itemcommon->currencytitle, Text::_('COM_PHOCACART_CURRENCY'));
+	echo $r->itemText($this->itemcommon->currencytitle, Text::_('COM_PHOCACART_CURRENCY'), '', 'currency');
 }
 
 if ($this->itemcommon->discounttitle != '') {
-	echo $r->itemText($this->itemcommon->discounttitle, Text::_('COM_PHOCACART_CART_DISCOUNT'));
+	echo $r->itemText($this->itemcommon->discounttitle, Text::_('COM_PHOCACART_CART_DISCOUNT'), '', 'discount');
 }
 if ($this->itemcommon->coupontitle != '') {
-	echo $r->itemText($this->itemcommon->coupontitle, Text::_('COM_PHOCACART_COUPON'));
+	echo $r->itemText($this->itemcommon->coupontitle, Text::_('COM_PHOCACART_COUPON'), '', 'coupon');
 }
 if ($this->itemcommon->shippingtitle != '') {
-	echo $r->itemText($this->itemcommon->shippingtitle, Text::_('COM_PHOCACART_SHIPPING_METHOD'));
+	echo $r->itemText($this->itemcommon->shippingtitle, Text::_('COM_PHOCACART_SHIPPING_METHOD'), '', 'shipping_method');
 }
 
 
@@ -126,7 +126,7 @@ if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id
 }
 
 if ($this->itemcommon->paymenttitle != '') {
-	echo $r->itemText($this->itemcommon->paymenttitle, Text::_('COM_PHOCACART_PAYMENT_METHOD'));
+	echo $r->itemText($this->itemcommon->paymenttitle, Text::_('COM_PHOCACART_PAYMENT_METHOD'), '', 'payment_method');
 }
 
 $formArray = array ('id', 'status_id', 'order_token', 'comment', 'terms', 'privacy', 'newsletter');
@@ -150,14 +150,14 @@ echo $r->startTab('tracking', $tabs['tracking']);
 
 if ($this->itemcommon->shippingtrackinglink != '') {
 	PhocacartRenderJs::renderJsAddTrackingCode('jform_tracking_number', 'tracking-link');
-	echo $r->itemText($this->itemcommon->shippingtrackinglink, Text::_('COM_PHOCACART_TRACKING_LINK'), 'tracking-link');
+	echo $r->itemText($this->itemcommon->shippingtrackinglink, Text::_('COM_PHOCACART_TRACKING_LINK'), 'tracking-link', 'tracking_link');
 }
 
 $formArray = array ('tracking_number', 'tracking_link_custom', 'tracking_date_shipped', 'tracking_description_custom');
 echo $r->group($this->form, $formArray);
 
 if ($this->itemcommon->shippingtrackingdescription != '') {
-	echo $r->itemText($this->itemcommon->shippingtrackingdescription, Text::_('COM_PHOCACART_TRACKING_DESCRIPTION'));
+	echo $r->itemText($this->itemcommon->shippingtrackingdescription, Text::_('COM_PHOCACART_TRACKING_DESCRIPTION'), '', 'tracking_description');
 }
 
 echo $r->endTab();

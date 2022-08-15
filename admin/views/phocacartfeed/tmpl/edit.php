@@ -50,7 +50,8 @@ echo $r->startTab('product', $tabs['product']);
 $fieldSets = $this->form->getFieldsets('item_params');
 foreach ($fieldSets as $name => $fieldSet) {
 	foreach ($this->form->getFieldset($name) as $field) {
-		echo $r->itemLabel($field->input, $field->label, $field->description);
+
+		echo $r->itemLabel($field->input, $field->label, $field->description, $field->fieldname);
 	}
 }
 echo $r->endTab();
@@ -60,7 +61,7 @@ echo $r->startTab('feed', $tabs['feed']);
 $fieldSets = $this->form->getFieldsets('feed_params');
 foreach ($fieldSets as $name => $fieldSet) {
 	foreach ($this->form->getFieldset($name) as $field) {
-		echo $r->itemLabel($field->input, $field->label, $field->description);
+		echo $r->itemLabel($field->input, $field->label, $field->description, $field->fieldname);
 	}
 }
 echo $r->endTab();

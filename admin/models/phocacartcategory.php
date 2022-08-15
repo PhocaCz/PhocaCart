@@ -83,6 +83,12 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				$item->metadata = $registry->toArray();
 			}
 
+			if (isset($item->params_feed)) {
+				$registry = new Registry;
+				$registry->loadString($item->params_feed);
+				$item->params_feed = $registry->toArray();
+			}
+
             // ASSOCIATION
             // Load associated Phoca Cart items
             $assoc = Associations::isEnabled();
@@ -189,6 +195,16 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			return false;
 		}
 
+		if (!empty($data['feed'])) {
+			$registry 	= new Registry($data['feed']);
+			//$registry 	= new JRegistry($dataPh);
+			$dataFeed 	= $registry->toString();
+			if($dataFeed != '') {
+				$data['params_feed'] = $dataFeed;
+			}
+		} else {
+			$data['params_feed'] = '';
+		}
 
 		// Trigger the before event.
 		PluginHelper::importPlugin('pca');
@@ -900,6 +916,39 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
                 $form->load($addform, false);
             }
         }
+
+
+		// Load Feed Forms - by Plugin
+		$feedPlugins = PhocacartFeed::getFeedPluginMethods();
+
+		if (!empty($feedPlugins)) {
+			foreach ($feedPlugins as $k => $v) {
+
+				$element = htmlspecialchars($v->element, ENT_QUOTES, 'UTF-8');
+				$addformF = new SimpleXMLElement('<form />');
+				$fields = $addformF->addChild('fields');
+				$fields->addAttribute('name', 'feed');
+				//$fields->addAttribute('addfieldpath', 'associations');
+				$fieldset = $fields->addChild('fieldset');
+				$fieldset->addAttribute('name', 'feed_'.$element);
+				$fieldset->addAttribute('group', 'pcf');
+
+				$field = $fieldset->addChild('field');
+				$field->addAttribute('name', $element);
+				$field->addAttribute('type', 'subform');
+
+				$field->addAttribute('label', Text::_(strtoupper($v->name)));
+				$field->addAttribute('multiple', 'false');
+				$field->addAttribute('layout', 'joomla.form.field.subform.default');
+				$field->addAttribute('formsource', 'plugins/pcf/'.$element.'/models/forms/category.xml');
+				$field->addAttribute('clear', 'true');
+				$field->addAttribute('propagate', 'true');
+				$form->load($addformF, false);
+			}
+
+
+		}
+
         parent::preprocessForm($form, $data, $group);
     }
 }
