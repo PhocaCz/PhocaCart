@@ -11,7 +11,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-compare-box">
     <div class="ph-category-item-compare">
         <form action="<?php echo $d['linkc']; ?>" method="post" id="phCompare<?php echo (int)$d['id']; ?>" class="phItemCompareBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />

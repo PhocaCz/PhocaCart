@@ -63,31 +63,40 @@ class PhocacartRenderStyle
         $s['c']['row']      = 'row';
         $s['c']['row-item'] = 'row-item';
 
-        $s['c']['col.xs12.sm1.md1']   = 'col-xs-12 col-sm-1 col-md-1';
-        $s['c']['col.xs12.sm2.md2']   = 'col-xs-12 col-sm-2 col-md-2';
+        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-1';
+        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-2 col-md-2';
         $s['c']['col.xs12.sm3.md3']   = 'col-sm-12 col-md-3 col-lg-3 col-xl-3';
         $s['c']['col.xs12.sm4.md4']   = 'col-sm-12 col-md-4 col-lg-4 col-xl-4';
-        $s['c']['col.xs12.sm5.md5']   = 'col-xs-12 col-sm-5 col-md-5';
-        $s['c']['col.xs12.sm6.md6']   = 'col-xs-12 col-sm-6 col-md-6';
-        $s['c']['col.xs12.sm7.md7']   = 'col-xs-12 col-sm-7 col-md-7';
-        $s['c']['col.xs12.sm8.md8']   = 'col-xs-12 col-sm-8 col-md-8';
-        $s['c']['col.xs12.sm9.md9']   = 'col-xs-12 col-sm-9 col-md-9';
-        $s['c']['col.xs12.sm10.md10'] = 'col-xs-12 col-sm-10 col-md-10';
-        $s['c']['col.xs12.sm12.md12'] = 'col-xs-12 col-sm-12 col-md-12';
+        $s['c']['col.xs12.sm5.md5']   = 'col-12 col-sm-5 col-md-5';
+        $s['c']['col.xs12.sm6.md6']   = 'col-12 col-sm-6 col-md-6';
+        $s['c']['col.xs12.sm7.md7']   = 'col-12 col-sm-7 col-md-7';
+        $s['c']['col.xs12.sm8.md8']   = 'col-12 col-sm-8 col-md-8';
+        $s['c']['col.xs12.sm9.md9']   = 'col-12 col-sm-9 col-md-9';
+        $s['c']['col.xs12.sm10.md10'] = 'col-12 col-sm-10 col-md-10';
+        $s['c']['col.xs12.sm12.md12'] = 'col-12 col-sm-12 col-md-12';
 
-        $s['c']['col.xs2.sm2.md2']    = 'col-xs-2 col-sm-2 col-md-2';
-        $s['c']['col.xs6.sm6.md6']    = 'col-xs-6 col-sm-6 col-md-6';
-        $s['c']['col.xs10.sm10.md10'] = 'col-xs-10 col-sm-10 col-md-10';
+        // Small not 12
+        $s['c']['col.xs1.sm1.md1']   = 'col-1 col-sm-1 col-md-1';
+        $s['c']['col.xs2.sm2.md2']   = 'col-2 col-sm-2 col-md-2';
+        $s['c']['col.xs3.sm3.md3']   = 'col-sm-3 col-md-3 col-lg-3 col-xl-3';
+        $s['c']['col.xs4.sm4.md4']   = 'col-sm-4 col-md-4 col-lg-4 col-xl-4';
+        $s['c']['col.xs5.sm5.md5']   = 'col-5 col-sm-5 col-md-5';
+        $s['c']['col.xs6.sm6.md6']   = 'col-6 col-sm-6 col-md-6';
+        $s['c']['col.xs7.sm7.md7']   = 'col-7 col-sm-7 col-md-7';
 
-        $s['c']['col.xs0.sm0.md0'] = 'col-xs-0 col-sm-0 col-md-0';
-        $s['c']['col.xs3.sm3.md3'] = 'col-xs-3 col-sm-3 col-md-3';
-        $s['c']['col.xs4.sm4.md4'] = 'col-xs-4 col-sm-4 col-md-4';
-        $s['c']['col.xs8.sm8.md8'] = 'col-xs-8 col-sm-8 col-md-8';
+        $s['c']['col.xs2.sm2.md2']    = 'col-2 col-sm-2 col-md-2';
+        $s['c']['col.xs6.sm6.md6']    = 'col-6 col-sm-6 col-md-6';
+        $s['c']['col.xs10.sm10.md10'] = 'col-10 col-sm-10 col-md-10';
+
+        $s['c']['col.xs0.sm0.md0'] = 'col-0 col-sm-0 col-md-0';
+        $s['c']['col.xs3.sm3.md3'] = 'col-3 col-sm-3 col-md-3';
+        $s['c']['col.xs4.sm4.md4'] = 'col-4 col-sm-4 col-md-4';
+        $s['c']['col.xs8.sm8.md8'] = 'col-8 col-sm-8 col-md-8';
 
 
-        $s['c']['col.xs0.sm6.md6'] = 'col-xs-0 col-sm-6 col-md-6';
-        $s['c']['col.xs8.sm4.md4'] = 'col-xs-8 col-sm-4 col-md-4';
-        $s['c']['col.xs4.sm2.md2'] = 'col-xs-4 col-sm-2 col-md-2';
+        $s['c']['col.xs0.sm6.md6'] = 'col-0 col-sm-6 col-md-6';
+        $s['c']['col.xs8.sm4.md4'] = 'col-8 col-sm-4 col-md-4';
+        $s['c']['col.xs4.sm2.md2'] = 'col-4 col-sm-2 col-md-2';
 
         $s['c']['btn-group']                = 'btn-group';
         $s['c']['btn']                      = 'btn';
@@ -226,6 +235,16 @@ class PhocacartRenderStyle
                 $s['c']['col.xs12.sm9.md9']   = 'uk-width-1-1@s uk-width-3-4@m uk-width-3-4@l ';
                 $s['c']['col.xs12.sm10.md10'] = 'uk-width-1-1@s uk-width-5-6@m uk-width-5-6@l';
                 $s['c']['col.xs12.sm12.md12'] = 'uk-width-1-1@s uk-width-1-1@m uk-width-1-1@l';
+
+                // Small not 12
+                $s['c']['col.xs1.sm1.md1']   = 'uk-width-1-6@s uk-width-1-6@m uk-width-1-6@l';
+                $s['c']['col.xs2.sm2.md2']   = 'uk-width-1-6@s uk-width-1-6@m uk-width-1-6@l';
+                $s['c']['col.xs3.sm3.md3']   = 'uk-width-1-4@s uk-width-1-4@m uk-width-1-4@l';
+                $s['c']['col.xs4.sm4.md4']   = 'uk-width-1-3@s uk-width-1-3@m uk-width-1-3@l';
+                $s['c']['col.xs5.sm5.md5']   = 'uk-width-1-3@s uk-width-1-3@m uk-width-1-3@l';
+                $s['c']['col.xs6.sm6.md6']   = 'uk-width-1-2@s uk-width-1-2@m uk-width-1-2@l';
+                $s['c']['col.xs7.sm7.md7']   = 'uk-width-2-3@s uk-width-2-3@m uk-width-2-3@l';
+
 
                 $s['c']['col.xs2.sm2.md2']    = 'uk-width-1-6@s uk-width-1-6@m uk-width-1-6@l';
                 $s['c']['col.xs6.sm6.md6']    = 'uk-width-1-2@s uk-width-1-2@m uk-width-1-2@l';

@@ -95,6 +95,7 @@ function phChangeAttributeType(typeView) {
 				var isActive = jQuery(this).hasClass('on');
 
 				if (isActive) {
+					
 					if (phRequired == 1) {
 						e.preventDefault();// Active item cannot be unselected when the select box is required
 						return false;
@@ -349,17 +350,18 @@ jQuery(document).ready(function() {
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
         
-		if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
-			if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
-		} else if (phParams['theme'] == 'svg') {
+		if (phParams['theme'] == 'svg' || phParams['iconType'] == 'svg') {
 			if (e.target.tagName.toUpperCase() === "SVG" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
+		} else if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
+			if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
 		}
 
 		 // If REQUIRED, don't allow to untick all checkboxes
-		 //var phRequired = jQuery(this).data("required");
+		 var phRequired = jQuery(this).data("required");
 		 var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
 		 var phACheckedLength = jQuery(phCheckboxAInputChecked).length;
-		 if (phACheckedLength == 0) {
+		 
+		 if (phRequired && phACheckedLength == 0) {
 			 var phThisLabel = jQuery(e.target).parent();//  checkboxes - colors, images
 			 phThisLabel.addClass("active");//  checkboxes - colors, images
 			 e.preventDefault();
@@ -393,7 +395,9 @@ jQuery(document).ready(function() {
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
         
-		if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
+		if (phParams['theme'] == 'svg' || phParams['iconType'] == 'svg') {
+			if (e.target.tagName.toUpperCase() === "SVG" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
+		} else if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
 			if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
 		}
 

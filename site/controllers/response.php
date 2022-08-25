@@ -11,6 +11,7 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 jimport('joomla.log.log');
 JLog::addLogger( array('text_file' => 'com_phocacart_error_log.php'), JLog::ALL, array('com_phocacart'));
@@ -48,7 +49,7 @@ class PhocaCartControllerResponse extends FormController
 		if (!empty($message)) {
 			$session->set('infomessage', $message, 'phocaCart');
 		}
-		$app->redirect($return);
+		$app->redirect(Route::_($return));
 	}
 
 	// User gets info
@@ -71,10 +72,12 @@ class PhocaCartControllerResponse extends FormController
 		}
 
 		$return = PhocacartRoute::getInfoRoute();
+
+
 		$session->set('infoaction', 5, 'phocaCart');
 		$session->set('infomessage', $message, 'phocaCart');
 		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_CANCELED'), 'info');
-		$app->redirect($return);
+		$app->redirect(Route::_($return));
 	}
 
 

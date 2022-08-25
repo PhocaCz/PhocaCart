@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-left']; ?>">
+<div class="<?php echo $d['s']['c']['pull-left']; ?> ph-button-view-product-box">
 <?php
 if ($d['display_view_product_button'] == 1) {
 

@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 $d = $displayData;
 
-echo '<div class="'.$d['s']['c']['pull-right'].'">';
+echo '<div class="'.$d['s']['c']['pull-right'].'  ph-button-display-category-box">';
 
 if ($d['display_view_category_button'] == 1) {
 

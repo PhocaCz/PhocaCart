@@ -32,7 +32,7 @@ if (!empty($d['compare'])) {
 			<input type="hidden" name="tmpl" value="component" />
 			<input type="hidden" name="option" value="com_phocacart" />
 			<input type="hidden" name="return" value="<?php echo $d['actionbase64']; ?>" />
-			<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+			<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-compare-box">
 			<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
 				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo Text::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['remove']) ?></a></div>
 			<?php } else { ?>

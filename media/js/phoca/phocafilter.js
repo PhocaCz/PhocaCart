@@ -92,7 +92,17 @@ function phSetUrl(url) {
 }
 */
 
-function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
+function phResetNewUrl(waiting) {
+
+	phFilterNewUrlRemove = '';
+	phFilterNewUrlSet = '';
+	if (waiting == 1) {
+		phFilterNewUrlRemovePreviousParamWaiting = 0;
+		phFilterNewUrlSetPreviousParamWaiting = 0;
+	}
+}
+
+function phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
 
 	var phParams = Joomla.getOptions('phParamsPC');
 
@@ -100,9 +110,11 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 	/* Set back phFilterNewUrlSet - it can happen that we set more parameter at once
 	 * typically parameter plus category id because of forcing category when setting some parameter
-	 * So by sure, phFilterNewUrlSet is cleaned (except id of category which is set in urlItemsView)
+	 * So be sure, phFilterNewUrlSet is cleaned (except id of category which is set in urlItemsView)
 	*/
-	phFilterNewUrlSet = urlItemsView;
+	if (phParams['ajaxSearchingFilteringItems'] != 1) {
+		phFilterNewUrlSet = urlItemsView;
+	}
 
 
 	/*
@@ -113,7 +125,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 	 */
 
 	/* Array -> String */
-	param 			= phArrayToString(param);
+	paramV 			= phArrayToString(paramV);
 	var queryString	= jQuery.param.querystring();
 	queryString		= phArrayToString(queryString);
 
@@ -122,6 +134,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 		paramsAll = jQuery.deparam.querystring(phFilterNewUrlRemove);
 	} else {
 		paramsAll = jQuery.deparam.querystring(queryString);
+
 	}
 
 	var paramsTypeStringNew	= {};
@@ -138,11 +151,11 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 	if (uniqueValue == 1) {
 
-		delete paramsAll[param];
+		delete paramsAll[paramV];
 		paramsTypeStringNew = paramsAll;
 		mergeMode = 2;
-	} else if (typeof paramsAll[param] !== 'undefined') {
-		var paramsTypeString 	= paramsAll[param];
+	} else if (typeof paramsAll[paramV] !== 'undefined') {
+		var paramsTypeString 	= paramsAll[paramV];
 		var paramsTypeArray		= paramsTypeString.split(',');
 		paramsTypeArray 		= phCleanArray(paramsTypeArray);
 		var findVal				= paramsTypeArray.indexOf(value);
@@ -161,15 +174,15 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 			paramsTypeString 	= paramsTypeArray.join();
 
 			if (paramsTypeString) {
-				paramsTypeStringNew[param] = paramsTypeString;
+				paramsTypeStringNew[paramV] = paramsTypeString;
 			} else {
-				delete paramsAll[param];
+				delete paramsAll[paramV];
 				paramsTypeStringNew = paramsAll;
 				mergeMode = 2;
 			}
 		}
 	} else {
-		delete paramsAll[param];
+		delete paramsAll[paramV];
 		paramsTypeStringNew = paramsAll;
 		mergeMode = 2;
 	}
@@ -245,8 +258,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 
 		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
 			phUpdatePageAndParts(phFilterNewUrlRemove, source);// Update Main, Search, Filter
-			phFilterNewUrlRemove = '';
-			phFilterNewUrlRemovePreviousParamWaiting = 0;
+			phResetNewUrl(1);
 			return 2;
 		} else {
 			//document.location = phFilterNewUrlSet;
@@ -255,8 +267,7 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
 			}
 			document.location = phFilterNewUrlRemove;
 		}
-		phFilterNewUrlRemove = '';
-
+		phResetNewUrl();
 	}
 
 	return 1;
@@ -277,15 +288,14 @@ function phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProduct
  */
 
 
-function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
+function phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
 
 	/* When Force Category, then urlItemsview get the ID of category included by e.g. module filter - loaded by php
 		force_category ... yes
 		skip_category_view ... no
 	*/
-
 	var phParams = Joomla.getOptions('phParamsPC');
-
+	
 	/*
 	 * We need to differentiate:
 	 * a) there is no parameter in the URL
@@ -299,21 +309,21 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 	value = phFilterValue(value);
 
 	/* Array -> String */
-
-	param 			= phArrayToString(param);
+	paramV 			= phArrayToString(paramV);
 	var queryString	= jQuery.param.querystring();
 	queryString		= phArrayToString(queryString);
 
-
-
 	var paramsAll;
-	if (phFilterNewUrlSet !== '' || phFilterNewUrlSetPreviousParamWaiting == 1) {
+	if (/*phFilterNewUrlSet !== '' || */ phFilterNewUrlSetPreviousParamWaiting == 1) {
 		phFilterNewUrlSet	= phArrayToString(phFilterNewUrlSet);// wait back from () to [] so it can be read by querystring
+		
+	
+		
 		paramsAll = jQuery.deparam.querystring(phFilterNewUrlSet);
-
 
 	} else {
 		paramsAll = jQuery.deparam.querystring(queryString);
+
 	}
 
 
@@ -331,13 +341,13 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 
 
 	if (uniqueValue == 1) {
-		paramsTypeStringNew[param] = value;// { param:value};// unique value - always overwrite old value
+		paramsTypeStringNew[paramV] = value;// { param:value};// unique value - always overwrite old value
 
 	} else if (value === '') {
 
-	} else if (typeof paramsAll[param] !== 'undefined') {
+	} else if (typeof paramsAll[paramV] !== 'undefined') {
 
-		var paramsTypeString 	= paramsAll[param];
+		var paramsTypeString 	= paramsAll[paramV];
 
 
 		var paramsTypeArray		= paramsTypeString.split(',');
@@ -350,14 +360,14 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 			// New value is not there - add it
 			paramsTypeArray.push(value);
 			paramsTypeString = paramsTypeArray.join();
-			paramsTypeStringNew[param] = paramsTypeString;//{ param:paramsTypeString};// Changed
+			paramsTypeStringNew[paramV] = paramsTypeString;//{ param:paramsTypeString};// Changed
 		} else {
 			// New value is there - don't change it
-			paramsTypeStringNew[param] = paramsTypeString;//{ param:paramsTypeString};// Unchanged
+			paramsTypeStringNew[paramV] = paramsTypeString;//{ param:paramsTypeString};// Unchanged
 		}
 	} else {
 
-		paramsTypeStringNew[param] = value;//{ param:value};
+		paramsTypeStringNew[paramV] = value;//{ param:value};
 	}
 
 
@@ -370,9 +380,8 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 
 
 	// Set new url or take the one from previous parameter
-	if (phFilterNewUrlSet !== '' || phFilterNewUrlSetPreviousParamWaiting == 1) {
+	if (/*phFilterNewUrlSet !== '' ||*/ phFilterNewUrlSetPreviousParamWaiting == 1) {
 		url = phFilterNewUrlSet;
-
 	}
 
 	/* Array -> String */
@@ -406,22 +415,14 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 		}
 
 	} else {
-
-
 		if (isItemsView == 1 && phParams['ajaxSearchingFilteringItems'] == 1) {
-
 			phUpdatePageAndParts(phFilterNewUrlSet, source);// Update Main, Search, Filter
-
-			phFilterNewUrlSet = '';
-			phFilterNewUrlSetPreviousParamWaiting = 0;
+			phResetNewUrl(1);
 			return 2;
 		} else {
-
-
 			document.location = phFilterNewUrlSet;
 		}
-
-		phFilterNewUrlSet = '';
+		phResetNewUrl();
 	}
 
 	return 1;
@@ -430,7 +431,7 @@ function phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOn
 
 
 /* Function phChangeFilter */
-function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, source) {
+function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, source) {
 
 
 	var phVars 		= Joomla.getOptions('phVarsModPhocacartFilter');
@@ -450,17 +451,17 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
 			value = '';
 		}
 
-		phA = phSetFilter(param, value, 1, 0, 1, uniqueValue, wait, source);
+		phA = phSetFilter(paramV, value, 1, 0, 1, uniqueValue, wait, source);
 	} else if (formType == "text") {
 		//value = phEncode(value);
       	if (formAction == 1) {
 
 
-			 phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+			 phA = phSetFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
 
       	} else {
 
-         	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+         	phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	}
    	} else if (formType == "category") {
 		urlItemsView = urlItemsViewWithoutParams;
@@ -473,7 +474,7 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
 				if (isSef == 1) {
 					document.location 		= jQuery.param.querystring(urlItemsView, currentUrlParams, 2);
 				} else {
-					phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+					phRemoveFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
 				}
 			} else {
 				document.location 		= urlItemsView;
@@ -484,10 +485,10 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
       	if (formAction.checked) {
 
 
-         	phA = phSetFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+         	phA = phSetFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	} else {
 
-         	phA = phRemoveFilter(param, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+         	phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
       	}
 	}
 
@@ -496,7 +497,7 @@ function phChangeFilter(param, value, formAction, formType, uniqueValue, wait, s
 }
 
 /* Function phChangeSearch*/
-function phChangeSearch(param, value, formAction) {
+function phChangeSearch(paramV, value, formAction) {
 
 
 	var phVars 		= Joomla.getOptions('phVarsModPhocacartSearch');
@@ -524,9 +525,9 @@ function phChangeSearch(param, value, formAction) {
 			filteredProductsOnly = 0;// When options are disabled we always search without filtering
 		}
 
-		phA = phSetFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly,  1, 0, 2);
+		phA = phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly,  1, 0, 2);
 	} else {
-		phA = phRemoveFilter(param, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
+		phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
 	}
 
 	startFullOverlay(phA);

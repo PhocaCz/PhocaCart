@@ -66,7 +66,8 @@ class PhocacartRenderMedia
         $this->p['ajax_pagination_category']       = $params->get('ajax_pagination_category', 0);
         $this->p['ajax_searching_filtering_items'] = $params->get('ajax_searching_filtering_items', 0);
 
-        $this->p['theme'] = $params->get('theme', 'bs5');
+        $this->p['theme']                           = $params->get('theme', 'bs5');
+        $this->p['icon_type']                       = $params->get( 'icon_type', 'fa5');
 
         $this->p['pos_focus_input_fields'] = $params->get('pos_focus_input_fields', 0);
         $this->p['pos_filter_category']    = $params->get('pos_filter_category', 1);// reload equal height
@@ -118,6 +119,7 @@ class PhocacartRenderMedia
         $oParams['ajaxPaginationCategory']      = (int)$this->p['ajax_pagination_category'];
         $oParams['ajaxSearchingFilteringItems'] = (int)$this->p['ajax_searching_filtering_items'];
         $oParams['theme']                       = $this->p['theme'];
+        $oParams['iconType']			        = $this->p['icon_type'];
         if($oVars['isPOS']) {
             $oParams['theme'] = 'svg';// media\com_phocacart\js\phoca\jquery.phocaattribute.js line 319
         }

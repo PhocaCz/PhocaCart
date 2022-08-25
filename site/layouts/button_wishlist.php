@@ -11,7 +11,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-wishlist-box">
     <div class="ph-category-item-wishlist">
         <form action="<?php echo $d['linkw']; ?>" method="post" id="phWishList<?php echo (int)$d['id']; ?>" class="phItemWishListBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />

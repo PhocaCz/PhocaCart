@@ -27,7 +27,14 @@ class PhocacartCompare
 		$this->items	= $session->get('compare', array(), 'phocaCart');
 
 		// Recheck if we have access to all products:
-		$query				    = $this->getQueryList($this->items);
+		// This is different to wishlist, comparison is set only in session
+		// so not needed to check database
+		// even worse if checked database, then $items->itemDb is not empty and
+		// this will not allow us to use updated list after addItem or removeItem functions
+		// as both only update session
+		// So when using AJAX and adding item to comparison list, such will be wrongly rendered
+		// in renderList function because it will not get items from session but db
+		/*$query				    = $this->getQueryList($this->items);
 
 		if ($query) {
 			//echo nl2br(str_replace('#__', 'jos_', $query));
@@ -43,7 +50,7 @@ class PhocacartCompare
 				}
 			}
 			$this->items = $tempItems;
-		}
+		}*/
 	}
 
 	public function addItem($id = 0, $catid = 0) {

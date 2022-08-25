@@ -14,7 +14,7 @@ if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
 	$d['comparison_view_href'] = 'href="'.$d['link_comparison'].'"';
 }
 $d['comparison_view_href']    = $d['s']['a']['data-bs-dismiss-modal'];;
-$d['close']                 = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' >/button>';
+$d['close']                 = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' ></button>';
 if (isset($d['comparison_view']) && $d['comparison_view'] == 1) {
 	$d['comparison_view_href'] = 'href="'.$d['link_comparison'].'"';
 	$d['close']             = '<a role="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '. $d['comparison_view_href'].' ></a>';

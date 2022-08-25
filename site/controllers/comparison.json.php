@@ -39,6 +39,8 @@ class PhocaCartControllerComparison extends FormController
 		$added		= $compare->addItem((int)$item['id'], (int)$item['catid']);
 		//$catid		= PhocacartProduct::getCategoryByProductId((int)$item['id']);
 
+
+
 		$o = $o2 = '';
 		// Content of the comparison list
 		ob_start();

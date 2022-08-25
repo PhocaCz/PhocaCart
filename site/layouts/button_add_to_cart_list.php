@@ -21,7 +21,7 @@ $d = $displayData;
 
 if ($d['selectoptions'] == 1) {
 	// ATTRIBUTE REQUIRED - One of the attributes is required, cannot add to cart when we don't display attributes in category/items view
-	echo '<div class="'.$d['s']['c']['pull-right'].'">';
+	echo '<div class="'.$d['s']['c']['pull-right'].' ph-button-choose-variant-box">';
 
 
 	if ($d['addtocart'] == 1) {
@@ -47,7 +47,7 @@ if ($d['selectoptions'] == 1) {
 
 } else {
 
-	echo '<div class="'.$d['s']['c']['pull-right'].'">';
+	echo '<div class="'.$d['s']['c']['pull-right'].' ph-button-add-to-cart-box">';
 
 	// BUTTON ATTRIBUTE NOT REQUIRED OR REQUIRED BUT we list the attributes in category/items view so we can submit
 	$onClick = '';

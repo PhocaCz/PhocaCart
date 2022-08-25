@@ -11,7 +11,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-quickview-box">
     <?php echo isset($d['button']) && $d['button'] == 1 ? '' : '<div class="ph-category-item-quickview">'; ?>
         <form action="<?php echo $d['linkqvb']; ?>" method="post" id="phQuickView<?php echo (int)$d['id']; ?>" class="phItemQuickViewBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />

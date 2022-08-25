@@ -91,6 +91,7 @@ function phDoRequestSuccess(data, options) {
 
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
+
 			if (options['task'] == "add") {
 				//jQuery("#phAddToComparePopup").modal();
 				//var modal = new bootstrap.Modal(document.getElementById("phAddToComparePopup"), {});
@@ -188,7 +189,7 @@ function phDoRequestSuccess(data, options) {
 			jQuery(options["id_item_price"]).html(data.item.price);
 			// Change also Gift voucher if displayed
 			jQuery(options["id_item_price_gift"]).html(data.item.priceitems.bruttoformat);
-			
+
 		}
 
 		/* Change ID (SKU, EAN, ...) */
@@ -321,7 +322,7 @@ jQuery(document).ready(function(){
 	//jQuery(".phItemCartBoxForm").on(\'submit\', function (e) {// Not working when form is added by ajax
 	jQuery(document).on("submit", "form.phItemCartBoxForm", function (e) { // Works with forms added by ajax
 
-		
+
 		if (typeof phDoSubmitFormAddToCart === "function") {
 			e.preventDefault();
 			var sFormData = jQuery(this).serialize();

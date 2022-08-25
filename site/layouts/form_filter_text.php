@@ -105,7 +105,7 @@ $displayData 	= null;
 			<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>">
 				<div class="<?php echo $d['s']['c']['pull-right'] ?> <?php echo $d['s']['c']['btn-group'] ?> ph-zero ph-right-zero">
 					<button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"  aria-label="<?php echo $d['titleset']; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['ok']) ?></button>
-					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?> <?php echo $d['s']['c']['pull-right'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>" aria-label="<?php echo $d['titleclear']; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button>
+					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?> <?php echo $d['s']['c']['pull-right'] ?> ph-button-clear-box" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>" aria-label="<?php echo $d['titleclear']; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button>
 				</div>
 			</div>
             </div>
