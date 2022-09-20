@@ -110,7 +110,7 @@ class PhocaCartCpModelPhocaCartParamA extends AdminModel
 			// Try 1.5 format: /plugins/folder/element/element.xml
 			$formFile = Path::clean($client->path.'/plugins/'.$folder.'/'.$element.'.xml');
 			if (!file_exists($formFile)) {
-				throw new Exception(Text::sprintf('COM_PHOCACART_ERROR_FILE_NOT_FOUND', $element.'.xml'));
+				throw new Exception(Text::_('COM_PHOCACART_ERROR_FILE_NOT_FOUND') . ': '. $folder . ': '.$element.'.xml');
 				return false;
 			}
 		}

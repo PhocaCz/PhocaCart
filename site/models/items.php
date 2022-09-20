@@ -181,6 +181,12 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 		}
 
+		$p['sql_filter_method_tag']				= $params->get('sql_filter_method_tag', 0);
+		$p['sql_filter_method_label']			= $params->get('sql_filter_method_label', 0);
+		$p['sql_filter_method_parameter']		= $params->get('sql_filter_method_parameter', 0);
+		$p['sql_filter_method_attribute']		= $params->get('sql_filter_method_attribute', 0);
+		$p['sql_filter_method_specification']	= $params->get('sql_filter_method_specification', 0);
+
 		$wheres		= array();
 		$wheres[] = ' a.published = 1';
 		$wheres[] = ' c.published = 1';
@@ -218,13 +224,13 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			// -TAG-
 			$wheresTL = array();
 			if ($this->getState('tag')) {
-				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $p);
 				$wheresTL[]	= $s['where'];
 				$lefts[]	= $s['left'];
 			}
 			// -LABEL-
 			if ($this->getState('label')) {
-				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'));
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $p);
 				$wheresTL[]	= $s['where'];
 				$lefts[]	= $s['left'];
 			}
@@ -236,21 +242,27 @@ class PhocaCartModelItems extends BaseDatabaseModel
 					$startP = '(';
 					$endP 	= ')';
 				}
-				$wheres[] = $startP . implode(' OR ', $wheresTL) . $endP;
 
+
+				if (!empty($wheresTL)) {
+					$wheresTL = array_filter($wheresTL);
+					if (!empty($wheresTL)) {
+						$wheres[] = $startP . implode(' OR ', $wheresTL) . $endP;
+					}
+				}
 			}
 		} else {
 
 			// -TAG-
 			if ($this->getState('tag')) {
-				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $p);
 				$wheres[]	= $s['where'];
 				$lefts[]	= $s['left'];
 
 			}
 			// -LABEL-
 			if ($this->getState('label')) {
-				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'));
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $p);
 				$wheres[]	= $s['where'];
 				$lefts[]	= $s['left'];
 			}
@@ -290,7 +302,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 				$parameter = $app->input->get($alias, '', 'string');
 
 				if($parameter != '') {
-					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, array(), $v->id);
+					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, $p, $v->id);
 					$wheres[] = $s['where'];// There must be AND between custom parameters
 					//if ($leftOnce < 1) {
 						$lefts[] = $s['left'];
@@ -336,14 +348,14 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 		// -ATTRIBUTES-
 		if ($this->getState('a')) {
-			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'));
+			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'), $p);
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 
 		// -SPECIFICATIONS-
 		if ($this->getState('s')) {
-			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'));
+			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'), $p);
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
@@ -547,6 +559,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 
 		}
+
 		//echo "<br><br>" . nl2br(str_replace('#__', 'jos_', $q));
 
 		return $q;

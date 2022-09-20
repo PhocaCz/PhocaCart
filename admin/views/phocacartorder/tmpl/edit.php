@@ -46,7 +46,7 @@ echo $r->startTab('order', $tabs['order'], 'active');
 
 echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id, $this->itemcommon->date, $this->itemcommon->order_number), Text::_('COM_PHOCACART_ORDER_NUMBER'), '', 'order_number');
 
-
+$guest = 0;
 $user = $this->itemcommon->user_name;
 if ($this->itemcommon->user_username != '') {
 	$user .= ' <small>('.$this->itemcommon->user_username.')</small>';
@@ -54,6 +54,7 @@ if ($this->itemcommon->user_username != '') {
 if ($user != '') {
 	echo $r->itemText($user, Text::_('COM_PHOCACART_USER'), '', 'user');
 } else {
+	$guest = 1;
 	echo $r->itemText('<span class="label label-info badge bg-info">'.Text::_('COM_PHOCACART_GUEST').'</span>', Text::_('COM_PHOCACART_USER'), '', 'guest');
 }
 
@@ -133,7 +134,7 @@ $formArray = array ('id', 'status_id', 'order_token', 'comment', 'terms', 'priva
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 
-$data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['array'], $this->u, '_phb', '_phs');
+$data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['array'], $this->u, '_phb', '_phs', $guest);
 
 
 echo $r->startTab('billingaddress', $tabs['billingaddress']);
@@ -142,6 +143,10 @@ echo $r->endTab();
 
 
 echo $r->startTab('shippingaddress', $tabs['shippingaddress']);
+
+if ((isset($this->itembas['b']['ba_sa']) && $this->itembas['b']['ba_sa'] == 1) || (isset($this->itembas['s']['ba_sa']) && $this->itembas['s']['ba_sa'] == 1)) {
+	echo '<div class="alert alert-error alert-danger">'.Text::_('COM_PHOCACART_WARNING_USER_SET_SHIPPING_ADDRESS_SAME_AS_BILLING_ADDRESS').'</div>';
+}
 echo $data['s'];
 echo $r->endTab();
 

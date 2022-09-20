@@ -294,11 +294,13 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 
 		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
+
 			$d							= array();
 			$d['s']						= $this->s;
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;
 			$d['typeview']				= 'Item';
+			$d['stock_status_class']	= isset($this->t['stock_status']['stock_status_class']) ? $this->t['stock_status']['stock_status_class'] : '';
 			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
 
 			echo $layoutS->render($d);

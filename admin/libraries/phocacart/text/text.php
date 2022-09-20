@@ -43,6 +43,7 @@ class PhocacartText {
 
 
 		$body = isset($replace['downloadlink']) 			? str_replace('{downloadlink}', $replace['downloadlink'], $body) 					: $body;
+        $body = isset($replace['downloadlinkforce']) 		? str_replace('{downloadlinkforce}', $replace['downloadlinkforce'], $body) 					: $body;
 		$body = isset($replace['orderlink'])				? str_replace('{orderlink}', $replace['orderlink'], $body)							: $body;
 		$body = isset($replace['orderlinktoken'])			? str_replace('{orderlinktoken}', $replace['orderlinktoken'], $body)				: $body;
 		$body = isset($replace['ordertoken'])				? str_replace('{ordertoken}', $replace['ordertoken'], $body)						: $body;
@@ -199,7 +200,7 @@ class PhocacartText {
 		return $body;
 	}
 
-	public static function prepareReplaceText($order, $orderId, $common, $bas){
+	public static function prepareReplaceText($order, $orderId, $common, $bas, $status = []){
 
 
 
@@ -211,6 +212,7 @@ class PhocacartText {
 
 		$download_guest_access = $pC->get('download_guest_access', 0);
 
+        $email_downloadlink_description = isset($status['email_downloadlink_description']) && $status['email_downloadlink_description'] != '' ? $status['email_downloadlink_description'] : '';
 
 		$r = array();
 		$r['ordertoken'] = '';
@@ -218,7 +220,48 @@ class PhocacartText {
 		if ($common->user_id > 0) {
 			// Standard User get standard download page and order page
 		    $r['orderlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute());
-			$r['downloadlink'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
+
+            $r['downloadlinkforce'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
+
+            $r['downloadlink'] = '';
+            $products 	= $order->getItemProducts($orderId);
+            $isDownload = false;
+
+			if(!empty($products) && isset($common->order_token) && $common->order_token != '') {
+				foreach ($products as $k => $v) {
+
+				    if (!empty($v->downloads)) {
+				        foreach ($v->downloads as $k2 => $v2) {
+
+                            // Main Product Download File
+                            if (isset($v2->published) && $v2->published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '' && isset($v2->download_token) && $v2->download_token != '') {
+                                $isDownload = true;
+                                break;
+                            }
+
+				        }
+                    }
+
+					// Product Attribute Option Download File
+                    if (!empty($v->attributes)) {
+                        foreach ($v->attributes as $k2 => $v2) {
+                            if (isset($v2->download_published) && $v2->download_published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '') {
+                                $isDownload = true;
+                                break;
+                            }
+                        }
+                    }
+				}
+			}
+
+            if ($isDownload) {
+
+                if ($email_downloadlink_description != '') {
+                    $r['downloadlink'] .= '<div>'.$email_downloadlink_description.'</div>';
+                }
+
+                $r['downloadlink'] 	.= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
+            }
 
 			// Possible variables in email
 			if (isset($common->order_token) && $common->order_token != '') {
@@ -228,6 +271,8 @@ class PhocacartText {
 
 		} else {
 
+            $r['downloadlinkforce'] = '';
+            $r['downloadlink'] = '';
 		    // Guests
 			if (isset($common->order_token) && $common->order_token != '') {
 				$r['orderlinktoken'] = PhocacartPath::getRightPathLink(PhocacartRoute::getOrdersRoute() . '&o='.$common->order_token);
@@ -236,7 +281,7 @@ class PhocacartText {
 
 			}
 			$products 	= $order->getItemProducts($orderId);
-
+            $isDownload = false;
 
 			$downloadO 	= '';
 			if(!empty($products) && isset($common->order_token) && $common->order_token != '' && $download_guest_access > 0) {
@@ -256,6 +301,7 @@ class PhocacartText {
                                 $downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v2->download_token);
                                 $downloadO .= '<div>'.Text::_('COM_PHOCACART_DOWNLOAD').': <a href="'.$downloadLink.'">'.$title.'</a></div>';
                                 $downloadO .= '<div><small>'.Text::_('COM_PHOCACART_DOWNLOAD_LINK').': <a href="'.$downloadLink.'">'.$downloadLink.'</a></small><hr></div>';
+                                $isDownload = true;
                             }
 
 				        }
@@ -273,6 +319,7 @@ class PhocacartText {
                                 $downloadLink = PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute() . '&o='.$common->order_token.'&d='.$v2->download_token);
                                 $downloadO .= '<div>'.Text::_('COM_PHOCACART_DOWNLOAD').': <a href="'.$downloadLink.'">'.$title.'</a></div>';
                                 $downloadO .= '<div><small>'.Text::_('COM_PHOCACART_DOWNLOAD_LINK').': <a href="'.$downloadLink.'">'.$downloadLink.'</a></small><hr></div>';
+                                $isDownload = true;
                             }
                         }
                     }
@@ -280,8 +327,14 @@ class PhocacartText {
 				$downloadO .= '<p>&nbsp;</p>';
 			}
 
+            if ($isDownload) {
+                if ($email_downloadlink_description != '') {
+                    $r['downloadlink'] .= '<div>'.$email_downloadlink_description.'</div>';
+                }
+                $r['downloadlink'] .= $downloadO;
+            }
 
-			$r['downloadlink'] = $downloadO;
+
 
 		}
 
@@ -382,6 +435,8 @@ class PhocacartText {
      */
     public static function filterValue($string, $type = 'html') {
 
+
+        $string = (string)$string;
         switch ($type) {
 
             case 'url':
@@ -429,7 +484,12 @@ class PhocacartText {
 
             case 'text':
                 return trim(htmlspecialchars(strip_tags($string), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
-                break;
+            break;
+
+            case 'class':
+                $string = str_replace(' ', '-', strtolower($string));
+                return preg_replace("/[^\\w-]/", '', $string);// Alphanumeric plus _  -
+            break;
 
             case 'html':
             default:

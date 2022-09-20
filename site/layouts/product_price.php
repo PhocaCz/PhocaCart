@@ -71,7 +71,6 @@ if (isset($d['discount']) && $d['discount']) {
 
     if (isset($d['priceitems']['brutto']) && $d['priceitems']['brutto'] == 0 && isset($d['zero_price']) && $d['zero_price'] == 1) {
 
-
 		// Text and Label instead of zero price
 		// Label - Nothing | Custom Text | Standard "Price" String (ONLY IN CASE THE PRICE IS ZERO)
         if ($zero_price_label == '0') {

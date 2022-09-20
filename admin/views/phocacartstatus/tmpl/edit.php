@@ -69,6 +69,9 @@ echo $r->group($this->form, $formArray);
 $formArray = array( 'email_text_others');
 echo $r->group($this->form, $formArray, 1);
 
+$formArray = array( 'email_downloadlink_description');
+echo $r->group($this->form, $formArray, 1);
+
 $formArray = array ('email_send', 'email_send_format', 'email_attachments');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();

@@ -371,8 +371,8 @@ class PhocacartOrder
         $d['currency_id']            = (int)$currency->id;
         $d['currency_code']          = $currency->code;
         $d['currency_exchange_rate'] = $currency->exchange_rate;
-        $d['ip']                     = (!empty($_SERVER['REMOTE_ADDR'])) ? (string)$_SERVER['REMOTE_ADDR'] : '';
-        $user_agent                  = (!empty($_SERVER['HTTP_USER_AGENT'])) ? (string)$_SERVER['HTTP_USER_AGENT'] : '';
+        $d['ip']                     = PhocacartUtils::getIp();//(!empty($_SERVER['REMOTE_ADDR'])) ? (string)$_SERVER['REMOTE_ADDR'] : '';
+        $user_agent                  = PhocacartUtils::getUserAgent();//(!empty($_SERVER['HTTP_USER_AGENT'])) ? (string)$_SERVER['HTTP_USER_AGENT'] : '';
         $d['user_agent']             = substr($user_agent, 0, 200);
         $d['order_token']            = PhocacartUtils::getToken();
         $d['tax_calculation']        = $pC->get('tax_calculation', 0);
@@ -2992,5 +2992,119 @@ class PhocacartOrder
         }
         return $d;
     }
+
+    public static function getOrder($orderId, $orderToken, $orderUser) {
+
+        $db                 = Factory::getDbo();
+		$pC 			    = PhocacartUtils::getComponentParameters();
+		$orderGuestAccess	= $pC->get( 'order_guest_access', 0 );
+		if ($orderGuestAccess == 0) {
+			$orderToken = '';
+		}
+
+        $wheres		= array();
+		$wheres[] 	= ' o.published = 1';
+		if ($orderToken != '') {
+			$wheres[]	= ' o.order_token = '.$db->quote($orderToken);
+		} else {
+			$wheres[]	= ' o.user_id = '.(int)$orderUser;
+		}
+		$wheres[]	= ' t.type = '.$db->quote('brutto');
+
+        $wheres[]	= ' o.id = '.(int)$orderId;
+
+		$query = ' SELECT o.*,'
+		.' os.title AS status_title,'
+		.' t.amount AS total_amount,'
+		.' s.id AS shippingid, s.title AS shippingtitle, s.code AS shippingcode, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription, os.orders_view_display as ordersviewdisplay,'
+        .' p.id AS paymentid, p.title AS paymenttitle, p.code AS paymentcode'
+		.' FROM #__phocacart_orders AS o'
+		.' LEFT JOIN #__phocacart_order_statuses AS os ON os.id = o.status_id'
+		.' LEFT JOIN #__phocacart_order_total AS t ON o.id = t.order_id'
+		.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
+        .' LEFT JOIN #__phocacart_payment_methods AS p ON p.id = o.payment_id'
+		.' WHERE ' . implode( ' AND ', $wheres )
+		.' ORDER BY o.id'
+        . ' LIMIT 1';
+
+		$db->setQuery($query);
+        $order = $db->loadAssoc();
+        return $order;
+	}
+
+    public static function getOrderProducts($orderId) {
+
+        $db         = Factory::getDbo();
+        $wheres		= array();
+        $wheres[]	= ' p.order_id = '.(int)$orderId;
+
+		$query = ' SELECT p.*'
+		.' FROM #__phocacart_order_products AS p'
+		.' WHERE ' . implode( ' AND ', $wheres )
+		.' ORDER BY p.id';
+
+		$db->setQuery($query);
+        $orderProducts = $db->loadAssocList();
+
+        return $orderProducts;
+	}
+
+    public static function getOrderUser($orderId) {
+
+        $db         = Factory::getDbo();
+        $wheres		= array();
+        $wheres[]	= ' u.order_id = '.(int)$orderId;
+
+		$query = ' SELECT u.*'
+		.' FROM #__phocacart_order_users AS u'
+		.' WHERE ' . implode( ' AND ', $wheres )
+		.' ORDER BY u.id';
+
+		$db->setQuery($query);
+        $orderProducts = $db->loadAssocList();
+
+        return $orderProducts;
+	}
+
+    public static function getOrderTotal($orderId, $types = array()) {
+
+        $db         = Factory::getDbo();
+        $wheres		= array();
+        $wheres[]	= ' t.order_id = '.(int)$orderId;
+
+        if (!empty($types)) {
+            $typesString = "'" . implode("','", $types) . "'";
+            if ($typesString != '') {
+                $wheres[] = ' t.type IN (' . $typesString . ')';
+            }
+        }
+
+		$query = ' SELECT t.*'
+		.' FROM #__phocacart_order_total AS t'
+		.' WHERE ' . implode( ' AND ', $wheres )
+		.' ORDER BY t.id';
+
+		$db->setQuery($query);
+        $orderTotals = $db->loadAssocList('type');
+
+        return $orderTotals;
+	}
+
+    public static function getOrderAttributesByOrderedProductId($orderedProductId) {
+
+        $db         = Factory::getDbo();
+        $wheres		= array();
+        $wheres[]	= ' a.order_product_id = '.(int)$orderedProductId;
+
+		$query = ' SELECT a.*'
+		.' FROM #__phocacart_order_attributes AS a'
+		.' WHERE ' . implode( ' AND ', $wheres )
+		.' ORDER BY a.id';
+
+		$db->setQuery($query);
+        $attributes = $db->loadAssocList();
+
+        return $attributes;
+	}
 
 }

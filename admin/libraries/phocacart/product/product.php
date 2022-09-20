@@ -706,6 +706,8 @@ class PhocacartProduct
             $q .= ' LIMIT ' . (int)$limitOffset . ', ' . (int)$limitCount;
         }
 
+
+
         $db->setQuery($q);
 
         if ($return == 'column') {

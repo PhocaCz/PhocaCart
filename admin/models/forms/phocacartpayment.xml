@@ -9,6 +9,8 @@
 
 <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
+<field name="code" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PAYMENT_CODE_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_CODE_DESC" />
+
 <field name="method" type="phocaPluginMethod" plugintype="1" table="" class="form-control" label="COM_PHOCACART_FIELD_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_METHOD_DESC" />
 
 <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40" />

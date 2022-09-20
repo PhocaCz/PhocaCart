@@ -23,6 +23,7 @@ final class PhocacartCategory
 	private static $categoryF = array();
 	private static $categoryP = array();
 	private static $categoryI = array();
+	private static $categoryTitle = array();
 
 	public function __construct() {}
 
@@ -614,6 +615,26 @@ final class PhocacartCategory
 		}
 		return $o;
     }
+
+	public static function getCategoryTitleById($id) {
+
+		$id = (int)$id;
+		if( empty(self::$categoryTitle[$id])) {
+
+			$db = Factory::getDBO();
+			$query = 'SELECT a.title'
+			. ' FROM #__phocacart_categories AS a'
+			. ' WHERE a.id = '.(int)$id
+			. ' ORDER BY a.ordering'
+			. ' LIMIT 1';
+			$db->setQuery( $query );
+
+			$category = $db->loadObject();
+
+			self::$categoryTitle[$id] = $category;
+		}
+		return self::$categoryTitle[$id];
+	}
 
 
     public final function __clone() {

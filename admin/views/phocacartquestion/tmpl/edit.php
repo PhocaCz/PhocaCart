@@ -39,6 +39,11 @@ echo $r->endTab();
 
 echo $r->startTab('publishing', $tabs['publishing']);
 foreach($this->form->getFieldset('publish') as $field) {
+
+	// No publish/unpublish in Question yet
+	if($field->fieldname == 'published') {
+		continue;
+	}
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
 		echo '<div class="control-label">'.$field->label.'</div>';

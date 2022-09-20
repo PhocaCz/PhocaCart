@@ -91,12 +91,15 @@ class PhocacartPrice
 
             if ((int)$id > 0) {
                 self::$currency[$key] = PhocacartCurrency::getCurrency((int)$id, (int)$orderId);
+
+                // self::$currency[$key] could be false in case the currency was removed
             } else {
                 self::$currency[$key] = PhocacartCurrency::getCurrency(0, (int)$orderId);
+
             }
 
             // 1) change the currency exchange rate by order
-            if (isset($currencyOrder->currency_exchange_rate) && $exchange_rate_order == 0) {
+            if (self::$currency[$key] && isset($currencyOrder->currency_exchange_rate) && $exchange_rate_order == 0) {
 
                 self::$currency[$key]->exchange_rate = $currencyOrder->currency_exchange_rate;
             }
@@ -125,7 +128,7 @@ class PhocacartPrice
 
     public function getPriceFormat($price, $negative = 0, $skipCurrencyConverting = 0, $forceCurrency = 0, $skipPrefix = 0, $skipSuffix = 0) {
 
-        $currentCurrency = $this->currency_id;
+        $currentCurrency = isset($this->currency_id) ? $this->currency_id : 0;
 
         if ((int)$forceCurrency > 0) {
             $this->setCurrency((int)$forceCurrency);
@@ -179,13 +182,86 @@ class PhocacartPrice
             break;
         }
 
+        $pricePrefix = '';
+        $priceSuffix = '';
+        if($skipPrefix == 0) {
+            $pricePrefix = $this->price_prefix;
+        }
+        if($skipSuffix == 0) {
+            $priceSuffix = $this->price_suffix;
+        }
 
         $o = '';
         if ($negative) {
 
-            $o = '- ' . $this->price_prefix . $price . $this->price_suffix;
+            $o = '- ' . $pricePrefix . $price . $priceSuffix;
         } else {
-            $o = $this->price_prefix . $price . $this->price_suffix;
+            $o = $pricePrefix . $price . $priceSuffix;
+        }
+
+        if ((int)$forceCurrency > 0) {
+            $this->setCurrency((int)$currentCurrency);
+        }
+
+        return $o;
+
+    }
+
+    public function getPriceFormatRaw($price, $negative = 0, $skipCurrencyConverting = 0, $forceCurrency = 0, $specPriceDecimals = false, $specPriceDecSymbol = false, $specPriceThousandsSep = false) {
+
+        $currentCurrency = $this->currency_id;
+
+        if ((int)$forceCurrency > 0) {
+            $this->setCurrency((int)$forceCurrency);
+        }
+
+        if ($price < 0) {
+            $negative = 1;
+        }
+
+        // If negative is forced by parameter but the price is 0 in real - skip the negative sign
+        if ($price == 0) {
+            $negative = 0;
+        }
+
+        if ($price == '') {
+            $price = 0;
+        }
+
+
+        if ($skipCurrencyConverting == 0) {
+            $price *= $this->exchange_rate;
+        }
+
+        // Round after exchange rate
+        $price = $this->roundPrice($price);
+
+        if ($negative) {
+            $price = abs($price);
+        }
+
+        $priceDecimals = $this->price_decimals;
+        if ($specPriceDecimals !== false) {
+            $priceDecimals = $specPriceDecimals;
+        }
+
+        $priceDecSymbol = $this->price_dec_symbol;
+        if ($specPriceDecimals !== false) {
+            $priceDecSymbol = $specPriceDecSymbol;
+        }
+
+        $priceThousandsSep = $this->price_thousands_sep;
+        if ($specPriceThousandsSep !== false) {
+            $priceThousandsSep = $specPriceThousandsSep;
+        }
+
+        $price = number_format((double)$price, $priceDecimals, $priceDecSymbol, $priceThousandsSep);
+
+        $o = '';
+        if ($negative) {
+            $o = '-' . $price;
+        } else {
+            $o = $price;
         }
 
         if ((int)$forceCurrency > 0) {

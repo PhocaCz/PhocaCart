@@ -108,6 +108,8 @@ class PhocacartSearch
 
 
 		$in 	= '';
+        $inA    = [];
+        $inAS   = [];
 		$where 	= '';
 		$left	= '';
 		$db		= Factory::getDBO();
@@ -148,10 +150,26 @@ class PhocacartSearch
 						    $a = array_unique($a);
 							if ($search == 'a') {
 								// Attributes
+                                // QUERY METHOD ANY (product to display must include one of selected attributes)
 								$inA[] = '(at2.alias = '.$db->quote($k). ' AND v2.alias IN ('. '\'' . implode('\',\'', $a). '\'' .'))';
+
+                                // QUERY METHOD ALL (product to display must include all attributes togehter)
+                                $i = 0;
+                                foreach($a as $k2 => $v2) {
+                                    $inAS[$i] = 'at2.alias = '.$db->quote($k). ' AND v2x'.$i.'.alias = "'.$v2.'"';
+                                    $i++;
+                                }
 							} else if ($search == 's') {
 								// Specifications
+                                // QUERY METHOD ANY (product to display must include one of selected specifications)
 								$inA[] = '(s2.alias = '.$db->quote($k). ' AND s2.alias_value IN ('. '\'' . implode('\',\'', $a). '\'' .'))';
+
+                                // QUERY METHOD ALL (product to display must include all specifications togehter)
+                                $i = 0;
+                                foreach($a as $k2 => $v2) {
+                                    $inAS[$i] = 's2x'.$i.'.alias = '.$db->quote($k). ' AND s2x'.$i.'.alias_value = "'.$v2.'"';
+                                    $i++;
+                                }
 							}
 
 						}
@@ -173,19 +191,64 @@ class PhocacartSearch
 
 		    switch ($search) {
                 case 'tag':
-                    $where = ' tr.tag_id IN (' . $in . ')';
-                    $left = ' LEFT JOIN #__phocacart_tags_related AS tr ON a.id = tr.item_id';
+
+                    if ($params['sql_filter_method_tag'] == 1) {
+                        // QUERY METHOD ALL (product to display must include all tags togehter)
+                        $left = '';
+                        $where = '';
+                        if (!empty($inA)) {
+                            foreach($inA as $k => $v) {
+                                $left .= ' INNER JOIN #__phocacart_tags_related AS tr'.(int)$v.' ON a.id = tr'.(int)$v.'.item_id AND tr'.(int)$v.'.tag_id = '.(int)$v;
+                            }
+                        }
+                    } else {
+                        // QUERY METHOD ANY (product to display must include one of selected tags)
+                        $where = ' tr.tag_id IN (' . $in . ')';
+                        $left = ' LEFT JOIN #__phocacart_tags_related AS tr ON a.id = tr.item_id';
+                    }
                 break;
 
                 case 'label':
-                    $where = ' lr.tag_id IN (' . $in . ')';
-                    $left = ' LEFT JOIN #__phocacart_taglabels_related AS lr ON a.id = lr.item_id';
+
+                    if ($params['sql_filter_method_label'] == 1) {
+                        // QUERY METHOD ALL (product to display must include all labels togehter)
+                        $left = '';
+                        $where = '';
+                        if (!empty($inA)) {
+                            foreach($inA as $k => $v) {
+                                $left .= ' INNER JOIN #__phocacart_taglabels_related AS lr'.(int)$v.' ON a.id = lr'.(int)$v.'.item_id AND lr'.(int)$v.'.tag_id = '.(int)$v;
+                            }
+                        }
+
+                    } else {
+                        // QUERY METHOD ANY (product to display must include one of selected label)
+                        $where = ' lr.tag_id IN (' . $in . ')';
+                        $left = ' LEFT JOIN #__phocacart_taglabels_related AS lr ON a.id = lr.item_id';
+                    }
+
                 break;
 
                 // Custom parameters
                 case 'parameter':
-                    $where = ' pr'.(int)$prefix.'.parameter_value_id IN (' . $in . ')';
-                    $left = ' LEFT JOIN #__phocacart_parameter_values_related AS pr'.(int)$prefix.' ON a.id = pr'.(int)$prefix.'.item_id';
+
+
+                    if ($params['sql_filter_method_parameter'] == 1) {
+                        // QUERY METHOD ALL (product to display must include all parameter togehter)
+                        $left = '';
+                        $where = '';
+                        if (!empty($inA)) {
+                            foreach($inA as $k => $v) {
+                                $left .= ' INNER JOIN #__phocacart_parameter_values_related AS pr'.(int)$prefix.(int)$v.' ON a.id = pr'.(int)$prefix.(int)$v.'.item_id AND pr'.(int)$prefix.(int)$v.'.parameter_value_id = '.(int)$v;
+                            }
+                        }
+
+                    } else {
+                        // QUERY METHOD ANY (product to display must include one of selected parameter)
+                        $where = ' pr'.(int)$prefix.'.parameter_value_id IN (' . $in . ')';
+                        $left = ' LEFT JOIN #__phocacart_parameter_values_related AS pr'.(int)$prefix.' ON a.id = pr'.(int)$prefix.'.item_id';
+                    }
+
+
                 break;
 
                 case 'manufacturer':
@@ -218,16 +281,34 @@ class PhocacartSearch
                 case 'a': // Attributes
 
                     $where = '';
-                    if (!empty($in)) {
-                        $c = count($in);
-                        $where = ' a.id IN (SELECT at2.product_id FROM #__phocacart_attributes AS at2'
-                            . ' LEFT JOIN  #__phocacart_attribute_values AS v2 ON v2.attribute_id = at2.id'
-                            . ' WHERE ' . implode(' OR ', $in)
-                            . ' GROUP BY at2.product_id'
-                            //.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
-                            . ' HAVING COUNT(at2.alias) >= ' . (int)$c
+
+                    if ($params['sql_filter_method_attribute'] == 1) {
+                        // QUERY METHOD ALL (product to display must include all attributes togehter)
+                        if (!empty($inAS)) {
+                            $where = ' a.id IN (SELECT at2.product_id FROM #__phocacart_attributes AS at2';
+                            foreach ($inAS as $k => $v) {
+                                $where .= ' INNER JOIN  #__phocacart_attribute_values AS v2x' . $k . ' ON v2x' . $k . '.attribute_id = at2.id AND ' . $v;
+                            }
+                            $where .= ' GROUP BY at2.product_id'
+                                //.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
+                                // . ' HAVING COUNT(at2.alias) >= ' . (int)$c
                             . ')';
+                        }
+                    } else {
+
+                        // QUERY METHOD ANY (product to display must include one of selected attributes)
+                        if (!empty($in)) {
+                            $c = count($in);
+                            $where = ' a.id IN (SELECT at2.product_id FROM #__phocacart_attributes AS at2'
+                                . ' LEFT JOIN  #__phocacart_attribute_values AS v2 ON v2.attribute_id = at2.id'
+                                . ' WHERE ' . implode(' OR ', $in)
+                                . ' GROUP BY at2.product_id'
+                                //.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
+                                . ' HAVING COUNT(at2.alias) >= ' . (int)$c
+                                . ')';
+                        }
                     }
+
                     $left = '';
                 break;
 
@@ -235,14 +316,44 @@ class PhocacartSearch
 
                     $where = '';
 
-                    if (!empty($in)) {
-                        $c = count($in);
-                        $where = ' a.id IN (SELECT s2.product_id FROM #__phocacart_specifications AS s2'
-                            . ' WHERE ' . implode(' OR ', $in)
-                            . ' GROUP BY s2.product_id'
-                            //.' HAVING COUNT(distinct s2.alias) >= '.(int)$c.')';// problematic on some servers
-                            . ' HAVING COUNT(s2.alias) >= ' . (int)$c
+                    if ($params['sql_filter_method_specification'] == 1) {
+                        // QUERY METHOD ALL (product to display must include all specifications togehter)
+                        if (!empty($inAS)) {
+
+                            // We don't have any main table so we need to split all items into:
+                            // - one main table
+                            // - and all other with INNER JOIN
+                            $closeWhere = '';
+                            $where = ' a.id IN (SELECT';
+                            $i = 0;
+                            foreach ($inAS as $k => $v) {
+                                if ($i == 0) {
+                                    $where .= " s2x".$i.".product_id FROM #__phocacart_specifications AS s2x".$i;
+                                    $closeWhere = 'WHERE '.$v;
+                                } else {
+                                    $where .= " INNER JOIN #__phocacart_specifications AS s2x".$i." ON s2x0.product_id = s2x".$i.".product_id AND ". $v;
+                                }
+                                $i++;
+                                //$where .= ' INNER JOIN  #__phocacart_attribute_values AS v2x' . $k . ' ON v2x' . $k . '.attribute_id = at2.id AND ' . $v;
+                            }
+                            $where .= ' '. $closeWhere
+                            //$where .= ' GROUP BY s2.product_id'
+                                //.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
+                                // . ' HAVING COUNT(at2.alias) >= ' . (int)$c
                             . ')';
+                        }
+                    } else {
+
+                        // QUERY METHOD ANY (product to display must include one of selected specifications)
+                        if (!empty($in)) {
+                            $c = count($in);
+                            $where = ' a.id IN (SELECT s2.product_id FROM #__phocacart_specifications AS s2'
+                                . ' WHERE ' . implode(' OR ', $in)
+                                . ' GROUP BY s2.product_id'
+                                //.' HAVING COUNT(distinct s2.alias) >= '.(int)$c.')';// problematic on some servers
+                                . ' HAVING COUNT(s2.alias) >= ' . (int)$c
+                                . ')';
+                        }
                     }
 
                     $left = '';

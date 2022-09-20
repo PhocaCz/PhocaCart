@@ -48,7 +48,7 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 		$this->pr->setCurrency($this->item->currency_id, $this->item->id);
 
 
-		$this->fieldsbas				= $model->getFieldsBaS($this->item->id);
+		$this->fieldsbas				= $model->getFieldsBaS();
 		$this->formbas					= $model->getFormBaS($this->item->id);
 		$this->itemcommon				= $order->getItemCommon($this->item->id);
 		$this->itemproducts 			= $order->getItemProducts($this->item->id);
@@ -57,6 +57,7 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 		$this->itemtotal 				= $order->getItemTotal($this->item->id);
 		$this->itemtaxrecapitulation 	= $order->getItemTaxRecapitulation($this->item->id);
 
+		$this->itembas					= $order->getItemBaS($this->item->id, 1);
 
 
 		$media = new PhocacartRenderAdminmedia();

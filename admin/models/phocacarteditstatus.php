@@ -65,7 +65,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends ListModel
 		$data['status_id']			= (int)$data['status_id'];
 		$data['email_send']			= (int)$data['email_send'];
 		$data['email_send_format']	= (int)$data['email_send_format'];
-		$data['email_gift']			= (int)$data['email_gift'];
+		$data['email_gift']			= isset($data['email_gift']) ? (int)$data['email_gift'] : 0;
 		$row 				= $this->getTable('PhocacartOrder', 'Table');
 		$user 				= Factory::getUser();
 

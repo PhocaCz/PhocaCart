@@ -54,6 +54,8 @@ final class PhocacartStatistics
 
 
 
+
+
 		$o = "
 var config".$id." = {
 type: 'line',             
@@ -92,7 +94,7 @@ data: {
 		label: '".htmlspecialchars($dataBLabel)."',
 
 	}],
-	labels: [".htmlspecialchars($dataX)."
+	labels: [".htmlspecialchars($dataX, ENT_NOQUOTES)."
 	],
 },
 scaleIntegersOnly: true,
@@ -202,7 +204,7 @@ data: {
 		pointHighlightStroke: '#fff'*/
 
 	}],
-	labels: [".htmlspecialchars($dataX)."
+	labels: [".htmlspecialchars($dataX, ENT_NOQUOTES)."
 	],
 },
 scaleIntegersOnly: true,

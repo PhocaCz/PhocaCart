@@ -133,6 +133,7 @@ if (!empty($this->items)) {
 				$dS['class']				= 'ph-item-stock-box';
 				$dS['product_id']			= (int)$v->id;
 				$dS['typeview']				= 'Pos';
+				$dS['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
 				$dS['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($stockStatus);
 				$dSO = $layoutS->render($dS);
 			}

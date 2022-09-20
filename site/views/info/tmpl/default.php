@@ -21,6 +21,25 @@ if ( $this->t['info_view_description'] != '') {
 	echo '<div class="ph-desc">'. $this->t['info_view_description']. '</div>';
 }
 
+
+// Run view event, for conversions
+$pluginView = PluginHelper::importPlugin('pcv');
+if ($pluginView) {
+	$eventData               = array();
+	$results = Factory::getApplication()->triggerEvent('onPCVonInfoViewDisplayContent', array('com_phocacart.info', &$this->t['infodata'], &$this->t['infoaction'], $eventData));
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['content']) && $v['content'] != '') {
+				echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
+			}
+		}
+	}
+}
+
+
+
+
+
 switch($this->t['infoaction']) {
 
 	case 1:
@@ -62,8 +81,8 @@ if (isset($this->t['infodata']['shipping_id']) && (int)$this->t['infodata']['shi
 
 // Run shipping method event
 if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['shipping_method'] != '') {
-	$pluginShipping = PluginHelper::importPlugin('pcs');
-	if ($pluginShipping) {
+	$pluginView = PluginHelper::importPlugin('pcs');
+	if ($pluginView) {
 
 		PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['infodata']['shipping_method'])));
 		$eventData               = array();

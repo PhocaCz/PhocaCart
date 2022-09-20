@@ -206,6 +206,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 				$dS['class']				= 'ph-category-stock-box';
 				$dS['product_id']			= (int)$v->id;
 				$dS['typeview']				= 'Category';
+				$dS['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
 				$dS['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($stockStatus);
 				$dSO = $layoutS->render($dS);
 			}

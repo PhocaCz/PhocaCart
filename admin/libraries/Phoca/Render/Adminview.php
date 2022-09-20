@@ -75,13 +75,23 @@ class Adminview
 
 	public function startCp() {
 
+		// CSS based on user groups
+		$user = Factory::getUser();
+		$groupClass = '';
+		if (!empty($user->groups)) {
+			foreach ($user->groups as $k => $v) {
+				$groupClass .= ' group-'. $v;
+			}
+		}
+
+
 		$o = array();
 		if ($this->compatible) {
 
 			if ($this->sidebar) {
-
+				$o[] = '<div class="ph-group-class '.$groupClass.'">';
 			} else {
-				$o[] = '<div class="row">';
+				$o[] = '<div class="row '.$groupClass.'">';
 				$o[] = '<div id="j-main-container" class="col-md-2">'. JHtmlSidebar::render().'</div>';
 				$o[] = '<div id="j-main-container" class="col-md-10">';
 			}
@@ -99,7 +109,7 @@ class Adminview
 		$o = array();
 		if ($this->compatible) {
 			if ($this->sidebar) {
-
+				$o[] = '</div>';// end groupClass
 			} else {
 
 				$o[] = '</div></div>';
@@ -129,7 +139,16 @@ class Adminview
 			$containerClass = '';
 		}
 
-		return '<div id="'.$view.'"><form action="'.Route::_('index.php?option='.$option . $viewP . $layout . '&id='.(int) $itemId . $tmpl).'" method="post" name="'.$name.'" id="'.$id.'" class="form-validate '.$class.'" role="form">'."\n"
+		// CSS based on user groups
+		$user = Factory::getUser();
+		$groupClass = '';
+		if (!empty($user->groups)) {
+			foreach ($user->groups as $k => $v) {
+				$groupClass .= ' group-'. $v;
+			}
+		}
+
+		return '<div id="'.$view.'" class="'.$groupClass.'"><form action="'.Route::_('index.php?option='.$option . $viewP . $layout . '&id='.(int) $itemId . $tmpl).'" method="post" name="'.$name.'" id="'.$id.'" class="form-validate '.$class.'" role="form">'."\n"
 		.'<div id="phAdminEdit" class="'.$containerClass.'"><div class="row">'."\n";
 	}
 
@@ -138,7 +157,17 @@ class Adminview
 	}
 
 	public function startFormRoute($view, $route, $id = 'adminForm', $name = 'adminForm') {
-		return '<div id="'.$view.'"><form action="'.Route::_($route).'" method="post" name="'.$name.'" id="'.$id.'" class="form-validate">'."\n"
+
+		// CSS based on user groups
+		$user = Factory::getUser();
+		$groupClass = '';
+		if (!empty($user->groups)) {
+			foreach ($user->groups as $k => $v) {
+				$groupClass .= ' group-'. $v;
+			}
+		}
+
+		return '<div id="'.$view.'" class="'.$groupClass.'"><form action="'.Route::_($route).'" method="post" name="'.$name.'" id="'.$id.'" class="form-validate">'."\n"
 		.'<div id="phAdminEdit" class="row">'."\n";
 	}
 
@@ -319,7 +348,7 @@ class Adminview
 	}
 
 	public function itemText($item, $label, $class = '', $name = '') {
-		
+
 
 		$o = '';
 		$o .= '<div class="control-group ph-par-ph-text-'.$name.' ph-control-group-text">'."\n";

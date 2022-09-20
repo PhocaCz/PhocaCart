@@ -2101,12 +2101,33 @@ a[target=_blank]::before {
 #phocacartitem .ph-par-type_category_feed,
 #phocacartitem .ph-par-description,
 #phocacartitem .ph-par-description_long,
-#phocacartitem .ph-par-features { 
+#phocacartitem .ph-par-features,
+#phocacartitem .ph-par-special_parameter,
+#phocacartitem .ph-par-special_image {
 	display: none;
 }
 
 /* Additional box *//*
 #phocacartitem joomla-tab-element#general .ph-admin-additional-box {
 	display: none;
+}
+
+
+/* Hide items for specific group only - e.g. Managers with ID 6*//*
+#phocacartitem.group-6 joomla-tab-element#publishing, #phocacartitem.group-6 joomla-tab button[aria-controls="publishing"],
+#phocacartitem.group-6 joomla-tab-element#image, #phocacartitem.group-6 joomla-tab button[aria-controls="image"],
+#phocacartitem.group-6 joomla-tab-element#attributes, #phocacartitem.group-6 joomla-tab button[aria-controls="attributes"] {
+	display: none;
+}
+
+#phocacartitem.group-6 .ph-par-title,
+#phocacartitem.group-6 .ph-par-alias,
+#phocacartitem.group-6 .ph-par-price_original {
+	display: none;
+}
+
+/*Making tab active in case it is not the first tab*//*
+#phocacartitem.group-6 joomla-tab > joomla-tab-element#publishing {
+    display: block;
 }
 */

@@ -241,6 +241,14 @@ class PhocacartUtils
 
 	public static function getIp() {
 
+
+		$pC						= PhocacartUtils::getComponentParameters();
+		$store_ip				= $pC->get( 'store_ip', 0 );
+
+		if ($store_ip == 0) {
+			return '';
+		}
+
 		$ip = false;
 		if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) {
 			$ip  = $_SERVER['REMOTE_ADDR'];
@@ -251,8 +259,23 @@ class PhocacartUtils
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
-
 		return $ip;
+	}
+
+	public static function getUserAgent() {
+
+		$pC						= PhocacartUtils::getComponentParameters();
+		$store_user_agent		= $pC->get( 'store_user_agent', 0 );
+
+		if ($store_user_agent == 0) {
+			return '';
+		}
+
+		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+			return (string)$_SERVER['HTTP_USER_AGENT'];
+		}
+
+		return '';
 	}
 
 
@@ -604,5 +627,8 @@ class PhocacartUtils
 
 		return (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
 	}
+
+
+
 }
 ?>

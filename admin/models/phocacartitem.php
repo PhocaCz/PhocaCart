@@ -342,11 +342,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 		// Trigger the onContentBeforeSave event.
-		/*$result = JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
+		$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
 		if (in_array(false, $result, true)) {
 			$this->setError($table->getError());
 			return false;
-		}*/
+		}
 		// Trigger the before event.
 		PluginHelper::importPlugin($this->events_map['save']);
 

@@ -42,7 +42,7 @@ echo $r->groupHeader($this->form, $formArray);
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('cost', 'cost_additional', 'tax_id', 'calculation_type', 'default', 'type');
+$formArray = array ('cost', 'cost_additional', 'tax_id', 'code', 'calculation_type', 'default', 'type');
 echo $r->group($this->form, $formArray);
 
 $formArray = array ('method');

@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartUser
 {
@@ -178,6 +179,7 @@ class PhocacartUser
 		$baSa = $form->getValue('ba_sa');
 
 
+
 		// Setting "Delivery and billing addresses are the same" - enable or disabled
 		// This can be set for new users who didn't set the address yet and for gest only. Not for users how added the address as they made the choice which is saved and cannot be changed
 		$pC = PhocacartUtils::getComponentParameters();
@@ -207,8 +209,6 @@ class PhocacartUser
 
 		if (!empty($fields)) {
 			foreach($fields as $k => $v) {
-
-
 
 				if ($v->display_billing == 1 || ($app->isClient('administrator') && $v->title == 'id')){
 
@@ -257,6 +257,8 @@ class PhocacartUser
 					}
 
 				}
+
+
 
 				if ($v->display_shipping == 1 || ($app->isClient('administrator') && $v->title == 'id')) {
 
@@ -309,6 +311,31 @@ class PhocacartUser
 						$o['s'] .= '</div>' . "\n";
 					}
 
+				}
+
+				// Possible way to change Billing and Shipping is the same in administration
+				// Change the hidden field to Select box, so it can be changes in administration
+				// BE AWARE - it is a billing parameter ($billingSuffix but displayed in Shipping tab: $o[s]
+				if ($app->isClient('administrator') && $v->title == 'ba_sa') {
+					$valueField = $form->getValue($v->title . $billingSuffix);
+					$selectedYes = '';
+					$selectedNo = ' selected';
+					if ($valueField == 1) {
+						$selectedYes = ' selected';
+						$selectedNo = '';
+					}
+					$nameField = 'jform['.$v->title.$billingSuffix.']';
+					$idField = 'jform_'.$v->title.$billingSuffix.'';
+					$o['s'] .= '<div class="control-group">';
+					$o['s'] .= '<div class="control-label"><label>'.Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME').'</label></div>';
+					//$o['s'] .= '<div class="controls">'.$form->getInput($v->title . $billingSuffix).'</div>';
+					$o['s'] .= '<div class="controls">';
+					$o['s'] .= '<select name="'.$nameField.'" id="'.$idField.'" class="form-select">';
+					$o['s'] .= '<option value="1" '.$selectedYes.'>'.Text::_('COM_PHOCACART_YES').'</option>';
+					$o['s'] .= '<option value="0" '.$selectedNo.'>'.Text::_('COM_PHOCACART_NO').'</option>';
+					$o['s'] .= '</select>' . "\n";
+					$o['s'] .= '</div>' . "\n";
+					$o['s'] .= '</div>' . "\n";
 				}
 			}
 		}

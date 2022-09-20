@@ -61,6 +61,9 @@
         <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
 
+        <field name="email_downloadlink_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
+
         <field name="email_send" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC" class="form-select" size="1" default="0">
             <option value="0">COM_PHOCACART_NOTHING</option>
             <option value="1">COM_PHOCACART_ORDER</option>

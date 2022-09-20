@@ -166,6 +166,7 @@ class PhocaCartControllerCheckout extends FormController
                         $d['class']               = str_replace('-data-', '-stock-', $class);// change common "data" class to specific one
                         $d['product_id']          = (int)$id;
                         $d['typeview']            = $typeView;
+                        $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                         $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
 
                         $oA['stock'] = $layoutS->render($d);
@@ -422,6 +423,7 @@ class PhocaCartControllerCheckout extends FormController
                 $d['class']               = $class;
                 $d['product_id']          = (int)$id;
                 $d['typeview']            = $typeView;
+                $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                 $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
 
                 $o = $layoutS->render($d);

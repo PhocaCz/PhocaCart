@@ -405,6 +405,7 @@ $o[] = '<td colspan="5"><b>'.Text::_('COM_PHOCACART_SHIPPING_ADDRESS').'</b></td
 // -----------
 // BILLING
 // -----------
+
 $ob = array();
 $ob2 = array();// specific case for $oidn_global_billing_desc
 if (!empty($d['bas']['b'])) {

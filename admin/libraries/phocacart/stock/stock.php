@@ -65,6 +65,7 @@ class PhocacartStock
 
 		$stock['stock_count'] 	        = false;
 		$stock['stock_status'] 	        = false;
+        $stock['stock_status_class'] 	= false;
 		$stock['status_image'] 	        = false;
         $stock['status_link'] 	        = false;
         $stock['status_link_target'] 	= false;
@@ -90,6 +91,7 @@ class PhocacartStock
 						if (!empty($data) && $data[0]->title != '') {
 							$stock['stock_status'] 		= Text::_($data[0]->title);
 							$stock['stock_status_feed'] = Text::_($data[0]->title_feed);
+                            $stock['stock_status_class'] = 'pc-status-'.PhocacartText::filterValue($stock['stock_status'], 'class');
 						}
 						if (!empty($data) && $data[0]->image != '') {
 							$stock['status_image'] = $data[0]->image;
@@ -109,6 +111,7 @@ class PhocacartStock
 						if (!empty($data) && $data[0]->title != '') {
 							$stock['stock_status'] 		= Text::_($data[0]->title);
 							$stock['stock_status_feed'] = Text::_($data[0]->title_feed);
+                            $stock['stock_status_class'] = 'pc-status-'.PhocacartText::filterValue($stock['stock_status'], 'class');
 						}
 						if (!empty($data) && $data[0]->image != '') {
 							$stock['status_image'] = $data[0]->image;
@@ -129,6 +132,7 @@ class PhocacartStock
 					if (!empty($data) && $data[0]->title != '') {
 						$stock['stock_status'] 		= Text::_($data[0]->title);
 						$stock['stock_status_feed'] = Text::_($data[0]->title_feed);
+                        $stock['stock_status_class'] = 'pc-status-'.PhocacartText::filterValue($stock['stock_status'], 'class');
 					}
 					if (!empty($data) && $data[0]->image != '') {
 						$stock['status_image'] = $data[0]->image;

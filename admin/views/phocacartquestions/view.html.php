@@ -65,12 +65,12 @@ class PhocaCartCpViewPhocaCartQuestions extends HtmlView
 		if ($canDo->get('core.edit')) {
 			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
-		if ($canDo->get('core.edit.state')) {
+		/*if ($canDo->get('core.edit.state')) {
 
 			ToolbarHelper::divider();
 			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
 			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-		}
+		}*/
 
 		if ($canDo->get('core.delete')) {
 			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartquestions.delete', $this->t['l'].'_DELETE');

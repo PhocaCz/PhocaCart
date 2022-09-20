@@ -93,21 +93,20 @@ class PhocacartManufacturer
 		} else if ($select == 2){
 			$query = 'SELECT a.id, a.alias ';
 		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
+			$query = 'SELECT a.id, a.title, a.alias';
 		}
 		$query .= ' FROM #__phocacart_manufacturers AS a'
 				.' LEFT JOIN #__phocacart_products AS p ON a.id = p.manufacturer_id'
 				.' WHERE p.id = '.(int) $itemId
                 .' ORDER BY a.id';
 		$db->setQuery($query);
-
 		if ($select == 1) {
-			$tags = $db->loadColumn();
+			$mans = $db->loadColumn();
 		} else {
-			$tags = $db->loadObjectList();
+			$mans = $db->loadObjectList();
 		}
 
-		return $tags;
+		return $mans;
 	}
 
 	public static function getManufacturersByIds($cids) {

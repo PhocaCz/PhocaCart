@@ -19,7 +19,7 @@ foreach($fieldSets as $name => $fieldSet) {
 
         foreach ($this->form->getFieldset($name) as $field) {
 
-            $o .= '<div class="control-group">';
+            $o .= '<div class="control-group ph-par-'.$field->fieldname.'">';
             $o .= '<div class="control-label">' . $field->label . '</div>';
             $o .= '<div class="controls">' . $field->input . '</div>';
             $o .= '</div>';

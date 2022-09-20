@@ -76,7 +76,7 @@ class PhocaCartCpViewPhocaCartCurrencies extends HtmlView
 		}
 
 		if ($canDo->get('core.delete')) {
-			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartcurrencies.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( 'COM_PHOCACART_WARNING_DELETE_CURRENCY', 'phocacartcurrencies.delete', $this->t['l'].'_DELETE');
 		}
 		ToolbarHelper::divider();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );

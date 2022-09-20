@@ -166,12 +166,31 @@ class Adminviews
     }
 
     public function startForm($option, $view, $id = 'adminForm', $name = 'adminForm') {
-        return '<div id="' . $view . '"><form action="' . Route::_('index.php?option=' . $option . '&view=' . $view) . '" method="post" name="' . $name . '" id="' . $id . '">' . "\n" . '';
+
+        // CSS based on user groups
+		$user = Factory::getUser();
+		$groupClass = '';
+		if (!empty($user->groups)) {
+			foreach ($user->groups as $k => $v) {
+				$groupClass .= ' group-'. $v;
+			}
+		}
+
+        return '<div id="' . $view . '" class="'.$groupClass.'"><form action="' . Route::_('index.php?option=' . $option . '&view=' . $view) . '" method="post" name="' . $name . '" id="' . $id . '">' . "\n" . '';
     }
 
     public function startFormModal($option, $view, $id = 'adminForm', $name = 'adminForm', $function = '') {
 
-        return '<div id="' . $view . '"><form action="' . Route::_('index.php?option=' . $option . '&view=' . $view . '&layout=modal&tmpl=component&function=' . $function . '&' . Session::getFormToken() . '=1') . '" method="post" name="' . $name . '" id="' . $id . '">' . "\n" . '';
+         // CSS based on user groups
+		$user = Factory::getUser();
+		$groupClass = '';
+		if (!empty($user->groups)) {
+			foreach ($user->groups as $k => $v) {
+				$groupClass .= ' group-'. $v;
+			}
+		}
+
+        return '<div id="' . $view . '" class="'.$groupClass.'"><form action="' . Route::_('index.php?option=' . $option . '&view=' . $view . '&layout=modal&tmpl=component&function=' . $function . '&' . Session::getFormToken() . '=1') . '" method="post" name="' . $name . '" id="' . $id . '">' . "\n" . '';
     }
 
     public function endForm() {

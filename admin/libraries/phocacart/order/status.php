@@ -34,7 +34,7 @@ class PhocacartOrderStatus
 			$db = Factory::getDBO();
 			$query = ' SELECT a.title, a.stock_movements, a.change_user_group, a.change_points_needed, a.change_points_received,'
 					.' a.email_customer, a.email_others, a.email_subject, a.email_subject_others, a.email_text, a.email_footer,'
-					.' a.email_text_others, a.email_send, a.email_send_format, a.email_attachments, a.orders_view_display, a.download,'
+					.' a.email_text_others, a.email_send, a.email_send_format, a.email_attachments, a.orders_view_display, a.download, a.email_downloadlink_description,'
 					.' a.activate_gift, a.email_gift, a.email_subject_gift_sender, a.email_text_gift_sender, a.email_subject_gift_recipient, a.email_text_gift_recipient, a.email_gift_format'
 					.' FROM #__phocacart_order_statuses AS a'
 					.' WHERE a.id = '.(int)$id
@@ -68,6 +68,7 @@ class PhocacartOrderStatus
 				self::$status[$id]['email_gift_format']			= $s->email_gift_format;
 				self::$status[$id]['orders_view_display']		= $s->orders_view_display;
 				self::$status[$id]['download']					= $s->download;
+				self::$status[$id]['email_downloadlink_description']= $s->email_downloadlink_description;
 				$query = 'SELECT a.title AS text, a.id AS value'
 				. ' FROM #__phocacart_order_statuses AS a'
 				. ' WHERE a.published = 1'
@@ -535,7 +536,7 @@ class PhocacartOrderStatus
 
 
 			// REPLACE
-			$r = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas);
+			$r = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas, $status);
 
 
 
@@ -853,7 +854,7 @@ class PhocacartOrderStatus
 				}
 				$buyerBody = $status['email_text_gift_sender'];
 
-				$r          = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas);
+				$r          = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas, $status);
 				$r['email'] = $buyerEmail;// Overwrites the $r
 
 
@@ -1035,7 +1036,7 @@ class PhocacartOrderStatus
 						}
 						$recipientBody = $status['email_text_gift_recipient'];
 
-						$r                         = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas);
+						$r                         = PhocacartText::prepareReplaceText($order, $orderId, $common, $bas, $status);
 						$r['email_gift_recipient'] = $v;// Overwrites the $r
 						$r['name_gift_recipient'] 	= isset($bodyRecipient[$k]['data']['gift_recipient_name']) ? $bodyRecipient[$k]['data']['gift_recipient_name'] : '';
 						$r['name_gift_sender'] 		= isset($bodyRecipient[$k]['data']['gift_sender_name']) ? $bodyRecipient[$k]['data']['gift_sender_name'] : '';
