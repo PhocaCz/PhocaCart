@@ -32,7 +32,7 @@
 
         <field name="image" type="phocaselectfilenameimage" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40"/>
 
-		<field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" class="form-control" size="40" />
+        <field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" class="form-control" size="40" />
 
         <field name="title_feed" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC"/>
 
@@ -64,13 +64,13 @@
 
         <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText"/>
 
-		<field name="created" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" />
+        <field name="created" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" />
 
-<field name="created_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_CREATED_BY_LABEL" description="COM_PHOCACART_FIELD_CREATED_BY_DESC" readonly="readonly" />
+        <field name="created_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_CREATED_BY_LABEL" description="COM_PHOCACART_FIELD_CREATED_BY_DESC" readonly="readonly" />
 
-<field name="modified" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" />
+        <field name="modified" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" />
 
-<field name="modified_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly" />
+        <field name="modified_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly" />
         <!--
         <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
         -->
@@ -99,6 +99,5 @@
                     required="" filter="string" cols="30" rows="2" /> -->
         </fieldset>
     </fields>
-
 
 </form>

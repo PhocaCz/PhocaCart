@@ -12,6 +12,8 @@ jimport('joomla.filter.input');
 
 class TablePhocacartManufacturer extends Table
 {
+  protected $_jsonEncode = array('metadata');
+
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_manufacturers', 'id', $db);
 	}
