@@ -158,6 +158,7 @@ class PhocaCartCpModelPhocaCartFormfield extends AdminModel
 
 						if (empty($column1)) {
 							$query11 = 'ALTER TABLE #__phocacart_users ADD '.$db->quoteName($data['title']).' '.$type.';';
+
 							$db->setQuery($query11);
 
 							if (!$db->execute()){

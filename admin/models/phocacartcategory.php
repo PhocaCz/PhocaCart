@@ -178,19 +178,13 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 					$data['alias'] = OutputFilter::stringURLSafe($data['title']);
 				}
 
-
-				if ($table->load(array('alias' => $data['alias']))){
-					$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
-				}
-
-				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
-				$data['alias'] = $alias;
-
-				if (isset($msg)) {
-					Factory::getApplication()->enqueueMessage($msg, 'warning');
+				list($title, $alias) = $this->generateNewTitle($data['parent_id'], $data['alias'], $data['title']);
+				if ($data['alias'] != $alias) {
+					Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_SAVE_WARNING'), 'warning');
+					$data['alias'] = $alias;
 				}
 			}
-		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
+		} else if ($table->load(array('alias' => $data['alias'], 'parent_id' => $data['parent_id'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
 			$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			return false;
 		}
@@ -680,6 +674,12 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			// Set the new category ID
 			$table->parent_id = $categoryId;
 
+			// Alter the title & alias
+			list($title, $alias) = $this->generateNewTitle($categoryId, $table->alias, $table->title);
+			if ($table->alias != $alias) {
+				Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_SAVE_WARNING'), 'warning');
+				$table->alias = $alias;
+			}
 
 			// Cannot move the node to be a child of itself.
 			if ((int)$table->id == (int)$categoryId) {

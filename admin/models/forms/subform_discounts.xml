@@ -21,8 +21,8 @@
 <!--
 <field name="quantity_to" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_DESC" />
 -->
-<field name="valid_from" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="JComponentHelper::filterText"/>
-<field name="valid_to" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="JComponentHelper::filterText"/>
+<field name="valid_from" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="user_utc" translateformat="true" />
+<field name="valid_to" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="user_utc" translateformat="true" />
 
 <field name="groups" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL"   />
 

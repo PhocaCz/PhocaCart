@@ -2,7 +2,7 @@
 
 
 
-![Phoca Cart](https://github.com/PhocaCz/PhocaCart/blob/dev/phocacart.png?raw=true)
+![Phoca Cart](https://github.com/PhocaCz/PhocaCart/blob/master/phocacart.png?raw=true)
 
 # Phoca Cart
 
@@ -116,13 +116,13 @@ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Pho
 
 
 
+## Version (Joomla! 3.x)
 
+3.5.8
 
+## Version (Joomla! 4.x)
 
-
-## Version
-
-3.5.7Beta18
+4.0.6Beta
 
 
 

@@ -13,7 +13,7 @@
                description="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_DESC"/>
 
 
-		<field name="expiration_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_GIFT_EXPIRATION_DATE_LABEL" description="COM_PHOCACART_FIELD_GIFT_EXPIRATION_DATE_DESC"  translateformat="true" showtime="false"/>
+		<field name="expiration_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_GIFT_EXPIRATION_DATE_LABEL" description="COM_PHOCACART_FIELD_GIFT_EXPIRATION_DATE_DESC" filter="user_utc" translateformat="true" showtime="false"/>
 
 <field name="class_name" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CLASS_NAME_LABEL" required="false" />
 

@@ -172,6 +172,7 @@ class PhocacartFormUser
 
 						// Pattern
 						if (isset($v->pattern) && $v->pattern != '') {
+
 							$fB[] = $fS[] =  ' pattern="'.$v->pattern.'"';
 						}
 
@@ -179,7 +180,7 @@ class PhocacartFormUser
 							$fB[] = $fS[] =  ' maxlength="'.(int)$v->maxlength.'"';
 						} else {
 							// e.g. we limit varchar(100)
-							if($type == 'text' && $typeLimit > 0) {
+							if(($type == 'text' || $type == 'tel') && $typeLimit > 0) {
 								$fB[] = $fS[] =  ' maxlength="'.$typeLimit.'"';
 							}
 

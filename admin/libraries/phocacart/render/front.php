@@ -95,7 +95,7 @@ class PhocacartRenderFront
         }
 
         $type = '';
-        $name = array();
+        $name = new stdClass();
         if (!empty($item) && isset($item->title)) {
             $name = $item;
             $type = 'item';
@@ -120,6 +120,10 @@ class PhocacartRenderFront
             }*/
 
             $title = $name->title;
+        }
+
+        if (isset($name->title_long) && $name->title_long != '') {
+            $title = $name->title_long;
         }
 
         if ($viewLink != $viewCurrent && $header != '') {

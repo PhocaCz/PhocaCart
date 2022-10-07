@@ -68,9 +68,9 @@
 
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
-	<field name="valid_from" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_FROM_DESC" filter="JComponentHelper::filterText" />
+	<field name="valid_from" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_FROM_DESC" filter="user_utc" translateformat="true" />
 
-<field name="valid_to" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_TO_DESC" filter="JComponentHelper::filterText" />
+<field name="valid_to" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_TO_DESC" filter="user_utc" translateformat="true" />
 
 <field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
 	<option value="1">JPUBLISHED</option>

@@ -85,7 +85,7 @@
                    cols="30" filter="string"/>
 
             <field name="delivery_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
-                   filter="string" showtime="true" format="%Y-%m-%d %H:%M:%S"/>
+                   filter="user_utc" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true" />
 
 
             <field name="metatitle" type="text"
@@ -100,8 +100,8 @@
                    label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
                    class="form-control" rows="3" cols="30" filter="string"/>
 
-            <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="string"/>
-            <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="string"/>
+            <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
+            <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="user_utc" translateformat="true" />
 
             <field name="tags" type="PhocaTagsSubmitItems" multiple="1" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" class="form-control" size="1" filter="int_array"/>
 
@@ -139,7 +139,7 @@
         <field name="ip" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_IP_LABEL" description="COM_PHOCACART_FIELD_IP_DESC" filter="string"/>
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
         <field name="user_id" type="user" default="0" label="COM_PHOCACART_USER_ID_LABEL" description="COM_PHOCACART_USER_ID_DESC"/>
-        <field name="date_submit" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText"/>
+        <field name="date_submit" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
         <field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>

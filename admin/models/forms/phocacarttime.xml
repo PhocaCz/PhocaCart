@@ -115,7 +115,7 @@
 	<option	value="59">59</option>
 </field>
 
-<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_DESC" filter="JComponentHelper::filterText" />
+<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_DESC" filter="user_utc" translateformat="true" />
 
 
 <field name="ordering" type="phocacartOrdering" table="tag" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
