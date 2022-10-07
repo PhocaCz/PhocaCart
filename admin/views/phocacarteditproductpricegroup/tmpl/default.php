@@ -20,7 +20,6 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $link		= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricegroup&tmpl=component&id='.(int)$this->id);
 
-
 echo '<div id="phAdminEditPopup" class="ph-edit-stock-advanced-box">';
 
 echo '<div class="alert alert-info alert-dismissible fade show" role="alert">'
@@ -33,6 +32,30 @@ echo '<div class="alert alert-info alert-dismissible fade show" role="alert">'
 
 if (!empty($this->t['product'])) {
 
+	$priceDef = PhocacartPrice::cleanPrice($this->t['product']->price);
+	$js = '
+		document.addEventListener("DOMContentLoaded", () => {
+			document.querySelectorAll(".calc-price").forEach(el => {
+				el.addEventListener("input", e => {
+					const price = el.value,
+						percent = (' . $priceDef . ' - price) / (' . $priceDef . ' / 100);
+					if (!isNaN(percent))	
+						document.getElementById("calc-percent" + el.dataset.priceIndex).value = percent;		
+				});
+			}); 
+
+			document.querySelectorAll(".calc-percent").forEach(el => {
+				el.addEventListener("input", e => {
+					const percent = el.value,
+						price = ' . $priceDef . ' * (100 - percent) / 100;
+					if (!isNaN(price))	
+						document.getElementById("calc-price" + el.dataset.priceIndex).value = price;		
+				});
+			}); 
+		});
+	';
+	JFactory::getDocument()->addScriptDeclaration($js);
+
 	echo '<div class="ph-product-customer-group-box">';
 
 	echo '<form action="'.$link.'" method="post">';
@@ -40,22 +63,21 @@ if (!empty($this->t['product'])) {
 
 	if (!empty($this->t['groups'])) {
 
-		echo '<table class="ph-product-customer-group-box">';
+		echo '<table class="table table-sm table-responsive ph-product-customer-group-box">';
 
 		echo '<tr>';
 		echo '<th>'.Text::_('COM_PHOCACART_CUSTOMER_GROUP').'</th>';
 		//echo '<th>'.JText::_('COM_PHOCACART_PRODUCT_KEY').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_PRICE').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_DISCOUNT_PERCENT').'</th>';
 		echo '</tr>';
-
-
 
 
 		foreach($this->t['groups'] as $k => $v) {
 
 
 			echo '<tr>';
-			echo '<td>'.Text::_($v['title']).'</td>';
+			echo '<th>'.Text::_($v['title']).'</th>';
 
 			if ($v['type'] == 1) {
 
@@ -63,6 +85,7 @@ if (!empty($this->t['product'])) {
 				echo '<td><input type="text" class="input-small form-control" name="jform['.$v['id'].'][price]" value="'.PhocacartPrice::cleanPrice($this->t['product']->price).'" readonly />';
 				echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
 				echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
+				echo '</td><td>&nbsp;';
 
 			} else {
 
@@ -74,7 +97,10 @@ if (!empty($this->t['product'])) {
 						$price = PhocacartPrice::cleanPrice($price);
 					}
 				}
-				echo '<td><input type="text" class="input-small form-control" name="jform['.$v['id'].'][price]" value="'.$price.'" />';
+				$percent = ($priceDef - $price) / ($priceDef / 100);
+				echo '<td><input type="text" class="input-small form-control calc-price" name="jform['.$v['id'].'][price]" value="'.$price.'" id="calc-price' . $v['id'] . '" data-price-index="' . $v['id'] . '" />';
+				echo '</td><td>';
+				echo '<input type="text" class="input-small form-control calc-percent" value="'.$percent.'" id="calc-percent' . $v['id'] . '" data-price-index="' . $v['id'] . '" />';
 				echo '<input type="hidden" name="jform['.$v['id'].'][group_id]" value="'.$v['id'].'" />';
 				echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$this->id.'" />';
 				//echo '<input type="hidden" name="jform['.$v['id'].'][product_id]" value="'.$v['product_id'].'" />';
@@ -89,18 +115,19 @@ if (!empty($this->t['product'])) {
 
 		}
 
-		echo '<tr><td colspan="2"></td></tr>';
+		echo '<tr><td colspan="3"></td></tr>';
 
 		echo '<tr>';
 		echo '<td></td>';
 
-		echo '<td>';
+		echo '<td colspan="2">';
 		echo '<input type="hidden" name="id" value="'.(int)$this->t['product']->id.'">';
 		echo '<input type="hidden" name="task" value="phocacarteditproductpricegroup.save">';
 		echo '<input type="hidden" name="tmpl" value="component" />';
 		echo '<input type="hidden" name="option" value="com_phocacart" />';
 		echo '<button class="btn btn-success btn-sm ph-btn"><span class="icon-ok ph-icon-white"></span> '.Text::_('COM_PHOCACART_SAVE').'</button>';
 		echo HTMLHelper::_('form.token');
+		echo '</td>';
 
 
 		echo '</tr>';
