@@ -7,9 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-echo '<div id="ph-pc-checkout-box" class="pc-checkout-view'.$this->p->get( 'pageclass_sfx' ).'">';
+use Joomla\CMS\Language\Text;
+echo '<div id="ph-pc-checkout-box" class="pc-view pc-checkout-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_CHECKOUT')));
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_CHECKOUT')));
 
 if ( isset($this->t['checkout_desc']) && $this->t['checkout_desc'] != '') {
 	// Checkout description

@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
 
 final class PhocacartRenderJs
 {
@@ -41,7 +44,8 @@ final class PhocacartRenderJs
 
         if ($add_cart_method > 0) {
 
-            $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . JSession::getFormToken() . '=1&checkoutview=' . (int)$cView;
+            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
+
 
             $s = array();
             $s[] = 'function phDoSubmitFormAddToCart(sFormData) {';
@@ -56,7 +60,7 @@ final class PhocacartRenderJs
             $s[] = '	phDoRequestMethods(phUrl, sFormData, phOptions);';
             $s[] = '}';
             $s[] = ' ';
-            JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+            Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
             /*$s[] = '   phRequest = jQuery.ajax({';
             $s[] = '      type: "POST",';
@@ -181,7 +185,7 @@ final class PhocacartRenderJs
             $isPOS = true;
         }
 
-        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . JSession::getFormToken() . '=1&checkoutview=' . (int)$cView;
+        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
 
         $s = array();
         $s[] = 'function phDoSubmitFormUpdateCart(sFormData) {';
@@ -196,7 +200,7 @@ final class PhocacartRenderJs
         $s[] = '	phDoRequestMethods(phUrl, sFormData, phOptions);';
         $s[] = '}';
         $s[] = ' ';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
         /*
                 $s[] = '   phRequest = jQuery.ajax({';
@@ -272,7 +276,7 @@ final class PhocacartRenderJs
         $add_compare_method = $paramsC->get('add_compare_method', 0);
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
-        $app 	= JFactory::getApplication();
+        $app 	= Factory::getApplication();
         $view 	= $app->input->get('view', '');
         $option = $app->input->get('option', '');
         $cView	= $option == 'com_phocacart' && $view == 'comparison' ? 1 : 0;
@@ -283,7 +287,7 @@ final class PhocacartRenderJs
 
         if ($add_compare_method > 0) {
 
-        	$urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=comparison.add&format=json&' . JSession::getFormToken() . '=1&comparisonview=' . (int)$cView;
+        	$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=comparison.add&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView;
 
             $s = array();
             $s[] = 'function phItemCompareBoxFormAjax(phItemId) {';
@@ -298,7 +302,7 @@ final class PhocacartRenderJs
             $s[] = '	phDoRequestMethods(phUrl, phData, phOptions);';
             $s[] = '}';
             $s[] = ' ';
-            JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+            Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
             /*$s[] = ' ';
             $s[] = '	phRequest = jQuery.ajax({';
@@ -342,7 +346,7 @@ final class PhocacartRenderJs
         $add_compare_method = $paramsC->get('add_compare_method', 0);
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
-        $app 	= JFactory::getApplication();
+        $app 	= Factory::getApplication();
         $view 	= $app->input->get('view', '');
         $option = $app->input->get('option', '');
         $cView	= $option == 'com_phocacart' && $view == 'comparison' ? 1 : 0;
@@ -352,7 +356,7 @@ final class PhocacartRenderJs
         }
 
         if ($add_compare_method > 0) {
-            $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=comparison.remove&format=json&' . JSession::getFormToken() . '=1&comparisonview=' . (int)$cView;
+            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=comparison.remove&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView;
 
             $s = array();
             $s[] = ' ';
@@ -368,7 +372,7 @@ final class PhocacartRenderJs
             $s[] = '	phDoRequestMethods(phUrl, phData, phOptions);';
             $s[] = '}';
             $s[] = ' ';
-            JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+            Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
             /*$s[] = ' ';
             $s[] = '	phRequest = jQuery.ajax({';
@@ -412,7 +416,7 @@ final class PhocacartRenderJs
         $add_wishlist_method 	= $paramsC->get('add_wishlist_method', 0);
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
-        $app 	= JFactory::getApplication();
+        $app 	= Factory::getApplication();
         $view 	= $app->input->get('view', '');
         $option = $app->input->get('option', '');
         $wView	= $option == 'com_phocacart' && $view == 'wishlist' ? 1 : 0;
@@ -422,7 +426,7 @@ final class PhocacartRenderJs
         }
 
         if ($add_wishlist_method > 0) {
-            $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=wishlist.add&format=json&' . JSession::getFormToken() . '=1&wishlistview=' . (int)$wView;
+            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
             $s = array();
             $s[] = 'function phItemWishListBoxFormAjax(phItemId) {';
             $s[] = '	var phUrl 	= "' . $urlAjax . '";';
@@ -437,7 +441,7 @@ final class PhocacartRenderJs
             $s[] = '}';
             $s[] = ' ';
 
-            JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+            Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
             /*$s[] = ' ';
             $s[] = '	phRequest = jQuery.ajax({';
@@ -481,7 +485,7 @@ final class PhocacartRenderJs
         $add_wishlist_method = $paramsC->get('add_wishlist_method', 0);
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $view = $app->input->get('view', '');
         $option = $app->input->get('option', '');
         $wView	= $option == 'com_phocacart' && $view == 'wishlist' ? 1 : 0;
@@ -492,7 +496,7 @@ final class PhocacartRenderJs
 
         if ($add_wishlist_method > 0) {
 
-            $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=wishlist.remove&format=json&' . JSession::getFormToken() . '=1&wishlistview=' . (int)$wView;
+            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.remove&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
             $s = array();
             $s[] = ' ';
             $s[] = 'function phItemRemoveWishListFormAjax(phItemId) {';
@@ -508,7 +512,7 @@ final class PhocacartRenderJs
             $s[] = '}';
             $s[] = ' ';
 
-            JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+            Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
             /*
                         $s[] = '	phRequest = jQuery.ajax({';
@@ -550,18 +554,18 @@ final class PhocacartRenderJs
         $style 					= PhocacartRenderStyle::getStyles();
         $paramsC 				= PhocacartUtils::getComponentParameters();
         $dynamic_change_price 	= $paramsC->get('dynamic_change_price', 1);
-        $load_chosen 			= $paramsC->get('load_chosen', 1);
+        $load_chosen 			= $paramsC->get('load_chosen', 0);
         $quantity_input_spinner = $paramsC->get('quantity_input_spinner', 0);
 
         // needed because of phChangeAttributeType() - is included
         //$document = JFactory::getDocument();
-        //$document->addScript(JURI::root(true) . '/media/com_phocacart/js/phoca/jquery.phocaattribute.min.js');
+        //$document->addScript(JUri::root(true) . '/media/com_phocacart/js/phoca/jquery.phocaattribute.min.js');
         $media = PhocacartRenderMedia::getInstance('main');
         $media->loadPhocaAttribute(1);
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
 
 
-        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&view=item&format=json&tmpl=component&' . JSession::getFormToken() . '=1';
+        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&view=item&format=json&tmpl=component&' . Session::getFormToken() . '=1';
 
         $s = array();
         $s[] = 'function phItemQuickViewBoxFormAjax(phItemId) {';
@@ -574,18 +578,28 @@ final class PhocacartRenderJs
         $s[] = '	phOptions["type"]  = "quickview";';
         $s[] = '	phOptions["load_chosen"]  = ' . (int)$load_chosen . ';';
         $s[] = '	phOptions["quantity_input_spinner"]  = ' . (int)$quantity_input_spinner . ';';
-        if ((int)$quantity_input_spinner == 2) {
+      /*  if ((int)$quantity_input_spinner == 2) {
             $s[] = '	phOptions["icon_spinner_verticalup"] =  \'<span class="' . $style['i']['chevron-up'] . '"></span>\';';
             $s[] = '	phOptions["icon_spinner_verticaldown"] =  \'<span class="' . $style['i']['chevron-down'] . '"></span>\';';
         } else {
             $s[] = '	phOptions["icon_spinner_verticalup"] =  \'<span class="' . $style['i']['plus'] . '"></span>\';';
             $s[] = '	phOptions["icon_spinner_verticaldown"] =  \'<span class="' . $style['i']['minus'] . '"></span>\';';
         }
+*/
+        if ((int)$quantity_input_spinner == 2) {
+            $s[] = '	phOptions["icon_spinner_verticalup"] =  \''.PhocacartRenderIcon::icon($style['i']['chevron-up']).'\';';
+            $s[] = '	phOptions["icon_spinner_verticaldown"] =  \''.PhocacartRenderIcon::icon($style['i']['chevron-down']).'\';';
+        } else {
+            $s[] = '	phOptions["icon_spinner_verticalup"] =  \''.PhocacartRenderIcon::icon($style['i']['plus']).'\';';
+            $s[] = '	phOptions["icon_spinner_verticaldown"] =  \''.PhocacartRenderIcon::icon($style['i']['minus']).'\';';
+        }
+
+
         $s[] = '	var phData = jQuery(phItem).serialize();';
         $s[] = '	phDoRequestMethods(phUrl, phData, phOptions);';
         $s[] = '}';
         $s[] = ' ';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
         /*$s[] = '	phRequest = jQuery.ajax({';
         $s[] = '		type: "POST",';
@@ -658,7 +672,7 @@ final class PhocacartRenderJs
         }
 
 
-        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=checkout.changedatabox&format=json&' . JSession::getFormToken() . '=1';
+        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=checkout.changedatabox&format=json&' . Session::getFormToken() . '=1';
 
         $s = array();
         $s[] = 'function phAjaxChangeData' . $typeView . '(phProductId, phDataA1, phDataA2){';
@@ -747,7 +761,7 @@ final class PhocacartRenderJs
 /*
         $s[] = '})';
         $s[] = ' ';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }*/
 
 
@@ -767,7 +781,7 @@ final class PhocacartRenderJs
         }
 
 
-        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=checkout.changepricebox&format=json&' . JSession::getFormToken() . '=1';
+        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=checkout.changepricebox&format=json&' . Session::getFormToken() . '=1';
 
         $s = array();
         $s[] = 'function phAjaxChangePrice' . $typeView . '(phProductId, phDataA1, phDataA2){';
@@ -866,7 +880,7 @@ final class PhocacartRenderJs
 
         $s[] = '})';
         $s[] = ' ';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }*/
 
     /*
@@ -885,7 +899,7 @@ final class PhocacartRenderJs
         }
 
 
-        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=checkout.changeidbox&format=json&' . JSession::getFormToken() . '=1';
+        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=checkout.changeidbox&format=json&' . Session::getFormToken() . '=1';
 
         $s = array();
         $s[] = 'function phAjaxChangeId' . $typeView . '(phProductId, phDataA1, phDataA2){';
@@ -963,7 +977,7 @@ final class PhocacartRenderJs
 
         $s[] = '})';
         $s[] = ' ';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }*/
 
 
@@ -983,7 +997,7 @@ final class PhocacartRenderJs
             return false;
         }
 
-        $urlAjax = JURI::base(true) . '/index.php?option=com_phocacart&task=checkout.changestockbox&format=json&' . JSession::getFormToken() . '=1';
+        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=checkout.changestockbox&format=json&' . Session::getFormToken() . '=1';
 
        /* $s[] = ' ';
         $s[] = '/* Function phAjaxChangeStock *//* ';
@@ -1090,7 +1104,7 @@ final class PhocacartRenderJs
 
         $s[] = '})';
         $s[] = ' ';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }*/
 
     /*
@@ -1099,7 +1113,7 @@ final class PhocacartRenderJs
 
     public static function getPriceFormatJavascript($price_decimals, $price_dec_symbol, $price_thousands_sep, $price_currency_symbol, $price_prefix, $price_suffix, $price_format) {
 
-        //JFactory::getDocument()->addScript(JURI::root(true).'/media/com_phocacart/js/number_format.js');
+        //JFactory::getDocument()->addScript(JUri::root(true).'/media/com_phocacart/js/number_format.js');
         $s = array();
         $s[] = 'function phGetPriceFormat($price) {';
         $s[] = '	var $negative = 0;';
@@ -1128,7 +1142,7 @@ final class PhocacartRenderJs
         $s[] = '}';
         $s[] = ' ';
 
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }
 
 
@@ -1166,7 +1180,7 @@ final class PhocacartRenderJs
 
         $s[] = 'jQuery(function() {';
         $s[] = '   if (jQuery("#ph-msg-ns").length > 0){';
-        $s[] = '      jQuery(document).scrollTop( jQuery("#system-message").offset().top );';
+        $s[] = '      jQuery(document).scrollTop( jQuery("#ph-msg-ns").parent().offset().top );';
         //$s[] = '      jQuery(\'html,body\').animate({scrollTop: jQuery("#system-message").offset().top}, 1500 );';
 
         if ($scrollTo != '') {
@@ -1182,7 +1196,7 @@ final class PhocacartRenderJs
         $s[] = '   }';
         $s[] = '});';
 
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }
 
     /**
@@ -1204,7 +1218,7 @@ final class PhocacartRenderJs
         $s[] = '       jQuery( \'.' . $classDestination . '\').html(text);';
         $s[] = '   })';
         $s[] = '})';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }
 
     /*
@@ -1222,7 +1236,7 @@ final class PhocacartRenderJs
         $s[] = '    }';
         $s[] = '  });';
         $s[] = '});';
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
     }
     */
 
@@ -1239,20 +1253,26 @@ final class PhocacartRenderJs
             $s[] = '      var src = jQuery(this).attr("data-src");';
             $s[] = '      var height = "100%";';//jQuery(this).attr("data-height") || 300;// Does not work and it is solved by CSS
             $s[] = '      var width = "100%";';//jQuery(this).attr("data-width") || 400;
-            $s[] = '      var id = "#" + jQuery(this).attr("data-id");';
-            $s[] = '      var idIframe = id + " iframe";';
+            $s[] = '      var id = jQuery(this).attr("data-id");';
+            $s[] = '      var idIframe = "#" + id + " iframe";';
 
             // Loaded dynamically to not have previous src in iframe, see: components/com_phocacart/layouts/popup_container_iframe.php
-            $s[] = '      var idBody = id + " .modal-body";';
+            $s[] = '      var idBody = "#" + id + " .modal-body";';
             $s[] = '      jQuery(idBody).html(\'<iframe frameborder="0"></iframe>\');';
             // end iframe could be a past of layout file
 
             $s[] = '      jQuery(idIframe).attr({"src":src, "height": height, "width": width});';
-            $s[] = '      jQuery(id).modal();';
+            //$s[] = '      jQuery(id).modal();';
+
+        // Is loaded by HTML
+        //    $s[] = '      var modal = new bootstrap.Modal(document.getElementById(id), {});';
+        //    $s[] = '      modal.show();';
+
+
             $s[] = '   });';
             $s[] = ' });';
 
-            JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+            Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
         }
     }
 

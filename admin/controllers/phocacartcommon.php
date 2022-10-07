@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.controllerform');
 
-class PhocaCartCpControllerPhocaCartCommon extends JControllerForm
+class PhocaCartCpControllerPhocaCartCommon extends FormController
 {
 	protected $option	= 'com_phocacart';
 	
@@ -19,7 +21,7 @@ class PhocaCartCpControllerPhocaCartCommon extends JControllerForm
 
 	
 	protected function allowAdd($data = array()) {
-		$user		= JFactory::getUser();
+		$user		= Factory::getUser();
 		$allow		= null;
 		$allow	= $user->authorise('core.create', 'com_phocacart');
 		if ($allow === null) {
@@ -30,7 +32,7 @@ class PhocaCartCpControllerPhocaCartCommon extends JControllerForm
 	}
 
 	protected function allowEdit($data = array(), $key = 'id') {
-		$user		= JFactory::getUser();
+		$user		= Factory::getUser();
 		$allow		= null;
 		$allow	= $user->authorise('core.edit', 'com_phocacart');
 		if ($allow === null) {

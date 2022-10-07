@@ -7,19 +7,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
-$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
-$layoutA	= new JLayoutFile('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
-$layoutA2	= new JLayoutFile('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
-$layoutA3	= new JLayoutFile('button_external_link', null, array('component' => 'com_phocacart'));
+$layoutP	= new FileLayout('product_price', null, array('component' => 'com_phocacart'));
+$layoutS	= new FileLayout('product_stock', null, array('component' => 'com_phocacart'));
+$layoutA	= new FileLayout('button_add_to_cart_item', null, array('component' => 'com_phocacart'));
+$layoutA2	= new FileLayout('button_buy_now_paddle', null, array('component' => 'com_phocacart'));
+$layoutA3	= new FileLayout('button_external_link', null, array('component' => 'com_phocacart'));
 
-//$layoutQV 	= new JLayoutFile('popup_quickview', null, array('component' => 'com_phocacart'));
-$layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
-$layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
-$layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
+//$layoutQV 	= new FileLayout('popup_quickview', null, array('component' => 'com_phocacart'));
+$layoutAB	= new FileLayout('attribute_options_box', null, array('component' => 'com_phocacart'));
+$layoutPOQ	= new FileLayout('product_order_quantity', null, array('component' => 'com_phocacart'));
+$layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 
-$close = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>';
+$close = '<button type="button" class="'.$this->s['c']['modal-btn-close'].'"'.$this->s['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '.$this->s['a']['data-bs-dismiss-modal'].' ></button>';
 
 $x = $this->item[0];
 ?>
@@ -27,15 +31,14 @@ $x = $this->item[0];
     <div class="<?php echo $this->s['c']['modal-dialog'] ?> <?php echo $this->s['c']['modal-lg'] ?>">
       <div class="<?php echo $this->s['c']['modal-content'] ?>">
         <div class="<?php echo $this->s['c']['modal-header'] ?>">
-          <?php echo $this->s['c']['class-type'] != 'bs4' ? $close : '' ?>
-		  <h4><span class="<?php echo $this->s['i']['quick-view'] ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
-            <?php echo $this->s['c']['class-type'] == 'bs4' ? $close : '' ?>
+		 <h5 class="<?php echo $this->s['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($this->s['i']['quick-view'], '', ' ') . Text::_('COM_PHOCACART_QUICK_VIEW'); ?></h5>
+            <?php echo $close ?>
         </div>
         <div class="<?php echo $this->s['c']['modal-body'] ?>"><?php
 
 
 //echo '<h1>'.$x->title.'</h1>';
-echo '<div class="row">';
+echo '<div class="'. $this->s['c']['row'].'">';
 
 // === IMAGE PANEL
 echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
@@ -57,7 +60,7 @@ if ($imageA != '') {
 	$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
 }
 
-$link 	= JURI::base(true).'/'.$imageL->rel;
+$link 	= Uri::base(true).'/'.$imageL->rel;
 
 if (isset($image->rel) && $image->rel != '') {
 
@@ -84,10 +87,10 @@ if (isset($image->rel) && $image->rel != '') {
     $d						= array();
     $d['t']					= $this->t;
     $d['s']					= $this->s;
-    $d['src']				= JURI::base(true).'/'.$image->rel;
-    $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
-    $d['data-image']		= JURI::base(true).'/'.$image->rel;// Default image - when changed by javascript back to default
-    $d['data-image-webp']	= JURI::base(true).'/'.$image->rel_webp;// Default image - when changed by javascript back to default
+    $d['src']				= Uri::base(true).'/'.$image->rel;
+    $d['srcset-webp']		= Uri::base(true).'/'.$image->rel_webp;
+    $d['data-image']		= JUri::base(true).'/'.$image->rel;// Default image - when changed by javascript back to default
+    $d['data-image-webp']	= JUri::base(true).'/'.$image->rel_webp;// Default image - when changed by javascript back to default
     $d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $image->rel);
     $d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
     $d['style']				= '';
@@ -148,13 +151,13 @@ if ($this->t['can_display_price']) {
 	echo$layoutP->render($d);
 }
 	if ( isset($x->description) && $x->description != '') {
-		echo '<div class="ph-desc">'. Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $x->description). '</div>';
+		echo '<div class="ph-desc">'. HTMLHelper::_('content.prepare', $x->description). '</div>';
 	}
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
 	if ($pointsN) {
 		echo '<div class="ph-item-reward-box">';
-		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
+		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
 
 		echo '<div class="ph-reward">'.$pointsN.'</div>';
 		echo '</div>';
@@ -165,7 +168,7 @@ if ($this->t['can_display_price']) {
 	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
 	if ($pointsR) {
 		echo '<div class="ph-item-reward-box">';
-		echo '<div class="ph-reward-txt">'.JText::_('COM_PHOCACART_REWARD_POINTS').'</div>';
+		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').'</div>';
 
 		echo '<div class="ph-reward">'.$pointsR.'</div>';
 		echo '</div>';
@@ -175,7 +178,7 @@ if ($this->t['can_display_price']) {
 
 	if (isset($x->manufacturertitle) && $x->manufacturertitle != '') {
 		echo '<div class="ph-item-manufacturer-box">';
-		echo '<div class="ph-manufacturer-txt">'.JText::_('COM_PHOCACART_MANUFACTURER').':</div>';
+		echo '<div class="ph-manufacturer-txt">'.Text::_('COM_PHOCACART_MANUFACTURER').':</div>';
 		echo '<div class="ph-manufacturer">';
 		echo PhocacartRenderFront::displayLink($x->manufacturertitle, $x->manufacturerlink);
 		echo '</div>';
@@ -203,6 +206,7 @@ if ($this->t['can_display_price']) {
 			$d['class']					= 'ph-item-stock-box';
 			$d['product_id']			= (int)$x->id;
 			$d['typeview']				= 'ItemQuick';
+            $d['stock_status_class']	= isset($this->t['stock_status']['stock_status_class']) ? $this->t['stock_status']['stock_status_class'] : '';
 			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
 			echo $layoutS->render($d);
 		}
@@ -210,7 +214,7 @@ if ($this->t['can_display_price']) {
 		if($this->t['stock_status']['min_quantity']) {
 			$dPOQ						= array();
 			$dPOQ['s']					= $this->s;
-			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
+			$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_quantity'];
 			echo $layoutPOQ->render($dPOQ);
 		}
@@ -218,7 +222,7 @@ if ($this->t['can_display_price']) {
 		if($this->t['stock_status']['min_multiple_quantity']) {
 			$dPOQ						= array();
 			$dPOQ['s']					= $this->s;
-			$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
+			$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
 			echo $layoutPOQ->render($dPOQ);
 		}

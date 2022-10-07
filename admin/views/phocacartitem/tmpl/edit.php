@@ -7,12 +7,22 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 // ASSOCIATION
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 
-$app   = JFactory::getApplication();
+
+// Custom fields
+$this->useCoreUI = true;
+
+$app   = Factory::getApplication();
 $input = $app->input;
 $r     = $this->r;
 
@@ -33,16 +43,19 @@ function phCheckRequestStatus(i, task) {
             phCheckRequestStatus(i, task);
         }, 1000);
     } else {
-        if (task == "' . $this->t['task'] . '.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+
+
+        if (task != "'. $this->t['task'].'.cancel" && task != "phocacartwizard.backtowizard" && document.getElementById("jform_catid_multiple").value == "") {
+            alert("'. $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(Text::_('COM_PHOCACART_ERROR_CATEGORY_NOT_SELECTED')).'");
+        } else if (task == "' . $this->t['task'] . '.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
             Joomla.submitform(task, document.getElementById("adminForm"));
 
             /* Close Modal */
             if (task !== "phocacartitem.apply") {
                 window.parent.jQuery("#phocacartitemEdit' . $this->item->id . 'Modal").modal("hide");
             }
-        }
-        else {
-            Joomla.renderMessages({error: ["' . JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true) . '"]});
+        } else {
+            Joomla.renderMessages({error: ["' . Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true) . '"]});
         }
     }
 }
@@ -54,7 +67,11 @@ Joomla.submitbutton = function(task) {
 JFactory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
-$assoc = JLanguageAssociations::isEnabled();
+$assoc = Associations::isEnabled();
+
+
+
+
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
 $layout  = $isModal ? 'modal' : 'edit';
@@ -67,24 +84,28 @@ echo $r->startForm($this->t['o'], $this->t['task'], (int)$this->item->id, 'admin
 // First Column
 echo '<div class="span12 form-horizontal">';
 $tabs                   = array();
-$tabs['general']        = JText::_($this->t['l'] . '_GENERAL_OPTIONS');
-$tabs['image']          = JText::_($this->t['l'] . '_IMAGE_OPTIONS');
-$tabs['attributes']     = JText::_($this->t['l'] . '_ATTRIBUTES');
-$tabs['specifications'] = JText::_($this->t['l'] . '_SPECIFICATIONS');
-$tabs['related']        = JText::_($this->t['l'] . '_RELATED_PRODUCTS');
-$tabs['stock']          = JText::_($this->t['l'] . '_STOCK_OPTIONS');
-$tabs['discount']       = JText::_($this->t['l'] . '_DISCOUNT_OPTIONS');
-$tabs['download']       = JText::_($this->t['l'] . '_DOWNLOAD_OPTIONS');
-$tabs['size']           = JText::_($this->t['l'] . '_SIZE_OPTIONS');
-$tabs['reward']         = JText::_($this->t['l'] . '_REWARD_POINTS');
-$tabs['publishing']     = JText::_($this->t['l'] . '_PUBLISHING_OPTIONS');
-$tabs['feed']           = JText::_($this->t['l'] . '_FEED_OPTIONS');
-$tabs['metadata']       = JText::_($this->t['l'] . '_METADATA_OPTIONS');
+$tabs['general']        = Text::_($this->t['l'] . '_GENERAL_OPTIONS');
+$tabs['image']          = Text::_($this->t['l'] . '_IMAGE_OPTIONS');
+$tabs['attributes']     = Text::_($this->t['l'] . '_ATTRIBUTES');
+$tabs['specifications'] = Text::_($this->t['l'] . '_SPECIFICATIONS');
+$tabs['related']        = Text::_($this->t['l'] . '_RELATED_PRODUCTS');
+$tabs['stock']          = Text::_($this->t['l'] . '_STOCK_OPTIONS');
+$tabs['discount']       = Text::_($this->t['l'] . '_DISCOUNT_OPTIONS');
+$tabs['download']       = Text::_($this->t['l'] . '_DOWNLOAD_OPTIONS');
+$tabs['size']           = Text::_($this->t['l'] . '_SIZE_OPTIONS');
+$tabs['reward']         = Text::_($this->t['l'] . '_REWARD_POINTS');
+$tabs['publishing']     = Text::_($this->t['l'] . '_PUBLISHING_OPTIONS');
+$tabs['feed']           = Text::_($this->t['l'] . '_FEED_OPTIONS');
+$tabs['metadata']       = Text::_($this->t['l'] . '_METADATA_OPTIONS');
+//$tabs['fields']       = T ext::_($this->t['l'] . '_FIELDS');
 if (!$isModal && $assoc) {
-    $tabs['associations'] = JText::_($this->t['l'] . '_ASSOCIATIONS');
+    $tabs['associations'] = Text::_($this->t['l'] . '_ASSOCIATIONS');
 }
 
 echo $r->navigation($tabs);
+
+$formArray = array ('title', 'alias');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
 
@@ -97,7 +118,7 @@ $textButton = 'COM_PHOCACART_CUSTOMER_GROUP_PRICES';
 $w          = 500;
 $h          = 400;
 
-echo '<div class="ph-float-right ph-admin-additional-box">';
+echo '<div class="ph-admin-additional-box">';
 
 
 if ($this->item->image != '') {
@@ -106,8 +127,8 @@ if ($this->item->image != '') {
     echo '<div class="ph-admin-additional-box-img-box"><img src="' . Juri::root() . $image->rel . '" alt="" /></div><hr />';
 }
 
-$linkStatus = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpricegroup&tmpl=component&id=' . (int)$this->item->id);
-echo '<a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButton) . '</a>';
+$linkStatus = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpricegroup&tmpl=component&id=' . (int)$this->item->id);
+echo '<a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 
@@ -118,8 +139,8 @@ $textButton = 'COM_PHOCACART_PRODUCT_PRICE_HISTORY';
 $w          = 500;
 $h          = 400;
 
-$linkStatus = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpricehistory&tmpl=component&id=' . (int)$this->item->id);
-echo '<br /><a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButton) . '</a>';
+$linkStatus = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpricehistory&tmpl=component&id=' . (int)$this->item->id);
+echo '<br /><a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 
@@ -139,9 +160,9 @@ if ((int)$this->item->id > 0) {
         $linkPreview = PhocacartPath::getRightPathLink($linkPreview);
 
 
-        echo '<br /><a href="#' . $idPr . '" role="button" class="ph-u ' . $idPr . 'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="' . $linkPreview . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButton) . '</a>';
+        echo '<br /><a href="#' . $idPr . '" role="button" class="ph-u ' . $idPr . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkPreview . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 
-        $footer = '<span class="ph-warning-modal-window">' . JText::_('COM_PHOCACART_YOU_ARE_PREVIEWING_LIVE_PAGE') . '</span><button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('COM_PHOCACART_CLOSE') . '</button>';
+        $footer = '<span class="ph-warning-modal-window">' . Text::_('COM_PHOCACART_YOU_ARE_PREVIEWING_LIVE_PAGE') . '</span><button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-hidden="true">' . Text::_('COM_PHOCACART_CLOSE') . '</button>';
         echo $r->modalWindowDynamic($idPr, $textButton, $w, $h, false, 0, '', '', $footer);
 
     }
@@ -150,7 +171,10 @@ if ((int)$this->item->id > 0) {
 echo '</div>';
 
 // ORDERING cannot be used
-$formArray = array('title', 'alias', 'price', 'price_original', 'tax_id', 'catid_multiple', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
+
+// $formArray = array('title', 'alias',
+
+$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
@@ -160,6 +184,8 @@ $formArray = array('features');
 echo $r->group($this->form, $formArray, 1);
 //$formArray = array ('upc', 'ean', 'jan', 'mpn', 'isbn');
 //echo $r->group($this->form, $formArray);
+$formArray = array ('special_parameter', 'special_image');
+echo $r->group($this->form, $formArray);
 
 
 // ASSOCIATION
@@ -177,7 +203,7 @@ echo $r->startTab('image', $tabs['image']);
 
 $formArray = array('image');
 echo $r->group($this->form, $formArray);
-echo '<h3>' . JText::_($this->t['l'] . '_ADDITIONAL_IMAGES') . '</h3>';
+echo '<h3>' . Text::_($this->t['l'] . '_ADDITIONAL_IMAGES') . '</h3>';
 
 $formArray = array('additional_images');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
@@ -198,7 +224,7 @@ $urlO4 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=com
 
 */
 echo $r->startTab('attributes', $tabs['attributes']);
-echo '<h3>' . JText::_($this->t['l'] . '_ATTRIBUTES') . '</h3>';
+echo '<h3>' . Text::_($this->t['l'] . '_ATTRIBUTES') . '</h3>';
 $formArray = array('attributes');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
@@ -212,7 +238,7 @@ $urlO2 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=com
 $urlO3 	= 'index.php?option=com_phocacart&amp;view=phocacartmanager&amp;tmpl=component&amp;manager=productimage&amp;field=jform_specimage_small';
 */
 echo $r->startTab('specifications', $tabs['specifications']);
-echo '<h3>' . JText::_($this->t['l'] . '_SPECIFICATIONS') . '</h3>';
+echo '<h3>' . Text::_($this->t['l'] . '_SPECIFICATIONS') . '</h3>';
 $formArray = array('specifications');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
@@ -233,8 +259,8 @@ $textButton = 'COM_PHOCACART_ADVANCED_STOCK_OPTIONS';
 $w          = 500;
 $h          = 400;
 
-$linkStatus = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditstockadvanced&tmpl=component&id=' . (int)$this->item->id);
-echo '<div class="ph-float-right ph-admin-additional-box"><a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButton) . '</a>';
+$linkStatus = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditstockadvanced&tmpl=component&id=' . (int)$this->item->id);
+echo '<div class="ph-float-right ph-admin-additional-box"><a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 echo '</div>';
@@ -246,7 +272,7 @@ echo $r->endTab();
 
 // PRODUCT DISCOUNTS
 echo $r->startTab('discount', $tabs['discount']);
-echo '<h3>' . JText::_($this->t['l'] . '_PRODUCT_DISCOUNT') . '</h3>';
+echo '<h3>' . Text::_($this->t['l'] . '_PRODUCT_DISCOUNT') . '</h3>';
 $formArray = array('discounts');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
@@ -257,7 +283,7 @@ echo $r->startTab('download', $tabs['download']);
 $formArray = array('download_folder', 'download_token', 'download_file', 'download_days');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
 
-echo '<h3>' . JText::_($this->t['l'] . '_ADDITIONAL_DOWNLOAD_FILES') . '</h3>';
+echo '<h3>' . Text::_($this->t['l'] . '_ADDITIONAL_DOWNLOAD_FILES') . '</h3>';
 $formArray = array('additional_download_files');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
@@ -277,8 +303,8 @@ $textButton = 'COM_PHOCACART_CUSTOMER_GROUP_RECEIVED_POINTS';
 $w          = 500;
 $h          = 400;
 
-$linkStatus = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpointgroup&tmpl=component&id=' . (int)$this->item->id);
-echo '<div class="ph-float-right ph-admin-additional-box"><a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButton) . '</a>';
+$linkStatus = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpointgroup&tmpl=component&id=' . (int)$this->item->id);
+echo '<div class="ph-float-right ph-admin-additional-box"><a href="#' . $idMd . '" role="button" class="ph-u ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 
 echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 echo '</div>';
@@ -294,7 +320,7 @@ echo $r->endTab();
 echo $r->startTab('publishing', $tabs['publishing']);
 foreach ($this->form->getFieldset('publish') as $field) {
 
-    echo '<div class="control-group">';
+    echo '<div class="control-group ph-par-'.$field->fieldname.'">';
     if (!$field->hidden) {
         echo '<div class="control-label">' . $field->label . '</div>';
     }
@@ -320,7 +346,7 @@ echo $r->endTab();
 
 
 // ASSOCIATION
-$assoc = JLanguageAssociations::isEnabled();
+$assoc = Associations::isEnabled();
 
 if (!$isModal && $assoc) {
     echo $r->startTab('associations', $tabs['associations']);
@@ -329,6 +355,29 @@ if (!$isModal && $assoc) {
 } else if ($isModal && $assoc) {
     echo '<div class="hidden">' . $this->loadTemplate('associations') . '</div>';
 }
+
+
+
+// Display custom field parameters and ignore current fieldsetsw including all feed fieldsets
+
+$ignoreField = [];
+$ignoreField[] = 'metadata';
+$ignoreField[] = 'publish';
+$ignoreField[] = 'item_associations';
+$ignoreField[] = 'items_parameter';
+$currentFields = $this->form->getFieldsets();
+if (!empty($currentFields)) {
+    foreach ($currentFields as $k => $v) {
+        if (isset($v->name) && strpos($v->name, 'feed_') !== false) {
+            $ignoreField[] = $v->name;
+        }
+    }
+}
+
+
+$this->ignore_fieldsets = $ignoreField;
+echo JLayoutHelper::render('joomla.edit.params', $this);
+
 
 
 echo $r->endTabs();
@@ -340,7 +389,7 @@ echo '</div>';//end span10
 //echo '</div>';//end span2
 echo $r->formInputs($this->t['task']);
 
-if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
     echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
 }
 echo $r->endForm();

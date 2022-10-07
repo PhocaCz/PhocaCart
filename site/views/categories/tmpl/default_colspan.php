@@ -7,7 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$layoutC	= new JLayoutFile('categories_category', null, array('component' => 'com_phocacart'));
+use Joomla\CMS\Layout\FileLayout;
+$layoutC	= new FileLayout('categories_category', null, array('component' => 'com_phocacart'));
 
 $i      = $j = $k = 0;
 $last   = count($this->t['categories']);

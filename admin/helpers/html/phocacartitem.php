@@ -9,6 +9,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\LayoutHelper;
 
 
 use Joomla\Utilities\ArrayHelper;
@@ -20,7 +25,7 @@ JLoader::register('PhocacartitemHelper', JPATH_ADMINISTRATOR . '/components/com_
  *
  * @since  1.6
  */
-abstract class JHtmlPhocacartitem
+abstract class JHTMLPhocacartitem
 {
 	/**
 	 * Get the associated language flags
@@ -39,13 +44,13 @@ abstract class JHtmlPhocacartitem
 		$html = '';
 
 		// Get the associations
-		if ($associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', $productId, 'id', 'alias', false)) {
+		if ($associations = Associations::getAssociations('com_phocacart', '#__phocacart_products', 'com_phocacart.item', $productId, 'id', 'alias', false)) {
 			foreach ($associations as $tag => $associated) {
 				$associations[$tag] = (int) $associated->id;
 			}
 
 			// Get the associated contact items
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true)
 				->select('pi.id, pi.title as title')
 				->select('l.sef as lang_sef, lang_code')
@@ -68,7 +73,7 @@ abstract class JHtmlPhocacartitem
 			if ($items) {
 				foreach ($items as &$item) {
 					$text = strtoupper($item->lang_sef);
-					$url = JRoute::_('index.php?option=com_phocacart&task=phocacartitem.edit&id=' . (int) $item->id);
+					$url = Route::_('index.php?option=com_phocacart&task=phocacartitem.edit&id=' . (int) $item->id);
 
 					$tooltip = htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8');// . '<br />' . JText::sprintf('JCATEGORY_SPRINTF', $item->category_title);
 					$classes = 'hasPopover label label-association label-' . $item->lang_sef;
@@ -79,9 +84,9 @@ abstract class JHtmlPhocacartitem
 				}
 			}
 
-			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.popover');
+			HTMLHelper::_('bootstrap.popover');
 
-			$html = JLayoutHelper::render('joomla.content.associations', $items);
+			$html = LayoutHelper::render('joomla.content.associations', $items);
 		}
 
 
@@ -114,13 +119,13 @@ abstract class JHtmlPhocacartitem
 		if ($canChange)
 		{
 			$html = '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip'
-				. ($value == 1 ? ' active' : '') . '" title="' . Joomla\CMS\HTML\HTMLHelper::_('tooltipText', $state[3])
+				. ($value == 1 ? ' active' : '') . '" title="' . HTMLHelper::_('tooltipText', $state[3])
 				. '"><span class="icon-' . $icon . '" aria-hidden="true"></span></a>';
 		}
 		else
 		{
 			$html = '<a class="btn btn-micro hasTooltip disabled' . ($value == 1 ? ' active' : '') . '" title="'
-			. Joomla\CMS\HTML\HTMLHelper::_('tooltipText', $state[2]) . '"><span class="icon-' . $icon . '" aria-hidden="true"></span></a>';
+			. HTMLHelper::_('tooltipText', $state[2]) . '"><span class="icon-' . $icon . '" aria-hidden="true"></span></a>';
 		}
 
 		return $html;

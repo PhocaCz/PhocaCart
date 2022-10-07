@@ -9,12 +9,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\HTML\HTMLHelper;
 
 class PhocacartAttribute
 {
     public static function getAttributesById($productId, $return = 0) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $query = 'SELECT a.id, a.title, a.alias, a.required, a.type'
             . ' FROM #__phocacart_attributes AS a'
@@ -49,7 +54,7 @@ class PhocacartAttribute
 
     public static function getOptionsById($attributeId, $return = 0) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
 
         $query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type';
@@ -103,19 +108,19 @@ class PhocacartAttribute
 
         // EDIT PHOCACARTATTRIBUTE (attribute class, attribute layouts)
         $o = array(
-            '1' => array(JText::_('COM_PHOCACART_ATTR_TYPE_SELECT'), 0),
-            '2' => array(JText::_('COM_PHOCACART_ATTR_TYPE_COLOR_SELECT'), 0),
-            '3' => array(JText::_('COM_PHOCACART_ATTR_TYPE_IMAGE_SELECT'), 0),
-            '4' => array(JText::_('COM_PHOCACART_ATTR_TYPE_CHECKBOX'), 1),
-            '5' => array(JText::_('COM_PHOCACART_ATTR_TYPE_COLOR_CHECKBOX'), 1),
-            '6' => array(JText::_('COM_PHOCACART_ATTR_TYPE_IMAGE_CHECKBOX'), 1),
-            '7' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_64'), ''),
-            '8' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_128'), ''),
-            '9' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_256'), ''),
-            '10' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_1024'), ''),
-            '11' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048'), ''),
-            '12' => array(JText::_('COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER'), ''),
-            '20' => array(JText::_('COM_PHOCACART_ATTR_TYPE_GIFT'), '')
+            '1' => array(Text::_('COM_PHOCACART_ATTR_TYPE_SELECT'), 0),
+            '2' => array(Text::_('COM_PHOCACART_ATTR_TYPE_COLOR_SELECT'), 0),
+            '3' => array(Text::_('COM_PHOCACART_ATTR_TYPE_IMAGE_SELECT'), 0),
+            '4' => array(Text::_('COM_PHOCACART_ATTR_TYPE_CHECKBOX'), 1),
+            '5' => array(Text::_('COM_PHOCACART_ATTR_TYPE_COLOR_CHECKBOX'), 1),
+            '6' => array(Text::_('COM_PHOCACART_ATTR_TYPE_IMAGE_CHECKBOX'), 1),
+            '7' => array(Text::_('COM_PHOCACART_ATTR_TYPE_TEXT_64'), ''),
+            '8' => array(Text::_('COM_PHOCACART_ATTR_TYPE_TEXT_128'), ''),
+            '9' => array(Text::_('COM_PHOCACART_ATTR_TYPE_TEXT_256'), ''),
+            '10' => array(Text::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_1024'), ''),
+            '11' => array(Text::_('COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048'), ''),
+            '12' => array(Text::_('COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER'), ''),
+            '20' => array(Text::_('COM_PHOCACART_ATTR_TYPE_GIFT'), '')
 
 
         );
@@ -233,7 +238,7 @@ class PhocacartAttribute
     }
 
     public static function getRequiredArray() {
-        $o = array('0' => JText::_('COM_PHOCACART_NO'), '1' => JText::_('COM_PHOCACART_YES'));
+        $o = array('0' => Text::_('COM_PHOCACART_NO'), '1' => Text::_('COM_PHOCACART_YES'));
         return $o;
     }
 
@@ -254,8 +259,8 @@ class PhocacartAttribute
 
 
         if ((int)$productId > 0) {
-            $db             = JFactory::getDBO();
-            $app            = JFactory::getApplication();
+            $db             = Factory::getDBO();
+            $app            = Factory::getApplication();
             $pathAttributes = PhocacartPath::getPath('attributefile');// to check if attribute option download file exists
 
 
@@ -270,7 +275,7 @@ class PhocacartAttribute
                 foreach ($attributesArray as $k => $v) {
 
                     if (empty($v['title'])) {
-                        $v['title'] = JFactory::getDate()->format("Y-m-d-H-i-s");
+                        $v['title'] = Factory::getDate()->format("Y-m-d-H-i-s");
                     }
 
                     if (empty($v['alias'])) {
@@ -456,14 +461,14 @@ class PhocacartAttribute
                                 $v2['download_folder'] = PhocacartUtils::getToken('folder');
 
 
-                                if ($copy == 2 && $v2['download_file'] != '' && \Joomla\CMS\Filesystem\File::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
+                                if ($copy == 2 && $v2['download_file'] != '' && File::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
 
                                     $newDownloadFile = str_replace($oldDownloadFolder, $v2['download_folder'], $v2['download_file']);
-                                    if (!\Joomla\CMS\Filesystem\Folder::create($pathAttributes['orig_abs_ds'] . $v2['download_folder'])) {
+                                    if (!Folder::create($pathAttributes['orig_abs_ds'] . $v2['download_folder'])) {
                                         // Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
                                     }
 
-                                    if (!\Joomla\CMS\Filesystem\File::copy($pathAttributes['orig_abs_ds'] . $v2['download_file'], $pathAttributes['orig_abs_ds'] . $newDownloadFile)) {
+                                    if (!File::copy($pathAttributes['orig_abs_ds'] . $v2['download_file'], $pathAttributes['orig_abs_ds'] . $newDownloadFile)) {
                                         // Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
                                     }
                                     $v2['download_file'] = $newDownloadFile;
@@ -477,17 +482,17 @@ class PhocacartAttribute
 
                             // CHECK DOWNLOAD FILE
                             if ($v2['download_file'] != '' && $v2['download_folder'] == '') {
-                                $msg = JText::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
-                                $msg .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_DOES_NOT_INCLUDE_DOWNLOAD_FOLDER');
+                                $msg = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
+                                $msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_DOES_NOT_INCLUDE_DOWNLOAD_FOLDER');
                                 $app->enqueueMessage($msg, 'error');
 
                             }
 
                             // If download_file does not exist on the server, remove it
-                            if ($v2['download_file'] != '' && !JFile::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
+                            if ($v2['download_file'] != '' && !File::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
                                 $v2['download_file'] = '';
-                                $msg                 = JText::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
-                                $msg                 .= JText::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST');
+                                $msg                 = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
+                                $msg                 .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST');
                                 $app->enqueueMessage($msg, 'error');
                             }
 
@@ -584,8 +589,8 @@ class PhocacartAttribute
 
                         // One or more default values removed
                         if ($dVR == 1) {
-                            $msg = JText::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
-                            $msg .= JText::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_DEFAULT_VALUES_OR_MULTIPLE_DEFAULT_VALUES');
+                            $msg = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
+                            $msg .= Text::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_DEFAULT_VALUES_OR_MULTIPLE_DEFAULT_VALUES');
                             $app->enqueueMessage($msg, 'error');
                         }
                     }
@@ -672,8 +677,8 @@ class PhocacartAttribute
         if (!empty($folderFiles)) {
             foreach ($folderFiles as $kF => $vF) {
                 // Folder will remove the file(s) too
-                if (\Joomla\CMS\Filesystem\Folder::exists($pathAttributes['orig_abs_ds'] . $vF['download_folder'])) {
-                    \Joomla\CMS\Filesystem\Folder::delete($pathAttributes['orig_abs_ds'] . $vF['download_folder']);
+                if (Folder::exists($pathAttributes['orig_abs_ds'] . $vF['download_folder'])) {
+                    Folder::delete($pathAttributes['orig_abs_ds'] . $vF['download_folder']);
                 }
             }
         }
@@ -684,8 +689,8 @@ class PhocacartAttribute
 
 
         if ((int)$productId > 0) {
-            $db 	= JFactory::getDBO();
-            $app	= JFactory::getApplication();
+            $db 	= Factory::getDBO();
+            $app	= Factory::getApplication();
 
 
             // REMOVE OPTIONS
@@ -808,8 +813,8 @@ class PhocacartAttribute
 
                         // One or more default values removed
                         if ($dVR == 1) {
-                            $msg = JText::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
-                            $msg .= JText::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_MULTIPLE_DEFAULT_VALUES');
+                            $msg = Text::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
+                            $msg .= Text::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_MULTIPLE_DEFAULT_VALUES');
                             $app->enqueueMessage($msg, 'error');
                         }
                     }
@@ -849,7 +854,7 @@ class PhocacartAttribute
 
     public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
-        $db           = JFactory::getDBO();
+        $db           = Factory::getDBO();
         $orderingText = PhocacartOrdering::getOrderingText($ordering, 5);
 
 
@@ -863,6 +868,8 @@ class PhocacartAttribute
 
         $lefts[] = ' #__phocacart_attributes AS at ON at.id = v.attribute_id';
 
+        $productTableAdded = 0;
+
         if ($onlyAvailableProducts == 1) {
 
             if ($lang != '' && $lang != '*') {
@@ -870,6 +877,7 @@ class PhocacartAttribute
             }
 
             $lefts[] = ' #__phocacart_products AS p ON at.product_id = p.id';
+            $productTableAdded = 1;
             $rules   = PhocacartProduct::getOnlyAvailableProductRules();
             $wheres  = array_merge($wheres, $rules['wheres']);
             $lefts   = array_merge($lefts, $rules['lefts']);
@@ -878,12 +886,16 @@ class PhocacartAttribute
             if ($lang != '' && $lang != '*') {
                 $wheres[] = PhocacartUtilsSettings::getLangQuery('p.language', $lang);
                 $lefts[]  = ' #__phocacart_products AS p ON at.product_id = p.id';
+                $productTableAdded = 1;
             }
         }
 
         if (!empty($filterProducts)) {
             $productIds = implode(',', $filterProducts);
             $wheres[]   = 'p.id IN (' . $productIds . ')';
+            if ($productTableAdded == 0) {
+                $lefts[]  = ' #__phocacart_products AS p ON at.product_id = p.id';
+            }
         }
 
         $q = ' SELECT ' . $columns
@@ -935,8 +947,8 @@ class PhocacartAttribute
     }
 
     public static function getAttributeValue($id, $attributeId) {
-        $db    = JFactory::getDBO();
-        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
+        $db    = Factory::getDBO();
+        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
             . ' aa.id as aid, aa.title as atitle, aa.type as atype'
             . ' FROM #__phocacart_attribute_values AS a'
             . ' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
@@ -993,7 +1005,7 @@ class PhocacartAttribute
         }
 
         if ((int)$id > 0 && (int)$value == 0) {
-            $db =JFactory::getDBO();
+            $db =Factory::getDBO();
             $query = ' SELECT a.required'
             .' FROM #__phocacart_attributes AS a'
             .' WHERE a.id = '.(int)$id
@@ -1024,7 +1036,7 @@ class PhocacartAttribute
 
         $wheres		= array();
         $wheres[] 	= ' a.id = '.(int)$productId;
-        $db 		= JFactory::getDBO();
+        $db 		= Factory::getDBO();
         $query = ' SELECT a.id,'
         .' at.required AS attribute_required'
         .' FROM #__phocacart_products AS a'
@@ -1049,7 +1061,7 @@ class PhocacartAttribute
 
         $wheres   = array();
         $wheres[] = ' a.id = ' . (int)$productId;
-        $db       = JFactory::getDBO();
+        $db       = Factory::getDBO();
 
         // 1) Select required attributes
         $query    = ' SELECT at.id, at.type, "1" AS required_type, "" AS options'
@@ -1079,7 +1091,7 @@ class PhocacartAttribute
 
                 foreach($attributesOptions as $k => $v) {
 
-                    if (isset($v['id']) && $v['id'] > 0) {
+                    if (isset($v['id']) && $v['id'] > 0 && isset($v['option_id']) && $v['option_id'] > 0) {
                         $idA = $v['id'];
                         $idO = $v['option_id'];
                         $attributes[$idA]['id']              = $idA;
@@ -1631,7 +1643,7 @@ class PhocacartAttribute
         $pI = array();
         if (empty($requiredArray)) {
             $pIPK                         = $id . '::';
-            $pI[$pIPK]['title']           = '(' . JText::_('COM_PHOCACART_NO_ATTRIBUTES') . ')';
+            $pI[$pIPK]['title']           = '(' . Text::_('COM_PHOCACART_NO_ATTRIBUTES') . ')';
             $pI[$pIPK]['cannotcombinate'] = 0;
             $pI[$pIPK]['product_id']      = $id;
             $pI[$pIPK]['product_title']   = $title;
@@ -1651,7 +1663,7 @@ class PhocacartAttribute
 
     public static function getCombinationsDataByProductId($id) {
         if ($id > 0) {
-            $db    = JFactory::getDBO();
+            $db    = Factory::getDBO();
             $query = ' SELECT a.product_id, a.product_key, a.stock, a.price, a.sku, a.ean, a.image'
                 . ' FROM #__phocacart_product_stock AS a'
                 . ' WHERE a.product_id = ' . (int)$id
@@ -1673,7 +1685,7 @@ class PhocacartAttribute
 
     public static function getCombinationsDataByKey($productKey) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $query = 'SELECT product_id, product_key, stock, price, sku, ean, image'
             . ' FROM #__phocacart_product_stock'
@@ -1688,7 +1700,7 @@ class PhocacartAttribute
 
     public static function getCombinationsStockByKey($productKey) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $query = 'SELECT stock'
             . ' FROM #__phocacart_product_stock'
@@ -1707,7 +1719,7 @@ class PhocacartAttribute
 
     public static function getCombinationsPriceByKey($productKey) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $query = 'SELECT price'
             . ' FROM #__phocacart_product_stock'
@@ -1727,7 +1739,7 @@ class PhocacartAttribute
 
     public static function getCombinationsStockById($productId, $returnArray = 0) {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $query = 'SELECT a.id, a.product_id, a.product_key, a.stock, a.attributes'
             . ' FROM #__phocacart_product_stock AS a'
@@ -1746,7 +1758,7 @@ class PhocacartAttribute
     public static function storeCombinationsById($productId, $aosArray, $new = 0) {
 
         if ((int)$productId > 0) {
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
 
 
             $notDeleteItems = array();
@@ -1875,7 +1887,7 @@ class PhocacartAttribute
 
     public static function getAttributeType($id) {
 
-        $db       = JFactory::getDBO();
+        $db       = Factory::getDBO();
         $wheres   = array();
         $wheres[] = ' id = ' . (int)$id;
         $query    = ' SELECT type'
@@ -1890,7 +1902,7 @@ class PhocacartAttribute
 
     public static function getOptionType($id) {
 
-        $db       = JFactory::getDBO();
+        $db       = Factory::getDBO();
         $wheres   = array();
         $wheres[] = ' id = ' . (int)$id;
         $query    = ' SELECT type'
@@ -1905,7 +1917,7 @@ class PhocacartAttribute
 
     public static function getAttributeOptionDownloadFilesByOrder($orderId, $productId, $orderProductId) {
 
-        $db       = JFactory::getDBO();
+        $db       = Factory::getDBO();
         $wheres   = array();
         $wheres[] = ' oa.order_id = ' . (int)$orderId;
         $wheres[] = ' oa.product_id = ' . (int)$productId;
@@ -1941,7 +1953,7 @@ class PhocacartAttribute
     /*	public static function storeOptionsByAttributeId($attributeId, $optArray) {
 
             if ((int)$attributeId > 0) {
-                $db =JFactory::getDBO();
+                $db =Factory::getDBO();
                 $query = ' DELETE '
                         .' FROM #__phocacart_attribute_values'
                         . ' WHERE attribute_id = '. (int)$attributeId;
@@ -1973,7 +1985,7 @@ class PhocacartAttribute
 
         public static function getAllAttributesSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
 
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
             $query = 'SELECT a.id AS value, CONCAT(a.title_attribute,\' (\', a.title,  \')\') AS text'
                     .' FROM #__phocacart_attributes AS a'
                     . ' ORDER BY '. $order;
@@ -1981,7 +1993,7 @@ class PhocacartAttribute
 
             $attributes = $db->loadObjectList();
 
-            $attributesO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $attributes, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+            $attributesO = HTMLHelper::_('select.genericlist', $attributes, $name, 'class="form-control" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
             return $attributesO;
         }
@@ -1989,7 +2001,7 @@ class PhocacartAttribute
         */
     public static function getActiveAttributeValues($items, $ordering) {
 
-        $db       = JFactory::getDbo();
+        $db       = Factory::getDbo();
         $o        = array();
         $wheres   = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 5);//at v

@@ -9,12 +9,21 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Version;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 class PhocacartUtils
 {
 	public static function setVars( $task = '') {
 
 		$a				= array();
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$a['o'] 		= htmlspecialchars(strip_tags($app->input->get('option')));
 		$a['c'] 		= str_replace('com_', '', $a['o']);
 		$a['n'] 		= 'Phoca' . str_replace('com_phoca', '', $a['o']);
@@ -49,12 +58,12 @@ class PhocacartUtils
 		$component = 'com_phocacart';
 		$folder = JPATH_ADMINISTRATOR .'/components'.'/'.$component;
 
-		if (JFolder::exists($folder)) {
-			$xmlFilesInDir = JFolder::files($folder, '.xml$');
+		if (Folder::exists($folder)) {
+			$xmlFilesInDir = Folder::files($folder, '.xml$');
 		} else {
 			$folder = JPATH_SITE . '/components'.'/'.$component;
-			if (JFolder::exists($folder)) {
-				$xmlFilesInDir = JFolder::files($folder, '.xml$');
+			if (Folder::exists($folder)) {
+				$xmlFilesInDir = Folder::files($folder, '.xml$');
 			} else {
 				$xmlFilesInDir = null;
 			}
@@ -65,7 +74,7 @@ class PhocacartUtils
 		{
 			foreach ($xmlFilesInDir as $xmlfile)
 			{
-				if ($data = \JInstaller::parseXMLInstallFile($folder.'/'.$xmlfile)) {
+				if ($data = Installer::parseXMLInstallFile($folder.'/'.$xmlfile)) {
 					foreach($data as $key => $value) {
 						$xml_items[$key] = $value;
 					}
@@ -82,14 +91,14 @@ class PhocacartUtils
 
 	public static function getAliasName($alias) {
 
-		if (JFactory::getConfig()->get('unicodeslugs') == 1) {
-			$alias= JFilterOutput::stringURLUnicodeSlug($alias);
+		if (Factory::getConfig()->get('unicodeslugs') == 1) {
+			$alias= OutputFilter::stringURLUnicodeSlug($alias);
 		} else {
-			$alias = JFilterOutput::stringURLSafe($alias);
+			$alias = OutputFilter::stringURLSafe($alias);
 		}
 
 		if (trim(str_replace('-', '', $alias)) == '') {
-			$alias = JFactory::getDate()->format("Y-m-d-H-i-s");
+			$alias = Factory::getDate()->format("Y-m-d-H-i-s");
 		}
 		return $alias;
 	}
@@ -117,7 +126,7 @@ class PhocacartUtils
 
 	public static function getToken($type = 'token') {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$secret		= $app->get('secret');
 		$secretPartA= substr($secret, mt_rand(4,15), mt_rand(0,10));
 		$secretPartB= substr($secret, mt_rand(4,15), mt_rand(0,10));
@@ -232,6 +241,14 @@ class PhocacartUtils
 
 	public static function getIp() {
 
+
+		$pC						= PhocacartUtils::getComponentParameters();
+		$store_ip				= $pC->get( 'store_ip', 0 );
+
+		if ($store_ip == 0) {
+			return '';
+		}
+
 		$ip = false;
 		if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) {
 			$ip  = $_SERVER['REMOTE_ADDR'];
@@ -242,8 +259,23 @@ class PhocacartUtils
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
-
 		return $ip;
+	}
+
+	public static function getUserAgent() {
+
+		$pC						= PhocacartUtils::getComponentParameters();
+		$store_user_agent		= $pC->get( 'store_user_agent', 0 );
+
+		if ($store_user_agent == 0) {
+			return '';
+		}
+
+		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+			return (string)$_SERVER['HTTP_USER_AGENT'];
+		}
+
+		return '';
 	}
 
 
@@ -259,10 +291,10 @@ class PhocacartUtils
 	public static function setOptionParameter($parameter, $value = '') {
 
 		$component			= 'com_phocacart';
-		$paramsC			= JComponentHelper::getParams($component) ;
+		$paramsC			= ComponentHelper::getParams($component) ;
 		$paramsC->set($parameter, $value);
 		$data['params'] 	= $paramsC->toArray();
-		$table 				= JTable::getInstance('extension');
+		$table 				= Table::getInstance('extension');
 		$idCom				= $table->find( array('element' => $component ));
 		$table->load($idCom);
 
@@ -327,7 +359,7 @@ class PhocacartUtils
 			break;
 		}
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$db->setQuery($q);
 		$item = $db->loadResult();
 
@@ -349,7 +381,7 @@ class PhocacartUtils
 	// $version - minimum version it must have
 	public static function isJCompatible($version) {
 
-		$currentVersion = new JVersion();
+		$currentVersion = new Version();
 		if($currentVersion->isCompatible($version)) {
 			return true;
 		}
@@ -357,14 +389,14 @@ class PhocacartUtils
 	}
 	public static function setConcatCharCount($count = 16384) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$db->setQuery("SET @@group_concat_max_len = ".(int)$count);
 		$db->execute();
 	}
 
 	public static function issetMessage() {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$message 	= $app->getMessageQueue();
 
 		if (!empty($message)) {
@@ -375,21 +407,21 @@ class PhocacartUtils
 
 	public static function date($date, $format = '') {
 		if ($format == '') {
-			$format = JText::_('DATE_FORMAT_LC2');
+			$format = Text::_('DATE_FORMAT_LC2');
 		}
 		/*$user	= PhocacartUser::getUser();
-		$config = JFactory::getConfig();
-		$dateF 	= JFactory::getDate($date, 'UTC');
+		$config = Factory::getConfig();
+		$dateF 	= Factory::getDate($date, 'UTC');
 		$dateF->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
 		$dateN	= $dateF->format('Y-m-d h:i:s', true, false);
 		//$dateN = JHtml::date($v->date, JText::_('DATE_FORMAT_LC2'));*/
-		$dateN = Joomla\CMS\HTML\HTMLHelper::_('date', $date, $format);
+		$dateN = HTMLHelper::_('date', $date, $format);
 		return $dateN;
 	}
 
 	public static function getComponentParameters() {
 
-		$app 	= JFactory::getApplication();
+		$app 	= Factory::getApplication();
 		$option	= $app->input->get('option');
 		$client	= $app->isClient('administrator') ? 'A' : 'S';
 		return PhocacartUtilsOptions::getOptions('PC', $client, $option);
@@ -419,6 +451,13 @@ class PhocacartUtils
 			$int = (int)$parts[0];
 		}
 		return $int;
+	}
+
+	public static function getNullFromEmpty($value = '') {
+		if ($value  == '') {
+			return 0;
+		}
+		return $value;
 	}
 
 	public static function getDateFromString($string) {
@@ -453,7 +492,7 @@ class PhocacartUtils
 
 	public static function getDefaultTemplate() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$q = 'SELECT template FROM #__template_styles WHERE client_id = 0 AND home = 1;';
 		$db->setQuery($q);
 		$item = $db->loadResult();
@@ -497,7 +536,7 @@ class PhocacartUtils
 	public static function isView($viewToCheck = '') {
 
 		if ($viewToCheck != '') {
-			$app 		= JFactory::getApplication();
+			$app 		= Factory::getApplication();
 			$view 		= $app->input->get('view', '');
 			$option 	= $app->input->get('option', '');
 
@@ -511,7 +550,7 @@ class PhocacartUtils
 	public static function isTypeView($viewToCheck = '') {
 
 		if ($viewToCheck != '') {
-			$app 		= JFactory::getApplication();
+			$app 		= Factory::getApplication();
 			$view 		= $app->input->get('typeview', '');
 			$option 	= $app->input->get('option', '');
 
@@ -525,7 +564,7 @@ class PhocacartUtils
 	public static function isController($controllerToCheck = '') {
 
 		if ($controllerToCheck != '') {
-			$app 		= JFactory::getApplication();
+			$app 		= Factory::getApplication();
 			//$task 		= $app->input->get('task','', 'raw');
 			$controller = $app->input->get('controller', '');// Set in POS controllers
 			$option 	= $app->input->get('option', '');
@@ -551,5 +590,45 @@ class PhocacartUtils
 
 		return false;
 	}
+
+	public static function convertWeightToKg($weight, $unit){
+
+        if ($unit == 'kg') {
+            return $weight;
+        } else if ($unit == 'g') {
+            return $weight/1000;
+        } else if ($unit == 'lb') {
+            return $weight*0.45359237;
+        } else if ($unit == 'oz') {
+            return $weight*0.0283495231;
+        } else {
+            return $weight;
+        }
+
+	}
+
+	public static function convertWeightFromKg($weight, $unit){
+
+        if ($unit == 'kg') {
+            return $weight;
+        } else if ($unit == 'g') {
+            return $weight*1000;
+        } else if ($unit == 'lb') {
+            return $weight/0.45359237;
+        } else if ($unit == 'oz') {
+            return $weight/0.0283495231;
+        } else {
+            return $weight;
+        }
+
+	}
+
+	public static function getNumberFromText($text) {
+
+		return (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
+	}
+
+
+
 }
 ?>

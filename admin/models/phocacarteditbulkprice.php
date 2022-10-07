@@ -7,9 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditBulkprice extends JModelList
+class PhocaCartCpModelPhocaCartEditBulkprice extends ListModel
 {
 	protected	$option 		= 'com_phocacart';
 

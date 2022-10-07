@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartCatalogs extends JViewLegacy
+class PhocaCartCpViewPhocacartCatalogs extends HtmlView
 {
 
 	protected $state;
@@ -22,14 +25,14 @@ class PhocaCartCpViewPhocacartCatalogs extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_PHOCACART_CATALOG'));
+		$document = Factory::getDocument();
+		$document->setTitle(Text::_('COM_PHOCACART_CATALOG'));
 
 		$this->t				= PhocacartUtils::setVars('catalog');
 		$this->s                = PhocacartRenderStyle::getStyles();
 		$this->state			= $this->get('State');
 		$this->params			= PhocacartUtils::getComponentParameters();
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$this->t['format']	= $app->input->get('format', '', 'string');
 		$cid				= $app->input->get('cid', '', 'string');
 

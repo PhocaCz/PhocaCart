@@ -7,21 +7,31 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Router\Route;
 
-class PhocaCartControllerCheckout extends JControllerForm
+class PhocaCartControllerCheckout extends FormController
 {
     // Set Region
     public function setregion() {
 
-        if (!JSession::checkToken('request')) {
+        $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<div class="alert alert-danger">' . JText::_('JINVALID_TOKEN') . '</div>');
+                'error' => $layoutAl->render(array('type' => 'error', 'text' => Text::_('JINVALID_TOKEN'), 'json' => 1)));
             echo json_encode($response);
             exit;
         }
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $id  = $app->input->get('countryid', 0, 'int');
 
         //$model = $this->getModel('checkout');
@@ -30,7 +40,7 @@ class PhocaCartControllerCheckout extends JControllerForm
         $o       = '';
         if (!empty($options)) {
 
-            $o .= '<option value="">-&nbsp;' . JText::_('COM_PHOCACART_SELECT_REGION') . '&nbsp;-</option>';
+            $o .= '<option value="">-&nbsp;' . Text::_('COM_PHOCACART_SELECT_REGION') . '&nbsp;-</option>';
             foreach ($options as $k => $v) {
                 $o .= '<option value="' . $v->id . '">' . htmlspecialchars($v->title) . '</option>';
             }
@@ -53,10 +63,10 @@ class PhocaCartControllerCheckout extends JControllerForm
 
     function changedatabox($tpl = null) {
 
-        if (!JSession::checkToken('request')) {
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+                'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
             echo json_encode($response);
             return;
         }
@@ -72,7 +82,7 @@ class PhocaCartControllerCheckout extends JControllerForm
 
 
 
-        $app       = JFactory::getApplication();
+        $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
         $attribute = $app->input->get('attribute', '', 'array');
         $id        = $app->input->get('id', 0, 'int');
@@ -133,7 +143,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                     $d['discountcart']           = PhocacartDiscountCart::getCartDiscountPriceForProduct($item->id, $item->catid, $d['priceitemsdiscountcart']);
 
                     // Render the layout
-                    $layoutP     = new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+                    $layoutP     = new FileLayout('product_price', null, array('component' => 'com_phocacart'));
 
                     $oA['price'] = $layoutP->render($d);
                     $oA['priceitems'] = $d['priceitems'];
@@ -150,12 +160,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                     $o = '';
                     if ($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
-                        $layoutS                  = new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
+                        $layoutS                  = new FileLayout('product_stock', null, array('component' => 'com_phocacart'));
                         $d                        = array();
                         $d['s']                   = $s;
                         $d['class']               = str_replace('-data-', '-stock-', $class);// change common "data" class to specific one
                         $d['product_id']          = (int)$id;
                         $d['typeview']            = $typeView;
+                        $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                         $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
 
                         $oA['stock'] = $layoutS->render($d);
@@ -180,7 +191,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                     $d['typeview']   = $typeView;
 
                     // Render the layout
-                    $layoutID = new JLayoutFile('product_id', null, array('component' => 'com_phocacart'));
+                    $layoutID = new FileLayout('product_id', null, array('component' => 'com_phocacart'));
                     $oA['id'] = $layoutID->render($d);
                 }
 
@@ -229,16 +240,16 @@ class PhocaCartControllerCheckout extends JControllerForm
     // Change pricebox
     function changepricebox($tpl = null) {
 
-        if (!JSession::checkToken('request')) {
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+                'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
             echo json_encode($response);
             return;
         }
 
 
-        $app       = JFactory::getApplication();
+        $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
         $attribute = $app->input->get('attribute', '', 'array');
         $id        = $app->input->get('id', 0, 'int');
@@ -290,7 +301,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                 $d['discountcart']           = PhocacartDiscountCart::getCartDiscountPriceForProduct($item->id, $item->catid, $d['priceitemsdiscountcart']);
 
                 // Render the layout
-                $layoutP = new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
+                $layoutP = new FileLayout('product_price', null, array('component' => 'com_phocacart'));
                 //ob_start();
                 $o = $layoutP->render($d);
                 //$o = ob_get_contents();
@@ -317,16 +328,16 @@ class PhocaCartControllerCheckout extends JControllerForm
     // Change idbox (SKU, EAN, ...)
     function changeidbox($tpl = null) {
 
-        if (!JSession::checkToken('request')) {
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+                'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
             echo json_encode($response);
             return;
         }
 
 
-        $app       = JFactory::getApplication();
+        $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
         $attribute = $app->input->get('attribute', '', 'array');
         $id        = $app->input->get('id', 0, 'int');
@@ -352,7 +363,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                 $d['typeview']   = $typeView;
 
                 // Render the layout
-                $layoutID = new JLayoutFile('product_id', null, array('component' => 'com_phocacart'));
+                $layoutID = new FileLayout('product_id', null, array('component' => 'com_phocacart'));
                 //ob_start();
                 $o = $layoutID->render($d);
                 //$o = ob_get_contents();
@@ -378,15 +389,15 @@ class PhocaCartControllerCheckout extends JControllerForm
     function changestockbox($tpl = null) {
 
 
-        if (!JSession::checkToken('request')) {
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+                'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
             echo json_encode($response);
             return;
         }
 
-        $app       = JFactory::getApplication();
+        $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
         $attribute = $app->input->get('attribute', '', 'array');
         $id        = $app->input->get('id', 0, 'int');
@@ -406,12 +417,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 
             $o = '';
             if ($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
-                $layoutS                  = new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
+                $layoutS                  = new FileLayout('product_stock', null, array('component' => 'com_phocacart'));
                 $d                        = array();
                 $d['s']                   = $s;
                 $d['class']               = $class;
                 $d['product_id']          = (int)$id;
                 $d['typeview']            = $typeView;
+                $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                 $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
 
                 $o = $layoutS->render($d);
@@ -440,16 +452,16 @@ class PhocaCartControllerCheckout extends JControllerForm
     // Add item to cart
     function add($tpl = null) {
 
-        if (!JSession::checkToken('request')) {
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+                'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
             echo json_encode($response);
             return;
         }
 
 
-        $app                  = JFactory::getApplication();
+        $app                  = Factory::getApplication();
         $s                    = PhocacartRenderStyle::getStyles();
         $item                 = array();
         $item['id']           = $this->input->get('id', 0, 'int');
@@ -484,19 +496,19 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                 $canDisplay = 1;
                 if (!$this->t['can_display_addtocart']) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
                     $canDisplay = 0;
                 }
 
                 if (!$this->t['can_display_addtocart_price']) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_PRICE_IS_ZERO'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO'), 'error');
                     $canDisplay = 0;
                 }
 
                 if (!$this->t['can_display_addtocart_stock']) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_STOCK_IS_EMPTY'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY'), 'error');
                     $canDisplay = 0;
                 }
 
@@ -504,7 +516,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                     $d             = array();
                     $d['s']        = $s;
                     $d['info_msg'] = PhocacartRenderFront::renderMessageQueue();
-                    $layoutPE      = new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+                    $layoutPE      = new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
                     $oE            = $layoutPE->render($d);
                     $response      = array(
                         'status' => '0',
@@ -517,8 +529,8 @@ class PhocaCartControllerCheckout extends JControllerForm
                 $cart = new PhocacartCartRendercart();// is subclass of PhocacartCart, so we can use only subclass
 
                 // Get Phoca Cart Cart Module Parameters
-                $module                                = JModuleHelper::getModule('mod_phocacart_cart');
-                $paramsM                               = new JRegistry($module->params);
+                $module                                = ModuleHelper::getModule('mod_phocacart_cart');
+                $paramsM                               = new Registry($module->params);
                 $cart->params['display_image']         = $paramsM->get('display_image', 0);
                 $cart->params['display_checkout_link'] = $paramsM->get('display_checkout_link', 1);
 
@@ -529,7 +541,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                     $d['s']        = $s;
                     $d['info_msg'] = PhocacartRenderFront::renderMessageQueue();
 
-                    $layoutPE = new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+                    $layoutPE = new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
                     $oE       = $layoutPE->render($d);
                     $response = array(
                         'status' => '0',
@@ -555,9 +567,9 @@ class PhocaCartControllerCheckout extends JControllerForm
                 // Render the layout
                 $d       = array();
                 $d['s']  = $s;
-                $layoutP = new JLayoutFile('popup_add_to_cart', null, array('component' => 'com_phocacart'));
+                $layoutP = new FileLayout('popup_add_to_cart', null, array('component' => 'com_phocacart'));
 
-                $d['link_checkout'] = JRoute::_(PhocacartRoute::getCheckoutRoute((int)$item['id'], (int)$item['catid']));
+                $d['link_checkout'] = Route::_(PhocacartRoute::getCheckoutRoute((int)$item['id'], (int)$item['catid']));
                 $d['link_continue'] = '';
                 // It can happen that add to cart button will be e.g. in module and when the module will be displayed on checkout site:
                 // If yes and one item will be added per AJAX, we need to refresh checkout site
@@ -565,9 +577,9 @@ class PhocaCartControllerCheckout extends JControllerForm
                 $d['checkout_view'] = (int)$item['checkoutview'];
 
                 if ($added) {
-                    $d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART');
+                    $d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART');
                 } else {
-                    $d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART');
+                    $d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART');
                 }
 
                 // Popup with info - Continue,Proceed to Checkout
@@ -581,7 +593,7 @@ class PhocaCartControllerCheckout extends JControllerForm
                 $total  = "";
                 $totalA = $cart->getCartTotalItems();
                 if (!empty($totalA)) {
-                     $layoutT = new JLayoutFile('cart_total', null, array('component' => 'com_phocacart'));
+                     $layoutT = new FileLayout('cart_total', null, array('component' => 'com_phocacart'));
                      $dT = array();
                      $dT['s']  = $s;
                      $dT['total'] = $totalA;
@@ -635,19 +647,19 @@ class PhocaCartControllerCheckout extends JControllerForm
                 return;
 
             } else {
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_FOUND'), 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_FOUND'), 'error');
             }
         } else {
-            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
-            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_SELECTED'), 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART'), 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_SELECTED'), 'error');
         }
 
         $d             = array();
         $d['s']        = $s;
         $d['info_msg'] = PhocacartRenderFront::renderMessageQueue();
 
-        $layoutPE = new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+        $layoutPE = new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
         $oE       = $layoutPE->render($d);
         $response = array(
             'status' => '0',
@@ -661,16 +673,16 @@ class PhocaCartControllerCheckout extends JControllerForm
     // Add item to cart
     function update($tpl = null) {
 
-        if (!JSession::checkToken('request')) {
+        if (!Session::checkToken('request')) {
             $response = array(
                 'status' => '0',
-                'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+                'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
             echo json_encode($response);
             return;
         }
 
         $msgSuffix            = '';
-        $app                  = JFactory::getApplication();
+        $app                  = Factory::getApplication();
         $s                    = PhocacartRenderStyle::getStyles();
         $item                 = array();
         $item['id']           = $this->input->get('id', 0, 'int');
@@ -691,13 +703,13 @@ class PhocaCartControllerCheckout extends JControllerForm
 
         if (!$this->t['can_display_addtocart']) {
 
-            $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
 
 
             $d             = array();
             $d['s']        = $s;
             $d['info_msg'] = PhocacartRenderFront::renderMessageQueue();
-            $layoutPE      = new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+            $layoutPE      = new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
             $oE            = $layoutPE->render($d);
             $response      = array(
                 'status' => '0',
@@ -712,8 +724,8 @@ class PhocaCartControllerCheckout extends JControllerForm
             $cart = new PhocacartCartRendercheckout();
 
             // Get Phoca Cart Cart Module Parameters
-            $module                                = JModuleHelper::getModule('mod_phocacart_cart');
-            $paramsM                               = new JRegistry($module->params);
+            $module                                = ModuleHelper::getModule('mod_phocacart_cart');
+            $paramsM                               = new Registry($module->params);
             $cart->params['display_image']         = $paramsM->get('display_image', 0);
             $cart->params['display_checkout_link'] = $paramsM->get('display_checkout_link', 1);
 
@@ -724,9 +736,9 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                     $d      = array();
                     $d['s'] = $s;
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
                     $d['info_msg'] = PhocacartRenderFront::renderMessageQueue();;
-                    $layoutPE = new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+                    $layoutPE = new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
                     $oE       = $layoutPE->render($d);
                     $response = array(
                         'status' => '0',
@@ -737,9 +749,9 @@ class PhocaCartControllerCheckout extends JControllerForm
                 }
 
                 /*if ($updated) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'message');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'message');
                 } else {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
                 }*/
             } else {// update
                 $updated = $cart->updateItemsFromCheckout($item['idkey'], (int)$item['quantity']);
@@ -748,9 +760,9 @@ class PhocaCartControllerCheckout extends JControllerForm
 
                     $d      = array();
                     $d['s'] = $s;
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED') . $msgSuffix, 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED') . $msgSuffix, 'error');
                     $d['info_msg'] = PhocacartRenderFront::renderMessageQueue();;
-                    $layoutPE = new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+                    $layoutPE = new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
                     $oE       = $layoutPE->render($d);
                     $response = array(
                         'status' => '0',
@@ -760,9 +772,9 @@ class PhocaCartControllerCheckout extends JControllerForm
                     return;
                 }
                 /*if ($updated) {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED') .$msgSuffix , 'message');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED') .$msgSuffix , 'message');
                 } else {
-                    $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
                 }*/
             }
 
@@ -780,7 +792,7 @@ class PhocaCartControllerCheckout extends JControllerForm
             $total  = "";
             $totalA = $cart->getCartTotalItems();
             if (!empty($totalA)) {
-                 $layoutT = new JLayoutFile('cart_total', null, array('component' => 'com_phocacart'));
+                 $layoutT = new FileLayout('cart_total', null, array('component' => 'com_phocacart'));
                  $dT = array();
                  $dT['s']  = $s;
                  $dT['total'] = $totalA;

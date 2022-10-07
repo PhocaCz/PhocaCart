@@ -3,5 +3,5 @@
 	<view title="COM_PHOCACART_ASK_QUESTION_GROUP">
 		<message><![CDATA[COM_PHOCACART_ASK_QUESTION_GROUP_DESC]]></message>
 	</view>
-	<view hidden="true" />
+    <view hidden="true" />
 </metadata>

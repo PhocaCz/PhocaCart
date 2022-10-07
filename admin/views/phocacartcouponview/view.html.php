@@ -7,13 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
+class PhocaCartCpViewPhocacartCouponView extends HtmlView
 {
 	public function display($tpl = null) {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$this->t		= PhocacartUtils::setVars('couponview');
 		$this->r		= new PhocacartRenderAdminview();
 		$id				= $app->input->get('id', 0, 'int');
@@ -24,7 +29,7 @@ class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
 		echo $o;*/
 		
 		
-		$layoutG	= new JLayoutFile('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
+		$layoutG	= new FileLayout('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
 		
 		$price = new PhocacartPrice();
 		$gift = PhocacartCoupon::getGiftByCouponId($id);
@@ -33,8 +38,8 @@ class PhocaCartCpViewPhocacartCouponView extends JViewLegacy
 		$d['product_id'] = $gift['gift_product_id'];
 
 		$d['discount']   = $price->getPriceFormat($gift['discount']);
-		$d['valid_from'] = JHtml::date($gift['valid_from'], JText::_('DATE_FORMAT_LC3'));
-		$d['valid_to']   = JHtml::date($gift['valid_to'], JText::_('DATE_FORMAT_LC3'));
+		$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+		$d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
 		$d['format']     = 'html';
 
 		echo $layoutG->render($d);

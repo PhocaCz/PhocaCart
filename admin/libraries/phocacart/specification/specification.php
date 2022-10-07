@@ -9,12 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartSpecification
 {
 	public static function getSpecificationsById($productId, $return = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.title, a.alias, a.value, a.alias_value, a.group_id, a.image, a.image_medium, a.image_small, a.color'
 				.' FROM #__phocacart_specifications AS a'
@@ -54,7 +55,7 @@ class PhocacartSpecification
 
 	public static function getGroupArray() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT id, title'
 				.' FROM #__phocacart_specification_groups'
@@ -75,7 +76,7 @@ class PhocacartSpecification
 	public static function storeSpecificationsById($productId, $specsArray, $new = 0) {
 
 		if ((int)$productId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 
 
 
@@ -199,7 +200,7 @@ class PhocacartSpecification
 	public static function storeSpecificationsById($productId, $specsArray) {
 
 		if ((int)$productId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 
 			$query = ' DELETE '
 					.' FROM #__phocacart_specifications'
@@ -258,7 +259,7 @@ class PhocacartSpecification
 
 	public static function getSpecificationGroupsAndSpecifications($productId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT s.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color, g.id as groupid, g.title as grouptitle'
 				.' FROM #__phocacart_specifications AS s'
@@ -282,7 +283,7 @@ class PhocacartSpecification
 
 	public static function getAllSpecificationsAndValues($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 6);
 
 		$columns		= 's.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color';
@@ -296,6 +297,8 @@ class PhocacartSpecification
 		$wheres[]	= ' sg.published = 1';
 		$lefts[] 	= ' #__phocacart_specification_groups AS sg ON s.group_id = sg.id';
 
+		$productTableAdded = 0;
+
 		if ($onlyAvailableProducts == 1) {
 
 			if ($lang != '' && $lang != '*') {
@@ -304,6 +307,7 @@ class PhocacartSpecification
 
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
+			$productTableAdded = 1;
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
 		} else {
@@ -313,11 +317,15 @@ class PhocacartSpecification
 
 			}
 			$lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+			$productTableAdded = 1;
 		}
 
 		if (!empty($filterProducts)) {
 			$productIds = implode (',', $filterProducts);
 			$wheres[]	= 'p.id IN ('.$productIds.')';
+			if ($productTableAdded == 0) {
+                $lefts[] = ' #__phocacart_products AS p ON s.product_id = p.id';
+            }
 		}
 
 		$query = 'SELECT '.$columns
@@ -326,6 +334,7 @@ class PhocacartSpecification
 				. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 				.' GROUP BY '.$groups
 				.' ORDER BY '.$orderingText;
+
 		$db->setQuery($query);
 		$specifications = $db->loadObjectList();
 
@@ -361,7 +370,7 @@ class PhocacartSpecification
 
     public static function getActiveSpecificationValues($items, $ordering) {
 
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 6);//s

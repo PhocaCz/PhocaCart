@@ -7,9 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutPC 	= new JLayoutFile('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
-$layoutNC 	= new JLayoutFile('form_newsletter_checkbox', null, array('component' => 'com_phocacart'));
+$layoutPC 	= new FileLayout('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
+$layoutNC 	= new FileLayout('form_newsletter_checkbox', null, array('component' => 'com_phocacart'));
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 if ($this->a->confirm == 1) {
 
@@ -17,20 +21,20 @@ if ($this->a->confirm == 1) {
 	if ($this->t['stock_checking'] == 1 && $this->t['stock_checkout'] == 1 && $this->t['stockvalid'] == 0) {
 		// Header
 		echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" id="phcheckoutconfirmedit" >';
-		echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
+		echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_PRODUCTS_NOT_AVAILABLE_IN_QUANTITY_OR_NOT_IN_STOCK_UPDATE_QUANTITY_BEFORE_ORDERING')));
 		echo '</div>';
 
 	} else if ($this->t['minqtyvalid'] == 0 || $this->t['minmultipleqtyvalid'] == 0) {
 		// Header
 		if ($this->t['minqtyvalid'] == 0) {
 			echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
-			echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING')));
 			echo '</div>';
 		}
 
 		if ($this->t['minmultipleqtyvalid'] == 0) {
 			echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
-			echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING').'</div>';
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING')));
 			echo '</div>';
 		}
 
@@ -47,8 +51,8 @@ if ($this->a->confirm == 1) {
 
 		echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-confirm-row" id="phConfirm" >';
-		echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_NOTES_AND_REQUESTS_ABOUT_ORDER').'</div>';
-		echo '<textarea class="form-control" name="phcomment" rows="3"></textarea>';
+		echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_NOTES_AND_REQUESTS_ABOUT_ORDER').'</div>';
+		echo '<textarea class="'.$this->s['c']['inputbox.textarea'].'" name="phcomment" rows="3"></textarea>';
 		echo '</div>';
 		echo '</div>';
 
@@ -58,13 +62,13 @@ if ($this->a->confirm == 1) {
 		if ($this->t['enable_captcha_checkout']) {
 			echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
 
-			echo '<div class="control-group">';
+			echo '<div class="'.$this->s['c']['control-group'].'">';
 
-			echo '<div class="control-label">';
+			echo '<div class="'.$this->s['c']['control-label'].'">';
 			echo '<label id="jform_question_captcha-lbl" for="jform_question_captcha" class="hasPopover required" title="" data-content="'.JText::_('COM_PHOCACART_PLEASE_PROVE_THAT_YOU_ARE_HUMAN').'" data-original-title="'.JText::_('COM_PHOCACART_SECURITY_CHECK').'">'.JText::_('COM_PHOCACART_SECURITY_CHECK').'<span class="star">&nbsp;*</span></label>';
 			echo '</div>';
 
-			echo '<div class="controls">'.PhocacartCaptchaRecaptcha::render().'</div>';
+			echo '<div class="'.$this->s['c']['controls'].'">'.PhocacartCaptchaRecaptcha::render().'</div>';
 
 			echo '</div>';// end group
 
@@ -122,7 +126,11 @@ if ($this->a->confirm == 1) {
 		echo '<div class="ph-cb"></div>';
 
 		echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-confirm">';
-		echo '<button class="'.$this->s['c']['btn.btn-default.btn-sm'].' ph-btn"><span class="'.$this->s['i']['ok'].'"></span> '.$this->t['confirm_order_text'].'</button>';
+		echo '<button class="'.$this->s['c']['btn.btn-primary'].' ph-btn">';
+		//echo '<span class="'.$this->s['i']['ok'].'"></span> ';
+		echo PhocacartRenderIcon::icon($d['s']['i']['ok'], '', ' ');
+		echo $this->t['confirm_order_text'];
+		echo '</button>';
 		echo '</div>';
 
 		echo '<div class="ph-cb"></div>';
@@ -136,7 +144,7 @@ if ($this->a->confirm == 1) {
 		echo '<input type="hidden" name="tmpl" value="component" />';
 		echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 		echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+		echo HTMLHelper::_('form.token');
 		echo '</form>'. "\n";
 
 

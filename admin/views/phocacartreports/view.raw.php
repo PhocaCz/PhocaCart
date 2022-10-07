@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartReports extends JViewLegacy
+class PhocaCartCpViewPhocacartReports extends HtmlView
 {
 
 	protected $state;
@@ -25,8 +28,8 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_PHOCACART_REPORT'));
+		$document = Factory::getDocument();
+		$document->setTitle(Text::_('COM_PHOCACART_REPORT'));
 
 		$this->t				= PhocacartUtils::setVars('report');
 		$this->s                = PhocacartRenderStyle::getStyles();
@@ -35,7 +38,7 @@ class PhocaCartCpViewPhocacartReports extends JViewLegacy
 		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());
 		$this->t['date_days'] 	= PhocacartDate::getDateDays($this->t['date_from'], $this->t['date_to']);
 		$this->params			= PhocacartUtils::getComponentParameters();
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$this->t['format']	= $app->input->get('format', '', 'string');
 
 

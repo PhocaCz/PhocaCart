@@ -7,18 +7,27 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.controller' );
 
-class PhocaCartController extends JControllerLegacy
+class PhocaCartController extends BaseController
 {
 
 	public function display($cachable = false, $urlparams = false)
 	{
 
 	
-		if ( ! JFactory::getApplication()->input->get('view') ) {
-			JFactory::getApplication()->input->set('view', 'categories' );
+
+		if ( ! Factory::getApplication()->input->get('view') ) {
+			Factory::getApplication()->input->set('view', 'categories' );
 		}
+
+			if ( ! Factory::getApplication()->input->get('id') ) {
+			Factory::getApplication()->input->set('id', 0 );
+		}
+
+
 		/*if (JFactory::getApplication()->input->get('view') && JFactory::getApplication()->input->get('view') == 'feed') {
 			// Default view for Feed is XML
 			// Don't forget, this settings needs to have set router.php too - in method PhocacartParseRoute()
@@ -27,7 +36,7 @@ class PhocaCartController extends JControllerLegacy
 
 
 		//$paramsC 	= PhocacartUtils::getComponentParameters();
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$paramsC 	= $app->getParams();
 
 		$cache 		= $paramsC->get( 'enable_cache', 0 );
@@ -36,7 +45,7 @@ class PhocaCartController extends JControllerLegacy
 			$cachable 	= true;
 		}
 
-		$document 	= JFactory::getDocument();
+		$document 	= Factory::getDocument();
 
 		$safeurlparams = array('catid'=>'INT','id'=>'INT','cid'=>'ARRAY','year'=>'INT','month'=>'INT','limit'=>'INT','limitstart'=>'INT',
 			'showall'=>'INT','return'=>'BASE64','filter'=>'STRING','filter_order'=>'CMD','filter_order_Dir'=>'CMD','filter-search'=>'STRING','print'=>'BOOLEAN','lang'=>'CMD');

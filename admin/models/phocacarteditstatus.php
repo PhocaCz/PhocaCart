@@ -7,18 +7,21 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditStatus extends JModelList
+class PhocaCartCpModelPhocaCartEditStatus extends ListModel
 {
 	protected	$option 		= 'com_phocacart';
 
 	public function getData() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.status_id'
 		. ' FROM #__phocacart_orders AS a'
 		. ' WHERE a.id = '.(int)$id
@@ -28,7 +31,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		if (isset($item->status_id) && (int)$item->status_id > 0) {
 			$status = PhocacartOrderStatus::getStatus($item->status_id);
 
-			$status['select'] = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="inputbox"', 'value', 'text', $item->status_id, 'jform_status_id' );
+			$status['select'] = HTMLHelper::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="form-select"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
 		}
 		return array();
@@ -37,11 +40,11 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 
 	public function getHistoryData() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 
 		if ((int)$id > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'SELECT h.*,'
 			. ' u.name AS user_name, u.username AS user_username,'
 			. ' o.title as statustitle'
@@ -62,9 +65,9 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		$data['status_id']			= (int)$data['status_id'];
 		$data['email_send']			= (int)$data['email_send'];
 		$data['email_send_format']	= (int)$data['email_send_format'];
-		$data['email_gift']			= (int)$data['email_gift'];
+		$data['email_gift']			= isset($data['email_gift']) ? (int)$data['email_gift'] : 0;
 		$row 				= $this->getTable('PhocacartOrder', 'Table');
-		$user 				= JFactory::getUser();
+		$user 				= Factory::getUser();
 
 		if(isset($data['id']) && $data['id'] > 0) {
 			if (!$row->load(array('id' => (int)$data['id']))) {
@@ -74,7 +77,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 		//$row->bind($data);
 
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
@@ -82,18 +85,18 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 
 
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		// Store the table to the database
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		// Store the history
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		// EMAIL
 		$notifyUser 	= 0;
@@ -122,7 +125,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends JModelList
 
 		if ((int)$id > 0) {
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'DELETE FROM #__phocacart_order_history WHERE order_id = '.(int)$id;
 			$db->setQuery( $query );
 

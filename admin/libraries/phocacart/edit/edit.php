@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Table\Table;
 class PhocacartEdit
 {
 	public static function store(&$options) {
@@ -54,7 +55,7 @@ class PhocacartEdit
 			'upc', 'ean', 'jan', 'isbn', 'mpn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link',
 			'external_text', 'external_link2', 'external_text2', 'min_quantity', 'min_multiple_quantity', 'unit_amount', 'unit_unit',
 			'length', 'width', 'height', 'weight', 'volume', 'points_needed', 'points_received', 'description', 'description_long', 'features',
-			'video', 'type_feed', 'type_category_feed', 'metakey', 'metadesc','metatitle'
+			'video', 'type_feed', 'type_category_feed', 'metakey', 'metadesc','metatitle', 'special_parameter'
 		);
 
 
@@ -88,6 +89,7 @@ class PhocacartEdit
 
 		if (isset($idA[1])) {
 			$columnTest = $idA[1];
+
 			if (in_array($columnTest, $allowedColumns)) {
 				$column = PhocacartText::filterValue($columnTest, 'alphanumeric2');
 			}
@@ -142,11 +144,11 @@ class PhocacartEdit
 
 
 			// TEST CHECKOUT
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 
 			// Get an instance of the row to checkout.
-			JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
-			$table = JTable::getInstance($tableDbName, 'Table');
+			Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
+			$table = Table::getInstance($tableDbName, 'Table');
 
 			if (!$table->load($idRow)) {
 				$options['msg'] = $table->getError();
@@ -170,7 +172,7 @@ class PhocacartEdit
 
 			// DATA
 			$data = array();
-			$db	= JFactory::getDBO();
+			$db	= Factory::getDBO();
 			$data[$column]  = $options['value'];
 
 			if ($column == 'title') {
@@ -215,7 +217,7 @@ class PhocacartEdit
 				PhocacartGroup::updateGroupProductPriceById((int)$idRow, $data['price']);
 			}
 			/*
-			$db	= JFactory::getDBO();
+			$db	= Factory::getDBO();
 			$q	= 'UPDATE '.$tableDb.' SET '.$db->quoteName($column).' = '.$db->quote($options['value']).' WHERE id = '.(int)$idRow;
 
 			$db->setQuery($q);

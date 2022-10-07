@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport('joomla.form.formfield');
 
 if (! class_exists('PhocacartRelated')) {
@@ -20,7 +22,7 @@ if (! class_exists('PhocacartCategoryMultiple')) {
     require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/multiple.php');
 }
 
-class JFormFieldPhocaSelectItemCategory extends JFormField
+class JFormFieldPhocaSelectItemCategory extends FormField
 {
 	public $type = 'PhocaSelectItemCategory';
 
@@ -44,7 +46,7 @@ class JFormFieldPhocaSelectItemCategory extends JFormField
 		$productId	= isset($request->id) ? $request->id : 0;
 		$options    = PhocacartCategoryMultiple::getCategories($productId, 2);
 
-		$html[] = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value, $this->id);
+		$html[] = HTMLHelper::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value, $this->id);
 
 
 		return implode("\n", $html);

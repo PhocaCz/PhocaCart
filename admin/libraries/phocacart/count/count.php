@@ -9,13 +9,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartCount
 {
 	public static function setProductCount($cid, $type = '', $skipMessage = 0) {
 
-	    $db 		= JFactory::getDBO();
-	    $app	    = JFactory::getApplication();
+	    $db 		= Factory::getDBO();
+	    $app	    = Factory::getApplication();
 	    $successA   = array();
 	    $errorA     = array();
 
@@ -26,7 +28,7 @@ class PhocacartCount
 	    if (!empty($cid)) {
             foreach ($cid as $k => $v) {
 
-                $date 	= JFactory::getDate();
+                $date 	= Factory::getDate();
                 $now	= $date->toSql();
 
                 switch($type) {
@@ -121,11 +123,11 @@ class PhocacartCount
 
 	    if(!empty($errorA)) {
             $errorS = implode(', ', $errorA);
-            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_COUNT_NOT_SET_FOLLOWING_ITEMS') . ': '.$errorS, 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_COUNT_NOT_SET_FOLLOWING_ITEMS') . ': '.$errorS, 'error');
         }
         if (!empty($successA)){
 	        $successS = implode(', ', $successA);
-            $app->enqueueMessage(JText::_( 'COM_PHOCACART_PRODUCT_COUNT_SUCCESSFULLY_SET_FOLLOWING_ITEMS' ) . ': '.$successS, 'success');
+            $app->enqueueMessage(Text::_( 'COM_PHOCACART_PRODUCT_COUNT_SUCCESSFULLY_SET_FOLLOWING_ITEMS' ) . ': '.$successS, 'success');
         }
 
 	    return true;

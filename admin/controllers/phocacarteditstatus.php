@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocaCartEditStatus extends PhocaCartCpControllerPhocaCartCommons
 {
@@ -17,12 +20,12 @@ class PhocaCartCpControllerPhocaCartEditStatus extends PhocaCartCpControllerPhoc
 	
 	function editstatus() {
 	
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		//$id		= $app->input->get('id', 0, 'int');
 		$jform	= $app->input->get('jform', array(), 'array');
 		
@@ -31,38 +34,38 @@ class PhocaCartCpControllerPhocaCartEditStatus extends PhocaCartCpControllerPhoc
 			$model = $this->getModel( 'phocacarteditstatus' );
 			
 			if(!$model->editStatus($jform)) {
-				$message = JText::_( 'COM_PHOCACART_ERROR_UPDATE_STATUS' );
+				$message = Text::_( 'COM_PHOCACART_ERROR_UPDATE_STATUS' );
 				$app->enqueueMessage($message, 'error');
 			} else {
-				$message = JText::_( 'COM_PHOCACART_SUCCESS_UPDATE_STATUS' );
+				$message = Text::_( 'COM_PHOCACART_SUCCESS_UPDATE_STATUS' );
 				$app->enqueueMessage($message, 'message');
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditstatus&tmpl=component&id='.(int)$jform['id']);
 		} else {
 		
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditstatus&tmpl=component');
 		}
 	}
 
 	function emptyhistory() {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$jform	= $app->input->get('jform', array(), 'array');
 		
 		if ((int)$jform['id'] > 0) {
 			$model = $this->getModel( 'phocacarteditstatus' );
 			
 			if(!$model->emptyHistory($jform['id'])) {
-				$message = JText::_( 'COM_PHOCACART_ERROR_EMPTY_STATUSES' );
+				$message = Text::_( 'COM_PHOCACART_ERROR_EMPTY_STATUSES' );
 				$app->enqueueMessage($message, 'error');
 			} else {
-				$message = JText::_( 'COM_PHOCACART_SUCCESS_EMPTY_STATUSES' );
+				$message = Text::_( 'COM_PHOCACART_SUCCESS_EMPTY_STATUSES' );
 				$app->enqueueMessage($message, 'message');
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditstatus&tmpl=component&id='.(int)$jform['id']);
 		} else {
 		
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditstatus&tmpl=component');
 		}
 	}

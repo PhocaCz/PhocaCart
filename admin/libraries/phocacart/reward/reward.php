@@ -18,6 +18,8 @@
   * $reward['usedtotal'] 								... how many points user used (and it was allowed) when ordering items
   */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartReward
 {
@@ -34,7 +36,7 @@ class PhocacartReward
 		if ($userId > 0) {
 			if (empty($this->total[$userId])) {
 
-				$db = JFactory::getDBO();
+				$db = Factory::getDBO();
 
 				$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
 					.' WHERE a.user_id = '.(int) $userId
@@ -62,7 +64,7 @@ class PhocacartReward
 	public function checkReward($points, $msgOn = 0) {
 
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
 
@@ -75,7 +77,7 @@ class PhocacartReward
 		// 1. ENABLE REWARDS
 		if ($enable_rewards == 0) {
 			if ($msgOn == 1) {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_REWARD_POINTS_DISABLED'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_REWARD_POINTS_DISABLED'), 'error');
 			}
 			return false;
 		}
@@ -87,7 +89,7 @@ class PhocacartReward
 			$rewards['usertotal'] = $this->getTotalPointsByUserId($user->id);
 		} else {
 			if ($msgOn == 1) {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_USER_NOT_FOUND'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_USER_NOT_FOUND'), 'error');
 			}
 			return false;
 		}
@@ -167,7 +169,7 @@ class PhocacartReward
 
 		if ((int)$userId > 0 && (int)$orderId > 0) {
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
 				.' WHERE a.user_id = '.(int)$userId
@@ -193,7 +195,7 @@ class PhocacartReward
 
 		if ((int)$orderId > 0) {
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			$query = 'SELECT SUM(a.points) FROM #__phocacart_reward_points AS a'
 				.' WHERE a.order_id = '.(int)$orderId
@@ -218,7 +220,7 @@ class PhocacartReward
 
         if ((int)$orderId > 0) {
 
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
 
             $query = 'SELECT a.title, a.points, a.order_id, a.type, a.published FROM #__phocacart_reward_points AS a'
                 .' WHERE a.order_id = '.(int)$orderId

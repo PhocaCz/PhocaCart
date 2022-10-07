@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Uri\Uri;
 $d                      = $displayData;
 
 $altValue               = PhocaCartImage::getAltTitle($d['image']['title'], $d['image']['image']->rel);
@@ -18,13 +19,13 @@ if (isset($d['t']['image_width_cats']) && $d['t']['image_width_cats'] != '' && i
 }
 
 $class          = PhocacartRenderFront::completeClass(array($d['s']['c']['img-responsive'], 'ph-image', $d['t']['class_lazyload']));
-$src            = JURI::base(true).'/'.$d['image']['image']->rel;
-$srcImg         = JURI::base(true).'/'.$d['image']['image']->rel; // fallback
+$src            = Uri::base(true).'/'.$d['image']['image']->rel;
+$srcImg         = JUri::base(true).'/'.$d['image']['image']->rel; // fallback
 
 if ($d['t']['display_webp_images'] == 1) {
 
-    $srcWebP        = JURI::base(true).'/'.$d['image']['image']->rel_webp;
-    $srcSetWebP     = JURI::base(true).'/'.$d['image']['image']->rel_webp;
+    $srcWebP        = Uri::base(true).'/'.$d['image']['image']->rel_webp;
+    $srcSetWebP     = Uri::base(true).'/'.$d['image']['image']->rel_webp;
 
     if ($d['t']['lazy_load_categories'] == 1) {
 

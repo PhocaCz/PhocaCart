@@ -10,7 +10,7 @@
 jQuery(document).ready(function() {
 
 	jQuery(document).on('change', '.phjProductAttribute', function(){
-
+		
 
 		var phProductIdName	= jQuery(this).data('product-id-name');
 		var phProductImg	= '.phjProductImage' + phProductIdName;

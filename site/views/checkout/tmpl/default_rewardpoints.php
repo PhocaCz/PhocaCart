@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 if ($this->t['rewards']['apply'] && !$this->t['cartempty']) {
 
@@ -23,9 +25,12 @@ if ($this->t['rewards']['apply'] && !$this->t['cartempty']) {
 	echo '<input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-reward-points" type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" >';
 
 	if ($this->t['rewards']['usedvalue'] != '') {
-		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn"><span class="' . $this->s['i']['edit'] . '"></span> ' . JText::_('COM_PHOCACART_CHANGE_REWARD_POINTS') . '</button>';
+		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn">';
+		//echo '<span class="' . $this->s['i']['edit'] . '"></span> ' .
+		echo PhocacartRenderIcon::icon($this->s['i']['edit'], '', ' ');
+		echo Text::_('COM_PHOCACART_CHANGE_REWARD_POINTS') . '</button>';
 	} else {
-		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn"><span class="' . $this->s['i']['save'] . '"></span> ' . JText::_('COM_PHOCACART_APPLY_REWARD_POINTS') . '</button>';
+		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') . Text::_('COM_PHOCACART_APPLY_REWARD_POINTS') . '</button>';
 	}
 
 
@@ -33,7 +38,7 @@ if ($this->t['rewards']['apply'] && !$this->t['cartempty']) {
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 	echo '</div>';

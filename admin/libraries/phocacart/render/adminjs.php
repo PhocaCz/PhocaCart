@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 final class PhocacartRenderAdminjs
 {
 	private function __construct(){}
@@ -56,7 +59,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   })';
 		$s[] = '})';
 		$s[] = ' ';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
 
@@ -97,7 +100,7 @@ final class PhocacartRenderAdminjs
 		//jQuery('.modal').on('hidden', function () {
 		//  // Do something after close
 		//});
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 */
 
@@ -117,12 +120,12 @@ final class PhocacartRenderAdminjs
 		//jQuery('.modal').on('hidden', function () {
 		//  // Do something after close
 		//});
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}*/
 
 	public static function renderOverlayOnSubmit($id) {
 
-		$document	= JFactory::getDocument();
+		$document	= Factory::getDocument();
 
 		$s[] = 'jQuery(document).ready(function(){';
 		$s[] = '   jQuery(\'#'.$id.'\').on(\'submit\', function(){';
@@ -145,7 +148,7 @@ final class PhocacartRenderAdminjs
 
 	public static function renderImportExportItems($url, $messageBox, $formId, $count, $successMessage, $reload = 0) {
 
-		$document	= JFactory::getDocument();
+		$document	= Factory::getDocument();
 
 		$s   = array();
 		$s[] = 'function phUpdateProgress(percentage){';
@@ -185,7 +188,7 @@ final class PhocacartRenderAdminjs
 		$s[] = ' ';
 		$s[] = '                if (phMaxItems == phCurrentItemCount) {';
 		$s[] = '                   jQuery(".circle").addClass("circle-active");';
-		$s[] = '                   jQuery(phMessageBoxId).html(\'<div class="alert alert-success"><button class="close" type="button" data-dismiss="alert">×</button>'.$successMessage.'</div>\');';
+		$s[] = '                   jQuery(phMessageBoxId).html(\'<div class="alert alert-dismissible fade show">'.$successMessage.'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="' . Text::_('COM_PHOCACART_CLOSE', true) . '"></button></div>\');';
 
 		if ($reload == 1) {
 			// TO DO enable
@@ -252,7 +255,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   })';
 		$s[] = '})';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
 	/* When the modal window will be focused, check again the statuses of all the items
@@ -279,7 +282,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   })';
 
 		$s[] = '})';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
 	/* Ask for the changes, if something changes - e.g. category is created
@@ -293,17 +296,17 @@ final class PhocacartRenderAdminjs
 		$js 	= array();
 		$js[] = ' function phDoRequestWizard(url) {';
 		$js[] = '   var s = [];';
-		$js[] = '   s["phTrue"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.JText::_('COM_PHOCACART_CREATED').'</div>\';';
-		$js[] = '   s["phTrueAdd"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.JText::_('COM_PHOCACART_ADDED').'</div>\';';
-		$js[] = '   s["phTrueEdit"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.JText::_('COM_PHOCACART_EDITED').'</div>\';';
+		$js[] = '   s["phTrue"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.Text::_('COM_PHOCACART_CREATED').'</div>\';';
+		$js[] = '   s["phTrueAdd"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.Text::_('COM_PHOCACART_ADDED').'</div>\';';
+		$js[] = '   s["phTrueEdit"] = \'<div class="ph-true"><span class="glyphicon glyphicon-ok icon-ok"></span> '.Text::_('COM_PHOCACART_EDITED').'</div>\';';
 		$js[] = '   s["phTrueAll"] = 1';
-		$js[] = '   s["phFalse"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_CREATED_YET').'</div>\';';
-		$js[] = '   s["phFalseAdd"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_ADDED_YET').'</div>\';';
-		$js[] = '   s["phFalseEdit"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.JText::_('COM_PHOCACART_NOT_EDITED_YET').'</div>\';';
+		$js[] = '   s["phFalse"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.Text::_('COM_PHOCACART_NOT_CREATED_YET').'</div>\';';
+		$js[] = '   s["phFalseAdd"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.Text::_('COM_PHOCACART_NOT_ADDED_YET').'</div>\';';
+		$js[] = '   s["phFalseEdit"] = \'<div class="ph-false"><span class="glyphicon glyphicon-remove icon-remove"></span> '.Text::_('COM_PHOCACART_NOT_EDITED_YET').'</div>\';';
 		$js[] = '  phDoRequestWizardParent(url, s);';
 		$js[] = '}';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $js));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $js));
 	}
 
 
@@ -337,12 +340,12 @@ final class PhocacartRenderAdminjs
 		$s[] = '   phAddRowImageParent(phNewRow);';
 		$s[] = ' }';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}*/
 
 	/*public static function renderJsManageRowAttribute($i, $newRow) {
 
-		$url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&'. JSession::getFormToken().'=1';
+		$url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&'. Session::getFormToken().'=1';
 
 		$s 	= array();
 		$s[] = ' var phRowCountAttribute = '.$i.';';
@@ -354,17 +357,17 @@ final class PhocacartRenderAdminjs
 
 		$s[] = ' ';
 		$s[] = ' function phRemoveRowAttribute(id) {';
-		$s[] = '   if(confirm(\''.JText::_('COM_PHOCACART_WARNING_REMOVING_ATTRIBUTE_DELETES_DOWNLOAD_FOLDER_DOWNLOAD_FILE').'\')){';
+		$s[] = '   if(confirm(\''.Text::_('COM_PHOCACART_WARNING_REMOVING_ATTRIBUTE_DELETES_DOWNLOAD_FOLDER_DOWNLOAD_FILE').'\')){';
 		$s[] = '      phRemoveRowAttributeParent(id, \''. $url .'\');';
 		$s[] = '   }';
 		$s[] = ' }';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}*/
 
 	/*public static function renderJsManageRowOption($j,  $newRow, $newHeader) {
 
-		$url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&'. JSession::getFormToken().'=1';
+		$url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&'. Session::getFormToken().'=1';
 
 	    $s 	= array();
 		$s[] = ' var phRowCountOption = '.$j.';';
@@ -376,11 +379,11 @@ final class PhocacartRenderAdminjs
 
 		$s[] = ' ';
 		$s[] = ' function phRemoveRowOption(id, attrid) {';
-		$s[] = '   if(confirm(\''.JText::_('COM_PHOCACART_WARNING_REMOVING_ATTRIBUTE_OPTION_DELETES_DOWNLOAD_FOLDER_DOWNLOAD_FILE').'\')){';
+		$s[] = '   if(confirm(\''.Text::_('COM_PHOCACART_WARNING_REMOVING_ATTRIBUTE_OPTION_DELETES_DOWNLOAD_FOLDER_DOWNLOAD_FILE').'\')){';
 		$s[] = '      phRemoveRowOptionParent(id, attrid, \''. $url .'\');';
 		$s[] = '   }';
 		$s[] = ' }';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxoptionjs - header created by javascript
 		// #phrowboxoption - header created by php/mysql
 	}*/
@@ -393,7 +396,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   var phNewHeader	= 	\'<div></div>'. $newHeader .'\';';
 		$s[] = '   phAddRowSpecificationParent(phNewRow, phNewHeader);';
 		$s[] = '}';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxspecification - header created by javascript
 		// #phrowboxspecificationheader - header created by php/mysql
 	}*/
@@ -411,7 +414,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   phAddRowDiscountParent(phNewRow, phNewHeader, '. $compatible . ');';
 		$s[] = ' }';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxspecification - header created by javascript
 		// #phrowboxspecificationheader - header created by php/mysql
 	}*/
@@ -426,7 +429,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   var phNewRow		= 	\'<div></div>'. $newRow .'\';';// (to add option in right attribute box)
 		$s[] = '   phAddRowPricehistoryParent(phNewRow, '. $compatible . ');';
 		$s[] = '}';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 		// #phrowboxspecification - header created by javascript
 		// #phrowboxspecificationheader - header created by php/mysql
 	}*/
@@ -443,7 +446,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '      jQuery("'.$targetElement.'").show();';
 		$s[] = '   })';
 		$s[] = '})';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
 	/* Really not nice way to move the system messages from bootstrap2 (Joomla) to bootstrap3 (Phoca)
@@ -460,7 +463,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   jQuery("#ph-system-message-container").html(phSystemMsg);';
 		$s[] = '});';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
 
@@ -474,7 +477,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   var newUri = jQuery(\'.modal_jform_download_file\').attr(\'href\') + stringToSend;';
 		$s[] = '   jQuery(\'.modal_jform_download_file\').attr("href", newUri);';
 		$s[] = '})';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 
 	public static function renderAjaxDoRequest($text) {
@@ -517,7 +520,7 @@ final class PhocacartRenderAdminjs
 		$s[] = ' ';
 
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 	}
 	*/
 }

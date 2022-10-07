@@ -7,11 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$layoutI	= new JLayoutFile('category_image', null, array('component' => 'com_phocacart'));
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+$layoutI	= new FileLayout('category_image', null, array('component' => 'com_phocacart'));
 
 if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 0) {
 
-	echo '<div class="ph-subcategories">'.JText::_('COM_PHOCACART_SUBCATEGORIES') . ':</div>';
+	echo '<div class="ph-subcategories">'.Text::_('COM_PHOCACART_SUBCATEGORIES') . ':</div>';
 	$j = 0;
 
 	if ($this->t['cv_subcategories_layout'] == 2) {
@@ -19,7 +23,7 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 		// IMAGE BOXES
 		// Columns of subcategories = columns of products
 		$col = PhocacartRenderFront::getColumnClass((int)$this->t['columns_subcat_cat']);
-		echo '<div class="'.$this->s['c']['row.row-flex'].' grid">';
+		echo '<div class="'.$this->s['c']['row'].' grid">';
 
 		foreach($this->subcategories as $v) {
 
@@ -32,7 +36,7 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 			$image = PhocacartImage::getThumbnailName($this->t['pathcat'], $v->image, 'small');
 			if (isset($image->rel) && $image->rel != '') {
 
-				echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">';
+				echo '<a href="'.Route::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">';
 
 				$dI	= array();
 				$dI['t']			    = $this->t;
@@ -43,10 +47,10 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 
 				echo '</a>';
 			} else {
-				echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a>';
+				echo '<a href="'.Route::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a>';
 			}
 
-			echo '<h3><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a></h3>';
+			echo '<h3><a href="'.Route::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a></h3>';
 
 			echo '  </div>';
 			echo ' </div>';
@@ -69,11 +73,11 @@ if (!empty($this->subcategories) && (int)$this->t['cv_display_subcategories'] > 
 
 		/*	$image = PhocacartImage::getThumbnailName($this->t['pathcat'], $v->image, 'small');
 			if (isset($image->rel)) {
-				echo '<a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'"><img src="'. JURI::base(true).'/'.$image->rel.'" alt="" class="img-responsive ph-image" /></a>';
+				echo '<a href="'.Route::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'"><img src="'. Uri::base(true).'/'.$image->rel.'" alt="" class="img-responsive ph-image" /></a>';
 			}*/
 
 
-			echo '<li><a href="'.JRoute::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a></li>';
+			echo '<li><a href="'.Route::_(PhocacartRoute::getCategoryRoute($v->id, $v->alias)).'">'.$v->title.'</a></li>';
 			$j++;
 		}
 		echo '</ul>';

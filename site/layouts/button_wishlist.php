@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-wishlist-box">
     <div class="ph-category-item-wishlist">
         <form action="<?php echo $d['linkw']; ?>" method="post" id="phWishList<?php echo (int)$d['id']; ?>" class="phItemWishListBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />
@@ -20,12 +22,12 @@ $d = $displayData;
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
             <?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-                <a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['wish-list'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="phItemWishListBoxFormAjax('phWishList<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['wish-list']) ?></a>
             <?php } else { ?>
-                <a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><span class="<?php echo $d['s']['i']['wish-list'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="document.getElementById('phWishList<?php echo (int)$d['id']; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_WISH_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['wish-list']) ?></a>
             <?php } ?>
 
-            <?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+            <?php echo HTMLHelper::_('form.token'); ?>
         </form>
     </div>
 </div>

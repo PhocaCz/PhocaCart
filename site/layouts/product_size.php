@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d  = $displayData;
 $size = new PhocacartSize();
 
@@ -23,15 +24,15 @@ if ($length || $width || $height ) {
 
     echo '<div class="ph-item-size-box">';
     if ($length) {
-        echo '<div class="ph-item-length-txt">' . JText::_('COM_PHOCACART_LENGTH') . ':</div>';
+        echo '<div class="ph-item-length-txt">' . Text::_('COM_PHOCACART_LENGTH') . ':</div>';
         echo '<div class="ph-item-length">' . $length . '</div>';
     }
     if ($width) {
-        echo '<div class="ph-item-width-txt">' . JText::_('COM_PHOCACART_WIDTH') . ':</div>';
+        echo '<div class="ph-item-width-txt">' . Text::_('COM_PHOCACART_WIDTH') . ':</div>';
         echo '<div class="ph-item-width">' . $width . '</div>';
     }
     if ($height) {
-        echo '<div class="ph-item-height-txt">' . JText::_('COM_PHOCACART_HEIGHT') . ':</div>';
+        echo '<div class="ph-item-height-txt">' . Text::_('COM_PHOCACART_HEIGHT') . ':</div>';
         echo '<div class="ph-item-height">' . $height . '</div>';
     }
     echo '</div>';
@@ -43,7 +44,7 @@ if ($weight) {
  //   echo '<h4 class="ph-header-size">' . JText::_('COM_PHOCACART_HEADER_WEIGHT') . '</h4>';
 
     echo '<div class="ph-item-size-box">';
-    echo '<div class="ph-item-weight-txt">' . JText::_('COM_PHOCACART_WEIGHT') . ':</div>';
+    echo '<div class="ph-item-weight-txt">' . Text::_('COM_PHOCACART_WEIGHT') . ':</div>';
     echo '<div class="ph-item-weight">' . $weight . '</div>';
     echo '</div>';
 }
@@ -54,7 +55,7 @@ if ($volume) {
   //  echo '<h4 class="ph-header-size">' . JText::_('COM_PHOCACART_HEADER_VOLUME') . '</h4>';
 
     echo '<div class="ph-item-size-box">';
-    echo '<div class="ph-item-volume-txt">' . JText::_('COM_PHOCACART_VOLUME') . ':</div>';
+    echo '<div class="ph-item-volume-txt">' . Text::_('COM_PHOCACART_VOLUME') . ':</div>';
     echo '<div class="ph-item-volume">' . $volume . '</div>';
     echo '</div>';
 }

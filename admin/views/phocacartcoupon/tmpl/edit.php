@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 
 $r 			=  $this->r;
@@ -15,7 +17,7 @@ Joomla.submitbutton = function(task) {
 	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
 		Joomla.submitform(task, document.getElementById("adminForm"));
 	} else {
-		Joomla.renderMessages({"error": ["'. JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+		Joomla.renderMessages({"error": ["'. Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
 	}
 }
 ';
@@ -23,18 +25,21 @@ JFactory::getDocument()->addScriptDeclaration($js);
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
-echo '<div class="col-xs-12 col-sm-10 col-md-10 form-horizontal">';
+echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array (
-'general' 		=> JText::_($this->t['l'].'_GENERAL_OPTIONS'),
-'rules' 		=> JText::_($this->t['l'].'_RULES'),
-'gift' 		=> JText::_($this->t['l'].'_GIFT_VOUCHER_OPTIONS'),
-'publishing' 	=> JText::_($this->t['l'].'_PUBLISHING_OPTIONS'));
+'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
+'rules' 		=> Text::_($this->t['l'].'_RULES'),
+'gift' 		=> Text::_($this->t['l'].'_GIFT_VOUCHER_OPTIONS'),
+'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
+
+$formArray = array ('title');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('title', 'code', 'discount', 'calculation_type', 'type', 'access', 'group');
+$formArray = array ('code', 'discount', 'calculation_type', 'type', 'coupon_type', 'access', 'group');
 echo $r->group($this->form, $formArray);
 
 $formArray = array('description');
@@ -73,7 +78,7 @@ echo $r->endTab();
 echo $r->endTabs();
 echo '</div>';//end span10
 // Second Column
-echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
+//echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
 echo $r->formInputs();
 echo $r->endForm();
 ?>

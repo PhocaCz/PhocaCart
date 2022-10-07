@@ -322,8 +322,8 @@ input.pmreadonly:hover {
 /*
 .ph-background-loading {
 	filter: Alpha(Opacity=40); -moz-opacity:0.4; opacity: 0.4;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+    height: 100vh;
 	background-color: #333;
 	position: fixed;
 	top: 0px;
@@ -359,8 +359,8 @@ input.pmreadonly:hover {
   border-right: 0.6em solid #C1E2F1;
   border-bottom: 0.6em solid #C1E2F1;
   border-left: 0.6em solid #0069cc;
-  -webkit-animation: load8 0.9s infinite linear;
-  animation: load8 0.9s infinite linear;
+  -webkit-animation: load8 0.9s infinite linear !important;;
+  animation: load8 0.9s infinite linear !important;;
 }
 .ph-loader,
 .ph-loader:after {
@@ -391,8 +391,8 @@ input.pmreadonly:hover {
   border-right: 0.3em solid #fff;
   border-bottom: 0.3em solid #fff;
   border-left: 0.3em solid rgba(255,255,255,0.5);
-  -webkit-animation: load8 0.9s infinite linear;
-  animation: load8 0.9s infinite linear;
+  -webkit-animation: load8 0.9s infinite linear !important;;
+  animation: load8 0.9s infinite linear !important;;
    margin-bottom: 0.6em;
    margin-top: 0.5em
 }
@@ -491,15 +491,16 @@ input.pmreadonly:hover {
 
 }
 #ph-ajaxtop-message .ph-info-txt:before {
-	font-family: "Glyphicons Halflings";
-	content: "\e086";
+
 	color: #3bafda;
+	font-family: 'JoomlaFont' !important;
+	content: "\13c5d";
 	margin-right: 0.5em;
 	font-weight: bold;
 	position:absolute;
-	font-size: 2em;
+	font-size: 1.6em;
 	left: 0.4em;
-	/*margin-top: -0.3em;*/
+	margin-top: -0.3em;
 
 }
 
@@ -507,29 +508,31 @@ input.pmreadonly:hover {
 
 }
 #ph-ajaxtop-message .ph-success-txt:before {
-	font-family: "Glyphicons Halflings";
-	content: "\e086";
+
 	color: #00b19d;
+	font-family: 'JoomlaFont' !important;
+	content: "\13c5d";
 	margin-right: 0.5em;
 	font-weight: bold;
 	position:absolute;
-	font-size: 2em;
+	font-size: 1.6em;
 	left: 0.4em;
-	/*margin-top: -0.3em;*/
+	margin-top: -0.3em;
 }
 #ph-ajaxtop-message .ph-error-txt {
 }
 
 #ph-ajaxtop-message .ph-error-txt:before {
-	font-family: "Glyphicons Halflings";
-	content: "\e086";
+
 	color: #f76397;
+	font-family: 'JoomlaFont' !important;
+	content: "\13c5d";
 	margin-right: 0.5em;
 	font-weight: bold;
 	position:absolute;
-	font-size: 2em;
+	font-size: 1.6em;
 	left: 0.4em;
-	/*margin-top: -0.3em;*/
+	margin-top: -0.3em;
 }
 
 .ph-add-item {
@@ -694,7 +697,7 @@ table.ph-table-download-links tr th.link {
 }
 
 .ph-inline-param .field-calendar {
-	display: inline;
+	display: inline-block;
 }
 
 /* Charts */
@@ -748,6 +751,8 @@ border-radius: 2px;
 }
 
 .ph-admin-stat-row {
+	background: #fff;
+	margin-top: 1em;
 
 }
 .ph-admin-stat-box h2 {
@@ -859,8 +864,8 @@ border-radius: 2px;
   border-right: 1.1em solid #C1E2F1;
   border-bottom: 1.1em solid #C1E2F1;
   border-left: 1.1em solid #45A7D4;
-  -webkit-animation: load8 1.3s infinite linear;
-  animation: load8 1.3s infinite linear;
+  -webkit-animation: load8 1.3s infinite linear !important;
+  animation: load8 1.3s infinite linear !important;
 }
 #phLoaderFull,
 #phLoaderFull:after {
@@ -895,8 +900,8 @@ border-radius: 2px;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: #fff;
     filter:alpha(opacity=70);
     -moz-opacity:0.7;
@@ -931,13 +936,13 @@ border-radius: 2px;
 .view-phocacartexports [class^="icon-"].ph-icon-export::before,
 .view-phocacartexports [class*=" icon-"].ph-icon-export::before,*/
 
-
+/*
 #ph-icon-text.ph-icon-text::before,
 #ph-icon-pdf.ph-icon-pdf::before,
 #ph-icon-wizard.ph-icon-wizard::before {
-    font-family: "Glyphicons Halflings";
+
 	font-style: normal;
-	color: #fff;
+
 }
 
 .admin.com_phocacart [class^="icon-"].icon-earth::before,
@@ -947,7 +952,7 @@ border-radius: 2px;
 .admin.com_phocacart [class^="icon-"].icon-export::before,
 .admin.com_phocacart [class*=" icon-"].icon-export::before {
 
-	font-family: "Glyphicons Halflings";
+
     font-style: normal;
 }
 
@@ -964,7 +969,7 @@ border-radius: 2px;
 .admin.com_phocacart [class^="icon-"].icon-export::before,
 .admin.com_phocacart [class*=" icon-"].icon-export::before {
 
-}
+}*/
 
 #toolbar #toolbar-wizard {
     float: right;
@@ -1224,10 +1229,7 @@ td,
 	font-weight: bold;
 }
 
-.ph-cpanel-logo img {
-	width: 70%;
-    height: auto;
-}
+
 
 .ph-order-info-box .label {
 	margin: 1px;
@@ -1329,6 +1331,11 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
   margin-left: -2em;
 }
 
+.ph-tooltiptext.phTooltipImagePreview img {
+	max-width: 10em;
+	height: auto;
+}
+
 /* Show the tooltip text when you mouse over the tooltip container */
 .ph-tooltip:hover .ph-tooltiptext {
   visibility: visible;
@@ -1338,15 +1345,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 
 	position: relative;
 }
-.ph-admin-additional-box {
 
-	position: absolute;
-	top: 0.3em;
-	right: 0.3em;
-	padding: 1em;
-	background: #f0f0f0;
-	/*z-index: 1;*/
-}
 .ph-admin-additional-box-img-box {
 	text-align: center;
 }
@@ -1375,7 +1374,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 }
 
 #phEditStockAdvancedBox .inputbox.imageCreateThumbs {
-    width: 8em;
+   /* width: 8em;*/
 }
 #phEditStockAdvancedBox th small {
 	display:none;
@@ -1405,7 +1404,7 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	width: 100%;
 	border: 1px solid #ddd;
 	overflow-x: auto;
-	
+
 }
 
 .phAjaxOutputBox .alert {
@@ -1423,3 +1422,712 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	padding-left: 1em;
 	padding-right: 1em;
 }
+
+
+
+/* CP Info */
+.ph-box-cp {
+	display: flex;
+}
+
+.ph-left-cp {
+	flex-basis: 50%;
+}
+
+.ph-right-cp {
+	flex-basis: 50%;
+}
+
+
+/* CP Icons */
+
+.ph-cp-item-box {
+	display: flex;
+	flex-wrap: wrap;
+}
+.ph-cp-item {
+	width: 7rem;
+	margin: 0 0.7em 1.4em 0.7em;
+}
+
+.ph-cp-item-icon {
+	background: #fff;
+	border-radius: 5px;
+
+	width: 7rem;
+	height: 7rem;
+	text-align: center;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#ffffff);
+    box-shadow: 1px 2px 1px 0 rgba(0,0,0,.15);
+}
+
+.ph-cp-item-icon-link {
+	width: 7rem;
+	height:7rem;
+	display: flex;
+}
+
+.ph-cp-item-icon-link,
+.ph-cp-item-icon-link:hover,
+.ph-cp-item-icon-link:active,
+.ph-cp-item-icon-link:visited,
+.ph-cp-item-icon-link:focus {
+	color: #A6AAB1;
+	text-decoration: none;
+}
+
+.ph-cp-item-icon-link span {
+	border: 0px;
+	box-shadow: none;
+	border-radius: 50%;
+	width: 5rem;
+	height: 5rem;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	text-align: center;
+}
+
+.ph-cp-item-icon-link:hover {
+	border: 0px;
+	box-shadow: none;
+}
+
+.ph-cp-item-icon-link-large {
+	font-size: 2.6rem;
+	width: 2.6rem;
+	height:2.6rem;
+
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ph-cp-item-title {
+
+	display:block;
+	font-size: 0.95em;
+	margin: 0 auto;
+	margin-top: 0.1em;
+	text-align: center
+}
+
+.ph-cp-item-icon-link-large {
+   text-shadow:
+   -2px -2px 0 #575757,
+    2px -2px 0 #575757,
+    -2px 2px 0 #575757,
+     2px 2px 0 #575757;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+@-moz-document url-prefix() {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+
+.ph-cp-item-icon-link-large:before {
+	font-family: 'JoomlaFont' !important;
+}
+
+.ph-cp-item [class^="icon-"],
+.ph-cp-item [class*=" icon-"] {
+    display: inline;
+    width: auto;
+    height: auto;
+    margin-right: auto;
+    line-height: 1;
+}
+
+.ph-cp-item [class^="icon-"].duotone:after, .ph-cp-item [class*=" icon-"].duotone:after {
+  opacity: 0.6;
+}
+
+
+
+
+.ph-action-inline-icon-box {
+	white-space: nowrap;
+
+}
+.ph-action-inline-icon-box a {
+	margin-right: 0.3em;
+}
+
+
+
+#phAdminEdit .form-horizontal .tab-content {
+	position: relative;
+}
+/*
+.ph-admin-additional-box {
+
+	position: absolute;
+	top: 0.3em;
+	right: 0.3em;
+	padding: 1em;
+	background: #f0f0f0;
+	/*z-index: 1;*//*
+}*/
+
+.view-phocamenurawedit #phAdminEdit .form-horizontal .tab-content .ph-admin-additional-box,
+.view-phocamenumultipleedit #phAdminEdit .form-horizontal .tab-content .ph-admin-additional-box {
+	position: relative;
+	float: right;
+}
+
+.view-phocamenurawedit #phAdminEdit .form-horizontal .tab-content .alert,
+.view-phocamenumultipleedit #phAdminEdit .form-horizontal .tab-content .alert {
+	width: 50%;
+}
+
+.ph-admin-additional-box-img-box {
+	text-align: center;
+}
+
+.ph-admin-additional-box img {
+	margin: 0 auto;
+}
+
+.ph-float-right {
+	float: right;
+}
+
+
+
+
+
+
+
+
+/* Additional Box */
+.ph-admin-additional-box-img-box {
+	text-align: center;
+	border: 1px solid #f0f0f0;
+	border-radius: 3px;
+	padding: 0.25rem;
+	background: #fff;
+	display:inline-block;
+	margin: 0 auto;
+}
+
+.ph-admin-additional-box-img-box img {
+	margin: 0 auto;
+}
+
+.ph-admin-additional-box {
+
+	float: right;
+	width: 35%;
+	border-radius: 0.25em;
+	margin: 0 0 0.75em 0.75em;
+	padding: 0.5em;
+	background:#ffde7d;
+
+}
+
+.ph-admin-additional-box.ph-box-warning {
+	background:#eebfbe;
+}
+.ph-admin-additional-box.ph-box-info {
+	background:#dbe4f0;
+}
+
+.ph-admin-additional-box-margin {
+	margin-right: 40%;
+}
+
+@media (max-width: 768px) {
+	.ph-admin-additional-box {
+		float: none;
+		width: 100%;
+		margin: 0 0 0.75em 0;
+	}
+
+	.ph-admin-additional-box-margin {
+		margin-right: auto;
+	}
+}
+
+
+/* CP Info */
+.ph-box-info {
+	background: #fff;
+	padding: 1em;
+}
+.ph-box-cp {
+	display: flex;
+}
+
+.ph-left-cp {
+	flex-basis: 55%;
+}
+
+.ph-right-cp {
+	flex-basis: 45%;
+}
+
+@media (max-width: 768px) {
+	.ph-box-cp { display:block;}
+}
+
+.ph-cp-hr {
+	border-top: 3px solid #eee;
+	margin-bottom: 1em;
+}
+.ph-cpanel-logo img {
+	/*transform: scale(0.6);
+	transform-origin: 0 50%;*/
+	max-width: 70%;
+	height: auto;
+}
+
+.ph-cpanel-logo-seal {
+	float: right;
+	margin: 0.7em;
+}
+.ph-cpanel-logo-seal img {
+	width: 90%;
+	height: auto;
+}
+
+
+/* CP Icons, Joomla! Font Icons */
+.ph-cp-item-box {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
+.ph-cp-item-box .ph-cp-item {
+	width: 7rem;
+	margin: 0 0.7em 1.4em 0.7em;
+}
+
+.ph-cp-item-icon {
+	background: #fff;
+	border-radius: 5px;
+
+	width: 7rem;
+	height: 7rem;
+	text-align: center;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border: 0;
+	background-image: linear-gradient(-45deg,#ffffff,#ffffff);
+    box-shadow: 1px 2px 1px 0 rgba(0,0,0,.15);
+}
+
+.ph-cp-item-icon-link {
+	width: 7rem;
+	height:7rem;
+	display: flex;
+}
+
+.ph-cp-item-icon-link,
+.ph-cp-item-icon-link:hover,
+.ph-cp-item-icon-link:active,
+.ph-cp-item-icon-link:visited,
+.ph-cp-item-icon-link:focus {
+	color: #A6AAB1;
+	text-decoration: none;
+}
+
+.ph-cp-item-icon-link span {
+	border: 0px;
+	box-shadow: none;
+	border-radius: 50%;
+	width: 5rem;
+	height: 5rem;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	text-align: center;
+}
+
+.ph-cp-item-icon-link:hover {
+	border: 0px;
+	box-shadow: none;
+}
+
+.ph-cp-item-icon-link-large {
+	font-size: 2.6rem;
+	width: 2.6rem;
+	height:2.6rem;
+
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ph-cp-item-title {
+
+	display:block;
+	font-size: 0.95em;
+	margin: 0 auto;
+	margin-top: 0.1em;
+	text-align: center
+}
+
+.ph-cp-item-icon-link-large {
+   text-shadow:
+   -2px -2px 0 #575757,
+    2px -2px 0 #575757,
+    -2px 2px 0 #575757,
+     2px 2px 0 #575757;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+@-moz-document url-prefix() {
+	.ph-cp-item-icon-link-large {
+		/*-webkit-text-stroke: 2px #575757;*/
+		text-shadow: none;
+	}
+}
+/*
+.ph-cp-item-icon-link-large:before {
+	font-family: 'JoomlaFont' !important;
+}
+
+.ph-cp-item [class^="icon-"],
+.ph-cp-item [class*=" icon-"] {
+    display: inline;
+    width: auto;
+    height: auto;
+    margin-right: auto;
+    line-height: 1;
+}
+
+.ph-cp-item [class^="icon-"].duotone:after, .ph-cp-item [class*=" icon-"].duotone:after {
+  opacity: 0.6;
+}
+*/
+
+.pha-toolbox {
+	width: 4rem;
+}
+.pha-toolbox a {
+	display: inline-block;
+	margin: 0.1em;
+	margin-bottom: 0.3em;
+	padding: 0;
+	font-weight: bold;
+}
+
+.pha-no-underline,
+.pha-no-underline:hover {
+	text-decoration: none !important;
+}
+
+.ph-cp-item {
+	text-align: center;
+}
+
+.ph-cp-item [class^="icon-"].phi-fs-s,
+.ph-cp-item [class*=" icon-"].phi-fs-s {
+	font-size: 1rem;
+	width: 1rem;
+	height: 1rem;
+	display: inline-block;
+	margin: auto;
+}
+
+.ph-cp-item [class^="icon-"].phi-fs-m,
+.ph-cp-item [class*=" icon-"].phi-fs-m {
+	font-size: 1.4rem;
+	width: 1.4rem;
+	height: 1.4rem;
+	display: inline-block;
+	margin: auto;
+}
+.ph-cp-item [class^="icon-"].phi-fs-l,
+.ph-cp-item [class*=" icon-"].phi-fs-l {
+	font-size: 3.6rem;
+	width: 3.6rem;
+	height: 3.6rem;
+	display: inline-block;
+	margin: auto;
+}
+.phi-fc-bl {color: #3f72af}
+.phi-fc-bd {color: #112d4e}
+.phi-fc-rl {color: #e23e57}
+.phi-fc-rd {color: #CC1020}
+.phi-fc-yl {color: #ffde7d}
+.phi-fc-yd {color: #ffc314}
+.phi-fc-brl{color: #D2BDA9}
+.phi-fc-brd{color: #996633}
+.phi-fc-od {color: #ff9a00}
+.phi-fc-gd {color: #378137}
+.phi-fc-gl {color: #62bc62}
+
+
+.phi-mirror:before,
+.phi-mirror:after {
+	display:inline-block;
+	-moz-transform: scale(-1, 1);
+	-webkit-transform: scale(-1, 1);
+	-o-transform: scale(-1, 1);
+	-ms-transform: scale(-1, 1);
+	transform: scale(-1, 1);
+}
+
+.nav.nav-tabs .ph-cp-item .phi:before,
+.nav.nav-tabs .ph-cp-item .phi:after {
+	margin-top: 0.2em;
+}
+
+
+.js-stools .js-stools-container-bar .btn-wrapper {
+	margin: 0 3px;
+	padding: 3px 0px;
+ }
+
+ .ph-info-item .icon-minus-circle {
+	 color: #a94442;
+ }
+ .ph-info-item .icon-success {
+	 color: #3c763d;
+ }
+
+ .ph-si-tab {
+	width: 1.1em;
+	height: 1.1em;
+}
+.pd-icon-category {color: #F9C74F;}
+
+
+#adminForm .table tr th {
+	font-size: small;
+}
+
+.ph-recommended-settings-table tr.alert.alert-danger {
+    border: 0;
+}
+.ph-recommended-settings-table tr td [class^="icon-"].duotone:before,
+.ph-recommended-settings-table tr td [class*=" icon-"].duotone:before{
+    position: relative;
+}
+
+.ph-cb {
+	clear:both;
+}
+.ph-cp-logo-footer {
+	float:right;
+	margin: 0.5em;
+}
+.ph-cp-btn-update {
+	float: left;
+	margin: 0 0.3em 0.3em 0;
+}
+
+
+
+.ph-tools,
+.ph-tools-td {
+	width: 1%;
+
+}
+
+.ph-tools-td .ph-cp-item {
+	margin:0;
+	padding:0;
+	width: auto;
+}
+
+.phc-red {color: #a60000;}
+.phc-grey {color: #555555}
+.phc-green {color: #559d22;}
+.phc-orange {color:orange;}
+.phc-brown {color: #a5572a;}
+
+.ph-intendation {
+	display: inline-block;
+}
+
+a[target=_blank]::before {
+	content: "";
+}
+
+.ph-icon-task i {
+	font-size: 26px;
+}
+
+
+/* Two rows joined, Shipping Info, Payment Info */
+/*
+.ph-tr-prefix {
+	border-bottom: 1px solid transparent;
+}
+.ph-tr-prefix td {
+	border-bottom: 1px solid transparent;
+}
+.ph-tr-suffix {
+	border-top: 1px solid transparent;
+}
+.ph-tr-suffix td {
+	border-top: 1px solid transparent;
+}*/
+.table-striped.join > tbody > tr.ph-tr-suffix:nth-child(4n) > *,
+.table-striped.join > tbody > tr:nth-child(4n-1) > *{
+    --table-accent-bg: #fff;
+    color: var(--table-striped-color);
+}
+.table-striped.join > tbody > tr:nth-child(4n-2) > *,
+.table-striped.join > tbody > tr:nth-child(4n-3) > * {
+    --table-accent-bg: var(--table-striped-bg);
+    color: var(--table-striped-color);
+	
+}
+
+.table-striped.join > tbody > tr:nth-child(4n-1) > * {
+	border-bottom: 1px solid #fff;
+	padding-bottom: 0;
+}
+.table-striped.join > tbody > tr:nth-child(4n-3) > * {
+	border-bottom: 1px solid var(--table-striped-bg);
+	padding-bottom: 0;
+}
+
+.ph-order-info-box h4 {
+	text-decoration: underline;
+	font-size: 100%;
+}
+.ph-order-info-box {
+	display: flex;
+	flex: 1 1 50%;
+	flex-wrap: wrap;
+	font-size: 80%;
+}
+.ph-order-info-box .form-control {
+	font-size:100%;
+	max-width: 6em;
+	padding: 0.2em;
+	text-align: center;
+	margin: 0.1em;
+}
+.ph-order-info-box label {
+	font-size: 100%;
+}
+.ph-order-info-box-payment,
+.ph-order-info-box-shipping {
+	min-width: 50%;
+	padding: 0 0.5em 0 0.5em;
+}
+
+.ph-order-info-box-label {
+	min-width: 4em;
+	display: inline-block;
+}
+
+
+/* Hide objects in edit - administration - Product edit example */
+
+/* Entire tab *//*
+#phocacartitem joomla-tab-element#general, #phocacartitem joomla-tab button[aria-controls="general"],
+#phocacartitem joomla-tab-element#image, #phocacartitem joomla-tab button[aria-controls="image"],
+#phocacartitem joomla-tab-element#attributes, #phocacartitem joomla-tab button[aria-controls="attributes"],
+#phocacartitem joomla-tab-element#specifications, #phocacartitem joomla-tab button[aria-controls="specifications"],
+#phocacartitem joomla-tab-element#related, #phocacartitem joomla-tab button[aria-controls="related"],
+#phocacartitem joomla-tab-element#stock, #phocacartitem joomla-tab button[aria-controls="stock"],
+#phocacartitem joomla-tab-element#discount, #phocacartitem joomla-tab button[aria-controls="discount"],
+#phocacartitem joomla-tab-element#download, #phocacartitem joomla-tab button[aria-controls="download"],
+#phocacartitem joomla-tab-element#size, #phocacartitem joomla-tab button[aria-controls="size"],
+#phocacartitem joomla-tab-element#reward, #phocacartitem joomla-tab button[aria-controls="reward"],
+#phocacartitem joomla-tab-element#publishing, #phocacartitem joomla-tab button[aria-controls="publishing"],
+#phocacartitem joomla-tab-element#feed, #phocacartitem joomla-tab button[aria-controls="feed"],
+#phocacartitem joomla-tab-element#metadata, #phocacartitem joomla-tab button[aria-controls="metadata"] { 
+	display: none;
+}
+
+/* Individual parameters *//*
+#phocacartitem .ph-par-title,
+#phocacartitem .ph-par-alias,
+#phocacartitem .ph-par-price,
+#phocacartitem .ph-par-price_original,
+#phocacartitem .ph-par-tax_id,
+#phocacartitem .ph-par-catid_multiple,
+#phocacartitem .ph-par-catid,
+#phocacartitem .ph-par-manufacturer_id,
+#phocacartitem .ph-par-sku,
+#phocacartitem .ph-par-upc,
+#phocacartitem .ph-par-ean,
+#phocacartitem .ph-par-jan,
+#phocacartitem .ph-par-mpn,
+#phocacartitem .ph-par-isbn,
+#phocacartitem .ph-par-serial_number,
+#phocacartitem .ph-par-registration_key,
+#phocacartitem .ph-par-external_id,
+#phocacartitem .ph-par-external_key,
+#phocacartitem .ph-par-external_link,
+#phocacartitem .ph-par-external_text,
+#phocacartitem .ph-par-external_link2,
+#phocacartitem .ph-par-external_text2,
+#phocacartitem .ph-par-access,
+#phocacartitem .ph-par-group,
+#phocacartitem .ph-par-featured,
+#phocacartitem .ph-par-featured_background_image,
+#phocacartitem .ph-par-video,
+#phocacartitem .ph-par-public_download_file,
+#phocacartitem .ph-par-public_download_text,
+#phocacartitem .ph-par-public_play_file,
+#phocacartitem .ph-par-public_play_text,
+#phocacartitem .ph-par-condition,
+#phocacartitem .ph-par-type_feed,
+#phocacartitem .ph-par-type_category_feed,
+#phocacartitem .ph-par-description,
+#phocacartitem .ph-par-description_long,
+#phocacartitem .ph-par-features,
+#phocacartitem .ph-par-special_parameter,
+#phocacartitem .ph-par-special_image {
+	display: none;
+}
+
+/* Additional box *//*
+#phocacartitem joomla-tab-element#general .ph-admin-additional-box {
+	display: none;
+}
+
+
+/* Hide items for specific group only - e.g. Managers with ID 6*//*
+#phocacartitem.group-6 joomla-tab-element#publishing, #phocacartitem.group-6 joomla-tab button[aria-controls="publishing"],
+#phocacartitem.group-6 joomla-tab-element#image, #phocacartitem.group-6 joomla-tab button[aria-controls="image"],
+#phocacartitem.group-6 joomla-tab-element#attributes, #phocacartitem.group-6 joomla-tab button[aria-controls="attributes"] {
+	display: none;
+}
+
+#phocacartitem.group-6 .ph-par-title,
+#phocacartitem.group-6 .ph-par-alias,
+#phocacartitem.group-6 .ph-par-price_original {
+	display: none;
+}
+
+/*Making tab active in case it is not the first tab*//*
+#phocacartitem.group-6 joomla-tab > joomla-tab-element#publishing {
+    display: block;
+}
+*/

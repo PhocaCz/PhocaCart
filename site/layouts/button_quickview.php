@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-quickview-box">
     <?php echo isset($d['button']) && $d['button'] == 1 ? '' : '<div class="ph-category-item-quickview">'; ?>
         <form action="<?php echo $d['linkqvb']; ?>" method="post" id="phQuickView<?php echo (int)$d['id']; ?>" class="phItemQuickViewBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />
@@ -19,12 +21,12 @@ $d = $displayData;
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
             <?php if (isset($d['button']) && $d['button'] == 1) { ?>
-                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></a>
+                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" role="button"><?php echo PhocacartRenderIcon::icon($d['s']['i']['quick-view'], '', ' ') ?><?php echo Text::_('COM_PHOCACART_QUICK_VIEW'); ?></a>
 
             <?php } else { ?>
-                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-toggle="tooltip" data-placement="top"><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="phItemQuickViewBoxFormAjax('phQuickView<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_QUICK_VIEW'); ?>"  data-bs-toggle="tooltip" data-placement="top"><?php echo PhocacartRenderIcon::icon($d['s']['i']['quick-view']) ?></a>
             <?php } ?>
-            <?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+            <?php echo HTMLHelper::_('form.token'); ?>
         </form>
     <?php echo isset($d['button']) && $d['button'] == 1 ? '' : '</div>'; ?>
 </div>

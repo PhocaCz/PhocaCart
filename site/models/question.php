@@ -7,16 +7,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
-
+use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+
+
 
 jimport('joomla.application.component.model');
 
-class PhocaCartModelQuestion extends JModelForm
+class PhocaCartModelQuestion extends FormModel
 {
 	function __construct() {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		parent::__construct();
 		$this->setState('filter.language',$app->getLanguageFilter());
 	}
@@ -29,7 +33,7 @@ class PhocaCartModelQuestion extends JModelForm
 			return false;
 		}
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$params = $app->getParams();
 
 		// Set required or not && disable if not available
@@ -79,16 +83,16 @@ class PhocaCartModelQuestion extends JModelForm
 	}
 
 	protected function loadFormData() {
-		$data = (array) JFactory::getApplication()->getUserState('com_phocacart.question.data', array());
+		$data = (array) Factory::getApplication()->getUserState('com_phocacart.question.data', array());
 		return $data;
 	}
 
 	function store(&$data) {
 
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$uri 	= \Joomla\CMS\Uri\Uri::getInstance();
-		$app    = JFactory::getApplication();
+		$uri 	= Uri::getInstance();
+		$app    = Factory::getApplication();
 		$params = PhocacartUtils::getComponentParameters() ;
 
 		// Maximum of character, they will be saved in database
@@ -104,19 +108,19 @@ class PhocaCartModelQuestion extends JModelForm
 
 		// Bind the form fields to the table
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		// Make sure the table is valid
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		// Store the Phoca guestbook table to the database
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 

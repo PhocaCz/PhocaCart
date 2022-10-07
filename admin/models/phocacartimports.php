@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartImports extends JModelList
+class PhocaCartCpModelPhocaCartImports extends ListModel
 {
 	protected $option 	= 'com_phocacart';	
 	
@@ -20,7 +22,7 @@ class PhocaCartCpModelPhocaCartImports extends JModelList
 	public function getItemsCountImport() {
 		
 		$db		= $this->getDbo();
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 		$q 		= 'SELECT COUNT(id)'
 				.' FROM #__phocacart_import'
 			    .' WHERE user_id = '.(int) $user->id

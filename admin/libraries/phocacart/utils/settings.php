@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 
 //=========
@@ -187,12 +189,12 @@ class PhocacartUtilsSettings
 	public static function getTaxCalculationType($type) {
 		switch($type) {
 			case 1:
-				return JText::_('COM_PHOCACART_PERCENTAGE');
+				return Text::_('COM_PHOCACART_PERCENTAGE');
 			break;
 
 			case 0:
 			default:
-				return JText::_('COM_PHOCACART_FIXED_AMOUNT');
+				return Text::_('COM_PHOCACART_FIXED_AMOUNT');
 			break;
 		}
 	}
@@ -200,8 +202,8 @@ class PhocacartUtilsSettings
 	public static function getDiscountCalculationTypeArray() {
 
 		$calcTypeArray = array();
-		$calcTypeArray[0] = JText::_('COM_PHOCACART_FIXED_AMOUNT');
-		$calcTypeArray[1] = JText::_('COM_PHOCACART_PERCENTAGE');
+		$calcTypeArray[0] = Text::_('COM_PHOCACART_FIXED_AMOUNT');
+		$calcTypeArray[1] = Text::_('COM_PHOCACART_PERCENTAGE');
 
 		return $calcTypeArray;
 	}
@@ -209,11 +211,11 @@ class PhocacartUtilsSettings
 	public static function getExtenstionsArray() {
 
 		$a = array();
-		$a['components'] 	= JText::_('COM_PHOCACART_COMPONENTS');
-		$a['modules'] 		= JText::_('COM_PHOCACART_MODULES');
-		$a['plugins'] 		= JText::_('COM_PHOCACART_PLUGINS');
-		$a['templates'] 	= JText::_('COM_PHOCACART_TEMPLATES');
-		$a['languages'] 	= JText::_('COM_PHOCACART_LANGUAGES');
+		$a['components'] 	= Text::_('COM_PHOCACART_COMPONENTS');
+		$a['modules'] 		= Text::_('COM_PHOCACART_MODULES');
+		$a['plugins'] 		= Text::_('COM_PHOCACART_PLUGINS');
+		$a['templates'] 	= Text::_('COM_PHOCACART_TEMPLATES');
+		$a['languages'] 	= Text::_('COM_PHOCACART_LANGUAGES');
 
 		return $a;
 	}
@@ -223,13 +225,16 @@ class PhocacartUtilsSettings
 
 		$dir = 'https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/extensions/';
 
+		$date = new DateTime();
+		$suffix = '?time='.$date->getTimestamp();
+
 		$a = array();
-		$a['components'] 	= 'components/components.json';
-		$a['modules'] 		= 'modules/modules.json';
-		$a['plugins'] 		= 'plugins/plugins.json';
-		$a['templates'] 	= 'templates/templates.json';
-		$a['languages'] 	= 'languages/languages.json';
-		$a['news'] 			= 'news/news.json';
+		$a['components'] 	= 'components/components.json' . $suffix;
+		$a['modules'] 		= 'modules/modules.json' . $suffix;
+		$a['plugins'] 		= 'plugins/plugins.json' . $suffix;
+		$a['templates'] 	= 'templates/templates.json' . $suffix;
+		$a['languages'] 	= 'languages/languages.json' . $suffix;
+		$a['news'] 			= 'news/news.json' . $suffix;
 
 		if (isset($a[$type])) {
 			return $dir . $a[$type];
@@ -267,12 +272,12 @@ class PhocacartUtilsSettings
 	public static function getAdditionalHitsType($type) {
 		switch($type) {
 			case 2:
-				return JText::_('COM_PHOCACART_SEARCH_TERM');
+				return Text::_('COM_PHOCACART_SEARCH_TERM');
 			break;
 
 			case 1:
 			default:
-				return JText::_('COM_PHOCACART_PRODUCT_VIEW');
+				return Text::_('COM_PHOCACART_PRODUCT_VIEW');
 			break;
 		}
 
@@ -322,15 +327,15 @@ class PhocacartUtilsSettings
 	public static function getShopTypes() {
 
 		return array(
-			0 => JText::_('COM_PHOCACART_ALL'),
-			1 => JText::_('COM_PHOCACART_ONLINE_SHOP'),
-			2 => JText::_('COM_PHOCACART_POS')
+			0 => Text::_('COM_PHOCACART_ALL'),
+			1 => Text::_('COM_PHOCACART_ONLINE_SHOP'),
+			2 => Text::_('COM_PHOCACART_POS')
 		);
 	}
 
 	public static function getLangQuery($column, $lang) {
 
-		$db 				= JFactory::getDbo();
+		$db 				= Factory::getDbo();
 		// Possible settings
 		//$pC					= PhocacartUtils::getComponentParameters();
 		//$filter_lang_type	= $pC->get( 'filter_lang_type', 2 );
@@ -366,27 +371,27 @@ class PhocacartUtilsSettings
 
         switch ($status) {
             case 'CANCELED':
-                $class = 'label label-warning badge badge-warning ph-order-status-canceled';
+                $class = 'label label-warning badge bg-warning ph-order-status-canceled';
             break;
 
             case 'COMPLETED':
-                $class = 'label label-success badge badge-success ph-order-status-completed';
+                $class = 'label label-success badge bg-success ph-order-status-completed';
             break;
 
             case 'CONFIRMED':
-                $class = 'label label-success badge badge-success ph-order-status-confirmed';
+                $class = 'label label-success badge bg-success ph-order-status-confirmed';
             break;
 
             case 'PENDING':
-                $class = 'label label-info badge badge-info label-primary ph-order-status-pending';
+                $class = 'label label-info badge bg-info label-primary ph-order-status-pending';
             break;
 
             case 'REFUNDED':
-                $class = 'label label-important label-danger badge badge-danger ph-order-status-refunded';
+                $class = 'label label-important label-danger badge bg-danger ph-order-status-refunded';
             break;
 
             case 'SHIPPED':
-                $class = 'label label-info badge badge-info ph-order-status-shipped';
+                $class = 'label label-info badge bg-info ph-order-status-shipped';
             break;
 
             default:

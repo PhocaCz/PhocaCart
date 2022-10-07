@@ -7,9 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\FormModel;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelWishList extends JModelForm
+class PhocaCartModelWishList extends FormModel
 {
 
 	public function getForm($data = array(), $loadData = true) {

@@ -13,6 +13,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
 
 class PhocacartProduct
 {
@@ -25,8 +28,8 @@ class PhocacartProduct
     public static function getProduct($productId, $prioritizeCatid = 0, $type = array(0, 1))
     {
 
-        $db = JFactory::getDBO();
-        $app = JFactory::getApplication();
+        $db = Factory::getDBO();
+        $app = Factory::getApplication();
         $wheres = array();
         $params = PhocacartUtils::getComponentParameters();
         $user = PhocacartUser::getUser();
@@ -67,7 +70,7 @@ class PhocacartProduct
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonProductBeforeLoadColumns', array('com_phocacart.product', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonProductBeforeLoadColumns', array('com_phocacart.product', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
@@ -190,7 +193,7 @@ class PhocacartProduct
 
             if ((int)$id > 0) {
 
-                $db = JFactory::getDBO();
+                $db = Factory::getDBO();
                 $wheres = array();
                 $user = PhocacartUser::getUser();
 
@@ -296,7 +299,7 @@ class PhocacartProduct
 
             /*if ((int)$id > 0) {
 
-                $db 		= JFactory::getDBO();
+                $db 		= Factory::getDBO();
                 $wheres		= array();
                 $user 		= PhocacartUser::getUser();
                 $userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -357,7 +360,7 @@ class PhocacartProduct
     public static function getProductIdBySku($sku, $typeSku = 'sku', $type = array(0, 1))
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $sku = $db->quote($sku);
         $typeSkuS = $db->quoteName('a.' . $typeSku);
         $typeSkuSA = $db->quoteName('ps.' . $typeSku);
@@ -453,7 +456,7 @@ class PhocacartProduct
     public static function getProductIdByOrder($orderId)
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $query = ' SELECT a.id'
             . ' FROM #__phocacart_products AS a'
             . ' LEFT JOIN #__phocacart_order_products AS o ON o.product_id = a.id'
@@ -474,7 +477,7 @@ class PhocacartProduct
         if ($id < 1) {
             return false;
         }
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $query = ' SELECT a.id, a.title,'
             . ' group_concat(CONCAT_WS(":", c.id, c.title) SEPARATOR \',\') AS categories,'
             . ' group_concat(c.title SEPARATOR \' \') AS categories_title,'
@@ -501,7 +504,7 @@ class PhocacartProduct
         /*phocacart import('phocacart.ordering.ordering');*/
 
         $ordering = PhocacartOrdering::getOrderingCombination($orderingItem);
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $wheres = array();
 
         $where = (count($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '');
@@ -551,7 +554,7 @@ class PhocacartProduct
         $ordering = PhocacartOrdering::getOrderingCombination($orderingItem, $orderingCat);
 
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $wheres = array();
         $user = PhocacartUser::getUser();
 
@@ -611,7 +614,7 @@ class PhocacartProduct
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonProductsBeforeLoadColumns', array('com_phocacart.products', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonProductsBeforeLoadColumns', array('com_phocacart.products', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
@@ -639,7 +642,8 @@ class PhocacartProduct
             $groupsFull = $queryColumns;
             $groupsFast = 'a.id';
         } else {
-            $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, m.title AS manufacturertitle,'
+            $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
+             . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, m.title AS manufacturertitle,'
                 . ' AVG(r.rating) AS rating,'
                 . ' at.required AS attribute_required';
             $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
@@ -661,6 +665,9 @@ class PhocacartProduct
             // add to 2 type_category_feed - used in XML FEED
             $q .= ', GROUP_CONCAT(c.title SEPARATOR "|") AS categories';
             $q .= ', GROUP_CONCAT(c.type_feed SEPARATOR "|") AS feedcategories';
+
+            // Possible feature but in all known feeds we use only one category
+            //$q .= ', GROUP_CONCAT(c.params_feed SEPARATOR "|") AS feedcategoriesparams';
         }
 
         // Possible DISTINCT
@@ -699,6 +706,8 @@ class PhocacartProduct
             $q .= ' LIMIT ' . (int)$limitOffset . ', ' . (int)$limitCount;
         }
 
+
+
         $db->setQuery($q);
 
         if ($return == 'column') {
@@ -715,7 +724,7 @@ class PhocacartProduct
      */
     public static function getCategoryByProductId($id)
     {
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $query = 'SELECT a.catid'
             . ' FROM #__phocacart_products AS a'
             . ' WHERE a.id = ' . (int)$id
@@ -732,7 +741,7 @@ class PhocacartProduct
 
     public static function getCategoriesByProductId($id)
     {
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $q = 'SELECT pc.category_id, c.alias, pc.ordering'
             . ' FROM #__phocacart_product_categories AS pc'
             . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
@@ -746,7 +755,7 @@ class PhocacartProduct
 
     public static function getImagesByProductId($id)
     {
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $q = 'SELECT pi.image'
             . ' FROM #__phocacart_product_images AS pi'
             . ' WHERE pi.product_id = ' . (int)$id
@@ -759,7 +768,7 @@ class PhocacartProduct
 
     public static function getImageByProductId($id)
     {
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $q = 'SELECT p.image'
             . ' FROM #__phocacart_products AS p'
             . ' WHERE p.id = ' . (int)$id
@@ -774,7 +783,7 @@ class PhocacartProduct
     public static function getMostViewedProducts($limit = 5, $checkPublished = false, $checkAccess = false, $count = false, $type = array(0, 1))
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $wheres = array();
 
         if ($checkAccess) {
@@ -818,7 +827,7 @@ class PhocacartProduct
 
         } else {
 
-            $q = 'SELECT a.id, a.title, a.alias, SUM(a.hits) AS hits, GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle'
+            $q = 'SELECT a.id, a.title, a.alias, SUM(a.hits) AS hits, GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, a.catid AS preferred_catid'
                 . ' FROM #__phocacart_products AS a'
                 . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
                 . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
@@ -845,7 +854,7 @@ class PhocacartProduct
     public static function getBestSellingProducts($limit = 5, $dateFrom = '', $dateTo = '', $count = false)
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $wheres = array();
 
         $wheres[] = " o.id > 0";
@@ -949,7 +958,7 @@ class PhocacartProduct
 
         $a = array();
 
-        $app			= JFactory::getApplication();
+        $app			= Factory::getApplication();
         $paramsC 		= PhocacartUtils::getComponentParameters();
         $export_attributes		= $paramsC->get( 'export_attributes', 1 );
         $export_specifications	= $paramsC->get( 'export_specifications', 1 );
@@ -1085,20 +1094,20 @@ class PhocacartProduct
     {
         // Sanitize the ids.
         $pks = (array)$pks;
-        \Joomla\Utilities\ArrayHelper::toInteger($pks);
-        $app = JFactory::getApplication();
+        ArrayHelper::toInteger($pks);
+        $app = Factory::getApplication();
 
         if (empty($pks)) {
-            $app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_SELECTED'), 'message');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'), 'message');
             return false;
         }
 
         //$table = $this->getTable('PhocacartFeatured', 'Table');
-        $table = JTable::getInstance('PhocacartFeatured', 'Table', array());
+        $table = Table::getInstance('PhocacartFeatured', 'Table', array());
 
 
         try {
-            $db = JFactory::getDbo();
+            $db = Factory::getDbo();
             $query = $db->getQuery(true)
                 ->update($db->quoteName('#__phocacart_products'))
                 ->set('featured = ' . (int)$value)
@@ -1134,7 +1143,7 @@ class PhocacartProduct
                     $tuples[] = $pk . ', 0';
                 }
                 if (count($tuples)) {
-                    $db = JFactory::getDbo();
+                    $db = Factory::getDbo();
                     $columns = array('product_id', 'ordering');
                     $query = $db->getQuery(true)
                         ->insert($db->quoteName('#__phocacart_product_featured'))
@@ -1163,7 +1172,7 @@ class PhocacartProduct
 
 
         // Store
-        $table = JTable::getInstance('PhocaCartItem', 'Table', array());
+        $table = Table::getInstance('PhocaCartItem', 'Table', array());
 
         $newInsertOldId = 0;
         if ($importColumn == 2) {
@@ -1212,9 +1221,8 @@ class PhocacartProduct
         }
 
         if (intval($table->date) == 0) {
-            $table->date = JFactory::getDate()->toSql();
+            $table->date = Factory::getDate()->toSql();
         }
-
 
         if (!$table->check()) {
             throw new Exception($table->getError());
@@ -1225,7 +1233,7 @@ class PhocacartProduct
             // The imported ID does not exist, we need to add new row, but we try to use the same ID
             // even the ID is autoincrement (this is why we use non standard method) because
             // standard method cannot add IDs into autoincrement
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
 
 
             if (!$db->insertObject('#__phocacart_products', $table, 'id')) {
@@ -1450,8 +1458,7 @@ class PhocacartProduct
     }
 
 
-    public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array())
-    {
+    public static function getProductPrice($type = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array(), $ignoreZeroPrice = 0) {
 
         switch ($type) {
 
@@ -1466,10 +1473,14 @@ class PhocacartProduct
 
         }
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
 
         $wheres = array();
-        $lefts = array();
+        $lefts  = array();
+
+        if ($ignoreZeroPrice == 1){
+            $wheres[] = 'p.price > 0';
+        }
 
         $wheres[] = ' p.published = 1';
 
@@ -1516,7 +1527,7 @@ class PhocacartProduct
     public static function getProductCodes($id)
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $wheres = array();
         $wheres[] = ' a.id = ' . (int)$id;
         $query = ' SELECT a.sku, a.upc, a.ean, a.jan, a.isbn, a.mpn, a.serial_number'
@@ -1569,7 +1580,7 @@ class PhocacartProduct
             $cidS = implode(',', $cidA);
 
             $ordering = PhocacartOrdering::getOrderingCombination($orderingItem);
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
             $wheres = array();
 
             $wheres[] = 'c.id IN ('.$cidS.')';
@@ -1611,7 +1622,7 @@ class PhocacartProduct
     public static function getProductCount()
     {
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $query = 'SELECT COUNT(*) FROM #__phocacart_products';
         $db->setQuery($query);
         $count = $db->loadResult();

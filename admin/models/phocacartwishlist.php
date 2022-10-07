@@ -7,9 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartWishlist extends JModelAdmin
+class PhocaCartCpModelPhocacartWishlist extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -28,12 +32,12 @@ class PhocaCartCpModelPhocacartWishlist extends JModelAdmin
 	
 	public function getTable($type = 'PhocacartWishlist', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 	
 	public function getForm($data = array(), $loadData = true) {
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartwishlist', 'phocacartwishlist', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -44,7 +48,7 @@ class PhocaCartCpModelPhocacartWishlist extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartwishlist.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartwishlist.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -56,14 +60,14 @@ class PhocaCartCpModelPhocacartWishlist extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		$table->date 				= PhocacartUtils::getDateFromString($table->date);
@@ -73,7 +77,7 @@ class PhocaCartCpModelPhocacartWishlist extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_wishlists WHERE user_id = '. (int) $table->user_id);
 				$max = $db->loadResult();
 

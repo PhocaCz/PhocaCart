@@ -7,19 +7,21 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditTax extends JModelList
+class PhocaCartCpModelPhocaCartEditTax extends ListModel
 {
 	protected	$option 		= 'com_phocacart';
 	
 	public function getData() {
 	
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 		$type	= $app->input->get('type', 0, 'type');// 1 country, 2 region
 		
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.id, a.title, a.code2, a.image';
 		if ($type == 1) {
 			$query .= ' FROM #__phocacart_countries AS a';
@@ -36,7 +38,7 @@ class PhocaCartCpModelPhocaCartEditTax extends JModelList
 	
 	public function getCountryTaxData() {
 	
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 		
 		if ((int)$id > 0) {
@@ -46,7 +48,7 @@ class PhocaCartCpModelPhocaCartEditTax extends JModelList
 	
 	public function getRegionTaxData() {
 	
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 		
 		if ((int)$id > 0) {
@@ -60,7 +62,7 @@ class PhocaCartCpModelPhocaCartEditTax extends JModelList
 		$data['type']		= (int)$data['type'];
 
 		$row 				= $this->getTable('PhocacartOrder', 'Table');
-		$user 				= JFactory::getUser();
+		$user 				= Factory::getUser();
 
 		if (!empty($data)) {
 			
@@ -201,7 +203,7 @@ class PhocaCartCpModelPhocaCartEditTax extends JModelList
 		
 		if ((int)$id > 0) {
 		
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			if ($type == 2) {
 				//$query = 'DELETE FROM #__phocacart_tax_regions WHERE region_id = '.(int)$id;
 				$query = 'UPDATE #__phocacart_tax_regions SET tax_rate = -1, title = \'\', alias = \'\' WHERE region_id = '.(int)$id;

@@ -9,8 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
-
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+
 
 final class PhocacartStatistics
 {
@@ -18,9 +19,9 @@ final class PhocacartStatistics
 
 	public function __construct() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		if ($app->isClient('administrator')) {
-			Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
+			HTMLHelper::_('jquery.framework', false);
 			HTMLHelper::_('script', 'media/com_phocacart/js/chartjs/Chart.min.js', array('version' => 'auto'), array('defer' => true));
 		} else {
 			$media = PhocacartRenderMedia::getInstance('main');
@@ -50,6 +51,8 @@ final class PhocacartStatistics
         $baC2	= 'rgba(255, 170, 0,0.5)';
         $pbC2	= 'rgba(255, 170, 0,0.8)';
         $pbaC2 	= 'rgba(255,255,255,1)';
+
+
 
 
 
@@ -91,7 +94,7 @@ data: {
 		label: '".htmlspecialchars($dataBLabel)."',
 
 	}],
-	labels: [".htmlspecialchars($dataX)."
+	labels: [".htmlspecialchars($dataX, ENT_NOQUOTES)."
 	],
 },
 scaleIntegersOnly: true,
@@ -164,7 +167,7 @@ options: {
 		},
 	}
 };";
-		JFactory::getDocument()->addScriptDeclaration($o);
+		Factory::getDocument()->addScriptDeclaration($o);
 	}
 
 
@@ -201,7 +204,7 @@ data: {
 		pointHighlightStroke: '#fff'*/
 
 	}],
-	labels: [".htmlspecialchars($dataX)."
+	labels: [".htmlspecialchars($dataX, ENT_NOQUOTES)."
 	],
 },
 scaleIntegersOnly: true,
@@ -274,11 +277,11 @@ options: {
 		},
 	}
 };";
-		JFactory::getDocument()->addScriptDeclaration($o);
+		Factory::getDocument()->addScriptDeclaration($o);
 	}
 
 
-	public function renderChartJsPie($id, $data) {
+	public function renderChartJsPie($id, $data, $limit = 5) {
 
 
 		$colors = array('#FFCC33', '#FF6633', '#FF3366', '#FF33CC', '#CC33FF');
@@ -286,11 +289,16 @@ options: {
 		if (!empty($data)) {
 
 			foreach($data as $k => $v) {
+
+				if ($k >= $limit) {
+					break;
+				}
+
 				$d[$k] = '\''. addslashes($v['items']). '\'';
-				$l[$k] = '\''. addslashes($v['title']). '\'';
+				$l[$k] = '\''. addslashes(($v['title'])). '\'';
 				$c = $k%5;
 
-				$b[$k] = '\''. addslashes($colors[$k]). '\'';
+				$b[$k] = '\''. addslashes($colors[$c]). '\'';
 			}
 
 			$dS = implode(',', $d);
@@ -299,6 +307,7 @@ options: {
 		}
 
 
+		// labels: [".htmlspecialchars($lS, ENT_NOQUOTES, 'UTF-8')."]
 		$o = "
 var config".$id." = {
 	type: 'pie',
@@ -307,13 +316,13 @@ var config".$id." = {
 			data: [".htmlspecialchars($dS)."],
 			backgroundColor : [".htmlspecialchars($bS)."],
 		}],
-		labels: [".htmlspecialchars($lS, ENT_NOQUOTES, 'UTF-8')."]
+		labels: [".$lS."]
 	},
 	options: {
 		responsive: true,
 	}
 };";
-		JFactory::getDocument()->addScriptDeclaration($o);
+		Factory::getDocument()->addScriptDeclaration($o);
 	}
 
 	public function setFunction($id, $type) {
@@ -334,13 +343,13 @@ var config".$id." = {
 			}
 		}
 		$s[] = '};';
-		JFactory::getDocument()->addScriptDeclaration(implode( "\n", $s ));
+		Factory::getDocument()->addScriptDeclaration(implode( "\n", $s ));
 	}
 
 	public function getDataChart($numberOfDate = '', $dateFrom = '', $dateTo = '') {
 
 
-		$db	= JFactory::getDbo();
+		$db	= Factory::getDbo();
 		$q	= $db->getQuery(true);
 
 		//- $q->select('a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders');
@@ -458,7 +467,7 @@ var config".$id." = {
 			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
 
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$q = 'SELECT COUNT(a.id) FROM #__phocacart_orders AS a WHERE a.published = 1';
 		$q .= ' AND DATE(a.date) >= '.$db->quote($dateFrom).' AND DATE(a.date) <= '.$db->quote($dateTo);
 
@@ -491,7 +500,7 @@ var config".$id." = {
 			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
 
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$q = 'SELECT COUNT(DISTINCT(a.user_id)) FROM #__phocacart_orders AS a WHERE a.published = 1';
 		$q .= ' AND DATE(a.date) >= '.$db->quote($dateFrom).' AND DATE(a.date) <= '.$db->quote($dateTo);
 
@@ -528,7 +537,7 @@ var config".$id." = {
 			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
 
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$q = ' SELECT SUM(t.amount) FROM #__phocacart_orders AS a';
 		$q .= ' LEFT JOIN #__phocacart_order_total AS t ON a.id = t.order_id';
 		$q .= ' WHERE a.published = 1';

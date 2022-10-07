@@ -7,10 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-$layoutAtOS	= new JLayoutFile('attribute_options_select', null, array('component' => 'com_phocacart'));
-$layoutAtOC	= new JLayoutFile('attribute_options_checkbox', null, array('component' => 'com_phocacart'));
-$layoutAtOT	= new JLayoutFile('attribute_options_text', null, array('component' => 'com_phocacart'));
-$layoutAtOG	= new JLayoutFile('attribute_options_gift', null, array('component' => 'com_phocacart'));
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+$layoutAtOS	= new FileLayout('attribute_options_select', null, array('component' => 'com_phocacart'));
+$layoutAtOC	= new FileLayout('attribute_options_checkbox', null, array('component' => 'com_phocacart'));
+$layoutAtOT	= new FileLayout('attribute_options_text', null, array('component' => 'com_phocacart'));
+$layoutAtOG	= new FileLayout('attribute_options_gift', null, array('component' => 'com_phocacart'));
 
 $d 				= $displayData;
 $displayData 	= null;
@@ -20,7 +22,7 @@ if (!empty($d['attr_options']) && $d['hide_attributes'] != 1) {
 	//PhocacartRenderJs::renderPhSwapImageInitialize($d['id'], $d['dynamic_change_image'], $d['init_type']);
 
 	echo '<div class="ph-item-attributes-box" id="phItemAttributesBox">';
-	echo '<h4>'.JText::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';
+	echo '<h4>'.Text::_('COM_PHOCACART_AVAILABLE_OPTIONS').'</h4>';
 
 
 	foreach ($d['attr_options'] as $k => $v) {

@@ -8,6 +8,21 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 
+function phShowModal(element, options) {
+
+	var phParams = Joomla.getOptions('phParamsPC');
+
+	if (phParams['theme'] == 'uikit') {
+
+		UIkit.modal(element, options);
+		UIkit.modal(element).show();
+	} else {
+		var modal = new bootstrap.Modal(element, options);
+		modal.show();
+	}
+
+}
+
 function phAppendContainerRequest() {
 	if (jQuery('#phContainerRequest').length === 0) {
 		jQuery("body").append('<div id="phContainerRequest"></div>');
@@ -51,7 +66,10 @@ function phDoRequestSuccess(data, options) {
 		if (options['method'] == 2) {
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
-			jQuery("#phAddToCartPopup").modal();
+			//jQuery("#phAddToCartPopup").modal();
+			//var modal = new bootstrap.Modal(document.getElementById("phAddToCartPopup"), {});
+			//modal.show();
+			phShowModal(document.getElementById("phAddToCartPopup"), {});
 
 		}
 
@@ -73,10 +91,17 @@ function phDoRequestSuccess(data, options) {
 
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
+
 			if (options['task'] == "add") {
-				jQuery("#phAddToComparePopup").modal();
+				//jQuery("#phAddToComparePopup").modal();
+				//var modal = new bootstrap.Modal(document.getElementById("phAddToComparePopup"), {});
+				//modal.show();
+				phShowModal(document.getElementById("phAddToComparePopup"), {});
 			} else if (options['task'] == "remove") {
-				jQuery("#phRemoveFromComparePopup").modal();
+				//jQuery("#phRemoveFromComparePopup").modal();
+				//var modal = new bootstrap.Modal(document.getElementById("phRemoveFromComparePopup"), {});
+				//modal.show();
+				phShowModal(document.getElementById("phRemoveFromComparePopup"), {});
 			}
 
 		}
@@ -95,9 +120,15 @@ function phDoRequestSuccess(data, options) {
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
 			if (options['task'] == "add") {
-				jQuery("#phAddToWishListPopup").modal();
+				//jQuery("#phAddToWishListPopup").modal();
+				//var modal = new bootstrap.Modal(document.getElementById("phAddToWishListPopup"), {});
+				//modal.show();
+				phShowModal(document.getElementById("phAddToWishListPopup"), {});
 			} else if (options['task'] == "remove") {
-				jQuery("#phRemoveFromWishListPopup").modal();
+				//jQuery("#phRemoveFromWishListPopup").modal();
+				//var modal = new bootstrap.Modal(document.getElementById("phRemoveFromWishListPopup"), {});
+				//modal.show();
+				phShowModal(document.getElementById("phRemoveFromWishListPopup"), {});
 			}
 
 		}
@@ -117,7 +148,10 @@ function phDoRequestSuccess(data, options) {
 		jQuery("#phContainerRequestQuickView").html(data.popup);
 		//jQuery("#phContainer").html(data.popup);
 		//jQuery("body").append(jQuery("#phQuickViewPopup"));
-		jQuery("#phQuickViewPopup").modal();
+		//jQuery("#phQuickViewPopup").modal();
+		//var modal = new bootstrap.Modal(document.getElementById("phQuickViewPopup"), {});
+		//modal.show();
+		phShowModal(document.getElementById("phQuickViewPopup"), {});
 		if (options['load_chosen'] > 0) {
 			jQuery('select').chosen('destroy').chosen({disable_search_threshold : 10,allow_single_deselect : true});
 		}
@@ -155,7 +189,7 @@ function phDoRequestSuccess(data, options) {
 			jQuery(options["id_item_price"]).html(data.item.price);
 			// Change also Gift voucher if displayed
 			jQuery(options["id_item_price_gift"]).html(data.item.priceitems.bruttoformat);
-			
+
 		}
 
 		/* Change ID (SKU, EAN, ...) */
@@ -227,7 +261,10 @@ function phDoRequestError(data, options) {
 		if (options['method'] == 2) {
 			phAppendContainerRequest();
 			jQuery("#phContainerRequest").html(data.popup);
-			jQuery("#phAddToCartPopup").modal();
+			//jQuery("#phAddToCartPopup").modal();
+			//var modal = new bootstrap.Modal(document.getElementById("phAddToCartPopup"), {});
+			//modal.show();
+			phShowModal(document.getElementById("phAddToCartPopup"), {});
 
 
 		}
@@ -241,6 +278,7 @@ function phDoRequestError(data, options) {
 		}
 	}
 }
+
 
 /*
  * type ... compare
@@ -283,6 +321,8 @@ jQuery(document).ready(function(){
 	// :: EVENT (SUBMIT) Item View
 	//jQuery(".phItemCartBoxForm").on(\'submit\', function (e) {// Not working when form is added by ajax
 	jQuery(document).on("submit", "form.phItemCartBoxForm", function (e) { // Works with forms added by ajax
+
+
 		if (typeof phDoSubmitFormAddToCart === "function") {
 			e.preventDefault();
 			var sFormData = jQuery(this).serialize();
@@ -302,5 +342,4 @@ jQuery(document).ready(function(){
 			phDoSubmitFormUpdateCart(sFormData);
 		}
 	})
-
 })

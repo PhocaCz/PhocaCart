@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
 
 class PhocacartCartDb
 {
@@ -24,8 +25,8 @@ class PhocacartCartDb
 
 		if(!isset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId])){
 
-			$db 	= JFactory::getDBO();
-			$query = ' SELECT c.cart, c.shipping, c.payment, c.coupon, c.reward, c.loyalty_card_number,'
+			$db 	= Factory::getDBO();
+			$query = ' SELECT c.cart, c.shipping, c.params_shipping, c.payment, c.params_payment, c.coupon, c.reward, c.loyalty_card_number,'
 					.' s.title as shippingtitle, s.method as shippingmethod, s.image as shippingimage, p.title as paymenttitle, p.method as paymentmethod, p.image as paymentimage,'
 					.' co.title as coupontitle, co.code as couponcode'
 					.' FROM #__phocacart_cart_multiple AS c'
@@ -53,7 +54,7 @@ class PhocacartCartDb
 				$pos_payment_force = 0;
 				$pos_shipping_force = 0;
 				if (PhocacartPos::isPos()) {
-					$app					= JFactory::getApplication();
+					$app					= Factory::getApplication();
 					$paramsC 				= PhocacartUtils::getComponentParameters();
 					$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
 					$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
@@ -80,6 +81,8 @@ class PhocacartCartDb
 				$cartDb['couponcode'] 			= '';
 				$cartDb['reward']				= '';
 				$cartDb['loyalty_card_number']	= '';
+				$cartDb['params_shipping']		= array();
+				$cartDb['params_payment']		= array();
 				self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId] = $cartDb;
 			}
 
@@ -89,7 +92,7 @@ class PhocacartCartDb
 
 	public static function emptyCartDb($userId, $vendorId = 0, $ticketId = 0, $unitId = 0, $sectionId = 0) {
 		self::$cart =  false;
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' DELETE FROM #__phocacart_cart_multiple'
 				.' WHERE user_id = '.(int)$userId
 				.' AND vendor_id = '.(int)$vendorId

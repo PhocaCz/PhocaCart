@@ -7,10 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
 jimport('joomla.filter.input');
 use Joomla\String\StringHelper;
 
-class TablePhocaCartItem extends JTable
+class TablePhocaCartItem extends Table
 {
 	
 	protected $_jsonEncode = array('params', 'metadata');
@@ -22,7 +24,7 @@ class TablePhocaCartItem extends JTable
 	function check() {
 		
 		if (trim( $this->title ) == '') {
-			$this->setError( JText::_( 'COM_PHOCACART_PRODUCT_MUST_HAVE_TITLE') );
+			$this->setError( Text::_( 'COM_PHOCACART_PRODUCT_MUST_HAVE_TITLE') );
 			return false;
 		}
 

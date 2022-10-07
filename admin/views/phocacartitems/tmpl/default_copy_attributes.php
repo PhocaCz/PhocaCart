@@ -6,47 +6,60 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-defined('_JEXEC') or die();
-//$published = $this->state->get('filter.published');
-$published = (int)$this->state->get('filter.published');
-?>
-<script type="text/javascript">
 
+defined('_JEXEC') or die();
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\FormHelper;
+
+//$published = $this->state->get('filter.published');
+//$published = (int)$this->state->get('filter.published');
+$s = array();
+
+$s[] = '
 jQuery(document).ready(function() {
 
-
-	jQuery('#collapseModalCA').on('shown.bs.modal', function (e) {
-		var phTitleString = '';
-		var phCheckedValues = jQuery('input[name="cid[]"]:checked');
+    var bsModal = document.getElementById(\'collapseModalCA\');
+	bsModal.addEventListener("shown.bs.modal", function (e) {
+	//jQuery(\'#collapseModalCA\').on(\'shown.bs.modal\', function (e) {
+		
+		var phTitleString = \'\';
+		var phCheckedValues = jQuery(\'input[name="cid[]"]:checked\');
 		jQuery.each(phCheckedValues, function( i, v ) {
-			var phIdTitle = '.phIdTitle' + v.value;
-			phTitleString += '<li>' + jQuery(phIdTitle).html() + '</li>';
+			var phIdTitle = \'.phIdTitle\' + v.value;
+			phTitleString += \'<li>\' + jQuery(phIdTitle).html() + \'</li>\';
 		});
-		jQuery('#phCopyAttributesTo').html('<ul>' + phTitleString + '</ul>');
+		jQuery(\'#phCopyAttributesTo\').html(\'<ul>\' + phTitleString + \'</ul>\');
 	});
+	
+});';
+$document = Factory::getDocument();
+$document->addScriptDeclaration(implode("\n", $s));
+?>
+<div id="collapseModalCA" role="dialog" tabindex="-1" class="joomla-modal modal fade">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><?php echo Text::_('COM_PHOCACART_COPY_ATTRIBUTES_TO_SELECTED_ITEMS');?></h3>
+				    <button type="button" data-focus="false" class="btn-close novalidate" data-bs-dismiss="modal" aria-label="<?php Text::_('COM_PHOCACART_CLOSE'); ?>"></button>
+            </div>
 
+            <div class="modal-body">
 
-});
-</script>
-<div class="modal hide fade" id="collapseModalCA">
-	<div class="modal-header">
-		<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
-		<h3><?php echo JText::_($this->t['l'] . '_COPY_ATTRIBUTES_TO_SELECTED_ITEMS');?></h3>
-	</div>
-	<div class="modal-body">
-
-		<div class="row-fluid">
+            <div class="p-3">
+	            <div class="row">
 
 			<div class="span5 col-sm-5 col-md-5">
-				<h3><?php echo JText::_('COM_PHOCACART_PRODUCT'); ?> (<?php echo JText::_('COM_PHOCACART_COPY_ATTRIBUTES_FROM'); ?>)</h3>
+				<h3><?php echo Text::_('COM_PHOCACART_PRODUCT'); ?> (<?php echo Text::_('COM_PHOCACART_COPY_ATTRIBUTES_FROM'); ?>)</h3>
 
 
-				<p><?php echo JText::_('COM_PHOCACART_SELECT_PRODUCT_FROM_WHICH_ATTRIBUTES_WILL_BE_COPIED'); ?></p>
+				<p><?php echo Text::_('COM_PHOCACART_SELECT_PRODUCT_FROM_WHICH_ATTRIBUTES_WILL_BE_COPIED'); ?></p>
 				<div class="control-group">
 					<div class="controls">
 						<?php
-						JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
-						$item = JFormHelper::loadFieldType('PhocaSelectItem', true);
+						FormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+						$item = FormHelper::loadFieldType('PhocaSelectItem', true);
 						$itemO = $item->getInputWithoutFormData();
 						echo $itemO;
 						?>
@@ -55,11 +68,11 @@ jQuery(document).ready(function() {
 
                 <div class="control-group">
                     <div class="controls">
-                        <label id="copy_attributes_download_files-lbl" for="copy_attributes_download_files"><?php echo JText::_('COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES') ?></label>
+                        <label id="copy_attributes_download_files-lbl" for="copy_attributes_download_files"><?php echo Text::_('COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES') ?></label>
 
-                        <select name="copy_attributes_download_files" class="inputbox" id="copy_attributes_download_files">
-                            <option value="1"><?php echo JText::_('COM_PHOCACART_YES'); ?></option>
-                            <option value="0" selected><?php echo JText::_('COM_PHOCACART_NO'); ?></option>
+                        <select data-focus="false" name="copy_attributes_download_files" class="form-select" id="copy_attributes_download_files">
+                            <option value="1"><?php echo Text::_('COM_PHOCACART_YES'); ?></option>
+                            <option value="0" selected><?php echo Text::_('COM_PHOCACART_NO'); ?></option>
                         </select>
                     </div>
                 </div>
@@ -71,20 +84,23 @@ jQuery(document).ready(function() {
 			</div>
 
 			<div class="span5 col-sm-5 col-md-5">
-				<h3><?php echo JText::_('COM_PHOCACART_PRODUCTS'); ?> (<?php echo JText::_('COM_PHOCACART_COPY_ATTRIBUTES_TO'); ?>)</h3>
-				<div class="alert alert-error"><?php echo JText::_('COM_PHOCACART_BE_AWARE_COPYING_OF_ATTRIBUTES_CAN_OVERWRITE_CURRENT_ATTRIBUTES_OF_SELECTED_PRODUCTS'); ?></div>
+				<h3><?php echo Text::_('COM_PHOCACART_PRODUCTS'); ?> (<?php echo Text::_('COM_PHOCACART_COPY_ATTRIBUTES_TO'); ?>)</h3>
+				<div class="alert alert-error"><?php echo Text::_('COM_PHOCACART_BE_AWARE_COPYING_OF_ATTRIBUTES_CAN_OVERWRITE_CURRENT_ATTRIBUTES_OF_SELECTED_PRODUCTS'); ?></div>
 				<div id="phCopyAttributesTo"></div>
 			</div>
 
 		</div>
+            </div>
+            </div>
 
-	</div>
 	<div class="modal-footer">
-		<button class="btn" type="button" onclick="document.getElementById('batch-category-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''" data-dismiss="modal">
-			<?php echo JText::_('JCANCEL'); ?>
+		<button class="btn btn-primary" type="button" onclick="document.getElementById('batch-category-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''" data-bs-dismiss="modal">
+			<?php echo Text::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('<?php echo $this->t['task'] ?>.copyattributes');">
-			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
+			<?php echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>
 </div>
+        </div>
+    </div>

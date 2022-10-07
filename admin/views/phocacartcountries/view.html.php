@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
+class PhocaCartCpViewPhocaCartCountries extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -41,7 +46,7 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderAdminmedia();
-		JHtml::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
+		//HTMLHelper::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -53,47 +58,47 @@ class PhocaCartCpViewPhocaCartCountries extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.country_id'));
-		$bar 	= JToolbar::getInstance('toolbar');
+		$bar 	= Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_COUNTRIES' ), 'globe' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_COUNTRIES' ), 'globe' );
 
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			ToolbarHelper::divider();
+			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartcountries.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartcountries.delete', $this->t['l'].'_DELETE');
 		}
 		//dummy gly phicon gly phicon-globe ph-icon-earth
 		//JToolbarHelper::custom($this->t['task'].'.importcountries', 'earth', 'earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
 
-		$dhtml = '<button onclick="if (confirm(\''.JText::_('COM_PHOCACART_WARNING_IMPORT_COUNTRIES').'\')) { Joomla.submitbutton(\'phocacartcountry.importcountries\'); }" class="btn btn-small button-earth"><i class="icon-earth" title="'.JText::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'"></i> '.JText::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'</button>';
+		$dhtml = '<joomla-toolbar-button><button onclick="if (confirm(\''.Text::_('COM_PHOCACART_WARNING_IMPORT_COUNTRIES').'\')) { Joomla.submitbutton(\'phocacartcountry.importcountries\'); }" class="btn btn-small button-earth"><i class="icon-earth fas fa fa-globe" title="'.Text::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'"></i> '.Text::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'</button></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml, 'importcountries');
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
-			'a.code2' 			=> JText::_($this->t['l'] . '_CODE2'),
-			'a.code3' 			=> JText::_($this->t['l'] . '_CODE3'),
-			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
+			'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
+			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
+			'a.code2' 			=> Text::_($this->t['l'] . '_CODE2'),
+			'a.code3' 			=> Text::_($this->t['l'] . '_CODE3'),
+			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
+			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

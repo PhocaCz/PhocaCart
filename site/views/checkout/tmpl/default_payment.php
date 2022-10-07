@@ -7,8 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutI 		= new JLayoutFile('icon_checkout_status', null, array('component' => 'com_phocacart'));
+$layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
 $d['s']			= $this->s;
 $d['suffix']	= $this->t['icon_suffix'];
@@ -29,7 +33,7 @@ if ($this->a->paymentnotused == 1) {
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutpaymentview">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutpaymentview">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.Text::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div>';
 
 
@@ -40,7 +44,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-payment-row" id="phPaymentMethods" >';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_PAYMENT_METHODS').'</div>';
+	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_PAYMENT_METHODS').'</div>';
 	echo '</div>';
 
 	if (isset($this->t['paymentmethod']) && isset($this->t['paymentmethod']['title']) && $this->t['paymentmethod']['title'] != '') {
@@ -49,13 +53,13 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
 
 		if (isset($this->t['paymentmethod']['image']) && $this->t['paymentmethod']['image'] != '') {
-			echo '<div class="ph-payment-image"><img src="'.JURI::base(true) .'/'. $this->t['paymentmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['paymentmethod']['title'])).'" /></div>';
+			echo '<div class="ph-payment-image"><img src="'.Uri::base(true) .'/'. $this->t['paymentmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['paymentmethod']['title'])).'" /></div>';
 		}
 
 		echo '<div class="ph-payment-title">'.$this->t['paymentmethod']['title'].'</div>';
 
 		if ($this->t['display_payment_desc'] && $this->t['paymentmethod']['description'] != '') {
-			echo '<div class="ph-checkout-payment-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.HTMLHelper::_('content.prepare', $this->t['paymentmethod']['description']).'</div>';
 		}
 
 		echo '</div>';
@@ -63,7 +67,10 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'">';
 		if ($this->a->paymentdisplayeditbutton) {
             echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-payment-edit">';
-            echo '<button class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn"><span class="' . $this->s['i']['edit'] . '"></span> ' . JText::_('COM_PHOCACART_EDIT_PAYMENT') . '</button>';
+            echo '<button class="'.$this->s['c']['btn.btn-success.btn-sm'].' ph-btn">';
+			//echo '<span class="' . $this->s['i']['edit'] . '"></span> ';
+			echo PhocacartRenderIcon::icon($this->s['i']['edit'], '', ' ');
+			echo Text::_('COM_PHOCACART_EDIT_PAYMENT') . '</button>';
             echo '</div>';
         }
 		echo '</div>';
@@ -80,7 +87,7 @@ if ($this->a->paymentnotused == 1) {
 	//echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
     //echo '</div>';// end checkout box row
 
@@ -95,7 +102,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 
 	// Header
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutpaymentedit">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutpaymentedit">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.Text::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div>';
 
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].'" role="form" id="phCheckoutPayment">';
@@ -105,7 +112,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-payment-row" id="phPaymentMethods" >';
-	echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_PAYMENT_METHODS').'</div>';
+	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_PAYMENT_METHODS').'</div>';
 	echo '</div>';
 
 	//echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-cost-box">';
@@ -121,12 +128,12 @@ if ($this->a->paymentnotused == 1) {
 		$priceI = $price->getPriceItemsPayment($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1);
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
-		echo '<div class="radio">';
-		echo '<label><input type="radio" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
+		echo '<div class="'.$this->s['c']['controls'] .'">';
+		echo '<label><input type="radio" class="'.$this->s['c']['inputbox.radio'].'" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
 
 
 		if ($v->image != '') {
-			echo '<span class="ph-payment-image"><img src="'.JURI::base(true) .'/'. $v->image.'" alt="'.htmlspecialchars(strip_tags($v->title)).'" /></span>';
+			echo '<span class="ph-payment-image"><img src="'.Uri::base(true) .'/'. $v->image.'" alt="'.htmlspecialchars(strip_tags($v->title)).'" /></span>';
 		}
 
 		echo '<span class="ph-payment-title">'.$v->title.'</span>';
@@ -136,7 +143,7 @@ if ($this->a->paymentnotused == 1) {
 
 
 		if ($this->t['display_payment_desc'] && $v->description != '') {
-			echo '<div class="ph-checkout-payment-desc">'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v->description).'</div>';
+			echo '<div class="ph-checkout-payment-desc">'.HTMLHelper::_('content.prepare', $v->description).'</div>';
 		}
 
 		echo '</div>';
@@ -150,7 +157,7 @@ if ($this->a->paymentnotused == 1) {
 		} else if ($this->t['zero_payment_price'] == 2 && $priceI['zero'] == 1) {
 			// Display free text
 			echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-payment-free-txt"></div>';
-			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-payment-free">'.JText::_('COM_PHOCACART_FREE').'</div>';
+			echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-checkout-payment-free">'.Text::_('COM_PHOCACART_FREE').'</div>';
 		} else {
 
 			if ($priceI['nettoformat'] == $priceI['bruttoformat']) {
@@ -185,7 +192,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';// end radio
 
 		echo '</div>';// end row second column
-		echo '<div class="ph-cb"></div>';
+		echo '<div class="ph-cb grid"></div>';
 
 	}
 
@@ -194,7 +201,7 @@ if ($this->a->paymentnotused == 1) {
 	// COUPON CODE
 	if ($this->t['enable_coupons'] > 0 && $this->t['display_apply_coupon_form'] == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
-		echo '<label>'.JText::_('COM_PHOCACART_COUPON_CODE'). ' <small>('.JText::_('COM_PHOCACART_APPLY_COUPON_CODE').')</small><br /><input type="text" name="phcoupon" id="phcoupon" value="'.$this->t['couponcodevalue'].'" ></label>';
+		echo '<label>'.Text::_('COM_PHOCACART_COUPON_CODE'). ' <small>('.Text::_('COM_PHOCACART_APPLY_COUPON_CODE').')</small><br /><input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-coupon" type="text" name="phcoupon" id="phcoupon" value="'.$this->t['couponcodevalue'].'" ></label>';
 		echo '</div>';
 		//echo '<div class="ph-cb"></div>';
 	}
@@ -203,7 +210,7 @@ if ($this->a->paymentnotused == 1) {
 	if ($this->t['rewards']['apply'] && $this->t['display_apply_reward_points_form'] == 1) {
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
-		echo '<label>'.JText::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" ></label>';
+		echo '<label>'.Text::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" ></label>';
 		echo '</div>';
 		//echo '<div class="ph-cb"></div>';
 	}
@@ -215,7 +222,7 @@ if ($this->a->paymentnotused == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-payment-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn"><span class="'.$this->s['i']['save'].'"></span> '.JText::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
 	echo '</div>';
 	echo '</div>';
 
@@ -226,7 +233,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
 // PAYMENT NOT ADDED OR SHIPPING IS EDITED OR ADDRESS IS EDITED
@@ -235,7 +242,7 @@ if ($this->a->paymentnotused == 1) {
 	$d['status']	= 'pending';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
-	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.JText::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
+	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.Text::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div>';
 }
 ?>

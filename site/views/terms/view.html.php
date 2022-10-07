@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewTerms extends JViewLegacy
+class PhocaCartViewTerms extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -19,7 +22,7 @@ class PhocaCartViewTerms extends JViewLegacy
 
 	public function display($tpl = null) {
 
-		$app						= JFactory::getApplication();
+		$app						= Factory::getApplication();
 		$this->p 					= $app->getParams();
 		$this->s                    = PhocacartRenderStyle::getStyles();
 		$this->t['terms_conditions']= $this->p->get( 'terms_conditions', '' );
@@ -35,7 +38,7 @@ class PhocaCartViewTerms extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_TERMS_AND_CONDITIONS'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_TERMS_AND_CONDITIONS'));
 	}
 }
 ?>

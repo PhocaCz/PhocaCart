@@ -7,13 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
 
 if (!empty($this->t['categories'])) {
 
 
 	// this function is triggered in phocapos.js
 	echo '<form class="'.$this->s['c']['form-inline'].' ph-pos-checkbox-form" action="'.$this->t['linkpos'].'" id="phPosCategory" method="post">';
-	echo '<div class="ph-pos-checkbox-box btn-group-toggle" data-toggle="buttons"  >';// data-toggle="buttons" - changes the standard checkbox to graphical checkbox
+	echo '<div class="ph-pos-checkbox-box btn-group-toggle" data-bs-toggle="buttons"  >';// data-bs-toggle="buttons" - changes the standard checkbox to graphical checkbox
 
 
 	foreach ($this->t['categories'] as $k => $v) {
@@ -24,7 +25,10 @@ if (!empty($this->t['categories'])) {
 			$attrO	= ' checked="checked"';
 		}
 
-		echo '<label class="'.$this->s['c']['btn'].' phCheckBoxButton phCheckBoxCategory '.$active.'" ><input type="checkbox" '.$attrO.' class="phPosCategoryCheckbox" name="c['.$v->id.']" value="'.$v->id.'" autocomplete="off"  /><span class="'.$this->s['i']['ok'].'" title="'.htmlspecialchars($v->title).''.'"></span> '.htmlspecialchars($v->title).'</label> ';
+		echo '<label class="'.$this->s['c']['btn'].' phCheckBoxButton phCheckBoxCategory '.$active.'" ><input type="checkbox" '.$attrO.' class="'.$this->s['c']['inputbox.checkbox'].' phPosCategoryCheckbox" name="c['.$v->id.']" value="'.$v->id.'" autocomplete="off"  />';
+		//echo '<span class="'.$this->s['i']['ok'].'" title="'.htmlspecialchars($v->title).''.'"></span>';
+		echo PhocacartRenderIcon::icon($this->s['i']['ok-strong'], 'title="'.htmlspecialchars($v->title).'"', ' ');
+		echo htmlspecialchars($v->title).'</label> ';
 
 	}
 
@@ -34,7 +38,7 @@ if (!empty($this->t['categories'])) {
 	echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 	echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 	echo '<input type="hidden" name="section" value="'.(int)$this->t['section']->id.'" />';
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 
 	echo '</div>';
 	echo '</form>';

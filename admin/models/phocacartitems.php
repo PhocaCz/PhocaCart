@@ -10,11 +10,14 @@
 use Joomla\CMS\Language\Text;
 
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.modellist' );
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartCpModelPhocaCartItems extends JModelList
+class PhocaCartCpModelPhocaCartItems extends ListModel
 {
 	protected $option 	= 'com_phocacart';
 
@@ -26,6 +29,8 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
 	public function __construct($config = array()) {
 
+
+
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$c = new PhocacartRenderAdmincolumns();
 
@@ -36,7 +41,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
 		$options                = array();
 		$options['type']    	= 'data';
-		$options['association'] = JLanguageAssociations::isEnabled();
+		$options['association'] = Associations::isEnabled();
 
 		if (!empty($admin_columns_products)) {
 			foreach ($admin_columns_products as $k => $v) {
@@ -80,7 +85,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 			);
 
 			// ASSOCIATION
-            $assoc = JLanguageAssociations::isEnabled();
+            $assoc = Associations::isEnabled();
             if ($assoc){
                 $config['filter_fields'][] = 'association';
             }
@@ -94,7 +99,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 	protected function populateState($ordering = 'a.title', $direction = 'ASC')
 	{
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		// ASSOCIATION
         $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
@@ -121,8 +126,10 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', null);
 		$this->setState('filter.category_id', $categoryId);
 
-		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
-		$this->setState('filter.manufacturer_id', $categoryId);
+
+
+		$manId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
+		$this->setState('filter.manufacturer_id', $manId);
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
@@ -258,7 +265,7 @@ class PhocaCartCpModelPhocaCartItems extends JModelList
 
         // ASSOCIATION
         // Join over the associations.
-        $assoc = JLanguageAssociations::isEnabled();
+        $assoc = Associations::isEnabled();
         if ($assoc) {
             $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))
                 ->join(

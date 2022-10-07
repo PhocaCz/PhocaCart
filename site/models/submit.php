@@ -7,16 +7,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
-
+use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Form\Form;
+
+
 
 jimport('joomla.application.component.model');
 
-class PhocaCartModelSubmit extends JModelForm
+class PhocaCartModelSubmit extends FormModel
 {
 	function __construct() {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		parent::__construct();
 		$this->setState('filter.language',$app->getLanguageFilter());
 	}
@@ -29,7 +36,7 @@ class PhocaCartModelSubmit extends JModelForm
 			return false;
 		}
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$params = $app->getParams();
 
 		/*
@@ -80,7 +87,7 @@ class PhocaCartModelSubmit extends JModelForm
 	}
 
 	protected function loadFormData() {
-		$data = (array) JFactory::getApplication()->getUserState('com_phocacart.submit.data', array());
+		$data = (array) Factory::getApplication()->getUserState('com_phocacart.submit.data', array());
 		return $data;
 	}
 
@@ -88,11 +95,11 @@ class PhocaCartModelSubmit extends JModelForm
 	{
 
 
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$uri = \Joomla\CMS\Uri\Uri::getInstance();
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$uri = Uri::getInstance();
+		$app = Factory::getApplication();
+		$user = Factory::getUser();
 		$path       = PhocacartPath::getPath('submititem');
 
 		$params = PhocacartUtils::getComponentParameters();
@@ -187,8 +194,12 @@ class PhocaCartModelSubmit extends JModelForm
 		$data['upload_token'] 			= PhocacartUtils::getToken();
 		$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
+		/*
+		if (isset($data['catid'])) {
+			$data['catid'] = (int)$data['catid'];
+		}*/
 
-		$folderPath         = JPath::clean($path['orig_abs_ds'] . $data['upload_folder']);
+		$folderPath         = Path::clean($path['orig_abs_ds'] . $data['upload_folder']);
 
 		// Images upload
 		$fileData = array();
@@ -205,8 +216,8 @@ class PhocaCartModelSubmit extends JModelForm
 				if (!$filesUploaded) {
 
 					// message set in app
-					if (JFolder::exists($folderPath)) {
-						JFolder::delete($folderPath);
+					if (Folder::exists($folderPath)) {
+						Folder::delete($folderPath);
 					}
 					return false;
 
@@ -233,21 +244,21 @@ class PhocaCartModelSubmit extends JModelForm
 
 
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
-			if (JFolder::exists($folderPath)) { JFolder::delete($folderPath); }
+			$this->setError($row->getError());
+			if (Folder::exists($folderPath)) { Folder::delete($folderPath); }
 			return false;
 		}
 
 
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
-			if (JFolder::exists($folderPath)) { JFolder::delete($folderPath); }
+			$this->setError($row->getError());
+			if (Folder::exists($folderPath)) { Folder::delete($folderPath); }
 			return false;
 		}
 
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
-			if (JFolder::exists($folderPath)) { JFolder::delete($folderPath); }
+			$this->setError($row->getError());
+			if (Folder::exists($folderPath)) { Folder::delete($folderPath); }
 			return false;
 		}
 
@@ -267,7 +278,7 @@ class PhocaCartModelSubmit extends JModelForm
 		return true;
 	}
 
-	protected function preprocessForm(JForm $form, $data, $group = 'content'){
+	protected function preprocessForm(Form $form, $data, $group = 'content'){
 
 
 		// Load Parameter Values for Parameters

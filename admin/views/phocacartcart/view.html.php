@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
 jimport( 'joomla.application.component.view' );
 /*
 phocacart import('phocacart.cart.cart');
@@ -15,7 +16,7 @@ phocacart import('phocacart.cart.rendercart');
 phocacart import('phocacart.currency.currency');
 */
 
-class PhocaCartCpViewPhocacartCart extends JViewLegacy
+class PhocaCartCpViewPhocacartCart extends HtmlView
 {
 	protected $t;
 	protected $r;

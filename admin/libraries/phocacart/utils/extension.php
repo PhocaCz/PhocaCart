@@ -9,6 +9,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
 
 class PhocacartUtilsExtension
 {
@@ -40,7 +45,7 @@ class PhocacartUtilsExtension
 
 		if( !array_key_exists( $elementFolder, self::$extension ) ) {
 
-			$db		= JFactory::getDbo();
+			$db		= Factory::getDbo();
 			$query	= $db->getQuery(true);
 			if ($type == 'component'){
 				$query->select('extension_id AS id, element AS "option", params, enabled');
@@ -55,7 +60,7 @@ class PhocacartUtilsExtension
 			$query->where('`element` = '.$db->quote($element));
 			$db->setQuery($query);
 
-			$cache 			= JFactory::getCache('_system','callback');
+			$cache 			= Factory::getCache('_system','callback');
 			$extensionData	=  $cache->get(array($db, 'loadObject'), null, $element, false);
 			if (isset($extensionData->enabled) && $extensionData->enabled == 1) {
 				self::$extension[$elementFolder] = 1;
@@ -82,22 +87,30 @@ class PhocacartUtilsExtension
 		if( !array_key_exists( $elementFolder, self::$extensionLoad ) ) {
 
 
-			$table 					= JTable::getInstance('Extension', 'JTable');
+			$table 					= Table::getInstance('extension');
 
+			$key = array();
 			$key['type']	= $type;
 			$key['element']	= $element;
 			if ($type == 'plugin') {
 				$key['folder'] = $folder;
 			}
 
-			if ($table->load($key)){
+			$extensionId = $table->find((array)$key);
+
+
+			if (isset($extensionId) && (int)$extensionId > 0 && $table->load((int)$extensionId)){
+
 
 				$extension['installed'] = true;
 				$extension['enabled']   = (bool) $table->enabled;
-				$manifest  		= json_decode($table->manifest_cache);
 
-				if (version_compare($extension['version'], @$manifest->version, 'gt')){
-					$extension['versioncurrent'] = $manifest->version;
+				if (!empty($table->manifest_cache)) {
+					$manifest = json_decode($table->manifest_cache);
+
+					if (version_compare($extension['version'], @$manifest->version, 'gt')) {
+						$extension['versioncurrent'] = $manifest->version;
+					}
 				}
 			}
 			self::$extensionLoad[$elementFolder] = $extension;
@@ -107,8 +120,17 @@ class PhocacartUtilsExtension
 	}
 
 
-	public static function getExtensionsObtainTypeButton($type, $download, $extension) {
+	public static function getExtensionsObtainTypeButton($type, $downloadSource, $extension) {
 
+
+		// We are now in Joomla 4
+		$download = '';
+		if (isset($downloadSource['4']) && $downloadSource['4'] != '') {
+			$download = $downloadSource['4'];// $downloadSource['5']
+
+		}
+
+		$extensionVersion = $extension['version4'];// $extension['version5']
 
 
 		$s = PhocacartRenderStyle::getStyles();
@@ -126,12 +148,13 @@ class PhocacartUtilsExtension
 		$classTxt 	= '';
 		$textTxt 	= '';
 
+
 		if (($type == 0 || $type == 4) && $extension['installed'] == false) {
 
 			$link  	= $download;
 			$icon 	= 'shopping-cart';
 			$class	= 'btn-buy';
-			$text	= JText::_('COM_PHOCACART_BUY_NOW');
+			$text	= Text::_('COM_PHOCACART_BUY_NOW');
 			$target = 'target="_blank"';
 
 		} else  {
@@ -144,48 +167,51 @@ class PhocacartUtilsExtension
 							$link = $download;
 							$icon 	= 'shopping-cart';
 							$class	= 'btn-buy';
-							$text	= JText::_('COM_PHOCACART_REQUEST') . ' ('.$extension['version'].')';
+							$text	= Text::_('COM_PHOCACART_REQUEST') . ' ('.$extensionVersion.')';
 							$target = 'target="_blank"';
 
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
-							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
+							$textTxt 	= Text::_('COM_PHOCACART_INSTALLED');
 
 						} else if ($type == 4) {
 							// 0 - Paid but update - installed but updated paid version found
 							$link = $download;
 							$icon 	= 'shopping-cart';
 							$class	= 'btn-buy';
-							$text	= JText::_('COM_PHOCACART_REQUEST') . ' ('.$extension['version'].')';
+							$text	= Text::_('COM_PHOCACART_REQUEST') . ' ('.$extensionVersion.')';
 							$target = 'target="_blank"';
 
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
-							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
+							$textTxt 	= Text::_('COM_PHOCACART_INSTALLED');
 
 						} else if ($type == 1) {
 							// Direct Install
-							$link = JRoute::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . JSession::getFormToken() . '=1', false);//SEC
+							$link   = '';
+							if ($download != '') {
+								$link = JRoute::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . JSession::getFormToken() . '=1', false);//SEC
+							}
 							$icon 	= 'refresh';
 							$class	= 'btn-success';
-							$text	= JText::_('COM_PHOCACART_UPDATE') . ' ('.$extension['version'].')';
+							$text	= Text::_('COM_PHOCACART_UPDATE') . ' ('.$extensionVersion.')';
 							$target = '';
 
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
-							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
+							$textTxt 	= Text::_('COM_PHOCACART_INSTALLED');
 
 						} else {
 							// 2 - Download, 3 Download/Register
 							$link = $download;
 							$icon 	= 'download';
 							$class	= 'btn-primary';
-							$text	= JText::_('COM_PHOCACART_DOWNLOAD') . ' ('.$extension['version'].')';
+							$text	= Text::_('COM_PHOCACART_DOWNLOAD') . ' ('.$extensionVersion.')';
 							$target = 'target="_blank"';
 
 							$iconTxt 	= 'ok';
 							$classTxt 	= 'ph-success-txt';
-							$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
+							$textTxt 	= Text::_('COM_PHOCACART_INSTALLED');
 						}
 
 					} else {
@@ -193,21 +219,24 @@ class PhocacartUtilsExtension
 						// Installed - version OK
 						$iconTxt 	= 'ok';
 						$classTxt 	= 'ph-success-txt';
-						$textTxt 	= JText::_('COM_PHOCACART_INSTALLED');
+						$textTxt 	= Text::_('COM_PHOCACART_INSTALLED');
 					}
 				} else {
 
 					$iconTxt 	= 'remove';
 					$classTxt 	= 'ph-disabled-txt';
-					$textTxt 	= JText::_('COM_PHOCACART_DISABLED');
+					$textTxt 	= Text::_('COM_PHOCACART_DISABLED');
 				}
 			} else {
 				if ($type == 1) {
 					// Direct Install
-					$link 	= JRoute::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . JSession::getFormToken() . '=1', false);
+					$link   = '';
+					if ($download != '') {
+						$link = Route::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . Session::getFormToken() . '=1', false);
+					}
 					$icon 	= 'download-alt';
 					$class	= 'btn-success';
-					$text	= JText::_('COM_PHOCACART_INSTALL');
+					$text	= Text::_('COM_PHOCACART_INSTALL');
 					$target = '';
 
 				} else {
@@ -215,7 +244,7 @@ class PhocacartUtilsExtension
 					$link 	= $download;
 					$icon 	= 'download';
 					$class	= 'btn-primary';
-					$text	= JText::_('COM_PHOCACART_DOWNLOAD');
+					$text	= Text::_('COM_PHOCACART_DOWNLOAD');
 					$target = 'target="_blank"';
 				}
 			}
@@ -226,9 +255,12 @@ class PhocacartUtilsExtension
 			$o .= '<div class="'.$classTxt.'"><span class="'.$s['i'][$iconTxt].'"></span> '.$textTxt.'</div>';
 		}
 		if ($link != '' && $icon != '' && $text != '') {
+
 			$o .= '<a href="'.$link.'" '.$target.' class="btn btn-small '.$class.'">';
 			$o .= '<span class="'.$s['i'][$icon].'"></span> ';
 			$o .= $text . '</a>';
+
+
 		}
 		$o .= '</div>';
 

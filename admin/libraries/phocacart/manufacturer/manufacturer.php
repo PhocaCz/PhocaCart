@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 
 class PhocacartManufacturer
 {
@@ -16,7 +18,7 @@ class PhocacartManufacturer
 
 	public static function getAllManufacturers($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array(), $limitCount = -1) {
 
-		$db 			= JFactory::getDBO();
+		$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 4);
 
 		$wheres		= array();
@@ -34,6 +36,8 @@ class PhocacartManufacturer
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('m.language', $lang);
 		}
 
+		$productTableAdded = 0;
+
 		if ($onlyAvailableProducts == 1) {
 
 			if ($lang != '' && $lang != '*') {
@@ -41,6 +45,7 @@ class PhocacartManufacturer
 			}
 
 			$lefts[] = ' #__phocacart_products AS p ON m.id = p.manufacturer_id';
+			$productTableAdded = 1;
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
 			$wheres = array_merge($wheres, $rules['wheres']);
 			$lefts	= array_merge($lefts, $rules['lefts']);
@@ -49,12 +54,16 @@ class PhocacartManufacturer
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
 				$lefts[] = ' #__phocacart_products AS p ON m.id = p.manufacturer_id';
+				$productTableAdded = 1;
 			}
 		}
 
 		if (!empty($filterProducts)) {
 			$productIds = implode (',', $filterProducts);
 			$wheres[]	= 'p.id IN ('.$productIds.')';
+			if ($productTableAdded == 0) {
+                $lefts[] = ' #__phocacart_products AS p ON m.id = p.manufacturer_id';
+            }
 		}
 
 		if ((int)$limitCount > -1) {
@@ -77,33 +86,32 @@ class PhocacartManufacturer
 
 	public static function getManufacturers($itemId, $select = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT a.id';
 		} else if ($select == 2){
 			$query = 'SELECT a.id, a.alias ';
 		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
+			$query = 'SELECT a.id, a.title, a.alias';
 		}
 		$query .= ' FROM #__phocacart_manufacturers AS a'
 				.' LEFT JOIN #__phocacart_products AS p ON a.id = p.manufacturer_id'
 				.' WHERE p.id = '.(int) $itemId
                 .' ORDER BY a.id';
 		$db->setQuery($query);
-
 		if ($select == 1) {
-			$tags = $db->loadColumn();
+			$mans = $db->loadColumn();
 		} else {
-			$tags = $db->loadObjectList();
+			$mans = $db->loadObjectList();
 		}
 
-		return $tags;
+		return $mans;
 	}
 
 	public static function getManufacturersByIds($cids) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
         if ($cids != '') {//cids is string separated by comma
 
             $query = 'SELECT a.id FROM #__phocacart_manufacturers AS a'
@@ -125,7 +133,7 @@ class PhocacartManufacturer
 
 			$link = PhocacartRoute::getItemsRoute();
 			$link = $link . PhocacartRoute::getItemsRouteSuffix($manufacturerAlias, $id, $alias);
-			return '<a href="'.JRoute::_($link).'" >'.$title.'</a>';
+			return '<a href="'.Route::_($link).'" >'.$title.'</a>';
 		} else {
 			return $title;
 		}
@@ -133,7 +141,7 @@ class PhocacartManufacturer
 
 	public static function getActiveManufacturers($items, $ordering, $manufacturerAlias = 'manufacturer') {
 
-	    $db     = JFactory::getDbo();
+	    $db     = Factory::getDbo();
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 4);//m

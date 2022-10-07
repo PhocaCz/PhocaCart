@@ -7,25 +7,27 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
-/*
- * SET IN DEFAULT_QUICKVIEW.PHP of ITEM View components/com_phocacart/views/item/tmpl/default_quickview.php
- *
- */
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Factory;
 $d = $displayData;
-$d['close'] = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>';
+$s          = $d['s'];
+$d['close'] = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '.$d['s']['a']['data-bs-dismiss-modal'].' ></button>';
 
 ?>
-<div id="phQuickViewPopup" class="<?php echo $s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="phQuickViewPopup" class="<?php echo $d['s']['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c']['modal-lg'] ?>">
       <div class="<?php echo $s['c']['modal-content'] ?>">
         <div class="<?php echo $s['c']['modal-header'] ?>">
-          <?php echo $d['s']['c']['class-type'] != 'bs4' ? $d['close'] : '' ?>
-		  <h4><span class="<?php echo $d['s']['i']['quick-view'] ?>"></span> <?php echo JText::_('COM_PHOCACART_QUICK_VIEW'); ?></h4>
-            <?php echo $d['s']['c']['class-type'] == 'bs4' ? $d['close'] : '' ?>
+           <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['quick-view'], '', ' ') . Text::_('COM_PHOCACART_QUICK_VIEW');  ?></h5>
+            <?php echo $d['close'] ?>
         </div>
-        <div class="<?php echo $s['c']['modal-body'] ?>">
-			<?php echo $d['content']; ?>
+        <div class="<?php echo $d['s']['c']['modal-body'] ?>">
+            <div class="<?php echo $d['s']['c']['row'] ?>">
+                <div class="<?php echo $d['s']['c']['col.xs12.sm12.md12'] ?> ph-center">
+			        <?php echo $d['content']; ?>
+                </div>
+            </div>
         </div>
 		<div class="<?php echo $s['c']['modal-footer'] ?>"></div>
 	   </div>

@@ -7,10 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Application\ApplicationHelper;
 jimport('joomla.filter.input');
 use Joomla\String\StringHelper;
 
-class TablePhocacartCategory extends JTable
+class TablePhocacartCategory extends Table
 {
 
 	protected $_jsonEncode = array('params', 'metadata');
@@ -21,7 +24,7 @@ class TablePhocacartCategory extends JTable
 
 	function check() {
 		if (trim( $this->title ) == '') {
-			$this->setError( JText::_( 'COM_PHOCACART_CATEGORY_MUST_HAVE_TITLE') );
+			$this->setError( Text::_( 'COM_PHOCACART_CATEGORY_MUST_HAVE_TITLE') );
 			return false;
 		}
 
@@ -36,7 +39,7 @@ class TablePhocacartCategory extends JTable
 		$pC = PhocacartUtils::getComponentParameters();
 		$category_alias_prefix = $pC->get('category_alias_prefix', '');
         if ($category_alias_prefix != '' && is_numeric(substr($this->alias, 0, 1))) {
-            $this->alias = JApplicationHelper::stringURLSafe($category_alias_prefix . $this->alias);
+            $this->alias = ApplicationHelper::stringURLSafe($category_alias_prefix . $this->alias);
         }
 
 

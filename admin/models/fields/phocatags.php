@@ -9,7 +9,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined('_JEXEC') or die();
-class JFormFieldPhocaTags extends JFormField
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Form\Field\ListField;
+
+class JFormFieldPhocaTags extends ListField
 {
 	protected $type 		= 'PhocaTags';
 
@@ -19,7 +22,7 @@ class JFormFieldPhocaTags extends JFormField
 		$javascript		= '';
 		$required		= $this->required;// accept dynamically added required
 		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
-		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="inputbox"';
+		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
 		$attr			= '';
 		$attr			.= $class . ' ';
 
@@ -36,7 +39,14 @@ class JFormFieldPhocaTags extends JFormField
 			$activeTags	= PhocacartTag::getTags($id, 1);
 		}
 
-		return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL, 'id', 0, $attr );
+		$tags 				= PhocacartTag::getAllTagsList();
+		$data               = $this->getLayoutData();
+		$data['options']    = (array)$tags;
+		$data['value']      = $activeTags;
+
+		return $this->getRenderer($this->layout)->render($data);
+
+		//return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL, 'id', 0, $attr );
 	}
 }
 ?>

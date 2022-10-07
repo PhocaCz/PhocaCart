@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d 		= $displayData;
 $text	= ' ';
 if ($d['external_text'] != '') {
@@ -14,6 +15,6 @@ if ($d['external_text'] != '') {
 }
 ?>
 <div class="<?php echo $d['s']['c']['pull-right']; ?> ph-item-buy-now-box">
-	<a class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" href="<?php echo $d['external_link']; ?>" target="_blank"><span class="<?php echo $d['s']['i']['ext-link'] ?>"></span> <?php echo JText::_($text); ?></a>
+	<a class="<?php echo $d['s']['c']['btn.btn-primary.btn-sm']; ?> ph-btn" href="<?php echo $d['external_link']; ?>" target="_blank"><?php echo PhocacartRenderIcon::icon($d['s']['i']['ext-link'], '', ' ') . Text::_($text); ?></a>
 </div>
 <div class="ph-cb"></div>

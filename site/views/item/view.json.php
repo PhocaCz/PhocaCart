@@ -7,11 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartViewItem extends JViewLegacy
+class PhocaCartViewItem extends HtmlView
 {
 	protected $item;
 	protected $itemnext;
@@ -25,26 +31,26 @@ class PhocaCartViewItem extends JViewLegacy
 
 	function display($tpl = null){
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
 
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$menus	= $app->getMenu('site', array());
 		$items	= $menus->getItems('component', 'com_phocacart');
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
 		$this->s				= PhocacartRenderStyle::getStyles();
-		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 					= Uri::getInstance();
 		$model					= $this->getModel();
-		$document				= JFactory::getDocument();
+		$document				= Factory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');
 		$catid					= $app->input->get('catid', 0, 'int');
 		$this->category			= $model->getCategory($id, $catid);
@@ -118,7 +124,7 @@ class PhocaCartViewItem extends JViewLegacy
 
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">'.Text::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</span>');
 			echo json_encode($response);
 			return;
 
@@ -135,11 +141,11 @@ class PhocaCartViewItem extends JViewLegacy
 			//$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
 
 			//$this->t['action']				= $uri->toString();
-			$this->t['action']				= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['action']				= Route::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
-			$this->t['linkcheckout']		= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkitem']			= JRoute::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkcheckout']		= Route::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkitem']			= Route::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 
 
 			$o2 = '';

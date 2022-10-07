@@ -7,21 +7,26 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartCpViewPhocaCartAttributeA extends JViewLegacy
+class PhocaCartCpViewPhocaCartAttributeA extends HtmlView
 {
 	function display($tpl = null){
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$task	= $app->input->get( 'task', '', 'string'  );
 
 
@@ -54,11 +59,11 @@ class PhocaCartCpViewPhocaCartAttributeA extends JViewLegacy
 				foreach($folderA as $k => $v) {
 
 				    $path = PhocacartPath::getPath('attributefile');
-				    if(JFolder::exists($path['orig_abs_ds'] . $v)) {
-                        if(JFolder::delete($path['orig_abs_ds'] . $v)) {
+				    if(Folder::exists($path['orig_abs_ds'] . $v)) {
+                        if(Folder::delete($path['orig_abs_ds'] . $v)) {
                             $nrDeletedFolders++;
                         } else {
-                           $errorMsg = JText::_('COM_PHOCACART_ERROR_REMOVE_ATTRIBUTE_OPTION_DOWNLOAD_FOLDER') . ': ' . $v;
+                           $errorMsg = Text::_('COM_PHOCACART_ERROR_REMOVE_ATTRIBUTE_OPTION_DOWNLOAD_FOLDER') . ': ' . $v;
                         }
                     }
 				}
@@ -69,7 +74,7 @@ class PhocaCartCpViewPhocaCartAttributeA extends JViewLegacy
 			    $errorMsg = $errorMsg != '' ? '<br>' . $errorMsg : '';
                 $response = array(
                     'status' => '1',
-                    'message' => '<span class="ph-result-txt ph-success-txt">' .JText::_('COM_PHOCACART_DOWNLOAD_FOLDER_OF_REMOVED_ATTRIBUTE_OPTION_DELETED') . $errorMsg . '</span>');
+                    'message' => '<span class="ph-result-txt ph-success-txt">' .Text::_('COM_PHOCACART_DOWNLOAD_FOLDER_OF_REMOVED_ATTRIBUTE_OPTION_DELETED') . $errorMsg . '</span>');
                 echo json_encode($response);
                 return;
             } else if ($nrDeletedFolders > 1) {
@@ -77,7 +82,7 @@ class PhocaCartCpViewPhocaCartAttributeA extends JViewLegacy
                 $errorMsg = $errorMsg != '' ? '<br>' . $errorMsg : '';
                 $response = array(
                     'status' => '1',
-                    'message' => '<span class="ph-result-txt ph-success-txt">' .JText::_('COM_PHOCACART_DOWNLOAD_FOLDERS_OF_REMOVED_ATTRIBUTE_OPTIONS_DELETED') . $errorMsg . '</span>');
+                    'message' => '<span class="ph-result-txt ph-success-txt">' .Text::_('COM_PHOCACART_DOWNLOAD_FOLDERS_OF_REMOVED_ATTRIBUTE_OPTIONS_DELETED') . $errorMsg . '</span>');
                 echo json_encode($response);
                 return;
             } else if ($errorMsg != '') {
@@ -98,7 +103,7 @@ class PhocaCartCpViewPhocaCartAttributeA extends JViewLegacy
 
 		$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_NO_TASK_SELECTED') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_NO_TASK_SELECTED') . '</span>');
 		echo json_encode($response);
 		return;
 	}

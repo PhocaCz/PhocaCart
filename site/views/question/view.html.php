@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewQuestion extends JViewLegacy
+class PhocaCartViewQuestion extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -22,11 +27,11 @@ class PhocaCartViewQuestion extends JViewLegacy
 
 	public function display($tpl = null) {
 
-		$app								= JFactory::getApplication();
-		$document							= JFactory::getDocument();
-		$session 							= JFactory::getSession();
+		$app								= Factory::getApplication();
+		$document							= Factory::getDocument();
+		$session 							= Factory::getSession();
 
-		$uri 								= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 								= Uri::getInstance();
 		$this->t['action']					= $uri->toString();
 		$this->t['actionbase64']			= base64_encode($this->t['action']);
 		$this->u							= PhocacartUser::getUser();
@@ -38,7 +43,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 		$this->t['enable_ask_question'] 	= $this->p->get('enable_ask_question', 0);
 		if ($this->t['enable_ask_question'] == 0) {
 			//throw new Exception(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 403);
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ASK_QUESTION_DISABLED'), 'error');
 			return false;
 		}
 
@@ -80,12 +85,13 @@ class PhocaCartViewQuestion extends JViewLegacy
 		$catid					= $app->input->get('catid', 0, 'int');
 		$tmpl					= $app->input->get('tmpl', '', 'string');
 
-
 		if ($id > 0 && $catid > 0) {
 			//$modelP	= $this->getModel('Item', 'PhocaCartModel');
-			jimport('joomla.application.component.model');
-			JModelLegacy::addIncludePath(JPATH_SITE.'/components/com_phocacart/models');
-			$modelP = JModelLegacy::getInstance( 'Item', 'PhocaCartModel' );
+			//jimport('joomla.application.component.model');
+			//BaseDatabaseModel::addIncludePath(JPATH_SITE.'/components/com_phocacart/models');
+			//$modelP = BaseDatabaseModel::getInstance( 'Item', 'PhocaCartModel' );
+
+			$modelP = $app->bootComponent('com_phocacart')->getMvcFactory()->createModel('Item', 'PhocaCartModel', ['ignore_request' => false]);
 
 			$this->category			= $modelP->getCategory($id, $catid);
 
@@ -99,7 +105,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 
 		if ($tmpl == 'component') {
 
-			$buffer = JFactory::getApplication()->sendHeaders();
+			$buffer = Factory::getApplication()->sendHeaders();
 
 			$document->addCustomTag( "<style type=\"text/css\"> \n"
 			." #ph-pc-question-box {
@@ -132,7 +138,7 @@ class PhocaCartViewQuestion extends JViewLegacy
 
 	protected function _prepareDocument() {
 
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_ASK_A_QUESTION'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_ASK_A_QUESTION'));
 	}
 }
 ?>

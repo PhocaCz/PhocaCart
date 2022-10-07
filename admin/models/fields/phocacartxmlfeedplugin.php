@@ -7,8 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaCartXmlFeedPlugin extends JFormField
+class JFormFieldPhocaCartXmlFeedPlugin extends FormField
 {
 	protected $type 		= 'PhocaCartXmlFeedPlugin';
 
@@ -19,7 +21,7 @@ class JFormFieldPhocaCartXmlFeedPlugin extends JFormField
 		//$method	= $this->form->getValue('method');
 		$plugins = PhocacartFeed::getFeedPluginMethods('', 1);
 
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $plugins,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return HTMLHelper::_('select.genericlist',  $plugins,  $this->name, 'class="form-select"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

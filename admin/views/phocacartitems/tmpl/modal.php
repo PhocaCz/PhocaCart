@@ -12,15 +12,21 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Multilanguage;
 // ASSOCIATION
 
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 if ($app->isClient('site')) {
-    JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+    Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
 $r         = $this->r;
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -30,13 +36,13 @@ $onclick   = $this->escape($function);
 
 if (!empty($editor)) {
     // This view is used also in com_menus. Load the xtd script only if the editor is set!
-    JFactory::getDocument()->addScriptOptions('xtd-phocacartitems', array('editor' => $editor));
+    Factory::getDocument()->addScriptOptions('xtd-phocacartitems', array('editor' => $editor));
     $onclick = "jSelectPhocacartitem";
 }
 
 // Special case for the search field tooltip. TO DO
 /*$searchFilterDesc = $this->filterForm->getFieldAttribute('search', 'description', null, 'filter');
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip', '#filter_search', array('title' => JText::_($searchFilterDesc), 'placement' => 'bottom'));
+JHtml::_('bootstrap.tooltip', '#filter_search', array('title' => Text::_($searchFilterDesc), 'placement' => 'bottom'));
 */
 
 
@@ -89,7 +95,7 @@ echo $r->endFilterBar();
 echo $r->endFilterBar();
 */
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
@@ -102,7 +108,7 @@ $options['listdirn']    = $listDirn;
 $options['listorder']   = $listOrder;
 $options['count']       = 2;
 $options['type']        = 'render';
-$options['association'] = JLanguageAssociations::isEnabled();
+$options['association'] = Associations::isEnabled();
 $options['tasks']       = $this->t['tasks'];
 
 $c = new PhocacartRenderAdmincolumns();
@@ -126,20 +132,20 @@ if(!empty($this->t['admin_columns_products'])) {
 echo $c->renderHeader($adminColumnProducts, $options);
 
 /*
-echo '<th class="ph-image">' . JText::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
-echo '<th class="ph-sku">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SKU', 'a.sku', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-title">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-published">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
-//echo '<th class="ph-parentcattitle">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-parentcattitle">' . JTEXT::_($this->t['l'] . '_CATEGORY') . '</th>' . "\n";
-echo '<th class="ph-price">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.price', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-price">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-stock">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IN_STOCK', 'a.stock', $listDirn, $listOrder) . '</th>' . "\n";
-//echo '<th class="ph-hits">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-access">' . JTEXT::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
-echo '<th class="ph-language">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-hits">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-id">' . Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-image">' . Text::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
+echo '<th class="ph-sku">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SKU', 'a.sku', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+//echo '<th class="ph-parentcattitle">'.JHtml::_('searchtools.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-parentcattitle">' . Text::_($this->t['l'] . '_CATEGORY') . '</th>' . "\n";
+echo '<th class="ph-price">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.price', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-price">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-stock">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IN_STOCK', 'a.stock', $listDirn, $listOrder) . '</th>' . "\n";
+//echo '<th class="ph-hits">'.JHtml::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-access">' . Text::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
+echo '<th class="ph-language">' . HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-hits">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 */
 
 
@@ -174,12 +180,12 @@ if (!empty($this->items)) {
         $canEdit    = $user->authorise('core.edit', $this->t['o']);
         $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
         $canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-        $linkEdit   = JRoute::_($urlEdit . $item->id);
-        $linkLang   = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacartitem&id=' . $this->escape($item->id) . '&lang=' . $this->escape($item->language));
+        $linkEdit   = Route::_($urlEdit . $item->id);
+        $linkLang   = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacartitem&id=' . $this->escape($item->id) . '&lang=' . $this->escape($item->language));
 
         //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
         $canEditCat = 0;// FORCE NOT EDITING CATEGORY IN MODAL $user->authorise('core.edit', $this->t['o']);
-        if ($item->language && JLanguageMultilang::isEnabled()) {
+        if ($item->language && Multilanguage::isEnabled()) {
             $tag = strlen($item->language);
             if ($tag == 5) {
                 $lang = substr($item->language, 0, 2);
@@ -188,11 +194,14 @@ if (!empty($this->items)) {
             } else {
                 $lang = '';
             }
-        } else if (!JLanguageMultilang::isEnabled()) {
+        } else if (!Multilanguage::isEnabled()) {
             $lang = '';
         }
 
-        $linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
+        //$linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
+
+        $linkEditBox = '<a class="select-link phIdTitle' . (int)$item->id . '" href="javascript:void(0)" onclick="if (window.parent) window.parent.'.$this->escape($onclick).'(\''. $item->id.'\', \''. $this->escape(addslashes($item->title)).'\', null, \''. $this->escape($linkLang).'\', \''. $this->escape($lang).'\', null);">';
+
         $linkEditBox .= $this->escape($item->title);
         $linkEditBox .= '</a>';
         $linkEdit = '';
@@ -264,15 +273,15 @@ if (!empty($this->items)) {
         /*
         $checkO = '';
         if ($item->checked_out) {
-            $checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+            $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
         }
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="'. JRoute::_($linkEdit).'"><span id="phIdTitle'.$item->id.'">'. $this->escape($item->title).'</span></a>';
+            $checkO .= '<a href="'. Route::_($linkEdit).'"><span id="phIdTitle'.$item->id.'">'. $this->escape($item->title).'</span></a>';
         } else {
             $checkO .= '<span id="phIdTitle'.$item->id.'">'.$this->escape($item->title).'</span>';// Id needed for displaying Copy Attributes Titles
         }
-        $checkO .= '<br /><span class="smallsub">(<span>'.JText::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
-        echo $r->td($checkO, "small");*/
+        $checkO .= '<br /><span class="smallsub">(<span>'.Text::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
+        echo $r->td($checkO, "small", 'th');*/
 /*
         $linkBox = '<a class="select-link" href="javascript:void(0)" data-function="' . $this->escape($onclick) . '" data-id="' . $item->id . '" data-title="' . $this->escape($item->title) . '" data-uri="' . $this->escape($linkLang) . '" data-language="' . $this->escape($lang) . '">';
         $linkBox .= $this->escape($item->title);
@@ -281,14 +290,14 @@ if (!empty($this->items)) {
         echo $r->td($linkBox, "small");
 
         /*echo $r->td(
-            '<div class="btn-group">'.Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange)
+            '<div class="btn-group">'.HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange)
             . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange). '</div>',
         "small");*/
 /*
         echo $r->td('<span class="' . $iconStates[$this->escape($item->published)] . '" aria-hidden="true"></span>');
         /*
         if ($canEditCat) {
-            $catO = '<a href="'. JRoute::_($linkCat).'">'. $this->escape($item->category_title).'</a>';
+            $catO = '<a href="'. Route::_($linkCat).'">'. $this->escape($item->category_title).'</a>';
         } else {
             $catO = $this->escape($item->category_title);
         }*/
@@ -296,8 +305,8 @@ if (!empty($this->items)) {
         if (isset($this->t['categories'][$item->id])) {
             foreach ($this->t['categories'][$item->id] as $k => $v) {
                 if ($canEditCat) {
-                    $linkCat = JRoute::_('index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit&id=' . (int)$v['id']);
-                    $catO[]  = '<a href="' . JRoute::_($linkCat) . '">' . $this->escape($v['title']) . '</a>';
+                    $linkCat = Route::_('index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit&id=' . (int)$v['id']);
+                    $catO[]  = '<a href="' . Route::_($linkCat) . '">' . $this->escape($v['title']) . '</a>';
                 } else {
                     $catO[] = $this->escape($v['title']);
                 }
@@ -317,7 +326,7 @@ if (!empty($this->items)) {
         echo $r->td($this->escape($item->access_level));
 
         //echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
-        echo $r->td(JLayoutHelper::render('joomla.content.language', $item));
+        echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
 
         echo $r->td($item->hits, "small");
 
@@ -330,7 +339,7 @@ if (!empty($this->items)) {
     }
 } else {
     // No items
-    echo '<div class="alert alert-no-items">' . JText::_('JGLOBAL_NO_MATCHING_RESULTS') . '</div>';
+    echo '<div class="alert alert-no-items">' . Text::_('JGLOBAL_NO_MATCHING_RESULTS') . '</div>';
 }
 echo $r->endTblBody();
 

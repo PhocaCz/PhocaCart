@@ -7,19 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 
 $d          = $displayData;
 $s          = $d['s'];
-$d['close'] = '<button type="button" class="close" aria-label="'.JText::_('COM_PHOCACART_CLOSE').'" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>';
+$d['close'] = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '.$d['s']['a']['data-bs-dismiss-modal'].' ></button>';
 
 ?>
-<div id="<?php echo $d['id'] ?>" class="<?php echo $s['c']['modal.zoom'] ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none">
+<div id="<?php echo $d['id'] ?>" class="<?php echo $s['c']['modal.zoom'] ?>"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none">
     <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c']['modal-lg'] ?>">
       <div class="<?php echo $s['c']['modal-content'] ?>">
         <div class="<?php echo $s['c']['modal-header'] ?>">
-          <?php echo $d['s']['c']['class-type'] != 'bs4' ? $d['close'] : '' ?>
-		  <h4><span class="<?php echo $d['icon'] ?>"></span> <?php echo $d['title']; ?></h4>
-            <?php echo $d['s']['c']['class-type'] == 'bs4' ? $d['close'] : '' ?>
+		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['icon'], '', ' ') .  $d['title'];  ?></h5>
+            <?php echo $d['close'] ?>
         </div>
         <div class="<?php echo $s['c']['modal-body'] ?>">
 			<?php

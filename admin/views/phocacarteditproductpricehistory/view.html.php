@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 /*
 phocacart import('phocacart.cart.cart');
@@ -15,7 +18,7 @@ phocacart import('phocacart.cart.rendercart');
 phocacart import('phocacart.currency.currency');
 */
 
-class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
+class PhocaCartCpViewPhocaCartEditProductPriceHistory extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -24,7 +27,7 @@ class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 	protected $id;
 	function display($tpl = null) {
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$this->id				= $app->input->get('id', 0, 'int');
 
 
@@ -32,8 +35,8 @@ class PhocaCartCpViewPhocaCartEditProductPriceHistory extends JViewLegacy
 
 		if ($this->id < 1) {
 			echo '<div class="alert alert-error">';
-		    echo JText::_('COM_PHOCACART_NO_PRODUCT_FOUND'). '<br/>';
-			echo JText::_('COM_PHOCACART_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST');
+		    echo Text::_('COM_PHOCACART_NO_PRODUCT_FOUND'). '<br/>';
+			echo Text::_('COM_PHOCACART_CLOSE_WINDOW_SAVE_THE_PRODUCT_FIRST');
 		    echo '</div>';
 			return;
 		}

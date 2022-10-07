@@ -7,10 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die;
+use Joomla\CMS\Form\FormField;
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
-class JFormFieldPhocaRawcontent extends JFormField
+class JFormFieldPhocaRawcontent extends FormField
 {
 	protected $type = 'PhocaRawcontent';
 	

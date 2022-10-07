@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartUsers extends JViewLegacy
+class PhocaCartCpViewPhocacartUsers extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -55,18 +58,18 @@ class PhocaCartCpViewPhocacartUsers extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.user_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_CUSTOMERS' ), 'user' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_CUSTOMERS' ), 'user' );
 
 		if ($canDo->get('core.create')) {
 			//JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolbarHelper::divider();
+			ToolbarHelper::divider();
 			//JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
 			//JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
@@ -74,21 +77,21 @@ class PhocaCartCpViewPhocacartUsers extends JViewLegacy
 		if ($canDo->get('core.delete')) {
 			//JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartusers.delete', $this->t['l'].'_DELETE');
 		}
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
+			'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
 			//'u.username' 		=> JText::_($this->t['l'] . '_USERNAME'),
-			'u.name' 			=> JText::_($this->t['l'] . '_NAME'),
-			'a.name_first' 		=> JText::_($this->t['l'] . '_FIRST_NAME_LABEL'),
-			'a.name_last' 			=> JText::_($this->t['l'] . '_LAST_NAME_LABEL'),
-			'a.address_1' 			=> JText::_($this->t['l'] . '_ADDRESS_1_LABEL'),
+			'u.name' 			=> Text::_($this->t['l'] . '_NAME'),
+			'a.name_first' 		=> Text::_($this->t['l'] . '_FIRST_NAME_LABEL'),
+			'a.name_last' 			=> Text::_($this->t['l'] . '_LAST_NAME_LABEL'),
+			'a.address_1' 			=> Text::_($this->t['l'] . '_ADDRESS_1_LABEL'),
 			//'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'u.email' 				=> JText::_($this->t['l'] . '_EMAIL_LABEL'),
-			'u.id' 				=> JText::_('JGRID_HEADING_ID')
+			'u.email' 				=> Text::_($this->t['l'] . '_EMAIL_LABEL'),
+			'u.id' 				=> Text::_('JGRID_HEADING_ID')
 
 		);
 	}

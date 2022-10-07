@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 /*
 phocacart import('phocacart.user.user');
@@ -65,8 +67,8 @@ class PhocacartCart
     public function __construct() {
 
 
-        $app         = JFactory::getApplication();
-        $session     = JFactory::getSession();
+        $app         = Factory::getApplication();
+        $session     = Factory::getSession();
         $dUser       = PhocacartUser::defineUser($this->user, $this->vendor, $this->ticket, $this->unit, $this->section);
         $this->guest = PhocacartUserGuestuser::getGuestUser();
 
@@ -86,12 +88,14 @@ class PhocacartCart
         $this->shipping['method']          = '';
         $this->shipping['costs']           = 0;
         $this->shipping['image']           = '';
+        $this->shipping['params_shipping'] = array();// For example shipping branch info
         $this->payment['id']               = 0;
         $this->payment['title']            = '';
         $this->payment['method']           = '';
         $this->payment['costs']            = 0;
         $this->payment['calculation_type'] = 0;
         $this->payment['image']            = '';
+        $this->payment['params_payment']    = array();
         $this->stock['valid']              = 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
         $this->minqty['valid']             = 1;// check minimum order quantity
         $this->minmultipleqty['valid']     = 1;// check minimum multiple order quantity
@@ -113,10 +117,12 @@ class PhocacartCart
             $this->shipping['title']   = $cartDb['shippingtitle'];
             $this->shipping['method']  = $cartDb['shippingmethod'];
             $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->shipping['params_shipping']   = $cartDb['params_shipping'];
             $this->payment['id']       = $cartDb['payment'];
             $this->payment['title']    = $cartDb['paymenttitle'];
             $this->payment['method']   = $cartDb['paymentmethod'];
             $this->payment['image']    = $cartDb['paymentimage'];
+            $this->payment['params_payment']   = $cartDb['params_payment'];
             $this->reward['used']      = $cartDb['reward'];
             $this->loyalty_card_number = $cartDb['loyalty_card_number'];
 
@@ -138,10 +144,12 @@ class PhocacartCart
             $this->shipping['title']   = $cartDb['shippingtitle'];
             $this->shipping['method']  = $cartDb['shippingmethod'];
             $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->shipping['params_shipping']   = $cartDb['params_shipping'];
             $this->payment['id']       = $cartDb['payment'];
             $this->payment['title']    = $cartDb['paymenttitle'];
             $this->payment['method']   = $cartDb['paymentmethod'];
             $this->payment['image']    = $cartDb['paymentimage'];
+            $this->payment['params_payment']   = $cartDb['params_payment'];
             $this->reward['used']      = $cartDb['reward'];
             $this->loyalty_card_number = $cartDb['loyalty_card_number'];
 
@@ -166,10 +174,12 @@ class PhocacartCart
             $this->shipping['title']   = $cartDb['shippingtitle'];
             $this->shipping['method']  = $cartDb['shippingmethod'];
             $this->shipping['image']   = $cartDb['shippingimage'];
+            $this->shipping['params_shipping']   = $cartDb['params_shipping'];
             $this->payment['id']       = $cartDb['payment'];
             $this->payment['title']    = $cartDb['paymenttitle'];
             $this->payment['method']   = $cartDb['paymentmethod'];
             $this->payment['image']    = $cartDb['paymentimage'];
+            $this->payment['params_payment']   = $cartDb['params_payment'];
             $this->reward['used']      = $cartDb['reward'];
             $this->loyalty_card_number = $cartDb['loyalty_card_number'];
             $sessionItems              = $session->get('cart', array(), 'phocaCart');
@@ -204,7 +214,7 @@ class PhocacartCart
                 // and we have stored items in session now
                 if (!empty($sessionItems)) {
                     // inform users and clean session
-                    $message = JText::_('COM_PHOCACART_CART_UPDATED_BASED_ON_YOUR_PREVIOUS_VISIT');
+                    $message = Text::_('COM_PHOCACART_CART_UPDATED_BASED_ON_YOUR_PREVIOUS_VISIT');
                     $app->enqueueMessage($message, 'message');
                     $session->set('cart', array(), 'phocaCart');
                     $session->set('guestcoupon', array(), 'phocaCart');
@@ -215,6 +225,10 @@ class PhocacartCart
             $this->items = $session->get('cart', array(), 'phocaCart');
 
             $this->shipping['id'] = $session->get('guestshipping', false, 'phocaCart');
+
+            $this->shipping['params_shipping'] = $session->get('guestshippingparams', false, 'phocaCart');
+
+
             if ((int)$this->shipping['id'] > 0) {
                 $shippingObject = new PhocacartShipping();
                 $shippingObject->setType($this->type);
@@ -225,6 +239,7 @@ class PhocacartCart
             }
 
             $this->payment['id'] = $session->get('guestpayment', false, 'phocaCart');
+            $this->payment['params_payment'] = $session->get('guestpaymentparams', false, 'phocaCart');
             if ((int)$this->payment['id'] > 0) {
                 $paymentObject = new PhocacartPayment();
                 $paymentObject->setType($this->type);
@@ -279,7 +294,7 @@ class PhocacartCart
      */
     public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         if ($idKey != '') {
             // we get idkey as string - from checkout update or remove -  used in CHECKOUT
@@ -292,10 +307,10 @@ class PhocacartCart
             $checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 
             if (!$checkP) {
-                //$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
+                //$uri 			= JUri::getInstance();
                 //$action			= $uri->toString();
 
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
                 return false;
             }
 
@@ -308,10 +323,10 @@ class PhocacartCart
 
 
             if (!$checkedA) {
-                //$uri 			= \Joomla\CMS\Uri\Uri::getInstance();
+                //$uri 			= JUri::getInstance();
                 //$action			= $uri->toString();
 
-                $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
+                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
 
 
                 return false;
@@ -353,7 +368,7 @@ class PhocacartCart
             //$this->updateSubTotal();
             return true;
         } else {
-            $app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_QUANTITY_WAS_NOT_SET'), 'error');
+            $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_QUANTITY_WAS_NOT_SET'), 'error');
         }
         return false;
     }
@@ -382,7 +397,7 @@ class PhocacartCart
      */
     protected function updateItems() {
 
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
 
         if ($this->pos && (int)$this->vendor->id > 0) {
 
@@ -506,9 +521,9 @@ class PhocacartCart
      */
     protected function updateItemsDb() {
 
-        $db    = JFactory::getDBO();
+        $db    = Factory::getDBO();
         $items = serialize($this->items);
-        $date  = JFactory::getDate();
+        $date  = Factory::getDate();
         $now   = $date->toSql();
 
         // Update multiple cart (include vendor, ticket)
@@ -587,7 +602,7 @@ class PhocacartCart
         if (empty($this->fullitems)) {
             if (!empty($this->items)) {
 
-                $app                      = JFactory::getApplication();
+                $app                      = Factory::getApplication();
                 $paramsC                  = PhocacartUtils::getComponentParameters();
                 $tax_calculation          = $paramsC->get('tax_calculation', 0);
                 $check_product_attributes = $paramsC->get('check_product_attributes', array(3));
@@ -611,14 +626,14 @@ class PhocacartCart
 
                         if ($app->getName() == 'administrator') {
                             $app->enqueueMessage(
-                            JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CUSTOMER_CART_NOT_EXISTS') . ' '
-                            . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CUSTOMER_CART') . ' '
-                            . JText::_('COM_PHOCACART_CUSTOMER_WILL_BE_INFORMED_OF_SITUATION_DURING_NEXT_VISIT_TO_STORE'), 'warning');
+                            Text::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CUSTOMER_CART_NOT_EXISTS') . ' '
+                            . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CUSTOMER_CART') . ' '
+                            . Text::_('COM_PHOCACART_CUSTOMER_WILL_BE_INFORMED_OF_SITUATION_DURING_NEXT_VISIT_TO_STORE'), 'warning');
                         } else {
                             $app->enqueueMessage(
-                            JText::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
-                            . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
-                            . JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+                            Text::_('COM_PHOCACART_ERROR_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
+                            . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
+                            . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                         }
 
                         unset($this->items[$k]);
@@ -642,9 +657,9 @@ class PhocacartCart
                             $checkA = PhocacartProduct::checkIfProductAttributesOptionsExist((int)$itemId, $k, (int)$v['catid'], $this->type, $attribs);
                             if (!$checkA) {
                                 $app->enqueueMessage(
-                                    JText::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
-                                    . JText::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
-                                    . JText::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+                                    Text::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
+                                    . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
+                                    . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                                 unset($this->items[$k]);
                                 $this->updateItemsFromCheckout($k, 0);
                                 // In case this all happens when order is made - stop the order and inform user
@@ -903,6 +918,7 @@ class PhocacartCart
         $payment['method'] = $this->payment['method'];
         $payment['id']     = $this->payment['id'];
         $payment['image']  = $this->payment['image'];
+        $payment['params_payment']  = $this->payment['params_payment'];
 
         // E.g. guest checkout
         if (isset($payment['id']) && (int)$payment['id'] > 0 && $payment['title'] == '' && $payment['method'] == '') {
@@ -934,6 +950,7 @@ class PhocacartCart
         $shipping['method'] = $this->shipping['method'];
         $shipping['id']     = $this->shipping['id'];
         $shipping['image']  = $this->shipping['image'];
+        $shipping['params_shipping']  = $this->shipping['params_shipping'];
 
 
         // E.g. guest checkout
@@ -1011,7 +1028,7 @@ class PhocacartCart
     }
 
     public function getRewardPointsReceived() {
-        return sset($this->total[0]['points_received']) ? $this->total[0]['points_received'] : 0;
+        return isset($this->total[0]['points_received']) ? $this->total[0]['points_received'] : 0;
     }
 
     public function getRewardPointsUsed() {
@@ -1117,6 +1134,8 @@ class PhocacartCart
                 $this->shipping['costs']['image']              = $sI->image;
                 $this->shipping['costs']['method']             = $sI->method;
 
+                $this->shipping['costs']['params_shipping']    = !empty($this->shipping['params_shipping']) ? $this->shipping['params_shipping'] : array();
+
                 // Update even the shipping info
                 $this->shipping['id']     = $sI->id;
                 $this->shipping['title']  = $sI->title;
@@ -1188,6 +1207,8 @@ class PhocacartCart
                 $this->payment['costs']['image']              = $pI->image;
                 $this->payment['costs']['method']             = $pI->method;
 
+                $this->payment['costs']['params_payment']    = !empty($this->payment['params_payment']) ? $this->payment['params_payment'] : array();
+
                 // Update even the payment info
                 $this->payment['id']     = $pI->id;
                 $this->payment['title']  = $pI->title;
@@ -1201,7 +1222,7 @@ class PhocacartCart
     }
 
     public function emptyCart() {
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
         $session->set('cart', array(), 'phocaCart');
         //if((int)$this->user->id > 0) {
         // this function to empty cart database is not use in POS, so always set ticketid, unitid and sectionid to 1
@@ -1247,8 +1268,8 @@ class PhocacartCart
 
     public function removeCouponDb() {
 
-        $db   = JFactory::getDBO();
-        $date = JFactory::getDate();
+        $db   = Factory::getDBO();
+        $date = Factory::getDate();
         $now  = $date->toSql();
 
         $query = 'UPDATE #__phocacart_cart_multiple'

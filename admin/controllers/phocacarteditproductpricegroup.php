@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 class PhocaCartCpControllerPhocaCartEditProductPriceGroup extends PhocaCartCpControllerPhocaCartCommons
 {
@@ -17,12 +20,12 @@ class PhocaCartCpControllerPhocaCartEditProductPriceGroup extends PhocaCartCpCon
 	
 	function save() {
 	
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
 		
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$jform					= $app->input->get('jform', array(), 'array');
 		$id						= $app->input->get('id', 0, 'int');
 		
@@ -30,16 +33,16 @@ class PhocaCartCpControllerPhocaCartEditProductPriceGroup extends PhocaCartCpCon
 		if (!empty($jform)) {
 			$model = $this->getModel( 'phocacarteditproductpricegroup' );
 			if(!$model->save($jform, $id)) {
-				$message = JText::_( 'COM_PHOCACART_ERROR_ADD_CUSTOMER_GROUP_DATA' );
+				$message = Text::_( 'COM_PHOCACART_ERROR_ADD_CUSTOMER_GROUP_DATA' );
 				$app->enqueueMessage($message, 'error');
 			} else {
-				$message = JText::_( 'COM_PHOCACART_SUCCESS_ADD_CUSTOMER_GROUP_DATA' );
+				$message = Text::_( 'COM_PHOCACART_SUCCESS_ADD_CUSTOMER_GROUP_DATA' );
 				$app->enqueueMessage($message, 'message');
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditproductpricegroup&tmpl=component&id='.(int)$id);
 		} else {
 		
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditproductpricegroup&tmpl=component');
 		}
 	}

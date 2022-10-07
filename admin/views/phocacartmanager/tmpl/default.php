@@ -7,16 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Filesystem\Path;
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 
 $r 			=  new PhocacartRenderAdminview();
 
 echo '<div id="phocacartmanager">';
 echo '<div class="span12 form-horizontal">';
-echo '<div class="ph-admin-path">' . JText::_('COM_PHOCACART_PATH'). ': '.JPath::clean($this->t['path']['orig_abs_ds']. $this->folderstate->folder) .'</div>';
+echo '<div class="ph-admin-path">' . Text::_('COM_PHOCACART_PATH'). ': '.Path::clean($this->t['path']['orig_abs_ds']. $this->folderstate->folder) .'</div>';
 //$countFaF =  count($this->images) + count($this->folders);
 echo '<table class="table table-hover table-condensed ph-multiple-table">'
 .'<thead>'
@@ -25,7 +28,7 @@ echo '<th class=" ph-check">'. "\n";
 //echo '<input type="checkbox" name="checkall-toggle" value="" title="'.JText::_('JGLOBAL_CHECK_ALL').'" onclick="Joomla.checkAll(this)" />'. "\n";
 echo '</th>'. "\n";
 echo '<th width="20">&nbsp;</th>'
-.'<th width="95%">'.JText::_( $this->t['l'].'_FILENAME' ).'</th>'
+.'<th width="95%">'.Text::_( $this->t['l'].'_FILENAME' ).'</th>'
 .'</tr>'
 .'</thead>';
 
@@ -51,7 +54,7 @@ if (count($this->files) > 0 || count($this->folders) > 0) {
 	echo '<tr>'
 	.'<td>&nbsp;</td>'
 	.'<td>&nbsp;</td>'
-	.'<td>'.JText::_( $this->t['l'].'_THERE_IS_NO_FILE' ).'</td>'
+	.'<td>'.Text::_( $this->t['l'].'_THERE_IS_NO_FILE' ).'</td>'
 	.'</tr>';
 }
 echo '</tbody>'
@@ -64,16 +67,16 @@ echo '<ul class="nav nav-tabs" id="configTabs">';
 
 
 if((int)$this->t['enablemultiple']  >= 0) {
-	$label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-upload-multiple.png','') . '&nbsp;'.JText::_($this->t['l'].'_MULTIPLE_UPLOAD');
-	echo '<li><a href="#multipleupload" data-toggle="tab">'.$label.'</a></li>';
+	$label = HTMLHelper::_( 'image', $this->t['i'].'icon-16-upload-multiple.png','') . '&nbsp;'.Text::_($this->t['l'].'_MULTIPLE_UPLOAD');
+	echo '<li><a href="#multipleupload" data-bs-toggle="tab">'.$label.'</a></li>';
 }
 
-$label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.JText::_($this->t['l'].'_UPLOAD');
-echo '<li><a href="#upload" data-toggle="tab">'.$label.'</a></li>';
+$label = HTMLHelper::_( 'image', $this->t['i'].'icon-16-upload.png','') . '&nbsp;'.Text::_($this->t['l'].'_UPLOAD');
+echo '<li><a href="#upload" data-bs-toggle="tab">'.$label.'</a></li>';
 
 
-$label = Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder.png','') . '&nbsp;'.JText::_($this->t['l'].'_CREATE_FOLDER');
-echo '<li><a href="#createfolder" data-toggle="tab">'.$label.'</a></li>';
+$label = HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder.png','') . '&nbsp;'.Text::_($this->t['l'].'_CREATE_FOLDER');
+echo '<li><a href="#createfolder" data-bs-toggle="tab">'.$label.'</a></li>';
 
 echo '</ul>';
 */
@@ -88,9 +91,9 @@ echo $r->startTabs($activeTab);
 echo $r->startTabs();
 
 $tabs = array();
-$tabs['multipleupload'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-bl duotone icon-upload"></i></span>' . '&nbsp;'.JText::_('COM_PHOCACART_MULTIPLE_UPLOAD');
-$tabs['upload'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-bd duotone icon-upload"></i></span>' . '&nbsp;'.JText::_('COM_PHOCACART_UPLOAD');
-$tabs['createfolder'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-brd duotone icon-folder"></i></span>' . '&nbsp;'.JText::_('COM_PHOCACART_CREATE_FOLDER');
+$tabs['multipleupload'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-bl duotone icon-upload"></i></span>' . '&nbsp;'.Text::_('COM_PHOCACART_MULTIPLE_UPLOAD');
+$tabs['upload'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-bd duotone icon-upload"></i></span>' . '&nbsp;'.Text::_('COM_PHOCACART_UPLOAD');
+$tabs['createfolder'] = '<span class="ph-cp-item"><i class="phi phi-fs-s phi-fc-brd duotone icon-folder"></i></span>' . '&nbsp;'.Text::_('COM_PHOCACART_CREATE_FOLDER');
 
 echo $r->navigation($tabs, $activeTab);
 
@@ -111,9 +114,12 @@ echo $r->endTabs();
 
 echo '</div>';
 echo '</div>';
-
+/*
 if ($this->t['tab'] != '') {$jsCt = 'a[href=#'.PhocacartText::filterValue($this->t['tab'], 'alphanumeric') .']';} else {$jsCt = 'a:first';}
 echo '<script type="text/javascript">';
 echo '   jQuery(\'#configTabs '.$jsCt.'\').tab(\'show\');'; // Select first tab
 echo '</script>';
+*/
+
 ?>
+

@@ -7,18 +7,21 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 
 
 
-$layoutA	= new JLayoutFile('button_add_to_cart_list', null, array('component' => 'com_phocacart'));
-$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
-$layoutI	= new JLayoutFile('product_image', null, array('component' => 'com_phocacart'));
-$layoutAB	= new JLayoutFile('attribute_options_box', null, array('component' => 'com_phocacart'));
-$layoutPFS	= new JLayoutFile('form_part_start_add_to_cart_list', null, array('component' => 'com_phocacart'));
-$layoutPFE	= new JLayoutFile('form_part_end', null, array('component' => 'com_phocacart'));
-$layoutBSH	= new JLayoutFile('button_submit_hidden', null, array('component' => 'com_phocacart'));
-$layoutS	= new JLayoutFile('product_stock', null, array('component' => 'com_phocacart'));
-$layoutPOQ	= new JLayoutFile('product_order_quantity', null, array('component' => 'com_phocacart'));
+$layoutA	= new FileLayout('button_add_to_cart_list', null, array('component' => 'com_phocacart'));
+$layoutP	= new FileLayout('product_price', null, array('component' => 'com_phocacart'));
+$layoutI	= new FileLayout('product_image', null, array('component' => 'com_phocacart'));
+$layoutAB	= new FileLayout('attribute_options_box', null, array('component' => 'com_phocacart'));
+$layoutPFS	= new FileLayout('form_part_start_add_to_cart_list', null, array('component' => 'com_phocacart'));
+$layoutPFE	= new FileLayout('form_part_end', null, array('component' => 'com_phocacart'));
+$layoutBSH	= new FileLayout('button_submit_hidden', null, array('component' => 'com_phocacart'));
+$layoutS	= new FileLayout('product_stock', null, array('component' => 'com_phocacart'));
+$layoutPOQ	= new FileLayout('product_order_quantity', null, array('component' => 'com_phocacart'));
 
 
 // ITEMS
@@ -30,7 +33,7 @@ if (!empty($this->items)) {
 	$i		= 1; // Not equal Heights
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
-	echo '<div class="'.$this->s['c']['row.row-flex'].' '.$lt.'">';
+	echo '<div class="'.$this->s['c']['row'].' '.$lt.'">';
 
 	foreach ($this->items as $v) {
 
@@ -38,7 +41,7 @@ if (!empty($this->items)) {
 		//$this->t['categoryid'] = (int)$v->catid;
 
 		//$label 		= PhocacartRenderFront::getLabel($v->date, $v->sales, $v->featured);
-		$link 		= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+		$link 		= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 
 
 		// Image data
@@ -130,6 +133,7 @@ if (!empty($this->items)) {
 				$dS['class']				= 'ph-item-stock-box';
 				$dS['product_id']			= (int)$v->id;
 				$dS['typeview']				= 'Pos';
+				$dS['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
 				$dS['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($stockStatus);
 				$dSO = $layoutS->render($dS);
 			}
@@ -137,7 +141,7 @@ if (!empty($this->items)) {
 			if($stockStatus['min_quantity']) {
 				$dPOQ						= array();
 				$dPOQ['s']					= $this->s;
-				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
+				$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
@@ -145,7 +149,7 @@ if (!empty($this->items)) {
 			if($stockStatus['min_multiple_quantity']) {
 				$dPOQ						= array();
 				$dPOQ['s']					= $this->s;
-				$dPOQ['text']				= JText::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
+				$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_multiple_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
@@ -299,8 +303,11 @@ if (!empty($this->items)) {
 	echo '</div>'. "\n"; // end items
 } else {
 	echo '<div id="phItems" class="ph-items '.$this->s['c']['grid'].'">';
-	echo '<div class="ph-pos-no-items-icon"><span class="'.$this->s['i']['ban'].'"></span></div>';
-	echo '<div class="ph-pos-no-items">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
+	echo '<div class="ph-pos-no-items-icon">';
+	//echo '<span class="'.$this->s['i']['ban'].'"></span>';
+	echo PhocacartRenderIcon::icon($this->s['i']['ban']);
+	echo '</div>';
+	echo '<div class="ph-pos-no-items">'.Text::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
 
 	echo $this->loadTemplate('pagination');// empty pagination only needed variables
 	echo '</div>'. "\n"; // end items

@@ -8,8 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -54,19 +59,19 @@ $h = 400;
 $rV = new PhocacartRenderAdminview();
 echo $rV->modalWindowDynamic($idMd, $textButton, $w, $h, true);
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-taxrate">'.JText::_($this->t['l'].'_TAX_RATE').'</th>'."\n";
-echo '<th class="ph-published">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-code">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CODE2', 'a.code2', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-code">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CODE3', 'a.code3', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-taxrate">'.Text::_($this->t['l'].'_TAX_RATE').'</th>'."\n";
+echo '<th class="ph-published">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_PUBLISHED', 'a.published', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-code">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CODE2', 'a.code2', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-code">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CODE3', 'a.code3', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -90,8 +95,8 @@ $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= JRoute::_( $urlEdit. $item->id );
-$linkTax 		= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartedittax&type=1&tmpl=component&id='.(int)$item->id  );
+$linkEdit 		= Route::_( $urlEdit. $item->id );
+$linkTax 		= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacartedittax&type=1&tmpl=component&id='.(int)$item->id  );
 
 
 
@@ -102,7 +107,7 @@ echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
 
 $checkO = '';
 if ($item->checked_out) {
-	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 
 if (isset($item->code2) && $item->code2 != '') {
@@ -110,16 +115,16 @@ if (isset($item->code2) && $item->code2 != '') {
 }
 
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->title).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 //$tax = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
 $tax = '';
 
-$tax .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-toggle="modal" title="' . JText::_($textButton) . '" data-src="'.$linkTax.'" data-height="'.$h.'" data-width="'.$w.'">'. JText::_($textButton) . '</a></span>';
+$tax .= ' <span><a href="'.$linkTax.'" role="button" class="ph-u '.$idMd.'ModalButton" data-bs-toggle="modal" data-bs-target="#'.$idMd.'" title="' . Text::_($textButton) . '" data-src="'.$linkTax.'" data-height="'.$h.'" data-width="'.$w.'">'. Text::_($textButton) . '</a></span>';
 
 if (isset($item->tc_tax_rate) && $item->tc_tax_rate != '') {
 	$taxRateA = explode(',', $item->tc_tax_rate);
@@ -136,7 +141,7 @@ if (isset($item->tc_tax_rate) && $item->tc_tax_rate != '') {
 
 echo $r->td($tax, "small");
 
-echo $r->td(Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
+echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($item->code2, "small");
 echo $r->td($item->code3, "small");

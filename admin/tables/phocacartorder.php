@@ -7,7 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
-class TablePhocacartOrder extends JTable
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+class TablePhocacartOrder extends Table
 {
 	function __construct( &$db ) {
 		parent::__construct( '#__phocacart_orders', 'id', $db );
@@ -16,7 +20,7 @@ class TablePhocacartOrder extends JTable
 	function check(){
 		
 		/*if (trim( $this->title ) == '') {
-			$this->setError( JText::_( 'COM_PHOCACART_ERROR_TITLE_NOT_SET') );
+			$this->setError( Text::_( 'COM_PHOCACART_ERROR_TITLE_NOT_SET') );
 			return false;
 		}
 
@@ -24,9 +28,9 @@ class TablePhocacartOrder extends JTable
 			$this->alias = $this->title;
 		}
 
-		$this->alias = JApplicationHelper::stringURLSafe($this->alias);
+		$this->alias = ApplicationHelper::stringURLSafe($this->alias);
 		if (trim(str_replace('-', '', $this->alias)) == '') {
-			$this->alias = JFactory::getDate()->format("Y-m-d-H-i-s");
+			$this->alias = Factory::getDate()->format("Y-m-d-H-i-s");
 		}*/
 		return true;
 	}

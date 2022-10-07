@@ -9,12 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('JPATH_BASE') or die;
+use Joomla\CMS\Factory;
 
 class PhocacartCaptchaRecaptcha
 {
 	public static function render() {
 
-		$document	= JFactory::getDocument();
+		$document	= Factory::getDocument();
 		$pC 		= PhocacartUtils::getComponentParameters();
 		$siteKey	= strip_tags(trim($pC->get( 'recaptcha_sitekey', '' )));
 		$lang	    = strip_tags(trim($pC->get( 'recaptcha_lang', '' )));
@@ -28,7 +29,7 @@ class PhocacartCaptchaRecaptcha
 	}
 	public static function isValid() {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$pC 		= PhocacartUtils::getComponentParameters();
 		$secretKey	= strip_tags(trim($pC->get( 'recaptcha_privatekey', '' )));
 		//$response 	= $app->input->post->get('g-recaptcha-response', '', 'string');

@@ -7,9 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Filesystem\File;
+use Joomla\Data\DataObject;
+use Joomla\CMS\Log\Log;
+use Joomla\Utilities\ArrayHelper;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartCountry extends JModelAdmin
+class PhocaCartCpModelPhocacartCountry extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -28,12 +37,12 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 
 	public function getTable($type = 'PhocacartCountry', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartcountry', 'phocacartcountry', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -44,7 +53,7 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartcountry.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartcountry.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -56,14 +65,14 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -72,7 +81,7 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_countries');
 				$max = $db->loadResult();
 
@@ -87,26 +96,26 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 	}
 
 	public function importcountries() {
-		$app	= JFactory::getApplication();
-		$db		= JFactory::getDBO();
+		$app	= Factory::getApplication();
+		$db		= Factory::getDBO();
 
 		$db->setQuery('SELECT COUNT(id) FROM #__phocacart_countries');
 		$sum = $db->loadResult();
 
 		/*if ((int)$sum > 240) {
-			$message = JText::_('COM_PHOCACART_COUNTRIES_ALREADY_IMPORTED');
+			$message = Text::_('COM_PHOCACART_COUNTRIES_ALREADY_IMPORTED');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}*/
 
 		if ((int)$sum > 0) {
-			$message = JText::_('COM_PHOCACART_COUNTRIES_CAN_BE_IMPORTED_ONLY_WHEN_COUNTRY_TABLE_IS_EMPTY');
+			$message = Text::_('COM_PHOCACART_COUNTRIES_CAN_BE_IMPORTED_ONLY_WHEN_COUNTRY_TABLE_IS_EMPTY');
 			$app->enqueueMessage($message, 'error');
 			return false;
 		}
 
 		$file	= JPATH_ADMINISTRATOR . '/components/com_phocacart/install/sql/mysql/countries.utf8.sql';
-		if(JFile::exists($file)) {
+		if(File::exists($file)) {
 			$buffer = file_get_contents($file);
 			$queries = JDatabaseDriver::splitSql($buffer);
 			if (count($queries) == 0) {
@@ -118,15 +127,15 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 				if ($query != '' && $query[0] != '#'){
 					$db->setQuery($query);
 					if (!$db->execute()){
-						$app->enqueueMessage(JText::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), 'error');
-						JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), JLog::WARNING);
+						$app->enqueueMessage(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), 'error');
+						Log::add(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), Log::WARNING);
 						return false;
 					}
 				}
 			}
 			return true;
 		} else {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_IMPORT_FILE_NOT_EXIST'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_IMPORT_FILE_NOT_EXIST'), 'error');
 			return false;
 		}
 	}
@@ -137,17 +146,17 @@ class PhocaCartCpModelPhocacartCountry extends JModelAdmin
 		$delete_regions		= $paramsC->get( 'delete_regions', 0 );
 
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING);
+					Log::add($error, Log::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 					return false;
 				}
 			}

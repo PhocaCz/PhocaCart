@@ -18,13 +18,13 @@ $d['class']	= $d['s']['i'][$d['icon']]. strip_tags($d['suffix']).' ph-checkout-i
 
 if ($d['type'] == 1) {
 
-?><div class="<?php echo $d['s']['c']['pull-right'] ?>">
+?><div class="<?php echo $d['s']['c']['pull-right'] ?> ph-checkout-icon-spec-box">
 	<span class="ph-checkout-icon-spec-<?php echo $d['status'];?>"><?php echo $d['number'];?></span>
 </div><?php
 
 } else {
 
-?><div class="<?php echo $d['s']['c']['pull-right'] ?>">
+?><div class="<?php echo $d['s']['c']['pull-right'] ?> ph-checkout-icon-spec-box">
 	<span class="<?php echo $d['class']; ?>"></span>
 </div><?php
 

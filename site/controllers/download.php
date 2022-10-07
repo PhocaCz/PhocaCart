@@ -7,13 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
-class PhocaCartControllerDownload extends JControllerForm
+class PhocaCartControllerDownload extends FormController
 {
 	public function download() {
 	
-		JSession::checkToken() or jexit( 'Invalid Token' );
-		$app				= JFactory::getApplication();
+		Session::checkToken() or jexit( 'Invalid Token' );
+		$app				= Factory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
@@ -21,10 +25,10 @@ class PhocaCartControllerDownload extends JControllerForm
 		if ($item['id'] > 0) {
 			$download = PhocacartDownload::download($item['id']);
 			if (!$download) {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_FILE_CANNOT_BE_DOWNLOADED'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_FILE_CANNOT_BE_DOWNLOADED'), 'error');
 			}
 		} else {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_FILE_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_FILE_FOUND'), 'error');
 		}
 		
 		$app->redirect(base64_decode($item['return']));
@@ -32,8 +36,8 @@ class PhocaCartControllerDownload extends JControllerForm
 	
 	public function downloadpublic() {
 	
-		JSession::checkToken() or jexit( 'Invalid Token' );
-		$app				= JFactory::getApplication();
+		Session::checkToken() or jexit( 'Invalid Token' );
+		$app				= Factory::getApplication();
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
 		$item['return']		= $this->input->get( 'return', '', 'string'  );
@@ -41,10 +45,10 @@ class PhocaCartControllerDownload extends JControllerForm
 		if ($item['id'] > 0) {
 			$download = PhocacartDownload::downloadPublic($item['id']);
 			if (!$download) {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_FILE_CANNOT_BE_DOWNLOADED'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_FILE_CANNOT_BE_DOWNLOADED'), 'error');
 			}
 		} else {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_NO_FILE_FOUND'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_FILE_FOUND'), 'error');
 		}
 		
 		$app->redirect(base64_decode($item['return']));

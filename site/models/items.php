@@ -12,9 +12,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelItems extends JModelLegacy
+class PhocaCartModelItems extends BaseDatabaseModel
 {
 
 	protected $item 				= null;
@@ -172,12 +173,19 @@ class PhocaCartModelItems extends JModelLegacy
 		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
 		$p['search_deep']					= $params->get( 'search_deep', 0);
 		$p['sql_search_skip_id']			= $params->get( 'sql_search_skip_id', 1 );
+		$p['search_custom_fields']			= $params->get( 'search_custom_fields', 0 );
 
 		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (Online Shop)
 		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 2){
 			$p['sql_search_skip_id_specific_type'] = 0;
 
 		}
+
+		$p['sql_filter_method_tag']				= $params->get('sql_filter_method_tag', 0);
+		$p['sql_filter_method_label']			= $params->get('sql_filter_method_label', 0);
+		$p['sql_filter_method_parameter']		= $params->get('sql_filter_method_parameter', 0);
+		$p['sql_filter_method_attribute']		= $params->get('sql_filter_method_attribute', 0);
+		$p['sql_filter_method_specification']	= $params->get('sql_filter_method_specification', 0);
 
 		$wheres		= array();
 		$wheres[] = ' a.published = 1';
@@ -216,13 +224,13 @@ class PhocaCartModelItems extends JModelLegacy
 			// -TAG-
 			$wheresTL = array();
 			if ($this->getState('tag')) {
-				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $p);
 				$wheresTL[]	= $s['where'];
 				$lefts[]	= $s['left'];
 			}
 			// -LABEL-
 			if ($this->getState('label')) {
-				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'));
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $p);
 				$wheresTL[]	= $s['where'];
 				$lefts[]	= $s['left'];
 			}
@@ -234,21 +242,27 @@ class PhocaCartModelItems extends JModelLegacy
 					$startP = '(';
 					$endP 	= ')';
 				}
-				$wheres[] = $startP . implode(' OR ', $wheresTL) . $endP;
 
+
+				if (!empty($wheresTL)) {
+					$wheresTL = array_filter($wheresTL);
+					if (!empty($wheresTL)) {
+						$wheres[] = $startP . implode(' OR ', $wheresTL) . $endP;
+					}
+				}
 			}
 		} else {
 
 			// -TAG-
 			if ($this->getState('tag')) {
-				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'));
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $p);
 				$wheres[]	= $s['where'];
 				$lefts[]	= $s['left'];
 
 			}
 			// -LABEL-
 			if ($this->getState('label')) {
-				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'));
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $p);
 				$wheres[]	= $s['where'];
 				$lefts[]	= $s['left'];
 			}
@@ -288,7 +302,7 @@ class PhocaCartModelItems extends JModelLegacy
 				$parameter = $app->input->get($alias, '', 'string');
 
 				if($parameter != '') {
-					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, array(), $v->id);
+					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, $p, $v->id);
 					$wheres[] = $s['where'];// There must be AND between custom parameters
 					//if ($leftOnce < 1) {
 						$lefts[] = $s['left'];
@@ -334,14 +348,14 @@ class PhocaCartModelItems extends JModelLegacy
 
 		// -ATTRIBUTES-
 		if ($this->getState('a')) {
-			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'));
+			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'), $p);
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
 
 		// -SPECIFICATIONS-
 		if ($this->getState('s')) {
-			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'));
+			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'), $p);
 			$wheres[]	= $s['where'];
 			$lefts[]	= $s['left'];
 		}
@@ -378,7 +392,7 @@ class PhocaCartModelItems extends JModelLegacy
 				$pluginOptions 				= array();
 				$eventData 					= array();
 				$eventData['pluginname'] 	= $this->items_layout_plugin;
-				Factory::getApplication()->triggerEvent('PCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+				Factory::getApplication()->triggerEvent('onPCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
 
 				if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
 					$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
@@ -402,7 +416,7 @@ class PhocaCartModelItems extends JModelLegacy
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonItemsBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonItemsBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
@@ -498,7 +512,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 			$columns	= implode(',', $col) . ','
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias,';
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid,';
 
 			if (!$skip['tax']) {
 				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
@@ -545,6 +559,7 @@ class PhocaCartModelItems extends JModelLegacy
 
 
 		}
+
 		//echo "<br><br>" . nl2br(str_replace('#__', 'jos_', $q));
 
 		return $q;

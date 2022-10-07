@@ -7,39 +7,45 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$layoutP	= new JLayoutFile('product_price', null, array('component' => 'com_phocacart'));
-$layoutI	= new JLayoutFile('image', null, array('component' => 'com_phocacart'));
+$layoutP	= new FileLayout('product_price', null, array('component' => 'com_phocacart'));
+$layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
-echo '<div id="ph-pc-comparison-box" class="pc-comparison-view'.$this->p->get( 'pageclass_sfx' ).'">';
+echo '<div id="ph-pc-comparison-box" class="pc-view pc-comparison-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
 
-echo PhocacartRenderFront::renderHeader(array(JText::_('COM_PHOCACART_COMPARISON')));
+echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_COMPARISON')));
 
 
 if (!empty($this->t['items'])) {
 
 	$c = array();
-	$c['title']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_PRODUCT').'</b></td>';
+	$c['title']		= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_PRODUCT').'</b></td>';
 
 	if ($this->t['can_display_price']) {
-		$c['price']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_PRICE').'</b></td>';
+		$c['price']		= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_PRICE').'</b></td>';
 	}
 	$c['remove'] 	= '<tr><td class="ph-middle"></td>';
-	$c['desc']		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_DESCRIPTION').'</b></td>';
-	$c['man'] 		= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_MANUFACTURER').'</b></td>';
+	$c['desc']		= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_DESCRIPTION').'</b></td>';
+	$c['man'] 		= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_MANUFACTURER').'</b></td>';
 	$c2['link'] 	= '<tr><td></td>';
 
-	if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_AVAILABILITY').'</b></td>';}
+	if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_AVAILABILITY').'</b></td>';}
 
-	if ($this->t['value']['length'] == 1)	{ $c['length'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_LENGTH').'</b></td>';}
-	if ($this->t['value']['width'] == 1)	{ $c['width'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_WIDTH').'</b></td>';}
-	if ($this->t['value']['height'] == 1) 	{ $c['height'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_HEIGHT').'</b></td>';}
-	if ($this->t['value']['weight'] == 1) 	{ $c['weight'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_WEIGHT').'</b></td>';}
-	if ($this->t['value']['volume'] == 1) 	{ $c['volume'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_VOLUME').'</b></td>';}
+	if ($this->t['value']['length'] == 1)	{ $c['length'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_LENGTH').'</b></td>';}
+	if ($this->t['value']['width'] == 1)	{ $c['width'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_WIDTH').'</b></td>';}
+	if ($this->t['value']['height'] == 1) 	{ $c['height'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_HEIGHT').'</b></td>';}
+	if ($this->t['value']['weight'] == 1) 	{ $c['weight'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_WEIGHT').'</b></td>';}
+	if ($this->t['value']['volume'] == 1) 	{ $c['volume'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_VOLUME').'</b></td>';}
 
 
-	if ($this->t['value']['attrib'] == 1) 	{ $c['attrib'] 	= '<tr><td class="ph-middle"><b>'.JText::_('COM_PHOCACART_ATTRIBUTES').'</b></td>';}
+	if ($this->t['value']['attrib'] == 1) 	{ $c['attrib'] 	= '<tr><td class="ph-middle"><b>'.Text::_('COM_PHOCACART_ATTRIBUTES').'</b></td>';}
 
 
 	$count = count($this->t['items']);
@@ -52,9 +58,9 @@ if (!empty($this->t['items'])) {
 		$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v['image'], 'small');
 
 		if (isset($v['catid2']) && (int)$v['catid2'] > 0 && isset($v['catalias2']) && $v['catalias2'] != '') {
-			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
+			$link 	= Route::_(PhocacartRoute::getItemRoute($v['id'], $v['catid2'], $v['alias'], $v['catalias2']));
 		} else {
-			$link 	= JRoute::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
+			$link 	= Route::_(PhocacartRoute::getItemRoute($v['id'], $v['catid'], $v['alias'], $v['catalias']));
 		}
 
 
@@ -65,8 +71,8 @@ if (!empty($this->t['items'])) {
             $d						= array();
             $d['t']					= $this->t;
             $d['s']			        = $this->s;
-            $d['src']				= JURI::base(true).'/'.$image->rel;
-            $d['srcset-webp']		= JURI::base(true).'/'.$image->rel_webp;
+            $d['src']				= Uri::base(true).'/'.$image->rel;
+            $d['srcset-webp']		= Uri::base(true).'/'.$image->rel_webp;
             $d['alt-value']			= PhocaCartImage::getAltTitle($v['title'], $image->rel);
             $d['class']				= $this->s['c']['img-responsive'];
 
@@ -119,22 +125,26 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '<input type="hidden" name="option" value="com_phocacart" />';
 		$c['remove'] .= '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />';
 		$c['remove'] .= '<div class="ph-center">';
-		$c['remove'] .= '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn"><span class="'.$this->s['i']['remove'].'"></span> '.JText::_('COM_PHOCACART_REMOVE').'</button>';
+		$c['remove'] .= '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].' ph-btn">';
+		//$c['remove'] .= ' '<span class="' . $this->s['i']['remove'] . '"></span>';
+		$c['remove'] .= PhocacartRenderIcon::icon($this->s['i']['remove']);
+		$c['remove'] .= '</button>';
 		$c['remove'] .= '</div>';
-		$c['remove'] .= Joomla\CMS\HTML\HTMLHelper::_('form.token');
+		$c['remove'] .= HTMLHelper::_('form.token');
 		$c['remove'] .= '</form>';
 		$c['remove'] .= '</td>';
 
-		$c['desc'] .= '<td>'.Joomla\CMS\HTML\HTMLHelper::_('content.prepare', $v['description']).'</td>';
+		$c['desc'] .= '<td>'.HTMLHelper::_('content.prepare', $v['description']).'</td>';
 		$c['man'] .= '<td class="ph-center">'.$v['manufacturer_title'].'</td>';
 
-		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.JText::_($v['stock']).'</td>';}
+		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.Text::_($v['stock']).'</td>';}
 
 		if ($this->t['value']['length'] == 1)	{ $c['length'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['length']).' '.$this->t['unit_size'].'</td>';}
 		if ($this->t['value']['width'] == 1)	{ $c['width'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['width']).' '.$this->t['unit_size'].'</td>';}
 		if ($this->t['value']['height'] == 1)	{ $c['height'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['height']).' '.$this->t['unit_size'].'</td>';}
 		if ($this->t['value']['weight'] == 1)	{ $c['weight'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['weight']).' '.$this->t['unit_weight'].'</td>';}
 		if ($this->t['value']['volume'] == 1)	{ $c['volume'] 	.= '<td class="ph-center">'.PhocacartUtils::round($v['volume']).' '.$this->t['unit_volume'].'</td>';}
+
 
 		if ($this->t['value']['attrib'] == 1) 	{
 			$c['attrib'] 	.= '<td>';
@@ -155,7 +165,7 @@ if (!empty($this->t['items'])) {
 		}
 
 		$c2['link'] .= '<td class="ph-center">';
-		$c2['link'] .= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm']. ' ph-btn" role="button"><span class="'.$this->s['i']['search'].'"></span> '.JText::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
+		$c2['link'] .= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm']. ' ph-btn" role="button">'.PhocacartRenderIcon::icon($this->s['i']['search'], '', ' ') .Text::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
 		$c2['link'] .= '</td>';
 
 	}
@@ -185,6 +195,9 @@ if (!empty($this->t['items'])) {
 	foreach($c as $k => $v) {
 		echo $v;
 	}
+
+
+
 	foreach($this->t['spec'] as $k => $v) {
 		if($k != '') {
 			echo '<tr><td><b><u>'.$k.'</u></b></td><td colspan="'.$count.'"></td></tr>';
@@ -192,15 +205,57 @@ if (!empty($this->t['items'])) {
 				foreach($v as $k2 => $v2) {
 					echo '<tr><td><b>'.$k2.'</b></td>';
 
+
 					if ($count == 1) {
-						if (isset($v2[0])) { echo '<td class="ph-center">'.$v2[0].'</td>';} else {echo '<td></td>';}
+						if (isset($v2[0])) {
+							$v2V = $v2[0];
+							if (is_array($v2[0])) {
+								$v2V = implode ('<br>', $v2[0]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
 					} else if ($count == 2) {
-						if (isset($v2[0])) { echo '<td class="ph-center">'.$v2[0].'</td>';} else {echo '<td></td>';}
-						if (isset($v2[1])) { echo '<td class="ph-center">'.$v2[1].'</td>';} else {echo '<td></td>';}
+
+						if (isset($v2[0])) {
+							$v2V = $v2[0];
+							if (is_array($v2[0])) {
+								$v2V = implode ('<br>', $v2[0]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
+						if (isset($v2[1])) {
+							$v2V = $v2[1];
+							if (is_array($v2[1])) {
+								$v2V = implode ('<br>', $v2[1]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
 					} else {
-						if (isset($v2[0])) { echo '<td class="ph-center">'.$v2[0].'</td>';} else {echo '<td></td>';}
-						if (isset($v2[1])) { echo '<td class="ph-center">'.$v2[1].'</td>';} else {echo '<td></td>';}
-						if (isset($v2[2])) { echo '<td class="ph-center">'.$v2[2].'</td>';} else {echo '<td></td>';}
+						if (isset($v2[0])) {
+							$v2V = $v2[0];
+							if (is_array($v2[0])) {
+								$v2V = implode ('<br>', $v2[0]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
+						if (isset($v2[1])) {
+							$v2V = $v2[1];
+							if (is_array($v2[1])) {
+								$v2V = implode ('<br>', $v2[1]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
+
+						if (isset($v2[2])) {
+							$v2V = $v2[2];
+							if (is_array($v2[2])) {
+								$v2V = implode ('<br>', $v2[2]);
+							}
+							echo '<td class="ph-center">'.$v2V.'</td>';
+						} else {echo '<td></td>';}
 					}
 
 					echo'</tr>';
@@ -217,7 +272,7 @@ if (!empty($this->t['items'])) {
 	echo '</table>';
 	echo '</div>';// end comparison items
 } else {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_THERE_ARE_NO_PRODUCTS_IN_COMPARISON_LIST').'</div>';
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_THERE_ARE_NO_PRODUCTS_IN_COMPARISON_LIST')));
 }
 
 

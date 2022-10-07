@@ -9,12 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('JPATH_BASE') or die;
+use Joomla\CMS\Factory;
 
 class PhocacartCaptcha
 {
 	public static function enableCaptchaCheckout() {
 		
-		$document					= JFactory::getDocument();
+		$document					= Factory::getDocument();
 		$pC 						= PhocacartUtils::getComponentParameters();
 		$enable_captcha_checkout	= $pC->get( 'enable_captcha_checkout', 0 );
 		

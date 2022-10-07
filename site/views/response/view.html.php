@@ -7,8 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 jimport( 'joomla.application.component.view');
-class PhocaCartViewResponse extends JViewLegacy
+class PhocaCartViewResponse extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -18,9 +21,9 @@ class PhocaCartViewResponse extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$document					= JFactory::getDocument();
-		$app						= JFactory::getApplication();
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$document					= Factory::getDocument();
+		$app						= Factory::getApplication();
+		$uri 						= Uri::getInstance();
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
 		$this->s                    = PhocacartRenderStyle::getStyles();

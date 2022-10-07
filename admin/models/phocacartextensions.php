@@ -9,9 +9,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocacartExtensions extends JModelList
+class PhocaCartCpModelPhocacartExtensions extends ListModel
 {
 	protected $option 	= 'com_phocacart';
 
@@ -23,7 +26,7 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 
 	protected function populateState($ordering = 'a.date', $direction = 'DESC')
 	{
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', 'modules');
 		$this->setState('filter.category_id', $categoryId);
@@ -42,7 +45,7 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 
 	public function getItems() {
 
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		$items	= null;
 		$type	= $this->getState('filter.category_id', 'modules');
@@ -52,6 +55,7 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 
 		if ($items === null) {
 			$items = array();
+
 
 			if ($url) {
 				$content = @file_get_contents($url);
@@ -66,14 +70,14 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 						$items = $contentJSON['extensions'];
 					}
 				} else {
-					$msg = JText::_('COM_PHOCACART_ERROR_EXTENSIONS_CHANNEL_NOT_FOUND'). ' ('.ucfirst($type).')';
+					$msg = Text::_('COM_PHOCACART_ERROR_EXTENSIONS_CHANNEL_NOT_FOUND'). ' ('.ucfirst($type).')';
 					$app->enqueueMessage($msg, 'error');
 				}
 			}
 
 			$app->setUserState('com_phocacart.getExtensions.'.$type, $items);
 		} else if (empty($items)) {
-			$msg = JText::_('COM_PHOCACART_ERROR_NO_EXTENSION_FOUND'). ' ('.ucfirst($type).')';
+			$msg = Text::_('COM_PHOCACART_ERROR_NO_EXTENSION_FOUND'). ' ('.ucfirst($type).')';
 			$app->enqueueMessage($msg, 'error');
 		}
 
@@ -82,7 +86,7 @@ class PhocaCartCpModelPhocacartExtensions extends JModelList
 
 	public function getNews() {
 
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		$news	= null;
 		$type	= 'news';

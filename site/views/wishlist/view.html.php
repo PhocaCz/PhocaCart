@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartViewWishList extends JViewLegacy
+class PhocaCartViewWishList extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -19,9 +24,9 @@ class PhocaCartViewWishList extends JViewLegacy
 
 	function display($tpl = null)
 	{
-		$app								= JFactory::getApplication();
+		$app								= Factory::getApplication();
 		$model								= $this->getModel();
-		$document							= JFactory::getDocument();
+		$document							= Factory::getDocument();
 		$this->p 							= $app->getParams();
 		$this->u							= PhocacartUser::getUser();
 		$this->s							= PhocacartRenderStyle::getStyles();
@@ -40,10 +45,10 @@ class PhocaCartViewWishList extends JViewLegacy
 
 
 
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 						= Uri::getInstance();
 		$this->t['action']			= $uri->toString();
 		$this->t['actionbase64']	= base64_encode($this->t['action']);
-		$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute());
+		$this->t['linkwishlist']	= Route::_(PhocacartRoute::getWishListRoute());
 
 		$wishlist = new PhocacartWishlist();
 		$this->t['items'] = $wishlist->getFullItems();
@@ -93,7 +98,7 @@ class PhocaCartViewWishList extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_WISH_LIST'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_WISH_LIST'));
 	}
 }
 ?>

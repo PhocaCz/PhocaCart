@@ -7,13 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\Registry\Registry;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartUser extends JModelAdmin
+class PhocaCartCpModelPhocacartUser extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected $fields;
 
 	public function getFields(){
@@ -22,22 +28,22 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		}
 		return $this->fields;
 	}
-	
-	
+
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartUser', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getFormSpecific($data = array(), $loadData = true) {
-		
+
 		if (empty($this->fields['xml'])) {
 			$this->fields = $this->getFields();
 		}
@@ -47,51 +53,51 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		}
 		return $form;
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$form = $this->loadForm('com_phocacart.user', 'phocacartuser', array('control' => 'jform', 'load_data' => $loadData));
-		
+
 		if (empty($form)) {
 			return false;
 		}
 		return $form;
 	}
-	
-	
+
+
 	protected function loadFormData() {
-		$formData = (array) JFactory::getApplication()->getUserState('com_phocacart.user.data', array());
-		
+		$formData = (array) Factory::getApplication()->getUserState('com_phocacart.user.data', array());
+
 		if (empty($data)) {
 			$formData = $this->getItem();
 		}
 		return $formData;
 	}
-	
+
 	public function getItem($pk = null) {
-		$app	= JFactory::getApplication();
-		
+		$app	= Factory::getApplication();
+
 		if (empty($pk)) {
 			$pk = (int) $this->getState($this->getName() . '.id');
 		}
-		
+
 		$user 	= $this->getUser($pk);
-		
-		
+
+
 		$table 	= $this->getTable('PhocacartUser', 'Table');
 		$tableS = $this->getTable('PhocacartUser', 'Table');
-		
+
 		// Billing
 		if(isset($user->id) && (int)$user->id > 0) {
-			
+
 			$return = $table->load(array('user_id' => (int)$user->id, 'type' => 0));
-			
+
 			if ($return === false && $table->getError()) {
 				$this->setError($table->getError());
 				return false;
 			}
 		}
-		
+
 		// Shipping
 		if(isset($user->id) && (int)$user->id > 0) {
 			$returnS = $tableS->load(array('user_id' => (int)$user->id, 'type' => 1));
@@ -100,56 +106,56 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 				return false;
 			}
 		}
-		
+
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = \Joomla\Utilities\ArrayHelper::toObject($properties, 'JObject');
-		
+		$item = ArrayHelper::toObject($properties, 'JObject');
+
 		$propertiesS = $tableS->getProperties(1);
-		//$itemS = \Joomla\Utilities\ArrayHelper::toObject($propertiesS, 'JObject');
-		
+		//$itemS = JArrayHelper::toObject($propertiesS, 'JObject');
+
 		//Add shipping data to billing and do both data package
 		if(!empty($propertiesS) && is_object($item)) {
 			foreach($propertiesS as $k => $v) {
 				$newName = $k . '_phs';
 				$item->$newName = $v;
-			
+
 			}
-		
+
 		}
 		/*
 
 		if (property_exists($item, 'params'))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($item->params);
 			$item->params = $registry->toArray();
 		}*/
-		
+
 		return $item;
 	}
-	
+
 	/*
 	 * User id is the key, not the id in table users
 	 * we are managing two rows in table - shipping, billing
 	 * so we cannot do standard checkout
 	 */
-	 
+
 	public function checkout($pk = null) {
 		return true;
 	}
-	
+
 	protected function getUser() {
-		$app	= JFactory::getApplication();
-		$userId = $app->input->get('id', 0, 'int'); 
-		$user 	= JFactory::getUser($userId);
+		$app	= Factory::getApplication();
+		$userId = $app->input->get('id', 0, 'int');
+		$user 	= Factory::getUser($userId);
 		return $user;
 	}
-	
-	
+
+
 	public function save($data, $type = 0) {
-		
-		$app	= JFactory::getApplication();
+
+		$app	= Factory::getApplication();
 		$data['type']		= (int)$type;
 		$data['country']	= PhocacartUtils::getIntFromString($data['country']);
 		$data['region']		= PhocacartUtils::getIntFromString($data['region']);
@@ -158,25 +164,48 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 		if(isset($data['user_id']) && $data['user_id'] > 0) {
 			if (!$row->load(array('user_id' => (int)$data['user_id'], 'type' => $type))) {
 				// No data yet
-				
+
 			} else {
 				if (isset($row->id) && (int)$row->id > 0 && (!isset($data['id']) || (isset($data['id']) && $data['id'] == ''))) {
 					$data['id'] = (int)$row->id;
 				}
 			}
 		}
-	
+
+		// Get all checkboxes, because they are not sent in POST if they are set to not checked CHECKBOXMISSING
+		$checkboxes = PhocacartUser::getAllCheckboxesFromFormFields();
+
+		if (!empty($checkboxes)) {
+			foreach($checkboxes as $k => $v) {
+				if ($v->display_billing == 1) {
+					$title = $v->title;
+
+					if(!isset($data[$title])) {
+						$data[$title] = false;
+					}
+				}
+
+				if ($v->display_shipping == 1) {
+					$title = $v->title. '_phs';
+
+					if(!isset($data[$title])) {
+						$data[$title] = false;
+					}
+				}
+			}
+		}
+		// ---
 
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		$row->date = gmdate('Y-m-d H:i:s');
-		
+
 
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
@@ -184,25 +213,25 @@ class PhocaCartCpModelPhocacartUser extends JModelAdmin
 			// fix the type by new items
 			$row->id = null;
 		}
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
-		
+
 		// We save shipping and billing after each other - twice, so don't delete the group and run only once
 		if (empty($data['group'])) {
 			$data['group'] = array();
 		}
-				
+
 		if ($type == 0) {
 			PhocacartGroup::storeGroupsById((int)$row->user_id, 1, $data['group']);
 		}
-	
+
 		return $row->user_id;
 	}
-	
+
 	public function delete(&$cid = array()) {
 		return false;
 	}

@@ -7,14 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaFormRegion extends JFormField
+class JFormFieldPhocaFormRegion extends FormField
 {
 	protected $type 		= 'PhocaFormRegion';
 
 	protected function getInput() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 
 		$country = $this->form->getValue('country');
@@ -68,7 +72,7 @@ class JFormFieldPhocaFormRegion extends JFormField
 
 
 		$attr = '';
-		$attr .= !empty($this->class) ? ' class="' . $this->class . ' form-control chosen-select ph-input-select-region"' : 'class="form-control chosen-select ph-input-select-region"';
+		$attr .= !empty($this->class) ? ' class="' . $this->class . ' form-select chosen-select ph-input-select-region"' : 'class="form-select chosen-select ph-input-select-region"';
 		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
 		$attr .= $this->multiple ? ' multiple' : '';
 		$attr .= $this->required ? ' required aria-required="true"' : '';
@@ -80,9 +84,9 @@ class JFormFieldPhocaFormRegion extends JFormField
 		$attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
 
 
-		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-', 'value', 'text'));
+		array_unshift($data, HTMLHelper::_('select.option', '', '-&nbsp;'.Text::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-', 'value', 'text'));
 
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		return HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

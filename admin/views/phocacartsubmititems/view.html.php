@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartSubmititems extends JViewLegacy
+class PhocaCartCpViewPhocaCartSubmititems extends HtmlView
 {
 
 	protected $items;
@@ -55,45 +61,45 @@ class PhocaCartCpViewPhocaCartSubmititems extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.item_id'));
-		$user  	= JFactory::getUser();
-		$bar 	= JToolbar::getInstance('toolbar');
+		$user  	= Factory::getUser();
+		$bar 	= Toolbar::getInstance('toolbar');
 
 
 
-		JToolbarHelper::title( JText::_($this->t['l'].'_SUBMITTED_ITEMS'), 'duplicate' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_SUBMITTED_ITEMS'), 'duplicate' );
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
 		}
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 
 		if ($canDo->get('core.edit.state')) {
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			ToolbarHelper::divider();
+			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
 
 		// Add a batch button
 	/*	if ($user->authorise('core.edit'))
 		{
-			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-			$title = JText::_('JTOOLBAR_BATCH');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
+			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
+			$title = Text::_('JTOOLBAR_BATCH');
+			$dhtml = "<button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 
-			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
-			$title = JText::_('COM_PHOCACART_COPY_ATTRIBUTES');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModalCA\" class=\"btn btn-small\">
+			HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
+			$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
+			$dhtml = "<button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModalCA\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'copy_attributes');
@@ -101,7 +107,7 @@ class PhocaCartCpViewPhocaCartSubmititems extends JViewLegacy
 
 */
 
-		$dhtml = '<button class="btn btn-small" onclick="javascript: if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS').'\')){submitbutton(\'phocacartsubmititem.create\');}}" ><i class="icon-new" title="'.JText::_('COM_PHOCACART_CREATE_PRODUCTS').'"></i> '.JText::_('COM_PHOCACART_CREATE_PRODUCTS').'</button>';
+		$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="javascript: if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS').'\')){Joomla.submitbutton(\'phocacartsubmititem.create\');}}" ><i class="icon-new" title="'.Text::_('COM_PHOCACART_CREATE_PRODUCTS').'"></i> '.Text::_('COM_PHOCACART_CREATE_PRODUCTS').'</button></joomla-toolbar-button>';
 
 
 
@@ -109,19 +115,19 @@ class PhocaCartCpViewPhocaCartSubmititems extends JViewLegacy
 
 
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		//PhocacartRenderAdminview::renderWizardButton('back');
 	}
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
-			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'a.submit_date' 			=> JText::_($this->t['l'] . '_DATE'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
+			'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
+			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
+			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
+			'a.submit_date' 			=> Text::_($this->t['l'] . '_DATE'),
+			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

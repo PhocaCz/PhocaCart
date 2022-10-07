@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 class PhocacartOrdering
 {
 	public static function getOrderingText ($ordering, $type = 0) {
@@ -159,7 +161,7 @@ class PhocacartOrdering
 
 			default://PRODUCTS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'pc.ordering DESC';break;
+					case 2:$orderingOutput	= 'c.id, pc.ordering DESC';break;
 					case 3:$orderingOutput	= 'a.title ASC';break;
 					case 4:$orderingOutput	= 'a.title DESC';break;
 					case 5:$orderingOutput	= 'a.price ASC';break;
@@ -183,8 +185,14 @@ class PhocacartOrdering
 
 					case 19:$orderingOutput = 'a.sku ASC';break;
 					case 20:$orderingOutput = 'a.sku DESC';break;
+
+					case 23:$orderingOutput	= 'a.stock ASC';break;
+					case 24:$orderingOutput	= 'a.stock DESC';break;
+					case 25:$orderingOutput	= 'a.featured ASC';break;
+					case 26:$orderingOutput	= 'a.featured DESC';break;
+
 					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'pc.ordering ASC';break;
+					case 1:default:$orderingOutput = 'c.id, pc.ordering ASC';break;
 				}
 			break;
 		}
@@ -235,7 +243,9 @@ class PhocacartOrdering
 			break;
 		}
 
-		$html 	= Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $typeOrdering, $ordering, 'class="inputbox" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected, $ordering);
+		$s = PhocacartRenderStyle::getStyles();
+
+		$html 	= HTMLHelper::_('select.genericlist',  $typeOrdering, $ordering, 'class="'.$s['c']['inputbox.form-select'].'" size="1" onchange="phEventChangeFormPagination(this.form, this)"', 'value', 'text', $selected, $ordering);
 
 		return $html;
 	}
@@ -254,46 +264,54 @@ class PhocacartOrdering
 
 		if ($ordering_asc_desc_arrows == 1) {
 			$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_ORDERING') . " &nbsp;" . "&#8679;",
-				2 => JText::_('COM_PHOCACART_ORDERING') . " &nbsp;" .  "&#8681;",
-				3 => JText::_('COM_PHOCACART_TITLE'). " &nbsp;" .  "&#8679;",
-				4 => JText::_('COM_PHOCACART_TITLE'). " &nbsp;" .  "&#8681;",
-				5 => JText::_('COM_PHOCACART_PRICE'). " &nbsp;" .  "&#8679;",
-				6 => JText::_('COM_PHOCACART_PRICE'). " &nbsp;" .  "&#8681;",
-				7 => JText::_('COM_PHOCACART_DATE_ADDED'). " &nbsp;" .  "&#8679;",
-				8 => JText::_('COM_PHOCACART_DATE_ADDED'). " &nbsp;" .  "&#8681;",
-				21 => JText::_('COM_PHOCACART_DATE_UPDATED'). " &nbsp;" .  "&#8679;",
-				22 => JText::_('COM_PHOCACART_DATE_UPDATED'). " &nbsp;" .  "&#8681;",
-				9 => JText::_('COM_PHOCACART_RATING'). " &nbsp;" .  "&#8679;",
-				10 => JText::_('COM_PHOCACART_RATING'). " &nbsp;" .  "&#8681;",
-				19 => JText::_('COM_PHOCACART_SKU'). " &nbsp;" .  "&#8679;",
-				20 => JText::_('COM_PHOCACART_SKU'). " &nbsp;" .  "&#8681;",
-				13 => JText::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8679;",
-				14 => JText::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8681;",
-				15 => JText::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8679;",
-				16 => JText::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8681;"
+				1 => Text::_('COM_PHOCACART_ORDERING') . " &nbsp;" . "&#8679;",
+				2 => Text::_('COM_PHOCACART_ORDERING') . " &nbsp;" .  "&#8681;",
+				3 => Text::_('COM_PHOCACART_TITLE'). " &nbsp;" .  "&#8679;",
+				4 => Text::_('COM_PHOCACART_TITLE'). " &nbsp;" .  "&#8681;",
+				5 => Text::_('COM_PHOCACART_PRICE'). " &nbsp;" .  "&#8679;",
+				6 => Text::_('COM_PHOCACART_PRICE'). " &nbsp;" .  "&#8681;",
+				7 => Text::_('COM_PHOCACART_DATE_ADDED'). " &nbsp;" .  "&#8679;",
+				8 => Text::_('COM_PHOCACART_DATE_ADDED'). " &nbsp;" .  "&#8681;",
+				21 => Text::_('COM_PHOCACART_DATE_UPDATED'). " &nbsp;" .  "&#8679;",
+				22 => Text::_('COM_PHOCACART_DATE_UPDATED'). " &nbsp;" .  "&#8681;",
+				9 => Text::_('COM_PHOCACART_RATING'). " &nbsp;" .  "&#8679;",
+				10 => Text::_('COM_PHOCACART_RATING'). " &nbsp;" .  "&#8681;",
+				19 => Text::_('COM_PHOCACART_SKU'). " &nbsp;" .  "&#8679;",
+				20 => Text::_('COM_PHOCACART_SKU'). " &nbsp;" .  "&#8681;",
+				13 => Text::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8679;",
+				14 => Text::_('COM_PHOCACART_MOST_POPULAR'). " &nbsp;" .  "&#8681;",
+				15 => Text::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8679;",
+				16 => Text::_('COM_PHOCACART_MOST_VIEWED'). " &nbsp;" .  "&#8681;",
+				23 => Text::_('COM_PHOCACART_STOCK'). " &nbsp;" .  "&#8679;",
+				24 => Text::_('COM_PHOCACART_STOCK'). " &nbsp;" .  "&#8681;",
+				25 => Text::_('COM_PHOCACART_FEATURED'). " &nbsp;" .  "&#8679;",
+				26 => Text::_('COM_PHOCACART_FEATURED'). " &nbsp;" .  "&#8681;"
 			);
 
 		} else {
 			$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_ORDERING_ASC'),
-				2 => JText::_('COM_PHOCACART_ORDERING_DESC'),
-				3 => JText::_('COM_PHOCACART_TITLE_ASC'),
-				4 => JText::_('COM_PHOCACART_TITLE_DESC'),
-				5 => JText::_('COM_PHOCACART_PRICE_ASC'),
-				6 => JText::_('COM_PHOCACART_PRICE_DESC'),
-				7 => JText::_('COM_PHOCACART_DATE_ADDED_ASC'),
-				8 => JText::_('COM_PHOCACART_DATE_ADDED_DESC'),
-				21 => JText::_('COM_PHOCACART_DATE_UPDATED_ASC'),
-				22 => JText::_('COM_PHOCACART_DATE_UPDATED_DESC'),
-				9 => JText::_('COM_PHOCACART_RATING_ASC'),
-				10 => JText::_('COM_PHOCACART_RATING_DESC'),
-				19 => JText::_('COM_PHOCACART_SKU_ASC'),
-				20 => JText::_('COM_PHOCACART_SKU_DESC'),
-				13 => JText::_('COM_PHOCACART_MOST_POPULAR_ASC'),
-				14 => JText::_('COM_PHOCACART_MOST_POPULAR_DESC'),
-				15 => JText::_('COM_PHOCACART_MOST_VIEWED_ASC'),
-				16 => JText::_('COM_PHOCACART_MOST_VIEWED_DESC')
+				1 => Text::_('COM_PHOCACART_ORDERING_ASC'),
+				2 => Text::_('COM_PHOCACART_ORDERING_DESC'),
+				3 => Text::_('COM_PHOCACART_TITLE_ASC'),
+				4 => Text::_('COM_PHOCACART_TITLE_DESC'),
+				5 => Text::_('COM_PHOCACART_PRICE_ASC'),
+				6 => Text::_('COM_PHOCACART_PRICE_DESC'),
+				7 => Text::_('COM_PHOCACART_DATE_ADDED_ASC'),
+				8 => Text::_('COM_PHOCACART_DATE_ADDED_DESC'),
+				21 => Text::_('COM_PHOCACART_DATE_UPDATED_ASC'),
+				22 => Text::_('COM_PHOCACART_DATE_UPDATED_DESC'),
+				9 => Text::_('COM_PHOCACART_RATING_ASC'),
+				10 => Text::_('COM_PHOCACART_RATING_DESC'),
+				19 => Text::_('COM_PHOCACART_SKU_ASC'),
+				20 => Text::_('COM_PHOCACART_SKU_DESC'),
+				13 => Text::_('COM_PHOCACART_MOST_POPULAR_ASC'),
+				14 => Text::_('COM_PHOCACART_MOST_POPULAR_DESC'),
+				15 => Text::_('COM_PHOCACART_MOST_VIEWED_ASC'),
+				16 => Text::_('COM_PHOCACART_MOST_VIEWED_DESC'),
+				23 => Text::_('COM_PHOCACART_STOCK_ASC'),
+				24 => Text::_('COM_PHOCACART_STOCK_DESC'),
+				25 => Text::_('COM_PHOCACART_FEATURED_ASC'),
+				26 => Text::_('COM_PHOCACART_FEATURED_DESC')
 			);
 		}
 
@@ -312,50 +330,50 @@ class PhocacartOrdering
 
 	public static function getOrderingUserArray() {
 		$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_NAME_ASC'),
-				2 => JText::_('COM_PHOCACART_NAME_DESC'));
+				1 => Text::_('COM_PHOCACART_NAME_ASC'),
+				2 => Text::_('COM_PHOCACART_NAME_DESC'));
 		return $itemOrdering;
 	}
 
 	public static function getOrderingShippingMethodArray() {
 		$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_TITLE_ASC'),
-				2 => JText::_('COM_PHOCACART_TITLE_DESC'));
+				1 => Text::_('COM_PHOCACART_TITLE_ASC'),
+				2 => Text::_('COM_PHOCACART_TITLE_DESC'));
 		return $itemOrdering;
 	}
 
 	public static function getOrderingPaymentMethodArray() {
 		$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_TITLE_ASC'),
-				2 => JText::_('COM_PHOCACART_TITLE_DESC'));
+				1 => Text::_('COM_PHOCACART_TITLE_ASC'),
+				2 => Text::_('COM_PHOCACART_TITLE_DESC'));
 		return $itemOrdering;
 	}
 
 	public static function getOrderingOrdersArray() {
 		$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_DATE_ASC'),
-				2 => JText::_('COM_PHOCACART_DATE_DESC'),
-				3 => JText::_('COM_PHOCACART_ID_ASC'),
-				4 => JText::_('COM_PHOCACART_ID_DESC'));
+				1 => Text::_('COM_PHOCACART_DATE_ASC'),
+				2 => Text::_('COM_PHOCACART_DATE_DESC'),
+				3 => Text::_('COM_PHOCACART_ID_ASC'),
+				4 => Text::_('COM_PHOCACART_ID_DESC'));
 		return $itemOrdering;
 	}
 
 	/*public static function getOrderingCategoryArray() {
 		$itemOrdering	= array(
-				1 => JText::_('COM_PHOCACART_ORDERING_ASC'),
-				2 => JText::_('COM_PHOCACART_ORDERING_DESC'),
-				3 => JText::_('COM_PHOCACART_TITLE_ASC'),
-				4 => JText::_('COM_PHOCACART_TITLE_DESC'),
-				5 => JText::_('COM_PHOCACART_DATE_ASC'),
-				6 => JText::_('COM_PHOCACART_DATE_DESC'),
+				1 => Text::_('COM_PHOCACART_ORDERING_ASC'),
+				2 => Text::_('COM_PHOCACART_ORDERING_DESC'),
+				3 => Text::_('COM_PHOCACART_TITLE_ASC'),
+				4 => Text::_('COM_PHOCACART_TITLE_DESC'),
+				5 => Text::_('COM_PHOCACART_DATE_ASC'),
+				6 => Text::_('COM_PHOCACART_DATE_DESC'),
 				//7 => JText::_('COM_PHOCACART_ID_ASC'),
 				//8 => JText::_('COM_PHOCACART_ID_DESC'),
-				11 => JText::_('COM_PHOCACART_COUNT_ASC'),
-				12 => JText::_('COM_PHOCACART_COUNT_DESC'),
-				13 => JText::_('COM_PHOCACART_AVERAGE_ASC'),
-				14 => JText::_('COM_PHOCACART_AVERAGE_DESC'),
-				15 => JText::_('COM_PHOCACART_HITS_ASC'),
-				16 => JText::_('COM_PHOCACART_HITS_DESC'));
+				11 => Text::_('COM_PHOCACART_COUNT_ASC'),
+				12 => Text::_('COM_PHOCACART_COUNT_DESC'),
+				13 => Text::_('COM_PHOCACART_AVERAGE_ASC'),
+				14 => Text::_('COM_PHOCACART_AVERAGE_DESC'),
+				15 => Text::_('COM_PHOCACART_HITS_ASC'),
+				16 => Text::_('COM_PHOCACART_HITS_DESC'));
 		return $itemOrdering;
 	}*/
 

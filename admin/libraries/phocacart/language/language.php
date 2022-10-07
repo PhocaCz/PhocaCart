@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Language;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Language\Text;
 class PhocacartLanguage
 {
 
@@ -19,7 +23,7 @@ class PhocacartLanguage
      * @param $lang
      */
     public function __construct(){
-        $language               = JFactory::getLanguage();
+        $language               = Factory::getLanguage();
         $this->primeLangTag     = $language->getTag();
         $this->primeLangPaths   = $language->getPaths();
     }
@@ -27,12 +31,12 @@ class PhocacartLanguage
 
     public function setLanguage($lang) {
 
-        $app                    = JFactory::getApplication();
-        $language               = JFactory::getLanguage();
+        $app                    = Factory::getApplication();
+        $language               = Factory::getLanguage();
 
         if ($lang != '' && $lang != '*') {
-            $newLang = JLanguage::getInstance($lang);
-            JFactory::$language = $newLang;
+            $newLang = Language::getInstance($lang);
+            Factory::$language = $newLang;
             $app->loadLanguage($newLang);
 
             if (!empty($this->primeLangPaths)) {
@@ -46,11 +50,11 @@ class PhocacartLanguage
 
 	public function setLanguageBack() {
 
-        $app                    = JFactory::getApplication();
-        $language               = JFactory::getLanguage();
+        $app                    = Factory::getApplication();
+        $language               = Factory::getLanguage();
 
-        $newLang = JLanguage::getInstance($this->primeLangTag);
-        JFactory::$language = $newLang;
+        $newLang = Language::getInstance($this->primeLangTag);
+        Factory::$language = $newLang;
         $app->loadLanguage($newLang);
 
         if (!empty($this->primeLangPaths)) {
@@ -62,7 +66,7 @@ class PhocacartLanguage
 
     public function getDefaultLanguage($type = 1) {
 
-        $params = JComponentHelper::getParams('com_languages');
+        $params = ComponentHelper::getParams('com_languages');
 
         if ($type == 1) {
             return $params->get('site');
@@ -90,7 +94,7 @@ class PhocacartLanguage
 
         $o = '';
         if ($titleLang != '') {
-            $o .= JText::_($titleLang);
+            $o .= Text::_($titleLang);
 
             if (!empty($titleSuffix)) {
                 foreach ($titleSuffix as $k => $v) {
@@ -100,8 +104,8 @@ class PhocacartLanguage
                     $startTag   = isset($v[2]) && $v[2] != '' ? $v[2] : '';
                     $endTag     = isset($v[3]) && $v[3] != '' ? $v[3] : '';
 
-                    if ($startTag . JText::_($title) . $endTag != '') {
-                        $o .= $separator . $startTag . JText::_($title) . $endTag;
+                    if ($startTag . Text::_($title) . $endTag != '') {
+                        $o .= $separator . $startTag . Text::_($title) . $endTag;
                     }
                 }
             }

@@ -9,16 +9,23 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\FileLayout;
 
 class PhocacartWishlist
 {
-	protected $items     		= array();
+	protected $items     		= array();// wishlist items
+	protected $itemsDb			= array();// real products (real products are stored in wish list items but can differ, e.g. if product will be unpublished)
 	protected $user				= array();
 
 	public function __construct() {
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		$this->user		= PhocacartUser::getUser();
-		$app 			= JFactory::getApplication();
+		$app 			= Factory::getApplication();
+		$db				= Factory::getDbo();
 
 
 		if((int)$this->user->id > 0) {
@@ -29,6 +36,25 @@ class PhocacartWishlist
 			// 4. Remove them from SESSION as they are stored in DATABASE
 			$wLDb = $this->getWishListItemdDb();// user logged in - try to get wishlist from db
 			$this->items 		= $wLDb;
+
+			// Recheck if we have access to all products:
+			$query				    = $this->getQueryList($this->items);
+
+			if ($query) {
+				//echo nl2br(str_replace('#__', 'jos_', $query));
+				$db->setQuery($query);
+				$this->itemsDb = $db->loadObjectList();
+				$tempItems = array();
+				if (!empty($this->itemsDb)){
+					foreach ($this->itemsDb as $k => $v) {
+						$id = (int)$v->id;
+						if (isset($this->items[$id])) {
+							$tempItems[$id] = $this->items[$id];
+						}
+					}
+				}
+				$this->items = $tempItems;
+			}
 
 			if(empty($this->items)) {
 				$this->items	= $session->get('wishlist', array(), 'phocaCart');
@@ -45,7 +71,7 @@ class PhocacartWishlist
 
 	public function getWishListItemdDb() {
 		if ($this->user->id > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			$query = 'SELECT a.product_id, a.category_id, a.user_id'
 					.' FROM #__phocacart_wishlists AS a'
@@ -73,9 +99,9 @@ class PhocacartWishlist
 
 	public function updateWishListItems() {
 		if ($this->user->id > 0) {
-			$db 	= JFactory::getDBO();
+			$db 	= Factory::getDBO();
 			//$items	= se rialize($this->items);
-			$date 	= JFactory::getDate();
+			$date 	= Factory::getDate();
 			$now	= $date->toSql();
 
 
@@ -101,7 +127,7 @@ class PhocacartWishlist
 			return false;
 		} else {
 
-			$session 		= JFactory::getSession();
+			$session 		= Factory::getSession();
 			$session->set('wishlist', $this->items, 'phocaCart');
 		}
 		return false;
@@ -110,21 +136,21 @@ class PhocacartWishlist
 	public function addItem($id = 0, $catid = 0) {
 		if ($id > 0) {
 
-			$app			= JFactory::getApplication();
+			$app			= Factory::getApplication();
 			$paramsC 		= PhocacartUtils::getComponentParameters();
 			$maxWishListItems	= $paramsC->get( 'max_wishlist_items', 20 );
 
 			$count = count($this->items);
 
 			if ($count > (int)$maxWishListItems || $count == (int)$maxWishListItems) {
-				$message = JText::_('COM_PHOCACART_COUNT_OF_PRODUCTS_IN_WISH_LIST_IS_LIMITED');
+				$message = Text::_('COM_PHOCACART_COUNT_OF_PRODUCTS_IN_WISH_LIST_IS_LIMITED');
 				$app->enqueueMessage($message, 'error');
 				return false;
 			}
 
 			if(isset($this->items[$id]) && (int)$this->items[$id] > 0) {
 
-				$message = JText::_('COM_PHOCACART_PRODUCT_INCLUDED_IN_WISH_LIST');
+				$message = Text::_('COM_PHOCACART_PRODUCT_INCLUDED_IN_WISH_LIST');
 				$app->enqueueMessage($message, 'error');
 				return false;
 			} else {
@@ -147,7 +173,7 @@ class PhocacartWishlist
 				if ($this->user->id > 0) {
 					if (isset($this->items[$id]['product_id']) && isset($this->items[$id]['category_id'])) {
 
-						$db 	= JFactory::getDBO();
+						$db 	= Factory::getDBO();
 						$query = ' DELETE '
 						.' FROM #__phocacart_wishlists'
 						.' WHERE product_id = '.(int)$this->items[$id]['product_id']
@@ -165,7 +191,7 @@ class PhocacartWishlist
 
 				} else {
 					unset($this->items[$id]);
-					$session 		= JFactory::getSession();
+					$session 		= Factory::getSession();
 					$session->set('wishlist', $this->items, 'phocaCart');
 					return true;
 				}
@@ -179,7 +205,7 @@ class PhocacartWishlist
 	}
 
 	public function emptyWishList() {
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		$session->set('wishlist', array(), 'phocaCart');
 	}
 
@@ -194,7 +220,6 @@ class PhocacartWishlist
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$itemsS		= $this->getItemsIdString($items);
-
 
 
 		if ($itemsS == '') {
@@ -215,7 +240,7 @@ class PhocacartWishlist
 		if ($full == 1) {
 
 			$columns		= 'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
-			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
+			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
 			//.' a.length, a.width, a.height, a.weight, a.volume,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			//.' m.title as manufacturer_title'
@@ -246,7 +271,7 @@ class PhocacartWishlist
 		} else {
 
 			$columns		= 'a.id as id, a.title as title, a.alias as alias,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories';
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid';
 			$groupsFull		= 'a.id, a.title, a.alias';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -287,38 +312,41 @@ class PhocacartWishlist
 
 	public function renderList() {
 
-		$db 				    = JFactory::getDBO();
-		$uri 				    = \Joomla\CMS\Uri\Uri::getInstance();
+		$db 				    = Factory::getDBO();
+		$uri 				    = Uri::getInstance();
 		$action			        = $uri->toString();
-		$app			        = JFactory::getApplication();
+		$app			        = Factory::getApplication();
 		$s                      = PhocacartRenderStyle::getStyles();
 		$paramsC 		        = PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
-		$query				    = $this->getQueryList($this->items);
 
-		$d					    = array();
-		$d['s']			        = $s;
 
-		if ($query) {
-			//echo nl2br(str_replace('#__', 'jos_', $query));
-			$db->setQuery($query);
-			$d['wishlist'] 			= $db->loadObjectList();
-
-			$tempItems = $this->correctItems();
+		if (empty($this->itemsDb)) {
+			// we asked them in construct, don't ask again
+			$query				= $this->getQueryList($this->items);
+			if ($query) {
+				$db->setQuery($query);
+				$this->itemsDb = $db->loadObjectList();
+			}
+		}
+		$d					= array();
+		$d['s']			    = $s;
+		if (!empty($this->itemsDb)) {
+			$d['wishlist'] 	= $this->itemsDb;
+			$tempItems 		= $this->correctItems();
 			PhocacartCategoryMultiple::setBestMatchCategory($d['wishlist'], $tempItems, 1);// returned by reference
-
 		}
 		$d['actionbase64']		= base64_encode($action);
-		$d['linkwishlist']		= JRoute::_(PhocacartRoute::getWishListRoute());
+		$d['linkwishlist']		= Route::_(PhocacartRoute::getWishListRoute());
 		$d['method']			= $add_wishlist_method;
 
-		$layoutW 			= new JLayoutFile('list_wishlist', null, array('component' => 'com_phocacart'));
+		$layoutW 			= new FileLayout('list_wishlist', null, array('component' => 'com_phocacart'));
 		echo $layoutW->render($d);
 	}
 
 	public function getFullItems() {
 
-		$db 		= JFactory::getDBO();
+		$db 		= Factory::getDBO();
 		$query		= $this->getQueryList($this->items, 1);
 
 		$products	= array();

@@ -10,8 +10,12 @@
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
-$layoutG	= new JLayoutFile('gift_voucher', null, array('component' => 'com_phocacart'));
+$layoutG	= new FileLayout('gift_voucher', null, array('component' => 'com_phocacart'));
 
 $d               = $displayData;
 $displayData     = null;
@@ -38,7 +42,7 @@ echo '<div ' . implode(' ', $attr) . '>';
 
 // CHECKBOX COLOR CHECKBOX IMAGE
 /*if ($v->type == 5 || $v->type == 6) {
-	echo '<div class="ph-item-input-checkbox-color" data-toggle="buttons">';
+	echo '<div class="ph-item-input-checkbox-color" data-bs-toggle="buttons">';
 }*/
 
 // First, set default values
@@ -53,7 +57,7 @@ $giftSenderNameActive 	= 0;
 $giftSenderMessageActive = 0;
 $giftRecipientNameActive = 0;
 if (!empty($d['gift_types'])) {
-	$registry = new JRegistry;
+	$registry = new Registry;
 	$registry->loadString($d['gift_types']);
 	$giftTypes = $registry->toArray();
 
@@ -130,7 +134,7 @@ foreach ($v->options as $k2 => $v2) {
 
 			if (!empty($giftTypes)) {
 				$i = 0;
-				
+
 				foreach($giftTypes as $k3 => $v3){
 
 					$id = str_replace('gift_types', '', $k3 );
@@ -145,7 +149,7 @@ foreach ($v->options as $k2 => $v2) {
 
 					$image = '';
 					if (isset($v3['image']) && $v3['image'] != '') {
-						$image = /*JURI::base(true) . '/' .*/ $v3['image'];
+						$image = /*JUri::base(true) . '/' .*/ $v3['image'];
 						if ($i == 0) {
 							$defaultImage = $image;
 						}
@@ -153,7 +157,7 @@ foreach ($v->options as $k2 => $v2) {
 
 					$date = '';
 					if (isset($v3['expiration_date']) && $v3['expiration_date'] != '') {
-						$date = JHtml::date($v3['expiration_date'], JText::_('DATE_FORMAT_LC3'));
+						$date = HTMLHelper::date($v3['expiration_date'], Text::_('DATE_FORMAT_LC3'));
 						if ($i == 0) {
 							$defaultDate = $date;
 						}
@@ -186,7 +190,7 @@ foreach ($v->options as $k2 => $v2) {
 					.$checked
 					.' data-type="phAOGiftType"'
 					.' data-title="'. $title .'"'
-					.' data-image="'. JURI::base(true) . '/' . $image .'"'
+					.' data-image="'. Uri::base(true) . '/' . $image .'"'
 					.' data-date="'. $date .'"'
 					.' data-description="'. base64_encode($description) .'"'
 					.' data-class-name="'. $className .'"'
@@ -194,7 +198,7 @@ foreach ($v->options as $k2 => $v2) {
 					.' value="'.$id.'">';
 
 					if (isset($v3['image_small']) && $v3['image_small'] != '') {
-						echo '<div class="ph-radio-gift-image"><img src="'.JURI::base(true) . '/' . $v3['image_small'].'" alt="" /></div>';
+						echo '<div class="ph-radio-gift-image"><img src="'.Uri::base(true) . '/' . $v3['image_small'].'" alt="" /></div>';
 					}
 
 					echo '<label class="ph-radio-gift-title" for="phGiftTypes'.$id.'">';
@@ -253,7 +257,7 @@ $d2['gift_image'] = $defaultImage;
 $d2['gift_title'] = $defaultTitle;
 $d2['gift_description'] = $defaultDescription;
 $d2['discount'] = isset($d['priceitems']['bruttoformat']) ? $d['priceitems']['bruttoformat'] : '';
-$d2['valid_to'] = JHtml::date($defaultDate, JText::_('DATE_FORMAT_LC3'));
+$d2['valid_to'] = HTMLHelper::date($defaultDate, Text::_('DATE_FORMAT_LC3'));
 $d2['valid_from'] = '';
 $d2['code'] = '';
 $d2['gift_sender_name'] = $giftSenderNameActive == 1 ? '&nbsp;' : '';

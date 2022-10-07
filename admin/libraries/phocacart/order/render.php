@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
 
 class PhocacartOrderRender
 {
@@ -26,11 +30,11 @@ class PhocacartOrderRender
 		// $pos - we are not in POS view but we ask order view from pos view
 
 		if (($pos && !PhocacartPos::isPosEnabled()) && PhocacartPos::isPosView() && !PhocacartPos::isPosEnabled()) {
-			die (JText::_('COM_PHOCACART_POS_IS_DISABLED'));
+			die (Text::_('COM_PHOCACART_POS_IS_DISABLED'));
 		}
 
 		if ($id < 1) {
-			return JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND');
+			return Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND');
 		}
 
 		$d 					= array();
@@ -38,16 +42,19 @@ class PhocacartOrderRender
 		$d['type']			= $type;
 		$d['format']		= $format;
 
-		$layout 			= new \Joomla\CMS\Layout\FileLayout('order', null, array('client' => 0));
+		$layout 			= new FileLayout('order', null, array('client' => 0));
 		$defaultTemplate 	= PhocacartUtils::getDefaultTemplate();
 
 		if ($defaultTemplate != '') {
 			$layout->addIncludePath(JPATH_SITE . '/templates/'.$defaultTemplate.'/html/layouts/com_phocacart');
 		}
 
-		JHtml::stylesheet('media/com_phocacart/css/main.css' );
+		$app = Factory::getApplication();
+        $wa = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.main', 'com_phocacart/main.css', array('version' => 'auto'));
+		//HTMLHelper::stylesheet('media/com_phocacart/css/main.css' );
 
-		$app 			= JFactory::getApplication();
+		$app 			= Factory::getApplication();
 		$order			= new PhocacartOrderView();
 		$d['common']	= $order->getItemCommon($id);
 		$d['price'] 	= new PhocacartPrice();
@@ -65,16 +72,16 @@ class PhocacartOrderRender
 				$dUser 	= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section, 1);
 
 				if ((int)$vendor->id < 1) {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor not found (1)');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor not found (1)');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if (!isset($d['common']->vendor_id)) {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor not found (2)');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor not found (2)');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if ($vendor->id != $d['common']->vendor_id) {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor doesn\'t match');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Vendor doesn\'t match');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 
 
@@ -86,7 +93,7 @@ class PhocacartOrderRender
 				// Frontend, view = orders view or view = order view
 				// Order status can prevent from displaying some documents (can be set for each order status, parameter: orders_view_diplay
 				// So this rules only applies to frontend orders or order view (and of course then all other rules are applied too, like user or token
-				$app				= JFactory::getApplication();
+				$app				= Factory::getApplication();
 				$view				= $app->input->get('view', '', 'string');
 				$option				= $app->input->get('option', '', 'string');
 
@@ -103,28 +110,28 @@ class PhocacartOrderRender
 
 				// We are in orders/order view and order status cannot display current document
 				if ($displayInOrderView == false) {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Order status does not allow this document to be displayed in Order/Orders View');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Order status does not allow this document to be displayed in Order/Orders View');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 
 				if ((int)$user->id < 1 && $token == '') {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (1)');
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (1)');
 
 					// Add some debug here including debug_print_backtrace(); too see the flow which comes to this error - if from status or from view
 
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if (!isset($d['common']->user_id) && $token == '') {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (2)');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User not found (2)');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if ($user->id != $d['common']->user_id && $token == '') {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User doesn\'t match');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'User doesn\'t match');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 				if ((int)$user->id < 1 && $token != '' && ($token != $d['common']->order_token)) {
-					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Token doesn\'t match');
-					die (JText::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
+					PhocacartLog::add(2, 'Render Order - ERROR', (int)$id, Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND') . 'Token doesn\'t match');
+					die (Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND'));
 				}
 			}
 

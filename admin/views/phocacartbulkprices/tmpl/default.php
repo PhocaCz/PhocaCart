@@ -11,8 +11,13 @@
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
 $r 			= $this->r;
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -50,7 +55,7 @@ echo $r->endFilterBar();
 
 echo $r->endFilterBar();*/
 
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 
 $idMdRun       = 'phEditBulkPriceRunModal';
 $idMdRevert       = 'phEditBulkPriceRevertModal';
@@ -69,13 +74,13 @@ echo $r->startTblHeader();
 
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
-echo '<th class="ph-title2">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-title2">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-desc">'.Text::_('COM_PHOCACART_DESCRIPTION').'</th>'."\n";
 echo '<th class="ph-desc">'.Text::_('COM_PHOCACART_CALCULATION').'</th>'."\n";
-echo '<th class="ph-status">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_STATUS', 'a.status', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-status">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_STATUS', 'a.status', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-action">'.Text::_('COM_PHOCACART_ACTION').'</th>'."\n";
-echo '<th class="ph-date">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-id">'.Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-date">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
 
@@ -98,9 +103,9 @@ $canCreate		= $user->authorise('core.create', $this->t['o']);
 $canEdit		= $user->authorise('core.edit', $this->t['o']);
 $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
 $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= JRoute::_( $urlEdit. $item->id );
-$linkRun        = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditbulkprice&status='.(int)$item->status.'&tmpl=component&id=' . (int)$item->id);
-$linkRevert     = JRoute::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditbulkprice&status='.(int)$item->status.'&tmpl=component&id=' . (int)$item->id);
+$linkEdit 		= Route::_( $urlEdit. $item->id );
+$linkRun        = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditbulkprice&status='.(int)$item->status.'&tmpl=component&id=' . (int)$item->id);
+$linkRevert     = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditbulkprice&status='.(int)$item->status.'&tmpl=component&id=' . (int)$item->id);
 
 
 
@@ -111,19 +116,19 @@ echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
 
 $checkO = '';
 if ($item->checked_out) {
-	$checkO .= Joomla\CMS\HTML\HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
+	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 }
 if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. JRoute::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->title).'</a>';
 } else {
 	$checkO .= $this->escape($item->title);
 }
-echo $r->td($checkO, "small");
+echo $r->td($checkO, "small", 'th');
 
 
 echo $r->td($item->description, "small");
 
-$registry = new JRegistry;
+$registry = new Registry;
 $registry->loadString($item->params);
 $item->params = $registry;
 $amount = $item->params->get('amount', '');
@@ -139,20 +144,20 @@ echo $r->td($operator . $amount . $calculation_price, "small");
 
 $status = '';
 if ($item->status == 1) {
-	$status .= '<span class="label label-success label-success badge badge-success">'.JText::_('COM_PHOCACART_ACTIVE'). '</span>';
+	$status .= '<span class="label label-success label-success badge bg-success">'.Text::_('COM_PHOCACART_ACTIVE'). '</span>';
 } else {
-	$status .= '<span class="label label-important label-danger badge badge-danger">'.JText::_('COM_PHOCACART_INACTIVE'). '</span>';
+	$status .= '<span class="label label-important label-danger badge bg-danger">'.Text::_('COM_PHOCACART_INACTIVE'). '</span>';
 }
 
 echo $r->td($status, "small");
 
 $action = '';
 if ($item->status == 0) {
-	$action .= ' <span><a href="#' . $idMdRun . '" role="button" class="btn btn-success ' . $idMdRun . 'ModalButton" data-toggle="modal" title="' . JText::_($textButtonRun) . '" data-src="' . $linkRun . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButtonRun) . '</a></span>';
+	$action .= ' <span><a href="#' . $idMdRun . '" role="button" class="btn btn-success ' . $idMdRun . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButtonRun) . '" data-src="' . $linkRun . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButtonRun) . '</a></span>';
 }
 
 if ($item->status == 1) {
-	$action .= ' <span><a href="#' . $idMdRevert . '" role="button" class="btn btn-danger ' . $idMdRevert . 'ModalButton" data-toggle="modal" title="' . JText::_($textButtonRevert) . '" data-src="' . $linkRevert . '" data-height="' . $h . '" data-width="' . $w . '">' . JText::_($textButtonRevert) . '</a></span>';
+	$action .= ' <span><a href="#' . $idMdRevert . '" role="button" class="btn btn-danger ' . $idMdRevert . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButtonRevert) . '" data-src="' . $linkRevert . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButtonRevert) . '</a></span>';
 }
 echo $r->td($action, "small");
 

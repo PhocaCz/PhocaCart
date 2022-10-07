@@ -5,46 +5,46 @@
 
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
 
-        <field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_LANG_STRING_DESC" required="true"/>
+        <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_LANG_STRING_DESC" required="true"/>
 
-        <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+        <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
-        <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="inputbox" size="40"/>
+        <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40"/>
 
-        <field name="title_feed" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_TITLE_XML_FEED_DESC"/>
-
-
-        <field name="link" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_DESC"/>
+        <field name="title_feed" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_TITLE_XML_FEED_DESC"/>
 
 
-        <field name="link_target" type="list" class="inputbox" label="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_TARGET_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_TARGET_DESC" default="_self">
+        <field name="link" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_DESC"/>
+
+
+        <field name="link_target" type="list" class="form-select" label="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_TARGET_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_LINK_TARGET_DESC" default="_self">
             <option value="_self">COM_PHOCACART_OPEN_WINDOW_SELF</option>
             <option value="_blank">COM_PHOCACART_OPEN_WINDOW_BLANK</option>
             <option value="_parent">COM_PHOCACART_OPEN_WINDOW_PARENT</option>
             <option value="_top">COM_PHOCACART_OPEN_WINDOW_TOP</option>
         </field>
 
-        <field name="ordering" type="PhocacartOrdering" table="attribute" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+        <field name="ordering" type="PhocacartOrdering" table="attribute" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
     </fieldset>
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
 
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+        <field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
             <option value="*">JALL</option>
         </field>
         <!--
-        <field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
+        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
-        <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
+        <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
         -->
     </fieldset>
 

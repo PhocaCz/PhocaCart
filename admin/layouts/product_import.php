@@ -544,10 +544,14 @@ if($xml) {
 	// CSV
 	if (isset($d['productcolumns'][0]['item']) && ($d['productcolumns'][0]['item'] != '')) {
 		$pcAH = str_getcsv($d['productcolumns'][0]['item'], ';', '"');
+
 		if (!empty($d['products'])){
 			foreach($d['products'] as $k => $v) {
+
 				if (isset($v['item']) && $v['item'] != '') {
 					$pcAP = str_getcsv($v['item'], ';', '"');
+
+
 					if (!empty($pcAH) && !empty($pcAP)) {
 
 						$cPcAH = count($pcAH);
@@ -557,8 +561,9 @@ if($xml) {
 						} else if ($cPcAH < $cPcAP) {
 							$pcAH = array_pad($pcAH, $cPcAP, '');
 						}
-						$data = array_combine($pcAH, $pcAP);
 
+
+						$data = array_combine($pcAH, $pcAP);
 
 						$data['tax_id'] 				= array();
 						$data['manufacturer_id'] 		= array();
@@ -782,7 +787,6 @@ if($xml) {
 						if (isset($data['additional_download_files'])) {
 							$data['additional_download_files'] = json_decode($data['additional_download_files'], true);
 						}
-
 
 						$newId = PhocacartProduct::storeProduct($data, $import_column);
 						if ($newId > 0) {

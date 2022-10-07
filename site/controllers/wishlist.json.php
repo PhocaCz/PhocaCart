@@ -7,22 +7,28 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Router\Route;
 
-class PhocaCartControllerWishList extends JControllerForm
+class PhocaCartControllerWishList extends FormController
 {
 
 	public function add() {
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
 
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$s 					    = PhocacartRenderStyle::getStyles();
 		$item					= array();
 		$item['id']				= $this->input->get( 'id', 0, 'int' );
@@ -44,9 +50,9 @@ class PhocaCartControllerWishList extends JControllerForm
 		// Render the layout
 		$d          = array();
 		$d['s']	    = $s;
-		$layoutW	= new JLayoutFile('popup_add_to_wishlist', null, array('component' => 'com_phocacart'));
+		$layoutW	= new FileLayout('popup_add_to_wishlist', null, array('component' => 'com_phocacart'));
 
-		$d['link_wishlist'] = JRoute::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_wishlist'] = Route::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on wishlist site
 		// If yes and one item will be deleted per AJAX, we need to refresh wishlist site
@@ -54,9 +60,9 @@ class PhocaCartControllerWishList extends JControllerForm
 		$d['wishlist_view'] 	= (int)$item['wishlistview'];
 
 		if ($added) {
-			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_WISH_LIST');
+			$d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_ADDED_TO_WISH_LIST');
 		} else {
-			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_WISH_LIST');
+			$d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_WISH_LIST');
 
 			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;
@@ -82,15 +88,15 @@ class PhocaCartControllerWishList extends JControllerForm
 
 	public function remove() {
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app 					= JFactory::getApplication();
+		$app 					= Factory::getApplication();
 		$s 					    = PhocacartRenderStyle::getStyles();
 		$item					= array();
 		$item['id']				= $this->input->get( 'id', 0, 'int' );
@@ -112,9 +118,9 @@ class PhocaCartControllerWishList extends JControllerForm
 		// Render the layout
 		$d          = array();
 		$d['s']	    = $s;
-		$layoutW	= new JLayoutFile('popup_remove_from_wishlist', null, array('component' => 'com_phocacart'));
+		$layoutW	= new FileLayout('popup_remove_from_wishlist', null, array('component' => 'com_phocacart'));
 
-		$d['link_wishlist'] = JRoute::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_wishlist'] = Route::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on wishlist site
 		// If yes and one item will be deleted per AJAX, we need to refresh wishlist site
@@ -124,9 +130,9 @@ class PhocaCartControllerWishList extends JControllerForm
 
 
 		if ($added) {
-			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_WISH_LIST');
+			$d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_WISH_LIST');
 		} else {
-			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_WISH_LIST');
+			$d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_WISH_LIST');
 
 			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;

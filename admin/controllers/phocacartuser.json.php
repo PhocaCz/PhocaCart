@@ -7,20 +7,24 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
-class PhocaCartCpControllerPhocacartUser extends JControllerForm
+class PhocaCartCpControllerPhocacartUser extends FormController
 {
 	public function setregion() {
 	
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="alert alert-danger">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="alert alert-danger">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			exit;
 		}
 		
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$id		= $app->input->get('countryid', 0, 'int');
 		
 		//$model = $this->getModel('checkout');
@@ -29,7 +33,7 @@ class PhocaCartCpControllerPhocacartUser extends JControllerForm
 		$o = '';
 		if(!empty($options)) {
 			
-			$o .= '<option value="">-&nbsp;'.JText::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-</option>';
+			$o .= '<option value="">-&nbsp;'.Text::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-</option>';
 			foreach($options as $k => $v) {
 				$o .= '<option value="'.$v->id.'">'.htmlspecialchars($v->title).'</option>';
 			}

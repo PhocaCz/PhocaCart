@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartCartCalculation
 {
@@ -19,7 +21,7 @@ class PhocacartCartCalculation
 
     public function __construct() {
 
-        $app     = JFactory::getApplication();
+        $app     = Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         // Affect only calculation in POS cart
         // Not receipts, invoices
@@ -37,7 +39,7 @@ class PhocacartCartCalculation
     // ==============
     public function calculateBasicProducts(&$fullItems, &$fullItemsGroup, &$total, &$stock, &$minqty, &$minmultipleqty, $items) {
 
-        $app             = JFactory::getApplication();
+        $app             = Factory::getApplication();
         $paramsC         = PhocacartUtils::getComponentParameters();
         $tax_calculation = $paramsC->get('tax_calculation', 0);
         // Moved to product parameters
@@ -148,7 +150,7 @@ class PhocacartCartCalculation
             $fullItems[$k]['couponcartid']      = 0;
 
             $fullItems[$k]['rewardproduct']          = 0;
-            $fullItems[$k]['rewardproducttitle']     = JText::_('COM_PHOCACART_REWARD_POINTS');
+            $fullItems[$k]['rewardproducttitle']     = Text::_('COM_PHOCACART_REWARD_POINTS');
             $fullItems[$k]['rewardproductpoints']    = 0;
             $fullItems[$k]['rewardproducttxtsuffix'] = '';
             $fullItems[$k]['points_needed']          = 0;
@@ -201,7 +203,7 @@ class PhocacartCartCalculation
                 $fullItems[$k]['price']             = $price->getPriceItem($itemD->price, $itemD->group_price, 0);
                 $fullItems[$k]['taxid']             = $itemD->taxid;
                 $fullItems[$k]['taxrate']           = $itemD->taxrate;
-                $fullItems[$k]['taxtitle']          = JText::_($itemD->taxtitle);
+                $fullItems[$k]['taxtitle']          = Text::_($itemD->taxtitle);
                 $fullItems[$k]['taxcountryid']      = $itemD->taxcountryid;
                 $fullItems[$k]['taxregionid']       = $itemD->taxregionid;
                 $taxKey                             = PhocacartTax::getTaxKey($itemD->taxid, $itemD->taxcountryid, $itemD->taxregionid);
@@ -287,7 +289,7 @@ class PhocacartCartCalculation
                     $taxSuffix = ' (' . ($price->getTaxFormat($itemD->taxrate, $itemD->taxcalculationtype, 0)) . ')';
                 }
 
-                $total['tax'][$taxKey]['title']              = JText::_($itemD->taxtitle) . $taxSuffix;
+                $total['tax'][$taxKey]['title']              = Text::_($itemD->taxtitle) . $taxSuffix;
                 $total['tax'][$taxKey]['title_lang']         = $itemD->taxtitle;
                 $total['tax'][$taxKey]['title_lang_suffix2'] = '(' . $taxSuffix . ')';
                 $total['tax'][$taxKey]['type']               = $itemD->taxcalculationtype;
@@ -341,7 +343,7 @@ class PhocacartCartCalculation
                                     if ($fullItems[$k]['stockcalculation'] != 3) {
                                         /*	if (!$attrib->aid) {
 
-                                                $app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_ATTRIBUTE_NOT_EXISTS_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
+                                                $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_ATTRIBUTE_NOT_EXISTS_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                                                 break;
                                             }*/
                                         if (isset($attrib->title) && isset($attrib->amount) && isset($attrib->operator)) {
@@ -419,14 +421,14 @@ class PhocacartCartCalculation
                                         $total['weight']         += ($attrib->weight * $fullItems[$k]['quantity']);
                                     }
 
-                                    // Volume - not used now
-                                    /*	if ($attrib->operator_volume == '-') {
-                                            $fullItems[$k]['volume'] 	-= $attrib->volume;
-                                            $fullItems[$k]['volume'] < 0 ? $fullItems[$k]['volume'] = 0 : $total['volume']			-= ($attrib->volume * $fullItems[$k]['quantity']);
-                                        }  else if ($attrib->operator_volume == '+') {
-                                            $fullItems[$k]['volume'] 	+= $attrib->volume;
-                                            $total['volume']			+= ($attrib->volume * $fullItems[$k]['quantity']);
-                                        } */
+                                    // Volume
+                                    if ($attrib->operator_volume == '-') {
+                                        $fullItems[$k]['volume'] 	-= $attrib->volume;
+                                        $fullItems[$k]['volume'] < 0 ? $fullItems[$k]['volume'] = 0 : $total['volume']	-= ($attrib->volume * $fullItems[$k]['quantity']);
+                                    }  else if ($attrib->operator_volume == '+') {
+                                        $fullItems[$k]['volume'] 	+= $attrib->volume;
+                                        $total['volume']			+= ($attrib->volume * $fullItems[$k]['quantity']);
+                                    }
 
 
                                     if (isset($optionsQuantity[$attrib->id])) {
@@ -605,7 +607,7 @@ class PhocacartCartCalculation
 
                     $fullItems[$k]['rewardproduct']       = 1;
                     $fullItems[$k]['rewardproductpoints'] = $rewards['usedproduct'];
-                    $fullItems[$k]['rewardproducttitle']  = JText::_('COM_PHOCACART_REWARD_POINTS');
+                    $fullItems[$k]['rewardproducttitle']  = Text::_('COM_PHOCACART_REWARD_POINTS');
 
 
                     PhocacartCalculation::calculateDiscountPercentage($rewards['percentage'], $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
@@ -1094,7 +1096,7 @@ class PhocacartCartCalculation
     public function roundFixedAmountDiscount(&$total) {
 
 
-        $app                      = JFactory::getApplication();
+        $app                      = Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         $rounding_calculation_fad = $paramsC->get('rounding_calculation_fixed_amount_discount', -1);
 
@@ -1136,7 +1138,7 @@ class PhocacartCartCalculation
 
     public function roundFixedAmountCoupon(&$total) {
 
-        $app                      = JFactory::getApplication();
+        $app                      = Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         $rounding_calculation_fac = $paramsC->get('rounding_calculation_fixed_amount_coupon', -1);
 

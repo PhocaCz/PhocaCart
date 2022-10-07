@@ -7,9 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Object\CMSObject;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
+class PhocaCartCpViewPhocaCartCategories extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -76,7 +85,7 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
         } else {
             // In article associations modal we need to remove language filter if forcing a language.
             // We also need to change the category filter to show show categories with All or the forced language.
-            if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
+            if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
             {
                 // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
                 //$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
@@ -103,50 +112,69 @@ class PhocaCartCpViewPhocaCartCategories extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.category_id'));
-		JToolbarHelper::title( JText::_( $this->t['l'].'_CATEGORIES' ), 'folder-open' );
-		$user  = JFactory::getUser();
-		$bar = JToolbar::getInstance('toolbar');
+		ToolbarHelper::title( Text::_( $this->t['l'].'_CATEGORIES' ), 'folder-open' );
+		$user  = Factory::getUser();
+		$bar = Toolbar::getInstance('toolbar');
 
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
+
+
+		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action')->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
+
+
 		if ($canDo->get('core.edit.state')) {
 
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			//ToolbarHelper::divider();
+			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
+			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
+
+			//ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			//ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( JText::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			$childBar->delete($this->t['tasks'].'.delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
+			//ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-			$title = JText::_('JTOOLBAR_BATCH');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
+			/*$title = Text::_('JTOOLBAR_BATCH');
+			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModal\" class=\"btn btn-small\">
+						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
+						$title</button></joomla-toolbar-button>";
+			$bar->appendButton('Custom', $dhtml, 'batch');*/
+			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal')->listCheck(true);
 		}
 
-		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){submitbutton(\'phocacartcategory.recreate\');}}" ><i class="icon-image" title="'.JText::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.JText::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
-		$bar->appendButton('Custom', $dhtml);
+		/*$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){Joomla.submitbutton(\'phocacartcategory.recreate\');}}" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button></joomla-toolbar-button>';
+		$bar->appendButton('Custom', $dhtml);*/
 
-		$dhtml = '<button onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacartcategory.countproducts\');}" class="btn btn-small button-plus"><i class="icon-plus" title="'.JText::_($this->t['l'].'_COUNT_PRODUCTS').'"></i> '.JText::_($this->t['l'].'_COUNT_PRODUCTS').'</button>';
-		$bar->appendButton('Custom', $dhtml, 'countproducts');
+		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS_CATEGORIES').'\')){Joomla.submitbutton(\'phocacartcategory.recreate\');}}';
+		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image');
+
+
+
+		/*$dhtml = '<joomla-toolbar-button><button onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacartcategory.countproducts\');}" class="btn btn-small button-plus"><i class="icon-plus" title="'.Text::_($this->t['l'].'_COUNT_PRODUCTS').'"></i> '.Text::_($this->t['l'].'_COUNT_PRODUCTS').'</button></joomla-toolbar-button>';
+		$bar->appendButton('Custom', $dhtml, 'countproducts');*/
+
+		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacartcategory.countproducts\');}';
+		$childBar->standardButton('countproducts')->text($this->t['l'].'_COUNT_PRODUCTS')->onclick($onClick)->icon('icon-plus');
 
 
 
 
 		// Catalog JS
 		if ($printed_catalog_enable == 1) {
-			JFactory::getDocument()->addScriptDeclaration('
+			Factory::getDocument()->addScriptDeclaration('
 
 function phOpenCatalog(href){
 	var categories = [];
@@ -155,7 +183,7 @@ function phOpenCatalog(href){
     });
 
     if (categories === undefined || categories.length == 0) {
-        alert(\'' . JText::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');
+        alert(\'' . Text::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');
         return false;
     } else {
         
@@ -167,27 +195,38 @@ function phOpenCatalog(href){
 			);
 
 			// Catalog HTML
-			$linkTxt = JRoute::_('index.php?option=com_phocacart&view=phocacartcatalogs&tmpl=component&format=raw&' . JSession::getFormToken() . '=1');
-			$linkTxtHandler = 'onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . JText::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.href);return false;}"';
+			$linkTxt = Route::_('index.php?option=com_phocacart&view=phocacartcatalogs&tmpl=component&format=raw&' . Session::getFormToken() . '=1');
+			/*$linkTxtHandler = 'onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . Text::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.href);return false;}"';
 
 			// Catalog PDF
-			$dhtml = '<a href="' . $linkTxt . '" class="btn btn-small btn-primary" ' . $linkTxtHandler . '><i id="ph-icon-text" class="icon-dummy ' . $this->s['i']['list-alt'] . ' ph-icon-text"></i>' . JText::_('COM_PHOCACART_CREATE_CATALOG_HTML') . '</a>';
-			$bar->appendButton('Custom', $dhtml, 'countproducts');
+			$dhtml = '<joomla-toolbar-button><a href="' . $linkTxt . '" class="btn btn-small btn-primary" ' . $linkTxtHandler . '><i id="ph-icon-text" class="icon-dummy ' . $this->s['i']['list-alt'] . ' ph-icon-text"></i>' . Text::_('COM_PHOCACART_CREATE_CATALOG_HTML') . '</a></joomla-toolbar-button>';
+			$bar->appendButton('Custom', $dhtml, 'countproducts');*/
+
+
+			$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . Text::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.dataset.href);return false;}';
+		$childBar->standardButton('phocacartcatalogs')->text('COM_PHOCACART_CREATE_CATALOG_HTML')->attributes(['data-href' => $linkTxt])->onclick($onClick)->icon('icon-book');
+
+
+
+
 
 			$this->t['plugin-pdf'] = PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
 			$this->t['component-pdf'] = PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
 			if ($this->t['plugin-pdf'] == 1 && $this->t['component-pdf']) {
-				$linkPdf = JRoute::_('index.php?option=com_phocacart&view=phocacartcatalogs&tmpl=component&format=pdf&' . JSession::getFormToken() . '=1');
-				$linkPdfHandler = 'onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . JText::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.href);return false;}"';
-				$dhtml = '<a href="' . $linkPdf . '" class="btn btn-small btn-danger" ' . $linkPdfHandler . '><i id="ph-icon-pdf" class="icon-dummy ' . $this->s['i']['list-alt'] . ' ph-icon-pdf"></i>' . JText::_('COM_PHOCACART_CREATE_CATALOG_PDF') . '</a>';
-				$bar->appendButton('Custom', $dhtml);
+				$linkPdf = Route::_('index.php?option=com_phocacart&view=phocacartcatalogs&tmpl=component&format=pdf&' . Session::getFormToken() . '=1');
+				/*$linkPdfHandler = 'onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . Text::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.href);return false;}"';
+				$dhtml = '<joomla-toolbar-button><a href="' . $linkPdf . '" class="btn btn-small btn-danger" ' . $linkPdfHandler . '><i id="ph-icon-pdf" class="icon-dummy ' . $this->s['i']['list-alt'] . ' ph-icon-pdf"></i>' . Text::_('COM_PHOCACART_CREATE_CATALOG_PDF') . '</a></joomla-toolbar-button>';
+				$bar->appendButton('Custom', $dhtml);*/
+
+				$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\'' . Text::_('COM_PHOCACART_WARNING_CATALOG_MAKE_SELECTION') . '\');return false;}else{phOpenCatalog(this.dataset.href);return false;}';
+				$childBar->standardButton('phocacartcatalogspdf')->text('COM_PHOCACART_CREATE_CATALOG_PDF')->attributes(['data-href' => $linkPdf])->onclick($onClick)->icon('icon-book');
 
 			}
 		}
 
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 
@@ -208,7 +247,7 @@ function phOpenCatalog(href){
 				static $iCT = 0;// All displayed items
 
 				if ($key->parent_id == $id && $currentId != $id && $currentId != $key->id ) {
-					$tree[$iCT] 					= new JObject();
+					$tree[$iCT] 					= new CMSObject();
 
 					// Ordering MUST be solved here
 					if ($countItemsInCat > 0) {
@@ -223,7 +262,7 @@ function phOpenCatalog(href){
 						$tree[$iCT]->orderdown 				= 0;
 					}
 
-					$tree[$iCT] 					= new JObject();
+					$tree[$iCT] 					= new CMSObject();
 
 					$tree[$iCT]->level				= $level;
 					$tree[$iCT]->parentstree		= $parentsTreeString;
@@ -277,14 +316,14 @@ function phOpenCatalog(href){
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'	=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 		=> JText::_($this->t['l'] . '_TITLE'),
-			'a.published' 	=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'parent_title' 	=> JText::_($this->t['l'] . '_PARENT_CATEGORY'),
-			'a.count_products' 	=> JText::_($this->t['l'] . '_PRODUCT_COUNT'),
-			'language' 		=> JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.hits' 		=> JText::_($this->t['l'] . '_HITS'),
-			'a.id' 			=> JText::_('JGRID_HEADING_ID')
+			'a.ordering'	=> Text::_('JGRID_HEADING_ORDERING'),
+			'a.title' 		=> Text::_($this->t['l'] . '_TITLE'),
+			'a.published' 	=> Text::_($this->t['l'] . '_PUBLISHED'),
+			'parent_title' 	=> Text::_($this->t['l'] . '_PARENT_CATEGORY'),
+			'a.count_products' 	=> Text::_($this->t['l'] . '_PRODUCT_COUNT'),
+			'language' 		=> Text::_('JGRID_HEADING_LANGUAGE'),
+			'a.hits' 		=> Text::_($this->t['l'] . '_HITS'),
+			'a.id' 			=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

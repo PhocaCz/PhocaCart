@@ -7,9 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
 jimport('joomla.form.formfield');
 
-class JFormFieldPhocaColorText extends JFormField
+class JFormFieldPhocaColorText extends FormField
 {
 	public $type = 'PhocaColorText';
 
@@ -19,10 +24,10 @@ class JFormFieldPhocaColorText extends JFormField
 		//$group 			= PhocacartUtilsSettings::getManagerGroup((string) $this->element['manager']);
 		$textButton		= 'COM_PHOCACART_FORM_SELECT_COLOR';
 
-		$document		= JFactory::getDocument();
+		$document		= Factory::getDocument();
 
-		JHTML::stylesheet( 'media/com_phocacart/js/jcp/picker.css' );
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/jcp/picker.js');
+		HTMLHelper::stylesheet( 'media/com_phocacart/js/jcp/picker.css' );
+		$document->addScript(Uri::root(true).'/media/com_phocacart/js/jcp/picker.js');
 
 		$onchange 		= (string) $this->element['onchange'];
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
@@ -30,17 +35,17 @@ class JFormFieldPhocaColorText extends JFormField
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 
 
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+		HTMLHelper::_('jquery.framework');
 
 		$idA = 'phColorText';
 		$idAC = $idA.'PickerName'. $this->id;
 
-		$html[] = '<span class="input-append"><input type="text" ' . $required . ' id="' . $this->id . '" name="' . $this->name . '"'
+		$html[] = '<span class="input-append input-group"><input type="text" ' . $required . ' id="' . $this->id . '" name="' . $this->name . '"'
 			. ' value="' . $this->value . '"' . $size . $class . ' style="background-color: '.$this->value.'" />';
 		// data-id does not work by dynamically added form fields so we need to get the id which is stored in input before the button
 		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'PickerButton">'
 			. '<span class="icon-list icon-white"></span> '
-			. JText::_($textButton) . '</a></span>';
+			. Text::_($textButton) . '</a></span>';
 
 		return implode("\n", $html);
 	}

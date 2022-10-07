@@ -10,6 +10,7 @@
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d               = $displayData;
 $displayData     = null;
 $v               = $d['attribute'];
@@ -35,13 +36,13 @@ echo '<div ' . implode(' ', $attr) . '>';
 
 // CHECKBOX COLOR CHECKBOX IMAGE
 /*if ($v->type == 5 || $v->type == 6) {
-	echo '<div class="ph-item-input-checkbox-color" data-toggle="buttons">';
+	echo '<div class="ph-item-input-checkbox-color" data-bs-toggle="buttons">';
 }*/
 
 foreach ($v->options as $k2 => $v2) {
 	// Extends required part for some specific parameters
 	$req = PhocacartRenderJs::renderRequiredParts((int)$v->id, (int)$v2->required );
-	$d['required'] = $req;												  
+	$d['required'] = $req;
     if ($v2->operator == '=') {
         $operator = '';
     } else {
@@ -65,9 +66,9 @@ foreach ($v->options as $k2 => $v2) {
 
     $maxLength = ' maxlength="' . PhocacartAttribute::getAttributeLength($v->type) . '"';
 
-	echo '<div class="'. $d['s']['c']['row'].' ph-gift-box-form">';															   
+	echo '<div class="'. $d['s']['c']['row'].' ph-gift-box-form">';
     echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'"><label class="' . $d['s']['c']['btn'] . ' phTextAttributeInput ' . $active . '" style="background-color: ' . strip_tags($v2->color) . '">' . htmlspecialchars($v2->title) . $suffix . $d['required']['span'] . '</label></div>';
-	echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'">';																					  
+	echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'">';
     switch ($v->type) {
         case 10:
         case 11:
@@ -86,11 +87,11 @@ foreach ($v->options as $k2 => $v2) {
         	$idA = 'phColorText';
 			$idAC = $idA.'PickerName'. $v->id . 'Id'. $v2->id;
 
-        	echo '<span class="input-append">';
+        	echo '<span class="input-append input-group">';
             echo '<input type="text" id="' . $idAC . '" name="attribute[' . $v->id . '][' . $v2->id . ']" value="" ' . $d['required']['attribute'] . $maxLength . ' class="text_area phColorText" />';
 			echo ' <a href="javascript:void(0);" role="button" class="btn btn-primary '.$idA.'PickerButton" onclick="openPicker(\'' . $idAC . '\');">';
 			echo '<span class="icon-list icon-white"></span> ';
-			echo JText::_('COM_PHOCACART_FORM_SELECT_COLOR') . '</a>';
+			echo Text::_('COM_PHOCACART_FORM_SELECT_COLOR') . '</a>';
 			echo '</span>';
         break;
 

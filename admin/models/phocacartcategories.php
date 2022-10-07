@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartCategories extends JModelList
+class PhocaCartCpModelPhocaCartCategories extends ListModel
 {
 	protected $option 	= 'com_phocacart';
 	protected $total		= 0;
@@ -33,7 +36,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 			);
 
             // ASSOCIATION
-            $assoc = JLanguageAssociations::isEnabled();
+            $assoc = Associations::isEnabled();
             if ($assoc){
                 $config['filter_fields'][] = 'association';
             }
@@ -44,7 +47,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 	protected function populateState($ordering = 'a.title', $direction = 'ASC')
 	{
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
         // ASSOCIATION
         $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
@@ -201,7 +204,7 @@ class PhocaCartCpModelPhocaCartCategories extends JModelList
 
         // ASSOCIATION
         // Join over the associations.
-        $assoc = JLanguageAssociations::isEnabled();
+        $assoc = Associations::isEnabled();
         if ($assoc) {
             $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))
                 ->join(

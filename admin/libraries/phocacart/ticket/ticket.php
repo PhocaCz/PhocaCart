@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 
 class PhocacartTicket
 {
@@ -17,7 +19,7 @@ class PhocacartTicket
 		$ticket	= array();
 
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$ticketId	= $app->input->get( 'ticketid', 1, 'int' );// if not set, always set it to 1, ticekt 1 is default
 		$unitId		= $app->input->get( 'unitid', 0, 'int' );// if not set, always set it to 1, ticekt 1 is default
 		$sectionId	= $app->input->get( 'sectionid', 0, 'int' );// if not set, always set it to 1, ticekt 1 is default
@@ -93,7 +95,7 @@ class PhocacartTicket
 
 	public static function existsTicket($vendorId, $ticketId, $unitId, $sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT ticket_id FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
 				.' AND ticket_id = '.(int)$ticketId
@@ -109,7 +111,7 @@ class PhocacartTicket
 
 	public static function getVendorTickets($vendorId, $unitId, $sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT user_id, vendor_id, ticket_id, unit_id, section_id FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
 				.' AND unit_id = '.(int)$unitId
@@ -125,7 +127,7 @@ class PhocacartTicket
 
 	public static function getLastVendorTicket($vendorId, $unitId, $sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT ticket_id FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
 				.' AND unit_id = '.(int)$unitId
@@ -140,7 +142,7 @@ class PhocacartTicket
 
 	public static function getFirstVendorTicket($vendorId, $unitId, $sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT ticket_id FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
 				.' AND unit_id = '.(int)$unitId
@@ -155,7 +157,7 @@ class PhocacartTicket
 	public static function addNewVendorTicket($vendorId, $ticketId, $unitId, $sectionId) {
 
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
 		$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );
@@ -167,9 +169,9 @@ class PhocacartTicket
             $pos_shipping_force = PhocacartShipping::isShippingMethodActive($pos_shipping_force) === true ? (int)$pos_shipping_force : 0;
         }
 
-		$date 	= JFactory::getDate();
+		$date 	= Factory::getDate();
 		$now	= $date->toSql();
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query	= 'INSERT INTO #__phocacart_cart_multiple (user_id, vendor_id, ticket_id, unit_id, section_id, shipping, payment, cart, date)'
 				.' VALUES (0, '.(int)$vendorId.', '.(int)$ticketId.', '.(int)$unitId.', '.(int)$sectionId.', '.(int)$pos_shipping_force.', '.(int)$pos_payment_force.', \'\', '.$db->quote($now).');';
 				$db->setQuery($query);
@@ -180,7 +182,7 @@ class PhocacartTicket
 
 	public static function removeVendorTicket($vendorId, $ticketId, $unitId, $sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' DELETE FROM #__phocacart_cart_multiple'
 				.' WHERE vendor_id = '.(int)$vendorId
 				.' AND ticket_id = '.(int)$ticketId
@@ -207,7 +209,7 @@ class PhocacartTicket
 				}
 
 
-				$link = JRoute::_(PhocacartRoute::getPosRoute((int)$v->ticket_id, (int)$v->unit_id, (int)$v->section_id));
+				$link = Route::_(PhocacartRoute::getPosRoute((int)$v->ticket_id, (int)$v->unit_id, (int)$v->section_id));
 				$o .= '<li class="nav-item '.$active.'">';
 				$o .= '<a class="nav-link '.$active.'" href="'.$link.'"> '.(int)$v->ticket_id.' </a>';
 				$o .= '</li>';
@@ -215,7 +217,7 @@ class PhocacartTicket
 			}
 
 		} else {
-			$link = JRoute::_(PhocacartRoute::getPosRoute());
+			$link = Route::_(PhocacartRoute::getPosRoute());
 
 			$o .= '<li class="nav-item active">';
 			$o .= '<a class="nav-link active" href="'.$link.'"> 1 </a>';
@@ -228,9 +230,9 @@ class PhocacartTicket
 
 	}
 /*
-	$link1 = JRoute::_(PhocacartRoute::getPosRoute(1));
-$link2 = JRoute::_(PhocacartRoute::getPosRoute(2));
-$link3 = JRoute::_(PhocacartRoute::getPosRoute(3));
+	$link1 = Route::_(PhocacartRoute::getPosRoute(1));
+$link2 = Route::_(PhocacartRoute::getPosRoute(2));
+$link3 = Route::_(PhocacartRoute::getPosRoute(3));
 ?>
 
 

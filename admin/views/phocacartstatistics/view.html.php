@@ -7,9 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
+class PhocaCartCpViewPhocacartStatistics extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -21,7 +28,7 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$document				= JFactory::getDocument();
+		$document				= Factory::getDocument();
 		$this->t				= PhocacartUtils::setVars('statistic');
 		$this->r				= new PhocacartRenderAdminviews();
 		$this->state			= $this->get('State');
@@ -112,13 +119,13 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 		}
 
 		$media = new PhocacartRenderAdminmedia();
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/administrator/jquery.equalheights.min.js');
+		/*HTMLHelper::_('jquery.framework', false);
+		$document->addScript(Uri::root(true).'/media/com_phocacart/js/administrator/jquery.equalheights.min.js');
 		$document->addScriptDeclaration(
 		//'jQuery(window).load(function(){
 		'jQuery(window).on(\'load\', function(){
 			jQuery(\'.ph-admin-stat-box\').equalHeights();
-		});');
+		});');*/
 
 		// Most viewed and best-selling products
 		$this->t['most_viewed'] 	= PhocacartProduct::getMostViewedProducts(0, false, false);
@@ -141,41 +148,41 @@ class PhocaCartCpViewPhocacartStatistics extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.statistic_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_STATISTICS' ), 'stats' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_STATISTICS' ), 'stats' );
 
 		// This button is unnecessary but it is displayed because Joomla! design bug
-		$bar = JToolbar::getInstance( 'toolbar' );
-		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.JText::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.JText::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
+		$bar = Toolbar::getInstance( 'toolbar' );
+		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.Text::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.Text::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
 
 	/*
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
 		}
 
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			ToolbarHelper::divider();
+			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartlogs.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartlogs.delete', $this->t['l'].'_DELETE');
 		}*/
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 
 	protected function getSortFields() {
 		return array(
-			'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
-			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
+			'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
+			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
+			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
+			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

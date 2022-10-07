@@ -21,6 +21,16 @@
  */
 
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Factory;
+
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+
 $d = $displayData;
 
 /*
@@ -73,19 +83,19 @@ $display_time_of_supply_invoice			= $d['params']->get( 'display_time_of_supply_i
 
 
 if($d['type'] == 1 && $d['common']->order_number == '') {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_ORDER_DOES_NOT_EXIST').'</div>';
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_ORDER_DOES_NOT_EXIST')));
 	return;
 }
 if($d['type'] == 3 && $d['common']->order_number == '') {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_DELIVERY_NOTE_NOT_YET_ISSUED').'</div>';
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_DELIVERY_NOTE_NOT_YET_ISSUED')));
 	return;
 }
 if($d['type'] == 1 && $d['common']->receipt_number == '') {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_RECEIPT_NOT_YET_ISSUED').'</div>';
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_RECEIPT_NOT_YET_ISSUED')));
 	return;
 }
 if($d['type'] == 2 && $d['common']->invoice_number == '') {
-	echo '<div class="alert alert-error alert-danger">'.JText::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED').'</div>';
+	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED')));
 	return;
 }
 
@@ -299,7 +309,7 @@ if ($store_title != '') {
 	$o[] = '<div><h1>'.$store_title.'</h1></div>';
 }
 if ($store_logo != '') {
-	$o[] = '<div><img class="ph-idnr-header-img" src="'.JURI::root(false). ''.$store_logo.'" /></div>';
+	$o[] = '<div><img class="ph-idnr-header-img" src="'.Uri::root(false). ''.$store_logo.'" /></div>';
 }
 if ($store_info != '') {
 	$o[] = '<div>'.$store_info.'</div>';
@@ -314,42 +324,42 @@ $o[] = '<td colspan="2" '.$sep2.'></td>';
 // -----------
 $o[] = '<td colspan="5">';
 if ($d['type'] == 1) {
-	$o[] = '<div><h1>'.JText::_('COM_PHOCACART_ORDER').'</h1></div>';
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC4').'</div>';
+	$o[] = '<div><h1>'.Text::_('COM_PHOCACART_ORDER').'</h1></div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_ORDER_DATE').'</b>: '.HTMLHelper::date($d['common']->date, 'DATE_FORMAT_LC4').'</div>';
 } else if ($d['type'] == 2) {
 
-	$o[] = '<div><h1>'.JText::_('COM_PHOCACART_INVOICE').'</h1></div>';
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_NR').'</b>: '.PhocacartOrder::getInvoiceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_number).'</div>';
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_DATE').'</b>: '.JHtml::date($d['common']->invoice_date, 'DATE_FORMAT_LC4').'</div>';
+	$o[] = '<div><h1>'.Text::_('COM_PHOCACART_INVOICE').'</h1></div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_INVOICE_NR').'</b>: '.PhocacartOrder::getInvoiceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_number).'</div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_INVOICE_DATE').'</b>: '.HTMLHelper::date($d['common']->invoice_date, 'DATE_FORMAT_LC4').'</div>';
 
 	if ($display_time_of_supply_invoice	== 1 && $d['common']->invoice_time_of_supply != '' && $d['common']->invoice_time_of_supply != '0000-00-00 00:00:00') {
-        $o[] = '<div><b>' . JText::_('COM_PHOCACART_DATE_OF_TAXABLE_SUPPLY') . '</b>: ' . JHtml::date($d['common']->invoice_time_of_supply, 'DATE_FORMAT_LC4') . '</div>';
+        $o[] = '<div><b>' . Text::_('COM_PHOCACART_DATE_OF_TAXABLE_SUPPLY') . '</b>: ' . HTMLHelper::date($d['common']->invoice_time_of_supply, 'DATE_FORMAT_LC4') . '</div>';
     }
 
-    $o[] = '<div><b>'.JText::_('COM_PHOCACART_INVOICE_DUE_DATE').'</b>: '.PhocacartOrder::getInvoiceDueDate($d['common']->id, $d['common']->date, $d['common']->invoice_due_date, 'DATE_FORMAT_LC4').'</div>';
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_PAYMENT_REFERENCE_NUMBER').'</b>: '.PhocacartOrder::getPaymentReferenceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_prn).'</div>';
+    $o[] = '<div><b>'.Text::_('COM_PHOCACART_INVOICE_DUE_DATE').'</b>: '.PhocacartOrder::getInvoiceDueDate($d['common']->id, $d['common']->date, $d['common']->invoice_due_date, 'DATE_FORMAT_LC4').'</div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_PAYMENT_REFERENCE_NUMBER').'</b>: '.PhocacartOrder::getPaymentReferenceNumber($d['common']->id, $d['common']->date, $d['common']->invoice_prn).'</div>';
 	// Display order number in invoice because order number can be different to invoice number
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
-	
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
+
 } else if ($d['type'] == 3) {
-	$o[] = '<div><h1>'.JText::_('COM_PHOCACART_DELIVERY_NOTE').'</h1></div>';
-	$o[] = '<div style="margin:0;"><b>'.JText::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
-	$o[] = '<div style="margin:0"><b>'.JText::_('COM_PHOCACART_ORDER_DATE').'</b>: '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC4').'</div>';
+	$o[] = '<div><h1>'.Text::_('COM_PHOCACART_DELIVERY_NOTE').'</h1></div>';
+	$o[] = '<div style="margin:0;"><b>'.Text::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($d['common']->id, $d['common']->date, $d['common']->order_number).'</div>';
+	$o[] = '<div style="margin:0"><b>'.Text::_('COM_PHOCACART_ORDER_DATE').'</b>: '.HTMLHelper::date($d['common']->date, 'DATE_FORMAT_LC4').'</div>';
 
 }
 
 $o[] = '<div>&nbsp;</div>';
 if (isset($d['common']->paymenttitle) && $d['common']->paymenttitle != '') {
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_PAYMENT').'</b>: '.$d['common']->paymenttitle.'</div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_PAYMENT').'</b>: '.$d['common']->paymenttitle.'</div>';
 }
 
 if ($d['type'] == 2 && $invoice_tp	!= '') {
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_TERMS_OF_PAYMENT').'</b>: '.$invoice_tp.'</div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_TERMS_OF_PAYMENT').'</b>: '.$invoice_tp.'</div>';
 }
 
 if (isset($d['common']->shippingtitle) && $d['common']->shippingtitle != '') {
-	$o[] = '<div><b>'.JText::_('COM_PHOCACART_SHIPPING').'</b>: '.$d['common']->shippingtitle.'</div>';
+	$o[] = '<div><b>'.Text::_('COM_PHOCACART_SHIPPING').'</b>: '.$d['common']->shippingtitle.'</div>';
 }
 
 $o[] = '</td></tr>';
@@ -387,14 +397,15 @@ if ($pR) {
 // -----------
 // BILLING AND SHIPPING HEADER
 // -----------
-$o[] = '<tr><td colspan="5"><b>'.JText::_('COM_PHOCACART_BILLING_ADDRESS').'</b></td>';
+$o[] = '<tr><td colspan="5"><b>'.Text::_('COM_PHOCACART_BILLING_ADDRESS').'</b></td>';
 $o[] = '<td colspan="2"></td>';
-$o[] = '<td colspan="5"><b>'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</b></td></tr>';
+$o[] = '<td colspan="5"><b>'.Text::_('COM_PHOCACART_SHIPPING_ADDRESS').'</b></td></tr>';
 
 
 // -----------
 // BILLING
 // -----------
+
 $ob = array();
 $ob2 = array();// specific case for $oidn_global_billing_desc
 if (!empty($d['bas']['b'])) {
@@ -419,8 +430,8 @@ if (!empty($d['bas']['b'])) {
 	if (!empty($v['regiontitle'])) {$ob[] = $v['regiontitle'].'<br />';}
 	if (!empty($v['countrytitle'])) {$ob[] = $v['countrytitle'].'<br />';}
 	//echo '<br />';
-	if ($v['vat_1'] != '') { $ob[] = '<br />'.JText::_('COM_PHOCACART_VAT_1_LABEL').': '. $v['vat_1'].'<br />';}
-	if ($v['vat_2'] != '') { $ob[] = JText::_('COM_PHOCACART_VAT_2_LABEL').': '.$v['vat_2'].'<br />';}
+	if ($v['vat_1'] != '') { $ob[] = '<br />'.Text::_('COM_PHOCACART_VAT_1_LABEL').': '. $v['vat_1'].'<br />';}
+	if ($v['vat_2'] != '') { $ob[] = Text::_('COM_PHOCACART_VAT_2_LABEL').': '.$v['vat_2'].'<br />';}
 
 	// -----------------------
 	// ORDER | INVOICE | DELIVERY NOTE BILLING ADDRESS DESCRIPTION
@@ -472,8 +483,8 @@ if (!empty($d['bas']['s'])) {
 	if (!empty($v['regiontitle'])) {$os[] = $v['regiontitle'].'<br />';}
 	if (!empty($v['countrytitle'])) {$os[] = $v['countrytitle'].'<br />';}
 	//echo '<br />';
-	if ($v['vat_1'] != '') { $os[] = '<br />'.JText::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
-	if ($v['vat_2'] != '') { $os[] = JText::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
+	if ($v['vat_1'] != '') { $os[] = '<br />'.Text::_('COM_PHOCACART_VAT1').': '. $v['vat_1'].'<br />';}
+	if ($v['vat_2'] != '') { $os[] = Text::_('COM_PHOCACART_VAT2').': '.$v['vat_2'].'<br />';}
 
 
 	// -----------------------
@@ -606,21 +617,21 @@ if (!empty($d['products'])) {
 	}
 
 	$p[] = '<tr '.$hProduct.'>';
-	$p[] = '<td>'.JText::_('COM_PHOCACART_SKU').'</td>';
-	$p[] = '<td colspan="'.$cTitle.'">'.JText::_('COM_PHOCACART_ITEM').'</td>';
-	$p[] = '<td style="text-align:center">'.JText::_('COM_PHOCACART_QTY').'</td>';
+	$p[] = '<td>'.Text::_('COM_PHOCACART_SKU').'</td>';
+	$p[] = '<td colspan="'.$cTitle.'">'.Text::_('COM_PHOCACART_ITEM').'</td>';
+	$p[] = '<td style="text-align:center">'.Text::_('COM_PHOCACART_QTY').'</td>';
 
 	if ($d['type'] != 3) {
-		$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_UNIT').'</td>';
+		$p[] = '<td style="text-align:right" colspan="2">'.Text::_('COM_PHOCACART_PRICE_UNIT').'</td>';
 		if ($dDiscount == 1) {
-			$p[] = '<td style="text-align:center"">'.JText::_('COM_PHOCACART_DISCOUNT').'</td>';
+			$p[] = '<td style="text-align:center"">'.Text::_('COM_PHOCACART_DISCOUNT').'</td>';
 		}
 		if ($tax_calculation > 0) {
-			$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_EXCL_TAX').'</td>';
-			$p[] = '<td style="text-align:right">'.JText::_('COM_PHOCACART_TAX').'</td>';
-			$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE_INCL_TAX').'</td>';
+			$p[] = '<td style="text-align:right" colspan="2">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</td>';
+			$p[] = '<td style="text-align:right">'.Text::_('COM_PHOCACART_TAX').'</td>';
+			$p[] = '<td style="text-align:right" colspan="2">'.Text::_('COM_PHOCACART_PRICE_INCL_TAX').'</td>';
 		} else {
-			$p[] = '<td style="text-align:right" colspan="2">'.JText::_('COM_PHOCACART_PRICE').'</td>';
+			$p[] = '<td style="text-align:right" colspan="2">'.Text::_('COM_PHOCACART_PRICE').'</td>';
 		}
 
 	}
@@ -639,7 +650,7 @@ if (!empty($d['products'])) {
 		$path				= PhocacartPath::getPath('productimage');// add before foreach
 		if ($productImage != '') {
 			$productThumbnail 	= PhocacartImage::getThumbnailName($path, $productImage, 'small');
-			$productImageOutput = '<img src="'.JURI::root().''.$productThumbnail->rel.'" alt="" />';
+			$productImageOutput = '<img src="'.Uri::root().''.$productThumbnail->rel.'" alt="" />';
 		}
 		*/
 
@@ -897,7 +908,7 @@ if ($toPay != '') {
 
 	$o[] = '<tr class="ph-idnr-to-pay-box">';
 	$o[] = '<td colspan="'.$tColspanLeft.'">&nbsp;</td>';
-	$o[] = '<td colspan="'.$tColspanMid.'" '.$toPayS.'><b>'.JText::_('COM_PHOCACART_TO_PAY').'</b></td>';
+	$o[] = '<td colspan="'.$tColspanMid.'" '.$toPayS.'><b>'.Text::_('COM_PHOCACART_TO_PAY').'</b></td>';
 	$o[] = '<td colspan="'.$tColspanRight.'" '.$toPaySV.'><b>'.$toPay.'</b></td>';
 	$o[] = '</tr>';
 }
@@ -971,7 +982,7 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 	}
 	$o[] = '</td><td>';
 	if ($pdf_invoice_signature_image != '') {
-		$o[] = '<img src="'.JURI::root().''.$pdf_invoice_signature_image.'" style="width:80"/>';
+		$o[] = '<img src="'.Uri::root().''.$pdf_invoice_signature_image.'" style="width:80"/>';
 	}
 	$o[] = '</td></tr>';
 	$o[] = '</table>';
@@ -987,18 +998,18 @@ if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display
 	if (!empty($d['taxrecapitulation'])) {
 
 
-		$o[] = '<h3>'.JText::_('COM_PHOCACART_TAX_RECAPITULATION').'</h3>';
+		$o[] = '<h3>'.Text::_('COM_PHOCACART_TAX_RECAPITULATION').'</h3>';
 		if ($pR) {
-			$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_TAX_RECAPITULATION')), 'pLeft');
+			$oPr[] = $pP->printLine(array(Text::_('COM_PHOCACART_TAX_RECAPITULATION')), 'pLeft');
 		}
 
 
 		$o[] = '<table '.$taxRecTable.'>';
 		$o[] = '<tr>';
-		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TITLE').'</th>';
-		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TAX_BASIS').'</th>';
-		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TAX').'</th>';
-		$o[] = '<th '.$taxRecTd.'>'.JText::_('COM_PHOCACART_TOTAL').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TITLE').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TAX_BASIS').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TAX').'</th>';
+		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TOTAL').'</th>';
 		//$o[] = '<th>'.JText::_('COM_PHOCACART_TOTAL').' '.JText::_('COM_PHOCACART_CURRENCY').'</td>';
 		$o[] = '</tr>';
 
@@ -1022,7 +1033,7 @@ if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display
 				// In administration edit: Rounding (Incl. Tax Recapitulation Rounding)
 				// In documents (invoice): Rouning
 				// Skip "(Incl. Tax Recapitulation Rounding)" in documents
-				$title = JText::_('COM_PHOCACART_ROUNDING');
+				$title = Text::_('COM_PHOCACART_ROUNDING');
 			}*/
 
 			if ($v->type == 'brutto') {
@@ -1072,13 +1083,13 @@ if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display
 
 
 				if ($pR) {
-					$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_TAX_RECAPITULATION')), 'pLeft');
+					$oPr[] = $pP->printLine(array(Text::_('COM_PHOCACART_TAX_RECAPITULATION')), 'pLeft');
 				}
 
 				if (!empty($v['tax'])) {
 
 					$o[] = '<table '.$taxRecTable.'>';
-					$o[] = '<tr><th colspan="2">'.JText::_('COM_PHOCACART_TAX_RECAPITULATION').'</th></tr>';
+					$o[] = '<tr><th colspan="2">'.Text::_('COM_PHOCACART_TAX_RECAPITULATION').'</th></tr>';
 
 					foreach($v['tax'] as $kT => $vT) {
 
@@ -1113,12 +1124,12 @@ if (($display_reward_points_invoice == 1 && $d['type'] == 2 ) ||  ($display_rewa
 		$pointsOrder 	= PhocacartReward::getTotalPointsByOrderId($d['common']->id);
 
 
-		$o[] = '<div>'.JText::_('COM_PHOCACART_YOUR_CURRENT_REWARD_POINTS_BALANCE').': '.$pointsUser.'</div>';
-		$o[] = '<div>'.JText::_('COM_PHOCACART_POINTS_RECEIVED_FOR_THIS_PURCHASE').': '.$pointsOrder.'</div>';
+		$o[] = '<div>'.Text::_('COM_PHOCACART_YOUR_CURRENT_REWARD_POINTS_BALANCE').': '.$pointsUser.'</div>';
+		$o[] = '<div>'.Text::_('COM_PHOCACART_POINTS_RECEIVED_FOR_THIS_PURCHASE').': '.$pointsOrder.'</div>';
 
 		if ($pR) {
-			$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_YOUR_CURRENT_REWARD_POINTS_BALANCE').': ', $pointsUser));
-			$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_POINTS_RECEIVED_FOR_THIS_PURCHASE'). ': ', $pointsOrder));
+			$oPr[] = $pP->printLineColumns(array(Text::_('COM_PHOCACART_YOUR_CURRENT_REWARD_POINTS_BALANCE').': ', $pointsUser));
+			$oPr[] = $pP->printLineColumns(array(Text::_('COM_PHOCACART_POINTS_RECEIVED_FOR_THIS_PURCHASE'). ': ', $pointsOrder));
 			$oPr[] = $pP->printFeed(1);
 		}
 	}
@@ -1182,14 +1193,14 @@ if ($pR) {
 	if (isset($d['common']->amount_tendered) && $d['common']->amount_tendered > 0 && isset($d['common']->amount_change) && ($d['common']->amount_change > 0 || $d['common']->amount_change == 0)) {
 		//$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': '.$d['price']->getPriceFormat($d['common']->amount_tendered)), 'pLeft');
 		//$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': '.$d['price']->getPriceFormat($d['common']->amount_change)), 'pLeft');
-		$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': ', $d['price']->getPriceFormat($d['common']->amount_tendered)));
-		$oPr[] = $pP->printLineColumns(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': ', $d['price']->getPriceFormat($d['common']->amount_change)));
+		$oPr[] = $pP->printLineColumns(array(Text::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': ', $d['price']->getPriceFormat($d['common']->amount_tendered)));
+		$oPr[] = $pP->printLineColumns(array(Text::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': ', $d['price']->getPriceFormat($d['common']->amount_change)));
 		$oPr[] = $pP->printFeed(1);
 	}
 
 
-	$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_NR').': '.PhocacartOrder::getReceiptNumber($d['common']->id, $d['common']->date, $d['common']->receipt_number)), 'pLeft');
-	$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_PURCHASE_DATE').': '.JHtml::date($d['common']->date, 'DATE_FORMAT_LC6')), 'pLeft');
+	$oPr[] = $pP->printLine(array(Text::_('COM_PHOCACART_RECEIPT_NR').': '.PhocacartOrder::getReceiptNumber($d['common']->id, $d['common']->date, $d['common']->receipt_number)), 'pLeft');
+	$oPr[] = $pP->printLine(array(Text::_('COM_PHOCACART_PURCHASE_DATE').': '.HTMLHelper::date($d['common']->date, 'DATE_FORMAT_LC6')), 'pLeft');
 	$oPr[] = $pP->printFeed(1);
 
 	$storeInfoFooterPos = array();
@@ -1210,14 +1221,14 @@ if ($pR) {
 	$oPr2 = implode("", $oPr);// new rows set in print library
 
 
-	\JFactory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
+	Factory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
 
 	echo $oPr2;
 } else {
 
 	$o2 = implode("\n", $o);
 
-	\JFactory::getApplication()->triggerEvent('onChangeText', array(&$o2));
+	Factory::getApplication()->triggerEvent('onChangeText', array(&$o2));
 	echo $o2;
 }
 

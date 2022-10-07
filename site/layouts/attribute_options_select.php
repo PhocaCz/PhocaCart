@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Filesystem\File;
 $d 					= $displayData;
 $displayData 		= null;
 $v 					= $d['attribute'];
@@ -17,7 +20,7 @@ $price				= new PhocacartPrice();
 
 $attr				= array();
 $attr[]				= 'id="phItemAttribute'.$attributeIdName.'"';// ID
-$attr[]				= 'class="form-control chosen-select ph-item-input-set-attributes phj'. $d['typeview'].' phjProductAttribute"';// CLASS
+$attr[]				= 'class="form-select chosen-select ph-item-input-set-attributes phj'. $d['typeview'].' phjProductAttribute"';// CLASS
 $attr[]				= $d['required']['attribute'];
 $attr[]				= 'name="attribute['.(int)$v->id.']"';
 $attr[]				= 'data-product-id="'. $d['product_id'].'"';// Product ID
@@ -37,7 +40,7 @@ if ((int)$d['required']['required'] == 1 && (int)$d['remove_select_option_attrib
 	// this is not a problem for "add to cart" button as it just checks for the selected options
 	// but for ajaxes like chaning price or stock in item view, this is why this option is not displayed when attribute required
 } else {
-	echo '<option value="">'. JText::_('COM_PHOCACART_SELECT_OPTION').'</option>';
+	echo '<option value="">'. Text::_('COM_PHOCACART_SELECT_OPTION').'</option>';
 }
 
 foreach ($v->options as $k2 => $v2) {
@@ -59,9 +62,9 @@ foreach ($v->options as $k2 => $v2) {
 		}
 
 		if (isset($imageO->rel) && $imageO->rel != '') {
-			$linkO 		= JURI::base(true).'/'.$imageO->rel;
+			$linkO 		= Uri::base(true).'/'.$imageO->rel;
 
-			if (JFile::exists($imageO->abs)) {
+			if (File::exists($imageO->abs)) {
 				$attrO		.= 'data-image-option="'.htmlspecialchars($linkO).'"';
 			}
 		}
@@ -75,7 +78,7 @@ foreach ($v->options as $k2 => $v2) {
 
 	// SELECTBOX IMAGE
 	if ($v->type == 3 && isset($v2->image_small) && $v2->image_small != '') {
-		$linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v2->image_small;
+		$linkI 		= Uri::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v2->image_small;
 		$attrO		.= ' data-image="'.strip_tags($linkI).'"';
 	}
 

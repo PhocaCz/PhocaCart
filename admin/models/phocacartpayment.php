@@ -7,9 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartPayment extends JModelAdmin
+class PhocaCartCpModelPhocacartPayment extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -23,11 +31,11 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocacartPayment', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartpayment', 'phocacartpayment', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -36,7 +44,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartpayment.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartpayment.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 			$price = new PhocacartPrice();
@@ -48,11 +56,11 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		$table->cost 			= PhocacartUtils::replaceCommaWithPoint($table->cost);
 		$table->cost_additional	= PhocacartUtils::replaceCommaWithPoint($table->cost_additional);
@@ -60,7 +68,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		$table->highest_amount 	= PhocacartUtils::replaceCommaWithPoint($table->highest_amount);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);
@@ -71,7 +79,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_payment_methods');
 				$max = $db->loadResult();
 
@@ -102,7 +110,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 		$isNew = true;
 
 		// Include the content plugins for the on save events.
-		JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Allow an exception to be thrown.
 		try
@@ -116,10 +124,10 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 			// Plugin parameters are converted to params column in payment table (x001)
 			// Store form parameters of selected method
-			$app		= JFactory::getApplication();
+			$app		= Factory::getApplication();
 			$dataPh		= $app->input->get('phform', array(), 'array');
 			if (!empty($dataPh['params'])) {
-				$registry 	= new JRegistry($dataPh['params']);
+				$registry 	= new Registry($dataPh['params']);
 				//$registry 	= new JRegistry($dataPh);
 				$dataPhNew 	= $registry->toString();
 				if($dataPhNew != '') {
@@ -148,7 +156,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
@@ -206,7 +214,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			\JFactory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
 		}
 		catch (Exception $e)
 		{
@@ -232,7 +240,7 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 			$delete = parent::delete($cid);
 			if ($delete) {
 
-				\Joomla\Utilities\ArrayHelper::toInteger($cid);
+				ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 
 				$query = 'DELETE FROM #__phocacart_item_groups'
@@ -246,17 +254,17 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 	public function setDefault($id = 0) {
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$db   = $this->getDbo();
 
 		if (!$user->authorise('core.edit.state', 'com_phocacart')) {
-			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			throw new Exception(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 		}
 
 		$table = $this->getTable();
 
 		if (!$table->load((int) $id)){
-			throw new Exception(JText::_('COM_PHOCACART_ERROR_TABLE_NOT_FOUND'));
+			throw new Exception(Text::_('COM_PHOCACART_ERROR_TABLE_NOT_FOUND'));
 		}
 
 		$db->setQuery("UPDATE #__phocacart_payment_methods SET ".$db->quoteName('default')." = '0'");
@@ -272,17 +280,17 @@ class PhocaCartCpModelPhocacartPayment extends JModelAdmin
 
 	public function unsetDefault($id = 0) {
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$db   = $this->getDbo();
 
 		if (!$user->authorise('core.edit.state', 'com_phocacart')) {
-			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			throw new Exception(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 		}
 
 		$table = $this->getTable();
 
 		if (!$table->load((int) $id)){
-			throw new Exception(JText::_('COM_PHOCACART_ERROR_TABLE_NOT_FOUND'));
+			throw new Exception(Text::_('COM_PHOCACART_ERROR_TABLE_NOT_FOUND'));
 		}
 
 		// It is possible that nothing will be set as default

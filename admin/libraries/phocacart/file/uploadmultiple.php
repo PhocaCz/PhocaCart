@@ -9,6 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 class PhocacartFileUploadmultiple
 {
@@ -27,44 +31,44 @@ class PhocacartFileUploadmultiple
 	static public function renderMultipleUploadLibraries() {
 
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
 		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 4 );
 
-		Joomla\CMS\HTML\HTMLHelper::_('behavior.framework', true);// Load it here to be sure, it is loaded before jquery
-		Joomla\CMS\HTML\HTMLHelper::_('jquery.framework', false);// Load it here because of own nonConflict method (nonconflict is set below)
-		$document			= JFactory::getDocument();
+		//JHtml::_('behavior.framework', true);// Load it here to be sure, it is loaded before jquery
+		HTMLHelper::_('jquery.framework', false);// Load it here because of own nonConflict method (nonconflict is set below)
+		$document			= Factory::getDocument();
 
 
 		/*if ($uploadMethod == 2) {
-			//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/gears_init.js');
+			//$document->addScript(JUri::root(true).'/media/com_phocacart/js/plupload/gears_init.js');
 		}
 		if ($uploadMethod == 5) {
-			//$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
+			//$document->addScript(JUri::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
 		}*/
 
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.js');
+		$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.js');
 		/*if ($uploadMethod == 2) {
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.gears.js');
+			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.gears.js');
 		}
 		if ($uploadMethod == 3) {
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.silverlight.js');
+			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.silverlight.js');
 		}
 		if ($uploadMethod == 1) {
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.flash.js');
+			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.flash.js');
 		}
 		if ($uploadMethod == 5) {
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
+			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
 		}
 		if ($uploadMethod == 6) {
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.html4.js');
+			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.html4.js');
 		}*/
 		if ($uploadMethod == 4) {
-			$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/plupload.html5.js');
+			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.html5.js');
 		}
-		$document->addScript(JURI::root(true).'/media/com_phocacart/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
-		JHtml::stylesheet( 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css' );
+		$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
+		HTMLHelper::stylesheet( 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css' );
 	}
 
 	static public function getMultipleUploadSizeFormat($size) {
@@ -76,7 +80,7 @@ class PhocacartFileUploadmultiple
 
 	public function renderMultipleUploadJS($frontEnd = 0, $chunkMethod = 0) {
 
-		$document			= JFactory::getDocument();
+		$document			= Factory::getDocument();
 
 		switch ($this->method) {
 			/* case 2:
@@ -128,20 +132,20 @@ class PhocacartFileUploadmultiple
 
 		$js.=''."\n";
 		$js.='   plupload.addI18n({'."\n";
-		$js.='	   \'Select files\' : \''.addslashes(JText::_('COM_PHOCACART_SELECT_FILES')).'\','."\n";
-		$js.='	   \'Add files to the upload queue and click the start button.\' : \''.addslashes(JText::_('COM_PHOCACART_ADD_FILES_TO_UPLOAD_QUEUE_AND_CLICK_START_BUTTON')).'\','."\n";
-		$js.='	   \'Filename\' : \''.addslashes(JText::_('COM_PHOCACART_FILENAME')).'\','."\n";
-		$js.='	   \'Status\' : \''.addslashes(JText::_('COM_PHOCACART_STATUS')).'\','."\n";
-		$js.='	   \'Size\' : \''.addslashes(JText::_('COM_PHOCACART_SIZE')).'\','."\n";
-		$js.='	   \'Add files\' : \''.addslashes(JText::_('COM_PHOCACART_ADD_FILES')).'\','."\n";
-		$js.='	   \'Add Files\' : \''.addslashes(JText::_('COM_PHOCACART_ADD_FILES')).'\','."\n";																					   
-		$js.='	   \'Start upload\':\''.addslashes(JText::_('COM_PHOCACART_START_UPLOAD')).'\','."\n";
-		$js.='	   \'Start Upload\':\''.addslashes(JText::_('COM_PHOCACART_START_UPLOAD')).'\','."\n";
-		$js.='	   \'Stop upload\' : \''.addslashes(JText::_('COM_PHOCACART_STOP_CURRENT_UPLOAD')).'\','."\n";
-		$js.='	   \'Stop Upload\' : \''.addslashes(JText::_('COM_PHOCACART_STOP_CURRENT_UPLOAD')).'\','."\n";																						   
-		$js.='	   \'Stop current upload\' : \''.addslashes(JText::_('COM_PHOCACART_STOP_CURRENT_UPLOAD')).'\','."\n";
-		$js.='	   \'Start uploading queue\' : \''.addslashes(JText::_('COM_PHOCACART_START_UPLOADING_QUEUE')).'\','."\n";
-		$js.='	   \'Drag files here.\' : \''.addslashes(JText::_('COM_PHOCACART_DRAG_FILES_HERE')).'\''."\n";
+		$js.='	   \'Select files\' : \''.addslashes(Text::_('COM_PHOCACART_SELECT_FILES')).'\','."\n";
+		$js.='	   \'Add files to the upload queue and click the start button.\' : \''.addslashes(Text::_('COM_PHOCACART_ADD_FILES_TO_UPLOAD_QUEUE_AND_CLICK_START_BUTTON')).'\','."\n";
+		$js.='	   \'Filename\' : \''.addslashes(Text::_('COM_PHOCACART_FILENAME')).'\','."\n";
+		$js.='	   \'Status\' : \''.addslashes(Text::_('COM_PHOCACART_STATUS')).'\','."\n";
+		$js.='	   \'Size\' : \''.addslashes(Text::_('COM_PHOCACART_SIZE')).'\','."\n";
+		$js.='	   \'Add files\' : \''.addslashes(Text::_('COM_PHOCACART_ADD_FILES')).'\','."\n";
+		$js.='	   \'Add Files\' : \''.addslashes(Text::_('COM_PHOCACART_ADD_FILES')).'\','."\n";
+		$js.='	   \'Start upload\':\''.addslashes(Text::_('COM_PHOCACART_START_UPLOAD')).'\','."\n";
+		$js.='	   \'Start Upload\':\''.addslashes(Text::_('COM_PHOCACART_START_UPLOAD')).'\','."\n";
+		$js.='	   \'Stop upload\' : \''.addslashes(Text::_('COM_PHOCACART_STOP_CURRENT_UPLOAD')).'\','."\n";
+		$js.='	   \'Stop Upload\' : \''.addslashes(Text::_('COM_PHOCACART_STOP_CURRENT_UPLOAD')).'\','."\n";
+		$js.='	   \'Stop current upload\' : \''.addslashes(Text::_('COM_PHOCACART_STOP_CURRENT_UPLOAD')).'\','."\n";
+		$js.='	   \'Start uploading queue\' : \''.addslashes(Text::_('COM_PHOCACART_START_UPLOADING_QUEUE')).'\','."\n";
+		$js.='	   \'Drag files here.\' : \''.addslashes(Text::_('COM_PHOCACART_DRAG_FILES_HERE')).'\''."\n";
 		$js.='   });';
 		$js.=''."\n";
 
@@ -173,9 +177,9 @@ class PhocacartFileUploadmultiple
 			}
 		}*/
 		/* if ($this->method == 1) {
-			$js.='		flash_swf_url : \''.JURI::root(true).'/media/com_phocacart/js/plupload/plupload.flash.swf\''."\n";
+			$js.='		flash_swf_url : \''.Uri::root(true).'/media/com_phocacart/js/plupload/plupload.flash.swf\''."\n";
 		} else if ($this->method == 3) {
-			$js.='		silverlight_xap_url : \''.JURI::root(true).'/media/com_phocacart/js/plupload/plupload.silverlight.xap\''."\n";
+			$js.='		silverlight_xap_url : \''.Uri::root(true).'/media/com_phocacart/js/plupload/plupload.silverlight.xap\''."\n";
 		}*/
 		$js.='	});'."\n";
 
@@ -246,32 +250,32 @@ class PhocacartFileUploadmultiple
 		switch ($this->method) {
 			/*case 2:
 				$name		= 'gears_uploader';
-				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_GEARS');
+				$msg		= Text::_('COM_PHOCACART_NOT_INSTALLED_GEARS');
 			break;
 			case 3:
 				$name		= 'silverlight_uploader';
-				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_SILVERLIGHT');
+				$msg		= Text::_('COM_PHOCACART_NOT_INSTALLED_SILVERLIGHT');
 			break;*/
 			case 4:
 			default:
 				$name		= 'html5_uploader';
-				$msg		= JText::_('COM_PHOCACART_NOT_SUPPORTED_HTML5');
+				$msg		= Text::_('COM_PHOCACART_NOT_SUPPORTED_HTML5');
 			break;
 
 			/* case 5:
 				$name		= 'browserplus_uploader';
-				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_BROWSERPLUS');
+				$msg		= Text::_('COM_PHOCACART_NOT_INSTALLED_BROWSERPLUS');
 			break;
 
 			case 6:
 				$name		= 'html4_uploader';
-				$msg		= JText::_('COM_PHOCACART_NOT_SUPPORTED_HTML4');
+				$msg		= Text::_('COM_PHOCACART_NOT_SUPPORTED_HTML4');
 			break;
 
 			case 1:
 			default:
 				$name		= 'flash_uploader';
-				$msg		= JText::_('COM_PHOCACART_NOT_INSTALLED_FLASH');
+				$msg		= Text::_('COM_PHOCACART_NOT_INSTALLED_FLASH');
 			break;*/
 		}
 

@@ -7,15 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocacartCart extends JModelList
+class PhocaCartCpModelPhocacartCart extends ListModel
 {
 	protected	$option 		= 'com_phocacart';
 
 	public function getData() {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$userid			= $app->input->get('userid', 0, 'int');
 		$vendorid		= $app->input->get('vendorid', 0, 'int');
 		$ticketid		= $app->input->get('ticketid', 0, 'int');
@@ -24,7 +26,7 @@ class PhocaCartCpModelPhocacartCart extends JModelList
 
 
 		if ((int)$userid > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'SELECT a.cart, a.user_id, a.vendor_id, a.ticket_id, a.unit_id, a.section_id, u.name as user_name, u.username as user_username, a.date'
 			. ' FROM #__phocacart_cart_multiple AS a'
 			. ' LEFT JOIN #__users AS u ON u.id = a.user_id'
@@ -45,7 +47,7 @@ class PhocaCartCpModelPhocacartCart extends JModelList
 
 		if ((int)$userid > 0) {
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = 'DELETE FROM #__phocacart_cart_multiple'
 				. ' WHERE user_id = '.(int)$userid
 				. ' AND vendor_id = '.(int)$vendorid

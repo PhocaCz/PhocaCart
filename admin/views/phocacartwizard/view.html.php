@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartWizard extends JViewLegacy
+class PhocaCartCpViewPhocaCartWizard extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -18,7 +20,7 @@ class PhocaCartCpViewPhocaCartWizard extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$app				    = JFactory::getApplication();
+		$app				    = Factory::getApplication();
 		$this->page		        = $app->input->get('page', 0, 'int');
 		$this->t				= PhocacartUtils::setVars('wizard');
 		$this->r				= new PhocacartRenderAdminview();

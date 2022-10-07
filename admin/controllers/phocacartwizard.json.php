@@ -7,6 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Router\Route;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCartCommon
 
@@ -14,10 +19,10 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	
 	public function skipwizard() {
 		
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
@@ -30,10 +35,10 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	
 	public function enablewizard() {
 		
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
@@ -46,10 +51,10 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	
 	public function updatestatus() {
 		
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
@@ -85,7 +90,7 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 		return;
 		
 		/*
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$item					= array();
 		$item['id']				= $this->input->get( 'id', 0, 'int' );
 		$item['catid']			= $this->input->get( 'catid', 0, 'int' );
@@ -105,9 +110,9 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 		
 		// Render the layout
 		$d = array();
-		$layoutC	= new JLayoutFile('popup_add_to_compare', null, array('component' => 'com_phocacart'));
+		$layoutC	= new FileLayout('popup_add_to_compare', null, array('component' => 'com_phocacart'));
 		
-		$d['link_comparison'] = JRoute::_(PhocacartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_comparison'] = Route::_(PhocacartRoute::getComparisonRoute((int)$item['id']), (int)$item['catid']);
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on comparison site
 		// If yes and one item will be deleted per AJAX, we need to refresh comparison site
@@ -115,9 +120,9 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 		$d['comparison_view'] 	= (int)$item['comparisonview'];
 		
 		if ($added) {
-			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_COMPARISON_LIST');
+			$d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_ADDED_TO_COMPARISON_LIST');
 		} else {
-			$d['info_msg'] = JText::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_COMPARISON_LIST');
+			$d['info_msg'] = Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_COMPARISON_LIST');
 			
 			$mO = PhocacartRenderFront::renderMessageQueue();
 			$d['info_msg_additional'] = $mO;

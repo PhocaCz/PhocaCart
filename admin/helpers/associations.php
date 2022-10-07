@@ -8,6 +8,8 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Associations;
 
 use Joomla\CMS\Association\AssociationExtensionHelper;
 
@@ -66,14 +68,14 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 		$context    = 'com_phocacart.item';
 		$catidField = '';
 
-		
+
 		if ($typeName === 'phocacartcategory') {
 			$context    = 'com_phocacart.category';
 			$catidField = '';
 		}
 
 		// Get the associations.
-		$associations = JLanguageAssociations::getAssociations(
+		$associations = Associations::getAssociations(
 			$this->extension,
 			$type['tables']['a'],
 			$context,
@@ -108,11 +110,11 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 		switch ($typeName)
 		{
 			case 'phocacartitem':
-				$table = JTable::getInstance('PhocacartItem', 'Table');
+				$table = Table::getInstance('PhocacartItem', 'Table');
 				break;
 
 			case 'phocacartcategory':
-				$table = JTable::getInstance('PhocacartCategory', 'Table');
+				$table = Table::getInstance('PhocacartCategory', 'Table');
 				break;
 		}
 
@@ -195,4 +197,7 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 			'title'   => $title
 		);
 	}
+
+    public function getAssociationsForItem($id = 0, $view = null) {
+    }
 }

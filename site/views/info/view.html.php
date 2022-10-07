@@ -7,8 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view');
-class PhocaCartViewInfo extends JViewLegacy
+class PhocaCartViewInfo extends HtmlView
 {
 	protected $t;
 	protected $r;
@@ -18,9 +22,9 @@ class PhocaCartViewInfo extends JViewLegacy
 
 	function display($tpl = null) {
 
-		$document					= JFactory::getDocument();
-		$app						= JFactory::getApplication();
-		$uri 						= \Joomla\CMS\Uri\Uri::getInstance();
+		$document					= Factory::getDocument();
+		$app						= Factory::getApplication();
+		$uri 						= Uri::getInstance();
 		$this->u					= PhocacartUser::getUser();
 		$this->p					= $app->getParams();
 		$this->s                    = PhocacartRenderStyle::getStyles();
@@ -28,7 +32,7 @@ class PhocaCartViewInfo extends JViewLegacy
 		$this->t['info_view_description']			= $this->p->get( 'info_view_description', '' );
 		$this->t['info_view_description']			= PhocacartRenderFront::renderArticle($this->t['info_view_description']);
 
-		$session 				= JFactory::getSession();
+		$session 				= Factory::getSession();
 		$this->t['infoaction'] 	= $session->get('infoaction', 0, 'phocaCart');
 		$this->t['infomessage'] = $session->get('infomessage', array(), 'phocaCart');
 		$this->t['infodata'] 	= $session->get('infodata', array(), 'phocaCart');
@@ -48,7 +52,7 @@ class PhocaCartViewInfo extends JViewLegacy
 	}
 
 	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, JText::_('COM_PHOCACART_INFO'));
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_INFO'));
 	}
 }
 ?>

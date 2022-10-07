@@ -11,9 +11,10 @@ defined('JPATH_PLATFORM') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Form\FormRule;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
+use Joomla\CMS\Form\FormRule;
+use Joomla\CMS\Language\Text;
 
 
 class JFormRuleAlphanumeric extends FormRule
@@ -33,7 +34,7 @@ class JFormRuleAlphanumeric extends FormRule
 		// Uncomment for Possible string length rule
 		/*
 		if (StringHelper::strlen($value) > 10) {
-			return new \UnexpectedValueException(\JText::_('The maximum allowable string length is 10 characters'));
+			return new \UnexpectedValueException(Text::_('The maximum allowable string length is 10 characters'));
 		}
 		*/
 		if (empty($this->regex)) {
@@ -48,7 +49,7 @@ class JFormRuleAlphanumeric extends FormRule
             return true;
         }
 
-        return new \UnexpectedValueException(\JText::_('COM_PHOCACART_ONLY_ALPHANUMERIC_CHARACTERS_ARE_ALLOWED'));
+        return new \UnexpectedValueException(Text::_('COM_PHOCACART_ONLY_ALPHANUMERIC_CHARACTERS_ARE_ALLOWED'));
 
 	}
 }

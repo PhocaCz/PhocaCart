@@ -21,14 +21,26 @@ function phRenderModalWindow(id, title) {
 
 
     o = ''
-    + '<div id="'+ id +'" tabindex="-1" class="modal hide fade jviewport-width80">'
-    + ' <div class="modal-header">'
-    + '  <button type="button" class="close novalidate" data-dismiss="modal" aria-label="'+ phLang['COM_PHOCACART_CLOSE'] + '" <span aria-hidden="true">&times;</span></button>'
-    + '  <h3>'+ title +'</h3>'
-    + ' </div>'
-    + ' <div class="modal-body jviewport-height70"><iframe frameborder="0"></iframe></div>'
-    + ' <div class="modal-footer"><button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'+ phLang['COM_PHOCACART_CLOSE'] + '</button></div>'
-    + '</div>';
+    + '<div id="'+ id +'" tabindex="-1" role="dialog" class="joomla-modal modal fade">'
+    + ' <div class="modal-dialog modal-lg jviewport-width80">'
+    + '  <div class="modal-content">'
+    + '   <div class="modal-header">'
+    + '    <h3 class="modal-title">'+ title +'</h3>'
+    + '    <button type="button" class="btn-close novalidate" data-bs-dismiss="modal" aria-label="'+ phLang['COM_PHOCACART_CLOSE'] + '"></button>'
+    + '   </div>'
+    + '   <div class="modal-body jviewport-height80">'
+   // + '    <div class="p-3">'
+	//+ '     <div class="row">'
+   // + '      <div class="form-group col-md-12">'
+    + '       <iframe frameborder="0"></iframe>'
+    //+ '      </div>'
+   // + '     </div>'
+  //  + '    </div>'
+    + '   </div>'
+    + '   <div class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-hidden="true">'+ phLang['COM_PHOCACART_CLOSE'] + '</button></div>'
+    + '  </div>';// end modal content
+    + ' </div>';// end modal dialog
+    + '</div>';// end joomla-modal
 
     jQuery(".modal-backdrop").remove();// Remove not correctly hidden modal-backdrop
     jQuery("#phModalContainer").remove();// Remove previously created container
@@ -37,7 +49,17 @@ function phRenderModalWindow(id, title) {
     var phModalContainer = jQuery('<div id="phModalContainer"></div>');
 	phModalContainer.appendTo(document.body);
     jQuery("#phModalContainer").html(o);
-    jQuery("#" + id).modal();
+   // jQuery("#" + id).modal();
+
+
+
+    var myModal = new bootstrap.Modal(document.getElementById(id), {});
+
+//document.onreadystatechange = function () {
+
+  myModal.show();
+//};
+
 }
 
 /* Function phDoRequest (create thumbnails) */
@@ -156,7 +178,8 @@ jQuery(document).ready(function() {
         var height = jQuery(window).height() - 200;
 
         phRenderModalWindow(idModal, title);// Render Modal Window
-        jQuery("#" + idIframe).attr({"src": src, "height": height, "width": width});// Set iframe url for rendered modal window
+        //jQuery("#" + idIframe).attr({"src": src, "height": height, "width": width});// Set iframe url for rendered modal window
+        jQuery("#" + idIframe).attr({"src": src});
 
     });
 
@@ -231,7 +254,12 @@ jQuery(document).ready(function() {
     /* Event - adding new row of options (in attributes)
      * Add and create download token and download folder for attribute download files
      */
-    jQuery(document).on('subform-row-add', function(event, row){
+    //jQuery(document).on('subform-row-add', function(event, row){
+    //document.addEventListener('subform-row-add', function(event, row){
+        //document.addEventListener('subform-row-add', ({ detail: { row } }) => {
+
+        document.addEventListener('subform-row-add', function (_ref) {
+            var row = _ref.detail.row;
 
         /*
         * Get "download_token" and "download_folder for "options"

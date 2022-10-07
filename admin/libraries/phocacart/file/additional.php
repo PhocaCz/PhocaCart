@@ -9,12 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartFileAdditional
 {
 	public static function getProductFilesByProductId($productId, $return = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.download_file, a.download_token, a.download_days';
 		$query .= ' FROM #__phocacart_product_files AS a'
@@ -48,7 +49,7 @@ class PhocacartFileAdditional
 	public static function storeProductFilesByProductId($productId, $fileArray, $new = 0) {
 
 		if ((int)$productId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 
 			$notDeleteFiles   = array();// Select all files which will be not deleted
             $i                  = 1;

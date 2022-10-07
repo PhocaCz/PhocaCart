@@ -26,8 +26,8 @@
 	<fields name="list">
 		<field name="fullordering" type="list" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.title ASC" validate="options" >
 			<option value="">JGLOBAL_SORT_BY</option>
-			<option value="pc.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
-			<option value="pc.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
 			<option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
 			<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
 			<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>

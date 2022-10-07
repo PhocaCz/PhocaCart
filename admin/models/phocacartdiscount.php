@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Utilities\ArrayHelper;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
+class PhocaCartCpModelPhocacartDiscount extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -23,11 +29,11 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocacartDiscount', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartdiscount', 'phocacartdiscount', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -36,7 +42,7 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartdiscount.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartdiscount.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 		}
@@ -52,14 +58,14 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		$table->valid_from 				= PhocacartUtils::getDateFromString($table->valid_from);
@@ -76,7 +82,7 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_discounts');
 				$max = $db->loadResult();
 
@@ -109,7 +115,7 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 		$isNew = true;
 
 		// Include the content plugins for the on save events.
-		JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Allow an exception to be thrown.
 		try
@@ -140,7 +146,7 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
@@ -174,7 +180,7 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			\JFactory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
 		}
 		catch (Exception $e)
 		{
@@ -203,7 +209,7 @@ class PhocaCartCpModelPhocacartDiscount extends JModelAdmin
 			$delete = parent::delete($cid);
 			if ($delete) {
 
-				\Joomla\Utilities\ArrayHelper::toInteger($cid);
+				ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 
 				$query = 'DELETE FROM #__phocacart_item_groups'

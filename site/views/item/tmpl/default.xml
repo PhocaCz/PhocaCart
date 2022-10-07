@@ -11,39 +11,39 @@
    <fields name="request">
       <fieldset name="request" addfieldpath="/administrator/components/com_phocacart/models/fields">
 
-        
-		 
-		 
-		 
-		  <field 
-            name="id" 
-            type="phocaselectitem" 
-            section="com_phocacart" 
-            class="inputbox"
-            default="" 
-            label="COM_PHOCACART_FIELD_SELECT_PRODUCT_LABEL" 
-            description="COM_PHOCACART_FIELD_SELECT_PRODUCT_DESC" 
+
+
+
+
+		  <field
+            name="id"
+            type="phocaselectitem"
+            section="com_phocacart"
+            
+            default=""
+            label="COM_PHOCACART_FIELD_SELECT_PRODUCT_LABEL"
+            description="COM_PHOCACART_FIELD_SELECT_PRODUCT_DESC"
             required="true"
 			multiple="false"
 			filter="integer"
          />
-		 
-		 <field 
-            name="catid" 
-            type="phocaselectitemcategory" 
-            section="com_phocacart" 
-            class="inputbox"
-            default="1" 
-            label="COM_PHOCACART_FIELD_CATEGORY_LABEL" 
-            description="COM_PHOCACART_FIELD_CATEGORY_DESC" 
+
+		 <field
+            name="catid"
+            type="phocaselectitemcategory"
+            section="com_phocacart"
+            class="form-select"
+            default="1"
+            label="COM_PHOCACART_FIELD_CATEGORY_LABEL"
+            description="COM_PHOCACART_FIELD_CATEGORY_DESC"
             required="true"
 			multiple="false"
 			filter="integer"
-			
+
          />
-		
+
       </fieldset>
    </fields>
-  
+
 
 </metadata>

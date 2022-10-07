@@ -7,10 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Layout\FileLayout;
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 
-$layout 			= new JLayoutFile('category_pagination_top', null, array('component' => 'com_phocacart'));
+$layout 			= new FileLayout('category_pagination_top', null, array('component' => 'com_phocacart'));
 $d					= array();
 $d['t']				= $this->t;
 $d['s']				= $this->s;

@@ -11,9 +11,11 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Table\Table;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelItem extends JModelLegacy
+class PhocaCartModelItem extends BaseDatabaseModel
 {
 	var $item 				= null;
 	var $category			= null;
@@ -22,7 +24,7 @@ class PhocaCartModelItem extends JModelLegacy
 	var $itemprev			= null;
 
 	function __construct() {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		parent::__construct();
 		$this->setState('filter.language',$app->getLanguageFilter());
 	}
@@ -64,7 +66,7 @@ class PhocaCartModelItem extends JModelLegacy
 
 	private function getItemQueryOrdering($ordering, $catid, $direction) {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$params 	= $app->getParams();
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
 
@@ -108,7 +110,7 @@ class PhocaCartModelItem extends JModelLegacy
 		}
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
@@ -135,7 +137,7 @@ class PhocaCartModelItem extends JModelLegacy
 	}
 	private function getItemQuery( $itemId, $catId ) {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$params 	= $app->getParams();
 		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
 
@@ -195,7 +197,7 @@ class PhocaCartModelItem extends JModelLegacy
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonItemBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonItemBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
@@ -213,7 +215,7 @@ class PhocaCartModelItem extends JModelLegacy
 
 
 
-		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
+		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, i.catid AS preferred_catid, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
 
 		if (!$skip['tax']) {
             $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
@@ -295,7 +297,7 @@ class PhocaCartModelItem extends JModelLegacy
 		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			//$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
@@ -325,13 +327,13 @@ class PhocaCartModelItem extends JModelLegacy
 	}
 
 	public function hit($pk = 0) {
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		$hitcount = $input->getInt('hitcount', 1);
 
 		if ($hitcount) {
 			$pk = (!empty($pk)) ? $pk : (int) $this->getState('product.id');
 
-			$table = JTable::getInstance('PhocaCartItem', 'Table');
+			$table = Table::getInstance('PhocaCartItem', 'Table');
 			$table->load($pk);
 			$table->hit($pk);
 		}

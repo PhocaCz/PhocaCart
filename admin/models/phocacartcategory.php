@@ -7,10 +7,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\LanguageHelper;
 jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
 
-class PhocaCartCpModelPhocacartCategory extends JModelAdmin
+class PhocaCartCpModelPhocacartCategory extends AdminModel
 {
 	protected	$option 		    = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
@@ -18,7 +31,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
     protected   $associationsContext    = 'com_phocacart.category';	// ASSOCIATION
 
 	protected function canDelete($record) {
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
 			return $user->authorise('core.delete', 'com_phocacart.phocadownloadcategory.'.(int) $record->catid);
@@ -28,7 +41,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	}
 
 	protected function canEditState($record){
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
 			return $user->authorise('core.edit.state', 'com_phocacart.phocadownloadcategory.'.(int) $record->catid);
@@ -38,12 +51,12 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocacartCategory', $prefix = 'Table', $config = array()){
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartcategory', 'phocacartcategory', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -53,7 +66,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 	protected function loadFormData() {
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartcategory.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartcategory.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -65,19 +78,25 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
 			if (isset($item->metadata)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->metadata);
 				$item->metadata = $registry->toArray();
 			}
 
+			if (isset($item->params_feed)) {
+				$registry = new Registry;
+				$registry->loadString($item->params_feed);
+				$item->params_feed = $registry->toArray();
+			}
+
             // ASSOCIATION
             // Load associated Phoca Cart items
-            $assoc = JLanguageAssociations::isEnabled();
+            $assoc = Associations::isEnabled();
             if ($assoc) {
                 $item->associations = array();
 
                 if ($item->id != null){
-                    $associations = JLanguageAssociations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $item->id, 'id', 'alias', false);
+                    $associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $item->id, 'id', 'alias', false);
 
                     foreach ($associations as $tag => $association){
                         $item->associations[$tag] = $association->id;
@@ -92,14 +111,14 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 
@@ -112,7 +131,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_categories');
 				$max = $db->loadResult();
 
@@ -137,8 +156,8 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	public function save($data) {
 
 
-		$app		= JFactory::getApplication();
-		$input  	= JFactory::getApplication()->input;
+		$app		= Factory::getApplication();
+		$input  	= Factory::getApplication()->input;
 		//$dispatcher = JDispatcher::getInstance();
 		$table		= $this->getTable();
 
@@ -147,38 +166,48 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($data['image'], '', 1, 1, 1, 0, 'categoryimage');
 		}
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
 			if ($data['alias'] == null) {
-				if (JFactory::getConfig()->get('unicodeslugs') == 1) {
-					$data['alias'] = JFilterOutput::stringURLUnicodeSlug($data['title']);
+				if (Factory::getConfig()->get('unicodeslugs') == 1) {
+					$data['alias'] = OutputFilter::stringURLUnicodeSlug($data['title']);
 				} else {
-					$data['alias'] = JFilterOutput::stringURLSafe($data['title']);
+					$data['alias'] = OutputFilter::stringURLSafe($data['title']);
 				}
 
 
 				if ($table->load(array('alias' => $data['alias']))){
-					$msg = JText::_('COM_PHOCACART_SAVE_WARNING');
+					$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
 				}
 
 				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
 				$data['alias'] = $alias;
 
 				if (isset($msg)) {
-					JFactory::getApplication()->enqueueMessage($msg, 'warning');
+					Factory::getApplication()->enqueueMessage($msg, 'warning');
 				}
 			}
 		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
-			$this->setError(\JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
+			$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			return false;
 		}
 
+		if (!empty($data['feed'])) {
+			$registry 	= new Registry($data['feed']);
+			//$registry 	= new JRegistry($dataPh);
+			$dataFeed 	= $registry->toString();
+			if($dataFeed != '') {
+				$data['params_feed'] = $dataFeed;
+			}
+		} else {
+			$data['params_feed'] = '';
+		}
 
 		// Trigger the before event.
-		JPluginHelper::importPlugin('pca');
+		PluginHelper::importPlugin('pca');
 
 		// - START SAVE
 		// ----------
@@ -189,7 +218,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		$isNew = true;
 
 		// Include the plugins for the save events.
-		\JPluginHelper::importPlugin($this->events_map['save']);
+		PluginHelper::importPlugin($this->events_map['save']);
 
 
 		try {
@@ -208,14 +237,14 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			}
 
 			if(intval($table->date) == 0) {
-				$table->date = JFactory::getDate()->toSql();
+				$table->date = Factory::getDate()->toSql();
 			}
 
 			if ($isNew) {
-				$table->created = JFactory::getDate()->toSql();
+				$table->created = Factory::getDate()->toSql();
 				$table->created_by = isset($user->id) ? (int)$user->id: 0;
 			} else {
-				$table->modified = JFactory::getDate()->toSql();
+				$table->modified = Factory::getDate()->toSql();
 				$table->modified_by = isset($user->id) ? (int)$user->id: 0;
 			}
 
@@ -229,7 +258,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			}
 
 			// Trigger the before save event.
-			$result = \JFactory::getApplication()->triggerEvent('PCAonCategoryBeforeSave', array('com_phocacart.category', &$table, $isNew, $data));
+			$result = Factory::getApplication()->triggerEvent('onPCAonCategoryBeforeSave', array('com_phocacart.category', &$table, $isNew, $data));
 
 			if (in_array(false, $result, true)) {
 				$this->setError($table->getError());
@@ -244,7 +273,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$this->cleanCache();
 
 			// Trigger the after save event.
-			\JFactory::getApplication()->triggerEvent('PCAonCategoryAfterSave', array('com_phocacart.category', &$table, $isNew, $data));
+			Factory::getApplication()->triggerEvent('onPCAonCategoryAfterSave', array('com_phocacart.category', &$table, $isNew, $data));
 
 		} catch (\Exception $e) {
 			$this->setError($e->getMessage());
@@ -275,10 +304,10 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 
         // ASSOCIATION
-        if ((int)$savedId > 0 && $this->associationsContext && \JLanguageAssociations::isEnabled() && !empty($data['associations'])) {
+        if ((int)$savedId > 0 && $this->associationsContext && Associations::isEnabled() && !empty($data['associations'])) {
             $associations = $data['associations'];
             // Unset any invalid associations
-            $associations = Joomla\Utilities\ArrayHelper::toInteger($associations);
+            $associations = ArrayHelper::toInteger($associations);
             // Unset any invalid associations
             foreach ($associations as $tag => $id) {
                 if (!$id){
@@ -288,8 +317,8 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
             // Show a warning if the item isn't assigned to a language but we have associations.
             if ($associations && $table->language === '*') {
-                \JFactory::getApplication()->enqueueMessage(
-                    \JText::_(strtoupper($this->option) . '_ERROR_ALL_LANGUAGE_ASSOCIATED'),
+                Factory::getApplication()->enqueueMessage(
+                    Text::_(strtoupper($this->option) . '_ERROR_ALL_LANGUAGE_ASSOCIATED'),
                     'warning'
                 );
             }
@@ -348,22 +377,22 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	}
 
 	public function delete(&$cid = array()) {
-		$app	= JFactory::getApplication();
-		$db 	= JFactory::getDBO();
+		$app	= Factory::getApplication();
+		$db 	= Factory::getDBO();
 
 		$result = false;
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING);
+					Log::add($error, Log::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 					return false;
 				}
 			}
@@ -378,7 +407,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			$db->setQuery( $query );
 
 			if (!($rows2 = $db->loadObjectList())) {
-				throw new Exception( JText::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
+				throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
 				return false;
 			}
 
@@ -396,7 +425,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 			// Product with new cid - - - - -
 			if (count( $cid )) {
-				\Joomla\Utilities\ArrayHelper::toInteger($cid);
+				ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 
 				// Select id's from product table, if there are some items, don't delete it.
@@ -409,7 +438,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				$db->setQuery( $query );
 
 				if (!($rows = $db->loadObjectList())) {
-					throw new Exception( JText::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
+					throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
 					return false;
 				}
 
@@ -445,7 +474,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 					. ' WHERE catid IN ( '.$cids.' )';
 					$db->setQuery( $query );
 					if (!$db->query()) {
-						$this->setError($this->_db->getErrorMsg());
+						$this->setError($row->getError());
 						return false;
 					}*/
 
@@ -463,12 +492,12 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 			if (count( $err_cat ) || count( $err_img )) {
 				if (count( $err_cat )) {
 					$cids_cat = implode( ", ", $err_cat );
-					$msg .= JText::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', $cids_cat );
+					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', $cids_cat );
 				}
 
 				if (count( $err_img )) {
 					$cids_img = implode( ", ", $err_img );
-					$msg .= JText::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', $cids_img );
+					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', $cids_img );
 				}
 				$link = 'index.php?option=com_phocacart&view=phocacartcategories';
 				$app->enqueueMessage($msg, 'error');
@@ -488,7 +517,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 		// Check that the category exists
 		if ($categoryId) {
-			$categoryTable = JTable::getInstance('PhocacartCategory', 'Table');
+			$categoryTable = Table::getInstance('PhocacartCategory', 'Table');
 
 			if (!$categoryTable->load($categoryId)) {
 				if ($error = $categoryTable->getError()) {
@@ -497,7 +526,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 					return false;
 				}
 				else {
-					$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
+					$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 					return false;
 				}
 			}
@@ -505,15 +534,15 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 		//if (empty($categoryId)) {
 		if (!isset($categoryId)) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 			return false;
 		}
 
 		// Check that the user has create permission for the component
-		$extension	= JFactory::getApplication()->input->get('option');
-		$user		= JFactory::getUser();
+		$extension	= Factory::getApplication()->input->get('option');
+		$user		= Factory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 			return false;
 		}
 
@@ -536,7 +565,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				}
 				else {
 					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
@@ -594,11 +623,11 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 		$table	= $this->getTable();
 		//$db		= $this->getDbo();
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 
 		// Check that the category exists
 		if ($categoryId) {
-			$categoryTable = JTable::getInstance('PhocacartCategory', 'Table');
+			$categoryTable = Table::getInstance('PhocacartCategory', 'Table');
 			if (!$categoryTable->load($categoryId)) {
 				if ($error = $categoryTable->getError()) {
 					// Fatal error
@@ -606,7 +635,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 					return false;
 				}
 				else {
-					$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
+					$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 					return false;
 				}
 			}
@@ -614,20 +643,20 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 		//if (empty($categoryId)) {
 		if (!isset($categoryId)) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 			return false;
 		}
 
 		// Check that user has create and edit permission for the component
-		$extension	= JFactory::getApplication()->input->get('option');
-		$user		= JFactory::getUser();
+		$extension	= Factory::getApplication()->input->get('option');
+		$user		= Factory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 			return false;
 		}
 
 		if (!$user->authorise('core.edit', $extension)) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 			return false;
 		}
 
@@ -643,7 +672,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				}
 				else {
 					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
@@ -654,7 +683,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 			// Cannot move the node to be a child of itself.
 			if ((int)$table->id == (int)$categoryId) {
-				$app->enqueueMessage(JText::sprintf('JLIB_DATABASE_ERROR_INVALID_NODE_RECURSION', get_class($pk)));
+				$app->enqueueMessage(Text::sprintf('JLIB_DATABASE_ERROR_INVALID_NODE_RECURSION', get_class($pk)));
 				return false;
 			}
 
@@ -693,7 +722,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		\Joomla\Utilities\ArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true)) {
@@ -701,7 +730,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		}
 
 		if (empty($pks)) {
-			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
 			return false;
 		}
 
@@ -728,7 +757,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		if ($comCat)
 		//if (isset($commands['category_id']))
 		{
-			$cmd = \Joomla\Utilities\ArrayHelper::getValue($commands, 'move_copy', 'c');
+			$cmd = ArrayHelper::getValue($commands, 'move_copy', 'c');
 
 			if ($cmd == 'c')
 			{
@@ -760,7 +789,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 		}
 
 		if (!$done) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
 			return false;
 		}
 
@@ -788,7 +817,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 	function recreate($cid = array(), &$message = '') {
 
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			$query = 'SELECT a.image, a.title'.
 					' FROM #__phocacart_categories AS a' .
@@ -801,7 +830,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				foreach($files as $k => $v) {
 
 					$title 	= isset($v->title) ? $v->title : '';
-					$title	= JText::_('COM_PHOCACART_CATEGORY') . ' ' . $v->title . ': ';
+					$title	= Text::_('COM_PHOCACART_CATEGORY') . ' ' . $v->title . ': ';
 
 					if (isset($v->image) && $v->image != '') {
 
@@ -810,7 +839,7 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 						$original	= PhocacartFile::existsFileOriginal($v->image, 'categoryimage');
 						if (!$original) {
 							// Original does not exist - cannot generate new thumbnail
-							$msg[$k] = $title . JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
+							$msg[$k] = $title . Text::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
 							//return false;
 							continue;
 						}
@@ -818,20 +847,20 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 						// Delete old thumbnails
 						$deleteThubms = PhocacartFileThumbnail::deleteFileThumbnail($v->image, 1, 1, 1, 'categoryimage');
 						if (!$deleteThubms) {
-							$msg[$k] = $title. JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
+							$msg[$k] = $title. Text::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
 							//return false;
 							continue;
 						}
 						$createThubms = PhocacartFileThumbnail::getOrCreateThumbnail($v->image, 0, 1,1,1,0,'categoryimage');
 						if (!$createThubms) {
-							$msg[$k] = $title . JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
+							$msg[$k] = $title . Text::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 							//return false;
 							continue;
 						}
 
 					} else {
 						//$msg[$k] = $title . JText::_('COM_PHOCACART_FILENAME_NOT_EXISTS');
-						$msg[$k] = $title . JText::_('COM_PHOCACART_CATEGORY_IMAGE_NOT_EXISTS');
+						$msg[$k] = $title . Text::_('COM_PHOCACART_CATEGORY_IMAGE_NOT_EXISTS');
 						//return false;
 						continue;
 					}
@@ -840,26 +869,26 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
 				$message = !empty($msg) ? implode('<br />', $msg) : '';
 
 			} else {
-				$message = JText::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
+				$message = Text::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
 				return false;
 			}
 		} else {
-			$message = JText::_('COM_PHOCACART_ERROR_ITEM_NOT_SELECTED');
+			$message = Text::_('COM_PHOCACART_ERROR_ITEM_NOT_SELECTED');
 			return false;
 		}
 		return true;
 	}
 
     // ASSOCIATION
-    protected function preprocessForm(JForm $form, $data, $group = 'content'){
+    protected function preprocessForm(Form $form, $data, $group = 'content'){
         /*if ($this->canCreateCategory())
         {
             $form->setFieldAttribute('catid', 'allowAdd', 'true');
         }*/
 
         // Association Phoca Cart items
-        if (JLanguageAssociations::isEnabled()){
-            $languages = JLanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
+        if (Associations::isEnabled()){
+            $languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
             if (count($languages) > 1){
                 $addform = new SimpleXMLElement('<form />');
@@ -887,6 +916,39 @@ class PhocaCartCpModelPhocacartCategory extends JModelAdmin
                 $form->load($addform, false);
             }
         }
+
+
+		// Load Feed Forms - by Plugin
+		$feedPlugins = PhocacartFeed::getFeedPluginMethods();
+
+		if (!empty($feedPlugins)) {
+			foreach ($feedPlugins as $k => $v) {
+
+				$element = htmlspecialchars($v->element, ENT_QUOTES, 'UTF-8');
+				$addformF = new SimpleXMLElement('<form />');
+				$fields = $addformF->addChild('fields');
+				$fields->addAttribute('name', 'feed');
+				//$fields->addAttribute('addfieldpath', 'associations');
+				$fieldset = $fields->addChild('fieldset');
+				$fieldset->addAttribute('name', 'feed_'.$element);
+				$fieldset->addAttribute('group', 'pcf');
+
+				$field = $fieldset->addChild('field');
+				$field->addAttribute('name', $element);
+				$field->addAttribute('type', 'subform');
+
+				$field->addAttribute('label', Text::_(strtoupper($v->name)));
+				$field->addAttribute('multiple', 'false');
+				$field->addAttribute('layout', 'joomla.form.field.subform.default');
+				$field->addAttribute('formsource', 'plugins/pcf/'.$element.'/models/forms/category.xml');
+				$field->addAttribute('clear', 'true');
+				$field->addAttribute('propagate', 'true');
+				$form->load($addformF, false);
+			}
+
+
+		}
+
         parent::preprocessForm($form, $data, $group);
     }
 }

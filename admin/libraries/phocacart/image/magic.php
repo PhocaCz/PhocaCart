@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Filesystem\File;
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
@@ -59,7 +60,7 @@ class PhocacartImageMagic
 		}
 		// - - - - - - - - - - -
 
-		if ($fileIn !== '' && JFile::exists($fileIn)) {
+		if ($fileIn !== '' && File::exists($fileIn)) {
 
 			// array of width, height, IMAGETYPE, "height=x width=x" (string)
 	        list($w, $h, $type) = GetImageSize($fileIn);
@@ -120,7 +121,7 @@ class PhocacartImageMagic
 
 					// Which Watermark will be used
 					if ($thumbnailMedium) {
-						if (JFile::exists($fileWatermarkMedium)) {
+						if (File::exists($fileWatermarkMedium)) {
 								$fileWatermark  = $fileWatermarkMedium;
 						} else {
 							if ($watermarkParams['create'] == 2) {
@@ -130,7 +131,7 @@ class PhocacartImageMagic
 							}
 						}
 					} else if ($thumbnailLarge) {
-						if (JFile::exists($fileWatermarkLarge)) {
+						if (File::exists($fileWatermarkLarge)) {
 								$fileWatermark  = $fileWatermarkLarge;
 						} else {
 							if ($watermarkParams['create'] == 2) {
@@ -144,7 +145,7 @@ class PhocacartImageMagic
 					}
 
 
-					if (!JFile::exists($fileWatermark)) {
+					if (!File::exists($fileWatermark)) {
 						$fileWatermark = '';
 					}
 
@@ -350,7 +351,7 @@ class PhocacartImageMagic
 							$imgJPEGToWrite = ob_get_contents();
 							ob_end_clean();
 
-							if(!JFile::write( $fileOut, $imgJPEGToWrite)) {
+							if(!File::write( $fileOut, $imgJPEGToWrite)) {
 								$errorMsg = 'ErrorWriteFile';
 								return false;
 							}
@@ -436,7 +437,7 @@ class PhocacartImageMagic
 							$imgPNGToWrite = ob_get_contents();
 							ob_end_clean();
 
-							if(!JFile::write( $fileOut, $imgPNGToWrite)) {
+							if(!File::write( $fileOut, $imgPNGToWrite)) {
 								$errorMsg = 'ErrorWriteFile';
 								return false;
 							}
@@ -470,7 +471,7 @@ class PhocacartImageMagic
 							$imgGIFToWrite = ob_get_contents();
 							ob_end_clean();
 
-							if(!JFile::write( $fileOut, $imgGIFToWrite)) {
+							if(!File::write( $fileOut, $imgGIFToWrite)) {
 								$errorMsg = 'ErrorWriteFile';
 								return false;
 							}
@@ -505,7 +506,7 @@ class PhocacartImageMagic
                             $imgWEBPToWrite = ob_get_contents();
                             ob_end_clean();
 
-                            if(!JFile::write( $fileOut, $imgWEBPToWrite)) {
+                            if(!File::write( $fileOut, $imgWEBPToWrite)) {
                                 $errorMsg = 'ErrorWriteFile';
                                 return false;
                             }
@@ -584,7 +585,7 @@ class PhocacartImageMagic
 			$imgWEBPToWrite = ob_get_contents();
 			ob_end_clean();
 
-			if(!JFile::write( $fileOut, $imgWEBPToWrite)) {
+			if(!File::write( $fileOut, $imgWEBPToWrite)) {
 				$errorMsg = 'ErrorWriteFile';
 				return false;
 			}

@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartCoupon
 {
@@ -22,7 +23,7 @@ class PhocacartCoupon
 	}
 
 	public function setCoupon($couponId = 0, $couponCode = '') {
-		$db 		    = JFactory::getDBO();
+		$db 		    = Factory::getDBO();
 		$user 		    = PhocacartUser::getUser();
 		$guest		    = PhocacartUserGuestuser::getGuestUser();
 		$pos		    = PhocacartPos::isPos();// In POS coupons can be set for not selected user (when user is not selected)
@@ -338,7 +339,7 @@ class PhocacartCoupon
 	 */
 	public static function storeCouponProductsById($itemString, $couponId) {
 		if ((int)$couponId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_coupon_products'
 					. ' WHERE coupon_id = '. (int)$couponId;
@@ -372,7 +373,7 @@ class PhocacartCoupon
 	public static function storeCouponCatsById($catArray, $couponId) {
 
 		if ((int)$couponId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_coupon_categories'
 					. ' WHERE coupon_id = '. (int)$couponId;
@@ -401,7 +402,7 @@ class PhocacartCoupon
 
 	public static function getCouponProductsById($couponId, $select = 0) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT co.coupon_id';
@@ -431,7 +432,7 @@ class PhocacartCoupon
 
 	public static function getCouponCatsById($couponId, $select = 0) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT co.coupon_id';
@@ -455,7 +456,7 @@ class PhocacartCoupon
 
 	public static function getCouponTitleById($couponId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT c.title'
 		.' FROM #__phocacart_coupons AS c'
 		.' WHERE c.id = '.(int) $couponId
@@ -469,7 +470,7 @@ class PhocacartCoupon
 
 	public static function getCouponInfoById($couponId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT c.id, c.title, c.code'
 		.' FROM #__phocacart_coupons AS c'
 		.' WHERE c.id = '.(int) $couponId
@@ -486,7 +487,7 @@ class PhocacartCoupon
 
 		$idExists = 0;
 		if ((int)$couponId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' SELECT id FROM #__phocacart_coupon_count WHERE coupon_id = '. (int)$couponId .' ORDER BY id LIMIT 1';
 			$db->setQuery($query);
 			$idExists = $db->loadResult();
@@ -513,7 +514,7 @@ class PhocacartCoupon
 
 		$idExists = 0;
 		if ((int)$couponId > 0 && (int)$userId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' SELECT coupon_id, user_id FROM #__phocacart_coupon_count_user WHERE coupon_id = '. (int)$couponId .' AND user_id = '.(int)$userId.' ORDER BY coupon_id LIMIT 1';
 			$db->setQuery($query);
 			$idExists = $db->loadAssoc();
@@ -543,7 +544,7 @@ class PhocacartCoupon
         $gift_code_length     = $pC->get('gift_code_length', 8);
         $gift_code_characters = $pC->get('gift_code_characters', '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
-        $db =JFactory::getDBO();
+        $db =Factory::getDBO();
         // Limit attempts for generating coupon code - to protect before infinite loop
         for ($i = 0; $i < 7; $i++) {
 
@@ -577,7 +578,7 @@ class PhocacartCoupon
 
     public static function getGiftsByOrderId($orderId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT c.id, c.title, c.code, c.discount, c.valid_from, c.valid_to, c.type, c.published,'
             .' c.gift_order_id, c.gift_product_id, c.gift_order_product_id, c.coupon_type, c.gift_class_name,'
             .' c.gift_title, c.gift_description, c.gift_image, c.gift_recipient_name, c.gift_recipient_email, c.gift_sender_name, c.gift_sender_message, c.gift_type'
@@ -593,7 +594,7 @@ class PhocacartCoupon
 
 	public static function getGiftByCouponId($couponId) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT c.id, c.title, c.code, c.discount, c.valid_from, c.valid_to, c.type, c.published,'
             .' c.gift_order_id, c.gift_product_id, c.gift_order_product_id, c.coupon_type, c.gift_class_name,'
             .' c.gift_title, c.gift_description, c.gift_image, c.gift_recipient_name, c.gift_recipient_email, c.gift_sender_name, c.gift_sender_message, c.gift_type'
@@ -608,7 +609,7 @@ class PhocacartCoupon
 	}
 
 	public static function activateAllGiftsByOrderId($orderId) {
-	    $db 	= JFactory::getDBO();
+	    $db 	= Factory::getDBO();
 
 		$query = 'UPDATE #__phocacart_coupons SET'
 		.' published = 1'

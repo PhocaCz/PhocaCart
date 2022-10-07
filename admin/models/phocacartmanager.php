@@ -7,17 +7,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Filesystem\Path;
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
-class PhocaCartCpModelPhocaCartManager extends JModelAdmin
+class PhocaCartCpModelPhocaCartManager extends AdminModel
 {
 	protected $option 			= 'com_phocacart';
 	protected $text_prefix 		= 'com_phocacart';
 
 	public function getTable($type = 'PhocacartCategory', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
@@ -29,7 +35,7 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacartm.edit.phocacartmanager.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacartm.edit.phocacartmanager.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -42,8 +48,8 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		static $set;
 
 		if (!$set) {
-			$app		= JFactory::getApplication();
-			$session	= JFactory::getSession();
+			$app		= Factory::getApplication();
+			$session	= Factory::getSession();
 
 			// Folder = false - is not set, there is a way for session
 			// Folder = '' - empty/root - is not set but means a root - no way for session
@@ -140,11 +146,11 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		$folders 	= array ();
 
 		// Get the list of files and folders from the given folder
-		$file_list 		= JFolder::files($orig_path);
+		$file_list 		= Folder::files($orig_path);
 		if ($group['i'] == 1) {
-			$folder_list 	= JFolder::folders($orig_path, '', false, false, array(0 => 'thumbs'));
+			$folder_list 	= Folder::folders($orig_path, '', false, false, array(0 => 'thumbs'));
 		} else {
-			$folder_list 	= JFolder::folders($orig_path, '', false, false, array());
+			$folder_list 	= Folder::folders($orig_path, '', false, false, array());
 		}
 
 		// Iterate over the files if they exist
@@ -152,12 +158,12 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		if ($file_list !== false) {
 			foreach ($file_list as $file) {
 				if (is_file($orig_path.'/'.$file) && substr($file, 0, 1) != '.' && strtolower($file) !== 'index.html') {
-						$tmp 							= new JObject();
+						$tmp 							= new CMSObject();
 						$tmp->name 						= basename($file);
-						$tmp->path_with_name 			= str_replace('\\', '/', JPath::clean($orig_path . '/' .  $file));
+						$tmp->path_with_name 			= str_replace('\\', '/', Path::clean($orig_path . '/' .  $file));
 						$tmp->path_without_name_relative= $path['orig_rel_ds'] . str_replace($orig_path_server, '', $tmp->path_with_name);
 
-						$tmp->path_with_name 			= str_replace('\\', '/', JPath::clean($orig_path . '/' .  $file));
+						$tmp->path_with_name 			= str_replace('\\', '/', Path::clean($orig_path . '/' .  $file));
 						$tmp->path_with_name_relative_no= str_replace($orig_path_server, '', $tmp->path_with_name);
 
 						$files[] = $tmp;
@@ -170,9 +176,9 @@ class PhocaCartCpModelPhocaCartManager extends JModelAdmin
 		if ($folder_list !== false) {
 			foreach ($folder_list as $folder)
 			{
-				$tmp 							= new JObject();
+				$tmp 							= new CMSObject();
 				$tmp->name 						= basename($folder);
-				$tmp->path_with_name 			= str_replace('\\', '/', JPath::clean($orig_path . '/' .  $folder));
+				$tmp->path_with_name 			= str_replace('\\', '/', Path::clean($orig_path . '/' .  $folder));
 				$tmp->path_without_name_relative= $path['orig_rel_ds'] . str_replace($orig_path_server, '', $tmp->path_with_name);
 				$tmp->path_with_name_relative_no= str_replace($orig_path_server, '', $tmp->path_with_name);
 

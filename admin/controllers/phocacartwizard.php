@@ -7,6 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCartCommon
 
@@ -18,16 +22,16 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	
 	public function skipwizard() {
 		
-		$app		= JFactory::getApplication();
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$app		= Factory::getApplication();
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		PhocacartUtils::setWizard(0);
 		$redirect	= 'index.php?option=com_phocacart';
 		$app->redirect($redirect);
 	}
 
 	public function enablewizard() {
-		$app		= JFactory::getApplication();
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$app		= Factory::getApplication();
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		PhocacartUtils::setWizard(2);	
 		$redirect	= 'index.php?option=com_phocacart';
 		$app->redirect($redirect);
@@ -35,8 +39,8 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	
 	public function backtowizard() {
 		
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		$app		= JFactory::getApplication();
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		$app		= Factory::getApplication();
 		$taskGroup	= $app->input->get('taskgroup', '');
 		
 		if ($taskGroup != '') {
@@ -75,7 +79,7 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 					$this->setMessage($this->getError(), 'error');
 
 					$this->setRedirect(
-						JRoute::_(
+						Route::_(
 							'index.php?option=' . $this->option . '&view=' . $this->view_item
 							. $this->getRedirectToItemAppend($recordId, $key), false
 						)
@@ -88,7 +92,7 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 
 		// Clean the session data and redirect.
 		$this->releaseEditId($context, $recordId);
-		JFactory::getApplication()->setUserState($context . '.data', null);
+		Factory::getApplication()->setUserState($context . '.data', null);
 
 		return true;
 	}

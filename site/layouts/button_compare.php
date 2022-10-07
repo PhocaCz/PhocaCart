@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 ?>
-<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-compare-box">
     <div class="ph-category-item-compare">
         <form action="<?php echo $d['linkc']; ?>" method="post" id="phCompare<?php echo (int)$d['id']; ?>" class="phItemCompareBoxForm">
             <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>" />
@@ -20,12 +22,12 @@ $d = $displayData;
             <input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
 
             <?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-                <a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo $d['s']['i']['compare'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="phItemCompareBoxFormAjax('phCompare<?php echo (int)$d['id']; ?>');" title="<?php echo Text::_('COM_PHOCACART_COMPARE'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['compare']) ?></a>
             <?php } else { ?>
-                <a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_COMPARE'); ?>"><span class="<?php echo $d['s']['i']['compare'] ?>"></span></a>
+                <a href="javascript:void(0)" onclick="document.getElementById('phCompare<?php echo (int)$d['id']; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_COMPARE'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['compare']) ?></a>
             <?php } ?>
 
-            <?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+            <?php echo HTMLHelper::_('form.token'); ?>
         </form>
     </div>
 </div>

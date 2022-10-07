@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
 
 if (!empty($d['compare'])) {
@@ -14,9 +17,9 @@ if (!empty($d['compare'])) {
 		// Try to find the best menu link
 
 		if (isset($v->catid2) && (int)$v->catid2 > 0 && isset($v->catalias2) && $v->catalias2 != '') {
-			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
+			$linkProduct 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid2, $v->alias, $v->catalias2));
 		} else {
-			$linkProduct 	= JRoute::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+			$linkProduct 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
 		}
 
 ?>
@@ -29,21 +32,21 @@ if (!empty($d['compare'])) {
 			<input type="hidden" name="tmpl" value="component" />
 			<input type="hidden" name="option" value="com_phocacart" />
 			<input type="hidden" name="return" value="<?php echo $d['actionbase64']; ?>" />
-			<div class="<?php echo $d['s']['c']['pull-right'] ?>">
+			<div class="<?php echo $d['s']['c']['pull-right'] ?> ph-category-item-compare-box">
 			<?php if (isset($d['method']) && (int)$d['method'] > 0) { ?>
-				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
+				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="phItemRemoveCompareFormAjax('phCompareRemove<?php echo (int)$v->id; ?>');" title="<?php echo Text::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['remove']) ?></a></div>
 			<?php } else { ?>
-				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo JText::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><span class="<?php echo $d['s']['i']['remove'] ?>"></span></a></div>
+				<div class="ph-category-item-compare"><a href="javascript:void(0)" onclick="document.getElementById('phCompareRemove<?php echo (int)$v->id; ?>').submit();" title="<?php echo Text::_('COM_PHOCACART_REMOVE_FROM_COMPARISON_LIST'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['remove']) ?></a></div>
 			<?php } ?>
 			</div>
-		<?php echo Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
+		<?php echo HTMLHelper::_('form.token'); ?>
 		</form>
 	</div>
 </div>
 <?php
 	}
 } else {
-	echo '<div>'.JText::_('COM_PHOCACART_COMPARISON_LIST_IS_EMPTY').'</div>';
+	echo '<div>'.Text::_('COM_PHOCACART_COMPARISON_LIST_IS_EMPTY').'</div>';
 }
 ?>
-<div class="ph-small ph-right ph-u ph-cart-link-compare"><a href="<?php echo $d['linkcomparison']; ?>"><?php echo JText::_('COM_PHOCACART_VIEW_COMPARISON_LIST'); ?></a></div>
+<div class="ph-small ph-right ph-u ph-cart-link-compare"><a href="<?php echo $d['linkcomparison']; ?>"><?php echo Text::_('COM_PHOCACART_VIEW_COMPARISON_LIST'); ?></a></div>

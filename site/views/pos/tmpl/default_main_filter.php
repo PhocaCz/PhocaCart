@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 echo '<div class="ph-pos-message-box"></div>';
 
@@ -17,7 +19,7 @@ echo '<div class="ph-pos-filter-box">';
 echo '<div class="ph-pos-date-order-box" id="phPosDateOrdersBox">';
 echo '<form id="phPosDateOrdersForm" class="form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
-Joomla\CMS\HTML\HTMLHelper::_('script', 'system/html5fallback.js', false, true);
+//JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "date";
@@ -34,9 +36,13 @@ $attributes = array(
 $valueFrom 	= $this->escape($this->state->get('filter.date', PhocacartDate::getCurrentDate()));
 
 
-$calendar = Joomla\CMS\HTML\HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes);
+$calendar = HTMLHelper::_('calendar', $valueFrom, $name, $id, $format, $attributes);
 $calendarIcon = $this->s['i']['calendar'];
-$calendar = str_replace('icon-calendar', $calendarIcon .' icon-calendar', $calendar);
+
+
+$find = '<span class="icon-calendar" aria-hidden="true"></span>';
+$replace = PhocacartRenderIcon::icon($this->s['i']['calendar'].' icon-calendar', 'aria-hidden="true"');
+$calendar = str_replace($find, $replace, $calendar);
 
 echo '<div class="ph-inline-param">'. $calendar.'</div>';
 
@@ -47,7 +53,7 @@ echo '<input type="hidden" name="page" value="main.content.orders" />';
 echo '<input type="hidden" name="ticketid" value="'.$this->t['ticket']->id.'" />';
 echo '<input type="hidden" name="unitid" value="'.$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 echo '</div>';
 
@@ -56,7 +62,8 @@ echo '</div>';
 echo '<div class="ph-pos-sku-product-box" id="phPosSkuProductBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+//echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+echo PhocacartRenderIcon::icon($this->s['i']['barcode'], '', '', ' ');
 
 echo '<form id="phPosSkuProductForm" class="phItemCartBoxForm phjAddToCart phjPos phjAddToCartVPosPSku form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -71,7 +78,7 @@ echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" 
 //echo '<input type="hidden" name="return" value="'.$this->t['mainboxdatabase64'].'" />';
 echo '<input type="'.$this->t['pos_sku_input_type'].'" name="sku" id="phPosSku" value="'.htmlspecialchars($this->t['sku']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.$this->t['skutypetxt'].' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 //echo '<input type="submit" value="submit" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 
 echo '</div>';
@@ -82,7 +89,8 @@ echo '</div>';
 echo '<div class="ph-pos-card-user-box" id="phPosCartUserBox">';
 echo '<div class="inner-addon right-addon">';
 
-echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+//echo ' <i class="'.$this->s['i']['barcode'].'"></i>';
+echo PhocacartRenderIcon::icon($this->s['i']['barcode'], '', '', ' ');
 
 echo '<form id="phPosCardUserForm" class="phjAddToCartVPosPCard form-inline" action="'.$this->t['linkpos'].'" method="post">';
 
@@ -95,9 +103,9 @@ echo '<input type="hidden" name="ticketid" value="'.$this->t['ticket']->id.'" />
 echo '<input type="hidden" name="unitid" value="'.$this->t['unit']->id.'" />';
 echo '<input type="hidden" name="sectionid" value="'.$this->t['section']->id.'" />';
 //echo '<input type="hidden" name="return" value="'.$this->t['mainboxdatabase64'].'" />';
-echo '<input type="'.$this->t['pos_loyalty_card_number_input_type'].'" name="card" id="phPosCard" value="'.htmlspecialchars($this->t['card']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_LABEL').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
+echo '<input type="'.$this->t['pos_loyalty_card_number_input_type'].'" name="card" id="phPosCard" value="'.htmlspecialchars($this->t['card']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.Text::_('COM_PHOCACART_FIELD_LOYALTY_CARD_NUMBER_LABEL').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 //echo '<input type="submit" value="submit" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 
 echo '</div>';
@@ -107,8 +115,9 @@ echo '</div>';
 // SEARCH
 echo '<div class="ph-pos-search-box" id="phPosSearchBox">';
 echo '<div class="inner-addon right-addon">';
-echo ' <i class="'.$this->s['i']['search'].'"></i>';
-echo '	<input type="text" name="phpossearch" id="phPosSearch" value="'.htmlspecialchars($this->t['search']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.JText::_('COM_PHOCACART_SEARCH').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
+//echo ' <i class="'.$this->s['i']['search'].'"></i>';
+echo PhocacartRenderIcon::icon($this->s['i']['search'], '', '', ' ');
+echo '	<input type="text" name="phpossearch" id="phPosSearch" value="'.htmlspecialchars($this->t['search']).'" class="'.$this->s['c']['form-control'].' ph-pos-search" placeholder="'.Text::_('COM_PHOCACART_SEARCH').' ..." '.$this->t['pos_input_autocomplete_output'].' />';
 echo '</div>';
 echo '</div>';
 

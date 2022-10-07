@@ -8,11 +8,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 $linkIcon = '';//'<sup><span class="glyph icon glyph icon-link"></span></sup>';
 
 
 $r      = $this->r;
-$user   = JFactory::getUser();
+$user   = Factory::getUser();
 $userId = $user->get('id');
 
 $saveOrderingUrl = '';
@@ -26,17 +29,18 @@ if ($this->t['load_extension_list'] == 0) {
     //echo $r->endFilter();
     echo $r->startMainContainer();
 
-    echo '<div class="alert alert-warning">';
-    echo '<button type="button" class="close" data-dismiss="alert">×</button>';
+   // echo '<div class="alert alert-warning">';
+    echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
     //echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
-    echo '<div class="alert-message">' . JText::_('COM_PHOCACART_LOADING_OF_EXTENSION_LIST_DISABLED') . '</div>';
-    echo '</div>';
+    echo '<div class="alert alert-warning alert-dismissible fade show">' . Text::_('COM_PHOCACART_LOADING_OF_EXTENSION_LIST_DISABLED') . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button></div>';
+    //echo '</div>';
 
-    echo '<div class="alert alert-info">';
-    echo '<button type="button" class="close" data-dismiss="alert">×</button>';
+  //  echo '<div class="alert alert-info">';
+    //echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
     //echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
-    echo '<div class="alert-message">' . JText::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon . '</div>';
-    echo '</div>';
+    echo '<div class="alert alert-info alert-dismissible fade show">' . JText::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon;
+    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button>' . '</div>';
+   // echo '</div>';
 
 
     /* echo $r->startFilterBar();
@@ -75,11 +79,12 @@ if ($this->t['load_extension_list'] == 0) {
 
     echo $r->startMainContainer();
 
-    echo '<div class="alert alert-info">';
-    echo '<button type="button" class="close" data-dismiss="alert">×</button>';
+    //echo '<div class="alert alert-info">';
+   // echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
     //echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
-    echo '<div class="alert-message">' . JText::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon . '</div>';
-    echo '</div>';
+    echo '<div class="alert alert-info alert-dismissible fade show">' . JText::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon;
+    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button>' . '</div>';
+    //echo '</div>';
 
 
     if (is_array($this->news)) {
@@ -130,7 +135,7 @@ if ($this->t['load_extension_list'] == 0) {
 
     $filters = $this->filterForm->getGroup('filter');
     if ($filters) {
-        echo '<div class="js-stools ph-pull-right">';
+        echo '<div class="js-stools ph-pull-right ph-extensions-filter">';
         foreach ($filters as $fieldName => $field) {
             echo '<div class="js-stools-field-filter">';
             echo $field->input;
@@ -144,13 +149,14 @@ if ($this->t['load_extension_list'] == 0) {
     echo $r->startTblHeader();
 
 
-    echo '<th class="ph-image">' . JText::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
-    echo '<th class="ph-title-small">' . JText::_($this->t['l'] . '_NAME') . '</th>' . "\n";
-    echo '<th class="ph-description">' . JTEXT::_($this->t['l'] . '_DESCRIPTION') . '</th>' . "\n";
-    echo '<th class="ph-version">' . JText::_($this->t['l'] . '_VERSION') . '</th>' . "\n";
-    echo '<th class="ph-developer">' . JTEXT::_($this->t['l'] . '_DEVELOPER') . '</th>' . "\n";
-    echo '<th class="ph-type">' . JTEXT::_($this->t['l'] . '_TYPE') . '</th>' . "\n";
-    echo '<th class="ph-action">' . JTEXT::_($this->t['l'] . '_ACTION') . '</th>' . "\n";
+    echo '<th class="ph-image">' . Text::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
+    echo '<th class="ph-title-small">' . Text::_($this->t['l'] . '_NAME') . '</th>' . "\n";
+    echo '<th class="ph-description">' . Text::_($this->t['l'] . '_DESCRIPTION') . '</th>' . "\n";
+    echo '<th class="ph-version">' . Text::_($this->t['l'] . '_VERSION') . ' (J3)</th>' . "\n";
+    echo '<th class="ph-version">' . Text::_($this->t['l'] . '_VERSION') . ' (J4)</th>' . "\n";
+    echo '<th class="ph-developer">' . Text::_($this->t['l'] . '_DEVELOPER') . '</th>' . "\n";
+    echo '<th class="ph-type">' . Text::_($this->t['l'] . '_TYPE') . '</th>' . "\n";
+    echo '<th class="ph-action">' . Text::_($this->t['l'] . '_ACTION') . '</th>' . "\n";
 
     echo $r->endTblHeader();
 
@@ -179,7 +185,7 @@ if ($this->t['load_extension_list'] == 0) {
             $canEdit		= $user->authorise('core.edit', $this->t['o']);
             $canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
             $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-            $linkEdit 		= JRoute::_( $urlEdit. $item->id );
+            $linkEdit 		= Route::_( $urlEdit. $item->id );
 
             //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
             $canEditCat	= $user->authorise('core.edit', $this->t['o']);*/
@@ -193,11 +199,13 @@ if ($this->t['load_extension_list'] == 0) {
             $type    = isset($item['type']) ? $item['type'] : '';
             $folder  = isset($item['folder']) ? $item['folder'] : '';
             $version = isset($item['version']) ? $item['version'] : '';
+            $version4 = isset($item['version4']) ? $item['version4'] : '';
 
             $extension                   = array();
             $extension['installed']      = false;
             $extension['enabled']        = false;
             $extension['version']        = $version;
+            $extension['version4']        = $version4;
             $extension['versioncurrent'] = null;
             PhocacartUtilsExtension::getExtensionLoadInfo($extension, $element, $type, $folder);
 
@@ -232,7 +240,10 @@ if ($this->t['load_extension_list'] == 0) {
 
             $versionCurrent = $extension['versioncurrent'] ? $extension['versioncurrent'] : $extension['version'];
 
+            $versionCurrent4 = $extension['versioncurrent'] ? $extension['versioncurrent'] : $extension['version4'];
+
             echo $r->td($versionCurrent);
+            echo $r->td($versionCurrent4);
 
             $developer     = isset($item['developer']) ? $item['developer'] : '';
             $linkDeveloper = isset($item['developerlink']) ? $item['developerlink'] : '';
@@ -245,9 +256,13 @@ if ($this->t['load_extension_list'] == 0) {
             $obtainType = isset($item['obtaintype']) ? $item['obtaintype'] : '';
             echo $r->td(PhocacartUtilsSettings::getExtensionsJSONObtainTypeText($obtainType));
 
+
             // ACTION
             if ($canCreate && $canChange && $canEdit) {
-                $download = isset($item['download']) ? $item['download'] : '';
+                $download = array();
+                $download['3'] = isset($item['download']) ? $item['download'] : '';
+                $download['4'] = isset($item['download4']) ? $item['download4'] : '';
+                //$download['5'] = isset($item['download5']) ? $item['download5'] : '';
                 echo $r->td(PhocacartUtilsExtension::getExtensionsObtainTypeButton($obtainType, $download, $extension));
             }
 
@@ -259,7 +274,7 @@ if ($this->t['load_extension_list'] == 0) {
     }
     echo $r->endTblBody();
 
-    echo $r->tblFoot('', 7);//
+    echo $r->tblFoot('', 8);//
     echo $r->endTable();
 
     echo '<input type="hidden" name="type" value="' . $this->state->get('filter.category_id') . '" />' . "\n";

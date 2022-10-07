@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 jimport('joomla.application.component.modellist');
 
-class PhocaCartCpModelPhocaCartStatuses extends JModelList
+class PhocaCartCpModelPhocaCartStatuses extends ListModel
 {
 	protected $option 	= 'com_phocacart';
 
@@ -31,9 +33,9 @@ class PhocaCartCpModelPhocaCartStatuses extends JModelList
 		parent::__construct($config);
 	}
 
-	protected function populateState($ordering = 'a.title', $direction = 'ASC') {
+	protected function populateState($ordering = 'a.ordering', $direction = 'ASC') {
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');

@@ -7,10 +7,24 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Language\LanguageHelper;
 jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
 
-class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
+class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 {
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
@@ -18,7 +32,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 	protected   $associationsContext    = 'com_phocacart.submititem';	// ASSOCIATION
 
 	protected function canDelete($record){
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
 			// catid not used
@@ -29,7 +43,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 	}
 
 	protected function canEditState($record) {
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
 			// catid not used
@@ -41,12 +55,12 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 	public function getTable($type = 'PhocaCartSubmititem', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartsubmititem', 'submit', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form)) {
@@ -57,7 +71,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacart.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacart.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -71,20 +85,20 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 			// Convert the params field to an array.
 			if (isset($item->metadata)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->metadata);
 				$item->metadata = $registry->toArray();
 			}
 
 			if (isset($item->params_feed)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->params_feed);
 				$item->params_feed = $registry->toArray();
 			}
 
 
 			if (isset($item->items_item)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->items_item);
 				$itemI = $registry->toArray();
 				$item->items_item = $itemI;
@@ -92,14 +106,14 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 			}
 
 			if (isset($item->items_contact)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->items_contact);
 				$contactI = $registry->toArray();
 				$item->items_contact = $contactI;
 			}
 
 			if (isset($item->items_parameter)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->items_parameter);
 				$parameterI = $registry->toArray();
 				$item->items_parameter = $parameterI;
@@ -114,15 +128,15 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title					= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias					= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias					= ApplicationHelper::stringURLSafe($table->alias);
 
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 	}
@@ -130,8 +144,8 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 	function save($data) {
 
-		$app		= JFactory::getApplication();
-		$input  	= JFactory::getApplication()->input;
+		$app		= Factory::getApplication();
+		$input  	= Factory::getApplication()->input;
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
@@ -211,26 +225,26 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
 			if ($data['alias'] == null) {
-				if (JFactory::getConfig()->get('unicodeslugs') == 1) {
-					$data['alias'] = JFilterOutput::stringURLUnicodeSlug($data['title']);
+				if (Factory::getConfig()->get('unicodeslugs') == 1) {
+					$data['alias'] = OutputFilter::stringURLUnicodeSlug($data['title']);
 				} else {
-					$data['alias'] = JFilterOutput::stringURLSafe($data['title']);
+					$data['alias'] = OutputFilter::stringURLSafe($data['title']);
 				}
 
 
 				if ($table->load(array('alias' => $data['alias']))){
-					$msg = JText::_('COM_PHOCACART_SAVE_WARNING');
+					$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
 				}
 
 				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
 				$data['alias'] = $alias;
 
 				if (isset($msg)) {
-					JFactory::getApplication()->enqueueMessage($msg, 'warning');
+					Factory::getApplication()->enqueueMessage($msg, 'warning');
 				}
 			}
 		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
-			//$this->setError(\JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
+			//$this->setError(JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			//return false;
 		}
 
@@ -268,11 +282,11 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 		}
 
 		// Clean the cache.
-		$cache = JFactory::getCache($this->option);
+		$cache = Factory::getCache($this->option);
 		$cache->clean();
 
 		// Trigger the onContentAfterSave event.
-		//\JFactory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
+		//JFactory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
@@ -286,10 +300,10 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 	public function delete(&$cid = array()) {
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 
@@ -297,10 +311,10 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
 				if ($error){
-					JLog::add($error, JLog::WARNING);
+					Log::add($error, Log::WARNING);
 					return false;
 				} else {
-					JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING);
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 					return false;
 				}
 			}
@@ -322,9 +336,9 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 				$pathSubmit = PhocacartPath::getPath('submititem');
 				foreach($items as $k => $v) {
 					if (isset($v->upload_folder) && $v->upload_folder != '') {
-						if (\Joomla\CMS\Filesystem\Folder::exists($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
-							if (!\Joomla\CMS\Filesystem\Folder::delete($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
-								$msg = JText::_('COM_PHOCACART_FOLDER') . ': ' . $v->upload_folder . " - " . JText::_('COM_PHOCACART_ERROR_FOLDER_NOT_DELETED');
+						if (Folder::exists($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
+							if (!Folder::delete($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
+								$msg = Text::_('COM_PHOCACART_FOLDER') . ': ' . $v->upload_folder . " - " . Text::_('COM_PHOCACART_ERROR_FOLDER_NOT_DELETED');
 								$app->enqueueMessage($msg, 'error');
 							}
 						}
@@ -338,7 +352,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 
 
-	function create($cid = array(), &$message) {
+	function create($cid = array(), &$message = '') {
 
 		if (count( $cid )) {
 
@@ -359,7 +373,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 			$pathImage = PhocacartPath::getPath('productimage');
 			$pathSubmit = PhocacartPath::getPath('submititem');
 
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			$query = 'SELECT a.*'.
 					' FROM #__phocacart_submit_items AS a' .
@@ -389,7 +403,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 						if (!empty($data['catid_multiple']) && isset($data['catid_multiple'][0]) && (int)$data['catid_multiple'][0] > 0) {
 
 						} else {
-							$msg[] = JText::_('COM_PHOCACART_ITEM') . ': ' . $v->title . " - ". JText::_('COM_PHOCACART_ERROR_PRODUCT_FROM_ITEM_NOT_CREATED_NO_CATEGORY');
+							$msg[] = Text::_('COM_PHOCACART_ITEM') . ': ' . $v->title . " - ". Text::_('COM_PHOCACART_ERROR_PRODUCT_FROM_ITEM_NOT_CREATED_NO_CATEGORY');
 							$notAddedItems++;
 							continue;
 						}
@@ -421,9 +435,9 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 									// 1) Specific folder
 									$folder = PhocacartText::filterValue($sIMoveImageFolderSpecific, 'folder');
 									if ($folder != '') {
-										if (!Joomla\CMS\Filesystem\Folder::exists($pathImage['orig_abs_ds'] . $folder)) {
-											if (!Joomla\CMS\Filesystem\Folder::create($pathImage['orig_abs_ds'] . $folder)) {
-												$msg[] = JText::_('COM_PHOCACART_FOLDER') . ': ' . $folder . " - ". JText::_('COM_PHOCACART_ERROR_FOLDER_NOT_CREATED');
+										if (!Folder::exists($pathImage['orig_abs_ds'] . $folder)) {
+											if (!Folder::create($pathImage['orig_abs_ds'] . $folder)) {
+												$msg[] = Text::_('COM_PHOCACART_FOLDER') . ': ' . $folder . " - ". Text::_('COM_PHOCACART_ERROR_FOLDER_NOT_CREATED');
 											}
 										}
 
@@ -453,9 +467,9 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 									}
 
 									if ($folder != '') {
-										if (!Joomla\CMS\Filesystem\Folder::exists($pathImage['orig_abs_ds'] . $folder)) {
-											if (!Joomla\CMS\Filesystem\Folder::create($pathImage['orig_abs_ds'] . $folder)) {
-												$msg[] = JText::_('COM_PHOCACART_FOLDER') . ': ' . $folder . " - ". JText::_('COM_PHOCACART_ERROR_FOLDER_NOT_CREATED');
+										if (!Folder::exists($pathImage['orig_abs_ds'] . $folder)) {
+											if (!Folder::create($pathImage['orig_abs_ds'] . $folder)) {
+												$msg[] = Text::_('COM_PHOCACART_FOLDER') . ': ' . $folder . " - ". Text::_('COM_PHOCACART_ERROR_FOLDER_NOT_CREATED');
 											}
 										}
 
@@ -502,7 +516,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 							$data['language'] = '*';
 						}
 
-						$date = JFactory::getDate()->toSql();
+						$date = Factory::getDate()->toSql();
 
 						if (!isset($data['date'])) {
 							$data['date'] = $date;
@@ -512,7 +526,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 							$data['date_update'] = $date;
 						}
 
-						$user = JFactory::getUser();
+						$user = Factory::getUser();
 						$data['created'] = $date;
 						$data['created_by'] = isset($user->id) ? (int)$user->id: 0;
 						//$data['modified'] = $date;
@@ -616,20 +630,20 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 								foreach($dataImageMove as $kIm => $vIm) {
 
 
-									if (!\Joomla\CMS\Filesystem\File::copy($vIm['src'], $vIm['dest'])) {
-										$msg[] = JText::_('COM_PHOCACART_IMAGE') . ': ' . $vIm['image'] . " - ". JText::_('COM_PHOCACART_ERROR_IMAGE_NOT_COPIED');
+									if (!File::copy($vIm['src'], $vIm['dest'])) {
+										$msg[] = Text::_('COM_PHOCACART_IMAGE') . ': ' . $vIm['image'] . " - ". Text::_('COM_PHOCACART_ERROR_IMAGE_NOT_COPIED');
 
 									} else {
 										$createThubms = PhocacartFileThumbnail::getOrCreateThumbnail($vIm['fileno'], 0, 1, 1, 1, 0, 'productimage');
 										if (!$createThubms) {
-											$msg[] = $vIm['image'] . JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
+											$msg[] = $vIm['image'] . Text::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 
 										}
 									}
 								}
 							}
 
-							$msg[] = JText::_('COM_PHOCACART_ITEM') . ': ' . $v->title . " - ". JText::_('COM_PHOCACART_SUCCESS_PRODUCT_FROM_ITEM_CREATED');
+							$msg[] = Text::_('COM_PHOCACART_ITEM') . ': ' . $v->title . " - ". Text::_('COM_PHOCACART_SUCCESS_PRODUCT_FROM_ITEM_CREATED');
 							$addedItems++;
 
 						}
@@ -640,9 +654,9 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 					if ($sIRemoveItemCreateProduct == 1) {
 						// Delete the submit item folder for all images
 						if (isset($v->upload_folder) && $v->upload_folder != '') {
-							if (\Joomla\CMS\Filesystem\Folder::exists($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
-								if (!\Joomla\CMS\Filesystem\Folder::delete($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
-									$msg[] = JText::_('COM_PHOCACART_FOLDER') . ': ' . $v->upload_folder . " - " . JText::_('COM_PHOCACART_ERROR_FOLDER_NOT_DELETED');
+							if (Folder::exists($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
+								if (!Folder::delete($pathSubmit['orig_abs_ds'] . $v->upload_folder)) {
+									$msg[] = Text::_('COM_PHOCACART_FOLDER') . ': ' . $v->upload_folder . " - " . Text::_('COM_PHOCACART_ERROR_FOLDER_NOT_DELETED');
 
 								}
 							}
@@ -669,11 +683,11 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 
 			} else {
-				$message = JText::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
+				$message = Text::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
 				return false;
 			}
 		} else {
-			$message = JText::_('COM_PHOCACART_ERROR_ITEM_NOT_SELECTED');
+			$message = Text::_('COM_PHOCACART_ERROR_ITEM_NOT_SELECTED');
 			return false;
 		}
 
@@ -691,7 +705,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 	protected function generateNewTitle($category_id, $alias, $title) {
 
-		$app 			= JFactory::getApplication('administrator');
+		$app 			= Factory::getApplication('administrator');
 		$batchParams 	= $app->input->post->get('batch', array(), 'array');
 
 
@@ -715,15 +729,15 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 
 
 	// ASSOCIATION
-	protected function preprocessForm(JForm $form, $data, $group = 'content'){
+	protected function preprocessForm(Form $form, $data, $group = 'content'){
 		/*if ($this->canCreateCategory())
 		{
 			$form->setFieldAttribute('catid', 'allowAdd', 'true');
 		}*/
 
 		// Association Phoca Cart items
-		if (JLanguageAssociations::isEnabled()){
-			$languages = JLanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
+		if (Associations::isEnabled()){
+			$languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
 			if (count($languages) > 1){
 				$addform = new SimpleXMLElement('<form />');
@@ -773,7 +787,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends JModelAdmin
 				$field->addAttribute('name', $element);
 				$field->addAttribute('type', 'subform');
 
-				$field->addAttribute('label', JText::_(strtoupper($v->name)));
+				$field->addAttribute('label', Text::_(strtoupper($v->name)));
 				$field->addAttribute('multiple', 'false');
 				$field->addAttribute('layout', 'joomla.form.field.subform.default');
 				$field->addAttribute('formsource', 'plugins/pcf/'.$element.'/models/forms/item.xml');

@@ -7,9 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartOrder extends JModelAdmin
+class PhocaCartCpModelPhocacartOrder extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -27,14 +34,14 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	public function getFormBas($orderId) {
 
 		$options			= array('control' => 'jform', 'load_data' => true);
-		$options['control'] = \Joomla\Utilities\ArrayHelper::getValue($options, 'control', false);
-		JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-		JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
-		JForm::addFormPath(JPATH_COMPONENT . '/model/form');
-		JForm::addFieldPath(JPATH_COMPONENT . '/model/field');
+		$options['control'] = ArrayHelper::getValue($options, 'control', false);
+		Form::addFormPath(JPATH_COMPONENT . '/models/forms');
+		Form::addFieldPath(JPATH_COMPONENT . '/models/fields');
+		Form::addFormPath(JPATH_COMPONENT . '/model/form');
+		Form::addFieldPath(JPATH_COMPONENT . '/model/field');
 
 		try {
-			$form = JForm::getInstance('com_phocacart.order.bas', (string)$this->fieldsbas['xml'], $options, false, false);
+			$form = Form::getInstance('com_phocacart.order.bas', (string)$this->fieldsbas['xml'], $options, false, false);
 			$order= new PhocacartOrderView();
 			$data = $order->getItemBaS($orderId);
 			$this->preprocessForm($form, $data);
@@ -60,11 +67,11 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocacartOrder', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartorder', 'phocacartorder', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -73,7 +80,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartorder.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartorder.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 		}
@@ -82,13 +89,17 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 
 	protected function prepareTable($table) {
 		$table->currency_exchange_rate 			= PhocacartUtils::replaceCommaWithPoint($table->currency_exchange_rate);
+
+		if ($table->tracking_date_shipped == '0' || $table->tracking_date_shipped == '') {
+			$table->tracking_date_shipped = '0000-00-00 00:00:00';
+		}
 	}
 
 
 	public function save($data) {
 
-		$app	= JFactory::getApplication();
-		if (!JSession::checkToken('request')) {
+		$app	= Factory::getApplication();
+		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
@@ -128,9 +139,8 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 				}
 			}
 
-
 			$billingO 	= $this->storeOrderAddress($billing);
-			$shippingO 	= $this->storeOrderAddress($shipping);
+			$shippingO 	= $this->storeOrderAddress($shipping, 1, $data['id']);
 		}
 
 		// Products
@@ -194,6 +204,10 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
 
+
+
+
+
 		$currentStatus 	= 0;
 		$newStatus 		= $data['status_id'];
 		if ($pk > 0) {
@@ -213,7 +227,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 			return false;
 		}
 
-		$table->modified  = JFactory::getDate()->toSql();
+		$table->modified  = Factory::getDate()->toSql();
 		$date = $table->date;
 
 
@@ -239,7 +253,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 			PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], $date, (int)$data['status_id'], array('I'));
 
 			$notify 	= PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id']);// Notify user, notify others, emails send - will be decided in function
-			$comment	= JText::_('COM_PHOCACART_ORDER_EDITED');
+			$comment	= Text::_('COM_PHOCACART_ORDER_EDITED');
 
 			// Store the history
 			PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
@@ -249,7 +263,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 
 
 
-		$cache = JFactory::getCache($this->option);
+		$cache = Factory::getCache($this->option);
 		$cache->clean();
 
 		$pkName = $table->getKeyName();
@@ -263,7 +277,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 
 
 	public function storeOrderProducts($d) {
-		$row = JTable::getInstance('PhocacartOrderProducts', 'Table', array());
+		$row = Table::getInstance('PhocacartOrderProducts', 'Table', array());
 
 
 		$d['netto'] 			= PhocacartUtils::replaceCommaWithPoint($d['netto']);
@@ -271,7 +285,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		$d['brutto'] 			= PhocacartUtils::replaceCommaWithPoint($d['brutto']);
 
 		if (!$row->bind($d)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($row->getError());
 			return false;
 		}
 
@@ -287,13 +301,13 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	}
 
 	public function storeOrderAttributes($d) {
-		$row = JTable::getInstance('PhocacartOrderAttributes', 'Table', array());
+		$row = Table::getInstance('PhocacartOrderAttributes', 'Table', array());
 
 
 		$d['option_value'] = urlencode($d['option_value']);
 
 		if (!$row->bind($d)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($row->getError());
 			return false;
 		}
 
@@ -309,13 +323,13 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	}
 
 	public function storeOrderTotal($d) {
-		$row = JTable::getInstance('PhocacartOrderTotal', 'Table', array());
+		$row = Table::getInstance('PhocacartOrderTotal', 'Table', array());
 
 
 		$d['amount'] 			= PhocacartUtils::replaceCommaWithPoint($d['amount']);
 
 		if (!$row->bind($d)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($row->getError());
 			return false;
 		}
 
@@ -331,7 +345,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	}
 
 	public function storeOrderTaxRecapitulation($d) {
-		$row = JTable::getInstance('PhocacartOrderTaxRecapitulation', 'Table', array());
+		$row = Table::getInstance('PhocacartOrderTaxRecapitulation', 'Table', array());
 
 		$d['amount_netto'] 				= PhocacartUtils::replaceCommaWithPoint($d['amount_netto']);
 		$d['amount_tax'] 				= PhocacartUtils::replaceCommaWithPoint($d['amount_tax']);
@@ -340,7 +354,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
             $d['amount_brutto_currency'] = PhocacartUtils::replaceCommaWithPoint($d['amount_brutto_currency']);
         }
 		if (!$row->bind($d)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($row->getError());
 			return false;
 		}
 
@@ -355,17 +369,39 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 		}
 	}
 
-	public function storeOrderAddress($d) {
-		$row = JTable::getInstance('PhocacartOrderUsers', 'Table', array());
+	public function storeOrderAddress($d, $type = 0, $orderId = 0) {
+		$row = Table::getInstance('PhocacartOrderUsers', 'Table', array());
+
+
+		// it can happen that shipping (delivery) address was not created yet
+		if ($type == 1) {
+			if (!isset($d['id']) || (isset($d['id']) && (int)$d['id'] < 1)) {
+				if ((int)$orderId < 1) {
+					return false;
+				}
+
+				$d['order_id'] = (int)$orderId;
+				$d['type'] = 1;
+			}
+		}
+
+
 
 		if (!$row->bind($d)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($row->getError());
 			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
 			return false;
+		}
+
+		if ($row->country == '') {
+			$row->country = 0;
+		}
+		if ($row->region == '') {
+			$row->region = 0;
 		}
 
 		if (!$row->store()) {
@@ -375,14 +411,14 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 	}
 
 	public function storeOrderProductDiscounts($d) {
-		$row = JTable::getInstance('PhocacartOrderProductDiscounts', 'Table', array());
+		$row = Table::getInstance('PhocacartOrderProductDiscounts', 'Table', array());
 
 		$d['netto'] 			= PhocacartUtils::replaceCommaWithPoint($d['netto']);
 		$d['tax'] 			= PhocacartUtils::replaceCommaWithPoint($d['tax']);
 		$d['brutto'] 			= PhocacartUtils::replaceCommaWithPoint($d['brutto']);
 
 		if (!$row->bind($d)) {
-			throw new Exception($db->getErrorMsg());
+			throw new Exception($row->getError());
 			return false;
 		}
 
@@ -401,7 +437,7 @@ class PhocaCartCpModelPhocacartOrder extends JModelAdmin
 
 
 		if (count( $cid )) {
-			\Joomla\Utilities\ArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 

@@ -7,16 +7,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 jimport( 'joomla.application.component.view');
 
-class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
+class PhocaCartCpViewPhocaCartImageA extends HtmlView
 {
 	function display($tpl = null){
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<span class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</span>');
+				'error' => '<span class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</span>');
 			echo json_encode($response);
 			return;
 		}
@@ -31,7 +35,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 		$copypaste_folder			= PhocacartText::filterValue($copypaste_folder, 'folder');
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$title			= $app->input->get( 'imagetitle', '', 'string'  );
 		$format			= $app->input->get( 'imageformat', '', 'string'  );
 		$image			= $app->input->get( 'image', '', 'base64'  );
@@ -42,7 +46,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 		$eM = '</span>';
 
 		if ($copypaste_enable == 0) {
-			$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_COPY_PASTE_IMAGES_FUNCTION_DISABLED') . $eE);
+			$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_COPY_PASTE_IMAGES_FUNCTION_DISABLED') . $eE);
 			echo json_encode($response);
 			return;
 		}
@@ -50,7 +54,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 		$image 			= base64_decode($image);
 		if ($image == '') {
-			$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_NO_IMAGE_PASTED') . $eE);
+			$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_NO_IMAGE_PASTED') . $eE);
 			echo json_encode($response);
 			return;
 		}
@@ -80,7 +84,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 				if (!Joomla\CMS\Filesystem\Folder::exists($path['orig_abs_ds'] . $folder)){
 					if (!Joomla\CMS\Filesystem\Folder::create($path['orig_abs_ds'] . $folder)){
-						$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_WRITING_FOLDER') . $eE);
+						$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_WRITING_FOLDER') . $eE);
 						echo json_encode($response);
 						return;
 					}
@@ -94,7 +98,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 			if ($folder != '') {
 				if (!Joomla\CMS\Filesystem\Folder::exists($path['orig_abs_ds'] . $folder)) {
 					if (!Joomla\CMS\Filesystem\Folder::create($path['orig_abs_ds'] . $folder)) {
-						$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_WRITING_FOLDER') . $eE);
+						$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_WRITING_FOLDER') . $eE);
 						echo json_encode($response);
 						return;
 					}
@@ -109,7 +113,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 		if (Joomla\CMS\Filesystem\File::exists($pathImageName) && $copypaste_overwrite_file == 0) {
 
-			$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_IMAGE_ALREADY_EXITS') . $eE);
+			$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_IMAGE_ALREADY_EXITS') . $eE);
 			echo json_encode($response);
 			return;
 		} else {
@@ -141,14 +145,14 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 					switch($type) {
 						case IMAGETYPE_JPEG:
 							if (!function_exists('ImageCreateFromJPEG')) {
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoJPGFunction' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoJPGFunction' . $eE);
 								echo json_encode($response);
 								return;
 							}
 							try {
 								$image1 = ImageCreateFromJPEG($fileIn);
 							} catch(\Exception $exception) {
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoJPGFunction' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoJPGFunction' . $eE);
 								echo json_encode($response);
 								return;
 							}
@@ -156,14 +160,14 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 						case IMAGETYPE_PNG :
 							if (!function_exists('ImageCreateFromPNG')) {
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoPNGFunction' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoPNGFunction' . $eE);
 								echo json_encode($response);
 								return;
 							}
 							try {
 								$image1 = ImageCreateFromPNG($fileIn);
 							} catch(\Exception $exception) {
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoPNGFunction' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoPNGFunction' . $eE);
 								echo json_encode($response);
 								return;
 							}
@@ -171,7 +175,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 						case IMAGETYPE_WEBP:
 							if (!function_exists('ImageCreateFromWEBP')) {
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoWEBPFunction' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoWEBPFunction' . $eE);
 								echo json_encode($response);
 								return;
 							}
@@ -179,13 +183,13 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 							try {
 								$image1 = ImageCreateFromWEBP($fileIn);
 							} catch(\Exception $exception) {
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoWEBPFunction' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoWEBPFunction' . $eE);
 								echo json_encode($response);
 								return;
 							}
 						break;
 						default:
-							$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNotSupportedImage' . $eE);
+							$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNotSupportedImage' . $eE);
 							echo json_encode($response);
 							return;
 						break;
@@ -195,7 +199,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 						$image2 = @ImageCreateTruecolor($dst[2], $dst[3]);
 						if (!$image2) {
-							$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoImageCreateTruecolor' . $eE);
+							$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoImageCreateTruecolor' . $eE);
 							echo json_encode($response);
 							return;
 						}
@@ -207,14 +211,14 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 						switch ($type) {
 							case IMAGETYPE_JPEG:
 								if (!function_exists('ImageJPEG')) {
-									$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoJPGFunction' . $eE);
+									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoJPGFunction' . $eE);
 									echo json_encode($response);
 									return;
 								}
 
 								if (!@ImageJPEG($image2, $fileOut, 100)) {
 
-									$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_WRITING_IMAGE_FILE') . $eE);
+									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_WRITING_IMAGE_FILE') . $eE);
 									echo json_encode($response);
 									return;
 								}
@@ -222,13 +226,13 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 							case IMAGETYPE_PNG :
 								if (!function_exists('ImagePNG')) {
-									$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoPNGFunction' . $eE);
+									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoPNGFunction' . $eE);
 									echo json_encode($response);
 									return;
 								}
 
 								if (!@ImagePNG($image2, $fileOut)) {
-									$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorWriteFile' . $eE);
+									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorWriteFile' . $eE);
 									echo json_encode($response);
 									return;
 								}
@@ -237,20 +241,20 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 							case IMAGETYPE_WEBP :
 								if (!function_exists('ImageWEBP')) {
-									$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNoWEBPFunction' . $eE);
+									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoWEBPFunction' . $eE);
 									echo json_encode($response);
 									return;
 								}
 
 								if (!@imagewebp($image2, $fileOut)) {
-									$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR_WRITING_IMAGE_FILE') . $eE);
+									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_WRITING_IMAGE_FILE') . $eE);
 									echo json_encode($response);
 									return;
 								}
 							break;
 
 							default:
-								$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorNotSupportedImage' . $eE);
+								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNotSupportedImage' . $eE);
 								echo json_encode($response);
 								return;
 							break;
@@ -262,7 +266,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 
 				}
 			} else {
-				$response = array('status' => '0', 'error' => $sE . JText::_('COM_PHOCACART_ERROR') . ': ErrorWriteFile' . $eE);
+				$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorWriteFile' . $eE);
 				echo json_encode($response);
 				return;
 			}
@@ -270,7 +274,7 @@ class PhocaCartCpViewPhocaCartImageA extends JViewLegacy
 			$response = array(
 			'status'	=> '1',
 			'file'		=> $folder .$imgName,
-			'message' 	=> $sM . JText::_('COM_PHOCACART_SUCCESS_IMAGE_PASTED') . $eM);
+			'message' 	=> $sM . Text::_('COM_PHOCACART_SUCCESS_IMAGE_PASTED') . $eM);
 			echo json_encode($response);
 			return;
 

@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 
 class PhocacartCurrency
 {
@@ -26,13 +28,13 @@ class PhocacartCurrency
 	/*public static function getCurrency() {
 
 		if(self::$currency === false){
-			$session 		= JFactory::getSession();
+			$session 		= Factory::getSession();
 			$currencyId		= $session->get('currency', 0, 'phocaCart');
 			if ((int)$currencyId < 1) {
 				$currencyId = self::getDefaultCurrency();
 			}
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' SELECT a.* FROM #__phocacart_currencies AS a'
 					.' WHERE a.id = '.(int)$currencyId;
 			$db->setQuery($query);
@@ -51,7 +53,7 @@ class PhocacartCurrency
 
 		// Order currency is never stored in session
 		// so we use id instead of key
-		$session 	= JFactory::getSession();
+		$session 	= Factory::getSession();
 		if( $id == 0 ) {
 			$id			= $session->get('currency', 0, 'phocaCart');
 
@@ -76,7 +78,7 @@ class PhocacartCurrency
 		if( !array_key_exists( (string)$key, self::$currency ) ) {
 
 
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' SELECT a.* FROM #__phocacart_currencies AS a'
 					.' WHERE a.id = '.(int)$id
 					.' ORDER BY a.id';
@@ -100,7 +102,7 @@ class PhocacartCurrency
 
 			if(!array_key_exists((int)$id, self::$currencyvalid)) {
 
-				$db = JFactory::getDBO();
+				$db = Factory::getDBO();
 				$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
 					.' WHERE a.id = '.(int)$id
 					.' AND a.published = 1'
@@ -124,7 +126,7 @@ class PhocacartCurrency
 	public static function getDefaultCurrency() {
 
 		if(self::$defaultcurrency === false){
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' SELECT a.id FROM #__phocacart_currencies AS a'
 					.' WHERE a.exchange_rate = 1'
 					.' ORDER BY a.id';
@@ -146,7 +148,7 @@ class PhocacartCurrency
 	public static function getDefaultCurrencyCode() {
 
 		if(self::$defaultcurrencycode === false){
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' SELECT a.code FROM #__phocacart_currencies AS a'
 					.' WHERE a.exchange_rate = 1'
 					.' ORDER BY a.code';
@@ -168,7 +170,7 @@ class PhocacartCurrency
 	public static function getDefaultCurrencyArray() {
 
 		if(self::$defaultcurrencyarray === false){
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' SELECT a.id, a.title, a.code, a.exchange_rate FROM #__phocacart_currencies AS a'
 					.' WHERE a.exchange_rate = 1'
 					.' ORDER BY a.code';
@@ -187,7 +189,7 @@ class PhocacartCurrency
 	public static function getAllCurrencies() {
 
 		if(self::$allcurrencies === false){
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = ' SELECT a.id, a.id as value, CONCAT_WS(\'\', a.title, \' (\', a.code, \')\') as text, a.title, a.alias, a.code, a.image FROM #__phocacart_currencies AS a'
 				.' WHERE a.published = 1'
 				.' ORDER BY a.id';
@@ -204,12 +206,12 @@ class PhocacartCurrency
 	}
 
 	public static function setCurrentCurrency($currencyId) {
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		$session->set('currency', (int)$currencyId, 'phocaCart');
 	}
 
 	public static function getCurrenciesSelectBox() {
-		$session 	= JFactory::getSession();
+		$session 	= Factory::getSession();
 		$active		= $session->get('currency', 0, 'phocaCart');
 		if ((int)$active < 1) {
 			$active = self::getDefaultCurrency();
@@ -217,13 +219,13 @@ class PhocacartCurrency
 		$currencies = self::getAllCurrencies();
 		$o = '';
 		if (!empty($currencies)) {
-			$o = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $currencies, 'id', 'class="form-control chosen-select ph-input-select-currencies"', 'value', 'text', $active);
+			$o = HTMLHelper::_('select.genericlist',  $currencies, 'id', 'class="form-select chosen-select ph-input-select-currencies"', 'value', 'text', $active);
 		}
 		return $o;
 	}
 
 	public static function getCurrenciesArray() {
-		$session 	= JFactory::getSession();
+		$session 	= Factory::getSession();
 		$active		= $session->get('currency', 0, 'phocaCart');
 		if ((int)$active < 1) {
 			$active = self::getDefaultCurrency();
@@ -244,7 +246,7 @@ class PhocacartCurrency
 	}
 
 	public static function getCurrenciesListBox() {
-		$session 	= JFactory::getSession();
+		$session 	= Factory::getSession();
 		$active		= $session->get('currency', 0, 'phocaCart');
 		if ((int)$active < 1) {
 			$active = self::getDefaultCurrency();

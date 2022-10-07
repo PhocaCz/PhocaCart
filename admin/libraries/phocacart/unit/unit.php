@@ -9,13 +9,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartUnit
 {
 	
 	public static function existsUnit($unitId, $sectionId) {
 		
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT id FROM #__phocacart_units'
 				.' WHERE id = '.(int)$unitId
 				.' AND section_id = '.(int)$sectionId
@@ -30,7 +31,7 @@ class PhocacartUnit
 	
 	public static function getUnits($sectionId, $limit = 0) {
 		
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT a.id, a.title FROM #__phocacart_units AS a'
 				.' WHERE a.published = 1'
 				.' AND a.section_id ='.(int)$sectionId
@@ -46,7 +47,7 @@ class PhocacartUnit
 	
 	public static function getUnitById($unitId) {
 		
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT id, title FROM #__phocacart_units'
 				.' WHERE id = '.(int)$unitId
 				.' AND published = 1';

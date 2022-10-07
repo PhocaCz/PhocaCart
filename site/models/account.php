@@ -7,9 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelAccount extends JModelLegacy
+class PhocaCartModelAccount extends BaseDatabaseModel
 {
 	public function __construct() {	
 		parent::__construct();		

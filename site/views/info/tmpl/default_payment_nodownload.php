@@ -7,16 +7,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 // ORDER PROCESSED - STANDARD PRODUCTS - PAYMENT MADE (PAYMENT/NO DOWNLOAD)
-echo '<div class="alert alert-success">';
-
 if (isset($this->t['infomessage']['payment_nodownload']) && $this->t['infomessage']['payment_nodownload'] != '') {
-	echo $this->t['infomessage']['payment_nodownload'];
+	$msg = $this->t['infomessage']['payment_nodownload'];
 } else {
-	echo JText::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
-	echo '</br>' . JText::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_ADDITIONAL_INFO');
+	$msg = Text::_('COM_PHOCACART_ORDER_AND_PAYMENT_SUCCESSFULLY_PROCESSED');
+	$msg .= '</br>' . Text::_('COM_PHOCACART_ORDER_PAYMENT_PROCESSED_ADDITIONAL_INFO');
 }
 
-echo '</div>';
+echo $layoutAl->render(array('type' => 'success', 'text' => $msg));
 ?>

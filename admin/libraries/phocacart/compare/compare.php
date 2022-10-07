@@ -9,38 +9,71 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\FileLayout;
 
 class PhocacartCompare
 {
-	protected $items     		= array();
+	protected $items     		= array();// compare items
+	protected $itemsDb			= array();// real products (real products are stored in compare items but can differ, e.g. if product will be unpublished)
 
 	public function __construct() {
-		$session 		= JFactory::getSession();
-		$app 			= JFactory::getApplication();
+		$session 		= Factory::getSession();
+		$app 			= Factory::getApplication();
+		$db				= Factory::getDbo();
 		$this->items	= $session->get('compare', array(), 'phocaCart');
+
+		// Recheck if we have access to all products:
+		// This is different to wishlist, comparison is set only in session
+		// so not needed to check database
+		// even worse if checked database, then $items->itemDb is not empty and
+		// this will not allow us to use updated list after addItem or removeItem functions
+		// as both only update session
+		// So when using AJAX and adding item to comparison list, such will be wrongly rendered
+		// in renderList function because it will not get items from session but db
+		/*$query				    = $this->getQueryList($this->items);
+
+		if ($query) {
+			//echo nl2br(str_replace('#__', 'jos_', $query));
+			$db->setQuery($query);
+			$this->itemsDb = $db->loadObjectList();
+			$tempItems = array();
+			if (!empty($this->itemsDb)){
+				foreach ($this->itemsDb as $k => $v) {
+					$id = (int)$v->id;
+					if (isset($this->items[$id])) {
+						$tempItems[$id] = $this->items[$id];
+					}
+				}
+			}
+			$this->items = $tempItems;
+		}*/
 	}
 
 	public function addItem($id = 0, $catid = 0) {
 		if ($id > 0) {
-			$app 			= JFactory::getApplication();
+			$app 			= Factory::getApplication();
 
 			$count = count($this->items);
 
 			if ($count > 2) {
-				$message = JText::_('COM_PHOCACART_ONLY_THREE_PRODUCTS_CAN_BE_LISTED_IN_COMPARISON_LIST');
+				$message = Text::_('COM_PHOCACART_ONLY_THREE_PRODUCTS_CAN_BE_LISTED_IN_COMPARISON_LIST');
 				$app->enqueueMessage($message, 'error');
 				return false;
 			}
 
 			if(isset($this->items[$id]) && (int)$this->items[$id] > 0) {
 
-				$message = JText::_('COM_PHOCACART_PRODUCT_INCLUDED_IN_COMPARISON_LIST');
+				$message = Text::_('COM_PHOCACART_PRODUCT_INCLUDED_IN_COMPARISON_LIST');
 				$app->enqueueMessage($message, 'error');
 				return false;
 			} else {
 				$this->items[$id]['id'] = $id;
 				$this->items[$id]['catid'] = $catid;
-				$session 		= JFactory::getSession();
+				$session 		= Factory::getSession();
 				$session->set('compare', $this->items, 'phocaCart');
 			}
 			return true;
@@ -52,7 +85,7 @@ class PhocacartCompare
 		if ($id > 0) {
 			if(isset($this->items[$id]) && (int)$this->items[$id] > 0) {
 				unset($this->items[$id]);
-				$session 		= JFactory::getSession();
+				$session 		= Factory::getSession();
 				$session->set('compare', $this->items, 'phocaCart');
 				return true;
 			} else {
@@ -64,7 +97,7 @@ class PhocacartCompare
 	}
 
 	public function emptyCompare() {
-		$session 		= JFactory::getSession();
+		$session 		= Factory::getSession();
 		$session->set('compare', array(), 'phocaCart');
 	}
 
@@ -100,7 +133,7 @@ class PhocacartCompare
 
 			$columns		=
 			'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image, a.type,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories,'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
 			.' a.length, a.width, a.height, a.weight, a.volume, a.unit_amount, a.unit_unit, a.price_original,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' a.gift_types,'
@@ -138,7 +171,7 @@ class PhocacartCompare
 		} else {
 			$columns		=
 			'a.id as id, a.title as title, a.alias as alias,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories';
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid';
 			$groupsFull		= 'a.id, a.title, a.alias';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -154,7 +187,6 @@ class PhocacartCompare
 			.' GROUP BY '.$groups
 			.' ORDER BY a.id';
 		}
-
 
 		return $query;
 	}
@@ -180,35 +212,40 @@ class PhocacartCompare
 
 	public function renderList() {
 
-		$db 				= JFactory::getDBO();
-		$uri 				= \Joomla\CMS\Uri\Uri::getInstance();
+		$db 				= Factory::getDBO();
+		$uri 				= Uri::getInstance();
 		$action				= $uri->toString();
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$s                  = PhocacartRenderStyle::getStyles();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
-		$query				= $this->getQueryList($this->items);
+
+		if (empty($this->itemsDb)) {
+			// we asked them in construct, don't ask again
+			$query				= $this->getQueryList($this->items);
+			if ($query) {
+				$db->setQuery($query);
+				$this->itemsDb = $db->loadObjectList();
+			}
+		}
 
 		$d					= array();
 		$d['s']			    = $s;
-		if ($query) {
-			//echo nl2br(str_replace('#__', 'jos_', $query));
-			$db->setQuery($query);
-			$d['compare'] 			= $db->loadObjectList();
-			PhocacartCategoryMultiple::setBestMatchCategory($d['compare'], $this->items, 1);// returned by reference
-
+		if (!empty($this->itemsDb)) {
+			$d['compare'] 			= $this->itemsDb;
+			PhocacartCategoryMultiple::setBestMatchCategory($d['compare'] , $this->items, 1);// returned by reference
 		}
 		$d['actionbase64']		= base64_encode($action);
-		$d['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute());
+		$d['linkcomparison']	= Route::_(PhocacartRoute::getComparisonRoute());
 		$d['method']			= $add_compare_method;
 
-		$layoutC 			= new JLayoutFile('list_compare', null, array('component' => 'com_phocacart'));
+		$layoutC 			= new FileLayout('list_compare', null, array('component' => 'com_phocacart'));
 		echo $layoutC->render($d);
 	}
 
 	public function getFullItems() {
 
-		$db 		= JFactory::getDBO();
+		$db 		= Factory::getDBO();
 		$query		= $this->getQueryList($this->items, 1);
 
 		$products	= array();

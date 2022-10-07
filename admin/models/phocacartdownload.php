@@ -7,9 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartDownload extends JModelAdmin
+class PhocaCartCpModelPhocacartDownload extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -23,11 +29,11 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocacartOrderDownloads', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartdownload', 'phocacartdownload', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -36,7 +42,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartdownload.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartdownload.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 		}
@@ -45,14 +51,14 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -61,7 +67,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_downloads');
 				$max = $db->loadResult();
 
@@ -90,7 +96,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 		$isNew = true;
 
 		// Include the content plugins for the on save events.
-		JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Allow an exception to be thrown.
 		try
@@ -103,9 +109,9 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 			}
 
 			// Store form parameters of selected method
-			$app		= JFactory::getApplication();
+			$app		= Factory::getApplication();
 			$dataPh		= $app->input->get('phform', array(), 'array');
-			$registry 	= new JRegistry($dataPh);
+			$registry 	= new Registry($dataPh);
 			$dataPhNew 	= $registry->toString();
 			if($dataPhNew != '') {
 				$data['params'] = $dataPhNew;
@@ -130,7 +136,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = \JFactory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
@@ -153,7 +159,7 @@ class PhocaCartCpModelPhocacartDownload extends JModelAdmin
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			\JFactory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
 		}
 		catch (Exception $e)
 		{

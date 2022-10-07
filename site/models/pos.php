@@ -7,10 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Language\Text;
 jimport('joomla.application.component.model');
 use Joomla\Utilities\ArrayHelper;
 
-class PhocaCartModelPos extends JModelLegacy
+class PhocaCartModelPos extends BaseDatabaseModel
 {
 	protected $item 				= null;
 	protected $item_ordering		= null;
@@ -25,8 +29,8 @@ class PhocaCartModelPos extends JModelLegacy
 	public function __construct() {
 		parent::__construct();
 
-		$app				= JFactory::getApplication();
-		$config 			= JFactory::getConfig();
+		$app				= Factory::getApplication();
+		$config 			= Factory::getConfig();
 		$paramsC 			= $app->getParams();
 		$item_pagination	= $paramsC->get( 'pos_pagination_default', 24 );
 		$item_ordering		= $paramsC->get( 'pos_ordering', 1 );
@@ -219,7 +223,7 @@ class PhocaCartModelPos extends JModelLegacy
 
 	protected function getItemListQuery($count = 0) {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -233,6 +237,7 @@ class PhocaCartModelPos extends JModelLegacy
 		$p['pos_categories']		= $params->get( 'pos_categories', array(-1) );
 		$p['sql_search_skip_id']	= $params->get( 'sql_search_skip_id', 1 );
 		$p['search_deep']			= $params->get( 'search_deep', 0 );
+		$p['search_custom_fields']	= $params->get( 'search_custom_fields', 0 );
 
 		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (POS)
 		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 3){
@@ -266,7 +271,7 @@ class PhocaCartModelPos extends JModelLegacy
 		if ($this->getState('filter.language')) {
 
 
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
@@ -420,7 +425,7 @@ class PhocaCartModelPos extends JModelLegacy
 
 			$columns	= 'a.id, a.title, a.image, a.alias, a.unit_amount, a.unit_unit, a.description, a.type,'
 						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.price, MIN(ppg.price) as group_price,'
+						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid, a.price, MIN(ppg.price) as group_price,'
 						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
 						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,'
 						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
@@ -448,8 +453,8 @@ class PhocaCartModelPos extends JModelLegacy
 
 	protected function getItemListQueryCustomers($count = 0) {
 
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -460,7 +465,7 @@ class PhocaCartModelPos extends JModelLegacy
 		$customers		= array();
 		if (!empty($pos_customers)) {
 			foreach($pos_customers as $k => $v) {
-				$customersA = JAccess::getUsersByGroup((int)$v);
+				$customersA = Access::getUsersByGroup((int)$v);
 				$customers = array_merge($customers, $customersA);
 
 			}
@@ -559,8 +564,8 @@ class PhocaCartModelPos extends JModelLegacy
 
 	protected function getItemListQueryUnits($count = 0) {
 
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -614,8 +619,8 @@ class PhocaCartModelPos extends JModelLegacy
 
 	protected function getItemListQueryOrders($count = 0) {
 
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -679,7 +684,7 @@ class PhocaCartModelPos extends JModelLegacy
 	protected function getCategoriesQuery( $categoryId, $subcategories = FALSE ) {
 
 		$wheres		= array();
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$params 	= $app->getParams();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -699,7 +704,7 @@ class PhocaCartModelPos extends JModelLegacy
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
@@ -732,7 +737,7 @@ class PhocaCartModelPos extends JModelLegacy
 
 	protected function getItemOrdering() {
 		if (empty($this->item_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			//$ordering					= $params->get( 'item_ordering', 1 );
 			$ordering					= $this->getState('itemordering');
@@ -763,7 +768,7 @@ class PhocaCartModelPos extends JModelLegacy
 
 	protected function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
 			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);
@@ -788,7 +793,7 @@ class PhocaCartModelPos extends JModelLegacy
 	// ACTIONS
 	public function saveShipping($shippingId) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$user	= $vendor = $ticket = $unit = $section = array();
 		$dUser 	= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 
@@ -803,7 +808,7 @@ class PhocaCartModelPos extends JModelLegacy
 		} else {
 			$isValidShipping = $shipping->checkAndGetShippingMethod($shippingId);
 			if (!$isValidShipping) {
-				$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
+				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_SHIPPING_METHOD_NOT_AVAILABLE'), 'error');
 				return false;
 			}
 		}
@@ -811,31 +816,31 @@ class PhocaCartModelPos extends JModelLegacy
 		if (!$row->load(array('user_id' => (int)$user->id, 'vendor_id' => (int)$vendor->id, 'ticket_id' => (int)$ticket->id, 'unit_id' => (int)$unit->id, 'section_id' => (int)$section->id))) {}
 
 		if (empty($row->cart)) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_SHIPPING_METHOD_CANNOT_BE_SET'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_SHIPPING_METHOD_CANNOT_BE_SET'), 'error');
 			return false;
 		}
 
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		$row->date = gmdate('Y-m-d H:i:s');
 
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		if ((int)$shippingId == 0) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_DESELECTED'), 'success');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_DESELECTED'), 'success');
 		} else {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_SELECTED'), 'success');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_SHIPPING_METHOD_SELECTED'), 'success');
 		}
 
 
@@ -844,7 +849,7 @@ class PhocaCartModelPos extends JModelLegacy
 
 	public function savePaymentAndCouponAndReward($paymentId, $couponId, $reward) {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$user	= $vendor = $ticket = $unit = $section = array();
 		$dUser 	= PhocacartUser::defineUser($user, $vendor, $ticket, $unit, $section);
 
@@ -861,7 +866,7 @@ class PhocaCartModelPos extends JModelLegacy
 		} else {
 			$isValidPayment	= $payment->checkAndGetPaymentMethod($paymentId);
 			if (!$isValidPayment) {
-				$app->enqueueMessage( $paymentId . JText::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
+				$app->enqueueMessage( $paymentId . Text::_('COM_PHOCACART_ERROR_PAYMENT_METHOD_NOT_AVAILABLE'), 'error');
 				return false;
 			}
 		}
@@ -872,31 +877,31 @@ class PhocaCartModelPos extends JModelLegacy
 
 
 		if (empty($row->cart)) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_PAYMENT_METHOD_CANNOT_BE_SET'), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_PAYMENT_METHOD_CANNOT_BE_SET'), 'error');
 			return false;
 		}
 
 		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		$row->date = gmdate('Y-m-d H:i:s');
 
 		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
+			$this->setError($row->getError());
 			return false;
 		}
 
 		if ((int)$paymentId == 0) {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_PAYMENT_METHOD_DESELECTED'), 'success');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_PAYMENT_METHOD_DESELECTED'), 'success');
 		} else {
-			$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_PAYMENT_METHOD_SELECTED'), 'success');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_PAYMENT_METHOD_SELECTED'), 'success');
 		}
 
 

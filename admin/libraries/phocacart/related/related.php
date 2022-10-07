@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartRelated
 {
@@ -16,7 +17,7 @@ class PhocacartRelated
 
 
 		if ((int)$productId > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_product_related'
 					. ' WHERE product_a = '. (int)$productId;
@@ -54,25 +55,24 @@ class PhocacartRelated
 	public static function getRelatedItemsById($productId, $select = 0, $frontend = 0)
     {
 
-        $db = JFactory::getDBO();
-        $wheres = array();
-        $wheres[] = 't.product_a = ' . (int)$productId;
-        $catid = 0;
+        $db         = Factory::getDBO();
+        $wheres     = array();
+        $wheres[]   = 't.product_a = ' . (int)$productId;
+        $catid      = 0;
         $params 	= PhocacartUtils::getComponentParameters();
 
         // FRONTEND
         $skip = array();
-        $skip['access'] = $params->get('sql_product_skip_access', 0);
-        $skip['group'] = $params->get('sql_product_skip_group', 0);
-        //$skip['attributes']	    = $params->get('sql_product_skip_attributes', 0);
-        $skip['category_type'] = $params->get('sql_product_skip_category_type', 0);
-        //$skip['tax'] = $params->get('sql_product_skip_tax', 0);
+        $skip['access']         = $params->get('sql_product_skip_access', 0);
+        $skip['group']          = $params->get('sql_product_skip_group', 0);
+        //$skip['attributes']	= $params->get('sql_product_skip_attributes', 0);
+        $skip['category_type']  = $params->get('sql_product_skip_category_type', 0);
+        //$skip['tax']          = $params->get('sql_product_skip_tax', 0);
 
         if ($frontend) {
             $user = PhocacartUser::getUser();
             $userLevels = implode(',', $user->getAuthorisedViewLevels());
             $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
-
 
             if (!$skip['category_type']) {
                 $wheres[] = " c.type IN (0,1)";// Related are displayed only in online shop (0 - all, 1 - online shop, 2 - pos)
@@ -99,30 +99,57 @@ class PhocacartRelated
             $query = ' SELECT t.product_b';
         } else if ($select == 2) {
             $query = ' SELECT a.id, a.alias';
+        } else if ($select == 3) {
+            $query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long';
         } else {
             // FULL GROUP BY ISSUE
+            // We have three issues with MySQL (zero with MariaDB)
+            // - 1. ONLY_FULL_GROUP_BY (now disabled in Joomla) - it lists duplicity items
+            //      This we can solve with group_concat (but MySQL has not LIMIT option inside group_concat)
+            // - 2. no LIMIT in group_concat
+            //      So we can use substring_index because of MySQL (but on some servers there can be memory problems)
+            // - 3. substring_index memory limit (3 was hack for 2 in mysql)
+            // So because ONLY_FULL_GROUP_BY is disabled for Joomla 4, we break the first rule for now (see GROUP_BY below - no info about c.)
+
             //$query = ' SELECT a.id as id, a.title as title, a.image as image, a.alias as alias,'
             //		.' c.id as catid, c.alias as catalias, c.title as cattitle';
-            $query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long,'
-                . ' SUBSTRING_INDEX(GROUP_CONCAT(c.id ORDER BY c.parent_id), \',\', 1) as catid,'
-                . ' SUBSTRING_INDEX(GROUP_CONCAT(c.title ORDER BY c.parent_id), \',\', 1) as cattitle,'
-                . ' SUBSTRING_INDEX(GROUP_CONCAT(c.alias ORDER BY c.parent_id), \',\', 1) as catalias';
+            $query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long,';
 
-            /*.' (SELECT c.id FROM jos_phocacart_product_categories AS pc'
-             .' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catid, '
+            // (1)RANDOM CATEGORY
+            /*$query  .= ' GROUP_CONCAT(c.id ORDER BY c.parent_id, c.ordering DESC LIMIT 1) as catid,'
+                . ' GROUP_CONCAT(c.title ORDER BY c.parent_id, c.ordering DESC LIMIT 1) as cattitle,'
+                . ' GROUP_CONCAT(c.alias ORDER BY c.parent_id, c.ordering DESC LIMIT 1) as catalias,';*/
+            /*
+            $query  .= ' SUBSTRING_INDEX(GROUP_CONCAT(c.id ORDER BY c.parent_id ASC), \',\', 1) as catid,'
+                    . ' SUBSTRING_INDEX(GROUP_CONCAT(c.title ORDER BY c.parent_id ASC), \',\', 1) as cattitle,'
+                    . ' SUBSTRING_INDEX(GROUP_CONCAT(c.alias ORDER BY c.parent_id ASC), \',\', 1) as catalias,';*/
+            /*
+            $query .= ' (SELECT c.id FROM jos_phocacart_product_categories AS pc'
+             .' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id AND WHEN c. LIMIT 1) AS catid, '
             .' (SELECT c.title FROM jos_phocacart_product_categories AS pc'
             .' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS cattitle, '
             .' (SELECT c.alias FROM jos_phocacart_product_categories AS pc'
             .' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catalias';*/
 
+            $query  .= ' c.id as catid, c.title as cattitle, c.alias as catalias,';
+
+            // (2)PREFERRED CATEGORY (catid set)
+            // FULL GROUP BY ISSUE
+            //$query .= ' GROUP_CONCAT(cp.id) AS catid_pref, GROUP_CONCAT(cp.alias) AS catalias_pref, GROUP_CONCAT(cp.title) AS cattitle_pref';
+            $query .= ' cp.id AS catid_pref, cp.alias AS catalias_pref, cp.title AS cattitle_pref';
+
         }
+
         if ((int)$catid > 0) {
-            $query .= ', ';
-            $query .= ' GROUP_CONCAT(c2.id) AS catid2, GROUP_CONCAT(c2.alias) AS catalias2, GROUP_CONCAT(c2.title) AS cattitle2';
+            // (3)SELECTED CATEGORY (displayed category in frontend)
+            $query .= ',';
+            // FULL GROUP BY ISSUE
+            //$query .= ' GROUP_CONCAT(cs.id) AS catid_sel, GROUP_CONCAT(cs.alias) AS catalias_sel, GROUP_CONCAT(cs.title) AS cattitle_sel';
+            $query .= ' cs.id AS catid_sel, cs.alias AS catalias_sel, cs.title AS cattitle_sel';
         }
 
         if (!$frontend) {
-            $query .= ', ';
+            $query .= ',';
             $query .= ' GROUP_CONCAT(c.title SEPARATOR " ") AS categories_title';
         }
 
@@ -131,10 +158,16 @@ class PhocacartRelated
             //.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
             . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
             . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
-        if ((int)$catid > 0) {
-            $query .= ' LEFT JOIN #__phocacart_categories AS c2 ON c2.id = pc.category_id and pc.category_id = ' . (int)$catid;
+
+        if ($select != 1 && $select != 2 && $select != 3) {
+            // (2)
+            $query .= ' LEFT JOIN #__phocacart_categories AS cp ON cp.id = pc.category_id and pc.category_id = a.catid';
         }
 
+        if ((int)$catid > 0) {
+            // (3)
+            $query .= ' LEFT JOIN #__phocacart_categories AS cs ON cs.id = pc.category_id and pc.category_id = ' . (int)$catid;
+        }
 
         if ($frontend && !$skip['group']) {
             $query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
@@ -148,13 +181,19 @@ class PhocacartRelated
 			$query .= ' GROUP BY a.id, t.product_b';
 		} else if ($select == 2) {
 			$query .= ' GROUP BY a.id, a.alias';
-		}else {
-			// FULL GROUP BY ISSUE
-			//$query .= ' GROUP BY a.id, a.title, a.image, a.alias, c.id, c.alias, c.title';
-			$query .= ' GROUP BY a.id, a.title, a.alias, a.image, a.description, a.description_long';
+		}  else if ($select == 3) {
+			$query .= ' GROUP BY a.id, a.alias';
+		} else {
+			// FULL GROUP BY ISSUE - BE AWARE: not ready for ONLY_FULL_GROUP_BY because of above mentioned issues in MySQL
+            //$query .= ' GROUP BY a.id, a.title, a.alias, a.image, a.description, a.description_long, c.id, c.alias, c.title';// Not used for now because of limits and problems in MySQL
+            //$query .= ' GROUP BY a.id, a.title, a.alias, a.image, a.description, a.description_long';
+            $query .= ' GROUP BY a.id';
 		}
 
+        //$query .= ' ORDER BY a.id';
+
 		$db->setQuery($query);
+
 
 		if ($select == 1) {
 			$related = $db->loadColumn();
@@ -166,7 +205,7 @@ class PhocacartRelated
 	}
 
 	public static function correctProductId($productIdChange) {
-		$db 		= JFactory::getDBO();
+		$db 		= Factory::getDBO();
 		if (!empty($productIdChange)) {
 			foreach($productIdChange as $new => $old) {
 				if ($new == $old) {

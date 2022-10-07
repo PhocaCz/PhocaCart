@@ -9,13 +9,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Component\ComponentHelper;
 
 class PhocacartSubmit {
 
 
 	public static function isAllowedToSubmit() {
 
-	    $paramsC 			            = JComponentHelper::getParams('com_phocacart') ;
+	    $paramsC 			            = ComponentHelper::getParams('com_phocacart') ;
         $submit_item_registered_only 	= $paramsC->get( 'submit_item_registered_only', 1 );
 
         $user				= PhocacartUser::getUser();

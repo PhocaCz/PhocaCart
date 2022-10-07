@@ -9,16 +9,19 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 class PhocacartPriceHistory
 {
 
 	public static function storePriceHistoryById($productId, $price, $type = 0) {
 
-		$date		= JFactory::getDate();
+		$date		= Factory::getDate();
 		$dateNow 	= $date->toSql();
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.price, a.date'
 				.' FROM #__phocacart_product_price_history AS a'
@@ -38,8 +41,8 @@ class PhocacartPriceHistory
 			// Do nothing
 		} else if (isset($history['date']) && isset($history['id'])) {
 
-			$dateDb2 	= Joomla\CMS\HTML\HTMLHelper::_('date', $history['date'], 'Y-m-d');
-			$dateNow2	= Joomla\CMS\HTML\HTMLHelper::_('date', $dateNow , 'Y-m-d');
+			$dateDb2 	= HTMLHelper::_('date', $history['date'], 'Y-m-d');
+			$dateNow2	= HTMLHelper::_('date', $dateNow , 'Y-m-d');
 			if ($dateDb2 == $dateNow2) {
 				$query = ' UPDATE #__phocacart_product_price_history SET price = '.$db->quote($price) . ', type = '.(int)$type
 						.' WHERE id = '.(int)$history['id'];
@@ -69,7 +72,7 @@ class PhocacartPriceHistory
 	 */
 	public static function storePriceHistoryCustomById($data, $productId, $type = 0) {
 
-		$db 				= JFactory::getDBO();
+		$db 				= Factory::getDBO();
 		$notDeleteIds 		= array();
 
 
@@ -80,7 +83,7 @@ class PhocacartPriceHistory
 
 
 				if (isset($v['date']) && isset($v['price']) && (float)$v['price'] > 0) {
-					$date		= JFactory::getDate($v['date']);
+					$date		= Factory::getDate($v['date']);
 					$dateDb 	= $date->toSql();
 
 					$query = 'SELECT a.id'
@@ -169,8 +172,8 @@ class PhocacartPriceHistory
 
 	public static function storePriceHistoryBulkPriceById($productId, $price, $priceOriginal, $bulkId, $currentPrice, $currentPriceOriginal, $type) {
 
-	    $db         = JFactory::getDBO();
-		$date		= JFactory::getDate();
+	    $db         = Factory::getDBO();
+		$date		= Factory::getDate();
 		$dateNow 	= $date->toSql();
 
 
@@ -186,9 +189,9 @@ class PhocacartPriceHistory
 
 	public static function getPriceHistoryById($productId, $limit = 10, $admin = 0) {
 
-		$date		= JFactory::getDate();
+		$date		= Factory::getDate();
 		$dateNow 	= $date->toSql();
-		$db 		= JFactory::getDBO();
+		$db 		= Factory::getDBO();
 
 
 		$query = 'SELECT a.id, a.product_id, a.price, a.date'
@@ -232,8 +235,8 @@ class PhocacartPriceHistory
 		$c = count($history);
 		$c--;
 		if (isset($history[$c]['date'])) {
-			$dateDb2 	= Joomla\CMS\HTML\HTMLHelper::_('date', $history[$c]['date'], 'Y-m-d');
-			$dateNow2	= Joomla\CMS\HTML\HTMLHelper::_('date', $dateNow , 'Y-m-d');
+			$dateDb2 	= HTMLHelper::_('date', $history[$c]['date'], 'Y-m-d');
+			$dateNow2	= HTMLHelper::_('date', $dateNow , 'Y-m-d');
 			// Date in price history is the same like today's price, so take today's price
 			if ($dateDb2 == $dateNow2 && isset($history[$c])) {
 				unset($history[$c]);
@@ -270,7 +273,7 @@ class PhocacartPriceHistory
 			foreach($history as $k => $v) {
 
 				$dataY[] = '\'' . $v['price'] . '\'';
-				$dataX[] = '\'' . Joomla\CMS\HTML\HTMLHelper::_('date', $v['date'] , JText::_('DATE_FORMAT_LC3')) .'\'';
+				$dataX[] = '\'' . HTMLHelper::_('date', $v['date'] , Text::_('DATE_FORMAT_LC3')) .'\'';
 			}
 		}
 
@@ -286,7 +289,7 @@ class PhocacartPriceHistory
 		if (!empty($data['x']) && !empty($data['y'])) {
 			$s = new PhocacartStatistics();
 
-			$s->renderChartJsLine2('phChartAreaLine', $data['y'], JText::_('COM_PHOCACART_PRICE'), $data['x']);
+			$s->renderChartJsLine2('phChartAreaLine', $data['y'], Text::_('COM_PHOCACART_PRICE'), $data['x']);
 			$s->setFunction('phChartAreaLine', 'Line');
 			$s->renderFunctions();
 			return true;

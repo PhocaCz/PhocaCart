@@ -7,12 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
-
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Application\ApplicationHelper;
+
 
 jimport('joomla.application.component.modeladmin');
 
-class PhocaCartCpModelPhocacartFeed extends JModelAdmin
+class PhocaCartCpModelPhocacartFeed extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
@@ -26,11 +30,11 @@ class PhocaCartCpModelPhocacartFeed extends JModelAdmin
 	}
 
 	public function getTable($type = 'PhocacartFeed', $prefix = 'Table', $config = array()) {
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartfeed', 'phocacartfeed', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -39,7 +43,7 @@ class PhocaCartCpModelPhocacartFeed extends JModelAdmin
 	}
 
 	protected function loadFormData() {
-		$data = JFactory::getApplication()->getUserState('com_phocacart.edit.phocacartfeed.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartfeed.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 		}
@@ -50,13 +54,13 @@ class PhocaCartCpModelPhocacartFeed extends JModelAdmin
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
 			if (isset($item->item_params)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->item_params);
 				$item->item_params = $registry->toArray();
 			}
 
 			if (isset($item->feed_params)) {
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($item->feed_params);
 				$item->feed_params = $registry->toArray();
 			}
@@ -68,14 +72,14 @@ class PhocaCartCpModelPhocacartFeed extends JModelAdmin
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias		= JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
-			$table->alias = JApplicationHelper::stringURLSafe($table->title);
+			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
 		if (empty($table->id)) {
@@ -84,7 +88,7 @@ class PhocaCartCpModelPhocacartFeed extends JModelAdmin
 
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_feeds');
 				$max = $db->loadResult();
 

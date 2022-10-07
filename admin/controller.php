@@ -7,9 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\Controller\BaseController;
 
 jimport('joomla.application.component.controller');
-$app		= JFactory::getApplication();
+$app		= Factory::getApplication();
 $option 	= $app->input->get('option');
 
 $l['cp']	= array('COM_PHOCACART_CONTROL_PANEL', '');
@@ -61,8 +65,8 @@ $l['bp']	= array('COM_PHOCACART_BULK_PRICE_EDITOR', 'phocacartbulkprices');
 // Submenu view
 
 
-$view	= JFactory::getApplication()->input->get('view');
-$layout	= JFactory::getApplication()->input->get('layout');
+$view	= Factory::getApplication()->input->get('view');
+$layout	= Factory::getApplication()->input->get('layout');
 
 if ($layout == 'edit') {
 } else {
@@ -75,13 +79,13 @@ if ($layout == 'edit') {
 		}
 
 		if ($view == $v[1]) {
-			JHtmlSidebar::addEntry(JText::_($v[0]), $link.$v[1], true );
+			JHtmlSidebar::addEntry(Text::_($v[0]), $link.$v[1], true );
 		} else {
-			JHtmlSidebar::addEntry(JText::_($v[0]), $link.$v[1]);
+			JHtmlSidebar::addEntry(Text::_($v[0]), $link.$v[1]);
 		}
 	}
 }
-class phocaCartCpController extends JControllerLegacy
+class phocaCartCpController extends BaseController
 {
 	function display($cachable = false, $urlparams = array()) {
 		parent::display($cachable, $urlparams);

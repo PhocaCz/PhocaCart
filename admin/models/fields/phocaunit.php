@@ -7,8 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaUnit extends JFormField
+class JFormFieldPhocaUnit extends FormField
 {
 	protected $type 		= 'PhocaUnit';
 
@@ -21,11 +24,11 @@ class JFormFieldPhocaUnit extends JFormField
 
 		$unitsA = array();
 		foreach ($units as $k => $v) {
-			$unitsA[$k] = JText::_($v[0]);
+			$unitsA[$k] = Text::_($v[0]);
 		}
 
 
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $unitsA,  $this->name, 'class="inputbox"', 'value', 'text', $this->value, $this->id );
+		return HTMLHelper::_('select.genericlist',  $unitsA,  $this->name, 'class="form-select"', 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

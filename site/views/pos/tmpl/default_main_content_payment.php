@@ -7,6 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 $price		= new PhocacartPrice();
 
 
@@ -19,7 +24,7 @@ echo '</div>';
 
 
 echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
-echo '<div class="ph-pos-payment-item-txt">' . JText::_('COM_PHOCACART_TOTAL_TO_PAY') . '</div>';
+echo '<div class="ph-pos-payment-item-txt">' . Text::_('COM_PHOCACART_TOTAL_TO_PAY') . '</div>';
 echo '</div>';
 
 echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
@@ -50,7 +55,7 @@ $payment	= $this->cart->getPaymentMethod();
 JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
 $eventData 					= array();
 $eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
-\JFactory::getApplication()->triggerEvent('PCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
+JFactory::getApplication()->triggerEvent('onPCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
 echo $output;
 // END PLUGIN
 
@@ -72,8 +77,8 @@ echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" /
 echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
 echo '<input type="hidden" name="redirectsuccess" value="main.content.order" />';
 echo '<input type="hidden" name="redirecterror" value="main.content.payment" />';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
-echo '<button class="'.$this->s['c']['btn.btn-success.btn-lg'].' btn-extra-lg editMainContent">'.JText::_('COM_PHOCACART_CONFIRM').'</button>';
+echo HTMLHelper::_('form.token');
+echo '<button class="'.$this->s['c']['btn.btn-success.btn-lg'].' btn-extra-lg editMainContent">'.Text::_('COM_PHOCACART_CONFIRM').'</button>';
 
 echo '</div>';
 

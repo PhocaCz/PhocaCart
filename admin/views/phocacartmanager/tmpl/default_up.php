@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
 
 $group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 
@@ -18,7 +19,7 @@ if ($this->currentFolder === '' || ($this->currentFolder == $this->downloadFolde
 echo '<tr><td>&nbsp;</td>'
 .'<td class="ph-img-table">'
 .'<a href="'.$link.'" >'
-. Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-up.png', '').'</a>'
+. HTMLHelper::_( 'image', $this->t['i'].'icon-16-up.png', '').'</a>'
 .'</td>'
 .'<td><a href="'.$link.'" >..</a></td>'
 .'</tr>';

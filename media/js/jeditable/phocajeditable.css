@@ -2,7 +2,7 @@
 
 .ph-editinplace-text {
 	display: block;
-	min-height: 36px; /* em will jump because of different converting to px */
+	min-height: 2em;
 	/*font-size: 96% !important;*/
 }
 
@@ -14,10 +14,8 @@
 	min-width: 3em;
 }
 
-.ph-editinplace-text.ph-eip-title, 
-.ph-editinplace-text.ph-eip-alias {
+.ph-editinplace-text.ph-eip-title, .ph-editinplace-text.ph-eip-alias {
 	min-width: 6em;
-	margin-top: 2px;
 }
 
 .ph-editinplace-text.ph-eip-description {
@@ -28,6 +26,7 @@
 	background: #f5f5f5;
 	position: relative;
 	padding: 0.5em;
+    border: 1px solid #fff;
 }
 
 .ph-editinplace-text form {
@@ -41,7 +40,6 @@
 	position: absolute;
 	left: -5em;
 	right: 0;
-	margin:0;
 }
 
 .ph-editinplace-text form button {
@@ -51,6 +49,8 @@
 .ph-editinplace-text form input {
 	width: 8em !important;
 	margin: -1px 0 0 0.5em !important;
+    border-radius: .25rem;
+    padding: 0.7em;
 }
 
 .ph-editinplace-text.ph-eip-title form input {
@@ -138,41 +138,41 @@
 #ph-ajaxtop-message .ph-info-txt {}
 
 #ph-ajaxtop-message .ph-info-txt:before {
-	font-family: "Glyphicons Halflings";
-	content: "\e086";
+	font-family: 'JoomlaFont' !important;
+	content: "\13c5d";
 	color: #3bafda;
 	margin-right: 0.5em;
 	font-weight: bold;
 	position: absolute;
-	font-size: 2em;
+	font-size: 1.6em;
 	left: 0.4em;
-	/*margin-top: -0.3em;*/
+	margin-top: -0.3em;
 }
 
 #ph-ajaxtop-message .ph-success-txt {}
 
 #ph-ajaxtop-message .ph-success-txt:before {
-	font-family: "Glyphicons Halflings";
-	content: "\e086";
+	font-family: 'JoomlaFont' !important;
+	content: "\13c5d";
 	color: #00b19d;
 	margin-right: 0.5em;
 	font-weight: bold;
 	position: absolute;
-	font-size: 2em;
+	font-size: 1.6em;
 	left: 0.4em;
-	/*margin-top: -0.3em;*/
+	margin-top: -0.3em;
 }
 
 #ph-ajaxtop-message .ph-error-txt {}
 
 #ph-ajaxtop-message .ph-error-txt:before {
-	font-family: "Glyphicons Halflings";
-	content: "\e086";
+	font-family: 'JoomlaFont' !important;
+	content: "\13c5d";
 	color: #f76397;
 	margin-right: 0.5em;
 	font-weight: bold;
 	position: absolute;
-	font-size: 2em;
+	font-size: 1.6em;
 	left: 0.4em;
-	/*margin-top: -0.3em;*/
+	margin-top: -0.3em;
 }

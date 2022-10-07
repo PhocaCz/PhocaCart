@@ -7,11 +7,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Plugin\PluginHelper;
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
-class PhocaCartViewItem extends JViewLegacy
+class PhocaCartViewItem extends HtmlView
 {
 	protected $item;
 	protected $itemnext;
@@ -25,15 +33,17 @@ class PhocaCartViewItem extends JViewLegacy
 
 	function display($tpl = null){
 
-		$app = JFactory::getApplication();
+		$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+
+		$app = Factory::getApplication();
 		//D $menus	= $app->getMenu('site', array());
 		//D $items	= $menus->getItems('component', 'com_phocacart');
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 		$this->p 				= $app->getParams();
 		$this->u				= PhocacartUser::getUser();
 		$this->s				= PhocacartRenderStyle::getStyles();
-		$uri 					= \Joomla\CMS\Uri\Uri::getInstance();
+		$uri 					= Uri::getInstance();
 		$model					= $this->getModel();
 		//D $document				= JFactory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');
@@ -49,6 +59,7 @@ class PhocaCartViewItem extends JViewLegacy
 
 
 		// PARAMS
+		$this->t['skip_category_view'] 		    = $this->p->get( 'skip_category_view', 0 );
 		$this->t['tax_calculation'] 		    = $this->p->get( 'tax_calculation', 0 );
 		$this->t['cart_metakey'] 			    = $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			    = $this->p->get( 'cart_metadesc', '' );
@@ -110,8 +121,8 @@ class PhocaCartViewItem extends JViewLegacy
 
 		if (!isset($this->item[0]->id) || (isset($this->item[0]->id) && $this->item[0]->id < 1)) {
 
-			header("HTTP/1.0 404 ".JText::_('COM_PHOCACART_NO_PRODUCT_FOUND'));
-			echo '<div class="alert alert-error">'.JText::_('COM_PHOCACART_NO_PRODUCT_FOUND').'</div>';
+			header("HTTP/1.0 404 ".Text::_('COM_PHOCACART_NO_PRODUCT_FOUND'));
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_NO_PRODUCT_FOUND')));
 
 
 
@@ -119,6 +130,7 @@ class PhocaCartViewItem extends JViewLegacy
 
 			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
+
 			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags'], ' ');
 			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels'], ' ');
 			$this->t['stock_status']		= array();
@@ -140,12 +152,12 @@ class PhocaCartViewItem extends JViewLegacy
 			$this->t['action']				= $uri->toString();
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
-			$this->t['linkcheckout']		= JRoute::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkitem']			= JRoute::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkcheckout']		= Route::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkitem']			= Route::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 
-			$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
-			$this->t['linkdownload']	= JRoute::_(PhocacartRoute::getDownloadRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkcomparison']	= Route::_(PhocacartRoute::getComparisonRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkwishlist']	= Route::_(PhocacartRoute::getWishListRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
+			$this->t['linkdownload']	= Route::_(PhocacartRoute::getDownloadRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			$this->itemnext[0]			= false;
 			$this->itemprev[0]			= false;
 
@@ -222,28 +234,28 @@ class PhocaCartViewItem extends JViewLegacy
 		PhocacartStatisticsHits::productHit((int)$id);
 
 		// Plugins ------------------------------------------
-		JPluginHelper::importPlugin('pcv');
+		PluginHelper::importPlugin('pcv');
 		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 
-		$results = \JFactory::getApplication()->triggerEvent('PCVonItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemBeforeHeader = trim(implode("\n", $results));
 
-		$results = \JFactory::getApplication()->triggerEvent('PCVonItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemAfterAddToCart = trim(implode("\n", $results));
 
-		$results = \JFactory::getApplication()->triggerEvent('PCVonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
 
-		$results = \JFactory::getApplication()->triggerEvent('PCVonItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemInsideTabPanel = $results;
 
-		$results = \JFactory::getApplication()->triggerEvent('PCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
 
 		// Some payment plugins want to display specific information in detail view
-		JPluginHelper::importPlugin('pcp');
-		$results = \JFactory::getApplication()->triggerEvent('PCPonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		PluginHelper::importPlugin('pcp');
+		$results = Factory::getApplication()->triggerEvent('onPCPonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->PCPonItemBeforeEndPricePanel = trim(implode("\n", $results));
 
 		// END Plugins --------------------------------------

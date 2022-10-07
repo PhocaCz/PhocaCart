@@ -7,14 +7,19 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\Form\FormRule;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
-class JFormRulePhocaCartHidden extends JFormRule
+class JFormRulePhocaCartHidden extends FormRule
 {
 
-	public function test(SimpleXMLElement $element, $value, $group = null, JRegistry $input = null, JForm $form = null)
+	public function test(SimpleXMLElement $element, $value, $group = null, Registry $input = null, Form $form = null)
 	{
 		
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		//E_ERROR, E_WARNING, E_NOTICE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE.
 		$info = array();
 		$info['field'] = 'phocacart_hidden';
@@ -22,7 +27,7 @@ class JFormRulePhocaCartHidden extends JFormRule
 		if ($value != '') {
 			
 			
-			$app->enqueueMessage(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'error');
+			$app->enqueueMessage(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED' ), 'error');
 			return false;
 		}
 		

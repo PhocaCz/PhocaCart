@@ -7,15 +7,22 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
-class JFormFieldPhocaFormCountry extends JFormField
+class JFormFieldPhocaFormCountry extends FormField
 {
 	protected $type 		= 'PhocaFormCountry';
 
 	protected function getInput() {
 
-		$app	= JFactory::getApplication();
-		$db	 	= JFactory::getDBO();
+		$app	= Factory::getApplication();
+		$db	 	= Factory::getDBO();
 
 		if ($this->id == 'jform_country') {
 			$regionId = 'jform_region';
@@ -29,20 +36,20 @@ class JFormFieldPhocaFormCountry extends JFormField
 		$s[] 	= 'function phUpdateRegion'.$this->id.'(value) {';
 
 
-		$config 	= JComponentHelper::getParams('com_media');
+		$config 	= ComponentHelper::getParams('com_media');
 		//$paramsC 	= PhocacartUtils::getComponentParameters() ;
-		
-		
+
+
 
 
 		if (!$app->isClient('administrator')) {
 			$paramsC 	= $app->getParams();
-			$load_chosen= $paramsC->get( 'load_chosen', 1 );
-			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. JSession::getFormToken().'=1\';';
+			$load_chosen= $paramsC->get( 'load_chosen', 0 );
+			$s[] 	= '   var url = \''.Uri::base(true).'/index.php?option=com_phocacart&task=checkout.setregion&format=json&'. Session::getFormToken().'=1\';';
 		} else {
 			$paramsC 	= PhocacartUtils::getComponentParameters();
-			$load_chosen= $paramsC->get( 'load_chosen', 1 );
-			$s[] 	= '   var url = \''.JURI::base(true).'/index.php?option=com_phocacart&task=phocacartuser.setregion&format=json&'. JSession::getFormToken().'=1\';';
+			$load_chosen= $paramsC->get( 'load_chosen', 0 );
+			$s[] 	= '   var url = \''.Uri::base(true).'/index.php?option=com_phocacart&task=phocacartuser.setregion&format=json&'. Session::getFormToken().'=1\';';
 		}
 
 		$s[] 	= '   var dataPost = {};';
@@ -73,7 +80,7 @@ class JFormFieldPhocaFormCountry extends JFormField
 
 
 		$s[] 	= '}';
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $s));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
 
 
@@ -87,12 +94,12 @@ class JFormFieldPhocaFormCountry extends JFormField
 
 
 		$attr = '';
-		$attr .= !empty($this->class) ? ' class="' . $this->class . ' form-control chosen-select ph-input-select-countries"' : 'class="form-control chosen-select ph-input-select-countries"';
+		$attr .= !empty($this->class) ? ' class="' . $this->class . ' form-select chosen-select ph-input-select-countries"' : 'class="form-select chosen-select ph-input-select-countries"';
 		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
 		$attr .= $this->multiple ? ' multiple' : '';
 		$attr .= $this->required ? ' required aria-required="true"' : '';
 		$attr .= $this->autofocus ? ' autofocus' : '';
-		
+
 		// Set default value in case, there is no value
 		if (($this->value == 0 || $this->value == '') && isset($this->default) && (int)$this->default > 0) {
 			$this->value = $this->default;
@@ -105,9 +112,9 @@ class JFormFieldPhocaFormCountry extends JFormField
 		}
 		$attr .= $this->onchange ? ' onchange="phUpdateRegion'.$this->id.'(this.value);' . $this->onchange . '" ' : ' onchange="phUpdateRegion'.$this->id.'(this.value);" ';
 
-		array_unshift($data, Joomla\CMS\HTML\HTMLHelper::_('select.option', '', '-&nbsp;'.JText::_('COM_PHOCACART_SELECT_COUNTRY').'&nbsp;-', 'value', 'text'));
+		array_unshift($data, HTMLHelper::_('select.option', '', '-&nbsp;'.Text::_('COM_PHOCACART_SELECT_COUNTRY').'&nbsp;-', 'value', 'text'));
 
-		return Joomla\CMS\HTML\HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
+		return HTMLHelper::_('select.genericlist',  $data,  $this->name, trim($attr), 'value', 'text', $this->value, $this->id );
 	}
 }
 ?>

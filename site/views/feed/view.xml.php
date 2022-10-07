@@ -9,10 +9,13 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 
 jimport('joomla.application.component.view');
 
-class PhocaCartViewFeed extends JViewLegacy
+class PhocaCartViewFeed extends HtmlView
 {
 
     protected $t;
@@ -21,15 +24,15 @@ class PhocaCartViewFeed extends JViewLegacy
 
     function display($tpl = null) {
 
-        $app  = JFactory::getApplication();
+        $app  = Factory::getApplication();
         $id   = $app->input->get('id', 0, 'int');
         $this->t['feed'] = PhocacartFeed::getFeed((int)$id);
 
 
 
         if ($this->t['feed']) {
-            $fP = new JRegistry;
-            $iP = new JRegistry;
+            $fP = new Registry;
+            $iP = new Registry;
 
 
             if (isset($this->t['feed']['feed_params']) && $this->t['feed']['feed_params'] != '') {
@@ -39,7 +42,6 @@ class PhocaCartViewFeed extends JViewLegacy
             if (isset($this->t['feed']['item_params']) && $this->t['feed']['item_params'] != '') {
                 $iP->loadString($this->t['feed']['item_params']);
             }
-
 
 
             $this->t['pathitem'] = PhocacartPath::getPath('productimage');

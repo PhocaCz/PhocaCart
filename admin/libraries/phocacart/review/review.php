@@ -9,11 +9,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartReview
 {
 	public static function getReviewsByProduct($productId) {
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		if ((int)$productId > 0) {
 
 			$columns		= 'a.id, a.product_id, a.user_id, a.name, a.rating, a.review, a.date, a.published';
@@ -39,7 +40,7 @@ class PhocacartReview
 	public static function addReview( &$error, $approveReview, $productId, $userId, $userName, $rating, $review) {
 
 		if ((int)$productId > 0 && (int)$userId > 0 && $userName != '' && (int)$rating > 0 && $review != '') {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			$published		= 0;
 			if ($approveReview == 0) {
@@ -57,7 +58,7 @@ class PhocacartReview
 				$error = 1;
 				return false;
 			}
-            $date = JFactory::getDate()->toSql();
+            $date = Factory::getDate()->toSql();
 
 			$query = ' INSERT INTO #__phocacart_reviews (product_id, user_id, name, rating, review, published, date)'
 			.' VALUES ('

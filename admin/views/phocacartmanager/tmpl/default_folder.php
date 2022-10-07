@@ -7,11 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 $group 	= PhocacartUtilsSettings::getManagerGroup($this->manager);
 
 if ($this->manager == 'filemultiple') {
 
-	$checked 	= Joomla\CMS\HTML\HTMLHelper::_('grid.id', $this->folderi, $this->folders[$this->folderi]->path_with_name_relative_no, 0, 'foldercid' );
+	$checked 	= HTMLHelper::_('grid.id', $this->folderi, $this->folders[$this->folderi]->path_with_name_relative_no, 0, 'foldercid' );
 	$link		= 'index.php?option=com_phocacart&amp;view=phocacartmanager'
 		 .'&amp;manager='.$this->manager
 		 .$group['c']
@@ -20,9 +23,9 @@ if ($this->manager == 'filemultiple') {
 
 	echo '<tr>'
 	.' <td>'. $checked .'</td>'
-	.' <td class="ph-img-table"><a href="'. JRoute::_( $link ).'">'
-	. Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder-small.png', '').'</a></td>'
-	.' <td><a href="'. JRoute::_( $link ).'">'. $this->_tmp_folder->name.'</a></td>'
+	.' <td class="ph-img-table"><a href="'. Route::_( $link ).'">'
+	. HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder-small.png', '').'</a></td>'
+	.' <td><a href="'. Route::_( $link ).'">'. $this->_tmp_folder->name.'</a></td>'
 	.'</tr>';
 
 } else {
@@ -35,9 +38,9 @@ if ($this->manager == 'filemultiple') {
 
 	echo '<tr>'
 	.' <td></td>'
-	.' <td class="ph-img-table"><a href="'. JRoute::_( $link ).'">'
-	. Joomla\CMS\HTML\HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder-small.png', JText::_('COM_PHOCACART_OPEN')).'</a></td>'
-	.' <td><a href="'. JRoute::_( $link ).'">'. $this->_tmp_folder->name.'</a></td>'
+	.' <td class="ph-img-table"><a href="'. Route::_( $link ).'">'
+	. HTMLHelper::_( 'image', $this->t['i'].'icon-16-folder-small.png', Text::_('COM_PHOCACART_OPEN')).'</a></td>'
+	.' <td><a href="'. Route::_( $link ).'">'. $this->_tmp_folder->name.'</a></td>'
 	.'</tr>';
 }
 ?>

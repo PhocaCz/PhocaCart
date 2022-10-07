@@ -10,9 +10,14 @@
 use Joomla\CMS\Language\Text;
 
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocaCartItems extends JViewLegacy
+class PhocaCartCpViewPhocaCartItems extends HtmlView
 {
 
 	protected $items;
@@ -91,7 +96,7 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
         } else {
             // In article associations modal we need to remove language filter if forcing a language.
             // We also need to change the category filter to show show categories with All or the forced language.
-            if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
+            if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
             {
                 // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
                 //$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
@@ -113,52 +118,74 @@ class PhocaCartCpViewPhocaCartItems extends JViewLegacy
 		$state	= $this->get('State');
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.item_id'));
-		$user  	= JFactory::getUser();
-		$bar 	= JToolbar::getInstance('toolbar');
+		$user  	= Factory::getUser();
+		$bar 	= Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
 		if ($canDo->get('core.create')) {
-			JToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
+			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
 		}
+
 		if ($canDo->get('core.edit')) {
-			JToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
+			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
+
+		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action')->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
+
+
+
 
 		if ($canDo->get('core.edit.state')) {
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
+			///ToolbarHelper::divider();
+			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
+			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
+			$childBar->standardButton('featured')->text('JFEATURE')->task($this->t['tasks'].'.featured')->listCheck(true);
+			$childBar->standardButton('unfeatured')->text('JUNFEATURE')->task($this->t['tasks'].'.unfeatured')->listCheck(true);
+			//ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			//ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			//ToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+			$childBar->delete($this->t['tasks'].'.delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
+			//ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
+
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-			$title = Text::_('JTOOLBAR_BATCH');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
 
-			Joomla\CMS\HTML\HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
-			$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModalCA\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'copy_attributes');
+			/*$title = Text::_('JTOOLBAR_BATCH');
+			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModal\" class=\"btn btn-small\">
+						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
+						$title</button></joomla-toolbar-button>";
+			$bar->appendButton('Custom', $dhtml, 'batch');*/
+
+			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal')->listCheck(true);
+
+			HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
+			/*$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
+			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModalCA\" class=\"btn btn-small\">
+						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
+						$title</button></joomla-toolbar-button>";
+			$bar->appendButton('Custom', $dhtml, 'copy_attributes');*/
+
+			$childBar->popupButton('copy_attributes')->text('COM_PHOCACART_COPY_ATTRIBUTES')->selector('collapseModalCA')->icon('icon-list')->listCheck(true);
 		}
 
-		$dhtml = '<button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){submitbutton(\'phocacartitem.recreate\');}}" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button>';
-		$bar->appendButton('Custom', $dhtml);
+		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){Joomla.submitbutton(\'phocacartitem.recreate\');}}';
+		//$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="'.$onClick.'" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button></joomla-toolbar-button>';
+		//$bar->appendButton('Custom', $dhtml);
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+
+		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image');
+
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}

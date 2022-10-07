@@ -5,70 +5,73 @@
 
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
 
-        <field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_LANG_STRING_DESC" required="true"/>
+        <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_LANG_STRING_DESC" required="true"/>
 
-        <field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+        <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
 
-        <field name="stock_movements" type="list" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL" description="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_DESC" class="inputbox" size="1" default="=">
+        <field name="stock_movements" type="list" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL" description="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_DESC" class="form-select" size="1" default="=">
             <option value="=">COM_PHOCACART_ITEMS_UNCHANGED</option>
             <option value="+">COM_PHOCACART_ITEMS_ADDED</option>
             <option value="-">COM_PHOCACART_ITEMS_SUBTRACTED</option>
         </field>
 
-        <field name="change_user_group" type="list" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_DESC" class="inputbox" size="1" default="0">
+        <field name="change_user_group" type="list" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_DESC" class="form-select" size="1" default="0">
             <option value="0">COM_PHOCACART_USER_GROUP_UNCHANGED</option>
             <option value="1">COM_PHOCACART_USER_GROUP_CHANGED</option>
         </field>
 
-        <field name="change_points_needed" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC" class="inputbox" size="1"
+        <field name="change_points_needed" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC" class="form-select" size="1"
                default="1">
             <option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
             <option value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
             <option value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
         </field>
 
-        <field name="change_points_received" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_DESC" class="inputbox" size="1"
+        <field name="change_points_received" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_DESC" class="form-select" size="1"
                default="0">
             <option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
             <option value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
             <option value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
         </field>
 
-        <field name="download" type="list" label="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_DESC" class="inputbox" size="1" default="0">
+        <field name="download" type="list" label="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_DESC" class="form-select" size="1" default="0">
             <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
 
-        <field name="email_customer" type="list" label="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_DESC" class="inputbox" size="1" default="0">
+        <field name="email_customer" type="list" label="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_DESC" class="form-select" size="1" default="0">
             <option value="1">COM_PHOCACART_YES</option>
 			<option value="2">COM_PHOCACART_YES_EXCLUDING_POS</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
-        <field name="email_others" type="textarea" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC"/>
+        <field name="email_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC"/>
 
 
-        <field name="email_subject" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC"/>
+        <field name="email_subject" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC"/>
 
-        <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
 
-        <field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC"/>
 
-        <field name="email_subject_others" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC"/>
+        <field name="email_subject_others" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC"/>
 
-        <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
 
-        <field name="email_send" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC" class="inputbox" size="1" default="0">
+        <field name="email_downloadlink_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+               description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
+
+        <field name="email_send" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC" class="form-select" size="1" default="0">
             <option value="0">COM_PHOCACART_NOTHING</option>
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
-        <field name="email_send_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_DESC">
+        <field name="email_send_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL" class="form-select" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_DESC">
                 <option value="0">COM_PHOCACART_HTML</option>
                 <option value="1">COM_PHOCACART_PDF</option>
                 <option value="2">COM_PHOCACART_BOTH</option>
@@ -77,63 +80,62 @@
         <field name="email_attachments" type="subform" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_DESC" multiple="true" max="3"
                    layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml"/>
 
-        <field name="orders_view_display" type="list" label="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" class="inputbox" size="1"
-               filter="int_array" default="" multiple="true">
+        <field name="orders_view_display" type="list" label="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" layout="joomla.form.field.list-fancy-select" multiple="true" size="1" filter="int_array" default="">
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
-        <field name="ordering" type="PhocacartOrdering" table="status" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+        <field name="ordering" type="PhocacartOrdering" table="status" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
 
-		<field name="activate_gift" type="list" label="COM_PHOCACART_FIELD_ACTIVATE_GIFT_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_GIFT_DESC" class="inputbox" size="1" default="0">
+		<field name="activate_gift" type="list" label="COM_PHOCACART_FIELD_ACTIVATE_GIFT_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_GIFT_DESC" class="form-select" size="1" default="0">
 			<option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
-		
-		
-		<field name="email_gift" type="list" label="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_DESC" class="inputbox" size="1" default="0">
+
+
+		<field name="email_gift" type="list" label="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_DESC" class="form-select" size="1" default="0">
             <option value="1">COM_PHOCACART_YES_BUYER</option>
 			<option value="2">COM_PHOCACART_YES_RECIPIENT</option>
 			<option value="3">COM_PHOCACART_YES_BUYER_AND_RECIPIENT</option>
             <option value="0">COM_PHOCACART_NO_ONE</option>
         </field>
 
-		<field name="email_subject_gift_sender" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC"/>
+		<field name="email_subject_gift_sender" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC"/>
 
-        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
-		
-		<field name="email_subject_gift_recipient" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC"/>
 
-        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" filter="JComponentHelper::filterText"
+		<field name="email_subject_gift_recipient" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC"/>
+
+        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
 
-		<field name="email_gift_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_DESC">
+		<field name="email_gift_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_DESC" class="form-select">
                 <option value="0">COM_PHOCACART_HTML</option>
                 <option value="1">COM_PHOCACART_PDF</option>
                 <option value="2">COM_PHOCACART_BOTH</option>
             </field>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
     </fieldset>
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
 
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select" size="1" default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="inputbox">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-select">
             <option value="*">JALL</option>
         </field>
         <!--
-        <field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
+        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
 
-        <field name="hits" type="Text" class="inputbox" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
+        <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
         -->
     </fieldset>
 

@@ -9,19 +9,21 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\Helpers\JGrid;
+use Joomla\CMS\HTML\HTMLHelper;
 /*
 jimport('joomla.html.grid');
 jimport('joomla.html.html.grid');
 jimport('joomla.html.html.jgrid');
 */
 
-if (! class_exists('JHtmlJGrid')) {
-	require_once( JPATH_SITE.'/libraries/joomla/html/html/jgrid.php' );
+if (! class_exists('HTMLHelperJGrid')) {
+	require_once( JPATH_SITE.'/libraries/src/HTML/Helpers/JGrid.php' );
 }
 
-class PhocacartHtmlJgrid extends JHtmlJGrid
+class PhocacartHtmlJgrid extends JGrid
 {
-	
+
 	public static function displayBilling($value, $i, $prefix = '', $enabled = true, $checkbox='cb')
 	{
 		if (is_array($prefix)) {
@@ -35,8 +37,8 @@ class PhocacartHtmlJgrid extends JHtmlJGrid
 			0	=> array('displaybilling',		'COM_PHOCACART_HIDDEN',	'COM_PHOCACART_DISPLAY',	'COM_PHOCACART_HIDDEN',	false,	'unpublish',	'unpublish')
 		);
 		return self::state($states, $value, $i, $prefix, $enabled, true, $checkbox);
-	}	
-	
+	}
+
 	public static function displayShipping($value, $i, $prefix = '', $enabled = true, $checkbox='cb')
 	{
 		if (is_array($prefix)) {
@@ -50,8 +52,8 @@ class PhocacartHtmlJgrid extends JHtmlJGrid
 			0	=> array('displayshipping',		'COM_PHOCACART_HIDDEN',	'COM_PHOCACART_DISPLAY',	'COM_PHOCACART_HIDDEN',	false,	'unpublish',	'unpublish')
 		);
 		return self::state($states, $value, $i, $prefix, $enabled, true, $checkbox);
-	}	
-	
+	}
+
 	public static function displayAccount($value, $i, $prefix = '', $enabled = true, $checkbox='cb')
 	{
 		if (is_array($prefix)) {
@@ -81,9 +83,9 @@ class PhocacartHtmlJgrid extends JHtmlJGrid
 		);
 		return self::state($states, $value, $i, $prefix, $enabled, true, $checkbox);
 	}
-	
 
-	
+
+
 	public static function approve($value, $i, $prefix = '', $enabled = true, $checkbox = 'cb', $publish_up = null, $publish_down = null)
 	{
 		if (is_array($prefix))

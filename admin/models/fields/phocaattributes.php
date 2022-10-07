@@ -7,8 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Form\FormField;
 
-class JFormFieldPhocaAttributes extends JFormField
+class JFormFieldPhocaAttributes extends FormField
 {
 	protected $type 		= 'PhocaAttributes';
 

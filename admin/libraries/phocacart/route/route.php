@@ -9,6 +9,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
 jimport('joomla.application.component.helper');
 
 
@@ -16,7 +23,7 @@ class PhocacartRoute
 {
 	public static function getCategoriesRoute($lang = array()) {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -55,6 +62,21 @@ class PhocacartRoute
 		return $link;
 	}
 
+	public static function cleanUrlItemsView ($url) {
+		$config 					= JFactory::getConfig();
+		$sef						= $config->get('sef', 1);
+
+		if ($sef) {
+			$url  = str_replace(':', '-', $url);
+		}
+		$url  = str_replace('?id=0', '', $url);
+		$url  = str_replace('id=0', '', $url);
+		return $url;
+
+	}
+
+
+
 	public static function getCategoryRoute($catid, $catidAlias = '', $lang = array()) {
 
 
@@ -66,7 +88,7 @@ class PhocacartRoute
 		}
 
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -100,7 +122,7 @@ class PhocacartRoute
 
 	public static function getCategoryRouteByTag($tagId) {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -121,7 +143,7 @@ class PhocacartRoute
 			);
 		}
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'
 		.' FROM #__phocacart_tags AS a'
@@ -145,7 +167,7 @@ class PhocacartRoute
 	*/
 	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '') {
 
-		$app 		= JFactory::getApplication();
+		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
@@ -204,7 +226,7 @@ class PhocacartRoute
 
 	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array(), $forceView = 0) {
 
-		$app 			= JFactory::getApplication();
+		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
 		$option			= $app->input->get( 'option', '', 'string' );
@@ -218,7 +240,6 @@ class PhocacartRoute
 		if ($catidCurrent > 0) {
 			$catid = $catidCurrent;
 		}*/
-
 		$activeId 	= 0;
 		if (isset($active->id)){
 			$activeId    = $active->id;
@@ -229,7 +250,8 @@ class PhocacartRoute
 				'item'  => (int) $id,
 				'category' => (int) $catid,
 				'categories' => (int)$activeId,
-				'items' => (int)$catid
+				'items' => (int)$activeId
+
 			);
 		} else {
 			$needles = array(
@@ -248,6 +270,10 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
+
+
+
+
 		return self::_buildLink($link, $needles, $lang);
 		//return self::_buildLink($link, $needles). '#'.$idAlias;
 	}
@@ -262,6 +288,7 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=checkout';
+
 		return self::_buildLink($link, $needles);
 	}
 
@@ -418,10 +445,11 @@ class PhocacartRoute
 			$id = $id . ':' . $idAlias;
 		}
 
-		$link = 'index.php?option=com_phocacart&view=feed&format=xml&id='. $id;
+		$link = 'index.php?option=com_phocacart&view=feed&id='. $id.'&format=xml';
 		if ($noSEF == 1) {
 			return $link;
 		}
+
 		$xml = self::_buildLink($link, $needles);
 
 
@@ -431,7 +459,7 @@ class PhocacartRoute
 
 	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '') {
 
-		$app 			= JFactory::getApplication();
+		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
 		$option			= $app->input->get( 'option', '', 'string' );
@@ -469,12 +497,18 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=question';
-		if ($id != 0) {
-			$link .= '&id='. $id;
-		}
 		if ($catid != 0) {
 			$link .= '&catid='. $catid;
 		}
+
+		if ($id != 0) {
+			$link .= '&productid='. $id;
+		}
+
+		if ($id != 0) {
+			$link .= '&id='. $id;
+		}
+
 		if ($suffix != '') {
 			$link .= '&'.$suffix;
 		}
@@ -493,7 +527,33 @@ class PhocacartRoute
 			if (isset($item->id) && ((int)$item->id > 0)) {
 				$link .= '&Itemid='.$item->id;
 			}
+
+
+			/*if (Multilanguage::isEnabled()) {
+				$app    = Factory::getApplication();
+				$menu   = $app->getMenu();
+				$itemId = $app->input->get('Itemid', 0, '', 'int');
+				$item   = $menu->getItem($itemId);
+				$lang   = !is_null($item) && $item->language != '*' ? '&lang=' . $item->language : '';
+				if ($lang != '') {
+					$link .= $lang;
+				}
+
+			}*/
+
+			if (Multilanguage::isEnabled()) {
+				if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
+					$link .= '&lang='.$lang[0];
+				}
+
+			}
+
+
+
 		}
+
+
+
 		return $link;
 	}
 
@@ -501,16 +561,18 @@ class PhocacartRoute
 
 	protected static function _findItem($needles, $notCheckId = 0, $lang = array())
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$menus	= $app->getMenu('site', array());
 		//$items	= $menus->getItems('component', 'com_phocacart');
 
-		$component 		= JComponentHelper::getComponent('com_phocacart');
+		$component 		= ComponentHelper::getComponent('com_phocacart');
 		$attributes 	= array('component_id');
 		$values     	= array($component->id);
 
 		// Find menu items of current language
 		$items = $menus->getItems($attributes, $values);
+
+
 
 		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
 		if (!empty($lang)) {
@@ -524,6 +586,21 @@ class PhocacartRoute
 			if ($itemsLang) {
 				$items = $itemsLang;
 			}
+		} else if (Multilanguage::isEnabled()) {
+
+			// Just prioritize the current language menu item
+			$langCurrent = Factory::getLanguage();
+			$langTag = $langCurrent->getTag();
+
+			if ($langTag != '' && $langTag != '*') {
+				$attributes[] 	= 'language';
+				$values[]     	= $langTag;
+				$itemsLang 		= $menus->getItems($attributes, $values);
+				if ($itemsLang) {
+					$items = $itemsLang;
+				}
+			}
+
 		}
 
 
@@ -536,14 +613,19 @@ class PhocacartRoute
 
 		$match = null;
 
-
 		foreach($needles as $needle => $id)
 		{
 
 			if ($notCheckId == 0) {
 				foreach($items as $item) {
 
-					if ((@$item->query['view'] == $needle) && (@$item->query['id'] == $id)) {
+					// Unifiy $item->query['id']
+					$queryId = '';
+					if (isset($item->query['id']) && $item->query['id'] != null && $item->query['id'] != 0) {
+						$queryId = $item->query['id'];
+					}
+
+					if ((@$item->query['view'] == $needle) && ($queryId == $id)) {
 						$match = $item;
 						break;
 					}
@@ -563,6 +645,7 @@ class PhocacartRoute
 		}
 
 		if (!$match) {
+
 			// Nothing found, try to set back "categories menu link" so e.g. menu links in module to some category
 			// gets no ID from another category which do have a menu link
 			// Category A have menu link
@@ -600,7 +683,7 @@ class PhocacartRoute
 
 	public static function isItemsView() {
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		$option	= $app->input->get( 'option', '', 'string' );
 		$view	= $app->input->get( 'view', '', 'string' );
 
@@ -619,7 +702,7 @@ class PhocacartRoute
 			// 1) We don't want to include category in filter, e.g. mod_phocacart_filter does not
 			// allow to include category filtering (deselecting category)
 			// so don't include category
-			$urlItemsView	= JRoute::_(PhocacartRoute::getItemsRoute());
+			$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute());
 
 		} else {
 			// 2) We want to include category filter and user stays on page where category is active
@@ -627,14 +710,15 @@ class PhocacartRoute
 			//
 			// 3) But if user stays on site where there is no active category, he gets ID = 0 (id of category)
 			// so no filtering of category will be done - it is active but user didn't stay on category active page
-			$urlItemsView	= JRoute::_(PhocacartRoute::getItemsRoute($a['id'], $a['alias']));
+			$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute($a['id'], $a['alias']));
 
 		}
 
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
+
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JURI::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -642,11 +726,11 @@ class PhocacartRoute
 
 	public static function getJsItemsRouteWithoutParams() {
 
-		$urlItemsView	= JRoute::_(PhocacartRoute::getItemsRoute());
+		$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute());
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JURI::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -659,7 +743,7 @@ class PhocacartRoute
 	 */
 	public static function getIdForItemsRoute() {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
 
@@ -673,27 +757,41 @@ class PhocacartRoute
 			$a['id']		= $app->input->get( 'id', '', 'int' );
 			$category 		= PhocacartCategory::getCategoryById($a['id']);
 
-			$a['idalias']	= $app->input->get( 'id', '', 'string' );
-			$a['alias']		= self::getAliasFromId($a['idalias']);
-			$a['idalias']	= str_replace(':', '-', $a['idalias']);
-			if (isset($category->alias)) {
-				$a['idalias']	= $a['id'] .'-'. $category->alias;
-				$a['alias']		= $category->alias;
+			if (!$category) {
+				$a['alias'] = '';
+				$a['idalias'] = '';
+			} else {
+				$a['idalias'] = $app->input->get('id', '', 'string');
+				$a['alias']   = self::getAliasFromId($a['idalias']);
+				$a['idalias'] = str_replace(':', '-', $a['idalias']);
+				if (isset($category->alias)) {
+					$a['idalias'] = $a['id'] . '-' . $category->alias;
+					$a['alias']   = $category->alias;
+				}
 			}
 
 		} else if ($option == 'com_phocacart' && ($view == 'item')) {
 			$a['id']		= $app->input->get( 'catid', '', 'int' );
 			$category 		= PhocacartCategory::getCategoryById($a['id']);
 
-			$a['idalias']	= $app->input->get( 'catid', '', 'string' );
-			$a['alias']		= self::getAliasFromId($a['idalias']);
-			$a['idalias']	= str_replace(':', '-', $a['idalias']);
-			if (isset($category->alias)) {
-				$a['idalias']	= $a['id'] .'-'. $category->alias;
-				$a['alias']		= $category->alias;
+			if (!$category) {
+				$a['alias'] = '';
+				$a['idalias'] = '';
+			} else {
+				$a['idalias']	= $app->input->get( 'catid', '', 'string' );
+				$a['alias']		= self::getAliasFromId($a['idalias']);
+				$a['idalias']	= str_replace(':', '-', $a['idalias']);
+				if (isset($category->alias)) {
+					$a['idalias']	= $a['id'] .'-'. $category->alias;
+					$a['alias']		= $category->alias;
+				}
 			}
 
 		}
+
+
+
+
 
 		return $a;
 	}
@@ -716,7 +814,7 @@ class PhocacartRoute
 
 	public static function isFilterActive() {
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
 
@@ -744,16 +842,79 @@ class PhocacartRoute
 
 	public static function getFullUrl($url) {
 
-		$url = JRoute::_($url);
+		$url = Route::_($url);
 
-		$frontendUrl 	= str_replace(JURI::root(true).'/administrator/', '',$url);
-		$frontendUrl 	= str_replace(JURI::root(true), '', $frontendUrl);
+		$frontendUrl 	= str_replace(Uri::root(true).'/administrator/', '',$url);
+		$frontendUrl 	= str_replace(Uri::root(true), '', $frontendUrl);
 		$frontendUrl 	= str_replace('\\', '/', $frontendUrl);
-		//$frontendUrl 	= JURI::root(false). str_replace('//', '/', $frontendUrl);
-		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', JURI::root(false). $frontendUrl);
+		//$frontendUrl 	= JUri::root(false). str_replace('//', '/', $frontendUrl);
+		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', Uri::root(false). $frontendUrl);
 
 		return $frontendUrl;
 	}
+
+
+	public static function getProductCanonicalLink($id, $catid, $idAlias, $catidAlias, $preferredCatid = 0 ) {
+
+		if ((int)$preferredCatid > 0) {
+
+			$db    = Factory::getDBO();
+			$query = 'SELECT c.id, c.alias'
+				. ' FROM #__phocacart_categories AS c'
+				. ' WHERE c.id = ' . (int)$preferredCatid
+				. ' ORDER BY c.id';
+
+			$db->setQuery($query, 0, 1);
+			$catO = $db->loadObject();
+			if (isset($catO->id) && isset($catO->alias)) {
+				return self::getItemRoute($id, $catO->id, $idAlias, $catO->alias);
+			}
+		}
+
+		return self::getItemRoute($id, $catid, $idAlias, $catidAlias);
+	}
+
+
+/*
+		$app 		= Factory::getApplication();
+		$menu 		= $app->getMenu();
+		$active 	= $menu->getActive();
+		$option		= $app->input->get( 'option', '', 'string' );
+
+		$activeId 	= 0;
+		if (isset($active->id)){
+			$activeId    = $active->id;
+		}
+		if ((int)$activeId > 0 && $option == 'com_phocacart') {
+			$needles 	= array(
+				'category' => '',
+				'categories' => (int)$activeId
+			);
+		} else {
+			$needles = array(
+				'category' => '',
+				'categories' => ''
+			);
+		}
+
+		$db = Factory::getDBO();
+
+		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'
+		.' FROM #__phocacart_tags AS a'
+		.' WHERE a.id = '.(int)$tagId
+		.' ORDER BY a.id';
+
+		$db->setQuery($query, 0, 1);
+		$tag = $db->loadObject();
+
+
+		if (isset($tag->id)) {
+			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid='.(int)$tag->id;
+		} else {
+			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid=0';
+		}
+		return self::_buildLink($link, $needles);*/
+
 	/*
 	public static function getCompleteAlias($id, $alias = '') {
 

@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 class PhocacartSection
 {
@@ -25,35 +28,41 @@ class PhocacartSection
 
 			// Section including unit
 			$unitSectionTitle	= $section->title . ' ('.$unit->title.')';
-			$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', $sectionId));
+			$linkSection 		= Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', $sectionId));
 
 			$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
 			$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
-	        $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+	       // $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span>';
+            $o .= PhocacartRenderIcon::icon($s['i']['back-category'].' icon-white', 'aria-hidden="true"');
+            $o .= '</a>';
 	        $o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else if (isset($section->title) && $section->title != '') {
 
 			// One section without unit
 			$unitSectionTitle	= $section->title;
-			$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', $sectionId));
+			$linkSection 		= Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', $sectionId));
 
 			$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
 			$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
-	        $o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
+	        //$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span>';
+            $o .= PhocacartRenderIcon::icon($s['i']['back-category'].' icon-white', 'aria-hidden="true"');
+            $o .= '</a>';
 	        $o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.$unitSectionTitle.'</a>';
 	        $o .= '</div>';
 		} else {
 			$sections 		= PhocacartSection::getSections();
 
-			$linkSections 	= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
+			$linkSections 	= Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
 			if (!empty($sections)) {
 				foreach($sections as $k => $v) {
-					$linkSection 		= JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', (int)$v->id));
+					$linkSection 		= Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section', (int)$v->id));
 					$o .= '<div class="'.$s['c']['btn-group'].'" role="group">';
 					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">';
-					$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span></a>';
-					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.JText::_('COM_PHOCACART_SECTIONS').'</a>';
+					//$o .= '<span class="'.$s['i']['back-category'].' icon-white" aria-hidden="true"></span>';
+                    $o .= PhocacartRenderIcon::icon($s['i']['back-category'].' icon-white', 'aria-hidden="true"');
+                    $o .= '</a>';
+					$o .= '<a href="'.$linkSection.'" class="'.$s['c']['btn.btn-primary'].' active">'.Text::_('COM_PHOCACART_SECTIONS').'</a>';
 					$o .= '</div>';
 					break;
 				}
@@ -85,7 +94,7 @@ class PhocacartSection
 				}
 
 
-				$link = JRoute::_(PhocacartRoute::getPosRoute(1,0,0, 'section', (int)$v->id));
+				$link = Route::_(PhocacartRoute::getPosRoute(1,0,0, 'section', (int)$v->id));
 				$o .= '<li class="'.$s['c']['nav-item'].' '.$active.'">';
 				$o .= '<a class="'.$s['c']['nav-link'].' '.$active.'" href="'.$link.'"> '.$v->title.' </a>';
 				$o .= '</li>';
@@ -93,10 +102,10 @@ class PhocacartSection
 			}
 
 		} else {
-			$link = JRoute::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
+			$link = Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
 
 			$o .= '<li class="'.$s['c']['nav-item'].' active">';
-			$o .= '<a class="'.$s['c']['nav-link'].' active" href="'.$link.'">'.JText::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
+			$o .= '<a class="'.$s['c']['nav-link'].' active" href="'.$link.'">'.Text::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
 			$o .= '</li>';
 		}
 
@@ -108,7 +117,7 @@ class PhocacartSection
 
 	public static function getSections($limit = 0) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT a.id, a.title FROM #__phocacart_sections AS a'
 				.' WHERE a.published = 1'
 				.' ORDER BY a.ordering';
@@ -123,7 +132,7 @@ class PhocacartSection
 
 	public static function existsSection($sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT id FROM #__phocacart_sections'
 				.' WHERE id = '.(int)$sectionId
 				.' AND published = 1';
@@ -137,7 +146,7 @@ class PhocacartSection
 
 	public static function getSectionById($sectionId) {
 
-		$db 	= JFactory::getDBO();
+		$db 	= Factory::getDBO();
 		$query = ' SELECT id, title FROM #__phocacart_sections'
 				.' WHERE id = '.(int)$sectionId
 				.' AND published = 1';
@@ -148,7 +157,7 @@ class PhocacartSection
 
 	public static function options() {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = 'SELECT a.title AS text, a.id AS value'
 		. ' FROM #__phocacart_sections AS a'
 		. ' WHERE a.published = 1'

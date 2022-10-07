@@ -7,24 +7,29 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\FileLayout;
 
-class PhocaCartControllerPos extends JControllerForm
+class PhocaCartControllerPos extends FormController
 {
 
 	// Add item to cart
 	function add($tpl = null){
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
 
 
-		$app					= JFactory::getApplication();
+		$app					= Factory::getApplication();
 
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
@@ -66,7 +71,7 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!isset($vendor->id) || (isset($vendor->id) && (int)$vendor->id < 1)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -74,7 +79,7 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!PhocacartTicket::existsTicket((int)$vendor->id, (int)$ticket->id, (int)$unit->id, (int)$section->id)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -96,7 +101,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 				$response = array(
 					'status' => '0',
-					'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PRODUCT_NOT_FOUND') . '</div>');
+					'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PRODUCT_NOT_FOUND') . '</div>');
 				echo json_encode($response);
 				return;
 
@@ -119,7 +124,7 @@ class PhocaCartControllerPos extends JControllerForm
 			$d 				= array();
 			$d['s']			= $s;
 			$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
-			$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+			$layoutPE		= new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
 			$oE 			= $layoutPE->render($d);
 			$response = array(
 				'status' => '0',
@@ -177,7 +182,7 @@ class PhocaCartControllerPos extends JControllerForm
 		$response = array(
 			'status'	=> '1',
 			'item'		=> $o,
-			'message'	=> '<div class="ph-result-txt ph-success-txt">' . JText::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART') . '</div>',
+			'message'	=> '<div class="ph-result-txt ph-success-txt">' . Text::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART') . '</div>',
 			'popup'		=> $o2,
 			'count'		=> $count,
 			'total'		=> $total);
@@ -197,10 +202,10 @@ class PhocaCartControllerPos extends JControllerForm
 	// Add item to cart
 	function update($tpl = null){
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -208,7 +213,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int' );
@@ -236,14 +241,14 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!isset($vendor->id) || (isset($vendor->id) && (int)$vendor->id < 1)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 		if (!PhocacartTicket::existsTicket((int)$vendor->id, (int)$ticket->id, (int)$unit->id, (int)$section->id)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -263,9 +268,9 @@ class PhocaCartControllerPos extends JControllerForm
 
 					$d 				= array();
 					$d['s']			= $s;
-					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
 					$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();;
-					$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+					$layoutPE		= new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
 					$oE 			= $layoutPE->render($d);
 					$response = array(
 						'status' => '0',
@@ -278,9 +283,9 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 				/*if ($updated) {
-					$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'message');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'message');
 				} else {
-					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_NOT_REMOVED_FROM_SHOPPING_CART') . $msgSuffix, 'error');
 				}*/
 			} else {// update
 				$updated	= $cart->updateItemsFromCheckout($item['idkey'], (int)$item['quantity']);
@@ -289,9 +294,9 @@ class PhocaCartControllerPos extends JControllerForm
 
 					$d 				= array();
 					$d['s']			= $s;
-					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
 					$d['info_msg']	= PhocacartRenderFront::renderMessageQueue();
-					$layoutPE		= new JLayoutFile('popup_error', null, array('component' => 'com_phocacart'));
+					$layoutPE		= new FileLayout('popup_error', null, array('component' => 'com_phocacart'));
 					$oE 			= $layoutPE->render($d);
 					$response = array(
 						'status' => '0',
@@ -302,9 +307,9 @@ class PhocaCartControllerPos extends JControllerForm
 					return;
 				}
 				/*if ($updated) {
-					$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED') .$msgSuffix , 'message');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED') .$msgSuffix , 'message');
 				} else {
-					$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
+					$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_PRODUCT_QUANTITY_NOT_UPDATED'). $msgSuffix, 'error');
 				}*/
 			}
 
@@ -346,7 +351,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 
-			$message = $item['action'] == 'delete' ? JText::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') : JText::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED');
+			$message = $item['action'] == 'delete' ? Text::_('COM_PHOCACART_PRODUCT_REMOVED_FROM_SHOPPING_CART') : Text::_('COM_PHOCACART_PRODUCT_QUANTITY_UPDATED');
 			$response = array(
 				'status'	=> '1',
 				'item'		=> $o,
@@ -376,7 +381,7 @@ class PhocaCartControllerPos extends JControllerForm
         	$cart->updatePayment();
 
 
-        	$db 	= JFactory::getDBO();
+        	$db 	= Factory::getDBO();
 			$query = ' SELECT shipping FROM #__phocacart_cart_multiple AS a'
 					.' WHERE a.vendor_id = 211';
 			$db->setQuery($query);
@@ -443,15 +448,15 @@ class PhocaCartControllerPos extends JControllerForm
 
 	function savecustomer($tpl = null){
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app							= JFactory::getApplication();
+		$app							= Factory::getApplication();
 
 		$item							= array();
 		$item['id']						= $this->input->get( 'id', 0, 'int' );
@@ -469,14 +474,14 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!isset($vendor->id) || (isset($vendor->id) && (int)$vendor->id < 1)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 		if (!PhocacartTicket::existsTicket((int)$vendor->id, (int)$ticket->id, (int)$unit->id, (int)$section->id)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -514,12 +519,12 @@ class PhocaCartControllerPos extends JControllerForm
 			$cart->updatePayment();
 
 			if ($item['id'] > 0 && $item['loyalty_card_number'] == '') {
-				$msg = JText::_('COM_PHOCACART_SUCCESS_CUSTOMER_SELECTED');
+				$msg = Text::_('COM_PHOCACART_SUCCESS_CUSTOMER_SELECTED');
 			} else if ($item['loyalty_card_number'] != '') {
-				$msg = JText::_('COM_PHOCACART_SUCCESS_USER_NOT_FOUND_BY_LOYALTY_CARD_NUMBER');
-				$msg .= '<br />' . JText::_('COM_PHOCACART_ANONYMOUS_USER_SET');
+				$msg = Text::_('COM_PHOCACART_SUCCESS_USER_NOT_FOUND_BY_LOYALTY_CARD_NUMBER');
+				$msg .= '<br />' . Text::_('COM_PHOCACART_ANONYMOUS_USER_SET');
 			} else {
-				$msg = JText::_('COM_PHOCACART_SUCCESS_CUSTOMER_DESELECTED');
+				$msg = Text::_('COM_PHOCACART_SUCCESS_CUSTOMER_DESELECTED');
 			}
 
 			$response = array(
@@ -532,7 +537,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_ERROR_CART_NOT_UPDATED') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_ERROR_CART_NOT_UPDATED') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -541,15 +546,15 @@ class PhocaCartControllerPos extends JControllerForm
 
 	public function saveshipping() {
 
-	 	if (!JSession::checkToken('request')) {
+	 	if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 
 		$item		= array();
 		$item['id']	= $this->input->get( 'id', 0, 'int'  );
@@ -565,21 +570,21 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!isset($vendor->id) || (isset($vendor->id) && (int)$vendor->id < 1)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 		if (!PhocacartTicket::existsTicket((int)$vendor->id, (int)$ticket->id, (int)$unit->id, (int)$section->id)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
 		$model 	= $this->getModel('pos');
 		if(!$model->saveShipping((int)$item['id'])) {
-			$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+			$msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 			$app->enqueueMessage($msg, 'error');
 			$response = array(
 				'status' => '0',
@@ -587,7 +592,7 @@ class PhocaCartControllerPos extends JControllerForm
 			echo json_encode($response);
 			return;
 		} else {
-			$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+			$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 			$app->enqueueMessage($msg, 'message');
 
 
@@ -603,15 +608,15 @@ class PhocaCartControllerPos extends JControllerForm
 
 	public function savepayment() {
 
-	 	if (!JSession::checkToken('request')) {
+	 	if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 
 		$item				= array();
 		$item['id']			= $this->input->get( 'id', 0, 'int'  );
@@ -633,14 +638,14 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!isset($vendor->id) || (isset($vendor->id) && (int)$vendor->id < 1)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 		if (!PhocacartTicket::existsTicket((int)$vendor->id, (int)$ticket->id, (int)$unit->id, (int)$section->id)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -667,10 +672,10 @@ class PhocaCartControllerPos extends JControllerForm
 			}
 
 			if(!$couponId) {
-				$msg = JText::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT');
+				$msg = Text::_('COM_PHOCACART_COUPON_INVALID_EXPIRED_REACHED_USAGE_LIMIT');
 				$app->enqueueMessage($msg, 'error');
 			} else {
-				$msg = JText::_('COM_PHOCACART_COUPON_ADDED');
+				$msg = Text::_('COM_PHOCACART_COUPON_ADDED');
 				$app->enqueueMessage($msg, 'message');
 			}
 		}
@@ -685,10 +690,10 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 			if($rewards['used'] === false) {
-				$msg = JText::_('COM_PHOCACART_REWARD_POINTS_NOT_ADDED');
+				$msg = Text::_('COM_PHOCACART_REWARD_POINTS_NOT_ADDED');
 				$app->enqueueMessage($msg, 'error');
 			} else {
-				$msg = JText::_('COM_PHOCACART_REWARD_POINTS_ADDED');
+				$msg = Text::_('COM_PHOCACART_REWARD_POINTS_ADDED');
 				$app->enqueueMessage($msg, 'message');
 			}
 
@@ -700,7 +705,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 
 		if(!$model->savePaymentAndCouponAndReward((int)$item['id'], $couponId, $rewards['used'])) {
-			$msg = JText::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
+			$msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
 			$app->enqueueMessage($msg, 'error');
 			$response = array(
 				'status' => '0',
@@ -708,7 +713,7 @@ class PhocaCartControllerPos extends JControllerForm
 			echo json_encode($response);
 			return;
 		} else {
-			$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+			$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 			$app->enqueueMessage($msg, 'message');
 			$response = array(
 				'status' => '1',
@@ -721,7 +726,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 	/*public function printserver() {
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 		$item				= array();
 		$params 			= $app->getParams();
 		$pos_server_print	= $params->get( 'pos_server_print', 0 );
@@ -733,15 +738,15 @@ class PhocaCartControllerPos extends JControllerForm
 	public function order() {
 
 
-		if (!JSession::checkToken('request')) {
+		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('JINVALID_TOKEN') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app				= JFactory::getApplication();
+		$app				= Factory::getApplication();
 
 		$item				= array();
 
@@ -777,14 +782,14 @@ class PhocaCartControllerPos extends JControllerForm
 		if (!isset($vendor->id) || (isset($vendor->id) && (int)$vendor->id < 1)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 		if (!PhocacartTicket::existsTicket((int)$vendor->id, (int)$ticket->id, (int)$unit->id, (int)$section->id)) {
 			$response = array(
 				'status' => '0',
-				'error' => '<div class="ph-result-txt ph-error-txt">' . JText::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
+				'error' => '<div class="ph-result-txt ph-error-txt">' . Text::_('COM_PHOCACART_TICKET_DOES_NOT_EXIST') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -802,7 +807,7 @@ class PhocaCartControllerPos extends JControllerForm
 		if(!$orderMade) {
 			$msg = '';
 			if (!PhocacartUtils::issetMessage()){
-				$msg = JText::_('COM_PHOCACART_ORDER_ERROR_PROCESSING');
+				$msg = Text::_('COM_PHOCACART_ORDER_ERROR_PROCESSING');
 			}
 			$app->enqueueMessage($msg, 'error');
 			$response = array(
@@ -837,7 +842,7 @@ class PhocaCartControllerPos extends JControllerForm
 					print r($v);
 				}
 			}*/
-			$msg = JText::_('COM_PHOCACART_ORDER_HAS_BEEN_SAVED_SUCCESSFULLY');
+			$msg = Text::_('COM_PHOCACART_ORDER_HAS_BEEN_SAVED_SUCCESSFULLY');
 
 
 			// PRINT SERVER PRINT
@@ -851,7 +856,7 @@ class PhocaCartControllerPos extends JControllerForm
 					$printPos->printOrder($o);
 					//echo JText::_('COM_PHOCACART_RECEIPT_SENT_TO_PRINTER');
 				} catch(Exception $e) {
-					$msg .= "<br />" . JText::_('COM_PHOCACART_ERROR'). ': '. $e->getMessage();
+					$msg .= "<br />" . Text::_('COM_PHOCACART_ERROR'). ': '. $e->getMessage();
 					/*$response = array(
 					'status' => '1',
 					'id'	=> (int)$orderMade,
@@ -863,7 +868,7 @@ class PhocaCartControllerPos extends JControllerForm
 
 			}
 
-			$session 	= JFactory::getSession();
+			$session 	= Factory::getSession();
 			if ($action == 4 || $action == 3) {
 				// Ordered OK, but now we proceed to payment
 				//$session->set('infoaction', $action, 'phocaCart');

@@ -7,7 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-class TablePhocacartProductPriceGroup extends JTable
+use Joomla\CMS\Table\Table;
+class TablePhocacartProductPriceGroup extends Table
 {
 	function __construct( &$db ) {
 		parent::__construct( '#__phocacart_product_price_groups', 'id', $db );

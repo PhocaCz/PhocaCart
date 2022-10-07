@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhocaCartCommon {
@@ -14,14 +17,14 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 
 	public function run() {
 
-		if (!JSession::checkToken('request')) {
-			$response = array('status' => '0', 'output' => '<div class="alert alert-error">' . JText::_('JINVALID_TOKEN') . '</div>');
+		if (!Session::checkToken('request')) {
+			$response = array('status' => '0', 'output' => '<div class="alert alert-error">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$price		= new PhocacartPrice();
 		$continue 	= 0;
@@ -35,7 +38,7 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 		$item_save_price_history_run    = $item->params->get('save_price_history_run', 1);
 
 		if (isset($item->status) && $item->status == 1) {
-			$response = array('status' => '1', 'output' => '<div class="alert alert-error">' . JText::_('COM_PHOCACART_THIS_BULK_PRICE_JOB_HAS_ALREADY_BEEN_RUN_AND_IS_ACTIVE') . '</div>');
+			$response = array('status' => '1', 'output' => '<div class="alert alert-error">' . Text::_('COM_PHOCACART_THIS_BULK_PRICE_JOB_HAS_ALREADY_BEEN_RUN_AND_IS_ACTIVE') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -91,13 +94,13 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
             	if (isset($v['price']) ) {
 
             		$newPrice = PhocacartPriceBulkprice::setNewPrice($v['id'], $v['price'], $item->params);
-            		$o[] = '<div class="ph-bulk-price-price">' . JText::_('COM_PHOCACART_PRICE') . ': <b>'. $price->getPriceFormat($v['price']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPrice). '</b></div>';
+            		$o[] = '<div class="ph-bulk-price-price">' . Text::_('COM_PHOCACART_PRICE') . ': <b>'. $price->getPriceFormat($v['price']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPrice). '</b></div>';
 				}
 
             	if (isset($v['price_original']) ) {
 
             		$newPriceOriginal = PhocacartPriceBulkprice::setNewOriginalPrice($v['id'], $v['price_original'], $v['price'], $item->params);
-            		$o[] = '<div class="ph-bulk-price-original-price">' . JText::_('COM_PHOCACART_ORIGINAL_PRICE') . ': <b>'. $price->getPriceFormat($v['price_original']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPriceOriginal). '</b></div>';
+            		$o[] = '<div class="ph-bulk-price-original-price">' . Text::_('COM_PHOCACART_ORIGINAL_PRICE') . ': <b>'. $price->getPriceFormat($v['price_original']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPriceOriginal). '</b></div>';
 				}
 
             	if (isset($v['price']) && isset($v['price_original'])) {
@@ -141,7 +144,7 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 
         	// Job finished
         	$oFinished[] = '<div class="ph-bulk-price-item alert alert-success">';
-        	$oFinished[] = JText::_('COM_PHOCACART_BULK_PRICE_CHANGE_FINISHED');
+        	$oFinished[] = Text::_('COM_PHOCACART_BULK_PRICE_CHANGE_FINISHED');
         	$oFinished[] = '</div>';
         	$output = implode('', $oFinished) . $output;
 
@@ -158,14 +161,14 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 
 	public function revert() {
 
-		if (!JSession::checkToken('request')) {
-			$response = array('status' => '0', 'output' => '<div class="alert alert-error">' . JText::_('JINVALID_TOKEN') . '</div>');
+		if (!Session::checkToken('request')) {
+			$response = array('status' => '0', 'output' => '<div class="alert alert-error">' . Text::_('JINVALID_TOKEN') . '</div>');
 			echo json_encode($response);
 			return;
 		}
 
-		$app		= JFactory::getApplication();
-		$db			= JFactory::getDBO();
+		$app		= Factory::getApplication();
+		$db			= Factory::getDBO();
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$price		= new PhocacartPrice();
 		$continue 	= 0;
@@ -179,7 +182,7 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 		$item_save_price_history_revert = $item->params->get('save_price_history_revert', 1);
 
 		if (isset($item->status) && $item->status == 0) {
-			$response = array('status' => '1', 'output' => '<div class="alert alert-error">' . JText::_('COM_PHOCACART_THIS_BULK_PRICE_JOB_HAS_NOT_BEEN_RUN_AND_IS_NOT_ACTIVE') . '</div>');
+			$response = array('status' => '1', 'output' => '<div class="alert alert-error">' . Text::_('COM_PHOCACART_THIS_BULK_PRICE_JOB_HAS_NOT_BEEN_RUN_AND_IS_NOT_ACTIVE') . '</div>');
 			echo json_encode($response);
 			return;
 		}
@@ -235,13 +238,13 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
             	if (isset($v['price']) ) {
 
             		$newPrice = PhocacartPriceBulkprice::setRevertPrice($v['id'], $id, $v['price'], $item->params);
-            		$o[] = '<div class="ph-bulk-price-price">' . JText::_('COM_PHOCACART_PRICE') . ': <b>'. $price->getPriceFormat($v['price']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPrice). '</b></div>';
+            		$o[] = '<div class="ph-bulk-price-price">' . Text::_('COM_PHOCACART_PRICE') . ': <b>'. $price->getPriceFormat($v['price']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPrice). '</b></div>';
 				}
 
             	if (isset($v['price_original']) ) {
 
             		$newPriceOriginal = PhocacartPriceBulkprice::setRevertOriginalPrice($v['id'], $id, $v['price_original'], $v['price'], $item->params);
-            		$o[] = '<div class="ph-bulk-price-original-price">' . JText::_('COM_PHOCACART_ORIGINAL_PRICE') . ': <b>'. $price->getPriceFormat($v['price_original']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPriceOriginal). '</b></div>';
+            		$o[] = '<div class="ph-bulk-price-original-price">' . Text::_('COM_PHOCACART_ORIGINAL_PRICE') . ': <b>'. $price->getPriceFormat($v['price_original']) . '</b> <span class="ph-bulk-price-arrow">&rarr;</span> <b>' .$price->getPriceFormat($newPriceOriginal). '</b></div>';
 				}
 
             	if (isset($v['price']) && isset($v['price_original'])) {
@@ -281,7 +284,7 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 
         	// Job finished
         	$oFinished[] = '<div class="ph-bulk-price-item alert alert-success">';
-        	$oFinished[] = JText::_('COM_PHOCACART_BULK_PRICE_CHANGE_FINISHED');
+        	$oFinished[] = Text::_('COM_PHOCACART_BULK_PRICE_CHANGE_FINISHED');
         	$oFinished[] = '</div>';
         	$output = implode('', $oFinished) . $output;
 

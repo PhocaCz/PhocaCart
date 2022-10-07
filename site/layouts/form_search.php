@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 $d = $displayData;
 $d['paramname'] = str_replace('_', '', $d['param']);
 $jsSet = 'phChangeSearch(\'' . $d['param'] . '\', jQuery(\'#' . $d['id'] . ' input[name=&quot;' . $d['paramname'] . '&quot;]\').val(), 1, \'text\', 1);';
@@ -24,7 +26,7 @@ $js .= '      }' . "\n";
 $js .= '   });' . "\n";
 $js .= '});' . "\n";
 $js .= ' ' . "\n";
-$document = JFactory::getDocument();
+$document = Factory::getDocument();
 $document->addScriptDeclaration($js);
 
 if (isset($d['activefilter']) && $d['activefilter']) {
@@ -38,10 +40,10 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 <?php if ($d['display_inner_icon'] == 1) { ?>
 
-    <div class="inner-addon right-addon"><i class="<?php echo $d['s']['i']['search'] ?>"></i><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo JText::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>"/></div>
+    <div class="inner-addon right-addon"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>"/></div>
 
 <?php } else { ?>
-    <input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo JText::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" />
+    <input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" />
 
 <?php } ?>
 
@@ -50,7 +52,7 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 <?php } ?>
 
         <span class="input-group-btn">
-        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" aria-label="<?php echo JText::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'] . $d['paramname'] . 'Btn'; ?>"><span class="<?php echo $d['s']['i']['search'] ?>"></span></button><button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo JText::_('COM_PHOCACART_CLEAR'); ?>" aria-label="<?php echo JText::_('COM_PHOCACART_CLEAR'); ?>"><span class="<?php echo $d['s']['i']['clear'] ?>"></span></button></span>
+        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'] . $d['paramname'] . 'Btn'; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?></button><button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button></span>
 
 <?php if ($d['hide_buttons'] == 1) { ?>
     </div>
@@ -60,10 +62,10 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 
 <?php if ($d['search_options'] == 1) { ?>
-    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo JText::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
+    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
     </div>
 
-    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo JText::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
+    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
     </div>
 <?php } ?>
 

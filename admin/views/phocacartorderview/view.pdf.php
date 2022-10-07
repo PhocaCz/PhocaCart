@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
+class PhocaCartCpViewPhocacartOrderView extends HtmlView
 {
 
 	protected $t;
@@ -18,7 +21,7 @@ class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 	public function display($tpl = null) {
 
 
-		$app			= JFactory::getApplication();
+		$app			= Factory::getApplication();
 		$this->t		= PhocacartUtils::setVars('orderview');
 		$this->r		= new PhocacartRenderAdminview();
 		$id				= $app->input->get('id', 0, 'int');
@@ -42,13 +45,13 @@ class PhocaCartCpViewPhocacartOrderView extends JViewLegacy
 			case 2:
 				$invoiceNumber	= PhocacartOrder::getInvoiceNumber($id, $orderBillingData['date'], $orderBillingData['invoice_number']);
 
-				$title			= JText::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
+				$title			= Text::_('COM_PHOCACART_INVOICE_NR'). ': '. $invoiceNumber;
 			break;
 			case 1:
 			case 3:
 			default:
 				$orderNumber	= PhocacartOrder::getOrderNumber($id, $orderBillingData['date'], $orderBillingData['order_number']);
-				$title			= JText::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
+				$title			= Text::_('COM_PHOCACART_ORDER_NR'). ': '. $orderNumber;
 			break;
 		}
 

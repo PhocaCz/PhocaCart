@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartFormItems
 {
@@ -17,7 +18,7 @@ class PhocacartFormItems
 	public function __construct() {}
 
 	public function getFormItems($billing = 1, $shipping = 1, $account = 0) {
-		$db 					= JFactory::getDBO();
+		$db 					= Factory::getDBO();
 		$user 					= PhocacartUser::getUser();
 		$userLevels				= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -66,7 +67,7 @@ class PhocacartFormItems
 
 	public static function isFormFieldActive($type = 'billing') {
 
-	    $db = JFactory::getDBO();
+	    $db = Factory::getDBO();
 
 	    $wheres = array();
 

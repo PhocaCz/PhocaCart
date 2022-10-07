@@ -7,11 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Filesystem\File;
 $d = $displayData;
 
 if (isset($d['publicplayfile']) && $d['publicplayfile'] != '') {
 
-    $ext = \Joomla\CMS\Filesystem\File::getExt($d['publicplayfile']);
+    $ext = File::getExt($d['publicplayfile']);
 
     echo '<div class="ph-item-play-file">';
     if (isset($d['title']) && $d['title'] != '') {

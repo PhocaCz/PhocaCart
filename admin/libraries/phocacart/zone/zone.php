@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 jimport('joomla.application.component.model');
 
 class PhocacartZone
@@ -23,7 +25,7 @@ class PhocacartZone
 			$c = 'payment_id';
 		}
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT c.zone_id';
@@ -47,16 +49,28 @@ class PhocacartZone
 
 	public static function getAllZonesSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id' ) {
 
-		$db =JFactory::getDBO();
+		$db =Factory::getDBO();
 		$query = 'SELECT a.id AS value, a.title AS text'
 				.' FROM #__phocacart_zones AS a'
 				. ' ORDER BY '. $order;
 		$db->setQuery($query);
 		$zones = $db->loadObjectList();
 
-		$zonesO = Joomla\CMS\HTML\HTMLHelper::_('select.genericlist', $zones, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
+		$zonesO = HTMLHelper::_('select.genericlist', $zones, $name, 'class="form-control" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray, $id);
 
 		return $zonesO;
+	}
+
+	public static function getAllZones($order = 'id' ) {
+
+		$db =Factory::getDBO();
+		$query = 'SELECT a.id AS value, a.title AS text'
+				.' FROM #__phocacart_zones AS a'
+				. ' ORDER BY '. $order;
+		$db->setQuery($query);
+		$zones = $db->loadObjectList();
+
+		return $zones;
 	}
 
 	/*
@@ -76,7 +90,7 @@ class PhocacartZone
 		}
 
 		if ((int)$id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM '.$t
 					. ' WHERE '.$c.' = '. (int)$id;
@@ -89,7 +103,9 @@ class PhocacartZone
 				$valuesString 	= '';
 
 				foreach($zonesArray as $k => $v) {
-					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					//$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					// No multidimensional in J4
+					$values[] = ' ('.(int)$id.', '.(int)$v.')';
 				}
 
 				if (!empty($values)) {
@@ -107,7 +123,7 @@ class PhocacartZone
 
 	public static function getCountries($id = 0) {
 		if ($id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$q = ' SELECT a.country_id FROM #__phocacart_zone_countries AS a'
 			    .' WHERE a.zone_id = '.(int) $id
 				.' ORDER BY a.zone_id';
@@ -120,7 +136,7 @@ class PhocacartZone
 
 	public static function getRegions($id = 0) {
 		if ($id > 0) {
-			$db =JFactory::getDBO();
+			$db =Factory::getDBO();
 			$q = ' SELECT a.region_id FROM #__phocacart_zone_regions AS a'
 			    .' WHERE a.zone_id = '.(int) $id
 				.' ORDER BY a.zone_id';

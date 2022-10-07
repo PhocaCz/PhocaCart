@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartUser
 {
@@ -24,19 +26,19 @@ class PhocacartUser
 	/*public function __construct($pos) {
 
 
-		$this->user		= JFactory::getUser();
+		$this->user		= Factory::getUser();
 		$this->pos		= $pos;
 	}*/
 
 
 	public static function getUser($id = 0) {
 
-		$app         = JFactory::getApplication();
+		$app         = Factory::getApplication();
 		$pUser		= $vendor = $ticket = $unit	= $section = array();
 		$isVendor	= false;
 
 		if ((int)$id > 0) {
-			$jUser = JFactory::getUser($id);
+			$jUser = Factory::getUser($id);
 			return $jUser;
 		} else {
 			if (PhocacartPos::isPos()) {
@@ -73,7 +75,7 @@ class PhocacartUser
 
 				if ((int)$userid > 0) {
 					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - CUSTOMER FOUND
-					return JFactory::getUser($userid);
+					return Factory::getUser($userid);
 				} else {
 					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - NO CUSTOMER FOUND
 					return JFactory::getUser(0);// Joomla! User is administrator and there is no information about user
@@ -83,7 +85,7 @@ class PhocacartUser
 			} else {
 				// ======= LOGGED JOOMLA! USER IS CUSTOMER
 				// No POS, return standard Joomla! User
-				$jUser = JFactory::getUser();
+				$jUser = Factory::getUser();
 				return $jUser;
 			}
 		}
@@ -95,7 +97,7 @@ class PhocacartUser
 
 		$pos		= PhocacartPos::isPos($forcePos);
 
-		$user		= JFactory::getUser();
+		$user		= Factory::getUser();
 		$vendor 	= array();
 		$vendor		= new stdClass();
 		$vendor->id = 0;
@@ -129,7 +131,7 @@ class PhocacartUser
 					$unit->id 		= $ticketA['unitid'];
 					$section->id 	= $ticketA['sectionid'];
 					$userId 		= PhocacartPos::getUserIdByVendorAndTicket($vendor->id, $ticket->id, $unit->id, $section->id);
-					$user			= JFactory::getUser($userId);
+					$user			= Factory::getUser($userId);
 					return true;
 				} else {
 					$vendor = array();
@@ -147,7 +149,7 @@ class PhocacartUser
 
 	public static function getUserIdByCard($card) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = ' SELECT a.user_id FROM #__phocacart_users AS a'
 			    .' WHERE a.loyalty_card_number = '.$db->quote($card)
@@ -170,11 +172,12 @@ class PhocacartUser
 		$o['bsch']		= '';// B S Checked? Is the billing address the same like shipping address
 		$o['filled']	= 1; // Is every form input filled out
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 
 		$s = PhocacartRenderStyle::getStyles();
 
 		$baSa = $form->getValue('ba_sa');
+
 
 
 		// Setting "Delivery and billing addresses are the same" - enable or disabled
@@ -211,19 +214,39 @@ class PhocacartUser
 
 					$value = $form->getValue($v->title);// If form input is required but it is empty, this is wrong
 
+					if($v->type == 'checkbox:text') {
+						// Checkbox field can have set default value e.g. to 1 - that in default it is enabled
+						// so such checkbox is set as checked as default so if we stored that it is disabled, we need to remove checked
+						if(!$value || $value == false || $value == 0 || $value == null || is_null($value)) {
+							$form->setFieldAttribute($v->title. $billingSuffix, 'checked', 'false');
+						}
+					}
+
 					if ($v->required == 1 && $value == '') {
 						$o['filled'] = 0;
 					}
 
 					if ($v->title == 'email' && $guestUser == 0) {
-						$form->setValue($v->title, null, $user->email );
+						$form->setValue($v->title. $billingSuffix, null, $user->email );
 					}
 
 					if (!$app->isClient('administrator')) {
+
+						// change general xml class to general variable
+						$input = str_replace('form-control', $s['c']['inputbox.form-control'], $form->getInput($v->title . $billingSuffix));
+						$input = str_replace('form-select', $s['c']['inputbox.form-select'], $input);
+
+
 						$o['b'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
 						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $billingSuffix).'</div>';
-						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$form->getInput($v->title . $billingSuffix).'</div>';
+						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$input.'</div>';
 						$o['b'] .= '</div>' . "\n";
+
+						/*
+						$form->setFieldAttribute($v->title, 'hint', ' ');
+						$o['b'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
+						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$form->getInput($v->title . $billingSuffix) . '' .$form->getLabel($v->title . $billingSuffix).'</div>';
+						$o['b'] .= '</div>' . "\n";*/
 
 					} else {
 						// Admin uses obsolete bootstrap
@@ -235,22 +258,51 @@ class PhocacartUser
 
 				}
 
+
+
 				if ($v->display_shipping == 1 || ($app->isClient('administrator') && $v->title == 'id')) {
 
-					$value = $form->getValue($v->title);				    // Form input value is required but it is empty
+					$value = $form->getValue($v->title.$shippingSuffix);// Form input value is required but it is empty
+
+
+					if($v->type == 'checkbox:text') {
+
+
+						// Checkbox field can have set default value e.g. to 1 - that in default it is enabled
+						// so such checkbox is set as checked as default so if we stored that it is disabled, we need to remove checked
+						if(!$value || $value == false || $value == 0 || $value == null || is_null($value)) {
+
+
+							$form->setFieldAttribute($v->title.$shippingSuffix, 'checked', 'false');
+
+						}
+					}
+
 					if ($v->required == 1 && $value == '' && $baSa == 0) {  // and we have set that the shipping address
 						$o['filled'] = 0;									// is other than billing
 					}
 
 					if ($v->title == 'email' && $guestUser == 0) {
-						$form->setValue($v->title, null, $user->email );
+						$form->setValue($v->title.$shippingSuffix, null, $user->email );
 					}
 
 					if (!$app->isClient('administrator')) {
+
+						// change general xml class to general variable
+						$input = str_replace('form-control', $s['c']['inputbox.form-control'], $form->getInput($v->title . $shippingSuffix));
+						$input = str_replace('form-select', $s['c']['inputbox.form-select'], $input);
+
 						$o['s'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
 						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $shippingSuffix).'</div>';
-						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$form->getInput($v->title . $shippingSuffix).'</div>';
+						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$input.'</div>';
 						$o['s'] .= '</div>' . "\n";
+
+						/*
+						$form->setFieldAttribute($v->title, 'hint', ' ');
+						$o['s'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
+						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$form->getInput($v->title . $shippingSuffix) . '' .$form->getLabel($v->title . $shippingSuffix).'</div>';
+						$o['s'] .= '</div>' . "\n";*/
+
 					} else {
 						// Admin uses obsolete bootstrap
 						$o['s'] .= '<div class="control-group">';
@@ -259,6 +311,31 @@ class PhocacartUser
 						$o['s'] .= '</div>' . "\n";
 					}
 
+				}
+
+				// Possible way to change Billing and Shipping is the same in administration
+				// Change the hidden field to Select box, so it can be changes in administration
+				// BE AWARE - it is a billing parameter ($billingSuffix but displayed in Shipping tab: $o[s]
+				if ($app->isClient('administrator') && $v->title == 'ba_sa') {
+					$valueField = $form->getValue($v->title . $billingSuffix);
+					$selectedYes = '';
+					$selectedNo = ' selected';
+					if ($valueField == 1) {
+						$selectedYes = ' selected';
+						$selectedNo = '';
+					}
+					$nameField = 'jform['.$v->title.$billingSuffix.']';
+					$idField = 'jform_'.$v->title.$billingSuffix.'';
+					$o['s'] .= '<div class="control-group">';
+					$o['s'] .= '<div class="control-label"><label>'.Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME').'</label></div>';
+					//$o['s'] .= '<div class="controls">'.$form->getInput($v->title . $billingSuffix).'</div>';
+					$o['s'] .= '<div class="controls">';
+					$o['s'] .= '<select name="'.$nameField.'" id="'.$idField.'" class="form-select">';
+					$o['s'] .= '<option value="1" '.$selectedYes.'>'.Text::_('COM_PHOCACART_YES').'</option>';
+					$o['s'] .= '<option value="0" '.$selectedNo.'>'.Text::_('COM_PHOCACART_NO').'</option>';
+					$o['s'] .= '</select>' . "\n";
+					$o['s'] .= '</div>' . "\n";
+					$o['s'] .= '</div>' . "\n";
 				}
 			}
 		}
@@ -359,7 +436,7 @@ class PhocacartUser
 							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$regionTitle.'</div>';
 						} else if ($v->title == 'zip') {
 							$o['bzip']	= $value;// Return region and country or zip
-							$o['s'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
+							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						} else {
 							$o['b'] .= '<div class="'.$s['c']['col.xs12.sm12.md12'].'">'.$value.'</div>';
 						}
@@ -416,7 +493,7 @@ class PhocacartUser
 
 	public static function getUserAddress($userId) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		$query = ' (SELECT * FROM #__phocacart_users AS a'
 			    .' WHERE a.user_id = '.(int) $userId
@@ -432,6 +509,18 @@ class PhocacartUser
 		$address = $db->loadObjectList();
 		return $address;
 
+	}
+
+	public static function getAllCheckboxesFromFormFields() {
+
+		$db = Factory::getDBO();
+
+		$query = ' SELECT title, published, display_billing, display_shipping, display_account  FROM #__phocacart_form_fields AS a'
+			    .' WHERE a.published = 1'
+				.' AND a.type = '.$db->quote('checkbox:text');
+		$db->setQuery($query);
+		$checkboxes = $db->loadObjectList();
+		return $checkboxes;
 	}
 
 	public static function convertAddressTwo($data, $array = 1) {
@@ -510,7 +599,7 @@ class PhocacartUser
 
 		$total = 0;
 		if ($userId > 0) {
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 
 			$query = 'SELECT SUM(a.amount) FROM #__phocacart_order_total AS a'
 				.' LEFT JOIN #__phocacart_orders AS o ON a.order_id = o.id'
@@ -530,7 +619,7 @@ class PhocacartUser
 
 	public static function getUserData($userId = 0) {
 
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 
 		if ((int)$userId == 0) {
 			$user 	= PhocacartUser::getUser();

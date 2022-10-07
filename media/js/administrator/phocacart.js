@@ -52,6 +52,16 @@ jQuery(document).ready(function() {
 	})
 })
 
+/* Event - specific multiselect in orders view because of two rows at once */
+jQuery(document).on("click", "tr.ph-row-multiselect", function() {
+	el = jQuery(this).find('.ph-select-row input:checkbox.form-check-input')[0];
+	el.checked = ! el.checked;
+	Joomla.isChecked(el.checked);
+});
+jQuery(document).on("click", '.ph-select-row input:checkbox.form-check-input', function(e) {
+	e.stopPropagation();
+})
+
 
 
 
@@ -361,5 +371,87 @@ function phDoRequestWizardParent(url, s) {
 		}
 	});
 }
+
+
+// Add icons to submenu
+jQuery(document).ready(function() {
+
+	var getUrlParameter = function getUrlParameter(sParam, url) {
+		var sPageURL = url,
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+
+			if (sParameterName[0] === sParam) {
+				return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
+		return false;
+	};
+
+	jQuery('.item-level-3').find('a').each(function() {
+		var view = getUrlParameter('view', jQuery(this).attr('href'));
+		view = String(view);
+		if(view.includes('phocacart')) {
+			var className = view.replace('phocacart', '');
+			jQuery(this).addClass('ph-submenu ph-submenu-' + className);
+		}
+
+		/* Link to custom fields and custom field groups */
+		var context = getUrlParameter('context', jQuery(this).attr('href'));
+		context = String(context);
+		if(context == 'com_phocacart.phocacartitem') {
+			if (view == 'groups') {
+				var className = 'fieldgroups';
+			} else {
+				var className = 'fields';
+			}
+
+			jQuery(this).addClass('ph-submenu ph-submenu-' + className);
+		}
+
+
+		if (jQuery(this).attr('href') == 'index.php?option=com_phocacart') {
+			jQuery(this).addClass('ph-submenu ph-submenu-cp');
+		}
+	});
+
+	const container = jQuery('.main-nav-container');
+	if (container) {
+		const menu = container.children('ul');
+		if (menu) {
+			const submenu = menu.find('a[href="index.php?option=com_phocacart"] + ul');
+			if (submenu) {
+				const phSubmenu = submenu.clone();
+				phSubmenu.attr('class', 'nav flex-column main-nav metismenu child-open ph-menu');
+				phSubmenu.find('li').each(function() {
+					jQuery(this).removeClass('item-level-3').addClass('item-level-1');
+				});
+
+				phSubmenu.prepend(jQuery('<li class="item item-level-1"><a href="#" class="no-dropdown ph-submenu ph-submenu-back"><span class="sidebar-item-title">' + Joomla.JText._('COM_PHOCACART_MENU_BACK') + '</span></a></li>'));
+				const phMenuSwitch = phSubmenu.find('.ph-submenu-back');
+				phMenuSwitch.click(function(e) {
+					e.preventDefault();
+					menu.css('display', 'block');
+					phSubmenu.css('display', 'none');
+				});
+
+				menu.prepend(jQuery('<li class="item item-level-1"><a href="#" class="no-dropdown ph-submenu ph-submenu-phocacart"><span class="sidebar-item-title">' + Joomla.JText._('COM_PHOCACART_MENU_PHOCACART') + '</span></a></li>'));
+				const menuSwitch = menu.find('.ph-submenu-phocacart');
+				menuSwitch.click(function(e) {
+					e.preventDefault();
+					phSubmenu.css('display', 'block');
+					menu.css('display', 'none');
+				});
+
+				container.append(phSubmenu);
+				menu.css('display', 'none');
+			}
+		}
+	}
+})
 
 

@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+use Joomla\CMS\Language\Text;
 
 class PhocacartFileUploadsingle
 {
@@ -27,7 +28,7 @@ class PhocacartFileUploadsingle
 		} else {
 			$html = '<input type="file" id="sfile-upload" name="Filedata" />'
 			//.'<input type="submit" id="sfile-upload-submit" value="'.JText::_('COM_PHOCADOWNLOAD_START_UPLOAD').'"/>'
-			.'<button class="btn btn-primary" id="upload-submit"><i class="icon-upload icon-white"></i> '.JText::_('COM_PHOCACART_START_UPLOAD').'</button>'
+			.'<button class="btn btn-primary" id="upload-submit"><i class="icon-upload icon-white"></i> '.Text::_('COM_PHOCACART_START_UPLOAD').'</button>'
 			.'<input type="hidden" name="return-url" value="'. base64_encode($this->returnUrl).'" />'
 			.'<input type="hidden" name="tab" value="'.$this->tab.'" />';
 		}

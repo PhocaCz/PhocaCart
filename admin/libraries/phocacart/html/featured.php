@@ -10,6 +10,9 @@
  */
 
 defined('_JEXEC') or die;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
 
 
 abstract class PhocacartHtmlFeatured
@@ -17,27 +20,50 @@ abstract class PhocacartHtmlFeatured
 
 	public static function featured($value = 0, $i = 0, $canChange = true)
 	{
-		Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+		HTMLHelper::_('bootstrap.tooltip');
 
 		// Array of image, task, title, action
 		$states	= array(
 			0	=> array('unfeatured',	'phocacartitems.featured',	'COM_PHOCACART_UNFEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_FEATURE'),
 			1	=> array('featured',	'phocacartitems.unfeatured',	'COM_PHOCACART_FEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_UNFEATURE'),
 		);
-		$state	= \Joomla\Utilities\ArrayHelper::getValue($states, (int) $value, $states[1]);
-		$icon	= $state[0];
+		$state	= ArrayHelper::getValue($states, (int) $value, $states[1]);
+		//$icon	= $state[0];
 
-		if ($canChange)
+
+		$icon = $state[0] === 'featured' ? 'star featured' : 'circle';
+		$onclick = 'onclick="return Joomla.listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')"';
+		$tooltipText = Text::_($state[3]);
+
+		if (!$canChange)
 		{
-			$html	= '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><i class="icon-'
+			$onclick     = 'disabled';
+			$tooltipText = Text::_($state[2]);
+		}
+
+		$html = '<button type="submit" class="tbody-icon' . ($value == 1 ? ' active' : '') . '"'
+			. ' aria-labelledby="cb' . $i . '-desc" ' . $onclick . '>'
+			. '<span class="icon-' . $icon . '" aria-hidden="true"></span>'
+			. '</button>'
+			. '<div role="tooltip" id="cb' . $i . '-desc">' . $tooltipText . '</div>';
+
+
+	/*	if ($canChange)
+		{
+			$html	= '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip' . ($value == 1 ? ' active' : '') . '" title="' . HTMLHelper::tooltipText($state[3]) . '"><i class="icon-'
 					. $icon . '"></i></a>';
 		}
 		else
 		{
-			$html	= '<a class="btn btn-micro hasTooltip disabled' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[2]) . '"><i class="icon-'
+			$html	= '<a class="btn btn-micro hasTooltip disabled' . ($value == 1 ? ' active' : '') . '" title="' . HTMLHelper::tooltipText($state[2]) . '"><i class="icon-'
 					. $icon . '"></i></a>';
 		}
-
+*/
 		return $html;
+
+
+
+
+
 	}
 }

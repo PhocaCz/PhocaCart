@@ -1,0 +1,57 @@
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Cart
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz - https://www.phoca.cz/phocacart
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+
+.com-phocacart.view-items .modal-backdrop,
+.pc-view .modal-backdrop {
+    z-index: 1040 !important;
+}
+
+/* BS Dropdown */
+.ph-cart-module-box .dropdown button.dropdown-toggle {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    white-space: nowrap;
+}
+
+.ph-cart-module-box .dropdown button.dropdown-toggle img {
+    display: inline-block;
+    margin-top: -2px;
+}
+
+.ph-cart-module-box .dropdown button.dropdown-toggle:focus,
+.ph-cart-module-box .dropdown button.dropdown-toggle:active:focus {
+    box-shadow: none;
+}
+
+.ph-cart-module-box .dropdown-menu {
+    padding: 1em;
+}
+
+.ph-cart-module-box .dropdown-menu img {
+    display: inline-block;
+    margin-top: -2px;
+}
+
+.phItemCurrencyBox .ph-currency-list {
+    list-style-type: none;
+    margin-left: 0;
+}   
+
+.ph-cart-module-compare-box .dropdown-menu,
+.ph-cart-module-wishlist-box .dropdown-menu,
+.ph-cart-module-cart-box .dropdown-menu {
+    min-width: 16em;
+}
+
+.ph-cart-module-cart-box .dropdown-menu {
+    padding: 2em;
+}
+

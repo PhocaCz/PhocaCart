@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 jimport( 'joomla.application.component.view' );
 
-class PhocaCartCpViewPhocacartDownloads extends JViewLegacy
+class PhocaCartCpViewPhocacartDownloads extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -57,7 +60,7 @@ class PhocaCartCpViewPhocacartDownloads extends JViewLegacy
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.download_id'));
 
-		JToolbarHelper::title( JText::_( $this->t['l'].'_DOWNLOADS' ), 'download-alt' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_DOWNLOADS' ), 'download-alt' );
 
 		if ($canDo->get('core.create')) {
 			//JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
@@ -68,29 +71,29 @@ class PhocaCartCpViewPhocacartDownloads extends JViewLegacy
 		}
 		if ($canDo->get('core.edit.state')) {
 
-			JToolbarHelper::divider();
-			JToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+			ToolbarHelper::divider();
+			ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
+			ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartdownloads.delete', $this->t['l'].'_DELETE');
+			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacartdownloads.delete', $this->t['l'].'_DELETE');
 		}
-		JToolbarHelper::divider();
-		JToolbarHelper::help( 'screen.'.$this->t['c'], true );
+		ToolbarHelper::divider();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 
 	protected function getSortFields() {
 		return array(
 			//'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
-			'a.title' 			=> JText::_($this->t['l'] . '_TITLE'),
-			'u.name' 			=> JText::_($this->t['l'] . '_USER'),
-			'a.order_id' 		=> JText::_($this->t['l'] . '_ORDER_NUMBER'),
-			'a.published' 		=> JText::_($this->t['l'] . '_PUBLISHED'),
-			'a.date' 			=> JText::_($this->t['l'] . '_DATE'),
-			'a.download_hits' 	=> JText::_($this->t['l'] . '_DOWNLOADS'),
-			'a.download_file' 	=> JText::_($this->t['l'] . '_FILENAME'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID')
+			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
+			'u.name' 			=> Text::_($this->t['l'] . '_USER'),
+			'a.order_id' 		=> Text::_($this->t['l'] . '_ORDER_NUMBER'),
+			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
+			'a.date' 			=> Text::_($this->t['l'] . '_DATE'),
+			'a.download_hits' 	=> Text::_($this->t['l'] . '_DOWNLOADS'),
+			'a.download_file' 	=> Text::_($this->t['l'] . '_FILENAME'),
+			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

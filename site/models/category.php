@@ -10,9 +10,11 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 defined('_JEXEC') or die();
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Table\Table;
 jimport('joomla.application.component.model');
 
-class PhocaCartModelCategory extends JModelLegacy
+class PhocaCartModelCategory extends BaseDatabaseModel
 {
 
 	protected $item 				= null;
@@ -29,8 +31,8 @@ class PhocaCartModelCategory extends JModelLegacy
 	public function __construct() {
 		parent::__construct();
 
-		$app					= JFactory::getApplication();
-		$config 				= JFactory::getConfig();
+		$app					= Factory::getApplication();
+		$config 				= Factory::getConfig();
 		$paramsC 				= $app->getParams();
 		$item_pagination		= $paramsC->get( 'item_pagination_default', '20' );
 		$item_ordering			= $paramsC->get( 'item_ordering', 1 );
@@ -110,7 +112,7 @@ class PhocaCartModelCategory extends JModelLegacy
 
 	protected function getItemListQuery($categoryId, $count = 0) {
 
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
@@ -168,7 +170,7 @@ class PhocaCartModelCategory extends JModelLegacy
         }
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
@@ -205,7 +207,7 @@ class PhocaCartModelCategory extends JModelLegacy
 				$pluginOptions 				= array();
 				$eventData 					= array();
 				$eventData['pluginname'] 	= $this->category_layout_plugin;
-				Factory::getApplication()->triggerEvent('PCLonCategoryGetOptions', array('com_phocacart.category', &$pluginOptions, $eventData));
+				Factory::getApplication()->triggerEvent('onPCLonCategoryGetOptions', array('com_phocacart.category', &$pluginOptions, $eventData));
 
 				if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
 					$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
@@ -229,7 +231,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		if ($pluginLayout) {
 			$pluginOptions 				= array();
 			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('PCVonCategoryBeforeLoadColumns', array('com_phocacart.category', &$pluginOptions, $eventData));
+			Factory::getApplication()->triggerEvent('onPCVonCategoryBeforeLoadColumns', array('com_phocacart.category', &$pluginOptions, $eventData));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
@@ -362,6 +364,7 @@ class PhocaCartModelCategory extends JModelLegacy
 			. ' ORDER BY '.$itemOrdering;
 		}
 
+
 		//echo nl2br(str_replace('#__', 'jos_', $q->__toString()));
 
 		return $q;
@@ -370,7 +373,7 @@ class PhocaCartModelCategory extends JModelLegacy
 	protected function getCategoriesQuery($categoryId, $subcategories = FALSE) {
 
 		$wheres		= array();
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$params 	= $app->getParams();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
@@ -391,7 +394,7 @@ class PhocaCartModelCategory extends JModelLegacy
 		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 
 		if ($this->getState('filter.language')) {
-			$lang 		= JFactory::getLanguage()->getTag();
+			$lang 		= Factory::getLanguage()->getTag();
 			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 
@@ -425,7 +428,7 @@ class PhocaCartModelCategory extends JModelLegacy
 
 	protected function getItemOrdering() {
 		if (empty($this->item_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			//$ordering					= $params->get( 'item_ordering', 1 );
 			$ordering					= $this->getState('itemordering');
@@ -436,7 +439,7 @@ class PhocaCartModelCategory extends JModelLegacy
 
 	protected function getCategoryOrdering() {
 		if (empty($this->category_ordering)) {
-			$app						= JFactory::getApplication();
+			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
 			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);
@@ -445,13 +448,13 @@ class PhocaCartModelCategory extends JModelLegacy
 	}
 
 	public function hit($pk = 0) {
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		$hitcount = $input->getInt('hitcount', 1);
 
 		if ($hitcount) {
 			$pk = (!empty($pk)) ? $pk : (int) $this->getState('cateogry.id');
 
-			$table = JTable::getInstance('PhocacartCategory', 'Table');
+			$table = Table::getInstance('PhocacartCategory', 'Table');
 			$table->load($pk);
 			$table->hit($pk);
 		}

@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
 $d 				= $displayData;
 
 $d['paramname']	= str_replace('_', '', $d['param']);
@@ -55,16 +56,25 @@ if (isset($d['filterprice']) && $d['filterprice'] == 2) {
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 $displayData 	= null;
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $d['param']; ?>">
-	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $d['param']; ?>">
-		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
-			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo JText::_('COM_PHOCACART_COLLAPSE') . ' ' . $title ?>"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
-			<a data-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo $title ?>"><?php echo $title ?></a>
-		</h4>
-	</div>
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $d['param']; ?>" <?php echo $d['s']['a']['accordion'] ?>>
+
+    <?php if ($d['s']['c']['class-type'] != 'uikit') { ?>
+        <div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $d['param']; ?>">
+            <h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo Text::_('COM_PHOCACART_COLLAPSE') . ' ' . $title ?>"><?php echo PhocacartRenderIcon::icon($d['triangle_class']) ?></a>
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo $title ?>"><?php echo $title ?></a>
+            </h4>
+        </div>
+    <?php } ?>
 
 	<div id="collapse<?php echo $d['param']; ?>" class="<?php echo $d['collapse_class'] ?>" role="tabpanel" aria-labelledby="heading<?php echo $d['param']; ?>">
-		<div class="<?php echo $d['s']['c']['panel-body'] ?> <?php echo $d['s']['c']['form-horizontal'] ?>" id="<?php echo $d['id']; ?>">
+
+        <?php if ($d['s']['c']['class-type'] == 'uikit') { ?>
+            <a href="#" class="<?php echo $d['s']['c']['panel-title'] ?>"><?php echo $title ?></a>
+        <?php } ?>
+
+
+        <div class="<?php echo $d['s']['c']['panel-body'] ?> <?php echo $d['s']['c']['form-horizontal'] ?>" id="<?php echo $d['id']; ?>">
 
 			<div class="<?php echo $d['s']['c']['form-group'] ?> <?php echo $d['s']['c']['row'] ?>" <?php echo $styleFormGroup ?>>
 				<label class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>" for="<?php echo $d['id'].$d['paramname']; ?>"><?php echo $d['title1']; ?></label>
@@ -94,15 +104,15 @@ $displayData 	= null;
 			<div class="<?php echo $d['s']['c']['col.xs12.sm5.md5'] ?>"></div>
 			<div class="<?php echo $d['s']['c']['col.xs12.sm7.md7'] ?>">
 				<div class="<?php echo $d['s']['c']['pull-right'] ?> <?php echo $d['s']['c']['btn-group'] ?> ph-zero ph-right-zero">
-					<button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"  aria-label="<?php echo $d['titleset']; ?>"><span class="<?php echo $d['s']['i']['ok'] ?>"></span></button>
-					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?> <?php echo $d['s']['c']['pull-right'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>" aria-label="<?php echo $d['titleclear']; ?>"><span class="<?php echo $d['s']['i']['clear'] ?>"></span></button>
+					<button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo $d['titleset']; ?>"  aria-label="<?php echo $d['titleset']; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['ok']) ?></button>
+					<button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?> <?php echo $d['s']['c']['pull-right'] ?> ph-button-clear-box" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo $d['titleclear']; ?>" aria-label="<?php echo $d['titleclear']; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button>
 				</div>
 			</div>
             </div>
 			<?php
 			/*
 
-			<button class="btn tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="phChangeFilter('.$d['param'].', \''. $value.'\', 0, \'text\');" title="<?php echo JText::_('COM_PHOCACART_CLEAR_PRICE'); ?>"><span class="icon-remove"></span></button>
+			<button class="btn tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="phChangeFilter('.$d['param'].', \''. $value.'\', 0, \'text\');" title="<?php echo Text::_('COM_PHOCACART_CLEAR_PRICE'); ?>"><span class="icon-remove"></span></button>
 
 			foreach ($d['items'] as $k => $v) {
 

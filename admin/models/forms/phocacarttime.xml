@@ -5,18 +5,18 @@
 
 <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
 
-<field name="title" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"  />
+<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"  />
 
-<field name="alias" type="text" class="inputbox" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
 
-<field name="type" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_TYPE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_TYPE_DESC" class="inputbox" size="1" default="1">
+<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPENING_TIMES_TYPE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_TYPE_DESC" size="1" default="1">
 	<option value="1">COM_PHOCACART_OPENING_HOURS</option>
 	<option	value="2">COM_PHOCACART_CLOSING_HOURS</option>
 	<option	value="3">COM_PHOCACART_CLOSING_DAYS</option>
 </field>
 
-<field name="day" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_DESC" class="inputbox" size="1" default="-1">
+<field name="day" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_DESC" size="1" default="-1">
 	<option value="-1">COM_PHOCACART_NOT_SET</option>
 	<option value="1">MONDAY</option>
 	<option value="2">TUESDAY</option>
@@ -27,7 +27,7 @@
 	<option	value="0">SUNDAY</option>
 </field>
 
-<field name="hour_from" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_FROM_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_FROM_DESC" class="inputbox" size="1" default="-1">
+<field name="hour_from" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_FROM_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_FROM_DESC" size="1" default="-1">
 <option value="-1">COM_PHOCACART_NOT_SET</option>
 	<option value="0">00</option>
 	<option value="1">01</option>
@@ -54,7 +54,7 @@
 	<option	value="22">22</option>
 	<option	value="23">23</option>
 </field>
-<field name="minute_from" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_FROM_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_FROM_DESC" class="inputbox" size="1" default="-1">
+<field name="minute_from" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_FROM_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_FROM_DESC" size="1" default="-1">
 <option value="-1">COM_PHOCACART_NOT_SET</option>
 	<option value="0">00</option>
 	<option	value="5">05</option>
@@ -71,7 +71,7 @@
 	<option	value="59">59</option>
 </field>
 
-<field name="hour_to" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_TO_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_TO_DESC" class="inputbox" size="1" default="-1">
+<field name="hour_to" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_TO_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_HOUR_TO_DESC" size="1" default="-1">
 <option value="-1">COM_PHOCACART_NOT_SET</option>
 	<option value="0">00</option>
 	<option value="1">01</option>
@@ -98,7 +98,7 @@
 	<option	value="22">22</option>
 	<option	value="23">23</option>
 </field>
-<field name="minute_to" type="list" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_TO_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_TO_DESC" class="inputbox" size="1" default="-1">
+<field name="minute_to" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_TO_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DAY_MINUTE_TO_DESC" size="1" default="-1">
 <option value="-1">COM_PHOCACART_NOT_SET</option>
 	<option value="0">00</option>
 	<option	value="5">05</option>
@@ -115,19 +115,19 @@
 	<option	value="59">59</option>
 </field>
 
-<field name="date" type="Calendar" class="inputbox" label="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_DESC" filter="JComponentHelper::filterText" />
+<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_LABEL" description="COM_PHOCACART_FIELD_OPENING_TIMES_DATE_DESC" filter="JComponentHelper::filterText" />
 
 
-<field name="ordering" type="phocacartOrdering" table="tag" class="inputbox" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+<field name="ordering" type="phocacartOrdering" table="tag" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 	</fieldset>
-	
-	
+
+
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="inputbox" size="1" default="1">
+<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
 	<option value="1">JPUBLISHED</option>
 	<option	value="0">JUNPUBLISHED</option>
 </field>
@@ -135,8 +135,8 @@
 
 
 
-	
+
 	</fieldset>
 
-	
+
 </form>

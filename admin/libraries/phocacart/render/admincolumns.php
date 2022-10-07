@@ -9,8 +9,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die('Restricted access');
-
 use Joomla\CMS\Factory;
+use Joomla\CMS\Version;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -54,8 +58,8 @@ class PhocacartRenderAdmincolumns
 
     public function __construct() {
 
-        $app              = JFactory::getApplication();
-        $version          = new \Joomla\CMS\Version();
+        $app              = Factory::getApplication();
+        $version          = new Version();
         $this->compatible = $version->isCompatible('4.0.0-alpha');
         $this->view       = $app->input->get('view');
         $this->option     = $app->input->get('option');
@@ -383,6 +387,11 @@ class PhocacartRenderAdmincolumns
         return $this->renderHeaderColumn($data, $options);
     }
 
+    public function special_parameterHeader(&$options) {
+        $data = array('class' => 'ph-special_parameter', 'title' => 'COM_PHOCACART_FIELD_SPECIAL_PARAMETER_LABEL', 'tool' => 'searchtools.sort', 'column' => 'a.special_parameter');
+        return $this->renderHeaderColumn($data, $options);
+    }
+
 
 
 
@@ -500,6 +509,13 @@ class PhocacartRenderAdmincolumns
         return $this->commonColumn($item, $options);
     }
 
+    public function special_parameter($item, &$options) {
+        // textarea in description instead of text like e.g. by title, sku, price
+        $item['editclass']  = 'autogrow';
+        $item['editfilter'] = 'html';
+        return $this->commonColumn($item, $options);
+    }
+
 
     public function price($item, &$options) {
         $item['value'] = PhocacartPrice::cleanPrice($item['value']);
@@ -541,8 +557,8 @@ class PhocacartRenderAdmincolumns
 
         $thumbnail = PhocacartFileThumbnail::getThumbnailName(PhocacartText::filterValue($item['value'], 'text'), 'small', 'productimage');
         $img       = '';
-        if (JFile::exists($thumbnail->abs)) {
-            $img = '<img src="' . JURI::root() . $thumbnail->rel . '?imagesid=' . md5(uniqid(time())) . '" />';
+        if (File::exists($thumbnail->abs)) {
+            $img = '<img src="' . Uri::root() . $thumbnail->rel . '?imagesid=' . md5(uniqid(time())) . '" />';
         }
 
         //if ($item['params']['edit'] == 2) {
@@ -577,7 +593,7 @@ class PhocacartRenderAdmincolumns
             if (isset($item['linkeditbox']) && $item['linkeditbox'] != '') {
                 $o[] = $item['linkeditbox'];
             } else {
-                $o[] = '<a href="' . JRoute::_($item['linkedit']) . '"><span id="phIdTitle' . (int)$item['id'] . '" class="ph-' . $item['name'] . ' phIdTitle' . (int)$item['id'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span></a>';
+                $o[] = '<a href="' . Route::_($item['linkedit']) . '"><span id="phIdTitle' . (int)$item['id'] . '" class="ph-' . $item['name'] . ' phIdTitle' . (int)$item['id'] . '">' . PhocacartText::filterValue($item['value'], 'text') . '</span></a>';
             }
             $o[] = '<br /><span class="smallsub">(<span>' . Text::_('COM_PHOCACART_FIELD_ALIAS_LABEL') . ':</span>' . PhocacartText::filterValue($item['valuealias'], 'text') . ')</span>';
 
@@ -587,13 +603,13 @@ class PhocacartRenderAdmincolumns
             $o[] = '<br /><span class="smallsub">(<span>' . Text::_('COM_PHOCACART_FIELD_FIELD_ALIAS_LABEL') . ':</span>' . PhocacartText::filterValue($item['valuealias'], 'text') . ')</span>';
         }
 
-        return $this->r->td(implode("\n", $o), 'small');
+        return $this->r->td(implode("\n", $o), 'small', 'th');
 
 
     }
 
     public function published($item, &$options) {
-        return $this->r->td('<div class="btn-group">' . HTMLHelper::_('jgrid.published', $item['value'], $item['i'], $options['tasks'] . '.', $item['canchange']) . PhocacartHtmlFeatured::featured($item['valuefeatured'], $item['i'], $item['canchange']) . '</div>', "small");
+        return $this->r->td('<div class="">' . HTMLHelper::_('jgrid.published', $item['value'], $item['i'], $options['tasks'] . '.', $item['canchange']) . PhocacartHtmlFeatured::featured($item['valuefeatured'], $item['i'], $item['canchange']) . '</div>', "small");
     }
 
     public function categories($item, &$options) {
@@ -604,8 +620,8 @@ class PhocacartRenderAdmincolumns
         if (isset($item['value'][$id])) {
             foreach ($item['value'][$id] as $k => $v) {
                 if ($item['caneditcategory'] && isset($item['linkeditcategory']) && $item['linkeditcategory'] != '') {
-                    $linkCat = JRoute::_($item['linkeditcategory'] . '&id=' . (int)$v['id']);
-                    $o[]     = '<a href="' . JRoute::_($linkCat) . '">' . PhocacartText::filterValue($v['title'], 'text') . '</a>';
+                    $linkCat = Route::_($item['linkeditcategory'] . '&id=' . (int)$v['id']);
+                    $o[]     = '<a href="' . Route::_($linkCat) . '">' . PhocacartText::filterValue($v['title'], 'text') . '</a>';
                 } else {
                     $o[] = PhocacartText::filterValue($v['title'], 'text');
                 }
@@ -627,16 +643,16 @@ class PhocacartRenderAdmincolumns
     }
 
     public function language($item, &$options) {
-        return $this->r->td(LayoutHelper::render('joomla.content.language', $item['value']));
+        return $this->r->td(LayoutHelper::render('joomla.content.language', $item['value']), 'small');
     }
 
     public function phoca_action($item, &$options) {
 
         if ($item['cancreate'] || $item['canedit']) {
             if (isset($item['linkeditbox']) && $item['linkeditbox'] != '') {
-                return $this->r->td($item['linkeditbox'], 'small');
+                return $this->r->td( str_replace('<a ', '<a class="ph-no-underline"', $item['linkeditbox']), '');
             } else {
-                return $this->r->td('<a href="' . JRoute::_($item['linkedit']) . '"><span id="phIdTitle' . $item['id'] . '" class="ph-icon-task ph-cp-item"><i class="duotone icon-apply"></i></span></a>', 'small');
+                return $this->r->td('<a class="pha-no-underline" href="' . Route::_($item['linkedit']) . '"><span id="phIdTitle' . $item['id'] . '" class="ph-icon-task ph-cp-item"><i class="duotone icon-apply"></i></span></a>', '');
             }
 
 
@@ -650,7 +666,7 @@ class PhocacartRenderAdmincolumns
 
 sku
 image
-title
+title (title=E - in options, there is parameter: Title - Edit in Place which manages alias behavior)
 published
 categories
 price
@@ -695,6 +711,7 @@ type_feed
 type_category_feed
 metakey
 metadesc
+special_parameter
 phoca_action
 */
 ?>

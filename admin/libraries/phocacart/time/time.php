@@ -9,6 +9,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Date\Date;
+use Joomla\CMS\Factory;
 
 class PhocacartTime
 {
@@ -19,17 +22,17 @@ class PhocacartTime
 		switch ($type) {
 
 			case 2:
-				$t = JText::_('COM_PHOCACART_CLOSING_HOURS');
-				$c = "label label-important label-danger badge badge-danger";
+				$t = Text::_('COM_PHOCACART_CLOSING_HOURS');
+				$c = "label label-important label-danger badge bg-danger";
 			break;
 
 			case 3:
-				$t = JText::_('COM_PHOCACART_CLOSING_DAYS');
-				$c = "label label-important label-danger badge badge-danger";
+				$t = Text::_('COM_PHOCACART_CLOSING_DAYS');
+				$c = "label label-important label-danger badge bg-danger";
 			break;
 			case 1:
 			default:
-				$t = JText::_('COM_PHOCACART_OPENING_HOURS');
+				$t = Text::_('COM_PHOCACART_OPENING_HOURS');
 				$c = "label label-important label-success";
 			break;
 
@@ -63,7 +66,7 @@ class PhocacartTime
 			$a['day'] 	= '';
 		} else if ($day != '' && ($date == '' || $date == $dateFormat)) {
 
-			$dateClass = new \Joomla\CMS\Date\Date();
+			$dateClass = new Date();
 			$a['date'] 	= '';
 			$a['day'] 	= $dateClass->dayToString($day);
 		}
@@ -122,19 +125,19 @@ class PhocacartTime
 			$orderAllowed = true;
 		}
 
-		$msg 		= PhocacartRenderFront::renderArticle((int)$store_closed_checkout_message, 'html', JText::_('COM_PHOCACART_SHOP_IS_NOT_CURRENTLY_OPEN'));
+		$msg 		= PhocacartRenderFront::renderArticle((int)$store_closed_checkout_message, 'html', Text::_('COM_PHOCACART_SHOP_IS_NOT_CURRENTLY_OPEN'));
 		$msgType 	= 'error';
 
-		$app			= JFactory::getApplication();
-		$config 		= JFactory::getConfig();
-		$date 			= JFactory::getDate("NOW", 'UTC');
+		$app			= Factory::getApplication();
+		$config 		= Factory::getConfig();
+		$date 			= Factory::getDate("NOW", 'UTC');
 		$date->setTimezone(new DateTimeZone($config->get('offset')));
 		$currentDay		= $date->format('w', true, false);
 		$currentTime	= $date->format('H:i', true, false);
 		$currentDate	= $date->format('Y-m-d', true, false);
 
 
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$q = ' SELECT a.id, a.title, a.type, a.day, a.date, a.hour_from, a.minute_from, a.hour_to, a.minute_to FROM #__phocacart_opening_times AS a';
 		$q .= ' WHERE a.published = 1';
 		$q .= ' AND (DATE(a.date) = '.$db->quote($currentDate).' OR a.day = '.(int)$currentDay. ')';
@@ -214,7 +217,7 @@ class PhocacartTime
         }
 
         if ($orderAllowed) {
-            return PhocacartRenderFront::renderArticle((int)$store_closed_checkout_message, 'html', JText::_('COM_PHOCACART_SHOP_IS_NOT_CURRENTLY_OPEN'));
+            return PhocacartRenderFront::renderArticle((int)$store_closed_checkout_message, 'html', Text::_('COM_PHOCACART_SHOP_IS_NOT_CURRENTLY_OPEN'));
         }
     }
 

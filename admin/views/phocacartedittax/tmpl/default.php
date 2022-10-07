@@ -8,51 +8,54 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 
-Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
-Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
-Joomla\CMS\HTML\HTMLHelper::_('dropdown.init');
-Joomla\CMS\HTML\HTMLHelper::_('formbehavior.chosen', 'select');
-jimport( 'joomla.filesystem.folder' ); 
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
+jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
 
-$link	= JRoute::_( 'index.php?option='.$this->t['o'].'&view=phocacartedittax&tmpl=component&id='.(int)$this->id);
+$link	= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacartedittax&tmpl=component&id='.(int)$this->id);
 
 if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->title) && $this->item->title != '') {
-	
+
 	$flag = '';
 	if (isset($this->item->code2) && $this->item->code2 != '') {
-		$flag = PhocacartCountry::getCountryFlag($this->item->code2, 0, $this->item->image, '20px'); 
+		$flag = PhocacartCountry::getCountryFlag($this->item->code2, 0, $this->item->image, '20px');
 	}
 
 	echo '<h1 class="ph-modal-header">'.$flag .' '.$this->item->title.'</h1>';
 
 	echo '<form action="'.$link.'" method="post">';
-	
+
 	//echo '<table class="ph-tax-edit">';
-	echo '<div class="row-fluid ph-tax-edit-header">';
-	echo '<div class="span4 col-sm-4 col-md-4">'.JText::_('COM_PHOCACART_TAX_NAME').'</div>';
-	echo '<div class="span2 col-sm-2 col-md-2">'.JText::_('COM_PHOCACART_TAX_RATE').'</div>';
-	echo '<div class="span2 col-sm-2 col-md-2">'.JText::_('COM_PHOCACART_TITLE').'</div>';
-	echo '<div class="span2 col-sm-2 col-md-2">'.JText::_('COM_PHOCACART_ALIAS').'</div>';
-	echo '<div class="span2 col-sm-2 col-md-2">'. ($this->type == 2 ? JText::_('COM_PHOCACART_TAX_RATE_REGION') : JText::_('COM_PHOCACART_TAX_RATE_COUNTRY')).'</div>';
+	echo '<div class="row ph-tax-edit-header">';
+	echo '<div class="span4 col-sm-4 col-md-4">'.Text::_('COM_PHOCACART_TAX_NAME').'</div>';
+	echo '<div class="span2 col-sm-2 col-md-2">'.Text::_('COM_PHOCACART_TAX_RATE').'</div>';
+	echo '<div class="span2 col-sm-2 col-md-2">'.Text::_('COM_PHOCACART_TITLE').'</div>';
+	echo '<div class="span2 col-sm-2 col-md-2">'.Text::_('COM_PHOCACART_ALIAS').'</div>';
+	echo '<div class="span2 col-sm-2 col-md-2">'. ($this->type == 2 ? Text::_('COM_PHOCACART_TAX_RATE_REGION') : Text::_('COM_PHOCACART_TAX_RATE_COUNTRY')).'</div>';
 	echo '</div>';
-	
+
 	if (!empty($this->itemcountrytax)) {
 		foreach($this->itemcountrytax as $k => $v) {
-			echo '<div class="row-fluid ph-tax-edit-item">';
-			echo '<div class="span4 col-sm-4 col-md-4">'.JText::_($v->title).'</div>';
+			echo '<div class="row ph-tax-edit-item">';
+			echo '<div class="span4 col-sm-4 col-md-4">'.Text::_($v->title).'</div>';
 			echo '<div class="span2 col-sm-2 col-md-2">'.PhocacartPrice::cleanPrice($v->tax_rate).'</div>';
-			
+
 			echo '<div class="span2 col-sm-2 col-md-2">';
-			
-			echo '<input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][title]" value="'.htmlspecialchars($v->tcr_title).'">';
+
+			echo '<input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][title]" value="'.htmlspecialchars((string)$v->tcr_title).'">';
 			echo '<input type="hidden" name="jform['.(int)$v->id.'][tax_id]" value="'.(int)$v->id.'">';
 			echo '</div>';
-			
-			echo '<div class="span2 col-sm-2 col-md-2"><input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][alias]" value="'.htmlspecialchars($v->tcr_alias).'"></div>';
-			
+
+			echo '<div class="span2 col-sm-2 col-md-2"><input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][alias]" value="'.htmlspecialchars((string)$v->tcr_alias).'"></div>';
+
 			// cleanPrice method add 0 to empty values which is wrong in this case as we have:
 			// VAT = 0 (valid VAT)
 			// VAT = '' (vat not set)
@@ -63,25 +66,25 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 			if ($v->tcr_tax_rate == -1) {
 				$tcTaxRate = '';// -1 means, it was not active but we still hold the ID of such tax for comparison in reports
 			}
-			echo '<div class="span2 col-sm-2 col-md-2"><input class="input-small input-sm" type="text" name="jform['.(int)$v->id.'][tax_rate]" value="'.htmlspecialchars($tcTaxRate).'"></div>';
+			echo '<div class="span2 col-sm-2 col-md-2"><input class="form-control input-sm" type="text" name="jform['.(int)$v->id.'][tax_rate]" value="'.htmlspecialchars($tcTaxRate).'"></div>';
 			echo '</div>';
-			
+
 		}
 	}
 	//echo '</table>';
-	
 
 
-	
-	
+
+
+
 	echo '<input type="hidden" name="jform[id]" value="'.(int)$this->id.'">';
 	echo '<input type="hidden" name="jform[type]" value="'.(int)$this->type.'">';
 	echo '<input type="hidden" name="task" value="phocacartedittax.edittax">';
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />';
-	echo '<div class="ph-tax-edit-button"><button class="btn btn-success btn-sm ph-btn"><span class="icon-edit"></span> '.JText::_('COM_PHOCACART_SAVE').'</button></div>';
+	echo '<div class="ph-tax-edit-button"><button class="btn btn-success btn-sm ph-btn"><span class="icon-edit"></span> '.Text::_('COM_PHOCACART_SAVE').'</button></div>';
 
-	echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+	echo HTMLHelper::_('form.token');
 	echo '</form>';
 }
 
@@ -95,10 +98,10 @@ echo '<input type="hidden" name="jform[type]" value="'.(int)$this->type.'">';
 echo '<input type="hidden" name="task" value="phocacartedittax.emptyinformation">';
 echo '<input type="hidden" name="tmpl" value="component" />';
 echo '<input type="hidden" name="option" value="com_phocacart" />';
-echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.JText::_('COM_PHOCACART_EMPTY_TAX_INFORMATION').'</button>';
+echo '<button class="btn btn-primary btn-sm ph-btn"><span class="icon-delete"></span> '.Text::_('COM_PHOCACART_EMPTY_TAX_INFORMATION').'</button>';
 echo '</div>';
-echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
+echo HTMLHelper::_('form.token');
 echo '</form>';
 
-	
+
 ?>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
-        <fieldset name="display" label="COM_PHOCACART_CONFIG_HEAD_DISPLAY_LABEL">
+        <fieldset name="display" label="COM_PHOCACART_CONFIG_HEAD_DISPLAY_LABEL" addfieldprefix="Joomla\Component\Content\Administrator\Field">
 
 
             <field name="phocahead1" type="phocahead" default="COM_PHOCACART_CATEGORIES_VIEW_LABEL" label="" description=""/>
 
 
-            <field name="columns_cats" type="list" default="3" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_DESC">
+            <field name="columns_cats" type="list" class="form-select" default="3" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_DESC">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -18,23 +18,23 @@
 
             <field name="csv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_DESC"/>
 
-            <field name="csv_display_category_desc" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_DESCRIPTION_CSV_LABEL"
+            <field name="csv_display_category_desc" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_DESCRIPTION_CSV_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_DESCRIPTION_CSV_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
             </field>
 
             <field name="image_width_cats" default="" size="10" type="text" label="COM_PHOCACART_FIELD_IMAGE_WIDTH_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_IMAGE_WIDTH_CATEGORIES_VIEW_DESC"/>
 
             <field name="image_height_cats" default="" size="10" type="text" label="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORIES_VIEW_LABEL" description="COM_PHOCACART_FIELD_IMAGE_HEIGHT_CATEGORIES_VIEW_DESC"/>
 
-            <field name="display_view_category_button" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
+            <field name="display_view_category_button" type="list" class="form-select" default="1" label="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_VIEW_CATEGORY_BUTTON_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_ICON_ONLY</option>
             </field>
-			
-			<field name="display_category_header" type="list" default="h3" label="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_HEADER_CATEGORIES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_HEADER_CATEGORIES_DESC">
+
+			<field name="display_category_header" type="list" class="form-select" default="h3" label="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_HEADER_CATEGORIES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_HEADER_CATEGORIES_DESC">
                 <option value="h1">h1</option>
                 <option value="h2">h2</option>
                 <option value="h3">h3</option>
@@ -46,28 +46,28 @@
                 <option value="-1">COM_PHOCACART_HIDE_HEADER</option>
             </field>
 
-            <field name="category_name_link" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_CATEGORY_NAME_AS_LINK_LABEL"
+            <field name="category_name_link" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_CATEGORY_NAME_AS_LINK_LABEL"
                    description="COM_PHOCACART_FIELD_CATEGORY_NAME_AS_LINK_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="categories_view_layout" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_CATEGORIES_VIEW_LAYOUT_LABEL"
+            <field name="categories_view_layout" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_CATEGORIES_VIEW_LAYOUT_LABEL"
                    description="COM_PHOCACART_FIELD_CATEGORIES_VIEW_LAYOUT_DESC">
                 <option value="1">COM_PHOCACART_STANDARD</option>
                 <option value="2">COM_PHOCACART_COLSPAN</option>
             </field>
 
-			<field name="lazy_load_categories" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_LABEL"
+			<field name="lazy_load_categories" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
-			
+
 			<field name="image_categories_view" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_CATEGORIES_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_IMAGE_CATEGORIES_VIEW_DESC"/>
 
-			
+
 
             <!--
             <field name="phocahead2" type="phocahead" default="COM_PHOCACART_CATEGORY_VIEW_LABEL" label="" description=""/>
@@ -98,7 +98,7 @@
             <field name="phocahead4" type="phocahead" default="COM_PHOCACART_CATEGORY_AND_ITEMS_VIEW_LABEL" label="" description=""/>
 
 
-            <field name="columns_cat" type="list" default="3" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_DESC">
+            <field name="columns_cat" type="list" class="form-select" default="3" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -110,7 +110,7 @@
             <field name="cv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_DESC"/>
 
-            <field name="cv_subcategories_layout" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SUBCATEGORIES_LAYOUT_LABEL"
+            <field name="cv_subcategories_layout" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_SUBCATEGORIES_LAYOUT_LABEL"
                    description="COM_PHOCACART_FIELD_SUBCATEGORIES_LAYOUT_DESC">
                 <option value="1">COM_PHOCACART_LISTS</option>
                 <option value="2">COM_PHOCACART_IMAGE_BOXES</option>
@@ -126,10 +126,10 @@
             </field>
 
 
-            <field name="cv_display_description" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DESCRIPTION_CATEGORY_LABEL"
+            <field name="cv_display_description" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DESCRIPTION_CATEGORY_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DESCRIPTION_CATEGORY_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="display_product_header" type="list" default="h3" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_HEADER_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_HEADER_CATEGORY_DESC">
@@ -154,10 +154,10 @@
             </field>
 
 
-            <field name="hide_attributes_category" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_CATEGORY_LABEL"
+            <field name="hide_attributes_category" default="1" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_CATEGORY_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_CATEGORY_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="item_ordering" type="list" default="1" label="COM_PHOCACART_FIELD_PRODUCT_ORDERING_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ORDERING_DESC">
@@ -179,69 +179,74 @@
                 <option value="14">COM_PHOCACART_MOST_POPULAR_DESC</option>
 				<option value="15">COM_PHOCACART_MOST_VIEWED_ASC</option>
                 <option value="16">COM_PHOCACART_MOST_VIEWED_DESC</option>
+                <option value="23">COM_PHOCACART_STOCK_ASC</option>
+                <option value="24">COM_PHOCACART_STOCK_DESC</option>
+                <option value="25">COM_PHOCACART_FEATURED_ASC</option>
+                <option value="26">COM_PHOCACART_FEATURED_DESC</option>
+
             </field>
 
 			<field name="item_ordering_values" default="1,2,3,4,5,6,7,8,21,22,9,10,19,20" size="18" type="text" label="COM_PHOCACART_FIELD_PRODUCT_ORDERING_VALUES_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ORDERING_VALUES_DESC"/>
 
-			 <field name="ordering_asc_desc_arrows" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ORDERING_ASC_DESC_ARROWS_LABEL"
+			 <field name="ordering_asc_desc_arrows" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ORDERING_ASC_DESC_ARROWS_LABEL"
                    description="COM_PHOCACART_FIELD_ORDERING_ASC_DESC_ARROWS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="show_pagination" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="show_pagination" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
 
-            <field name="show_pagination_top" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_TOP_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="show_pagination_top" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_TOP_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_TOP_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
 
-            <field name="show_pagination_limit" class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SELECT_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="show_pagination_limit" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SELECT_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SELECT_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
 
-            <field name="show_pagination_limit_top" class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SELECT_TOP_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="show_pagination_limit_top" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SELECT_TOP_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SELECT_TOP_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
 
-            <field name="display_item_ordering" class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ORDERING_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="display_item_ordering" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ORDERING_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_ORDERING_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
 
-            <field name="display_item_ordering_top" class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ORDERING_TOP_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="display_item_ordering_top" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ORDERING_TOP_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_ORDERING_TOP_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
 
-            
 
-            <field name="ajax_pagination_category" class="btn-group btn-group-yesno" type="radio" default="0" label="COM_PHOCACART_FIELD_AJAX_PAGINATION_CATEGORY_ITEMS_VIEW_LABEL"
+
+            <field name="ajax_pagination_category" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_AJAX_PAGINATION_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_AJAX_PAGINATION_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			<field name="ajax_searching_filtering_items" class="btn-group btn-group-yesno" type="radio" default="0" label="COM_PHOCACART_FIELD_AJAX_SEARCHING_FILTERING_ITEMS_VIEW_LABEL"
+			<field name="ajax_searching_filtering_items" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_AJAX_SEARCHING_FILTERING_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_AJAX_SEARCHING_FILTERING_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			<field name="display_pagination_labels" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_LABELS_CATEGORY_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_LABELS_CATEGORY_ITEMS_VIEW_DESC">
+			<field name="display_pagination_labels" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_LABELS_CATEGORY_ITEMS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PAGINATION_LABELS_CATEGORY_ITEMS_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="layout_type" type="list" default="grid" label="COM_PHOCACART_FIELD_DEFAULT_LAYOUT_CATEGORY_ITEMS_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_LAYOUT_CATEGORY_ITEMS_DESC">
@@ -249,23 +254,23 @@
                 <option value="gridlist">COM_PHOCACART_GRID_LIST</option>
                 <option value="list">COM_PHOCACART_LIST</option>
             </field>
-			
-			<field name="show_switch_layout_type" class="btn-group btn-group-yesno" type="radio" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SWITCH_LAYOUT_TYPE_CATEGORY_ITEMS_VIEW_LABEL"
+
+			<field name="show_switch_layout_type" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_SWITCH_LAYOUT_TYPE_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SWITCH_LAYOUT_TYPE_CATEGORY_ITEMS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_DISPLAY</option>
             </field>
-			
-			<field name="category_layout_plugin" type="PhocaCartLayoutPlugin" typeview="category" default="" class="inputbox" label="COM_PHOCACART_FIELD_CATEGORY_LAYOUT_PLUGIN_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_LAYOUT_PLUGIN_DESC" />
-			
-			<field name="items_layout_plugin" type="PhocaCartLayoutPlugin" typeview="items" default="" class="inputbox" label="COM_PHOCACART_FIELD_ITEMS_LAYOUT_PLUGIN_LABEL" description="COM_PHOCACART_FIELD_ITEMS_LAYOUT_PLUGIN_DESC" />
+
+			<field name="category_layout_plugin" type="PhocaCartLayoutPlugin" typeview="category" default="" class="form-control" label="COM_PHOCACART_FIELD_CATEGORY_LAYOUT_PLUGIN_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_LAYOUT_PLUGIN_DESC" />
+
+			<field name="items_layout_plugin" type="PhocaCartLayoutPlugin" typeview="items" default="" class="form-control" label="COM_PHOCACART_FIELD_ITEMS_LAYOUT_PLUGIN_LABEL" description="COM_PHOCACART_FIELD_ITEMS_LAYOUT_PLUGIN_DESC" />
 
             <field name="item_pagination" default="5,10,15,20,50" size="18" type="text" label="COM_PHOCACART_FIELD_PRODUCT_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_PAGINATION_DESC"/>
 
             <field name="item_pagination_default" default="20" size="18" type="text" label="COM_PHOCACART_FIELD_DEFAULT_VALUE_PAGINATION_PRODUCTS_LABEL"
                    description="COM_PHOCACART_FIELD_DEFAULT_VALUE_PAGINATION_PRODUCTS_DESC"/>
 
-            <field name="item_pagination_limit" class="btn-group btn-group-yesno" type="radio" default="0" label="COM_PHOCACART_FIELD_PRODUCT_PAGINATION_LIMIT_LABEL"
+            <field name="item_pagination_limit" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_PRODUCT_PAGINATION_LIMIT_LABEL"
                    description="COM_PHOCACART_FIELD_PRODUCT_PAGINATION_LIMIT_DESC">
                 <option value="0">COM_PHOCACART_DISABLE</option>
                 <option value="1">COM_PHOCACART_ENABLE</option>
@@ -278,8 +283,8 @@
 
 
             <field name="display_view_product_button" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_VIEW_PRODUCT_BUTTON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_VIEW_PRODUCT_BUTTON_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_ICON_ONLY</option>
             </field>
 
@@ -289,32 +294,28 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="product_name_link" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_PRODUCT_NAME_AS_LINK_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_NAME_AS_LINK_DESC">
+            <field name="product_name_link" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_PRODUCT_NAME_AS_LINK_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_NAME_AS_LINK_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="switch_image_category_items" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_LABEL"
+            <field name="switch_image_category_items" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_SWITCH_IMAGE_CATEGORY_ITEMS_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			 <field name="lazy_load_category_items" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_LABEL"
+			 <field name="lazy_load_category_items" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="join_tag_label_filter" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_JOIN_TAG_LABEL_FILTER_LABEL"
-                   description="COM_PHOCACART_FIELD_JOIN_TAG_LABEL_FILTER_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
+
 
             <field name="category_askquestion" type="list" default="0" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_CATEGORY_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_ONLY_IF_ADD_TO_CART_NOT_DISPLAYED</option>
             </field>
 
@@ -326,8 +327,8 @@
             </field>
 
 			<field name="category_display_tags" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAGS_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_TAGS_CATEGORY_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 			<field name="category_display_manufacturer" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_MANUFACTURER_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_MANUFACTURER_CATEGORY_VIEW_DESC">
@@ -340,6 +341,47 @@
                    description="COM_PHOCACART_FIELD_IMAGE_ITEMS_VIEW_DESC"/>
 
 
+
+
+
+            <field name="phocahead41" type="phocahead" default="COM_PHOCACART_FILTER_OPTIONS_LABEL" label="" description=""/>
+
+            <field name="join_tag_label_filter" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_JOIN_TAG_LABEL_FILTER_LABEL"
+                   description="COM_PHOCACART_FIELD_JOIN_TAG_LABEL_FILTER_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+
+            <field name="sql_filter_method_tag" type="list" default="0" label="COM_PHOCACART_FIELD_TAG_FILTER_METHOD_LABEL"
+                   description="COM_PHOCACART_FIELD_TAG_FILTER_METHOD_DESC">
+                <option value="0">COM_PHOCACART_FIELD_ANY</option>
+                <option value="1">COM_PHOCACART_FIELD_ALL</option>
+            </field>
+
+            <field name="sql_filter_method_label" type="list" default="0" label="COM_PHOCACART_FIELD_LABEL_FILTER_METHOD_LABEL"
+                   description="COM_PHOCACART_FIELD_LABEL_FILTER_METHOD_DESC">
+                <option value="0">COM_PHOCACART_FIELD_ANY</option>
+                <option value="1">COM_PHOCACART_FIELD_ALL</option>
+            </field>
+
+            <field name="sql_filter_method_parameter" type="list" default="0" label="COM_PHOCACART_FIELD_PARAMETER_FILTER_METHOD_LABEL"
+                   description="COM_PHOCACART_FIELD_PARAMETER_FILTER_METHOD_DESC">
+                <option value="0">COM_PHOCACART_FIELD_ANY</option>
+                <option value="1">COM_PHOCACART_FIELD_ALL</option>
+            </field>
+
+            <field name="sql_filter_method_attribute" type="list" default="0" label="COM_PHOCACART_FIELD_ATTRIBUTE_FILTER_METHOD_LABEL"
+                   description="COM_PHOCACART_FIELD_ATTRIBUTE_FILTER_METHOD_DESC">
+                <option value="0">COM_PHOCACART_FIELD_ANY</option>
+                <option value="1">COM_PHOCACART_FIELD_ALL</option>
+            </field>
+
+            <field name="sql_filter_method_specification" type="list" default="0" label="COM_PHOCACART_FIELD_SPECIFICATION_FILTER_METHOD_LABEL"
+                   description="COM_PHOCACART_FIELD_SPECIFICATION_FILTER_METHOD_DESC">
+                <option value="0">COM_PHOCACART_FIELD_ANY</option>
+                <option value="1">COM_PHOCACART_FIELD_ALL</option>
+            </field>
+
             <field name="phocahead5" type="phocahead" default="COM_PHOCACART_ITEM_VIEW_LABEL" label="" description=""/>
 
 
@@ -351,16 +393,16 @@
                 <option value="103">COM_PHOCACART_YES_EXTERNAL_LINK</option>
             </field>
 
-            <field name="hide_attributes_item" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_ITEM_LABEL"
+            <field name="hide_attributes_item" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_ITEM_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="enable_item_navigation" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_NAVIGATION_ITEM_VIEW_LABEL"
+            <field name="enable_item_navigation" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_NAVIGATION_ITEM_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_NAVIGATION_ITEM_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="tags_links" type="list" default="0" label="COM_PHOCACART_FIELD_TAGS_LINKS_LABEL" description="COM_PHOCACART_FIELD_TAGS_LINKS_DESC">
@@ -377,38 +419,38 @@
             </field>
 
             <field name="item_display_tags" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_TAGS_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_TAGS_ITEM_VIEW_LABEL">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 			<field name="item_display_parameters" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PARAMETERS_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PARAMETERS_ITEM_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
             <field name="item_askquestion" type="list" default="0" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_ITEM_VIEW_LABEL" description="COM_PHOCACART_FIELD_ASK_A_QUESTION_BUTTON_ITEM_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_ONLY_IF_ADD_TO_CART_NOT_DISPLAYED</option>
             </field>
 
-            <field name="display_public_download" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PUBLIC_DOWNLOAD_BUTTON_LABEL"
+            <field name="display_public_download" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_PUBLIC_DOWNLOAD_BUTTON_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PUBLIC_DOWNLOAD_BUTTON_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="display_file_play" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_FILE_PLAY_LABEL"
+			<field name="display_file_play" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_FILE_PLAY_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_FILE_PLAY_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_external_link" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_EXTERNAL_LINK_LABEL"
+            <field name="display_external_link" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_EXTERNAL_LINK_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_EXTERNAL_LINK_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="title_next_prev" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_NEXT_PREVIOUS_TITLE_LABEL" description="COM_PHOCACART_FIELD_NEXT_PREVIOUS_TITLE_DESC">
@@ -418,34 +460,34 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="enable_price_history" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_PRICE_HISTORY_LABEL"
+            <field name="enable_price_history" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_PRICE_HISTORY_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_PRICE_HISTORY_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="item_display_size_options" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SIZE_OPTIONS_ITEM_VIEW_LABEL"
+			<field name="item_display_size_options" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SIZE_OPTIONS_ITEM_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SIZE_OPTIONS_ITEM_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="item_display_delivery_date" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_DELIVERY_DATE_ITEM_VIEW_LABEL"
+			<field name="item_display_delivery_date" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_DELIVERY_DATE_ITEM_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_DELIVERY_DATE_ITEM_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
             <field name="phocahead6" type="phocahead" default="COM_PHOCACART_CHECKOUT_VIEW_LABEL" label="" description=""/>
 
-            <field name="checkout_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_LABEL"
+            <field name="checkout_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_CHECKOUT_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
-            <field name="display_shipping_desc" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_DESCRIPTION_LABEL"
+            <field name="display_shipping_desc" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_DESCRIPTION_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="zero_shipping_price" type="list" default="1" label="COM_PHOCACART_FIELD_ZERO_SHIPPING_PRICE_LABEL" description="COM_PHOCACART_FIELD_ZERO_SHIPPING_PRICE_DESC">
@@ -461,10 +503,10 @@
                 <option value="-1">COM_PHOCACART_HIDE_COMPLETELY</option>
             </field>
 
-            <field name="display_payment_desc" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PAYMENT_DESCRIPTION_LABEL"
+            <field name="display_payment_desc" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PAYMENT_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PAYMENT_DESCRIPTION_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="zero_payment_price" type="list" default="1" label="COM_PHOCACART_FIELD_ZERO_PAYMENT_PRICE_LABEL" description="COM_PHOCACART_FIELD_ZERO_PAYMENT_PRICE_DESC">
@@ -481,8 +523,8 @@
             </field>
 
             <field name="display_discount_product" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="enable_captcha_checkout" type="list" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_CHECKOUT_LABEL"
@@ -493,27 +535,27 @@
             </field>
 
 
-            <field name="checkout_scroll" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SCROLL_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_SCROLL_CHECKOUT_DESC">
+            <field name="checkout_scroll" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_SCROLL_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_SCROLL_CHECKOUT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="checkout_icon_status" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_CHECKOUT_STATUS_ICON_LABEL"
+            <field name="checkout_icon_status" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_CHECKOUT_STATUS_ICON_LABEL"
                    description="COM_PHOCACART_FIELD_CHECKOUT_STATUS_ICON_DESC">
                 <option value="0">COM_PHOCACART_DEFAULT_ICONS</option>
                 <option value="1">COM_PHOCACART_DEFAULT_NUMBERS</option>
             </field>
 
 
-            <field name="display_reward_points_receive_info" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_RECEIVED_POINTS_LABEL"
+            <field name="display_reward_points_receive_info" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_RECEIVED_POINTS_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_RECEIVED_POINTS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			<field name="display_zero_total" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ZERO_TOTAL_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ZERO_TOTAL_DESC">
+			<field name="display_zero_total" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ZERO_TOTAL_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ZERO_TOTAL_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -528,8 +570,8 @@
                 <option value="2">COM_PHOCACART_BEFORE_LOGIN_FORM</option>
                 <option value="3">COM_PHOCACART_AFTER_LOGIN_FORM</option>
             </field>
-			
-			
+
+
 			<field name="delivery_billing_same_enabled" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_CHECKED_LABEL" description="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_CHECKED_DESC">
                 <option value="-1">COM_PHOCACART_DISABLED</option>
 				<option value="0">COM_PHOCACART_NO</option>
@@ -537,11 +579,11 @@
 				<option value="2">COM_PHOCACART_YES_NEW_GUEST_USERS</option>
                 <option value="3">COM_PHOCACART_YES_NEW_USERS_NEW_GUEST_USERS</option>
             </field>
-			
+
 
             <field name="phocahead30" type="phocahead" default="COM_PHOCACART_USER_ACCOUNT_VIEW_LABEL" label="" description=""/>
 
-            <field name="display_reward_points_total_info" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ACCOUNT_VIEW_LABEL"
+            <field name="display_reward_points_total_info" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ACCOUNT_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ACCOUNT_VIEW_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
@@ -549,21 +591,21 @@
 
             <field name="phocahead31" type="phocahead" default="COM_PHOCACART_USER_ORDERS_VIEW_LABEL" label="" description=""/>
 
-            <field name="display_reward_points_user_orders" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ORDERS_VIEW_LABEL"
+            <field name="display_reward_points_user_orders" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ORDERS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ORDERS_VIEW_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
-			
+
 			<field name="phocahead39" type="phocahead" default="COM_PHOCACART_INFO_VIEW_LABEL" label="" description=""/>
-			
-			<field name="info_view_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_LABEL"
+
+			<field name="info_view_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
             <field name="phocahead7" type="phocahead" default="COM_PHOCACART_GENERAL_DISPLAY_OPTIONS_LABEL" label="" description=""/>
 
-            <field name="main_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_LABEL"
+            <field name="main_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_MAIN_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
             <field name="display_header_type" type="list" default="h1" label="COM_PHOCACART_FIELD_DISPLAY_HEADER_TYPE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_HEADER_TYPE_DESC">
@@ -578,7 +620,7 @@
                 <option value="-1">COM_PHOCACART_HIDE_HEADER</option>
             </field>
 
-            <field name="hide_header_view" type="list" default="" label="COM_PHOCACART_FIELD_HIDE_HEADER_VIEW_LABEL" description="COM_PHOCACART_FIELD_HIDE_HEADER_VIEW_DESC" multiple="true">
+            <field name="hide_header_view" type="list" default="" label="COM_PHOCACART_FIELD_HIDE_HEADER_VIEW_LABEL" description="COM_PHOCACART_FIELD_HIDE_HEADER_VIEW_DESC" layout="joomla.form.field.list-fancy-select"  multiple="true">
                 <option value="categories">COM_PHOCACART_CATEGORIES_LAYOUT</option>
                 <option value="category">COM_PHOCACART_CATEGORY_LAYOUT</option>
                 <option value="items">COM_PHOCACART_ITEM_LIST_LAYOUT</option>
@@ -597,46 +639,46 @@
             </field>
 
 
-            <field name="display_compare" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_COMPARE_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_COMPARE_ICON_DESC">
+            <field name="display_compare" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_COMPARE_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_COMPARE_ICON_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
-            <field name="display_wishlist" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WISH_LIST_ICON_LABEL"
+            <field name="display_wishlist" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WISH_LIST_ICON_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_WISH_LIST_ICON_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_quickview" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_LABEL"
+            <field name="display_quickview" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_QUICK_VIEW_ICON_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_addtocart_icon" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ICON_LABEL"
+            <field name="display_addtocart_icon" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ICON_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ICON_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="fade_in_action_icons" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_FADE_IN_ACTION_ICONS_LABEL"
+            <field name="fade_in_action_icons" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_FADE_IN_ACTION_ICONS_LABEL"
                    description="COM_PHOCACART_FIELD_FADE_IN_ACTION_ICONS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="dynamic_change_price" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_PRICE_LABEL"
+            <field name="dynamic_change_price" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_PRICE_LABEL"
                    description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_PRICE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="dynamic_change_stock" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_STOCK_LABEL"
+            <field name="dynamic_change_stock" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_STOCK_LABEL"
                    description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_STOCK_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="dynamic_change_image" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_IMAGE_LABEL"
@@ -645,23 +687,23 @@
 				<option value="2">COM_PHOCACART_YES_ADVANCED_STOCK_MANAGEMENT</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
-			
-			<field name="dynamic_change_id" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_ID_LABEL"
+
+			<field name="dynamic_change_id" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_ID_LABEL"
                    description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_ID_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
-			
-			<field name="dynamic_change_url_attributes" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_URL_ATTRIBUTES_LABEL"
+
+			<field name="dynamic_change_url_attributes" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_URL_ATTRIBUTES_LABEL"
                    description="COM_PHOCACART_FIELD_DYNAMIC_CHANGE_URL_ATTRIBUTES_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
-			
-			<field name="remove_select_option_attribute" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REMOVE_SELECT_OPTION_ATTRIBUTE_LABEL"
+
+			<field name="remove_select_option_attribute" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_REMOVE_SELECT_OPTION_ATTRIBUTE_LABEL"
                    description="COM_PHOCACART_FIELD_REMOVE_SELECT_OPTION_ATTRIBUTE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="display_new" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_NEW_ICON_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_NEW_ICON_DESC"/>
@@ -670,9 +712,9 @@
 
             <field name="display_featured" default="" size="20" type="text" label="COM_PHOCACART_FIELD_DISPLAY_FEATURED_TEXT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_FEATURED_TEXT_DESC"/>
 
-            <field name="display_unit_price" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_UNIT_PRICE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_UNIT_PRICE_DESC">
+            <field name="display_unit_price" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_UNIT_PRICE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_UNIT_PRICE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -692,9 +734,9 @@
                 <option value="6">COM_PHOCACART_DATE_DESC</option>
             </field>
 
-            <field name="equal_height" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_BOX_EQUAL_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_BOX_EQUAL_HEIGHT_DESC">
+            <field name="equal_height" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_BOX_EQUAL_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_BOX_EQUAL_HEIGHT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="cart_metakey" default="" type="textarea" label="COM_PHOCACART_FIELD_META_KEYWORDS_LABEL" description="COM_PHOCACART_FIELD_META_KEYWORDS_DESC"/>
@@ -714,39 +756,40 @@
 
             <field name="icon_suffix" default="-circle" size="20" type="text" label="COM_PHOCACART_FIELD_ICON_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_ICON_SUFFIX_DESC"/>
 
-            <field name="display_attribute_image" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTE_IMAGE_CATEGORY_ITEMS_ITEM_LABEL"
+            <field name="display_attribute_image" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTE_IMAGE_CATEGORY_ITEMS_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTE_IMAGE_CATEGORY_ITEMS_ITEM_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
-            <field name="display_attribute_image_checkout" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTE_IMAGE_CHECKOUT_LABEL"
+            <field name="display_attribute_image_checkout" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTE_IMAGE_CHECKOUT_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTE_IMAGE_CHECKOUT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
             <!--<field name="display_discount_price" type="radio"  class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>-->
 
-            <field name="display_discount_product_views" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"
+            <field name="display_discount_product_views" type="list"  default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PRODUCT_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
+                <option value="2">COM_PHOCACART_YES_QUANTITY_RULE_IGNORED</option>
             </field>
 
-            <field name="display_discount_cart_product_views" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CART_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"
+            <field name="display_discount_cart_product_views" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CART_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CART_DISCOUNT_PRICE_CATEGORY_ITEMS_ITEM_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="hide_add_to_cart_stock" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_OUT_OF_STOCK_LABEL"
+            <field name="hide_add_to_cart_stock" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_OUT_OF_STOCK_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_OUT_OF_STOCK_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -764,10 +807,10 @@
             <field name="price_on_demand_text" default="" size="20" type="text" label="COM_PHOCACART_FIELD_PRICE_ON_DEMAND_TEXT_LABEL" description="COM_PHOCACART_FIELD_PRICE_ON_DEMAND_TEXT_DESC"/>
 
 
-            <field name="hide_add_to_cart_zero_price" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_LABEL"
+            <field name="hide_add_to_cart_zero_price" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_ADD_TO_CART_PRODUCT_ZERO_PRICE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="zero_attribute_price" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ATTRIBUTE_PRICE_LABEL"
@@ -783,9 +826,9 @@
                 <option value="2">COM_PHOCACART_IMAGE_NAME</option>
             </field>
 
-			<field name="display_webp_images" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_DESC">
+			<field name="display_webp_images" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_WEBP_IMAGES_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="popup_askquestion" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ASK_A_QUESTION_POPUP_ITEM_VIEW_LABEL"
@@ -793,6 +836,11 @@
                 <option value="1">COM_PHOCACART_YES_WINDOW_POPUP</option>
 				<option value="2">COM_PHOCACART_YES_MODAL_POPUP</option>
 				<option value="0">COM_PHOCACART_NO</option>
+            </field>
+
+            <field name="render_canonical_url" type="list" default="0" label="COM_PHOCACART_FIELD_RENDER_CANONICAL_URL_LABEL" description="COM_PHOCACART_FIELD_RENDER_CANONICAL_URL_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_PRODUCT_VIEW</option>
             </field>
 
             <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
@@ -819,41 +867,49 @@
 
 			<field name="phocahead35" type="phocahead" default="COM_PHOCACART_CONFIG_THEME_OPTIONS_LABEL" label="" description=""/>
 
-			<field name="theme" type="list" class="btn-group btn-group-yesno" default="bs3" label="COM_PHOCACART_FIELD_THEME_LABEL" description="COM_PHOCACART_FIELD_THEME_DESC">
-                <option value="bs3">Bootstrap 3</option>
-                <option value="bs4">Bootstrap 4</option>
+			<field name="theme" type="list" class="btn-group btn-group-yesno" default="bs5" label="COM_PHOCACART_FIELD_THEME_LABEL" description="COM_PHOCACART_FIELD_THEME_DESC">
+                <!--<option value="bs3">Bootstrap 3</option>
+                <option value="bs4">Bootstrap 4</option>-->
+                <option value="bs5">Bootstrap 5</option>
+                <option value="uikit">UIkit</option>
+
 
             </field>
 
-            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="bs" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
+            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="fa5" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
                 <option value="bs">Bootstrap</option>
                 <option value="fa">Font Awesome</option>
 				<option value="fa5">Font Awesome 5</option>
+                <option value="svg">SVG</option>
             </field>
 
-			<field name="load_main_css" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_DESC">
+			<field name="load_main_css" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_MAIN_CSS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 			<field name="load_spec_css" type="list" class="btn-group btn-group-yesno" default="" label="COM_PHOCACART_FIELD_LOAD_SPECIFIC_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_SPECIFIC_CSS_DESC">
                 <option value="">COM_PHOCACART_NO</option>
                 <option value="gantry">Gantry</option>
-				<option value="astroid">Astroid</option>
+                <option value="yootheme">YOOtheme</option>
+                <option value="cassiopeia">Cassiopeia</option>
+                <option value="helix">Helix</option>
+                <option value="t4">T4</option>
+                <option value="astroid">Astroid</option>
             </field>
 
-			<field name="load_rtl_css" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_LOAD_RTL_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_RTL_CSS_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+			<field name="load_rtl_css" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_LOAD_RTL_CSS_LABEL" description="COM_PHOCACART_FIELD_LOAD_RTL_CSS_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="load_bootstrap" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_LABEL" description="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_DESC">
+            <!--<field name="load_bootstrap" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_LABEL" description="COM_PHOCACART_FIELD_LOAD_BOOTSTRAP_DESC">
                 <option value="2">Bootstrap 4</option>
 				<option value="1">Bootstrap 3</option>
                 <option value="0">COM_PHOCACART_NO</option>
-            </field>
+            </field>-->
 
-            <field name="load_chosen" type="list" default="1" label="COM_PHOCACART_FIELD_LOAD_CHOSEN_LABEL" description="COM_PHOCACART_FIELD_LOAD_CHOSEN_DESC">
+            <field name="load_chosen" type="list" default="0" label="COM_PHOCACART_FIELD_LOAD_CHOSEN_LABEL" description="COM_PHOCACART_FIELD_LOAD_CHOSEN_DESC">
                 <option value="1">COM_PHOCACART_YES_EXCLUDING_BOOTSTRAP_JS</option>
                 <option value="2">COM_PHOCACART_YES_INCLUDING_BOOTSTRAP_JS</option>
                 <option value="0">COM_PHOCACART_NO</option>
@@ -882,21 +938,21 @@
                 <option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
                 <option value="0">COM_PHOCACART_NO_TAX_AMOUNT</option>
             </field>
-			
+
 			<field name="shipping_country_rule" type="list" default="1" label="COM_PHOCACART_FIELD_COUNTRY_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_COUNTRY_RULE_SHIPPING_DESC">
                 <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
 				<option value="3">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS_IF_EMPTY_SHIPPING_ADDRESS</option>
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
-			
+
 			<field name="shipping_region_rule" type="list" default="1" label="COM_PHOCACART_FIELD_REGION_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_REGION_RULE_SHIPPING_DESC">
                 <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
 				<option value="3">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS_IF_EMPTY_SHIPPING_ADDRESS</option>
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
-			
+
 			<field name="shipping_zip_rule" type="list" default="1" label="COM_PHOCACART_FIELD_ZIP_RULE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_ZIP_RULE_SHIPPING_DESC">
                 <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
@@ -915,14 +971,14 @@
                 <option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
                 <option value="0">COM_PHOCACART_NO_TAX_AMOUNT</option>
             </field>
-			
+
 			<field name="payment_country_rule" type="list" default="1" label="COM_PHOCACART_FIELD_COUNTRY_RULE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_COUNTRY_RULE_PAYMENT_DESC">
                 <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
 				<option value="3">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS_IF_EMPTY_SHIPPING_ADDRESS</option>
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
-			
+
 			<field name="payment_region_rule" type="list" default="1" label="COM_PHOCACART_FIELD_REGION_RULE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_REGION_RULE_PAYMENT_DESC">
                 <option value="1">COM_PHOCACART_BASED_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS</option>
@@ -1006,19 +1062,19 @@
             <field name="phocahead9" type="phocahead" default="COM_PHOCACART_CONFIG_STOCK_LABEL" label="" description=""/>
 
 
-            <field name="stock_checking" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_STOCK_CHECKING_LABEL" description="COM_PHOCACART_FIELD_STOCK_CHECKING_DESC">
+            <field name="stock_checking" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_STOCK_CHECKING_LABEL" description="COM_PHOCACART_FIELD_STOCK_CHECKING_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="stock_checkout" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_CHECKOUT_DESC">
+            <field name="stock_checkout" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_CHECKOUT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="negative_stocks" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_NEGATIVE_STOCKS_LABEL" description="COM_PHOCACART_FIELD_NEGATIVE_STOCKS_DESC">
+            <field name="negative_stocks" default="1" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_NEGATIVE_STOCKS_LABEL" description="COM_PHOCACART_FIELD_NEGATIVE_STOCKS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="display_stock_status" default="1" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_STATUS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_STATUS_DESC">
@@ -1029,15 +1085,15 @@
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="stock_status_display_count" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_AMOUNT_IN_STOCK_STATUS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_AMOUNT_IN_STOCK_STATUS_DESC">
+			<field name="stock_status_display_count" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_AMOUNT_IN_STOCK_STATUS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_STOCK_AMOUNT_IN_STOCK_STATUS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="hide_products_out_of_stock" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_LABEL"
+            <field name="hide_products_out_of_stock" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_PRODUCTS_OUT_OF_STOCK_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 
@@ -1046,7 +1102,7 @@
 
             <field name="min_order_amount" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_MINIMUM_ORDER_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_ORDER_AMOUNT_DESC"/>
 
-            <field name="check_product_attributes" default="3" type="list" label="COM_PHOCACART_FIELD_CHECK_PRODUCT_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_CHECK_PRODUCT_ATTRIBUTES_DESC" multiple="true">
+            <field name="check_product_attributes" default="3" type="list" label="COM_PHOCACART_FIELD_CHECK_PRODUCT_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_CHECK_PRODUCT_ATTRIBUTES_DESC" layout="joomla.form.field.list-fancy-select"  multiple="true">
                 <option value="1">COM_PHOCACART_IN_CART</option>
                 <option value="2">COM_PHOCACART_IN_CHECKOUT</option>
                 <option value="3">COM_PHOCACART_IN_ORDER</option>
@@ -1080,7 +1136,7 @@
                 <option value="2">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_PUBLISHED</option>
 				<option value="3">COM_PHOCACART_YES_OVERALL_NO_PAYMENT_METHOD_FOUND_DESPITE_CHECKING_RULES</option>
             </field>
-			
+
 			<field name="change_remove_shipping_method" default="1" type="list" label="COM_PHOCACART_FIELD_REMOVE_SHIPPING_METHOD_CHANGE_LABEL" description="COM_PHOCACART_FIELD_REMOVE_SHIPPING_METHOD_CHANGE_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
@@ -1137,7 +1193,7 @@
                 <option value="1">COM_PHOCACART_HIGHEST_DISCOUNT</option>
                 <option value="2">COM_PHOCACART_HIGHEST_QUANTITY</option>
             </field>
-			
+
 			<field name="discount_subtotal_amount" default="1" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISCOUNT_SUBTOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_SUBTOTAL_AMOUNT_DESC">
                 <option value="1">COM_PHOCACART_SUBTOTAL_REDUCED_BY_OTHER_TYPES_OF_DISCOUNTS</option>
                 <option value="2">COM_PHOCACART_FIXED_SUBTOTAL</option>
@@ -1145,10 +1201,10 @@
 
             <field name="phocahead21" type="phocahead" default="COM_PHOCACART_CONFIG_PRODUCT_DISCOUNT_OPTIONS_LABEL" label="" description=""/>
 
-            <field name="discount_product_variations_quantity" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_QUANTITY_RULE_PRODUCT_VARIATIONS_LABEL"
+            <field name="discount_product_variations_quantity" default="1" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_QUANTITY_RULE_PRODUCT_VARIATIONS_LABEL"
                    description="COM_PHOCACART_FIELD_QUANTITY_RULE_PRODUCT_VARIATIONS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <!--<field name="phocahead22" type="phocahead" default="COM_PHOCACART_CONFIG_CART_DISCOUNT_OPTIONS_LABEL" label="" description=""/>
@@ -1161,41 +1217,41 @@
         <fieldset name="users" label="COM_PHOCACART_CONFIG_HEAD_USERS_LABEL">
 
 
-            <field name="display_edit_profile" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_EDIT_PROFILE_LABEL"
+            <field name="display_edit_profile" default="1" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_EDIT_PROFILE_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_EDIT_PROFILE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="guest_checkout" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_DESC">
+            <field name="guest_checkout" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="guest_checkout_auto_enable" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_AUTO_ENABLE_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_AUTO_ENABLE_DESC">
+			<field name="guest_checkout_auto_enable" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_GUEST_CHECKOUT_AUTO_ENABLE_LABEL" description="COM_PHOCACART_FIELD_GUEST_CHECKOUT_AUTO_ENABLE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="order_guest_access" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_LABEL" description="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_DESC">
+            <field name="order_guest_access" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_LABEL" description="COM_PHOCACART_FIELD_ORDER_GUEST_ACCESS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="download_guest_access" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DOWNLOAD_GUEST_ACCESS_LABEL"
+            <field name="download_guest_access" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DOWNLOAD_GUEST_ACCESS_LABEL"
                    description="COM_PHOCACART_FIELD_DOWNLOAD_GUEST_ACCESS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="enable_review" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_ENABLE_REVIEW_DESC">
+            <field name="enable_review" default="1" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ENABLE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_ENABLE_REVIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="approve_review" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_APPROVE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_APPROVE_REVIEW_DESC">
+            <field name="approve_review" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_APPROVE_REVIEW_LABEL" description="COM_PHOCACART_FIELD_APPROVE_REVIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="user_group_change_rule" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_RULE_LABEL"
@@ -1216,7 +1272,7 @@
 				<option value="3">COM_PHOCACART_BASED_ON_CUSTOMER_GROUP</option>
             </field>
 
-			<field name="display_price_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_PRICE_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRICE_ACCESS_LEVELS_DESC" class="inputbox" multiple="true" size="1" showon="display_price:2" />
+			<field name="display_price_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_PRICE_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PRICE_ACCESS_LEVELS_DESC" class="form-control" multiple="true" size="1" showon="display_price:2" />
 
 			<field name="display_addtocart" default="1" type="list" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_DESC">
                 <option value="0">COM_PHOCACART_NO_ONE</option>
@@ -1225,7 +1281,7 @@
 				<option value="3">COM_PHOCACART_BASED_ON_CUSTOMER_GROUP</option>
             </field>
 
-			<field name="display_addtocart_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ACCESS_LEVELS_DESC" class="inputbox" multiple="true" size="1" showon="display_addtocart:2" />
+			<field name="display_addtocart_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ADD_TO_CART_ACCESS_LEVELS_DESC" class="form-control" multiple="true" size="1" showon="display_addtocart:2" />
 
 			<field name="display_attributes" default="1" type="list" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_DESC">
                 <option value="0">COM_PHOCACART_NO_ONE</option>
@@ -1234,7 +1290,7 @@
 				<option value="3">COM_PHOCACART_BASED_ON_CUSTOMER_GROUP</option>
             </field>
 
-			<field name="display_attributes_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_ACCESS_LEVELS_DESC" class="inputbox" multiple="true" size="1" showon="display_attributes:2" />
+			<field name="display_attributes_access_levels" type="accesslevel" label="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_ACCESS_LEVELS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_ATTRIBUTES_ACCESS_LEVELS_DESC" class="form-control" multiple="true" size="1" showon="display_attributes:2" />
 
 
             <field name="phocahead12" type="phocahead" default="COM_PHOCACART_CONFIG_DOWNLOAD_LABEL" label="" description=""/>
@@ -1262,10 +1318,10 @@
         <fieldset name="main" label="COM_PHOCACART_CONFIG_HEAD_MAIN_LABEL">
 
 
-            <field name="enable_logging" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_LOGGING_LABEL" description="COM_PHOCACART_FIELD_ENABLE_LOGGING_DESC">
+            <field name="enable_logging" default="0" type="list" label="COM_PHOCACART_FIELD_ENABLE_LOGGING_LABEL" description="COM_PHOCACART_FIELD_ENABLE_LOGGING_DESC" class="form-select">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES_ALL</option>
 				<option value="2">COM_PHOCACART_YES_ERRORS_ONLY</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -1295,26 +1351,26 @@
                 <option value="7">COM_PHOCACART_ALL</option>
             </field>
 
-			<field name="create_webp_copy" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_LABEL" description="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+			<field name="create_webp_copy" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_LABEL" description="COM_PHOCACART_FIELD_CREATE_WEBP_COPY_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 
 			<field name="phocahead36" type="phocahead" default="COM_PHOCACART_HEAD_COPY_PASTE_IMAGES_OPTIONS_LABEL" label="" description=""/>
 
-			<field name="copypaste_enable" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGES_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+			<field name="copypaste_enable" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGES_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGES_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 			<field name="copypaste_width" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_WIDTH_DESC"/>
 
             <field name="copypaste_height" default="0" size="4" type="text" label="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_COPY_PASTE_IMAGE_HEIGHT_DESC"/>
 
-			<field name="copypaste_overwrite_file" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_OVERWRITE_FILE_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_OVERWRITE_FILE_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+			<field name="copypaste_overwrite_file" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_OVERWRITE_FILE_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_OVERWRITE_FILE_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
 			<field name="copypaste_folder_creation" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_CREATING_FOLDER_LABEL" description="COM_PHOCACART_FIELD_ENABLE_COPY_PASTE_IMAGE_CREATING_FOLDER_DESC">
@@ -1341,31 +1397,34 @@
                 <option value="2">COM_PHOCACART_BOTH</option>
             </field>-->
 
-            <field name="additional_hits" default="" type="list" label="COM_PHOCACART_FIELD_ADDITIONAL_HITS_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_HITS_DESC" multiple="true">
+            <field name="additional_hits" default="" type="list" label="COM_PHOCACART_FIELD_ADDITIONAL_HITS_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_HITS_DESC" layout="joomla.form.field.list-fancy-select"  multiple="true">
                 <option value="1">COM_PHOCACART_PRODUCT_VIEW</option>
                 <option value="2">COM_PHOCACART_SEARCH_TERM</option>
             </field>
 
-            <field name="delete_regions" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DELETE_REGIONS_LABEL" description="COM_PHOCACART_FIELD_DELETE_REGIONS_DESC">
+            <field name="delete_regions" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DELETE_REGIONS_LABEL" description="COM_PHOCACART_FIELD_DELETE_REGIONS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="enable_wizard" default="1" type="list" label="COM_PHOCACART_FIELD_ENABLE_WIZARD_LABEL" description="COM_PHOCACART_FIELD_ENABLE_WIZARD_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
                 <option value="2">COM_PHOCACART_YES_FORCE_ENABLE_WIZARD</option>
             </field>
 
             <field name="comma_point" type="list" default="0" label="COM_PHOCACART_FIELD_REPLACE_COMMA_WITH_POINT_LABEL" description="COM_PHOCACART_FIELD_REPLACE_COMMA_WITH_POINT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="load_extension_list" type="list" default="1" label="COM_PHOCACART_FIELD_LOAD_EXTENSION_LIST_LABEL" description="COM_PHOCACART_FIELD_LOAD_EXTENSION_LIST_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
+
+
+
 
 
 			<field name="phocahead34" type="phocahead" default="COM_PHOCACART_SEARCH_AND_FILTER_OPTIONS_LABEL" label="" description=""/>
@@ -1383,18 +1442,25 @@
                 <option value="all">COM_PHOCACART_SEARCH_ALL</option>
 				<option value="exact">COM_PHOCACART_SEARCH_EXACT</option>
             </field>
-			
-			<field name="search_deep" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DEEP_SEARCH_LABEL"
+
+			<field name="search_deep" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DEEP_SEARCH_LABEL"
                    description="COM_PHOCACART_FIELD_DEEP_SEARCH_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+            </field>
+
+            <field name="search_custom_fields" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SEARCH_CUSTOM_FIELDS_LABEL"
+                   description="COM_PHOCACART_FIELD_SEARCH_CUSTOM_FIELDS_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+
             </field>
 
 
             <field name="phocahead24" type="phocaheadexpert" default="COM_PHOCACART_ADVANCED_OPTIONS_EXPERTS_ONLY_LABEL" label="" description=""/>
 
 			<field name="admin_columns_products" default="sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id" type="textarea" label="COM_PHOCACART_FIELD_COLUMNS_PRODUCT_LIST_ADMINISTRATION_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_PRODUCT_LIST_ADMINISTRATION_DESC"/>
-			
+
 			<field name="admin_eip_title" type="list" class="btn-group btn-group-yesno" default="4" label="COM_PHOCACART_FIELD_TITLE_EDIT_IN_PLACE_LABEL"
                    description="COM_PHOCACART_FIELD_TITLE_EDIT_IN_PLACE_DESC">
                 <option value="1">COM_PHOCACART_ALIAS_NOT_EDITED_NOT_OVERWRITTEN</option>
@@ -1402,68 +1468,68 @@
 				<option value="3">COM_PHOCACART_ALIAS_EDITED_NOT_OVERWRITTEN</option>
 				<option value="4">COM_PHOCACART_ALIAS_EDITED_OVERWRITTEN</option>
             </field>
-			
-			
-            <field name="display_products_all_subcategories" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCTS_FROM_ALL_SUBCATEGORIES_LABEL"
+
+
+            <field name="display_products_all_subcategories" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_PRODUCTS_FROM_ALL_SUBCATEGORIES_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_PRODUCTS_FROM_ALL_SUBCATEGORIES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-				<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
             </field>
-			
-			<field name="sql_only_full_group_by" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_ONLY_FULL_GROUP_BY_LABEL"
+
+			<field name="sql_only_full_group_by" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_ONLY_FULL_GROUP_BY_LABEL"
                    description="COM_PHOCACART_FIELD_SQL_ONLY_FULL_GROUP_BY_DESC">
                 <option value="0">COM_PHOCACART_DISABLED</option>
                 <option value="1">COM_PHOCACART_ENABLED</option>
             </field>
 
-			<field name="sql_products_skip_access" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ACCESS_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ACCESS_DESC">
+			<field name="sql_products_skip_access" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ACCESS_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ACCESS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
-			<field name="sql_products_skip_group" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_GROUP_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_GROUP_DESC">
+			<field name="sql_products_skip_group" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_GROUP_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_GROUP_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
-
-			<field name="sql_products_skip_attributes" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ATTRIBUTES_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="sql_products_skip_category_type" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_CATEGORY_TYPE_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_CATEGORY_TYPE_DESC">
+			<field name="sql_products_skip_attributes" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_ATTRIBUTES_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="sql_products_skip_tax" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_TAX_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_TAX_DESC">
+			<field name="sql_products_skip_category_type" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_CATEGORY_TYPE_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_CATEGORY_TYPE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="sql_product_skip_access" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ACCESS_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ACCESS_DESC">
+			<field name="sql_products_skip_tax" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_TAX_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCTS_SKIP_TAX_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
-            </field>
-			<field name="sql_product_skip_group" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_GROUP_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_GROUP_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="sql_product_skip_attributes" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ATTRIBUTES_DESC">
+			<field name="sql_product_skip_access" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ACCESS_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ACCESS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
+            </field>
+			<field name="sql_product_skip_group" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_GROUP_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_GROUP_DESC">
+<option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			<field name="sql_product_skip_category_type" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_CATEGORY_TYPE_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_CATEGORY_TYPE_DESC">
+			<field name="sql_product_skip_attributes" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_ATTRIBUTES_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-			<field name="sql_product_skip_tax" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_TAX_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_TAX_DESC">
+			<field name="sql_product_skip_category_type" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_CATEGORY_TYPE_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_CATEGORY_TYPE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
-			
+
+			<field name="sql_product_skip_tax" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_TAX_LABEL" description="COM_PHOCACART_FIELD_SQL_PRODUCT_SKIP_TAX_DESC">
+<option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+
 			<field name="sql_search_skip_id" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SQL_SEARCH_SKIP_ID_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_SQL_SEARCH_SKIP_ID_ATTRIBUTES_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
 				<option value="2">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
@@ -1476,42 +1542,42 @@
 
 			<field name="thumb_name_prefix" default="phoca_thumb" size="4" type="text" label="COM_PHOCACART_FIELD_THUMBNAIL_NAME_PREFIX_LABEL" description="COM_PHOCACART_FIELD_THUMBNAIL_NAME_PREFIX_DESC"/>
 
-			<field name="skip_category_view" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SKIP_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_SKIP_CATEGORY_VIEW_DESC">
+			<field name="skip_category_view" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SKIP_CATEGORY_VIEW_LABEL" description="COM_PHOCACART_FIELD_SKIP_CATEGORY_VIEW_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
 	<field name="manufacturer_alias" default="manufacturer" size="10" type="text" label="COM_PHOCACART_FIELD_MANUFACTURER_ALIAS_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_ALIAS_DESC"/>
 
 
-		   <field name="load_min_js" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_LABEL" description="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_DESC">
+		   <field name="load_min_js" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_LABEL" description="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 			<field name="category_alias_prefix" default="" size="10" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ALIAS_PREFIX_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ALIAS_PREFIX_DESC"/>
-			
-			
+
+
 			<!--<field name="sef_advanced" type="radio" class="btn-group btn-group-yesno btn-group-reversed" default="0" label="JGLOBAL_SEF_ADVANCED_LABEL" description="JGLOBAL_SEF_ADVANCED_DESC" filter="integer" >
 			<option value="0">JGLOBAL_SEF_ADVANCED_LEGACY</option>
 			<option value="1">JGLOBAL_SEF_ADVANCED_MODERN</option>
 		</field>
 
-		<field name="sef_ids" type="radio" class="btn-group btn-group-yesno" default="0" label="JGLOBAL_SEF_NOIDS_LABEL" description="JGLOBAL_SEF_NOIDS_DESC" showon="sef_advanced:1" filter="integer" >
+		<field name="sef_ids" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="JGLOBAL_SEF_NOIDS_LABEL" description="JGLOBAL_SEF_NOIDS_DESC" showon="sef_advanced:1" filter="integer" >
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>-->
-		<field name="remove_sef_ids" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_SEF_NOIDS_LABEL" description="COM_PHOCACART_SEF_NOIDS_DESC"  filter="integer" >
-			<option value="1">COM_PHOCACART_YES</option>
+		<field name="remove_sef_ids" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_SEF_NOIDS_LABEL" description="COM_PHOCACART_SEF_NOIDS_DESC"  filter="integer" >
 			<option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
 		</field>
-		
+
 
 		   <field name="phocahead18" type="phocahead" default="COM_PHOCACART_IMPORT_EXPORT_OPTIONS_LABEL" label="" description=""/>
 
 
-            <field name="import_export_type" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_IMPORT_EXPORT_TYPE_LABEL" description="COM_PHOCACART_FIELD_IMPORT_EXPORT_TYPE_DESC">
+            <field name="import_export_type" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_IMPORT_EXPORT_TYPE_LABEL" description="COM_PHOCACART_FIELD_IMPORT_EXPORT_TYPE_DESC">
                 <option value="0">COM_PHOCACART_CSV</option>
                 <option value="1">COM_PHOCACART_XML</option>
             </field>
@@ -1525,40 +1591,40 @@
             </field>
 
 
-            <field name="export_attributes" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_EXPORT_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_EXPORT_ATTRIBUTES_DESC">
+            <field name="export_attributes" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_EXPORT_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_EXPORT_ATTRIBUTES_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="export_advanced_stock_options" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_EXPORT_ADVANCED_STOCK_OPTIONS_LABEL"
+            <field name="export_advanced_stock_options" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_EXPORT_ADVANCED_STOCK_OPTIONS_LABEL"
                    description="COM_PHOCACART_FIELD_EXPORT_ADVANCED_STOCK_OPTIONS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="export_specifications" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_EXPORT_SPECIFICATIONS_LABEL"
+            <field name="export_specifications" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_EXPORT_SPECIFICATIONS_LABEL"
                    description="COM_PHOCACART_FIELD_EXPORT_SPECIFICATIONS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="export_discounts" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_EXPORT_DISCOUNTS_LABEL" description="COM_PHOCACART_FIELD_EXPORT_DISCOUNTS_DESC">
+            <field name="export_discounts" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_EXPORT_DISCOUNTS_LABEL" description="COM_PHOCACART_FIELD_EXPORT_DISCOUNTS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="export_downloads" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_EXPORT_DOWNLOADS_LABEL" description="COM_PHOCACART_FIELD_EXPORT_DOWNLOADS_DESC">
+            <field name="export_downloads" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_EXPORT_DOWNLOADS_LABEL" description="COM_PHOCACART_FIELD_EXPORT_DOWNLOADS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
-			
-			<field name="export_parameters" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_EXPORT_PARAMETERS_LABEL"
+
+			<field name="export_parameters" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_EXPORT_PARAMETERS_LABEL"
                    description="COM_PHOCACART_FIELD_EXPORT_PARAMETERS_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <!--<field name="export_add_title" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ADD_TITLE_ATTRIBUTE_EXPORT_LABEL" description="COM_PHOCACART_FIELD_ADD_TITLE_ATTRIBUTE_EXPORT_DESC">
+            <!--<field name="export_add_title" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ADD_TITLE_ATTRIBUTE_EXPORT_LABEL" description="COM_PHOCACART_FIELD_ADD_TITLE_ATTRIBUTE_EXPORT_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>-->
@@ -1579,7 +1645,7 @@
                 <option value="32768">32768</option>
             </field>
 
-            <field name="import_column" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_IMPORT_COLUMN_LABEL" description="COM_PHOCACART_FIELD_IMPORT_COLUMN_DESC">
+            <field name="import_column" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_IMPORT_COLUMN_LABEL" description="COM_PHOCACART_FIELD_IMPORT_COLUMN_DESC">
                 <option value="1">COM_PHOCACART_ID</option>
                 <option value="2">COM_PHOCACART_SKU</option>
             </field>
@@ -1588,12 +1654,21 @@
             <field name="phocahead25" type="phocahead" default="COM_PHOCACART_STATISTICS_OPTIONS_LABEL" label="" description=""/>
 
             <field name="statistics_order_status" type="PhocacartOrderstatus" default="-1" label="COM_PHOCACART_FIELD_STATISTICS_ORDER_STATUS_LABEL" description="COM_PHOCACART_FIELD_STATISTICS_ORDER_STATUS_DESC"
-                   multiple="true"/>
+                   layout="joomla.form.field.list-fancy-select"  multiple="true"/>
+
+            <field name="store_ip" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_STORE_IP_ADDRESS_LABEL" description="COM_PHOCACART_FIELD_STORE_IP_ADDRESS_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+            <field name="store_user_agent" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_STORE_USER_AGENT_LABEL" description="COM_PHOCACART_FIELD_STORE_USER_AGENT_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
 
 
             <field name="phocahead27" type="phocahead" default="COM_PHOCACART_REPORT_OPTIONS_LABEL" label="" description=""/>
 
-            <field name="report_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_REPORT_HEADER_LABEL"
+            <field name="report_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_REPORT_HEADER_LABEL"
                    description="COM_PHOCACART_FIELD_REPORT_HEADER_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
@@ -1603,45 +1678,45 @@
             </field>
 
 
-            <field name="report_display_tax" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_LABEL" description="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_DESC">
+            <field name="report_display_tax" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_LABEL" description="COM_PHOCACART_FIELD_REPORT_DISPLAY_TAX_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="report_display_rounding" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_LABEL"
+            <field name="report_display_rounding" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_LABEL"
                    description="COM_PHOCACART_FIELD_REPORT_DISPLAY_ROUNDING_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
-			
+
 			<field name="phocahead40" type="phocahead" default="COM_PHOCACART_GIFT_VOUCHER_OPTIONS_LABEL" label="" description=""/>
-			
+
 			<field name="gift_code_length" type="text" default="8" label="COM_PHOCACART_FIELD_GIFT_CODE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_GIFT_CODE_LENGTH_DESC"/>
 			<field name="gift_code_characters" type="text" default="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" label="COM_PHOCACART_FIELD_GIFT_CODE_CHARACTERS_LABEL" description="COM_PHOCACART_FIELD_GIFT_CODE_CHARACTERS_DESC"/>
 			<field name="gift_sender_message_length" type="text" default="500" label="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LENGTH_LABEL" description="COM_PHOCACART_FIELD_GIFT_SENDER_MESSAGE_LENGTH_DESC"/>
-			
-			
+
+
 			<field name="phocahead38" type="phocahead" default="COM_PHOCACART_PRINTED_CATALOG_OPTIONS_LABEL" label="" description=""/>
 
-			 <field name="printed_catalog_enable" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_CREATING_PRINTED_CATALOG_LABEL"
+			 <field name="printed_catalog_enable" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_CREATING_PRINTED_CATALOG_LABEL"
                    description="COM_PHOCACART_FIELD_ENABLE_CREATING_PRINTED_CATALOG_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
-            <field name="printed_catalog_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_HEADER_LABEL"
+            <field name="printed_catalog_header" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_HEADER_LABEL"
                    description="COM_PHOCACART_FIELD_PRINTED_CATALOG_HEADER_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-			
+
 			<field name="printed_catalog_document_title" type="text" default="" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DOCUMENT_TITLE_LABEL" description="COM_PHOCACART_FIELD_PRINTED_CATALOG_DOCUMENT_TITLE_DESC" filter="string"/>
 
 			<field name="printed_catalog_css" default="" type="textarea" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_CSS_LABEL" description="COM_PHOCACART_FIELD_PRINTED_CATALOG_CSS_DESC"/>
 
-			 <field name="printed_catalog_display_category_title" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_CATEGORY_TITLE_LABEL"
+			 <field name="printed_catalog_display_category_title" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_CATEGORY_TITLE_LABEL"
                    description="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_CATEGORY_TITLE_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
-			
-			<field name="printed_catalog_display_price_label" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_PRICE_LABEL_LABEL"
+
+			<field name="printed_catalog_display_price_label" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_PRICE_LABEL_LABEL"
                    description="COM_PHOCACART_FIELD_PRINTED_CATALOG_DISPLAY_PRICE_LABEL_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
@@ -1649,7 +1724,7 @@
 
             <field name="phocahead32" type="phocahead" default="COM_PHOCACART_ADMINISTRATION_OPTIONS_LABEL" label="" description=""/>
 
-			
+
 
             <field name="display_admin_description" type="text" default="35" label="COM_PHOCACART_FIELD_DISPLAY_DESCRIPTION_ADMINISTRATION_LISTS_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_DESCRIPTION_ADMINISTRATION_LISTS_DESC" filter="integer"/>
@@ -1663,11 +1738,16 @@
                 <option value="1">COM_PHOCACART_CUSTOMERS_LANGUAGE</option>
             </field>
 
-            <field name="order_language_variables" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ORDER_LANGUAGE_VARIABLE_LABEL"
+            <field name="order_language_variables" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ORDER_LANGUAGE_VARIABLE_LABEL"
                    description="COM_PHOCACART_FIELD_ORDER_LANGUAGE_VARIABLE_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
+
+             <field name="custom_fields_enable" type="radio" label="JGLOBAL_CUSTOM_FIELDS_ENABLE_LABEL" layout="joomla.form.field.radio.switcher" default="1">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 
         </fieldset>
 
@@ -1680,25 +1760,25 @@
             <field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC"/>
 
 
-            <field name="store_info" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL"
+            <field name="store_info" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL"
                    description="COM_PHOCACART_FIELD_STORE_INFORMATION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
             <field name="phocahead26" type="phocahead" default="COM_PHOCACART_PRIVACY_TERMS_AND_CONDITIONS_SETTINGS_LABEL" label="" description=""/>
 
 
-            <field name="display_checkout_toc_checkbox" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_LABEL"
+            <field name="display_checkout_toc_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="terms_conditions_custom_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
+            <field name="terms_conditions_custom_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
                    label="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_CUSTOM_LABEL_TEXT_LABEL" description="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_CUSTOM_LABEL_TEXT_DESC"
                    addfieldpath="/administrator/components/com_content/models/fields"/>
 
-            <field name="terms_conditions" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_LABEL"
+            <field name="terms_conditions" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_LABEL"
                    description="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
             <field name="cofirm_order_text" default="" type="text" label="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_LABEL" description="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_DESC"/>
@@ -1706,26 +1786,26 @@
             <field name="cofirm_order_text_zero" default="" type="text" label="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_LABEL" description="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_DESC"/>
 
 
-            <field name="display_checkout_privacy_checkbox" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
+            <field name="display_checkout_privacy_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="checkout_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
+            <field name="checkout_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
                    label="COM_PHOCACART_FIELD_CHECKOUT_PRIVACY_CHECKBOX_LABEL_TEXT_LABEL" description="COM_PHOCACART_FIELD_CHECKOUT_PRIVACY_CHECKBOX_LABEL_TEXT_DESC"
                    addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
 
-				   <field name="display_checkout_newsletter_checkbox" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL"
+				   <field name="display_checkout_newsletter_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="checkout_newsletter_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
+            <field name="checkout_newsletter_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
                    label="COM_PHOCACART_FIELD_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL_TEXT_LABEL" description="COM_PHOCACART_FIELD_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL_TEXT_DESC"
                    addfieldpath="/administrator/components/com_content/models/fields"/>
 
@@ -1739,7 +1819,7 @@
                 <option value="2">COM_PHOCACART_ENABLED_ORDER_NOT_POSSIBLE</option>
             </field>
 
-            <field name="store_closed_checkout_message" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_STORE_CLOSED_CHECKOUT_MESSAGE_LABEL"
+            <field name="store_closed_checkout_message" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_STORE_CLOSED_CHECKOUT_MESSAGE_LABEL"
                    description="COM_PHOCACART_FIELD_STORE_CLOSED_CHECKOUT_MESSAGE_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
@@ -1785,13 +1865,13 @@
                 <option value="Y">COM_PHOCACART_ON_ANNUAL_BASIS</option>
                 <option value="M">COM_PHOCACART_ON_MONTHLY_BASIS</option>
             </field>
-			
+
 			<field name="invoice_creating_status_based" class="btn-group" default="0" type="PhocacartOrderstatus" typemethod="1" label="COM_PHOCACART_FIELD_CREATING_INVOICE_NUMBER_BASED_ON_ORDER_STATUS_LABEL"
                    description="COM_PHOCACART_FIELD_CREATING_INVOICE_NUMBER_BASED_ON_ORDER_STATUS_DESC">
-          
+
             </field>
-			
-		
+
+
             <field name="invoice_number_format" default="{prefix}{year}{orderid}{suffix}" size="18" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_LABEL"
                    description="COM_PHOCACART_FIELD_INVOICE_NUMBER_FORMAT_DESC"/>
             <field name="invoice_number_prefix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_PREFIX_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_PREFIX_DESC"/>
@@ -1817,8 +1897,8 @@
             <field name="order_id_length_prn" default="10" size="18" type="text" label="COM_PHOCACART_FIELD_ORDER_ID_LENGTH_PRN_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_ID_LENGTH_PRN_NUMBER_DESC"/>
 
 
-			
-			
+
+
 			<field name="queue_number_prefix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_PREFIX_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_PREFIX_DESC"/>
             <field name="queue_number_suffix" default="" size="18" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_SUFFIX_DESC"/>
 			<field name="queue_creating_numbers" type="list" class="btn-group btn-group-yesno" default="A" label="COM_PHOCACART_FIELD_CREATING_QUEUE_NUMBERS_METHOD_LABEL"
@@ -1829,73 +1909,73 @@
 				<option value="D">COM_PHOCACART_ON_DAILY_BASIS</option>
             </field>
 			<field name="queue_number_length" default="5" size="18" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_LENGTH_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_LENGTH_DESC"/>
-			
-			
-			
+
+
+
             <field name="pdf_invoice_qr_information" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_INFORMATION_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_INFORMATION_DESC"/>
             <field name="pdf_invoice_qr_code" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_DESC"/>
             <field name="pdf_invoice_signature_image" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_PDF_INVOICE_SIGNATURE_IMAGE_LABEL"
                    description="COM_PHOCACART_FIELD_PDF_INVOICE_SIGNATURE_IMAGE_DESC"/>
 
-            <field name="invoice_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_LABEL"
+            <field name="invoice_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-            <field name="invoice_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
+            <field name="invoice_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-            <field name="invoice_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
+            <field name="invoice_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_INVOICE_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-				   
-				   <field name="order_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_TOP_DESCRIPTION_LABEL"
-                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-            <field name="order_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
-                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-            <field name="order_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
-                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-				   
-				   <field name="dn_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_DN_GLOBAL_TOP_DESCRIPTION_LABEL"
-                   description="COM_PHOCACART_FIELD_DN_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-            <field name="dn_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_DN_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
-                   description="COM_PHOCACART_FIELD_DN_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-            <field name="dn_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_DN_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
-                   description="COM_PHOCACART_FIELD_DN_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
-				   
-				   
-				   
-				   
 
-            <field name="oidn_global_billing_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
+				   <field name="order_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_TOP_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="order_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="order_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_ORDER_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_ORDER_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+
+				   <field name="dn_global_top_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_DN_GLOBAL_TOP_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_DN_GLOBAL_TOP_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="dn_global_middle_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_DN_GLOBAL_MIDDLE_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_DN_GLOBAL_MIDDLE_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="dn_global_bottom_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_DN_GLOBAL_BOTTOM_DESCRIPTION_LABEL"
+                   description="COM_PHOCACART_FIELD_DN_GLOBAL_BOTTOM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+
+
+
+
+
+            <field name="oidn_global_billing_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
                    label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_GLOBAL_BILLING_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_GLOBAL_BILLING_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
-            <field name="oidn_global_shipping_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox"
+            <field name="oidn_global_shipping_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
                    label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_GLOBAL_SHIPPING_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_GLOBAL_SHIPPING_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
-            <field name="display_tax_recapitulation_invoice" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_INVOICE_LABEL"
+            <field name="display_tax_recapitulation_invoice" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_INVOICE_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_INVOICE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_time_of_supply_invoice" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_DATE_OF_TAXABLE_SUPPLY_LABEL"
+            <field name="display_time_of_supply_invoice" type="radio" layout="joomla.form.field.radio.switcher"  default="0" label="COM_PHOCACART_FIELD_DISPLAY_DATE_OF_TAXABLE_SUPPLY_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_DATE_OF_TAXABLE_SUPPLY_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_reward_points_invoice" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INVOICE_LABEL"
+            <field name="display_reward_points_invoice" type="radio" layout="joomla.form.field.radio.switcher"  default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INVOICE_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INVOICE_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
         </fieldset>
 
 
         <fieldset name="pos" label="COM_PHOCACART_CONFIG_HEAD_POS_LABEL">
 
-            <field name="pos_enabled" default="0" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_ENABLE_POS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_POS_DESC">
+            <field name="pos_enabled" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_ENABLE_POS_LABEL" description="COM_PHOCACART_FIELD_ENABLE_POS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="pos_filter_category" default="1" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_POS_FILTER_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_POS_FILTER_CATEGORY_DESC">
@@ -1904,16 +1984,22 @@
             </field>
 
             <field name="pos_categories" default="-1" type="PhocacartCategory" typemethod="allnone" categorytype="2" label="COM_PHOCACART_FIELD_POS_CATEGORIES_LABEL" description="COM_PHOCACART_FIELD_POS_CATEGORIES_DESC"
-                   multiple="true"/>
+                   layout="joomla.form.field.list-fancy-select"  multiple="true"/>
 
 
-            <field name="pos_customers" type="usergroup" label="COM_PHOCACART_POS_CUSTOMERS_LABEL" description="COM_PHOCACART_POS_CUSTOMERS_DESC" class="inputbox" size="1" multiple="true"/>
+            <field name="pos_customers" type="usergrouplist" label="COM_PHOCACART_POS_CUSTOMERS_LABEL" description="COM_PHOCACART_POS_CUSTOMERS_DESC" layout="joomla.form.field.list-fancy-select" multiple="true"/>
 
             <field name="pos_shipping_force" type="PhocaCartShippingMethod" typemethod="2" label="COM_PHOCACART_FIELD_FORCE_SHIPPING_METHOD_POS_LABEL" description="COM_PHOCACART_FIELD_FORCE_SHIPPING_METHOD_POS_DESC"
-                   class="inputbox" size="1"/>
+                   class="form-control" size="1"/>
 
             <field name="pos_payment_force" type="PhocaCartPayMentMethod" typemethod="2" label="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_LABEL" description="COM_PHOCACART_FIELD_FORCE_PAYMENT_METHOD_POS_DESC"
-                   class="inputbox" size="1"/>
+                   class="form-control" size="1"/>
+
+            <field name="pos_display_apply_benefits" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_APPLY_BENEFITS_BUTTON_POS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_APPLY_BENEFITS_BUTTON_POS_DESC"
+                   class="inputbox" size="1">
+           <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+        </field>
 
             <field name="pos_preferred_sku" class="btn-group" type="list" default="sku" label="COM_PHOCACART_FIELD_POS_PREFERRED_SKU_LABEL" description="COM_PHOCACART_FIELD_POS_PREFERRED_SKU_DESC">
                 <option value="sku">COM_PHOCACART_FIELD_SKU_LABEL</option>
@@ -1927,20 +2013,20 @@
             </field>
 
 
-            <field name="pos_sku_input_type" class="btn-group" type="radio" default="text" label="COM_PHOCACART_FIELD_POS_SKU_INPUT_TYPE_LABEL" description="COM_PHOCACART_FIELD_POS_SKU_INPUT_TYPE_DESC">
+            <field name="pos_sku_input_type" type="radio" layout="joomla.form.field.radio.switcher"  default="text" label="COM_PHOCACART_FIELD_POS_SKU_INPUT_TYPE_LABEL" description="COM_PHOCACART_FIELD_POS_SKU_INPUT_TYPE_DESC">
                 <option value="text">COM_PHOCACART_TEXT</option>
                 <option value="number">COM_PHOCACART_NUMBER</option>
             </field>
 
-            <field name="pos_loyalty_card_number_input_type" class="btn-group" type="radio" default="text" label="COM_PHOCACART_FIELD_POS_LOYALTY_CARD_NUMBER_INPUT_TYPE_LABEL"
+            <field name="pos_loyalty_card_number_input_type" type="radio" layout="joomla.form.field.radio.switcher"  default="text" label="COM_PHOCACART_FIELD_POS_LOYALTY_CARD_NUMBER_INPUT_TYPE_LABEL"
                    description="COM_PHOCACART_FIELD_POS_LOYALTY_CARD_NUMBER_INPUT_TYPE_DESC">
                 <option value="text">COM_PHOCACART_TEXT</option>
                 <option value="number">COM_PHOCACART_NUMBER</option>
             </field>
 
-            <field name="pos_focus_input_fields" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_POS_FOCUS_INPUT_FIELDS_LABEL" description="COM_PHOCACART_FIELD_POS_FOCUS_INPUT_FIELDS_DESC">
+            <field name="pos_focus_input_fields" type="radio" layout="joomla.form.field.radio.switcher"  default="0" label="COM_PHOCACART_FIELD_POS_FOCUS_INPUT_FIELDS_LABEL" description="COM_PHOCACART_FIELD_POS_FOCUS_INPUT_FIELDS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -1955,15 +2041,15 @@
 
             <field name="store_info_footer_pos" default="" type="textarea" label="COM_PHOCACART_FIELD_STORE_FOOTER_INFORMATION_POS_LABEL" description="COM_PHOCACART_FIELD_STORE_FOOTER_INFORMATION_POS_DESC"/>
 
-            <field name="display_tax_recapitulation_pos" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_POS_LABEL"
+            <field name="display_tax_recapitulation_pos" type="radio" layout="joomla.form.field.radio.switcher"  default="0" label="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_POS_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_TAX_RECAPITULATION_POS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_reward_points_pos" class="btn-group" type="radio" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_POS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_POS_DESC">
+            <field name="display_reward_points_pos" type="radio" layout="joomla.form.field.radio.switcher"  default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_POS_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_POS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="phocahead23" type="phocahead" default="COM_PHOCACART_POS_LAYOUT_SETTINGS_LABEL" label="" description=""/>
@@ -1979,14 +2065,14 @@
 
             <field name="pos_display_stock_status" default="0" type="list" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_DISPLAY_STOCK_STATUS_POS_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_STOCK_STATUS_POS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="pos_hide_attributes" default="1" type="radio" class="btn-group btn-group-yesno" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_POS_LABEL"
+            <field name="pos_hide_attributes" default="1" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_POS_LABEL"
                    description="COM_PHOCACART_FIELD_HIDE_ATTRIBUTES_POS_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
             <field name="pos_pagination" default="6,12,24,36,48,60" size="18" type="text" label="COM_PHOCACART_FIELD_PRODUCT_POS_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_POS_PAGINATION_DESC"/>
@@ -2050,8 +2136,8 @@
             <field name="pos_print_connector_port" default="" size="40" type="text" label="COM_PHOCACART_FIELD_POS_PRINT_CONNECTOR_PORT_LABEL" description="COM_PHOCACART_FIELD_POS_PRINT_CONNECTOR_PORT_DESC"/>
             <field name="pos_print_connector_timeout" class="btn-group" type="list" default="0" label="COM_PHOCACART_FIELD_POS_PRINT_CONNECTOR_TIMEOUT_LABEL"
                    description="COM_PHOCACART_FIELD_POS_PRINT_CONNECTOR_TIMEOUT_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
 
@@ -2068,50 +2154,51 @@
 		 <field name="phocahead16" type="phocahead" default="COM_PHOCACART_ASK_QUESTION_FEEDBACK_REPORT_OPTIONS_LABEL" label="" description=""/>
 
 
-            <field name="enable_ask_question" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_ASK_QUESTION_LABEL" description="COM_PHOCACART_FIELD_ENABLE_ASK_QUESTION_DESC">
+            <field name="enable_ask_question" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_ASK_QUESTION_LABEL" description="COM_PHOCACART_FIELD_ENABLE_ASK_QUESTION_DESC">
+<option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-                <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="question_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_LABEL"
+            <field name="question_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_ASK_QUESTION_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
-            <field name="display_name_form" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_DESC">
+            <field name="display_name_form" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_NAME_FORM_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_email_form" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_DISPLAY_EMAIL_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_EMAIL_FORM_DESC">
+            <field name="display_email_form" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_DISPLAY_EMAIL_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_EMAIL_FORM_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_phone_form" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_DISPLAY_PHONE_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PHONE_FORM_DESC">
+            <field name="display_phone_form" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_DISPLAY_PHONE_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_PHONE_FORM_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="display_message_form" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_DISPLAY_MESSAGE_FORM_LABEL"
+            <field name="display_message_form" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_DISPLAY_MESSAGE_FORM_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_MESSAGE_FORM_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="enable_captcha_question" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_LABEL"
+            <field name="enable_captcha_question" type="radio" layout="joomla.form.field.radio.switcher" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_LABEL"
                    description="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_DESC">
-                <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="2">COM_PHOCACART_YES_REQUIRED</option>
+
             </field>
 
-            <field name="enable_hidden_field_question" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_QUESTION_LABEL"
+            <field name="enable_hidden_field_question" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_QUESTION_LABEL"
                    description="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_QUESTION_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
             </field>
 
             <field name="enable_time_check_question" type="text" default="0" label="COM_PHOCACART_FIELD_ENABLE_TIME_CHECK_QUESTION_LABEL" description="COM_PHOCACART_FIELD_ENABLE_TIME_CHECK_QUESTION_DESC">
@@ -2131,46 +2218,47 @@
 
             <field name="send_email_question" type="user" section="com_phocacart" default="" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_DESC"/>
 
-			<field name="send_email_question_others" type="textarea" class="inputbox" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_DESC" />
+			<field name="send_email_question_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_DESC" />
 
 
-			<field name="display_question_privacy_checkbox" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL"
+			<field name="display_question_privacy_checkbox" type="list" class="form-select" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_ASK_QUESTION_PRIVACY_CHECKBOX_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="question_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL" description="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="question_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL" description="COM_PHOCACART_FIELD_ASK_QUESTION_PRIVACY_CHECKBOX_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
 			<field name="phocahead37" type="phocahead" default="COM_PHOCACART_SUBMIT_ITEM_OPTIONS_LABEL" label="" description=""/>
 
-			<field name="enable_submit_item" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_ENABLE_SUBMIT_ITEM_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
+			<field name="enable_submit_item" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_ENABLE_SUBMIT_ITEM_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			<field name="submit_item_registered_only" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_REGISTERED_ONLY_LABEL" description="COM_PHOCACART_FIELD_SUBMIT_ITEM_REGISTERED_ONLY_DESC">
-                <option value="1">COM_PHOCACART_REGISTERED_USERS</option>
+			<field name="submit_item_registered_only" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_REGISTERED_ONLY_LABEL" description="COM_PHOCACART_FIELD_SUBMIT_ITEM_REGISTERED_ONLY_DESC">
                 <option value="0">COM_PHOCACART_ALL_USERS</option>
+                <option value="1">COM_PHOCACART_REGISTERED_USERS</option>
             </field>
 
-            <field name="submit_item_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_DESCRIPTION_LABEL"
+            <field name="submit_item_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_DESCRIPTION_LABEL"
                    description="COM_PHOCACART_FIELD_SUBMIT_ITEM_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
 
-			<field name="enable_captcha_submit_item" type="radio" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_SUBMIT_ITEM_LABEL"
+			<field name="enable_captcha_submit_item" type="radio" layout="joomla.form.field.radio.switcher" default="2" label="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_SUBMIT_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_ENABLE_CAPTCHA_FORM_SUBMIT_ITEM_DESC">
-                <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="2">COM_PHOCACART_YES_REQUIRED</option>
+
             </field>
 
-            <field name="enable_hidden_field_submit_item" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_SUBMIT_ITEM_LABEL"
+            <field name="enable_hidden_field_submit_item" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_SUBMIT_ITEM_LABEL"
                    description="COM_PHOCACART_FIELD_ENABLE_HIDDEN_FIELD_SUBMIT_ITEM_DESC">
-                <option value="1">COM_PHOCACART_YES</option>
                 <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
             </field>
 
             <field name="enable_time_check_submit_item" type="text" default="0" label="COM_PHOCACART_FIELD_ENABLE_TIME_CHECK_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_ENABLE_TIME_CHECK_SUBMIT_ITEM_DESC">
@@ -2188,28 +2276,28 @@
 
 
 
-			<field name="display_submit_item_privacy_checkbox" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SUBMIT_ITEM_PRIVACY_CHECKBOX_LABEL"
+			<field name="display_submit_item_privacy_checkbox" type="list" class="form-select" default="0" label="COM_PHOCACART_FIELD_DISPLAY_SUBMIT_ITEM_PRIVACY_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SUBMIT_ITEM_PRIVACY_CHECKBOX_DESC">
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
                 <option value="0">COM_PHOCACART_NO</option>
             </field>
 
-            <field name="submit_item_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="inputbox" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_PRIVACY_CHECKBOX_LABEL" description="COM_PHOCACART_FIELD_SUBMIT_ITEM_PRIVACY_CHECKBOX_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+            <field name="submit_item_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_PRIVACY_CHECKBOX_LABEL" description="COM_PHOCACART_FIELD_SUBMIT_ITEM_PRIVACY_CHECKBOX_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
 
             <field name="submit_item_max_char_textarea" default="1000" type="text" label="COM_PHOCACART_FIELD_MAXIMUM_CHARACTERS_SUBMIT_ITEM_TEXTAREA_FIELDS_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_CHARACTERS_SUBMIT_ITEM_TEXTAREA_FIELDS_DESC"/>
 
 			<field name="send_email_submit_item" type="user" section="com_phocacart" default="" label="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_DESC"/>
 
-			<field name="send_email_submit_item_others" type="textarea" class="inputbox" label="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_DESC" />
+			<field name="send_email_submit_item_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_DESC" />
 
 			<field name="submit_item_upload_image_maxsize" type="text" size="20" default="512000" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_IMAGE_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_IMAGE_SUBMIT_ITEM_DESC"/>
 			<field name="submit_item_upload_image_count" type="text" size="20" default="1" label="COM_PHOCACART_FIELD_MAXIMUM_COUNT_UPLOAD_IMAGE_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_COUNT_UPLOAD_IMAGE_SUBMIT_ITEM_DESC"/>
 
 
 
-			<field name="submit_item_move_image_folder" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_FOLDER_SUBMIT_ITEM_MOVE_IMAGE_LABEL"
+			<field name="submit_item_move_image_folder" type="list" class="form-select" default="0" label="COM_PHOCACART_FIELD_FOLDER_SUBMIT_ITEM_MOVE_IMAGE_LABEL"
                    description="COM_PHOCACART_FIELD_FOLDER_SUBMIT_ITEM_MOVE_IMAGE_DESC">
                 <option value="0">COM_PHOCACART_NO_FOLDER_ROOT_PHOCACART_PRODUCT_IMAGES</option>
 				<option value="1">COM_PHOCACART_SPECIFIC_FOLDER</option>
@@ -2219,13 +2307,13 @@
 
 			<field name="submit_item_move_image_folder_specific" default="" size="4" type="text" label="COM_PHOCACART_FIELD_SUBMIT_ITEM_MOVE_IMAGE_SPECIFIC_FOLDER_LABEL" description="COM_PHOCACART_FIELD_SUBMIT_ITEM_MOVE_IMAGE_SPECIFIC_FOLDER_DESC"/>
 
-			<field name="submit_item_remove_item_create_product" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_DELETING_SUBMITTED_ITEM_WHEN_CREATING_PRODUCT_LABEL"
+			<field name="submit_item_remove_item_create_product" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DELETING_SUBMITTED_ITEM_WHEN_CREATING_PRODUCT_LABEL"
                    description="COM_PHOCACART_FIELD_DELETING_SUBMITTED_ITEM_WHEN_CREATING_PRODUCT_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			<field name="submit_item_convert_markdown_create_product" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_SUBMITTED_ITEM_COVERT_MARKDOWN_WHEN_CREATING_PRODUCT_LABEL"
+			<field name="submit_item_convert_markdown_create_product" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_SUBMITTED_ITEM_COVERT_MARKDOWN_WHEN_CREATING_PRODUCT_LABEL"
                    description="COM_PHOCACART_FIELD_SUBMITTED_ITEM_COVERT_MARKDOWN_WHEN_CREATING_PRODUCT_DESC">
                 <option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
@@ -2242,7 +2330,7 @@
 
 			<field name="recaptcha_lang" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_DESC"/>
 
-            <field name="recaptcha_request_method" type="list" class="btn-group btn-group-yesno" default="2" label="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_LABEL"
+            <field name="recaptcha_request_method" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_LABEL"
                    description="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_DESC">
                 <option value="1">file_get_contents</option>
                 <option value="2">cUrl</option>
@@ -2256,7 +2344,7 @@
 
 			<field name="upload_maxsize" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
 
-			<field name="upload_maxsize_frontend" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
+			<field name="upload_maxsize_frontend" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_FRONTEND_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_FRONTEND_DESC"/>
 
 			<field name="ignore_file_types_check" default="0" type="list" label="COM_PHOCACART_IGNORE_FILE_TYPES_CHECK_LABEL" description="COM_PHOCACART_IGNORE_FILE_TYPES_CHECK_DESC" >
 	<!--<option value="1">COM_PHOCACART_YES_UPLOAD_PARAM</option>
@@ -2272,24 +2360,25 @@
 
 	<field name="phocahead38" type="phocahead" default="COM_PHOCACART_NEWSLETTER_OPTIONS_PHOCA_EMAIL_LABEL" label="" description=""/>
 
-	<field name="newsletter_enable" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ENABLE_NEWSLETTER_LABEL" description="COM_PHOCACART_FIELD_ENABLE_NEWSLETTER_DESC">
+	<field name="newsletter_enable" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_ENABLE_NEWSLETTER_LABEL" description="COM_PHOCACART_FIELD_ENABLE_NEWSLETTER_DESC">
 		<option value="0">COM_PHOCACART_NO</option>
 		<option value="1">COM_PHOCACART_YES</option>
 	</field>
 
-	<field name="newsletter_activate" type="list" class="btn-group btn-group-yesno" default="0" label="COM_PHOCACART_FIELD_ACTIVATE_NEWSLETTER_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_NEWSLETTER_DESC">
+	<field name="newsletter_activate" type="list" class="form-select" default="0" label="COM_PHOCACART_FIELD_ACTIVATE_NEWSLETTER_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_NEWSLETTER_DESC">
 		<option value="0">COM_PHOCACART_NO</option>
 		<option value="1">COM_PHOCACART_YES</option>
 		<option value="2">COM_PHOCACART_NO_ACTIVATION_EMAIL_SEND</option>
 	</field>
-	
-	<field name="newsletter_mailinglist" type="PhocaCartMailingList" size="" default="" manager="subscriber" multiple="true" label="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_DESC"/>
-		
+
+	<field name="newsletter_mailinglist" type="PhocaCartMailingList" size="" default="" manager="subscriber" layout="joomla.form.field.list-fancy-select"  multiple="true" label="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_MAILING_LIST_DESC"/>
+
+
+
 		</fieldset>
 
-        <fieldset name="permissions_label" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
-            <field name="rules" type="rules" component="com_phocacart" filter="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component" description=""/>
-
+        <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
+            <field name="rules" type="rules" component="com_phocacart" filter="rules" validate="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component"/>
         </fieldset>
 
     </fields>

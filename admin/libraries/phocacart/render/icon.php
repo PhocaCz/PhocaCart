@@ -8,25 +8,58 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined( '_JEXEC' ) or die( 'Restricted access' );
-/*
- *
- * DEPRECATED CLASS - WILL BE REMOVED in Joomla! 4
- * @deprecated use  $s = PhocacartRenderStyle::getStyles(); --> $s['i']['icon-name'] instead
- */
+
 class PhocacartRenderIcon
 {
-	private static $iconType = '';
+
+	public static function icon($class, $attributes = '', $suffix = '', $prefix = '', $forceIconType = '') {
+
+		$pC 						= PhocacartUtils::getComponentParameters();
+		$icon_type			= $pC->get( 'icon_type', 'fa5');
+
+		if ($forceIconType != '') {
+			$icon_type			= $forceIconType;
+		}
+
+		$o = '';
+
+		if ($prefix != '') {
+			$o .= $prefix;
+		}
+		if ($attributes != '') {
+			$attributes = ' '. $attributes;
+		}
+
+		if ($icon_type == 'svg') {
+
+			// Get path for the svg-definitions.svg - this can be path to media folder:
+        	// com_phocacart: media/com_phocacart/images/svg-definitions.svg
+        	// or override in template: media/templates/site/cassiopeia/images/com_phocacart/svg-definitions.svg
+        	$path = HTMLHelper::image('com_phocacart/svg-definitions.svg', '', [], true, 1);
+			$cleanClass = strtok($class, ' ');
+
+			$o .= '<svg class="pc-si pc-si-'.$class.'"'.$attributes.'><use xlink:href="'.$path.'#pc-si-'.$cleanClass.'"></use></svg>';
+		} else {
+			$o .= '<span class="'.$class.'"'.$attributes.'></span>';
+		}
+
+		if ($suffix != '') {
+			$o .= $suffix;
+		}
+
+		return $o;
+	}
+	/*private static $iconType = '';
 	private static $i = 0;
 
-	/*
-	 * @deprecated
-	 */
+
 	private function __construct(){}
 
-	/*
-	 * @deprecated
-	 */
+
 	public static function getClassAdmin($name = '') {
 
 		if ($name != ''){
@@ -35,9 +68,7 @@ class PhocacartRenderIcon
 		return '';
 	}
 
-	/*
-	 * @deprecated
-	 */
+
 	public static function getIconType() {
 		if( self::$iconType == '' ) {
 			$pC 		= PhocacartUtils::getComponentParameters();
@@ -53,9 +84,7 @@ class PhocacartRenderIcon
 		return self::$iconType;
 	}
 
-	/*
-	 * @deprecated
-	 */
+
 	public static function getClass( $name = '') {
 		self::$i++;
 
@@ -187,13 +216,11 @@ class PhocacartRenderIcon
 
 	}
 
-	/*
-	 * @deprecated
-	 */
+
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
-	}
+	}*/
 }
 
 ?>

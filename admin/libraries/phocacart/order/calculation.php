@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Factory;
 
 class PhocacartOrderCalculation
 {
@@ -21,7 +22,7 @@ class PhocacartOrderCalculation
 	
 	public function __construct() {
 		
-		$app						= JFactory::getApplication();
+		$app						= Factory::getApplication();
 		$paramsC					= PhocacartUtils::getComponentParameters();
 		// Affect only calculation in POS cart
 		// Not receipts, invoices

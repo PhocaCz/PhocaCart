@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Uri\Uri;
 $d 				= $displayData;
 $displayData 	= null;
 $dParamAttr		= str_replace(array('[',']'), '', $d['param']);
@@ -49,7 +50,7 @@ foreach ($d['items'] as $k => $v) {
 
     if (isset($v->image_small) && $v->image_small != '') {
 
-        $linkI 		= JURI::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v->image_small;
+        $linkI 		= Uri::base(true).'/'.$d['pathitem']['orig_rel'].'/'.$v->image_small;
 
         $jsSet = '';
         if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
@@ -66,16 +67,24 @@ foreach ($d['items'] as $k => $v) {
 
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>  panel-<?php echo $dParamAttr; ?>">
-	<div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
-		<h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><span class="<?php echo $d['triangle_class'] ?>"></span></a>
-			<a data-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $title ?></a>
-		</h4>
-	</div>
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?>  panel-<?php echo $dParamAttr; ?>" <?php echo $d['s']['a']['accordion'] ?>>
+
+    <?php if ($d['s']['c']['class-type'] != 'uikit') { ?>
+        <div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $dParamAttr; ?>">
+            <h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo $dParamAttr; ?>" class="panel-collapse"><?php echo PhocacartRenderIcon::icon($d['triangle_class']) ?></a>
+                <a data-bs-toggle="collapse" href="#collapse<?php echo $dParamAttr; ?>" aria-expanded="true" aria-controls="collapse<?php echo$dParamAttr; ?>" class="panel-collapse"><?php echo $title ?></a>
+            </h4>
+        </div>
+    <?php } ?>
 
 	<div id="collapse<?php echo $dParamAttr; ?>" class="<?php echo $d['collapse_class'] ?>" role="tabpanel" aria-labelledby="heading<?php echo $dParamAttr; ?>">
-		<div class="<?php echo $d['s']['c']['panel-body'] ?> ph-panel-body-color">
+
+        <?php if ($d['s']['c']['class-type'] == 'uikit') { ?>
+            <a href="#" class="<?php echo $d['s']['c']['panel-title'] ?>"><?php echo $title ?></a>
+        <?php } ?>
+
+        <div class="<?php echo $d['s']['c']['panel-body'] ?> ph-panel-body-color">
 			<div class="ph-mod-color-box">
 			<?php echo $output ?>
             </div>

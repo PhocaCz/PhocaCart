@@ -6,7 +6,12 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+use Joomla\CMS\Layout\FileLayout;
+
 defined('_JEXEC') or die();
+
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 echo '<div id="ph-pc-pos-site">';
 
@@ -19,14 +24,14 @@ echo '</div>';
 echo '<div class="ph-pos-wrap-main">';
 echo '<div class="ph-pos-main-page">';
 
-echo '<div class="alert '.$this->t['infotype'].'">' . $this->t['infotext'] . '</div>';
+echo $layoutAl->render(array('type' => $this->t['infotype'], 'text' => $this->t['infotext'], 'pos' => 1));
 
 echo '</div>';// end ph-pos-main-page
 echo '</div>';// end ph-pos-wrap-main
-	
+
 echo '<div class="ph-pos-wrap-bottom">';
 echo $this->loadTemplate('bottom');
 echo '</div>';
-	
+
 echo '</div>';
 ?>

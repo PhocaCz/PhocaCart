@@ -7,8 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Uri\Uri;
 
 echo '<div class="ph-pos-logo">';
-echo '<img class="'.$this->s['c']['img-responsive'].' ph-image" src="'.JURI::base(true).'/media/com_phocacart/images/phoca-pos.png" alt=""  />';
+echo '<img class="'.$this->s['c']['img-responsive'].' ph-image" src="'.Uri::base(true).'/media/com_phocacart/images/phoca-pos.png" alt=""  />';
 echo '</div>';
 ?>

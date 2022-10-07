@@ -7,21 +7,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 $price = $this->t['price'];
 
-echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_ORDERS_SALES').'</div>';
+echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_ORDERS_SALES').'</div>';
 if (!empty($this->items)) {
 
 	echo '<div class="'.$this->s['c']['row'].' ph-pos-customer-row-header">';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'">'.JText::_('COM_PHOCACART_ORDER').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.JText::_('COM_PHOCACART_VENDOR').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.JText::_('COM_PHOCACART_TOTAL').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.JText::_('COM_PHOCACART_CUSTOMER').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'">'.JText::_('COM_PHOCACART_DATE').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.JText::_('COM_PHOCACART_SECTION').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.JText::_('COM_PHOCACART_UNIT').'</div>';
-		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.JText::_('COM_PHOCACART_TICKET').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'">'.Text::_('COM_PHOCACART_ORDER').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.Text::_('COM_PHOCACART_VENDOR').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.Text::_('COM_PHOCACART_TOTAL').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.Text::_('COM_PHOCACART_CUSTOMER').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'">'.Text::_('COM_PHOCACART_DATE').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.Text::_('COM_PHOCACART_SECTION').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.Text::_('COM_PHOCACART_UNIT').'</div>';
+		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">'.Text::_('COM_PHOCACART_TICKET').'</div>';
 		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'"></div>';
 	echo '</div>';
 
@@ -53,7 +55,7 @@ if (!empty($this->items)) {
 
 
 		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm2.md2'].'">';
-		echo '<div class="ph-pos-customer-name">'.JHtml::date($v->date, 'DATE_FORMAT_LC6').'</div>';
+		echo '<div class="ph-pos-customer-name">'.HTMLHelper::date($v->date, 'DATE_FORMAT_LC6').'</div>';
 		echo '</div>';
 
 
@@ -73,14 +75,14 @@ if (!empty($this->items)) {
 		if (isset($v->unit_title)) {
 			$title = $v->unit_title;
 		}
-		echo '<span class="label label-info badge badge-info">'.$title.'</span>';
+		echo '<span class="label label-info badge bg-info">'.$title.'</span>';
 		echo '</div>';
 		echo '</div>';
 
 
 		echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm1.md1'].'">';
 		echo '<div class="ph-pos-ticket-name">';
-		echo '<span class="label label-warning badge badge-warning">'.$v->ticket_id.'</span>';
+		echo '<span class="label label-warning badge bg-warning">'.$v->ticket_id.'</span>';
 		echo '</div>';
 		echo '</div>';
 
@@ -93,8 +95,8 @@ if (!empty($this->items)) {
 		echo '<input type="hidden" name="ticketid" value="'.(int)$this->t['ticket']->id.'" />';
 		echo '<input type="hidden" name="unitid" value="'.(int)$this->t['unit']->id.'" />';
 		echo '<input type="hidden" name="sectionid" value="'.(int)$this->t['section']->id.'" />';
-		echo Joomla\CMS\HTML\HTMLHelper::_('form.token');
-		echo '<button class="'.$this->s['c']['btn.btn-success'].' loadMainContent">'.JText::_('COM_PHOCACART_VIEW').'</button>';
+		echo HTMLHelper::_('form.token');
+		echo '<button class="'.$this->s['c']['btn.btn-success'].' loadMainContent">'.Text::_('COM_PHOCACART_VIEW').'</button>';
 		echo '</form>';
 		echo '</div>';
 
@@ -102,7 +104,7 @@ if (!empty($this->items)) {
 	}
 
 } else {
-	echo '<div class="ph-pos-no-items">'.JText::_('COM_PHOCACART_NO_ORDER_SALE_FOUND_FOR_SELECTED_DATE').'</div>';
+	echo '<div class="ph-pos-no-items">'.Text::_('COM_PHOCACART_NO_ORDER_SALE_FOUND_FOR_SELECTED_DATE').'</div>';
 }
 
 echo $this->loadTemplate('pagination');
