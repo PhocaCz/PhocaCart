@@ -193,6 +193,9 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	if (isset($this->item[0]->title) && $this->item[0]->title != '') {
 		$title = $this->item[0]->title;
 	}
+	if (isset($this->item[0]->title_long) && $this->item[0]->title_long != '') {
+		$title = $this->item[0]->title_long;
+	}
 
 
 	echo PhocacartRenderFront::renderHeader(array($title));
