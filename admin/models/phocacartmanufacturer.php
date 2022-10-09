@@ -11,6 +11,8 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\Registry\Registry;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartManufacturer extends AdminModel
@@ -31,7 +33,6 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartmanufacturer', 'phocacartmanufacturer', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -39,11 +40,25 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 		return $form;
 	}
 
+  public function getItem($pk = null) {
+    if ($item = parent::getItem($pk)) {
+      // Convert the metadata field to Registry
+      if (isset($item->metadata)) {
+        $registry = new Registry;
+        $registry->loadString($item->metadata);
+        $item->metadata = $registry->toArray();
+      }
+    }
+    return $item;
+  }
+
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartmanufacturer.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
 		}
+
+    $this->preprocessData('com_phocacart.phocacartmanufacturer', $data);
 		return $data;
 	}
 
@@ -80,18 +95,15 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 	}
 
 	public function save($data) {
+		if (parent::save($data)) {
+			$savedId = $this->getState($this->getName().'.id');
+			if ((int)$savedId > 0) {
+				PhocacartCount::setProductCount(array(0 => (int)$savedId), 'manufacturer', 1);
+			}
+			return true;
+		} else {
+			return false;
+		}
 
-	    if (parent::save($data)) {
-
-	        $savedId = $this->getState($this->getName().'.id');
-		    if ((int)$savedId > 0) {
-               PhocacartCount::setProductCount(array(0 => (int)$savedId), 'manufacturer', 1);
-            }
-		    return true;
-        } else {
-	        return false;
-        }
-
-    }
+	}
 }
-?>
