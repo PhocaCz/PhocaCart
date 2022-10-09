@@ -9,6 +9,8 @@
 
         <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
+        <field name="title_long" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
+
         <field name="sku" type="text" class="form-control" size="255" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC"/>
         <field name="upc" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC"/>
         <field name="ean" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC"/>
