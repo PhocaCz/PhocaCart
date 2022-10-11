@@ -52,6 +52,19 @@ class PhocacartText {
         $body = isset($replace['trackingdescription'])		? str_replace('{trackingdescription}', $replace['trackingdescription'], $body)		: $body;
 		$body = isset($replace['shippingtitle'])			? str_replace('{shippingtitle}', $replace['shippingtitle'], $body)					: $body;
         $body = isset($replace['shippingdescriptioninfo'])	? str_replace('{shippingdescriptioninfo}', $replace['shippingdescriptioninfo'], $body): $body;
+
+        // Shipping Branch Info
+        $body = isset($replace['shippingbranchname'])	? str_replace('{shippingbranchname}', $replace['shippingbranchname'], $body): $body;
+        $body = isset($replace['shippingbranchcode'])	? str_replace('{shippingbranchcode}', $replace['shippingbranchcode'], $body): $body;
+        $body = isset($replace['shippingbranchid'])	? str_replace('{shippingbranchid}', $replace['shippingbranchid'], $body): $body;
+        $body = isset($replace['shippingbranchcountry'])	? str_replace('{shippingbranchcountry}', $replace['shippingbranchcountry'], $body): $body;
+        $body = isset($replace['shippingbranchcity'])	? str_replace('{shippingbranchcity}', $replace['shippingbranchcity'], $body): $body;
+        $body = isset($replace['shippingbranchstreet'])	? str_replace('{shippingbranchstreet}', $replace['shippingbranchstreet'], $body): $body;
+        $body = isset($replace['shippingbranchzip'])	? str_replace('{shippingbranchzip}', $replace['shippingbranchzip'], $body): $body;
+        $body = isset($replace['shippingbranchurl'])	? str_replace('{shippingbranchurl}', $replace['shippingbranchurl'], $body): $body;
+        $body = isset($replace['shippingbranchthumbnail'])	? str_replace('{shippingbranchthumbnail}', $replace['shippingbranchthumbnail'], $body): $body;
+        $body = isset($replace['shippingbranchcurrency'])	? str_replace('{shippingbranchcurrency}', $replace['shippingbranchcurrency'], $body): $body;
+
         $body = isset($replace['paymenttitle'])			    ? str_replace('{paymenttitle}', $replace['paymenttitle'], $body)					: $body;
         $body = isset($replace['paymentdescriptioninfo'])	? str_replace('{paymentdescriptioninfo}', $replace['paymentdescriptioninfo'], $body): $body;
 		$body = isset($replace['dateshipped'])				? str_replace('{dateshipped}', $replace['dateshipped'], $body)						: $body;
@@ -361,6 +374,34 @@ class PhocacartText {
 		$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
 		$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
         $r['shippingdescriptioninfo'] 		= PhocacartOrderView::getShippingDescriptionInfo($common);
+
+
+        $r['shippingbranchname']    = '';
+        $r['shippingbranchcode']    = '';
+        $r['shippingbranchid']      = '';
+        $r['shippingbranchcountry'] = '';
+        $r['shippingbranchcity']    = '';
+        $r['shippingbranchstreet']  = '';
+        $r['shippingbranchzip']     = '';
+        $r['shippingbranchurl']     = '';
+        $r['shippingbranchthumbnail']   = '';
+        $r['shippingbranchcurrency']    = '';
+
+        if (isset($common->params_shipping)) {
+            $paramsShipping = json_decode($common->params_shipping, true);
+            $r['shippingbranchname']    = isset($paramsShipping['name']) ? $paramsShipping['name']: '';
+            $r['shippingbranchcode']    = isset($paramsShipping['branchCode']) ? $paramsShipping['branchCode']: '';
+            $r['shippingbranchid']      = isset($paramsShipping['id']) ? $paramsShipping['id']: '';
+            $r['shippingbranchcountry'] = isset($paramsShipping['country']) ? $paramsShipping['country']: '';
+            $r['shippingbranchcity']    = isset($paramsShipping['city']) ? $paramsShipping['city']: '';
+            $r['shippingbranchstreet']  = isset($paramsShipping['street']) ? $paramsShipping['street']: '';
+            $r['shippingbranchzip']     = isset($paramsShipping['zip']) ? $paramsShipping['zip']: '';
+            $r['shippingbranchurl']     = isset($paramsShipping['url']) ? $paramsShipping['url']: '';
+            $r['shippingbranchthumbnail']   = isset($paramsShipping['thumbnail']) ? $paramsShipping['thumbnail']: '';
+            $r['shippingbranchcurrency']    = isset($paramsShipping['currency']) ? $paramsShipping['currency']: '';
+        }
+
+
 		$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);
 		$r['customercomment'] 		= $common->comment;
 		$r['currencycode'] 			= $common->currency_code;
