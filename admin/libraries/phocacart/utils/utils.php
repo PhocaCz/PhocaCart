@@ -246,7 +246,7 @@ class PhocacartUtils
 		$store_ip				= $pC->get( 'store_ip', 0 );
 
 		if ($store_ip == 0) {
-			return '';
+			return 'anonymous';
 		}
 
 		$ip = false;
