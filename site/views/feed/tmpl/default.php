@@ -84,8 +84,20 @@ if (!empty($this->t['products'])) {
             $oI['item_id'] = $l.$this->p['item_id'].$r.$v->id.$e.$this->p['item_id'].$r;
         }
 
-        if ($this->p['item_title'] != '' && isset($v->title) && $v->title != '') {
-            $oI['item_title'] = $l.$this->p['item_title'].$r.htmlspecialchars($v->title).$e.$this->p['item_title'].$r;
+        if ($this->p['item_title']) {
+            $title = '';
+            if (isset($paramsFeedA[$feedName][$this->p['item_title']])) {
+                $title = $paramsFeedA[$feedName][$this->p['item_title']];
+                unset($paramsFeedA[$feedName][$this->p['item_title']]);
+            }
+
+            if ($title === '' && isset($v->title)) {
+                $title = $v->title;
+            }
+
+            if ($title !== '') {
+                $oI['item_title'] = $l . $this->p['item_title'] . $r . htmlspecialchars($title) . $e . $this->p['item_title'] . $r;
+            }
         }
 
         if ($this->p['item_title_extended'] != '' && isset($v->title) && $v->title != '') {
