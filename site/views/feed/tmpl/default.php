@@ -91,11 +91,13 @@ if (!empty($this->t['products'])) {
                 unset($paramsFeedA[$feedName][$this->p['item_title']]);
             }
 
-            if ($title === '') {
+            if ($title === '' && isset($v->title)) {
                 $title = $v->title;
             }
 
-            $oI['item_title'] = $l.$this->p['item_title'].$r.htmlspecialchars($title).$e.$this->p['item_title'].$r;
+            if ($title !== '') {
+                $oI['item_title'] = $l . $this->p['item_title'] . $r . htmlspecialchars($title) . $e . $this->p['item_title'] . $r;
+            }
         }
 
         if ($this->p['item_title_extended'] != '' && isset($v->title) && $v->title != '') {
