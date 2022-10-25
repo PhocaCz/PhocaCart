@@ -176,6 +176,9 @@ class PhocaCartViewCategory extends HtmlView
 			$this->t['event']		= new stdClass;
 			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
 			$this->t['event']->onCategoryBeforeHeader = trim(implode("\n", $results));
+
+			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforePaginationTop', array('com_phocacart.category', &$this->items, &$this->p));
+			$this->t['event']->onCategoryBeforePaginationTop = trim(implode("\n", $results));
 			// Foreach values are rendered in default foreaches
 
 			// Layout plugins - completely new layout including foreach

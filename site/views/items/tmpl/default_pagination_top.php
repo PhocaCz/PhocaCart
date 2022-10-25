@@ -8,6 +8,8 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Layout\FileLayout;
+echo $this->t['event']->onItemsBeforePaginationTop;
+
 $this->t['action'] = str_replace('&amp;', '&', $this->t['action']);
 $this->t['action'] = htmlspecialchars($this->t['action']);
 
