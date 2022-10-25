@@ -248,7 +248,23 @@ class PhocaCartViewItem extends HtmlView
 		$this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
 
 		$results = Factory::getApplication()->triggerEvent('onPCVonItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
-		$this->t['event']->onItemInsideTabPanel = $results;
+		$this->t['event']->onItemInsideTabPanel = [];
+		foreach($results as $result) {
+			if (!is_array($result)) {
+				continue;
+			}
+
+			if (isset($result['alias']) && isset($result['title']) && isset($result['content'])) {
+				$this->t['event']->onItemInsideTabPanel[] = $result;
+				continue;
+			}
+
+			foreach ($result as $subresult) {
+				if (is_array($subresult) && isset($subresult['alias']) && isset($subresult['title']) && isset($subresult['content'])) {
+					$this->t['event']->onItemInsideTabPanel[] = $subresult;
+				}
+			}
+		}
 
 		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
