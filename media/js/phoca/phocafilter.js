@@ -455,8 +455,6 @@ function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, 
 	} else if (formType == "text") {
 		//value = phEncode(value);
       	if (formAction == 1) {
-
-
 			 phA = phSetFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
 
       	} else {
@@ -480,6 +478,17 @@ function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, 
 				document.location 		= urlItemsView;
 			}
 		}
+   	}  else if (formType == "color" || formType == 'image') {
+
+		var isActive = jQuery(formAction).hasClass('on');
+		if (isActive) {
+			phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+			jQuery(formAction).removeClass('on');
+		} else {
+			phA = phSetFilter(paramV, value, isItemsView, urlItemsView, 1, uniqueValue, wait, source);
+			jQuery(formAction).addClass('on');
+		}
+
    	} else {
 
       	if (formAction.checked) {

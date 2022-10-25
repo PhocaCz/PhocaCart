@@ -19,7 +19,7 @@
         <field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL"
                filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC"/>
 
-        <field name="tracking_date_shipped" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" filter="JComponentHelper::filterText" translateformat="true" filter="user_utc" />
+        <field name="tracking_date_shipped" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" translateformat="true" filter="user_utc" />
 
 
         <field name="order_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_DESC"/>

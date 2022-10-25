@@ -62,6 +62,7 @@ echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-min-purchase">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_MINIMAL_SUM_OF_PURCHASES', 'a.minimum_sum', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-activate-registration">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ACTIVATE_REGISTRATION', 'a.activate_registration', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-default">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DEFAULT', 'a.type', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
@@ -110,6 +111,12 @@ if (is_array($this->items)) {
 
         echo $r->td(PhocacartPrice::cleanPrice($item->minimum_sum), "small");
 
+        if ($item->activate_registration) {
+            echo $r->td('<i class="icon-featured"></i>', "small ph-center");
+        } else {
+            echo $r->td('', "small ph-center");
+        }
+
         if ($item->type == 1) {
             $default = '<a data-original-title="' . Text::_('COM_PHOCACART_DEFAULT') . '" class="" title="' . Text::_('COM_PHOCACART_DEFAULT') . '"><i class="icon-featured"></i></a>';
             echo $r->td($default, "small ph-center");
@@ -126,7 +133,7 @@ if (is_array($this->items)) {
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 7);
+echo $r->tblFoot($this->pagination->getListFooter(), 8);
 echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);

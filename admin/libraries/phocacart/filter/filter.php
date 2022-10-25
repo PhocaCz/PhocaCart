@@ -258,8 +258,14 @@ class PhocacartFilter
 
     }
 
-    public function renderList()
+    public function renderList(array $params = [])
     {
+        $params = array_merge([
+          'layout' => 'form_filter',
+          'wrapper_class' => '',
+          'wrapper_role' => 'tablist',
+        ], $params);
+
         $document	= Factory::getDocument();
         $p = array();
         $pC = PhocacartUtils::getComponentParameters();
@@ -272,16 +278,16 @@ class PhocacartFilter
         $o = array();
 
         if ($this->ajax == 0) {
-            $o[] = '<div id="phFilterBox" role="tablist">';// AJAX ID
+            $o[] = '<div id="phFilterBox"' . ($params['wrapper_role'] ? ' role="' . $params['wrapper_role'] . '"' : '') . ($params['wrapper_class'] ? ' class="' . $params['wrapper_class'] . '"' : '') . '>';// AJAX ID
         }
 
         $s = PhocacartRenderStyle::getStyles();
         //$app		= JFactory::getApplication();
-        $layout = new FileLayout('form_filter_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
-        $layout2 = new FileLayout('form_filter_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
-        $layout3 = new FileLayout('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
-        $layout4 = new FileLayout('form_filter_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
-        $layout5 = new FileLayout('form_filter_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
+        $layout = new FileLayout($params['layout'] . '_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
+        $layout2 = new FileLayout($params['layout'] . '_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
+        $layout3 = new FileLayout($params['layout'] . '_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
+        $layout4 = new FileLayout($params['layout'] . '_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
+        $layout5 = new FileLayout($params['layout'] . '_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
 
 
         $language = '';
@@ -637,11 +643,11 @@ class PhocacartFilter
 
                         if ($this->enable_color_filter && isset($v['type']) && ($v['type'] == 2 || $v['type'] == 5)) {
                             // Color
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'color';
                             $o[] = $layout4->render($data);
                         } else if ($this->enable_image_filter && isset($v['type']) && ($v['type'] == 3 || $v['type'] == 6)) {
                             // Image
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'image';
                             $data['style'] = strip_tags($this->image_style_image_filter);
                             $o[] = $layout5->render($data);
                         } else {
@@ -680,11 +686,11 @@ class PhocacartFilter
 
                         if ($this->enable_color_filter_spec) {
                             // Color
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'color';
                             $o[] = $layout4->render($data);
                         } else if ($this->enable_image_filter_spec) {
                             // Image
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'image';
                             $data['style'] = strip_tags($this->image_style_image_filter_spec);
                             $o[] = $layout5->render($data);
                         } else {

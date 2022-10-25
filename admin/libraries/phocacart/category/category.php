@@ -296,16 +296,6 @@ final class PhocacartCategory
 		return $path;
 	}
 
-
-
-
-
-
-
-
-
-
-
 	public static function categoryTree($d, $r = 0, $pk = 'parent_id', $k = 'id', $c = 'children') {
 		$m = array();
 		foreach ($d as $e) {
@@ -318,6 +308,21 @@ final class PhocacartCategory
 			return $m[$r];
 		}
 		return 0;
+	}
+
+	public static function nestedToFlat(array $data, $level = 0): array
+	{
+		if (!$data)
+			return [];
+
+		$result = [];
+		foreach ($data as $v) {
+			$v['nested_level'] = $level;
+			$result[] = $v;
+			$result = array_merge($result, self::nestedToFlat($v['children'], $level + 1));
+		}
+
+		return $result;
 	}
 
 	public static function nestedToUl($data, $currentCatid = 0) {

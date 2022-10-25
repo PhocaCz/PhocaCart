@@ -906,13 +906,15 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 				if (!empty($v['data'])) {
 					foreach ($v['data'] as $k2 => $v2) {
-						$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-cf-title">';
-						$tabO	.= isset($v2->title) ? $v2->title : '';
-						$tabO	.= '</div>';
+						if (!empty($v2->value)) {
+							$tabO .= '<div class="' . $this->s['c']['col.xs12.sm4.md4'] . ' ph-cf-title">';
+							$tabO .= isset($v2->title) ? $v2->title : '';
+							$tabO .= '</div>';
 
-						$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-cf-value">';
-						$tabO	.= isset($v2->value) ? $v2->value : '';
-						$tabO	.= '</div>';
+							$tabO .= '<div class="' . $this->s['c']['col.xs12.sm6.md6'] . ' ph-cf-value">';
+							$tabO .= isset($v2->value) ? $v2->value : '';
+							$tabO .= '</div>';
+						}
 					}
 				}
 

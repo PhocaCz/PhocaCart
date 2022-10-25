@@ -15,8 +15,22 @@ class TablePhocacartUser extends Table
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_users', 'id', $db);
 	}
-	
-	function check() {
+
+  public function bind($src, $ignore = array())
+  {
+    if (isset($src['country'])) {
+      $src['country'] = (int)$src['country'];
+    }
+
+    if (isset($src['region'])) {
+      $src['region'] = (int)$src['region'];
+    }
+
+    return parent::bind($src, $ignore);
+  }
+
+
+  function check() {
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}

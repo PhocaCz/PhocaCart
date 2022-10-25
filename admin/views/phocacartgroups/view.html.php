@@ -86,6 +86,7 @@ class PhocaCartCpViewPhocacartGroups extends HtmlView
 			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
 			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
 			'a.minimum_sum'		=> Text::_($this->t['l']. '_MINIMAL_SUM_OF_PURCHASES'),
+			'a.activate_registration'		=> Text::_($this->t['l']. '_ACTIVATE_REGISTRATION'),
 			'a.type'			=> Text::_($this->t['l']. '_DEFAULT'),
 			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);

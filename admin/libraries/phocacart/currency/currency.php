@@ -210,7 +210,11 @@ class PhocacartCurrency
 		$session->set('currency', (int)$currencyId, 'phocaCart');
 	}
 
-	public static function getCurrenciesSelectBox() {
+	/**
+	 * @param string $attrs - HTML attributes of en select box
+	 * @return mixed|string
+	 */
+	public static function getCurrenciesSelectBox(string $attrs = '') {
 		$session 	= Factory::getSession();
 		$active		= $session->get('currency', 0, 'phocaCart');
 		if ((int)$active < 1) {
@@ -219,7 +223,7 @@ class PhocacartCurrency
 		$currencies = self::getAllCurrencies();
 		$o = '';
 		if (!empty($currencies)) {
-			$o = HTMLHelper::_('select.genericlist',  $currencies, 'id', 'class="form-select chosen-select ph-input-select-currencies"', 'value', 'text', $active);
+			$o = HTMLHelper::_('select.genericlist',  $currencies, 'id', 'class="form-select chosen-select ph-input-select-currencies" ' . $attrs, 'value', 'text', $active);
 		}
 		return $o;
 	}
