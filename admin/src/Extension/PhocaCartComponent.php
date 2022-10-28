@@ -79,7 +79,11 @@ class PhocaCartComponent extends LegacyComponent implements CategoryServiceInter
   {
     /** @var Form $form */
     $form = $event->getArgument(0);
-    Form::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/fields');
-    $form->setFieldAttribute('assigned_cat_ids', 'type', 'PhocaCartCategory');
+    if ($form->getName() === 'com_fields.field.com_phocacart.phocacartitem') {
+      Form::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/fields');
+      $form->setFieldAttribute('assigned_cat_ids', 'type', 'PhocaCartCategory');
+
+      $form->loadFile(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/forms/com_fields.xml');
+    }
   }
 }
