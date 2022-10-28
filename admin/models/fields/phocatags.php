@@ -16,7 +16,13 @@ class JFormFieldPhocaTags extends ListField
 {
 	protected $type 		= 'PhocaTags';
 
-	protected function getInput() {
+	protected function getOptions()
+	{
+		$options = (array)PhocacartTag::getAllTagsList();
+		return array_merge(parent::getOptions(), $options);
+	}
+
+	/*protected function getInput() {
 
 		$id 	= (int) $this->form->getValue('id');
 		$javascript		= '';
@@ -47,6 +53,6 @@ class JFormFieldPhocaTags extends ListField
 		return $this->getRenderer($this->layout)->render($data);
 
 		//return PhocacartTag::getAllTagsSelectBox($this->name, $this->id, $activeTags, NULL, 'id', 0, $attr );
-	}
+	}*/
 }
 ?>

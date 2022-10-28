@@ -61,9 +61,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		return Table::getInstance($type, $prefix, $config);
 	}
 
-	public function getForm($data = array(), $loadData = true) {
-
-		$app	= Factory::getApplication();
+	public function getForm($data = array(), $loadData = true)
+	{
 		$form 	= $this->loadForm('com_phocacart.phocacartitem', 'phocacartitem', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form)) {
@@ -74,11 +73,38 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacart.data', array());
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartitem.data', array());
 
-		if (empty($data)) {
+		if (is_array($data) && $data) {
+			if (!isset($data['group']) || !$data['group']) {
+				$data['group'] = PhocacartGroup::getDefaultGroup(1);
+			}
+			if (isset($data['related']) && is_array($data['related'])) {
+				$relatedOption = array_shift($data['related']);
+				$relatedOption = explode(',', $relatedOption);
+				if($relatedOption) {
+					$i = 0;
+					$value = '';
+					foreach($relatedOption as $id) {
+						$v = PhocacartProduct::getProductByProductId($id);
+						if ($i > 0) {
+							$value .= '[|]';
+						}
+
+						$title = PhocacartText::filterValue($v->title, 'text');
+						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
+
+						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
+						$i++;
+					}
+					$data['related'] = $value;
+				}
+			}
+		} else {
 			$data = $this->getItem();
 		}
+
+		$this->preprocessData('com_phocacart.phocacartitem', $data);
 
 		return $data;
 	}
@@ -130,6 +156,42 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$item->set('specifications', PhocacartSpecification::getSpecificationsById((int)$item->id, 2));
 
 			$item->set('discounts', PhocacartDiscountProduct::getDiscountsById((int)$item->id, 2));
+			$item->set('catid_multiple', PhocacartCategoryMultiple::getCategories((int)$item->id, 1));
+			$item->set('tags', PhocacartTag::getTags((int)$item->id, 1));
+			$item->set('taglabels', PhocacartTag::getTagLabels((int)$item->id, 1));
+			$groups = PhocacartGroup::getGroupsById((int)$item->id, 3, 1);
+			if (!$groups)
+				$groups = PhocacartGroup::getDefaultGroup(1);
+			$item->set('group', $groups);
+
+			$parameters = PhocacartParameter::getAllParameters();
+			$itemParameters = [];
+			foreach ($parameters as $parameter) {
+				$itemParameters[$parameter->id] = PhocacartParameter::getParameterValues((int)$item->id, $parameter->id, 1);
+			}
+			$item->set('items_parameter', $itemParameters);
+
+			$value = '';
+			if ((int)$item->id > 0) {
+				$relatedOption	= PhocacartRelated::getRelatedItemsById((int)$item->id, 3);
+
+				if($relatedOption) {
+					$i = 0;
+					foreach($relatedOption as $v) {
+						if ($i > 0) {
+							$value .= '[|]';
+						}
+
+						$title = PhocacartText::filterValue($v->title, 'text');
+						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
+
+						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
+						$i++;
+					}
+				}
+			}
+			$item->set('related', $value);
+
 
 
 
