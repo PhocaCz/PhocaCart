@@ -41,11 +41,11 @@
         <field name="tax_id" type="phocatax" class="form-control" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
 
 
-        <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" layout="joomla.form.field.list-fancy-select" />
+        <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" />
 
-        <field name="catid" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" />
+        <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" />
 
-        <field name="manufacturer_id" type="phocamanufacturer" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC"/>
+        <field name="manufacturer_id" type="phocamanufacturer" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC" />
 
         <field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
@@ -82,7 +82,7 @@
         <field name="stockstatus_a_id" type="phocastockstatus" manager="a" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2"/>
         <field name="stockstatus_n_id" type="phocastockstatus" manager="n" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
 
-        <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true"/>
+        <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
 
         <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs" size="40"/>
 

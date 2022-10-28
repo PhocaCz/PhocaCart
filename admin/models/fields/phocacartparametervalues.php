@@ -16,14 +16,22 @@ if (! class_exists('PhocacartParameter')) {
 $lang = Factory::getLanguage();
 $lang->load('com_phocacart');
 
-use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Form\Field\ListField;
+
 defined('_JEXEC') or die();
 
-class JFormFieldPhocaCartParameterValues extends FormField
+class JFormFieldPhocaCartParameterValues extends ListField
 {
 	protected $type 		= 'PhocaCartParameterValues';
 
-	protected function getInput() {
+	protected function getOptions()
+	{
+		$parameterId = (int)$this->element['parameterid'];
+		$options = PhocacartParameter::getAllParameterValuesList($parameterId, 'a.id');
+		return array_merge(parent::getOptions(), $options);
+	}
+
+/*	protected function getInput() {
 
 		$id = (int) $this->form->getValue('id');
 		$parameterId = (int)$this->element['parameterid'];
@@ -50,7 +58,7 @@ class JFormFieldPhocaCartParameterValues extends FormField
 
 
 
-	}
+	}*/
 
 }
 ?>
