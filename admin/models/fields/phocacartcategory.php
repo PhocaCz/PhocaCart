@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -31,6 +31,15 @@ $lang->load('com_phocacart');
 class JFormFieldPhocacartCategory extends ListField
 {
 	protected $type 		= 'PhocacartCategory';
+	protected $layout   = 'phocacart.form.field.category';
+
+	protected function getRenderer($layoutId = 'default')
+	{
+		// Make field usable outside of Phoca Cart component
+		$renderer = parent::getRenderer($layoutId);
+		$renderer->addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/layouts');
+		return $renderer;
+	}
 
 	protected function getInput() {
 
@@ -53,20 +62,6 @@ class JFormFieldPhocacartCategory extends ListField
 
 		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
 		//$attr		.= $javascript . ' ';
-
-
-		// Multiple load more values
-		$activeCats = array();
-		$id 		= 0;
-		// Active cats can be selected in administration item view
-		// but this function is even called in module so ignore this part for module administration
-		if ($multiple && $this->form->getName() == 'com_phocacart.phocacartitem') {
-			$id = (int) $this->form->getValue('id');// Product ID
-			if ((int)$id > 0) {
-				$activeCats	= PhocacartCategoryMultiple::getCategories($id, 1);
-
-			}
-		}
 
 
 		// Filter language
@@ -159,6 +154,11 @@ class JFormFieldPhocacartCategory extends ListField
 		} else {
 			$data['value'] = $this->value;
 		}
+
+		$data['refreshPage']    = (bool) $this->element['refresh-enabled'];
+		$data['refreshCatId']   = (string) $this->element['refresh-cat-id'];
+		$data['refreshSection'] = (string) $this->element['refresh-section'];
+		$data['hasCustomFields']= !empty(FieldsHelper::getFields('com_phocacart.phocacartitem'));
 
 		return $this->getRenderer($this->layout)->render($data);
 
