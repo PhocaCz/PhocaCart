@@ -2,12 +2,12 @@
 <extension type="component" method="upgrade" version="4.0">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>20/11/2022</creationDate>
+	<creationDate>21/11/2022</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>4.0.6Beta8</version>
+	<version>4.0.6Beta9</version>
 	<description>COM_PHOCACART_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<projectName>PhocaCart</projectName>
@@ -112,12 +112,12 @@
 			<folder>update</folder>
 			<folder>tables</folder>
 			<folder>helpers</folder>
+			<folder>src</folder>
 			<folder>views</folder>
 			<folder>help</folder>
 			<folder>layouts</folder>
-			<folder>models</folder>
 			<folder>services</folder>
-			<folder>src</folder>
+			<folder>models</folder>
 			<filename>index.html</filename>
 			<filename>config.xml</filename>
 			<filename>phocacart.php</filename>
