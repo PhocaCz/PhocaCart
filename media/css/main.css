@@ -966,7 +966,7 @@ table.ph-comparison-table tr td.ph-middle {
     position: absolute;
     top: 0.3em;
     right: 0.2em;
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .ph-manufacturer-box,
