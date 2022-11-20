@@ -1944,16 +1944,24 @@ li.ph-currency-list {
 }
 /* style icon */
 .inner-addon .fa,
-.inner-addon .glyphicon {
+.inner-addon .glyphicon,
+.inner-addon svg {
     position: absolute;
     padding: 10px;
     pointer-events: none;
 }
+.inner-addon svg {
+    padding: 0;
+    margin: 10px;
+}
+
 /* align icon */
-.left-addon .glyphicon {
+.left-addon .glyphicon,
+.left-addon svg {
     left: 0;
 }
-.right-addon .glyphicon {
+.right-addon .glyphicon,
+.right-addon svg {
     right: 0;
 }
 .left-addon .fa {
@@ -2252,6 +2260,7 @@ img.ph-lazyload:not([src]) {
     display:flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
 }
 
 .ph-pag-top-row button {
@@ -2357,4 +2366,3 @@ img.ph-lazyload:not([src]) {
     left: 0px;
     margin: 5px;
 }
-

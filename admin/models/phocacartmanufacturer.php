@@ -58,7 +58,7 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 			$data = $this->getItem();
 		}
 
-    $this->preprocessData('com_phocacart.phocacartmanufacturer', $data);
+        $this->preprocessData('com_phocacart.phocacartmanufacturer', $data);
 		return $data;
 	}
 

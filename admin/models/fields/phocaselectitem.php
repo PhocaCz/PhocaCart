@@ -63,7 +63,6 @@ class JFormFieldPhocaSelectItem extends FormField
 		$maxSize = isset($this->element['maxsize']) &&  (int)$this->element['maxsize'] > 0 ? (int)$this->element['maxsize'] : 0;
 
 
-
 		$onchange 	= (string) $this->element['onchange'];
 		$value = '';
 		if ($related) {

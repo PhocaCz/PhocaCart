@@ -609,19 +609,23 @@ jQuery(document).ready(function () {
 		jQuery(this).parent().find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
 		jQuery(this).parent().find(".fa-caret-right").removeClass("fa-caret-right").addClass("fa-caret-down");
 		/* SVG */
-		var useT = jQuery(this).parent().find("svg use");
-		var link = useT.attr('xlink:href');
-		link = link.replace('#pc-si-triangle-right', '#pc-si-triangle-bottom');
-		useT.attr('xlink:href', link);
+		var useT = jQuery(this).parent().find("svg use").first();
+		if(useT.length > 0) {
+			var link = useT.attr('xlink:href');
+			link = link.replace('#pc-si-triangle-right', '#pc-si-triangle-bottom');
+			useT.attr('xlink:href', link);
+		}
     })
     .on('hidden.bs.collapse', function() {
         jQuery(this).parent().find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
         jQuery(this).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
 		/* SVG */
-		var useT = jQuery(this).parent().find("svg use");
-		var link = useT.attr('xlink:href');
-		link = link.replace('#pc-si-triangle-bottom', '#pc-si-triangle-right');
-		useT.attr('xlink:href', link);
+		var useT = jQuery(this).parent().find("svg use").first();
+		if(useT.length > 0) {
+			var link = useT.attr('xlink:href');
+			link = link.replace('#pc-si-triangle-bottom', '#pc-si-triangle-right');
+			useT.attr('xlink:href', link);
+		}
 	});
 
 
