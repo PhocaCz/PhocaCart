@@ -577,6 +577,10 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_manufacturers` (
   `date` datetime NOT NULL,
   `params` text,
   `language` char(7) NOT NULL DEFAULT '',
+  `metatitle` varchar(255) NOT NULL DEFAULT '',
+  `metakey` text,
+  `metadesc` text,
+  `metadata` text,
   PRIMARY KEY (`id`),
   KEY `idx_language` (`language`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

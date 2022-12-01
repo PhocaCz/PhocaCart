@@ -288,6 +288,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
 
+
 	if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 		$class_btn 					= 'ph-visibility-hidden';
 		$class_icon					= 'ph-display-none';
