@@ -357,6 +357,7 @@ class PhocacartUtilsSettings
 
 			case 1: return 'refurbished';	break;
 			case 2: return 'used'; 			break;
+			case 3: return 'damaged'; 		break;
 			case 0: default: return 'new';	break;
 		}
 

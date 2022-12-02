@@ -77,6 +77,7 @@
                 <option value="0">COM_PHOCACART_CONDITION_NEW</option>
                 <option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
                 <option value="2">COM_PHOCACART_CONDITION_USED</option>
+                <!--<option value="3">COM_PHOCACART_CONDITION_DAMAGED</option>-->
             </field>
 
             <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_DESC" class="form-control" rows="3" cols="30" filter="string"/>
