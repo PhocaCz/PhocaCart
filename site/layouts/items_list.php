@@ -32,7 +32,7 @@ echo '<div class="ph-item-box '.$d['lt'].'">';
 
 if (!empty($d['labels'])) { echo '<div class="ph-label-box">' . $d['labels'] . '</div>';}
 
-echo '<div class="'.PhocacartRenderFront::completeClass(array($s['c']['thumbnail'], 'ph-thumbnail', 'ph-thumbnail-c', 'ph-item', $t['class_fade_in_action_icons'], $d['lt'])).'">';
+echo '<div class="'.PhocacartRenderFront::completeClass(array($s['c']['thumbnail'], 'ph-thumbnail', 'ph-thumbnail-c', 'ph-item', $t['class_fade_in_action_icons'], $d['lt'], $d['class_additional'])).'">';
 echo '<div class="ph-item-content '.$d['lt'].'">';
 
 

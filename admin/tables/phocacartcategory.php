@@ -81,6 +81,16 @@ class TablePhocacartCategory extends Table
 			$this->metadesc = StringHelper::str_ireplace($bad_characters, '', $this->metadesc);
 		}
 
+		if (!isset($this->modified) || $this->modified == '0' || $this->modified == '') {
+			$this->modified = '0000-00-00 00:00:00';
+		}
+		if (!isset($this->count_date) || $this->count_date == '0' || $this->count_date == '') {
+			$this->count_date = '0000-00-00 00:00:00';
+		}
+		if (!isset($this->created) || $this->created == '0' || $this->created == '') {
+			$this->created = '0000-00-00 00:00:00';
+		}
+
 		return true;
 	}
 }

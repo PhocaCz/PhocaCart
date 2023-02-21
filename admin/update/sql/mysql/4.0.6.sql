@@ -7,3 +7,7 @@ ALTER TABLE `#__phocacart_manufacturers` ADD COLUMN `metatitle` varchar(255) NOT
 ALTER TABLE `#__phocacart_manufacturers` ADD COLUMN `metakey` text;
 ALTER TABLE `#__phocacart_manufacturers` ADD COLUMN `metadesc` text;
 ALTER TABLE `#__phocacart_manufacturers` ADD COLUMN `metadata` text;
+
+
+ALTER TABLE `#__phocacart_groups` CHANGE `valid_from` `valid_from` datetime NULL DEFAULT NULL;
+ALTER TABLE `#__phocacart_groups` CHANGE `valid_to` `valid_to` datetime NULL DEFAULT NULL;

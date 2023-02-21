@@ -416,8 +416,20 @@ class PhocacartShipping
 
 		$pC = PhocacartUtils::getComponentParameters();
         $shipping_country_rule = $pC->get('shipping_country_rule', 1);
+		$delivery_billing_same_rules = $pC->get('delivery_billing_same_rules', 1);
 
         $country = 0;
+
+		// Before we start to check, if user set that billing and shipping
+		// address is the same, this in fact means that
+		// shipping country, shipping region and shipping zip is zero
+		// even we still store some shipping info for possible future orders
+		if ($delivery_billing_same_rules == 1 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['scountry'] = isset($dataAddress['bcountry']) ? (int)$dataAddress['bcountry'] : 0;
+		}
+		if ($delivery_billing_same_rules == 2 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['scountry'] = 0;
+		}
 
         switch($shipping_country_rule) {
 
@@ -460,8 +472,20 @@ class PhocacartShipping
 
 		$pC = PhocacartUtils::getComponentParameters();
         $shipping_region_rule = $pC->get('shipping_region_rule', 1);
+		$delivery_billing_same_rules = $pC->get('delivery_billing_same_rules', 1);
 
         $region = 0;
+
+		// Before we start to check, if user set that billing and shipping
+		// address is the same, this in fact means that
+		// shipping country, shipping region and shipping zip is zero
+		// even we still store some shipping info for possible future orders
+		if ($delivery_billing_same_rules == 1 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['sregion'] = isset($dataAddress['bregion']) ? (int)$dataAddress['bregion'] : 0;
+		}
+		if ($delivery_billing_same_rules == 2 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['sregion'] = 0;
+		}
 
         switch($shipping_region_rule) {
 
@@ -503,8 +527,21 @@ class PhocacartShipping
 
 		$pC = PhocacartUtils::getComponentParameters();
         $shipping_zip_rule = $pC->get('shipping_zip_rule', 1);
+		$delivery_billing_same_rules = $pC->get('delivery_billing_same_rules', 1);
 
-        $zip = 0;
+        $zip = '';
+
+
+		// Before we start to check, if user set that billing and shipping
+		// address is the same, this in fact means that
+		// shipping country, shipping region and shipping zip is zero
+		// even we still store some shipping info for possible future orders
+		if ($delivery_billing_same_rules == 1 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['szip'] = isset($dataAddress['bzip']) ? (int)$dataAddress['bzip'] : '';
+		}
+		if ($delivery_billing_same_rules == 2 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['szip'] = '';
+		}
 
         switch($shipping_zip_rule) {
 

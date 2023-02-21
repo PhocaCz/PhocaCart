@@ -1564,8 +1564,9 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_groups` (
   `display_attributes` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimum_sum` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `product_id` int(11) NOT NULL DEFAULT '0',
-  `valid_from` datetime NOT NULL,
-  `valid_to` datetime NOT NULL,
+  `valid_from` datetime NULL DEFAULT NULL,
+  `valid_to` datetime NULL DEFAULT NULL,
+  `activate_registration` int(1) NOT NULL DEFAULT 0,
   `type` tinyint(3) NOT NULL default '0',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -1754,23 +1755,23 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_submit_items` (
 
 
 -- Data
-INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`) VALUES
-(1, 'COM_PHOCACART_STATUS_PENDING', 'P', '1', '1', '-', '1', '0', '0', '1', '0', '[1]'),
-(2, 'COM_PHOCACART_STATUS_CONFIRMED', 'C', '1', '2', '=', '1', '0', '1', '1', '1', '[1,3]'),
-(3, 'COM_PHOCACART_STATUS_CANCELED', 'CL', '1', '3', '+', '1', '0', '1', '2', '2', '[1]'),
-(4, 'COM_PHOCACART_STATUS_SHIPPED', 'S', '1', '4', '=', '1', '0', '1', '1', '1', '[1,2,3]'),
-(5, 'COM_PHOCACART_STATUS_REFUNDED', 'RF', '1', '5', '=', '1', '0', '1', '2', '2', '[1]'),
-(6, 'COM_PHOCACART_STATUS_COMPLETED', 'CE', '1', '6', '=', '1', '1', '1', '1', '1', '[1,2,3]'),
+INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`, `date`) VALUES
+(1, 'COM_PHOCACART_STATUS_PENDING', 'P', '1', '1', '-', '1', '0', '0', '1', '0', '[1]', CURRENT_TIMESTAMP),
+(2, 'COM_PHOCACART_STATUS_CONFIRMED', 'C', '1', '2', '=', '1', '0', '1', '1', '1', '[1,3]', CURRENT_TIMESTAMP),
+(3, 'COM_PHOCACART_STATUS_CANCELED', 'CL', '1', '3', '+', '1', '0', '1', '2', '2', '[1]', CURRENT_TIMESTAMP),
+(4, 'COM_PHOCACART_STATUS_SHIPPED', 'S', '1', '4', '=', '1', '0', '1', '1', '1', '[1,2,3]', CURRENT_TIMESTAMP),
+(5, 'COM_PHOCACART_STATUS_REFUNDED', 'RF', '1', '5', '=', '1', '0', '1', '2', '2', '[1]', CURRENT_TIMESTAMP),
+(6, 'COM_PHOCACART_STATUS_COMPLETED', 'CE', '1', '6', '=', '1', '1', '1', '1', '1', '[1,2,3]', CURRENT_TIMESTAMP),
 
-(7, 'COM_PHOCACART_STATUS_FAILED', 'E', '0', '7', '=', '1', '0', '1', '2', '2', '[1]'),
-(8, 'COM_PHOCACART_STATUS_DENIED', 'D', '0', '8', '=', '1', '0', '1', '2', '2', '[1]'),
-(9, 'COM_PHOCACART_STATUS_CANCELED_REVERSAL', 'CRV', '0', '9', '=', '1', '0', '1', '2', '2', '[1]'),
-(10, 'COM_PHOCACART_STATUS_REVERSED', 'RV', '0', '10', '=', '1', '0', '1', '2', '2', '[1]');
+(7, 'COM_PHOCACART_STATUS_FAILED', 'E', '0', '7', '=', '1', '0', '1', '2', '2', '[1]', CURRENT_TIMESTAMP),
+(8, 'COM_PHOCACART_STATUS_DENIED', 'D', '0', '8', '=', '1', '0', '1', '2', '2', '[1]', CURRENT_TIMESTAMP),
+(9, 'COM_PHOCACART_STATUS_CANCELED_REVERSAL', 'CRV', '0', '9', '=', '1', '0', '1', '2', '2', '[1]', CURRENT_TIMESTAMP),
+(10, 'COM_PHOCACART_STATUS_REVERSED', 'RV', '0', '10', '=', '1', '0', '1', '2', '2', '[1]', CURRENT_TIMESTAMP);
 
 -- -
-INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`) VALUES (NULL, 'COM_PHOCACART_STATUS_OUT_OF_STOCK', '1', '1');
-INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`) VALUES (NULL, 'COM_PHOCACART_STATUS_IN_STOCK', '1', '2');
-INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`) VALUES (NULL, 'COM_PHOCACART_STATUS_2_3_DAYS', '1', '3');
+INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`, `date`) VALUES (NULL, 'COM_PHOCACART_STATUS_OUT_OF_STOCK', '1', '1', CURRENT_TIMESTAMP);
+INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`, `date`) VALUES (NULL, 'COM_PHOCACART_STATUS_IN_STOCK', '1', '2', CURRENT_TIMESTAMP);
+INSERT INTO `#__phocacart_stock_statuses` (`id`, `title`, `published`, `ordering`, `date`) VALUES (NULL, 'COM_PHOCACART_STATUS_2_3_DAYS', '1', '3', CURRENT_TIMESTAMP);
 -- -
 INSERT INTO `#__phocacart_currencies` (`id`, `title`, `code`, `exchange_rate`, `price_currency_symbol`, `price_format`, `price_dec_symbol`, `price_decimals`, `price_thousands_sep`, `price_suffix`, `price_prefix`, `published`) VALUES
 (1, 'Euro', 'EUR', 1, '€', 3, ',', 2, '.', '', '', 1);

@@ -418,6 +418,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			// - - - - - - - - - - - - - - -
 
 			// Product with new cid - - - - -
+			$err_img = array();
 			if (count( $cid )) {
 				ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
@@ -437,7 +438,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				}
 
 
-				$err_img = array();
+
 				$cid 	 = array();
 				foreach ($rows as $row) {
 					if ($row->numproduct == 0) {
@@ -483,13 +484,13 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 			// There are some images in the category - don't delete it
 			$msg = '';
-			if (count( $err_cat ) || count( $err_img )) {
-				if (count( $err_cat )) {
+			if (!empty( $err_cat ) || !empty( $err_img )) {
+				if (!empty( $err_cat )) {
 					$cids_cat = implode( ", ", $err_cat );
 					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', $cids_cat );
 				}
 
-				if (count( $err_img )) {
+				if (!empty( $err_img )) {
 					$cids_img = implode( ", ", $err_img );
 					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', $cids_img );
 				}

@@ -99,7 +99,7 @@ if (!empty($this->t['items'])) {
 			}
 			$d['class']			= 'ph-category-price-box';// we need the same class as category or items view
 			$d['product_id']	= (int)$v['id'];
-			$d['typeview']		= 'Module';
+			$d['typeview']		= 'Comparison';
 
 			// Display discount price
 			// Move standard prices to new variable (product price -> product discount)

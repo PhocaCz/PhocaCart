@@ -553,7 +553,6 @@ class PhocacartProduct
 
         $ordering = PhocacartOrdering::getOrderingCombination($orderingItem, $orderingCat);
 
-
         $db = Factory::getDBO();
         $wheres = array();
         $user = PhocacartUser::getUser();

@@ -986,6 +986,13 @@
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
 
+
+            <field name="delivery_billing_same_rules" type="list" default="1" label="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_INFLUENCE_RULES_LABEL" description="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_INFLUENCE_RULES_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES_SAME_VALUES</option>
+                <option value="2">COM_PHOCACART_YES_EMPTY_VALUES</option>
+            </field>
+
             <field name="dynamic_tax_rate" type="list" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_TAX_RATE_LABEL" description="COM_PHOCACART_FIELD_DYNAMIC_TAX_RATE_DESC">
                 <option value="1">COM_PHOCACART_ENABLE_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_ENABLE_CUSTOMER_SHIPPING_ADDRESS</option>

@@ -21,6 +21,7 @@ class PhocacartSearch
 	public $display_inner_icon 		    = 0;
 	public $placeholder_text 			= '';
 	public $display_active_parameters 	= 0;
+    public $load_component_media        = 1;
 
 
 	public function __construct() {}

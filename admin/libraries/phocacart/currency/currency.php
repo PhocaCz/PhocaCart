@@ -294,7 +294,7 @@ class PhocacartCurrency
 			}
 		}
 
-		return;
+		return '';
 
 	}
 

@@ -259,7 +259,12 @@ class PhocacartCompare
 
 	}
 
+	/* Deprecated method - typo will be removed*/
 	public function getComapareCountItems() {
+		return count($this->items);
+	}
+
+	public function getCompareCountItems() {
 		return count($this->items);
 	}
 }

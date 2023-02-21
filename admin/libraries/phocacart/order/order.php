@@ -551,7 +551,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = Text::_($row->getErrorMsg()) . $msgSuffix;
+            $msg = Text::_($row->getError()) . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -561,7 +561,7 @@ class PhocacartOrder
             if ($order_language == 0) {
                 $pLang->setLanguageBack($defaultLang);
             }
-            $msg = Text::_($row->getErrorMsg()) . $msgSuffix;
+            $msg = Text::_($row->getError()) . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }

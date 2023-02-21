@@ -1651,7 +1651,7 @@ h3.gridlist {
         flex: 1 1 auto;
     }
 }
-.ph-mod-product-scroller-swiper-wrapper .ph-item-box .ph-thumbnail-c .ph-item-content,
+.phProductScrollerModuleBox .ph-item-box .ph-thumbnail-c .ph-item-content,
 .ph-row-flex.grid .row-item .ph-item-box .ph-thumbnail-c .ph-item-content {
     height: 100%;
     display: flex;
@@ -2365,4 +2365,19 @@ img.ph-lazyload:not([src]) {
     top: 0px;
     left: 0px;
     margin: 5px;
+}
+
+
+/* Swiper */
+.phProductScrollerModuleBox .ph-item-box h3,
+.phProductScrollerModuleBox .ph-item-box .ph-stars-box .ph-stars,
+.phProductScrollerModuleBox .ph-item-box .ph-item-desc,
+.phProductScrollerModuleBox .ph-item-box .ph-category-price-box div {
+    text-align: center;
+    margin: 0 auto;
+}
+.phProductScrollerModuleBox .ph-item-box .ph-button-view-product-box {
+    float: none;
+    text-align: center;
+    margin: 0 auto;
 }

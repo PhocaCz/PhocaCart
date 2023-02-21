@@ -22,6 +22,8 @@ $classPS	= 'ph-standard';// class price suffix
 if (isset($d['discount']) && $d['discount']) {
 	$classPS	= 'ph-line-through';
 }
+
+
 ?>
 <div id="phItemPriceBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">

@@ -54,7 +54,7 @@ class JFormFieldPhocaFormCountry extends FormField
 
 		$s[] 	= '   var dataPost = {};';
 		$s[] 	= '   dataPost[\'countryid\'] = encodeURIComponent(value);';
-		$s[] 	= '   phRequestActive = jQuery.ajax({';
+		$s[] 	= '   let phRequestActive = jQuery.ajax({';
 		$s[] 	= '      url: url,';
 		$s[] 	= '      type:\'POST\',';
 		$s[] 	= '      data:dataPost,';

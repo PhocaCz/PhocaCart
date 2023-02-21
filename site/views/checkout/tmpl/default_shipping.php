@@ -235,9 +235,9 @@ if ($this->a->shippingnotused == 1) {
 				echo trim(implode("\n", $results));
 			}*/
 			if (!empty($results)) {
-				foreach ($results as $k => $v) {
-					if ($v != false && isset($v['content']) && $v['content'] != '') {
-						echo $v['content'];
+				foreach ($results as $k2 => $v2) {
+					if ($v2 != false && isset($v2['content']) && $v2['content'] != '') {
+						echo $v2['content'];
 					}
 				}
 			}

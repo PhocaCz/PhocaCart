@@ -14,26 +14,23 @@
 function phChangeAttributeType(typeView) {
 
 	typeView = typeof typeView !== 'undefined' ? '.phj' + typeView : '';
-
-
-	var phProductAttribute = typeView + '.phjProductAttribute';// Find all select boxes which should be transformed to color or image
-	var phCleanAttribute = typeView + '.phjCleanAttribute';// Clean previously transformed select boxes in case of ajax reload
+	let phProductAttribute = typeView + '.phjProductAttribute';// Find all select boxes which should be transformed to color or image
+	let phCleanAttribute = typeView + '.phjCleanAttribute';// Clean previously transformed select boxes in case of ajax reload
 
 	jQuery(phCleanAttribute).remove();
 
-
 	jQuery(phProductAttribute).each(function() {
 
-		var phClass = '';
-		var phClassId = '';
+		let phClass = '';
+		let phClassId = '';
 
-		var phSelectNameId	= '#phItemAttribute' + jQuery(this).data('attribute-id-name');
-		var phSelectNameIdT	= '#phItemHiddenAttribute' + jQuery(this).data('attribute-id-name');
-		var phSelectNameIdB	= '#phItemBoxAttribute' + jQuery(this).data('attribute-id-name');
-		var phType			= jQuery(this).data('attribute-type');// Type of attribute
-		var phTypeView		= jQuery(this).data('type-view');// Type of view, e.g. ItemQuickView is reloaded by ajax
-		var phTypeIcon 		= jQuery(this).data('type-icon');// Type of used icon library
-		var phRequired	 	= jQuery(this).data('required');// Type of used icon library
+		let phSelectNameId	= '#phItemAttribute' + jQuery(this).data('attribute-id-name');
+		let phSelectNameIdT	= '#phItemHiddenAttribute' + jQuery(this).data('attribute-id-name');
+		let phSelectNameIdB	= '#phItemBoxAttribute' + jQuery(this).data('attribute-id-name');
+		let phType			= jQuery(this).data('attribute-type');// Type of attribute
+		let phTypeView		= jQuery(this).data('type-view');// Type of view, e.g. ItemQuickView is reloaded by ajax
+		let phTypeIcon 		= jQuery(this).data('type-icon');// Type of used icon library
+		let phRequired	 	= jQuery(this).data('required');// Type of used icon library
 
 		if (phType == 3) {
 			phClass			= 'phSelectBoxImage';// Image
@@ -45,8 +42,8 @@ function phChangeAttributeType(typeView) {
 		if (phClass != '') {
 
 			phClassId			= phSelectNameIdT + ' .' + phClass;
-			var phSelectName 	= jQuery(phSelectNameId).attr('name');
-			var phHiddenEl 		= jQuery('<input type="hidden" name="'+ phSelectName +'">');
+			let phSelectName 	= jQuery(phSelectNameId).attr('name');
+			let phHiddenEl 		= jQuery('<input type="hidden" name="'+ phSelectName +'">');
 			phHiddenEl.val(jQuery(phSelectNameId).val());
 			phHiddenEl.insertAfter(jQuery(phSelectNameId));
 
@@ -66,15 +63,17 @@ function phChangeAttributeType(typeView) {
 				/* Do not display default value (empty value), can be set by clicking back from other value */
 				if (jQuery(this).val() != '') {
 
+					let phSBtn = '';
 					if (phType == 3) {
 						// Image
-						var phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'"><img src="'+ jQuery(this).data('image') +'" alt="'+ jQuery(this).text() +'" /></div>');
+						phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'"><img src="'+ jQuery(this).data('image') +'" alt="'+ jQuery(this).text() +'" /></div>');
 					} else if (phType == 2) {
 						// Color
-						var phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
+						phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
+						
 					}
 
-
+					
 					if(jQuery(this).is(':selected')) {
 						phSBtn.addClass('on');
 					}
@@ -92,7 +91,7 @@ function phChangeAttributeType(typeView) {
 
 				e.preventDefault();// Bootstrap modal (close and open again duplicates events)
 
-				var isActive = jQuery(this).hasClass('on');
+				let isActive = jQuery(this).hasClass('on');
 
 				if (isActive) {
 					
@@ -118,10 +117,10 @@ function phChangeAttributeType(typeView) {
 
 function phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2){
 
-	var phParams 	= Joomla.getOptions('phParamsPC');
-	var phVars 		= Joomla.getOptions('phVarsPC');
-	var phUrl 		= phVars['urlCheckoutChangeData'];
-    var phOptions 	= [];
+	const phParams 	= Joomla.getOptions('phParamsPC');
+	const phVars	= Joomla.getOptions('phVarsPC');
+	let phUrl 		= phVars['urlCheckoutChangeData'];
+    let phOptions 	= [];
     phOptions["id"] = phProductId;
     phOptions["id_item_price"] = "#phItemPriceBox" + phTypeView + phProductId;
 	phOptions["id_item_price_gift"] = "#phItemPriceGiftBox" + phTypeView + phProductId;
@@ -142,15 +141,14 @@ function phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2){
 	} else {
 		phOptions["class"] ='ph-category-data-box';// Category, Items
 	}
-	var phData 	= 'id='+ phOptions["id"] +'&'+ phDataA1 +'&'+ phDataA2 +'&'+'class='+ phOptions["class"] +'&'+'typeview='+ phOptions["view"];
+	let phData 	= 'id='+ phOptions["id"] +'&'+ phDataA1 +'&'+ phDataA2 +'&'+'class='+ phOptions["class"] +'&'+'typeview='+ phOptions["view"];
     phDoRequestMethods(phUrl, phData, phOptions);
 }
 
 function phSetAttributeUrl(phSetValueByUser) {
 
-
-	var phParams			= Joomla.getOptions('phParamsPC');
-	var phVars 				= Joomla.getOptions('phVarsPC');
+	const phParams	= Joomla.getOptions('phParamsPC');
+	const phVars	= Joomla.getOptions('phVarsPC');
 
 	if (phParams['dynamicChangeUrlAttributes'] != 1) {
 		return false;
@@ -160,19 +158,23 @@ function phSetAttributeUrl(phSetValueByUser) {
 		return false;
 	}
 
-	var phHash				= jQuery(location).attr('hash');
+	let phHash				= jQuery(location).attr('hash');
 	phHash					= phReplaceAll('#', '', phHash)
-	var phHashParams 		= jQuery.deparam(phHash);
-	var phProductAttribute 	= '.phjProductAttribute';
-	var phHashNew 			= '';
-	var phTypeView 			= '';
-	var phProductId 		= '';
+	let phHashParams 		= phUrlDeParam(phHash);// phocacartfilter.js //jQuery.deparam(phHash);
+	let phProductAttribute 	= '.phjProductAttribute';
+	let phHashNew 			= '';
+	let phTypeView 			= '';
+	let phProductId 		= '';
 
 	// Change base64 return url - add attribute suffix to the URL so when products will be added to cart without running ajax
 	// then it will be redirected back to the site with selected attribute
-	var attributeForm   = jQuery(phProductAttribute).closest("form");
-	var attributeFormReturn = attributeForm.find("input[name=return]");
-	var attributeFormReturnValue = Base64.decode(attributeFormReturn.val());
+	let attributeForm   = jQuery(phProductAttribute).closest("form");
+	let attributeFormReturn = attributeForm.find("input[name=return]");
+	let attributeFormReturnValue = '';
+	if (typeof attributeFormReturn.val() !== 'undefined' && attributeFormReturn.val() != '') {
+		console.log(attributeFormReturn.val());
+		attributeFormReturnValue = Base64.decode(attributeFormReturn.val());
+	}
 	
 
 	// Find all attributes in Item View
@@ -182,15 +184,12 @@ function phSetAttributeUrl(phSetValueByUser) {
 			phHashNew = phHashNew + '&';
 		}
 
-		var attributeId 	= this.id;
-		var attributeAlias 	= jQuery(this).data('alias');
-		var valueAlias 		= '';// One value for selectbox
-		var valuesAlias 	= '';// One or more values for checkbox
-		var phSelectNameIdT	= '#phItemHiddenAttribute' + jQuery(this).data('attribute-id-name');
+		let attributeId 	= this.id;
+		let attributeAlias 	= jQuery(this).data('alias');
+		let valueAlias 		= '';// One value for selectbox
+		let valuesAlias 	= '';// One or more values for checkbox
+		let phSelectNameIdT	= '#phItemHiddenAttribute' + jQuery(this).data('attribute-id-name');
 		
-		
-
-
 		if (phSetValueByUser == 1) {
 			// 1) Set by user
 
@@ -225,7 +224,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 
 				phHashNew = phHashNew + 'a[' + jQuery(this).data('alias') + ']=' + phHashParams.a[attributeAlias];
 
-				var arrayValues = phHashParams.a[attributeAlias].split(",");
+				let arrayValues = phHashParams.a[attributeAlias].split(",");
 
 				if (arrayValues !== undefined || arrayValues.length != 0) {
 
@@ -276,9 +275,9 @@ function phSetAttributeUrl(phSetValueByUser) {
 	if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
 		//Interactive change is disabled
 	} else {
-		var phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
-		var phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
-		var phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
+		let phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
+		let phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
+		let phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 	}
 
@@ -308,30 +307,28 @@ function phSetAttributeUrl(phSetValueByUser) {
 
 jQuery(document).ready(function() {
 
-
 	phChangeAttributeType();// Change select to color or image, change checkbox to color or image
 	phSetAttributeUrl(0);// Change URL (# attributes) or change attributes by URL at start
 
-
 	/* Interactive change - price, stock, ID (EAN, SKU, ...) */
-	var phSelectboxA            =  "select.phjProductAttribute";
-	var phSelectboxASelected	=  phSelectboxA + ":selected";
+	let phSelectboxA            =  "select.phjProductAttribute";
+	//let phSelectboxASelected	=  phSelectboxA + ":selected";
 	// Select box
 	jQuery(document).on('change', phSelectboxA, function(e){
 
 
 
-		var phParams = Joomla.getOptions('phParamsPC');
+		const phParams = Joomla.getOptions('phParamsPC');
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
 			return false;// Interactive Change is disabled
 		}
 
 		//jQuery(this).off("change");';
-		var phTypeView = jQuery(this).data('type-view');
-		var phProductId = jQuery(this).data('product-id');
-		var phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
-		var phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
-		var phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
+		let phTypeView = jQuery(this).data('type-view');
+		let phProductId = jQuery(this).data('product-id');
+		let phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
+		let phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
+		let phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
 
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);
@@ -341,10 +338,10 @@ jQuery(document).ready(function() {
 	/* CHECKBOXES */
 
 	/* Only design function - display icon instead of checkbox */
-	var phCheckboxA             =  ".ph-checkbox-attribute.phjProductAttribute";
+	let phCheckboxA             =  ".ph-checkbox-attribute.phjProductAttribute";
 	jQuery(document).on('click', phCheckboxA, function(e){
 
-		var phParams = Joomla.getOptions('phParamsPC');
+		const phParams = Joomla.getOptions('phParamsPC');
 		
 
 
@@ -357,23 +354,23 @@ jQuery(document).ready(function() {
 		}
 
 		 // If REQUIRED, don't allow to untick all checkboxes
-		 var phRequired = jQuery(this).data("required");
-		 var phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
-		 var phACheckedLength = jQuery(phCheckboxAInputChecked).length;
+		 let phRequired = jQuery(this).data("required");
+		 let phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
+		 let phACheckedLength = jQuery(phCheckboxAInputChecked).length;
 		 
 		 if (phRequired && phACheckedLength == 0) {
-			 var phThisLabel = jQuery(e.target).parent();//  checkboxes - colors, images
+			 let phThisLabel = jQuery(e.target).parent();//  checkboxes - colors, images
 			 phThisLabel.addClass("active");//  checkboxes - colors, images
 			 e.preventDefault();
 			 return false;
 		}
 		
-		var phCheckboxAInput =  "#" + jQuery(this).attr("id") + " input[type='checkbox']";
-		var allInputs = jQuery(phCheckboxAInput);
+		let phCheckboxAInput =  "#" + jQuery(this).attr("id") + " input[type='checkbox']";
+		let allInputs = jQuery(phCheckboxAInput);
 
 		if (allInputs.length > 0) {
 			allInputs.each(function(i) {
-				var phThisLabel = jQuery(this).parent();
+				let phThisLabel = jQuery(this).parent();
 				if (jQuery(this).is(':checked')) {
 
 					phThisLabel.addClass("active");// Checkboxes - colors, images
@@ -387,7 +384,7 @@ jQuery(document).ready(function() {
 	/* Interactive change */
 	jQuery(document).on('click', phCheckboxA, function(e){
 
-		var phParams = Joomla.getOptions('phParamsPC');
+		const phParams = Joomla.getOptions('phParamsPC');
 		
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {	
 			return;// Interactive Change is disabled
@@ -401,13 +398,11 @@ jQuery(document).ready(function() {
 			if (e.target.tagName.toUpperCase() === "SPAN" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
 		}
 
-		var phProductId = jQuery(this).data('product-id');
-        var phTypeView = jQuery(this).data('type-view');
-        var phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
-        var phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
-        var phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
-
-       
+		let phProductId = jQuery(this).data('product-id');
+        let phTypeView = jQuery(this).data('type-view');
+        let phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
+        let phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
+        let phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
 
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);
@@ -416,23 +411,25 @@ jQuery(document).ready(function() {
 
 	// Gift coupon
 	jQuery('.phAOGift').on('input', function() {
-		var phAOType = '.' + jQuery(this).data('type');
+		let phAOType = '.' + jQuery(this).data('type');
 
 
 		if (phAOType == '.phAOGiftType') {
 			
-			var title = jQuery(this).data('title');
+			let title = jQuery(this).data('title');
 			jQuery('.phAOGiftTitle').text(title);
-			var image = jQuery(this).data('image');
+			let image = jQuery(this).data('image');
 			jQuery('.phAOGiftImage').attr('src', image);
-			var date = jQuery(this).data('date');
+			let date = jQuery(this).data('date');
 			jQuery('.phAOGiftDate').text(date);
 			
-			var description = jQuery(this).data('description');
-			description = Base64.decode(description);
+			let description = jQuery(this).data('description');
+			if (description != '') {
+				description = Base64.decode(description);
+			}
 			jQuery('.phAOGiftDescription').html(description);
 
-			var className = jQuery(this).data('class-name');
+			let className = jQuery(this).data('class-name');
 			jQuery(phAOType).attr('class', 'phAOGiftType ph-gift-voucher-box ' + className);
 
 		} else {

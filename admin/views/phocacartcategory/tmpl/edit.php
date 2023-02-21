@@ -23,8 +23,9 @@ $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
 
 // phocacartcategory-form => adminForm
+// phocacart security stop loop
 $js = '
-var phRequestActive = null;
+let phRequestActive = null;
 
 function phCheckRequestStatus(i, task) {
 	i++;

@@ -29,7 +29,7 @@ $r     = $this->r;
 
 // phocacartitem-form ==> adminForm
 $js = '
-var phRequestActive = null;
+let phRequestActive = null;
 
 function phCheckRequestStatus(i, task) {
     i++;

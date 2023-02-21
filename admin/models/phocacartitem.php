@@ -255,6 +255,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$table->created = '0000-00-00 00:00:00';
 		}
 
+		if (!isset($table->modified) || $table->modified == '0' || $table->modified == '') {
+			$table->modified = '0000-00-00 00:00:00';
+		}
+
+
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}

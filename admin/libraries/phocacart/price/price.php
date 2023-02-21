@@ -24,6 +24,7 @@ class PhocacartPrice
     protected $price_prefix = '';
     protected $price_suffix = '';
     protected $exchange_rate = 1;
+    protected $currency_id = 1;
     private static $currency = array();
 
     public function __construct() {

@@ -16,6 +16,8 @@ use Joomla\CMS\Router\Route;
 
 class PhocaCartControllerCheckout extends FormController
 {
+    public $t;
+
     /*
      * Add product to cart
      */

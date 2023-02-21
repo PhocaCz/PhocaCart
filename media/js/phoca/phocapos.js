@@ -46,7 +46,7 @@ function phUpdateUrlParameter(param, value, urlChange) {
 /* Update input box after change */
 function phDoSubmitFormUpdateInputBox(sFormData, phUrlAjax) {
 
-	phRequest = jQuery.ajax({
+	jQuery.ajax({
 	   type: "POST",
 	   url: phUrlAjax,
 	   async: true,
@@ -69,7 +69,7 @@ function phDoSubmitFormUpdateCategoriesBox(sFormData, phUrlAjax) {
 		return false;
 	}
 
-	phRequest = jQuery.ajax({
+	jQuery.ajax({
 		type: "POST",
 		url: phUrlAjax,
 		async: true,
@@ -243,7 +243,7 @@ function phAjaxEditPos(sFormData, phUrlAjax, forcepageSuccess, forcepageError) {
 	var phDataInput = phPosCurrentData("main.input");
 	var phDataCats  = phPosCurrentData("main.categories");
 	var phDataCart 	= phPosCurrentData("main.cart", "json");
-	phRequest = jQuery.ajax({
+	jQuery.ajax({
 		type: "POST",
 		url: phUrlAjax,
 		async: true,
@@ -331,7 +331,6 @@ function phConfirm(submitForm, dataPost, txt) {
 
 	return false;
 }
-
 
 
 // ------
@@ -468,15 +467,15 @@ jQuery(document).ready(function(){
 		var posFilterCategory = phParams['posFilterCategory'];
 
 
-		
+
 
 		if (posFilterCategory == 2) {
 			// Multiple categories can be displayed - can be active
 			var phA = [];
-			
+
 			// DESIGN - Remove active from all categories and add only for selected
 			jQuery("label.phCheckBoxCategory").removeClass("active");
-			
+
 			jQuery("input.phPosCategoryCheckbox:checkbox:checked").each(function () {
 				phA.push(jQuery(this).val());
 				jQuery(this).parent("label").addClass("active");
@@ -486,12 +485,12 @@ jQuery(document).ready(function(){
 			// Only one category can be displayed
 			// Deselect all checkboxed except the one selected - can be active
 			var cValue = jQuery(this).val();
-			
+
 			// DESIGN Mark this category active
 			jQuery(this).parent().addClass("active");
 
 			jQuery("input.phPosCategoryCheckbox:checkbox:checked").each(function () {
-				
+
 				if (cValue != jQuery(this).val() ) {
 					jQuery(this).prop("checked", false);
 					jQuery(this).parent("label").removeClass("active");
@@ -550,7 +549,7 @@ jQuery(document).ready(function(){
 				// - 1 AND 4 PC PRINT FOR ALL DOCUMENTS EXCEPT 4 (Receipt) - Receipt will be printend by SERVER PRINT
 				if (phTypeCurrent == "4") {
 					var phUrlAjaxPrint = phAddSuffixToUrl(phUrlAjax, "id=" + phOrder + "&type=" + phTypeCurrent + "&pos=1&printserver=1");
-					phRequestPrint = jQuery.ajax({
+					jQuery.ajax({
 						type: "GET",
 						url: phUrlAjaxPrint,
 						async: true,
@@ -577,7 +576,7 @@ jQuery(document).ready(function(){
 
 		var phClass 	= "phType" + phType;
 		var phUrlAjax 	= phAddSuffixToUrl(phUrlAjax, "id=" + phOrder + "&type=" + phType + "&pos=1");
-			phRequest = jQuery.ajax({
+			jQuery.ajax({
 			type: "GET",
 			url: phUrlAjax,
 			async: true,

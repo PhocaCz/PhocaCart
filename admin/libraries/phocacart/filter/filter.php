@@ -25,9 +25,12 @@ class PhocacartFilter
     public $specifications = false;
     public $category = false;
 
-    public $enable_color_filter = false;
-    public $enable_image_filter = false;
-    public $image_style_image_filter = false;
+    public $enable_color_filter             = 0;
+    public $enable_image_filter             = 0;
+    public $image_style_image_filter        = 0;
+    public $enable_color_filter_spec	    = 0;
+    public $enable_image_filter_spec	    = 0;
+    public $image_style_image_filter_spec 	= 0;
 
     public $ordering_tag = 1;
     public $ordering_label = 1;
@@ -59,7 +62,9 @@ class PhocacartFilter
     public $limit_manufacturer_count = -1;
     public $display_manufacturer_count = 0;
 
-    public $check_available_products = 1;
+    public $check_available_products    = 1;
+    public $remove_parameters_cat		= 0;
+    public $load_component_media		= 1;
 
     public $ignore_zero_price = 0;
 

@@ -63,8 +63,8 @@ class PhocacartRenderStyle
         $s['c']['row']      = 'row';
         $s['c']['row-item'] = 'row-item';
 
-        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-1';
-        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-2 col-md-2';
+        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-2';
+        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-1 col-md-2';
         $s['c']['col.xs12.sm3.md3']   = 'col-sm-12 col-md-3 col-lg-3 col-xl-3';
         $s['c']['col.xs12.sm4.md4']   = 'col-sm-12 col-md-4 col-lg-4 col-xl-4';
         $s['c']['col.xs12.sm5.md5']   = 'col-12 col-sm-5 col-md-5';

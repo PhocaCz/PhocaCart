@@ -86,7 +86,7 @@ function phAddRowOptionParent(newRow, newHeader, attrid, url) {
 	data['task'] = 'gettoken';
 
 	phRowCountOptionBeforeAjax = phRowCountOption;/* AJAX returns the values after the phRowCountOption will be phRowCountOption++ in next rows*/
-	phRequestActiveToken = jQuery.ajax({
+	let phRequestActiveToken = jQuery.ajax({
 		url: url,
 		type: 'POST',
 	   	data: data,
@@ -117,7 +117,7 @@ function phRemoveOptionFolder(data, url) {
 
 
 
-	phRequestActiveToken = jQuery.ajax({
+	let phRequestActiveToken = jQuery.ajax({
 		url: url,
 		type: 'POST',
 	   	data: data,
@@ -299,7 +299,7 @@ function phRemoveRowPricehistory(id) {
 function phDoRequestWizardParent(url, s) {
 
 	var dataPost = {};
-	phRequestActive = jQuery.ajax({
+	let phRequestActive = jQuery.ajax({
 		url: url,
 		type:'POST',
 		data:dataPost,

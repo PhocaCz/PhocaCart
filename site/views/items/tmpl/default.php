@@ -397,6 +397,19 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 
 		$dL['icon']				= $icon;// Icons
+		// Additional class
+		$classAdditional = [];
+		if (PhocacartRenderFront::renderNewIcon($v->date, 1, 1)) {
+			$classAdditional[] = 'pc-status-new';
+		}
+		if (PhocacartRenderFront::renderHotIcon($v->sales, 1, 1)) {
+			$classAdditional[] = 'pc-status-hot';
+		}
+		if (PhocacartRenderFront::renderFeaturedIcon($v->featured, 1, 1)) {
+			$classAdditional[] = 'pc-status-featured';
+		}
+
+		$dL['class_additional'] = !empty($classAdditional) ? implode(' ', $classAdditional) : '';// Additional class
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
         $dL['item']             = $v;
 		//$dL['product_header'] .= '<div>SKU: '.$v->sku.'</div>';
