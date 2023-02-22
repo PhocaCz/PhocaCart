@@ -18,15 +18,37 @@ use Joomla\Utilities\ArrayHelper;
 abstract class PhocacartHtmlFeatured
 {
 
-	public static function featured($value = 0, $i = 0, $canChange = true)
+	public static function featured($value = 0, $i = 0, $canChange = true, $type = 'product')
 	{
 		HTMLHelper::_('bootstrap.tooltip');
 
 		// Array of image, task, title, action
-		$states	= array(
-			0	=> array('unfeatured',	'phocacartitems.featured',	'COM_PHOCACART_UNFEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_FEATURE'),
-			1	=> array('featured',	'phocacartitems.unfeatured',	'COM_PHOCACART_FEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_UNFEATURE'),
-		);
+
+        switch ($type){
+
+            case 'manufacturer':
+                $states	= array(
+                    0	=> array('unfeatured',	'phocacartmanufacturers.featured',	'COM_PHOCACART_UNFEATURED_MANUFACTURER',	'COM_PHOCACART_TOGGLE_TO_FEATURE_MANUFACTURER'),
+                    1	=> array('featured',	'phocacartmanufacturers.unfeatured',	'COM_PHOCACART_FEATURED_MANUFACTURER',	'COM_PHOCACART_TOGGLE_TO_UNFEATURE_MANUFACTURER'),
+                );
+            break;
+            case 'category':
+                $states	= array(
+                    0	=> array('unfeatured',	'phocacartcategories.featured',	'COM_PHOCACART_UNFEATURED_CATEGORY',	'COM_PHOCACART_TOGGLE_TO_FEATURE_CATEGORY'),
+                    1	=> array('featured',	'phocacartcategories.unfeatured',	'COM_PHOCACART_FEATURED_CATEGORY',	'COM_PHOCACART_TOGGLE_TO_UNFEATURE_CATEGORY'),
+                );
+            break;
+
+            case 'product':
+            default:
+                $states	= array(
+                    0	=> array('unfeatured',	'phocacartitems.featured',	'COM_PHOCACART_UNFEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_FEATURE'),
+                    1	=> array('featured',	'phocacartitems.unfeatured',	'COM_PHOCACART_FEATURED_PRODUCT',	'COM_PHOCACART_TOGGLE_TO_UNFEATURE'),
+                );
+            break;
+        }
+
+
 		$state	= ArrayHelper::getValue($states, (int) $value, $states[1]);
 		//$icon	= $state[0];
 

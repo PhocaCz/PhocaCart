@@ -39,15 +39,15 @@ foreach ($d['items'] as $k => $v) {
 
 
     $output .= '<li>';
-    $output .= '<label class="dropdown-item ph-checkbox-container"><input class="'.$d['s']['c']['inputbox.checkbox'].'" type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'.$v->title.$count.'<span class="ph-checkbox-checkmark"></span></label>';
+    $output .= '<label class="'.$d['s']['c']['dropdown-item'].' ph-checkbox-container"><input class="'.$d['s']['c']['inputbox.checkbox'].'" type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'.$v->title.$count.'<span class="ph-checkbox-checkmark"></span></label>';
     $output .= '</li>';
 
 }
 
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
-?><span class="dropdown filter-<?php echo $dParamAttr; ?>">
-  <button class="btn btn-outline-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><?php echo $title ?></button>
-  <ul class="dropdown-menu">
+?><span class="<?php echo $d['s']['c']['dropdown'] ?> filter-<?php echo $dParamAttr; ?>">
+  <button class="<?php echo $d['s']['c']['btn.btn-outline-secondary'] ?> <?php echo $d['s']['c']['dropdown-toggle'] ?>" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><?php echo $title ?></button>
+  <ul <?php echo $d['s']['a']['dropdown'] ?> class="<?php echo $d['s']['c']['dropdown-menu'] ?>">
 		<?php echo $output ?>
 	</ul>
 </span>

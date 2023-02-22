@@ -50,9 +50,9 @@ foreach ($d['items'] as $k => $v) {
 }
 
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
-?><span class="dropdown filter-<?php echo $dParamAttr; ?>">
-  <button class="btn btn-outline-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><?php echo $title ?></button>
-  <div class="dropdown-menu px-3 py-3 ph-panel-body-color ph-mod-color-box">
+?><span class="<?php echo $d['s']['c']['dropdown'] ?> filter-<?php echo $dParamAttr; ?>">
+  <button class="<?php echo $d['s']['c']['btn.btn-outline-secondary'] ?> <?php echo $d['s']['c']['dropdown-toggle'] ?>" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><?php echo $title ?></button>
+  <div <?php echo $d['s']['a']['dropdown'] ?> class="<?php echo $d['s']['c']['dropdown-menu'] ?> <?php echo $d['s']['c']['px-3'] ?> <?php echo $d['s']['c']['py-3'] ?> ph-panel-body-color ph-mod-color-box">
 		<?php echo $output ?>
 	</div>
 </span>

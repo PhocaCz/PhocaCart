@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
+
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocacartManufacturer extends PhocaCartCpControllerPhocaCartCommon {
 

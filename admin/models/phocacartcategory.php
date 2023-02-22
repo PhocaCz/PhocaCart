@@ -952,5 +952,89 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
         parent::preprocessForm($form, $data, $group);
     }
+
+
+	public function featured($pks, $value = 0) {
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		ArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		//$table = $this->getTable('PhocacartCategoryFeatured', 'Table');
+
+
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+						->update($db->quoteName('#__phocacart_categories'))
+						->set('featured = ' . (int) $value)
+						->where('id IN (' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$db->execute();
+
+			/*if ((int) $value == 0)
+			{
+				// Adjust the mapping table.
+				// Clear the existing features settings.
+				$query = $db->getQuery(true)
+							->delete($db->quoteName('#__phocacart_category_featured'))
+							->where('product_id IN (' . implode(',', $pks) . ')');
+				$db->setQuery($query);
+				$db->execute();
+			}
+			else
+			{
+				// first, we find out which of our new featured articles are already featured.
+				$query = $db->getQuery(true)
+					->select('f.product_id')
+					->from('#__phocacart_category_featured AS f')
+					->where('product_id IN (' . implode(',', $pks) . ')');
+				//echo $query;
+				$db->setQuery($query);
+
+				$old_featured = $db->loadColumn();
+
+				// we diff the arrays to get a list of the articles that are newly featured
+				$new_featured = array_diff($pks, $old_featured);
+
+				// Featuring.
+				$tuples = array();
+				foreach ($new_featured as $pk)
+				{
+					$tuples[] = $pk . ', 0';
+				}
+				if (count($tuples))
+				{
+					$db = $this->getDbo();
+					$columns = array('product_id', 'ordering');
+					$query = $db->getQuery(true)
+						->insert($db->quoteName('#__phocacart_category_featured'))
+						->columns($db->quoteName($columns))
+						->values($tuples);
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}*/
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		//$table->reorder();
+
+		$this->cleanCache();
+
+		return true;
+	}
+
 }
 ?>

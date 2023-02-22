@@ -84,7 +84,7 @@ echo $r->groupHeader($this->form, $formArray);
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('title_long', 'image', 'icon_class', 'parent_id', 'type', 'ordering', 'access', 'group', 'title_feed', 'type_feed');
+$formArray = array ('title_long', 'image', 'icon_class', 'parent_id', 'type', 'featured', 'ordering', 'access', 'group', 'title_feed', 'type_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);

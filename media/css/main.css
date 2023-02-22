@@ -2369,6 +2369,13 @@ img.ph-lazyload:not([src]) {
 
 
 /* Swiper */
+.phBrandsModuleBox .ph-item-content,
+.phBrandsModuleBox .ph-item-box h3,
+.phBrandsModuleBox .ph-item-box .ph-stars-box .ph-stars,
+.phBrandsModuleBox .ph-item-box .ph-item-desc,
+.phBrandsModuleBox .ph-item-box .ph-category-price-box div,
+
+.phProductScrollerModuleBox .ph-item-content,
 .phProductScrollerModuleBox .ph-item-box h3,
 .phProductScrollerModuleBox .ph-item-box .ph-stars-box .ph-stars,
 .phProductScrollerModuleBox .ph-item-box .ph-item-desc,
@@ -2376,6 +2383,7 @@ img.ph-lazyload:not([src]) {
     text-align: center;
     margin: 0 auto;
 }
+.phBrandsModuleBox .ph-item-box .ph-button-view-product-box,
 .phProductScrollerModuleBox .ph-item-box .ph-button-view-product-box {
     float: none;
     text-align: center;

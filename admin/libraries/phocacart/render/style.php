@@ -199,6 +199,15 @@ class PhocacartRenderStyle
         $s['c']['alert-close']   = 'btn-close';
 
 
+        $s['c']['dropdown']             = 'dropdown';
+        $s['c']['dropdown-toggle']      = 'dropdown-toggle';
+        $s['c']['dropdown-menu']        = 'dropdown-menu';
+        $s['c']['dropdown-item']        = 'dropdown-item';
+        $s['c']['btn.btn-outline-secondary']   = 'btn btn-outline-secondary';
+        $s['c']['px-3']                 = 'px-3';
+        $s['c']['py-3']                 = 'py-3';
+
+
         // ===============
         // ATTRIBUTES - Default
         // ===============
@@ -208,6 +217,7 @@ class PhocacartRenderStyle
         $s['a']['accordion']             = '';
         $s['a']['alert']                 = ' role="alert"';
         $s['a']['alert-close']           = ' data-bs-dismiss="alert"';
+        $s['a']['dropdown']              = '';
 
 
         switch ($theme) {
@@ -277,6 +287,7 @@ class PhocacartRenderStyle
                 $s['c']['btn.btn-success.btn-sm']   = 'uk-button uk-button-success uk-button-small';// not exist
                 $s['c']['btn.btn-warning.btn-sm']   = 'uk-button uk-button-warning uk-button-small';// not exist
                 $s['c']['btn.btn-success.btn-lg']   = 'uk-button uk-button-success uk-button-large';// not exist
+                $s['c']['btn.btn-outline-secondary']= 'uk-button uk-button-secondary';
                 /*
                 $s['c']['pull-left']		        = 'ph-pull-left';
                 $s['c']['pull-right']		        = 'ph-pull-right';
@@ -359,6 +370,16 @@ class PhocacartRenderStyle
                 $s['c']['alert-close']   = 'uk-alert-close';
 
 
+                $s['c']['dropdown']             = 'uk-dropdown-box';
+                $s['c']['dropdown-toggle']      = 'uk-dropdown-toggle';
+                $s['c']['dropdown-menu']        = 'uk-dropdown';
+                $s['c']['dropdown-item']        = 'uk-dropdown-item';
+
+                //$s['c']['px-3']                 = 'px-3';
+                //$s['c']['py-3']                 = 'py-3';
+
+
+
                 // ===============
                 // ATTRIBUTES - UIkit
                 // ===============
@@ -369,6 +390,8 @@ class PhocacartRenderStyle
                 $s['a']['accordion']             = ' uk-accordion="multiple: true"';
                 $s['a']['alert']                 = ' uk-alert';
                 $s['a']['alert-close']           = ' uk-close';
+                $s['a']['dropdown']              = ' uk-dropdown';
+                //$s['a']['dropdown']               = 'uk-dropdown="mode: click"';
 
             break;
 

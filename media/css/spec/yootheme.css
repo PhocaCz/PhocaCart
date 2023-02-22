@@ -202,3 +202,10 @@ img {
   }
 
 
+.ph-filter-box-horizontal .uk-dropdown-box .uk-form-group.row {
+    margin-bottom: 0.5em !important;
+}
+
+.ph-filter-box-horizontal .uk-dropdown-box li {
+    list-style-type: none;
+}

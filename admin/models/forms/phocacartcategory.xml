@@ -26,6 +26,11 @@
             <option value="2">COM_PHOCACART_POS_ONLY</option>
         </field>
 
+        <field name="featured" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FEATURED_LABEL" description="COM_PHOCACART_FIELD_FEATURED_CATEGORY_DESC" default="0">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+        </field>
+
         <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
