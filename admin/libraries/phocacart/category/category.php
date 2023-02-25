@@ -18,6 +18,11 @@ jimport('joomla.application.component.model');
 
 final class PhocacartCategory
 {
+  public const TYPE_COMMON = 0;
+  public const TYPE_SHOP_ONLY = 1;
+  public const TYPE_POS_ONLY = 2;
+
+  /** @var array $categoriesCache */
 	private static $categoriesCache = null;
 	private static $categoryA = array();
 	private static $categoryF = array();
@@ -28,9 +33,10 @@ final class PhocacartCategory
 			$show_text =  $text . $key->text;
 
 			if ($key->parentid == $id && $currentId != $id && $currentId != $key->value) {
-				$tree[$key->value] 			= new CMSObject();
-				$tree[$key->value]->text 	= $show_text;
-				$tree[$key->value]->value 	= $key->value;
+				$tree[$key->value] = (object)[
+          'text' => $show_text,
+          'value' => $key->value,
+        ];
 				$tree = self::CategoryTreeOption($data, $tree, $key->value, $show_text . " - ", $currentId);
 			}
 		}
@@ -38,8 +44,8 @@ final class PhocacartCategory
 		return $tree;
 	}
 
-	public static function filterCategory($query, $active = NULL, $frontend = NULL, $onChange = TRUE, $fullTree = NULL ) {
-
+	public static function filterCategory($query, $active = null, $frontend = null, $onChange = true, $fullTree = null )
+  {
 		$db	= Factory::getDBO();
 
 		$form = 'adminForm';
@@ -121,13 +127,6 @@ final class PhocacartCategory
 			$db->setQuery('SELECT a.title, a.alias, a.id, a.parent_id FROM #__phocacart_categories AS a ORDER BY a.ordering');
 			$categories = $db->loadObjectList('id');
 
-/*			array_walk($categories, function($category) use ($categories) {
-				$parentId = $category->id;
-				$category->subcategories = array_filter($categories, function($category) use ($parentId) {
-					return $category->parent_id == $parentId;
-				});
-			});*/
-
 			self::$categoriesCache = $categories;
 		}
 	}
@@ -135,11 +134,13 @@ final class PhocacartCategory
 	public static function getCategoryById($id)
 	{
 		self::loadCategoriesCache();
+
 		return self::$categoriesCache[(int)$id] ?? null;
 	}
 
 	public static function getChildren($id) {
 		self::loadCategoriesCache();
+
 		return array_filter(self::$categoriesCache, function($category) use ($id) {
 			return $category->parent_id == $id;
 		});
@@ -147,7 +148,7 @@ final class PhocacartCategory
 
 	public static function getPath($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '')
 	{
-		if( empty(self::$categoryA[$id])) {
+		if( empty(self::$categoryP[$id])) {
 			self::$categoryP[$id]	= self::getPathTree($path, $id, $parent_id, $title, $alias);
 		}
 		return self::$categoryP[$id];
@@ -178,7 +179,7 @@ final class PhocacartCategory
 
 	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
 
-		if( empty(self::$categoryA[$id])) {
+		if( empty(self::$categoryP[$id])) {
 			self::$categoryP[$id]	= self::getPathTreeRouter($path, $id, $parent_id, $title, $alias);
 		}
 		return self::$categoryP[$id];
@@ -231,36 +232,17 @@ final class PhocacartCategory
 
 	public static function nestedToUl($data, $currentCatid = 0) {
 		$result = [];
+
 		if ($data) {
 			$result[] = '<ul>';
 			foreach ($data as $v) {
-				$link 		= Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
-        //$link 		= Route::_('index.php');
+				$link = Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
 
-				// Current Category is selected
-				if ($currentCatid == $v['id']) {
-          $result[] =
-            '<li data-jstree=\'{"opened":true,"selected":true}\' >' .
-            '<a href="'.$link.'">' . $v['title']. '</a>' .
-            self::nestedToUl($v['children'], $currentCatid) .
-            '</li>';
-					/*$result[] = sprintf(
-						'<li data-jstree=\'{"opened":true,"selected":true}\' >%s%s</li>',
-						'<a href="'.$link.'">' . $v['title']. '</a>',
-						self::nestedToUl($v['children'], $currentCatid)
-					);*/
-				} else {
-          $result[] =
-            '<li>' .
-            '<a href="'.$link.'">' . $v['title']. '</a>' .
-            self::nestedToUl($v['children'], $currentCatid) .
-            '</li>';
-					/*$result[] = sprintf(
-						'<li>%s%s</li>',
-						'<a href="'.$link.'">' . $v['title']. '</a>',
-						self::nestedToUl($v['children'], $currentCatid)
-					);*/
-				}
+        $result[] =
+          '<li' . ($currentCatid == $v['id'] ? ' data-jstree=\'{"opened":true,"selected":true}\'' : '') . '>' .
+          '<a href="'.$link.'">' . $v['title']. '</a>' .
+          self::nestedToUl($v['children'], $currentCatid) .
+          '</li>';
 			}
 			$result[] = '</ul>';
 		}
@@ -268,47 +250,34 @@ final class PhocacartCategory
 		return implode("\n", $result);
 	}
 
-	public static function nestedToUlSimple($data, $currentCatid = 0) {
-		$result = array();
+	public static function nestedToUlSimple($data, $currentCatid = 0): string {
+    $result = [];
 
-		if (!empty($data) && count($data) > 0) {
+		if ($data) {
 			$result[] = '<ul>';
-			foreach ($data as $k => $v) {
-				$link 		= Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
-
-				// Current Category is selected
-				if ($currentCatid == $v['id']) {
-					$result[] = sprintf(
-						'<li class="ph-active" >%s%s</li>',
-						'<a href="'.$link.'">' . $v['title']. '</a>',
-						self::nestedToUlSimple($v['children'], $currentCatid)
-					);
-				} else {
-					$result[] = sprintf(
-						'<li>%s%s</li>',
-						'<a href="'.$link.'">' . $v['title']. '</a>',
-						self::nestedToUlSimple($v['children'], $currentCatid)
-					);
-				}
+			foreach ($data as $v) {
+				$link = Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
+        $result[] =
+          '<li' . ($currentCatid == $v['id'] ? ' class="ph-active"' : '') . '>' .
+          '<a href="'.$link.'">' . $v['title']. '</a>' .
+          self::nestedToUlSimple($v['children'], $currentCatid) .
+          '</li>';
 			}
 			$result[] = '</ul>';
 		}
 
-		return implode("\n", $result);
-	}
+    return implode("\n", $result);
+  }
 
 	public static function nestedToCheckBox($data, $d, $currentCatid = 0, &$active = 0, $forceCategoryId = 0) {
+		$s = PhocacartRenderStyle::getStyles();
+		$result = [];
 
-
-		$s                      = PhocacartRenderStyle::getStyles();
-
-		$result = array();
-		if (!empty($data) && count($data) > 0) {
+		if ($data) {
 			$result[] = '<ul class="ph-filter-module-category-tree">';
-			foreach ($data as $k => $v) {
-
+			foreach ($data as $v) {
 				$checked 	= '';
-				$value		= htmlspecialchars($v['alias']);
+				$value = htmlspecialchars($v['alias']);
 				if (isset($d['nrinalias']) && $d['nrinalias'] == 1) {
 					$value 		= (int)$v['id'] .'-'. htmlspecialchars($v['alias']);
 				}
@@ -343,15 +312,11 @@ final class PhocacartCategory
 				$jsSet = '';
 
 				if (isset($d['forcecategory']['idalias']) && $d['forcecategory']['idalias']  != '') {
-
 					// Category View - force the category parameter if set in parameters
 					$jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1,  \'text\', 0, 1, 1);'; // ADD IS FIXED ( use "text" as formType - it cannot by managed by checkbox, it is fixed - always 1 - does not depends on checkbox, it is fixed 1
 				}
 
-
-
 				$jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\',\''.$d['uniquevalue'].'\', 0, 1);';// ADD OR REMOVE
-
 
 				$result[] = '<li><div class="'.$s['c']['controls'].'">';
 				$result[] = '<label class="ph-checkbox-container"><input class="'.$s['c']['inputbox.checkbox'].'" type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'. $icon . $v['title'].$count.'<span class="ph-checkbox-checkmark"></span></label>';
@@ -364,12 +329,45 @@ final class PhocacartCategory
 		return implode("\n", $result);
 	}
 
-	public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '', $format = 'js') {
+  /**
+   * old syntax public static function getCategoryTreeFormat($ordering = 1, $display = '', $hide = '', $type = [self::TYPE_COMMON, self::TYPE_SHOP_ONLY], $lang = '', $format = 'js')
+   *
+   * @param $params
+   * @return mixed|string
+   */
+  public static function getCategoryTreeFormat($params = [])
+  {
+    if (!is_array($params)) {
+      @trigger_error(
+        'Using separate parameters is deprecated, use array params instead.',
+        E_USER_DEPRECATED
+      );
 
-		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide. 'l'. $lang);
+      $args = func_get_args();
+      $params = [
+        'ordering' => $args[0] ?? 1,
+        'display' => $args[1] ?? null,
+        'hide' => $args[2] ?? null,
+        'type' => $args[3] ?? [self::TYPE_COMMON, self::TYPE_SHOP_ONLY],
+        'lang' => $args[4] ?? null,
+        'format' => $args[5] ?? 'js',
+      ];
+    }
+
+    $params = array_merge([
+      'ordering' => 1,
+      'display' => null, // comma separetd list of displayed category ids
+      'hide' => null, // comma separetd list of hidden category ids
+      'type' => [self::TYPE_COMMON, self::TYPE_SHOP_ONLY], // Category type filter - Common, Shop only, POS only
+      'lang' => null, // language
+      'limitCount' => -1, // only categories with certain products count
+      'featured' => null, // null -> all categories, true -> only featured, false -> only not featured
+      'format' => 'js', // output format
+    ], $params);
+
+    $cis = md5(serialize($params));
 		if( empty(self::$categoryF[$cis])) {
-			/* phocacart import('phocacart.ordering.ordering');*/
-			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
+			$itemOrdering 	= PhocacartOrdering::getOrderingText($params['ordering'],1);
 
 			if ($itemOrdering != '') {
 				$itemOrdering = 'c.parent_id, '. $itemOrdering;
@@ -384,26 +382,30 @@ final class PhocacartCategory
 			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
 			$wheres[] 		= " c.published = 1";
 
-			if ($lang != '' && $lang != '*') {
-				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
+			if ($params['lang'] && $params['lang'] != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $params['lang']);
 			}
 
-			if (!empty($type) && is_array($type)) {
-				$wheres[] = " c.type IN (".implode(',', $type).")";
+			if (!empty($params['type']) && is_array($params['type'])) {
+				$wheres[] = " c.type IN (".implode(',', $params['type']).")";
 			}
 
-			if ($display != '') {
-				$wheres[] = " c.id IN (".$display.")";
+			if ($params['display']) {
+				$wheres[] = " c.id IN (" . $params['display'] . ")";
 			}
 
-			if ($hide != '') {
-				$wheres[] = " c.id NOT IN (".$hide.")";
+			if ($params['hide']) {
+				$wheres[] = " c.id NOT IN (" . $params['hide'] . ")";
 			}
 
-			$columns		= 'c.id, c.title, c.alias, c.parent_id';
-			$groupsFull		= $columns;
-			$groupsFast		= 'c.id';
-			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+      if ($params['featured'] !== null) {
+        $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
+      }
+
+			$columns = 'c.id, c.title, c.alias, c.parent_id';
+			$groupsFull = $columns;
+			$groupsFast = 'c.id';
+			$groups = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 			$query = 'SELECT c.id, c.ordering, c.title, c.alias, c.parent_id'
 			. ' FROM #__phocacart_categories AS c'
@@ -413,135 +415,164 @@ final class PhocacartCategory
 			. ' ORDER BY '.$itemOrdering;
 			$db->setQuery( $query );
 
-			$items 						= $db->loadAssocList();
-			$tree 						= self::categoryTree($items);
+			$items = $db->loadAssocList();
+			$tree = self::categoryTree($items);
 
-			$currentCatid				= self::getActiveCategoryId();
-			if ($format == 'simple') {
-				self::$categoryF[$cis] = self::nestedToUlSimple($tree, $currentCatid);
-			} else {
-				self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);
-			}
+			$currentCatid = self::getActiveCategoryId();
+      switch ($params['format']) {
+        case 'simple':
+          self::$categoryF[$cis] = self::nestedToUlSimple($tree, $currentCatid);
+          break;
+        default:
+          self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);
+          break;
+      }
 		}
 
 		return self::$categoryF[$cis];
 	}
 
-	public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '', $limitCount = -1) {
 
-		$cis = str_replace(',', '', 'o'.$ordering .'d'. $display .'h'. $hide . 'l'. $lang . 'c'.$limitCount);
-		if( empty(self::$categoryA[$cis])) {
-			/*phocacart import('phocacart.ordering.ordering');*/
-			$itemOrdering 	= PhocacartOrdering::getOrderingText($ordering,1);
+  /**
+   * old syntax public static function getCategoryTreeArray($ordering = 1, $display = '', $hide = '', $type = array(0,1), $lang = '', $limitCount = -1)
+   *
+   * @param array $params
+   * @return array|int|mixed
+   */
+  public static function getCategoryTreeArray($params = [])
+  {
+    if (!is_array($params)) {
+      @trigger_error(
+        'Using separate parameters is deprecated, use array params instead.',
+        E_USER_DEPRECATED
+      );
+
+      $args = func_get_args();
+      $params = [
+        'ordering' => $args[0] ?? 1,
+        'display' => $args[1] ?? null,
+        'hide' => $args[2] ?? null,
+        'type' => $args[3] ?? [self::TYPE_COMMON, self::TYPE_SHOP_ONLY],
+        'lang' => $args[4] ?? null,
+        'limitCount' => $args[5] ?? -1,
+      ];
+    }
+
+    $params = array_merge([
+      'ordering' => 1,
+      'display' => null, // comma separetd list of displayed category ids
+      'hide' => null, // comma separetd list of hidden category ids
+      'type' => [self::TYPE_COMMON, self::TYPE_SHOP_ONLY], // Category type filter - Common, Shop only, POS only
+      'lang' => null, // language
+      'limitCount' => -1, // only categories with certain products count
+      'featured' => null, // null -> all categories, true -> only featured, false -> only not featured
+    ], $params);
+
+    $cis = md5(serialize($params));
+		if(empty(self::$categoryA[$cis])) {
+			$itemOrdering 	= PhocacartOrdering::getOrderingText($params['ordering'],1);
 
 			if ($itemOrdering != '') {
 				$itemOrdering = 'c.parent_id, '. $itemOrdering;
 			}
 
 			$db 			= Factory::getDBO();
-			$wheres			= array();
 			$user 			= PhocacartUser::getUser();
 			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
 			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
-			$wheres[] 		= " c.access IN (".$userLevels.")";
-			$wheres[] 		= " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
-			$wheres[] 		= " c.published = 1";
+      $wheres			= [
+        ' c.access IN (' . $userLevels . ')',
+        ' (gc.group_id IN (' . $userGroups . ') OR gc.group_id IS NULL)',
+        ' c.published = 1'
+      ];
 
-			if ($lang != '' && $lang != '*') {
-				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
-			}
-
-			if (!empty($type) && is_array($type)) {
-				$wheres[] = " c.type IN (".implode(',', $type).")";
+			if ($params['lang'] && $params['lang'] != '*') {
+				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $params['lang']);
 			}
 
-			if ($display != '') {
-				$wheres[] = " c.id IN (".$display.")";
-			}
-			if ($hide != '') {
-				$wheres[] = " c.id NOT IN (".$hide.")";
+			if ($params['type'] && is_array($params['type'])) {
+				$wheres[] = ' c.type IN ('.implode(',', $params['type']) . ')';
 			}
 
-			if ((int)$limitCount > -1) {
-				$wheres[] = " c.count_products > ".(int)$limitCount;
+			if ($params['display']) {
+				$wheres[] = ' c.id IN (' . $params['display'] . ')';
 			}
+
+			if ($params['hide'] != '') {
+				$wheres[] = ' c.id NOT IN (' . $params['hide'] . ')';
+			}
+
+			if ((int)$params['limitCount'] > -1) {
+				$wheres[] = ' c.count_products > ' . (int)$params['limitCount'];
+			}
+
+      if ($params['featured'] !== null) {
+        $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
+      }
 
 			$query = 'SELECT c.id, c.title, c.alias, c.parent_id, c.icon_class, c.image, c.description, c.count_products'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			. ' WHERE ' . implode( ' AND ', $wheres )
-			. ' ORDER BY '.$itemOrdering;
+			. ' ORDER BY ' . $itemOrdering;
+
 			$db->setQuery( $query );
-			$items 						= $db->loadAssocList();
+			$items = $db->loadAssocList();
+
 			self::$categoryA[$cis]	= self::categoryTree($items);
 		}
+
 		return self::$categoryA[$cis];
 	}
 
-	public static function getActiveCategoryId() {
+	public static function getActiveCategoryId()
+  {
+    $app = Factory::getApplication();
+    $option = $app->input->get('option', '', 'string');
+    $view = $app->input->get('view', '', 'string');
+    $catid = $app->input->get('catid', '', 'int'); // ID in items view is category id
+    $id = $app->input->get('id', '', 'int');
+    $c = $app->input->get('c', '', 'string');// Category ID in items view - filter options (does not work with ajax)
 
-		$app			= Factory::getApplication();
-		$option			= $app->input->get( 'option', '', 'string' );
-		$view			= $app->input->get( 'view', '', 'string' );
-		$catid			= $app->input->get( 'catid', '', 'int' ); // ID in items view is category id
-		$id				= $app->input->get( 'id', '', 'int' );
-		$c				= $app->input->get( 'c', '', 'string' );// Category ID in items view - filter options (does not work with ajax)
-
-		if ($option == 'com_phocacart' && ($view == 'items' || $view == 'category')) {
-
-			if ((int)$id > 0) {
-				return $id;
-			}
+		if ($option == 'com_phocacart' && ($view == 'items' || $view == 'category') && (int)$id > 0) {
+  		return $id;
 		}
-		if ($option == 'com_phocacart' && $view == 'item') {
 
-			if ((int)$catid > 0) {
-				return $catid;
-			}
+		if ($option == 'com_phocacart' && $view == 'item' && (int)$catid > 0) {
+  		return $catid;
 		}
 
 		// If in filtering only one category is selected, make active the selected category in e.g. tree (not working in ajax)
-		if ($option == 'com_phocacart' && $view == 'items') {
-
-			if ($c != '') {
-				$cA = explode(',', $c);
-				if (isset($cA[0]) && count($cA) == 1) {
-					return (int)$cA[0];
-				}
-
-			}
+		if ($option == 'com_phocacart' && $view == 'items' && $c != '') {
+      $cA = explode(',', $c);
+      if (isset($cA[0]) && count($cA) == 1) {
+        return (int)$cA[0];
+      }
 		}
 
 		return 0;
 	}
 
-    public static function getActiveCategories($items, $ordering) {
+  public static function getActiveCategories($items, $ordering)
+  {
+    if (!$items)
+      return [];
 
-		$db     = Factory::getDbo();
-	    $o      = array();
-        $wheres = array();
-        $ordering = PhocacartOrdering::getOrderingText($ordering, 1);//c
-		if ($items != '') {
-			$wheres[] = 'c.id IN (' . $items . ')';
-			$q = 'SELECT DISTINCT c.title, CONCAT(c.id, \'-\', c.alias) AS alias, \'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
-				. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
-				. ' GROUP BY c.alias, c.title'
-				. ' ORDER BY ' . $ordering;
+    $db     = Factory::getDbo();
+    $ordering = PhocacartOrdering::getOrderingText($ordering, 1);//c
+    $q = 'SELECT DISTINCT c.title, CONCAT(c.id, \'-\', c.alias) AS alias, \'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
+      . 'c.id IN (' . $items . ')'
+      . ' GROUP BY c.alias, c.title'
+      . ' ORDER BY ' . $ordering;
 
-			$db->setQuery($q);
-			$o = $db->loadAssocList();
-		}
-		return $o;
-    }
+    $db->setQuery($q);
+    return $db->loadAssocList();
+  }
 
 	public static function getCategoryTitleById($id) {
 		$category = self::getCategoryById($id);
+
 		return $category ? $category->title : null;
 	}
 
-
-  public final function __clone() {
-		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
-		return false;
-	}
 }
