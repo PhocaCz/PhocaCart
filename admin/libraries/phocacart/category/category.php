@@ -116,17 +116,17 @@ final class PhocacartCategory
 
 	private static function loadCategoriesCache(): void
 	{
-		if(self::$categoriesCache === null) {
+		if (self::$categoriesCache === null) {
 			$db = Factory::getDBO();
 			$db->setQuery('SELECT a.title, a.alias, a.id, a.parent_id FROM #__phocacart_categories AS a ORDER BY a.ordering');
 			$categories = $db->loadObjectList('id');
 
-			array_walk($categories, function($category) use ($categories) {
+/*			array_walk($categories, function($category) use ($categories) {
 				$parentId = $category->id;
 				$category->subcategories = array_filter($categories, function($category) use ($parentId) {
 					return $category->parent_id == $parentId;
 				});
-			});
+			});*/
 
 			self::$categoriesCache = $categories;
 		}
@@ -175,8 +175,6 @@ final class PhocacartCategory
 		}
 		return $path;
 	}
-
-
 
 	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
 
@@ -232,26 +230,36 @@ final class PhocacartCategory
 	}
 
 	public static function nestedToUl($data, $currentCatid = 0) {
-		$result = array();
-
-		if (!empty($data) && count($data) > 0) {
+		$result = [];
+		if ($data) {
 			$result[] = '<ul>';
-			foreach ($data as $k => $v) {
+			foreach ($data as $v) {
 				$link 		= Route::_(PhocacartRoute::getCategoryRoute($v['id'], $v['alias']));
+        //$link 		= Route::_('index.php');
 
 				// Current Category is selected
 				if ($currentCatid == $v['id']) {
-					$result[] = sprintf(
+          $result[] =
+            '<li data-jstree=\'{"opened":true,"selected":true}\' >' .
+            '<a href="'.$link.'">' . $v['title']. '</a>' .
+            self::nestedToUl($v['children'], $currentCatid) .
+            '</li>';
+					/*$result[] = sprintf(
 						'<li data-jstree=\'{"opened":true,"selected":true}\' >%s%s</li>',
 						'<a href="'.$link.'">' . $v['title']. '</a>',
 						self::nestedToUl($v['children'], $currentCatid)
-					);
+					);*/
 				} else {
-					$result[] = sprintf(
+          $result[] =
+            '<li>' .
+            '<a href="'.$link.'">' . $v['title']. '</a>' .
+            self::nestedToUl($v['children'], $currentCatid) .
+            '</li>';
+					/*$result[] = sprintf(
 						'<li>%s%s</li>',
 						'<a href="'.$link.'">' . $v['title']. '</a>',
 						self::nestedToUl($v['children'], $currentCatid)
-					);
+					);*/
 				}
 			}
 			$result[] = '</ul>';
@@ -406,7 +414,6 @@ final class PhocacartCategory
 			$db->setQuery( $query );
 
 			$items 						= $db->loadAssocList();
-
 			$tree 						= self::categoryTree($items);
 
 			$currentCatid				= self::getActiveCategoryId();
@@ -415,7 +422,6 @@ final class PhocacartCategory
 			} else {
 				self::$categoryF[$cis] = self::nestedToUl($tree, $currentCatid);
 			}
-
 		}
 
 		return self::$categoryF[$cis];

@@ -453,44 +453,31 @@ class PhocacartCategoryMultiple
 	}
 
 
-	public static function getCategoryChildrenString($id, $children = '') {
-
-        $db 	= Factory::getDBO();
-        $query 	= "SELECT id FROM #__phocacart_categories WHERE parent_id = ".(int)$id;
-        $db->setQuery($query);
-        $categories = $db->loadColumn();
-
-        if (!empty($categories)) {
-            foreach ($categories as $k => $v) {
-
-                if ($children != '') {
-                    $children .= ',';
-                }
-                $children .= $v;
-                $children = self::getCategoryChildrenString($v, $children);
-
-            }
+  public static function getCategoryChildrenString($id, $children = '') {
+    $categories = PhocaCartCategory::getChildren($id);
+    if ($categories) {
+      foreach ($categories as $v) {
+        if ($children != '') {
+          $children .= ',';
         }
 
-        return $children;
-
-
+        $children .= $v->id;
+        $children = self::getCategoryChildrenString($v->id, $children);
+      }
     }
 
-    public static function getCategoryChildrenArray($id) {
+    return $children;
+  }
 
-        $db 	= Factory::getDBO();
-        $query 	= "SELECT id FROM #__phocacart_categories WHERE parent_id = ".(int)$id;
-        $db->setQuery($query);
-        $categories = $db->loadColumn();
+  public static function getCategoryChildrenArray($id) {
+    $categories = PhocaCartCategory::getChildren($id);
+    $children = [];
 
-        $children = array();
-
-        if (!empty($categories)) {
-            foreach ($categories as $k => $v) {
-                $children[$v] = self::getCategoryChildrenArray($v);
-            }
-        }
-        return $children;
+    if ($categories) {
+      foreach ($categories as $v) {
+        $children[$v->id] = self::getCategoryChildrenArray($v->id);
+      }
     }
+    return $children;
+  }
 }
