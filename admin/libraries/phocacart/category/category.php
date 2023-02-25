@@ -23,8 +23,7 @@ final class PhocacartCategory
 	private static $categoryF = array();
 	private static $categoryP = array();
 
-	public static function CategoryTreeOption($data, $tree, $id=0, $text='', $currentId = 0) {
-
+	public static function CategoryTreeOption($data, $tree, $id = 0, $text = '', $currentId = 0) {
 		foreach ($data as $key) {
 			$show_text =  $text . $key->text;
 
@@ -32,10 +31,11 @@ final class PhocacartCategory
 				$tree[$key->value] 			= new CMSObject();
 				$tree[$key->value]->text 	= $show_text;
 				$tree[$key->value]->value 	= $key->value;
-				$tree = self::CategoryTreeOption($data, $tree, $key->value, $show_text . " - ", $currentId );
+				$tree = self::CategoryTreeOption($data, $tree, $key->value, $show_text . " - ", $currentId);
 			}
 		}
-		return($tree);
+
+		return $tree;
 	}
 
 	public static function filterCategory($query, $active = NULL, $frontend = NULL, $onChange = TRUE, $fullTree = NULL ) {
@@ -57,41 +57,29 @@ final class PhocacartCategory
 		$db->setQuery($query);
 		$catData = $db->loadObjectList();
 
-
-
 		if ($fullTree) {
-
 			// Start - remove in case there is a memory problem
-			$tree = array();
-			$text = '';
+			self::loadCategoriesCache();
+			$catDataAll = self::$categoriesCache;
+			array_walk($catDataAll, function($category) {
+				$category->text = $category->title;
+				$category->value = $category->id;
+				$category->parentid = $category->parent_id;
+			});
 
-			$queryAll = ' SELECT cc.id AS value, cc.title AS text, cc.parent_id as parentid'
-					.' FROM #__phocacart_categories AS cc'
-					.' ORDER BY cc.ordering';
-			$db->setQuery($queryAll);
-			$catDataAll 		= $db->loadObjectList();
-
-			$catDataTree	= PhocacartCategory::CategoryTreeOption($catDataAll, $tree, 0, $text, -1);
+			$catDataTree	= PhocacartCategory::CategoryTreeOption($catDataAll, [], 0, '', -1);
 
 			$catDataTreeRights = array();
-			/*foreach ($catData as $k => $v) {
-				foreach ($catDataTree as $k2 => $v2) {
-					if ($v->value == $v2->value) {
-						$catDataTreeRights[$k]->text 	= $v2->text;
-						$catDataTreeRights[$k]->value = $v2->value;
-					}
-				}
-			}*/
 
 			foreach ($catDataTree as $k => $v) {
-                foreach ($catData as $k2 => $v2) {
-                   if ($v->value == $v2->value) {
+				foreach ($catData as $v2) {
+					if ($v->value == $v2->value) {
 						$catDataTreeRights[$k] = new StdClass();
 						$catDataTreeRights[$k]->text  = $v->text;
 						$catDataTreeRights[$k]->value = $v->value;
-                   }
-                }
-             }
+					}
+				}
+			}
 
 			$catDataTree = $catDataTreeRights;
 			// End - remove in case there is a memory problem
@@ -111,23 +99,19 @@ final class PhocacartCategory
 
 	public static function options($type = 0)
 	{
-		$db = Factory::getDBO();
+		self::loadCategoriesCache();
 
-       //build the list of categories
-		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id'
-		. ' FROM #__phocacart_categories AS a'
-		. ' WHERE a.published = 1'
-		. ' ORDER BY a.ordering';
-		$db->setQuery( $query );
-		$items = $db->loadObjectList();
+		$items = array_filter(self::$categoriesCache, function($category) {
+			return !!$category->published;
+		});
 
-		$catId	= -1;
+		array_walk($items, function($category) {
+			$category->text = $category->title;
+			$category->value = $category->id;
+			$category->parentid = $category->parent_id;
+		});
 
-		$tree = array();
-		$text = '';
-		$tree = PhocacartCategory::CategoryTreeOption($items, $tree, 0, $text, $catId);
-
-		return $tree;
+		return PhocacartCategory::CategoryTreeOption($items, [], 0, '', -1);
 	}
 
 	private static function loadCategoriesCache(): void
