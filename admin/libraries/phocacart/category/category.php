@@ -18,15 +18,10 @@ jimport('joomla.application.component.model');
 
 final class PhocacartCategory
 {
-
+	private static $categoriesCache = null;
 	private static $categoryA = array();
 	private static $categoryF = array();
 	private static $categoryP = array();
-	private static $categoryI = array();
-	private static $categoryTitle = array();
-
-	public function __construct() {}
-
 
 	public static function CategoryTreeOption($data, $tree, $id=0, $text='', $currentId = 0) {
 
@@ -98,9 +93,6 @@ final class PhocacartCategory
                 }
              }
 
-
-
-			$catDataTree = array();
 			$catDataTree = $catDataTreeRights;
 			// End - remove in case there is a memory problem
 
@@ -119,12 +111,10 @@ final class PhocacartCategory
 
 	public static function options($type = 0)
 	{
-
-
 		$db = Factory::getDBO();
 
        //build the list of categories
-		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
+		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id'
 		. ' FROM #__phocacart_categories AS a'
 		. ' WHERE a.published = 1'
 		. ' ORDER BY a.ordering';
@@ -133,62 +123,46 @@ final class PhocacartCategory
 
 		$catId	= -1;
 
-		$javascript 	= 'class="form-control" size="1" onchange="submitform( );"';
-
 		$tree = array();
 		$text = '';
 		$tree = PhocacartCategory::CategoryTreeOption($items, $tree, 0, $text, $catId);
 
 		return $tree;
-
 	}
 
-	public static function getCategoryById($id) {
-
-		$id = (int)$id;
-		if( empty(self::$categoryI[$id])) {
-
+	private static function loadCategoriesCache(): void
+	{
+		if(self::$categoriesCache === null) {
 			$db = Factory::getDBO();
-			$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
-			. ' FROM #__phocacart_categories AS a'
-			. ' WHERE a.id = '.(int)$id
-			. ' ORDER BY a.ordering'
-			. ' LIMIT 1';
-			$db->setQuery( $query );
+			$db->setQuery('SELECT a.title, a.alias, a.id, a.parent_id FROM #__phocacart_categories AS a ORDER BY a.ordering');
+			$categories = $db->loadObjectList('id');
 
-			$category = $db->loadObject();
-			if (!empty($category) && isset($category->id) && (int)$category->id > 0) {
+			array_walk($categories, function($category) use ($categories) {
+				$parentId = $category->id;
+				$category->subcategories = array_filter($categories, function($category) use ($parentId) {
+					return $category->parent_id == $parentId;
+				});
+			});
 
-				$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
-				. ' FROM #__phocacart_categories AS a'
-				. ' WHERE a.parent_id = '.(int)$id
-				. ' ORDER BY a.ordering';
-				//. ' LIMIT 1'; We need all subcategories
-				$db->setQuery( $query );
-				$subcategories = $db->loadObjectList();
-				if (!empty($subcategories)) {
-					$category->subcategories = $subcategories;
-				}
-			}
-
-			self::$categoryI[$id] = $category;
+			self::$categoriesCache = $categories;
 		}
-		return self::$categoryI[$id];
+	}
+
+	public static function getCategoryById($id)
+	{
+		self::loadCategoriesCache();
+		return self::$categoriesCache[(int)$id] ?? null;
 	}
 
 	public static function getChildren($id) {
-		$db = Factory::getDBO();
-		$query = 'SELECT a.title, a.alias, a.id'
-		. ' FROM #__phocacart_categories AS a'
-		. ' WHERE a.parent_id = '.(int)$id
-		. ' ORDER BY a.ordering';
-		$db->setQuery( $query );
-		$categories = $db->loadObjectList();
-		return $categories;
+		self::loadCategoriesCache();
+		return array_filter(self::$categoriesCache, function($category) use ($id) {
+			return $category->parent_id == $id;
+		});
 	}
 
-	public static function getPath($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
-
+	public static function getPath($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '')
+	{
 		if( empty(self::$categoryA[$id])) {
 			self::$categoryP[$id]	= self::getPathTree($path, $id, $parent_id, $title, $alias);
 		}
@@ -196,7 +170,6 @@ final class PhocacartCategory
 	}
 
 	public static function getPathTree($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
-
 		static $iCT = 0;
 
 		if ((int)$id > 0) {
@@ -208,33 +181,12 @@ final class PhocacartCategory
 		}
 
 		if ((int)$parent_id > 0) {
-			$db = Factory::getDBO();
-			$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
-			. ' FROM #__phocacart_categories AS a'
-			. ' WHERE a.id = '.(int)$parent_id
-			. ' ORDER BY a.ordering';
-			$db->setQuery( $query );
-			$category = $db->loadObject();
+			$category = self::getCategoryById($parent_id);
 
-			if (isset($category->id)) {
-				$id 	= (int)$category->id;
-				$title 	= '';
-				if (isset($category->title)) {
-					$title = $category->title;
-				}
-
-				$alias 	= '';
-				if (isset($category->alias)) {
-					$alias = $category->alias;
-				}
-
-				$parent_id = 0;
-				if (isset($category->parent_id)) {
-					$parent_id = (int)$category->parent_id;
-				}
+			if ($category) {
 				$iCT++;
 
-				$path = self::getPathTree($path, (int)$id, (int)$parent_id, $title, $alias);
+				$path = self::getPathTree($path, $category->id, $category->parent_id, $category->title, $category->alias);
 			}
 		}
 		return $path;
@@ -251,48 +203,18 @@ final class PhocacartCategory
 	}
 
 	public static function getPathTreeRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
-
-		static $iCT = 0;
-
 		if ((int)$id > 0) {
-			/*$path[$iCT]['id'] = (int)$id;
-			$path[$iCT]['catid'] = (int)$parent_id;
-			$path[$iCT]['parent_id'] = (int)$parent_id;
-			$path[$iCT]['title'] = $title;
-			$path[$iCT]['alias'] = $alias;*/
 			$path[$id] = (int)$id. ':'. $alias;
 		}
 
 		if ((int)$parent_id > 0) {
-			$db = Factory::getDBO();
-			$query = 'SELECT a.title, a.alias, a.id, a.parent_id'
-			. ' FROM #__phocacart_categories AS a'
-			. ' WHERE a.id = '.(int)$parent_id
-			. ' ORDER BY a.ordering';
-			$db->setQuery( $query );
-			$category = $db->loadObject();
+			$category = self::getCategoryById($parent_id);
 
-			if (isset($category->id)) {
-				$id 	= (int)$category->id;
-				$title 	= '';
-				if (isset($category->title)) {
-					$title = $category->title;
-				}
-
-				$alias 	= '';
-				if (isset($category->alias)) {
-					$alias = $category->alias;
-				}
-
-				$parent_id = 0;
-				if (isset($category->parent_id)) {
-					$parent_id = (int)$category->parent_id;
-				}
-				$iCT++;
-
-				$path = self::getPathTreeRouter($path, (int)$id, (int)$parent_id, $title, $alias);
+			if ($category) {
+				$path = self::getPathTreeRouter($path, $category->id, $category->parent_id, $category->title, $category->alias);
 			}
 		}
+
 		return $path;
 	}
 
@@ -481,6 +403,7 @@ final class PhocacartCategory
 			if ($display != '') {
 				$wheres[] = " c.id IN (".$display.")";
 			}
+
 			if ($hide != '') {
 				$wheres[] = " c.id NOT IN (".$hide.")";
 			}
@@ -622,29 +545,13 @@ final class PhocacartCategory
     }
 
 	public static function getCategoryTitleById($id) {
-
-		$id = (int)$id;
-		if( empty(self::$categoryTitle[$id])) {
-
-			$db = Factory::getDBO();
-			$query = 'SELECT a.title'
-			. ' FROM #__phocacart_categories AS a'
-			. ' WHERE a.id = '.(int)$id
-			. ' ORDER BY a.ordering'
-			. ' LIMIT 1';
-			$db->setQuery( $query );
-
-			$category = $db->loadObject();
-
-			self::$categoryTitle[$id] = $category;
-		}
-		return self::$categoryTitle[$id];
+		$category = self::getCategoryById($id);
+		return $category ? $category->title : null;
 	}
 
 
-    public final function __clone() {
+  public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
 		return false;
 	}
 }
-?>
