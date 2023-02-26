@@ -27,6 +27,7 @@ final class PhocacartCategory
 	private static $categoryA = array();
 	private static $categoryF = array();
 	private static $categoryP = array();
+  private static $categoryPR = array();
 
 	public static function CategoryTreeOption($data, $tree, $id = 0, $text = '', $currentId = 0) {
 		foreach ($data as $key) {
@@ -178,11 +179,10 @@ final class PhocacartCategory
 	}
 
 	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
-
-		if( empty(self::$categoryP[$id])) {
-			self::$categoryP[$id]	= self::getPathTreeRouter($path, $id, $parent_id, $title, $alias);
+		if( empty(self::$categoryPR[$id])) {
+			self::$categoryPR[$id]	= self::getPathTreeRouter($path, $id, $parent_id, $title, $alias);
 		}
-		return self::$categoryP[$id];
+		return self::$categoryPR[$id];
 	}
 
 	public static function getPathTreeRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
