@@ -27,7 +27,14 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 	}
 
 	public function getCategoriesList($displaySubcategories = 0) {
-		if (empty($this->categories)) {
+		if ($this->categories === null) {
+			$this->categories = [];
+
+			$app = Factory::getApplication();
+			$params = $app->getParams();
+			if(!$params->get('show_categories', 1))
+				return $this->categories;
+
 			$categoriesOrdering = $this->getCategoryOrdering();
 
 			if ((int)$displaySubcategories > 0) {
@@ -77,7 +84,6 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		$userGroups 		= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 		$app				= Factory::getApplication();
 		$params 			= $app->getParams();
-
 
 		$display_categories = $params->get('display_categories', '');
 		$hide_categories 	= $params->get('hide_categories', '');
@@ -185,4 +191,4 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		return $this->category_ordering;
 	}
 }
-?>
+
