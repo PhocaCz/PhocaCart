@@ -201,6 +201,7 @@ class PhocaCartViewCheckout extends HtmlView
                 if ($this->a->addressedit == 0) {
                     $this->data                   = $this->get('DataGuest');
                     $this->t['dataaddressoutput'] = PhocacartUser::getAddressDataOutput($this->data, $this->fields['array'], $this->u, 1);
+
                 }
                 //Some required field is not filled out
                 if (isset($this->t['dataaddressoutput']['filled']) && $this->t['dataaddressoutput']['filled'] == 1) {
@@ -304,7 +305,6 @@ class PhocaCartViewCheckout extends HtmlView
                 //- $shipping					= new PhocacartShipping();
                 //$shipping->setType();
                 $total = $this->cart->getTotal();
-
 
                 $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 

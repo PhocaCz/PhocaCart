@@ -18,6 +18,10 @@ class JFormFieldPhocaTax extends FormField
 	protected $type 		= 'PhocaTax';
 
 	protected function getInput() {
+
+		$lang 		= Factory::getLanguage();
+		$lang->load('com_phocacart');
+
 		$db = Factory::getDBO();
 
 		$query = 'SELECT a.title AS text, a.id AS value'

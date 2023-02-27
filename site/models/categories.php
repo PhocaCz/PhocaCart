@@ -27,7 +27,15 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 	}
 
 	public function getCategoriesList($displaySubcategories = 0) {
-		if (empty($this->categories)) {
+		if ($this->categories === null) {
+			$this->categories = [];
+
+			$app = Factory::getApplication();
+			$params = $app->getParams();
+			if(!$params->get('show_categories', 1)) {
+                return $this->categories;
+            }
+
 			$categoriesOrdering = $this->getCategoryOrdering();
 
 			if ((int)$displaySubcategories > 0) {

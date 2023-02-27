@@ -62,7 +62,7 @@ class PhocaCartViewAccount extends HtmlView
 		//$lang->load('com_users.sys');
 		$lang->load('com_users');
 
-
+		$this->t['datauser'] = [];
 		if ((int)$this->u->id > 0) {
 			// Checkout Model
 			jimport('joomla.application.component.model');
@@ -74,7 +74,7 @@ class PhocaCartViewAccount extends HtmlView
 			$this->data2				= $modelCheckout->getData();
 			$this->form2				= $modelCheckout->getForm();
 			$this->t['dataaddressform']	= PhocacartUser::getAddressDataForm($this->form2, $this->fields2['array'], $this->u);
-
+			$this->t['datauser']		= $this->data2;
 
 			// USER PROFILE - USER MODULE
 		/*	jimport('joomla.application.component.model');
@@ -111,6 +111,7 @@ class PhocaCartViewAccount extends HtmlView
 			$this->otpConfig        = $modelUsers->getOtpConfig();
 			$this->data->tags 		= new TagsHelper;
 			$this->data->tags->getItemTags('com_users.user.', $this->data->id);
+
 
 			// REWARD POINTS
 			$reward = new PhocacartReward();

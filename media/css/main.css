@@ -2389,3 +2389,51 @@ img.ph-lazyload:not([src]) {
     text-align: center;
     margin: 0 auto;
 }
+
+
+.ph-msg-error-box {
+    background: var(--ph-error);
+    color: #fff;
+    padding: 1em;
+    margin: 1em auto;
+    display: block;
+}
+
+.ph-msg-success-box {
+    background: var(--ph-success);
+    color: #fff;
+    padding: 1em;
+    margin: 1em auto;
+    display: block;
+}
+
+.ph-msg-info-box {
+    background: var(--ph-info);
+    color: #fff;
+    padding: 1em;
+    margin: 1em auto;
+    display: block;
+}
+
+.ph-msg-warning-box {
+    background: var(--ph-warning);
+    color: #fff;
+    padding: 1em;
+    margin: 1em auto;
+    display: block;
+}
+
+.ph-msg-info-box .pc-si,
+.ph-msg-warning-box .pc-si,
+.ph-msg-error-box .pc-si,
+.ph-msg-success-box .pc-si {
+    fill: #fff;
+    stroke: #fff;
+    margin-right: 0.5em;
+}
+
+.ph-msg-info-box > p,
+.ph-msg-info-box > div {
+    display: inline-block;
+    margin: 0;
+}

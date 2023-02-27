@@ -13,6 +13,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
+
+use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
@@ -91,9 +93,9 @@ class PhocacartProduct
 
 
         if (!$skip['tax']) {
-            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
+            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
         } else {
-            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
+            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
         }
 
 
@@ -126,7 +128,7 @@ class PhocacartProduct
         $groupsFull = implode(',', $col) .',pc.ordering, c.id, c.title, c.alias, m.id, m.title, m.alias';
 
         if (!$skip['tax']) {
-            $groupsFull .= ', t.id, t.tax_rate, t.calculation_type, t.title';
+            $groupsFull .= ', t.id, t.tax_rate, t.calculation_type, t.title, t.tax_hide';
         }
 
 
@@ -165,11 +167,33 @@ class PhocacartProduct
 
         // Change TAX based on country or region
         if (!empty($product)) {
-            $taxChangedA = PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalculationtype, $product->taxtitle);
-            $product->taxrate = $taxChangedA['taxrate'];
-            $product->taxtitle = $taxChangedA['taxtitle'];
-            $product->taxcountryid = $taxChangedA['taxcountryid'];
-            $product->taxregionid = $taxChangedA['taxregionid'];
+
+            // Is tax active?
+            $tax = PhocacartTax::getTaxById($product->taxid);
+
+            if (isset($product->taxhide)) {
+				$registry = new Registry;
+				$registry->loadString($product->taxhide);
+				$product->taxhide = $registry->toArray();
+			}
+
+            if ($tax) {
+                $taxChangedA           = PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalculationtype, $product->taxtitle, $product->taxhide);
+                $product->taxid        = $taxChangedA['taxid'];
+                $product->taxrate      = $taxChangedA['taxrate'];
+                $product->taxtitle     = $taxChangedA['taxtitle'];
+                $product->taxcountryid = $taxChangedA['taxcountryid'];
+                $product->taxregionid  = $taxChangedA['taxregionid'];
+                $product->taxpluginid  = $taxChangedA['taxpluginid'];
+                $product->taxhide      = $taxChangedA['taxhide'];
+            } else {
+                $product->taxid        = 0;
+                $product->taxrate      = 0;
+                $product->taxtitle     = '';
+                $product->taxcountryid = 0;
+                $product->taxregionid  = 0;
+                $product->taxpluginid  = 0;
+            }
         }
 
         return $product;
@@ -642,7 +666,7 @@ class PhocacartProduct
             $groupsFast = 'a.id';
         } else {
             $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
-             . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, m.title AS manufacturertitle,'
+             . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, t.tax_hide as taxhide, m.title AS manufacturertitle,'
                 . ' AVG(r.rating) AS rating,'
                 . ' at.required AS attribute_required';
             $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
@@ -1586,7 +1610,7 @@ class PhocacartProduct
 
             $where = (count($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '');
 
-            $q = ' SELECT a.*, c.id as category_id, c.title as category_title, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle';
+            $q = ' SELECT a.*, c.id as category_id, c.title as category_title, t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide';
 
             // No Images, Categories, Attributes, Specifications here
             $q .= ', CONCAT_WS(":", t.id, t.alias) AS tax';

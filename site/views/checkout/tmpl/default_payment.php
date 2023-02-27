@@ -125,7 +125,7 @@ if ($this->a->paymentnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 
-		$priceI = $price->getPriceItemsPayment($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1);
+		$priceI = $price->getPriceItemsPayment($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, 'PAYMENT_', $v->taxhide);
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
 		echo '<div class="'.$this->s['c']['controls'] .'">';

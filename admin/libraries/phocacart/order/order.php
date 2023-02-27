@@ -76,12 +76,42 @@ class PhocacartOrder
         }
 
 
+        // ORDER
+        $d = array();
+
+
         $uri    = Uri::getInstance();
         $action = $uri->toString();
         $app    = Factory::getApplication();
 
         $user  = PhocacartUser::getUser();
         $guest = PhocacartUserGuestuser::getGuestUser();
+
+        if ($guest && (int)$user->id < 1) {
+            $address = PhocacartUserGuestuser::getUserAddressGuest();
+        } else {
+            $address = PhocacartUser::getUserAddress($user->id);
+        }
+
+        // VAT can be changed by plugin, this needs to be done before calculation start
+        // 1. Check the VAT by external service if it is enabled in plugin
+        if (!empty($address[0])) {
+            // Event user e.g. check valid VAT and store information about it
+            $pluginLayout = PluginHelper::importPlugin('pct');
+            if ($pluginLayout) {
+                $eventData = [];
+                Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveOrder', array('com_phocacart.order', &$address[0], $eventData));
+            }
+        }
+        // 2. Use stored information and change the VAT (before calculation)
+
+
+        // 3. Store information about the VAT check to order table.
+        if (isset($address[0]->params_user)) {
+            $d['params_user'] = $address[0]->params_user;
+        }
+
+
         $cart  = new PhocacartCartRendercheckout();
         $cart->setInstance(3);//order
         $cart->setType($this->type);
@@ -268,8 +298,7 @@ class PhocacartOrder
 
         //JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
-        // ORDER
-        $d = array();
+
         if ($guest) {
             $d['user_id'] = 0;
         } else {
@@ -367,6 +396,8 @@ class PhocacartOrder
 
         $d['params_payment']         = json_encode($paymentParams);
 
+
+
         $d['coupon_id']              = (int)$coupon['id'];
         $d['currency_id']            = (int)$currency->id;
         $d['currency_code']          = $currency->code;
@@ -399,11 +430,8 @@ class PhocacartOrder
         $shippingClass->setType($this->type);
         $paymentClass = new PhocacartPayment();
         $paymentClass->setType($this->type);
-        if ($guest) {
-            $address = PhocacartUserGuestuser::getUserAddressGuest();
-        } else {
-            $address = PhocacartUser::getUserAddress($user->id);
-        }
+
+
 
         $dataAddress             = array();
         $dataAddress['bcountry'] = isset($address[0]->country) && (int)$address[0]->country > 0 ? (int)$address[0]->country : 0;
@@ -743,7 +771,7 @@ class PhocacartOrder
                     $d2['amount']             = $total[1]['netto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 1;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -758,7 +786,7 @@ class PhocacartOrder
                     $d2['amount']             = '-' . $total[5]['dnetto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 1;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -771,7 +799,7 @@ class PhocacartOrder
                     $d2['amount']             = '-' . $total[5]['dbrutto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 0;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -786,7 +814,7 @@ class PhocacartOrder
                     $d2['amount']             = '-' . $total[2]['dnetto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 1;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -799,7 +827,7 @@ class PhocacartOrder
                     $d2['amount']             = '-' . $total[2]['dbrutto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 0;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -827,7 +855,7 @@ class PhocacartOrder
                     $d2['amount']             = '-' . $total[3]['dnetto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 1;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -840,7 +868,7 @@ class PhocacartOrder
                     $d2['amount']             = '-' . $total[3]['dbrutto'];
                     $d2['ordering']           = $ordering;
                     $d2['published']          = 0;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -874,7 +902,7 @@ class PhocacartOrder
                     $d2['amount']    = '-' . $total[4]['dnetto'];
                     $d2['ordering']  = $ordering;
                     $d2['published'] = 1;
-                    $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -892,7 +920,7 @@ class PhocacartOrder
                     $d2['amount']    = '-' . $total[4]['dbrutto'];
                     $d2['ordering']  = $ordering;
                     $d2['published'] = 0;
-                    $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -910,8 +938,18 @@ class PhocacartOrder
                 }*/
 
                 if (!empty($total[0]['tax'])) {
+
+
                     foreach ($total[0]['tax'] as $k => $v) {
-                        if ($v['tax'] > 0) {
+
+                        if (isset($v['taxid']) && $v['taxid'] > 0) {
+
+                            $v['taxcalc']      = (int)$d['tax_calculation'];
+                            $displayPriceItems = PhocaCartPrice::displayPriceItems($v, 'order');
+                            $published = 0;
+                            if ($displayPriceItems['tax'] == 1) {
+                                $published = 1;
+                            }
                             $d2['title']              = $v['title'];
                             $d2['title_lang']         = $v['title'];
                             $d2['title_lang_suffix']  = '';
@@ -919,14 +957,16 @@ class PhocacartOrder
                             $d2['type']               = 'tax';
                             $d2['amount']             = $v['tax'];
                             $d2['ordering']           = $ordering;
-                            $d2['published']          = 1;
+                            $d2['published']          = $published;
                             //$d2['item_id']	        = (int)$k;// ID (Type) of VAT (10% or 20%)
                             $taxKeyA         = PhocacartTax::getTaxIdsFromKey($k);
                             $d2['item_id']   = (int)$taxKeyA['id'];
                             $d2['item_id_c'] = (int)$taxKeyA['countryid'];
                             $d2['item_id_r'] = (int)$taxKeyA['regionid'];
+                            $d2['item_id_p'] = (int)$taxKeyA['pluginid'];
                             $this->saveOrderTotal($d2);
                             $ordering++;
+
                         }
                     }
                 }
@@ -938,6 +978,16 @@ class PhocacartOrder
 
                 if (!empty($shippingC)) {
 
+                    $published = 1;
+                    if (isset($shippingC['taxtxt']) && isset($shippingC['tax']) && $shippingC['tax'] > 0) {
+                        $shippingC['taxcalc']      = (int)$d['tax_calculation'];
+                        $displayPriceItems = PhocaCartPrice::displayPriceItems($shippingC, 'order');
+                        $published = 0;
+                        if ($displayPriceItems['tax'] == 1) {
+                            $published = 1;
+                        }
+                    }
+
                     if (isset($shippingC['nettotxt']) && isset($shippingC['netto'])) {
                         $d2['title']              = $shippingC['title'] . ' - ' . $shippingC['nettotxt'];
                         $d2['title_lang']         = $shippingC['title'];
@@ -946,12 +996,14 @@ class PhocacartOrder
                         $d2['type']               = 'snetto';
                         $d2['amount']             = $shippingC['netto'];
                         $d2['ordering']           = $ordering;
-                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
+                        $d2['published']          = $published;
                         $this->saveOrderTotal($d2);
                         $ordering++;
                     }
 
                     if (isset($shippingC['taxtxt']) && isset($shippingC['tax']) && $shippingC['tax'] > 0) {
+
                         $d2['title']              = $shippingC['title'] . ' - ' . $shippingC['taxtxt'];
                         $d2['title_lang']         = isset($shippingC['title']) && $shippingC['title'] != '' ? $shippingC['title'] : $shippingC['tax_title_lang'];
                         $d2['title_lang_suffix']  = $shippingC['tax_title_suffix'];
@@ -962,8 +1014,10 @@ class PhocacartOrder
                         $d2['item_id']   = (int)$taxKeyA['id'];
                         $d2['item_id_c'] = (int)$taxKeyA['countryid'];
                         $d2['item_id_r'] = (int)$taxKeyA['regionid'];
+                        $d2['item_id_p'] = (int)$taxKeyA['pluginid'];
                         $d2['amount']    = $shippingC['tax'];
                         $d2['ordering']  = $ordering;
+                        $d2['published']          = $published;
 
                         $this->saveOrderTotal($d2);
                         $ordering++;
@@ -977,7 +1031,9 @@ class PhocacartOrder
                         $d2['type']               = 'sbrutto';
                         $d2['amount']             = $shippingC['brutto'];
                         $d2['ordering']           = $ordering;
-                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
+                        //$d2['published']          = $published; // if vat is not published e.g. because it is null, unpublish even netto but not brutto
+                        $d2['published']            = 1;
                         $this->saveOrderTotal($d2);
                         $ordering++;
                     }
@@ -985,6 +1041,17 @@ class PhocacartOrder
 
                 // Payment
                 if (!empty($paymentC)) {
+
+                    $published = 1;
+                    if (isset($paymentC['taxtxt']) && isset($paymentC['tax']) && $paymentC['tax'] > 0) {
+                        $paymentC['taxcalc']      = (int)$d['tax_calculation'];
+                        $displayPriceItems = PhocaCartPrice::displayPriceItems($paymentC, 'order');
+                        $published = 0;
+                        if ($displayPriceItems['tax'] == 1) {
+                            $published = 1;
+                        }
+                    }
+
                     if (isset($paymentC['nettotxt']) && isset($paymentC['netto'])) {
                         $d2['title']              = $paymentC['title'] . ' - ' . $paymentC['nettotxt'];
                         $d2['title_lang']         = $paymentC['title'];
@@ -993,7 +1060,8 @@ class PhocacartOrder
                         $d2['type']               = 'pnetto';
                         $d2['amount']             = $paymentC['netto'];
                         $d2['ordering']           = $ordering;
-                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
+                        $d2['published']          = $published;
                         $this->saveOrderTotal($d2);
                         $ordering++;
                     }
@@ -1009,8 +1077,10 @@ class PhocacartOrder
                         $d2['item_id']   = (int)$taxKeyA['id'];
                         $d2['item_id_c'] = (int)$taxKeyA['countryid'];
                         $d2['item_id_r'] = (int)$taxKeyA['regionid'];
+                        $d2['item_id_p'] = (int)$taxKeyA['pluginid'];
                         $d2['amount']    = $paymentC['tax'];
                         $d2['ordering']  = $ordering;
+                        $d2['published']          = $published;
                         $this->saveOrderTotal($d2);
                         $ordering++;
                     }
@@ -1023,12 +1093,15 @@ class PhocacartOrder
                         $d2['type']               = 'pbrutto';
                         $d2['amount']             = $paymentC['brutto'];
                         $d2['ordering']           = $ordering;
-                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                        $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
+                        //$d2['published']          = $published;// if vat is not published e.g. because it is null, unpublish even netto but not brutto
+                        $d2['published']            = 1;
                         $this->saveOrderTotal($d2);
                         $ordering++;
                     }
                 }
 
+                $d2['published'] = 1;
 
                 // Rounding
                 if (isset($total[0]['rounding'])) {
@@ -1040,7 +1113,7 @@ class PhocacartOrder
                     $d2['amount']             = $total[0]['rounding'];
                     $d2['amount_currency']    = $total[0]['rounding_currency'];
                     $d2['ordering']           = $ordering;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -1056,7 +1129,7 @@ class PhocacartOrder
                     $d2['amount']             = $total[0]['brutto'];
                     $d2['amount_currency']    = $total[0]['brutto_currency'];
                     $d2['ordering']           = $ordering;
-                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = 0;
+                    $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
                 }
@@ -1079,6 +1152,7 @@ class PhocacartOrder
                             $d3['item_id']                = (int)$taxKeyA['id'];
                             $d3['item_id_c']              = (int)$taxKeyA['countryid'];
                             $d3['item_id_r']              = (int)$taxKeyA['regionid'];
+                            $d3['item_id_p']              = (int)$taxKeyA['pluginid'];
                             $d3['title']                  = $vTc['title'];
                             $d3['title_lang']             = $vTc['title_lang'];
                             $d3['title_lang_suffix']      = '';
@@ -1099,6 +1173,7 @@ class PhocacartOrder
                     $d3['item_id']                = 0;
                     $d3['item_id_c']              = 0;
                     $d3['item_id_r']              = 0;
+                    $d3['item_id_p']              = 0;
                     $d3['amount_netto']           = 0;
                     $d3['amount_tax']             = 0;
                     $d3['amount_brutto']          = 0;
@@ -1366,7 +1441,7 @@ class PhocacartOrder
         $d['attributes'] = !empty($d['attributes']) ? $d['attributes'] : array();
         if (!empty($itemP)) {
             $price  = new PhocacartPrice();
-            $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price);
+            $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price, $itemP->taxhide);
 
             $aA     = $d['attributes'];// Sanitanized yet //PhocacartAttribute::sanitizeAttributeArray($d['attributes']);
             $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $itemP, 1);
@@ -1413,6 +1488,7 @@ class PhocacartOrder
         $d['default_tax_id']               = (int)$taxKeyA['id'];
         $d['default_tax_id_c']             = (int)$taxKeyA['countryid'];
         $d['default_tax_id_r']             = (int)$taxKeyA['regionid'];
+        $d['default_tax_id_p']             = (int)$taxKeyA['pluginid'];
         $d['default_tax_calculation_rate'] = $d['taxcalctype'];
         $d['default_points_received']      = $d['default_points_received'];
 
@@ -2752,7 +2828,7 @@ class PhocacartOrder
             $wheres[] = 'a.order_id IN (' . $oIdS . ')';
         }
 
-        $query = 'SELECT a.id, a.order_id, a.item_id, a.item_id_c, a.item_id_r, a.title, a.title_lang, a.title_lang_suffix, a.title_lang_suffix, a.type, a.amount, a.amount_currency'
+        $query = 'SELECT a.id, a.order_id, a.item_id, a.item_id_c, a.item_id_r, a.item_id_p, a.title, a.title_lang, a.title_lang_suffix, a.title_lang_suffix, a.type, a.amount, a.amount_currency'
             . ' FROM #__phocacart_order_total AS a';
         if (!empty($wheres)) {
             $query .= ' WHERE ' . implode(' AND ', $wheres);
@@ -2774,7 +2850,7 @@ class PhocacartOrder
             $wheres[] = 'a.order_id IN (' . $oIdS . ')';
         }
 
-        $query = 'SELECT a.id, a.order_id, a.item_id, a.item_id_c, a.item_id_r, a.title, a.type, a.amount_netto, a.amount_tax, a.amount_brutto, a.amount_brutto_currency'
+        $query = 'SELECT a.id, a.order_id, a.item_id, a.item_id_c, a.item_id_r, a.item_id_p, a.title, a.type, a.amount_netto, a.amount_tax, a.amount_brutto, a.amount_brutto_currency'
             . ' FROM #__phocacart_order_tax_recapitulation AS a';
         if (!empty($wheres)) {
             $query .= ' WHERE ' . implode(' AND ', $wheres);

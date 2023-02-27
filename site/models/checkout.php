@@ -122,8 +122,9 @@ class PhocaCartModelCheckout extends FormModel
 
 	public function saveAddress($data, $type = 0) {
 
-		$app	= Factory::getApplication();
-		$user 	= PhocacartUser::getUser();
+		$app		= Factory::getApplication();
+		$user 		= PhocacartUser::getUser();
+		$typeView 	= $app->input->get('typeview', '');
 
 
 		if ((int)$user->id < 1) {
@@ -157,15 +158,10 @@ class PhocaCartModelCheckout extends FormModel
 		}
 		//$row->bind($data);
 
-
 		if (!$row->bind($data)) {
 			$this->setError($row->getError());
 			return false;
 		}
-
-
-
-
 
 		$row->date = gmdate('Y-m-d H:i:s');
 
@@ -175,11 +171,29 @@ class PhocaCartModelCheckout extends FormModel
 			return false;
 		}
 
+		// Event user e.g. check valid VAT and store information about it
+		$pluginLayout 	= PluginHelper::importPlugin('pct');
+		if ($pluginLayout) {
+
+			$eventData	= [];
+			if ($typeView == 'account') {
+				// Account
+				Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveCheckout', array('com_phocacart.checkout', &$row, $eventData));
+			} else {
+				// Checkout
+				Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveAccount', array('com_phocacart.account', &$row, $eventData));
+			}
+
+		}
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($row->getError());
 			return false;
 		}
+
+
+
 		return $row->id;
 	}
 
@@ -534,6 +548,18 @@ class PhocaCartModelCheckout extends FormModel
 		//$guest	= new PhocacartUserGuestuser();
 		$data['user_id']	= 0;
 		$data['type']		= 0;
+
+		if (!isset($data['params_user'])) {
+			$data['params_user'] = '';
+		}
+
+		// Event user e.g. check valid VAT and store information about it
+		$pluginLayout 	= PluginHelper::importPlugin('pct');
+		if ($pluginLayout) {
+			$eventData	= [];
+			Factory::getApplication()->triggerEvent('onPCTonGuestUserAddressBeforeSaveCheckout', array('com_phocacart.checkout', &$data, $eventData));
+		}
+
 		if (PhocacartUserGuestuser::storeAddress($data)) {
 			return true;
 		} else {
