@@ -284,7 +284,7 @@ class PhocacartTax
 
 
        $pluginLayout 	= PluginHelper::importPlugin('pct');
-  /*     if ($taxId > 0) {
+       if ($taxId > 0) {
             if ($pluginLayout) {
                 $eventData = [];
                 $results   = Factory::getApplication()->triggerEvent('onPCTonChangeTaxBasedRule', array('com_phocacart.tax', &$taxChangedA, $eventData));
@@ -298,7 +298,7 @@ class PhocacartTax
                 }
             }
         }
-*/
+
 
 		if ($dynamic_tax_rate == 0) {
 			return $taxChangedA;
