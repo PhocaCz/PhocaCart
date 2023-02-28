@@ -500,7 +500,7 @@ class PhocacartRenderMedia
             //$this->wa->registerAndUseStyle('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
             //$this->wa->registerAndUseScript('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), $this->scriptAtributeInline);
             $this->wa->registerAndUseStyle('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
-            $this->wa->registerAndUseScript('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), $this->scriptAtributeInline);
+            $this->wa->registerAndUseScript('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), ['defer' => true]);
         }
     }
 

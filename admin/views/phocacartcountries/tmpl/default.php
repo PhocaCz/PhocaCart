@@ -132,10 +132,18 @@ if (isset($item->tc_tax_rate) && $item->tc_tax_rate != '') {
 	if (!empty($taxRateA)) {
 
 		foreach($taxRateA as $k => $v) {
-			$taxRateA[$k] = PhocacartPrice::cleanPrice($v);
+			$tValue = PhocacartPrice::cleanPrice($v);
+			if ($tValue < 0) {
+				unset($taxRateA[$k]);
+			} else {
+				$taxRateA[$k] = $tValue;
+			}
+
 		}
 		$taxRateS = implode(', ', $taxRateA);
-		$tax .= ' <small>('.$taxRateS.')</small>';
+		if ($taxRateS != '') {
+			$tax .= ' <small>(' . $taxRateS . ')</small>';
+		}
 	}
 }
 
