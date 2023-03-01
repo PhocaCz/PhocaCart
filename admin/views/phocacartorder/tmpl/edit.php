@@ -140,6 +140,29 @@ $data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['arra
 
 echo $r->startTab('billingaddress', $tabs['billingaddress']);
 echo $data['b'];
+
+
+if (isset($this->itemcommon->params_user)) {
+
+	if (!empty($this->itemcommon)) {
+
+		PluginHelper::importPlugin('pct');
+		$eventData  = array();
+		$results = Factory::getApplication()->triggerEvent('onPCTgetUserBillingInfoAdminEdit', array('com_phocacart.phocacartorder', $this->itemcommon, $eventData));
+
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo $v['content'];
+				}
+			}
+		}
+
+	}
+}
+
+
+
 echo $r->endTab();
 
 

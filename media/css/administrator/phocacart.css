@@ -1959,9 +1959,9 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	width: auto;
 }
 
-.phc-red {color: #a60000;}
+.phc-red, .ph-msg-error {color: #a60000;}
 .phc-grey {color: #555555}
-.phc-green {color: #559d22;}
+.phc-green, .ph-msg-success {color: #559d22;}
 .phc-orange {color:orange;}
 .phc-brown {color: #a5572a;}
 
@@ -2044,7 +2044,40 @@ a[target=_blank]::before {
 	display: inline-block;
 }
 
-.ph-order-edit-shipping-info
+
+.ph-order-edit-user-info-header {
+	font-weight: bold;
+}
+
+.ph-order-edit-shipping-info,
+.ph-order-edit-payment-info,
+.ph-order-edit-user-info {
+    border-radius: 0.25em;
+    padding: 1em;
+    background: #ffde7d;
+}
+
+.ph-order-edit-shipping-info .ph-item,
+.ph-order-edit-payment-info .ph-item,
+.ph-order-edit-user-info .ph-item{
+	display: flex;
+}
+
+.ph-order-edit-shipping-info .ph-item .ph-label,
+.ph-order-edit-payment-info .ph-item .ph-label,
+.ph-order-edit-user-info .ph-item .ph-label{
+	font-weight: bold;
+	width: 25%;
+}
+
+.ph-order-edit-shipping-info .ph-item .ph-value,
+.ph-order-edit-payment-info .ph-item .ph-value,
+.ph-order-edit-user-info .ph-item .ph-value{
+	
+}
+
+
+
 
 
 /* Hide objects in edit - administration - Product edit example */

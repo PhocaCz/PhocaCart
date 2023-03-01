@@ -172,10 +172,8 @@ function phSetAttributeUrl(phSetValueByUser) {
 	let attributeFormReturn = attributeForm.find("input[name=return]");
 	let attributeFormReturnValue = '';
 	if (typeof attributeFormReturn.val() !== 'undefined' && attributeFormReturn.val() != '') {
-		console.log(attributeFormReturn.val());
 		attributeFormReturnValue = Base64.decode(attributeFormReturn.val());
 	}
-	
 
 	// Find all attributes in Item View
 	jQuery(phProductAttribute).each(function() {
