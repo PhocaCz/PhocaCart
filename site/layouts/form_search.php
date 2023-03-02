@@ -62,10 +62,10 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 
 <?php if ($d['search_options'] == 1) { ?>
-    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
+    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" class="phSearchBoxSearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
     </div>
 
-    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
+    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" class="phSearchBoxSearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
     </div>
 <?php } ?>
 

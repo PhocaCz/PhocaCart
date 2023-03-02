@@ -283,7 +283,7 @@ class PhocacartFilter
         $o = array();
 
         if ($this->ajax == 0) {
-            $o[] = '<div id="phFilterBox"' . ($params['wrapper_role'] ? ' role="' . $params['wrapper_role'] . '"' : '') . ($params['wrapper_class'] ? ' class="' . $params['wrapper_class'] . '"' : '') . '>';// AJAX ID
+            $o[] = '<div id="phFilterBox"' . ($params['wrapper_role'] ? ' role="' . $params['wrapper_role'] . '"' : '') . ($params['wrapper_class'] ? ' class="phFilterBox ' . $params['wrapper_class'] . '"' : ' class="phFilterBox"') . '>';// AJAX ID
         }
 
         $s = PhocacartRenderStyle::getStyles();

@@ -669,23 +669,30 @@ function phChangeSearch(paramV, value, formAction) {
     let phA = 1;
 
     let filteredProductsOnly = isItemsView;
-    
-    
+
     if (formAction == 1) {
         if (phParams["searchOptions"] == 1) {
             //jQuery("#phSearchBoxSearchAllProducts:checked").val();
             //jQuery("#phSearchBoxSearchAllProducts").attr("checked");
-            if (jQuery("#phSearchBoxSearchAllProducts:checked").length > 0) {
+            //if (jQuery("#phSearchBoxSearchAllProducts:checked").length > 0) {
+            // Class instead of ID because of more possible instances (desktop/mobile/...)
+            if (jQuery(".phSearchBoxSearchAllProducts:checked").length > 0) {
                 urlItemsView = urlItemsViewWithoutParams;
                 filteredProductsOnly = 0; // When options are enabled and searching is set to all - we search without filtering
             }
         } else {
             filteredProductsOnly = 0; // When options are disabled we always search without filtering
         }
-
         phA = phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
     } else {
         phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
+    }
+    
+    // Possible search in offcanvas
+    var phItemSearchBoxOffCanvas = document.getElementById('phItemSearchBoxOffCanvas');
+    if(phItemSearchBoxOffCanvas) {
+        var phItemSearchBoxOffCanvasBs = bootstrap.Offcanvas.getInstance(phItemSearchBoxOffCanvas);
+        phItemSearchBoxOffCanvasBs.hide();
     }
 
     startFullOverlay(phA);
