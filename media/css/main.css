@@ -1955,6 +1955,7 @@ li.ph-currency-list {
     margin: 10px;
 }
 
+
 /* align icon */
 .left-addon .glyphicon,
 .left-addon svg {
@@ -1979,6 +1980,10 @@ li.ph-currency-list {
     padding-right: 30px;
     width: 100%;
 }
+
+#ph-pc-pos-site .inner-addon svg {
+    margin: 0;
+ }
 
 .row-item-subcategory {
 }
