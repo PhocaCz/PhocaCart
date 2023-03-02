@@ -669,8 +669,8 @@ function phChangeSearch(paramV, value, formAction) {
     let phA = 1;
 
     let filteredProductsOnly = isItemsView;
-
-    alert(phParams["searchOptions"]);
+    
+    
     if (formAction == 1) {
         if (phParams["searchOptions"] == 1) {
             //jQuery("#phSearchBoxSearchAllProducts:checked").val();
