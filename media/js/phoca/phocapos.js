@@ -334,6 +334,8 @@ function phConfirm(submitForm, dataPost, txt) {
 }
 
 
+var phPosCloseTicketFormConfirmed = false;
+
 // ------
 // Events
 // ------
@@ -435,7 +437,6 @@ jQuery(document).ready(function(){
 	});
 
 	/* Display warning when closing a ticket */
-	var phPosCloseTicketFormConfirmed = false;
 	jQuery(document).on("submit", "#phPosCloseTicketForm", function (e) {
 		var txt = jQuery(this).data("txt");
 		if(!phPosCloseTicketFormConfirmed) {
