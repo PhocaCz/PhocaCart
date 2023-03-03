@@ -219,6 +219,8 @@ class PhocacartRenderStyle
         $s['a']['alert-close']           = ' data-bs-dismiss="alert"';
         $s['a']['dropdown']              = '';
 
+        $s['a']['lazyload']              = ' loading="lazy"';
+
 
         switch ($theme) {
 

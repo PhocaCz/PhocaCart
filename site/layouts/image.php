@@ -39,6 +39,8 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
     echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
     echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="'.$d['data-image-meta'].'"' : '';
+
+    echo isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
     echo '/>';
 
     echo '</picture>';
@@ -57,6 +59,7 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
     echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
     echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="'.$d['data-image-meta'].'"' : '';
+    echo isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
     echo '/>';
 }
 ?>

@@ -127,7 +127,7 @@ class PhocaCartViewPos extends HtmlView
 		$this->t['switch_image_category_items']				= $this->p->get( 'switch_image_category_items', 0 );
 		$this->t['pos_loyalty_card_number_input_type']		= $this->p->get( 'pos_loyalty_card_number_input_type', 'text' );
 
-		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 0 );
+		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 2 );
 		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );

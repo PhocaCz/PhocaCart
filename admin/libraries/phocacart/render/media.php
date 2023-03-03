@@ -71,8 +71,8 @@ class PhocacartRenderMedia
 
         $this->p['pos_focus_input_fields'] = $params->get('pos_focus_input_fields', 0);
         $this->p['pos_filter_category']    = $params->get('pos_filter_category', 1);// reload equal height
-        $this->p['lazy_load_category_items'] = $params->get('lazy_load_category_items', 0);
-        $this->p['lazy_load_categories']     = $params->get('lazy_load_categories', 0);
+        $this->p['lazy_load_category_items'] = $params->get('lazy_load_category_items', 2);
+        $this->p['lazy_load_categories']     = $params->get('lazy_load_categories', 2);
         $this->p['pos_server_print']         = $params->get('pos_server_print', 0);
 
         $this->p['load_min_js'] = $params->get('load_min_js', 1);
