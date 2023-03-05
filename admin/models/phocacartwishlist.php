@@ -17,26 +17,26 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartWishlist', $prefix = 'Table', $config = array())
 	{
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartwishlist', 'phocacartwishlist', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
@@ -44,7 +44,7 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -56,14 +56,14 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 
 		return $data;
 	}
-	
+
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
 		$date = Factory::getDate();
 		$user = Factory::getUser();
 
-		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
+		$table->title		= htmlspecialchars_decode((string)$table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias)) {
@@ -90,7 +90,7 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	protected function getReorderConditions($table = null)
 	{
 		$condition = array();
@@ -99,7 +99,7 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 	}
 	/*
 	public function increaseOrdering($productId) {
-		
+
 		$ordering = 1;
 		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_reviews WHERE product_id='.(int)$productId);
 		$max = $this->_db->loadResult();

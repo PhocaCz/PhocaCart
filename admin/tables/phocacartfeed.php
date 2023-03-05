@@ -15,12 +15,16 @@ class TablePhocacartFeed extends Table
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_feeds', 'id', $db);
 	}
-	
+
 	function check() {
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
+
+        if (!isset($this->date) || $this->date == '0' || $this->date == '') {
+			$this->date = '0000-00-00 00:00:00';
+		}
 
 		return true;
 	}

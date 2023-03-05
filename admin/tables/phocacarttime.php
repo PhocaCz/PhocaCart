@@ -16,34 +16,38 @@ class TablePhocacartTime extends Table
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_opening_times', 'id', $db);
 	}
-	
+
 	function check() {
-		
+
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
 
-		
+        if (!isset($this->date) || $this->date == '0' || $this->date == '') {
+			$this->date = '0000-00-00 00:00:00';
+		}
+
+
 		$timeFrom = PhocacartTime::getTime($this->hour_from, $this->minute_from);
 		$timeTo = PhocacartTime::getTime($this->hour_to, $this->minute_to);
-		
+
 		if (strtotime($timeFrom) > 0  && strtotime($timeTo) == 0) {
 			$this->setError(Text::_('COM_PHOCACART_IF_TIME_FROM_SET_THEN_TIME_TO_MUST_BE_SET_TOO'));
 			return false;
 		}
-		if (strtotime($timeTo) > 0  && strtotime($timeFrom) == 0) {	
+		if (strtotime($timeTo) > 0  && strtotime($timeFrom) == 0) {
 			$this->setError(Text::_('COM_PHOCACART_IF_TIME_TO_SET_THEN_TIME_FROM_MUST_BE_SET_TOO'));
 			return false;
 		}
-	
+
 		if(strtotime($timeFrom) > strtotime($timeTo)) {
 			//$app	= JFactory::getApplication();
 			//$app->enqueueMessage(JText::_('COM_PHOCACART_TIME_FROM_CANNOT_BE_GREATER_THAN_TIME_TO'), 'error');
 			$this->setError(Text::_('COM_PHOCACART_TIME_FROM_CANNOT_BE_GREATER_THAN_TIME_TO'));
 			return false;
 		}
-		
+
 		return true;
 	}
 }

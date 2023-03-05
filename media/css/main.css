@@ -308,7 +308,7 @@ span.ph-stars span {
 .ph-checkout-cart-box tr td ul li,
 .ph-cart-small-box tr td ul li {
     color: var(--ph-grey);
-    padding: 0 auto;
+    padding: 0;
     margin: 0 auto;
     line-height: 1;
 }
@@ -663,7 +663,7 @@ table.ph-idnr-tax-rec tr th {
 .ph-center-pagination {
     text-align: center;
     margin: 0 auto;
-    padding: 0 auto;
+    padding: 0;
 }
 
 .ph-center-pagination input,
@@ -692,7 +692,7 @@ table.ph-comparison-table tr td.ph-middle {
 }
 
 .ph-red {
-    color: var(ph-error);
+    color: var(--ph-error);
 }
 .ph-b {
     font-weight: bold;
@@ -1449,7 +1449,7 @@ table.ph-cart-small-box {
 
 .ph-cart-small-box div div ul li {
     color: var(--ph-grey-color);
-    padding: 0 auto;
+    padding: 0;
     margin: 0 auto;
     line-height: 1;
 }
@@ -1931,7 +1931,7 @@ li.ph-currency-list {
     outline-width: 0;
 }
 
-#phPriceFilterRange.ui-slider-horizontal .ui-slider-handle::focus {
+#phPriceFilterRange.ui-slider-horizontal .ui-slider-handle:focus {
     outline-width: 0;
 }
 #phPriceFilterRange .ui-widget-header {
@@ -2071,7 +2071,7 @@ img.ph-lazyload {
     width: 100%;
     height: auto;
     opacity: 0;
-    box-sizing: border-box;23000
+    box-sizing: border-box;
     position: relative;
     clear: both;
 }

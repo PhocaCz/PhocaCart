@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
@@ -559,10 +560,12 @@ class PhocacartRoute
 
 
 
-	protected static function _findItem($needles, $notCheckId = 0, $lang = array())
-	{
+	protected static function _findItem($needles, $notCheckId = 0, $lang = array())  {
+
 		$app = Factory::getApplication();
-		$menus	= $app->getMenu('site', array());
+		//$menus	= $app->getMenu('site', array());// Problems in indexer
+		$menus    = AbstractMenu::getInstance('site');
+		$active 	= $menus->getActive();
 		//$items	= $menus->getItems('component', 'com_phocacart');
 
 		$component 		= ComponentHelper::getComponent('com_phocacart');
@@ -603,39 +606,47 @@ class PhocacartRoute
 
 		}
 
-
-
+		// Don't check ID for specific views. e.g. categories view does not have ID
+		$notCheckIdArray =  array('categories');
 
 		if(!$items) {
-			return $app->input->get('Itemid', 0, '', 'int');
-			//return null;
+			$itemId =  $app->input->get('Itemid', 0, 'int');
+			if ($itemId > 0) {
+				$item = new stdClass();
+				$item->id = $itemId;
+				return $item;
+			}
+			return null;
 		}
 
 		$match = null;
+		// FIRST - test active menu link
+		foreach($needles as $needle => $id) {
+			if (isset($active->query['option']) && $active->query['option'] == $component
+				&& isset($active->query['view']) && $active->query['view'] == $needle
+				&& (in_array($needle, $notCheckIdArray) || (isset($active->query['id']) && $active->query['id'] == $id ))
+			) {
+				$match = $active;
+			}
+		}
 
-		foreach($needles as $needle => $id)
-		{
+		if(isset($match)) {
+			return $match;
+		}
 
-			if ($notCheckId == 0) {
-				foreach($items as $item) {
+		// SECOND - if not find in active, try to run other items
+		//          ordered by function which calls this function - e.g. file, category, categories
+		//          as last the categories view should be checked, it has no ID so we skip the checking
+		//          of ID for categories view with OR: in_array($needle, $notCheckIdArray) ||
+		foreach($needles as $needle => $id) {
 
-					// Unifiy $item->query['id']
-					$queryId = '';
-					if (isset($item->query['id']) && $item->query['id'] != null && $item->query['id'] != 0) {
-						$queryId = $item->query['id'];
-					}
+			foreach($items as $item) {
 
-					if ((@$item->query['view'] == $needle) && ($queryId == $id)) {
-						$match = $item;
-						break;
-					}
-				}
-			} else {
-				foreach($items as $item) {
-					if (@$item->query['view'] == $needle) {
-						$match = $item;
-						break;
-					}
+				if (isset($item->query['option']) && $item->query['option'] == $component
+					&& isset($item->query['view']) && $item->query['view'] == $needle
+					&& (in_array($needle, $notCheckIdArray) || (isset($item->query['id']) && $item->query['id'] == $id ))
+				) {
+					$match = $item;
 				}
 			}
 

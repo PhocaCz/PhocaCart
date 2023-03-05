@@ -443,7 +443,7 @@ final class PhocacartCategory
 				$result[] = '<li><div class="'.$s['c']['controls'].'">';
 				$result[] = '<label class="ph-checkbox-container"><input class="'.$s['c']['inputbox.checkbox'].'" type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'. $icon . $v['title'].$count.'<span class="ph-checkbox-checkmark"></span></label>';
 				$result[] = '</div></li>';
-				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active);
+				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active, $forceCategoryId);
 			}
 			$result[] = '</ul>';
 		}

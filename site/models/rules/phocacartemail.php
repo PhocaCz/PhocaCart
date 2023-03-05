@@ -39,7 +39,7 @@ class JFormRulePhocaCartEmail extends EmailRule
 		}
 
 		//BANNED EMAIL
-		$banned = $params->get('banned_email');
+		$banned = $params->get('banned_email', '');
 		foreach(explode(';', $banned) as $item){
 			if (trim($item) != '') {
 				if (StringHelper::stristr($item, $value) !== false){
