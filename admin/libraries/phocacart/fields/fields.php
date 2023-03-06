@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Joomla\Database\ParameterType;
 
 class PhocacartFields
 {
@@ -24,15 +25,34 @@ class PhocacartFields
     return $fields;
   }
 
-	public static function getAllFieldsValues($fieldId, $onlyAvailableProducts = 0, $lang = '', $filterProducts = [])
+  public static function getFieldId(int $id): ?object
+  {
+    $fields = array_filter(self::getAllFields(), function($field) use ($id) {
+      return $field->id === $id;
+    });
+
+    if ($fields) {
+      return reset($fields);
+    }
+
+    return null;
+  }
+
+	public static function getAllFieldsValues(int $fieldId, bool $onlyAvailableProducts = false, string $lang = '', array $filterProducts = []): array
 	{
+    $field = self::getFieldId($fieldId);
+    if (!$field) {
+      return [];
+    }
+
 		$wheres = [];
 		$lefts	= [];
 		$db 		= Factory::getDbo();
-
-		$wheres[]	= 'fv.field_id = ' . (int)$fieldId;
+		$wheres[]	= 'fv.field_id = ' . $fieldId;
 
 		$productTableAdded = 0;
+    // TODO solve very slow join
+    $onlyAvailableProducts = false;
 		if ($onlyAvailableProducts) {
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
@@ -56,12 +76,27 @@ class PhocacartFields
 		$q = ' SELECT DISTINCT fv.value as title, fv.value as alias'
 			.' FROM  #__fields_values AS fv'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
-			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
-			.' ORDER BY fv.value';
+			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '');
 
 		$db->setQuery($q);
 
 		$items = $db->loadObjectList();
+
+    if ($field->type === 'list') {
+      $options = [];
+      foreach($field->fieldparams->get('options') as $option) {
+        $options[$option->value] = $option->name;
+      }
+
+      array_walk($items, function(&$item) use ($options) {
+        if (isset($options[$item->alias]))
+          $item->title = $options[$item->alias];
+      });
+    }
+
+    usort($items, function ($a, $b) {
+      return strcmp($a->title, $b->title);
+    });
 
 		return $items;
 	}
