@@ -32,8 +32,9 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 
 			$app = Factory::getApplication();
 			$params = $app->getParams();
-			if(!$params->get('show_categories', 1))
-				return $this->categories;
+			if(!$params->get('show_categories', 1)) {
+                return $this->categories;
+            }
 
 			$categoriesOrdering = $this->getCategoryOrdering();
 
