@@ -259,6 +259,27 @@ class PhocacartSearch
 
                 break;
 
+                // Custom fields
+/*                case 'field':
+                  // TODO different way for multiple values
+                  $in = $db->quote($in);
+                  // TODO own parameter
+                  if ($params['sql_filter_method_parameter'] == 1) {
+                    // QUERY METHOD ALL (product to display must include all custom filed values togehter)
+                    $left = '';
+                    $where = '';
+                    if (!empty($inA)) {
+                      foreach($inA as $k => $v) {
+                        $left .= ' INNER JOIN #__field_values AS fv'.(int)$prefix.(int)$v.' ON a.id = pr'.(int)$prefix.(int)$v.'.item_id AND pr'.(int)$prefix.(int)$v.'.parameter_value_id = '.(int)$v;
+                      }
+                    }
+                  } else {
+                    $where = ' fv'.(int)$prefix.'.value IN (' . $in . ')';
+                    $left = ' LEFT JOIN #__fields_values AS fv'.(int)$prefix.' ON a.id = fv'.(int)$prefix.'.item_id and fv'.(int)$prefix.'.field_id = ' . (int)$prefix;
+                  }
+
+                break;*/
+
                 case 'manufacturer':
                     $where = ' m.id IN (' . $in . ')';
                     //$left = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id'; is asked as default

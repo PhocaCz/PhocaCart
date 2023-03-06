@@ -86,7 +86,6 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		$app				= Factory::getApplication();
 		$params 			= $app->getParams();
 
-
 		$display_categories = $params->get('display_categories', '');
 		$hide_categories 	= $params->get('hide_categories', '');
 
@@ -193,4 +192,4 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		return $this->category_ordering;
 	}
 }
-?>
+
