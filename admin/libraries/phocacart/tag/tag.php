@@ -399,7 +399,7 @@ class PhocacartTag
     }
   }
 
-  private function getActiveItems($type, $ids, $ordering)
+  private static function getActiveItems($type, $ids, $ordering)
   {
     $db     = Factory::getDbo();
     $o      = array();

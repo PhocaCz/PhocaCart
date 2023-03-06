@@ -565,9 +565,10 @@ final class PhocacartCategory
         $db       = Factory::getDbo();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 1);//c
         $q        = 'SELECT DISTINCT c.title, CONCAT(c.id, \'-\', c.alias) AS alias, \'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
-            . 'c.id IN (' . $items . ')'
+            . ' WHERE c.id IN (' . $items . ')'
             . ' GROUP BY c.alias, c.title'
             . ' ORDER BY ' . $ordering;
+
 
         $db->setQuery($q);
         return $db->loadAssocList();
