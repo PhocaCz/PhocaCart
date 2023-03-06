@@ -28,7 +28,7 @@ final class PhocacartCategory
 	private static $categoryF = array();
 	private static $categoryP = array();
 	private static $categoryPR = array();
-  
+
 	public static function CategoryTreeOption($data, $tree, $id = 0, $text = '', $currentId = 0) {
 		foreach ($data as $key) {
 			$show_text =  $text . $key->text;
@@ -125,9 +125,16 @@ final class PhocacartCategory
 	{
 		if (self::$categoriesCache === null) {
 			$db = Factory::getDBO();
-			$db->setQuery('SELECT a.title, a.alias, a.id, a.parent_id FROM #__phocacart_categories AS a ORDER BY a.ordering');
+			$db->setQuery('SELECT a.*, null as children FROM #__phocacart_categories AS a ORDER BY a.ordering');
 			$categories = $db->loadObjectList('id');
 
+      array_walk($categories, function($category) use ($categories) {
+        if ($category->parent_id) {
+          if ($categories[$category->parent_id]->children === null)
+            $categories[$category->parent_id]->children = [];
+          $categories[$category->parent_id]->children[] = $category;
+        }
+      });
 			self::$categoriesCache = $categories;
 		}
 	}
@@ -141,10 +148,12 @@ final class PhocacartCategory
 
 	public static function getChildren($id) {
 		self::loadCategoriesCache();
+    if ($id) {
+      $category = self::getCategoryById($id);
+      return $category->children;
+    }
 
-		return array_filter(self::$categoriesCache, function($category) use ($id) {
-			return $category->parent_id == $id;
-		});
+		return [];
 	}
 
 	public static function getPath($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '')
@@ -178,7 +187,7 @@ final class PhocacartCategory
 		return $path;
 	}
 
-	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') 
+	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '')
   {
 		if( empty(self::$categoryPR[$id])) {
 			self::$categoryPR[$id]	= self::getPathTreeRouter($path, $id, $parent_id, $title, $alias);
