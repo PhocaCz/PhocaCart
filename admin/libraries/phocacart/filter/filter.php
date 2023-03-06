@@ -756,6 +756,8 @@ class PhocacartFilter
         }
 
         // -CUSTOM FIELDS-
+        // TODO resolve getAllFieldsValues speed
+        /*
         if ($this->fields) {
             $fields = PhocacartFields::getAllFields();
             if (!empty($fields)) {
@@ -790,7 +792,7 @@ class PhocacartFilter
                 }
             }
         }
-
+        */
 
         if ($this->ajax == 0) {
             $o[] = '</div>';// End phFilterBox
