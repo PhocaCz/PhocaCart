@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 
 class PhocacartFilter
 {
@@ -19,6 +20,7 @@ class PhocacartFilter
     public $tag = false;
     public $label = false;
     public $parameter = false;
+    public $fields = false;
     public $manufacturer = false;
     public $price = false;
     public $attributes = false;
@@ -375,7 +377,11 @@ class PhocacartFilter
             // if we are in category view and want to force active category when clicking on filter
             // so we want to move the category id from CATEGORY VIEW to ITEMS VIEW
             // and we should mark the category active in category list = $forceActive
-            $data['items'] = PhocacartCategory::getCategoryTreeArray($this->ordering_category, '', '', array(0, 1), $language, $this->limit_category_count);
+            $data['items'] = PhocacartCategory::getCategoryTreeArray([
+              'ordering' => $this->ordering_category,
+              'language' => $language,
+              'limitCount' => $this->limit_category_count,
+            ]);
             $data['output'] = PhocacartCategory::nestedToCheckBox($data['items'], $data, 0, $data['active'], $forceCategory['id']);
 
             if ($this->open_filter_panel == 0) {
@@ -746,6 +752,42 @@ class PhocacartFilter
                     $o[] = $layout->render($data);
                 }
 
+            }
+        }
+
+        // -CUSTOM FIELDS-
+        if ($this->fields) {
+            $fields = PhocacartFields::getAllFields();
+            if (!empty($fields)) {
+                foreach ($fields as $field) {
+                    if (!$field->params->get('is_filter')) {
+                        continue;
+                    }
+
+                    $data = [
+                      's' => $s,
+                      'param' => $field->name,
+                      'title' => Text::_($field->title),
+                      'titleheader' => Text::_($field->title),
+                      'getparams' => $this->getArrayParamValues($field->name, 'string'),
+                      'nrinalias' => 0,
+                      'formtype' => 'checked',
+                      'uniquevalue' => 0,
+                      'params' => [
+                        'open_filter_panel' => $this->open_filter_panel,
+                        'display_count' => $this->display_parameter_count,
+                      ],
+                      'forcecategory' => $forceCategory,
+                    ];
+
+                    $items = PhocacartFields::getAllFieldsValues((int)$field->id, $this->check_available_products, $language, $activeProductsParameters);
+
+                    if ($items) {
+                        $data['items'] = $items;
+                        $o[] = $layout->render($data);
+                    }
+
+                }
             }
         }
 
