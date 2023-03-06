@@ -15,6 +15,17 @@
 	<option	value="2">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>
 
+
+<field name="tax_hide" type="list" default="" label="COM_PHOCACART_FIELD_HIDE_TAX_LABEL" description="COM_PHOCACART_FIELD_HIDE_TAX_DESC" layout="joomla.form.field.list-fancy-select"  multiple="true">
+	<option value="1">COM_PHOCACART_PRODUCT_PRICES</option>
+	<option value="2">COM_PHOCACART_PRODUCT_PRICES_INCLUDING_NETTO</option>
+	<option value="3">COM_PHOCACART_CHECKOUT</option>
+	<option value="4">COM_PHOCACART_CART</option>
+	<option value="5">COM_PHOCACART_ORDER</option>
+	<option value="6">COM_PHOCACART_CATALOG</option>
+	<option value="7">COM_PHOCACART_CATALOG_INCLUDING_NETTO</option>
+</field>
+
 <field name="ordering" type="PhocacartOrdering" table="tax" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 	</fieldset>
 

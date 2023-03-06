@@ -330,9 +330,11 @@ class PhocacartAttribute
 
                     } else {
 
+                        $date = Factory::getDate();
+                        $now  = $date->toSql();
                         $valuesString = '';
-                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($v['title']) . ', ' . $db->quote($v['alias']) . ', ' . (int)$v['required'] . ', ' . (int)$v['type'] . ', ' . $i . ')';
-                        $query        = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type, ordering)'
+                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($v['title']) . ', ' . $db->quote($v['alias']) . ', ' . (int)$v['required'] . ', ' . (int)$v['type'] . ', ' . $db->quote($now) . ', '.  $i . ')';
+                        $query        = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type, date, ordering)'
                             . ' VALUES ' . (string)$valuesString;
                         $db->setQuery($query);
                         $db->execute(); // insert is not done together but step by step because of getting last insert id

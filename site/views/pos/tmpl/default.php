@@ -22,8 +22,8 @@ echo '<div id="phDialogConfirm" class="modal fade" tabindex="-1" role="dialog">'
 echo '<div class="modal-dialog" role="document">';
 echo '<div class="modal-content">';
 echo '<div class="modal-header">';
-echo '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
 echo '<h4 class="modal-title">'. Text::_('COM_PHOCACART_CONFIRM').'</h4>';
+echo '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
 echo '</div>';
 echo '<div class="modal-body"></div>';
 echo '<div class="modal-footer">';

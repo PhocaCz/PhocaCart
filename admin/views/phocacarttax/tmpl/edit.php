@@ -36,7 +36,7 @@ echo $r->groupHeader($this->form, $formArray);
 echo $r->startTabs();
 
 echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ('tax_rate', 'calculation_type', 'ordering');
+$formArray = array ('tax_rate', 'calculation_type', 'tax_hide', 'ordering');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

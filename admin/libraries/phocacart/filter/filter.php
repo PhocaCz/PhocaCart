@@ -283,7 +283,7 @@ class PhocacartFilter
         $o = array();
 
         if ($this->ajax == 0) {
-            $o[] = '<div id="phFilterBox"' . ($params['wrapper_role'] ? ' role="' . $params['wrapper_role'] . '"' : '') . ($params['wrapper_class'] ? ' class="' . $params['wrapper_class'] . '"' : '') . '>';// AJAX ID
+            $o[] = '<div id="phFilterBox"' . ($params['wrapper_role'] ? ' role="' . $params['wrapper_role'] . '"' : '') . ($params['wrapper_class'] ? ' class="phFilterBox ' . $params['wrapper_class'] . '"' : ' class="phFilterBox"') . '>';// AJAX ID
         }
 
         $s = PhocacartRenderStyle::getStyles();
@@ -318,6 +318,8 @@ class PhocacartFilter
         // We even can limit filter items like attributes only for specific category
         // Parameter for this is "limit_attributes_category" (attributes)
         $category = PhocacartRoute::getIdForItemsRoute();// Used for parameter: Filter Category: Yes (Active Category) (int)$this->category == 1
+
+
         $forceCategory = array();
         $forceCategory['id'] = 0;
         $forceCategory['idalias'] = '';

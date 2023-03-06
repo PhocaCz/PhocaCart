@@ -85,7 +85,7 @@ class PhocacartPayment
 		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
-		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
+		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
@@ -93,7 +93,7 @@ class PhocacartPayment
 		$groupsFull		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
-		.' t.id, t.title, t.tax_rate, t.calculation_type';
+		.' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
 		$groupsFast		= 'p.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -132,6 +132,11 @@ class PhocacartPayment
 		$i = 0;
 		if (!empty($payments)) {
 			foreach($payments as $k => $v) {
+
+				if (isset($v->taxhide)) {
+					$registry = new Registry($v->taxhide);
+					$v->taxhide = $registry->toArray();
+				}
 
 
 				$v->active   = 0;
@@ -462,7 +467,7 @@ class PhocacartPayment
 		$db->setQuery($query);*/
 
 		$query = ' SELECT p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId
@@ -482,6 +487,13 @@ class PhocacartPayment
 			$payment->params = $registry;
 			//$payment->paramsArray = $registry->toArray();
 		}
+
+		if (isset($shipping->taxhide)) {
+			$registry = new Registry($shipping->taxhide);
+			$shipping->taxhide = $registry->toArray();
+		}
+
+
 
 
 		return $payment;

@@ -42,7 +42,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 // Price (don't display add to cart when price is zero)
                 $price  = new PhocacartPrice();
-                $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price);
+                $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price, $itemP->taxhide);
                 $aA     = PhocacartAttribute::sanitizeAttributeArray($item['attribute']);
                 $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $itemP, 1);
                 $price->correctMinusPrice($priceP);

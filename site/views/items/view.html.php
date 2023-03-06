@@ -113,8 +113,8 @@ class PhocaCartViewItems extends HtmlView
         $this->t['product_name_link']           = $this->p->get('product_name_link', 0);
         $this->t['switch_image_category_items'] = $this->p->get('switch_image_category_items', 0);
 
-        $this->t['lazy_load_category_items']      = $this->p->get('lazy_load_category_items', 0);// Products
-        $this->t['lazy_load_categories']          = $this->p->get('lazy_load_categories', 0);    // Subcategories
+        $this->t['lazy_load_category_items']      = $this->p->get('lazy_load_category_items', 2);// Products
+        $this->t['lazy_load_categories']          = $this->p->get('lazy_load_categories', 2);    // Subcategories
         $this->t['medium_image_width']            = $this->p->get('medium_image_width', 300);
         $this->t['medium_image_height']           = $this->p->get('medium_image_height', 200);
         $this->t['small_image_width']             = $this->p->get('small_image_width', 180);
