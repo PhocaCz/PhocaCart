@@ -708,7 +708,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_taxes` (
   `calculation_type` tinyint(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
-  `tax_hide` int(11) text,
+  `tax_hide` tinyint(1) NOT NULL default '0',
   `checked_out_time` datetime,
   `ordering` int(11) NOT NULL DEFAULT '0',
   `params` text,
