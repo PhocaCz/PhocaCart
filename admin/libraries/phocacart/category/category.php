@@ -201,17 +201,19 @@ final class PhocacartCategory
 		return $path;
 	}
 
-	public static function categoryTree($d, $r = 0, $pk = 'parent_id', $k = 'id', $c = 'children') {
-		$m = array();
-		foreach ($d as $e) {
-			isset($m[$e[$pk]]) ?: $m[$e[$pk]] = array();
-			isset($m[$e[$k]]) ?: $m[$e[$k]] = array();
-			$m[$e[$pk]][] = array_merge($e, array($c => &$m[$e[$k]]));
+	public static function categoryTree($data, $root = 0, $parentKey = 'parent_id', $key = 'id', $childrenKey = 'children') {
+		$tree = [];
+		foreach ($data as $element) {
+			isset($tree[$element[$parentKey]]) ?: $tree[$element[$parentKey]] = [];
+			isset($tree[$element[$key]]) ?: $tree[$element[$key]] = [];
+			$tree[$element[$parentKey]][] = array_merge($element, [$childrenKey => &$tree[$element[$key]]]);
 		}
-		//return $m[$r][0]; // remove [0] if there could be more than one root nodes
-		if (isset($m[$r])) {
-			return $m[$r];
+
+		//return $tree[$r][0]; // remove [0] if there could be more than one root nodes
+		if (isset($tree[$root])) {
+			return $tree[$root];
 		}
+
 		return 0;
 	}
 
