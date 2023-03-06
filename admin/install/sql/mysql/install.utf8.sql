@@ -708,6 +708,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_taxes` (
   `calculation_type` tinyint(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
+  `tax_hide` tinyint(1) NOT NULL default '0',
   `checked_out_time` datetime,
   `ordering` int(11) NOT NULL DEFAULT '0',
   `params` text,
@@ -738,6 +739,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_tax_regions` (
   KEY `tax_id` (`tax_id`),
   KEY `region_id` (`region_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_currencies` (
   `id` int(11) NOT NULL auto_increment,
@@ -1025,6 +1028,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_users` (
 	`phone_2` varchar(20) NOT NULL DEFAULT '',
 	`phone_mobile` varchar(20) NOT NULL DEFAULT '',
 	`fax` varchar(20) NOT NULL DEFAULT '',
+  `params_user` text,
   `privacy` tinyint(1) NOT NULL default '0',
   `date` datetime NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -1185,6 +1189,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`params` text,
 	`params_shipping` text,
 	`params_payment` text,
+	`params_user` text,
 	`user_lang` char(7) NOT NULL DEFAULT '',
 	`default_lang` char(7) NOT NULL DEFAULT '',
 	`language` char(7) NOT NULL DEFAULT '',
@@ -1252,6 +1257,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_products` (
   `default_tax_id` int(11) NOT NULL DEFAULT '0',
   `default_tax_id_c` int(11) NOT NULL DEFAULT '0',
   `default_tax_id_r` int(11) NOT NULL DEFAULT '0',
+  `default_tax_id_p` int(11) NOT NULL DEFAULT '0',
   `default_calculation_type` tinyint(1) NOT NULL DEFAULT '0',
   `default_points_received` int(11) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -1332,6 +1338,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_total` (
 	`item_id` int(11) NOT NULL DEFAULT '0',
 	`item_id_c` int(11) NOT NULL DEFAULT '0',
 	`item_id_r` int(11) NOT NULL DEFAULT '0',
+	`item_id_p` int(11) NOT NULL DEFAULT '0',
 	`title` varchar(255) NOT NULL DEFAULT '',
 	`title_lang` varchar(255) NOT NULL DEFAULT '',
 	`title_lang_suffix` varchar(100) NOT NULL DEFAULT '',
@@ -1354,6 +1361,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_tax_recapitulation` (
 	`item_id` int(11) NOT NULL DEFAULT '0',
 	`item_id_c` int(11) NOT NULL DEFAULT '0',
 	`item_id_r` int(11) NOT NULL DEFAULT '0',
+	`item_id_p` int(11) NOT NULL DEFAULT '0',
 	`title` varchar(255) NOT NULL DEFAULT '',
 	`title_lang` varchar(255) NOT NULL DEFAULT '',
 	`title_lang_suffix` varchar(100) NOT NULL DEFAULT '',

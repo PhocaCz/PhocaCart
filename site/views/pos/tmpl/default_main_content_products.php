@@ -82,11 +82,11 @@ if (!empty($this->items)) {
 		if ($this->t['can_display_price']) {
 			$dP['s']		= $this->s;
 			$dP['type']		= $v->type;// PRODUCTTYPE
-			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
+			$dP['priceitems']	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price, $v->taxhide);
 			$price->getPriceItemsChangedByAttributes($dP['priceitems'], $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();
 			if ($v->price_original != '' && $v->price_original > 0) {
-				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype);
+				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
 			}
 			//$dP['class']		= 'ph-category-price-box '.$lt;
 			$dP['class']		= 'ph-category-price-box';// Cannot be dynamic as can change per ajax - this can cause jumping of boxes

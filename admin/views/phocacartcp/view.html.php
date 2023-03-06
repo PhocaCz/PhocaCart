@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
@@ -15,6 +16,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.view' );
 
+use Joomla\Event\Event;
 use Phoca\Render\Adminviews;
 
 class PhocaCartCpViewPhocaCartCp extends HtmlView
@@ -160,8 +162,6 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$this->t['enable_wizard']	= $paramsC->get( 'enable_wizard', 1 );
-
-
 
 		$media = new PhocacartRenderAdminmedia();
 

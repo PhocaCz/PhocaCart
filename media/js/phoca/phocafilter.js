@@ -112,7 +112,7 @@ function phGetQueryString(url) {
 
 // jQuery Param alternative
 function phUrlParam(data) {
-    
+
 	if (data == null) { return "";}
 
     const urlParams = [];
@@ -163,7 +163,7 @@ function phUrlDeParam(params, coerce) {
     // Iterate over all name=value pairs.
     let paramsA = params.replace(/\+/g, " ").split("&");
     paramsA.forEach(function (v) {
-        
+
         let param = v.split("=");
         let key = decodeURIComponent(param[0]);
         let val = '';
@@ -194,12 +194,12 @@ function phUrlDeParam(params, coerce) {
                     ? +val : val === "undefined"
 					// undefined
                     ? undefined : coerce_types[val] !== undefined
-                    // true, false, null    
+                    // true, false, null
 					? coerce_types[val] : val; // string
             }
 
             if (keys_last) {
-                
+
 				// Complex key, build deep object structure based on a few rules:
                 // * The 'cur' pointer starts at the object top-level.
                 // * [] = array push (n is set to array length), [n] = array if n is
@@ -239,7 +239,7 @@ function phUrlDeParam(params, coerce) {
 
 // jQuery Param.querystring alternative
 function phUrlParamQueryString(url, params, merge_mode) {
-    
+
 	let result 		= '';
 	let qs 			= '';
 	let matches 	= '';
@@ -265,10 +265,10 @@ function phUrlParamQueryString(url, params, merge_mode) {
             url_params = phUrlDeParam(matches[2]);
 
 			// Convert passed params string into object
-            params = phIsString(params) 
+            params = phIsString(params)
 				? phUrlDeParamQueryString(params) : params; // Passed params object
             qs = merge_mode === 2
-				? params 
+				? params
 				: merge_mode === 1
 					// Url params override passed params
 					? { ...params, ...url_params } : { ...url_params, ...params }; // Passed params override url params
@@ -287,9 +287,9 @@ function phUrlParamQueryString(url, params, merge_mode) {
     return result;
 }
 
-// jQuery DeParam.querystring 
+// jQuery DeParam.querystring
 function phUrlDeParamQueryString(url_or_params, coerce) {
-    
+
 	if (url_or_params === undefined || typeof url_or_params === "boolean") {
         // url_or_params not specified.
         coerce = url_or_params;
@@ -477,12 +477,12 @@ function phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProduc
  */
 
 function phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, uniqueValue, wait, source) {
-    
+
 	/* When Force Category, then urlItemsview get the ID of category included by e.g. module filter - loaded by php
 		force_category ... yes
 		skip_category_view ... no
 	*/
-    
+
 	const phParams = Joomla.getOptions("phParamsPC");
 
     /*
@@ -596,7 +596,7 @@ function phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsO
 
 /* Function phChangeFilter */
 function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, source) {
-    
+
 	const phVars = Joomla.getOptions("phVarsModPhocacartFilter");
     const phParams = Joomla.getOptions("phParamsModPhocacartFilter");
     const isItemsView = phVars["isItemsView"];
@@ -659,38 +659,47 @@ function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, 
 
 /* Function phChangeSearch */
 function phChangeSearch(paramV, value, formAction) {
-    
+
 	const phVars = Joomla.getOptions("phVarsModPhocacartSearch");
     const phParams = Joomla.getOptions("phParamsModPhocacartSearch");
     //const phVarsPC = Joomla.getOptions("phParamsPC");
     const isItemsView = phVars["isItemsView"];
-    const urlItemsView = phVars["urlItemsView"];
+    let urlItemsView = phVars["urlItemsView"];
     const urlItemsViewWithoutParams = phVars["urlItemsViewWithoutParams"];
     let phA = 1;
 
     let filteredProductsOnly = isItemsView;
+
     if (formAction == 1) {
         if (phParams["searchOptions"] == 1) {
             //jQuery("#phSearchBoxSearchAllProducts:checked").val();
             //jQuery("#phSearchBoxSearchAllProducts").attr("checked");
-            if (jQuery("#phSearchBoxSearchAllProducts:checked").length > 0) {
+            //if (jQuery("#phSearchBoxSearchAllProducts:checked").length > 0) {
+            // Class instead of ID because of more possible instances (desktop/mobile/...)
+            if (jQuery(".phSearchBoxSearchAllProducts:checked").length > 0) {
                 urlItemsView = urlItemsViewWithoutParams;
                 filteredProductsOnly = 0; // When options are enabled and searching is set to all - we search without filtering
             }
         } else {
             filteredProductsOnly = 0; // When options are disabled we always search without filtering
         }
-
         phA = phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
     } else {
         phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
+    }
+    
+    // Possible search in offcanvas
+    var phItemSearchBoxOffCanvas = document.getElementById('phItemSearchBoxOffCanvas');
+    if(phItemSearchBoxOffCanvas) {
+        var phItemSearchBoxOffCanvasBs = bootstrap.Offcanvas.getInstance(phItemSearchBoxOffCanvas);
+        phItemSearchBoxOffCanvasBs.hide();
     }
 
     startFullOverlay(phA);
 }
 
 function phPriceFilterRange() {
-    
+
 	const phVars = Joomla.getOptions("phParamsPC");
     const phLang = Joomla.getOptions("phLangPC");
 
@@ -712,7 +721,7 @@ function phPriceFilterRange() {
     jQuery("#phPriceFilterPrice").html("" + phLang["COM_PHOCACART_PRICE"] + ": " + phGetPriceFormat(phVars["filterPriceFrom"]) + " - " + phGetPriceFormat(phVars["filterPriceTo"]));
 
     jQuery("#phPriceFromTopricefrom").on("change", function (e) {
-        
+
 		let from = jQuery("#phPriceFromTopricefrom").val();
         let to = jQuery("#phPriceFromTopriceto").val();
         if (to == "") {

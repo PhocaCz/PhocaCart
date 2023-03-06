@@ -291,6 +291,7 @@ function phFindMember(typeValue) {
 	jQuery(".ph-pos-message-box").html("");// clear message box
 }
 
+
 /* POS Scroll cart */
 function phScrollPosCart(phPosCart) {
 	if (jQuery("#ph-msg-ns").length > 0){
@@ -332,6 +333,8 @@ function phConfirm(submitForm, dataPost, txt) {
 	return false;
 }
 
+
+var phPosCloseTicketFormConfirmed = false;
 
 // ------
 // Events
@@ -434,7 +437,6 @@ jQuery(document).ready(function(){
 	});
 
 	/* Display warning when closing a ticket */
-	phPosCloseTicketFormConfirmed = false;
 	jQuery(document).on("submit", "#phPosCloseTicketForm", function (e) {
 		var txt = jQuery(this).data("txt");
 		if(!phPosCloseTicketFormConfirmed) {

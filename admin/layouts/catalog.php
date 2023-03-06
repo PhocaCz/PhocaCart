@@ -13,7 +13,7 @@ use Joomla\CMS\Uri\Uri;
 
 $d 		        = $displayData;
 $price 	        = new PhocacartPrice();
-$taxes 	        = PhocacartTax::getAllTaxesIncludingCountryRegion();
+$taxes 	        = PhocacartTax::getAllTaxesIncludingCountryRegionPlugin();
 $pathItem 		= PhocacartPath::getPath('productimage');
 
 
@@ -151,7 +151,7 @@ foreach($d['items'] as $k => $v) {
 	echo '<td>';
 
     // 2)2) SUBCOLUMN PRICE
-    $priceItems	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, NULL);
+    $priceItems	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, NULL, $v['taxhide']);
 
 
 	//echo '<div class="ph-catalog-price">'. $price->getPriceFormat($v['price']).'</div>';
@@ -173,17 +173,25 @@ foreach($d['items'] as $k => $v) {
 
         echo '<table class="ph-catalog-price-table">';
 
-        if ($priceItems['netto'] != 0 && $priceItems['netto'] != $priceItems['brutto']) {
+
+        $displayPriceItems = PhocaCartPrice::displayPriceItems($priceItems, 'catalog');// Display Netto, Tax, Brutto?
+
+        if ($displayPriceItems['netto'] == 1) {
+        //if ($priceItems['netto'] != 0 && $priceItems['netto'] != $priceItems['brutto']) {
             echo '<tr><td class="ph-catalog-price-item-txt">' . $priceItems['nettotxt'] . ' </td><td class="ph-catalog-price-item">' . $priceItems['nettoformat'] . '</td></tr>';
         } else {
             echo '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>';
         }
-        if ($priceItems['tax'] != 0 && $priceItems['netto'] != $priceItems['brutto']) {
+
+        if ($displayPriceItems['tax'] == 1) {
+        //if ($priceItems['tax'] != 0 && $priceItems['netto'] != $priceItems['brutto']) {
             echo '<tr><td class="ph-catalog-price-item-txt">' . $priceItems['taxtxt'] . ' </td><td class="ph-catalog-price-item">' . $priceItems['taxformat'] . '</td></tr>';
         } else {
             echo '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>';
         }
-        if ($priceItems['brutto'] != 0) {
+
+        if ($displayPriceItems['brutto'] == 1) {
+        //if ($priceItems['brutto'] != 0) {
             echo '<tr><td class="ph-catalog-price-item-txt">' . $priceItems['bruttotxt'] . ' </td><td class="ph-catalog-price-item">' . $priceItems['bruttoformat'] . '</td></tr>';
         } else {
             echo '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>';

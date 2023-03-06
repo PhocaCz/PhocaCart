@@ -22,6 +22,7 @@ $price		= new PhocacartPrice();
 $msgSuffix	= '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
 $p['tax_calculation']					= $d['params']->get( 'tax_calculation', 0 );
+$p['display_zero_tax']					= $d['params']->get( 'display_zero_tax', 0 );
 $p['stock_checkout']					= $d['params']->get( 'stock_checkout', 0 );
 $p['stock_checking']					= $d['params']->get( 'stock_checking', 0 );
 $p['display_discount_product']			= $d['params']->get( 'display_discount_product', 1 );
@@ -484,12 +485,16 @@ if (!empty($d['fullitems'][1])) {
 	// TAX
 	if (!empty($d['total'][0]['tax'])) {
 		foreach($d['total'][0]['tax'] as $k3 => $v3) {
-			if($v3['tax'] !== 0 && $v3['tax'] != 0 && $p['tax_calculation'] != 0) {
-				echo '<div class="'.$r.' ph-cart-tax-box ph-checkout-cart-row-tax">';
-				echo '<div class="'.$cTotE.'"></div>';
-				echo '<div class="'.$cTotT.' ph-cart-tax-txt">'.$v3['title'].'</div>';
-				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-tax">'.$price->getPriceFormat($v3['tax']).'</div>';
+			//if($v3['tax'] !== 0 && ($v3['tax'] != 0 xor (int)$displayZeroTax == 1) && (int)$p['tax_calculation'] != 0) {
+			$v3['taxcalc'] = (int)$p['tax_calculation'];
+			$displayPriceItems = PhocaCartPrice::displayPriceItems($v3, 'checkout');
+				if ($displayPriceItems['tax'] == 1) {
+				echo '<div class="' . $r . ' ph-cart-tax-box ph-checkout-cart-row-tax">';
+				echo '<div class="' . $cTotE . '"></div>';
+				echo '<div class="' . $cTotT . ' ph-cart-tax-txt">' . $v3['title'] . '</div>';
+				echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-tax">' . $price->getPriceFormat($v3['tax']) . '</div>';
 				echo '</div>';// end row
+
 			}
 		}
 	}

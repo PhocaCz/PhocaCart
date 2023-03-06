@@ -10,7 +10,8 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 $d 		= $displayData;
 $price 	= new PhocacartPrice();
-$taxes 	= PhocacartTax::getAllTaxesIncludingCountryRegion();
+$taxes 	= PhocacartTax::getAllTaxesIncludingCountryRegionPlugin();
+
 
 $p = array();
 $p['report_calculation'] 		= $d['params']->get( 'report_calculation', 1);
@@ -222,6 +223,7 @@ foreach($d['items'] as $k => $v) {
 			echo '<td '.$cRTax.'>';
 			if (!empty($v->tax)) {
 				foreach($v->tax as $kT => $vT) {
+
 					echo isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ' ' : '';
 					echo isset($taxes[$kT]['tax_rate']) && isset($taxes[$kT]['calculation_type']) ? '('.$price->getTaxFormat($taxes[$kT]['tax_rate'], (int)$taxes[$kT]['calculation_type']).') ' : '';
 					echo ': ';

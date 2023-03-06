@@ -13,6 +13,8 @@ use Joomla\CMS\Plugin\PluginHelper;
 defined('_JEXEC') or die();
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+
 jimport('joomla.application.component.model');
 
 class PhocaCartModelItem extends BaseDatabaseModel
@@ -37,6 +39,13 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			if (empty($this->item)) {
 				return null;
 			}
+
+			if (isset($this->item[0]->taxhide)) {
+				$registry = new Registry;
+				$registry->loadString($this->item[0]->taxhide);
+				$this->item[0]->taxhide = $registry->toArray();
+			}
+
 		}
 		return $this->item;
 	}
@@ -218,9 +227,9 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, i.catid AS preferred_catid, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
 
 		if (!$skip['tax']) {
-            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
+            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
         } else {
-            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
+            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
         }
 
         if (!$skip['group']) {

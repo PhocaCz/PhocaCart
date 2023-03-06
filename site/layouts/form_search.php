@@ -43,7 +43,7 @@ if (isset($d['activefilter']) && $d['activefilter']) {
     <div class="inner-addon right-addon"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>"/></div>
 
 <?php } else { ?>
-    <input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" />
+    <input type="text" class="<?php echo $d['s']['c']['form-control'] ?> phSearchBoxSearchInput" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" />
 
 <?php } ?>
 
@@ -62,10 +62,10 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 
 <?php if ($d['search_options'] == 1) { ?>
-    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
+    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchAllProducts" class="phSearchBoxSearchAllProducts" value="phOptionSearchAllProducts" <?php echo $checkedAll; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_ALL_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
     </div>
 
-    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
+    <div class="radio ph-search-radio ph-radio-container"><label><input type="radio" name="phOptionSearchProducts" id="<?php echo $d['id']; ?>SearchFilteredProducts" class="phSearchBoxSearchFilteredProducts" value="phOptionSearchFilteredProducts" <?php echo $checkedFilter; ?>><?php echo Text::_('COM_PHOCACART_SEARCH_FILTERED_PRODUCTS'); ?><span class="ph-radio-checkmark"></span></label>
     </div>
 <?php } ?>
 

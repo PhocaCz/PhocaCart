@@ -28,7 +28,7 @@ function phRemoveUrlParameter(param, url) {
 
 
 function startOverlay(outputDiv) {
-	
+
 	const phOverlay = jQuery('<div id="phOverlayDiv"><div id="phLoaderFull"> </div></div>');
 	phOverlay.appendTo(outputDiv);
 	jQuery("#phOverlayDiv").fadeIn().css("display","block");
@@ -186,7 +186,7 @@ function phRenderPagePart(sFormData, outputDiv, phUrl) {
 		data: sFormData,
 		dataType:"HTML",
 		success: function(data){
-			outputDiv = '#'+ outputDiv;
+			outputDiv = '.'+ outputDiv;
 			jQuery(outputDiv).html(data);
 		}
 	})

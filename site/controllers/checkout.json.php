@@ -106,7 +106,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 // ==================
                 // PRICE
-                $priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 1, 1, $item->group_price);
+                $priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 1, 1, $item->group_price, $item->taxhide);
                 $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 
 
@@ -479,7 +479,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 // Price (don't display add to cart when price is zero)
                 $price  = new PhocacartPrice();
-                $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price);
+                $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price, $itemP->taxhide);
                 $aA     = PhocacartAttribute::sanitizeAttributeArray($item['attribute']);
                 $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $itemP, 1);
                 $price->correctMinusPrice($priceP);

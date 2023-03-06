@@ -27,8 +27,8 @@ final class PhocacartCategory
 	private static $categoryA = array();
 	private static $categoryF = array();
 	private static $categoryP = array();
-  private static $categoryPR = array();
-
+	private static $categoryPR = array();
+  
 	public static function CategoryTreeOption($data, $tree, $id = 0, $text = '', $currentId = 0) {
 		foreach ($data as $key) {
 			$show_text =  $text . $key->text;
@@ -178,7 +178,8 @@ final class PhocacartCategory
 		return $path;
 	}
 
-	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
+	public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') 
+  {
 		if( empty(self::$categoryPR[$id])) {
 			self::$categoryPR[$id]	= self::getPathTreeRouter($path, $id, $parent_id, $title, $alias);
 		}
@@ -323,7 +324,7 @@ final class PhocacartCategory
 				$result[] = '<li><div class="'.$s['c']['controls'].'">';
 				$result[] = '<label class="ph-checkbox-container"><input class="'.$s['c']['inputbox.checkbox'].'" type="checkbox" name="tag" value="'.$value.'" '.$checked.' onchange="'.$jsSet.'" />'. $icon . $v['title'].$count.'<span class="ph-checkbox-checkmark"></span></label>';
 				$result[] = '</div></li>';
-				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active);
+				$result[] = self::nestedToCheckBox($v['children'], $d, $currentCatid, $active, $forceCategoryId);
 			}
 			$result[] = '</ul>';
 		}
