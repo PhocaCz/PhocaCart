@@ -36,7 +36,7 @@ class PhocacartTag
     }
   }
 
-  private static function getProductTags($type, $itemId, $select = 0)
+  private static function getProductTags($type, $itemId, $select = 0, $checkPublish = 0)
   {
     $db = Factory::getDBO();
 
@@ -51,8 +51,12 @@ class PhocacartTag
     $query .= ' FROM #__phocacart_tags AS a'
       .' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id'
       .' WHERE a.type = ' . (int)$type
-      .' AND r.item_id = '.(int) $itemId
-      .' ORDER BY a.id';
+      .' AND r.item_id = '.(int) $itemId;
+    if ($checkPublish == 1) {
+        $query .= ' AND a.published = 1';
+    }
+
+    $query .= ' ORDER BY a.id';
     $db->setQuery($query);
 
     if ($select == 1) {
@@ -120,9 +124,9 @@ class PhocacartTag
 	 * @param number $select
 	 * @return mixed|void|mixed[]
 	 */
-	public static function getTags($itemId, $select = 0)
+	public static function getTags($itemId, $select = 0, $checkPublish = 0)
   {
-    return self::getProductTags(self::TYPE_TAG, $itemId, $select);
+    return self::getProductTags(self::TYPE_TAG, $itemId, $select, $checkPublish);
 	}
 
 	/*
@@ -144,9 +148,9 @@ class PhocacartTag
 	 * @param number $select
 	 * @return mixed|void|mixed[]
 	 */
-	public static function getTagLabels($itemId, $select = 0)
+	public static function getTagLabels($itemId, $select = 0, $checkPublish = 0)
   {
-    return self::getProductTags(self::TYPE_LABEL, $itemId, $select);
+    return self::getProductTags(self::TYPE_LABEL, $itemId, $select, $checkPublish);
 	}
 
 	/*
@@ -292,14 +296,14 @@ class PhocacartTag
 
 	    if ($types == 1) {
 	        // Only tags
-			$tags 	= self::getTags($itemId);
+			$tags 	= self::getTags($itemId, 0, 1);
 		} else if ($types == 2) {
 		    // Only labels
-			$tags 	= self::getTagLabels($itemId);
+			$tags 	= self::getTagLabels($itemId, 0, 1);
 		} else if ($types == 3) {
 		    // Tags and Labels together (they can be displayed as labels in category/items view)
-		    $t 	= self::getTags($itemId);
-		    $l 	= self::getTagLabels($itemId);
+		    $t 	= self::getTags($itemId, 0, 1);
+		    $l 	= self::getTagLabels($itemId, 0, 1);
 		    $tags = array_merge($t, $l);
         } else {
 	        return '';

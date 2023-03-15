@@ -14,7 +14,7 @@ ALTER TABLE `#__phocacart_users` ADD COLUMN `params_user` text;
 ALTER TABLE `#__phocacart_orders` ADD COLUMN `params_user` text;
 
 
-ALTER TABLE `#__phocacart_taxes` ADD COLUMN `tax_hide` tinyint(1) NOT NULL default '0';
+ALTER TABLE `#__phocacart_taxes` ADD COLUMN `tax_hide` text;
 ALTER TABLE `#__phocacart_order_total` ADD COLUMN `item_id_p` int(11) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_order_tax_recapitulation` ADD COLUMN `item_id_p` int(11) NOT NULL DEFAULT '0';
 ALTER TABLE `#__phocacart_order_products` ADD COLUMN `default_tax_id_p` int(11) NOT NULL DEFAULT '0';

@@ -1293,6 +1293,15 @@ class PhocacartPrice
                 }
 
             }
+        } else {
+            // Tax not exist
+            if (isset($priceItems['taxcalc']) && (int)$priceItems['taxcalc'] == 0) {
+                // And tax calculation disabled
+                if ($priceItems['netto'] == $priceItems['brutto']){
+                    // And netto is equal brutto
+                   $displayPriceItems['netto'] = 0;
+                }
+            }
         }
 
         return $displayPriceItems;
