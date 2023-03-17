@@ -36,14 +36,16 @@ if ($d['t']['display_webp_images'] == 1) {
     if ($d['t']['lazy_load_categories'] == 1) {
 
         echo '<picture>';
-        echo '<source type="image/webp" data-src="'. $srcWebP.'" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-srcset="' . $srcSetWebP . '" />';
+        // alt="' . $altValue . '"
+        echo '<source type="image/webp" data-src="'. $srcWebP.'" class="' . $class . '" ' . $d['image']['style'] . ' data-srcset="' . $srcSetWebP . '" />';
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' />';
         echo '</picture>';
 
     } else {
 
         echo '<picture>';
-        echo '<source type="image/webp" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" />';
+        //  alt="' . $altValue . '"
+        echo '<source type="image/webp" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" />';
         echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ''.$attributeLazyLoad.' />';
         echo '</picture>';
     }

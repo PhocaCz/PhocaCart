@@ -110,6 +110,12 @@ class PhocacartText {
         $body = isset($replace['totaltopaynoformatcomma'])	? str_replace('{totaltopaynoformatcomma}', $replace['totaltopaynoformatcomma'], $body)	: $body;
 		$body = isset($replace['currencycode'])				? str_replace('{currencycode}', $replace['currencycode'], $body)		            : $body;
 
+
+        $body = isset($replace['totaltopaynoformatcurrency'])	? str_replace('{totaltopaynoformatcurrency}', $replace['totaltopaynoformatcurrency'], $body)	: $body;
+        $body = isset($replace['totaltopaynoformatcommacurrency'])	? str_replace('{totaltopaynoformatcommacurrency}', $replace['totaltopaynoformatcommacurrency'], $body)	: $body;
+        $body = isset($replace['totaltopaycurrency'])	? str_replace('{totaltopaycurrency}', $replace['totaltopaycurrency'], $body)	: $body;
+
+
         $body = isset($replace['openingtimesinfo'])			? str_replace('{openingtimesinfo}', $replace['openingtimesinfo'], $body)		    : $body;
 
         $body = isset($replace['vendorname'])			    ? str_replace('{vendorname}', $replace['vendorname'], $body)		                : $body;
@@ -435,10 +441,26 @@ class PhocacartText {
 
 
 		$r['invoicetimeofsupply']	= PhocacartOrder::getInvoiceDate($orderId, $common->invoice_time_of_supply, 'Y-m-d');
+
+        $defaultCurrency = PhocacartCurrency::getDefaultCurrency();
 		$totalToPay					= isset($totalBrutto[0]->amount) ? $totalBrutto[0]->amount : 0;
 		$r['totaltopaynoformat']	= number_format($totalToPay, 2, '.', '');
         $r['totaltopaynoformatcomma']	= number_format($totalToPay, 2, ',', '');
-		$r['totaltopay']			= $price->getPriceFormat($totalToPay, 0, 1);
+		$r['totaltopay']			= $price->getPriceFormat($totalToPay, 0, 1, $defaultCurrency);
+
+        $totalToPayCurrency			= isset($totalBrutto[0]->amount_currency) ? $totalBrutto[0]->amount_currency : 0;
+        if ($totalToPayCurrency != 0) {
+            $r['totaltopaynoformatcurrency']      = number_format($totalToPayCurrency, 2, '.', '');
+            $r['totaltopaynoformatcommacurrency'] = number_format($totalToPayCurrency, 2, ',', '');
+            $r['totaltopaycurrency']              = $price->getPriceFormat($totalToPayCurrency, 0, 1);
+        } else {
+            $r['totaltopaynoformatcurrency']      = $r['totaltopaynoformat'];
+            $r['totaltopaynoformatcommacurrency'] = $r['totaltopaynoformatcomma'];
+            $r['totaltopaycurrency']              = $r['totaltopay'];
+        }
+        
+
+
         $r['paymenttitle'] 		    = PhocacartOrderView::getPaymentTitle($common);
         $r['paymentdescriptioninfo'] 		= PhocacartOrderView::getPaymentDescriptionInfo($common);
 		$dateO 						= PhocacartDate::splitDate($common->date);

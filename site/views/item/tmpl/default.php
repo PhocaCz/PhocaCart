@@ -966,7 +966,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo '<div class="ph-cb"></div>';
 
 		echo '<div class="ph-item-tag-box">';
-		echo '<h3>Tags</h3>';
+		echo '<h3>'.Text::_('COM_PHOCACART_TAGS').'</h3>';
 		echo $this->t['tags_output'];
 		echo '</div>';
 

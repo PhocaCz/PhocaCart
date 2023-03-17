@@ -304,6 +304,8 @@ class PhocaCartViewCheckout extends HtmlView
                 $scrollTo               = 'phcheckoutshippingedit';
                 //- $shipping					= new PhocacartShipping();
                 //$shipping->setType();
+
+                $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
                 $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
@@ -414,6 +416,7 @@ class PhocaCartViewCheckout extends HtmlView
                 //$payment					= new PhocacartPayment();
                 $shippingId = $this->cart->getShippingId();// Shipping stored in cart or not?
 
+                $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
 
@@ -526,7 +529,9 @@ class PhocaCartViewCheckout extends HtmlView
         if (($this->a->login == 1 || $this->a->login == 2) && $this->a->addressview == 1 && $this->a->shippingview == 1 && $this->a->paymentview == 1) {
             $this->a->confirm = 1;
 
+
             // Custom "Confirm Order" Text
+            $this->cart->roundTotalAmount();
             $total                         = $this->cart->getTotal();
             $totalBrutto                   = isset($total[0]['brutto']) ? $total[0]['brutto'] : 0;
             $this->t['confirm_order_text'] = PhocacartRenderFront::getConfirmOrderText($totalBrutto);
@@ -559,6 +564,11 @@ class PhocaCartViewCheckout extends HtmlView
 
         // Render the cart (here because it can be changed above - shipping can be added)
         //$total				= $this->cart->getTotal();
+
+
+
+
+
         $this->t['cartoutput'] = $this->cart->render();
 
         $this->t['cartempty'] = $this->cart->getCartCountItems() > 0 ? false : true;

@@ -14,7 +14,7 @@ if ($d['t']['display_webp_images'] == 1) {
     echo '<picture>';
     echo ' <source type="image/webp"';
     echo isset($d['srcset-webp']) ? ' srcset="'.$d['srcset-webp'].'"' : ' srcset=""';
-    echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
+    //echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
     //echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : ''; // TEST
     //echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : ''; // TEST
     echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';

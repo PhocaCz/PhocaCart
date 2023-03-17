@@ -58,7 +58,8 @@ if ($d['t']['display_webp_images'] == 1) {
 
         // TEST 2 (removed data-src because it is transformed to src in picture tag which is obsolete)
         // class needed because of chaning attributes - changing attributes changes images
-        echo '<source type="image/webp" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" class="'.$classSource.'" />';
+        // alt="' . $altValue . '"
+        echo '<source type="image/webp" data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" class="'.$classSource.'" />';
 
 
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
@@ -69,7 +70,8 @@ if ($d['t']['display_webp_images'] == 1) {
         echo '<picture>';
         //echo '<source type="image/webp" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" />';
         // class needed because of chaning attributes - changing attributes changes images
-        echo '<source type="image/webp" alt="' . $altValue . '"  srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" class="'.$classSource.'" />';// TEST
+        // alt="' . $altValue . '"
+        echo '<source type="image/webp" srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" class="'.$classSource.'" />';// TEST
         echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-image="' . $dataImg . '"'.$attributeLazyLoad.' />';
         echo '</picture>';
 

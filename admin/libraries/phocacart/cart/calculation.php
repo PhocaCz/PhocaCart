@@ -1281,6 +1281,7 @@ class PhocacartCartCalculation
             } else {
                 $totalBruttoCurrency         = $price->roundPrice($total[0]['brutto'] * $cr);
                 $total[0]['brutto_currency'] = $totalBruttoCurrency;
+
             }
 
 

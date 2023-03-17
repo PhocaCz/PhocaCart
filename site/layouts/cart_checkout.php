@@ -20,7 +20,7 @@ $app 		= Factory::getApplication();
 $d 			= $displayData;
 $price		= new PhocacartPrice();
 $msgSuffix	= '<span id="ph-msg-ns" class="ph-hidden"></span>';
-
+$p = array();
 $p['tax_calculation']					= $d['params']->get( 'tax_calculation', 0 );
 $p['display_zero_tax']					= $d['params']->get( 'display_zero_tax', 0 );
 $p['stock_checkout']					= $d['params']->get( 'stock_checkout', 0 );

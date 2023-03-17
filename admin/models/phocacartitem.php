@@ -74,14 +74,16 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	protected function loadFormData()
 	{
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartitem.data', array());
-
+		
 		if (is_array($data) && $data) {
 			if (!isset($data['group']) || !$data['group']) {
 				$data['group'] = PhocacartGroup::getDefaultGroup(1);
 			}
+
 			if (isset($data['related']) && is_array($data['related'])) {
 				$relatedOption = array_shift($data['related']);
 				$relatedOption = explode(',', $relatedOption);
+
 				if($relatedOption) {
 					$i = 0;
 					$value = '';
