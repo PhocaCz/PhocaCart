@@ -622,7 +622,7 @@ class PhocacartRoute
 		$match = null;
 		// FIRST - test active menu link
 		foreach($needles as $needle => $id) {
-			if (isset($active->query['option']) && $active->query['option'] == $component
+			if (isset($active->query['option']) && $active->query['option'] == $component->option
 				&& isset($active->query['view']) && $active->query['view'] == $needle
 				&& (in_array($needle, $notCheckIdArray) || (isset($active->query['id']) && $active->query['id'] == $id ))
 			) {
@@ -642,7 +642,7 @@ class PhocacartRoute
 
 			foreach($items as $item) {
 
-				if (isset($item->query['option']) && $item->query['option'] == $component
+				if (isset($item->query['option']) && $item->query['option'] == $component->option
 					&& isset($item->query['view']) && $item->query['view'] == $needle
 					&& (in_array($needle, $notCheckIdArray) || (isset($item->query['id']) && $item->query['id'] == $id ))
 				) {

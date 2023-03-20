@@ -458,7 +458,7 @@ class PhocacartText {
             $r['totaltopaynoformatcommacurrency'] = $r['totaltopaynoformatcomma'];
             $r['totaltopaycurrency']              = $r['totaltopay'];
         }
-        
+
 
 
         $r['paymenttitle'] 		    = PhocacartOrderView::getPaymentTitle($common);
