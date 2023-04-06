@@ -23,5 +23,5 @@ ALTER TABLE `#__phocacart_order_products` ADD COLUMN `default_tax_id_p` int(11) 
 ALTER TABLE `#__phocacart_groups` CHANGE `valid_from` `valid_from` datetime NULL DEFAULT NULL;
 ALTER TABLE `#__phocacart_groups` CHANGE `valid_to` `valid_to` datetime NULL DEFAULT NULL;
 
-
+ALTER TABLE `#__phocacart_products` ADD COLUMN `aidata` text;
 

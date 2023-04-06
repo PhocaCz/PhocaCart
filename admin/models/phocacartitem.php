@@ -74,7 +74,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	protected function loadFormData()
 	{
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartitem.data', array());
-		
+
 		if (is_array($data) && $data) {
 			if (!isset($data['group']) || !$data['group']) {
 				$data['group'] = PhocacartGroup::getDefaultGroup(1);
@@ -130,6 +130,12 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$registry = new Registry;
 				$registry->loadString($item->gift_types);
 				$item->gift_types = $registry->toArray();
+			}
+
+			if (isset($item->aidata)) {
+				$registry = new Registry;
+				$registry->loadString($item->aidata);
+				$item->aidata = $registry->toArray();
 			}
 
 			// Make the numbers more readable
@@ -354,6 +360,16 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		} else {
 			$data['gift_types'] = '';
+		}
+
+		if (!empty($data['aidata'])) {
+			$registry 	= new Registry($data['aidata']);
+			$aIData 	= $registry->toString();
+			if($aIData != '') {
+				$data['aidata'] = $aIData;
+			}
+		} else {
+			$data['aidata'] = '';
 		}
 
 

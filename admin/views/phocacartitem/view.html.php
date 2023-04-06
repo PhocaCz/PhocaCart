@@ -23,6 +23,7 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 	protected $form;
 	protected $t;
 	protected $r;
+	protected $p;
 	protected $attributes;
 
 	public function display($tpl = null) {
@@ -33,8 +34,42 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
-
+		$params    = PhocacartUtils::getComponentParameters();
 		$media = new PhocacartRenderAdminmedia();
+
+		// AI
+		$app = Factory::getApplication();
+        $wa = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseScript('com_phocacart.phocacartai', 'media/com_phocacart/js/phoca/phocacartai.js', array('version' => 'auto'));
+		$config = Factory::getConfig();
+		$editor = $config->get('editor');
+
+		$oVars['editor'] = $editor;
+
+		$oLang['COM_PHOCACART_ERROR_YOU_DID_NOT_PROVIDE_API_KEY'] = Text::_('COM_PHOCACART_ERROR_YOU_DID_NOT_PROVIDE_API_KEY');
+		$oLang['COM_PHOCACART_SUCCESS_CONTENT_INSERTED'] = Text::_('COM_PHOCACART_SUCCESS_CONTENT_INSERTED');
+		$oLang['COM_PHOCACART_DESTINATION_FIELD_NOT_EMPTY_PRESS_OK_TO_OVERWRITE_CONTENTS_IN_DESTINATION_FIELD'] = Text::_('COM_PHOCACART_DESTINATION_FIELD_NOT_EMPTY_PRESS_OK_TO_OVERWRITE_CONTENTS_IN_DESTINATION_FIELD');
+
+		$oParams['aiApiKey'] = $params->get('ai_apikey', '');
+		$oParams['aiModel'] = $params->get('ai_model', 'text-davinci-003');
+
+		$oParams['ai_parameters_description'] = $params->get('ai_parameters_description', '{"max_tokens": 300, "temperature": 0.5}');
+		$oParams['ai_premade_question_description'] = $params->get('ai_premade_question_description', 'Create a product description based on the following information');
+
+		$oParams['ai_parameters_description_long'] = $params->get('ai_parameters_description_long', '{"max_tokens": 2048, "temperature": 0.5}');
+		$oParams['ai_premade_question_description_long'] = $params->get('ai_premade_question_description_long', 'Create a very comprehensive description of the product based on the following information');
+
+		$oParams['ai_parameters_features'] = $params->get('ai_parameters_features', '{"max_tokens": 2048, "temperature": 0.5}');
+		$oParams['ai_premade_question_features'] = $params->get('ai_premade_question_features', 'Create a very comprehensive feature list of the product based on the following information');
+
+		$oParams['ai_parameters_metadesc'] = $params->get('ai_parameters_metadesc', '{"max_tokens": 50, "temperature": 0.5}');
+		$oParams['ai_premade_question_metadesc'] = $params->get('ai_premade_question_metadesc', 'Create a very short description of the product based on the following information');
+
+        $this->document->addScriptOptions('phLangPC', $oLang);
+        $this->document->addScriptOptions('phVarsPC', $oVars);
+        $app->getDocument()->addScriptOptions('phParamsPC', $oParams);
+
+
 
 
 		//$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
@@ -55,10 +90,6 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 			//$this->specifications				= PhocacartSpecification::getSpecificationsById((int)$this->item->id);
 			//$this->discounts					= PhocacartDiscountProduct::getDiscountsById((int)$this->item->id);
 			//$this->additional_images 			= PhocacartImageAdditional::getImagesByProductId((int)$this->item->id);
-
-
-
-
 
 		}
 

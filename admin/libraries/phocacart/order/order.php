@@ -1711,7 +1711,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1719,7 +1719,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }

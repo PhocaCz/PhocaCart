@@ -152,6 +152,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `metakey` text,
   `metadesc` text,
   `metadata` text,
+  `aidata` text,
   `language` char(7) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `product_idx` (`published`,`access`),

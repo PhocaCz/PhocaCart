@@ -1960,8 +1960,22 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 }
 
 .phc-red, .ph-msg-error {color: #a60000;}
+.ph-msg-error-box {
+	padding: 1em;
+	border-radius: 3px;
+	background-color: #ffa3a3;
+	color: #a60000;
+}
+
 .phc-grey {color: #555555}
 .phc-green, .ph-msg-success {color: #559d22;}
+.ph-msg-success-box {
+	padding: 1em;
+	border-radius: 3px;
+	background-color: #daf3c9;
+	color: #559d22;
+}
+
 .phc-orange {color:orange;}
 .phc-brown {color: #a5572a;}
 
@@ -2077,6 +2091,34 @@ a[target=_blank]::before {
 }
 
 
+.ph-ai-question-item {
+	display: flex;
+	margin: 0.5em;
+}
+
+.ph-ai-paste-item {
+	display:flex;
+	align-items: center;
+	justify-content: end;
+	margin: 0.5em;
+}
+
+.ph-ai-content-item {
+	margin: 0.5em;
+}
+
+.ph-ai-content-item textarea {
+	min-height: 8em;
+}
+
+.ph-ai-question-item-field,
+.ph-ai-paste-item-text {
+	margin-right: 1em;
+}
+
+.ph-ai-message-box {
+	margin-bottom: 1em;
+}
 
 
 

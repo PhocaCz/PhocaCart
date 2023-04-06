@@ -1776,11 +1776,12 @@
             <field name="phocahead26" type="phocahead" default="COM_PHOCACART_PRIVACY_TERMS_AND_CONDITIONS_SETTINGS_LABEL" label="" description=""/>
 
 
-            <field name="display_checkout_toc_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_LABEL"
+            <field name="display_checkout_toc_checkbox" type="list" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
-                <option value="0">COM_PHOCACART_NO</option>
+
             </field>
 
             <field name="terms_conditions_custom_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
@@ -1795,11 +1796,12 @@
             <field name="cofirm_order_text_zero" default="" type="text" label="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_LABEL" description="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_DESC"/>
 
 
-            <field name="display_checkout_privacy_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
+            <field name="display_checkout_privacy_checkbox" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
-                <option value="0">COM_PHOCACART_NO</option>
+
             </field>
 
             <field name="checkout_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
@@ -1810,7 +1812,7 @@
 
 				   <field name="display_checkout_newsletter_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_DESC">
-<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
@@ -2385,6 +2387,35 @@
 
 
 		</fieldset>
+
+        <fieldset name="ai" label="COM_PHOCACART_CONFIG_HEAD_AI_LABEL">
+
+            <field name="ai_apikey" type="text" label="COM_PHOCACART_AI_OPENAI_API_KEY_LABEL" description="COM_PHOCACART_AI_OPENAI_API_KEY_DESC" filter="safehtml" />
+            <field name="ai_model" type="list" label="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_LABEL" description="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_LABEL" default="text-davinci-003">
+                <option value="text-davinci-003">text-davinci-003</option>
+                <option value="text-curie-001">text-curie-001</option>
+                <option value="text-babbage-001">text-babbage-001</option>
+                <option value="text-ada-001">text-ada-001</option>
+            </field>
+
+            <field name="ai_premade_question_description" type="text" default="Create a product description based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_description" type="textarea" default="{&quot;max_tokens&quot;: 300, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_LABEL" description="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_DESC" filter="raw" />
+
+            <field name="ai_premade_question_description_long" type="text" default="Create a very comprehensive description of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LONG_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LONG_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_description_long" type="textarea" default="{&quot;max_tokens&quot;: 2048, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_LONG_LABEL" description="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_LONG_DESC" filter="raw" />
+
+            <field name="ai_premade_question_features" type="text" default="Create a very comprehensive feature list of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_FEATURES_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_FEATURES_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_features" type="textarea" default="{&quot;max_tokens&quot;: 2048, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_FEATURES_LABEL" description="COM_PHOCACART_AI_PARAMETERS_FEATURES_DESC" filter="raw" />
+
+            <field name="ai_premade_question_metadesc" type="text" default="Create a very short description of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_metadesc" type="textarea" default="{&quot;max_tokens&quot;: 50, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_METADESC_LABEL" description="COM_PHOCACART_AI_PARAMETERS_METADESC_DESC" filter="raw" />
+
+
+        </fieldset>
 
         <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
             <field name="rules" type="rules" component="com_phocacart" filter="rules" validate="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component"/>
