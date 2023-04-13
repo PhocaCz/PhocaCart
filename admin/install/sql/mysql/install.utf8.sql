@@ -902,6 +902,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_payment_methods` (
   `active_region` tinyint(1) NOT NULL DEFAULT '0',
   `active_zone` tinyint(1) NOT NULL DEFAULT '0',
   `active_shipping` tinyint(1) NOT NULL DEFAULT '0',
+  `active_currency` tinyint(1) NOT NULL DEFAULT '0',
   `method` varchar(100) NOT NULL DEFAULT '',
   `access` int(11) unsigned NOT NULL DEFAULT '0',
   `privacy` tinyint(1) NOT NULL default '0',
@@ -938,6 +939,12 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_payment_method_shipping` (
   `payment_id` int(11) NOT NULL DEFAULT '0',
   `shipping_id` int(11) NOT NULL DEFAULT '0',
   KEY `idx_payment` (`payment_id`, `shipping_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_payment_method_currencies` (
+  `payment_id` int(11) NOT NULL DEFAULT '0',
+  `currency_id` int(11) NOT NULL DEFAULT '0',
+  KEY `idx_payment` (`payment_id`, `currency_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 

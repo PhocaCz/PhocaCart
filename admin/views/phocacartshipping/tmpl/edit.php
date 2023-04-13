@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 
+Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('webcomponent.field-subform');
+
 
 $r 			=  $this->r;
 $js ='

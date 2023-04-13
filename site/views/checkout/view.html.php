@@ -368,6 +368,13 @@ class PhocaCartViewCheckout extends HtmlView
             $payment = new PhocacartPayment();
             $country = $payment->getUserCountryPayment($this->t['dataaddressoutput']);
             $region  = $payment->getUserRegionPayment($this->t['dataaddressoutput']);
+
+            $currencyId = 0;
+            $currency  = PhocacartCurrency::getCurrency();
+            if (isset($currency->id) && $currency->id > 0) {
+                $currencyId = (int)$currency->id;
+            }
+
             $this->a->paymentadded    = 0;
             $this->a->paymentedit     = $app->input->get('paymentedit', 0, 'int'); // Edit Shipping
             $this->t['paymentmethod'] = $this->cart->getPaymentMethod();
@@ -390,7 +397,7 @@ class PhocaCartViewCheckout extends HtmlView
                 if ($this->t['automatic_payment_method_setting'] == 1) {
                     //$payment					= new PhocacartPayment();
                     $shippingId                = $this->cart->getShippingId();// Shipping stored in cart or not?
-                    $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId);
+                    $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
                     if (!empty($this->t['paymentmethods']) && count($this->t['paymentmethods']) == 1) {
                         $this->a->paymentdisplayeditbutton = 0;
                     }
@@ -419,8 +426,7 @@ class PhocaCartViewCheckout extends HtmlView
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
-
-                $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId);
+                $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
 
 
                 // If there is only one valid payment method and it is set in parameter we can directly store this method so user does not need to add it

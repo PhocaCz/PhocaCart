@@ -991,7 +991,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[0]) && $this->itemprev[0])) {
 	echo '<div class="'.$this->s['c']['row'].' ph-item-navigation">';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-navigation-box ph-item-navigation-box-prev">';
 	if(isset($this->itemprev[0]) && $this->itemprev[0]) {
 		$p = $this->itemprev[0];
 
@@ -1005,7 +1005,7 @@ if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[
 			$title = $p->title;
 		}
 		$linkPrev = Route::_(PhocacartRoute::getItemRoute($p->id, $p->categoryid, $p->alias, $p->categoryalias));
-		echo '<div class="'.$this->s['c']['pull-left'].' ph-button-prev-box">';
+		echo '<div class="ph-button-prev-box">';
 		echo '<a href="'.$linkPrev.'" class="'.$this->s['c']['btn.btn-default'].' ph-item-navigation" role="button" title="'.$titleT.'">'
 		//.'<span class="'.$this->s['i']['prev'].'"></span> '
 		. PhocacartRenderIcon::icon($this->s['i']['prev'], '', ' ')
@@ -1015,13 +1015,13 @@ if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[
 	}
 	echo '</div>';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
+	/*echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
 	echo '</div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
-	echo '</div>';
+	echo '</div>';*/
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-navigation-box ph-item-navigation-box-next">';
 	if(isset($this->itemnext[0]) && $this->itemnext[0]) {
 		$n = $this->itemnext[0];
 		$title 	= '';
@@ -1034,7 +1034,7 @@ if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[
 			$title = $n->title;
 		}
 		$linkNext = Route::_(PhocacartRoute::getItemRoute($n->id, $n->categoryid, $n->alias, $n->categoryalias));
-		echo '<div class="'.$this->s['c']['pull-right'].' ph-button-next-box">';
+		echo '<div class="ph-button-next-box">';
 		echo '<a href="'.$linkNext.'" class="'.$this->s['c']['btn.btn-default'].' ph-item-navigation" role="button" title="'.$titleT.'">'.$title
 		//.' <span class="'.$this->s['i']['next'].'"></span>'
 		. PhocacartRenderIcon::icon($this->s['i']['next'], '', '', ' ')

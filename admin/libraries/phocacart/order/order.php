@@ -511,7 +511,7 @@ class PhocacartOrder
             //    - check if this method even exists
             //	  - and check if the selected method meets every criteria and rules to be selected
             //$paymentMethods	= $paymentClass->checkAndGetPaymentMethod($payment['id']); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-            $paymentMethods = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0);
+            $paymentMethods = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0, $d['currency_id']);
 
 
         } else {
@@ -531,7 +531,7 @@ class PhocacartOrder
             // Cooperates with components/com_phocacart/views/checkout/view.html.php 270
 
             // Find all possible payments methods (without payment method selected) to see if there is really no rule to display any method
-            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, 0);
+            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, 0, $d['currency_id']);
             if (empty($paymentMethodsAllPossible)) {
                 $paymentNotFoundAllowProceed = true;
             }

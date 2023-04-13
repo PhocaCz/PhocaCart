@@ -94,7 +94,7 @@ function phAiCreateQuestion() {
 
 function phAiGenerateAnswer(typeId) {
 
-    startFullOverlay();
+    
 
     const paramName = 'ai_parameters_' + typeId;
     const questionId = 'ai_question_' + typeId;
@@ -126,11 +126,10 @@ function phAiGenerateAnswer(typeId) {
 
     if (apiKey == '') {
         document.getElementById(messageId).innerHTML = '<div class="ph-msg-error-box">' + phLang['COM_PHOCACART_ERROR_YOU_DID_NOT_PROVIDE_API_KEY'] + '</div>';
-        stopOverlay();
         return false;
     }
+    startFullOverlay();
 
-  
     // Make request to OpenAI API
     fetch(apiUrl, {
         method: 'POST',

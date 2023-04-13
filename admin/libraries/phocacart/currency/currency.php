@@ -307,6 +307,89 @@ class PhocacartCurrency
 		}
 	}
 
+	/* Payment method rule, possible shipping method rule */
+
+	public static function storeCurrencies($currencyArray, $id, $table = 'payment') {
+
+		if ($table == 'payment') {
+			$t = '#__phocacart_payment_method_currencies';
+			$c = 'payment_id';
+		}
+
+		if ((int)$id > 0) {
+			$db =Factory::getDBO();
+			$query = ' DELETE '
+					.' FROM '.$t
+					. ' WHERE '.$c.' = '. (int)$id;
+			$db->setQuery($query);
+			$db->execute();
+
+
+			if (!empty($currencyArray)) {
+
+				$values 		= array();
+				$valuesString 	= '';
+
+				foreach($currencyArray as $k => $v) {
+					//$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					// No multidimensional in J4
+					$values[] = ' ('.(int)$id.', '.(int)$v.')';
+				}
+
+				if (!empty($values)) {
+					$valuesString = implode(',', $values);
+
+					$query = ' INSERT INTO '.$t.' ('.$c.', currency_id)'
+								.' VALUES '.(string)$valuesString;
+
+
+
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}
+		}
+
+	}
+
+	/* Select currency in payment method rule */
+
+	public static function getFieldCurrencies($id, $select = 0, $table = 'payment') {
+
+		/*if ($table == 'shipping') {
+			$t = '#__phocacart_shipping_method_regions';
+			$c = 'shipping_id';
+		} else if ($table == 'payment') {
+			$t = '#__phocacart_payment_method_regions';
+			$c = 'payment_id';
+		}  else if ($table == 'zone') {
+			$t = '#__phocacart_zone_regions';
+			$c = 'zone_id';
+		}*/
+
+		$t = '#__phocacart_payment_method_currencies';
+		$c = 'payment_id';
+
+		$db =Factory::getDBO();
+
+		if ($select == 1) {
+			$query = 'SELECT c.currency_id';
+		} else {
+			$query = 'SELECT a.*';
+		}
+		$query .= ' FROM #__phocacart_currencies AS a'
+				.' LEFT JOIN '.$t.' AS c ON a.id = c.currency_id'
+			    .' WHERE c.'.$c.' = '.(int) $id;
+		$db->setQuery($query);
+		if ($select == 1) {
+			$items = $db->loadColumn();
+		} else {
+			$items = $db->loadObjectList();
+		}
+
+		return $items;
+	}
+
 
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);

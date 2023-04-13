@@ -47,6 +47,7 @@ class PhocaCartViewPayment extends HtmlView
 			$o['products'] 	= $order->getItemProducts($id);
 			$o['total'] 	= $order->getItemTotal($id);
 
+
 			if (isset($o['common']->payment_id) && (int)$o['common']->payment_id > 0) {
 				$paymentO = $payment->getPaymentMethod((int)$o['common']->payment_id );
 

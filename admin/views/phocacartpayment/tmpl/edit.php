@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 
+Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('webcomponent.field-subform');
 
 $r 			=  $this->r;
 $js ='
@@ -32,6 +33,7 @@ $tabs = array (
 'country' 		=> Text::_($this->t['l'].'_COUNTRY_RULE'),
 'region' 		=> Text::_($this->t['l'].'_REGION_RULE'),
 'shipping' 		=> Text::_($this->t['l'].'_SHIPPING_RULE'),
+'currency' 		=> Text::_($this->t['l'].'_CURRENCY_RULE'),
 'method' 		=> Text::_($this->t['l'].'_PAYMENT_METHOD_OPTIONS'),
 'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
@@ -85,6 +87,11 @@ echo $r->endTab();
 
 echo $r->startTab('shipping', $tabs['shipping']);
 $formArray = array ('shipping', 'active_shipping');
+echo $r->group($this->form, $formArray);
+echo $r->endTab();
+
+echo $r->startTab('currency', $tabs['currency']);
+$formArray = array ('currency', 'active_currency');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

@@ -147,6 +147,10 @@ if (is_array($this->items)) {
             $rules[] = '<span class="label label-primary badge bg-primary label-primary">' . Text::_('COM_PHOCACART_ZONE_RULE') . '</span>';
         }
 
+        if ($item->active_currency) {
+            $rules[] = '<span class="label label-primary badge bg-success label-success">' . Text::_('COM_PHOCACART_CURRENCY_RULE') . '</span>';
+        }
+
 
         echo $r->td(implode(" ", $rules), "small");
 

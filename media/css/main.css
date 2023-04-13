@@ -2442,3 +2442,21 @@ img.ph-lazyload:not([src]) {
     display: inline-block;
     margin: 0;
 }
+
+.ph-item-navigation-box-prev {
+    display: flex;
+    justify-content: start;
+
+}
+
+.ph-item-navigation-box-next {
+    display: flex;
+    justify-content: end;
+}
+
+@media screen and (max-width: 576px) {
+    .ph-item-navigation-box-prev,
+    .ph-item-navigation-box-next {
+        justify-content: center;
+    }
+}

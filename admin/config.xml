@@ -1061,7 +1061,7 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="display_discount_price_product" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_DESC">
+            <field name="display_discount_price_product" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_ROW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_ROW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_PRICE_AFTER_DISCOUNT</option>
                 <option value="2">COM_PHOCACART_DISCOUNT_PRICE</option>
@@ -2391,7 +2391,7 @@
         <fieldset name="ai" label="COM_PHOCACART_CONFIG_HEAD_AI_LABEL">
 
             <field name="ai_apikey" type="text" label="COM_PHOCACART_AI_OPENAI_API_KEY_LABEL" description="COM_PHOCACART_AI_OPENAI_API_KEY_DESC" filter="safehtml" />
-            <field name="ai_model" type="list" label="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_LABEL" description="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_LABEL" default="text-davinci-003">
+            <field name="ai_model" type="list" label="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_LABEL" description="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_DESC" default="text-davinci-003">
                 <option value="text-davinci-003">text-davinci-003</option>
                 <option value="text-curie-001">text-curie-001</option>
                 <option value="text-babbage-001">text-babbage-001</option>

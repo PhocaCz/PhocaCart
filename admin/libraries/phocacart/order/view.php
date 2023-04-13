@@ -133,7 +133,7 @@ class PhocacartOrderView
 				.' u.id AS user_id, o.vendor_id AS vendor_id, u.name AS user_name, u.username AS user_username,'
 				.' p.title AS paymenttitle, p.description_info AS paymentdescriptioninfo,'
 				.' s.title AS shippingtitle, s.description_info AS shippingdescriptioninfo, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription,'
-				.' c.title AS coupontitle, cu.title AS currencytitle, d.title AS discounttitle, os.orders_view_display as ordersviewdisplay,'
+				.' c.title AS coupontitle, cu.title AS currencytitle, cu.price_currency_symbol AS currency_symbol, d.title AS discounttitle, os.orders_view_display as ordersviewdisplay,'
 				.' uv.username as vendor_username, uv.name as vendor_name,'
 				.' sc.title as section_name, un.title as unit_name'
 				.' FROM #__phocacart_orders AS o'
