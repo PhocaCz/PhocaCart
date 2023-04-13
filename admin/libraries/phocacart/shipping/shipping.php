@@ -78,7 +78,7 @@ class PhocacartShipping
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
 		.' s.highest_weight, s.default,'
 		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
-		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
+		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
@@ -88,7 +88,7 @@ class PhocacartShipping
 		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
 		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
 		.' s.highest_weight, s.default,'
-		.' t.id, t.title, t.tax_rate, t.calculation_type';
+		.' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
 		$groupsFast		= 's.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -123,11 +123,15 @@ class PhocacartShipping
 			return false;
 		}
 
-
 		$i = 0;
 
 		if (!empty($shippings)) {
 			foreach($shippings as $k => $v) {
+
+				if (isset($v->taxhide)) {
+					$registry = new Registry($v->taxhide);
+					$v->taxhide = $registry->toArray();
+				}
 
 				$v->active = 0;
 				$v->selected = 0;
@@ -416,8 +420,20 @@ class PhocacartShipping
 
 		$pC = PhocacartUtils::getComponentParameters();
         $shipping_country_rule = $pC->get('shipping_country_rule', 1);
+		$delivery_billing_same_rules = $pC->get('delivery_billing_same_rules', 1);
 
         $country = 0;
+
+		// Before we start to check, if user set that billing and shipping
+		// address is the same, this in fact means that
+		// shipping country, shipping region and shipping zip is zero
+		// even we still store some shipping info for possible future orders
+		if ($delivery_billing_same_rules == 1 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['scountry'] = isset($dataAddress['bcountry']) ? (int)$dataAddress['bcountry'] : 0;
+		}
+		if ($delivery_billing_same_rules == 2 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['scountry'] = 0;
+		}
 
         switch($shipping_country_rule) {
 
@@ -460,8 +476,20 @@ class PhocacartShipping
 
 		$pC = PhocacartUtils::getComponentParameters();
         $shipping_region_rule = $pC->get('shipping_region_rule', 1);
+		$delivery_billing_same_rules = $pC->get('delivery_billing_same_rules', 1);
 
         $region = 0;
+
+		// Before we start to check, if user set that billing and shipping
+		// address is the same, this in fact means that
+		// shipping country, shipping region and shipping zip is zero
+		// even we still store some shipping info for possible future orders
+		if ($delivery_billing_same_rules == 1 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['sregion'] = isset($dataAddress['bregion']) ? (int)$dataAddress['bregion'] : 0;
+		}
+		if ($delivery_billing_same_rules == 2 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['sregion'] = 0;
+		}
 
         switch($shipping_region_rule) {
 
@@ -503,8 +531,21 @@ class PhocacartShipping
 
 		$pC = PhocacartUtils::getComponentParameters();
         $shipping_zip_rule = $pC->get('shipping_zip_rule', 1);
+		$delivery_billing_same_rules = $pC->get('delivery_billing_same_rules', 1);
 
-        $zip = 0;
+        $zip = '';
+
+
+		// Before we start to check, if user set that billing and shipping
+		// address is the same, this in fact means that
+		// shipping country, shipping region and shipping zip is zero
+		// even we still store some shipping info for possible future orders
+		if ($delivery_billing_same_rules == 1 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['szip'] = isset($dataAddress['bzip']) ? (int)$dataAddress['bzip'] : '';
+		}
+		if ($delivery_billing_same_rules == 2 && isset($dataAddress['bsch']) && ((int)$dataAddress['bsch'] == 1)) {
+			$dataAddress['szip'] = '';
+		}
 
         switch($shipping_zip_rule) {
 
@@ -553,7 +594,7 @@ class PhocacartShipping
 		$db = Factory::getDBO();
 
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.method, s.params, s.description, s.image,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
 				.' WHERE s.id = '.(int)$shippingId
@@ -571,6 +612,11 @@ class PhocacartShipping
      			$registry->loadString($shipping->params);
 			}
 			$shipping->params = $registry;
+		}
+
+        if (isset($shipping->taxhide)) {
+			$registry = new Registry($shipping->taxhide);
+			$shipping->taxhide = $registry->toArray();
 		}
 
 		return $shipping;

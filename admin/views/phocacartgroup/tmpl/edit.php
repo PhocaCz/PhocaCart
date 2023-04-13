@@ -52,7 +52,7 @@ echo $r->endTab();
 
 
 echo $r->startTab('rules', $tabs['rules']);
-$formArray = array ('minimum_sum');
+$formArray = array ('minimum_sum', 'activate_registration');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

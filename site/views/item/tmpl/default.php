@@ -193,6 +193,9 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	if (isset($this->item[0]->title) && $this->item[0]->title != '') {
 		$title = $this->item[0]->title;
 	}
+	if (isset($this->item[0]->title_long) && $this->item[0]->title_long != '') {
+		$title = $this->item[0]->title_long;
+	}
 
 
 	echo PhocacartRenderFront::renderHeader(array($title));
@@ -206,8 +209,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$priceItems = array();
 	if ($this->t['can_display_price']) {
 
-		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
-
+		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
 		// Can change price and also SKU OR EAN (Advanced Stock and Price Management)
 		$price->getPriceItemsChangedByAttributes($priceItems, $this->t['attr_options'], $price, $x);
 
@@ -218,7 +220,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		$d['priceitemsorig']= array();
 		if ($x->price_original != '' && $x->price_original > 0) {
-			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype);
+			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
 		}
 		$d['class']			= 'ph-item-price-box';
 		$d['product_id']	= (int)$x->id;
@@ -284,6 +286,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$class_icon	= '';
 
 	$stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
+
 
 	if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 		$class_btn 					= 'ph-visibility-hidden';
@@ -903,13 +906,15 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 				if (!empty($v['data'])) {
 					foreach ($v['data'] as $k2 => $v2) {
-						$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-cf-title">';
-						$tabO	.= isset($v2->title) ? $v2->title : '';
-						$tabO	.= '</div>';
+						if (!empty($v2->value)) {
+							$tabO .= '<div class="' . $this->s['c']['col.xs12.sm4.md4'] . ' ph-cf-title">';
+							$tabO .= isset($v2->title) ? $v2->title : '';
+							$tabO .= '</div>';
 
-						$tabO	.= '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-cf-value">';
-						$tabO	.= isset($v2->value) ? $v2->value : '';
-						$tabO	.= '</div>';
+							$tabO .= '<div class="' . $this->s['c']['col.xs12.sm6.md6'] . ' ph-cf-value">';
+							$tabO .= isset($v2->value) ? $v2->value : '';
+							$tabO .= '</div>';
+						}
 					}
 				}
 
@@ -961,7 +966,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo '<div class="ph-cb"></div>';
 
 		echo '<div class="ph-item-tag-box">';
-		echo '<h3>Tags</h3>';
+		echo '<h3>'.Text::_('COM_PHOCACART_TAGS').'</h3>';
 		echo $this->t['tags_output'];
 		echo '</div>';
 
@@ -986,7 +991,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[0]) && $this->itemprev[0])) {
 	echo '<div class="'.$this->s['c']['row'].' ph-item-navigation">';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-navigation-box ph-item-navigation-box-prev">';
 	if(isset($this->itemprev[0]) && $this->itemprev[0]) {
 		$p = $this->itemprev[0];
 
@@ -1000,7 +1005,7 @@ if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[
 			$title = $p->title;
 		}
 		$linkPrev = Route::_(PhocacartRoute::getItemRoute($p->id, $p->categoryid, $p->alias, $p->categoryalias));
-		echo '<div class="'.$this->s['c']['pull-left'].' ph-button-prev-box">';
+		echo '<div class="ph-button-prev-box">';
 		echo '<a href="'.$linkPrev.'" class="'.$this->s['c']['btn.btn-default'].' ph-item-navigation" role="button" title="'.$titleT.'">'
 		//.'<span class="'.$this->s['i']['prev'].'"></span> '
 		. PhocacartRenderIcon::icon($this->s['i']['prev'], '', ' ')
@@ -1010,13 +1015,13 @@ if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[
 	}
 	echo '</div>';
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
+	/*echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
 	echo '</div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].' ph-item-navigation-box">';
-	echo '</div>';
+	echo '</div>';*/
 
-	echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].' ph-item-navigation-box">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-navigation-box ph-item-navigation-box-next">';
 	if(isset($this->itemnext[0]) && $this->itemnext[0]) {
 		$n = $this->itemnext[0];
 		$title 	= '';
@@ -1029,7 +1034,7 @@ if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[
 			$title = $n->title;
 		}
 		$linkNext = Route::_(PhocacartRoute::getItemRoute($n->id, $n->categoryid, $n->alias, $n->categoryalias));
-		echo '<div class="'.$this->s['c']['pull-right'].' ph-button-next-box">';
+		echo '<div class="ph-button-next-box">';
 		echo '<a href="'.$linkNext.'" class="'.$this->s['c']['btn.btn-default'].' ph-item-navigation" role="button" title="'.$titleT.'">'.$title
 		//.' <span class="'.$this->s['i']['next'].'"></span>'
 		. PhocacartRenderIcon::icon($this->s['i']['next'], '', '', ' ')

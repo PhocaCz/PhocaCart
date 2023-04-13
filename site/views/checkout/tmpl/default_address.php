@@ -7,9 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
 
 $layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
@@ -35,7 +38,17 @@ if ($this->a->addressedit == 1) {
 	// Body
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
+	$pluginLayout 	= PluginHelper::importPlugin('pct');
+	$eventData = [];
+	$results = Factory::getApplication()->triggerEvent('onPCVonCheckoutInsideAddressAfterHeader', array('com_phocacart.checkout', $this->data, $eventData));
+	if (!empty($results)) {
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+		echo trim(implode("\n", $results));
+		echo '</div>';
+	}
+
 	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-checkout-billing-row" id="phBillingAddress" >';
+
 	if ($this->t['dataaddressform']['b'] != '') {
 		echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_BILLING_ADDRESS').'</div>';
 		echo $this->t['dataaddressform']['b'];
@@ -74,6 +87,7 @@ if ($this->a->addressedit == 1) {
 	echo '<input type="hidden" name="tmpl" value="component" />'. "\n";
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="task" value="checkout.saveaddress" />'. "\n";
+	echo '<input type="hidden" name="typeview" value="checkout" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
@@ -89,12 +103,12 @@ if ($this->a->addressedit == 1) {
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header"  id="phcheckoutaddressview">'.$layoutI->render($d).'<h3>'.$this->t['na'].'. '.Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div>';
 	// end Header
-
 	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].'" role="form" id="phCheckoutAddress">';
 	echo '<div id="ph-request-message" style="display:none"></div>';
 
 	// Body
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
+
 	if (isset($this->t['dataaddressoutput']['bsch']) && $this->t['dataaddressoutput']['bsch'] == 1) {
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-billing-row"  >';
@@ -124,6 +138,18 @@ if ($this->a->addressedit == 1) {
 		echo '</div>';
 	}
 
+	$pluginLayout 	= PluginHelper::importPlugin('pct');
+	if ($pluginLayout) {
+		$eventData	= [];
+		$results = Factory::getApplication()->triggerEvent('onPCTonAfterUserAddressCheckoutView', array('com_phocacart.checkout', &$this->data, $eventData));
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
+				}
+			}
+		}
+	}
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-address-edit">';

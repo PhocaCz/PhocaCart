@@ -22,6 +22,8 @@ $classPS	= 'ph-standard';// class price suffix
 if (isset($d['discount']) && $d['discount']) {
 	$classPS	= 'ph-line-through';
 }
+
+
 ?>
 <div id="phItemPriceBox<?php echo $d['typeview'] . (int)$d['product_id']; ?>">
 	<div class="<?php echo $d['class']; ?>">
@@ -53,17 +55,21 @@ if (isset($d['discount']) && $d['discount']) {
 
     $displayPrice   = 1;// At start display price = yes. If there will be some condition which will hide the price then use the information e.g. for discount prices (even disable them)
     $displayLabel   = 1;
-    if ($d['priceitems']['netto'] && $d['priceitems']['taxcalc'] > 0 && ($d['priceitems']['netto'] != $d['priceitems']['brutto'])) {
+
+    $displayPriceItems = PhocaCartPrice::displayPriceItems($d['priceitems'], 'price');// Display Netto, Tax, Brutto?
+
+    if ($displayPriceItems['netto'] == 1) {
 		$labelNetto = '<div class="ph-price-txt ph-price-netto-txt '.$classPS.'-txt">'. $d['priceitems']['nettotxt'].'</div>';
 		$priceNetto = '<div class="ph-price-netto '.$classPS.'">'.$d['priceitems']['nettoformat'].'</div>';
 	}
 
-	if ($d['priceitems']['tax'] && $d['priceitems']['taxcalc'] > 0) {
+	//if ($d['priceitems']['tax']) && $d['priceitems']['taxcalc'] > 0) {
+    if($displayPriceItems['tax'] == 1) {
 		$labelTax = '<div class="ph-tax-txt '.$classPS.'-txt">'.$d['priceitems']['taxtxt'].'</div>';
 		$priceTax = '<div class="ph-tax '.$classPS.'">'.$d['priceitems']['taxformat'].'</div>';
 	}
 
-	if (isset($d['priceitems']['brutto'])) {
+	if ($displayPriceItems['brutto'] == 1) {
 		$labelBrutto = '<div class="ph-price-txt ph-price-brutto-txt '.$classPS.'-txt">'.$d['priceitems']['bruttotxt'].'</div>';
 		$priceBrutto = '<div class="ph-price-brutto '.$classPS.'">'.$d['priceitems']['bruttoformat'].'</div>';
 	}

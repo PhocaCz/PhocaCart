@@ -125,8 +125,8 @@ class PhocaCartViewCategory extends HtmlView
 		$this->t['switch_image_category_items']	= $this->p->get( 'switch_image_category_items', 0 );
 
 
-		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 0 );// Products
-		$this->t['lazy_load_categories']		= $this->p->get( 'lazy_load_categories', 0 );// Subcategories
+		$this->t['lazy_load_category_items']	= $this->p->get( 'lazy_load_category_items', 2 );// Products
+		$this->t['lazy_load_categories']		= $this->p->get( 'lazy_load_categories', 2 );// Subcategories
 		$this->t['medium_image_width']			= $this->p->get( 'medium_image_width', 300 );
 		$this->t['medium_image_height']			= $this->p->get( 'medium_image_height', 200 );
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
@@ -255,6 +255,9 @@ class PhocaCartViewCategory extends HtmlView
 			$this->t['event']		= new stdClass;
 			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
 			$this->t['event']->onCategoryBeforeHeader = trim(implode("\n", $results));
+
+			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforePaginationTop', array('com_phocacart.category', &$this->items, &$this->p));
+			$this->t['event']->onCategoryBeforePaginationTop = trim(implode("\n", $results));
 			// Foreach values are rendered in default foreaches
 
 			// Layout plugins - completely new layout including foreach

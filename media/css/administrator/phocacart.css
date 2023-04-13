@@ -1959,9 +1959,23 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	width: auto;
 }
 
-.phc-red {color: #a60000;}
+.phc-red, .ph-msg-error {color: #a60000;}
+.ph-msg-error-box {
+	padding: 1em;
+	border-radius: 3px;
+	background-color: #ffa3a3;
+	color: #a60000;
+}
+
 .phc-grey {color: #555555}
-.phc-green {color: #559d22;}
+.phc-green, .ph-msg-success {color: #559d22;}
+.ph-msg-success-box {
+	padding: 1em;
+	border-radius: 3px;
+	background-color: #daf3c9;
+	color: #559d22;
+}
+
 .phc-orange {color:orange;}
 .phc-brown {color: #a5572a;}
 
@@ -2043,6 +2057,69 @@ a[target=_blank]::before {
 	min-width: 4em;
 	display: inline-block;
 }
+
+
+.ph-order-edit-user-info-header {
+	font-weight: bold;
+}
+
+.ph-order-edit-shipping-info,
+.ph-order-edit-payment-info,
+.ph-order-edit-user-info {
+    border-radius: 0.25em;
+    padding: 1em;
+    background: #ffde7d;
+}
+
+.ph-order-edit-shipping-info .ph-item,
+.ph-order-edit-payment-info .ph-item,
+.ph-order-edit-user-info .ph-item{
+	display: flex;
+}
+
+.ph-order-edit-shipping-info .ph-item .ph-label,
+.ph-order-edit-payment-info .ph-item .ph-label,
+.ph-order-edit-user-info .ph-item .ph-label{
+	font-weight: bold;
+	width: 25%;
+}
+
+.ph-order-edit-shipping-info .ph-item .ph-value,
+.ph-order-edit-payment-info .ph-item .ph-value,
+.ph-order-edit-user-info .ph-item .ph-value{
+	
+}
+
+
+.ph-ai-question-item {
+	display: flex;
+	margin: 0.5em;
+}
+
+.ph-ai-paste-item {
+	display:flex;
+	align-items: center;
+	justify-content: end;
+	margin: 0.5em;
+}
+
+.ph-ai-content-item {
+	margin: 0.5em;
+}
+
+.ph-ai-content-item textarea {
+	min-height: 8em;
+}
+
+.ph-ai-question-item-field,
+.ph-ai-paste-item-text {
+	margin-right: 1em;
+}
+
+.ph-ai-message-box {
+	margin-bottom: 1em;
+}
+
 
 
 /* Hide objects in edit - administration - Product edit example */

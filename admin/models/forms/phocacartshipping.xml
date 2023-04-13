@@ -164,7 +164,7 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
 	<option value="*">JALL</option>
 </field>
-<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" />
+<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
 
 <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
 -->

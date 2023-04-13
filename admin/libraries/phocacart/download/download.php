@@ -223,8 +223,10 @@ class PhocacartDownload
 			header('Cache-Control: private, max-age=0, must-revalidate, no-store');
 		} else {
 			header("Cache-Control: public, must-revalidate");
-			header('Cache-Control: pre-check=0, post-check=0, max-age=0');
-			header("Pragma: no-cache");
+            // 4.0.5
+			//header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+			//header("Pragma: no-cache");
+            header('Cache-Control: max-age=0');
 			header("Expires: 0");
 		} /* end if protocol https */
 		header("Content-Description: File Transfer");

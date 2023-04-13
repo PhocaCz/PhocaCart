@@ -49,7 +49,7 @@ class JFormFieldPhocaPluginMethod extends FormField
 		$s[] 	= '   var dataPost = {};';
 		$s[] 	= '   dataPost[\'method\'] = encodeURIComponent(value);';
 		$s[] 	= '   dataPost[\'id\'] = encodeURIComponent('.(int)$id.');';
-		$s[] 	= '   phRequestActive = jQuery.ajax({';
+		$s[] 	= '   let phRequestActive = jQuery.ajax({';
 		$s[] 	= '      url: url,';
 		$s[] 	= '      type:\'POST\',';
 		$s[] 	= '      data:dataPost,';

@@ -117,21 +117,21 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 				echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 				$points = PhocacartReward::getRewardPointsByOrderId($v->id);
 				if (!empty($points)) {
-					foreach ($points as $k => $v) {
+					foreach ($points as $k2 => $v2) {
 						$approvedClass = 'approved';
-						if ($v->published == 0) {
+						if ($v2->published == 0) {
 							$approvedClass = 'not-approved';
 						}
 
-						if ($v->type == 1) {
+						if ($v2->type == 1) {
 
-							if ($v->published == 0) {
-								echo '<div>' . Text::_('COM_PHOCACART_USER_POINTS_TO_RECEIVE') . ' <span class="'.$this->s['c']['label.label-success'].' ' . $approvedClass . '">' . $v->points . '</span> <small>(' . Text::_('COM_PHOCACART_USER_NOT_APPROVED_YET') . ')</small></div>';
+							if ($v2->published == 0) {
+								echo '<div>' . Text::_('COM_PHOCACART_USER_POINTS_TO_RECEIVE') . ' <span class="'.$this->s['c']['label.label-success'].' ' . $approvedClass . '">' . $v2->points . '</span> <small>(' . Text::_('COM_PHOCACART_USER_NOT_APPROVED_YET') . ')</small></div>';
 							} else {
-								echo '<div>' . Text::_('COM_PHOCACART_USER_POINTS_RECEIVED') . ' <span class="'.$this->s['c']['label.label-success'].' ' . $approvedClass . '">' . $v->points . '</span></div>';
+								echo '<div>' . Text::_('COM_PHOCACART_USER_POINTS_RECEIVED') . ' <span class="'.$this->s['c']['label.label-success'].' ' . $approvedClass . '">' . $v2->points . '</span></div>';
 							}
-						} else if ($v->type == -1) {
-							echo '<div>' . Text::_('COM_PHOCACART_USER_POINTS_USED') . ' <span class="'.$this->s['c']['label.label-danger'].' ' . $approvedClass . '">' . $v->points . '</span></div>';
+						} else if ($v2->type == -1) {
+							echo '<div>' . Text::_('COM_PHOCACART_USER_POINTS_USED') . ' <span class="'.$this->s['c']['label.label-danger'].' ' . $approvedClass . '">' . $v2->points . '</span></div>';
 						} else {
 							//echo '<div><span class="label">'.$v->points.'</span></div>';
 						}
@@ -151,8 +151,8 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($v);
 
 
-
 			if($r['shippingtitle'] != '' || $r['trackinglink'] != '') {
+
 				echo '<div class="ph-shipping-info-box">';
 				echo '<div class="ph-shipping-info-header">'.Text::_('COM_PHOCACART_SHIPPING_INFORMATION').'</div>';
 				if ($r['shippingtitle'] != '') {

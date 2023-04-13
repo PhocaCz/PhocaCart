@@ -259,6 +259,7 @@ INSERT INTO `#__phocacart_countries` (`id`, `title`, `alias`, `type`, `code2`, `
 (248, 'South Sudan', '', 0, 'SS', 'SSD', 1, 0, '0000-00-00 00:00:00', 248, NULL, ''),
 (249, 'St. Barthelemy', '', 0, 'BL', 'BLM', 1, 0, '0000-00-00 00:00:00', 249, NULL, ''),
 (250, 'St. Martin (French part)', '', 0, 'MF', 'MAF', 1, 0, '0000-00-00 00:00:00', 250, NULL, ''),
-(251, 'Canary Islands', '', 0, 'IC', 'ICA', 1, 0, '0000-00-00 00:00:00', 251, NULL, '');
+(251, 'Canary Islands', '', 0, 'IC', 'ICA', 1, 0, '0000-00-00 00:00:00', 251, NULL, ''),
+(252, 'United Kingdom (Northern Ireland)', '', 0, 'XI', 'GBR', 1, 0, '0000-00-00 00:00:00', 252, NULL, '');
 
 -- UTF-8 test: ä,ö,ü

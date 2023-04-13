@@ -81,9 +81,11 @@ echo '<li><a href="#createfolder" data-bs-toggle="tab">'.$label.'</a></li>';
 echo '</ul>';
 */
 
-$activeTab = 'multipleupload';
+$activeTab = '';
 if (isset($this->t['tab']) && $this->t['tab'] != '') {
 	$activeTab = $this->t['tab'];
+} else  {
+	$activeTab = 'multipleupload';
 }
 
 echo $r->startTabs($activeTab);

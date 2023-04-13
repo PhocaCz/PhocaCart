@@ -20,7 +20,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 
 class PhocacartRenderFront
 {
-    public static function renderNewIcon($date, $size = 1)
+    public static function renderNewIcon($date, $size = 1, $statusOnly = 0)
     {
         $app = Factory::getApplication();
         $params = $app->getParams();
@@ -37,13 +37,21 @@ class PhocacartRenderFront
             if ($dateExists < $dateNew) {
                 $o .= '<div class="ph-corner-icon-wrapper ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-new">' . Text::_('COM_PHOCACART_LABEL_TXT_NEW') . '</div></div>';
 
+                if ($statusOnly == 1) {
+                    return true;
+                }
 
             }
         }
+
+        if ($statusOnly == 1) {
+            return false;
+        }
+
         return $o;
     }
 
-    public static function renderHotIcon($sales, $size = 1)
+    public static function renderHotIcon($sales, $size = 1, $statusOnly = 0)
     {
         $app = Factory::getApplication();
         $params = $app->getParams();
@@ -55,12 +63,22 @@ class PhocacartRenderFront
         } else {
             if ($sales > $hot || $sales == $hot) {
                 $o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-hot">' . Text::_('COM_PHOCACART_HOT') . '</div></div>';
+
+                if ($statusOnly == 1) {
+                    return true;
+                }
+
             }
         }
+
+        if ($statusOnly == 1) {
+            return false;
+        }
+
         return $o;
     }
 
-    public static function renderFeaturedIcon($featured, $size = 1)
+    public static function renderFeaturedIcon($featured, $size = 1, $statusOnly = 0)
     {
         $app = Factory::getApplication();
         $params = $app->getParams();
@@ -71,7 +89,16 @@ class PhocacartRenderFront
             $o .= '';
         } else {
             $o .= '<div class="ph-corner-icon-wrapper  ph-corner-icon' . $size . '-wrapper"><div class="ph-corner-icon ph-corner-icon' . $size . ' ph-corner-icon-featured">' . Text::_($feat) . '</div></div>';
+
+            if ($statusOnly == 1) {
+                return true;
+            }
         }
+
+        if ($statusOnly == 1) {
+            return false;
+        }
+
         return $o;
     }
 
@@ -95,7 +122,7 @@ class PhocacartRenderFront
         }
 
         $type = '';
-        $name = array();
+        $name = new stdClass();
         if (!empty($item) && isset($item->title)) {
             $name = $item;
             $type = 'item';
@@ -120,6 +147,10 @@ class PhocacartRenderFront
             }*/
 
             $title = $name->title;
+        }
+
+        if (isset($name->title_long) && $name->title_long != '') {
+            $title = $name->title_long;
         }
 
         if ($viewLink != $viewCurrent && $header != '') {

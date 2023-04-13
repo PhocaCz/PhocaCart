@@ -16,82 +16,130 @@ use Joomla\CMS\Language\Text;
 
 class PhocacartTag
 {
+  /**
+   * Standard Tags - are displayed at the bottom
+   */
+  public const TYPE_TAG = 0;
+  /**
+   * Labels - are displayed at the top
+   */
+  public const TYPE_LABEL = 1;
+
+  private static function getRelatedTable($type)
+  {
+    switch ($type) {
+      case self::TYPE_TAG:
+      default:
+        return '#__phocacart_tags_related';
+      case self::TYPE_LABEL:
+        return '#__phocacart_taglabels_related';
+    }
+  }
+
+  private static function getProductTags($type, $itemId, $select = 0, $checkPublish = 0)
+  {
+    $db = Factory::getDBO();
+
+    if ($select == 1) {
+      $query = 'SELECT r.tag_id';
+    } else if ($select == 2){
+      $query = 'SELECT a.id, a.alias ';
+    } else {
+      $query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+    }
+
+    $query .= ' FROM #__phocacart_tags AS a'
+      .' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id'
+      .' WHERE a.type = ' . (int)$type
+      .' AND r.item_id = '.(int) $itemId;
+    if ($checkPublish == 1) {
+        $query .= ' AND a.published = 1';
+    }
+
+    $query .= ' ORDER BY a.id';
+    $db->setQuery($query);
+
+    if ($select == 1) {
+      $tags = $db->loadColumn();
+    } else {
+      $tags = $db->loadObjectList();
+    }
+
+    return $tags;
+  }
+
+
+  private static function getSubmittedProductTags($type, $itemId)
+  {
+    $db = Factory::getDBO();
+    $query = 'SELECT a.items_item';
+    $query .= ' FROM #__phocacart_submit_items AS a'
+      .' WHERE a.id = '.(int) $itemId;
+    $db->setQuery($query);
+    $items = $db->loadResult();
+
+    if (!empty($items)) {
+      $itemsA = json_decode($items, true);
+      switch ($type) {
+        case self::TYPE_TAG:
+        default:
+          $fieldName = 'tags';
+          break;
+        case self::TYPE_LABEL:
+          $fieldName = 'taglabels';
+          break;
+      }
+
+      if (isset($itemsA[$fieldName])){
+        return $itemsA[$fieldName];
+      }
+    }
+
+    return [];
+  }
+
+  private static function getProductsTags($type, $cids)
+  {
+    $db = Factory::getDBO();
+    if ($cids) {//cids is string separated by comma
+      $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
+        . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id'
+        . ' WHERE a.type = ' . (int)$type
+        . ' AND r.item_id IN (' . $cids . ')'
+        . ' ORDER BY a.id';
+
+      $db->setQuery($query);
+      $tags = $db->loadColumn();
+      $tags = array_unique($tags);
+
+      return $tags;
+    }
+
+    return [];
+  }
+
 	/**
 	 * Standard Tags - are displayed at the bottom
 	 * @param int $itemId
 	 * @param number $select
 	 * @return mixed|void|mixed[]
 	 */
-	public static function getTags($itemId, $select = 0) {
-
-		$db = Factory::getDBO();
-
-		if ($select == 1) {
-			$query = 'SELECT r.tag_id';
-		} else if ($select == 2){
-			$query = 'SELECT a.id, a.alias ';
-		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
-		}
-		$query .= ' FROM #__phocacart_tags AS a'
-				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
-				.' LEFT JOIN #__phocacart_tags_related AS r ON a.id = r.tag_id'
-			    .' WHERE a.type = 0'
-				.' AND r.item_id = '.(int) $itemId
-                .' ORDER BY a.id';
-		$db->setQuery($query);
-
-		if ($select == 1) {
-			$tags = $db->loadColumn();
-		} else {
-			$tags = $db->loadObjectList();
-		}
-
-		return $tags;
+	public static function getTags($itemId, $select = 0, $checkPublish = 0)
+  {
+    return self::getProductTags(self::TYPE_TAG, $itemId, $select, $checkPublish);
 	}
 
 	/*
 	 * TAGS (stored in submitted items) Field JFormFieldPhocaTagsSubmitItems
 	 */
-	public static function getTagsSubmitItems($itemId) {
-
-		$db = Factory::getDBO();
-		$query = 'SELECT a.items_item';
-		$query .= ' FROM #__phocacart_submit_items AS a'
-				.' WHERE a.id = '.(int) $itemId
-                .' ORDER BY a.id';
-		$db->setQuery($query);
-		$items = $db->loadResult();
-
-		if (!empty($items)) {
-			$itemsA = json_decode($items, true);
-			if (isset($itemsA['tags'])){
-				return $itemsA['tags'];
-			}
-		}
-
-		return array();
+	public static function getTagsSubmitItems($itemId)
+  {
+    return self::getSubmittedProductTags(self::TYPE_TAG, $itemId);
 	}
 
-	public static function getTagsByIds($cids) {
-
-		$db = Factory::getDBO();
-        if ($cids != '') {//cids is string separated by comma
-
-            $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
-                //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
-                . ' LEFT JOIN #__phocacart_tags_related AS r ON a.id = r.tag_id'
-                . ' WHERE a.type = 0'
-                . ' AND r.item_id IN (' . $cids . ')'
-                . ' ORDER BY a.id';
-
-            $db->setQuery($query);
-            $tags = $db->loadColumn();
-            $tags = array_unique($tags);
-
-            return $tags;
-        }
-        return array();
+	public static function getTagsByIds($cids)
+  {
+    return self::getProductsTags(self::TYPE_TAG, $cids);
 	}
 
 	/**
@@ -100,76 +148,21 @@ class PhocacartTag
 	 * @param number $select
 	 * @return mixed|void|mixed[]
 	 */
-	public static function getTagLabels($itemId, $select = 0) {
-
-		$db = Factory::getDBO();
-
-		if ($select == 1) {
-			$query = 'SELECT r.tag_id';
-		} else if ($select == 2){
-			$query = 'SELECT a.id, a.alias ';
-		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
-		}
-		$query .= ' FROM #__phocacart_tags AS a'
-				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
-				.' LEFT JOIN #__phocacart_taglabels_related AS r ON a.id = r.tag_id'
-			    .' WHERE a.type = 1'
-				.' AND r.item_id = '.(int) $itemId
-                .' ORDER BY a.id';
-		$db->setQuery($query);
-
-		if ($select == 1) {
-			$tags = $db->loadColumn();
-		} else {
-			$tags = $db->loadObjectList();
-		}
-
-		return $tags;
+	public static function getTagLabels($itemId, $select = 0, $checkPublish = 0)
+  {
+    return self::getProductTags(self::TYPE_LABEL, $itemId, $select, $checkPublish);
 	}
 
 	/*
 	 * TAGLABELS (stored in submitted items) Field JFormFieldPhocaTaglabelsSubmitItems
 	 */
-	public static function getTagLabelsSubmitItems($itemId) {
-
-		$db = Factory::getDBO();
-		$query = 'SELECT a.items_item';
-		$query .= ' FROM #__phocacart_submit_items AS a'
-				.' WHERE a.id = '.(int) $itemId
-                .' ORDER BY a.id';
-		$db->setQuery($query);
-		$items = $db->loadResult();
-
-		if (!empty($items)) {
-			$itemsA = json_decode($items, true);
-			if (isset($itemsA['taglabels'])){
-				return $itemsA['taglabels'];
-			}
-		}
-
-		return array();
+	public static function getTagLabelsSubmitItems($itemId)
+  {
+    return self::getSubmittedProductTags(self::TYPE_LABEL, $itemId);
 	}
 
 	public static function getTagsLabelsByIds($cids) {
-
-		$db = Factory::getDBO();
-        if ($cids != '') {//cids is string separated by comma
-
-            $query = 'SELECT r.tag_id FROM #__phocacart_tags AS a'
-                //.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
-                . ' LEFT JOIN #__phocacart_taglabels_related AS r ON a.id = r.tag_id'
-                . ' WHERE a.type = 1'
-                . ' AND r.item_id IN (' . $cids . ')'
-                . ' ORDER BY a.id';
-
-            $db->setQuery($query);
-            $tags = $db->loadColumn();
-            $tags = array_unique($tags);
-
-            return $tags;
-        }
-        return array();
+    return self::getProductsTags(self::TYPE_LABEL, $cids);
 	}
 
     /**
@@ -179,58 +172,26 @@ class PhocacartTag
      * @param string $lang
      * @return mixed
      */
-	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = 0, $lang = '', $filterProducts = array(), $limitCount = -1) {
+	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = self::TYPE_TAG, $lang = '', $filterProducts = array(), $limitCount = -1)
+  {
+    $wheres		= array();
+    $lefts		= array();
 
-	/*	$db 			= JFactory::getDBO();
+    $wheres[]	= ' t.type = ' . (int)$type;
+
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
-
-		$query = 'SELECT t.id, t.title, t.alias FROM #__phocacart_tags AS t WHERE t.published = 1 ORDER BY '.$orderingText;
-		$db->setQuery($query);
-		$tags = $db->loadObjectList();
-
-		return $tags;*/
-
-        $wheres		= array();
-        $lefts		= array();
-
-	    switch($type) {
-            case 1:
-                $wheres[]	= ' t.type = 1';
-                $related    = '#__phocacart_taglabels_related';
-            break;
-
-            case 0:
-            default:
-                $wheres[]	= ' t.type = 0';
-                $related    = '#__phocacart_tags_related';
-            break;
-
-        }
-
-
-		$db 			= Factory::getDBO();
-		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
-
-
 
 		$columns		= 't.id, t.title, t.alias, t.type, t.count_products';
-		/*$groupsFull		= $columns;
-		$groupsFast		= 'm.id';
-		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
-
 		$wheres[]	= ' t.published = 1';
 
-
-        $productTableAdded = 0;
-
+    $productTableAdded = 0;
 
 		if ($onlyAvailableProducts == 1) {
-
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
 			}
 
-			$lefts[] = ' '.$related.' AS tr ON tr.tag_id = t.id';
+			$lefts[] = ' ' . self::getRelatedTable($type) . ' AS tr ON tr.tag_id = t.id';
 			$lefts[] = ' #__phocacart_products AS p ON tr.item_id = p.id';
             $productTableAdded = 1;
 			$rules = PhocacartProduct::getOnlyAvailableProductRules();
@@ -238,23 +199,22 @@ class PhocacartTag
 			$lefts	= array_merge($lefts, $rules['lefts']);
 
 		} else {
-
 			if ($lang != '' && $lang != '*') {
 				$wheres[] 	= PhocacartUtilsSettings::getLangQuery('p.language', $lang);
-				$lefts[] 	= ' '.$related.' AS tr ON tr.tag_id = t.id';
+				$lefts[] 	= ' ' . self::getRelatedTable($type) . ' AS tr ON tr.tag_id = t.id';
 				$lefts[] 	= ' #__phocacart_products AS p ON tr.item_id = p.id';
                 $productTableAdded = 1;
 			}
 		}
 
-		if (!empty($filterProducts)) {
-			$productIds = implode (',', $filterProducts);
-			$wheres[]	= 'p.id IN ('.$productIds.')';
-            if ($productTableAdded == 0) {
-                $lefts[] 	= ' '.$related.' AS tr ON tr.tag_id = t.id';
-                $lefts[] 	= ' #__phocacart_products AS p ON tr.item_id = p.id';
-            }
-		}
+    if (!empty($filterProducts)) {
+      $productIds = implode (',', $filterProducts);
+      $wheres[]	= 'p.id IN (' . $productIds . ')';
+      if ($productTableAdded == 0) {
+        $lefts[] 	= ' ' . self::getRelatedTable($type) . ' AS tr ON tr.tag_id = t.id';
+        $lefts[] 	= ' #__phocacart_products AS p ON tr.item_id = p.id';
+      }
+    }
 
 		if ((int)$limitCount > -1) {
 		    $wheres[] = " t.count_products > ".(int)$limitCount;
@@ -265,128 +225,85 @@ class PhocacartTag
 			.' FROM  #__phocacart_tags AS t'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
-			//.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;
 
-		$db->setQuery($q);
+    $db = Factory::getDBO();
+    $db->setQuery($q);
 
-		$items = $db->loadObjectList();
+    return $db->loadObjectList();
+  }
 
-
-		return $items;
-	}
-
-	public static function storeTags($tagsArray, $itemId) {
-
-
-		if ((int)$itemId > 0) {
-			$db = Factory::getDBO();
-			$query = ' DELETE '
-					.' FROM #__phocacart_tags_related'
-					. ' WHERE item_id = '. (int)$itemId;
-			$db->setQuery($query);
-			$db->execute();
-			if (!empty($tagsArray)) {
-
-				$values 		= array();
-				$valuesString 	= '';
-
-				foreach($tagsArray as $k => $v) {
-					$values[] = ' ('.(int)$itemId.', '.(int)$v.')';
-				}
-
-				if (!empty($values)) {
-					$valuesString = implode(',', $values);
-
-					$query = ' INSERT INTO #__phocacart_tags_related (item_id, tag_id)'
-								.' VALUES '.(string)$valuesString;
-
-					$db->setQuery($query);
-					$db->execute();
-				}
-			}
-		}
-
-	}
-
-	public static function storeTagLabels($tagsArray, $itemId) {
-
-
-		if ((int)$itemId > 0) {
-			$db = Factory::getDBO();
-			$query = ' DELETE '
-					.' FROM #__phocacart_taglabels_related'
-					. ' WHERE item_id = '. (int)$itemId;
-			$db->setQuery($query);
-			$db->execute();
-			if (!empty($tagsArray)) {
-
-				$values 		= array();
-				$valuesString 	= '';
-
-				foreach($tagsArray as $k => $v) {
-					$values[] = ' ('.(int)$itemId.', '.(int)$v.')';
-				}
-
-				if (!empty($values)) {
-					$valuesString = implode(',', $values);
-
-					$query = ' INSERT INTO #__phocacart_taglabels_related (item_id, tag_id)'
-								.' VALUES '.(string)$valuesString;
-
-					$db->setQuery($query);
-					$db->execute();
-				}
-			}
-		}
-
-	}
-
-	public static function getAllTagsList($order = 'id', $type = 0){
-	    $db = Factory::getDBO();
-		$query = 'SELECT a.id AS value, a.title AS text'
-				.' FROM #__phocacart_tags AS a'
-				.' WHERE a.type ='.(int)$type
-				.' ORDER BY '. $order;
-		$db->setQuery($query);
-		$tags = $db->loadObjectList();
-		return $tags;
+  private static function storeProductTags($type, $tagsArray, $itemId)
+  {
+    if ((int)$itemId <= 0) {
+      return;
     }
 
-	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = 0, $attributes = '') {
+    $db = Factory::getDBO();
+    $query = ' DELETE '
+      .' FROM ' . self::getRelatedTable($type)
+      . ' WHERE item_id = '. (int)$itemId;
+    $db->setQuery($query);
+    $db->execute();
 
-		$db = Factory::getDBO();
-		$query = 'SELECT a.id AS value, a.title AS text'
-				.' FROM #__phocacart_tags AS a'
-				.' WHERE a.type ='.(int)$type
-				.' ORDER BY '. $order;
-		$db->setQuery($query);
-		$tags = $db->loadObjectList();
+    if ($tagsArray) {
+      $values = [];
+      foreach ($tagsArray as $v) {
+        $values[] = ' (' . (int)$itemId . ', ' . (int)$v . ')';
+      }
 
-		$tagsO = HTMLHelper::_('select.genericlist', $tags, $name, $attributes, 'value', 'text', $activeArray, $id);
+      $query = ' INSERT INTO ' . self::getRelatedTable($type) . ' (item_id, tag_id)'
+        . ' VALUES ' . implode(',', $values);
 
-		return $tagsO;
+      $db->setQuery($query);
+      $db->execute();
+    }
+  }
+
+	public static function storeTags($tagsArray, $itemId)
+  {
+    self::storeProductTags(self::TYPE_TAG, $tagsArray, $itemId);
+	}
+
+  public static function storeTagLabels($tagsArray, $itemId)
+  {
+    self::storeProductTags(self::TYPE_LABEL, $tagsArray, $itemId);
+  }
+
+  public static function getAllTagsList($order = 'id', $type = self::TYPE_TAG)
+  {
+    $db = Factory::getDBO();
+    $query = 'SELECT a.id AS value, a.title AS text'
+      .' FROM #__phocacart_tags AS a'
+      .' WHERE a.type ='.(int)$type
+      .' ORDER BY '. $order;
+    $db->setQuery($query);
+    return $db->loadObjectList();
+  }
+
+	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = self::TYPE_TAG, $attributes = '')
+  {
+		return HTMLHelper::_('select.genericlist', self::getAllTagsList($order, $type), $name, $attributes, 'value', 'text', $activeArray, $id);
 	}
 
 	/**
 	 *
 	 * @param int $itemId
-	 * @param number $type 0 ... nothing, 1 ... tags only, 2 ... labels only, 3 ... tags and labels
+	 * @param number $types 0 ... nothing, 1 ... tags only, 2 ... labels only, 3 ... tags and labels
 	 * @return string
 	 */
+	public static function getTagsRendered($itemId, $types = 0, $separator = '') {
 
-	public static function getTagsRendered($itemId, $type = 0, $separator = '') {
-
-	    if ($type == 1) {
+	    if ($types == 1) {
 	        // Only tags
-			$tags 	= self::getTags($itemId);
-		} else if ($type == 2) {
+			$tags 	= self::getTags($itemId, 0, 1);
+		} else if ($types == 2) {
 		    // Only labels
-			$tags 	= self::getTagLabels($itemId);
-		} else if ($type == 3) {
+			$tags 	= self::getTagLabels($itemId, 0, 1);
+		} else if ($types == 3) {
 		    // Tags and Labels together (they can be displayed as labels in category/items view)
-		    $t 	= self::getTags($itemId);
-		    $l 	= self::getTagLabels($itemId);
+		    $t 	= self::getTags($itemId, 0, 1);
+		    $l 	= self::getTagLabels($itemId, 0, 1);
 		    $tags = array_merge($t, $l);
         } else {
 	        return '';
@@ -402,7 +319,7 @@ class PhocacartTag
 		if (!empty($tags)) {
 			foreach($tags as $k => $v) {
 
-				if ($type == 2 || $type == 3) {
+				if ($types == 2 || $types == 3) {
 					$o[$i] = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-'.htmlspecialchars(strip_tags($v->alias)).'">';
 				} else {
 					$o[$i] = '<span class="'.$s['c']['label.label-info'] .'">';
@@ -453,7 +370,7 @@ class PhocacartTag
 					}
 				} else if ($tl == 3) {
 					$link = PhocacartRoute::getItemsRoute();
-                    if ($type == 2 || $type == 3) {
+                    if ($types == 2 || $types == 3) {
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $v->id, $v->alias);
                     } else {
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
@@ -462,7 +379,7 @@ class PhocacartTag
 					$o[$i] .= '<a href="'.Route::_($link).'">'.$dO.'</a>';
 				}
 
-				if ($type == 2 || $type == 3) {
+				if ($types == 2 || $types == 3) {
 					$o[$i] .= '</div></div>';
 				} else {
 					$o[$i] .= '</span>';
@@ -477,59 +394,40 @@ class PhocacartTag
 	}
 
 
-	public static function getTagType($type = 0) {
-
-		switch ($type) {
-
-			case 1:
-				return Text::_('COM_PHOCACART_LABEL');
-			break;
-
-			default:
-				return Text::_('COM_PHOCACART_TAG');
-			break;
-
-		}
-	}
-
-
-	public static function getActiveTags($items, $ordering) {
-
-	    $db     = Factory::getDbo();
-	    $o      = array();
-        $wheres = array();
-        $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t
-        if ($items != '') {
-            $wheres[] = 't.id IN (' . $items . ')';
-            $wheres[] = 't.type = 0';
-            $q = 'SELECT DISTINCT t.title, CONCAT(t.id, \'-\', t.alias) AS alias, \'tag\' AS parameteralias, \'tag\' AS parametertitle FROM #__phocacart_tags AS t'
-                . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
-                . ' GROUP BY t.alias, t.title'
-                . ' ORDER BY ' . $ordering;
-
-            $db->setQuery($q);
-            $o = $db->loadAssocList();
-        }
-        return $o;
+  public static function getTagType($type = self::TYPE_TAG) {
+    switch ($type) {
+      case self::TYPE_LABEL:
+        return Text::_('COM_PHOCACART_LABEL');
+      default:
+        return Text::_('COM_PHOCACART_TAG');
     }
+  }
 
-    public static function getActiveLabels($items, $ordering) {
+  private static function getActiveItems($type, $ids, $ordering)
+  {
+    $db     = Factory::getDbo();
+    $o      = array();
+    $wheres = array();
+    $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t
+    if ($ids) {
+      $wheres[] = 't.id IN (' . $ids . ')';
+      $wheres[] = 't.type = ' . (int)$type;
+      $q = 'SELECT DISTINCT t.title, CONCAT(t.id, \'-\', t.alias) AS alias, \'tag\' AS parameteralias, \'tag\' AS parametertitle FROM #__phocacart_tags AS t'
+        . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+        . ' GROUP BY t.alias, t.title'
+        . ' ORDER BY ' . $ordering;
 
-	    $db     = Factory::getDbo();
-	    $o      = array();
-        $wheres = array();
-        $ordering = PhocacartOrdering::getOrderingText($ordering, 3);//t
-        if ($items != '') {
-            $wheres[] = 't.id IN (' . $items . ')';
-            $wheres[] = 't.type = 1';
-            $q = 'SELECT DISTINCT t.title, CONCAT(t.id, \'-\', t.alias) AS alias, \'tag\' AS parameteralias, \'tag\' AS parametertitle FROM #__phocacart_tags AS t'
-                . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
-                . ' GROUP BY t.alias, t.title'
-                . ' ORDER BY ' . $ordering;
-
-            $db->setQuery($q);
-            $o = $db->loadAssocList();
-        }
-        return $o;
+      $db->setQuery($q);
+      $o = $db->loadAssocList();
     }
+    return $o;
+  }
+
+  public static function getActiveTags($items, $ordering) {
+    return self::getActiveItems(self::TYPE_TAG, $items, $ordering);
+  }
+
+  public static function getActiveLabels($items, $ordering) {
+    return self::getActiveItems(self::TYPE_LABEL, $items, $ordering);
+  }
 }

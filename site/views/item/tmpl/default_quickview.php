@@ -126,12 +126,12 @@ if ($this->t['can_display_price']) {
 	$d					= array();
 	$d['s']				= $this->s;
 	$d['type']          = $x->type;// PRODUCTTYPE
-	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price);
+	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
 	$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
 
 	$d['priceitemsorig']= array();
 	if ($x->price_original != '' && $x->price_original > 0) {
-		$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype);
+		$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
 	}
 	$d['class']			= 'ph-item-price-box';
 	$d['product_id']	= (int)$x->id;

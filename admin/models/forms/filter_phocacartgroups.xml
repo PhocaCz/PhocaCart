@@ -36,6 +36,8 @@
 			<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
 			<option value="a.minimum_sum ASC">COM_PHOCACART_MINIMAL_SUM_OF_PURCHASES_ASC</option>
 			<option value="a.minimum_sum DESC">COM_PHOCACART_MINIMAL_SUM_OF_PURCHASES_DESC</option>
+			<option value="a.activate_registration ASC">COM_PHOCACART_ACTIVATE_REGISTRATION_ASC</option>
+			<option value="a.activate_registration DESC">COM_PHOCACART_ACTIVATE_REGISTRATION_DESC</option>
 			<option value="a.type ASC">COM_PHOCACART_DEFAULT_ASC</option>
 			<option value="a.type DESC">COM_PHOCACART_DEFAULT_DESC</option>
 			<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>

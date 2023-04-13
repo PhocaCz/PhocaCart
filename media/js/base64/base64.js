@@ -15,7 +15,6 @@ var Base64 = {
 		var output = "";
 		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
 		var i = 0;
- 
 		input = Base64._utf8_encode(input);
  
 		while (i < input.length) {

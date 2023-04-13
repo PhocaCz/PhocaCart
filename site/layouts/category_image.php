@@ -10,6 +10,12 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Uri\Uri;
 $d                      = $displayData;
 
+// Native lazy load
+$attributeLazyLoad = '';
+if ($d['t']['lazy_load_categories'] == 2) {
+    $attributeLazyLoad = isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
+}
+
 $altValue               = PhocaCartImage::getAltTitle($d['image']['title'], $d['image']['image']->rel);
 $d['image']['style']    = '';
 $srcPlaceHolder = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 '.(int)$d['t']['medium_image_width'] .' '.(int)$d['t']['medium_image_height'] .'\'%3E%3C/svg%3E';
@@ -30,15 +36,17 @@ if ($d['t']['display_webp_images'] == 1) {
     if ($d['t']['lazy_load_categories'] == 1) {
 
         echo '<picture>';
-        echo '<source type="image/webp" data-src="'. $srcWebP.'" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-srcset="' . $srcSetWebP . '" />';
+        // alt="' . $altValue . '"
+        echo '<source type="image/webp" data-src="'. $srcWebP.'" class="' . $class . '" ' . $d['image']['style'] . ' data-srcset="' . $srcSetWebP . '" />';
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' />';
         echo '</picture>';
 
     } else {
 
         echo '<picture>';
-        echo '<source type="image/webp" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" />';
-        echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' />';
+        //  alt="' . $altValue . '"
+        echo '<source type="image/webp" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" />';
+        echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ''.$attributeLazyLoad.' />';
         echo '</picture>';
     }
 
@@ -47,7 +55,7 @@ if ($d['t']['display_webp_images'] == 1) {
     if (($d['t']['view'] == 'categories' && $d['t']['lazy_load_categories'] == 1) || (($d['t']['view'] == 'category' || $d['t']['view'] == 'items') && $d['t']['lazy_load_category_items'] == 1)) {
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' />';
     } else {
-        echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' />';
+        echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].''.$attributeLazyLoad.' />';
     }
 }
 ?>

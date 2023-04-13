@@ -43,6 +43,7 @@ hr {
 	border: 0;
 	font-size: 120%;
 	border-radius: 3px;
+	margin: auto;
 }
 .ph-options-head-expert {
 	background-image: linear-gradient(-90deg, #b74848,#b74848);
@@ -51,6 +52,7 @@ hr {
 	border: 0;
 	font-size: 120%;
 	border-radius: 3px;
+	margin: auto;
 }
 
 

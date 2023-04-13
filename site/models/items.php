@@ -515,9 +515,9 @@ class PhocaCartModelItems extends BaseDatabaseModel
 						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid,';
 
 			if (!$skip['tax']) {
-				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
+				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
 			} else {
-				$columns	.= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
+				$columns	.= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
 			}
 
 			if (!$skip['attributes']) {

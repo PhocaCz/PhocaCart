@@ -29,6 +29,18 @@ class PhocacartCountry
 		return '';
 	}
 
+	public static function getCountryByCode2($countryId) {
+
+		$db =Factory::getDBO();
+		$query = 'SELECT code2 FROM #__phocacart_countries WHERE id = '.(int) $countryId. ' ORDER BY code2 LIMIT 1';
+		$db->setQuery($query);
+		$country = $db->loadColumn();
+		if(isset($country[0])) {
+			return (string)$country[0];
+		}
+		return '';
+	}
+
 	public static function options() {
 
 		$db = Factory::getDBO();

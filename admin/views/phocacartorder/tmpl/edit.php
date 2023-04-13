@@ -78,6 +78,7 @@ if (isset($this->itemcommon->ticket_id) && $this->itemcommon->ticket_id != '') {
 
 echo $r->itemText($this->itemcommon->ip, Text::_('COM_PHOCACART_USER_IP'), '', 'user_ip');
 echo $r->itemText($this->itemcommon->user_agent, Text::_('COM_PHOCACART_USER_AGENT'), '', 'user_agent');
+echo $r->itemText($this->itemcommon->user_lang, Text::_('COM_PHOCACART_USER_LANGUAGE'), '', 'user_lang');
 echo $r->itemText(HTMLHelper::date($this->itemcommon->date, Text::_('DATE_FORMAT_LC2')), Text::_('COM_PHOCACART_DATE'), '', 'date');
 if ($this->itemcommon->currencytitle != '') {
 	echo $r->itemText($this->itemcommon->currencytitle, Text::_('COM_PHOCACART_CURRENCY'), '', 'currency');
@@ -139,6 +140,29 @@ $data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['arra
 
 echo $r->startTab('billingaddress', $tabs['billingaddress']);
 echo $data['b'];
+
+
+if (isset($this->itemcommon->params_user)) {
+
+	if (!empty($this->itemcommon)) {
+
+		PluginHelper::importPlugin('pct');
+		$eventData  = array();
+		$results = Factory::getApplication()->triggerEvent('onPCTgetUserBillingInfoAdminEdit', array('com_phocacart.phocacartorder', $this->itemcommon, $eventData));
+
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo $v['content'];
+				}
+			}
+		}
+
+	}
+}
+
+
+
 echo $r->endTab();
 
 

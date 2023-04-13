@@ -9,14 +9,14 @@
  */
 
 function phRemoveUrlParameter(param, url) {
-	var rtn = url.split("?")[0],
-	param,
-	params_arr = [],
-	queryString = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
+	let rtn = url.split("?")[0];
+	//let param;
+	let params_arr = [];
+	let queryString = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
 	if (queryString !== "") {
 	   params_arr = queryString.split("&");
-	   for (var i = params_arr.length - 1; i >= 0; i -= 1) {
-		  paramV = params_arr[i].split("=")[0];
+	   for (let i = params_arr.length - 1; i >= 0; i -= 1) {
+		  let paramV = params_arr[i].split("=")[0];
 		  if (paramV === param) {
 			 params_arr.splice(i, 1);
 		  }
@@ -28,8 +28,8 @@ function phRemoveUrlParameter(param, url) {
 
 
 function startOverlay(outputDiv) {
-	var phOverlay = jQuery('<div id="phOverlayDiv"><div id="phLoaderFull"> </div></div>');
 
+	const phOverlay = jQuery('<div id="phOverlayDiv"><div id="phLoaderFull"> </div></div>');
 	phOverlay.appendTo(outputDiv);
 	jQuery("#phOverlayDiv").fadeIn().css("display","block");
 
@@ -39,7 +39,7 @@ function startFullOverlay(phA) {
 	if (phA == 2) {
 
 	} else {
-		var phOverlay = jQuery('<div id="phOverlay"><div id="phLoaderFull"> </div></div>');
+		const phOverlay = jQuery('<div id="phOverlay"><div id="phLoaderFull"> </div></div>');
 		phOverlay.appendTo(document.body);
 		jQuery("#phOverlay").fadeIn().css("display","block");
 
@@ -49,17 +49,16 @@ function startFullOverlay(phA) {
 
 function stopOverlay() {
 	jQuery("#phOverlay").fadeIn().css("display","none");
-
 }
 
 function phRemoveParamFromUrl(key, sourceURL) {
-    var rtn = sourceURL.split("?")[0],
+    let rtn = sourceURL.split("?")[0],
         param,
         params_arr = [],
         queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
     if (queryString !== "") {
         params_arr = queryString.split("&");
-        for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+        for (let i = params_arr.length - 1; i >= 0; i -= 1) {
             param = params_arr[i].split("=")[0];
             if (param === key) {
                 params_arr.splice(i, 1);
@@ -72,20 +71,16 @@ function phRemoveParamFromUrl(key, sourceURL) {
 
 function phUpdatePageAndParts(url, source) {
 
-
-	var phVars 		= Joomla.getOptions('phVarsPC');
-	var phParamsS 	= Joomla.getOptions('phParamsModPhocacartSearch');
-
-
-	var ds = '/';
+	const phVars 		= Joomla.getOptions('phVarsPC');
+	const phParamsS 	= Joomla.getOptions('phParamsModPhocacartSearch');
+	let ds = '/';
 	if (phVars['basePath'] == 'undefined' || phVars['basePath'] == '') {
 		ds = '';
 	}
 
-
 	// Firefox problem
 	// FROM:
-	//window.history.pushState({},"", url);// update URL
+	// window.history.pushState({},"", url);// update URL
 	// TO:
 	if (url == '') {
 		window.history.pushState({},"", location.pathname);// update URL
@@ -93,25 +88,24 @@ function phUpdatePageAndParts(url, source) {
 		window.history.pushState({},"", url);// update URL
 	}
 
-
+	let urlMain = '';
 	if (url != '') {
 		// Remove format and set the raw
-		var urlMain = phRemoveParamFromUrl('format', url);
+		urlMain = phRemoveParamFromUrl('format', url);
 		urlMain = url + '&format=raw';
 	} else {
-		var urlMain = '?format=raw';
+		urlMain = '?format=raw';
 	}
 
 	// Remove possible conflict params in URL
-	var urlModule = phRemoveParamFromUrl('option', urlMain);
-	urlModule = phRemoveParamFromUrl('view', urlModule);
-	urlModule = phRemoveParamFromUrl('module', urlModule);
+	let urlModule	= phRemoveParamFromUrl('option', urlMain);
+	urlModule		= phRemoveParamFromUrl('view', urlModule);
+	urlModule 		= phRemoveParamFromUrl('module', urlModule);
 
 	urlModule = urlModule.substring(urlModule.indexOf('?') + 1);
 
-	var urlSearchModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_search';
-	var urlFilterModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_filter';
-
+	let urlSearchModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_search';
+	let urlFilterModule = phVars['basePath'] + ds + 'index.php?option=com_ajax&module=phocacart_filter';
 
 	if (urlModule.indexOf("?") == 0) {
 		urlSearchModule = urlSearchModule + '&' +urlModule.substr(1);
@@ -128,7 +122,7 @@ function phUpdatePageAndParts(url, source) {
 	}
 
 	if (typeof phParamsS != 'undefined' && phVars['mod_phocacart_search'] == 1 && phParamsS['displayActiveParameters'] == 1) {
-		// Update filter only when
+		// Update filter only when source comes from filter
 		phRenderPagePart({}, 'phSearchActiveTags', urlSearchModule);// AJAX update search module
 	}
 
@@ -142,21 +136,18 @@ function phUpdatePageAndParts(url, source) {
 
 function phRenderPage(sFormData, phUrlJs) {
 
+	const phVars 		= Joomla.getOptions('phVarsPC');
+	const phParams	= Joomla.getOptions('phParamsPC');
 
-	var phVars = Joomla.getOptions('phVarsPC');
-	var phParams = Joomla.getOptions('phParamsPC');
-
-	var outputDiv = '#' + phVars['renderPageOutput'];
-	var phUrl = phVars['renderPageUrl'];
-	var isPOS = phVars['isPOS'];
-	var loadChosen = phParams['loadChosen'];
-
+	const outputDiv 	= '#' + phVars['renderPageOutput'];
+	let phUrl 		= phVars['renderPageUrl'];
+	const isPOS 		= phVars['isPOS'];
+	const loadChosen	= phParams['loadChosen'];
 
 	startOverlay(outputDiv);
 
-
 	phUrl = typeof phUrlJs !== "undefined" ? phUrlJs : phUrl;
-	phRequest = jQuery.ajax({
+	jQuery.ajax({
 		type: "POST",
 		url: phUrl,
 		async: true,
@@ -170,7 +161,7 @@ function phRenderPage(sFormData, phUrlJs) {
 				phPosManagePage();
 			}
 			if (loadChosen == 1) {
-				jQuery('select').chosen('destroy').chosen({disable_search_threshold : 10,allow_single_deselect : true});
+				jQuery('select').chosen('destroy').chosen({disable_search_threshold : 10, allow_single_deselect : true});
 			}
 			if (typeof phChangeAttributeType === "function") {
 				phChangeAttributeType();// Recreate the select attribute (color, image) after AJAX
@@ -187,7 +178,7 @@ function phRenderPage(sFormData, phUrlJs) {
 
 function phRenderPagePart(sFormData, outputDiv, phUrl) {
 
-	phRequest = jQuery.ajax({
+	jQuery.ajax({
 		type: "POST",
 		url: phUrl,
 		async: true,
@@ -195,7 +186,7 @@ function phRenderPagePart(sFormData, outputDiv, phUrl) {
 		data: sFormData,
 		dataType:"HTML",
 		success: function(data){
-			outputDiv = '#'+ outputDiv;
+			outputDiv = '.'+ outputDiv;
 			jQuery(outputDiv).html(data);
 		}
 	})
@@ -203,12 +194,11 @@ function phRenderPagePart(sFormData, outputDiv, phUrl) {
 
 function phDisableRequirement() {
 
-	var phParams = Joomla.getOptions('phParamsPC');
-	var loadChosen = phParams['loadChosen'];
-
-	var selectC = jQuery("#jform_country_phs");
-	var selectR = jQuery("#jform_region_phs");
-	var checked = jQuery('#phCheckoutBillingSameAsShipping').prop('checked');
+	const phParams 	= Joomla.getOptions('phParamsPC');
+	const loadChosen= phParams['loadChosen'];
+	const selectC 	= jQuery("#jform_country_phs");
+	const selectR 	= jQuery("#jform_region_phs");
+	const checked 	= jQuery('#phCheckoutBillingSameAsShipping').prop('checked');
 	if (checked) {
 
 		jQuery(".phShippingFormFields").prop("readonly", true);
@@ -245,16 +235,15 @@ function phRenderBillingAndShippingSame() {
 	})
 }
 
-
-
+// ------
 // Events
+// ------
 function phEventChangeFormPagination(sForm, sItem) {
 
+	const phVars 	= Joomla.getOptions('phVarsPC');
+	const phParams 	= Joomla.getOptions('phParamsPC');
 
-	var phVars = Joomla.getOptions('phVarsPC');
-	var phParams = Joomla.getOptions('phParamsPC');
-
-	var phA = 1;// Full Overlay Yes
+	let phA = 1;// Full Overlay Yes
 
 	// If pagination changes on top (ordering or display num then the bottom pagination is reloaded by ajax
 	// But if bottom pagination changes, the top pagination is not reloaded
@@ -262,20 +251,20 @@ function phEventChangeFormPagination(sForm, sItem) {
 	// and set it to top
 	// top id: itemorderingtop, limittop
 	// bottom id: itemordering, limit
-	var phSelectBoxVal  = jQuery(sItem).val();
-	var phSelectBoxId 	= "#" + jQuery(sItem).attr("id") + "top";
+	let phSelectBoxVal  = jQuery(sItem).val();
+	let phSelectBoxId 	= "#" + jQuery(sItem).attr("id") + "top";
 	jQuery(phSelectBoxId).val(phSelectBoxVal);
 
-	var formName = jQuery(sForm).attr("name");
+	let formName = jQuery(sForm).attr("name");
 
 	if (phParams['ajaxPaginationCategory'] == 1 || phVars['isPOS'] == 1) {
 		// Everything is AJAX - pagination top even pagination bottom
-		var phUrl = window.location.href;
+		let phUrl = window.location.href;
 		phRenderPage(jQuery(sForm).serialize(), phUrl);
 	} else {
 		// Only top pagination is ajax, bottom pagination is not ajax start prev 1 2 3 next end
 		if (formName == "phitemstopboxform") {// AJAX - Top pagination always ajax
-			var phUrl = window.location.href;
+			let phUrl = window.location.href;
 			phRenderPage(jQuery(sForm).serialize(), phUrl);
 		} else {
 			sForm.submit();// STANDARD
@@ -287,14 +276,14 @@ function phEventChangeFormPagination(sForm, sItem) {
 function phNumberFormat (number, decimals, decPoint, thousandsSep) {
 
 	number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
-	var n = !isFinite(+number) ? 0 : +number
-	var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
-	var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
-	var dec = (typeof decPoint === 'undefined') ? '.' : decPoint
-	var s = ''
+	let n = !isFinite(+number) ? 0 : +number
+	let prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
+	let sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
+	let dec = (typeof decPoint === 'undefined') ? '.' : decPoint
+	let s = ''
 
-	var toFixedFix = function (n, prec) {
-	  var k = Math.pow(10, prec)
+	let toFixedFix = function (n, prec) {
+	  let k = Math.pow(10, prec)
 	  return '' + (Math.round(n * k) / k)
 		.toFixed(prec)
 	}
@@ -321,30 +310,26 @@ jQuery(document).ready(function(){
 	// ::EVENT (CLICK) Change Layout Type Clicking on Grid, Gridlist, List
 	jQuery(".phItemSwitchLayoutType").on('click', function (e) {
 
-
-		var phDataL = jQuery(this).data("layouttype");// Get the right button (list, grid, gridlist)
-		var sForm 	= jQuery(this).closest("form");// Find in which form the right button was clicked
-
-		var sFormData = sForm.serialize() + "&layouttype=" + phDataL;
+		const phDataL 	= jQuery(this).data("layouttype");// Get the right button (list, grid, gridlist)
+		const sForm 	= jQuery(this).closest("form");// Find in which form the right button was clicked
+		const sFormData = sForm.serialize() + "&layouttype=" + phDataL;
 
 		jQuery(".phItemSwitchLayoutType").removeClass("active");
 		jQuery(".phItemSwitchLayoutType." + phDataL).addClass("active");
-		var phUrl = window.location.href;
+		let phUrl = window.location.href;
 		phRenderPage(sFormData, phUrl);
 	})
 
 	// ::EVENT (CLICK) Pagination - Clicking on Start Prev 1 2 3 Next End
 	jQuery(document).on('click', ".phPaginationBox .pagination li a", function (e) {
 
-
-
-		var phVars = Joomla.getOptions('phVarsPC');
-		var phParams = Joomla.getOptions('phParamsPC');
+		const phVars 	= Joomla.getOptions('phVarsPC');
+		const phParams 	= Joomla.getOptions('phParamsPC');
 
 		if (phParams['ajaxPaginationCategory'] == 1 || phVars['isPOS'] == 1) {
-			var phUrl = jQuery(this).attr("href");
-			var sForm = jQuery(this).closest("form");// Find in which form the right button was clicked
-			var sFormData = sForm.serialize();
+			let phUrl = jQuery(this).attr("href");
+			const sForm = jQuery(this).closest("form");// Find in which form the right button was clicked
+			const sFormData = sForm.serialize();
 
 			phRenderPage(sFormData, phUrl);
 
@@ -359,8 +344,5 @@ jQuery(document).ready(function(){
 			e.preventDefault();
 		}
 	})
-
 	phRenderBillingAndShippingSame();
-
-
 })

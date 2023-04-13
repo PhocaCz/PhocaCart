@@ -27,7 +27,7 @@
 <field name="icon_class" type="text" label="COM_PHOCACART_FIELD_TAG_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_TAG_ICON_CLASS_DESC" class="form-control" size="40" />
 -->
 
-		<field name="parameter_id" type="phocacartparameter" label="COM_PHOCACART_FIELD_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_DESC" class="form-select" required="true" />
+		<field name="parameter_id" type="phocacartparameter" label="COM_PHOCACART_FIELD_PARAMETER_LINKED_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_LINKED_DESC" class="form-select" required="true" />
 
 
 <field name="ordering" type="phocacartOrdering" table="tag" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />

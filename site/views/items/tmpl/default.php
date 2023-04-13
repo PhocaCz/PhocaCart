@@ -14,6 +14,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
 $layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
@@ -75,6 +76,12 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 	echo '<div class="'.PhocacartRenderFront::completeClass(array($this->s['c']['row'], $this->t['class_row_flex'], $this->t['class_lazyload'], $lt)).'">';
 
 	foreach ($this->items as $v) {
+
+		if (isset($v->taxhide)) {
+			$registry = new Registry;
+			$registry->loadString($v->taxhide);
+			$v->taxhide = $registry->toArray();
+		}
 
 		// DIFF CATEGORY / ITEMS
 		$this->t['categoryid'] = (int)$v->catid;
@@ -147,14 +154,14 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 			$dP['type'] = $v->type;// PRODUCTTYPE
 
-			$priceItems	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price);
+			$priceItems	= $price->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, $v->unit_amount, $v->unit_unit, 1, 1, $v->group_price, $v->taxhide);
 
 			$price->getPriceItemsChangedByAttributes($priceItems, $attributesOptions, $price, $v);
 			$dP['priceitemsorig']= array();
 			$dP['priceitems']	= $priceItems;
 
 			if ($v->price_original != '' && $v->price_original > 0) {
-				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype);
+				$dP['priceitemsorig'] = $price->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
 			}
 			//$dP['class']		= 'ph-category-price-box '.$lt;
 			$dP['class']		= 'ph-category-price-box';// Cannot be dynamic as can change per ajax - this can cause jumping of boxes
@@ -397,6 +404,19 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 
 		$dL['icon']				= $icon;// Icons
+		// Additional class
+		$classAdditional = [];
+		if (PhocacartRenderFront::renderNewIcon($v->date, 1, 1)) {
+			$classAdditional[] = 'pc-status-new';
+		}
+		if (PhocacartRenderFront::renderHotIcon($v->sales, 1, 1)) {
+			$classAdditional[] = 'pc-status-hot';
+		}
+		if (PhocacartRenderFront::renderFeaturedIcon($v->featured, 1, 1)) {
+			$classAdditional[] = 'pc-status-featured';
+		}
+
+		$dL['class_additional'] = !empty($classAdditional) ? implode(' ', $classAdditional) : '';// Additional class
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
         $dL['item']             = $v;
 		//$dL['product_header'] .= '<div>SKU: '.$v->sku.'</div>';

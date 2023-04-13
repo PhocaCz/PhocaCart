@@ -40,6 +40,9 @@ $title = '';
 if (isset($this->category[0]->title) && $this->category[0]->title != '') {
 	$title = $this->category[0]->title;
 }
+if (isset($this->category[0]->title_long) && $this->category[0]->title_long != '') {
+	$title = $this->category[0]->title_long;
+}
 
 // Image meta is used for open graph plugins
 $imageMeta = '';

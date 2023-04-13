@@ -321,9 +321,9 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias,';
 
 			if (!$skip['tax']) {
-				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
+				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
 			} else {
-				$columns	.= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
+				$columns	.= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
 			}
 
 			if (!$skip['attributes']) {
@@ -400,8 +400,8 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 
 		if ($subcategories) {
 
-			$columns	= 'c.id, c.parent_id, c.title, c.alias, c.image, COUNT(c.id) AS numdoc';
-			$groupsFull	= 'c.id, c.parent_id, c.title, c.alias, c.image';
+			$columns	= 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image, COUNT(c.id) AS numdoc';
+			$groupsFull	= 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
 			$groupsFast	= 'c.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -414,7 +414,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 				. " GROUP BY ".$groups
 				. " ORDER BY ".$categoryOrdering;
 		} else {
-			$query = " SELECT c.id, c.parent_id, c.title, c.alias, c.image, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
+			$query = " SELECT c.id, c.parent_id, c.title, c.title_long, c.alias, c.image, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
 				. " FROM #__phocacart_categories AS c"
 				. " LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id"
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category

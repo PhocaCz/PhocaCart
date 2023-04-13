@@ -32,7 +32,8 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 				'language', 'a.language',
 				'hits', 'a.hits',
 				'published','a.published',
-				'parentcat_title', 'parentcat_title'
+				'parentcat_title', 'parentcat_title',
+				'featured', 'a.featured'
 			);
 
             // ASSOCIATION
@@ -161,7 +162,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
-		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language, a.count_products, a.count_date';
+		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language, a.count_products, a.count_date, a.featured';
 		//$groupsFull	= $columns . ', ' .'l.title, uc.name, ag.title, c.title, c.id, cc.countid';
 		//$groupsFast	= 'a.id';
 		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
@@ -227,6 +228,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
                             'a.published',
                             'a.access',
                             'a.ordering',
+							'a.featured',
                             'a.language',
                             'l.title' ,
                             'l.image' ,

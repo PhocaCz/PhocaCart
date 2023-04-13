@@ -57,7 +57,8 @@ foreach ($d['items'] as $k => $v) {
             // Category View - force the category parameter if set in parameters
             $jsSet .= 'phChangeFilter(\'c\', \''.$d['forcecategory']['idalias'].'\', 1, \'text\', 0, 1, 1);';
         }
-        $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\', 0, 1);return false;';
+        //$jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', '.(int)$checkedInt.', \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\', 0, 1);return false;';
+        $jsSet .= 'phChangeFilter(\''.$d['param'].'\', \''. $value.'\', this, \''.$d['formtype'].'\', \''.$d['uniquevalue'].'\', 0, 1);return false;';
 
         $output .= '<a href="#" class="phSelectBoxImage '.$class.'" onclick="'.$jsSet.'" title="'.htmlspecialchars($v->title).'">'
         .'<img style="'.$d['style'].'" src="'.$linkI.'" alt="'.$v->title.'" />'

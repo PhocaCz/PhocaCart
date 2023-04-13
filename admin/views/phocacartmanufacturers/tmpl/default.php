@@ -115,7 +115,8 @@ if (is_array($this->items)) {
         $pC .= '</div>';
         echo $r->td($pC, "small");
 
-        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
+        //echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
+        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange) . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange, 'manufacturer'), "small");
 
 
         echo $r->td($item->id, "small");

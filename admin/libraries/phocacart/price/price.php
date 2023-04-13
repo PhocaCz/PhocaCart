@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
 
 class PhocacartPrice
@@ -24,6 +25,7 @@ class PhocacartPrice
     protected $price_prefix = '';
     protected $price_suffix = '';
     protected $exchange_rate = 1;
+    protected $currency_id = 1;
     private static $currency = array();
 
     public function __construct() {
@@ -304,7 +306,9 @@ class PhocacartPrice
      * param format - format the price or not (add currency symbol, price decimals thousands separator, ...)
      */
 
-    public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null) {
+    public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null, $taxHide = []) {
+
+
 
 
         // We need to round because if not
@@ -312,6 +316,21 @@ class PhocacartPrice
         // TAX             0.025 ... 0.03
         // NETTO           0.125 ... 0.13
         // BRUTTO IS WRONG 0.15  ... 0.16
+
+        // External extensions - backward compatibility
+        /*if (!is_array($taxHide)) {
+			if ($taxHide != '') {
+                $registry = new Registry;
+                $registry->loadString($taxHide);
+                $taxHide = $registry->toArray();
+            } else {
+                $taxHide = [];
+            }
+		}*/
+        if (!is_array($taxHide)) {
+            $registry = new Registry($taxHide);
+            $taxHide = $registry->toArray();
+        }
 
         // If user is assigned to some group, the lowest price was selected from groups for all groups he is assigned
         if ($groupPrice !== null) {
@@ -325,8 +344,8 @@ class PhocacartPrice
 
 
         // Change TAX based on country or region
-        $taxChangedA = PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
-        $tax         = $this->roundPrice($taxChangedA['taxrate']);
+        $taxChangedA = PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle, $taxHide);
+        $tax = $this->roundPrice($taxChangedA['taxrate']);
         $taxTitle    = $taxChangedA['taxtitle'];
         $taxTitle    = Text::_($taxTitle);
 
@@ -345,14 +364,17 @@ class PhocacartPrice
         $priceO['taxcalctype'] = $taxCalculationType;// Set in Tax edit: Percentate, Fixed Amount
         $priceO['zero']        = 0;
 
+        $priceO['taxid']        = $taxChangedA['taxid'];
         $priceO['taxcountryid'] = $taxChangedA['taxcountryid'];
         $priceO['taxregionid']  = $taxChangedA['taxregionid'];
-        $priceO['taxkey']       = PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
+        $priceO['taxpluginid']  = $taxChangedA['taxpluginid'];
+        $priceO['taxkey']       = PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid'], $taxChangedA['taxpluginid']);
+        $priceO['taxhide']      = $taxChangedA['taxhide'];
 
         // NO TAX
         if ($tax_calculation == 0) {
             $priceO['netto']     = $price;
-            $priceO['tax']       = 0;
+            $priceO['tax']       = NULL;
             $priceO['brutto']    = $price;
             $priceO['bruttotxt'] = Text::_('COM_PHOCACART_PRICE');
             $priceO['nettotxt']  = Text::_('COM_PHOCACART_PRICE');
@@ -360,12 +382,15 @@ class PhocacartPrice
 
             // EXCLUSIVE TAX
         } else if ($tax_calculation == 1) {
+
             $priceO['netto'] = $price;
             if ($taxCalculationType == 2) { // FIX
                 $priceO['tax']    = $tax;
                 $priceO['brutto'] = $priceO['netto'] + $tax;
                 $priceO['taxtxt'] = $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
             } else { // Percentage
+
+
                 $priceO['tax'] = $priceO['netto'] * ($tax / 100);
                 if ($round == 1) {
                     $priceO['tax'] = $this->roundPrice($priceO['tax']);
@@ -381,12 +406,14 @@ class PhocacartPrice
 
             // INCLUSIVE TAX
         } else if ($tax_calculation == 2) {
+
             $priceO['brutto'] = $price;
             if ($taxCalculationType == 2) { // FIX
                 $priceO['tax']    = $tax;
                 $priceO['netto']  = $priceO['brutto'] - $tax;
                 $priceO['taxtxt'] = $taxTitle . ' (' . $this->getPriceFormat($tax) . ')';
             } else { // Percentage
+
 
                 $priceO['tax'] = $priceO['brutto'] - ($priceO['brutto'] / (($tax / 100) + 1));
                 if ($round == 1) {
@@ -419,8 +446,11 @@ class PhocacartPrice
         if ($priceO['netto']) {
             $priceO['nettoformat'] = $this->getPriceFormat($priceO['netto']);
         }
-        if ($priceO['tax']) {
+
+        if (isset($priceO['tax'])) { // it can be even zero
             $priceO['taxformat'] = $this->getPriceFormat($priceO['tax']);
+        } else if ($priceO['tax'] === NULL) {
+            $priceO['taxformat'] = $this->getPriceFormat(0);
         }
         //}
         $priceO['bruttoformat'] = $this->getPriceFormat($priceO['brutto']);
@@ -460,7 +490,9 @@ class PhocacartPrice
         if ($round == 1) {
             $priceO['netto']  = $this->roundPrice($priceO['netto']);
             $priceO['brutto'] = $this->roundPrice($priceO['brutto']);
-            $priceO['tax']    = $this->roundPrice($priceO['tax']);
+            if ($priceO['tax'] != NULL) {
+                $priceO['tax'] = $this->roundPrice($priceO['tax']);
+            }
         }
 
 
@@ -524,11 +556,17 @@ class PhocacartPrice
         return $priceR;
     }
 
-    public function getPriceItemsShipping($price, $priceAdditional, $calculationType, $total, $taxId, $tax, $taxCalculationType, $taxTitle = '', $freeShipping = 0, $round = 1, $langPrefix = 'SHIPPING_') {
+    public function getPriceItemsShipping($price, $priceAdditional, $calculationType, $total, $taxId, $tax, $taxCalculationType, $taxTitle = '', $freeShipping = 0, $round = 1, $langPrefix = 'SHIPPING_', $taxHide = []) {
 
         // PERCENTAGE PRICE OF SHIPPING
         // CALCULATED FROM TOTAL - PAYMENT - SHIPPING (TOTAL BEFORE SHIPPING AND PAYMENT PRICE)
         // $total[brutto] can be changed e.g. to netto, etc.
+
+        // External extensions - backward compatibility
+        if (!is_array($taxHide)) {
+			$registry = new Registry($taxHide);
+			$taxHide = $registry->toArray();
+		}
 
         $priceO             = array();
         $priceO['costinfo'] = '';
@@ -558,7 +596,7 @@ class PhocacartPrice
         }
 
         // Change TAX based on country or region
-        $taxChangedA = PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
+        $taxChangedA = PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle, $taxHide);
         $tax         = $this->roundPrice($taxChangedA['taxrate'], 'shipping');
         $taxTitle    = $taxChangedA['taxtitle'];
 
@@ -574,6 +612,7 @@ class PhocacartPrice
         $priceO['netto']        = 0;
         $priceO['tax']          = 0;
         $priceO['taxid']        = 0;
+        $priceO['taxhide']        = $taxChangedA['taxhide'];
         $priceO['brutto']       = 0;
         $priceO['nettotxt']     = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX');
         $priceO['taxtxt']       = '';
@@ -673,8 +712,8 @@ class PhocacartPrice
             $priceO['bruttotxt'] = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_INCL_TAX');
             $priceO['nettotxt']  = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX');
 
-            $priceO['taxid']  = $taxId;
-            $priceO['taxkey'] = PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
+            $priceO['taxid']  = $taxChangedA['taxid'];
+            $priceO['taxkey'] = PhocacartTax::getTaxKey($taxChangedA['taxid'], $taxChangedA['taxcountryid'], $taxChangedA['taxregionid'], $taxChangedA['taxpluginid']);
 
             $priceO['netto_title_lang'] = 'COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX';
             $priceO['netto_title']      = Text::_($priceO['netto_title_lang']);
@@ -712,8 +751,8 @@ class PhocacartPrice
             $priceO['bruttotxt'] = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_INCL_TAX');
             $priceO['nettotxt']  = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX');
 
-            $priceO['taxid']  = $taxId;
-            $priceO['taxkey'] = PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
+            $priceO['taxid']  = $taxChangedA['taxid'];
+            $priceO['taxkey'] = PhocacartTax::getTaxKey($taxChangedA['taxid'], $taxChangedA['taxcountryid'], $taxChangedA['taxregionid'], $taxChangedA['taxpluginid']);
 
             $priceO['netto_title_lang'] = 'COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX';
             $priceO['netto_title']      = Text::_($priceO['netto_title_lang']);
@@ -771,13 +810,18 @@ class PhocacartPrice
     }
 
 
-    public function getPriceItemsPayment($price, $priceAdditional, $calculationType, $total, $taxId, $tax, $taxCalculationType, $taxTitle = '', $freePayment = 0, $round = 1, $langPrefix = 'PAYMENT_') {
+    public function getPriceItemsPayment($price, $priceAdditional, $calculationType, $total, $taxId, $tax, $taxCalculationType, $taxTitle = '', $freePayment = 0, $round = 1, $langPrefix = 'PAYMENT_', $taxHide = []) {
 
 
         // PERCENTAGE PRICE OF PAYMENT
         // CALCULATED FROM TOTAL - PAYMENT (TOTAL BEFORE PAYMENT PRICE)
         // $total[brutto] can be changed e.g. to netto, etc.
 
+        // External extensions - backward compatibility
+        if (!is_array($taxHide)) {
+			$registry = new Registry($taxHide);
+			$taxHide = $registry->toArray();
+		}
 
         $priceO             = array();
         $priceO['costinfo'] = '';
@@ -809,7 +853,7 @@ class PhocacartPrice
 
 
         // Change TAX based on country or region
-        $taxChangedA = PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle);
+        $taxChangedA = PhocacartTax::changeTaxBasedOnRule($taxId, $tax, $taxCalculationType, $taxTitle, $taxHide);
         $tax         = $this->roundPrice($taxChangedA['taxrate'], 'payment');
         $taxTitle    = $taxChangedA['taxtitle'];
 
@@ -829,8 +873,10 @@ class PhocacartPrice
         $priceO['netto']        = 0;
         $priceO['tax']          = 0;
         $priceO['taxid']        = 0;
+        $priceO['taxhide']        = $taxChangedA['taxhide'];
         $priceO['taxkey']       = '';
         $priceO['brutto']       = 0;
+
         $priceO['nettotxt']     = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX');
         $priceO['taxtxt']       = '';
         $priceO['bruttotxt']    = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_INCL_TAX');
@@ -919,8 +965,8 @@ class PhocacartPrice
             }
             $priceO['bruttotxt'] = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_INCL_TAX');
             $priceO['nettotxt']  = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX');
-            $priceO['taxid']     = $taxId;
-            $priceO['taxkey']    = PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
+            $priceO['taxid']     = $taxChangedA['taxid'];
+            $priceO['taxkey']    = PhocacartTax::getTaxKey($taxChangedA['taxid'], $taxChangedA['taxcountryid'], $taxChangedA['taxregionid'], $taxChangedA['taxpluginid']);
 
             $priceO['netto_title_lang'] = 'COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX';
             $priceO['netto_title']      = Text::_($priceO['netto_title_lang']);
@@ -956,8 +1002,8 @@ class PhocacartPrice
             }
             $priceO['bruttotxt'] = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_INCL_TAX');
             $priceO['nettotxt']  = Text::_('COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX');
-            $priceO['taxid']     = $taxId;
-            $priceO['taxkey']    = PhocacartTax::getTaxKey($taxId, $taxChangedA['taxcountryid'], $taxChangedA['taxregionid']);
+            $priceO['taxid']     = $taxChangedA['taxid'];
+            $priceO['taxkey']    = PhocacartTax::getTaxKey($taxChangedA['taxid'] ,$taxChangedA['taxcountryid'], $taxChangedA['taxregionid'], $taxChangedA['taxpluginid']);
 
             $priceO['netto_title_lang'] = 'COM_PHOCACART_' . $langPrefix . 'PRICE_EXCL_TAX';
             $priceO['netto_title']      = Text::_($priceO['netto_title_lang']);
@@ -1094,7 +1140,7 @@ class PhocacartPrice
                             // function getStockItemsChangedByAttributes - similar behaviour
                             if ($ajax == 1 || ($ajax == 0 && isset($v2->default_value) && $v2->default_value == 1)) {
                                 if (isset($v2->title) && isset($v2->amount) && isset($v2->operator)) {
-                                    $priceA = $price->getPriceItems($v2->amount, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle);
+                                    $priceA = $price->getPriceItems($v2->amount, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle,0, '', 0, 1, null, $item->taxhide);
 
                                     if ($v2->operator == '-') {
                                         $priceP['netto']  -= $priceA['netto'];
@@ -1124,7 +1170,7 @@ class PhocacartPrice
             $dataASM = PhocacartAttribute::getCombinationsDataByKey($k);
 
             if (isset($dataASM['price']) && $dataASM['price'] > 0) {
-                $priceP = $price->getPriceItems($dataASM['price'], $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle);
+                $priceP = $price->getPriceItems($dataASM['price'], $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 0, 1, null, $item->taxhide);
             }
 
         }
@@ -1159,5 +1205,106 @@ class PhocacartPrice
     public static function cleanPrice($price) {
         $price = (float)$price;
         return $price + 0;
+    }
+
+    /* Display or hide NETTO, TAX or BRUTTO - for products, in checkout, etc.
+    */
+    public static function displayPriceItems($priceItems, $type){
+
+        $displayPriceItems = [];
+        $displayPriceItems['netto'] = 0;
+        $displayPriceItems['tax']   = 0;
+        $displayPriceItems['brutto'] = 0;
+
+        if (isset($priceItems['netto'])) {
+            $displayPriceItems['netto'] = 1;
+        }
+
+        if (isset($priceItems['brutto'])) {
+            $displayPriceItems['brutto'] = 1;
+        }
+
+        if (isset($priceItems['tax'])) {
+            if (isset($priceItems['taxcalc']) && (int)$priceItems['taxcalc'] > 0) {
+                $displayPriceItems['tax'] = 1;
+                if (isset($priceItems['taxid']) && $priceItems['taxid'] > 0) {
+                    $displayPriceItems['tax'] = 1;
+                    if (empty($priceItems['taxhide'])) {
+                        $displayPriceItems['tax'] = 1;
+                    } else {
+
+                        // External extensions - backward compatibility
+                        if (!is_array($priceItems['taxhide'])) {
+                            $registry = new Registry;
+                            $registry->loadString($priceItems['taxhide']);
+                            $priceItems['taxhide'] = $registry->toArray();
+                        }
+
+                        // See tax options in administration - Prameter - Hide Tax
+                        if ($type == 'price') {
+                            // Hide Tax for all price items
+                            if (in_array(1, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                            // Hide Tax including netto for all price items
+                            if (in_array(2, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax']   = 0;
+                                $displayPriceItems['netto'] = 0;
+                            }
+                        } else if ($type == 'checkout'){
+                            // Hide Tax for all price items
+                            if (in_array(3, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                        } else if ($type == 'cart'){
+                            // Hide Tax for all price items
+                            if (in_array(4, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                        } else if ($type == 'order'){
+                            // Hide Tax for all price items
+                            if (in_array(5, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                        } else if ($type == 'catalog') {
+                            // Hide Tax for all price items
+                            if (in_array(6, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                            // Hide Tax including netto for all price items
+                            if (in_array(7, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax']   = 0;
+                                $displayPriceItems['netto'] = 0;
+                            }
+                        }
+                    }
+                } else {
+                    $displayPriceItems['tax'] = 0;
+                    // If there is no VAT for current item displayed then don't display the same netto and brutto together
+                    if ($priceItems['netto'] == $priceItems['brutto']){
+                     $displayPriceItems['netto'] = 0;
+                    }
+                }
+            } else {
+
+                // If there is VAT generally not displayed then don't display the same netto and brutto together
+                if ($priceItems['netto'] == $priceItems['brutto']){
+                   $displayPriceItems['netto'] = 0;
+                }
+
+            }
+        } else {
+            // Tax not exist
+            if (isset($priceItems['taxcalc']) && (int)$priceItems['taxcalc'] == 0) {
+                // And tax calculation disabled
+                if ($priceItems['netto'] == $priceItems['brutto']){
+                    // And netto is equal brutto
+                   $displayPriceItems['netto'] = 0;
+                }
+            }
+        }
+
+        return $displayPriceItems;
+
     }
 }

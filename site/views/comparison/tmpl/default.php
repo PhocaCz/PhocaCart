@@ -92,14 +92,14 @@ if (!empty($this->t['items'])) {
 			$d['s']			    = $this->s;
 			$d['type']			= $v['type'];// PRODUCTTYPE
 
-			$d['priceitems']	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, $v['group_price']);
+			$d['priceitems']	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, $v['group_price'], $v['taxhide']);
 			$d['priceitemsorig']= array();
 			if ($v['price_original'] != '' && $v['price_original'] > 0) {
-				$d['priceitemsorig'] = $price->getPriceItems($v['price_original'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype']);
+				$d['priceitemsorig'] = $price->getPriceItems($v['price_original'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], '', 0, '', 0, 1, null, $v['taxhide']);
 			}
 			$d['class']			= 'ph-category-price-box';// we need the same class as category or items view
 			$d['product_id']	= (int)$v['id'];
-			$d['typeview']		= 'Module';
+			$d['typeview']		= 'Comparison';
 
 			// Display discount price
 			// Move standard prices to new variable (product price -> product discount)

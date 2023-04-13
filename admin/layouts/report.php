@@ -10,7 +10,8 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 $d 		= $displayData;
 $price 	= new PhocacartPrice();
-$taxes 	= PhocacartTax::getAllTaxesIncludingCountryRegion();
+$taxes 	= PhocacartTax::getAllTaxesIncludingCountryRegionPlugin();
+
 
 $p = array();
 $p['report_calculation'] 		= $d['params']->get( 'report_calculation', 1);
@@ -67,10 +68,10 @@ switch($d['format']) {
 	break;
 
 	case 'pdf':
-
-		$cRDoc 		= 'style="font-family: sans-serif,arial;"';
-		$cRHead		= 'style="font-family: sans-serif,arial;margin: 0pt;padding: 0pt;"';
-		$cRDate		= 'style="font-family: sans-serif,arial;margin: 0pt;padding: 0pt;"';
+        // Don't set font-family attribute here because it can break when displaying specific characters by specific font in Phoca PDF (e.g. arial does not include latin extended, etc.)
+		$cRDoc 		= 'style=""';
+		$cRHead		= 'style="margin: 0pt;padding: 0pt;"';
+		$cRDate		= 'style="margin: 0pt;padding: 0pt;"';
 		$cRT 		= 'style="border: 1pt solid #f0f0f0;border-collapse:collapse;font-size:60%;width:100%" cellpadding="1"';
 		$cRTRH 		= 'style="border: 1pt solid #f0f0f0;"';
 		$cRTRHC 	= 'style="border: 1pt solid #f0f0f0;background-color: #f7f7f7;font-size: 90%"';
@@ -168,7 +169,6 @@ foreach($d['items'] as $k => $v) {
 	echo isset($v->user_country) && $v->user_country != '' ? ' ' . $v->user_country : '';
 	echo '</td>';
 
-
 	// Payment Title
 	echo '<td '.$cRCur.'>'.$v->payment_title.'</td>';
 
@@ -223,6 +223,7 @@ foreach($d['items'] as $k => $v) {
 			echo '<td '.$cRTax.'>';
 			if (!empty($v->tax)) {
 				foreach($v->tax as $kT => $vT) {
+
 					echo isset($taxes[$kT]['title']) ? $taxes[$kT]['title'] . ' ' : '';
 					echo isset($taxes[$kT]['tax_rate']) && isset($taxes[$kT]['calculation_type']) ? '('.$price->getTaxFormat($taxes[$kT]['tax_rate'], (int)$taxes[$kT]['calculation_type']).') ' : '';
 					echo ': ';

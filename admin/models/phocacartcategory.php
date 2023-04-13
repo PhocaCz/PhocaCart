@@ -178,19 +178,13 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 					$data['alias'] = OutputFilter::stringURLSafe($data['title']);
 				}
 
-
-				if ($table->load(array('alias' => $data['alias']))){
-					$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
-				}
-
-				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
-				$data['alias'] = $alias;
-
-				if (isset($msg)) {
-					Factory::getApplication()->enqueueMessage($msg, 'warning');
+				list($title, $alias) = $this->generateNewTitle($data['parent_id'], $data['alias'], $data['title']);
+				if ($data['alias'] != $alias) {
+					Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_SAVE_WARNING'), 'warning');
+					$data['alias'] = $alias;
 				}
 			}
-		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
+		} else if ($table->load(array('alias' => $data['alias'], 'parent_id' => $data['parent_id'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
 			$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			return false;
 		}
@@ -424,6 +418,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			// - - - - - - - - - - - - - - -
 
 			// Product with new cid - - - - -
+			$err_img = array();
 			if (count( $cid )) {
 				ArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
@@ -443,7 +438,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				}
 
 
-				$err_img = array();
+
 				$cid 	 = array();
 				foreach ($rows as $row) {
 					if ($row->numproduct == 0) {
@@ -489,13 +484,13 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 			// There are some images in the category - don't delete it
 			$msg = '';
-			if (count( $err_cat ) || count( $err_img )) {
-				if (count( $err_cat )) {
+			if (!empty( $err_cat ) || !empty( $err_img )) {
+				if (!empty( $err_cat )) {
 					$cids_cat = implode( ", ", $err_cat );
 					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', $cids_cat );
 				}
 
-				if (count( $err_img )) {
+				if (!empty( $err_img )) {
 					$cids_img = implode( ", ", $err_img );
 					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', $cids_img );
 				}
@@ -680,6 +675,12 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			// Set the new category ID
 			$table->parent_id = $categoryId;
 
+			// Alter the title & alias
+			list($title, $alias) = $this->generateNewTitle($categoryId, $table->alias, $table->title);
+			if ($table->alias != $alias) {
+				Factory::getApplication()->enqueueMessage(Text::_('COM_PHOCACART_SAVE_WARNING'), 'warning');
+				$table->alias = $alias;
+			}
 
 			// Cannot move the node to be a child of itself.
 			if ((int)$table->id == (int)$categoryId) {
@@ -951,5 +952,89 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
         parent::preprocessForm($form, $data, $group);
     }
+
+
+	public function featured($pks, $value = 0) {
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		ArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		//$table = $this->getTable('PhocacartCategoryFeatured', 'Table');
+
+
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+						->update($db->quoteName('#__phocacart_categories'))
+						->set('featured = ' . (int) $value)
+						->where('id IN (' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$db->execute();
+
+			/*if ((int) $value == 0)
+			{
+				// Adjust the mapping table.
+				// Clear the existing features settings.
+				$query = $db->getQuery(true)
+							->delete($db->quoteName('#__phocacart_category_featured'))
+							->where('product_id IN (' . implode(',', $pks) . ')');
+				$db->setQuery($query);
+				$db->execute();
+			}
+			else
+			{
+				// first, we find out which of our new featured articles are already featured.
+				$query = $db->getQuery(true)
+					->select('f.product_id')
+					->from('#__phocacart_category_featured AS f')
+					->where('product_id IN (' . implode(',', $pks) . ')');
+				//echo $query;
+				$db->setQuery($query);
+
+				$old_featured = $db->loadColumn();
+
+				// we diff the arrays to get a list of the articles that are newly featured
+				$new_featured = array_diff($pks, $old_featured);
+
+				// Featuring.
+				$tuples = array();
+				foreach ($new_featured as $pk)
+				{
+					$tuples[] = $pk . ', 0';
+				}
+				if (count($tuples))
+				{
+					$db = $this->getDbo();
+					$columns = array('product_id', 'ordering');
+					$query = $db->getQuery(true)
+						->insert($db->quoteName('#__phocacart_category_featured'))
+						->columns($db->quoteName($columns))
+						->values($tuples);
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}*/
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		//$table->reorder();
+
+		$this->cleanCache();
+
+		return true;
+	}
+
 }
 ?>

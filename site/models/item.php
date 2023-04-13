@@ -13,6 +13,8 @@ use Joomla\CMS\Plugin\PluginHelper;
 defined('_JEXEC') or die();
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+
 jimport('joomla.application.component.model');
 
 class PhocaCartModelItem extends BaseDatabaseModel
@@ -37,6 +39,13 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			if (empty($this->item)) {
 				return null;
 			}
+
+			if (isset($this->item[0]->taxhide)) {
+				$registry = new Registry;
+				$registry->loadString($this->item[0]->taxhide);
+				$this->item[0]->taxhide = $registry->toArray();
+			}
+
 		}
 		return $this->item;
 	}
@@ -119,7 +128,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			$wheres[] = " a.stock > 0";
 		}
 
-		$query = ' SELECT a.id, a.title, a.alias, a.catid, c.id AS categoryid, c.title AS categorytitle, c.alias AS categoryalias'
+		$query = ' SELECT a.id, a.title, a.title_long, a.alias, a.catid, c.id AS categoryid, c.title AS categorytitle, c.alias AS categoryalias'
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
@@ -208,7 +217,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			}
 		}
 
-		$baseColumns = array('i.id', 'i.title', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types');
+		$baseColumns = array('i.id', 'i.title', 'i.title_long', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types');
 
 		$col = array_merge($baseColumns, $additionalColumns);
 		$col = array_unique($col);
@@ -218,9 +227,9 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		$columns	= implode(',', $col) . ', pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, i.catid AS preferred_catid, m.id as manufacturerid, m.title as manufacturertitle, m.link as manufacturerlink,';
 
 		if (!$skip['tax']) {
-            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle,';
+            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
         } else {
-            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle,';
+            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
         }
 
         if (!$skip['group']) {

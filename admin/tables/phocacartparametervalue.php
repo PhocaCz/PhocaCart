@@ -22,6 +22,10 @@ class TablePhocacartParameterValue extends Table
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
 
+		if (!isset($this->count_date) || $this->count_date == '0' || $this->count_date == '') {
+			$this->count_date = '0000-00-00 00:00:00';
+		}
+
 		return true;
 	}
 }

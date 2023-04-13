@@ -50,9 +50,12 @@ class PhocacartPayment
 	 * if id > 0 ... it can test if the payment method exists (order)
 	 * if id = 0 ... it lists all possible payment methods meeting the criteria (checkout)
 	 * Always test for the id before using this function
+	 *
+	 * paymentSelected ... list all payments, check them all but mark one as selected
+	 *
 	 */
 
-	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $id = 0, $selected = 0) {
+	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $paymentId = 0, $paymentSelected = 0, $currency = 0) {
 
 		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
@@ -73,8 +76,8 @@ class PhocacartPayment
 			$wheres[] = " p.type IN (" . implode(',', $this->type) . ')';
 		}
 
-		if ((int)$id > 0) {
-			$wheres[] =  'p.id = '.(int)$id;
+		if ((int)$paymentId > 0) {
+			$wheres[] =  'p.id = '.(int)$paymentId;
 			$limit = ' LIMIT 1';
 			//$group = '';
 		} else {
@@ -83,17 +86,18 @@ class PhocacartPayment
 		}
 
 		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
-		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
+		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping, p.active_currency,'
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
-		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype,'
+		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
 		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone,'
-		.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping';
+		.' GROUP_CONCAT(DISTINCT s.shipping_id) AS shipping,'
+		.' GROUP_CONCAT(DISTINCT cu.currency_id) AS currency';
 		$groupsFull		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
-		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping,'
+		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping, p.active_currency,'
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
-		.' t.id, t.title, t.tax_rate, t.calculation_type';
+		.' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
 		$groupsFast		= 'p.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -111,6 +115,7 @@ class PhocacartPayment
 				.' LEFT JOIN #__phocacart_payment_method_countries AS c ON c.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_zones AS z ON z.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_shipping AS s ON s.payment_id = p.id'
+				.' LEFT JOIN #__phocacart_payment_method_currencies AS cu ON cu.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON p.id = ga.item_id AND ga.type = 8'// type 8 is payment
 				. $where
@@ -124,7 +129,6 @@ class PhocacartPayment
 		$db->setQuery($query);
 		$payments = $db->loadObjectList();
 
-
 		if (!empty($payments) && !isset($payments[0]->id) || (isset($payments[0]->id) && (int)$payments[0]->id < 1)) {
 			return false;
 		}
@@ -132,6 +136,11 @@ class PhocacartPayment
 		$i = 0;
 		if (!empty($payments)) {
 			foreach($payments as $k => $v) {
+
+				if (isset($v->taxhide)) {
+					$registry = new Registry($v->taxhide);
+					$v->taxhide = $registry->toArray();
+				}
 
 
 				$v->active   = 0;
@@ -141,6 +150,7 @@ class PhocacartPayment
 				$c           = 0;
 				$r           = 0;
 				$s           = 0;
+				$cu			 = 0;
 
 				// Amount Rule
 				if ($v->active_amount == 1) {
@@ -216,15 +226,28 @@ class PhocacartPayment
 					$s = 1;
 				}
 
+				// Currency Rule
+				if ($v->active_currency == 1) {
+					if (isset($v->currency) && $v->currency != '') {
+						$currencies = explode(',', $v->currency);
+
+						if (in_array((int)$currency, $currencies)) {
+							$cu = 1;
+						}
+					}
+				} else {
+					$cu = 1;
+				}
+
 				// No rule was set for shipping, it will be displayed at all events
-				if ($v->active_amount == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_shipping == 0) {
+				if ($v->active_amount == 0 && $v->active_country == 0 && $v->active_region == 0 && $v->active_shipping == 0 && $v->active_currency == 0) {
 					$v->active = 1;
 				}
 
 
 				// if some of the rules is not valid, all the payment is NOT valid
 
-				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $s == 0) {
+				if ($a == 0 || $z == 0 || $c == 0 || $r == 0 || $s == 0 || $cu == 0) {
 					$v->active = 0;
 				} else {
 					$v->active = 1;
@@ -256,8 +279,8 @@ class PhocacartPayment
 				// Try to set default for frontend form
 				// If user selected some payment, such will be set as default
 				// If not then the default will be set
-				if ((int)$selected > 0) {
-					if ((int)$v->id == (int)$selected) {
+				if ((int)$paymentSelected > 0) {
+					if ((int)$v->id == (int)$paymentSelected) {
 						$v->selected = 1;
 					}
 				} else {
@@ -351,8 +374,13 @@ class PhocacartPayment
 		$country 	= $this->getUserCountryPayment($dataAddress);
 		$region 	= $this->getUserRegionPayment($dataAddress);
 
+		$currencyId = 0;
+		$currency  = PhocacartCurrency::getCurrency();
+		if (isset($currency->id) && $currency->id > 0) {
+			$currencyId = (int)$currency->id;
+		}
 
-		$paymentMethods	= $this->getPossiblePaymentMethods($totalFinal['netto'], $totalFinal['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected);
+		$paymentMethods	= $this->getPossiblePaymentMethods($totalFinal['netto'], $totalFinal['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected, $currencyId);
 
 
 		if (!empty($paymentMethods)) {
@@ -462,7 +490,7 @@ class PhocacartPayment
 		$db->setQuery($query);*/
 
 		$query = ' SELECT p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.' FROM #__phocacart_payment_methods AS p'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId
@@ -482,6 +510,13 @@ class PhocacartPayment
 			$payment->params = $registry;
 			//$payment->paramsArray = $registry->toArray();
 		}
+
+		if (isset($shipping->taxhide)) {
+			$registry = new Registry($shipping->taxhide);
+			$shipping->taxhide = $registry->toArray();
+		}
+
+
 
 
 		return $payment;

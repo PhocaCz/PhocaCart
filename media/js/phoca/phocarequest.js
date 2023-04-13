@@ -291,7 +291,7 @@ function phDoRequestError(data, options) {
 
 function phDoRequestMethods(url, data, options) {
 
-	phRequest = jQuery.ajax({
+	jQuery.ajax({
 		type: "POST",
 		url: url,
 		async: "false",

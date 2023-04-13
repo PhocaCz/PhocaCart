@@ -68,7 +68,7 @@ function phDoRequest(url, data, msg) {
 	jQuery("#ph-ajaxtop").html(phGetMsg(msg, 1));
 	jQuery("#ph-ajaxtop").show();
 
-	phRequestActive = jQuery.ajax({
+	let phRequestActive = jQuery.ajax({
 	   	url: url,
 	   	type:'POST',
 	   	data:data,
@@ -278,7 +278,7 @@ jQuery(document).ready(function() {
             var url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&' + phVars['token'] + '=1';
 
 
-            phRequestActiveToken = jQuery.ajax({
+            let phRequestActiveToken = jQuery.ajax({
                 url: url,
                 type: 'POST',
                 data: data,
@@ -329,7 +329,7 @@ jQuery(document).ready(function() {
 
             var url = 'index.php?option=com_phocacart&view=phocacartattributea&format=json&tmpl=component&' + phVars['token'] + '=1';
 
-            phRequestActiveToken = jQuery.ajax({
+            let phRequestActiveToken = jQuery.ajax({
             url: url,
             type: 'POST',
             data: data,

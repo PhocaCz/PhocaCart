@@ -63,8 +63,8 @@ class PhocacartRenderStyle
         $s['c']['row']      = 'row';
         $s['c']['row-item'] = 'row-item';
 
-        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-1';
-        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-2 col-md-2';
+        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-2';
+        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-1 col-md-2';
         $s['c']['col.xs12.sm3.md3']   = 'col-sm-12 col-md-3 col-lg-3 col-xl-3';
         $s['c']['col.xs12.sm4.md4']   = 'col-sm-12 col-md-4 col-lg-4 col-xl-4';
         $s['c']['col.xs12.sm5.md5']   = 'col-12 col-sm-5 col-md-5';
@@ -199,6 +199,15 @@ class PhocacartRenderStyle
         $s['c']['alert-close']   = 'btn-close';
 
 
+        $s['c']['dropdown']             = 'dropdown';
+        $s['c']['dropdown-toggle']      = 'dropdown-toggle';
+        $s['c']['dropdown-menu']        = 'dropdown-menu';
+        $s['c']['dropdown-item']        = 'dropdown-item';
+        $s['c']['btn.btn-outline-secondary']   = 'btn btn-outline-secondary';
+        $s['c']['px-3']                 = 'px-3';
+        $s['c']['py-3']                 = 'py-3';
+
+
         // ===============
         // ATTRIBUTES - Default
         // ===============
@@ -208,6 +217,9 @@ class PhocacartRenderStyle
         $s['a']['accordion']             = '';
         $s['a']['alert']                 = ' role="alert"';
         $s['a']['alert-close']           = ' data-bs-dismiss="alert"';
+        $s['a']['dropdown']              = '';
+
+        $s['a']['lazyload']              = ' loading="lazy"';
 
 
         switch ($theme) {
@@ -277,6 +289,7 @@ class PhocacartRenderStyle
                 $s['c']['btn.btn-success.btn-sm']   = 'uk-button uk-button-success uk-button-small';// not exist
                 $s['c']['btn.btn-warning.btn-sm']   = 'uk-button uk-button-warning uk-button-small';// not exist
                 $s['c']['btn.btn-success.btn-lg']   = 'uk-button uk-button-success uk-button-large';// not exist
+                $s['c']['btn.btn-outline-secondary']= 'uk-button uk-button-secondary';
                 /*
                 $s['c']['pull-left']		        = 'ph-pull-left';
                 $s['c']['pull-right']		        = 'ph-pull-right';
@@ -359,6 +372,16 @@ class PhocacartRenderStyle
                 $s['c']['alert-close']   = 'uk-alert-close';
 
 
+                $s['c']['dropdown']             = 'uk-dropdown-box';
+                $s['c']['dropdown-toggle']      = 'uk-dropdown-toggle';
+                $s['c']['dropdown-menu']        = 'uk-dropdown';
+                $s['c']['dropdown-item']        = 'uk-dropdown-item';
+
+                //$s['c']['px-3']                 = 'px-3';
+                //$s['c']['py-3']                 = 'py-3';
+
+
+
                 // ===============
                 // ATTRIBUTES - UIkit
                 // ===============
@@ -369,6 +392,8 @@ class PhocacartRenderStyle
                 $s['a']['accordion']             = ' uk-accordion="multiple: true"';
                 $s['a']['alert']                 = ' uk-alert';
                 $s['a']['alert-close']           = ' uk-close';
+                $s['a']['dropdown']              = ' uk-dropdown';
+                //$s['a']['dropdown']               = 'uk-dropdown="mode: click"';
 
             break;
 

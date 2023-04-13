@@ -9,6 +9,8 @@
 
         <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
+        <field name="title_long" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
+
         <field name="sku" type="text" class="form-control" size="255" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC"/>
         <field name="upc" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC"/>
         <field name="ean" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC"/>
@@ -39,11 +41,11 @@
         <field name="tax_id" type="phocatax" class="form-control" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
 
 
-        <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" layout="joomla.form.field.list-fancy-select" />
+        <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" />
 
-        <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" class="form-control" />
+        <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" />
 
-        <field name="manufacturer_id" type="phocamanufacturer" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC" class="form-select"/>
+        <field name="manufacturer_id" type="phocamanufacturer" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_MANUFACTURER_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_DESC" />
 
         <field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
@@ -80,7 +82,7 @@
         <field name="stockstatus_a_id" type="phocastockstatus" manager="a" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2"/>
         <field name="stockstatus_n_id" type="phocastockstatus" manager="n" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
 
-        <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true"/>
+        <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
 
         <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs" size="40"/>
 
@@ -138,6 +140,7 @@
             <option value="0">COM_PHOCACART_CONDITION_NEW</option>
             <option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
             <option value="2">COM_PHOCACART_CONDITION_USED</option>
+            <!--<option value="3">COM_PHOCACART_CONDITION_DAMAGED</option>-->
         </field>
 
         <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_DESC" class="form-control" rows="3" cols="30"/>
@@ -146,7 +149,7 @@
                cols="30"/>
 
         <field name="delivery_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
-               filter="JComponentHelper::filterText" showtime="true" format="%Y-%m-%d %H:%M:%S"/>
+               filter="JComponentHelper::filterText" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true"/>
 
 
         <field name="metatitle" type="text"
@@ -199,8 +202,8 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText"/>
-        <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="JComponentHelper::filterText"/>
+        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" translateformat="true" />
+        <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="JComponentHelper::filterText" translateformat="true" />
 
         <field name="tags" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC"  size="1"/>
 
@@ -227,7 +230,7 @@
 		<field name="gift_types" type="subform" label="COM_PHOCACART_FIELD_GIFT_VOUCHER_TYPE_LABEL" description="COM_PHOCACART_FIELD_GIFT_VOUCHER_TYPE_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
                formsource="administrator/components/com_phocacart/models/forms/subform_gifttypes.xml" class="phSubformGiftTypes"/>
 
-
+       <field name="internal_comment" type="textarea"  class="form-control" label="COM_PHOCACART_FIELD_INTERNAL_COMMENT_LABEL" description="COM_PHOCACART_FIELD_INTERNAL_COMMENT_DESC"/>
 
     </fieldset>
 
@@ -252,6 +255,13 @@
                 <field name="rights" type="text"
                     label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
                     required="" filter="string" cols="30" rows="2" /> -->
+        </fieldset>
+    </fields>
+
+    <fields name="aidata">
+        <fieldset name="aidata" label="COM_PHOCACART_FIELDSET_AIDATA_OPTIONS">
+
+            <field name="ai_keywords" type="text" class="form-control" size="6" label="COM_PHOCACART_FIELD_AI_KEYWORDS_LABEL" description="COM_PHOCACART_FIELD_AI_KEYWORDS_DESC" />
         </fieldset>
     </fields>
 

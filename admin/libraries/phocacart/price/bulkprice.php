@@ -88,7 +88,7 @@ class PhocacartPriceBulkprice
 
 		if ($calculation_type == 0) {
 		    // FIXED AMOUNT
-            if ($calculation_type == '+') {
+            if ($operator == '+') {
                 $newPrice = $price + $amount;
             } else {
                 $newPrice = $price - $amount;
@@ -96,7 +96,7 @@ class PhocacartPriceBulkprice
 
         } else {
 		    // PERCENTAGE
-            if ($calculation_type == '+') {
+            if ($operator == '+') {
                 $newPrice = $price + ($price * $amount / 100);
             } else {
                 $newPrice = $price - ($price * $amount / 100);
@@ -104,7 +104,7 @@ class PhocacartPriceBulkprice
         }
 
 		if ($calculation_rounding > -1) {
-            $bruttoCurrency = round($newPrice, (int)$calculation_rounding, $rounding_calculation);
+            $newPrice = round($newPrice, (int)$calculation_rounding, $rounding_calculation);
         }
 
 		if ($newPrice != $price) {

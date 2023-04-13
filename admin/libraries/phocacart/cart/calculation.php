@@ -183,7 +183,6 @@ class PhocacartCartCalculation
             // ITEM D - product info from database
             $itemD = PhocacartProduct::getProduct((int)$itemId, (int)$v['catid'], $this->type);
 
-
             // Correct the tax rate - no tax calculation, no tax rate for each product
             if (!empty($itemD) && $tax_calculation == 0) {
                 $itemD->taxrate = 0;
@@ -206,7 +205,8 @@ class PhocacartCartCalculation
                 $fullItems[$k]['taxtitle']          = Text::_($itemD->taxtitle);
                 $fullItems[$k]['taxcountryid']      = $itemD->taxcountryid;
                 $fullItems[$k]['taxregionid']       = $itemD->taxregionid;
-                $taxKey                             = PhocacartTax::getTaxKey($itemD->taxid, $itemD->taxcountryid, $itemD->taxregionid);
+                $fullItems[$k]['taxpluginid']       = $itemD->taxpluginid;
+                $taxKey                             = PhocacartTax::getTaxKey($itemD->taxid, $itemD->taxcountryid, $itemD->taxregionid, $itemD->taxpluginid);
                 $fullItems[$k]['taxkey']            = $taxKey;
                 $fullItems[$k]['taxcalctype']       = $itemD->taxcalculationtype;
                 $fullItems[$k]['weight']            = $itemD->weight;
@@ -232,7 +232,7 @@ class PhocacartCartCalculation
                 $fullItemsGroup[$itemId]['minmultipleqtyvalid'] = 1;
 
 
-                $priceI = $price->getPriceItems($itemD->price, $itemD->taxid, $itemD->taxrate, $itemD->taxcalculationtype, $itemD->taxtitle, 0, '', 0, 1, $itemD->group_price);
+                $priceI = $price->getPriceItems($itemD->price, $itemD->taxid, $itemD->taxrate, $itemD->taxcalculationtype, $itemD->taxtitle, 0, '', 0, 1, $itemD->group_price, $itemD->taxhide);
 
 
                 // Get price from advanced stock managment TO DO group price
@@ -294,6 +294,8 @@ class PhocacartCartCalculation
                 $total['tax'][$taxKey]['title_lang_suffix2'] = '(' . $taxSuffix . ')';
                 $total['tax'][$taxKey]['type']               = $itemD->taxcalculationtype;
                 $total['tax'][$taxKey]['rate']               = $itemD->taxrate;
+                $total['tax'][$taxKey]['taxid']              = $itemD->taxid;
+                $total['tax'][$taxKey]['taxhide']            = $itemD->taxhide;
 
                 // PRODUCTTYPE Digital product
                 $total['countallproducts']++;
@@ -350,9 +352,9 @@ class PhocacartCartCalculation
 
                                             // If there is fixed VAT - don't change it in attributes - it is just fix - set taxtrate to 0
                                             if ($itemD->taxcalculationtype == 2) {
-                                                $priceA = $price->getPriceItems($attrib->amount, $itemD->taxid, 0, $itemD->taxcalculationtype, $itemD->taxtitle);
+                                                $priceA = $price->getPriceItems($attrib->amount, $itemD->taxid, 0, $itemD->taxcalculationtype, $itemD->taxtitle, 0, '', 0, 1, null, $itemD->taxhide);
                                             } else {
-                                                $priceA = $price->getPriceItems($attrib->amount, $itemD->taxid, $itemD->taxrate, $itemD->taxcalculationtype, $itemD->taxtitle);
+                                                $priceA = $price->getPriceItems($attrib->amount, $itemD->taxid, $itemD->taxrate, $itemD->taxcalculationtype, $itemD->taxtitle, 0, '', 0, 1, null, $itemD->taxhide);
                                             }
 
 
@@ -1279,6 +1281,7 @@ class PhocacartCartCalculation
             } else {
                 $totalBruttoCurrency         = $price->roundPrice($total[0]['brutto'] * $cr);
                 $total[0]['brutto_currency'] = $totalBruttoCurrency;
+
             }
 
 
@@ -1527,6 +1530,8 @@ class PhocacartCartCalculation
                 $tax             = $price->roundPrice($v['tax']);
                 $brutto          = $v['brutto'];
                 $rate            = $price->roundPrice($v['rate']);
+                $taxId           = $v['taxid'];
+                $taxHide         = $v['taxhide'];
 
                 //$bruttoCurrency = $price->roundPrice(($v['brutto'] * $currencyRate));
 
@@ -1579,6 +1584,8 @@ class PhocacartCartCalculation
                 $total['taxrecapitulation']['items'][$k]['netto']              = $netto;
                 $total['taxrecapitulation']['items'][$k]['tax']                = $tax;
                 $total['taxrecapitulation']['items'][$k]['brutto']             = $brutto;
+                $total['taxrecapitulation']['items'][$k]['taxid']               = $taxId;
+                $total['taxrecapitulation']['items'][$k]['taxhide']             = $taxHide;
 
                 // Currency
                 //	$bruttoCurrency = $price->roundPrice($netto * $currencyRate) + $price->roundPrice($tax * $currencyRate);
@@ -1626,6 +1633,9 @@ class PhocacartCartCalculation
             $brutto = $shippingCosts['brutto'];
             $taxkey = $shippingCosts['taxkey'];
 
+             $taxId = $shippingCosts['taxid'];
+             $taxHide = $shippingCosts['taxhide'];
+
 
             // Nothing to fix
             /*if ($correct_tax_recapitulation == 1) {
@@ -1649,6 +1659,8 @@ class PhocacartCartCalculation
                 $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix2'] = $shippingCosts['tax_title_suffix2'] != '' ? '(' . $shippingCosts['tax_title_suffix2'] . ')' : '';
                 $total['taxrecapitulation']['items'][$taxkey]['netto']              = $netto;
                 $total['taxrecapitulation']['netto_incl_sp']                        = $netto;
+                $total['taxrecapitulation']['items'][$taxkey]['taxid']               = $taxId;
+                $total['taxrecapitulation']['items'][$taxkey]['taxhide']             = $taxHide;
                 //	$total['taxrecapitulation']['netto'] 					= $netto;
             }
 
@@ -1690,6 +1702,8 @@ class PhocacartCartCalculation
             $tax   = $paymentCosts['tax'];
             $brutto = $paymentCosts['brutto'];
             $taxkey = $paymentCosts['taxkey'];
+            $taxId = $paymentCosts['taxid'];
+             $taxHide = $paymentCosts['taxhide'];
 
             /*if ($correct_tax_recapitulation == 1) {
 
@@ -1712,6 +1726,8 @@ class PhocacartCartCalculation
                 $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix2'] = $paymentCosts['tax_title_suffix2'] != '' ? '(' . $paymentCosts['tax_title_suffix2'] . ')' : '';
                 $total['taxrecapitulation']['items'][$taxkey]['netto']              = $netto;
                 $total['taxrecapitulation']['netto_incl_sp']                        = $netto;
+                $total['taxrecapitulation']['items'][$taxkey]['taxid']               = $taxId;
+                $total['taxrecapitulation']['items'][$taxkey]['taxhide']             = $taxHide;
                 //$total['taxrecapitulation']['netto'] 					= $netto;
             }
 

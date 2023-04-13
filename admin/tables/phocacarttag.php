@@ -15,12 +15,16 @@ class TablePhocacartTag extends Table
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_tags', 'id', $db);
 	}
-	
+
 	function check() {
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
+
+        if (!isset($this->count_date) || $this->count_date == '0' || $this->count_date == '') {
+			$this->count_date = '0000-00-00 00:00:00';
+		}
 
 		return true;
 	}

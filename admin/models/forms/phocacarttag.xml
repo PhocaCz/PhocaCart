@@ -9,7 +9,7 @@
 
 <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 
-<field name="link_cat" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LINK_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_LINK_DESC" class="form-control"  />
+<field name="link_cat" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LINK_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_LINK_DESC" />
 
 <field name="link_ext" type="text" label="COM_PHOCACART_FIELD_EXT_LINK_TAG_LABEL"  description="COM_PHOCACART_FIELD_EXT_LINK_TAG_DESC" class="form-control" size="40" />
 

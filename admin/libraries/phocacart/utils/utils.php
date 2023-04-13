@@ -20,6 +20,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 class PhocacartUtils
 {
+
+    private static $pluginId = [];
+	private static $pluginIdsGroup = [];
+
 	public static function setVars( $task = '') {
 
 		$a				= array();
@@ -246,7 +250,7 @@ class PhocacartUtils
 		$store_ip				= $pC->get( 'store_ip', 0 );
 
 		if ($store_ip == 0) {
-			return '';
+			return 'anonymous';
 		}
 
 		$ip = false;
@@ -629,6 +633,49 @@ class PhocacartUtils
 	}
 
 
+	public static function getPluginId($folder, $element) {
 
+		if(!isset(self::$pluginId[$folder][$element])) {
+            $db    = Factory::getDbo();
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote($folder))
+                ->where($db->quoteName('element') . ' = ' . $db->quote($element));
+            $db->setQuery($query);
+
+            try {
+                $result = (int)$db->loadResult();
+            } catch (\RuntimeException $e) {
+                $result = 0;
+                //Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            }
+
+            self::$pluginId[$folder][$element] = $result;
+        }
+        return self::$pluginId[$folder][$element];
+    }
+
+	public static function getPluginIdsByGroup($folder) {
+
+		if(!isset(self::$pluginIdsGroup[$folder])) {
+            $db    = Factory::getDbo();
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
+            $db->setQuery($query);
+
+            try {
+                $result = $db->loadColumn();
+            } catch (\RuntimeException $e) {
+                $result = [];
+                //Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            }
+
+            self::$pluginIdsGroup[$folder] = $result;
+        }
+        return self::$pluginIdsGroup[$folder];
+    }
 }
 ?>

@@ -419,13 +419,13 @@ if (!empty($d['bas']['b'])) {
 	if ($v['name_first'] != '') { $name[] = $v['name_first'];}
 	if ($v['name_middle'] != '') { $name[] = $v['name_middle'];}
 	if ($v['name_last'] != '') { $name[] = $v['name_last'];}
-	if (!empty($name)) {$ob[] = '<b>' . implode("\n", $name).'</b><br />';}
+	if (!empty($name)) {$ob[] = '<b>' . implode(" ", $name).'</b><br />';}
 	if ($v['address_1'] != '') { $ob[] = $v['address_1'].'<br />';}
 	if ($v['address_2'] != '') { $ob[] = $v['address_2'].'<br />';}
 	$city = array();
 	if ($v['zip'] != '') { $city[] = $v['zip'];}
 	if ($v['city'] != '') { $city[] = $v['city'];}
-	if (!empty($city)) {$ob[] = implode("\n", $city).'<br />';}
+	if (!empty($city)) {$ob[] = implode(" ", $city).'<br />';}
 	//echo '<br />';
 	if (!empty($v['regiontitle'])) {$ob[] = $v['regiontitle'].'<br />';}
 	if (!empty($v['countrytitle'])) {$ob[] = $v['countrytitle'].'<br />';}
@@ -472,13 +472,13 @@ if (!empty($d['bas']['s'])) {
 	if ($v['name_first'] != '') { $name[] = $v['name_first'];}
 	if ($v['name_middle'] != '') { $name[] = $v['name_middle'];}
 	if ($v['name_last'] != '') { $name[] = $v['name_last'];}
-	if (!empty($name)) {$os[] = '<b>' . implode("\n", $name).'</b><br />';}
+	if (!empty($name)) {$os[] = '<b>' . implode(" ", $name).'</b><br />';}
 	if ($v['address_1'] != '') { $os[] = $v['address_1'].'<br />';}
 	if ($v['address_2'] != '') { $os[] = $v['address_2'].'<br />';}
 	$city = array();
 	if ($v['zip'] != '') { $city[] = $v['zip'];}
 	if ($v['city'] != '') { $city[] = $v['city'];}
-	if (!empty($city)) {$os[] = implode("\n", $city).'<br />';}
+	if (!empty($city)) {$os[] = implode(" ", $city).'<br />';}
 	//echo '<br />';
 	if (!empty($v['regiontitle'])) {$os[] = $v['regiontitle'].'<br />';}
 	if (!empty($v['countrytitle'])) {$os[] = $v['countrytitle'].'<br />';}

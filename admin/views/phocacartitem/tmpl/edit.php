@@ -29,7 +29,7 @@ $r     = $this->r;
 
 // phocacartitem-form ==> adminForm
 $js = '
-var phRequestActive = null;
+let phRequestActive = null;
 
 function phCheckRequestStatus(i, task) {
     i++;
@@ -97,6 +97,7 @@ $tabs['reward']         = Text::_($this->t['l'] . '_REWARD_POINTS');
 $tabs['publishing']     = Text::_($this->t['l'] . '_PUBLISHING_OPTIONS');
 $tabs['feed']           = Text::_($this->t['l'] . '_FEED_OPTIONS');
 $tabs['metadata']       = Text::_($this->t['l'] . '_METADATA_OPTIONS');
+$tabs['aidata']       = Text::_($this->t['l'] . '_AI_TASKS');
 //$tabs['fields']       = T ext::_($this->t['l'] . '_FIELDS');
 if (!$isModal && $assoc) {
     $tabs['associations'] = Text::_($this->t['l'] . '_ASSOCIATIONS');
@@ -174,7 +175,7 @@ echo '</div>';
 
 // $formArray = array('title', 'alias',
 
-$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
+$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'title_long', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);
@@ -344,6 +345,10 @@ echo $r->startTab('metadata', $tabs['metadata']);
 echo $this->loadTemplate('metadata');
 echo $r->endTab();
 
+echo $r->startTab('aidata', $tabs['aidata']);
+echo $this->loadTemplate('aidata');
+echo $r->endTab();
+
 
 // ASSOCIATION
 $assoc = Associations::isEnabled();
@@ -361,6 +366,7 @@ if (!$isModal && $assoc) {
 // Display custom field parameters and ignore current fieldsetsw including all feed fieldsets
 
 $ignoreField = [];
+$ignoreField[] = 'aidata';
 $ignoreField[] = 'metadata';
 $ignoreField[] = 'publish';
 $ignoreField[] = 'item_associations';

@@ -71,8 +71,8 @@ class PhocacartRenderMedia
 
         $this->p['pos_focus_input_fields'] = $params->get('pos_focus_input_fields', 0);
         $this->p['pos_filter_category']    = $params->get('pos_filter_category', 1);// reload equal height
-        $this->p['lazy_load_category_items'] = $params->get('lazy_load_category_items', 0);
-        $this->p['lazy_load_categories']     = $params->get('lazy_load_categories', 0);
+        $this->p['lazy_load_category_items'] = $params->get('lazy_load_category_items', 2);
+        $this->p['lazy_load_categories']     = $params->get('lazy_load_categories', 2);
         $this->p['pos_server_print']         = $params->get('pos_server_print', 0);
 
         $this->p['load_min_js'] = $params->get('load_min_js', 1);
@@ -163,7 +163,7 @@ class PhocacartRenderMedia
 
         $this->wa->registerAndUseScript('com_phocacart.phocacart', 'media/com_phocacart/js/phoca/phocacart' . $this->t['min'] . '.js', array('version' => 'auto'), $this->scriptAtributeInline);
         $this->wa->registerAndUseScript('com_phocacart.phocacartrequest', 'media/com_phocacart/js/phoca/phocarequest' . $this->t['min'] . '.js', array('version' => 'auto'), $this->scriptAtributeInline);
-        $this->wa->registerAndUseScript('com_phocacart.ba-bbq', 'media/com_phocacart/js/filter/jquery.ba-bbq.min.js', array('version' => 'auto'), $this->scriptAtributeInline);
+        //$this->wa->registerAndUseScript('com_phocacart.ba-bbq', 'media/com_phocacart/js/filter/jquery.ba-bbq.js', array('version' => 'auto'), $this->scriptAtributeInline);// Not more used
 
         // phocacartfilter.js can work without loaded jquery-ui.slder.min.js - it tests if the function exist - no error
         // if set in phoca cart filter moduler - the slider range can be displayed in filter module
@@ -497,8 +497,10 @@ class PhocacartRenderMedia
             //HTMLHelper::_('stylesheet', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
             //HTMLHelper::_('script', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), $this->scriptAtributeInline);
 
+            //$this->wa->registerAndUseStyle('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
+            //$this->wa->registerAndUseScript('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), $this->scriptAtributeInline);
             $this->wa->registerAndUseStyle('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.css', array('version' => 'auto'));
-            $this->wa->registerAndUseScript('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), $this->scriptAtributeInline);
+            $this->wa->registerAndUseScript('com_phocacart.swiper', 'media/com_phocacart/js/swiper/swiper.min.js', array('version' => 'auto'), ['defer' => true]);
         }
     }
 

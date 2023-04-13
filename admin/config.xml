@@ -58,10 +58,11 @@
                 <option value="2">COM_PHOCACART_COLSPAN</option>
             </field>
 
-			<field name="lazy_load_categories" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_LABEL"
+			<field name="lazy_load_categories" type="list"  default="2" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORIES_VIEW_DESC">
-<option value="0">COM_PHOCACART_NO</option>
-                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES_JAVASCRIPT_LOADING</option>
+                <option value="2">COM_PHOCACART_YES_HTML_NATIVE_LOADING</option>
             </field>
 
 			<field name="image_categories_view" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_CATEGORIES_VIEW_LABEL"
@@ -305,10 +306,11 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-			 <field name="lazy_load_category_items" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_LABEL"
+			 <field name="lazy_load_category_items" type="list"  default="2" label="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_LABEL"
                    description="COM_PHOCACART_FIELD_LAZY_LOAD_IMAGES_CATEGORY_ITEMS_VIEW_DESC">
-<option value="0">COM_PHOCACART_NO</option>
-                <option value="1">COM_PHOCACART_YES</option>
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES_JAVASCRIPT_LOADING</option>
+                <option value="2">COM_PHOCACART_YES_HTML_NATIVE_LOADING</option>
             </field>
 
 
@@ -986,6 +988,13 @@
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
 
+
+            <field name="delivery_billing_same_rules" type="list" default="1" label="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_INFLUENCE_RULES_LABEL" description="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_INFLUENCE_RULES_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES_SAME_VALUES</option>
+                <option value="2">COM_PHOCACART_YES_EMPTY_VALUES</option>
+            </field>
+
             <field name="dynamic_tax_rate" type="list" default="0" label="COM_PHOCACART_FIELD_DYNAMIC_TAX_RATE_LABEL" description="COM_PHOCACART_FIELD_DYNAMIC_TAX_RATE_DESC">
                 <option value="1">COM_PHOCACART_ENABLE_CUSTOMER_BILLING_ADDRESS</option>
                 <option value="2">COM_PHOCACART_ENABLE_CUSTOMER_SHIPPING_ADDRESS</option>
@@ -1052,7 +1061,7 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-            <field name="display_discount_price_product" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_DESC">
+            <field name="display_discount_price_product" type="list" default="1" label="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_ROW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DISCOUNT_PRICE_PRODUCT_ROW_DESC">
                 <option value="0">COM_PHOCACART_HIDE</option>
                 <option value="1">COM_PHOCACART_PRICE_AFTER_DISCOUNT</option>
                 <option value="2">COM_PHOCACART_DISCOUNT_PRICE</option>
@@ -1767,11 +1776,12 @@
             <field name="phocahead26" type="phocahead" default="COM_PHOCACART_PRIVACY_TERMS_AND_CONDITIONS_SETTINGS_LABEL" label="" description=""/>
 
 
-            <field name="display_checkout_toc_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_LABEL"
+            <field name="display_checkout_toc_checkbox" type="list" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_TERMS_AND_CONDITIONS_CHECKBOX_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
-                <option value="0">COM_PHOCACART_NO</option>
+
             </field>
 
             <field name="terms_conditions_custom_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
@@ -1786,11 +1796,12 @@
             <field name="cofirm_order_text_zero" default="" type="text" label="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_LABEL" description="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_DESC"/>
 
 
-            <field name="display_checkout_privacy_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
+            <field name="display_checkout_privacy_checkbox" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
                 <option value="2">COM_PHOCACART_YES_REQUIRED</option>
-                <option value="0">COM_PHOCACART_NO</option>
+
             </field>
 
             <field name="checkout_privacy_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
@@ -1801,7 +1812,7 @@
 
 				   <field name="display_checkout_newsletter_checkbox" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_NEWSLETTER_CHECKBOX_DESC">
-<option value="0">COM_PHOCACART_NO</option>
+                <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
@@ -2339,7 +2350,7 @@
 
 			<field name="allowed_file_types_upload_frontend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_DESC"/>
 
-			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
+			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}{epub=application/epub+zip}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
 
 
 			<field name="upload_maxsize" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
@@ -2376,6 +2387,35 @@
 
 
 		</fieldset>
+
+        <fieldset name="ai" label="COM_PHOCACART_CONFIG_HEAD_AI_LABEL">
+
+            <field name="ai_apikey" type="text" label="COM_PHOCACART_AI_OPENAI_API_KEY_LABEL" description="COM_PHOCACART_AI_OPENAI_API_KEY_DESC" filter="safehtml" />
+            <field name="ai_model" type="list" label="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_LABEL" description="COM_PHOCACART_AI_OPENAI_CHATGPT_MODEL_DESC" default="text-davinci-003">
+                <option value="text-davinci-003">text-davinci-003</option>
+                <option value="text-curie-001">text-curie-001</option>
+                <option value="text-babbage-001">text-babbage-001</option>
+                <option value="text-ada-001">text-ada-001</option>
+            </field>
+
+            <field name="ai_premade_question_description" type="text" default="Create a product description based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_description" type="textarea" default="{&quot;max_tokens&quot;: 300, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_LABEL" description="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_DESC" filter="raw" />
+
+            <field name="ai_premade_question_description_long" type="text" default="Create a very comprehensive description of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LONG_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LONG_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_description_long" type="textarea" default="{&quot;max_tokens&quot;: 2048, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_LONG_LABEL" description="COM_PHOCACART_AI_PARAMETERS_DESCRIPTION_LONG_DESC" filter="raw" />
+
+            <field name="ai_premade_question_features" type="text" default="Create a very comprehensive feature list of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_FEATURES_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_FEATURES_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_features" type="textarea" default="{&quot;max_tokens&quot;: 2048, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_FEATURES_LABEL" description="COM_PHOCACART_AI_PARAMETERS_FEATURES_DESC" filter="raw" />
+
+            <field name="ai_premade_question_metadesc" type="text" default="Create a very short description of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_DESC" filter="safehtml" />
+
+            <field name="ai_parameters_metadesc" type="textarea" default="{&quot;max_tokens&quot;: 50, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_METADESC_LABEL" description="COM_PHOCACART_AI_PARAMETERS_METADESC_DESC" filter="raw" />
+
+
+        </fieldset>
 
         <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
             <field name="rules" type="rules" component="com_phocacart" filter="rules" validate="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component"/>

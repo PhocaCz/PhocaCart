@@ -40,6 +40,11 @@ final class PhocacartStatisticsHits
 		$date 	= Factory::getDate();
 		$item	= array();
 
+
+		if ($ip == '') {
+			$ip = 'anonymous';
+		}
+
 		$q = 'SELECT a.id, a.hits'
 			.' FROM #__phocacart_hits AS a';
 		if (isset($user->id) && (int)$user->id > 0) {

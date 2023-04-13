@@ -21,6 +21,7 @@ class PhocacartSearch
 	public $display_inner_icon 		    = 0;
 	public $placeholder_text 			= '';
 	public $display_active_parameters 	= 0;
+    public $load_component_media        = 1;
 
 
 	public function __construct() {}
@@ -36,9 +37,15 @@ class PhocacartSearch
 
 
         // SEARCH FORM
+        $specificIdSuffix = '';
+        if (isset($options['specific_id_suffix']) && $options['specific_id_suffix'] != '') {
+            $specificIdSuffix = $options['specific_id_suffix'];
+        }
+
+
 		$data                       = array();
 		$data['s']                  = $s;
-		$data['id'] 			    = 'phSearchBox';// AJAX ID
+		$data['id'] 			    = 'phSearchBox' . $specificIdSuffix;
 		$data['param'] 			    = 'search';
 		$data['getparams']		    = PhocacartText::filterValue($app->input->get('search', '', 'string'), 'text');
 		$data['title']			    = Text::_('COM_PHOCACART_SEARCH');
@@ -57,13 +64,14 @@ class PhocacartSearch
         $dataAP         = array();
         $dataAP['s']    = $s;
         $dataAP['f']    = $f;
-        $dataAP['id']   = 'phSearchActiveTags';
+        $dataAP['id']   = 'phSearchActiveTags'. $specificIdSuffix;;
 
+         // AJAX WILL BE BASED ON CLASS NOT ON ID (because of more possible instances)
 
         if ($this->ajax == 0) {
             $o[] = '<div class="' . $data['s']['c']['row'] . '">';
             $o[] = '<div class="' . $data['s']['c']['col.xs12.sm12.md12'] . '">';
-            $o[] = '<div id="' . $data['id'] . '">';
+            $o[] = '<div id="' . $data['id'] . '" class="phSearchBox '.$data['id'].'">';
             $o[] = $layout->render($data);
 
 
@@ -71,7 +79,7 @@ class PhocacartSearch
 
         if ($this->display_active_parameters) {
             if ($this->ajax == 0) {
-                $o[] = '<div id="' . $dataAP['id'] . '">';
+                $o[] = '<div id="' . $dataAP['id'] . '" class="phSearchActiveTags '.$dataAP['id'].'">';
             }
 
             $o[] = $layoutAP->render($dataAP);// only this is displayed by ajax but if display_active_parameters is enabled
@@ -250,6 +258,27 @@ class PhocacartSearch
 
 
                 break;
+
+                // Custom fields
+/*                case 'field':
+                  // TODO different way for multiple values
+                  $in = $db->quote($in);
+                  // TODO own parameter
+                  if ($params['sql_filter_method_parameter'] == 1) {
+                    // QUERY METHOD ALL (product to display must include all custom filed values togehter)
+                    $left = '';
+                    $where = '';
+                    if (!empty($inA)) {
+                      foreach($inA as $k => $v) {
+                        $left .= ' INNER JOIN #__field_values AS fv'.(int)$prefix.(int)$v.' ON a.id = pr'.(int)$prefix.(int)$v.'.item_id AND pr'.(int)$prefix.(int)$v.'.parameter_value_id = '.(int)$v;
+                      }
+                    }
+                  } else {
+                    $where = ' fv'.(int)$prefix.'.value IN (' . $in . ')';
+                    $left = ' LEFT JOIN #__fields_values AS fv'.(int)$prefix.' ON a.id = fv'.(int)$prefix.'.item_id and fv'.(int)$prefix.'.field_id = ' . (int)$prefix;
+                  }
+
+                break;*/
 
                 case 'manufacturer':
                     $where = ' m.id IN (' . $in . ')';

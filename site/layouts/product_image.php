@@ -12,8 +12,15 @@ $d                      = $displayData;
 $productIdName			= 'V'.$d['typeview'].'P'.(int)$d['product_id'];
 $altValue               = PhocaCartImage::getAltTitle($d['title'], $d['image']['image']->original);
 
+
+// Native lazy load
+$attributeLazyLoad = '';
+if ($d['t']['lazy_load_category_items'] == 2) {
+    $attributeLazyLoad = isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
+}
+
 if ($d['typeview'] == 'Pos') {
-    $d['t']['lazy_load_category_items'] = 0;
+    $d['t']['lazy_load_category_items'] = 2;
 }
 
 
@@ -51,7 +58,8 @@ if ($d['t']['display_webp_images'] == 1) {
 
         // TEST 2 (removed data-src because it is transformed to src in picture tag which is obsolete)
         // class needed because of chaning attributes - changing attributes changes images
-        echo '<source type="image/webp" alt="' . $altValue . '"  data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" class="'.$classSource.'" />';
+        // alt="' . $altValue . '"
+        echo '<source type="image/webp" data-srcset="' . $srcSetWebP . '" data-image="' . $dataImgWebP . '" class="'.$classSource.'" />';
 
 
         echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
@@ -62,8 +70,9 @@ if ($d['t']['display_webp_images'] == 1) {
         echo '<picture>';
         //echo '<source type="image/webp" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" />';
         // class needed because of chaning attributes - changing attributes changes images
-        echo '<source type="image/webp" alt="' . $altValue . '"  srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" class="'.$classSource.'" />';// TEST
-        echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-image="' . $dataImg . '" />';
+        // alt="' . $altValue . '"
+        echo '<source type="image/webp" srcset="' . $srcSetWebP . '" data-image="' . $dataImg . '" class="'.$classSource.'" />';// TEST
+        echo '<img src="' . $srcImg . '" alt="' . $altValue . '" class="' . $class . '" ' . $d['image']['style'] . ' data-image="' . $dataImg . '"'.$attributeLazyLoad.' />';
         echo '</picture>';
 
         // Switch
@@ -82,7 +91,7 @@ if ($d['t']['display_webp_images'] == 1) {
 
     } else {
 
-        echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
+        echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'"'.$attributeLazyLoad.' />';
 
         // Switch
         if (isset($d['image']['second']->rel) && $d['image']['second']->rel != '') {

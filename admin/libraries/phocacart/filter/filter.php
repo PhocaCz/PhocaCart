@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 
 class PhocacartFilter
 {
@@ -19,15 +20,19 @@ class PhocacartFilter
     public $tag = false;
     public $label = false;
     public $parameter = false;
+    public $fields = false;
     public $manufacturer = false;
     public $price = false;
     public $attributes = false;
     public $specifications = false;
     public $category = false;
 
-    public $enable_color_filter = false;
-    public $enable_image_filter = false;
-    public $image_style_image_filter = false;
+    public $enable_color_filter             = 0;
+    public $enable_image_filter             = 0;
+    public $image_style_image_filter        = 0;
+    public $enable_color_filter_spec	    = 0;
+    public $enable_image_filter_spec	    = 0;
+    public $image_style_image_filter_spec 	= 0;
 
     public $ordering_tag = 1;
     public $ordering_label = 1;
@@ -59,7 +64,9 @@ class PhocacartFilter
     public $limit_manufacturer_count = -1;
     public $display_manufacturer_count = 0;
 
-    public $check_available_products = 1;
+    public $check_available_products    = 1;
+    public $remove_parameters_cat		= 0;
+    public $load_component_media		= 1;
 
     public $ignore_zero_price = 0;
 
@@ -258,8 +265,14 @@ class PhocacartFilter
 
     }
 
-    public function renderList()
+    public function renderList(array $params = [])
     {
+        $params = array_merge([
+          'layout' => 'form_filter',
+          'wrapper_class' => '',
+          'wrapper_role' => 'tablist',
+        ], $params);
+
         $document	= Factory::getDocument();
         $p = array();
         $pC = PhocacartUtils::getComponentParameters();
@@ -272,16 +285,16 @@ class PhocacartFilter
         $o = array();
 
         if ($this->ajax == 0) {
-            $o[] = '<div id="phFilterBox" role="tablist">';// AJAX ID
+            $o[] = '<div id="phFilterBox"' . ($params['wrapper_role'] ? ' role="' . $params['wrapper_role'] . '"' : '') . ($params['wrapper_class'] ? ' class="phFilterBox ' . $params['wrapper_class'] . '"' : ' class="phFilterBox"') . '>';// AJAX ID
         }
 
         $s = PhocacartRenderStyle::getStyles();
         //$app		= JFactory::getApplication();
-        $layout = new FileLayout('form_filter_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
-        $layout2 = new FileLayout('form_filter_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
-        $layout3 = new FileLayout('form_filter_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
-        $layout4 = new FileLayout('form_filter_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
-        $layout5 = new FileLayout('form_filter_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
+        $layout = new FileLayout($params['layout'] . '_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
+        $layout2 = new FileLayout($params['layout'] . '_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
+        $layout3 = new FileLayout($params['layout'] . '_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class
+        $layout4 = new FileLayout($params['layout'] . '_color', null, array('component' => 'com_phocacart'));// foreach with items in layout
+        $layout5 = new FileLayout($params['layout'] . '_image', null, array('component' => 'com_phocacart'));// foreach with items in layout
 
 
         $language = '';
@@ -307,6 +320,8 @@ class PhocacartFilter
         // We even can limit filter items like attributes only for specific category
         // Parameter for this is "limit_attributes_category" (attributes)
         $category = PhocacartRoute::getIdForItemsRoute();// Used for parameter: Filter Category: Yes (Active Category) (int)$this->category == 1
+
+
         $forceCategory = array();
         $forceCategory['id'] = 0;
         $forceCategory['idalias'] = '';
@@ -362,7 +377,11 @@ class PhocacartFilter
             // if we are in category view and want to force active category when clicking on filter
             // so we want to move the category id from CATEGORY VIEW to ITEMS VIEW
             // and we should mark the category active in category list = $forceActive
-            $data['items'] = PhocacartCategory::getCategoryTreeArray($this->ordering_category, '', '', array(0, 1), $language, $this->limit_category_count);
+            $data['items'] = PhocacartCategory::getCategoryTreeArray([
+              'ordering' => $this->ordering_category,
+              'language' => $language,
+              'limitCount' => $this->limit_category_count,
+            ]);
             $data['output'] = PhocacartCategory::nestedToCheckBox($data['items'], $data, 0, $data['active'], $forceCategory['id']);
 
             if ($this->open_filter_panel == 0) {
@@ -637,11 +656,11 @@ class PhocacartFilter
 
                         if ($this->enable_color_filter && isset($v['type']) && ($v['type'] == 2 || $v['type'] == 5)) {
                             // Color
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'color';
                             $o[] = $layout4->render($data);
                         } else if ($this->enable_image_filter && isset($v['type']) && ($v['type'] == 3 || $v['type'] == 6)) {
                             // Image
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'image';
                             $data['style'] = strip_tags($this->image_style_image_filter);
                             $o[] = $layout5->render($data);
                         } else {
@@ -680,11 +699,11 @@ class PhocacartFilter
 
                         if ($this->enable_color_filter_spec) {
                             // Color
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'color';
                             $o[] = $layout4->render($data);
                         } else if ($this->enable_image_filter_spec) {
                             // Image
-                            $data['formtype'] = 'text';
+                            $data['formtype'] = 'image';
                             $data['style'] = strip_tags($this->image_style_image_filter_spec);
                             $o[] = $layout5->render($data);
                         } else {
@@ -736,6 +755,44 @@ class PhocacartFilter
             }
         }
 
+        // -CUSTOM FIELDS-
+        // TODO resolve getAllFieldsValues speed
+        /*
+        if ($this->fields) {
+            $fields = PhocacartFields::getAllFields();
+            if (!empty($fields)) {
+                foreach ($fields as $field) {
+                    if (!$field->params->get('is_filter')) {
+                        continue;
+                    }
+
+                    $data = [
+                      's' => $s,
+                      'param' => $field->name,
+                      'title' => Text::_($field->title),
+                      'titleheader' => Text::_($field->title),
+                      'getparams' => $this->getArrayParamValues($field->name, 'string'),
+                      'nrinalias' => 0,
+                      'formtype' => 'checked',
+                      'uniquevalue' => 0,
+                      'params' => [
+                        'open_filter_panel' => $this->open_filter_panel,
+                        'display_count' => $this->display_parameter_count,
+                      ],
+                      'forcecategory' => $forceCategory,
+                    ];
+
+                    $items = PhocacartFields::getAllFieldsValues((int)$field->id, $this->check_available_products, $language, $activeProductsParameters);
+
+                    if ($items) {
+                        $data['items'] = $items;
+                        $o[] = $layout->render($data);
+                    }
+
+                }
+            }
+        }
+        */
 
         if ($this->ajax == 0) {
             $o[] = '</div>';// End phFilterBox

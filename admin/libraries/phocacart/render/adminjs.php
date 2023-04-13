@@ -226,7 +226,7 @@ final class PhocacartRenderAdminjs
 
 		$s[] = 'function phDoRequestWizardController(url) {';
 		$s[] = '   var dataPost = {};';
-		$s[] = '   phRequestActive = jQuery.ajax({';
+		$s[] = '   let phRequestActive = jQuery.ajax({';
 		$s[] = '      url: url,';
 		$s[] = '      type:\'POST\',';
 		$s[] = '      data:dataPost,';
@@ -493,7 +493,7 @@ final class PhocacartRenderAdminjs
 		$s[] = '   var dataPost = {};';
 		$s[] = '   dataPost[\'filename\'] = encodeURIComponent(value);';
 		$s[] = '   dataPost[\'manager\'] = manager;';
-		$s[] = '   phRequestActive = jQuery.ajax({';
+		$s[] = '   let phRequestActive = jQuery.ajax({';
 		$s[] = '      url: url,';
 		$s[] = '      type:\'POST\',';
 		$s[] = '      data:dataPost,';

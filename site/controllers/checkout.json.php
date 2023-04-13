@@ -106,7 +106,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 // ==================
                 // PRICE
-                $priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 1, 1, $item->group_price);
+                $priceP = $price->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, 0, '', 1, 1, $item->group_price, $item->taxhide);
                 $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $item, 1);
 
 
@@ -479,7 +479,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 // Price (don't display add to cart when price is zero)
                 $price  = new PhocacartPrice();
-                $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price);
+                $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price, $itemP->taxhide);
                 $aA     = PhocacartAttribute::sanitizeAttributeArray($item['attribute']);
                 $price->getPriceItemsChangedByAttributes($priceP, $aA, $price, $itemP, 1);
                 $price->correctMinusPrice($priceP);
@@ -489,24 +489,25 @@ class PhocaCartControllerCheckout extends FormController
                 $stockStatus = array();
                 $stock       = PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $aA, $itemP, 1);
 
-                $rights                                 = new PhocacartAccessRights();
-                $this->t['can_display_addtocart']       = $rights->canDisplayAddtocartAdvanced($itemP);
-                $this->t['can_display_addtocart_price'] = $rights->canDisplayAddtocartPrice($itemP, $priceA);
-                $this->t['can_display_addtocart_stock'] = $rights->canDisplayAddtocartStock($itemP, $stock);
+                $rights                             = new PhocacartAccessRights();
+                $r                                  = [];
+                $r['can_display_addtocart']         = $rights->canDisplayAddtocartAdvanced($itemP);
+                $r['can_display_addtocart_price']   = $rights->canDisplayAddtocartPrice($itemP, $priceA);
+                $r['can_display_addtocart_stock']   = $rights->canDisplayAddtocartStock($itemP, $stock);
 
                 $canDisplay = 1;
-                if (!$this->t['can_display_addtocart']) {
+                if (!$r['can_display_addtocart']) {
                     $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
                     $canDisplay = 0;
                 }
 
-                if (!$this->t['can_display_addtocart_price']) {
+                if (!$r['can_display_addtocart_price']) {
                     $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
                     $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO'), 'error');
                     $canDisplay = 0;
                 }
 
-                if (!$this->t['can_display_addtocart_stock']) {
+                if (!$r['can_display_addtocart_stock']) {
                     $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
                     $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY'), 'error');
                     $canDisplay = 0;
@@ -699,9 +700,10 @@ class PhocaCartControllerCheckout extends FormController
 
         $rights = new PhocacartAccessRights();
         $itemProduct       = PhocacartProduct::getProduct($item['id'], $item['catid']);
-        $this->t['can_display_addtocart'] = $rights->canDisplayAddtocartAdvanced($itemProduct);
+        $r = [];
+        $r['can_display_addtocart'] = $rights->canDisplayAddtocartAdvanced($itemProduct);
 
-        if (!$this->t['can_display_addtocart']) {
+        if (!$r['can_display_addtocart']) {
 
             $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_NOT_ALLOWED_TO_ADD_PRODUCTS_TO_SHOPPING_CART'), 'error');
 

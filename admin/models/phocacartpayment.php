@@ -207,6 +207,12 @@ class PhocaCartCpModelPhocacartPayment extends AdminModel
 
 				PhocacartGroup::storeGroupsById((int)$table->id, 8, $data['group']);
 
+				if (!isset($data['currency'])) {
+					$data['currency'] = array();
+				}
+
+				PhocacartCurrency::storeCurrencies($data['currency'], (int)$table->id, 'payment');
+
 			}
 
 

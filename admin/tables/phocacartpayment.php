@@ -15,16 +15,20 @@ class TablePhocacartPayment extends Table
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_payment_methods', 'id', $db);
 	}
-	
+
 	function check() {
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
 
+        if (!isset($this->date) || $this->date == '0' || $this->date == '') {
+			$this->date = '0000-00-00 00:00:00';
+		}
+
 		return true;
 	}
-	
+
 	public function store($updateNulls = false){
 		if ($this->default != '0') {
 			$query = $this->_db->getQuery(true)

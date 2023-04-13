@@ -7,10 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Language\Text;
@@ -20,26 +23,26 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record)
 	{
 		//$user = JFactory::getUser();
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartTax', $prefix = 'Table', $config = array())
 	{
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacarttax', 'phocacarttax', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
@@ -47,7 +50,7 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -59,14 +62,21 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 
 		return $data;
 	}
-	
+
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
 			$item->tax_rate	= PhocacartPrice::cleanPrice($item->tax_rate);
+
+			if (isset($item->tax_hide)) {
+				$registry = new Registry;
+				$registry->loadString($item->tax_hide);
+				$item->tax_hide = $registry->toArray();
+				//$item->tax_hide = json_decode($item->tax_hide, true);
+			}
 		}
 		return $item;
 	}
-	
+
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
@@ -79,10 +89,10 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
-		
-	
+
+
 		$table->tax_rate 			= PhocacartUtils::replaceCommaWithPoint($table->tax_rate);
-		
+
 
 		if (empty($table->id)) {
 			// Set the values
@@ -103,14 +113,31 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
+	public function save($data) {
+
+
+		if (!empty($data['tax_hide'])) {
+			$registry 	= new Registry($data['tax_hide']);
+			$taxHide 	= $registry->toString();
+			if($taxHide != '') {
+				$data['tax_hide'] = $taxHide;
+			}
+			//$data['tax_hide'] = json_encode($data['tax_hide']);
+		} else {
+			$data['tax_hide'] = '';
+		}
+
+		return parent::save($data);
+	}
+
 	public function delete(&$cid = array()) {
-		
-		
+
+
 		if (count( $cid )) {
 			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-			
+
 			$table = $this->getTable();
 			if (!$this->canDelete($table)){
 				$error = $this->getError();
@@ -122,20 +149,20 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 					return false;
 				}
 			}
-			
+
 			// 1. DELETE TAXES
 			$query = 'DELETE FROM #__phocacart_taxes'
 				. ' WHERE id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
-			
+
+
 			// 2. DELETE COUNTRY TAXES
 			$query = 'DELETE FROM #__phocacart_tax_countries'
 				. ' WHERE tax_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-			
+
 		}
 		return true;
 	}

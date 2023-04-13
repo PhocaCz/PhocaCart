@@ -206,7 +206,7 @@ if ($this->a->shippingnotused == 1) {
 			$checked = 'checked="checked"';
 		}
 
-		$priceI = $price->getPriceItemsShipping($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1);
+		$priceI = $price->getPriceItemsShipping($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, 'SHIPPING_', $v->taxhide);
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
 
@@ -235,9 +235,9 @@ if ($this->a->shippingnotused == 1) {
 				echo trim(implode("\n", $results));
 			}*/
 			if (!empty($results)) {
-				foreach ($results as $k => $v) {
-					if ($v != false && isset($v['content']) && $v['content'] != '') {
-						echo $v['content'];
+				foreach ($results as $k2 => $v2) {
+					if ($v2 != false && isset($v2['content']) && $v2['content'] != '') {
+						echo $v2['content'];
 					}
 				}
 			}

@@ -48,7 +48,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		if (empty($this->fullitems)) {
 			$this->fullitems = $this->getFullItems();// get them from parent
 
-			// SUBTOTAL
+		/*	// SUBTOTAL
 			if (empty($this->total)) {
 				$this->total = $this->getTotal();
 
@@ -57,8 +57,29 @@ class PhocacartCartRendercheckout extends PhocacartCart
 			// COUPONTITLE
 			if (empty($this->coupon['title'])) {
 				$this->coupon['title'] = $this->getCouponTitle();
+			}*/
+		}
+
+		if (!empty($this->fullitems)) {
+
+			// SUBTOTAL
+			if (empty($this->total)) {
+				$this->total = $this->getTotal();
+			}
+
+			// COUPONTITLE
+			if (empty($this->coupon['title'])) {
+				$this->coupon['title'] = $this->getCouponTitle();
 			}
 		}
+
+		// Final Brutto
+	/*	if ($this->total['brutto']) {
+			$this->total['fbrutto'] = $this->total['brutto'];
+			if ($this->couponvalid) {
+				$this->total['fbrutto'] = $this->total['brutto'] - $this->total['cbrutto'];
+			}
+		}*/
 
 
 		$layout 				= new FileLayout('cart_checkout', null, array('component' => 'com_phocacart'));

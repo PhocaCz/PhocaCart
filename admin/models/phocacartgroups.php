@@ -21,6 +21,7 @@ class PhocaCartCpModelPhocacartGroups extends ListModel
 				'id', 'a.id',
 				'title', 'a.title',
 				'alias', 'a.alias',
+				'activate_registration', 'a.activate_registration',
 				'minimum_sum', 'a.minimum_sum',
 				'valid_from', 'a.valid_from',
 				'valid_to', 'a.valid_to',

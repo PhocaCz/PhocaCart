@@ -11,6 +11,7 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 $layoutUL 		= new FileLayout('user_login', null, array('component' => 'com_phocacart'));
@@ -53,6 +54,17 @@ if ((int)$this->u->id > 0) {
 
 	echo '<div class="'.$this->s['c']['row'].' ph-account-box-action">';
 
+	$pluginLayout 	= PluginHelper::importPlugin('pct');
+	$eventData = [];
+	$results = Factory::getApplication()->triggerEvent('onPCVonAccountInsideAddressAfterHeader', array('com_phocacart.account', $this->data, $eventData));
+
+	if (!empty($results)) {
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+		echo trim(implode("\n", $results));
+		echo '</div>';
+	}
+
+
 	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-account-billing-row" id="phBillingAddress" >';
 	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_BILLING_ADDRESS').'</div>';
 	echo $this->t['dataaddressform']['b'];
@@ -76,6 +88,19 @@ if ((int)$this->u->id > 0) {
 
 	echo '</div>';
 
+	$pluginLayout 	= PluginHelper::importPlugin('pct');
+	if ($pluginLayout) {
+		$eventData	= [];
+		$results = Factory::getApplication()->triggerEvent('onPCTonAfterUserAddressAccountView', array('com_phocacart.account', $this->t['datauser'], $eventData));
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
+				}
+			}
+		}
+	}
+
 	//echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' '.$this->s['c']['pull-right'].' ph-right ph-account-address-save">';
@@ -90,6 +115,7 @@ if ((int)$this->u->id > 0) {
 	echo '<input type="hidden" name="tmpl" value="component" />';
 	echo '<input type="hidden" name="option" value="com_phocacart" />'. "\n";
 	echo '<input type="hidden" name="task" value="checkout.saveaddress" />'. "\n";
+	echo '<input type="hidden" name="typeview" value="account" />'. "\n";
 	echo '<input type="hidden" name="return" value="'.$this->t['actionbase64'].'" />'. "\n";
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";

@@ -63,14 +63,13 @@ class JFormFieldPhocaSelectItem extends FormField
 		$maxSize = isset($this->element['maxsize']) &&  (int)$this->element['maxsize'] > 0 ? (int)$this->element['maxsize'] : 0;
 
 
-
 		$onchange 	= (string) $this->element['onchange'];
 		$value = '';
 		if ($related) {
 			// Related product - select related products by "parent" product ID
 			$id 	= $this->form->getValue('id');
 
-
+/*
 			if ((int)$id > 0) {
 				$relatedOption	= PhocacartRelated::getRelatedItemsById((int)$id, 3);
 
@@ -92,7 +91,8 @@ class JFormFieldPhocaSelectItem extends FormField
 					}
 					//$value .= ']';
 				}
-			}
+			}*/
+			$value = $this->value;
 		} else {
 			// Standard product - only select one product by ID
 			$product = PhocacartProduct::getProductByProductId((int)$this->value);

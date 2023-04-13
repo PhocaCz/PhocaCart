@@ -62,7 +62,7 @@ final class PhocacartRenderJs
             $s[] = ' ';
             Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
 
-            /*$s[] = '   phRequest = jQuery.ajax({';
+            /*$s[] = '   let phRequest = jQuery.ajax({';
             $s[] = '      type: "POST",';
             $s[] = '      url: phUrl,';
             $s[] = '      async: "false",';

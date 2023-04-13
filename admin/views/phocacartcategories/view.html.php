@@ -133,6 +133,8 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 			//ToolbarHelper::divider();
 			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
 			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
+			$childBar->standardButton('featured')->text('JFEATURE')->task($this->t['tasks'].'.featured')->listCheck(true);
+			$childBar->standardButton('unfeatured')->text('JUNFEATURE')->task($this->t['tasks'].'.unfeatured')->listCheck(true);
 
 			//ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
 			//ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
@@ -298,6 +300,7 @@ function phOpenCatalog(href){
 					$tree[$iCT]->language_image		= $key->language_image;
 					$tree[$iCT]->count_date			= $key->count_date;
 					$tree[$iCT]->count_products		= $key->count_products;
+					$tree[$iCT]->featured			= $key->featured;
 				//	$tree[$iCT]->deleteuserid		= $key->deleteuserid;
 				//	$tree[$iCT]->userfolder			= $key->userfolder;
 				//	$tree[$iCT]->approved			= $key->approved;
