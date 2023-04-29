@@ -536,7 +536,6 @@ var config".$id." = {
 		if ($dateTo == '') {
 			$dateTo 	= PhocacartDate::getCurrentDate();
 		}
-
 		$db		= Factory::getDbo();
 		$q = ' SELECT SUM(t.amount) FROM #__phocacart_orders AS a';
 		$q .= ' LEFT JOIN #__phocacart_order_total AS t ON a.id = t.order_id';
