@@ -117,6 +117,7 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=category&id='.$catid;
+
 		return self::_buildLink($link, $needles, $lang);
 	}
 
@@ -651,9 +652,33 @@ class PhocacartRoute
 			}
 
 			if(isset($match)) {
+				break;// needs to be changed to return in case of THIRD
+			}
+		}
+
+		// THIRD - Not testing ID
+		/*foreach($needles as $needle => $id) {
+
+			foreach($items as $item) {
+
+
+				if (isset($item->query['option']) && $item->query['option'] == $component->option
+					&& isset($item->query['view']) && $item->query['view'] == $needle
+					&& (in_array($needle, $notCheckIdArray)  || (isset($item->query['id']) /*&& $item->query['id'] == $id )*//*))
+				) {
+					$match = $item;
+
+
+				}
+			}
+
+			if(isset($match)) {
 				break;
 			}
 		}
+ 		*/
+
+
 
 		if (!$match) {
 

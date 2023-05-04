@@ -99,6 +99,7 @@ class PhocacartTax
             }
 
 			$items = array_merge($itemsT, $itemsC, $itemsR, $itemsP);
+
 			return $items;
 
 	}
@@ -377,6 +378,19 @@ class PhocacartTax
 			}
 		}
 
+
+        // Guest Checkout
+        $guest = PhocacartUserGuestuser::getGuestUser();
+        if ($guest && (int)$dynamic_tax_rate > 0) {
+            $data 			= PhocacartUserGuestuser::getUserAddressGuest();
+
+            if ($type == 0 && isset($data[0]->country) && $data[0]->country > 0) {
+                return (int)$data[0]->country;
+            } else if ($type == 1 && isset($data[1]->country) && $data[1]->country > 0) {
+                return (int)$data[1]->country;
+            }
+        }
+
 		return 0;
 	}
 
@@ -410,6 +424,18 @@ class PhocacartTax
 				return $regionId;
 			}
 		}
+
+        // Guest Checkout
+        $guest = PhocacartUserGuestuser::getGuestUser();
+        if ($guest && (int)$dynamic_tax_rate > 0) {
+            $data 			= PhocacartUserGuestuser::getUserAddressGuest();
+
+            if ($type == 0 && isset($data[0]->region) && $data[0]->region > 0) {
+                return (int)$data[0]->region;
+            } else if ($type == 1 && isset($data[1]->region) && $data[1]->region > 0) {
+                return (int)$data[1]->region;
+            }
+        }
 
 		return 0;
 	}
