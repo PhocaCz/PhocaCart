@@ -416,6 +416,8 @@ class PhocacartFilter
         $activeProductsSpecifications = array();
         if ($this->limit_attributes_category == 1 || $this->limit_tags_category == 1 || $this->limit_labels_category == 1 || $this->limit_parameters_category == 1
             || $this->limit_price_category == 1 || $this->limit_manufacturers_category == 1 || $this->limit_specifications_category == 1) {
+
+
             if ((int)$category['id'] > 0) {
                 $activeCategory[] = (int)$category['id'];
 

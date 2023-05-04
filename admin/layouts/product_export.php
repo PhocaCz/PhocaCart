@@ -338,7 +338,7 @@ if (!empty($d['products'])){
 						}
 
 						if (isset($v[$col])) {
-							$iP[] = $t1 . '<'.strip_tags($iCN[$k2]).$title.'>' . $l . $v[$col] . $r. '</'.strip_tags($iCN[$k2]).'>';
+							$iP[] = $t1 . '<'.strip_tags($iCN[$k2]).$title.'>' . $l . htmlspecialchars($v[$col], ENT_XML1) . $r. '</'.strip_tags($iCN[$k2]).'>';
 						}
 					} else {
 						$iP[] = $v[$col];
@@ -446,7 +446,7 @@ if (!empty($d['products'])){
 										if ($xml) {
 											$iP[] = $t2 . '<attribute>';
 											$iP[] = $t3 . '<id>'.$vX->id.'</id>';
-											$iP[] = $t3 . '<title>'.$vX->title.'</title>';
+											$iP[] = $t3 . '<title>'.htmlspecialchars($vX->title, ENT_XML1).'</title>';
 											$iP[] = $t3 . '<alias>'.$vX->alias.'</alias>';
 											$iP[] = $t3 . '<required>'.$vX->required.'</required>';
 											$iP[] = $t3 . '<type>'.$vX->type.'</type>';
@@ -455,7 +455,7 @@ if (!empty($d['products'])){
 												foreach($vX->options as $kX2 => $vX2) {
 													$iP[] = $t4 . '<option>';
 													$iP[] = $t5 . '<id>'.$vX2->id.'</id>';
-													$iP[] = $t5 . '<title>'.$vX2->title.'</title>';
+													$iP[] = $t5 . '<title>'.htmlspecialchars($vX2->title, ENT_XML1) .'</title>';
 													$iP[] = $t5 . '<alias>'.$vX2->alias.'</alias>';
 													$iP[] = $t5 . '<amount>'.$vX2->amount.'</amount>';
 													$iP[] = $t5 . '<operator>'.$vX2->operator.'</operator>';
@@ -463,9 +463,9 @@ if (!empty($d['products'])){
 													//$iP[] = $t5 . '<stock_calculation>'.$vX2->stock_calculation.'</stock_calculation>';
 													$iP[] = $t5 . '<operator_weight>'.$vX2->operator_weight.'</operator_weight>';
 													$iP[] = $t5 . '<weight>'.$vX2->weight.'</weight>';
-													$iP[] = $t5 . '<image>'.$vX2->image.'</image>';
-													$iP[] = $t5 . '<image_medium>'.$vX2->image_medium.'</image_medium>';
-													$iP[] = $t5 . '<image_small>'.$vX2->image_small.'</image_small>';
+													$iP[] = $t5 . '<image>'.htmlspecialchars($vX2->image, ENT_XML1) .'</image>';
+													$iP[] = $t5 . '<image_medium>'.htmlspecialchars($vX2->image_medium, ENT_XML1) .'</image_medium>';
+													$iP[] = $t5 . '<image_small>'.htmlspecialchars($vX2->image_small, ENT_XML1) .'</image_small>';
 													$iP[] = $t5 . '<download_folder>'.$vX2->download_folder.'</download_folder>';
 													$iP[] = $t5 . '<download_token>'.$vX2->download_token.'</download_token>';
 													$iP[] = $t5 . '<download_file>'.$vX2->download_file.'</download_file>';
@@ -515,7 +515,7 @@ if (!empty($d['products'])){
 											$iP[] = $t2 . '<specification>';
 											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
 											$iP[] = $t3 . '<group_id>'.$vX['group_id'].'</group_id>';
-											$iP[] = $t3 . '<title>'.$vX['title'].'</title>';
+											$iP[] = $t3 . '<title>'.htmlspecialchars($vX['title'], ENT_XML1) .'</title>';
 											$iP[] = $t3 . '<alias>'.$vX['alias'].'</alias>';
 											$iP[] = $t3 . '<value>'.$vX['value'].'</value>';
 											$iP[] = $t3 . '<alias_value>'.$vX['alias_value'].'</alias_value>';
@@ -566,7 +566,7 @@ if (!empty($d['products'])){
 										if ($xml) {
 											$iP[] = $t2 . '<discount>';
 											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
-											$iP[] = $t3 . '<title>'.$vX['title'].'</title>';
+											$iP[] = $t3 . '<title>'.htmlspecialchars($vX['title'], ENT_XML1) .'</title>';
 											$iP[] = $t3 . '<alias>'.$vX['alias'].'</alias>';
 											$iP[] = $t3 . '<discount>'.$vX['discount'].'</discount>';
 											$iP[] = $t3 . '<access>'.$vX['access'].'</access>';
@@ -583,7 +583,7 @@ if (!empty($d['products'])){
 												foreach($groups as $kY => $vY) {
 													$iP[] = $t4 . '<group>';
 													$iP[] = $t5 . '<id>'.$vY['id'].'</id>';
-													$iP[] = $t5 . '<title>'.$vY['title'].'</title>';
+													$iP[] = $t5 . '<title>'.htmlspecialchars($vY['title'], ENT_XML1) .'</title>';
 													$iP[] = $t4 . '</group>';
 												}
 
@@ -787,7 +787,7 @@ if (!empty($d['products'])){
 											if (!empty($pA)) {
 											    $iP[] = $t2 . '<parameter>';
 											    $iP[] = $t3 . '<id>'.$vX->id.'</id>';
-											    $iP[] = $t3 . '<title>'.$vX->title.'</title>';
+											    $iP[] = $t3 . '<title>'.htmlspecialchars($vX->title, ENT_XML1).'</title>';
 											    $iP[] = $t3 . '<alias>'.$vX->alias.'</alias>';
 												$iP[] = $t3 . '<values>';
 												foreach($pA as $kX2 => $vX2) {
@@ -839,7 +839,7 @@ if (!empty($d['products'])){
 										if ($xml) {
 											$iP[] = $t2 . '<group>';
 											$iP[] = $t3 . '<id>'.$vX['id'].'</id>';
-											$iP[] = $t3 . '<title>'.$vX['title'].'</title>';
+											$iP[] = $t3 . '<title>'.htmlspecialchars($vX['title'], ENT_XML1).'</title>';
 											$iP[] = $t2 . '</group>';
 										} else {
 											//$x[] = $vX['image'];

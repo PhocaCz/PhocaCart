@@ -15,6 +15,7 @@ use Joomla\CMS\Layout\FileLayout;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartExport extends PhocaCartCpControllerPhocaCartCommon {
 
+	public $t;
 
 	public function export() {
 

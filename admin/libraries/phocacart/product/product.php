@@ -1247,6 +1247,22 @@ class PhocacartProduct
             $table->date = Factory::getDate()->toSql();
         }
 
+        if(isset($table->manufacturer_id) && $table->manufacturer_id == '') {$table->manufacturer_id = 0;}
+        if(isset($table->type) && $table->type == '') {$table->type = 0;}
+        if(isset($table->min_quantity) && $table->min_quantity == '') {$table->min_quantity = 0;}
+        if(isset($table->min_multiple_quantity) && $table->min_multiple_quantity == '') {$table->min_multiple_quantity = 0;}
+        if(isset($table->min_quantity_calculation) && $table->min_quantity_calculation == '') {$table->min_quantity_calculation = 0;}
+        if(isset($table->condition) && $table->condition == '') {$table->condition = 0;}
+        if(isset($table->points_received) && $table->points_received == '') {$table->points_received = 0;}
+        if(isset($table->points_needed) && $table->points_needed == '') {$table->points_needed = 0;}
+        if(isset($table->stock_calculation) && $table->stock_calculation == '') {$table->stock_calculation = 0;}
+        if(isset($table->featured) && $table->featured == '') {$table->featured = 0;}
+        if(isset($table->tax_id) && $table->tax_id == '') {$table->tax_id = 0;}
+        if(isset($table->stock) && $table->stock == '') {$table->stock = 0;}
+        if(isset($table->modified_by) && $table->modified_by == '') {$table->modified_by = 0;}
+        if(isset($table->sales) && $table->sales == '') {$table->sales = 0;}
+        if(isset($table->sales) && $table->sales == '') {$table->sales = 0;}
+
         if (!$table->check()) {
             throw new Exception($table->getError());
             return false;

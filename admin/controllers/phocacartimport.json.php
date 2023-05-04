@@ -16,6 +16,8 @@ require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCartCommon {
 
 
+	public $t;
+
 	public function import() {
 
 

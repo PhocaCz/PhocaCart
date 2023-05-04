@@ -104,7 +104,8 @@ class PhocacartSpecification
 					}
 
 					// When no value, then no alias
-					if ($v['alias_value'] != '') {
+					if ($v['alias_value'] != '' && !empty($v['alias_value'])) {
+
 						$v['alias_value'] = PhocacartUtils::getAliasName($v['alias_value']);
 					}
 
@@ -161,9 +162,12 @@ class PhocacartSpecification
 						$newIdS 				= $idExists;
 
 					} else {
-						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].', '.$db->quote($v['image']).', '.$db->quote($v['image_medium']).', '.$db->quote($v['image_small']).', '.$db->quote($v['color']).', '.$i.')';
 
-						$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id, image, image_medium, image_small, color, ordering)'
+						$date             = gmdate('Y-m-d H:i:s');// not null
+
+						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].', '.$db->quote($v['image']).', '.$db->quote($v['image_medium']).', '.$db->quote($v['image_small']).', '.$db->quote($v['color']).', '.$db->quote($date).', '.$i.')';
+
+						$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id, image, image_medium, image_small, color, date, ordering)'
 								.' VALUES '.$values;
 						$db->setQuery($query);
 						$db->execute();

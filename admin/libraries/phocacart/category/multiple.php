@@ -12,6 +12,8 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
+phocacartimport('phocacart.category.category');
+
 class PhocacartCategoryMultiple
 {
 	public static function getCategories($productId, $select = 0) {
@@ -454,6 +456,7 @@ class PhocacartCategoryMultiple
 
 
   public static function getCategoryChildrenString($id, $children = '') {
+
     $categories = PhocaCartCategory::getChildren($id);
     if ($categories) {
       foreach ($categories as $v) {
