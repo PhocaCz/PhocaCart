@@ -12,6 +12,10 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
+if (!class_exists('PhocaCartLoader')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
+}
+JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
 phocacartimport('phocacart.category.category');
 
 class PhocacartCategoryMultiple
