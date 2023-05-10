@@ -124,6 +124,11 @@ class PhocaCartViewFeed extends HtmlView
             }
             */
 
+            $forceLang = '';
+            if (isset($this->t['feed']['language']) && $this->t['feed']['language'] != '') {
+                $forceLang = $this->t['feed']['language'];
+            }
+
 
             // Load all categories for a product or only one
             // This influences two parameters: Categories and Product Category Type
@@ -133,7 +138,7 @@ class PhocaCartViewFeed extends HtmlView
             }
 
             // Possible feature - accept languages
-            $this->t['products'] = PhocacartProduct::getProducts(0, (int)$this->p['item_limit'], $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList);
+            $this->t['products'] = PhocacartProduct::getProducts(0, (int)$this->p['item_limit'], $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList, array(), 0, array(0, 1), '', '', false, $forceLang );
 
             parent::display($tpl);
         }
