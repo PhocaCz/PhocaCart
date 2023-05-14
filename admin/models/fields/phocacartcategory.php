@@ -18,15 +18,8 @@ use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 
-if (! class_exists('PhocacartCategory')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/category.php');
-}
-if (! class_exists('PhocacartCategoryMultiple')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/multiple.php');
-}
-
-$lang = Factory::getLanguage();
-$lang->load('com_phocacart');
+require_once(JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php');
+Factory::getApplication()->getLanguage()->load('com_phocacart');
 
 class JFormFieldPhocacartCategory extends ListField
 {
@@ -54,8 +47,8 @@ class JFormFieldPhocacartCategory extends ListField
       ];
       if ($category->children)
         $this->buildCategoryTree($options, $category->children, $title, $typeFilter, $langFilter, $omitIds);
-            }
-        }
+    }
+  }
 
 	protected function getInput() {
 		$db = Factory::getDBO();
@@ -64,17 +57,17 @@ class JFormFieldPhocacartCategory extends ListField
 		$typeMethod		= $this->element['typemethod'];
 
     switch($this->element['categorytype']) {
-			case 1:
+      case 1:
         $typeFilter = [0, 1];
-			break;
-			case 2:
+        break;
+      case 2:
         $typeFilter = [0, 2];
-			break;
-			case 0:
-			default:
+        break;
+      case 0:
+      default:
         $typeFilter = [];
-			break;
-		}
+        break;
+    }
 
     if ($this->element['language']) {
       $langFilter = explode(',', $this->element['language']);
@@ -84,36 +77,36 @@ class JFormFieldPhocacartCategory extends ListField
       $langFilter = [];
     }
 
-		// TO DO - check for other views than category edit
+    // TO DO - check for other views than category edit
     $omitIds = [];
     switch (Factory::getApplication()->input->get('view')) {
       case 'phocacartcategory':
         if ($this->form->getValue('id') > 0)
           $omitIds[] = $this->form->getValue('id');
         break;
-		}
+    }
 
     $rootCategories = array_filter(PhocacartCategory::getCategories(), function($category) use ($typeFilter, $langFilter, $omitIds) {
       return !$category->parent_id;
     });
 
     $options = [];
-		if ($multiple) {
-			if ($typeMethod == 'allnone') {
+    if ($multiple) {
+      if ($typeMethod == 'allnone') {
         $options[] = HTMLHelper::_('select.option', '0', Text::_('COM_PHOCACART_NONE'), 'value', 'text');
         $options[] = HTMLHelper::_('select.option', '-1', Text::_('COM_PHOCACART_ALL'), 'value', 'text');
-			}
-		} else {
-			// in filter we need zero value for canceling the filter
-			if ($typeMethod == 'filter') {
+      }
+    } else {
+      // in filter we need zero value for canceling the filter
+      if ($typeMethod == 'filter') {
         $options[] = HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_CATEGORY') . ' -', 'value', 'text');
-			} else {
+      } else {
         $options[] = HTMLHelper::_('select.option', '0', '- '.Text::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text');
-			}
-		}
+      }
+    }
     $this->buildCategoryTree($options, $rootCategories, '', $typeFilter, $langFilter, $omitIds);
 
-		$data            = $this->getLayoutData();
+		$data = $this->getLayoutData();
 		$data['options'] = $options;
 
 		if (!empty($activeCats)) {
@@ -122,9 +115,9 @@ class JFormFieldPhocacartCategory extends ListField
 			$data['value'] = $this->value;
 		}
 
-		$data['refreshPage']    = (bool) $this->element['refresh-enabled'];
-		$data['refreshCatId']   = (string) $this->element['refresh-cat-id'];
-		$data['refreshSection'] = (string) $this->element['refresh-section'];
+		$data['refreshPage']    = (bool)$this->element['refresh-enabled'];
+		$data['refreshCatId']   = (string)$this->element['refresh-cat-id'];
+		$data['refreshSection'] = (string)$this->element['refresh-section'];
 		$data['hasCustomFields']= !empty(FieldsHelper::getFields('com_phocacart.phocacartitem'));
 
 		return $this->getRenderer($this->layout)->render($data);
