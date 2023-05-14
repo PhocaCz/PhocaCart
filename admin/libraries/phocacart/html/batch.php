@@ -12,10 +12,25 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
+
 defined('JPATH_PLATFORM') or die();
 
 abstract class PhocacartHtmlBatch
 {
+
+  private static function buildCategoryTree(array &$options, array $categories, string $treeTitle): void {
+    foreach ($categories as $category) {
+      $title = ($treeTitle ? $treeTitle . ' - ' : '') . $category->title;
+      $options[] = (object)[
+        'text' => $title . ($category->language === '*' ? '' : ' (' . $category->language . ')'),
+        'value' => $category->id,
+      ];
+      if ($category->children)
+        self::buildCategoryTree($options, $category->children, $title);
+    }
+  }
+
 	public static function item($published, $category = 0)
 	{
 		// Create the copy/move options.
@@ -24,11 +39,45 @@ abstract class PhocacartHtmlBatch
 			HTMLHelper::_('select.option', 'm', Text::_('JLIB_HTML_BATCH_MOVE'))
 		);
 
-		$tree = PhocacartCategory::options();
+    $rootCategories = array_filter(PhocacartCategory::getCategories(), function($category) {
+      return !$category->parent_id;
+    });
 
-		if ($category) {
-			array_unshift($tree, HTMLHelper::_('select.option', 0, Text::_('JLIB_HTML_ADD_TO_ROOT'), 'value', 'text'));
-		}
+    $tree = [];
+    $tree[] = HTMLHelper::_('select.option', '', Text::_('JSELECT'), 'value', 'text');
+    if ($category) {
+      $tree[] = HTMLHelper::_('select.option', 0, Text::_('JLIB_HTML_ADD_TO_ROOT'), 'value', 'text');
+    }
+    self::buildCategoryTree($tree, $rootCategories, '');
+
+    $fancySelectData = [
+      'autocomplete'   => 'off',
+      'autofocus'      => false,
+      'class'          => '',
+      'description'    => '',
+      'disabled'       => false,
+      'group'          => false,
+      'id'             => 'batch-category-id',
+      'hidden'         => false,
+      'hint'           => '',
+      'label'          => '',
+      'labelclass'     => '',
+      'onchange'       => '',
+      'onclick'        => '',
+      'multiple'       => false,
+      'pattern'        => '',
+      'readonly'       => false,
+      'repeat'         => false,
+      'required'       => false,
+      'size'           => 4,
+      'spellcheck'     => false,
+      'validate'       => '',
+      'value'          => '',
+      'options'        => $tree,
+      'dataAttributes' => [],
+      'dataAttribute'  => '',
+      'name'           => 'batch[category_id]',
+    ];
 
 		// Create the batch selector to change select the category by which to move or copy.
 		$lines = array(
@@ -36,12 +85,8 @@ abstract class PhocacartHtmlBatch
 			Text::_('JLIB_HTML_BATCH_MENU_LABEL'),
 			'</label>',
 			'<fieldset id="batch-choose-action" class="combo">',
-				'<select name="batch[category_id]" class="form-select" id="batch-category-id">',
-					'<option value="">'.Text::_('JSELECT').'</option>',
-					/*JHtml::_('select.options',	JHtml::_('category.options', $extension, array('published' => (int) $published))),*/
-					HTMLHelper::_('select.options',  $tree ),
-				'</select>',
-				HTMLHelper::_( 'select.radiolist', $options, 'batch[move_copy]', '', 'value', 'text', 'm'),
+      LayoutHelper::render('joomla.form.field.list-fancy-select', $fancySelectData),
+  		HTMLHelper::_( 'select.radiolist', $options, 'batch[move_copy]', '', 'value', 'text', 'm'),
 			'</fieldset>'
 		);
 

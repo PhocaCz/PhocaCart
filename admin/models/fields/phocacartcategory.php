@@ -86,7 +86,7 @@ class JFormFieldPhocacartCategory extends ListField
         break;
     }
 
-    $rootCategories = array_filter(PhocacartCategory::getCategories(), function($category) use ($typeFilter, $langFilter, $omitIds) {
+    $rootCategories = array_filter(PhocacartCategory::getCategories(), function($category) {
       return !$category->parent_id;
     });
 
