@@ -124,8 +124,8 @@ final class PhocacartCategory
     private static function loadCategoriesCache(): void {
         if (self::$categoriesCache === null) {
             $db = Factory::getDBO();
-            $db->setQuery('SELECT a.*, null as children FROM #__phocacart_categories AS a ORDER BY a.ordering');
-            $categories = $db->loadObjectList('id');
+            $db->setQuery('SELECT a.*, null AS children FROM #__phocacart_categories AS a ORDER BY a.ordering, a.id');
+            $categories = $db->loadObjectList('id') ?? [];
 
             array_walk($categories, function ($category) use ($categories) {
                 if ($category->parent_id) {
@@ -134,9 +134,16 @@ final class PhocacartCategory
                     $categories[$category->parent_id]->children[] = $category;
                 }
             });
+
             self::$categoriesCache = $categories;
         }
     }
+
+  public static function getCategories(): array {
+    self::loadCategoriesCache();
+
+    return self::$categoriesCache;
+  }
 
     public static function getCategoryById($id) {
         self::loadCategoriesCache();

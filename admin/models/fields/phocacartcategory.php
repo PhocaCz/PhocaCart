@@ -41,113 +41,80 @@ class JFormFieldPhocacartCategory extends ListField
 		return $renderer;
 	}
 
-	protected function getInput() {
+  private function buildCategoryTree(array &$options, array $categories, string $treeTitle, array $typeFilter, array $langFilter, array $omitIds): void {
+    foreach ($categories as $category) {
+      if ($typeFilter && !in_array($category->type, $typeFilter)) continue;
+      if ($langFilter && !in_array($category->language, $langFilter)) continue;
+      if ($omitIds && in_array($category->id, $omitIds)) continue;
 
-		$db = Factory::getDBO();
-
-		//$javascript		= '';
-		$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
-		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
-		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
-		$typeMethod		= $this->element['typemethod'];
-		$categoryType	= $this->element['categorytype'];// 0 all, 1 ... online shop, 2 ... pos
-		$attr		= '';
-		$attr		.= $class . ' ';
-		if ($multiple) {
-			$attr		.= 'size="4" multiple="multiple" ';
-		}
-		if ($required) {
-			$attr		.= 'required aria-required="true" ';
-		}
-
-		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
-		//$attr		.= $javascript . ' ';
-
-
-		// Filter language
-        //$whereLang = '';
-		$wheres = array();
-        if (!empty($this->element['language'])) {
-            if (strpos($this->element['language'], ',') !== false)
-            {
-                $language = implode(',', $db->quote(explode(',', $this->element['language'])));
+      $title = ($treeTitle ? $treeTitle . ' - ' : '') . $category->title;
+      $options[] = (object)[
+        'text' => $title . ($category->language === '*' ? '' : ' (' . $category->language . ')'),
+        'value' => $category->id,
+      ];
+      if ($category->children)
+        $this->buildCategoryTree($options, $category->children, $title, $typeFilter, $langFilter, $omitIds);
             }
-            else
-            {
-                $language = $db->quote($this->element['language']);
-            }
-
-            $wheres[] = ' '.$db->quoteName('a.language') . ' IN (' . $language . ')';
         }
 
+	protected function getInput() {
+		$db = Factory::getDBO();
 
-       //build the list of categories
-		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
-		. ' FROM #__phocacart_categories AS a';
+		$multiple		= (string)$this->element['multiple'] == 'true';
+		$typeMethod		= $this->element['typemethod'];
 
-        // don't lose information about category when it will be unpublished - you should still be able to edit product with such category in administration
-		//. ' WHERE a.published = 1';
-		switch($categoryType) {
-
+    switch($this->element['categorytype']) {
 			case 1:
-				$wheres[] = ' a.type IN (0,1)';
+        $typeFilter = [0, 1];
 			break;
-
 			case 2:
-				$wheres[] = ' a.type IN (0,2)';
+        $typeFilter = [0, 2];
 			break;
-
-
 			case 0:
 			default:
-
+        $typeFilter = [];
 			break;
-
 		}
 
-		$query .= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
-
-
-		$query .= ' ORDER BY a.ordering';
-
-		$db->setQuery( $query );
-		$data = $db->loadObjectList();
+    if ($this->element['language']) {
+      $langFilter = explode(',', $this->element['language']);
+    } elseif ($this->form->getValue('language', 'filter')) {
+      $langFilter = [$this->form->getValue('language', 'filter')];
+    } else {
+      $langFilter = [];
+    }
 
 		// TO DO - check for other views than category edit
-		$view 	= Factory::getApplication()->input->get( 'view' );
-		$catId	= -1;
-		if ($view == 'phocacartcategory') {
-			$id 	= $this->form->getValue('id'); // id of current category
-			if ((int)$id > 0) {
-				$catId = $id;
-			}
+    $omitIds = [];
+    switch (Factory::getApplication()->input->get('view')) {
+      case 'phocacartcategory':
+        if ($this->form->getValue('id') > 0)
+          $omitIds[] = $this->form->getValue('id');
+        break;
 		}
 
+    $rootCategories = array_filter(PhocacartCategory::getCategories(), function($category) use ($typeFilter, $langFilter, $omitIds) {
+      return !$category->parent_id;
+    });
 
-
-
-		$tree = array();
-		$text = '';
-		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
-
+    $options = [];
 		if ($multiple) {
 			if ($typeMethod == 'allnone') {
-				array_unshift($tree, HTMLHelper::_('select.option', '0', Text::_('COM_PHOCACART_NONE'), 'value', 'text'));
-				array_unshift($tree, HTMLHelper::_('select.option', '-1', Text::_('COM_PHOCACART_ALL'), 'value', 'text'));
+        $options[] = HTMLHelper::_('select.option', '0', Text::_('COM_PHOCACART_NONE'), 'value', 'text');
+        $options[] = HTMLHelper::_('select.option', '-1', Text::_('COM_PHOCACART_ALL'), 'value', 'text');
 			}
 		} else {
-
 			// in filter we need zero value for canceling the filter
 			if ($typeMethod == 'filter') {
-				array_unshift($tree, HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_CATEGORY') . ' -', 'value', 'text'));
+        $options[] = HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_CATEGORY') . ' -', 'value', 'text');
 			} else {
-				array_unshift($tree, HTMLHelper::_('select.option', '0', '- '.Text::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text'));
+        $options[] = HTMLHelper::_('select.option', '0', '- '.Text::_('COM_PHOCACART_SELECT_CATEGORY').' -', 'value', 'text');
 			}
 		}
-
+    $this->buildCategoryTree($options, $rootCategories, '', $typeFilter, $langFilter, $omitIds);
 
 		$data            = $this->getLayoutData();
-		$data['options'] = (array)$tree;
+		$data['options'] = $options;
 
 		if (!empty($activeCats)) {
 			$data['value'] = $activeCats;
@@ -161,7 +128,6 @@ class JFormFieldPhocacartCategory extends ListField
 		$data['hasCustomFields']= !empty(FieldsHelper::getFields('com_phocacart.phocacartitem'));
 
 		return $this->getRenderer($this->layout)->render($data);
-
 	}
 }
-?>
+
