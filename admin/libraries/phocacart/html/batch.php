@@ -24,24 +24,11 @@ abstract class PhocacartHtmlBatch
 			HTMLHelper::_('select.option', 'm', Text::_('JLIB_HTML_BATCH_MOVE'))
 		);
 
-		$db = Factory::getDBO();
+		$tree = PhocacartCategory::options();
 
-       //build the list of categories
-		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
-		. ' FROM #__phocacart_categories AS a'
-		// TO DO. ' WHERE a.published = '.(int)$published
-		. ' ORDER BY a.ordering';
-		$db->setQuery( $query );
-		$data = $db->loadObjectList();
-		$tree = array();
-		$text = '';
-		$catId= -1;
-		$tree = PhocacartCategory::CategoryTreeOption($data, $tree, 0, $text, $catId);
-
-		if ($category == 1) {
+		if ($category) {
 			array_unshift($tree, HTMLHelper::_('select.option', 0, Text::_('JLIB_HTML_ADD_TO_ROOT'), 'value', 'text'));
 		}
-
 
 		// Create the batch selector to change select the category by which to move or copy.
 		$lines = array(
@@ -61,4 +48,3 @@ abstract class PhocacartHtmlBatch
 		return implode("\n", $lines);
 	}
 }
-?>
