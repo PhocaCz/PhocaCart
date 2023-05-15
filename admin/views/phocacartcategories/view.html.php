@@ -47,6 +47,8 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 		$this->t['search'] = $this->state->get('filter.search');
 		$this->t['level'] = $this->state->get('filter.level');
 
+		$media = new PhocacartRenderAdminmedia();
+		
 		// ASSOCIATION
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal') {
