@@ -13,15 +13,18 @@ use Joomla\CMS\MVC\Controller\BaseController;
 if (!Factory::getUser()->authorise('core.manage', 'com_phocacart')) {
 	throw new Exception(Text::_('COM_PHOCACART_ERROR_ALERTNOAUTHOR'), 404);
 }
+
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
-require_once( JPATH_COMPONENT.'/controller.php' );
-JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
-require JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/autoloadPhoca.php';
 jimport('joomla.application.component.controller');
+
+require_once( JPATH_COMPONENT . '/libraries/bootstrap.php' );
+require_once( JPATH_COMPONENT . '/controller.php' );
+
 Text::script('COM_PHOCACART_MENU_BACK');
 Text::script('COM_PHOCACART_MENU_PHOCACART');
+
 $controller	= BaseController::getInstance('phocacartCp');
 $controller->execute(Factory::getApplication()->input->get('task'));
 $controller->redirect();
-?>
+

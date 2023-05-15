@@ -9,10 +9,11 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Factory;
+
+require_once( JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php' );
 require_once( JPATH_COMPONENT.'/controller.php' );
 require_once( JPATH_COMPONENT.'/helpers/route.php' );
-JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
+
 $controller = BaseController::getInstance('PhocaCart');
 $controller->execute(Factory::getApplication()->input->get('task'));
 $controller->redirect();
-?>

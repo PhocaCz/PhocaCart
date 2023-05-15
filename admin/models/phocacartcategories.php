@@ -106,6 +106,19 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		return parent::getStoreId($id);
 	}
 
+	private function buildCategoryTree(array &$items, array $categories, int $level = 1, string $treeTitle = '', string $parentsTree = ''): void {
+		foreach ($categories as $idx => $category) {
+			$title = ($treeTitle ? $treeTitle . ' - ' : '') . $category->title;
+			$category->level = $level;
+			$category->title = $title;
+			$category->orderup = $idx > 0;
+			$category->orderdown = $idx < count($categories);
+			$category->parentstree = ($parentsTree ? $parentsTree . ' ' : '') . $category->id;
+			$items[] = $category;
+			if ($category->children)
+				$this->buildCategoryTree($items, $category->children, $level + 1, $title, $category->parentstree);
+		}
+	}
 	/*
 	 * Because of tree we need to load all the items
 	 *
@@ -114,7 +127,6 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 	 * and will set displaying of categories for current pagination
 	 * E.g. pagination is limitstart 5, limit 5 - so only categories from 5 to 10 will be displayed (in Default.php)
 	 */
-
 	public function getItems()
 	{
 		// Get a storage key.
@@ -127,12 +139,37 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
 		// Load the list items.
 		try {
-			$query	= $this->getListQuery();
-			//$items	= $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
-			$items	= $this->_getList($query);
+			$this->getDbo()->setQuery($this->getListQuery());
+			$categories	= $this->getDbo()->loadObjectList('id');
 		} catch (RuntimeException $e) {
-
 			throw new Exception($e->getMessage(), 500);
+		}
+
+		if ($this->getState('filter.search')) {
+			$items = $categories;
+		} else {
+			array_walk($categories, function ($category) use ($categories) {
+				if ($category->parent_id) {
+					if ($categories[$category->parent_id]->children === null)
+						$categories[$category->parent_id]->children = [];
+					$categories[$category->parent_id]->children[] = $category;
+				}
+			});
+
+			$rootCategories = array_filter($categories, function ($category) {
+				return !$category->parent_id;
+			});
+
+			$items = [];
+			$this->buildCategoryTree($items, $rootCategories);
+
+			if ($level = $this->getState('filter.level')) {
+				$items = array_filter($items, function ($category) use ($level) {
+					return $category->level <= $level;
+				});
+
+				$this->setTotal(count($items));
+			}
 		}
 
 		// Add the items to the internal cache.
@@ -143,45 +180,25 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
 	protected function getListQuery()
 	{
-		/*
-		$query = ' SELECT a.*, cc.title AS parentname, u.name AS editor, v.average AS ratingavg, ua.username AS usercatname, c.countid AS countid, ag.title AS access_level'
-		. ' FROM #__phocadownload_categories AS a '
-		. ' LEFT JOIN #__users AS u ON u.id = a.checked_out '
-		. ' LEFT JOIN #__viewlevels AS ag ON ag.id = a.access '
-		. ' LEFT JOIN #__phocadownload_categories AS cc ON cc.id = a.parent_id'
-		. ' LEFT JOIN #__phocadownload_votes_statistics AS v ON v.catid = a.id'
-		. ' LEFT JOIN #__users AS ua ON ua.id = a.owner_id'
-		. ' JOIN (SELECT c.parent_id, count(*) AS countid'
-		. ' FROM #__phocadownload_categories AS c'
-		.' GROUP BY c.parent_id ) AS c'
-		.' ON a.parent_id = c.parent_id'
-		. $where
-		. $orderby;
-		*/
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
-		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, a.image, a.description, a.published, a.checked_out_time, a.language, a.count_products, a.count_date, a.featured';
-		//$groupsFull	= $columns . ', ' .'l.title, uc.name, ag.title, c.title, c.id, cc.countid';
-		//$groupsFast	= 'a.id';
-		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+		$columns	= 'a.id, a.title, a.parent_id, a.alias, a.ordering, a.access, a.count, a.checked_out, a.hits, a.params, ' .
+			'a.image, a.description, a.published, a.checked_out_time, a.language, a.count_products, a.count_date, a.featured, ' .
+			'null AS children, 0 AS orderup, 0 AS orderdown, 1 AS level, a.id AS parentstree, a.title AS title_self, 0 AS groupname';
 
 		// Select the required fields from the table.
 		$query->select($this->getState('list.select', $columns));
 		$query->from('`#__phocacart_categories` AS a');
 
 		// Join over the language
-        $query->select('l.title AS language_title, l.image AS language_image');
+    $query->select('l.title AS language_title, l.image AS language_image');
 		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
-
-
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-
-
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
@@ -191,54 +208,25 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$query->select('c.title AS parentcat_title, c.id AS parentcat_id');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.parent_id');
 
-		//$query->select('ua.id AS userid, ua.username AS username, ua.name AS usernameno');
-		//$query->join('LEFT', '#__users AS ua ON ua.id = a.owner_id');
-
-
-
 		$query->select('cc.countid AS countid');
 		$query->join('LEFT', '(SELECT cc.parent_id, COUNT(*) AS countid'
 		. ' FROM #__phocacart_categories AS cc'
 		.' GROUP BY cc.parent_id ) AS cc'
 		.' ON a.parent_id = cc.parent_id');
 
+		// ASSOCIATION
+		// Join over the associations.
+		$assoc = Associations::isEnabled();
+		if ($assoc) {
+			$subQuery = $db->getQuery(true)
+				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
+				->from($db->quoteName('#__associations', 'asso'))
+				->join('LEFT', $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key'))
+				->where($db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id'))
+				->where($db->quoteName('asso.context') . ' = ' . $db->quote('com_phocacart.category'));
 
-        // ASSOCIATION
-        // Join over the associations.
-        $assoc = Associations::isEnabled();
-        if ($assoc) {
-            $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))
-                ->join(
-                    'LEFT',
-                    $db->quoteName('#__associations', 'asso') . ' ON ' . $db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id')
-                    . ' AND ' . $db->quoteName('asso.context') . ' = ' . $db->quote('com_phocacart.category')
-                )
-                ->join(
-                    'LEFT',
-                    $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key')
-                )
-                ->group(
-                    $db->quoteName(
-                        array(
-                            'a.id',
-                            'a.title',
-                            'a.alias',
-                            'a.checked_out',
-                            'a.checked_out_time',
-                            'a.published',
-                            'a.access',
-                            'a.ordering',
-							'a.featured',
-                            'a.language',
-                            'l.title' ,
-                            'l.image' ,
-                            'uc.name' ,
-                            'ag.title'
-                        )
-                    )
-                );
-        }
-
+			$query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
+		}
 
 		// Filter by access level.
 		if ($access = $this->getState('filter.access')) {

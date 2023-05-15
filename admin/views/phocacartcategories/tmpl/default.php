@@ -16,7 +16,6 @@ use Joomla\CMS\Router\Route;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-
 $r 			= $this->r;
 $user		= Factory::getUser();
 $userId		= $user->get('id');
@@ -196,4 +195,3 @@ echo $this->loadTemplate('batch');
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
-?>
