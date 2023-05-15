@@ -13,24 +13,24 @@ defined('_JEXEC') or die();
 require_once __DIR__ . '/phocacart.php';
 
 /**
- * Phoca Cart Category HTML helper class.
+ * Manufacturere HTML helper class.
  *
- * @since  4.0
+ * @since  4.1
  */
-abstract class JHTMLPhocacartcategory extends JHTMLPhocacart
+abstract class JHTMLPhocacartmanufacturer extends JHTMLPhocacart
 {
-  protected static $associationsTable = '#__phocacart_categories';
-  protected static $associationsContext = 'com_phocacart.category';
-  protected static $associationsEditTask = 'phocacartcategory.edit';
+  protected static $associationsTable = '#__phocacart_manufacturers';
+  protected static $associationsContext = 'com_phocacart.manufacturer';
+  protected static $associationsEditTask = 'phocacartmanufacturer.edit';
 
   /**
-   * @param int $categoryId
+   * @param int $manufacturerId
    * @return string
    * @throws Exception
    *
    * @since 4.1
    */
-  public static function association(int $categoryId): string	{
-    return self::associationsList($categoryId);
-  }
+  public static function association(int $manufacturerId): string	{
+    return self::associationsList($manufacturerId);
+	}
 }

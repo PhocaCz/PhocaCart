@@ -207,9 +207,11 @@ echo $r->endTblBody();
 echo $r->tblFoot($this->pagination->getListFooter(), 9);
 echo $r->endTable();
 
-echo $this->loadTemplate('batch');
-
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
+
+if ($forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+  echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
+}
+
 echo $r->endMainContainer();
 echo $r->endForm();
-?>

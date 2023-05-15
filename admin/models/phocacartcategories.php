@@ -36,11 +36,10 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 				'featured', 'a.featured'
 			);
 
-            // ASSOCIATION
-            $assoc = Associations::isEnabled();
-            if ($assoc){
-                $config['filter_fields'][] = 'association';
-            }
+			// ASSOCIATION
+			if (Associations::isEnabled()){
+				$config['filter_fields'][] = 'association';
+			}
 		}
 		parent::__construct($config);
 	}
@@ -50,16 +49,16 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		// Initialise variables.
 		$app = Factory::getApplication('administrator');
 
-        // ASSOCIATION
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
-            $this->context .= '.' . $layout;
-        }
-        // Adjust the context to support forced languages.
-        if ($forcedLanguage){
-            $this->context .= '.' . $forcedLanguage;
-        }
+		// ASSOCIATION
+		$forcedLanguage = $app->input->getCmd('forcedLanguage');
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout')) {
+			$this->context .= '.' . $layout;
+		}
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage){
+			$this->context .= '.' . $forcedLanguage;
+		}
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
@@ -87,10 +86,10 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		// List state information.
 		parent::populateState($ordering, $direction);
 
-        // ASSOCIATION
-        if (!empty($forcedLanguage)) {
-            $this->setState('filter.language', $forcedLanguage);
-        }
+		// ASSOCIATION
+		if (!empty($forcedLanguage)) {
+			$this->setState('filter.language', $forcedLanguage);
+		}
 	}
 
 	protected function getStoreId($id = '')
@@ -100,7 +99,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.category_id');
-        $id .= ':'.$this->getState('filter.language');
+		$id .= ':'.$this->getState('filter.language');
 		$id	.= ':'.$this->getState('filter.category_id');
 
 		return parent::getStoreId($id);
@@ -216,8 +215,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
 		// ASSOCIATION
 		// Join over the associations.
-		$assoc = Associations::isEnabled();
-		if ($assoc) {
+		if (Associations::isEnabled()) {
 			$subQuery = $db->getQuery(true)
 				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
 				->from($db->quoteName('#__associations', 'asso'))

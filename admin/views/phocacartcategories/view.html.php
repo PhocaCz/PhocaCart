@@ -48,25 +48,17 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 		$this->t['level'] = $this->state->get('filter.level');
 
 		$media = new PhocacartRenderAdminmedia();
-		
+
 		// ASSOCIATION
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal') {
 			$this->addToolbar();
 		} else {
-			// In article associations modal we need to remove language filter if forcing a language.
-			// We also need to change the category filter to show show categories with All or the forced language.
-			if (Factory::getApplication()->input->getCmd('forcedLanguage'))
-			{
-				// If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
-				//$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
-				//$this->filterForm->setField($languageXml, 'filter', true);
-
-				// Also, unset the active language filter so the search tools is not open by default with this filter.
+			if ($forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+				$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
+				$this->filterForm->setField($languageXml, 'filter', true);
 				unset($this->activeFilters['language']);
-
-				// One last changes needed is to change the category filter to just show categories with All language or with the forced language.
-				// $this->filterForm->setFieldAttribute('category_id', 'language', '*,' . $forcedLanguage, 'filter');
+				$this->filterForm->setFieldAttribute('category_id', 'language', '*,' . $forcedLanguage, 'filter');
 			}
 		}
 
