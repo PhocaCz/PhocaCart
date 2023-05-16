@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
@@ -32,6 +35,14 @@ class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 		$this->item		= $this->get('Item');
 
 		$media = new PhocacartRenderAdminmedia();
+
+		// ASSOCIATION
+		// If we are forcing a language in modal (used for associations).
+		if ($this->getLayout() === 'modal' && $forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+			// Set the language field to the forcedLanguage and disable changing it.
+			$this->form->setValue('language', null, $forcedLanguage);
+			$this->form->setFieldAttribute('language', 'readonly', 'true');
+		}
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -65,9 +76,11 @@ class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 
+		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
+			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
+		}
 
 		ToolbarHelper::divider();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
-?>

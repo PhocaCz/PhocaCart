@@ -38,7 +38,7 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 	 *
 	 * @since   3.7.0
 	 */
-	protected $itemTypes = array('phocacartitem', 'phocacartcategory');
+	protected $itemTypes = array('phocacartitem', 'phocacartcategory', 'phocacartmanufacturer');
 
 	/**
 	 * Has the extension association support
@@ -71,8 +71,11 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 
 		if ($typeName === 'phocacartcategory') {
 			$context    = 'com_phocacart.category';
-			$catidField = '';
 		}
+
+    if ($typeName === 'phocacartmanufacturer') {
+      $context    = 'com_phocacart.manufacturer';
+    }
 
 		// Get the associations.
 		$associations = Associations::getAssociations(
@@ -116,6 +119,10 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 			case 'phocacartcategory':
 				$table = Table::getInstance('PhocacartCategory', 'Table');
 				break;
+
+      case 'phocacartmanufacturer':
+        $table = Table::getInstance('PhocacartManufacturer', 'Table');
+        break;
 		}
 
 		if (empty($table))
@@ -186,6 +193,23 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 
 					$title = 'category';
 					break;
+
+        case 'phocacartmanufacturer':
+          $fields['created_user_id'] = false;
+          $fields['catid'] = '';
+          $fields['state'] = 'a.published';
+
+          $support['state'] = true;
+          $support['acl'] = false;
+          $support['checkout'] = true;
+          $support['level'] = false;
+
+          $tables = array(
+            'a' => '#__phocacart_manufacturers'
+          );
+
+          $title = 'manufacturer';
+          break;
 			}
 		}
 
@@ -198,6 +222,6 @@ class PhocaCartAssociationsHelper extends AssociationExtensionHelper
 		);
 	}
 
-    public function getAssociationsForItem($id = 0, $view = null) {
-    }
+  public function getAssociationsForItem($id = 0, $view = null) {
+  }
 }

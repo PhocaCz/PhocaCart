@@ -9,9 +9,14 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Associations;
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
 $r = $this->r;
 $user = Factory::getUser();
 $userId = $user->get('id');
@@ -24,6 +29,10 @@ if ($saveOrder && !empty($this->items)) {
     $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
 $sortFields = $this->getSortFields();
+
+$nrColumns = 7;
+$assoc     = Associations::isEnabled();
+if ($assoc) {$nrColumns = 8;}
 
 echo $r->jsJorderTable($listOrder);
 
@@ -38,7 +47,6 @@ echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
 //echo $r->endFilter();
 
 echo $r->startMainContainer();
-
 
 /*echo $r->startFilterBar();
 echo $r->inputFilterSearch($this->t['l'] . '_FILTER_SEARCH_LABEL', $this->t['l'] . '_FILTER_SEARCH_DESC',
@@ -64,8 +72,12 @@ echo $r->startTblHeader();
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-productcount">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRODUCT_COUNT', 'a.count_products', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
+echo '<th class="ph-productcount">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRODUCT_COUNT', 'a.count_products', $listDirn, $listOrder) . '</th>' . "\n";
+if ($assoc) {
+    echo '<th class="ph-association">' . Text::_('COM_PHOCACART_HEADING_ASSOCIATION') . '</th>' . "\n";
+}
+echo '<th class="ph-language">'.HTMLHelper::_('searchtools.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
@@ -108,6 +120,8 @@ if (is_array($this->items)) {
         }
         echo $r->td($checkO, "small", 'th');
 
+        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange) . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange, 'manufacturer'), "small");
+
         $pC = '<div class="center">' . $item->count_products;
         if (PhocacartUtils::validateDate($item->count_date)) {
             $pC .= '<br><small class="nowrap">(' . HTMLHelper::_('date', $item->count_date, 'd-m-Y H:i') . ')</small>';
@@ -115,8 +129,10 @@ if (is_array($this->items)) {
         $pC .= '</div>';
         echo $r->td($pC, "small");
 
-        //echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
-        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange) . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange, 'manufacturer'), "small");
+        if ($assoc) {
+          echo $r->td($item->association ? HTMLHelper::_('phocacartmanufacturer.association', $item->id) : '');
+        }
+        echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
 
 
         echo $r->td($item->id, "small");
@@ -128,7 +144,7 @@ if (is_array($this->items)) {
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 6);
+echo $r->tblFoot($this->pagination->getListFooter(), $nrColumns);
 echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);

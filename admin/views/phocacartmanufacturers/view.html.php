@@ -31,12 +31,11 @@ class PhocaCartCpViewPhocacartManufacturers extends HtmlView
 		$this->pagination		= $this->get('Pagination');
 		$this->state			= $this->get('State');
 		$this->filterForm   	= $this->get('FilterForm');
-        $this->activeFilters 	= $this->get('ActiveFilters');
+    $this->activeFilters 	= $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);
-			return false;
 		}
 
 		// Preprocess the list of items to find ordering divisions.
@@ -46,7 +45,16 @@ class PhocaCartCpViewPhocacartManufacturers extends HtmlView
 
 		$media = new PhocacartRenderAdminmedia();
 
-		$this->addToolbar();
+		if ($this->getLayout() !== 'modal') {
+			$this->addToolbar();
+		} else {
+			if ($forcedLanguage = JFactory::getApplication()->input->getCmd('forcedLanguage')) {
+				$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
+				$this->filterForm->setField($languageXml, 'filter', true);
+				unset($this->activeFilters['language']);
+			}
+		}
+
 		parent::display($tpl);
 	}
 

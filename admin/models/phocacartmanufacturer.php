@@ -8,6 +8,8 @@
  */
 defined( '_JEXEC' ) or die();
 
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -15,13 +17,16 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Associations;
 
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
-	protected 	$text_prefix	= 'com_phocacart';
+	protected $text_prefix	= 'com_phocacart';
+  public $typeAlias = 'com_phocacart.phocacartmanufacturer';
+  protected   $associationsContext    = 'com_phocacart.manufacturer';	// ASSOCIATION
 
 	protected function canDelete($record) {
 		return parent::canDelete($record);
@@ -51,6 +56,21 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
         $registry->loadString($item->metadata);
         $item->metadata = $registry->toArray();
       }
+
+      // ASSOCIATION
+      // Load associated manufacturers
+      if (Associations::isEnabled()) {
+        $item->associations = [];
+
+        if ($item->id) {
+          $associations = Associations::getAssociations('com_phocacart', '#__phocacart_manufacturers', $this->associationsContext, $item->id, 'id', 'alias', false);
+          n3tDebug::barDump($associations);
+
+          foreach ($associations as $tag => $association){
+            $item->associations[$tag] = $association->id;
+          }
+        }
+      }
     }
     return $item;
   }
@@ -61,14 +81,13 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 			$data = $this->getItem();
 		}
 
-        $this->preprocessData('com_phocacart.phocacartmanufacturer', $data);
+    $this->preprocessData('com_phocacart.phocacartmanufacturer', $data);
+
 		return $data;
 	}
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
@@ -78,22 +97,14 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 		}
 
 		if (empty($table->id)) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = Factory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_manufacturers');
 				$max = $db->loadResult();
 
-				$table->ordering = $max+1;
+				$table->ordering = $max + 1;
 			}
-		}
-		else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
 		}
 	}
 
@@ -103,30 +114,24 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 			if ((int)$savedId > 0) {
 				PhocacartCount::setProductCount(array(0 => (int)$savedId), 'manufacturer', 1);
 			}
+
 			return true;
 		} else {
 			return false;
 		}
-
 	}
 
-    public function featured($pks, $value = 0) {
+  public function featured($pks, $value = 0) {
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		ArrayHelper::toInteger($pks);
 
-		if (empty($pks))
-		{
+		if (empty($pks)) {
 			$this->setError(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
 			return false;
 		}
 
-		//$table = $this->getTable('PhocacartManufacturerFeatured', 'Table');
-
-
-
-		try
-		{
+		try {
 			$db = $this->getDbo();
 			$query = $db->getQuery(true)
 						->update($db->quoteName('#__phocacart_manufacturers'))
@@ -134,61 +139,45 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 						->where('id IN (' . implode(',', $pks) . ')');
 			$db->setQuery($query);
 			$db->execute();
-
-			/*if ((int) $value == 0)
-			{
-				// Adjust the mapping table.
-				// Clear the existing features settings.
-				$query = $db->getQuery(true)
-							->delete($db->quoteName('#__phocacart_manufacturer_featured'))
-							->where('product_id IN (' . implode(',', $pks) . ')');
-				$db->setQuery($query);
-				$db->execute();
-			}
-			else
-			{
-				// first, we find out which of our new featured articles are already featured.
-				$query = $db->getQuery(true)
-					->select('f.product_id')
-					->from('#__phocacart_manufacturer_featured AS f')
-					->where('product_id IN (' . implode(',', $pks) . ')');
-				//echo $query;
-				$db->setQuery($query);
-
-				$old_featured = $db->loadColumn();
-
-				// we diff the arrays to get a list of the articles that are newly featured
-				$new_featured = array_diff($pks, $old_featured);
-
-				// Featuring.
-				$tuples = array();
-				foreach ($new_featured as $pk)
-				{
-					$tuples[] = $pk . ', 0';
-				}
-				if (count($tuples))
-				{
-					$db = $this->getDbo();
-					$columns = array('product_id', 'ordering');
-					$query = $db->getQuery(true)
-						->insert($db->quoteName('#__phocacart_manufacturer_featured'))
-						->columns($db->quoteName($columns))
-						->values($tuples);
-					$db->setQuery($query);
-					$db->execute();
-				}
-			}*/
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->setError($e->getMessage());
 			return false;
 		}
-
-		//$table->reorder();
 
 		$this->cleanCache();
 
 		return true;
 	}
+
+  protected function preprocessForm(Form $form, $data, $group = 'content') {
+    if (Associations::isEnabled()){
+      $languages = LanguageHelper::getContentLanguages(false, false, null, 'ordering', 'asc');
+
+      if (count($languages) > 1) {
+        $addform = new \SimpleXMLElement('<form />');
+        $fields = $addform->addChild('fields');
+        $fields->addAttribute('name', 'associations');
+        $fieldset = $fields->addChild('fieldset');
+        $fieldset->addAttribute('name', 'item_associations');
+
+        foreach ($languages as $language) {
+          $field = $fieldset->addChild('field');
+          $field->addAttribute('name', $language->lang_code);
+          $field->addAttribute('type', 'Modal_Phocacartmanufacturer');
+          $field->addAttribute('language', $language->lang_code);
+          $field->addAttribute('label', $language->title);
+          $field->addAttribute('translate_label', 'false');
+          $field->addAttribute('select', 'true');
+          $field->addAttribute('new', 'true');
+          $field->addAttribute('edit', 'true');
+          $field->addAttribute('clear', 'true');
+          $field->addAttribute('propagate', 'true');
+        }
+
+        $form->load($addform, false);
+      }
+    }
+
+    parent::preprocessForm($form, $data, $group);
+  }
 }
