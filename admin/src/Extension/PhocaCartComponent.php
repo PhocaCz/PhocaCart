@@ -43,6 +43,18 @@ class PhocaCartComponent extends LegacyComponent implements CategoryServiceInter
    */
   public function getCategory(array $options = [], $section = ''): CategoryInterface
   {
+
+        // Hide wrong information about Phoca Cart categories in custom field list
+        $app    = Factory::getApplication();
+        $option = $app->input->get('option', '', 'string');
+        $context   = $app->input->get('context', '', 'string');
+        if ($option == 'com_fields' && $context == 'com_phocacart.phocacartitem') {
+            $document = $app->getDocument();
+            $document->addCustomTag('<style type="text/css"> table#fieldList tr th[scope=row] div div:nth-child(3) { display:none } </style>');
+        }
+
+
+
     return new class() implements CategoryInterface {
       public function getExtension(): string
       {
@@ -56,6 +68,8 @@ class PhocaCartComponent extends LegacyComponent implements CategoryServiceInter
         $node->addChild(new CategoryNode());
         return $node;
       }
+
+
     };
   }
 

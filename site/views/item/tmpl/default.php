@@ -277,6 +277,10 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 
+	// :L: ADD TO CART
+	$addToCartHidden = 0;// Button can be hidden based on price This variable is used for displaying Ask Question
+
+
 
 	// STOCK ===================================================
 	// Set stock: product, variations, or advanced stock status
@@ -291,6 +295,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 		$class_btn 					= 'ph-visibility-hidden';
 		$class_icon					= 'ph-display-none';
+		$addToCartHidden 			= 1;// used for displaying Ask Question
 	}
 
 	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
@@ -401,8 +406,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	echo $layoutAB->render($d);
 
 
-	// :L: ADD TO CART
-	$addToCartHidden = 0;// Button can be hidden based on price
+
 
 	if ($x->type == 3) {
 		// PRODUCTTYPE - price on demand product cannot be added to cart
@@ -549,6 +553,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	}
 
 	// ASK A QUESTION
+
 	if (((int)$this->t['item_askquestion'] == 1) || ($this->t['item_askquestion'] == 2 && ((int)$this->t['item_addtocart'] == 0 || $addToCartHidden != 0))) {
 
 		$d					= array();

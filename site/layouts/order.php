@@ -827,7 +827,9 @@ if ($tax_calculation > 0) {
 if (!empty($d['total'])) {
 	foreach($d['total'] as $k => $v) {
 
-		if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto') {
+		// display or not display shipping and payment methods with zero amount
+		//if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto' && $v->type != 'sbrutto' && $v->type != 'pbrutto') {
+			if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto') {
 			// Don't display coupon if null
 
 		} else if ($v->type == 'netto') {
