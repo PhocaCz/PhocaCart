@@ -26,7 +26,7 @@ class PhocacartPosPrint
 	public $lineSeparator;
 	private $printer;
 	private $connector	= null;
-
+	private string $lineEnd;
 
 
 	public function __construct($directPrint = 0) {

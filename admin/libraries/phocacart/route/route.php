@@ -576,8 +576,6 @@ class PhocacartRoute
 		// Find menu items of current language
 		$items = $menus->getItems($attributes, $values);
 
-
-
 		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
 		if (!empty($lang)) {
 			$attributes[] 	= 'language';
@@ -608,7 +606,8 @@ class PhocacartRoute
 		}
 
 		// Don't check ID for specific views. e.g. categories view does not have ID
-		$notCheckIdArray =  array('categories');
+		//$notCheckIdArray =  array('categories');
+		$notCheckIdArray = ['categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit'];
 
 		if(!$items) {
 			$itemId =  $app->input->get('Itemid', 0, 'int');

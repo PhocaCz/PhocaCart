@@ -1429,7 +1429,7 @@ class PhocacartOrder
         }
 
 
-        // Possible feature - remove this additional check based on mostly design parameters
+        // Possible feature - remove this additional check based on mostly design parameters - for now removed for POS
 
         // 1) canDisplayAddtocartAdvanced - Product on demand product cannot be ordered
         // canDisplayAddtocart (is a part of  1) - Display add to cart disabled or only for specific access level or only for specific group (checked previously in checkIfAccessPossible)
@@ -1461,21 +1461,26 @@ class PhocacartOrder
             $can_display_addtocart_price = $rights->canDisplayAddtocartPrice($itemP, $priceA);
             $can_display_addtocart_stock = $rights->canDisplayAddtocartStock($itemP, $stock);
 
+            $pos = PhocacartPos::isPos();
 
+            if ($pos) {
+                // Don't check "design" parameters
+            } else {
 
-            if (!$can_display_addtocart) {
-                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
-                return false;
-            }
+                if (!$can_display_addtocart) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                    return false;
+                }
 
-            if (!$can_display_addtocart_price) {
-                $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
-                return false;
-            }
+                if (!$can_display_addtocart_price) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                    return false;
+                }
 
-            if (!$can_display_addtocart_stock) {
-                $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
-                return false;
+                if (!$can_display_addtocart_stock) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                    return false;
+                }
             }
 
         }

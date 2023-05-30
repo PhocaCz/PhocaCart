@@ -36,6 +36,10 @@ if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
 $cur = '';
 //if ($this->p['item_currency'] != '') {
 $cur	= PhocacartCurrency::getDefaultCurrencyCode();
+
+///$curSelected = 2;
+///$curSelectedObj = PhocacartCurrency::getCurrency($curSelected);
+///$cur = $curSelectedObj->code;
 //}
 
 // START FOREACH OF PRODUCTS
@@ -160,8 +164,14 @@ if (!empty($this->t['products'])) {
             && isset($v->price) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 
             $priceFc = new PhocacartPrice;
+            ///$priceFc->setCurrency($curSelected);
             $priceF = $priceFc->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
 
+            /*if ($curSelectedObj->exchange_rate) {
+                $priceF['netto'] = $priceF['netto'] * $curSelectedObj->exchange_rate;
+                $priceF['brutto'] = $priceF['brutto'] * $curSelectedObj->exchange_rate;
+                $priceF['tax'] = $priceF['tax'] * $curSelectedObj->exchange_rate;
+            }*/
 
             if ($this->p['price_decimals'] != '') {
                 $priceF['netto'] = number_format($priceF['netto'], (int)$this->p['price_decimals']);
@@ -179,6 +189,7 @@ if (!empty($this->t['products'])) {
             if ($this->p['item_final_price_without_vat'] != '' && isset($priceF['netto']) && (int)$priceF['netto'] > 0) {
                 $oI['item_final_price_without_vat'] = $l.$this->p['item_final_price_without_vat'].$r.$priceF['netto'].$e.$this->p['item_final_price_without_vat'].$r;
             }
+
             if ($this->p['item_final_price_with_vat'] != '' && isset($priceF['brutto']) && (int)$priceF['brutto'] > 0) {
                 $oI['item_final_price_with_vat'] = $l.$this->p['item_final_price_with_vat'].$r.$priceF['brutto'].$e.$this->p['item_final_price_with_vat'].$r;
             }

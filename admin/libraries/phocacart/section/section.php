@@ -103,7 +103,6 @@ class PhocacartSection
 
 		} else {
 			$link = Route::_(PhocacartRoute::getPosRoute(1, 0, 0, 'section'));
-
 			$o .= '<li class="'.$s['c']['nav-item'].' active">';
 			$o .= '<a class="'.$s['c']['nav-link'].' active" href="'.$link.'">'.Text::_('COM_PHOCACART_DEFAULT_SECTION').'</a>';
 			$o .= '</li>';

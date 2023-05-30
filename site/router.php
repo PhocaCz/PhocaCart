@@ -118,6 +118,7 @@ class PhocacartRouter extends RouterView
     $question->setParent($item, 'productid');
     $question->setKey('id');// ID is not used by question but we need it because of SEF url (id is transformed to suffix "question" and product id replaces the ID in process
     // Question is managed by product id, not by question id
+
     $this->registerView($question);
 
     foreach ($viewsId as $k => $v) {
@@ -229,7 +230,13 @@ class PhocacartRouter extends RouterView
 
 
 	public function getQuestionId($segment, $query) {
-	    return $query['id'];// We need ID of product id
+        if ($segment == 'question') {
+            // There is following url:
+            // phoca-cart/category/product/question ... this seems to be question url for category and product
+            // phoca-cart/category/product/abc ... this seems to be wrong URL ... 404 should be returned
+            return $query['id'];// We need ID of product id
+        }
+        return false;
     }
 
 	public function getCategoryId($segment, $query) {
@@ -332,7 +339,6 @@ class PhocacartRouter extends RouterView
 
 
 	public function parse(&$segments){
-
 		return parent::parse($segments);
 	}
 
@@ -353,5 +359,7 @@ function PhocaCartParseRoute($segments) {
 
 	$app = Factory::getApplication();
 	$router = new PhocaCartRouter($app, $app->getMenu());
+
+
 	return $router->parse($segments);
 }

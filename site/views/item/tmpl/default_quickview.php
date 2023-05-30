@@ -150,84 +150,88 @@ if ($this->t['can_display_price']) {
 	$d['zero_price']		= 1;// Apply zero price if possible
 	echo$layoutP->render($d);
 }
-	if ( isset($x->description) && $x->description != '') {
-		echo '<div class="ph-desc">'. HTMLHelper::_('content.prepare', $x->description). '</div>';
-	}
-	// REWARD POINTS - NEEDED
-	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
-	if ($pointsN) {
-		echo '<div class="ph-item-reward-box">';
-		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
+if ( isset($x->description) && $x->description != '') {
+    echo '<div class="ph-desc">'. HTMLHelper::_('content.prepare', $x->description). '</div>';
+}
+// REWARD POINTS - NEEDED
+$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
+if ($pointsN) {
+    echo '<div class="ph-item-reward-box">';
+    echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
 
-		echo '<div class="ph-reward">'.$pointsN.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
+    echo '<div class="ph-reward">'.$pointsN.'</div>';
+    echo '</div>';
+    echo '<div class="ph-cb"></div>';
+}
 
-	// REWARD POINTS - RECEIVED
-	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
-	if ($pointsR) {
-		echo '<div class="ph-item-reward-box">';
-		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').'</div>';
+// REWARD POINTS - RECEIVED
+$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
+if ($pointsR) {
+    echo '<div class="ph-item-reward-box">';
+    echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').'</div>';
 
-		echo '<div class="ph-reward">'.$pointsR.'</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-
-
-	if (isset($x->manufacturertitle) && $x->manufacturertitle != '') {
-		echo '<div class="ph-item-manufacturer-box">';
-		echo '<div class="ph-manufacturer-txt">'.Text::_('COM_PHOCACART_MANUFACTURER').':</div>';
-		echo '<div class="ph-manufacturer">';
-		echo PhocacartRenderFront::displayLink($x->manufacturertitle, $x->manufacturerlink);
-		echo '</div>';
-		echo '</div>';
-		echo '<div class="ph-cb"></div>';
-	}
-
-	// STOCK ===================================================
-	// Set stock: product, variations, or advanced stock status
-	$class_btn	= '';
-	$class_icon	= '';
-	$this->stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
-
-	if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
+    echo '<div class="ph-reward">'.$pointsR.'</div>';
+    echo '</div>';
+    echo '<div class="ph-cb"></div>';
+}
 
 
-		if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$this->stock < 1) {
-			$class_btn 					= 'ph-visibility-hidden';
-			$class_icon					= 'ph-display-none';
-		}
+if (isset($x->manufacturertitle) && $x->manufacturertitle != '') {
+    echo '<div class="ph-item-manufacturer-box">';
+    echo '<div class="ph-manufacturer-txt">'.Text::_('COM_PHOCACART_MANUFACTURER').':</div>';
+    echo '<div class="ph-manufacturer">';
+    echo PhocacartRenderFront::displayLink($x->manufacturertitle, $x->manufacturerlink);
+    echo '</div>';
+    echo '</div>';
+    echo '<div class="ph-cb"></div>';
+}
 
-		if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
-			$d							= array();
-			$d['s']					    = $this->s;
-			$d['class']					= 'ph-item-stock-box';
-			$d['product_id']			= (int)$x->id;
-			$d['typeview']				= 'ItemQuick';
-            $d['stock_status_class']	= isset($this->t['stock_status']['stock_status_class']) ? $this->t['stock_status']['stock_status_class'] : '';
-			$d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
-			echo $layoutS->render($d);
-		}
+// :L: ADD TO CART
+$addToCartHidden = 0;// Button can be hidden based on price This variable is used for displaying Ask Question
 
-		if($this->t['stock_status']['min_quantity']) {
-			$dPOQ						= array();
-			$dPOQ['s']					= $this->s;
-			$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
-			$dPOQ['status']				= $this->t['stock_status']['min_quantity'];
-			echo $layoutPOQ->render($dPOQ);
-		}
+// STOCK ===================================================
+// Set stock: product, variations, or advanced stock status
+$class_btn	= '';
+$class_icon	= '';
+$this->stock = PhocacartStock::getStockItemsChangedByAttributes($this->t['stock_status'], $this->t['attr_options'], $x);
 
-		if($this->t['stock_status']['min_multiple_quantity']) {
-			$dPOQ						= array();
-			$dPOQ['s']					= $this->s;
-			$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
-			$dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
-			echo $layoutPOQ->render($dPOQ);
-		}
-	}
-	// END STOCK ================================================
+if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] == 3) {
+
+
+    if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$this->stock < 1) {
+        $class_btn 					= 'ph-visibility-hidden';
+        $class_icon					= 'ph-display-none';
+        $addToCartHidden 			= 1;// used for displaying Ask Question
+    }
+
+    if($this->t['stock_status']['stock_status'] || $this->t['stock_status']['stock_count'] !== false) {
+        $d							= array();
+        $d['s']					    = $this->s;
+        $d['class']					= 'ph-item-stock-box';
+        $d['product_id']			= (int)$x->id;
+        $d['typeview']				= 'ItemQuick';
+        $d['stock_status_class']	= isset($this->t['stock_status']['stock_status_class']) ? $this->t['stock_status']['stock_status_class'] : '';
+        $d['stock_status_output'] 	= PhocacartStock::getStockStatusOutput($this->t['stock_status']);
+        echo $layoutS->render($d);
+    }
+
+    if($this->t['stock_status']['min_quantity']) {
+        $dPOQ						= array();
+        $dPOQ['s']					= $this->s;
+        $dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY');
+        $dPOQ['status']				= $this->t['stock_status']['min_quantity'];
+        echo $layoutPOQ->render($dPOQ);
+    }
+
+    if($this->t['stock_status']['min_multiple_quantity']) {
+        $dPOQ						= array();
+        $dPOQ['s']					= $this->s;
+        $dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
+        $dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
+        echo $layoutPOQ->render($dPOQ);
+    }
+}
+// END STOCK ================================================
 
 // This form can get two events:
 // when option selected - price or image is changed id=phItemPriceBoxForm
@@ -258,8 +262,7 @@ $d['typeview']				= 'ItemQuick';
 echo $layoutAB->render($d);
 
 
-// :L: ADD TO CART
-$addToCartHidden = 0;// Button can be hidden based on price
+
 if ($x->type == 3) {
     // PRODUCTTYPE - price on demand price cannot be added to cart
     $addToCartHidden = 1;
