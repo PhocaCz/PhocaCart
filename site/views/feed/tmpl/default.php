@@ -34,13 +34,14 @@ if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
 // one time, not in foreach. Of course currency class is singleton so we don't run sql query many time
 // but we don't need to run the function many times too.
 $cur = '';
-//if ($this->p['item_currency'] != '') {
-$cur	= PhocacartCurrency::getDefaultCurrencyCode();
+if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id'] > 0) {
+    $forceCurrencyObject = PhocacartCurrency::getCurrency((int)$this->t['feed']['currency_id']);
+    $cur = $forceCurrencyObject->code;
+} else {
+    $cur	= PhocacartCurrency::getDefaultCurrencyCode();
+}
 
-///$curSelected = 2;
-///$curSelectedObj = PhocacartCurrency::getCurrency($curSelected);
-///$cur = $curSelectedObj->code;
-//}
+
 
 // START FOREACH OF PRODUCTS
 $o['items'] = '';
@@ -139,7 +140,17 @@ if (!empty($this->t['products'])) {
             && isset($v->price_original) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 
             $priceOc 	= new PhocacartPrice;
+            if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id'] > 0) {
+                $priceOc->setCurrency((int)$this->t['feed']['currency_id']);
+            }
             $priceO		= $priceOc->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
+
+
+            if (isset($forceCurrencyObject->exchange_rate) && $forceCurrencyObject->exchange_rate > 0) {
+                $priceO['netto'] = $priceO['netto'] * $forceCurrencyObject->exchange_rate;
+                $priceO['brutto'] = $priceO['brutto'] * $forceCurrencyObject->exchange_rate;
+                $priceO['tax'] = $priceO['tax'] * $forceCurrencyObject->exchange_rate;
+            }
 
             if ($this->p['price_decimals'] != '') {
                 $priceO['netto'] = number_format($priceO['netto'], (int)$this->p['price_decimals']);
@@ -164,14 +175,17 @@ if (!empty($this->t['products'])) {
             && isset($v->price) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 
             $priceFc = new PhocacartPrice;
-            ///$priceFc->setCurrency($curSelected);
+            if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id'] > 0) {
+                $priceFc->setCurrency((int)$this->t['feed']['currency_id']);
+            }
             $priceF = $priceFc->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
 
-            /*if ($curSelectedObj->exchange_rate) {
-                $priceF['netto'] = $priceF['netto'] * $curSelectedObj->exchange_rate;
-                $priceF['brutto'] = $priceF['brutto'] * $curSelectedObj->exchange_rate;
-                $priceF['tax'] = $priceF['tax'] * $curSelectedObj->exchange_rate;
-            }*/
+            if (isset($forceCurrencyObject->exchange_rate) && $forceCurrencyObject->exchange_rate > 0) {
+                $priceF['netto'] = $priceF['netto'] * $forceCurrencyObject->exchange_rate;
+                $priceF['brutto'] = $priceF['brutto'] * $forceCurrencyObject->exchange_rate;
+                $priceF['tax'] = $priceF['tax'] * $forceCurrencyObject->exchange_rate;
+            }
+
 
             if ($this->p['price_decimals'] != '') {
                 $priceF['netto'] = number_format($priceF['netto'], (int)$this->p['price_decimals']);

@@ -1340,6 +1340,7 @@ class PhocacartOrderStatus
 
 	public static function getRecipient($bas) {
 
+		$recipient = '';
 		if (isset($bas['b']['email_contact']) && $bas['b']['email_contact'] != '' && MailHelper::isEmailAddress($bas['b']['email_contact'])) {
 			$recipient = $bas['b']['email_contact'];
 		} else if (isset($bas['b']['email']) && $bas['b']['email'] != '' && MailHelper::isEmailAddress($bas['b']['email'])) {

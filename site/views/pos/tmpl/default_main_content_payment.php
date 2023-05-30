@@ -29,7 +29,7 @@ echo '</div>';
 
 echo '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
 //$totalAmount = 0;
-if ($this->t['total'][0]['brutto_currency'] !== 0) {
+if (isset($this->t['total'][0]['brutto_currency']) &&  $this->t['total'][0]['brutto_currency'] !== 0) {
 	echo '<div class="ph-pos-total-to-pay ph-right">' . $price->getPriceFormat($this->t['total'][0]['brutto_currency'], 0, 1).'</div>';
 	//$totalAmount = $this->t['total'][0]['brutto_currency'];
 } else if ($this->t['total'][0]['brutto'] !== 0) {
@@ -51,12 +51,14 @@ echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
 // PLUGIN
 $output 	= '';
 $payment	= $this->cart->getPaymentMethod();
-//$dispatcher = J EventDispatcher::getInstance();
-JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
-$eventData 					= array();
-$eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
-JFactory::getApplication()->triggerEvent('onPCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
-echo $output;
+if (isset($payment['method'])) {
+	//$dispatcher = J EventDispatcher::getInstance();
+	JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
+	$eventData               = array();
+	$eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
+	JFactory::getApplication()->triggerEvent('onPCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
+	echo $output;
+}
 // END PLUGIN
 
 

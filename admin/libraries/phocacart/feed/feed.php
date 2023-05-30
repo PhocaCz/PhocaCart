@@ -18,7 +18,7 @@ class PhocacartFeed
 
 		$db = Factory::getDBO();
 
-		$q = ' SELECT a.id, a.title, a.item_params, a.feed_params, a.feed_plugin, a.header, a.footer, a.root, a.item, a.language'
+		$q = ' SELECT a.id, a.title, a.item_params, a.feed_params, a.feed_plugin, a.header, a.footer, a.root, a.item, a.language, a.currency_id'
 			.' FROM #__phocacart_feeds AS a'
 			.' WHERE a.id = '.(int) $id
 			.' AND a.published = 1';
