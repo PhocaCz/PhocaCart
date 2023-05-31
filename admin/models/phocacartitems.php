@@ -265,7 +265,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			$query->where('a.language = ' . $db->quote($language));
 		}
 
-		// Search EAN, SKU in attributes (advanced stock management)
+		// Search EAN, SKU in attributes (advanced stock management) - Moved to subquery
 		//$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
 
 		// Filter by search in title
