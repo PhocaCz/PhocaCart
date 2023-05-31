@@ -266,7 +266,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		}
 
 		// Search EAN, SKU in attributes (advanced stock management)
-		$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
+		//$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -299,8 +299,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 							$wheresSub[]	= 'a.description LIKE '.$word;
 							$wheresSub[]	= 'a.sku LIKE '.$word;
 							$wheresSub[]	= 'a.ean LIKE '.$word;
-							$wheresSub[]	= 'ps.sku LIKE '.$word;
-							$wheresSub[]	= 'ps.ean LIKE '.$word;
+							$wheresSub[]	= 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $word . ' OR ps.ean LIKE ' . $word . ') ';
 							$wheres[]		= implode(' OR ', $wheresSub);
 						}
 
@@ -319,8 +318,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 						$wheresSub[]	= 'a.description LIKE '.$text;
 						$wheresSub[]	= 'a.sku LIKE '.$text;
 						$wheresSub[]	= 'a.ean LIKE '.$text;
-						$wheresSub[]	= 'ps.sku LIKE '.$text;
-						$wheresSub[]	= 'ps.ean LIKE '.$text;
+						$wheresSub[]	= 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $text . ' OR ps.ean LIKE ' . $text . ') ';
 						$query->where('(' . implode(') OR (', $wheresSub) . ')');
 
 						break;
