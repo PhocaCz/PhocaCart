@@ -256,8 +256,8 @@ class PhocacartRouter extends RouterView
 				->bind(':alias', $segment)
 				->bind(':parent_id', $query['id'], ParameterType::INTEGER);
       if (Multilanguage::isEnabled()) {
-        if (isset($query['language'])) {
-          $lang = $query['language'];
+        if (isset($query['lang'])) {
+          $lang = $query['lang'];
         } else {
           $lang = Factory::getApplication()->getLanguage()->getTag();
         }
@@ -341,8 +341,8 @@ class PhocacartRouter extends RouterView
         ])
         ->bind(':alias', $segment);
       if (Multilanguage::isEnabled()) {
-        if (isset($query['language'])) {
-          $lang = $query['language'];
+        if (isset($query['lang'])) {
+          $lang = $query['lang'];
         } else {
           $lang = Factory::getApplication()->getLanguage()->getTag();
         }
