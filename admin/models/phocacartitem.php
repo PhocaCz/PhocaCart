@@ -153,10 +153,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$item->set('additional_download_files', PhocacartFileAdditional::getProductFilesByProductId((int)$item->id, 2));
 			$item->set('additional_images', PhocacartImageAdditional::getImagesByProductId((int)$item->id, 2));
 
-			$attributes = PhocacartAttribute::getAttributesById((int)$item->id, 2);
+			$attributes = PhocacartAttribute::getAttributesById((int)$item->id, 2, true);
 			if (!empty($attributes)) {
 				foreach ($attributes as $k => $v) {
-					$attributes[$k]['options']	= PhocacartAttribute::getOptionsById((int)$v['id'], 2);
+					$attributes[$k]['options']	= PhocacartAttribute::getOptionsById((int)$v['id'], 2, true);
 				}
 			}
 			$item->set('attributes', $attributes);

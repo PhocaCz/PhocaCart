@@ -240,38 +240,45 @@ class PhocacartRouter extends RouterView
     }
 
 	public function getCategoryId($segment, $query) {
-
         if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'categories') {
             $query['id'] = 0;
         }
-
 
 	    if ($this->noIDs)  {
 	        $db = Factory::getDbo();
 			$dbquery = $db->getQuery(true);
 			$dbquery->select($db->quoteName('id'))
 				->from($db->quoteName('#__phocacart_categories'))
-				->where(
-					[
+				->where([
 						$db->quoteName('alias') . ' = :alias',
 						$db->quoteName('parent_id') . ' = :parent_id',
-					]
-				)
+        ])
 				->bind(':alias', $segment)
 				->bind(':parent_id', $query['id'], ParameterType::INTEGER);
-			$db->setQuery($dbquery);
+      if (Multilanguage::isEnabled()) {
+        if (isset($query['lang'])) {
+          $lang = $query['lang'];
+        } else {
+          $lang = Factory::getApplication()->getLanguage()->getTag();
+        }
 
+        $dbquery
+          ->where([
+            $db->quoteName('language') . ' in (:language, ' . $db->quote('*') . ')'
+          ])
+          ->bind(':language', $lang);
+      }
+
+			$db->setQuery($dbquery);
 			return (int) $db->loadResult();
 		}
 
         $category = false;
 	    if (isset($query['id'])) {
-
-
 		    if ((int)$query['id'] > 0) {
-                $category = PhocaCartCategory::getCategoryById($query['id']);
+        $category = PhocacartCategory::getCategoryById($query['id']);
             } else if ((int)$segment > 0) {
-		        $category = PhocaCartCategory::getCategoryById((int)$segment);
+        $category = PhocacartCategory::getCategoryById((int)$segment);
                 if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
                     // We don't have root category with 0 so we need to start with segment one
                     return (int)$category->id;
@@ -324,16 +331,33 @@ class PhocacartRouter extends RouterView
 
 	public function getItemId($segment, $query)
 	{
-
 		if ($this->noIDs) {
 			$db = Factory::getDbo();
-		    $query = 'SELECT a.id';
-		    $query .= ' FROM #__phocacart_products AS a'
-				.' LEFT JOIN #__phocacart_product_categories AS pc ON a.id = pc.product_id'
-			    .' WHERE a.alias = '.$db->q($segment);
-		    $db->setQuery($query);
+      $dbquery = $db->getQuery(true);
+      $dbquery->select($db->quoteName('id'))
+        ->from($db->quoteName('#__phocacart_products'))
+        ->where([
+          $db->quoteName('alias') . ' = :alias',
+        ])
+        ->bind(':alias', $segment);
+      if (Multilanguage::isEnabled()) {
+        if (isset($query['lang'])) {
+          $lang = $query['lang'];
+        } else {
+          $lang = Factory::getApplication()->getLanguage()->getTag();
+        }
+
+        $dbquery
+          ->where([
+            $db->quoteName('language') . ' in (:language, ' . $db->quote('*') . ')'
+          ])
+          ->bind(':language', $lang);
+      }
+
+      $db->setQuery($dbquery);
 			return (int) $db->loadResult();
 		}
+
 		return (int) $segment;
 	}
 
