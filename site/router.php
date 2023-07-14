@@ -15,6 +15,7 @@ use Joomla\CMS\Component\Router\Rules\MenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\Database\ParameterType;
 
 if (! class_exists('PhocaCartLoader')) {
@@ -240,9 +241,11 @@ class PhocacartRouter extends RouterView
     }
 
 	public function getCategoryId($segment, $query) {
+
         if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'categories') {
             $query['id'] = 0;
         }
+
 
 	    if ($this->noIDs)  {
 	        $db = Factory::getDbo();
@@ -275,6 +278,8 @@ class PhocacartRouter extends RouterView
 
         $category = false;
 	    if (isset($query['id'])) {
+
+
 		    if ((int)$query['id'] > 0) {
         $category = PhocacartCategory::getCategoryById($query['id']);
             } else if ((int)$segment > 0) {
@@ -331,6 +336,7 @@ class PhocacartRouter extends RouterView
 
 	public function getItemId($segment, $query)
 	{
+
 		if ($this->noIDs) {
 			$db = Factory::getDbo();
       $dbquery = $db->getQuery(true);

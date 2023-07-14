@@ -24,6 +24,12 @@
 	<option value="5">COM_PHOCACART_ORDER</option>
 	<option value="6">COM_PHOCACART_CATALOG</option>
 	<option value="7">COM_PHOCACART_CATALOG_INCLUDING_NETTO</option>
+	<option value="8">COM_PHOCACART_CHECKOUT_SHIPPING</option>
+	<option value="9">COM_PHOCACART_CHECKOUT_SHIPPING_INCLUDING_NETTO</option>
+	<option value="10">COM_PHOCACART_CHECKOUT_PAYMENT</option>
+	<option value="11">COM_PHOCACART_CHECKOUT_PAYMENT_INCLUDING_NETTO</option>
+	<option value="12">COM_PHOCACART_PRODUCT_PRICES_DISCOUNT</option>
+	<option value="13">COM_PHOCACART_PRODUCT_PRICES_DISCOUNT_INCLUDING_NETTO</option>
 </field>
 
 <field name="ordering" type="PhocacartOrdering" table="tax" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />

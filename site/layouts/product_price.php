@@ -143,56 +143,65 @@ if (isset($d['discount']) && $d['discount']) {
     echo $labelTax . $priceTax;
     echo $labelBrutto . $priceBrutto;
 
-	?>
 
-
-
-
-	<?php
 
 	// PRODUCT DISCOUNT
-	if (isset ($d['discount']) && $d['discount'] && $displayPrice == 1) { ?>
-		<?php if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0
-                    && ($d['priceitemsdiscount']['brutto'] != $d['priceitemsdiscount']['netto'])) { ?>
-			<div class="ph-price-txt ph-price-netto-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['nettotxt'] ?></div>
-			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscount']['nettoformat'] ?></div>
-		<?php } ?>
+    $displayPriceItems = PhocaCartPrice::displayPriceItems($d['priceitemsdiscount'], 'pricediscount');// Display Netto, Tax, Brutto?
+	if (isset ($d['discount']) && $d['discount'] && $displayPrice == 1) {
 
-		<?php if ($d['priceitemsdiscount']['tax'] && $d['priceitemsdiscount']['taxcalc'] > 0) { ?>
-			<div class="ph-tax-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['taxtxt'] ?></div>
-			<div class="ph-tax ph-price-discount"><?php echo $d['priceitemsdiscount']['taxformat'] ?></div>
-		<?php } ?>
+        if ($d['priceitemsdiscount']['netto'] && $d['priceitemsdiscount']['taxcalc'] > 0
+                    && ($d['priceitemsdiscount']['brutto'] != $d['priceitemsdiscount']['netto'])) {
 
-		<?php if ($d['priceitemsdiscount']['brutto']) { ?>
-			<div class="ph-price-txt ph-price-brutto-txt ph-price-discount"><?php echo $d['priceitemsdiscount']['bruttotxt'] ?></div>
-			<div class="ph-price-brutto ph-price-discount ph-price-discount-product"><?php echo $d['priceitemsdiscount']['bruttoformat'] ?></div>
-		<?php } ?>
-	<?php }?>
+            if ($displayPriceItems['netto'] == 1) {
+			    echo '<div class="ph-price-txt ph-price-netto-txt ph-price-discount">'.$d['priceitemsdiscount']['nettotxt'].'</div>';
+			    echo '<div class="ph-price-netto ph-price-discount">'.$d['priceitemsdiscount']['nettoformat'].'</div>';
+		    }
+        }
 
-	<?php
+        if ($d['priceitemsdiscount']['tax'] && $d['priceitemsdiscount']['taxcalc'] > 0) {
+            if ($displayPriceItems['tax'] == 1) {
+                echo '<div class="ph-tax-txt ph-price-discount">' . $d['priceitemsdiscount']['taxtxt'] . '</div>';
+                echo '<div class="ph-tax ph-price-discount">' . $d['priceitemsdiscount']['taxformat'] . '</div>';
+            }
+        }
+
+        if ($d['priceitemsdiscount']['brutto']) {
+            if ($displayPriceItems['brutto'] == 1) {
+                echo '<div class="ph-price-txt ph-price-brutto-txt ph-price-discount">' . $d['priceitemsdiscount']['bruttotxt'] . '</div>';
+                echo '<div class="ph-price-brutto ph-price-discount ph-price-discount-product">' . $d['priceitemsdiscount']['bruttoformat'] . '</div>';
+            }
+        }
+    }
+
 	// CART DISCOUNT DISPLAYED IN PRODUCT VIEWS (under specific conditions only)
-	if (isset ($d['discountcart']) && $d['discountcart'] && $displayPrice == 1) { ?>
-		<?php if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0
-                && ($d['priceitemsdiscountcart']['brutto'] != $d['priceitemsdiscountcart']['netto'])) { ?>
-			<div class="ph-price-txt ph-price-netto-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettotxt'] ?></div>
-			<div class="ph-price-netto ph-price-discount"><?php echo $d['priceitemsdiscountcart']['nettoformat'] ?></div>
-		<?php } ?>
+	if (isset ($d['discountcart']) && $d['discountcart'] && $displayPrice == 1) {
+		if ($d['priceitemsdiscountcart']['netto'] && $d['priceitemsdiscountcart']['taxcalc'] > 0
+                && ($d['priceitemsdiscountcart']['brutto'] != $d['priceitemsdiscountcart']['netto'])) {
+			if ($displayPriceItems['netto'] == 1) {
+                echo '<div class="ph-price-txt ph-price-netto-txt ph-price-discount">' . $d['priceitemsdiscountcart']['nettotxt'] . '</div>';
+                echo '<div class="ph-price-netto ph-price-discount">' . $d['priceitemsdiscountcart']['nettoformat'] . '</div>';
+            }
+		}
 
-		<?php if ($d['priceitemsdiscountcart']['tax'] && $d['priceitemsdiscountcart']['taxcalc'] > 0) { ?>
-			<div class="ph-tax-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['taxtxt'] ?></div>
-			<div class="ph-tax ph-price-discount"><?php echo $d['priceitemsdiscountcart']['taxformat'] ?></div>
-		<?php } ?>
+		if ($d['priceitemsdiscountcart']['tax'] && $d['priceitemsdiscountcart']['taxcalc'] > 0) {
+            if ($displayPriceItems['tax'] == 1) {
+                echo '<div class="ph-tax-txt ph-price-discount">' . $d['priceitemsdiscountcart']['taxtxt'] . '</div>';
+                echo '<div class="ph-tax ph-price-discount">' . $d['priceitemsdiscountcart']['taxformat'] . '</div>';
+            }
+        }
 
-		<?php if ($d['priceitemsdiscountcart']['brutto']) { ?>
-			<div class="ph-price-txt ph-price-brutto-txt ph-price-discount"><?php echo $d['priceitemsdiscountcart']['bruttotxt'] ?></div>
-			<div class="ph-price-brutto ph-price-discount ph-price-discount-cart"><?php echo $d['priceitemsdiscountcart']['bruttoformat'] ?></div>
-		<?php } ?>
-	<?php }?>
+		if ($d['priceitemsdiscountcart']['brutto']) {
+            if ($displayPriceItems['brutto'] == 1) {
+                echo '<div class="ph-price-txt ph-price-brutto-txt ph-price-discount">' . $d['priceitemsdiscountcart']['bruttotxt'] . '</div>';
+                echo '<div class="ph-price-brutto ph-price-discount ph-price-discount-cart">' . $d['priceitemsdiscountcart']['bruttoformat'] . '</div>';
+            }
+		}
+	}
 
 
 
 
-	<?php if ($d['priceitems']['baseformat']) { ?>
+	if ($d['priceitems']['baseformat']) { ?>
 		<div class="ph-price-txt"><?php echo Text::_('COM_PHOCACART_UNIT_PRICE') ?></div>
 		<div class="ph-price-base"><?php echo $d['priceitems']['baseformat'] ?></div>
 	<?php } ?>

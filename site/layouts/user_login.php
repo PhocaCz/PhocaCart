@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Helper\AuthenticationHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\Registry\Registry;
@@ -57,6 +59,47 @@ if (PluginHelper::isEnabled('system', 'remember')) {
         </div>
     </div><?php
 }
+
+$extraButtons = AuthenticationHelper::getLoginButtons('com-users-login__form');
+if (!empty($extraButtons)) {
+    foreach ($extraButtons as $button) {
+        $dataAttributeKeys = array_filter(array_keys($button), function ($key) {
+            return substr($key, 0, 5) == 'data-';
+        });
+        ?>
+        <div class="com-users-login__submit control-group">
+            <div class="controls">
+                <button type="button"
+                        class="btn btn-secondary w-100 <?php echo $button['class'] ?? '' ?>"
+                        <?php foreach ($dataAttributeKeys as $key) : ?>
+                            <?php echo $key ?>="<?php echo $button[$key] ?>"
+                        <?php endforeach; ?>
+                        <?php if ($button['onclick']) : ?>
+                        onclick="<?php echo $button['onclick'] ?>"
+                        <?php endif; ?>
+                        title="<?php echo Text::_($button['label']) ?>"
+                        id="<?php echo $button['id'] ?>"
+                >
+                    <?php if (!empty($button['icon'])) : ?>
+                        <span class="<?php echo $button['icon'] ?>"></span>
+                    <?php elseif (!empty($button['image'])) : ?>
+                        <?php echo HTMLHelper::_('image', $button['image'], Text::_($button['tooltip'] ?? ''), [
+                            'class' => 'icon',
+                        ], true) ?>
+                    <?php elseif (!empty($button['svg'])) : ?>
+                        <?php echo $button['svg']; ?>
+                    <?php endif; ?>
+                    <?php echo Text::_($button['label']) ?>
+                </button>
+            </div>
+        </div>
+    <?php
+    }
+}
+
+
+
+
 echo '<button type="submit" tabindex="0" name="Submit" class="'.$d['s']['c']['btn.btn-primary'].' ph-btn">'. Text::_('JLOGIN') .'</button>'. "\n";
 echo '</div>'. "\n";// end form inline
 

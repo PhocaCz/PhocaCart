@@ -53,14 +53,13 @@ if (!empty($this->t['products'])) {
 
 
         // PRODUCT - Specific FEED plugin
+        $feedName = trim($this->t['feed']['feed_plugin']);
          $paramsFeedA = array();
         if (isset($v->params_feed) && $v->params_feed != '') {
 
             $registry = new Registry;
             $registry->loadString($v->params_feed);
             $paramsFeedA = $registry->toArray();
-
-            $feedName = trim($this->t['feed']['feed_plugin']);
 
             if (isset($paramsFeedA[$feedName]['pcf_param_published']) && $paramsFeedA[$feedName]['pcf_param_published'] == 0) {
                 // The product is unpublished from feed

@@ -151,6 +151,15 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
 		echo '<div class="radio">';
 
+		// We can hide netto and tax by tax method
+		$displayPriceItems = PhocaCartPrice::displayPriceItems($priceI, 'checkoutpayment');
+		if ($displayPriceItems['tax'] == 0) {
+			$priceI['taxformat'] = '';
+		}
+		if ($displayPriceItems['netto'] == 0) {
+			$priceI['nettoformat'] = '';
+		}
+
 		echo '<div class="'.$this->s['c']['row'].'">';
 		if ($this->t['zero_payment_price'] == 0 && $priceI['zero'] == 1) {
 			// Display blank price field

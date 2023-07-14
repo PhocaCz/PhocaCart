@@ -52,6 +52,7 @@ class PhocaCartViewItem extends HtmlView
 		$this->category			= $model->getCategory($id, $catid);
 
 		$this->item				= $model->getItem($id, $catid);
+		
 		$this->t['catid']		= 0;
 		if (isset($this->category[0]->id)) {
 			$this->t['catid']	= (int)$this->category[0]->id;

@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="512"
-   height="512"
-   viewBox="0 0 512 512"
+   width="1000"
+   height="350"
+   viewBox="0 0 1000 350"
    version="1.1"
    id="svg5"
    inkscape:version="1.2 (1:1.2.1+202207142221+cd75a1ee6d)"
-   sodipodi:docname="release.svg"
+   sodipodi:docname="release-phoca-cart-news.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,12 +27,12 @@
      units="px"
      inkscape:showpageshadow="2"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.3485714"
-     inkscape:cx="327.75424"
-     inkscape:cy="359.63984"
+     inkscape:zoom="0.95358398"
+     inkscape:cx="450.40606"
+     inkscape:cy="217.07579"
      inkscape:window-width="1920"
      inkscape:window-height="1015"
-     inkscape:window-x="1920"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1">
@@ -42,24 +42,24 @@
        originx="0"
        originy="0" />
     <sodipodi:guide
-       position="0,512"
-       orientation="0,512"
-       id="guide3202"
+       position="0,350"
+       orientation="0,1000"
+       id="guide1646"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="512,512"
-       orientation="512,0"
-       id="guide3204"
+       position="1000,350"
+       orientation="350,0"
+       id="guide1648"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="512,0"
-       orientation="0,-512"
-       id="guide3206"
+       position="1000,0"
+       orientation="0,-1000"
+       id="guide1650"
        inkscape:locked="false" />
     <sodipodi:guide
        position="0,0"
-       orientation="-512,0"
-       id="guide3208"
+       orientation="-350,0"
+       id="guide1652"
        inkscape:locked="false" />
   </sodipodi:namedview>
   <defs
@@ -69,7 +69,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       d="m -288.54911,96.961607 a 6.3836136,6.3836136 0 0 0 -6.38361,6.383623 v 81.08678 a 6.3836136,6.3836136 0 0 0 6.38361,6.38362 h 81.08253 a 6.3836136,6.3836136 0 0 0 6.38362,-6.38362 v -81.08678 a 6.3836136,6.3836136 0 0 0 -6.38362,-6.383623 z m 16.08373,16.187573 c 0.59061,-0.0328 1.13394,0.12512 1.64161,0.48209 0.50767,0.3594 0.84234,0.80946 1.00576,1.35486 l 2.41471,8.30785 46.51739,-2.43961 c 0.82938,-0.0428 1.52094,0.2446 2.07384,0.8603 0.55036,0.60568 0.76908,1.33418 0.63588,2.17362 l -3.89826,24.93652 c -0.13832,0.73633 -0.56957,1.49673 -1.28837,2.27342 -0.71877,0.78659 -1.65597,1.2111 -2.79687,1.27174 l -32.86072,1.72058 3.03797,10.25293 27.7751,-1.45459 c 0.72631,-0.0402 1.3515,0.17832 1.88682,0.64834 0.52274,0.48256 0.80345,1.08569 0.84366,1.81201 0.0377,0.72631 -0.17831,1.35156 -0.64834,1.88683 -0.48256,0.52533 -1.0857,0.80642 -1.81201,0.84366 l -2.59749,0.13703 0.13703,2.59345 c 0.0377,0.72884 -0.17831,1.35582 -0.66081,1.87851 -0.47247,0.53535 -1.07072,0.81889 -1.79954,0.85613 -0.72632,0.0377 -1.35326,-0.17832 -1.8785,-0.66081 -0.53533,-0.4725 -0.81434,-1.07324 -0.852,-1.79955 l -0.13704,-2.59344 -15.57261,0.81042 0.13299,2.59749 c 0.0377,0.72882 -0.17576,1.35569 -0.64834,1.8785 -0.48254,0.53523 -1.0857,0.81804 -1.81201,0.85613 -0.72633,0.0402 -1.35152,-0.17831 -1.88682,-0.66081 -0.52527,-0.47247 -0.80602,-1.07323 -0.84368,-1.79954 l -0.13704,-2.59749 -1.60837,0.0832 c -0.62328,0.0326 -1.1928,-0.1115 -1.72058,-0.42807 -0.51522,-0.31666 -0.88347,-0.63191 -1.10964,-0.93094 l -0.28677,-0.50703 -13.04981,-49.3432 -2.80539,0.14554 c -0.69615,0.0377 -1.31238,-0.18087 -1.85773,-0.66081 -0.54538,-0.47243 -0.83511,-1.06908 -0.87277,-1.79539 -0.0377,-0.72884 0.1864,-1.35324 0.6816,-1.8785 0.4926,-0.53536 1.08259,-0.81817 1.77875,-0.85613 z"
+       d="m 10.656137,-65.038385 a 6.3836136,6.3836136 0 0 0 -6.38361,6.383623 v 81.08678 a 6.3836136,6.3836136 0 0 0 6.38361,6.38362 h 81.08253 a 6.3836136,6.3836136 0 0 0 6.38362,-6.38362 v -81.08678 a 6.3836136,6.3836136 0 0 0 -6.38362,-6.383623 z m 16.08373,16.187573 c 0.59061,-0.0328 1.13394,0.12512 1.64161,0.48209 0.50767,0.3594 0.84234,0.80946 1.00576,1.35486 l 2.41471,8.30785 46.51739,-2.43961 c 0.82938,-0.0428 1.52094,0.2446 2.07384,0.8603 0.55036,0.60568 0.76908,1.33418 0.63588,2.17362 l -3.89826,24.93652 c -0.13832,0.73633 -0.56957,1.49673 -1.28837,2.27342 -0.71877,0.78659 -1.65597,1.2110996 -2.79687,1.2717396 l -32.86072,1.72058 3.03797,10.2529296 27.7751,-1.45458997 c 0.72631,-0.0402 1.3515,0.17831997 1.88682,0.64833997 0.52274,0.48256 0.80345,1.08569 0.84366,1.81201 0.0377,0.72631 -0.17831,1.35156 -0.64834,1.88683 -0.48256,0.52533 -1.0857,0.80642 -1.81201,0.84366 l -2.59749,0.13703 0.13703,2.5934503 c 0.0377,0.72884 -0.17831,1.3558205 -0.66081,1.8785105 -0.47247,0.53535 -1.07072,0.81889 -1.79954,0.85613 -0.72632,0.0377 -1.35326,-0.17832 -1.8785,-0.66081 -0.53533,-0.4725 -0.81434,-1.0732405 -0.852,-1.7995505 l -0.13704,-2.5934403 -15.57261,0.81042 0.13299,2.5974903 c 0.0377,0.7288205 -0.17576,1.3556905 -0.64834,1.8785005 -0.48254,0.53523 -1.0857,0.81804 -1.81201,0.85613 -0.72633,0.0402 -1.35152,-0.17831 -1.88682,-0.66081 -0.52527,-0.47247 -0.80602,-1.07323 -0.84368,-1.79954 l -0.13704,-2.5974908 -1.60837,0.0832 c -0.62328,0.0326 -1.1928,-0.1115 -1.72058,-0.42807 -0.51522,-0.31666 -0.88347,-0.63191 -1.10964,-0.93094 l -0.28677,-0.50703 -13.04981,-49.3431992 -2.80539,0.14554 c -0.69615,0.0377 -1.31238,-0.18087 -1.85773,-0.66081 -0.54538,-0.47243 -0.83511,-1.06908 -0.87277,-1.79539 -0.0377,-0.72884 0.1864,-1.35324 0.6816,-1.8785 0.4926,-0.53536 1.08259,-0.81817 1.77875,-0.85613 z"
        style="fill:#ffffff;stroke-width:0.999999;paint-order:stroke fill markers"
        id="path400" />
     <rect
@@ -77,66 +77,18 @@
        id="rect723"
        width="512"
        height="512"
-       x="0"
-       y="0" />
+       x="299.20526"
+       y="-162" />
     <path
        id="rect4460"
        style="opacity:0.3;fill:#129ed9;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
-       d="M -256,4 H 768 v 480.00003 c 0,0 -42.66667,-10 -64,-10 -21.33333,0 -42.40782,10 -64,10 -21.59218,0 -42.66667,-10 -64,-10 -21.33333,0 -42.40782,10 -64,10 -21.59218,0 -41.88727,-34.70109 -63.2206,-34.70109 -21.33333,0 -35.64519,25.79497 -70.76128,19.24598 -35.11609,-6.54899 -78.86216,-4.74083 -98.51453,-1.54704 -47.28931,7.53322 -49.24731,-6.72376 -87.36918,-3.31095 -38.12187,3.41281 -56.92075,15.1932 -120.307303,10.4291 -63.3865529,-4.7641 -84.09093,0.69814 -135.827107,-0.116 -21.333333,0 -42.40782,10 -64,10 -21.59218,0 -42.66667,-10 -64,-10 -21.33333,0 -64,10 -64,10 z"
+       d="M 43.205247,-158 H 1067.2052 v 480.00003 c 0,0 -42.6666,-10 -63.9999,-10 -21.33338,0 -42.40787,10 -64.00005,10 -21.59218,0 -42.66667,-10 -64,-10 -21.33333,0 -42.40782,10 -64,10 -21.59218,0 -41.88727,-34.70109 -63.2206,-34.70109 -21.33333,0 -35.64519,25.79497 -70.76128,19.24598 -35.11609,-6.54899 -78.86216,-4.74083 -98.51453,-1.54704 -47.28931,7.53322 -49.24731,-6.72376 -87.36918,-3.31095 -38.12187,3.41281 -56.92075,15.1932 -120.30731,10.4291 -63.38655,-4.7641 -76.9883,-5.4576 -128.72447,-6.27174 -21.33334,0 -49.51045,15.46959 -71.10263,15.46959 -21.59218,0 -42.66667,-9.31385 -64,-9.31385 -21.333333,0 -142.622454,54.97388 -142.622454,54.97388 z"
        sodipodi:nodetypes="ccczzzzzzczzczzcc" />
     <path
        id="rect4460-5"
        style="fill:#129ed9;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
-       d="M -316,4.9999998e-7 H 708 V 480.00003 c 0,0 -42.66667,-10 -64,-10 -21.33333,0 -42.40782,10 -64,10 -21.59218,0 -62.25645,-10.04811 -83.58978,-10.04811 -21.33333,0 -54.44948,9.44764 -136.05941,-21.03042 -81.60993,-30.47805 -128.58292,27.6686 -167.97089,28.29083 -70.79469,-0.0417 -47.30269,-54.28778 -212.560781,-50.98325 C -185.43895,429.53361 -38.40782,480.00003 -60,480.00003 c -21.59218,0 -42.66667,-10 -64,-10 -21.33333,0 -42.40782,10 -64,10 -21.59218,0 -42.66667,-10 -64,-10 -21.33333,0 -64,10 -64,10 z"
-       sodipodi:nodetypes="ccczzzzczzzzzcc" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;fill:#129ed9;fill-opacity:1;stroke:none"
-       x="484.04175"
-       y="501.27652"
-       id="text2910-3-7"><tspan
-         sodipodi:role="line"
-         id="tspan2908-6-5"
-         x="484.04175"
-         y="501.27652"
-         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:21.3333px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Light';text-align:end;text-anchor:end;fill:#129ed9;fill-opacity:1">WWW.PHOCA.CZ/NEWS</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:34.6667px;line-height:1.05;font-family:Rubik;-inkscape-font-specification:'Rubik Semi-Bold';fill:#ffffff;fill-opacity:1;stroke:none"
-       x="255.99997"
-       y="165"
-       id="text11252"><tspan
-         sodipodi:role="line"
-         x="255.99997"
-         y="165"
-         id="tspan403"
-         style="text-align:center;text-anchor:middle" /><tspan
-         sodipodi:role="line"
-         x="255.99997"
-         y="202.65851"
-         style="font-size:34.6667px;text-align:center;text-anchor:middle"
-         id="tspan442"></tspan><tspan
-         sodipodi:role="line"
-         x="255.99997"
-         y="239.0585"
-         style="font-size:34.6667px;text-align:center;text-anchor:middle"
-         id="tspan444">Phoca Cart</tspan><tspan
-         sodipodi:role="line"
-         x="255.99997"
-         y="275.4585"
-         id="tspan1992"
-         style="font-size:34.6667px;text-align:center;text-anchor:middle">version 4.0.8Beta7
-</tspan><tspan
-         sodipodi:role="line"
-         x="255.99997"
-         y="311.85852"
-         id="tspan2906"
-         style="font-size:34.6667px;text-align:center;text-anchor:middle">has been released</tspan><tspan
-         sodipodi:role="line"
-         x="255.99997"
-         y="348.25851"
-         id="tspan1994"
-         style="font-size:34.6667px" /></text>
+       d="M -16.794753,-162 H 1007.2052 v 480.00003 c 0,0 -42.66662,-10 -63.99995,-10 -21.33333,0 -42.40782,10 -64,10 -21.59218,0 -62.25645,-10.04811 -83.58978,-10.04811 -21.33333,0 -54.44948,9.44764 -136.05941,-21.03042 -81.60993,-30.47805 -128.58292,27.6686 -167.97089,28.29083 -70.79469,-0.0417 -2.94481,-49.09524 -168.2029,-45.79071 -47.74033,-1.12283 -64.65585,33.46147 -87.4685,38.65142 -22.81265,5.18995 -45.09142,-13.32804 -64.67589,-13.32804 -12.35785,0 -36.79519,17.1889 -45.41692,23.18592 -8.62174,5.99702 -19.63982,10.22605 -38.99831,10.71736 -21.592183,0 -70.811517,-13.85906 -92.1448466,-13.85906 -21.3333304,0 -11.4725564,3.21081 -11.4725564,3.21081 z"
+       sodipodi:nodetypes="ccczzzzccsssczcc" />
     <circle
        style="opacity:0.15;fill:#ffffff;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
        id="path8376"
@@ -144,34 +96,73 @@
        cy="-72.080597"
        inkscape:transform-center-x="92.786515"
        inkscape:transform-center-y="100.55603"
-       r="250" />
+       r="250"
+       inkscape:label="path8376" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;fill:#129ed9;fill-opacity:1;stroke:none"
+       x="783.24695"
+       y="339.27652"
+       id="text2910-3-7"><tspan
+         sodipodi:role="line"
+         id="tspan2908-6-5"
+         x="783.24695"
+         y="339.27652"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:21.3333px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Light';text-align:end;text-anchor:end;fill:#129ed9;fill-opacity:1">WWW.PHOCA.CZ/NEWS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:34.6667px;line-height:1.05;font-family:Rubik;-inkscape-font-specification:'Rubik Semi-Bold';fill:#ffffff;fill-opacity:1;stroke:none"
+       x="500"
+       y="96.133263"
+       id="text11252"><tspan
+         sodipodi:role="line"
+         x="500"
+         y="96.133263"
+         id="tspan403"
+         style="text-align:center;text-anchor:middle" /><tspan
+         sodipodi:role="line"
+         x="500"
+         y="132.53329"
+         style="font-size:34.6667px;text-align:center;text-anchor:middle"
+         id="tspan444"> Phoca Cart</tspan><tspan
+         sodipodi:role="line"
+         x="500"
+         y="168.93332"
+         id="tspan2906"
+         style="font-size:34.6667px;text-align:center;text-anchor:middle">version 4.0.8Beta7
+ has been released</tspan><tspan
+         sodipodi:role="line"
+         x="500"
+         y="205.33336"
+         id="tspan1994"
+         style="font-size:34.6667px" /></text>
     <circle
        style="opacity:0.15;fill:#ffffff;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
        id="path8376-9"
-       cx="17.603855"
-       cy="244.00002"
+       cx="316.80908"
+       cy="82.000023"
        inkscape:transform-center-x="55.671924"
        inkscape:transform-center-y="60.333621"
        r="150" />
     <circle
        style="opacity:0.15;fill:#ffffff;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
        id="path8376-6"
-       cx="103.7038"
-       cy="0.11656053"
+       cx="402.90906"
+       cy="-161.88344"
        inkscape:transform-center-x="37.114606"
        inkscape:transform-center-y="40.222414"
        r="75" />
     <circle
        style="opacity:0.15;fill:#ffffff;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
        id="path8376-6-2"
-       cx="505.16833"
-       cy="274.23776"
+       cx="804.37354"
+       cy="112.23777"
        inkscape:transform-center-x="37.114606"
        inkscape:transform-center-y="40.222414"
        r="50" />
     <g
        id="g8950"
-       transform="matrix(0.29806897,0,0,0.29806897,107.3348,335.25957)"
+       transform="matrix(0.29806897,0,0,0.29806897,406.54005,173.25957)"
        style="fill:#129ed9;fill-opacity:1;stroke-width:3.35492">
       <g
          id="g895"
@@ -311,8 +302,8 @@
     <circle
        style="opacity:0.15;fill:#ffffff;fill-opacity:1;stroke-width:5;stroke-linejoin:round;paint-order:stroke fill markers"
        id="path8376-6-2-1"
-       cx="453.42072"
-       cy="406.30933"
+       cx="752.62592"
+       cy="244.30933"
        inkscape:transform-center-x="18.557303"
        inkscape:transform-center-y="20.111207"
        r="25" />
