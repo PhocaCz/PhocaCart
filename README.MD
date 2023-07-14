@@ -24,61 +24,67 @@ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Pho
 
 [Documentation](https://www.phoca.cz/documentation/category/116-phoca-cart-component)
 
-- [Features](https://www.phoca.cz/documents/116-phoca-cart-component/786-features)
+- [Features](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/786-features)
 
-- [Phoca Cart](https://www.phoca.cz/documents/116-phoca-cart-component/957-phoca-cart)
+- [Phoca Cart](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/957-phoca-cart)
 
-- [Screenshots](https://www.phoca.cz/documents/116-phoca-cart-component/796-screenshots)
+- [Screenshots](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/796-screenshots)
 
-- [System Requirements](https://www.phoca.cz/documents/116-phoca-cart-component/1038-system-requirements)
+- [System Requirements](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1038-system-requirements)
 
-- [Installation](https://www.phoca.cz/documents/116-phoca-cart-component/1037-installation)
+- [Installation](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1037-installation)
 
-- [Installing Sample Data](https://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data)
+- [Installing Sample Data](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/807-installing-sample-data)
 
-- [Basic Settings](https://www.phoca.cz/documents/116-phoca-cart-component/1039-basic-settings)
+- [Basic Settings](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1039-basic-settings)
 
-- [Administration](https://www.phoca.cz/documents/116-phoca-cart-component/922-administration)
+- [Administration](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/922-administration)
 
-- [Options](https://www.phoca.cz/documents/116-phoca-cart-component/880-options)
+- [Options](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/880-options)
 
-- [Views](https://www.phoca.cz/documents/116-phoca-cart-component/828-views)
+- [Views](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/828-views)
 
-- [Tax Management (VAT)](https://www.phoca.cz/documents/116-phoca-cart-component/924-tax-management-vat)
+- [Tax Management (VAT)](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/924-tax-management-vat)
 
-- [Stock Management](https://www.phoca.cz/documents/116-phoca-cart-component/932-stock-management)
+- [Stock Management](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/932-stock-management)
 
-- [Order Statuses](https://www.phoca.cz/documents/116-phoca-cart-component/935-order-statuses)
+- [Order Statuses](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/935-order-statuses)
 
-- [Reward Points](https://www.phoca.cz/documents/116-phoca-cart-component/946-reward-points)
+- [Reward Points](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/946-reward-points)
 
-- [Opening Times](https://www.phoca.cz/documents/116-phoca-cart-component/990-opening-times)
+- [Opening Times](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/990-opening-times)
 
-- [Icons, Labels and Tags](https://www.phoca.cz/documents/116-phoca-cart-component/986-icons-labels-and-tags)
+- [Icons, Labels and Tags](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/986-icons-labels-and-tags)
 
-- [Sending emails to customer or vendors](https://www.phoca.cz/documents/116-phoca-cart-component/966-sending-emails-to-customer-or-vendors)
+- [Sending emails to customer or vendors](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/966-sending-emails-to-customer-or-vendors)
 
-- [Multilingual Feature](https://www.phoca.cz/documents/116-phoca-cart-component/980-multilingual-feature)
+- [Multilingual Feature](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/980-multilingual-feature)
 
-- [Billing](https://www.phoca.cz/documents/116-phoca-cart-component/1067-billing)
+- [Billing](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1067-billing)
 
-- [Payment - PayPal Standard](https://www.phoca.cz/documents/116-phoca-cart-component/829-payment-paypal-standard)
+- [Payment - PayPal Standard](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/829-payment-paypal-standard)
 
-- [Point of Sale (POS)](https://www.phoca.cz/documents/116-phoca-cart-component/964-point-of-sale-pos)
+- [Point of Sale (POS)](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/964-point-of-sale-pos)
 
-- [XML Feed - Example - Google Merchant Feed](https://www.phoca.cz/documents/116-phoca-cart-component/1001-xml-feed-example-google-merchant-feed)
+- [XML Feed - Example - Google Merchant Feed](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1001-xml-feed-example-google-merchant-feed)
 
-- [Examples Of Use Cases](https://www.phoca.cz/documents/116-phoca-cart-component/920-examples-of-use-cases)
+- [Printed Catalog](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1081-printed-catalog)
 
-- [Phoca Cart - Development](https://www.phoca.cz/documents/116-phoca-cart-component/939-phoca-cart-development)
+- [Examples Of Use Cases](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/920-examples-of-use-cases)
 
-- [Phoca Cart - Template Overrides](https://www.phoca.cz/documents/116-phoca-cart-component/995-phoca-cart-template-overrides)
+- [Phoca Cart - Development](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/939-phoca-cart-development)
 
-- [Setting Up Phoca Cart and Gantry5 Template](https://www.phoca.cz/documents/116-phoca-cart-component/989-setting-up-phoca-cart-and-gantry-5-template)
+- [Phoca Cart - Template Overrides](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/995-phoca-cart-template-overrides)
 
-- [Setting Up Phoca Cart and Astroid Template](https://www.phoca.cz/documents/116-phoca-cart-component/1042-setting-up-phoca-cart-and-astroid-template)
+- [Setting Up Phoca Cart and Gantry5 Template](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/989-setting-up-phoca-cart-and-gantry-5-template)
 
-- [Tips and Tricks](https://www.phoca.cz/documents/116-phoca-cart-component/1070-tips-and-tricks)
+- [Setting Up Phoca Cart and Astroid Template](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1042-setting-up-phoca-cart-and-astroid-template)
+
+- [Tips and Tricks](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1070-tips-and-tricks)
+
+- [SQL Tips](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1193-sql-tips)
+
+- [CSS Tips](https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1194-css-tips)
 
 
 
@@ -122,7 +128,7 @@ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Pho
 
 ## Version (Joomla! 4.x)
 
-4.0.7
+4.0.8Beta7
 
 
 
