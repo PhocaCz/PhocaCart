@@ -22,7 +22,7 @@
 	"menu": {
 		"main":{
 			"0" : {
-				"image": "icon-16-cart-menu.png",
+				"image": "class:cp",
 				"view": "",
 				"link": "option=com_phocacart",
 				"title": "COM_PHOCACART"
@@ -30,287 +30,317 @@
 		},
 		"submenu": {
 			"0" : {
-				"image": "icon-16-pc-menu-cp.png",
+				"image": "class:cp",
 				"view": "phocacartcp",
-				"link": "option=com_phocacart",
+				"link": "option=com_phocacart&amp;view=phocacartcp",
 				"title": "COM_PHOCACART_CONTROLPANEL"
 			},
 			"1" : {
-				"image": "icon-16-pc-menu-item.png",
+				"image": "class:items",
 				"view": "phocacartitems",
 				"link": "option=com_phocacart&amp;view=phocacartitems",
 				"title": "COM_PHOCACART_PRODUCTS"
 			},
 			"2" : {
-				"image": "icon-16-pc-menu-category.png",
+				"image": "class:categories",
 				"view": "phocacartcategories",
 				"link": "option=com_phocacart&amp;view=phocacartcategories",
 				"title": "COM_PHOCACART_CATEGORIES"
 			},
 			"3" : {
-				"image": "icon-16-pc-menu-specification.png",
+				"image": "class:specifications",
 				"view": "phocacartspecifications",
 				"link": "option=com_phocacart&amp;view=phocacartspecifications",
 				"title": "COM_PHOCACART_SPECIFICATIONS"
 			},
 			"4" : {
-				"image": "icon-16-pc-menu-manufacturer.png",
+				"image": "class:manufacturers",
 				"view": "phocacartmanufacturers",
 				"link": "option=com_phocacart&amp;view=phocacartmanufacturers",
 				"title": "COM_PHOCACART_MANUFACTURERS"
 			},
 			"5" : {
-				"image": "icon-16-pc-menu-order.png",
+				"image": "class:orders",
 				"view": "phocacartorders",
 				"link": "option=com_phocacart&amp;view=phocacartorders",
 				"title": "COM_PHOCACART_ORDERS"
 			},
 			"6" : {
-				"image": "icon-16-pc-menu-orderstatus.png",
+				"image": "class:orderstatuses",
 				"view": "phocacartstatuses",
 				"link": "option=com_phocacart&amp;view=phocacartstatuses",
 				"title": "COM_PHOCACART_ORDER_STATUSES"
 			},
 			"7": {
-				"image": "icon-16-pc-menu-stockstatus.png",
+				"image": "class:stockstatuses",
 				"view": "phocacartstockstatuses",
 				"link": "option=com_phocacart&amp;view=phocacartstockstatuses",
 				"title": "COM_PHOCACART_STOCK_STATUSES"
 			},
 			"8": {
-				"image": "icon-16-pc-menu-shipping.png",
+				"image": "class:shippings",
 				"view": "phocacartshippings",
 				"link": "option=com_phocacart&amp;view=phocacartshippings",
 				"title": "COM_PHOCACART_SHIPPING"
 			},
 			"9": {
-				"image": "icon-16-pc-menu-country.png",
+				"image": "class:countries",
 				"view": "phocacartcountries",
 				"link": "option=com_phocacart&amp;view=phocacartcountries",
 				"title": "COM_PHOCACART_COUNTRIES"
 			},
 			"10": {
-				"image": "icon-16-pc-menu-region.png",
+				"image": "class:regions",
 				"view": "phocacartregions",
 				"link": "option=com_phocacart&amp;view=phocacartregions",
 				"title": "COM_PHOCACART_REGIONS"
 			},
 			"11": {
-				"image": "icon-16-pc-menu-zone.png",
+				"image": "class:zones",
 				"view": "phocacartzones",
 				"link": "option=com_phocacart&amp;view=phocacartzones",
 				"title": "COM_PHOCACART_ZONES"
 			},
 			"12": {
-				"image": "icon-16-pc-menu-payment.png",
+				"image": "class:payments",
 				"view": "phocacartpayments",
 				"link": "option=com_phocacart&amp;view=phocacartpayments",
 				"title": "COM_PHOCACART_PAYMENT"
 			},
 			"13": {
-				"image": "icon-16-pc-menu-currency.png",
+				"image": "class:currencies",
 				"view": "phocacartcurrencies",
 				"link": "option=com_phocacart&amp;view=phocacartcurrencies",
 				"title": "COM_PHOCACART_CURRENCIES"
 			},
 			"14": {
-				"image": "icon-16-pc-menu-tax.png",
+				"image": "class:taxes",
 				"view": "phocacarttaxes",
 				"link": "option=com_phocacart&amp;view=phocacarttaxes",
 				"title": "COM_PHOCACART_TAXES"
 			},
 			"15": {
-				"image": "icon-16-pc-menu-user.png",
+				"image": "class:users",
 				"view": "phocacartusers",
 				"link": "option=com_phocacart&amp;view=phocacartusers",
 				"title": "COM_PHOCACART_CUSTOMERS"
 			},
 			"16": {
-				"image": "icon-16-pc-menu-group.png",
+				"image": "class:groups",
 				"view": "phocacartgroups",
 				"link": "option=com_phocacart&amp;view=phocacartgroups",
 				"title": "COM_PHOCACART_CUSTOMER_GROUPS"
 			},
 			"17": {
-				"image": "icon-16-pc-menu-reward.png",
+				"image": "class:rewards",
 				"view": "phocacartrewards",
 				"link": "option=com_phocacart&amp;view=phocacartrewards",
 				"title": "COM_PHOCACART_REWARD_POINTS"
 			},
 			"18": {
-				"image": "icon-16-pc-menu-formfields.png",
+				"image": "class:formfields",
 				"view": "phocacartformfields",
 				"link": "option=com_phocacart&amp;view=phocacartformfields",
 				"title": "COM_PHOCACART_FORM_FIELDS"
 			},
 			"19": {
-				"image": "icon-16-pc-menu-review.png",
+				"image": "class:reviews",
 				"view": "phocacartreviews",
 				"link": "option=com_phocacart&amp;view=phocacartreviews",
 				"title": "COM_PHOCACART_REVIEWS"
 			},
 			"20": {
-				"image": "icon-16-pc-menu-coupon.png",
+				"image": "class:coupons",
 				"view": "phocacartcoupons",
 				"link": "option=com_phocacart&amp;view=phocacartcoupons",
 				"title": "COM_PHOCACART_COUPONS"
 			},
 			"21": {
-				"image": "icon-16-pc-menu-discount.png",
+				"image": "class:discounts",
 				"view": "phocacartdiscounts",
 				"link": "option=com_phocacart&amp;view=phocacartdiscounts",
 				"title": "COM_PHOCACART_DISCOUNTS"
 			},
 			"22": {
-				"image": "icon-16-pc-menu-download.png",
+				"image": "class:downloads",
 				"view": "phocacartdownloads",
 				"link": "option=com_phocacart&amp;view=phocacartdownloads",
 				"title": "COM_PHOCACART_DOWNLOADS"
 			},
 			"23": {
-				"image": "icon-16-pc-menu-tag.png",
+				"image": "class:tags",
 				"view": "phocacarttags",
 				"link": "option=com_phocacart&amp;view=phocacarttags",
 				"title": "COM_PHOCACART_TAGS"
 			},
 			"24": {
-				"image": "icon-16-pc-menu-tag.png",
+				"image": "class:parameters",
 				"view": "phocacartparameters",
 				"link": "option=com_phocacart&amp;view=phocacartparameters",
 				"title": "COM_PHOCACART_PARAMETERS"
 			},
 			"25": {
-				"image": "icon-16-pc-menu-tag.png",
+				"image": "class:parametervalues",
 				"view": "phocacartparametervalues",
 				"link": "option=com_phocacart&amp;view=phocacartparametervalues",
 				"title": "COM_PHOCACART_PARAMETER_VALUES"
 			},
 			"26": {
-				"image": "icon-16-pc-menu-feed.png",
+				"image": "class:fieldgroups",
+				"view": "phocacartfieldgroups",
+				"link": "option=com_fields&amp;view=groups&amp;context=com_phocacart.phocacartitem",
+				"title": "JGLOBAL_FIELD_GROUPS"
+			},
+			"27": {
+				"image": "class:fields",
+				"view": "phocacartfields",
+				"link": "option=com_fields&amp;context=com_phocacart.phocacartitem",
+				"title": "JGLOBAL_FIELDS"
+			},
+			"28": {
+				"image": "class:feeds",
 				"view": "phocacartfeeds",
 				"link": "option=com_phocacart&amp;view=phocacartfeeds",
 				"title": "COM_PHOCACART_XML_FEEDS"
 			},
-			"27": {
-				"image": "icon-16-pc-menu-wishlist.png",
+			"29": {
+				"image": "class:wishlists",
 				"view": "phocacartwishlists",
 				"link": "option=com_phocacart&amp;view=phocacartwishlists",
 				"title": "COM_PHOCACART_WISH_LISTS"
 			},
-			"28": {
-				"image": "icon-16-pc-menu-question.png",
+			"30": {
+				"image": "class:questions",
 				"view": "phocacartquestions",
 				"link": "option=com_phocacart&amp;view=phocacartquestions",
 				"title": "COM_PHOCACART_QUESTIONS"
 			},
-			"29": {
-				"image": "icon-16-pc-menu-time.png",
+			"31": {
+				"image": "class:times",
 				"view": "phocacarttimes",
 				"link": "option=com_phocacart&amp;view=phocacarttimes",
 				"title": "COM_PHOCACART_OPENING_TIMES"
 			},
-			"30": {
-				"image": "icon-16-pc-menu-duplicate.png",
+			"32": {
+				"image": "class:submititems",
 				"view": "phocacartsubmititems",
 				"link": "option=com_phocacart&amp;view=phocacartsubmititems",
 				"title": "COM_PHOCACART_SUBMITTED_ITEMS"
 			},
-			"31": {
-				"image": "icon-16-pc-menu-statistics.png",
+			"33": {
+				"image": "class:statistics",
 				"view": "phocacartstatistics",
 				"link": "option=com_phocacart&amp;view=phocacartstatistics",
 				"title": "COM_PHOCACART_STATISTICS"
 			},
-			"32": {
-				"image": "icon-16-pc-menu-report.png",
+			"34": {
+				"image": "class:reports",
 				"view": "phocacartreports",
 				"link": "option=com_phocacart&amp;view=phocacartreports",
 				"title": "COM_PHOCACART_REPORTS"
 			},
-			"33": {
-				"image": "icon-16-pc-menu-hits.png",
+			"35": {
+				"image": "class:hits",
 				"view": "phocacarthits",
 				"link": "option=com_phocacart&amp;view=phocacarthits",
 				"title": "COM_PHOCACART_HITS"
 			},
-			"34": {
-				"image": "icon-16-pc-menu-import.png",
+			"36": {
+				"image": "class:imports",
 				"view": "phocacartimports",
 				"link": "option=com_phocacart&amp;view=phocacartimports",
 				"title": "COM_PHOCACART_IMPORT"
 			},
-			"35": {
-				"image": "icon-16-pc-menu-export.png",
+			"37": {
+				"image": "class:exports",
 				"view": "phocacartexports",
 				"link": "option=com_phocacart&amp;view=phocacartexports",
 				"title": "COM_PHOCACART_EXPORT"
 			},
-			"36": {
-				"image": "icon-16-pc-menu-log.png",
+			"38": {
+				"image": "class:logs",
 				"view": "phocacartlogs",
 				"link": "option=com_phocacart&amp;view=phocacartlogs",
 				"title": "COM_PHOCACART_SYSTEM_LOG"
 			},
-			"37": {
-				"image": "icon-16-pc-menu-info.png",
-				"view": "phocacartinfo",
-				"link": "option=com_phocacart&amp;view=phocacartinfo",
-				"title": "COM_PHOCACART_INFO"
-			},
-			"38": {
-				"image": "icon-16-pc-menu-extension.png",
+			"39": {
+				"image": "class:extensions",
 				"view": "phocacartextensions",
 				"link": "option=com_phocacart&amp;view=phocacartextensions",
 				"title": "COM_PHOCACART_EXTENSIONS"
 			},
-			"39": {
-				"image": "icon-16-pc-menu-vendor.png",
+			"40": {
+				"image": "class:vendors",
 				"view": "phocacartvendors",
 				"link": "option=com_phocacart&amp;view=phocacartvendors",
 				"title": "COM_PHOCACART_VENDORS"
 			},
-			"40": {
-				"image": "icon-16-pc-menu-section.png",
+			"41": {
+				"image": "class:sections",
 				"view": "phocacartsections",
 				"link": "option=com_phocacart&amp;view=phocacartsections",
 				"title": "COM_PHOCACART_SECTIONS"
 			},
-			"41": {
-				"image": "icon-16-pc-menu-unit.png",
-				"view": "phocacartextunits",
-				"link": "option=com_phocacart&amp;view=phocacartextunits",
+			"42": {
+				"image": "class:units",
+				"view": "phocacartunits",
+				"link": "option=com_phocacart&amp;view=phocacartunits",
 				"title": "COM_PHOCACART_UNITS"
+			},
+			"43": {
+				"image": "class:bulkprices",
+				"view": "phocacartbulkprices",
+				"link": "option=com_phocacart&amp;view=phocacartbulkprices",
+				"title": "COM_PHOCACART_BULK_PRICE_EDITOR"
+			},
+			"44": {
+				"image": "class:info",
+				"view": "phocacartinfo",
+				"link": "option=com_phocacart&amp;view=phocacartinfo",
+				"title": "COM_PHOCACART_INFO"
 			}
+			
 		}
 	},
 	"projectDocumentationLinks": {
-		"Features": "https://www.phoca.cz/documents/116-phoca-cart-component/786-features",
-		"Phoca Cart": "https://www.phoca.cz/documents/116-phoca-cart-component/957-phoca-cart",
-		"Screenshots": "https://www.phoca.cz/documents/116-phoca-cart-component/796-screenshots",
-		"System Requirements": "https://www.phoca.cz/documents/116-phoca-cart-component/1038-system-requirements",
-		"Installation": "https://www.phoca.cz/documents/116-phoca-cart-component/1037-installation",
-		"Installing Sample Data": "https://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data",
-		"Basic Settings": "https://www.phoca.cz/documents/116-phoca-cart-component/1039-basic-settings",
-		"Administration": "https://www.phoca.cz/documents/116-phoca-cart-component/922-administration",
-		"Options": "https://www.phoca.cz/documents/116-phoca-cart-component/880-options",
-		"Views": "https://www.phoca.cz/documents/116-phoca-cart-component/828-views",
-		"Tax Management (VAT)": "https://www.phoca.cz/documents/116-phoca-cart-component/924-tax-management-vat",
-		"Stock Management": "https://www.phoca.cz/documents/116-phoca-cart-component/932-stock-management",
-		"Order Statuses": "https://www.phoca.cz/documents/116-phoca-cart-component/935-order-statuses",
-		"Reward Points": "https://www.phoca.cz/documents/116-phoca-cart-component/946-reward-points",
-		"Opening Times": "https://www.phoca.cz/documents/116-phoca-cart-component/990-opening-times",
-		"Icons, Labels and Tags": "https://www.phoca.cz/documents/116-phoca-cart-component/986-icons-labels-and-tags",
-		"Sending emails to customer or vendors": "https://www.phoca.cz/documents/116-phoca-cart-component/966-sending-emails-to-customer-or-vendors",
-		"Multilingual Feature": "https://www.phoca.cz/documents/116-phoca-cart-component/980-multilingual-feature",
-		"Billing": "https://www.phoca.cz/documents/116-phoca-cart-component/1067-billing",
-		"Payment - PayPal Standard": "https://www.phoca.cz/documents/116-phoca-cart-component/829-payment-paypal-standard",
-		"Point of Sale (POS)": "https://www.phoca.cz/documents/116-phoca-cart-component/964-point-of-sale-pos",
-		"XML Feed - Example - Google Merchant Feed": "https://www.phoca.cz/documents/116-phoca-cart-component/1001-xml-feed-example-google-merchant-feed",
-		"Examples Of Use Cases": "https://www.phoca.cz/documents/116-phoca-cart-component/920-examples-of-use-cases",
-		"Phoca Cart - Development": "https://www.phoca.cz/documents/116-phoca-cart-component/939-phoca-cart-development",
-		"Phoca Cart - Template Overrides": "https://www.phoca.cz/documents/116-phoca-cart-component/995-phoca-cart-template-overrides",
-		"Setting Up Phoca Cart and Gantry5 Template": "https://www.phoca.cz/documents/116-phoca-cart-component/989-setting-up-phoca-cart-and-gantry-5-template",
-		"Setting Up Phoca Cart and Astroid Template": "https://www.phoca.cz/documents/116-phoca-cart-component/1042-setting-up-phoca-cart-and-astroid-template",
-		"Tips and Tricks": "https://www.phoca.cz/documents/116-phoca-cart-component/1070-tips-and-tricks"
+		"Features": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/786-features",
+		"Phoca Cart": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/957-phoca-cart",
+		"Screenshots": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/796-screenshots",
+		"System Requirements": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1038-system-requirements",
+		"Installation": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1037-installation",
+		"Installing Sample Data": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/807-installing-sample-data",
+		"Basic Settings": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1039-basic-settings",
+		"Administration": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/922-administration",
+		"Options": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/880-options",
+		"Views": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/828-views",
+		"Tax Management (VAT)": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/924-tax-management-vat",
+		"Stock Management": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/932-stock-management",
+		"Order Statuses": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/935-order-statuses",
+		"Reward Points": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/946-reward-points",
+		"Opening Times": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/990-opening-times",
+		"Icons, Labels and Tags": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/986-icons-labels-and-tags",
+		"Sending emails to customer or vendors": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/966-sending-emails-to-customer-or-vendors",
+		"Multilingual Feature": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/980-multilingual-feature",
+		"Billing": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1067-billing",
+		"Payment - PayPal Standard": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/829-payment-paypal-standard",
+		"Point of Sale (POS)": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/964-point-of-sale-pos",
+		"XML Feed - Example - Google Merchant Feed": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1001-xml-feed-example-google-merchant-feed",
+		"Printed Catalog": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1081-printed-catalog",
+		"Examples Of Use Cases": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/920-examples-of-use-cases",
+		"Phoca Cart - Development": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/939-phoca-cart-development",
+		"Phoca Cart - Template Overrides": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/995-phoca-cart-template-overrides",
+		"Setting Up Phoca Cart and Gantry5 Template": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/989-setting-up-phoca-cart-and-gantry-5-template",
+		"Setting Up Phoca Cart and Astroid Template": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1042-setting-up-phoca-cart-and-astroid-template",
+		"Tips and Tricks": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1070-tips-and-tricks",
+		"SQL Tips": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1193-sql-tips",
+		"CSS Tips": "https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/1194-css-tips"
+	},
+	
+	"projectMiscLinks": {
+		"Phoca Cart Extensions": {
+			"Phoca Cart Extensions": "https://www.phoca.cz/phocacart-extensions"
+		}
 	}
+	
+	
 }
