@@ -425,6 +425,9 @@ class PhocacartAttribute
                             if (empty($v2['amount'])) {
                                 $v2['amount'] = '';
                             }
+
+                            $v2['amount'] = PhocacartText::filterValue($v2['amount'], 'number3');
+
                             if (empty($v2['stock'])) {
                                 $v2['stock'] = '';
                             }

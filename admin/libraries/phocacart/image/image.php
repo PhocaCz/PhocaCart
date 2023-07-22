@@ -111,7 +111,7 @@ class PhocacartImage
         $query = 'SELECT i.image FROM #__phocacart_product_images AS i'
             . ' LEFT JOIN #__phocacart_products AS p ON p.id = i.product_id'
             . ' WHERE p.id = ' . (int)$itemId
-            . ' ORDER BY i.image';
+            . ' ORDER BY i.ordering ASC';
         $db->setQuery($query);
         $images = $db->loadObjectList();
 

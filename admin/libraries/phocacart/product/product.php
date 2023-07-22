@@ -631,7 +631,7 @@ class PhocacartProduct
             $wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
             $wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
         }
-        
+
         // Views Plugin can load additional columns
 		$additionalColumns = array();
 		$pluginLayout 	= PluginHelper::importPlugin('pcv');
@@ -649,7 +649,7 @@ class PhocacartProduct
 			}
 		}
 
-        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
+        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.date_update', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
 
 
 		$col = array_merge($baseColumns, $additionalColumns);

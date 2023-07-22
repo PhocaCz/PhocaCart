@@ -28,6 +28,7 @@ if ($this->t['enable_coupons'] > 0 && !$this->t['cartempty']) {
 		// Make the following input only a design input without name and value - the value for removing is set as empty in hidden field
 		// name="phcouponremove" is abstract - not used, named to be ignored when saving form but displayed including the coupon code
 		echo '<input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-coupon" type="text" name="phcouponremove" id="phcoupon" value="' . $this->t['couponcodevalue'] . '" >';
+		echo '</div>';// end from-group
 		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn">';
 		//echo '<span class="' . $this->s['i']['remove'] . '"></span>';
 		echo PhocacartRenderIcon::icon($this->s['i']['remove'], '', ' ');
@@ -35,6 +36,7 @@ if ($this->t['enable_coupons'] > 0 && !$this->t['cartempty']) {
 	} else {
 		// ADD COUPON
 		echo '<input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-coupon" type="text" name="phcoupon" id="phcoupon" value="' . $this->t['couponcodevalue'] . '" >';
+		echo '</div>';// end from-group
 		echo '<button class="' . $this->s['c']['btn.btn-primary'] . ' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') . Text::_('COM_PHOCACART_APPLY_COUPON') . '</button>';
 	}
 
@@ -45,9 +47,8 @@ if ($this->t['enable_coupons'] > 0 && !$this->t['cartempty']) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
-	echo '</div>';
-	echo '</div>';
 
+	echo '</div>';
 	echo '</div>' . "\n";// end box action
 
 

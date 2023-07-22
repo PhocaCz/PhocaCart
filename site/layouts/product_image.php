@@ -23,7 +23,6 @@ if ($d['typeview'] == 'Pos') {
     $d['t']['lazy_load_category_items'] = 2;
 }
 
-
 $class          = $d['s']['c']['img-responsive'].' ph-image '. $d['image']['phil'].' phjProductImage'.$productIdName;
 $classSwitch    = $d['s']['c']['img-responsive'].' ph-image phIR phjProductImageNoChange'.$productIdName;
 $classSource    = 'phjProductSource'.$productIdName;

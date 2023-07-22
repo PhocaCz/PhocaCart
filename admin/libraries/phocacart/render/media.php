@@ -75,8 +75,8 @@ class PhocacartRenderMedia
         $this->p['lazy_load_categories']     = $params->get('lazy_load_categories', 2);
         $this->p['pos_server_print']         = $params->get('pos_server_print', 0);
 
-        $this->p['load_min_js'] = $params->get('load_min_js', 1);
-        $this->t['min']         = $this->p['load_min_js'] == 0 ? '' : '.min';
+        //$this->p['load_min_js'] = $params->get('load_min_js', 1);
+        $this->t['min']         = '';// Removed, managed by Joomla debug, $this->p['load_min_js'] == 0 ? '' : '.min';
 
 
         $this->format   = $app->input->get('format', '', 'string');

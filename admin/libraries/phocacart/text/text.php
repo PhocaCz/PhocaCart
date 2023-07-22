@@ -515,6 +515,13 @@ class PhocacartText {
                 return preg_replace( '/[^0-9\.,-]/', '', $string );
             break;
 
+            // Be sure we have number
+            case 'number3':
+                $string = str_replace(',', '.', $string);
+                //return preg_replace( '/[^0-9\.,+-]/', '', $string );
+                return preg_replace( '/[^0-9\.]/', '', $string );
+            break;
+
             case 'alphanumeric':
                 return preg_replace("/[^a-zA-Z0-9]+/", '', $string);
             break;
