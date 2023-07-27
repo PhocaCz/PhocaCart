@@ -89,13 +89,6 @@ class JFormFieldPhocacartOrdering extends FormField
 					$table		=	'#__phocacart_shipping_methods';
 				break;
 
-				case "attribute":
-				default:
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_attributes';
-				break;
-
                 case "specificationgroup":
 					$whereLabel	=	'';
 					$whereValue	=	'';
@@ -161,6 +154,19 @@ class JFormFieldPhocacartOrdering extends FormField
                     $whereValue	=	'';
                     $table		=	'#__phocacart_units';
                 break;
+
+                case "tax":
+                    $whereLabel	=	'';
+                    $whereValue	=	'';
+                    $table		=	'#__phocacart_taxes';
+                break;
+
+                case "attribute":
+				default:
+					$whereLabel	=	'';
+					$whereValue	=	'';
+					$table		=	'#__phocacart_attributes';
+				break;
 
 			}
 		} else {
