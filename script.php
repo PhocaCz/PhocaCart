@@ -37,7 +37,7 @@ class com_phocacartInstallerScript
 
         $folder[3][0]	=	'phocacartdownloadpublic' ;
         $folder[3][1]	= 	JPATH_ROOT . '/' . $folder[3][0];
-		
+
 		$folder[4][0]	=	'phocacartattachment' ;
         $folder[4][1]	= 	JPATH_ROOT . '/' . $folder[4][0];
 
@@ -49,10 +49,10 @@ class com_phocacartInstallerScript
 
         $folder[7][0]	=	'plugins/pcv' ; // View
         $folder[7][1]	= 	JPATH_ROOT . '/' . $folder[7][0];
-		
+
 		$folder[8][0]	=	'plugins/pcf' ; // Feed
         $folder[8][1]	= 	JPATH_ROOT . '/' . $folder[8][0];
-		
+
 		$folder[9][0]	=	'plugins/pcl' ; // Layout
         $folder[9][1]	= 	JPATH_ROOT . '/' . $folder[9][0];
 
@@ -166,8 +166,46 @@ class com_phocacartInstallerScript
 			$o .= ' <div class="g5-phoca">';
 			$o .=    '<a href="https://www.phoca.cz" target="_blank"><span>Phoca</span></a>';
 			$o .= ' </div>';
-			$o .= '</div>';
+            ///$o .= '</div>';
 
+
+
+            $upEL = 'https://extensions.joomla.org/extension/phoca-cart/';
+            $upE = 'Phoca Cart';
+
+            $o .= '<div class="upBox">';
+
+            $o .=  '<div class="upItem upItemD">';
+            $o .=  '<div class="upItemText">If you find this project useful, please support it with a donation</div>';
+            $o .=  '<form action="https://www.paypal.com/donate" method="post" target="_top">';
+            $o .=  '<input type="hidden" name="hosted_button_id" value="ZVPH25SQ2DDBY" />';
+            $o .=  '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />';
+            $o .=  '<img alt="" border="0" src="https://www.paypal.com/en_CZ/i/scr/pixel.gif" width="1" height="1" />';
+            $o .=  '</form>';
+            $o .=  '</div>';
+
+            $o .=  '<div class="upItem upItemJ">';
+            $o .=  '<div class="upItemText">If you find this project useful, please post a rating and review on the Joomla! Extension Directory website</div>';
+            $o .=  '<a class="upItemLink" target="_blank" href="'. $upEL.'">'. $upE.' (JED website)</a>';
+            $o .=  '</form>';
+            $o .=  '</div>';
+
+            $o .=  '<div class="upItem upItemDoc">';
+            $o .=  '<div class="upItemText">If you need help, visit</div>';
+            $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/documentation">Phoca documentatin website</a>';
+            $o .=  '<div class="upItemText">or ask directly in</div>';
+            $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/forum">Phoca forum website</a>';
+            $o .=  '</div>';
+
+            $o .=  '<div class="upItem upItemPh">';
+            $o .=  '<div class="upItemText">There are over a hundred more useful Phoca extensions, discover them on</div>';
+            $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz">Phoca website</a>';
+            $o .=  '</div>';
+
+            $o .=  '</div>';
+
+
+            $o .= '</div>';//g5i
 			echo $o;
 		}
 
@@ -260,6 +298,9 @@ class com_phocacartInstallerScript
 	font-size: 0;
 }
 
+.g5i .g5-phoca a::before {
+   content: none;
+}
 /* container */
 .g5i {
 	position: relative;
@@ -270,6 +311,67 @@ class com_phocacartInstallerScript
 	background-size: cover;
 	border-radius: 6px;
 }
+
+
+.upBox {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top:1em;
+    margin-bottom: 2em;
+}
+
+.upItemText {
+    margin-bottom: 1em;
+}
+
+.upItem {
+    padding: 1em;
+    text-align: center;
+    width: calc(50% - 0.4em);
+    margin: 0.2em;
+    border-radius: 0.3em;
+}
+
+.upItemD {
+    background: #F5D042;
+    color: #000;
+}
+.upItemPh {
+    background: rgba(255,255,255,0.7);
+    color: #000;
+}
+.upItemDoc {
+    background: rgba(255,255,255,0.7);
+    color: #000;
+}
+.upItemJ {
+    background: rgba(255,255,255,0.7);
+    color: #000;
+}
+
+a.upItemLink {
+    padding: 0.5em 1em;
+    border-radius: 9999px;
+    margin: 1em;
+    display: inline-block;
+}
+
+a.upItemLink::before {
+    content: none;
+}
+.upItemPh a.upItemLink {
+    background: #000;
+    color: #fff;
+}
+.upItemDoc a.upItemLink {
+    background: #000;
+    color: #fff;
+}
+.upItemJ a.upItemLink {
+    background: #000;
+    color: #fff;
+}
+
 </style>";
 	}
 }
