@@ -190,6 +190,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		}
 
 		if (!empty($data['feed'])) {
+			PluginHelper::importPlugin('pcf');
 			$registry 	= new Registry($data['feed']);
 			//$registry 	= new JRegistry($dataPh);
 			$dataFeed 	= $registry->toString();

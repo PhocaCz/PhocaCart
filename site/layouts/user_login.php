@@ -32,7 +32,7 @@ $d  = $displayData;
 
 echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_LOGIN').'</div>'. "\n";
 
-echo '<form action="'.Route::_('index.php', true, $mP->get('usesecure')).'" method="post" id="ph-login-form" class="form-inline" role="form">';
+echo '<form action="'.Route::_('index.php', true, $mP->get('usesecure')).'" method="post" id="ph-login-form" class="'.$d['s']['c']['form-inline'].'" role="form">';
 
 echo '<div id="ph-form-login-username" class="'.$d['s']['c']['control-group.form_inline'].'">'. "\n";
 echo '<div class="'.$d['s']['c']['form-group'].'">'. "\n";

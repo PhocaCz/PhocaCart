@@ -253,6 +253,7 @@ $d['hide_attributes']		= $this->t['hide_attributes_item'];
 $d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
 $d['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 $d['zero_attribute_price']  = $this->t['zero_attribute_price'];
+$d['stock_calculation']	    = (int)$x->stock_calculation;
 $d['pathitem']				= $this->t['pathitem'];
 $d['init_type']				= 1;
 $d['product_id']			= (int)$x->id;

@@ -122,6 +122,36 @@ a.upItemLink::before {
     background: #000;
     color: #fff;
 }
+
+.phTemplateItems {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top:1em;
+    margin-bottom: 2em;
+}
+
+.phTemplateItem {
+    padding: 1em;
+    text-align: center;
+    width: calc(33% - 0.4em);
+    margin: 0.2em;
+    border-radius: 0.3em;
+}
+
+.phTemplateItem img{
+    width: 100%;
+    height: auto;
+}
+
+.phTemplateItemsInfo {
+    margin: 1em auto;
+}
+.phTemplateItemTitle {
+    font-size: small;
+}
+.phTemplateItem a::before {
+    content: none;
+}
 ');
 
 $upEL = 'https://extensions.joomla.org/extension/phoca-cart/';
@@ -130,7 +160,7 @@ $upE = 'Phoca Cart';
 $o = '<div class="upBox">';
 
 $o .=  '<div class="upItem upItemD">';
-$o .=  '<div class="upItemText">If you find this project useful, please support it with a donation</div>';
+$o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO1'). '</div>';
 $o .=  '<form action="https://www.paypal.com/donate" method="post" target="_top">';
 $o .=  '<input type="hidden" name="hosted_button_id" value="ZVPH25SQ2DDBY" />';
 $o .=  '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />';
@@ -139,24 +169,59 @@ $o .=  '</form>';
 $o .=  '</div>';
 
 $o .=  '<div class="upItem upItemJ">';
-$o .=  '<div class="upItemText">If you find this project useful, please post a rating and review on the Joomla! Extension Directory website</div>';
-$o .=  '<a class="upItemLink" target="_blank" href="'. $upEL.'">'. $upE.' (JED website)</a>';
+$o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO2'). '</div>';
+$o .=  '<a class="upItemLink" target="_blank" href="'. $upEL.'">'. $upE.' (JED '.Text::_('COM_PHOCACART_WEBSITE').')</a>';
 $o .=  '</form>';
 $o .=  '</div>';
 
 $o .=  '<div class="upItem upItemDoc">';
-$o .=  '<div class="upItemText">If you need help, visit</div>';
-$o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/documentation">Phoca documentatin website</a>';
+$o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO3'). '</div>';
+$o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/documentation">Phoca documentatin '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
 $o .=  '<div class="upItemText">or ask directly in</div>';
-$o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/forum">Phoca forum website</a>';
+$o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/forum">Phoca forum '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
 $o .=  '</div>';
 
 $o .=  '<div class="upItem upItemPh">';
-$o .=  '<div class="upItemText">There are over a hundred more useful Phoca extensions, discover them on</div>';
-$o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz">Phoca website</a>';
+$o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO4'). '</div>';
+$o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz">Phoca '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
 $o .=  '</div>';
 
 $o .=  '</div>';
+
+
+$pathImg = 'media/com_phocacart/images/administrator/';
+
+$o .= '<div class="phTemplateItemsBox">';
+$o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO1'). '</div>';
+
+$o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO2'). '</div>';
+
+$o .= '<div class="phTemplateItems">';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-fashion.jpg', 'Phoca Cart - Cassiopeia - Fashion Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Fashion</b></div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-food.jpg', 'Phoca Cart - Cassiopeia - Food Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Food</b></div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-furniture.jpg', 'Phoca Cart - Cassiopeia - Furniture Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Furniture</b></div></div>';
+
+$o .= '</div>';
+
+
+$o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO3'). '</div>';
+
+$o .= '<div class="phTemplateItems">';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.linelab.org/support/lbox-free-joomla-4-template" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-lbox.jpg', ' LBOX - Free Joomla Template ' ) .'</a><div class="phTemplateItemTitle">LBOX - Free Joomla Template </div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.hotjoomlatemplates.com/joomla-templates/electronics-shop" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-ht.jpg', 'Hot Themes - Electronics Shop Joomla Template' ) .'</a><div class="phTemplateItemTitle">Hot Themes - Electronics Shop Joomla Template</div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://yootheme.com/joomla-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-yootheme.jpg', 'YOOtheme - Premium Joomla Templates' ) .'</a><div class="phTemplateItemTitle">YOOtheme - Premium Joomla Templates</div></div>';
+$o .= '</div>';
+
+$o .= '</div>';
+
+$o .= '</div>';// end phTemplateItemsBox
+
 echo $o;
 
 

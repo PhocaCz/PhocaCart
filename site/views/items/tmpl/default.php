@@ -280,6 +280,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
 			$dAb['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 			$dAb['zero_attribute_price']	= $this->t['zero_attribute_price'];
+			$dAb['stock_calculation']		= (int)$v->stock_calculation;
 			$dAb['pathitem']				= $this->t['pathitem'];
 
 			$dAb['product_id']				= (int)$v->id;

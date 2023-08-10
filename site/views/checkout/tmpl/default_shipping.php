@@ -208,7 +208,7 @@ if ($this->a->shippingnotused == 1) {
 
 		$priceI = $price->getPriceItemsShipping($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, 'SHIPPING_', $v->taxhide);
 
-		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-shipping-title-box">';
 
 		echo '<div class="'.$this->s['c']['controls'] .'">';
 		echo '<label><input type="radio" class="'.$this->s['c']['inputbox.radio'].'" name="phshippingopt" id="phshippingopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
@@ -248,7 +248,7 @@ if ($this->a->shippingnotused == 1) {
 		}
 		echo '</div>';
 
-		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-shipping-price-box">';
 		echo '<div class="radio">';
 
 		// We can hide netto and tax by tax method
@@ -301,7 +301,7 @@ if ($this->a->shippingnotused == 1) {
 		echo '</div>';// end radio
 
 		echo '</div>';// end row second column
-		echo '<div class="ph-cb grid"></div>';
+		//echo '<div class="ph-cb grid"></div>';
 
 	}
 

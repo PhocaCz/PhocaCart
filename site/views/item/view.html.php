@@ -52,7 +52,7 @@ class PhocaCartViewItem extends HtmlView
 		$this->category			= $model->getCategory($id, $catid);
 
 		$this->item				= $model->getItem($id, $catid);
-		
+
 		$this->t['catid']		= 0;
 		if (isset($this->category[0]->id)) {
 			$this->t['catid']	= (int)$this->category[0]->id;
@@ -181,6 +181,17 @@ class PhocaCartViewItem extends HtmlView
 
 			if ($this->t['popup_askquestion'] == 1) {
 				$media->loadWindowPopup();
+			}
+
+
+			// Possible change of image_popup_method parameter in plugin - to no load e.g. magnific or prettyphoto if not needed
+			$pluginData     = array();
+            $pluginData['image_popup_method'] = $this->t['image_popup_method'];
+			PluginHelper::importPlugin('pcv');
+			$eventData 					= array();
+			$result = Factory::getApplication()->triggerEvent('onPCVonItemImageBeforeLoadingImageLibrary', array(&$pluginData, $eventData));
+            if ($result) {
+				$this->t['image_popup_method'] = $pluginData['image_popup_method'];
 			}
 
 			if ($this->t['image_popup_method'] == 2) {

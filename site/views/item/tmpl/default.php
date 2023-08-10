@@ -394,6 +394,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$d['hide_attributes']		= $this->t['hide_attributes_item'];
 	$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
 	$d['zero_attribute_price']	= $this->t['zero_attribute_price'];
+	$d['stock_calculation']		= (int)$x->stock_calculation;
 	$d['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 	$d['pathitem']				= $this->t['pathitem'];
 	$d['init_type']				= 0;

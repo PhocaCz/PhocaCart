@@ -38,6 +38,7 @@ class PhocacartImage
                 $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
+                $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
 
             case 'medium':
@@ -46,6 +47,7 @@ class PhocacartImage
                 $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
+                $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
 
             default:
@@ -54,6 +56,7 @@ class PhocacartImage
                 $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
+                $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
         }
         return $thumbName;

@@ -68,7 +68,7 @@ if ($this->page == 0) { ?>
 				</ol>
 
 
-				<div><?php echo JText::_('COM_PHOCACART_FOR_MORE_INFORMATION_FOLLOW_THIS_GUIDE'); ?>: <a href="https://www.phoca.cz/documents/116-phoca-cart-component/807-installing-sample-data-demo-data-in-phoca-cart" target="_blank"><?php echo JText::_('COM_PHOCACART_INSTALLING_SAMPLE_DATA_IN_PHOCA_CART'); ?></a>.</div>
+				<div><?php echo JText::_('COM_PHOCACART_FOR_MORE_INFORMATION_FOLLOW_THIS_GUIDE'); ?>: <a href="https://www.phoca.cz/documentation/115-phoca-cart/116-phoca-cart-component/807-installing-sample-data" target="_blank"><?php echo JText::_('COM_PHOCACART_INSTALLING_SAMPLE_DATA_IN_PHOCA_CART'); ?></a>.</div>
 
 			</div>
 		</div>
