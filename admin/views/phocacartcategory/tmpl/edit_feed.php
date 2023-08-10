@@ -38,7 +38,11 @@ foreach($fieldSets as $name => $fieldSet) {
                     $nameFeed = str_replace('feed_', '', $name);// we have created dynamically the field as feed_zbozi_cz to differentiate from other fields, now return back to plugin name
 
                     Factory::getApplication()->triggerEvent('onPCFonCategoryBeforeRender', array('com_phocacart.category', $nameFeed, &$subform));
+<<<<<<< HEAD
 
+=======
+                    
+>>>>>>> 3d19e753c3c65ddf039cbb84e0192003d39c08d0
                     if (isset($this->item->params_feed[$nameFeed])) {
                         $subform->bind($this->item->params_feed[$nameFeed]);// bind the data from $this->item->param_feed['zbozi_cz'] to the subform
                     }
