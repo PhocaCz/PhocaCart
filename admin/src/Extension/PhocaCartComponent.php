@@ -9,13 +9,17 @@
 
 namespace Joomla\Component\PhocaCart\Administrator\Extension;
 
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Categories\CategoryInterface;
 use Joomla\CMS\Categories\CategoryNode;
-use Joomla\CMS\Categories\CategoryServiceInterface;
+use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
+use Joomla\CMS\Dispatcher\DispatcherInterface;
 use Joomla\CMS\Extension\LegacyComponent;
+use Joomla\CMS\Extension\MVCComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\MVC\Factory\MVCFactoryServiceTrait;
 use Joomla\Event\Event;
 
 \defined('JPATH_PLATFORM') or die;
@@ -25,16 +29,28 @@ use Joomla\Event\Event;
  *
  * @since  4.1.0
  */
-class PhocaCartComponent extends LegacyComponent implements CategoryServiceInterface
+class PhocaCartComponent extends LegacyComponent
 {
+  use MVCFactoryServiceTrait;
+
+  /**
+   * The dispatcher factory.
+   *
+   * @var ComponentDispatcherFactoryInterface
+   *
+   * @since  4.1.0
+   */
+  private $dispatcherFactory;
+
   /**
    * @inheritdoc
    * @since   4.1.0
    */
-  public function __construct(string $component = 'com_phocacart')
+  public function __construct(ComponentDispatcherFactoryInterface $dispatcherFactory, string $component = 'com_phocacart')
   {
     parent::__construct($component);
     Factory::getApplication()->getDispatcher()->addListener('onContentPrepareForm', [$this, 'onContentPrepareForm']);
+    $this->dispatcherFactory = $dispatcherFactory;
   }
 
   /**
@@ -44,16 +60,14 @@ class PhocaCartComponent extends LegacyComponent implements CategoryServiceInter
   public function getCategory(array $options = [], $section = ''): CategoryInterface
   {
 
-        // Hide wrong information about Phoca Cart categories in custom field list
-        $app    = Factory::getApplication();
-        $option = $app->input->get('option', '', 'string');
-        $context   = $app->input->get('context', '', 'string');
-        if ($option == 'com_fields' && $context == 'com_phocacart.phocacartitem') {
-            $document = $app->getDocument();
-            $document->addCustomTag('<style type="text/css"> table#fieldList tr th[scope=row] div div:nth-child(3) { display:none } </style>');
-        }
-
-
+    // Hide wrong information about Phoca Cart categories in custom field list
+    $app = Factory::getApplication();
+    $option = $app->input->get('option', '', 'string');
+    $context = $app->input->get('context', '', 'string');
+    if ($option == 'com_fields' && $context == 'com_phocacart.phocacartitem') {
+      $document = $app->getDocument();
+      $document->addCustomTag('<style type="text/css"> table#fieldList tr th[scope=row] div div:nth-child(3) { display:none } </style>');
+    }
 
     return new class() implements CategoryInterface {
       public function getExtension(): string
@@ -68,8 +82,6 @@ class PhocaCartComponent extends LegacyComponent implements CategoryServiceInter
         $node->addChild(new CategoryNode());
         return $node;
       }
-
-
     };
   }
 
@@ -98,6 +110,28 @@ class PhocaCartComponent extends LegacyComponent implements CategoryServiceInter
       $form->setFieldAttribute('assigned_cat_ids', 'type', 'PhocaCartCategory');
 
       $form->loadFile(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/forms/com_fields.xml');
+    }
+  }
+
+  /**
+   * @inheritdoc
+   * @since   4.1.0
+   */
+  public function getDispatcher(CMSApplicationInterface $application): DispatcherInterface
+  {
+    if ($application->isClient('api')) {
+      return $this->dispatcherFactory->createDispatcher($application);
+    } else {
+      return parent::getDispatcher($application);
+    }
+  }
+
+  public function getMVCFactory(): MVCFactoryInterface
+  {
+    if (Factory::getApplication()->isClient('api')) {
+      return $this->mvcFactory;
+    } else {
+      return parent::getMVCFactory();
     }
   }
 }

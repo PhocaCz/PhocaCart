@@ -1735,10 +1735,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$form->load($addform, false);
 		}
 
-
-
-
+		if (Factory::getApplication()->isClient('api')) {
+			$form->setFieldAttribute('catid_multiple', 'required', 'false');
+		}
+		
 		parent::preprocessForm($form, $data, $group);
 	}
 }
-?>
+

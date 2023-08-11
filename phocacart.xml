@@ -133,8 +133,12 @@
 			<language tag="en-GB">en-GB/en-GB.com_phocacart.sys.ini</language>
 		</languages>
 	</administration>
-	
-	
+
+	<api>
+		<files folder="api/">
+			<folder>src</folder>
+		</files>
+	</api>
 
 	<updateservers>
 		<server type="extension" name="COM_PHOCACART" priority="1"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml]]></server>
