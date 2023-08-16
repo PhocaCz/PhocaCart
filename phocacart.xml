@@ -134,10 +134,9 @@
 		</languages>
 	</administration>
 		<api>
-			<files folder="api/">
-			</files>
-				<folder>src</folder>
-		<api>
+			<files folder="api/"></files>
+			<folder>src</folder>
+		</api>
 	
 	
 
