@@ -1163,7 +1163,7 @@ class PhocacartOrderStatus
 
 		$db 		= Factory::getDBO();
 		//$user 		= PhocacartUser::getUser();
-		$user		= JFactory::getUser();// Logged in user, does not matter if customer|vendor|admin
+		$user		= Factory::getUser();// Logged in user, does not matter if customer|vendor|admin
 		$userId		= 0;
 
 		if (isset($user->id) && (int)$user->id > 0) {

@@ -526,6 +526,7 @@ class PhocacartRoute
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
 			}
+
 			if (isset($item->id) && ((int)$item->id > 0)) {
 				$link .= '&Itemid='.$item->id;
 			}
@@ -562,6 +563,7 @@ class PhocacartRoute
 
 
 	protected static function _findItem($needles, $notCheckId = 0, $lang = array())  {
+
 
 		$app = Factory::getApplication();
 		//$menus	= $app->getMenu('site', array());// Problems in indexer
@@ -611,6 +613,7 @@ class PhocacartRoute
 
 		if(!$items) {
 			$itemId =  $app->input->get('Itemid', 0, 'int');
+
 			if ($itemId > 0) {
 				$item = new stdClass();
 				$item->id = $itemId;
@@ -642,11 +645,19 @@ class PhocacartRoute
 
 			foreach($items as $item) {
 
+				// Correct problems when system returns differently null or 0
+				if (!isset($item->query['id'])) {
+					$item->query['id'] = 0;
+				}
+
 				if (isset($item->query['option']) && $item->query['option'] == $component->option
 					&& isset($item->query['view']) && $item->query['view'] == $needle
 					&& (in_array($needle, $notCheckIdArray) || (isset($item->query['id']) && $item->query['id'] == $id ))
 				) {
+
+
 					$match = $item;
+
 				}
 			}
 
