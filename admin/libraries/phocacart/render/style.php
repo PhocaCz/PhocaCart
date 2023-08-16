@@ -43,7 +43,11 @@ class PhocacartRenderStyle
                 $theme = $pC->get('theme', 'bs5');
                 $icons = $pC->get('icon_type', 'fa5');
             }
-            self::$styles = self::loadStyles($theme, $icons);
+
+            $params = [];
+            $params['form_design_type'] = $pC->get('form_design_type', '');
+
+            self::$styles = self::loadStyles($theme, $icons, $params);
         }
 
         return self::$styles;
@@ -51,7 +55,13 @@ class PhocacartRenderStyle
     }
 
 
-    public static function loadStyles($theme, $icons) {
+    public static function loadStyles($theme, $icons, $params = []) {
+
+
+        $formDesignTypeSuffix = '';
+        if (isset($params['form_design_type'])) {
+            $formDesignTypeSuffix = $params['form_design_type'];
+        }
 
         $s = array();
 
@@ -166,9 +176,9 @@ class PhocacartRenderStyle
         $s['c']['control-group.form_inline']     = 'control-group form-inline';
         $s['c']['form-group']                    = 'form-group';
         $s['c']['form-control']                  = 'form-control';
-        $s['c']['form-inline']                   = 'form-inline';
-        $s['c']['form-horizontal']               = 'form-horizontal';
-        $s['c']['form-horizontal.form-validate'] = 'form-horizontal form-validate';
+        $s['c']['form-inline']                   = 'form-inline '.$formDesignTypeSuffix;
+        $s['c']['form-horizontal']               = 'form-horizontal '.$formDesignTypeSuffix;
+        $s['c']['form-horizontal.form-validate'] = 'form-horizontal form-validate '.$formDesignTypeSuffix;
 
         $s['c']['form-check']       = 'form-check';
         $s['c']['form-check-input'] = 'form-check-input';
@@ -340,9 +350,9 @@ class PhocacartRenderStyle
                 $s['c']['control-group.form_inline']     = 'uk-form-group uk-inline';// Not exist
                 $s['c']['form-group']                    = 'uk-form-group';          // Not exist
                 $s['c']['form-control']                  = 'uk-input';
-                $s['c']['form-inline']                   = 'uk-inline';
-                $s['c']['form-horizontal']               = 'uk-form-horizontal';
-                $s['c']['form-horizontal.form-validate'] = 'uk-form-horizontal uk-form-validate';// Not exist
+                $s['c']['form-inline']                   = 'uk-inline '.$formDesignTypeSuffix;
+                $s['c']['form-horizontal']               = 'uk-form-horizontal '.$formDesignTypeSuffix;
+                $s['c']['form-horizontal.form-validate'] = 'uk-form-horizontal uk-form-validate '.$formDesignTypeSuffix;// Not exist
 
                 $s['c']['form-check']       = 'form-check';
                 $s['c']['form-check-input'] = 'form-check-input';

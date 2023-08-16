@@ -569,7 +569,7 @@ class PhocacartProduct
     * checkPrice - check if the product has price or not ( > 0 )
     */
 
-    public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0, $type = array(0, 1), $queryColumns = '', $return = '', $filterLang = false )
+    public static function getProducts($limitOffset = 0, $limitCount = 1, $orderingItem = 1, $orderingCat = 0, $checkPublished = false, $checkStock = false, $checkPrice = false, $categoriesList = 0, $categoryIds = array(), $featuredOnly = 0, $type = array(0, 1), $queryColumns = '', $return = '', $filterLang = false, $forceLang = '' )
     {
 
 
@@ -623,13 +623,14 @@ class PhocacartProduct
         }
 
         // Filter langauge
-        if ($filterLang) {
+        if ($forceLang != '' && $forceLang != '*') {
+           $wheres[] = ' ' . $db->quoteName('a.language') . ' IN ('.$db->quote($forceLang).')';
+        } else if ($filterLang) {
             $lang 		= Factory::getLanguage()->getTag();
+
             $wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
             $wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
         }
-
-
 
         // Views Plugin can load additional columns
 		$additionalColumns = array();
@@ -648,7 +649,7 @@ class PhocacartProduct
 			}
 		}
 
-        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
+        $baseColumns = array('a.id', 'a.title', 'a.image', 'a.video', 'a.alias', 'a.description', 'a.description_long', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.date_update', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
 
 
 		$col = array_merge($baseColumns, $additionalColumns);

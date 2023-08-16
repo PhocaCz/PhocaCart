@@ -127,8 +127,9 @@ if ($this->a->paymentnotused == 1) {
 
 		$priceI = $price->getPriceItemsPayment($v->cost, $v->cost_additional, $v->calculation_type, $total[0], $v->taxid, $v->taxrate, $v->taxcalculationtype, $v->taxtitle, 0, 1, 'PAYMENT_', $v->taxhide);
 
-		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-payment-title-box">';
 		echo '<div class="'.$this->s['c']['controls'] .'">';
+
 		echo '<label><input type="radio" class="'.$this->s['c']['inputbox.radio'].'" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
 
 
@@ -148,8 +149,17 @@ if ($this->a->paymentnotused == 1) {
 
 		echo '</div>';
 
-		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-payment-price-box">';
 		echo '<div class="radio">';
+
+		// We can hide netto and tax by tax method
+		$displayPriceItems = PhocaCartPrice::displayPriceItems($priceI, 'checkoutpayment');
+		if ($displayPriceItems['tax'] == 0) {
+			$priceI['taxformat'] = '';
+		}
+		if ($displayPriceItems['netto'] == 0) {
+			$priceI['nettoformat'] = '';
+		}
 
 		echo '<div class="'.$this->s['c']['row'].'">';
 		if ($this->t['zero_payment_price'] == 0 && $priceI['zero'] == 1) {
@@ -192,7 +202,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';// end radio
 
 		echo '</div>';// end row second column
-		echo '<div class="ph-cb grid"></div>';
+		//echo '<div class="ph-cb grid"></div>';
 
 	}
 
@@ -210,7 +220,7 @@ if ($this->a->paymentnotused == 1) {
 	if ($this->t['rewards']['apply'] && $this->t['display_apply_reward_points_form'] == 1) {
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
-		echo '<label>'.Text::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" ></label>';
+		echo '<label>'.Text::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-reward-points" type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" ></label>';
 		echo '</div>';
 		//echo '<div class="ph-cb"></div>';
 	}

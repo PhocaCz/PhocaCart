@@ -21,6 +21,11 @@ class PhocacartRenderIcon
 		$pC 						= PhocacartUtils::getComponentParameters();
 		$icon_type			= $pC->get( 'icon_type', 'fa5');
 
+		$pos   = PhocacartPos::isPos();
+		if ($pos) {
+			$icon_type = 'svg';
+		}
+
 		if ($forceIconType != '') {
 			$icon_type			= $forceIconType;
 		}

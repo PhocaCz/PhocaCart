@@ -17,14 +17,17 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 class PhocacartAttribute
 {
-    public static function getAttributesById($productId, $return = 0) {
+    public static function getAttributesById($productId, $return = 0, bool $showUnpublished = false) {
 
         $db = Factory::getDBO();
 
-        $query = 'SELECT a.id, a.title, a.alias, a.required, a.type'
+        $query = 'SELECT a.id, a.title, a.alias, a.required, a.type, a.published'
             . ' FROM #__phocacart_attributes AS a'
-            . ' WHERE a.product_id = ' . (int)$productId
-            . ' ORDER BY a.ordering';
+            . ' WHERE a.product_id = ' . (int)$productId;
+        if (!$showUnpublished) {
+            $query .= ' AND a.published = 1';
+        }
+        $query .= ' ORDER BY a.ordering';
         $db->setQuery($query);
 
 
@@ -41,6 +44,7 @@ class PhocacartAttribute
                     $attributesSubform['attributes' . $i]['id']       = (int)$v['id'];
                     $attributesSubform['attributes' . $i]['title']    = (string)$v['title'];
                     $attributesSubform['attributes' . $i]['alias']    = (string)$v['alias'];
+                    $attributesSubform['attributes' . $i]['published'] = (int)$v['published'];
                     $attributesSubform['attributes' . $i]['required'] = (int)$v['required'];
                     $attributesSubform['attributes' . $i]['type']     = (int)$v['type'];
                     $i++;
@@ -52,15 +56,18 @@ class PhocacartAttribute
         return false;
     }
 
-    public static function getOptionsById($attributeId, $return = 0) {
+    public static function getOptionsById($attributeId, $return = 0, bool $showUnpublished = false) {
 
         $db = Factory::getDBO();
 
 
-        $query = 'SELECT a.id, a.title, a.alias, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type';
+        $query = 'SELECT a.id, a.title, a.alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type';
         $query .= ' FROM #__phocacart_attribute_values AS a'
-            . ' WHERE a.attribute_id = ' . (int)$attributeId
-            . ' ORDER BY a.ordering';
+            . ' WHERE a.attribute_id = ' . (int)$attributeId;
+        if (!$showUnpublished) {
+            $query .= ' AND a.published = 1';
+        }
+        $query .= ' ORDER BY a.ordering';
         $db->setQuery($query);
 
         if ($return == 0) {
@@ -76,6 +83,7 @@ class PhocacartAttribute
                     $optionsSubform['options' . $i]['id']              = (int)$v['id'];
                     $optionsSubform['options' . $i]['title']           = (string)$v['title'];
                     $optionsSubform['options' . $i]['alias']           = (string)$v['alias'];
+                    $optionsSubform['options' . $i]['published']       = (int)$v['published'];
                     $optionsSubform['options' . $i]['operator']        = (string)$v['operator'];
                     $optionsSubform['options' . $i]['amount']          = PhocacartPrice::cleanPrice($v['amount']);
                     $optionsSubform['options' . $i]['stock']           = (string)$v['stock'];
@@ -256,8 +264,6 @@ class PhocacartAttribute
      */
 
     public static function storeAttributesById($productId, $attributesArray, $new = 0, $copy = 0) {
-
-
         if ((int)$productId > 0) {
             $db             = Factory::getDBO();
             $app            = Factory::getApplication();
@@ -290,6 +296,9 @@ class PhocacartAttribute
                     if (empty($v['alias'])) {
                         $v['alias'] = '';
                     }
+                    if (!isset($v['published'])) {
+                        $v['published'] = 1;
+                    }
                     if (empty($v['required'])) {
                         $v['required'] = '';
                     }
@@ -319,6 +328,7 @@ class PhocacartAttribute
                             . ' product_id = ' . (int)$productId . ','
                             . ' title = ' . $db->quote($v['title']) . ','
                             . ' alias = ' . $db->quote($v['alias']) . ','
+                            . ' published = ' . (int)$v['published'] . ','
                             . ' required = ' . (int)$v['required'] . ','
                             . ' type = ' . (int)$v['type'] . ','
                             . ' ordering = ' . (int)$i
@@ -333,8 +343,8 @@ class PhocacartAttribute
                         $date = Factory::getDate();
                         $now  = $date->toSql();
                         $valuesString = '';
-                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($v['title']) . ', ' . $db->quote($v['alias']) . ', ' . (int)$v['required'] . ', ' . (int)$v['type'] . ', ' . $db->quote($now) . ', '.  $i . ')';
-                        $query        = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type, date, ordering)'
+                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($v['title']) . ', ' . $db->quote($v['alias']) . ', ' . (int)$v['published'] . ', ' . (int)$v['required'] . ', ' . (int)$v['type'] . ', ' . $db->quote($now) . ', '.  $i . ')';
+                        $query        = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, published, required, type, date, ordering)'
                             . ' VALUES ' . (string)$valuesString;
                         $db->setQuery($query);
                         $db->execute(); // insert is not done together but step by step because of getting last insert id
@@ -406,12 +416,18 @@ class PhocacartAttribute
                             if (empty($v2['alias'])) {
                                 $v2['alias'] = '';
                             }
+                            if (!isset($v2['published'])) {
+                                $v2['published'] = '1';
+                            }
                             if (empty($v2['operator'])) {
                                 $v2['operator'] = '';
                             }
                             if (empty($v2['amount'])) {
                                 $v2['amount'] = '';
                             }
+
+                            $v2['amount'] = PhocacartText::filterValue($v2['amount'], 'number3');
+
                             if (empty($v2['stock'])) {
                                 $v2['stock'] = '';
                             }
@@ -524,6 +540,7 @@ class PhocacartAttribute
                                     . ' attribute_id = ' . (int)$newIdA . ','
                                     . ' title = ' . $db->quote($v2['title']) . ','
                                     . ' alias = ' . $db->quote($v2['alias']) . ','
+                                    . ' published = ' . (int)$v2['published'] . ','
                                     . ' operator = ' . $db->quote($v2['operator']) . ','
                                     . ' amount = ' . $db->quote($v2['amount']) . ','
                                     . ' stock = ' . (int)$v2['stock'] . ','
@@ -557,6 +574,7 @@ class PhocacartAttribute
                                 $options = '(' . (int)$newIdA . ', '
                                     . $db->quote($v2['title']) . ', '
                                     . $db->quote($v2['alias']) . ', '
+                                    . (int)$v2['published'] . ', '
                                     . $db->quote($v2['operator']) . ', '
                                     . $db->quote($v2['amount']) . ', '
                                     . (int)$v2['stock'] . ', '
@@ -575,7 +593,7 @@ class PhocacartAttribute
                                     . (int)$j . ')';
 
 
-                                $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, required, type, ordering)'
+                                $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, published, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, required, type, ordering)'
                                     . ' VALUES ' . $options;
 
                                 $db->setQuery($query);

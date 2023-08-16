@@ -19,6 +19,7 @@ use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Multilanguage;
 // ASSOCIATION
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $app = Factory::getApplication();
 if ($app->isClient('site')) {

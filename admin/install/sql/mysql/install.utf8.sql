@@ -311,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_attributes` (
   `alias` varchar(255) NOT NULL DEFAULT '',
   `required` tinyint(1) NOT NULL DEFAULT '0',
   `type` tinyint(1) NOT NULL DEFAULT '0',
-  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `published` tinyint(1) NOT NULL DEFAULT '1',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime,
   `ordering` int(11) NOT NULL DEFAULT '0',
@@ -329,6 +329,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_attribute_values` (
   `attribute_id` int(11) NOT NULL DEFAULT '0',
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
   `amount` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `operator` char(1) NOT NULL DEFAULT '',
   `stock` int(11) NOT NULL DEFAULT '0',
@@ -1469,6 +1470,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_feeds` (
   `date` datetime NOT NULL,
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '',
+  `currency_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

@@ -34,9 +34,14 @@ if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
 // one time, not in foreach. Of course currency class is singleton so we don't run sql query many time
 // but we don't need to run the function many times too.
 $cur = '';
-//if ($this->p['item_currency'] != '') {
-$cur	= PhocacartCurrency::getDefaultCurrencyCode();
-//}
+if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id'] > 0) {
+    $forceCurrencyObject = PhocacartCurrency::getCurrency((int)$this->t['feed']['currency_id']);
+    $cur = $forceCurrencyObject->code;
+} else {
+    $cur	= PhocacartCurrency::getDefaultCurrencyCode();
+}
+
+
 
 // START FOREACH OF PRODUCTS
 $o['items'] = '';
@@ -48,14 +53,13 @@ if (!empty($this->t['products'])) {
 
 
         // PRODUCT - Specific FEED plugin
+        $feedName = trim($this->t['feed']['feed_plugin']);
          $paramsFeedA = array();
         if (isset($v->params_feed) && $v->params_feed != '') {
 
             $registry = new Registry;
             $registry->loadString($v->params_feed);
             $paramsFeedA = $registry->toArray();
-
-            $feedName = trim($this->t['feed']['feed_plugin']);
 
             if (isset($paramsFeedA[$feedName]['pcf_param_published']) && $paramsFeedA[$feedName]['pcf_param_published'] == 0) {
                 // The product is unpublished from feed
@@ -135,7 +139,17 @@ if (!empty($this->t['products'])) {
             && isset($v->price_original) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 
             $priceOc 	= new PhocacartPrice;
+            if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id'] > 0) {
+                $priceOc->setCurrency((int)$this->t['feed']['currency_id']);
+            }
             $priceO		= $priceOc->getPriceItems($v->price_original, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
+
+
+            if (isset($forceCurrencyObject->exchange_rate) && $forceCurrencyObject->exchange_rate > 0) {
+                $priceO['netto'] = $priceO['netto'] * $forceCurrencyObject->exchange_rate;
+                $priceO['brutto'] = $priceO['brutto'] * $forceCurrencyObject->exchange_rate;
+                $priceO['tax'] = $priceO['tax'] * $forceCurrencyObject->exchange_rate;
+            }
 
             if ($this->p['price_decimals'] != '') {
                 $priceO['netto'] = number_format($priceO['netto'], (int)$this->p['price_decimals']);
@@ -160,7 +174,16 @@ if (!empty($this->t['products'])) {
             && isset($v->price) && isset($v->taxrate) && isset($v->taxcalculationtype)) {
 
             $priceFc = new PhocacartPrice;
+            if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id'] > 0) {
+                $priceFc->setCurrency((int)$this->t['feed']['currency_id']);
+            }
             $priceF = $priceFc->getPriceItems($v->price, $v->taxid, $v->taxrate, $v->taxcalculationtype, '', 0, '', 0, 1, null, $v->taxhide);
+
+            if (isset($forceCurrencyObject->exchange_rate) && $forceCurrencyObject->exchange_rate > 0) {
+                $priceF['netto'] = $priceF['netto'] * $forceCurrencyObject->exchange_rate;
+                $priceF['brutto'] = $priceF['brutto'] * $forceCurrencyObject->exchange_rate;
+                $priceF['tax'] = $priceF['tax'] * $forceCurrencyObject->exchange_rate;
+            }
 
 
             if ($this->p['price_decimals'] != '') {
@@ -179,6 +202,7 @@ if (!empty($this->t['products'])) {
             if ($this->p['item_final_price_without_vat'] != '' && isset($priceF['netto']) && (int)$priceF['netto'] > 0) {
                 $oI['item_final_price_without_vat'] = $l.$this->p['item_final_price_without_vat'].$r.$priceF['netto'].$e.$this->p['item_final_price_without_vat'].$r;
             }
+
             if ($this->p['item_final_price_with_vat'] != '' && isset($priceF['brutto']) && (int)$priceF['brutto'] > 0) {
                 $oI['item_final_price_with_vat'] = $l.$this->p['item_final_price_with_vat'].$r.$priceF['brutto'].$e.$this->p['item_final_price_with_vat'].$r;
             }

@@ -827,7 +827,9 @@ if ($tax_calculation > 0) {
 if (!empty($d['total'])) {
 	foreach($d['total'] as $k => $v) {
 
-		if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto') {
+		// display or not display shipping and payment methods with zero amount
+		//if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto' && $v->type != 'sbrutto' && $v->type != 'pbrutto') {
+			if($v->amount == 0 && $v->amount_currency == 0 && $v->type != 'brutto') {
 			// Don't display coupon if null
 
 		} else if ($v->type == 'netto') {
@@ -1220,6 +1222,8 @@ if ($pR) {
 	//$oPr2 = implode("\n", $oPr);
 	$oPr2 = implode("", $oPr);// new rows set in print library
 
+	// Run content plugins e.g. because of translation
+	$oPr2 = HTMLHelper::_('content.prepare', $oPr2);
 
 	Factory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
 
@@ -1227,6 +1231,9 @@ if ($pR) {
 } else {
 
 	$o2 = implode("\n", $o);
+
+	// Run content plugins e.g. because of translation
+	$o2 = HTMLHelper::_('content.prepare', $o2);
 
 	Factory::getApplication()->triggerEvent('onChangeText', array(&$o2));
 	echo $o2;

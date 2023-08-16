@@ -504,7 +504,6 @@ if (!empty($d['fullitems'][1])) {
 
 	// SHIPPING
 	// Add Shipping costs if there are some
-
 	if (!empty($d['shippingcosts'])) {
 		$sC = $d['shippingcosts'];
 
@@ -526,21 +525,25 @@ if (!empty($d['fullitems'][1])) {
 			echo '</div>';// end row
 		} else {
 
-
+			$displayPriceItems = PhocaCartPrice::displayPriceItems($sC, 'checkoutshipping');
 			if (isset($sC['nettoformat']) && $sC['nettoformat'] != '' && isset($sC['nettotxt'])/* && $sC['nettotxt'] != '' can be empty */) {
-				echo '<div class="'.$r.' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-netto">';
-				echo '<div class="'.$cTotE.'"></div>';
-				echo '<div class="'.$cTotT.' ph-cart-shipping-netto-txt">'.$sC['title']. PhocacartUtils::addSeparator($sC['nettotxt']).'</div>';
-				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-shipping-netto">'.$sC['nettoformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['netto'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-netto">';
+					echo '<div class="' . $cTotE . '"></div>';
+					echo '<div class="' . $cTotT . ' ph-cart-shipping-netto-txt">' . $sC['title'] . PhocacartUtils::addSeparator($sC['nettotxt']) . '</div>';
+					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-shipping-netto">' . $sC['nettoformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if (isset($sC['taxformat']) && $sC['taxformat'] != '' && isset($sC['taxtxt'])/* && $sC['taxtxt'] != '' can be empty */) {
-				echo '<div class="'.$r.' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-tax">';
-				echo '<div class="'.$cTotE.'"></div>';
-				echo '<div class="'.$cTotT.' ph-cart-shipping-tax-txt">'.$sC['title']. PhocacartUtils::addSeparator($sC['taxtxt']).'</div>';
-				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-shipping-tax">'.$sC['taxformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['tax'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-tax">';
+					echo '<div class="' . $cTotE . '"></div>';
+					echo '<div class="' . $cTotT . ' ph-cart-shipping-tax-txt">' . $sC['title'] . PhocacartUtils::addSeparator($sC['taxtxt']) . '</div>';
+					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-shipping-tax">' . $sC['taxformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if ((isset($sC['bruttoformat']) && $sC['bruttoformat'] != '' && isset($sC['bruttotxt']) /* && $sC['bruttotxt'] != '' - can be empty */) || $sC['freeshipping'] == 1) {
@@ -558,7 +561,6 @@ if (!empty($d['fullitems'][1])) {
 	// Add Payment costs if there are some
 	if (!empty($d['paymentcosts'])) {
 		$pC = $d['paymentcosts'];
-
 
 		if ($p['zero_payment_price_calculation'] == -1 && $pC['zero'] == 1) {
 			// Hide completely
@@ -578,23 +580,26 @@ if (!empty($d['fullitems'][1])) {
 			echo '</div>';// end row
 		} else {
 
-
+			$displayPriceItems = PhocaCartPrice::displayPriceItems($pC, 'checkoutpayment');
 			if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt'])/* && $pC['nettotxt'] != '' can be empty */) {
 
-
-				echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box-netto">';
-				echo '<div class="'.$cTotE.'"></div>';
-				echo '<div class="'.$cTotT.' ph-cart-payment-netto-txt">'.$pC['title']. PhocacartUtils::addSeparator($pC['nettotxt']).'</div>';
-				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-payment-netto">'.$pC['nettoformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['netto'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-payment-box ph-checkout-cart-row-payment-box-netto">';
+					echo '<div class="' . $cTotE . '"></div>';
+					echo '<div class="' . $cTotT . ' ph-cart-payment-netto-txt">' . $pC['title'] . PhocacartUtils::addSeparator($pC['nettotxt']) . '</div>';
+					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-payment-netto">' . $pC['nettoformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if (isset($pC['taxformat']) && $pC['taxformat'] != '' && isset($pC['taxtxt'])/* && $pC['taxtxt'] != '' can be empty */) {
-				echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box-tax">';
-				echo '<div class="'.$cTotE.'"></div>';
-				echo '<div class="'.$cTotT.' ph-cart-payment-tax-txt">'.$pC['title']. PhocacartUtils::addSeparator($pC['taxtxt']).'</div>';
-				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-payment-tax">'.$pC['taxformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['tax'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-payment-box ph-checkout-cart-row-payment-box-tax">';
+					echo '<div class="' . $cTotE . '"></div>';
+					echo '<div class="' . $cTotT . ' ph-cart-payment-tax-txt">' . $pC['title'] . PhocacartUtils::addSeparator($pC['taxtxt']) . '</div>';
+					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-payment-tax">' . $pC['taxformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if ((isset($pC['bruttoformat']) && $pC['bruttoformat'] != '' && isset($pC['bruttotxt'])/* && $pC['bruttotxt'] != '' can be empty */) || $pC['freepayment'] == 1) {

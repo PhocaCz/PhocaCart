@@ -33,7 +33,17 @@ class TablePhocacartOrder extends Table
 			$this->alias = Factory::getDate()->format("Y-m-d-H-i-s");
 		}*/
 
-        if (!isset($this->date) || $this->date == '0' || $this->date == '') {
+		/*
+		 * BE AWARE
+		 * These columns: date, tracking_date_shipped, invoice_date, invoice_due_date, invoice_time_of_supply, required_delivery_date
+		 * MUST BE ALWAYS INCLUDED WHEN STORING data in order table
+		 * IF NOT, NULL VALUES WILL BE SET TO 0000-00-00 00:00:00 (standardly NULL values means, the data stored in db will be not changed)
+		 * EXAMPLE: administrator/components/com_phocacart/libraries/phocacart/order/order.php line cca 3026
+		 * we want only update columns which exist so all null values columns will not change the stored data in database except these date columns
+		 * where default is set in case they have null
+		 */
+
+     	if (!isset($this->date) || $this->date == '0' || $this->date == '') {
 			$this->date = '0000-00-00 00:00:00';
 		}
         if (!isset($this->tracking_date_shipped) || $this->tracking_date_shipped == '0' || $this->tracking_date_shipped == '') {

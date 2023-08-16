@@ -7,8 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
+
 jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartManufacturers extends ListModel
@@ -24,16 +27,34 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
+				'language', 'a.language',
 				'published','a.published',
 				'count_products', 'a.count_products'
 			);
 		}
+
+		// ASSOCIATION
+		if (Associations::isEnabled()){
+			$config['filter_fields'][] = 'association';
+		}
+
 		parent::__construct($config);
 	}
 
 	protected function populateState($ordering = 'a.title', $direction = 'ASC') {
 		// Initialise variables.
 		$app = Factory::getApplication('administrator');
+
+		// ASSOCIATION
+		$forcedLanguage = $app->input->getCmd('forcedLanguage');
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout')) {
+			$this->context .= '.' . $layout;
+		}
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage){
+			$this->context .= '.' . $forcedLanguage;
+		}
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
@@ -47,8 +68,8 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
 		$this->setState('filter.published', $state);
 
-		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		//$this->setState('filter.language', $language);
+		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '', 'string');
+		$this->setState('filter.language', $language);
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
@@ -56,6 +77,11 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 
 		// List state information.
 		parent::populateState($ordering, $direction);
+
+		// ASSOCIATION
+		if (!empty($forcedLanguage)) {
+			$this->setState('filter.language', $forcedLanguage);
+		}
 	}
 
 	protected function getStoreId($id = '')
@@ -65,6 +91,7 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		//$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.manufacturer_id');
+		$id .= ':'.$this->getState('filter.language');
 		return parent::getStoreId($id);
 	}
 
@@ -83,13 +110,24 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		$query->from('`#__phocacart_manufacturers` AS a');
 
 		// Join over the language
-		//$query->select('l.title AS language_title');
-		//$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
+		$query->select('l.title AS language_title, l.image AS language_image');
+		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
+
+		if (Associations::isEnabled()) {
+			$subQuery = $db->getQuery(true)
+				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
+				->from($db->quoteName('#__associations', 'asso'))
+				->join('LEFT', $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key'))
+				->where($db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id'))
+				->where($db->quoteName('asso.context') . ' = ' . $db->quote('com_phocacart.manufacturer'));
+
+			$query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
+		}
 
 		// Filter by access level.
 /*		if ($access = $this->getState('filter.access')) {
@@ -97,6 +135,9 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		}*/
 
 
+		if ($language = $this->getState('filter.language')) {
+			$query->where('a.language = ' . $db->quote($language));
+		}
 
 		// Filter by published state.
 		$published = $this->getState('filter.published');
@@ -126,8 +167,7 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}
 }
-?>
+

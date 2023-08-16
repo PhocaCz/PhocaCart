@@ -327,14 +327,18 @@ class PhocacartOrder
 
 
         //$dispatcher = J EventDispatcher::getInstance();
-        $plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
-        if ($plugin) {
-            $eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
-            Factory::getApplication()->triggerEvent('onPCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
-            $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
-        } else {
+        if (isset($payment['method'])) {
+            $plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
+            if ($plugin) {
+                $eventData               = array();
+                $eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
+                Factory::getApplication()->triggerEvent('onPCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
+                $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
+            } else {
 
+                $d['status_id'] = $statusId;// no plugin or no event found
+            }
+        } else {
             $d['status_id'] = $statusId;// no plugin or no event found
         }
 
@@ -975,10 +979,10 @@ class PhocacartOrder
                 $d2['published'] = 1;
 
                 // Shipping
-
                 if (!empty($shippingC)) {
 
                     $published = 1;
+
                     if (isset($shippingC['taxtxt']) && isset($shippingC['tax']) && $shippingC['tax'] > 0) {
                         $shippingC['taxcalc']      = (int)$d['tax_calculation'];
                         $displayPriceItems = PhocaCartPrice::displayPriceItems($shippingC, 'order');
@@ -1429,7 +1433,7 @@ class PhocacartOrder
         }
 
 
-        // Possible feature - remove this additional check based on mostly design parameters
+        // Possible feature - remove this additional check based on mostly design parameters - for now removed for POS
 
         // 1) canDisplayAddtocartAdvanced - Product on demand product cannot be ordered
         // canDisplayAddtocart (is a part of  1) - Display add to cart disabled or only for specific access level or only for specific group (checked previously in checkIfAccessPossible)
@@ -1461,21 +1465,26 @@ class PhocacartOrder
             $can_display_addtocart_price = $rights->canDisplayAddtocartPrice($itemP, $priceA);
             $can_display_addtocart_stock = $rights->canDisplayAddtocartStock($itemP, $stock);
 
+            $pos = PhocacartPos::isPos();
 
+            if ($pos) {
+                // Don't check "design" parameters
+            } else {
 
-            if (!$can_display_addtocart) {
-                $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
-                return false;
-            }
+                if (!$can_display_addtocart) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ACCESSIBLE') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                    return false;
+                }
 
-            if (!$can_display_addtocart_price) {
-                $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
-                return false;
-            }
+                if (!$can_display_addtocart_price) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_PRICE_IS_ZERO') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                    return false;
+                }
 
-            if (!$can_display_addtocart_stock) {
-                $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY'). ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
-                return false;
+                if (!$can_display_addtocart_stock) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_STOCK_IS_EMPTY') . ' - ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $d['title'], 'error');
+                    return false;
+                }
             }
 
         }
@@ -2955,10 +2964,19 @@ class PhocacartOrder
         // If there are data yet, don't overwrite them
         // Order and Receipt are not changed by status, so this can be checked before invoice
         // and PRN
-        $query = ' SELECT date, invoice_number_id, invoice_number, invoice_prn, invoice_date, invoice_due_date, invoice_time_of_supply FROM #__phocacart_orders WHERE id = ' . (int)$id . ' ORDER BY id LIMIT 1';
+        $query = ' SELECT date, invoice_number_id, invoice_number, invoice_prn, invoice_date, invoice_due_date, invoice_time_of_supply, tracking_date_shipped, required_delivery_time  FROM #__phocacart_orders WHERE id = ' . (int)$id . ' ORDER BY id LIMIT 1';
         $db->setQuery($query);
         $orderData = $db->loadAssoc();
 
+        // SEE: administrator/components/com_phocacart/tables/phocacartorder.php
+        // some date columns cannot have null values, as null values will be transformed to 0000-00-00 00:00:00 in check function
+        // instead of leaving yet stored data in database (values with null standardly do not change current data in database)
+        // $d['date'] - defined previously
+        $d['tracking_date_shipped'] = $orderData['tracking_date_shipped'];
+        $d['invoice_date']          = $orderData['invoice_date'];
+        $d['invoice_due_date']      = $orderData['invoice_due_date'];
+        $d['invoice_time_of_supply']= $orderData['invoice_time_of_supply'];
+        $d['required_delivery_time']= $orderData['required_delivery_time'];
 
         if (in_array('I', $docs)) {
             if (!isset($orderData['date']) || (isset($orderData['date']) && !PhocacartDate::activeDatabaseDate($orderData['date']))) {
@@ -3012,8 +3030,9 @@ class PhocacartOrder
         // This method can be called by storing order or by chaning statuses, so
         // add only the variables which really should be added and don't
         // overwrite existing variables with empty values
-        // This is why dome $d array keys are not defined
+        // This is why some $d array keys are not defined
         // E.g. if this method is called by chaning status, order and receipt keys are inactive
+
         $row = Table::getInstance('PhocacartOrder', 'Table', array());
 
 
@@ -3024,6 +3043,9 @@ class PhocacartOrder
             return false;
         }
 
+        // SEE: administrator/components/com_phocacart/tables/phocacartorder.php
+        // some date columns cannot have null values, as null values will be transformed to 0000-00-00 00:00:00 in check function
+        // instead of leaving yet stored data in database (values with null standardly do not change current data in database)
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
@@ -3031,7 +3053,6 @@ class PhocacartOrder
             $app->enqueueMessage($msg, 'error');
             return false;
         }
-
 
         if (!$row->store()) {
             //throw new Exception($row->getError());

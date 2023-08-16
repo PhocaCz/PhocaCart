@@ -377,7 +377,9 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		$selImages = '';
 
 		if ($p['switch_image_category_items'] == 1) {
-			$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON a.id = im.product_id';
+			//$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON a.id = im.product_id';
+			// To have ordering of additional images
+			$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON im.id = (SELECT id FROM #__phocacart_product_images WHERE product_id = a.id ORDER BY ordering ASC LIMIT 1)';
 			$selImages	= ' GROUP_CONCAT(im.image) as additional_image,';
 
 		}

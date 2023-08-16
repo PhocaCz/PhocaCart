@@ -153,10 +153,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$item->set('additional_download_files', PhocacartFileAdditional::getProductFilesByProductId((int)$item->id, 2));
 			$item->set('additional_images', PhocacartImageAdditional::getImagesByProductId((int)$item->id, 2));
 
-			$attributes = PhocacartAttribute::getAttributesById((int)$item->id, 2);
+			$attributes = PhocacartAttribute::getAttributesById((int)$item->id, 2, true);
 			if (!empty($attributes)) {
 				foreach ($attributes as $k => $v) {
-					$attributes[$k]['options']	= PhocacartAttribute::getOptionsById((int)$v['id'], 2);
+					$attributes[$k]['options']	= PhocacartAttribute::getOptionsById((int)$v['id'], 2, true);
 				}
 			}
 			$item->set('attributes', $attributes);
@@ -341,6 +341,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 
 		if (!empty($data['feed'])) {
+			PluginHelper::importPlugin('pcf');
 			$registry 	= new Registry($data['feed']);
 			//$registry 	= new JRegistry($dataPh);
 			$dataFeed 	= $registry->toString();
@@ -1655,8 +1656,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$field->addAttribute('edit', 'true');
 					$field->addAttribute('clear', 'true');
 					$field->addAttribute('propagate', 'true');
-					$option = $field->addChild('option', 'COM_MENUS_ITEM_FIELD_ASSOCIATION_NO_VALUE');
-					$option->addAttribute('value', '');
+					//$option = $field->addChild('option', 'COM_MENUS_ITEM_FIELD_ASSOCIATION_NO_VALUE');
+					//$option->addAttribute('value', '');
 				}
 
 				$form->load($addform, false);
@@ -1734,7 +1735,9 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$form->load($addform, false);
 		}
 
-
+		if (Factory::getApplication()->isClient('api')) {
+			$form->setFieldAttribute('catid_multiple', 'required', 'false');
+		}
 
 
 		parent::preprocessForm($form, $data, $group);

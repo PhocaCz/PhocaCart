@@ -23,6 +23,7 @@
 
 	--ph-price-filter-bg: #08b2d9;
 	--ph-price-filter-border: #079ec0;
+    --ph-main: #08b2d9;
 
 
     --ph-icon-default: #d0d0d0;
@@ -2460,3 +2461,101 @@ img.ph-lazyload:not([src]) {
         justify-content: center;
     }
 }
+
+
+/* Form Design Type - Placeholder */
+.ph-form-group {
+    padding: 0.5em;
+}
+
+.ph-form-input-box {
+    position: relative;
+}
+
+.ph-form-input-box input.form-control {
+    left: 10px;
+    font-size: 1em;
+    height: 28px;
+    padding: 20px 15px;
+    /*border-radius: 5px;*/
+    border: 1px solid var(--ph-grey-color);
+    outline: 0;
+    box-sizing: border-box;
+}
+
+form.ph-form-placeholder input.form-control:focus,
+.ph-form-input-box select.form-select:focus,
+.ph-form-input-box input.form-control:focus {
+    border: 1px solid var(--ph-main);
+    outline: 0;
+    box-shadow: 0px 0px 0px 2px var(--ph-main);
+}
+
+.ph-form-input-box input.form-control.readonly:focus {
+    border: 1px solid var(--ph-grey-color);
+    outline: 0;
+    box-shadow: 0px 0px 0px 2px transparent;
+}
+
+/* .ph-form-input-box input:not(:focus):valid ~ label */
+.ph-form-input-box select ~ label,
+.ph-form-input-box input.form-control:focus ~ label,
+.ph-form-input-box input.form-control:not([value='']) ~ label {
+    top: -7px;
+    left: 10px;
+    font-size: 0.75em;
+    opacity: 1;
+    background: #fff;
+    display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px;
+    /*color: #000;*/
+}
+
+.ph-form-input-box label {
+    top: 10px;
+    left: 10px;
+    font-size: 1em;
+    position: absolute;
+    pointer-events: none;
+    transition: 0.2s ease all;
+    color: var(--ph-grey-color);
+}
+
+form.ph-form-placeholder .ph-checkout-shipping-row,
+form.ph-form-placeholder .ph-checkout-billing-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-self: flex-start;
+}
+
+.ph-box-header {
+    width: 100%;
+}
+
+.ph-form-group {
+    width: 100%;
+}
+
+.ph-form-group-vat_1,
+.ph-form-group-company {
+    width: 50%;
+}
+.ph-form-group-name_first,
+.ph-form-group-name_last {
+    width: 50%;
+}
+
+.ph-form-group-zip {
+    width: 30%;
+}
+
+.ph-form-group-city {
+    width: 70%;
+}
+
+.ph-form-group-country,
+.ph-form-group-region {
+    width: 50%;
+}
+

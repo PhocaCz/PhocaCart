@@ -293,18 +293,24 @@ if (!empty($d['fullitems'])) {
 			if ($sC['title'] != '') {
 				$sC['title'] = $sC['title']. ' - ';
 			}
+			$displayPriceItems = PhocaCartPrice::displayPriceItems($sC, 'checkoutshipping');
+
 			if (isset($sC['nettoformat']) && $sC['nettoformat'] != '' && isset($sC['nettotxt']) && $sC['nettotxt'] != '') {
-				echo '<div class="'.$r.' ph-cart-cart-row-shipping-box-netto">';
-				echo '<div class="'.$cT.' ph-small ph-cart-shipping-netto-txt">'.$sC['title'].$sC['nettotxt'].'</div>';
-				echo '<div class="'.$cP.' ph-small ph-right ph-cart-shipping-netto">'.$sC['nettoformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['netto'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-cart-row-shipping-box-netto">';
+					echo '<div class="' . $cT . ' ph-small ph-cart-shipping-netto-txt">' . $sC['title'] . $sC['nettotxt'] . '</div>';
+					echo '<div class="' . $cP . ' ph-small ph-right ph-cart-shipping-netto">' . $sC['nettoformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if (isset($sC['taxformat']) && $sC['taxformat'] != '' && isset($sC['taxtxt']) && $sC['taxtxt'] != '') {
-				echo '<div class="'.$r.' ph-cart-cart-row-shipping-box-tax">';
-				echo '<div class="'.$cT.' ph-small ph-cart-shipping-tax-txt">'.$sC['title'].$sC['taxtxt'].'</div>';
-				echo '<div class="'.$cP.' ph-small ph-right ph-cart-shipping-tax">'.$sC['taxformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['tax'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-cart-row-shipping-box-tax">';
+					echo '<div class="' . $cT . ' ph-small ph-cart-shipping-tax-txt">' . $sC['title'] . $sC['taxtxt'] . '</div>';
+					echo '<div class="' . $cP . ' ph-small ph-right ph-cart-shipping-tax">' . $sC['taxformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if ((isset($sC['bruttoformat']) && $sC['bruttoformat'] != '' && isset($sC['bruttotxt']) && $sC['bruttotxt'] != '') || $sC['freeshipping'] == 1) {
@@ -317,7 +323,6 @@ if (!empty($d['fullitems'])) {
 	}
 
 	// PAYMENT
-
 	// Add Payment costs if there are some
 	if (!empty($d['paymentcosts'])) {
 		$pC = $d['paymentcosts'];
@@ -343,20 +348,24 @@ if (!empty($d['fullitems'])) {
 				$pC['title'] = $pC['title']. ' - ';
 			}
 
-			if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt']) && $pC['nettotxt'] != '') {
+			$displayPriceItems = PhocaCartPrice::displayPriceItems($pC, 'checkoutpayment');
 
-				echo '<div class="'.$r.' ph-cart-cart-row-payment-box-netto">';
-				echo '<div class="'.$cT.' ph-small ph-cart-payment-netto-txt">'.$pC['title']. $pC['nettotxt'].'</div>';
-				echo '<div class="'.$cP.' ph-small ph-right ph-cart-payment-netto">'.$pC['nettoformat'].'</div>';
-				echo '</div>';// end row
+			if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt']) && $pC['nettotxt'] != '') {
+				if ($displayPriceItems['netto'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-cart-row-payment-box-netto">';
+					echo '<div class="' . $cT . ' ph-small ph-cart-payment-netto-txt">' . $pC['title'] . $pC['nettotxt'] . '</div>';
+					echo '<div class="' . $cP . ' ph-small ph-right ph-cart-payment-netto">' . $pC['nettoformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if (isset($pC['taxformat']) && $pC['taxformat'] != '' && isset($pC['taxtxt']) && $pC['taxtxt'] != '') {
-
-				echo '<div class="'.$r.' ph-cart-cart-row-payment-box-tax">';
-				echo '<div class="'.$cT.' ph-small ph-cart-payment-tax-txt">'.$pC['title']. $pC['taxtxt'].'</div>';
-				echo '<div class="'.$cP.' ph-small ph-right ph-cart-payment-tax">'.$pC['taxformat'].'</div>';
-				echo '</div>';// end row
+				if ($displayPriceItems['tax'] == 1) {
+					echo '<div class="' . $r . ' ph-cart-cart-row-payment-box-tax">';
+					echo '<div class="' . $cT . ' ph-small ph-cart-payment-tax-txt">' . $pC['title'] . $pC['taxtxt'] . '</div>';
+					echo '<div class="' . $cP . ' ph-small ph-right ph-cart-payment-tax">' . $pC['taxformat'] . '</div>';
+					echo '</div>';// end row
+				}
 			}
 
 			if ((isset($pC['bruttoformat']) && $pC['bruttoformat'] != '' && isset($pC['bruttotxt']) && $pC['bruttotxt'] != '') || $pC['freepayment'] == 1) {

@@ -184,6 +184,7 @@ class PhocacartUser
 		// This can be set for new users who didn't set the address yet and for gest only. Not for users how added the address as they made the choice which is saved and cannot be changed
 		$pC = PhocacartUtils::getComponentParameters();
         $delivery_billing_same_enabled = $pC->get('delivery_billing_same_enabled', 0);
+		$form_design_type = $pC->get('form_design_type', '');
 
         // 1) GUEST USER (no preference stored)
 		if ($guestUser > 0 && !PhocacartUserGuestuser::getAddress() && ($delivery_billing_same_enabled == 2 || $delivery_billing_same_enabled == 3)) {
@@ -237,10 +238,23 @@ class PhocacartUser
 						$input = str_replace('form-select', $s['c']['inputbox.form-select'], $input);
 
 
-						$o['b'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
-						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $billingSuffix).'</div>';
-						$o['b'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$input.'</div>';
-						$o['b'] .= '</div>' . "\n";
+						if ($form_design_type == 'ph-form-placeholder'){
+							// When input is not required we cannot select empty input field by CSS so we help us with setting value:
+							// FROM: .ph-form-input-box input:not(:focus):valid ~ label TO: .ph-form-input-box input.form-control:not([value='']) ~ label in main CSS
+							// Having all inputs required, such hack is not needed
+							$input = str_replace('<input', '<input onkeyup="this.setAttribute(\'value\', this.value);" ', $input);
+
+							$o['b'] .= '<div class="ph-form-group ph-form-group-'.$v->title.'">';
+							$o['b'] .= '<div class="ph-form-input-box">'.$input.'';
+							$o['b'] .= $form->getLabel($v->title . $billingSuffix);
+							$o['b'] .= '</div>' . "\n";
+							$o['b'] .= '</div>' . "\n";
+						} else {
+							$o['b'] .= '<div class="' . $s['c']['row'] . ' ' . $s['c']['form-group'] . '">';
+							$o['b'] .= '<div class="' . $s['c']['col.xs12.sm5.md5'] . ' ' . $s['c']['control-label'] . '">' . $form->getLabel($v->title . $billingSuffix) . '</div>';
+							$o['b'] .= '<div class="' . $s['c']['col.xs12.sm7.md7'] . '">' . $input . '</div>';
+							$o['b'] .= '</div>' . "\n";
+						}
 
 						/*
 						$form->setFieldAttribute($v->title, 'hint', ' ');
@@ -292,10 +306,23 @@ class PhocacartUser
 						$input = str_replace('form-control', $s['c']['inputbox.form-control'], $form->getInput($v->title . $shippingSuffix));
 						$input = str_replace('form-select', $s['c']['inputbox.form-select'], $input);
 
-						$o['s'] .= '<div class="'.$s['c']['row'].' '.$s['c']['form-group'].'">';
-						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm5.md5'].' '.$s['c']['control-label'].'">'.$form->getLabel($v->title . $shippingSuffix).'</div>';
-						$o['s'] .= '<div class="'.$s['c']['col.xs12.sm7.md7'].'">'.$input.'</div>';
-						$o['s'] .= '</div>' . "\n";
+						if ($form_design_type == 'ph-form-placeholder'){
+							// When input is not required we cannot select empty input field by CSS so we help us with setting value:
+							// FROM: .ph-form-input-box input:not(:focus):valid ~ label TO: .ph-form-input-box input.form-control:not([value='']) ~ label in main CSS
+							// Having all inputs required, such hack is not needed
+							$input = str_replace('<input', '<input onkeyup="this.setAttribute(\'value\', this.value);" ', $input);
+
+							$o['s'] .= '<div class="ph-form-group ph-form-group-'.$v->title.'">';
+							$o['s'] .= '<div class="ph-form-input-box">'.$input.'';
+							$o['s'] .= $form->getLabel($v->title . $shippingSuffix);
+							$o['s'] .= '</div>' . "\n";
+							$o['s'] .= '</div>' . "\n";
+						} else {
+							$o['s'] .= '<div class="' . $s['c']['row'] . ' ' . $s['c']['form-group'] . '">';
+							$o['s'] .= '<div class="' . $s['c']['col.xs12.sm5.md5'] . ' ' . $s['c']['control-label'] . '">' . $form->getLabel($v->title . $shippingSuffix) . '</div>';
+							$o['s'] .= '<div class="' . $s['c']['col.xs12.sm7.md7'] . '">' . $input . '</div>';
+							$o['s'] .= '</div>' . "\n";
+						}
 
 						/*
 						$form->setFieldAttribute($v->title, 'hint', ' ');

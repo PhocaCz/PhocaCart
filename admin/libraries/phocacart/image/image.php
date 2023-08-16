@@ -38,6 +38,7 @@ class PhocacartImage
                 $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
+                $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
 
             case 'medium':
@@ -46,6 +47,7 @@ class PhocacartImage
                 $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
+                $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
 
             default:
@@ -54,6 +56,7 @@ class PhocacartImage
                 $thumbName->abs      = Path::clean(str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_abs_ds'] . $filename));
                 $thumbName->rel      = str_replace($title, 'thumbs/' . $fileNameThumb, $path['orig_rel_ds'] . $filename);
                 $thumbName->rel_webp = PhocacartFile::changeFileExtension($thumbName->rel, 'webp');
+                $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
         }
         return $thumbName;
@@ -111,7 +114,7 @@ class PhocacartImage
         $query = 'SELECT i.image FROM #__phocacart_product_images AS i'
             . ' LEFT JOIN #__phocacart_products AS p ON p.id = i.product_id'
             . ' WHERE p.id = ' . (int)$itemId
-            . ' ORDER BY i.image';
+            . ' ORDER BY i.ordering ASC';
         $db->setQuery($query);
         $images = $db->loadObjectList();
 

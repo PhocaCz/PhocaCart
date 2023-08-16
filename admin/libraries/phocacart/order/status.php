@@ -585,8 +585,6 @@ class PhocacartOrderStatus
 
 
 
-
-
 			// All - users or others get the documents in user language - to save the memory when creating e.g. PDF documents. Even it is better that others see
 			// which language version the customer got
 			$pLang->setLanguage($common->user_lang);
@@ -709,7 +707,6 @@ class PhocacartOrderStatus
 			self::handleLangPluginOthers($bodyOthers);
 
 			//}
-
 
 			// if $emptyBody is empty (1) then it means, that there is not custom text
 			// so we can paste the order status message
@@ -1166,7 +1163,7 @@ class PhocacartOrderStatus
 
 		$db 		= Factory::getDBO();
 		//$user 		= PhocacartUser::getUser();
-		$user		= JFactory::getUser();// Logged in user, does not matter if customer|vendor|admin
+		$user		= Factory::getUser();// Logged in user, does not matter if customer|vendor|admin
 		$userId		= 0;
 
 		if (isset($user->id) && (int)$user->id > 0) {
@@ -1340,6 +1337,7 @@ class PhocacartOrderStatus
 
 	public static function getRecipient($bas) {
 
+		$recipient = '';
 		if (isset($bas['b']['email_contact']) && $bas['b']['email_contact'] != '' && MailHelper::isEmailAddress($bas['b']['email_contact'])) {
 			$recipient = $bas['b']['email_contact'];
 		} else if (isset($bas['b']['email']) && $bas['b']['email'] != '' && MailHelper::isEmailAddress($bas['b']['email'])) {
@@ -1385,12 +1383,20 @@ class PhocacartOrderStatus
 		if (isset($common->user_lang) && $common->user_lang != '' && $common->user_lang != '*') {
 
 			$pLang->setLanguage($common->user_lang);
+
+			// Run content plugins e.g. because of translation
+			$object = HTMLHelper::_('content.prepare', $object);
+
 			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
 
 			// Set language back to default
 			$pLang->setLanguageBack();
 
 		} else {
+
+			// Run content plugins e.g. because of translation
+			$object = HTMLHelper::_('content.prepare', $object);
+
 			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
 		}
 	}
@@ -1398,6 +1404,10 @@ class PhocacartOrderStatus
 	public static function handleLangPluginOthers(&$object) {
 		PluginHelper::importPlugin( 'system' );
 		PluginHelper::importPlugin('plgSystemMultilanguagesck');
+
+		// Run content plugins e.g. because of translation
+		$object = HTMLHelper::_('content.prepare', $object);
+
 		Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
 	}
 }

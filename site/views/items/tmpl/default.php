@@ -195,6 +195,10 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dA = $dA2 = $dA3 = $dA4 = $dAb = $dF = array();
 		$icon['addtocart'] = '';
 
+		// Different button or icons
+		// Button can be hidden based on price This variable is used for displaying Ask Question
+		$addToCartHidden = 0;// Design parameter - if there is no button (add to cart, paddle link, external link), used e.g. for displaying ask a question button
+
 		// STOCK ===================================================
 		// Set stock: product, variations, or advanced stock status
 		$dSO 				= '';
@@ -209,6 +213,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
 				$dA['class_icon']		= 'ph-display-none';// hide icon
+				$addToCartHidden 			= 1;// used for displaying Ask Question
 			}
 
 			if($stockStatus['stock_status'] || $stockStatus['stock_count'] !== false) {
@@ -275,6 +280,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$dAb['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
 			$dAb['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
 			$dAb['zero_attribute_price']	= $this->t['zero_attribute_price'];
+			$dAb['stock_calculation']		= (int)$v->stock_calculation;
 			$dAb['pathitem']				= $this->t['pathitem'];
 
 			$dAb['product_id']				= (int)$v->id;
@@ -297,8 +303,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			}
 		}
 
-		// Different button or icons
-		$addToCartHidden = 0;// Design parameter - if there is no button (add to cart, paddle link, external link), used e.g. for displaying ask a question button
+
 		// Type 3 is Product Price on Demand - there is no add to cart button except Quick View Button
 		if ($v->type == 3 && (int)$this->t['category_addtocart'] != 104) {
 			// PRODUCTTYPE - price on demand price cannot be added to cart

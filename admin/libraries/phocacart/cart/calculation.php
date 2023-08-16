@@ -1661,6 +1661,7 @@ class PhocacartCartCalculation
                 $total['taxrecapitulation']['netto_incl_sp']                        = $netto;
                 $total['taxrecapitulation']['items'][$taxkey]['taxid']               = $taxId;
                 $total['taxrecapitulation']['items'][$taxkey]['taxhide']             = $taxHide;
+
                 //	$total['taxrecapitulation']['netto'] 					= $netto;
             }
 

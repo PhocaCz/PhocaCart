@@ -25,7 +25,7 @@ class PhocaCartModelOrders extends BaseDatabaseModel
 		$config 	= Factory::getConfig();
 		//$paramsC 	= PhocacartUtils::getComponentParameters() ;
 		$paramsC 	= $app->getParams();
-		$defaultP	= $paramsC->get( 'default_pagination', '20' );
+		$defaultP	= (int)$paramsC->get( 'default_pagination', '20' );
 		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.orders.limit', 'limit', $defaultP, 'int'));
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));

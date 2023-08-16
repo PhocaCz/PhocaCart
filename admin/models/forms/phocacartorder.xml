@@ -38,6 +38,8 @@
         <field name="invoice_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DATE_DESC" translateformat="true" filter="user_utc" />
         <field name="invoice_due_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_DESC" translateformat="true" filter="user_utc" />
         <field name="invoice_time_of_supply" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_LABEL" description="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_DESC" translateformat="true" filter="user_utc" />
+        <!--
+        <field name="required_delivery_time" type="calendar" class="date" size="40" label="" description="" translateformat="true" filter="user_utc" />-->
 
         <field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC"/>

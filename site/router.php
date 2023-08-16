@@ -15,6 +15,7 @@ use Joomla\CMS\Component\Router\Rules\MenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\Database\ParameterType;
 
 if (! class_exists('PhocaCartLoader')) {
@@ -118,6 +119,7 @@ class PhocacartRouter extends RouterView
     $question->setParent($item, 'productid');
     $question->setKey('id');// ID is not used by question but we need it because of SEF url (id is transformed to suffix "question" and product id replaces the ID in process
     // Question is managed by product id, not by question id
+
     $this->registerView($question);
 
     foreach ($viewsId as $k => $v) {
@@ -229,7 +231,13 @@ class PhocacartRouter extends RouterView
 
 
 	public function getQuestionId($segment, $query) {
-	    return $query['id'];// We need ID of product id
+        if ($segment == 'question') {
+            // There is following url:
+            // phoca-cart/category/product/question ... this seems to be question url for category and product
+            // phoca-cart/category/product/abc ... this seems to be wrong URL ... 404 should be returned
+            return $query['id'];// We need ID of product id
+        }
+        return false;
     }
 
 	public function getCategoryId($segment, $query) {
@@ -244,16 +252,27 @@ class PhocacartRouter extends RouterView
 			$dbquery = $db->getQuery(true);
 			$dbquery->select($db->quoteName('id'))
 				->from($db->quoteName('#__phocacart_categories'))
-				->where(
-					[
+				->where([
 						$db->quoteName('alias') . ' = :alias',
 						$db->quoteName('parent_id') . ' = :parent_id',
-					]
-				)
+        ])
 				->bind(':alias', $segment)
 				->bind(':parent_id', $query['id'], ParameterType::INTEGER);
-			$db->setQuery($dbquery);
+      if (Multilanguage::isEnabled()) {
+        if (isset($query['lang'])) {
+          $lang = $query['lang'];
+        } else {
+          $lang = Factory::getApplication()->getLanguage()->getTag();
+        }
 
+        $dbquery
+          ->where([
+            $db->quoteName('language') . ' in (:language, ' . $db->quote('*') . ')'
+          ])
+          ->bind(':language', $lang);
+      }
+
+			$db->setQuery($dbquery);
 			return (int) $db->loadResult();
 		}
 
@@ -262,9 +281,9 @@ class PhocacartRouter extends RouterView
 
 
 		    if ((int)$query['id'] > 0) {
-                $category = PhocaCartCategory::getCategoryById($query['id']);
+        $category = PhocacartCategory::getCategoryById($query['id']);
             } else if ((int)$segment > 0) {
-		        $category = PhocaCartCategory::getCategoryById((int)$segment);
+        $category = PhocacartCategory::getCategoryById((int)$segment);
                 if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
                     // We don't have root category with 0 so we need to start with segment one
                     return (int)$category->id;
@@ -320,19 +339,36 @@ class PhocacartRouter extends RouterView
 
 		if ($this->noIDs) {
 			$db = Factory::getDbo();
-		    $query = 'SELECT a.id';
-		    $query .= ' FROM #__phocacart_products AS a'
-				.' LEFT JOIN #__phocacart_product_categories AS pc ON a.id = pc.product_id'
-			    .' WHERE a.alias = '.$db->q($segment);
-		    $db->setQuery($query);
+      $dbquery = $db->getQuery(true);
+      $dbquery->select($db->quoteName('id'))
+        ->from($db->quoteName('#__phocacart_products'))
+        ->where([
+          $db->quoteName('alias') . ' = :alias',
+        ])
+        ->bind(':alias', $segment);
+      if (Multilanguage::isEnabled()) {
+        if (isset($query['lang'])) {
+          $lang = $query['lang'];
+        } else {
+          $lang = Factory::getApplication()->getLanguage()->getTag();
+        }
+
+        $dbquery
+          ->where([
+            $db->quoteName('language') . ' in (:language, ' . $db->quote('*') . ')'
+          ])
+          ->bind(':language', $lang);
+      }
+
+      $db->setQuery($dbquery);
 			return (int) $db->loadResult();
 		}
+
 		return (int) $segment;
 	}
 
 
 	public function parse(&$segments){
-
 		return parent::parse($segments);
 	}
 
@@ -353,5 +389,7 @@ function PhocaCartParseRoute($segments) {
 
 	$app = Factory::getApplication();
 	$router = new PhocaCartRouter($app, $app->getMenu());
+
+
 	return $router->parse($segments);
 }

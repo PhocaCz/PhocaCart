@@ -38,6 +38,9 @@
 	<option value="*">JALL</option>
 </field>
 
+		<field name="currency_id" type="PhocacartCurrency" table="payment" multiple="false" label="COM_PHOCACART_FIELD_CURRENCY_LABEL" description="COM_PHOCACART_FIELD_CURRENCY_DESC"  />
+
+
 
 
 	</fieldset>

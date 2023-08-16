@@ -102,15 +102,15 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$app = Factory::getApplication('administrator');
 
 		// ASSOCIATION
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
-            $this->context .= '.' . $layout;
-        }
-        // Adjust the context to support forced languages.
-        if ($forcedLanguage){
-            $this->context .= '.' . $forcedLanguage;
-        }
+		$forcedLanguage = $app->input->getCmd('forcedLanguage', '');
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout')) {
+			$this->context .= '.' . $layout;
+		}
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage){
+			$this->context .= '.' . $forcedLanguage;
+		}
 
 
 		// Load the filter state.
@@ -134,10 +134,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-
-
-
-
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
 		$this->setState('params', $params);
@@ -145,26 +141,21 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		// List state information.
 		parent::populateState($ordering, $direction);
 
-
-
-
-        // ASSOCIATION
-        if (!empty($forcedLanguage)) {
-            $this->setState('filter.language', $forcedLanguage);
-        }
+		// ASSOCIATION
+		if (!empty($forcedLanguage)) {
+			$this->setState('filter.language', $forcedLanguage);
+		}
 	}
 
 	protected function getStoreId($id = '')
 	{
-
-
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.category_id');
 		$id	.= ':'.$this->getState('filter.manufacturer_id');
-        $id .= ':'.$this->getState('filter.language');
+    $id .= ':'.$this->getState('filter.language');
 		$id	.= ':'.$this->getState('filter.item_id');
 
 		return parent::getStoreId($id);
@@ -173,44 +164,31 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 	protected function getListQuery()
 	{
-
-
 		$paramsC 					    = PhocacartUtils::getComponentParameters();
 		$search_matching_option_admin	= $paramsC->get( 'search_matching_option_admin', 'exact' );
 
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
-
-
 		// Needed columns everytime
-		$col = array();
-		$col[] = 'a.id';
-		$col[] = 'a.title';
-		$col[] = 'a.alias';
-		$col[] = 'a.alias';
-		$col[] = 'a.checked_out';
-		$col[] = 'a.checked_out_time';
-		$col[] = 'a.published';
-		$col[] = 'a.ordering';
-		$col[] = 'a.featured';
-		$col[] = 'a.language';
-
+		$col = [
+			'a.id',
+			'a.title',
+			'a.alias',
+			'a.alias',
+			'a.checked_out',
+			'a.checked_out_time',
+			'a.published',
+			'a.ordering',
+			'a.featured',
+			'a.language',
+		];
 
 		$col = array_merge($col, $this->columns);
 		$col = array_unique($col);
 
-
-
-		$columns	= 'DISTINCT ' .implode(',', $col);
-		// GROUP BY not used
-		//$groupsFull	= $columns . ', ' .'a.tax_id, a.manufacturer_id, a.description, l.title, uc.name, ag.title';
-		//$groupsFast	= 'a.id';
-		//$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-
-
+		$columns	= implode(',', $col);
 		$query->select($this->getState('list.select', $columns));
-
 		$query->from('`#__phocacart_products` AS a');
 
 		// Join over the language
@@ -218,8 +196,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
-
-
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
@@ -227,77 +203,19 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
-		// Join over the categories.
-		// They are more ways to get the info about categories
-		// 1) GROUP BY + GROUP_CONCAT - slow, when only_full_group_by rule is used - much more slower than slow
-		// 2) SUBQUERIES - faster even they look complicated
-		// 3) SPECIFIC QUERY used in view: PhocacartCategoryMultiple::getCategoriesByProducts($idItems) (no loop used) DISTINCT needs to be used
+		// ASSOCIATION
+		// Join over the associations.
+		$assoc = Associations::isEnabled();
+		if ($assoc) {
+			$subQuery = $db->getQuery(true)
+				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
+				->from($db->quoteName('#__associations', 'asso'))
+				->join('LEFT', $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key'))
+				->where($db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id'))
+				->where($db->quoteName('asso.context') . ' = ' . $db->quote('com_phocacart.item'));
 
-		/*
-		 * GROUP BY
-		$query->select('GROUP_CONCAT(c.title) AS category_title, GROUP_CONCAT(c.id) AS category_id');
-		$query->join('LEFT', '#__phocacart_product_categories AS pc ON a.id = pc.product_id');
-		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
-
-		* SUBQUERIES
-		$query->select('(SELECT GROUP_CONCAT(c.id) FROM jos_phocacart_product_categories AS pc
-		 				LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id
-						WHERE a.id = pc.product_id) AS category_id');
-
-		$query->select('(SELECT GROUP_CONCAT(c.title) FROM jos_phocacart_product_categories AS pc
-		 				LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id
-						WHERE a.id = pc.product_id) AS category_title');
-
-		$query->select('(SELECT GROUP_CONCAT(c.id, ":", c.title) FROM jos_phocacart_product_categories AS pc
-		 				LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id
-						WHERE a.id = pc.product_id) AS category_title');
-	*/
-
-
-
-		// Not used
-		//$query->select("group_concat(c.id, '|^|', c.alias, '|^|', c.title SEPARATOR '|~|') as categories");
-
-		//$query->select('v.average AS ratingavg');
-		//$query->join('LEFT', '#__phocadownload_img_votes_statistics AS v ON v.imgid = a.id');
-
-
-
-        // ASSOCIATION
-        // Join over the associations.
-        $assoc = Associations::isEnabled();
-        if ($assoc) {
-            $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))
-                ->join(
-                    'LEFT',
-                    $db->quoteName('#__associations', 'asso') . ' ON ' . $db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id')
-                    . ' AND ' . $db->quoteName('asso.context') . ' = ' . $db->quote('com_phocacart.item')
-                )
-                ->join(
-                    'LEFT',
-                    $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key')
-                )
-                ->group(
-                    $db->quoteName(
-                        array(
-                            'a.id',
-                            'a.title',
-                            'a.alias',
-                            'a.checked_out',
-                            'a.checked_out_time',
-                            'a.published',
-                            'a.access',
-                            'a.ordering',
-                            'a.featured',
-                            'a.language',
-                            'l.title' ,
-                            'l.image' ,
-                            'uc.name' ,
-                            'ag.title'
-                        )
-                    )
-                );
-        }
+			$query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
+		}
 
 
 		// Filter by access level.
@@ -314,7 +232,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			$query->where('(a.published IN (0, 1))');
 		}
 
-
 		// When category is selected, we need to get info about selected category
 		// When it is not selected, don't ask for it to make the query faster
 		// pc.ordering is set as default ordering and it can be set (even igonered) even whey category not selected
@@ -322,8 +239,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$categoryId = $this->getState('filter.category_id');
-
-
 
 		// Filter by category.
 		if ($orderCol == 'pc.ordering' || is_numeric($categoryId)) {
@@ -345,15 +260,13 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			$query->where('a.manufacturer_id = ' . (int) $manufacturerId);
 		}
 
-
-
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = ' . $db->quote($language));
 		}
 
-		// Search EAN, SKU in attributes (advanced stock management)
-		$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
+		// Search EAN, SKU in attributes (advanced stock management) - Moved to subquery
+		//$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -386,14 +299,13 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 							$wheresSub[]	= 'a.description LIKE '.$word;
 							$wheresSub[]	= 'a.sku LIKE '.$word;
 							$wheresSub[]	= 'a.ean LIKE '.$word;
-							$wheresSub[]	= 'ps.sku LIKE '.$word;
-							$wheresSub[]	= 'ps.ean LIKE '.$word;
+							$wheresSub[]	= 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $word . ' OR ps.ean LIKE ' . $word . ') ';
 							$wheres[]		= implode(' OR ', $wheresSub);
 						}
 
 						$query->where('(' . implode(($search_matching_option_admin == 'all' ? ') AND (' : ') OR ('), $wheres) . ')');
 
-					break;
+						break;
 
 					case 'exact':
 					default:
@@ -406,28 +318,15 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 						$wheresSub[]	= 'a.description LIKE '.$text;
 						$wheresSub[]	= 'a.sku LIKE '.$text;
 						$wheresSub[]	= 'a.ean LIKE '.$text;
-						$wheresSub[]	= 'ps.sku LIKE '.$text;
-						$wheresSub[]	= 'ps.ean LIKE '.$text;
+						$wheresSub[]	= 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $text . ' OR ps.ean LIKE ' . $text . ') ';
 						$query->where('(' . implode(') OR (', $wheresSub) . ')');
 
-					break;
+						break;
 				}
 			}
 		}
 
-	//-	$query->group($groups);
-
-		// Add the list ordering clause.
-		//$orderCol	= $this->state->get('list.ordering', 'title');
-		//$orderDirn	= $this->state->get('list.direction', 'asc');
-
-		//if ($orderCol == 'pc.ordering' || $orderCol == 'category_title') {
-			//$orderCol = 'category_title '.$orderDirn.', pc.ordering';
-		//}
 		$query->order($db->escape($orderCol.' '.$orderDirn));
-
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-
 
 		return $query;
 	}

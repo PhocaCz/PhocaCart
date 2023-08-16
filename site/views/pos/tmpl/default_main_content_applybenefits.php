@@ -59,7 +59,7 @@ if ($this->t['enable_coupons'] > 0) {
 // REWARD POINTS
 if ($this->t['rewards']['apply']) {
 	//echo '<div class="col-sm-12 col-md-12 ">';
-	echo '<label>'.Text::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" autocomplete="off"></label>';
+	echo '<label>'.Text::_('COM_PHOCACART_REWARD_POINTS').' '.$this->t['rewards']['text'].'<br /><input class="'.$this->s['c']['form-control'].' ph-input-sm ph-input-apply-reward-points" type="text" name="phreward" id="phreward" value="'.$this->t['rewards']['usedvalue'].'" autocomplete="off"></label>';
 	//echo '</div><div class="ph-cb"></div>';
 }
 

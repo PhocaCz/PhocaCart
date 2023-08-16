@@ -673,6 +673,11 @@ class PhocacartPrice
         $priceO['tax_title_suffix']  = '';
         $priceO['tax_title_suffix2'] = '';
 
+        // BE AWARE - 3 similar parameters
+        // taxcalc = $tax_calculation_shipping - parameters in global configuration - will be shipping displayed with or without tax
+        // taxtype if the tax is percentage or fixed value
+        // calculationtype if the shipping cost is percentage or fixed value
+        $priceO['taxcalc'] = (int)$tax_calculation_shipping;
 
         // NO TAX
         if ($tax_calculation_shipping == 0) {
@@ -926,6 +931,12 @@ class PhocacartPrice
         $priceO['tax_title']         = Text::_($taxTitle);
         $priceO['tax_title_suffix']  = '';
         $priceO['tax_title_suffix2'] = '';
+
+        // BE AWARE - 3 similar parameters
+        // taxcalc = $tax_calculation_shipping - parameters in global configuration - will be shipping displayed with or without tax
+        // taxtype if the tax is percentage or fixed value
+        // calculationtype if the shipping cost is percentage or fixed value
+        $priceO['taxcalc'] = (int)$tax_calculation_payment;
 
         // NO TAX
         if ($tax_calculation_payment == 0) {
@@ -1273,6 +1284,35 @@ class PhocacartPrice
                             }
                             // Hide Tax including netto for all price items
                             if (in_array(7, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax']   = 0;
+                                $displayPriceItems['netto'] = 0;
+                            }
+                        } else if ($type == 'checkoutshipping') {
+                            // Hide Tax for all price items
+                            if (in_array(8, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                            // Hide Tax including netto for all price items
+                            if (in_array(9, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax']   = 0;
+                                $displayPriceItems['netto'] = 0;
+                            }
+                        } else if ($type == 'checkoutpayment') {
+                            // Hide Tax for all price items
+                            if (in_array(10, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                            if (in_array(11, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax']   = 0;
+                                $displayPriceItems['netto'] = 0;
+                            }
+                        } else if ($type == 'pricediscount') {
+                            // Hide Tax for all price items
+                            if (in_array(12, $priceItems['taxhide'])) {
+                                $displayPriceItems['tax'] = 0;
+                            }
+                            // Hide Tax including netto for all price items
+                            if (in_array(13, $priceItems['taxhide'])) {
                                 $displayPriceItems['tax']   = 0;
                                 $displayPriceItems['netto'] = 0;
                             }

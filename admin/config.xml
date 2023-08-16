@@ -845,6 +845,13 @@
                 <option value="1">COM_PHOCACART_PRODUCT_VIEW</option>
             </field>
 
+
+            <field name="form_design_type" type="radio" label="COM_PHOCACART_FIELD_FORM_DESIGN_LABEL" description="COM_PHOCACART_FIELD_FORM_DESIGN_DESC" layout="joomla.form.field.radio.switcher" default="">
+			<option value="">COM_PHOCACART_DEFAULT</option>
+			<option value="ph-form-placeholder">COM_PHOCACART_PLACEHOLDER</option>
+		</field>
+
+
             <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
 
 
@@ -1560,10 +1567,10 @@
 	<field name="manufacturer_alias" default="manufacturer" size="10" type="text" label="COM_PHOCACART_FIELD_MANUFACTURER_ALIAS_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_ALIAS_DESC"/>
 
 
-		   <field name="load_min_js" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_LABEL" description="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_DESC">
+		   <!--<field name="load_min_js" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_LABEL" description="COM_PHOCACART_FIELD_LOAD_MINIFIED_JS_LIBRARIES_DESC">
 <option value="0">COM_PHOCACART_NO</option>
                 <option value="1">COM_PHOCACART_YES</option>
-            </field>
+            </field>-->
 
 			<field name="category_alias_prefix" default="" size="10" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ALIAS_PREFIX_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ALIAS_PREFIX_DESC"/>
 
@@ -1772,6 +1779,14 @@
             <field name="store_info" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL"
                    description="COM_PHOCACART_FIELD_STORE_INFORMATION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
 
+
+            <field name="paddle_vendor_id" type="text" default="" label="COM_PHOCACART_FIELD_PADDLE_VENDOR_ID_LABEL" description="COM_PHOCACART_FIELD_PADDLE_VENDOR_ID_DESC" filter="string"/>
+
+
+            <field name="paddle_sandbox" type="radio" label="COM_PHOCACART_FIELD_ENABLE_PADDLE_SANDBOX_LABEL" description="COM_PHOCACART_FIELD_ENABLE_PADDLE_SANDBOX_DESC" layout="joomla.form.field.radio.switcher" default="1">
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
 
             <field name="phocahead26" type="phocahead" default="COM_PHOCACART_PRIVACY_TERMS_AND_CONDITIONS_SETTINGS_LABEL" label="" description=""/>
 
