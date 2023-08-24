@@ -1385,6 +1385,10 @@ class PhocacartOrderStatus
 			$pLang->setLanguage($common->user_lang);
 
 			// Run content plugins e.g. because of translation
+			// Disable emailclock for PDF | MAIL
+			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+				$object = '{emailcloak=off}' . $object;
+			//}
 			$object = HTMLHelper::_('content.prepare', $object);
 
 			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
@@ -1395,6 +1399,10 @@ class PhocacartOrderStatus
 		} else {
 
 			// Run content plugins e.g. because of translation
+			// Disable emailclock for PDF | MAIL
+			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+				$object = '{emailcloak=off}' . $object;
+			//}
 			$object = HTMLHelper::_('content.prepare', $object);
 
 			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
@@ -1406,6 +1414,10 @@ class PhocacartOrderStatus
 		PluginHelper::importPlugin('plgSystemMultilanguagesck');
 
 		// Run content plugins e.g. because of translation
+		// Disable emailclock for PDF | MAIL
+		//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+			$object = '{emailcloak=off}' . $object;
+		//}
 		$object = HTMLHelper::_('content.prepare', $object);
 
 		Factory::getApplication()->triggerEvent('onChangeText', array(&$object));

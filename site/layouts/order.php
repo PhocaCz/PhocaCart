@@ -442,7 +442,7 @@ if (!empty($d['bas']['b'])) {
 		if ($d['common']->oidn_spec_billing_desc != '') {
 			$oidnBillingDescArticle = $d['common']->oidn_spec_billing_desc;
 		} else if ((int)$oidn_global_billing_desc > 0) {
-			$oidnBillingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_billing_desc);
+			$oidnBillingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_billing_desc, $d['format']);
 		}
 
 		if ($oidnBillingDescArticle != '') {
@@ -496,7 +496,7 @@ if (!empty($d['bas']['s'])) {
 		if ($d['common']->oidn_spec_shipping_desc != '') {
 			$oidnShippingDescArticle = $d['common']->oidn_spec_shipping_desc;
 		} else if ((int)$oidn_global_shipping_desc > 0) {
-			$oidnShippingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_shipping_desc);
+			$oidnShippingDescArticle = PhocacartRenderFront::renderArticle((int)$oidn_global_shipping_desc, $d['format']);
 		}
 
 
@@ -546,7 +546,7 @@ if ($d['type'] == 2) {
 	if ($d['common']->invoice_spec_top_desc != '') {
 		$invoiceTopDescArticle = $d['common']->invoice_spec_top_desc;
 	} else if ((int)$invoice_global_top_desc > 0) {
-		$invoiceTopDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_top_desc);
+		$invoiceTopDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_top_desc, $d['format']);
 	}
 
 	if ($invoiceTopDescArticle != '') {
@@ -559,7 +559,7 @@ if ($d['type'] == 2) {
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceTopDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 1) {
-	$orderTopDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_top_desc);
+	$orderTopDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_top_desc, $d['format']);
 
 	if ($orderTopDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -571,7 +571,7 @@ if ($d['type'] == 2) {
 		$o[] = '<table '.$bDesc.'><tr><td>'.$orderTopDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 3) {
-	$dnTopDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_top_desc);
+	$dnTopDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_top_desc, $d['format']);
 
 	if ($dnTopDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -928,7 +928,7 @@ if ($d['type'] == 2) {
 	if ($d['common']->invoice_spec_middle_desc != '') {
 		$invoiceMiddleDescArticle = $d['common']->invoice_spec_middle_desc;
 	} else if ((int)$invoice_global_middle_desc > 0) {
-		$invoiceMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_middle_desc);
+		$invoiceMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_middle_desc, $d['format']);
 	}
 
 	if ($invoiceMiddleDescArticle != '') {
@@ -941,7 +941,7 @@ if ($d['type'] == 2) {
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceMiddleDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 1) {
-	$orderMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_middle_desc);
+	$orderMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_middle_desc, $d['format']);
 
 	if ($orderMiddleDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -953,7 +953,7 @@ if ($d['type'] == 2) {
 		$o[] = '<table '.$bDesc.'><tr><td>'.$orderMiddleDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 3) {
-	$dnMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_middle_desc);
+	$dnMiddleDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_middle_desc, $d['format']);
 
 	if ($dnMiddleDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -1146,7 +1146,7 @@ if ($d['type'] == 2) {
 	if ($d['common']->invoice_spec_bottom_desc != '') {
 		$invoiceBottomDescArticle = $d['common']->invoice_spec_bottom_desc;
 	} else if ((int)$invoice_global_bottom_desc > 0) {
-		$invoiceBottomDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_bottom_desc);
+		$invoiceBottomDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_bottom_desc, $d['format']);
 	}
 
 	if ($invoiceBottomDescArticle != '') {
@@ -1159,7 +1159,7 @@ if ($d['type'] == 2) {
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceBottomDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 1) {
-	$orderBottomDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_bottom_desc);
+	$orderBottomDescArticle = PhocacartRenderFront::renderArticle((int)$order_global_bottom_desc, $d['format']);
 
 	if ($orderBottomDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -1171,7 +1171,7 @@ if ($d['type'] == 2) {
 		$o[] = '<table '.$bDesc.'><tr><td>'.$orderBottomDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 3) {
-	$dnBottomDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_bottom_desc);
+	$dnBottomDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_bottom_desc, $d['format']);
 
 	if ($dnBottomDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
@@ -1223,6 +1223,11 @@ if ($pR) {
 	$oPr2 = implode("", $oPr);// new rows set in print library
 
 	// Run content plugins e.g. because of translation
+	// Disable emailclock for PDF | MAIL
+	if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+		$oPr2 = '{emailcloak=off}' . $oPr2;
+	}
+
 	$oPr2 = HTMLHelper::_('content.prepare', $oPr2);
 
 	Factory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
@@ -1233,6 +1238,10 @@ if ($pR) {
 	$o2 = implode("\n", $o);
 
 	// Run content plugins e.g. because of translation
+	// Disable emailclock for PDF | MAIL
+	if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+		$o2 = '{emailcloak=off}' . $o2;
+	}
 	$o2 = HTMLHelper::_('content.prepare', $o2);
 
 	Factory::getApplication()->triggerEvent('onChangeText', array(&$o2));

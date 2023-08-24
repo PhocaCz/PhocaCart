@@ -775,6 +775,7 @@ class PhocacartRenderFront
 
             $o = HTMLHelper::_('content.prepare', $o);
 
+
             if ($changeLang == 1) {
                 PluginHelper::importPlugin('system');
                 PluginHelper::importPlugin('plgSystemMultilanguagesck');
