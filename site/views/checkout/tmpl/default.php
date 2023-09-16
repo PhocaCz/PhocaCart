@@ -7,8 +7,26 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-echo '<div id="ph-pc-checkout-box" class="pc-view pc-checkout-view'.$this->p->get( 'pageclass_sfx' ).'">';
+use Joomla\CMS\Plugin\PluginHelper;
+
+$pluginLayout 	= PluginHelper::importPlugin('pct');
+$classByTaxPlugin = '';
+if ($pluginLayout) {
+	$eventData	= [];
+	$results = Factory::getApplication()->triggerEvent('onPCTonStartCheckoutView', array('com_phocacart.checkout', &$this->data, $eventData));
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['checkout_class']) && $v['checkout_class'] != '') {
+				$classByTaxPlugin = ' '. $v['checkout_class'];
+			}
+		}
+	}
+}
+
+echo '<div id="ph-pc-checkout-box" class="pc-view pc-checkout-view'.$this->p->get( 'pageclass_sfx' ).$this->t['tax_calculation_class'].$classByTaxPlugin.'">';
 
 echo PhocacartRenderFront::renderHeader(array(Text::_('COM_PHOCACART_CHECKOUT')));
 

@@ -39,7 +39,7 @@ $p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
 // POS
 $task 			= $d['pos'] == true ? 'pos.update' : 'checkout.update';
 $inputNumber	= $d['pos'] == true ? 'number' : 'text';
-$displayTax		= true;// Specific settings for POS - to make smaller widht of cart
+$displayTax		= true;// Specific settings for POS - to make smaller width of cart
 
 // A) MINIMUM QUANTITY FOR GROUPS - MAIN PRODUCT
 if (!empty($d['fullitemsgroup'][0])) {
@@ -115,20 +115,20 @@ if (!empty($d['fullitems'][1])) {
 
 	// HEADER
 	echo '<div class="'.$r.' ph-checkout-cart-row-header">';
-	echo '<div class="'.$cI.' ph-checkout-cart-image">'.Text::_('COM_PHOCACART_IMAGE').'</div>';
-	echo '<div class="'.$cP.' ph-checkout-cart-product">'.Text::_('COM_PHOCACART_PRODUCT').'</div>';
+	echo '<div class="'.$cI.' ph-checkout-cart-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.Text::_('COM_PHOCACART_IMAGE').'</div>';
+	echo '<div class="'.$cP.' ph-checkout-cart-product" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'">'.Text::_('COM_PHOCACART_PRODUCT').'</div>';
 
 	if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-		echo '<div class="'.$cN.' ph-checkout-cart-netto">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</div>';
+		echo '<div class="'.$cN.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</div>';
 	}
 
-	echo '<div class="'.$cQ.' ph-checkout-cart-quantity">'.Text::_('COM_PHOCACART_QUANTITY').'</div>';
+	echo '<div class="'.$cQ.' ph-checkout-cart-quantity" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_QUANTITY')).'">'.Text::_('COM_PHOCACART_QUANTITY').'</div>';
 
 	if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-		echo '<div class="'.$cT.' ph-checkout-cart-tax">'.Text::_('COM_PHOCACART_TAX').'</div>';
+		echo '<div class="'.$cT.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.Text::_('COM_PHOCACART_TAX').'</div>';
 	}
 
-	echo '<div class="'.$cB.' ph-checkout-cart-brutto">'.Text::_('COM_PHOCACART_PRICE').'</div>';
+	echo '<div class="'.$cB.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE')).'">'.Text::_('COM_PHOCACART_PRICE').'</div>';
 	echo '</div>'. "\n"; // end row
 
 

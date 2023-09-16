@@ -71,7 +71,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	echo '<div class="'.$this->s['c']['row'].'">';
 
 	// === IMAGE PANEL
-	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .'">';
+	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .' ph-item-view-image-box">';
 
 	//JPluginHelper::importPlugin('pcv');
 	$results = Factory::getApplication()->triggerEvent('onPCVonItemImage', array('com_phocacart.item', &$x, &$this->t, &$this->p));
@@ -186,7 +186,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 
 	// === PRICE PANEL
-	echo '<div class="'.$this->s['c']['col.xs12.sm7.md7'].'">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm7.md7'].' ph-item-view-data-box">';
 	echo '<div class="ph-item-price-panel phItemPricePanel">';
 
 	$title = '';
@@ -246,7 +246,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
 	if ($pointsN) {
-		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-item-reward-box ph-item-reward-needed">';
 		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
 
 		echo '<div class="ph-reward">'.$pointsN.'</div>';
@@ -257,7 +257,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// REWARD POINTS - RECEIVED
 	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
 	if ($pointsR) {
-		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-item-reward-box ph-item-reward-received">';
 		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').'</div>';
 
 		echo '<div class="ph-reward">'.$pointsR.'</div>';

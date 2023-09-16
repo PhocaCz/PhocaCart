@@ -220,8 +220,6 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$data['upload_token'] 			= PhocacartUtils::getToken();
 		$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
-
-
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
 			if ($data['alias'] == null) {
@@ -524,6 +522,14 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 
 						if (!isset($data['date_update'])) {
 							$data['date_update'] = $date;
+						}
+
+						if (!isset($data['modified'])) {
+							$data['modified'] = $date;
+						}
+
+						if (!isset($data['delivery_date']) || (isset($data['delivery_date']) && !PhocacartDate::activeDatabaseDate($data['delivery_date']))) {
+							$data['delivery_date'] = '0000-00-00 00:00:00';
 						}
 
 						$user = Factory::getUser();
