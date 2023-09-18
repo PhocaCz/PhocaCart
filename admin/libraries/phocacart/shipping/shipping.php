@@ -111,10 +111,7 @@ class PhocacartShipping
 		PhocacartUtils::setConcatCharCount();
 		$db->setQuery($query);
 
-
-
 		$shippings = $db->loadObjectList();
-
 
 		/*if (empty($shippings)) {
 			return false;
