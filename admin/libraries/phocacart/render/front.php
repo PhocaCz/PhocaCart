@@ -139,6 +139,7 @@ class PhocacartRenderFront
 
         $title = $params->get('page_title', '');
 
+
         if (isset($name->title) && $name->title != '') {
             /*if ($title != '') {
                 $title = $title .' - ' .  $name->title;
