@@ -69,11 +69,11 @@ function phChangeAttributeType(typeView) {
 						phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'"><img src="'+ jQuery(this).data('image') +'" alt="'+ jQuery(this).text() +'" /></div>');
 					} else if (phType == 2) {
 						// Color
-						phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
-						
+						phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon + ' color-' + jQuery(this).data('color').replace('#', '')  +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
+
 					}
 
-					
+
 					if(jQuery(this).is(':selected')) {
 						phSBtn.addClass('on');
 					}
@@ -86,7 +86,7 @@ function phChangeAttributeType(typeView) {
 
 
 			// Change on Click event
-			
+
 			jQuery(phClassId).on('click', function(e) {
 
 				e.preventDefault();// Bootstrap modal (close and open again duplicates events)
@@ -94,7 +94,7 @@ function phChangeAttributeType(typeView) {
 				let isActive = jQuery(this).hasClass('on');
 
 				if (isActive) {
-					
+
 					if (phRequired == 1) {
 						e.preventDefault();// Active item cannot be unselected when the select box is required
 						return false;
@@ -187,7 +187,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 		let valueAlias 		= '';// One value for selectbox
 		let valuesAlias 	= '';// One or more values for checkbox
 		let phSelectNameIdT	= '#phItemHiddenAttribute' + jQuery(this).data('attribute-id-name');
-		
+
 		if (phSetValueByUser == 1) {
 			// 1) Set by user
 
@@ -286,7 +286,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 	// Update URL after #
 	if (phSetValueByUser == 0 && phHashNew != '') {
 		phHashNew = '#' + phHashNew;
-		
+
 		// Update even form return value to be returned back with selected attribute
 		if(attributeFormReturnValue != '') {
 			attributeFormReturn.val(Base64.encode(attributeFormReturnValue + phHashNew));
@@ -294,7 +294,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 		window.history.pushState({},"", phHashNew);
 	} else if (phSetValueByUser == 1) {
 		phHashNew = '#' + phHashNew;
-		
+
 		// Update even form return value to be returned back with selected attribute
 		if(attributeFormReturnValue != '') {
 			attributeFormReturn.val(Base64.encode(attributeFormReturnValue + phHashNew));
@@ -340,11 +340,11 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', phCheckboxA, function(e){
 
 		const phParams = Joomla.getOptions('phParamsPC');
-		
+
 
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
-        
+
 		if (phParams['theme'] == 'svg' || phParams['iconType'] == 'svg') {
 			if (e.target.tagName.toUpperCase() === "SVG" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
 		} else if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
@@ -355,14 +355,14 @@ jQuery(document).ready(function() {
 		 let phRequired = jQuery(this).data("required");
 		 let phCheckboxAInputChecked =  "#" + jQuery(this).attr("id") + " input:checked";
 		 let phACheckedLength = jQuery(phCheckboxAInputChecked).length;
-		 
+
 		 if (phRequired && phACheckedLength == 0) {
 			 let phThisLabel = jQuery(e.target).parent();//  checkboxes - colors, images
 			 phThisLabel.addClass("active");//  checkboxes - colors, images
 			 e.preventDefault();
 			 return false;
 		}
-		
+
 		let phCheckboxAInput =  "#" + jQuery(this).attr("id") + " input[type='checkbox']";
 		let allInputs = jQuery(phCheckboxAInput);
 
@@ -383,13 +383,13 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', phCheckboxA, function(e){
 
 		const phParams = Joomla.getOptions('phParamsPC');
-		
-		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {	
+
+		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
 			return;// Interactive Change is disabled
 		}
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
-        
+
 		if (phParams['theme'] == 'svg' || phParams['iconType'] == 'svg') {
 			if (e.target.tagName.toUpperCase() === "SVG" || e.target.tagName.toUpperCase() === "IMG") {  return;}// Prevent from twice running
 		} else if (phParams['theme'] == 'bs4' || phParams['theme'] == 'bs5') {
@@ -413,14 +413,14 @@ jQuery(document).ready(function() {
 
 
 		if (phAOType == '.phAOGiftType') {
-			
+
 			let title = jQuery(this).data('title');
 			jQuery('.phAOGiftTitle').text(title);
 			let image = jQuery(this).data('image');
 			jQuery('.phAOGiftImage').attr('src', image);
 			let date = jQuery(this).data('date');
 			jQuery('.phAOGiftDate').text(date);
-			
+
 			let description = jQuery(this).data('description');
 			if (description != '') {
 				description = Base64.decode(description);

@@ -30,7 +30,7 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 				'published','a.published',
 				'user_id', 'a.user_id',
 				'user_name_selected',
-				'u.email'
+				'u.email', 'u.id'
 			);
 		}
 		parent::__construct($config);

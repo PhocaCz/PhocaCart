@@ -861,7 +861,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 						}
 
 					} else {
-						//$msg[$k] = $title . JText::_('COM_PHOCACART_FILENAME_NOT_EXISTS');
+						//$msg[$k] = $title . Text::_('COM_PHOCACART_FILENAME_NOT_EXISTS');
 						$msg[$k] = $title . Text::_('COM_PHOCACART_CATEGORY_IMAGE_NOT_EXISTS');
 						//return false;
 						continue;

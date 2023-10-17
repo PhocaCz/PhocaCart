@@ -12,10 +12,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-//JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+//HTMLHelper::_('formbehavior.chosen', 'select');
 
 $r 			= $this->r;
 $user		= Factory::getUser();
@@ -141,8 +141,8 @@ echo '</div>';
 echo '<div style="clear:both">&nbsp;</div>';
 
 // DATE FROM - DATE TO
-JHtml::_('jquery.framework');
-//JHtml::_('script', 'system/html5fallback.js', false, true);
+HTMLHelper::_('jquery.framework');
+//HTMLHelper::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
 $name		= "filter_date_from";

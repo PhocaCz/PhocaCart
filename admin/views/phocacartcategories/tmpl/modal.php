@@ -126,7 +126,7 @@ if (is_array($this->items)) {
 			$canEditParent	= 0;//$user->authorise('core.edit', $this->t['o']);
 			$linkLang		= Route::_('index.php?option='.$this->t['o'].'&view=phocacartcategory&id='.$this->escape($item->id).'&lang='.$this->escape($item->language));
 
-			//$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
+			//$linkCat	= Route::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
 			$canEdit	= 0;// FORCE NOT EDITING CATEGORY IN MODAL $user->authorise('core.edit', $this->t['o']);
 			if ($item->language && Multilanguage::isEnabled()) {
 				$tag = strlen($item->language);

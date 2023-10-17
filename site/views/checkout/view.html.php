@@ -71,7 +71,23 @@ class PhocaCartViewCheckout extends HtmlView
         $this->t['display_apply_coupon_form']         = $this->p->get('display_apply_coupon_form', 1);
         $this->t['display_apply_reward_points_form']  = $this->p->get('display_apply_reward_points_form', 1);
 
-        $this->t['$delivery_billing_same_enabled']     = $this->p->get('delivery_billing_same_enabled', 0);
+        $this->t['delivery_billing_same_enabled']     = $this->p->get('delivery_billing_same_enabled', 0);
+
+        $this->t['tax_calculation']     = $this->p->get('tax_calculation', 0);
+
+        // Specific CSS for different tax events - tax class indicator
+        switch ((int)$this->t['tax_calculation']){
+            case 2:
+                $this->t['tax_calculation_class'] = ' phTaxBoxTaxInclusive';
+            break;
+            case 1:
+                $this->t['tax_calculation_class'] = ' phTaxBoxTaxExclusive';
+            break;
+            case 0:
+            default:
+                $this->t['tax_calculation_class'] = ' phTaxBoxNoTax';
+            break;
+        }
 
 
         // Message set in Openting Times class

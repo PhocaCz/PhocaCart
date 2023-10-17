@@ -16,7 +16,7 @@ class JFormFieldPhocaCartXmlFeedPlugin extends FormField
 
 	protected function getInput() {
 
-		//$document = JFactory::getDocument();
+		//$document = Factory::getDocument();
 		//$id		= $this->form->getValue('id');
 		//$method	= $this->form->getValue('method');
 		$plugins = PhocacartFeed::getFeedPluginMethods('', 1);

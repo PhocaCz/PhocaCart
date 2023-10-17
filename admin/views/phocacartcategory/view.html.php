@@ -55,8 +55,8 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 
 
 		//$url = 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. JSession::getFormToken().'=1';
-		//PhocacartRenderAdminjs::phEventCreateImageThumbnail($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage', 'imageCreateThumbs');
-		//PhocacartRenderAdminjs::phAddValueImage($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage');
+		//PhocacartRenderAdminjs::phEventCreateImageThumbnail($url, Text::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage', 'imageCreateThumbs');
+		//PhocacartRenderAdminjs::phAddValueImage($url, Text::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'categoryimage');
 
 		// ASSOCIATION
 		// If we are forcing a language in modal (used for associations).

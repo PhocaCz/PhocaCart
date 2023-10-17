@@ -264,8 +264,8 @@ class PhocacartProduct
                     //return true;
                     self::$productAccess[$id][$catid][$typeS] = true;
                 } else {
-                    //$app	= JFactory::getApplication();
-                    //$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ATTRIBUTE_REQUIRED'), 'error');
+                    //$app	= Factory::getApplication();
+                    //$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_ATTRIBUTE_REQUIRED'), 'error');
                     //return false;// seems like attribute is required but not selected
                     self::$productAccess[$id][$catid][$typeS] = false;
                 }
@@ -363,8 +363,8 @@ class PhocacartProduct
                     //return true;
                     self::$productAttributes[$id][$catid][$typeS] = true;
                 } else {
-                    //$app	= JFactory::getApplication();
-                    //$app->enqueueMessage(JText::_('COM_PHOCACART_PRODUCT_ATTRIBUTE_REQUIRED'), 'error');
+                    //$app	= Factory::getApplication();
+                    //$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_ATTRIBUTE_REQUIRED'), 'error');
                     //return false;// seems like attribute is required but not selected
                     self::$productAttributes[$id][$catid][$typeS] = false;
                 }

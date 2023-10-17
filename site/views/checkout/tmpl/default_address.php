@@ -64,7 +64,7 @@ if ($this->a->addressedit == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-check-box">';
-	if ($this->t['dataaddressform']['s'] != '' && $this->t['$delivery_billing_same_enabled'] != -1) {
+	if ($this->t['dataaddressform']['s'] != '' && $this->t['delivery_billing_same_enabled'] != -1) {
 		echo '<div class="'.$this->s['c']['controls'].'">';
 		echo '<label><input class="'.$this->s['c']['inputbox.checkbox'].'" type="checkbox" id="phCheckoutBillingSameAsShipping" name="phcheckoutbsas" '.$this->t['dataaddressform']['bsch'].' > '.Text::_('COM_PHOCACART_DELIVERY_AND_BILLING_ADDRESSES_ARE_THE_SAME').'</label>';
 		echo '</div>';
@@ -117,8 +117,8 @@ if ($this->a->addressedit == 1) {
 		echo '</div>';// end row
 
 		//echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" >';
-		//echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
-		//echo JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME');
+		//echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
+		//echo Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME');
 		//echo '</div>';
 
 	} else {

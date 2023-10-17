@@ -13,10 +13,10 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 
@@ -63,7 +63,7 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 		// REVERT
 		echo '<form class="form-inline" id="phBulkPriceRevert" action="" method="post">';
 		echo '<div class="form-group">';
-		//echo '<label for="file_import">'. JText::_('COM_PHOCACART_RUN').':</label>';
+		//echo '<label for="file_import">'. Text::_('COM_PHOCACART_RUN').':</label>';
 		echo '<input class="btn btn-danger" type="submit"  name="submit" value="'. Text::_('COM_PHOCACART_REVERT').'">';
 
 		echo '<input type="hidden" name="id" value="'.(int)$this->item->id.'" />';
@@ -75,7 +75,7 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->tit
 		// RUN
 		echo '<form class="form-inline" id="phBulkPriceRun" action="" method="post">';
 		echo '<div class="form-group">';
-		//echo '<label for="file_import">'. JText::_('COM_PHOCACART_RUN').':</label>';
+		//echo '<label for="file_import">'. Text::_('COM_PHOCACART_RUN').':</label>';
 		echo '<input class="btn btn-success" type="submit"  name="submit" value="'. Text::_('COM_PHOCACART_RUN').'">';
 
 		echo '<input type="hidden" name="id" value="'.(int)$this->item->id.'" />';

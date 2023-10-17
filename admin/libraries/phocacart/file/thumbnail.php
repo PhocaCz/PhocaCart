@@ -195,7 +195,7 @@ class PhocacartFileThumbnail
 					break;
 
 					//case 'ErrorCreatingFolder':
-					//	return JText::_('COM_PHOCACART_ERROR_CREATING_THUMBS_FOLDER'); We can test to create the folder directly with file
+					//	return Text::_('COM_PHOCACART_ERROR_CREATING_THUMBS_FOLDER'); We can test to create the folder directly with file
 					default:
 						$returnFrontMessage = $errorMsg;
 					break;

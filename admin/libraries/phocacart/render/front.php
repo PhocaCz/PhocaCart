@@ -139,6 +139,7 @@ class PhocacartRenderFront
 
         $title = $params->get('page_title', '');
 
+
         if (isset($name->title) && $name->title != '') {
             /*if ($title != '') {
                 $title = $title .' - ' .  $name->title;
@@ -310,7 +311,7 @@ class PhocacartRenderFront
 
             /*if (isset($category->parentid)) {
                 if ($category->parentid == 0) {
-                    // $pathway->addItem( JText::_('COM_PHOCACART_CATEGORIES'), JRoute::_(PhocacartRoute::getCategoriesRoute()));
+                    // $pathway->addItem( Text::_('COM_PHOCACART_CATEGORIES'), Route::_(PhocacartRoute::getCategoriesRoute()));
                 } else if ($category->parentid > 0) {
                     $curpath = $pathway->getPathwayNames();
 
@@ -774,6 +775,7 @@ class PhocacartRenderFront
             }
 
             $o = HTMLHelper::_('content.prepare', $o);
+
 
             if ($changeLang == 1) {
                 PluginHelper::importPlugin('system');

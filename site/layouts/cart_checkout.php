@@ -39,7 +39,7 @@ $p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
 // POS
 $task 			= $d['pos'] == true ? 'pos.update' : 'checkout.update';
 $inputNumber	= $d['pos'] == true ? 'number' : 'text';
-$displayTax		= true;// Specific settings for POS - to make smaller widht of cart
+$displayTax		= true;// Specific settings for POS - to make smaller width of cart
 
 // A) MINIMUM QUANTITY FOR GROUPS - MAIN PRODUCT
 if (!empty($d['fullitemsgroup'][0])) {
@@ -169,16 +169,16 @@ if (!empty($d['fullitems'][1])) {
 		}
 
 		echo '<div class="'.$r.$cV.' ph-checkout-cart-row-item">';
-		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image">'.$imageOutput.'</div>';
-		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title"><a href="'.$link.'">'.$v['title'].'</a>';
+		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.$imageOutput.'</div>';
+		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'"><a href="'.$link.'">'.$v['title'].'</a>';
 		echo '</div>';
 
 
 		if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-			echo '<div class="'.$cN.$cVRow.$lineThroughClass.' ph-checkout-cart-netto">'.$price->getPriceFormat($v['netto']).'</div>';
+			echo '<div class="'.$cN.$cVRow.$lineThroughClass.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$price->getPriceFormat($v['netto']).'</div>';
 		}
 
-		echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity">';
+		echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_QUANTITY')).'">';
 
 		echo '<form action="'.$d['linkcheckout'].'" class="'.$d['s']['c']['form-inline'].' phItemCartUpdateBoxForm" method="post">';
 		echo '<div class="'.$d['s']['c']['input-group'].'">';
@@ -205,10 +205,10 @@ if (!empty($d['fullitems'][1])) {
 		echo '</div>';// end quantity
 
 		if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-			echo '<div class="'.$cT.$cVRow.$lineThroughClass.' ph-checkout-cart-tax">'.$price->getPriceFormat($v['tax'] * $v['quantity']).'</div>';
+			echo '<div class="'.$cT.$cVRow.$lineThroughClass.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$price->getPriceFormat($v['tax'] * $v['quantity']).'</div>';
 		}
 
-		echo '<div class="'.$cB.$cVRow.$lineThroughClass.' ph-checkout-cart-brutto">'.$price->getPriceFormat($v['final']).'</div>';
+		echo '<div class="'.$cB.$cVRow.$lineThroughClass.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE')).'">'.$price->getPriceFormat($v['final']).'</div>';
 		echo '</div>'. "\n"; // end row
 
 
@@ -719,7 +719,7 @@ if (!empty($d['fullitems'][1])) {
 				//- *$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
 				$c = $d['total'][0]['taxrecapitulation']['rounding'];
 			}
-			echo '<tr><td>'.JText::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
+			echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
 
 		//}
 

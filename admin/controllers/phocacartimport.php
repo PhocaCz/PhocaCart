@@ -25,7 +25,7 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 		$user 		= Factory::getUser();
 		$userId		= $user->id;
 		$redirect	= 'index.php?option=com_phocacart&view=phocacartimports';
-		//$file		= JFactory::getApplication()->input->files->get( 'Filedata', null, 'raw');
+		//$file		= Factory::getApplication()->input->files->get( 'Filedata', null, 'raw');
 		$file		= Factory::getApplication()->input->files->get( 'Filedata');
 
 		$paramsC 				= PhocacartUtils::getComponentParameters();

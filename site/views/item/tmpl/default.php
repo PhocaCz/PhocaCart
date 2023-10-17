@@ -71,9 +71,9 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	echo '<div class="'.$this->s['c']['row'].'">';
 
 	// === IMAGE PANEL
-	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .'">';
+	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .' ph-item-view-image-box">';
 
-	//JPluginHelper::importPlugin('pcv');
+	//PluginHelper::importPlugin('pcv');
 	$results = Factory::getApplication()->triggerEvent('onPCVonItemImage', array('com_phocacart.item', &$x, &$this->t, &$this->p));
 	$imageOutput = trim(implode("\n", $results));
 
@@ -97,8 +97,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $imageA, 'large');
 		}
 
-		$link = JUri::base(true) . '/' . $imageL->rel;// Thumbnail
-		//$link = JUri::base(true) . '/' . $this->t['pathitem']['orig_rel_ds'] . $x->image;// Original image
+		$link = Uri::base(true) . '/' . $imageL->rel;// Thumbnail
+		//$link = Uri::base(true) . '/' . $this->t['pathitem']['orig_rel_ds'] . $x->image;// Original image
 		if ($this->t['display_webp_images'] == 1) {
 			$link = Uri::base(true) . '/' . $imageL->rel_webp;
 		}
@@ -117,7 +117,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			echo '</div>';
 
 			$imageS = PhocacartImage::getThumbnailName($this->t['pathitem'], $x->image, 'small');
-			$linkS = JUri::base(true) . '/' . $imageS->rel;// Thumbnail
+			$linkS = Uri::base(true) . '/' . $imageS->rel;// Thumbnail
 			if ($this->t['display_webp_images'] == 1) {
 				$linkS = Uri::base(true) . '/' . $imageS->rel_webp;
 			}
@@ -186,7 +186,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 
 	// === PRICE PANEL
-	echo '<div class="'.$this->s['c']['col.xs12.sm7.md7'].'">';
+	echo '<div class="'.$this->s['c']['col.xs12.sm7.md7'].' ph-item-view-data-box">';
 	echo '<div class="ph-item-price-panel phItemPricePanel">';
 
 	$title = '';
@@ -246,7 +246,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// REWARD POINTS - NEEDED
 	$pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
 	if ($pointsN) {
-		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-item-reward-box ph-item-reward-needed">';
 		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
 
 		echo '<div class="ph-reward">'.$pointsN.'</div>';
@@ -257,7 +257,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// REWARD POINTS - RECEIVED
 	$pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
 	if ($pointsR) {
-		echo '<div class="ph-item-reward-box">';
+		echo '<div class="ph-item-reward-box ph-item-reward-received">';
 		echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').'</div>';
 
 		echo '<div class="ph-reward">'.$pointsR.'</div>';
@@ -820,7 +820,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 			$tabO	.= '<a href="'.$link.'">';
 			if (isset($image->rel) && $image->rel != '') {
-				/*$tabO	.= '<img src="'.JUri::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
+				/*$tabO	.= '<img src="'.Uri::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
 				if (isset($this->t['image_width']) && $this->t['image_width'] != '' && isset($this->t['image_height']) && $this->t['image_height'] != '') {
 					$tabO	.= ' style="width:'.$this->t['image_width'].';height:'.$this->t['image_height'].'"';
 				}

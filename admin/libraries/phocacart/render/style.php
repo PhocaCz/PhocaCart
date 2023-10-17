@@ -475,6 +475,7 @@ class PhocacartRenderStyle
         $s['i']['calendar']        = $pf . 'calendar' . $sf;
         $s['i']['globe']           = $pf . 'globe' . $sf;
         $s['i']['upload']          = $pf . 'upload' . $sf;
+        $s['i']['filter']          = $pf . 'filter' . $sf;
 
 
         switch ($icons) {
@@ -538,6 +539,7 @@ class PhocacartRenderStyle
                 $s['i']['calendar']        = $pf . 'calendar' . $sf;
                 $s['i']['globe']           = $pf . 'globe' . $sf;
                 $s['i']['upload']          = $pf . 'upload' . $sf;
+                $s['i']['filter']          = $pf . 'filter' . $sf;
 
                 if ($icons == 'fa5') {
 
@@ -607,6 +609,7 @@ class PhocacartRenderStyle
                 $s['i']['calendar']        = $pf . 'calendar' . $sf;
                 $s['i']['globe']           = $pf . 'globe' . $sf;
                 $s['i']['upload']          = $pf . 'upload' . $sf;
+                $s['i']['filter']          = $pf . 'filter' . $sf;
 
 
             break;

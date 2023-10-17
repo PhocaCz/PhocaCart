@@ -17,6 +17,10 @@
             <rect x="128" y="128" width="336" height="336" rx="57" ry="57" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="m383.5 128 .5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
         </symbol>
 
+        <symbol id="pc-si-filter" viewBox="0 0 512 512">
+            <path d="M64 144h226.75a48 48 0 0090.5 0H448a16 16 0 000-32h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32zm384 224h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32h226.75a48 48 0 0090.5 0H448a16 16 0 000-32zm0-128H221.25a48 48 0 00-90.5 0H64a16 16 0 000 32h66.75a48 48 0 0090.5 0H448a16 16 0 000-32z"/>
+        </symbol>
+
         <symbol id="pc-si-wish-list" viewBox="0 0 512 512">
             <path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0 0 18 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
         </symbol>
@@ -26,15 +30,26 @@
         </symbol>
 
         <symbol id="pc-si-grid" viewBox="0 0 512 512">
-            <rect x="48" y="48" width="176" height="176" rx="20" ry="20" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><rect x="288" y="48" width="176" height="176" rx="20" ry="20" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><rect x="48" y="288" width="176" height="176" rx="20" ry="20" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><rect x="288" y="288" width="176" height="176" rx="20" ry="20" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+            <path d="m274 274v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+            <path d="m36 274v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+            <path d="m36 36v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+            <path d="m274 36v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
         </symbol>
 
         <symbol id="pc-si-gridlist" viewBox="0 0 512 512">
-             <path d="m68 32c-19.667 0-36 16.333-36 36v56c0 19.667 16.333 36 36 36h56c19.667 0 36-16.333 36-36v-56c0-19.667-16.333-36-36-36h-56zm158 0c-19.667 0-36 16.333-36 36v56c0 19.667 16.333 36 36 36h218c19.667 0 36-16.333 36-36v-56c0-19.667-16.333-36-36-36h-218zm-158 32h56c2.4928 0 4 1.5072 4 4v56c0 2.4928-1.5072 4-4 4h-56c-2.4928 0-4-1.5072-4-4v-56c0-2.4928 1.5072-4 4-4zm158 0h218c2.4928 0 4 1.5072 4 4v56c0 2.4928-1.5072 4-4 4h-218c-2.4928 0-4-1.5072-4-4v-56c0-2.4928 1.5072-4 4-4zm-158 128c-19.667 0-36 16.333-36 36v56c0 19.667 16.333 36 36 36h56c19.667 0 36-16.333 36-36v-56c0-19.667-16.333-36-36-36h-56zm158 0c-19.667 0-36 16.333-36 36v56c0 19.667 16.333 36 36 36h218c19.667 0 36-16.333 36-36v-56c0-19.667-16.333-36-36-36h-218zm-158 32h56c2.4928 0 4 1.5072 4 4v56c0 2.4928-1.5072 4-4 4h-56c-2.4928 0-4-1.5072-4-4v-56c0-2.4928 1.5072-4 4-4zm158 0h218c2.4928 0 4 1.5072 4 4v56c0 2.4928-1.5072 4-4 4h-218c-2.4928 0-4-1.5072-4-4v-56c0-2.4928 1.5072-4 4-4zm-158 128c-19.667 0-36 16.333-36 36v56c0 19.667 16.333 36 36 36h56c19.667 0 36-16.333 36-36v-56c0-19.667-16.333-36-36-36h-56zm158 0c-19.667 0-36 16.333-36 36v56c0 19.667 16.333 36 36 36h218c19.667 0 36-16.333 36-36v-56c0-19.667-16.333-36-36-36h-218zm-158 32h56c2.4928 0 4 1.5072 4 4v56c0 2.4928-1.5072 4-4 4h-56c-2.4928 0-4-1.5072-4-4v-56c0-2.4928 1.5072-4 4-4zm158 0h218c2.4928 0 4 1.5072 4 4v56c0 2.4928-1.5072 4-4 4h-218c-2.4928 0-4-1.5072-4-4v-56c0-2.4928 1.5072-4 4-4z" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="m36 36v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
+            <path d="m36 354v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
+            <path d="m36 195v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
+            <path d="m194 36v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
+            <path d="m194 195v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
+            <path d="m194 354v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
         </symbol>
 
         <symbol id="pc-si-list" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M96 304h320M96 208h320M96 112h320M96 400h320"/>
+            <path d="m36 36h440v36h-440z" style="paint-order:stroke fill markers"/>
+            <path d="m36 440h440v36h-440z" style="paint-order:stroke fill markers"/>
+            <path d="m36 305.33h440v36h-440z" style="paint-order:stroke fill markers"/>
+            <path d="m36 170.67h440v36h-440z" style="paint-order:stroke fill markers"/>
         </symbol>
 
         <symbol id="pc-si-back-category" viewBox="0 0 512 512">
@@ -87,11 +102,11 @@
         </symbol>
 
         <symbol id="pc-si-plus" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 176v160M336 256H176"/>
+            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 112v288M400 256H112"/>
         </symbol>
 
         <symbol id="pc-si-minus" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M336 256H176"/>
+            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M400 256H112"/>
         </symbol>
 
         <symbol id="pc-si-question-sign" viewBox="0 0 512 512">
@@ -128,11 +143,11 @@
         </symbol>
 
         <symbol id="pc-si-triangle-bottom" viewBox="0 0 512 512">
-            <path d="m342.43 238.23-74.13 89.09a16 16 0 0 1-24.6 0l-74.13-89.09A16 16 0 0 1 181.86 212h148.28a16 16 0 0 1 12.29 26.23Z"/><path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M400 256H112"/>
         </symbol>
 
         <symbol id="pc-si-triangle-right" viewBox="0 0 512 512">
-            <path d="m238.23 342.43 89.09-74.13a16 16 0 0 0 0-24.6l-89.09-74.13A16 16 0 0 0 212 181.86v148.28a16 16 0 0 0 26.23 12.29Z"/><path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 112v288M400 256H112"/>
         </symbol>
 
         <symbol id="pc-si-save" viewBox="0 0 512 512">

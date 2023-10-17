@@ -300,7 +300,7 @@ if (PhocacartSubmit::isAllowedToSubmit()) {
     $lang->load('mod_login');
 
     echo '<div class="' . $this->s['c']['row'] . ' ph-account-box-row" >';
-    //echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="'.$this->s['i']['remove-circle'].' ph-account-icon-not-ok"></span></div><h3>1. '.JText::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
+    //echo '<div class="ph-account-box-header" id="phaccountloginedit"><div class="ph-pull-right"><span class="'.$this->s['i']['remove-circle'].' ph-account-icon-not-ok"></span></div><h3>1. '.Text::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
     echo '<div class="' . $this->s['c']['col.xs12.sm12.md12'] . ' ph-account-box-header" id="phaccountloginedit"><h3>' . Text::_('COM_PHOCACART_LOGIN_REGISTER') . '</h3></div>';
     echo '</div>';
 

@@ -53,10 +53,10 @@ $output 	= '';
 $payment	= $this->cart->getPaymentMethod();
 if (isset($payment['method'])) {
 	//$dispatcher = J EventDispatcher::getInstance();
-	JPluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
+	PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
 	$eventData               = array();
 	$eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
-	JFactory::getApplication()->triggerEvent('onPCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
+	Factory::getApplication()->triggerEvent('onPCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
 	echo $output;
 }
 // END PLUGIN

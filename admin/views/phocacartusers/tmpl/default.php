@@ -146,7 +146,7 @@ if ((int)$item->id < 1 && (int)$item->cartuserid < 1) {
 else if ( (int)$item->orderuserid > 0 ) {
 	$o = '<span class="label label-success badge bg-success">'.Text::_('COM_PHOCACART_ACTIVE_ORDER').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.Text::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. Text::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
@@ -157,7 +157,7 @@ else if ( (int)$item->orderuserid > 0 ) {
 else if ((int)$item->id > 0 && ($item->name_last != '' || $item->name_first != '' || $item->city != '' || $item->address_1 != '')) {
 	$o = '<span class="label label-warning badge bg-warning label-info">'.Text::_('COM_PHOCACART_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.Text::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. Text::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
@@ -170,7 +170,7 @@ else if ( (int)$item->cartuserid > 0 || ($item->name_last != '' || $item->name_f
 
 	$o = '<span class="label label-warning badge bg-warning label-warning">'.Text::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.Text::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. Text::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
@@ -182,7 +182,7 @@ else if ( (int)$item->cartuserid > 0) {
 
 	$o = '<span class="label label-warning badge bg-warning label-warning">'.Text::_('COM_PHOCACART_PARTIALLY_ACTIVE').'</span>';
 	if ((int)$item->cartuserid > 0) {
-		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.JText::_('COM_PHOCACART_VIEW_CART').'</small></a>';
+		//$o .= ' <a class="modal_view_cart ph-u" href="'.$linkCart.'" '.$linkCartHandler.' ><small>'.Text::_('COM_PHOCACART_VIEW_CART').'</small></a>';
 		$o .= ' <span><a href="#'.$idMd.'" role="button" class="ph-u '.$idMd.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="'.$linkCart.'" data-height="'.$h.'" data-width="'.$w.'">'. Text::_($textButton) . '</a></span>';
 	}
 	echo $r->td(  $o, "small");
@@ -249,7 +249,7 @@ echo $r->td($item->address_1, "small");
 $email 			= $item->email;
 if ($item->email != $item->user_email) {
 	$email = Text::_('COM_PHOCACART_EMAIL_CART'). ': '. $item->email
-	. '<br />'. JText::_('COM_PHOCACART_EMAIL_SYSTEM'). ': '.$item->user_email . ' <span class="ph-important-text">*</span>';
+	. '<br />'. Text::_('COM_PHOCACART_EMAIL_SYSTEM'). ': '.$item->user_email . ' <span class="ph-important-text">*</span>';
 	$emailConflict = 1;
 }
 
@@ -274,7 +274,7 @@ echo '<div><span class="label label-success badge bg-success">'.Text::_('COM_PHO
 
 if ($emailConflict == 1) {
 	echo '<div>&nbsp;</div>';
-	echo '<div><span class="ph-important-text">*</span> ... '.JText::_('COM_PHOCACART_NOTE_DIFFERENT_EMAILS').'</div>';
+	echo '<div><span class="ph-important-text">*</span> ... '.Text::_('COM_PHOCACART_NOTE_DIFFERENT_EMAILS').'</div>';
 }
 
 echo '</div>';

@@ -69,12 +69,12 @@
 
 <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="6"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 <field name="gift_title" type="text" label="COM_PHOCACART_FIELD_GIFT_TITLE_LABEL" description="COM_PHOCACART_FIELD_GIFT_TITLE_DESC" class="form-control" size="40"/>
 
 
-<field name="gift_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+<field name="gift_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_DESC"/>
 
 <field name="gift_image" type="media" label="COM_PHOCACART_FIELD_GIFT_IMAGE_LABEL" description="COM_PHOCACART_FIELD_GIFT_IMAGE_DESC" class="form-control" size="40"/>

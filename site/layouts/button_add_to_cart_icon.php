@@ -19,7 +19,7 @@ if ($d['selectoptions'] == 1) {
 	// ICON ATTRIBUTE REQUIRED AND ATTRIBUTES NOT DISPLAYED - so we should redirect to detail view
 
 	echo '<div class="ph-category-item-addtocart">';
-	echo '<a href="'.$d['link'].'" title="'. JText::_('COM_PHOCACART_CHOOSE_VARIANT') /* JText::_('COM_PHOCACART_SELECT_OPTIONS') */.'" data-bs-toggle="tooltip" data-placement="top">';
+	echo '<a href="'.$d['link'].'" title="'. Text::_('COM_PHOCACART_CHOOSE_VARIANT') /* Text::_('COM_PHOCACART_SELECT_OPTIONS') */.'" data-bs-toggle="tooltip" data-placement="top">';
 	//echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span>';
     echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart']);
 	echo '</a>';

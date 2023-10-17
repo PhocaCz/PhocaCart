@@ -125,6 +125,12 @@ class PhocacartFormUser
 							$fB[] = $fS[] = ' checked="checked"';
 						}
 
+						// Calendar
+						if ($type == 'calendar') {
+							$fB[] = $fS[] = ' filter="user_utc" translateformat="true" showtime="true"';
+						}
+
+
 						// 0 not read only
 						// 1 read only
 						// 2 read only for registered users but not read only for guests

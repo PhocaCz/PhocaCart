@@ -121,7 +121,7 @@ if ($canCreate || $canEdit) {
 }
 echo $r->td($checkO, "small", 'th');
 
-//$tax = '<span class="label label-default">'.$this->escape(JText::_($item->status_title)).'</span>';
+//$tax = '<span class="label label-default">'.$this->escape(Text::_($item->status_title)).'</span>';
 $tax = '';
 
 $tax .= ' <span><a href="'.$linkTax.'" role="button" class="ph-u '.$idMd.'ModalButton" data-bs-toggle="modal" data-bs-target="#'.$idMd.'" title="' . Text::_($textButton) . '" data-src="'.$linkTax.'" data-height="'.$h.'" data-width="'.$w.'">'. Text::_($textButton) . '</a></span>';

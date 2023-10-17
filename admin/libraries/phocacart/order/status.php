@@ -106,7 +106,7 @@ class PhocacartOrderStatus
 	 * User will be not checked when:
 	 * 1) status is changed in administration (vendor in admin is the the shopper user)
 	 * 2) guest user makes the order (there is nothing to check)
-	 * 3) payment method contact server to change status (payment method does not identify as user - $user = JFactory::getUser())
+	 * 3) payment method contact server to change status (payment method does not identify as user - $user = Factory::getUser())
 	 *
 	 * $notifyUser 0 ... no  1 ... yes 99 ... defined in order status settings
 	 * $notifyOthers   0 ... no  1 ... yes 99 ... defined in order status settings
@@ -1385,6 +1385,10 @@ class PhocacartOrderStatus
 			$pLang->setLanguage($common->user_lang);
 
 			// Run content plugins e.g. because of translation
+			// Disable emailclock for PDF | MAIL
+			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+				$object = '{emailcloak=off}' . $object;
+			//}
 			$object = HTMLHelper::_('content.prepare', $object);
 
 			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
@@ -1395,6 +1399,10 @@ class PhocacartOrderStatus
 		} else {
 
 			// Run content plugins e.g. because of translation
+			// Disable emailclock for PDF | MAIL
+			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+				$object = '{emailcloak=off}' . $object;
+			//}
 			$object = HTMLHelper::_('content.prepare', $object);
 
 			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
@@ -1406,6 +1414,10 @@ class PhocacartOrderStatus
 		PluginHelper::importPlugin('plgSystemMultilanguagesck');
 
 		// Run content plugins e.g. because of translation
+		// Disable emailclock for PDF | MAIL
+		//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+			$object = '{emailcloak=off}' . $object;
+		//}
 		$object = HTMLHelper::_('content.prepare', $object);
 
 		Factory::getApplication()->triggerEvent('onChangeText', array(&$object));

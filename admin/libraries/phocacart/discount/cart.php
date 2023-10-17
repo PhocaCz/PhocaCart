@@ -81,7 +81,7 @@ class PhocacartDiscountCart
 
 	public static function getCartDiscount($id = 0, $catid = 0, $quantity = 0, $amount = 0, $subtotalAmount = 0) {
 
-		//$app									= JFactory::getApplication();
+		//$app									= Factory::getApplication();
 		$paramsC 								= PhocacartUtils::getComponentParameters();
 		$discount_priority						= $paramsC->get( 'discount_priority', 1 );
 		$discount_subtotal_amount				= $paramsC->get( 'discount_subtotal_amount', 1 );

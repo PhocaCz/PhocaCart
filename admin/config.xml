@@ -1477,7 +1477,16 @@
 
 			<field name="admin_columns_products" default="sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id" type="textarea" label="COM_PHOCACART_FIELD_COLUMNS_PRODUCT_LIST_ADMINISTRATION_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_PRODUCT_LIST_ADMINISTRATION_DESC"/>
 
-			<field name="admin_eip_title" type="list" class="btn-group btn-group-yesno" default="4" label="COM_PHOCACART_FIELD_TITLE_EDIT_IN_PLACE_LABEL"
+			<field name="admin_columns_info_column" type="list" class="btn-group btn-group-yesno" default="" label="COM_PHOCACART_FIELD_INFO_COLUMN_VALUES_LABEL"
+                   description="COM_PHOCACART_FIELD_INFO_COLUMN_VALUES_DESC" multiple="true">
+                <option value="1">COM_PHOCACART_ATTRIBUTES</option>
+				<option value="2">COM_PHOCACART_ATTRIBUTE_OPTIONS</option>
+				<option value="3">COM_PHOCACART_SPECIFICATIONS</option>
+				<option value="4">COM_PHOCACART_TAGS</option>
+                <option value="5">COM_PHOCACART_LABELS</option>
+            </field>
+
+            <field name="admin_eip_title" type="list" class="btn-group btn-group-yesno" default="4" label="COM_PHOCACART_FIELD_TITLE_EDIT_IN_PLACE_LABEL"
                    description="COM_PHOCACART_FIELD_TITLE_EDIT_IN_PLACE_DESC">
                 <option value="1">COM_PHOCACART_ALIAS_NOT_EDITED_NOT_OVERWRITTEN</option>
 				<option value="2">COM_PHOCACART_ALIAS_NOT_EDITED_OVERWRITTEN</option>
@@ -2244,7 +2253,7 @@
 
             <field name="send_email_question" type="user" section="com_phocacart" default="" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_DESC"/>
 
-			<field name="send_email_question_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_DESC" />
+			<field name="send_email_question_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_QUESTION_OTHERS_DESC" />
 
 
 			<field name="display_question_privacy_checkbox" type="list" class="form-select" default="0" label="COM_PHOCACART_FIELD_DISPLAY_ASK_QUESTION_PRIVACY_CHECKBOX_LABEL"
@@ -2316,7 +2325,7 @@
 
 			<field name="send_email_submit_item" type="user" section="com_phocacart" default="" label="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_DESC"/>
 
-			<field name="send_email_submit_item_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_DESC" />
+			<field name="send_email_submit_item_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_SEND_EMAIL_SUBMIT_ITEM_OTHERS_DESC" />
 
 			<field name="submit_item_upload_image_maxsize" type="text" size="20" default="512000" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_IMAGE_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_IMAGE_SUBMIT_ITEM_DESC"/>
 			<field name="submit_item_upload_image_count" type="text" size="20" default="1" label="COM_PHOCACART_FIELD_MAXIMUM_COUNT_UPLOAD_IMAGE_SUBMIT_ITEM_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_COUNT_UPLOAD_IMAGE_SUBMIT_ITEM_DESC"/>

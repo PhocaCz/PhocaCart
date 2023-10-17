@@ -140,7 +140,7 @@ echo '<civ class="ph-right-cp">';
 			$s->setFunction('phChartAreaLine', 'Line');
 			$s->renderFunctions();
 
-				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
+				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo Text::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo Text::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
 						<div id="ph-canvas-holder2" class="phChartAreaLineholder" style="width: 97%;" >
                             <canvas id="phChartAreaLine" class="ph-chart-area"s></canvas>
 						</div>
@@ -167,8 +167,8 @@ echo '<h3>'.  Text::_($this->t['l'] . '_TRANSLATION').': '. Text::_($this->t['l'
 .'<p>'.Text::_($this->t['l'] . '_TRANSLATION_SUPPORT_URL').'</p>';
 
 echo '<div class="ph-cp-hr"></div>'
-.'<div class="btn-group"><a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'] . '_CHECK_FOR_UPDATE') .'</a></div>'
-.'<div style="float:right; margin: 0 10px"><a href="https://www.phoca.cz/" target="_blank">'.JHtml::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz' ).'</a></div>';
+.'<div class="btn-group"><a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  Text::_($this->t['l'] . '_CHECK_FOR_UPDATE') .'</a></div>'
+.'<div style="float:right; margin: 0 10px"><a href="https://www.phoca.cz/" target="_blank">'.HTMLHelper::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz' ).'</a></div>';
 
 echo '</div>';
 
@@ -306,7 +306,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 					<?php
 					foreach ($this->views as $k => $v) {
 						$linkV	= $link . $this->t['c'] . $k;
-						//echo PhocacartRenderAdmin::quickIconButton( $linkV, 'icon-48-'.$k.'.png', JText::_($v[0]), $this->t['i']);
+						//echo PhocacartRenderAdmin::quickIconButton( $linkV, 'icon-48-'.$k.'.png', Text::_($v[0]), $this->t['i']);
 						echo '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">';
 						echo PhocacartRenderAdmin::quickIconButton( $linkV, Text::_($v[0]), $v[1], $v[2]);
 						echo '</div>';
@@ -330,7 +330,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 			$s->setFunction('phChartAreaLine', 'Line');
 			$s->renderFunctions();
 
-				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> *//* ?>
+				/*	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo Text::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo Text::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> *//* ?>
 						<div id="ph-canvas-holder2" class="phChartAreaLineholder" style="width: 97%;" >
                             <canvas id="phChartAreaLine" class="ph-chart-area"s></canvas>
 						</div>
@@ -355,7 +355,7 @@ $cAmountD	= $s->getAmountOfOrders(0);
 			.'<p>© 2007 - '.  date("Y"). ' '. Text::_($this->t['l'] . '_TRANSLATER'). '</p>'
 			.'<p>'.Text::_($this->t['l'] . '_TRANSLATION_SUPPORT_URL').'</p>';
 					echo '<div style="border-top:1px solid #c2c2c2"></div><p>&nbsp;</p>'
-			.'<div><a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  JText::_($this->t['l'] . '_CHECK_FOR_UPDATE') .'</a>'.'<div style="float:right; margin: 0 10px"><a href="https://www.phoca.cz/" target="_blank">'.JHtml::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz' ).'</a></div></div>';
+			.'<div><a class="btn btn-large btn-primary" href="https://www.phoca.cz/version/index.php?'.$this->t['c'].'='.  $this->t['version'] .'" target="_blank"><i class="icon-loop icon-white"></i>&nbsp;&nbsp;'.  Text::_($this->t['l'] . '_CHECK_FOR_UPDATE') .'</a>'.'<div style="float:right; margin: 0 10px"><a href="https://www.phoca.cz/" target="_blank">'.JHtml::_('image', $this->t['i'] . 'logo.png', 'Phoca.cz' ).'</a></div></div>';
 
 					?></div>
 				</div>

@@ -281,7 +281,7 @@ class PhocacartFilter
 
         $p['display_products_all_subcategories'] = $pC->get('display_products_all_subcategories', 0);
 
-        // $db = JFactory::getDBO();
+        // $db = Factory::getDBO();
         $o = array();
 
         if ($this->ajax == 0) {
@@ -289,7 +289,7 @@ class PhocacartFilter
         }
 
         $s = PhocacartRenderStyle::getStyles();
-        //$app		= JFactory::getApplication();
+        //$app		= Factory::getApplication();
         $layout = new FileLayout($params['layout'] . '_checkbox', null, array('component' => 'com_phocacart')); //foreach with items in layout
         $layout2 = new FileLayout($params['layout'] . '_text', null, array('component' => 'com_phocacart'));// foreach with items in this class
         $layout3 = new FileLayout($params['layout'] . '_checkbox_categories', null, array('component' => 'com_phocacart'));// foreach with items in this class

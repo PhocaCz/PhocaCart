@@ -418,7 +418,7 @@ class PhocacartUtils
 		$dateF 	= Factory::getDate($date, 'UTC');
 		$dateF->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
 		$dateN	= $dateF->format('Y-m-d h:i:s', true, false);
-		//$dateN = JHtml::date($v->date, JText::_('DATE_FORMAT_LC2'));*/
+		//$dateN = JHtml::date($v->date, Text::_('DATE_FORMAT_LC2'));*/
 		$dateN = HTMLHelper::_('date', $date, $format);
 		return $dateN;
 	}

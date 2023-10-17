@@ -28,7 +28,7 @@ class PhocaCartControllerResponse extends FormController
 
 		//JSession::checkToken() or jexit( 'Invalid Token' );
 		$return = PhocacartRoute::getInfoRoute();
-		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_RECEIVED'), 'message');
+		//$app->enqueueMessage(Text::_('COM_PHOCACART_PAYMENT_RECEIVED'), 'message');
 		//$session->set('infoaction', 3, 'phocaCart');
 		//$session->set('infoaction', 4, 'phocaCart');
 		// NO message here, we have set the message during order and it stays unchanged as it is in session
@@ -76,7 +76,7 @@ class PhocaCartControllerResponse extends FormController
 
 		$session->set('infoaction', 5, 'phocaCart');
 		$session->set('infomessage', $message, 'phocaCart');
-		//$app->enqueueMessage(JText::_('COM_PHOCACART_PAYMENT_CANCELED'), 'info');
+		//$app->enqueueMessage(Text::_('COM_PHOCACART_PAYMENT_CANCELED'), 'info');
 		$app->redirect(Route::_($return));
 	}
 

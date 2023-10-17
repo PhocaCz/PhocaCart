@@ -9,8 +9,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Router\SiteRouter;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Application\CMSApplication;
 
@@ -50,8 +53,8 @@ class PhocacartPath
 			$attachmentFolderRel 			= Path::clean($attachmentFolder);
 			$path['orig_rel'] 				= '../' . $attachmentFolderRel;
 			$path['orig_rel_ds'] 			= '../' . $attachmentFolderRel .'/';
-			$path['orig_rel_path'] 			= Juri::root() . $attachmentFolderRel;
-			$path['orig_rel_path_ds'] 		= Juri::root() . $attachmentFolderRel .'/';
+			$path['orig_rel_path'] 			= Uri::root() . $attachmentFolderRel;
+			$path['orig_rel_path_ds'] 		= Uri::root() . $attachmentFolderRel .'/';
 
 		} else if ($group['f'] == 6) {
 			$downloadFolderPublic 			= Path::clean($downloadFolderPublic);
@@ -61,8 +64,8 @@ class PhocacartPath
 			$downloadFolderPublicRel 		= Path::clean($downloadFolderPublic);
 			$path['orig_rel'] 				= '../' . $downloadFolderPublicRel;
 			$path['orig_rel_ds'] 			= '../' . $downloadFolderPublicRel .'/';
-			$path['orig_rel_path'] 			= Juri::root() . $downloadFolderPublicRel;
-			$path['orig_rel_path_ds'] 		= Juri::root() . $downloadFolderPublicRel .'/';
+			$path['orig_rel_path'] 			= Uri::root() . $downloadFolderPublicRel;
+			$path['orig_rel_path_ds'] 		= Uri::root() . $downloadFolderPublicRel .'/';
 
 		} else if ($group['f'] == 4) {
 			// Images Categories
@@ -93,8 +96,8 @@ class PhocacartPath
 				$uploadFolderRel 				= Path::clean($uploadFolder);
 				$path['orig_rel_ds'] 			= '../' . $uploadFolderRel;
 				$path['orig_rel_ds'] 			= '../' . $uploadFolderRel .'/';
-				$path['orig_rel_path'] 			= Juri::root() . $uploadFolderRel;
-				$path['orig_rel_path_ds'] 		= Juri::root() . $uploadFolderRel .'/';
+				$path['orig_rel_path'] 			= Uri::root() . $uploadFolderRel;
+				$path['orig_rel_path_ds'] 		= Uri::root() . $uploadFolderRel .'/';
 			}
 		} else if ($group['f'] == 3) {
 			// Standard Path - Download
@@ -113,8 +116,8 @@ class PhocacartPath
 				$downloadFolderRel 				= Path::clean($downloadFolder);
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel;
 				$path['orig_rel_ds'] 			= '../' . $downloadFolderRel .'/';
-				$path['orig_rel_path'] 			= Juri::root() . $downloadFolderRel;
-				$path['orig_rel_path_ds'] 		= Juri::root() . $downloadFolderRel .'/';
+				$path['orig_rel_path'] 			= Uri::root() . $downloadFolderRel;
+				$path['orig_rel_path_ds'] 		= Uri::root() . $downloadFolderRel .'/';
 			}
 		} else {
 			$path['orig_abs'] 				= JPATH_ROOT . '/tmp';
@@ -145,11 +148,12 @@ class PhocacartPath
 	}
 
 	public static function getRightPathLink($link) {
-		$app    		= CMSApplication::getInstance('site');
-		$router 		= $app->getRouter();
-		$uri 			= $router->build($link);
+		//$app    		= CMSApplication::getInstance('site');
+		//$router 		= $app->getRouter();
+		//$uri 			= $router->build($link);
+		$router 		= Factory::getContainer()->get(SiteRouter::class);
+		$uri             = $router->build($link);
 		$uriS			= $uri->toString();
-
 		$pos 			= strpos($uriS, 'administrator');
 
 		if ($pos === false) {

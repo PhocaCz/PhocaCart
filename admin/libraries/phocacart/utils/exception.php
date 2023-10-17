@@ -14,9 +14,9 @@ use Joomla\CMS\Language\Text;
 class PhocacartUtilsException
 {
 	
-	public static function renderErrorInfo ($msg, $jText = false){
+	public static function renderErrorInfo ($msg, $Text = false){
 	
-		if ($jText) {
+		if ($Text) {
 			return '<div class="alert alert-error">'.Text::_($msg).'</div>';
 		} else {
 			return '<div class="alert alert-error">'.$msg.'</div>';

@@ -31,7 +31,7 @@ class PhocaCartControllerComparison extends FormController
 		} else {
 			$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_COMPARISON_LIST'), 'error');
 		}
-		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+		//$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}
 	
@@ -50,7 +50,7 @@ class PhocaCartControllerComparison extends FormController
 		} else {
 			$app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_COMPARISON_LIST'), 'error');
 		}
-		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+		//$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}
 	

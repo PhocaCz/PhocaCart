@@ -11,6 +11,8 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 class PhocacartUtilsInfo
 {
 
@@ -27,7 +29,7 @@ class PhocacartUtilsInfo
         if ($mode === 0) {
             return "\n\n" . 'Powered by Phoca Cart' . "\n" . 'https://www.phoca.cz/phocacart';
         } else if ($mode === 2) {
-            return '<div>Powered by <a href="https://www.phoca.cz/phocacart"><img src="'.JUri::root(true).'/media/com_phocacart/images/phoca-cart.png" alt="Phoca Cart" style="height:1.2em;width:auto;margin-bottom: 3px;" /></a> & <a href="https://www.phoca.cz/phocacart"><img src="'.JUri::root(true).'/media/com_phocacart/images/phoca-pos.png" alt="Phoca POS" style="height:1.2em;width:auto;margin-bottom: 3px;" /></a></div>';
+            return '<div>Powered by <a href="https://www.phoca.cz/phocacart"><img src="'.Uri::root(true).'/media/com_phocacart/images/phoca-cart.png" alt="Phoca Cart" style="height:1.2em;width:auto;margin-bottom: 3px;" /></a> & <a href="https://www.phoca.cz/phocacart"><img src="'.Uri::root(true).'/media/com_phocacart/images/phoca-pos.png" alt="Phoca POS" style="height:1.2em;width:auto;margin-bottom: 3px;" /></a></div>';
         } else {
             return '<div style="text-align:right;display:block">Powered by <a href="https://www.phoca.cz/phocacart">Phoca Cart</a></div>';
         }

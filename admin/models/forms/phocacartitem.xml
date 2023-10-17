@@ -53,11 +53,11 @@
 
         <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"/>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
-        <field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="JComponentHelper::filterText"
+        <field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC"/>
-        <field name="features" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_FEATURES_LABEL" filter="JComponentHelper::filterText"
+        <field name="features" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_FEATURES_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_FEATURES_DESC"/>
 
 
@@ -149,7 +149,7 @@
                cols="30"/>
 
         <field name="delivery_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
-               filter="JComponentHelper::filterText" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true"/>
+               filter="ComponentHelper::filterText" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true"/>
 
 
         <field name="metatitle" type="text"
@@ -202,8 +202,8 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="JComponentHelper::filterText" translateformat="true" />
-        <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="JComponentHelper::filterText" translateformat="true" />
+        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="ComponentHelper::filterText" translateformat="true" />
+        <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="ComponentHelper::filterText" translateformat="true" />
 
         <field name="tags" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC"  size="1"/>
 

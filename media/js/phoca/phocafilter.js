@@ -654,6 +654,13 @@ function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, 
         }
     }
 
+    // Possible filter in offcanvas
+    var phItemFilterBoxOffCanvas = document.getElementById('phItemFilterBoxOffCanvas');
+    if(phItemFilterBoxOffCanvas) {
+        var phItemFilterBoxOffCanvasBs = bootstrap.Offcanvas.getInstance(phItemFilterBoxOffCanvas);
+        setTimeout(function(){ phItemFilterBoxOffCanvasBs.hide();}, 500);
+    }
+
     startFullOverlay(phA);
 }
 

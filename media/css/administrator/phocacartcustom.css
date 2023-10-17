@@ -3,7 +3,7 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
- 
+
 .j-sidebar-container {
 	border-radius: 0px;
 	border: 0px;
@@ -44,7 +44,7 @@
 .js-stools .btn.btn-primary {
 	color: #fff !important;
 	background-color: #3BAFDA !important;
-	
+
 	box-shadow: none !important;
 	text-shadow: none !important;
 }
@@ -52,7 +52,7 @@
 .js-stools .btn.btn-danger {
 	color: #fff !important;
 	background-color: #F23855 !important;
-	
+
 	box-shadow: none !important;
 	text-shadow: none !important;
 }
@@ -192,7 +192,7 @@
 	background-color: #F9E151 !important;
 	border-color: #F9E151 !important;
 	border: 0px !important;
-	
+
 }
 
 .btn-buy:hover, .btn-buy:focus {
@@ -265,7 +265,7 @@
 
 .controls .btn-group > .btn:first-child {
 	border-radius: 3px 0px 0px 3px !important;
-	
+
 }
 
 .controls .btn-group > .btn:nth-child(4) {
@@ -299,8 +299,6 @@
 	box-shadow: 0px 0px 0px 0px transparent !important;
 	box-shadow: inset 0px 0px 0px 0px transparent !important;
 }
-
-
 
 
 .btn-inverse {
@@ -357,13 +355,13 @@ input[name="filter_date_from"] {
 }
 #phAdminEdit .select2-search-choice-close,
 #phAdminEdit .chzn-container-multi .chzn-choices li.search-choice .search-choice-close {
- 
+
     background: url(../../js/chosen/chosen-sprite-white.png) -42px 1px no-repeat !important;
 
 }
 
 #phAdminEdit .select2-container-multi .select2-choices .select2-search-field input  {
-	
+
 	border: 0px !important;
 }
 #phAdminEdit .select2-search-choice-close {
@@ -412,13 +410,13 @@ input[name="filter_date_from"] {
    box-shadow: none;
    color: #444;
    height: 35px;
-   line-height: 24px; 
-  
+   line-height: 24px;
+
    padding: 3px 0 5px 8px;
    box-shadow: none;
    border-radius: 3px;
    text-shadow: none;
-   
+
  /* border: 1px solid #ccc;
    box-shadow: 0 0 3px #fff inset, 0 1px 1px rgba(0, 0, 0, 0.1) !important;*/
 
@@ -537,10 +535,10 @@ table.table-striped tr th, table.table-striped tr th a {
 }
 
 .ph-param-label {
-	
+
 }
 .ph-param-desc {
-	
+
 }
 .ph-option-param {
 	width: 20%;
@@ -606,13 +604,13 @@ table.table-striped tr th, table.table-striped tr th a {
 }
 
 
-/* Hide items in left menu 
+/* Hide items in left menu
 .nav.nav-list li {
 	display: none;
 }
 
 .nav.nav-list li:nth-child(1),
-.nav.nav-list li:nth-child(2), 
+.nav.nav-list li:nth-child(2),
 .nav.nav-list li:nth-child(3),
 .nav.nav-list li:nth-child(6)   {
 	display:block;

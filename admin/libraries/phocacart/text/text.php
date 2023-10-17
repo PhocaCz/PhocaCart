@@ -522,6 +522,13 @@ class PhocacartText {
                 return preg_replace( '/[^0-9\.]/', '', $string );
             break;
 
+            // Only number and , for database IN
+            case 'number4':
+                $string = str_replace('.', ',', $string);
+                //return preg_replace( '/[^0-9\.,+-]/', '', $string );
+                return preg_replace( '/[^0-9\,]/', '', $string );
+            break;
+
             case 'alphanumeric':
                 return preg_replace("/[^a-zA-Z0-9]+/", '', $string);
             break;
@@ -539,6 +546,7 @@ class PhocacartText {
             case 'alphanumeric5':
                 return preg_replace("/[^\\w.,]/", '', $string);// Alphanumeric plus _ . ,
             break;
+
 
             case 'folder':
             case 'file':
@@ -576,7 +584,7 @@ class PhocacartText {
 		$str = str_replace('-', ' ', $string);
 
 		// Transliterate on the language requested (fallback to current language if not specified)
-		$lang = $language == '' || $language == '*' ? JFactory::getLanguage() : Language::getInstance($language);
+		$lang = $language == '' || $language == '*' ? Factory::getLanguage() : Language::getInstance($language);
 		$str = $lang->transliterate($str);
 
 		// Trim white spaces at beginning and end of alias and make lowercase

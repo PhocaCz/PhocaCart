@@ -15,12 +15,12 @@
 
 <field name="class_name" type="text" class="form-control" label="COM_PHOCACART_FIELD_CSS_CLASS_NAME_LABEL"  description="COM_PHOCACART_FIELD_CSS_CLASS_NAME_DESC" size="255" />
 
-<field name="custom_css" type="textarea" buttons="true" class="form-control" label="COM_PHOCACART_FIELD_CUSTOM_CSS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_CSS_DESC" />
+<field name="custom_css" type="textarea" buttons="true" class="form-control" label="COM_PHOCACART_FIELD_CUSTOM_CSS_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_CSS_DESC" />
 
 
 <field name="ordering" type="phocacartOrdering" table="unit" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
 	</fieldset>
 

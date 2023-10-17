@@ -22,7 +22,7 @@ class PhocacartPos
 			$date 	= Factory::getDate();
 			$now	= $date->toSql();
 
-			/*$app					= JFactory::getApplication();
+			/*$app					= Factory::getApplication();
 			$paramsC 				= PhocacartUtils::getComponentParameters();
 			$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
 			$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );*/

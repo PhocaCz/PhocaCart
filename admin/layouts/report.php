@@ -126,13 +126,13 @@ echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_CUSTOMER').'</th>';
 echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_PAYMENT').'</th>';
 echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_CURRENCY').'</th>';
 if ($p['report_display_tax'] == 1) {
-	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>'; // TRC
+	//echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>'; // TRC
 	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>';
-	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_AMOUNT_TAX').'</th>'; // TRC
+	//echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_TAX').'</th>'; // TRC
 	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_TAX').'</th>';
 }
 if ($p['report_display_rounding'] == 1) {
-	//echo '<th '.$cRTRHC.'>'.JText::_('COM_PHOCACART_ROUNDING').'</th>'; // TRC
+	//echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_ROUNDING').'</th>'; // TRC
 	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_ROUNDING').'</th>';
 }
 if ($p['report_display_tax'] == 1) {

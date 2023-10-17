@@ -73,7 +73,7 @@ if (!empty($d['fullitems'])) {
 	echo '</tr>';*/
 
 	// echo '<tr>';
-	// echo '<td colspan="'.$c2.'" class="ph-small">'. count($d['fullitems']).' '.JText::_('COM_PHOCACART_ITEM_S').'</td>';
+	// echo '<td colspan="'.$c2.'" class="ph-small">'. count($d['fullitems']).' '.Text::_('COM_PHOCACART_ITEM_S').'</td>';
 	// echo '<td class="ph-small ph-right">';
 	if (isset($d['countitems'])) {
 		echo '<div class="'.$r.' ph-cart-cart-row-header">';
@@ -203,7 +203,7 @@ if (!empty($d['fullitems'])) {
 	// SUBTOTAL NETTO
 	if ($d['total'][1]['netto'] !== 0) {
 		//- echo '<tr>';
-		//- echo '<td colspan="'.$c2.'" class="ph-small">'.JText::_('COM_PHOCACART_SUBTOTAL').'</td>';
+		//- echo '<td colspan="'.$c2.'" class="ph-small">'.Text::_('COM_PHOCACART_SUBTOTAL').'</td>';
 		//- echo '<td class="ph-small ph-right">'.$price->getPriceFormat($d['total']['netto']).'</td>';
 		//- echo '</tr>';
 		echo '<div class="'.$r.' ph-cart-cart-row-netto">';

@@ -26,7 +26,7 @@ class PhocaCartViewDownload extends HtmlView
 	{
 		$app								= Factory::getApplication();
 		//$model								= $this->getModel();
-		//$document							= JFactory::getDocument();
+		//$document							= Factory::getDocument();
 		$this->s                            = PhocacartRenderStyle::getStyles();
 		$this->p 							= $app->getParams();
 		$this->u							= PhocacartUser::getUser();

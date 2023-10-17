@@ -140,14 +140,14 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 
 	protected function getSortFields() {
 		return array(
-			/*'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
+			/*'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
 			'a.title' 			=> Text::_($this->t['l'] . '_TITLE'),
 			'a.published' 		=> Text::_($this->t['l'] . '_PUBLISHED'),
-			'a.id' 				=> JText::_('JGRID_HEADING_ID'),*/
+			'a.id' 				=> Text::_('JGRID_HEADING_ID'),*/
 			'a.date' 			=> Text::_($this->t['l'] . '_DATE'),
 			'a.order_number' 	=> Text::_($this->t['l'] . '_ORDER_NUMBER'),
 			'a.currency_code'	=> Text::_($this->t['l'] . '_CURRENCY'),
-			//'a.type'			=> JText::_($this->t['l'] . '_TYPE')
+			//'a.type'			=> Text::_($this->t['l'] . '_TYPE')
 		);
 	}
 }

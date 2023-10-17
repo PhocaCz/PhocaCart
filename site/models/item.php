@@ -7,10 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+defined('_JEXEC') or die();
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
-
-defined('_JEXEC') or die();
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
@@ -192,8 +192,8 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' i.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$wheres[] =  ' i.language IN ('.$this->_db->Quote(Factory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$wheres[] =  ' c.language IN ('.$this->_db->Quote(Factory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
 
 		if ($p['hide_products_out_of_stock'] == 1) {
@@ -298,7 +298,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
 
 		$wheres		= array();
-		//$app		= JFactory::getApplication();
+		//$app		= Factory::getApplication();
 		//$params 	= $app->getParams();
 
 		$wheres[] = " c.published = 1";

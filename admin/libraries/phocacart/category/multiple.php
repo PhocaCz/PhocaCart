@@ -190,7 +190,7 @@ class PhocacartCategoryMultiple
                 }
             } catch (RuntimeException $e) {
                 // No error, because this is just additional info
-                //JFactory::getApplication()->enqueueMessage('PROBABLY WITH RECURSIVE IS NOT SUPPORTED', 'warning');
+                //Factory::getApplication()->enqueueMessage('PROBABLY WITH RECURSIVE IS NOT SUPPORTED', 'warning');
             }
             // ----------------------------------------------------------
 

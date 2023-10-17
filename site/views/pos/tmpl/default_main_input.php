@@ -101,7 +101,7 @@ if ($this->t['pos_display_apply_benefits'] == 1) {
 	echo '<button class="'.$this->s['c']['btn.btn-primary'].' loadMainContent">';
 	//echo '<span class="'.$this->s['i']['plus'].' icon-white"></span> &nbsp;'.
 	echo PhocacartRenderIcon::icon($this->s['i']['plus'], '', ' &nbsp;');
-	echo JText::_('COM_PHOCACART_APPLY_BENEFITS').'</button>';
+	echo Text::_('COM_PHOCACART_APPLY_BENEFITS').'</button>';
 	echo '</form>';
 
 

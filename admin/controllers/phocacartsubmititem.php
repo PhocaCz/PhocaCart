@@ -31,7 +31,7 @@ class PhocaCartCpControllerPhocaCartSubmititem extends PhocaCartCpControllerPhoc
 			$app->enqueueMessage($message, 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartsubmititems');
 		} else {
-			//$message = JText::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' );
+			//$message = Text::_( 'COM_PHOCACART_SUCCESS_THUMBS_REGENERATING' );
 			$message = PhocacartUtils::setMessage($message, Text::_( 'COM_PHOCACART_SUCCESS_PRODUCT_CREATED' ));
 			$app->enqueueMessage($message, 'message');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartitems');

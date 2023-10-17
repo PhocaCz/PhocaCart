@@ -193,7 +193,7 @@ class com_phocacartInstallerScript
 
             $o .=  '<div class="upItem upItemDoc">';
             $o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO3'). '</div>';
-            $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/documentation">Phoca documentatin '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
+            $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/documentation">Phoca documentation '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
             $o .=  '<div class="upItemText">or ask directly in</div>';
             $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/forum">Phoca forum '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
             $o .=  '</div>';

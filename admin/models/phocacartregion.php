@@ -15,6 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\File;
 use Joomla\Data\DataObject;
 use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Utilities\ArrayHelper;
 jimport('joomla.application.component.modeladmin');
 
@@ -25,13 +26,13 @@ class PhocaCartCpModelPhocacartRegion extends AdminModel
 
 	protected function canDelete($record)
 	{
-		//$user = JFactory::getUser();
+		//$user = Factory::getUser();
 		return parent::canDelete($record);
 	}
 
 	protected function canEditState($record)
 	{
-		//$user = JFactory::getUser();
+		//$user = Factory::getUser();
 		return parent::canEditState($record);
 	}
 
@@ -126,7 +127,7 @@ class PhocaCartCpModelPhocacartRegion extends AdminModel
 		$file	= JPATH_ADMINISTRATOR . '/components/com_phocacart/install/sql/mysql/regions.utf8.sql';
 		if(File::exists($file)) {
 			$buffer = file_get_contents($file);
-			$queries = JDatabaseDriver::splitSql($buffer);
+			$queries = DatabaseDriver::splitSql($buffer);
 			if (count($queries) == 0) {
 				return false;
 			}

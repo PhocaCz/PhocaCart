@@ -64,7 +64,7 @@ class PhocacartRoute
 	}
 
 	public static function cleanUrlItemsView ($url) {
-		$config 					= JFactory::getConfig();
+		$config 					= Factory::getConfig();
 		$sef						= $config->get('sef', 1);
 
 		if ($sef) {
@@ -545,16 +545,15 @@ class PhocacartRoute
 			}*/
 
 			if (Multilanguage::isEnabled()) {
+
 				if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
 					$link .= '&lang='.$lang[0];
 				}
-
 			}
 
 
 
 		}
-
 
 
 		return $link;
@@ -581,10 +580,17 @@ class PhocacartRoute
 		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
 		if (!empty($lang)) {
 			$attributes[] 	= 'language';
-			$values[]     	= $lang;
+
+			//if (isset($lang[0])) {
+			//	$values[]     	= $lang[0];//$langTag
+			//} else {
+				$values[]     	= $lang;
+			//}
+
 
 			// If multilanguage feature enabled and specific lang set then set menu item of such language
 			$itemsLang = $menus->getItems($attributes, $values);
+
 
 			// If no language items try to find items of current lang and if not found set the current Itemid
 			if ($itemsLang) {
@@ -642,7 +648,6 @@ class PhocacartRoute
 		//          as last the categories view should be checked, it has no ID so we skip the checking
 		//          of ID for categories view with OR: in_array($needle, $notCheckIdArray) ||
 		foreach($needles as $needle => $id) {
-
 			foreach($items as $item) {
 
 				// Correct problems when system returns differently null or 0
@@ -699,6 +704,9 @@ class PhocacartRoute
 			foreach($items as $item) {
 				// Nothing found, gets some categories view, better than some category view from another category
 				if (@$item->query['view'] == 'categories') {
+					$match = $item;
+					break;
+				} else if (@$item->query['view'] == 'items') {
 					$match = $item;
 					break;
 				}
@@ -764,7 +772,7 @@ class PhocacartRoute
 
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(Uri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -776,7 +784,7 @@ class PhocacartRoute
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(Uri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -893,7 +901,7 @@ class PhocacartRoute
 		$frontendUrl 	= str_replace(Uri::root(true).'/administrator/', '',$url);
 		$frontendUrl 	= str_replace(Uri::root(true), '', $frontendUrl);
 		$frontendUrl 	= str_replace('\\', '/', $frontendUrl);
-		//$frontendUrl 	= JUri::root(false). str_replace('//', '/', $frontendUrl);
+		//$frontendUrl 	= Uri::root(false). str_replace('//', '/', $frontendUrl);
 		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', Uri::root(false). $frontendUrl);
 
 		return $frontendUrl;

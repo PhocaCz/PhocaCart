@@ -86,7 +86,7 @@ class PhocaCartCpViewPhocaCartWishlists extends HtmlView
 			'username' 			=> Text::_($this->t['l'] . '_USER'),
 			'productname' 		=> Text::_($this->t['l'] . '_PRODUCT'),
 			'cattitle' 			=> Text::_($this->t['l'] . '_CATEGORY'),
-			//'a.ip'	 			=> JText::_($this->t['l'] . '_IP'),
+			//'a.ip'	 			=> Text::_($this->t['l'] . '_IP'),
 			'a.date' 			=> Text::_($this->t['l'] . '_DATE'),
 			'a.id' 				=> Text::_('JGRID_HEADING_ID')
 		);

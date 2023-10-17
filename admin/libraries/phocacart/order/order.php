@@ -21,7 +21,7 @@ use Joomla\CMS\Mail\MailHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
 
-JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
+Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
 class PhocacartOrder
 {
@@ -287,7 +287,7 @@ class PhocacartOrder
                 $pLang->setLanguageBack($defaultLang);
             }
             // Message is set by cart class
-            //$msg = JText::_('') . $msgSuffix;
+            //$msg = Text::_('') . $msgSuffix;
             //$app->enqueueMessage($msg, 'error');
             return false;
         }

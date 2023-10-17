@@ -41,7 +41,7 @@ $x = $this->item[0];
 echo '<div class="'. $this->s['c']['row'].'">';
 
 // === IMAGE PANEL
-echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm6.md6'].'">';
+echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-view-image-box">';
 
 
 $idName			= 'VItemQuickP'.(int)$x->id;
@@ -89,8 +89,8 @@ if (isset($image->rel) && $image->rel != '') {
     $d['s']					= $this->s;
     $d['src']				= Uri::base(true).'/'.$image->rel;
     $d['srcset-webp']		= Uri::base(true).'/'.$image->rel_webp;
-    $d['data-image']		= JUri::base(true).'/'.$image->rel;// Default image - when changed by javascript back to default
-    $d['data-image-webp']	= JUri::base(true).'/'.$image->rel_webp;// Default image - when changed by javascript back to default
+    $d['data-image']		= Uri::base(true).'/'.$image->rel;// Default image - when changed by javascript back to default
+    $d['data-image-webp']	= Uri::base(true).'/'.$image->rel_webp;// Default image - when changed by javascript back to default
     $d['alt-value']			= PhocaCartImage::getAltTitle($x->title, $image->rel);
     $d['class']				= PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], $label['cssthumbnail2'], 'ph-image-full', 'phjProductImage'.$idName));
     $d['style']				= '';
@@ -110,7 +110,7 @@ echo '</div>';// end image panel
 
 
 // === PRICE PANEL
-echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-price-panel">';
+echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-item-view-data-box ph-item-price-panel">';
 
 $title = '';
 if (isset($x->title) && $x->title != '') {
@@ -156,7 +156,7 @@ if ( isset($x->description) && $x->description != '') {
 // REWARD POINTS - NEEDED
 $pointsN = PhocacartReward::getPoints($x->points_needed, 'needed');
 if ($pointsN) {
-    echo '<div class="ph-item-reward-box">';
+    echo '<div class="ph-item-reward-box ph-item-reward-needed">';
     echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_PRICE_IN_REWARD_POINTS').'</div>';
 
     echo '<div class="ph-reward">'.$pointsN.'</div>';
@@ -167,7 +167,7 @@ if ($pointsN) {
 // REWARD POINTS - RECEIVED
 $pointsR = PhocacartReward::getPoints($x->points_received, 'received', $x->group_points_received);
 if ($pointsR) {
-    echo '<div class="ph-item-reward-box">';
+    echo '<div class="ph-item-reward-box ph-item-reward-received">';
     echo '<div class="ph-reward-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').'</div>';
 
     echo '<div class="ph-reward">'.$pointsR.'</div>';

@@ -56,7 +56,7 @@ class PhocaCartViewAccount extends HtmlView
 		$this->t['linkcheckout']					= Route::_(PhocacartRoute::getCheckoutRoute());
 		$this->t['display_edit_profile']			= $this->p->get( 'display_edit_profile', 1 );
 		$this->t['display_reward_points_total_info']= $this->p->get( 'display_reward_points_total_info', 0 );
-		$this->t['$delivery_billing_same_enabled']  = $this->p->get('delivery_billing_same_enabled', 0);
+		$this->t['delivery_billing_same_enabled']  = $this->p->get('delivery_billing_same_enabled', 0);
 
 		$lang = Factory::getLanguage();
 		//$lang->load('com_users.sys');

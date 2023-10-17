@@ -13,10 +13,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 /*
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
 */
 
 echo '<div id="phEditStockAdvancedBox" class="ph-edit-stock-advanced-box">';
@@ -43,7 +43,7 @@ echo $r->startForm($this->t['o'], $this->t['task'], (int)$this->id, 'adminForm',
 echo '<div class="span12 form-horizontal">';
 
 echo '<div class="tab-pane" id="product_stock">'. "\n";
-//echo '<h3>'.JText::_($this->t['l'].'_PRODUCT_STOCK').'</h3>';
+//echo '<h3>'.Text::_($this->t['l'].'_PRODUCT_STOCK').'</h3>';
 $formArray = array ('product_stock');
 echo $r->group($this->form, $formArray);
 echo '</div>'. "\n";
@@ -93,7 +93,7 @@ if (!empty($this->t['product'])) {
 		echo '<tr>';
 		echo '<th>'.Text::_('COM_PHOCACART_TITLE').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_ATTRIBUTES').'</th>';
-		//echo '<th>'.JText::_('COM_PHOCACART_PRODUCT_KEY').'</th>';
+		//echo '<th>'.Text::_('COM_PHOCACART_PRODUCT_KEY').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_IN_STOCK').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_PRICE').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_SKU').'</th>';

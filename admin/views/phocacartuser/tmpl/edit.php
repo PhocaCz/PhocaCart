@@ -21,7 +21,7 @@ Joomla.submitbutton = function(task) {
 	}
 }
 ';
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 
 echo '<div id="ph-request-message" style="display:none"></div>';
 

@@ -189,7 +189,7 @@ class PhocaCartCpViewPhocaCartManager extends HtmlView
 		$class	= ucfirst($this->t['task']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.multiple'));
 
-		//JToolbarHelper::title( JText::_( $this->t['l'].'_MULTIPLE_ADD' ), 'multiple.png' );
+		//JToolbarHelper::title( Text::_( $this->t['l'].'_MULTIPLE_ADD' ), 'multiple.png' );
 
 		if ($canDo->get('core.create')){
 			ToolbarHelper::save($this->t['c'].'m.save', 'JTOOLBAR_SAVE');

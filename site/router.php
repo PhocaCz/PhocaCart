@@ -48,7 +48,8 @@ class PhocacartRouter extends RouterView
         if(isset($v->query['view']) && $v->query['view'] == 'categories') {
           $isCategoriesView = true;
         } else if(isset($v->query['view']) && $v->query['view'] == 'items') {
-          $isItemsView = true;
+            // TEST items view
+            $isItemsView = true;
         }
       }
     }
@@ -244,8 +245,10 @@ class PhocacartRouter extends RouterView
 
         if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'categories') {
             $query['id'] = 0;
+        } else if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'items') {
+            // TEST items view
+            $query['id'] = 0;
         }
-
 
 	    if ($this->noIDs)  {
 	        $db = Factory::getDbo();

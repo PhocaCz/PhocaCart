@@ -100,6 +100,12 @@ function phAddValueFile(id, title) {
     jQuery(".modal").modal("hide");
 }
 
+/* CurrentAttributesOptions */
+function phAddValueCurrentAttributesOptions(id, title) {
+    document.getElementById(id).value = title;
+    jQuery(".modal").modal("hide");
+}
+
 /* Image */
 function phAddValueImage(id, title, params) {
     document.getElementById(id).value = title;
@@ -213,6 +219,56 @@ jQuery(document).ready(function() {
         var idModal     = "phImageFileModalName" + id;
         var idIframe    = idModal + " iframe";
         src = src.replace("{ph-field-id}", id);
+		//src = src + "&folder=&downloadfolder=";
+
+        var phModalWidth = 700;
+        var width = jQuery(this).attr("data-width") || phModalWidth;
+        var height = jQuery(window).height() - 200;
+
+        phRenderModalWindow(idModal, title);// Render Modal Window
+        jQuery("#" + idIframe).attr({"src": src, "height": height, "width": width});// Set iframe url for rendered modal window
+
+    });
+
+
+    /* CurrentAttributesOptions */
+	jQuery(document).on("click", "a.phCurrentAttributesOptionsModalButton", function (e) {
+        var src         = jQuery(this).attr("data-src");
+        var title       = jQuery(this).attr("data-title");
+        var id          = jQuery(this).prev("input").attr("id");// data-id does not work by dynamically added form fields
+        var idModal     = "phCurrentAttributesOptionsModalName" + id;
+        var idIframe    = idModal + " iframe";
+
+        // When we have options subform:
+        // jform_attributes__attributes0__options__options0__current_options
+        // We want to get its parent (attributes)
+        // jform_attributes__attributes0
+        // In Options such substring is found and parent created
+        // In Attributes such substring is not found so the string stay unchanges, then we delete it
+        var parentId = id.split('__options')[0];
+        if (id == parentId) {
+            parentId = '';
+        } else {
+            // Get alias from parent attribute and send the value so only options from such type of alias will be selected
+            var parentAliasName = parentId + '__alias';
+            var parentAlias = jQuery('#' + parentAliasName).val();
+            src = src + '&parentattributealias=' + encodeURIComponent(parentAlias);
+            var parentTitleName = parentId + '__title';
+            var parentTitle = jQuery('#' + parentTitleName).val();
+            src = src + '&parentattributetitle=' + encodeURIComponent(parentTitle);
+        }
+
+        // Get all categories of current product for possible filtering
+        var cidA = jQuery('#jform_catid_multiple').val();
+        var cid = cidA.toString();
+
+        src = src + '&cid=' + cid;
+
+        src = src.replace("{ph-field-id}", id);
+        src = src.replace("{ph-field-parent-id}", parentId);
+
+        
+		//var phDownloadFolder = jQuery("#jform_download_folder").val();
 		//src = src + "&folder=&downloadfolder=";
 
         var phModalWidth = 700;

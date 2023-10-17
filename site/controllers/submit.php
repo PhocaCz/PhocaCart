@@ -80,7 +80,7 @@ class PhocaCartControllerSubmit extends FormController
 			$session->clear('time', $namespace);
 
 			PhocacartLog::add(3, 'Submit Item - Not valid session', 0, 'IP: '. $data['ip'].', User ID: '.$user->id . ', User Name: '.$user->username);
-			//jexit(JText::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'));
+			//jexit(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'));
 
 			throw new Exception(Text::_('COM_PHOCACART_POSSIBLE_SPAM_DETECTED'), 500);
 			return false;
@@ -175,9 +175,9 @@ class PhocaCartControllerSubmit extends FormController
 
 			if ($isSpam) {
 				//$app->setUserState('com_phocacart.submit.data', $data);	// Save the data in the session.
-				//$message = JText::_( 'COM_PHOCACART_POSSIBLE_SPAM_DETECTED' );
+				//$message = Text::_( 'COM_PHOCACART_POSSIBLE_SPAM_DETECTED' );
 				//$app->enqueueMessage($message, 'error');
-				//$app->redirect(JRoute::_($uri));
+				//$app->redirect(Route::_($uri));
 
 				$app->setUserState('com_phocacart.submit.data', '');
 				$session->clear('time', $namespace);

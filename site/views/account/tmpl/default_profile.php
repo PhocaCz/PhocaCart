@@ -61,7 +61,7 @@ echo '</div>';
 
 echo '<div class="'.$this->s['c']['row'].' ph-account-box-action">';
 echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-billing-row" id="phUserProfile" >';
-//echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_USER_PROFILE').'</div>';
+//echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_USER_PROFILE').'</div>';
 
 echo $this->loadTemplate('edit');
 echo '</div>';

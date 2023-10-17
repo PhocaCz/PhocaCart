@@ -16,8 +16,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
-JHtml::_('behavior.keepalive');
-JHtml::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('bootstrap.tooltip');
 
 require_once JPATH_SITE.'/components/com_users/src/Service/Router.php';
 jimport( 'joomla.application.module.helper' );

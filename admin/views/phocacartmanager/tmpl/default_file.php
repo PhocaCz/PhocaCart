@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 
 jimport( 'joomla.filesystem.file' );
 
@@ -25,7 +26,7 @@ if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
 	*/
 
 	$path 		= PhocacartPath::getPath($this->manager);
-	$pathImage 	= Juri::root() . $path['orig_rel_ds'];
+	$pathImage 	= Uri::root() . $path['orig_rel_ds'];
 	$url 		= 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. Session::getFormToken().'=1';
 	$jsParams = '{'
 		.' request: 1,'
@@ -43,7 +44,7 @@ if ($this->manager == 'productimage' || $this->manager == 'categoryimage') {
 	// There are more form fields mostly made by javascript (e.g. add new attribute row)
 
 	/*$path 		= PhocacartPath::getPath($this->manager);
-	$pathImage 	= Juri::root() . $path['orig_rel_ds'];
+	$pathImage 	= Uri::root() . $path['orig_rel_ds'];
 	$url 		= 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. Session::getFormToken().'=1';
 	$jsParams = '{
 		request: 1,

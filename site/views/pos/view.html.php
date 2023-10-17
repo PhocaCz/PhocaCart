@@ -77,7 +77,7 @@ class PhocaCartViewPos extends HtmlView
 
 		// 1) CHECK - VENDOR LOGGED IN
 		if (!isset($this->t['vendor']->id) || (isset($this->t['vendor']->id) && (int)$this->t['vendor']->id < 1 )) {
-			//$this->t['infotext'] = JText::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS');
+			//$this->t['infotext'] = Text::_('COM_PHOCACART_PLEASE_LOGIN_ACCESS_POS');
 			//$this->t['infotype'] = 'error';
 			//parent::display('info');
 
@@ -170,7 +170,7 @@ class PhocaCartViewPos extends HtmlView
 		// Moved to JS PhocacartRenderJs::renderSubmitPaginationTopForm($this->t['action'], '#phPosContentBox');
 
 		//- PhocacartRenderJspos::managePos($this->t['action']);
-		//- PhocacartRenderJspos::printPos(JRoute::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
+		//- PhocacartRenderJspos::printPos(Route::_( 'index.php?option=com_phocacart&view=order&tmpl=component&format=raw'));
 		//- PhocacartRenderJspos::searchPosByType('#phPosSearch');
 		//- PhocacartRenderJspos::searchPosByCategory();
 

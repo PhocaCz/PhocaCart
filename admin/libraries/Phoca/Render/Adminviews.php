@@ -126,13 +126,13 @@ class Adminviews
                 $o[] = '<div id="j-main-container" class="col-md-12">';
             } else {
 
-                $o[] = '<div id="j-sidebar-container" class="col-md-2">' . JHtmlSidebar::render() . '</div>';
+                $o[] = '<div id="j-sidebar-container" class="col-md-2">' . Sidebar::render() . '</div>';
                 $o[] = '<div id="j-main-container" class="col-md-10">';
             }
 
 
         } else {
-            $o[] = '<div id="j-sidebar-container" class="span2">' . JHtmlSidebar::render() . '</div>';
+            $o[] = '<div id="j-sidebar-container" class="span2">' . Sidebar::render() . '</div>';
             $o[] = '<div id="j-main-container" class="span10">';
         }
 

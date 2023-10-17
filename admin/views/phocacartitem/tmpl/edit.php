@@ -13,9 +13,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 // ASSOCIATION
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 
 
@@ -64,7 +65,7 @@ Joomla.submitbutton = function(task) {
     phCheckRequestStatus(0, task);
 }
 ';
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
 $assoc = Associations::isEnabled();
@@ -125,7 +126,7 @@ echo '<div class="ph-admin-additional-box">';
 if ($this->item->image != '') {
     $pathImage = PhocacartPath::getPath('productimage');
     $image     = PhocacartImage::getThumbnailName($pathImage, $this->item->image, 'small');
-    echo '<div class="ph-admin-additional-box-img-box"><img src="' . Juri::root() . $image->rel . '" alt="" /></div><hr />';
+    echo '<div class="ph-admin-additional-box-img-box"><img src="' . Uri::root() . $image->rel . '" alt="" /></div><hr />';
 }
 
 $linkStatus = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacarteditproductpricegroup&tmpl=component&id=' . (int)$this->item->id);
@@ -229,6 +230,7 @@ echo '<h3>' . Text::_($this->t['l'] . '_ATTRIBUTES') . '</h3>';
 $formArray = array('attributes');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
+
 
 
 // SPECIFICATIONS
@@ -382,7 +384,7 @@ if (!empty($currentFields)) {
 
 
 $this->ignore_fieldsets = $ignoreField;
-echo JLayoutHelper::render('joomla.edit.params', $this);
+echo LayoutHelper::render('joomla.edit.params', $this);
 
 
 

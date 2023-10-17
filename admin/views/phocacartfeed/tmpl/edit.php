@@ -23,7 +23,7 @@ Joomla.submitbutton = function(task) {
 	}
 }
 ';
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
@@ -96,15 +96,16 @@ if (isset($this->item->id) && (int)$this->item->id > 0 && isset($this->item->ali
 	/* phocacart import('phocacart.path.route'); */
 	$xmlLink 		= PhocacartRoute::getFeedRoute((int)$this->item->id, $this->item->alias);
 	$xmlLink2 		= PhocacartRoute::getFeedRoute((int)$this->item->id, $this->item->alias, 1);
-	$app    		= CMSApplication::getInstance('site');
-	$router 		= $app->getRouter();
+	//$app    		= CMSApplication::getInstance('site');
+	//$router 		= $app->getRouter();
+	$router 		= Factory::getContainer()->get(SiteRouter::class);
 	$uri 			= $router->build($xmlLink);
 
 
 	$frontendUrl 	= str_replace(Uri::root(true).'/administrator/', '',$uri->toString());
     $frontendUrl 	= str_replace(Uri::root(true), '', $frontendUrl);
     $frontendUrl 	= str_replace('\\', '/', $frontendUrl);
-    //$frontendUrl 	= JUri::root(false). str_replace('//', '/', $frontendUrl);
+    //$frontendUrl 	= Uri::root(false). str_replace('//', '/', $frontendUrl);
     $frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', Uri::root(false). $frontendUrl);
     $frontendUrl2 	= Uri::root(false). str_replace(Uri::root(true).'/administrator/', '',$xmlLink2);
 

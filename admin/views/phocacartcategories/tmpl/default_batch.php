@@ -26,7 +26,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 		<div class="p-3">
 	<div class="row">
 			<div class="col-sm-6 col-md-6">
-				<p><?php /* echo JText::_('COM_CONTENT_BATCH_TIP');*/ ?></p>
+				<p><?php /* echo Text::_('COM_CONTENT_BATCH_TIP');*/ ?></p>
 				<div class="control-group">
 					<div class="controls">
 						<?php echo LayoutHelper::render('joomla.html.batch.access', []);?>

@@ -115,7 +115,7 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		$wheres[] = " c.published = 1";
 
 		if ($this->getState('filter.language')) {
-			$wheres[] =  ' c.language IN ('.$this->_db->Quote(JFactory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
+			$wheres[] =  ' c.language IN ('.$this->_db->Quote(Factory::getLanguage()->getTag()).','.$this->_db->Quote('*').')';
 		}
 
 		$wheres[] = " c.access IN (".$userLevels.")";

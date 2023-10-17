@@ -12,6 +12,8 @@
 namespace Phoca\Render;
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\HTML\HTMLHelper;
 
 use Joomla\CMS\Factory;
@@ -92,12 +94,12 @@ class Adminview
 				$o[] = '<div class="ph-group-class '.$groupClass.'">';
 			} else {
 				$o[] = '<div class="row '.$groupClass.'">';
-				$o[] = '<div id="j-main-container" class="col-md-2">'. JHtmlSidebar::render().'</div>';
+				$o[] = '<div id="j-main-container" class="col-md-2">'. Sidebar::render().'</div>';
 				$o[] = '<div id="j-main-container" class="col-md-10">';
 			}
 
 		} else {
-			$o[] = '<div id="j-sidebar-container" class="span2">' . JHtmlSidebar::render() . '</div>'."\n";
+			$o[] = '<div id="j-sidebar-container" class="span2">' . Sidebar::render() . '</div>'."\n";
 			$o[] = '<div id="j-main-container" class="span10">'."\n";
 		}
 

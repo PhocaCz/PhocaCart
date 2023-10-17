@@ -101,7 +101,7 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 		if (count( $cid )) {
 			ArrayHelper::toInteger($cid);
 			//$cids = implode( ',', $cid );
-			//$app 	= JFactory::getApplication();
+			//$app 	= Factory::getApplication();
 			$error 	= 0;
 			if (!empty($cid)) {
 				foreach ($cid as $k => $v) {
@@ -122,7 +122,7 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 		}
 		if ($error) {
 			$this->setError(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
-			//$app->enqueueMessage(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
+			//$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
 			return false;
 		} else {
 			return true;
@@ -181,7 +181,7 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 	
 		if ($error) {
 			
-			//$this->setError(JText::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
+			//$this->setError(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			return true;
 		} else {

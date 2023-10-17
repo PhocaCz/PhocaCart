@@ -14,7 +14,7 @@ echo '<div id="ph-pc-pos-site">';
 
 // POPUP
 // jQuery UI
-//echo '<div id="phDialogConfirm" class="ph-dialog" title="'. JText::_('COM_PHOCACART_CONFIRM').'"></div>';
+//echo '<div id="phDialogConfirm" class="ph-dialog" title="'. Text::_('COM_PHOCACART_CONFIRM').'"></div>';
 
 
 // Bootstrap Modal

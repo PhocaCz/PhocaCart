@@ -44,7 +44,7 @@ echo $r->startMainContainer();
 //echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
 
 // DATE FROM - DATE TO
-JHtml::_('jquery.framework');
+HTMLHelper::_('jquery.framework');
 //JHtml::_('script', 'system/html5fallback.js', false, true);
 
 // DATE FROM
@@ -89,7 +89,7 @@ if ($this->t['data_error'] == 1) {
 	echo '<div class="alert alert-error">'.Text::_('COM_PHOCACART_MAXIMUM_NUMBER_OF_DAYS_SELECTED_EXCEEDED').' ('. Text::_('COM_PHOCACART_MAXIMUM_NUMBER_OF_DAYS_SELECTED') . ': '.$this->t['data_possible_days'].')</div>';
 } else {
 	/*
-	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo JText::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
+	<div class="ph-chart-legend"><span class="ph-orders">&nbsp;</span> <?php echo Text::_('COM_PHOCACART_TOTAL_ORDERS'); ?> &nbsp; <span class="ph-amount">&nbsp;</span> <?php echo Text::_('COM_PHOCACART_TOTAL_AMOUNT'); ?></div> */ ?>
 	<div class="ph-cpanel-chart-box">
 	<div id="phChartAreaLineHolder" class="ph-chart-canvas-holder" style="width:95%" >
         <canvas id="phChartAreaLine" class="ph-chart-area-line"></canvas>

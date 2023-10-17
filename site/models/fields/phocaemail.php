@@ -37,7 +37,7 @@ class JFormFieldPhocaEmail extends FormFieldEMail
 			$preIcon	= $this->element['preicon'] 	? '<i class="' . $this->element['preicon'] . ' tip" title="' . $placeholder . '"></i>' : '';
 			$postIcon	= $this->element['posticon'] 	? '<i class="' . $this->element['preicon'] . '"></i>' : '';
 			if ($postIcon && $this->element['posthref']) {
-				//$postIcon = '<a href="' . (string) $this->element['posthref'] . '" title="' . JText::_('COM_PHOCAGUESTBOOK_RELOAD_IMAGE') . '" class="btn hasTooltip" >' . $postIcon . '</a>';
+				//$postIcon = '<a href="' . (string) $this->element['posthref'] . '" title="' . Text::_('COM_PHOCAGUESTBOOK_RELOAD_IMAGE') . '" class="btn hasTooltip" >' . $postIcon . '</a>';
 				
 				$postIcon = '<span class="add-on input-group-addon"><a href="' . (string) $this->element['posthref'] . '" title="' . Text::_('COM_PHOCAGUESTBOOK_RELOAD_IMAGE') . '" class="" >' . $postIcon . '</a></span>';
 			}

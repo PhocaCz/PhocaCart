@@ -220,8 +220,6 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$data['upload_token'] 			= PhocacartUtils::getToken();
 		$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
-
-
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
 			if ($data['alias'] == null) {
@@ -244,12 +242,12 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 				}
 			}
 		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
-			//$this->setError(JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
+			//$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			//return false;
 		}
 
 		// Include the content plugins for the on save events.
-		//JPluginHelper::importPlugin('content');
+		//PluginHelper::importPlugin('content');
 
 		// Load the row if saving an existing record.
 		if ($pk > 0) {
@@ -286,7 +284,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$cache->clean();
 
 		// Trigger the onContentAfterSave event.
-		//JFactory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
+		//Factory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
@@ -524,6 +522,14 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 
 						if (!isset($data['date_update'])) {
 							$data['date_update'] = $date;
+						}
+
+						if (!isset($data['modified'])) {
+							$data['modified'] = $date;
+						}
+
+						if (!isset($data['delivery_date']) || (isset($data['delivery_date']) && !PhocacartDate::activeDatabaseDate($data['delivery_date']))) {
+							$data['delivery_date'] = '0000-00-00 00:00:00';
 						}
 
 						$user = Factory::getUser();

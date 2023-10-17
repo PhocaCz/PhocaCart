@@ -159,7 +159,7 @@ class PhocacartEdit
 			// Check if this is the user having previously checked out the row.
 			if ($table->checked_out > 0 && $table->checked_out != $user->get('id')) {
 				$options['msg'] = Text::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH');
-				//throw new RuntimeException(JText::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH'));
+				//throw new RuntimeException(Text::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH'));
 				return false;
 			}
 

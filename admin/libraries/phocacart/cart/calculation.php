@@ -1470,7 +1470,7 @@ class PhocacartCartCalculation
             return;
         }
 
-        //$app						= JFactory::getApplication();
+        //$app						= Factory::getApplication();
         $paramsC = PhocacartUtils::getComponentParameters();
         //$dynamic_tax_rate			= $paramsC->get( 'dynamic_tax_rate', 0 );
         $tax_calculation          = $paramsC->get('tax_calculation', 0);

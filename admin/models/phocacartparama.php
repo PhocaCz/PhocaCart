@@ -99,8 +99,8 @@ class PhocaCartCpModelPhocaCartParamA extends AdminModel
 
 		if (empty($folder) || empty($element)) {
 		    return false;
-			//$app = JFactory::getApplication();
-			//$app->re-direct(JRoute::_('index.php?option=com_phocapdf&view=phocapdfcp',false), JText::_('COM_PHOCACART_NO_FOLDER_OR_ELEMENT_FOUND'));
+			//$app = Factory::getApplication();
+			//$app->re-direct(Route::_('index.php?option=com_phocapdf&view=phocapdfcp',false), Text::_('COM_PHOCACART_NO_FOLDER_OR_ELEMENT_FOUND'));
 		}
 		// Try 1.6 format: /plugins/folder/element/element.xml
 		$formFile = Path::clean($client->path.'/plugins/'.$folder.'/'.$element.'/'.$element.'.xml');

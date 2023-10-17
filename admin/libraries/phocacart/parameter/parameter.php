@@ -262,7 +262,7 @@ class PhocacartParameter
 
 	public static function getAllParameterValues($parameterId, $ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array() , $limitCount = -1) {
 
-	/*	$db 			= JFactory::getDBO();
+	/*	$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 12);
 
 		$query = 'SELECT t.id, t.title, t.alias FROM #__phocacart_tags AS t WHERE t.published = 1 ORDER BY '.$orderingText;
