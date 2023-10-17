@@ -2120,6 +2120,26 @@ a[target=_blank]::before {
 	margin-bottom: 1em;
 }
 
+.ph-link {
+	text-decoration: underline;
+}
+
+.ph-attributes-options-link-box {
+	display: flex;
+	justify-content: end;
+	
+}
+.ph-attributes-options-link {
+	text-decoration: underline;
+}
+
+.ph-attributes-options-box {
+	display: flex;
+}
+
+.ph-attributes-options-box a {
+	margin: 0.2em;
+}
 
 
 /* Hide objects in edit - administration - Product edit example */

@@ -64,7 +64,7 @@ class JFormFieldPhocaSelectFilename extends FormField
 		$html[] = '<span class="input-append input-group"><input type="text" ' . $required . ' id="' . $this->id . '" name="' . $this->name . '"'
 			. ' value="' . $this->value . '"' . $size . $class . ' />';
 		// data-id does not work by dynamically added form fields so we need to get the id which is stored in input before the button
-		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'ModalButton"  title="' . Text::_($textButton) . '" data-title="' . Text::_($textButton) . '" data-id="' . $this->id . '" data-src="'.$link.'"  data-height='.$w.' data-width='.$h.'">'
+		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'ModalButton"  title="' . Text::_($textButton) . '" data-title="' . Text::_($textButton) . '" data-id="' . $this->id . '" data-src="'.$link.'"  data-height="'.$w.'" data-width="'.$h.'">'
 			. '<span class="icon-list icon-white"></span> '
 			. Text::_($textButton) . '</a></span>';
 		$html[] = '</div>'. "\n";

@@ -222,6 +222,11 @@ class PhocacartRenderAdmincolumns
         return $this->renderHeaderColumn($data, $options);
     }
 
+    public function phoca_infoHeader(&$options) {
+        $data = array('class' => 'ph-edit', 'title' => 'COM_PHOCACART_INFO_LABEL');
+        return $this->renderHeaderColumn($data, $options);
+    }
+
     public function idHeader(&$options) {
         $data = array('class' => 'ph-id', 'title' => 'JGLOBAL_FIELD_ID_LABEL', 'tool' => 'searchtools.sort', 'column' => 'a.id');
         return $this->renderHeaderColumn($data, $options);
@@ -655,8 +660,123 @@ class PhocacartRenderAdmincolumns
                 return $this->r->td('<a class="pha-no-underline" href="' . Route::_($item['linkedit']) . '"><span id="phIdTitle' . $item['id'] . '" class="ph-icon-task ph-cp-item"><i class="duotone icon-apply"></i></span></a>', '');
             }
 
+        }
+    }
+
+    public function phoca_info($item, &$options) {
+
+
+        $pC = PhocacartUtils::getComponentParameters();
+		$admin_columns_info_column = $pC->get('admin_columns_info_column', '');
+
+
+        $o = [];
+        if (isset($item['id']) && $item['id'] > 0) {
+
+            $o[] = '<div class="ph-info-column">';
+
+
+            // ATTRIBUTES
+            if (in_array('1', $admin_columns_info_column) || (in_array('2', $admin_columns_info_column))) {
+
+                $attributes = PhocacartAttribute::getAttributesAndOptions($item['id']);
+                if (!empty($attributes)) {
+
+                    // $o[] = '<div class="ph-info-column-attributes">'.Text::_('COM_PHOCACART_ATTRIBUTES').'</div>';
+                    $o[] = '<div class="ph-label-box">';
+
+                    foreach ($attributes as $k => $v) {
+
+                        $o[] = '<span class="badge bg-info" title="' . Text::_('COM_PHOCACART_ATTRIBUTES') . '">' . $v->title . '</span>';
+
+                        if (!empty($v->options) && in_array('2', $admin_columns_info_column)) {
+                            // $o[] = '<div class="phAttributes">'.Text::_('COM_PHOCACART_OPTIONS').'</div>';
+                            $o[] = '<div class="ph-label-box">';
+                            foreach ($v->options as $k2 => $v2) {
+                                $o[] = '<span class="badge bg-primary" title="' . Text::_('COM_PHOCACART_OPTIONS') . '">' . $v2->title . '</span>';
+
+                            }
+                            $o[] = '</div>';
+                        }
+
+                    }
+                    $o[] = '</div>';
+                }
+            }
+
+            // SPECIFICATIONS
+            if (in_array('3', $admin_columns_info_column)) {
+                $specificationGrops = PhocacartSpecification::getSpecificationGroupsAndSpecifications($item['id']);
+
+                if (!empty($specificationGrops)) {
+
+                    $o[] = '<div class="ph-label-box">';
+
+                    foreach ($specificationGrops as $k => $v) {
+
+                        $newV = $v;
+                        unset($newV[0]);
+                        if (!empty($newV)) {
+                            $o[] = '<div class="ph-label-box">';
+                            foreach ($newV as $k2 => $v2) {
+                                $o[] = '<span class="badge bg-success" title="' . Text::_('COM_PHOCACART_SPECIFICATIONS') . ' - ' . Text::_('COM_PHOCACART_GROUP') . ': ' . $v[0] . '">' . $v2['title'] . ': ' . $v2['value'] . '</span>';
+                            }
+                            $o[] = '</div>';
+                        }
+                    }
+
+                    $o[] = '</div>';
+                }
+            }
+
+
+            // TAGS
+            if (in_array('4', $admin_columns_info_column)) {
+                $tags = PhocacartTag::getTags($item['id']);
+                if (!empty($tags)) {
+
+                    $o[] = '<div class="ph-label-box">';
+
+                    foreach ($tags as $k => $v) {
+                        $o[] = '<span class="badge bg-warning" title="' . Text::_('COM_PHOCACART_TAGS') . '">' . $v->title . '</span>';
+                    }
+                    $o[] = '</div>';
+                }
+            }
+
+            // LABELS
+            if (in_array('5', $admin_columns_info_column)) {
+                $labels = PhocacartTag::getTagLabels($item['id']);
+                if (!empty($labels)) {
+
+                    $o[] = '<div class="ph-label-box">';
+
+                    foreach ($labels as $k => $v) {
+                        $o[] = '<span class="badge bg-danger" title="'.Text::_('COM_PHOCACART_LABELS').'">'.$v->title.'</span>';
+                    }
+                    $o[] = '</div>';
+                }
+            }
+
+
+
+
+            $o[] = '</div>';
 
         }
+
+
+
+        return $this->r->td(implode("\n", $o), '');
+
+        /*if ($item['cancreate'] || $item['canedit']) {
+            if (isset($item['linkeditbox']) && $item['linkeditbox'] != '') {
+                return $this->r->td( str_replace('<a ', '<a class="ph-no-underline"', $item['linkeditbox']), '');
+            } else {
+                return $this->r->td('<a class="pha-no-underline" href="' . Route::_($item['linkedit']) . '"><span id="phIdTitle' . $item['id'] . '" class="ph-icon-task ph-cp-item"><i class="duotone icon-apply"></i></span></a>', '');
+            }
+
+        }*/
     }
 
 }

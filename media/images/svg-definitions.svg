@@ -17,6 +17,10 @@
             <rect x="128" y="128" width="336" height="336" rx="57" ry="57" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="m383.5 128 .5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
         </symbol>
 
+        <symbol id="pc-si-filter" viewBox="0 0 512 512">
+            <path d="M64 144h226.75a48 48 0 0090.5 0H448a16 16 0 000-32h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32zm384 224h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32h226.75a48 48 0 0090.5 0H448a16 16 0 000-32zm0-128H221.25a48 48 0 00-90.5 0H64a16 16 0 000 32h66.75a48 48 0 0090.5 0H448a16 16 0 000-32z"/>
+        </symbol>
+
         <symbol id="pc-si-wish-list" viewBox="0 0 512 512">
             <path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0 0 18 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
         </symbol>

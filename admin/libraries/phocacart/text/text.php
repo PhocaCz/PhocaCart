@@ -522,6 +522,13 @@ class PhocacartText {
                 return preg_replace( '/[^0-9\.]/', '', $string );
             break;
 
+            // Only number and , for database IN
+            case 'number4':
+                $string = str_replace('.', ',', $string);
+                //return preg_replace( '/[^0-9\.,+-]/', '', $string );
+                return preg_replace( '/[^0-9\,]/', '', $string );
+            break;
+
             case 'alphanumeric':
                 return preg_replace("/[^a-zA-Z0-9]+/", '', $string);
             break;
@@ -539,6 +546,7 @@ class PhocacartText {
             case 'alphanumeric5':
                 return preg_replace("/[^\\w.,]/", '', $string);// Alphanumeric plus _ . ,
             break;
+
 
             case 'folder':
             case 'file':
