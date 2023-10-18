@@ -109,7 +109,7 @@ class PhocaCartCpModelPhocacartUser extends AdminModel
 
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = ArrayHelper::toObject($properties, 'stdClass');
+		$item = ArrayHelper::toObject($properties, CMSObject::class);
 
 		$propertiesS = $tableS->getProperties(1);
 		//$itemS = JArrayHelper::toObject($propertiesS, 'stdClass');

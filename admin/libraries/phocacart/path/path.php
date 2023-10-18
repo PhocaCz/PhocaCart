@@ -154,6 +154,7 @@ class PhocacartPath
 		$router 		= Factory::getContainer()->get(SiteRouter::class);
 		$uri             = $router->build($link);
 		$uriS			= $uri->toString();
+		//$uriS 		= Joomla\CMS\Router\Route::link('site', $link);
 		$pos 			= strpos($uriS, 'administrator');
 
 		if ($pos === false) {
