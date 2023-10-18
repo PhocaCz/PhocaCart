@@ -558,8 +558,8 @@ final class PhocacartRenderJs
         $quantity_input_spinner = $paramsC->get('quantity_input_spinner', 0);
 
         // needed because of phChangeAttributeType() - is included
-        //$document = JFactory::getDocument();
-        //$document->addScript(JUri::root(true) . '/media/com_phocacart/js/phoca/jquery.phocaattribute.min.js');
+        //$document = Factory::getDocument();
+        //$document->addScript(Uri::root(true) . '/media/com_phocacart/js/phoca/jquery.phocaattribute.min.js');
         $media = PhocacartRenderMedia::getInstance('main');
         $media->loadPhocaAttribute(1);
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
@@ -1113,7 +1113,7 @@ final class PhocacartRenderJs
 
     public static function getPriceFormatJavascript($price_decimals, $price_dec_symbol, $price_thousands_sep, $price_currency_symbol, $price_prefix, $price_suffix, $price_format) {
 
-        //JFactory::getDocument()->addScript(JUri::root(true).'/media/com_phocacart/js/number_format.js');
+        //Factory::getDocument()->addScript(Uri::root(true).'/media/com_phocacart/js/number_format.js');
         $s = array();
         $s[] = 'function phGetPriceFormat($price) {';
         $s[] = '	var $negative = 0;';

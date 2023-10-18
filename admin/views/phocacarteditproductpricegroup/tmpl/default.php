@@ -12,10 +12,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 
 $link		= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditproductpricegroup&tmpl=component&id='.(int)$this->id);
@@ -54,7 +54,7 @@ if (!empty($this->t['product'])) {
 			}); 
 		});
 	';
-	JFactory::getDocument()->addScriptDeclaration($js);
+	Factory::getDocument()->addScriptDeclaration($js);
 
 	echo '<div class="ph-product-customer-group-box">';
 
@@ -67,7 +67,7 @@ if (!empty($this->t['product'])) {
 
 		echo '<tr>';
 		echo '<th>'.Text::_('COM_PHOCACART_CUSTOMER_GROUP').'</th>';
-		//echo '<th>'.JText::_('COM_PHOCACART_PRODUCT_KEY').'</th>';
+		//echo '<th>'.Text::_('COM_PHOCACART_PRODUCT_KEY').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_PRICE').'</th>';
 		echo '<th>'.Text::_('COM_PHOCACART_DISCOUNT_IN_PERCENTAGE').'</th>';
 		echo '</tr>';

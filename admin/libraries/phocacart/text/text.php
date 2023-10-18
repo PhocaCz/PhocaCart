@@ -584,7 +584,7 @@ class PhocacartText {
 		$str = str_replace('-', ' ', $string);
 
 		// Transliterate on the language requested (fallback to current language if not specified)
-		$lang = $language == '' || $language == '*' ? JFactory::getLanguage() : Language::getInstance($language);
+		$lang = $language == '' || $language == '*' ? Factory::getLanguage() : Language::getInstance($language);
 		$str = $lang->transliterate($str);
 
 		// Trim white spaces at beginning and end of alias and make lowercase

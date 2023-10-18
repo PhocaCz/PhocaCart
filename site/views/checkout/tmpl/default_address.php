@@ -117,8 +117,8 @@ if ($this->a->addressedit == 1) {
 		echo '</div>';// end row
 
 		//echo '<div class="col-sm-6 col-md-6 ph-checkout-shipping-row" >';
-		//echo '<div class="ph-box-header">'.JText::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
-		//echo JText::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME');
+		//echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_SHIPPING_ADDRESS').'</div>';
+		//echo Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME');
 		//echo '</div>';
 
 	} else {

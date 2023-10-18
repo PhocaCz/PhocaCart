@@ -26,7 +26,7 @@ if (isset($d['t']['image_width_cats']) && $d['t']['image_width_cats'] != '' && i
 
 $class          = PhocacartRenderFront::completeClass(array($d['s']['c']['img-responsive'], 'ph-image', $d['t']['class_lazyload']));
 $src            = Uri::base(true).'/'.$d['image']['image']->rel;
-$srcImg         = JUri::base(true).'/'.$d['image']['image']->rel; // fallback
+$srcImg         = Uri::base(true).'/'.$d['image']['image']->rel; // fallback
 
 if ($d['t']['display_webp_images'] == 1) {
 

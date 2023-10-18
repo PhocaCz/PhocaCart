@@ -10,10 +10,10 @@ defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\Path;
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $r 			=  new PhocacartRenderAdminview();
 
@@ -25,7 +25,7 @@ echo '<table class="table table-hover table-condensed ph-multiple-table">'
 .'<thead>'
 .'<tr>';
 echo '<th class=" ph-check">'. "\n";
-//echo '<input type="checkbox" name="checkall-toggle" value="" title="'.JText::_('JGLOBAL_CHECK_ALL').'" onclick="Joomla.checkAll(this)" />'. "\n";
+//echo '<input type="checkbox" name="checkall-toggle" value="" title="'.Text::_('JGLOBAL_CHECK_ALL').'" onclick="Joomla.checkAll(this)" />'. "\n";
 echo '</th>'. "\n";
 echo '<th width="20">&nbsp;</th>'
 .'<th width="95%">'.Text::_( $this->t['l'].'_FILENAME' ).'</th>'

@@ -584,7 +584,7 @@ class PhocacartShipping
 
 	public function getShippingMethod($shippingId) {
 
-		//$app			= JFactory::getApplication();
+		//$app			= Factory::getApplication();
 		//$paramsC 		= PhocacartUtils::getComponentParameters();
 		//$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 

@@ -46,7 +46,7 @@ if((int)$this->u->id >  0) {
 	//echo '<ul class="unstyled">'. "\n";
 	if ($usersConfig->get('allowUserRegistration')) {
 		echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_REGISTER').'</div>'. "\n";
-		//echo '<li><a href="'. JRoute::_('index.php?option=com_users&view=registration').'">'.JText::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
+		//echo '<li><a href="'. Route::_('index.php?option=com_users&view=registration').'">'.Text::_('MOD_LOGIN_REGISTER').'<span class="icon-arrow-right"></span></a></li>'. "\n";
 
 		echo '<a class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-checkout-btn-login" href="'. Route::_('index.php?option=com_users&view=registration').'">'.PhocacartRenderIcon::icon($this->s['i']['user'] . ' icon-white', '', '  &nbsp;') .Text::_('MOD_LOGIN_REGISTER').'</a>'. "\n";
 

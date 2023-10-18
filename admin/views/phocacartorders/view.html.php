@@ -112,7 +112,7 @@ class PhocaCartCpViewPhocacartOrders extends HtmlView
     protected function getSortFields()
     {
         return array(
-            //'a.ordering'		=> JText::_('JGRID_HEADING_ORDERING'),
+            //'a.ordering'		=> Text::_('JGRID_HEADING_ORDERING'),
             'order_number' => Text::_($this->t['l'] . '_ORDER_NUMBER'),
             'user_username' => Text::_($this->t['l'] . '_USER'),
             'a.status_id' => Text::_($this->t['l'] . '_STATUS'),

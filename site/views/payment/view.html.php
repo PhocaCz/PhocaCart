@@ -67,7 +67,7 @@ class PhocaCartViewPayment extends HtmlView
 			$this->t['o'] = $proceed;
 		} else {
 			// No order set, no payment - this should not happen but if, then just repeat thank you
-			//$this->t['o'] =  '<div>'.JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED').'</div>';
+			//$this->t['o'] =  '<div>'.Text::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED').'</div>';
 			$this->t['o'] = '';
 		}
 

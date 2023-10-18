@@ -48,7 +48,7 @@ class JFormFieldPhocaSelectFilenameImage extends FormField
         }
 
 
-		$pathImage 		= Juri::root() . $path['orig_rel_ds'];
+		$pathImage 		= Uri::root() . $path['orig_rel_ds'];
 		$url 			= 'index.php?option=com_phocacart&view=phocacartthumba&format=json&tmpl=component&'. Session::getFormToken().'=1';
 		$dataManager 	= ' data-manager="'.$manager.'"';
 		$dataPathImage	= ' data-pathimage="'.strip_tags(addslashes($pathImage)).'"';

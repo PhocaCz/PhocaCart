@@ -64,7 +64,7 @@ class PhocacartRoute
 	}
 
 	public static function cleanUrlItemsView ($url) {
-		$config 					= JFactory::getConfig();
+		$config 					= Factory::getConfig();
 		$sef						= $config->get('sef', 1);
 
 		if ($sef) {
@@ -772,7 +772,7 @@ class PhocacartRoute
 
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(Uri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -784,7 +784,7 @@ class PhocacartRoute
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
 		// Cause URL problems
-		//$urlItemsView	= str_replace(JUri::root(true), '', $urlItemsView);
+		//$urlItemsView	= str_replace(Uri::root(true), '', $urlItemsView);
 		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
@@ -901,7 +901,7 @@ class PhocacartRoute
 		$frontendUrl 	= str_replace(Uri::root(true).'/administrator/', '',$url);
 		$frontendUrl 	= str_replace(Uri::root(true), '', $frontendUrl);
 		$frontendUrl 	= str_replace('\\', '/', $frontendUrl);
-		//$frontendUrl 	= JUri::root(false). str_replace('//', '/', $frontendUrl);
+		//$frontendUrl 	= Uri::root(false). str_replace('//', '/', $frontendUrl);
 		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', Uri::root(false). $frontendUrl);
 
 		return $frontendUrl;

@@ -65,7 +65,7 @@ if ($this->a->confirm == 1) {
 			echo '<div class="'.$this->s['c']['control-group'].'">';
 
 			echo '<div class="'.$this->s['c']['control-label'].'">';
-			echo '<label id="jform_question_captcha-lbl" for="jform_question_captcha" class="hasPopover required" title="" data-content="'.JText::_('COM_PHOCACART_PLEASE_PROVE_THAT_YOU_ARE_HUMAN').'" data-original-title="'.JText::_('COM_PHOCACART_SECURITY_CHECK').'">'.JText::_('COM_PHOCACART_SECURITY_CHECK').'<span class="star">&nbsp;*</span></label>';
+			echo '<label id="jform_question_captcha-lbl" for="jform_question_captcha" class="hasPopover required" title="" data-content="'.Text::_('COM_PHOCACART_PLEASE_PROVE_THAT_YOU_ARE_HUMAN').'" data-original-title="'.Text::_('COM_PHOCACART_SECURITY_CHECK').'">'.Text::_('COM_PHOCACART_SECURITY_CHECK').'<span class="star">&nbsp;*</span></label>';
 			echo '</div>';
 
 			echo '<div class="'.$this->s['c']['controls'].'">'.PhocacartCaptchaRecaptcha::render().'</div>';

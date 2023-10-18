@@ -248,19 +248,19 @@ class PhocacartUtilsSettings
 
 		switch($type){
 			case 0:
-				return JText::_('COM_PHOCACART_PAID');// Paid
+				return Text::_('COM_PHOCACART_PAID');// Paid
 			break;
 			case 1:
-				return JText::_('COM_PHOCACART_FREE');// Free Install
+				return Text::_('COM_PHOCACART_FREE');// Free Install
 			break;
 			case 2:
-				return JText::_('COM_PHOCACART_FREE');// Free Download
+				return Text::_('COM_PHOCACART_FREE');// Free Download
 			break;
 			case 3:
-				return JText::_('COM_PHOCACART_FREE_REGISTER');// Free Download but register
+				return Text::_('COM_PHOCACART_FREE_REGISTER');// Free Download but register
 			break;
 			case 4:
-				return JText::_('COM_PHOCACART_PAID_SUBSCRIPTION');// Paid - Subscription
+				return Text::_('COM_PHOCACART_PAID_SUBSCRIPTION');// Paid - Subscription
 			break;
 			default:
 				return '';

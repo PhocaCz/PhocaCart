@@ -25,13 +25,13 @@ class PhocaCartCpModelPhocacartZone extends AdminModel
 
 	protected function canDelete($record)
 	{
-		//$user = JFactory::getUser();
+		//$user = Factory::getUser();
 		return parent::canDelete($record);
 	}
 
 	protected function canEditState($record)
 	{
-		//$user = JFactory::getUser();
+		//$user = Factory::getUser();
 		return parent::canEditState($record);
 	}
 

@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
+
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 
@@ -18,7 +20,7 @@ class PhocacartOrderView
 
 	public function getItemBaS($orderId, $returnArray = 0) {
 
-		/*$db				= JFactory::getDBO();
+		/*$db				= Factory::getDBO();
 		$config['dbo'] 	= $db;
 		Table::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 		$table	= Table::getInstance('PhocacartOrderUsers', 'Table', $config);
@@ -74,9 +76,9 @@ class PhocacartOrderView
 			return $properties;
 		}
 
-		//$itemS 	= JArrayHelper::toObject($propertiesS, 'JObject');
-		//$item 	= JArrayHelper::toObject($properties, 'JObject');
-		$item		= new JObject();//stdClass();
+		//$itemS 	= JArrayHelper::toObject($propertiesS, 'stdClass');
+		//$item 	= JArrayHelper::toObject($properties, 'stdClass');
+		$item		= new stdClass();
 
 		if(!empty($properties['b']) && is_object($item)) {
 			foreach($properties['b'] as $k => $v) {

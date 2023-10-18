@@ -215,7 +215,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 				$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
 				return false;
 			} else {
-				//$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+				//$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 				//$app->enqueueMessage($msg, 'success');
 				// Waiting for shipping
 			}
@@ -230,7 +230,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 				$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar), false));
 				return false;
 			} else {
-				//$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+				//$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
 				//$app->enqueueMessage($msg, 'success');
 				// Waiting for shipping
 			}

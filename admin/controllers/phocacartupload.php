@@ -102,7 +102,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
                 $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING_EXISTS'), 'error');
 				$app->redirect($link);
 			}
-			//JFactory::getApplication()->input->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
+			//Factory::getApplication()->input->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
 		}
 		$app->redirect($link);
 	}

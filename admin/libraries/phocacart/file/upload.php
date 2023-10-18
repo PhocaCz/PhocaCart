@@ -53,7 +53,7 @@ class PhocacartFileUpload
         $ftp = ClientHelper::setCredentialsFromRequest('ftp');
 
 
-        //$file 			= JFactory::getApplication()->input->get( 'file', '', 'files', 'array' );
+        //$file 			= Factory::getApplication()->input->get( 'file', '', 'files', 'array' );
         $file = Factory::getApplication()->input->files->get('file', null, 'raw');
         $chunk = Factory::getApplication()->input->get('chunk', 0, '', 'int');
         $chunks = Factory::getApplication()->input->get('chunks', 0, '', 'int');
@@ -103,7 +103,7 @@ class PhocacartFileUpload
                 // and then (after all parts will be uploaded) we can make the condition to compare the file
                 // and we recognize there is one - ok don't upload it BUT the file will be damaged by
                 // parts uploaded by the new file - so this is why we are using temp file in Chunk method
-                $stream = JFactory::getStream();// Chunk Files
+                $stream = Factory::getStream();// Chunk Files
                 $tempFolder = 'pcpluploadtmpfolder' . '/';
                 $filepathImgFinal = Path::clean($path['orig_abs_ds'] . $folder . strtolower($file['name']));
                 $filepathImgTemp = Path::clean($path['orig_abs_ds'] . $folder . $tempFolder . strtolower($file['name']));
@@ -356,7 +356,7 @@ class PhocacartFileUpload
         //$file 			= J R equest::getVar( 'Filedata', '', 'files', 'array' );
         $folder = Factory::getApplication()->input->get('folder', '', '', 'path');
         $format = Factory::getApplication()->input->get('format', 'html', '', 'cmd');
-        $return = JFactory::getApplication()->input->get('return-url', null, 'post', 'base64');//includes field
+        $return = Factory::getApplication()->input->get('return-url', null, 'post', 'base64');//includes field
         $viewBack = Factory::getApplication()->input->get('viewback', '', '', '');
         $manager = Factory::getApplication()->input->get('manager', 'file', '', 'string');
         $tab = Factory::getApplication()->input->get('tab', '', '', 'string');
@@ -799,7 +799,7 @@ class PhocacartFileUpload
 						return false;
 					} else {
 
-						//$app->enqueueMessage(JText::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'));
+						//$app->enqueueMessage(Text::_('COM_PHOCACART_SUCCESS_FILE_UPLOADED'));
                         $fileData[$fileNameToken]                 = array();
                         $fileData[$fileNameToken]['id']           = $fileNameToken;
                         $fileData[$fileNameToken]['name']         = $v['name'];

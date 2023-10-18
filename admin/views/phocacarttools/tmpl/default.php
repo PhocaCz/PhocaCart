@@ -22,15 +22,15 @@ $s = 'jQuery(document).ready(function (){
 		jQuery(".circle").attr(\'class\', \'circle-active\');
 	})
 });';
-JFactory::getDocument()->addScriptDeclaration($s);
+Factory::getDocument()->addScriptDeclaration($s);
 
 
-JFactory::getDocument()->addScriptOptions('phLang', array(
+Factory::getDocument()->addScriptOptions('phLang', array(
 			'COM_PHOCACART_CLOSE' => Text::_('COM_PHOCACART_CLOSE'))
 		);
 
 
-JFactory::getDocument()->addScriptOptions('phVars', array('token' => Session::getFormToken(), 'urltools' => Uri::base(true).'/index.php?option=com_phocacart&format=json&'. Session::getFormToken().'=1'));
+Factory::getDocument()->addScriptOptions('phVars', array('token' => Session::getFormToken(), 'urltools' => Uri::base(true).'/index.php?option=com_phocacart&format=json&'. Session::getFormToken().'=1'));
 
 
 echo '<div id="'.$this->t['tasks'].'">';

@@ -1230,7 +1230,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 									$original2	= PhocacartFile::existsFileOriginal($v2->image, 'productimage');
 									if (!$original2) {
 										// Original does not exist - cannot generate new thumbnail
-										//$message = JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
+										//$message = Text::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
 										//return false;
 										continue;
 									}
@@ -1238,13 +1238,13 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 									// Delete old thumbnails
 									$deleteThubms2 = PhocacartFileThumbnail::deleteFileThumbnail($v2->image, 1, 1, 1, 'productimage');
 									if (!$deleteThubms2) {
-										//$message = JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
+										//$message = Text::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
 										//return false;
 										continue;
 									}
 									$createThubms2 = PhocacartFileThumbnail::getOrCreateThumbnail($v2->image, 0, 1,1,1,0,'productimage');
 									if (!$createThubms2) {
-										//$message = JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
+										//$message = Text::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 										//return false;
 										continue;
 									}
@@ -1267,7 +1267,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 									$original3	= PhocacartFile::existsFileOriginal($v3->image, 'productimage');
 									if (!$original3) {
 										// Original does not exist - cannot generate new thumbnail
-										//$message = JText::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
+										//$message = Text::_('COM_PHOCACART_FILEORIGINAL_NOT_EXISTS');
 										//return false;
 										continue;
 									}
@@ -1275,13 +1275,13 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 									// Delete old thumbnails
 									$deleteThubms3 = PhocacartFileThumbnail::deleteFileThumbnail($v3->image, 1, 1, 1, 'productimage');
 									if (!$deleteThubms3) {
-										//$message = JText::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
+										//$message = Text::_('COM_PHOCACART_ERROR_DELETE_THUMBNAIL');
 										//return false;
 										continue;
 									}
 									$createThubms3 = PhocacartFileThumbnail::getOrCreateThumbnail($v3->image, 0, 1,1,1,0,'productimage');
 									if (!$createThubms3) {
-										//$message = JText::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
+										//$message = Text::_('COM_PHOCACART_ERROR_WHILECREATINGTHUMB');
 										//return false;
 										continue;
 									}

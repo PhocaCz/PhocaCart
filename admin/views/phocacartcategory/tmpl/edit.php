@@ -13,7 +13,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\Associations;
 
 // ASSOCIATION
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 
 
@@ -51,7 +51,7 @@ Joomla.submitbutton = function(task) {
 }
 ';
 
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
 $assoc = Associations::isEnabled();

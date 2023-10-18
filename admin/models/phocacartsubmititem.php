@@ -242,12 +242,12 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 				}
 			}
 		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
-			//$this->setError(JText::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
+			//$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			//return false;
 		}
 
 		// Include the content plugins for the on save events.
-		//JPluginHelper::importPlugin('content');
+		//PluginHelper::importPlugin('content');
 
 		// Load the row if saving an existing record.
 		if ($pk > 0) {
@@ -284,7 +284,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$cache->clean();
 
 		// Trigger the onContentAfterSave event.
-		//JFactory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
+		//Factory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {

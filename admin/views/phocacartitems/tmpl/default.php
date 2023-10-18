@@ -17,7 +17,7 @@ use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $r         = $this->r;
 $user      = Factory::getUser();
@@ -162,7 +162,7 @@ if (is_array($this->items)) {
         $linkEdit   = Route::_($urlEdit . $item->id);
 
 
-        //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
+        //$linkCat	= Route::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
         $canEditCat  = $user->authorise('core.edit', $this->t['o']);
         $linkEditCat = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['c'] . 'category.edit';
 

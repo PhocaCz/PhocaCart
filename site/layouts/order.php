@@ -1012,7 +1012,7 @@ if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display
 		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TAX_BASIS').'</th>';
 		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TAX').'</th>';
 		$o[] = '<th '.$taxRecTd.'>'.Text::_('COM_PHOCACART_TOTAL').'</th>';
-		//$o[] = '<th>'.JText::_('COM_PHOCACART_TOTAL').' '.JText::_('COM_PHOCACART_CURRENCY').'</td>';
+		//$o[] = '<th>'.Text::_('COM_PHOCACART_TOTAL').' '.Text::_('COM_PHOCACART_CURRENCY').'</td>';
 		$o[] = '</tr>';
 
 
@@ -1193,8 +1193,8 @@ if ($pR) {
 
 
 	if (isset($d['common']->amount_tendered) && $d['common']->amount_tendered > 0 && isset($d['common']->amount_change) && ($d['common']->amount_change > 0 || $d['common']->amount_change == 0)) {
-		//$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': '.$d['price']->getPriceFormat($d['common']->amount_tendered)), 'pLeft');
-		//$oPr[] = $pP->printLine(array(JText::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': '.$d['price']->getPriceFormat($d['common']->amount_change)), 'pLeft');
+		//$oPr[] = $pP->printLine(array(Text::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': '.$d['price']->getPriceFormat($d['common']->amount_tendered)), 'pLeft');
+		//$oPr[] = $pP->printLine(array(Text::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': '.$d['price']->getPriceFormat($d['common']->amount_change)), 'pLeft');
 		$oPr[] = $pP->printLineColumns(array(Text::_('COM_PHOCACART_RECEIPT_AMOUNT_TENDERED').': ', $d['price']->getPriceFormat($d['common']->amount_tendered)));
 		$oPr[] = $pP->printLineColumns(array(Text::_('COM_PHOCACART_RECEIPT_AMOUNT_CHANGED').': ', $d['price']->getPriceFormat($d['common']->amount_change)));
 		$oPr[] = $pP->printFeed(1);
@@ -1215,8 +1215,8 @@ if ($pR) {
 
 }
 
-JPluginHelper::importPlugin( 'system' );
-JPluginHelper::importPlugin('plgSystemMultilanguagesck');
+PluginHelper::importPlugin( 'system' );
+PluginHelper::importPlugin('plgSystemMultilanguagesck');
 
 if ($pR) {
 	//$oPr2 = implode("\n", $oPr);

@@ -61,7 +61,7 @@ class PhocaCartControllerItem extends FormController
 				$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_REVIEW_NOT_ADDED'), 'warning');
 			}
 		}
-		//$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+		//$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
 		$app->redirect(base64_decode($item['return']));
 	}
 }

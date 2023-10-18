@@ -45,7 +45,7 @@ class PhocaCartViewItem extends HtmlView
 		$this->s				= PhocacartRenderStyle::getStyles();
 		$uri 					= Uri::getInstance();
 		$model					= $this->getModel();
-		//D $document				= JFactory::getDocument();
+		//D $document				= Factory::getDocument();
 		$id						= $app->input->get('id', 0, 'int');
 		$catid					= $app->input->get('catid', 0, 'int');
 

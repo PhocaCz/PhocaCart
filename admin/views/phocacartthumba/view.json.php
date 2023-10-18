@@ -106,7 +106,7 @@ class PhocaCartCpViewPhocaCartThumbA extends HtmlView
 		echo json_encode($response);
 		return;
 
-		/*$msg = JText::_('COM_PHOCACART_SUCCESS_THUMBNAIL_EXISTS');
+		/*$msg = Text::_('COM_PHOCACART_SUCCESS_THUMBNAIL_EXISTS');
 		$response = array(
 		'status' => '1',
 		'error' => '',

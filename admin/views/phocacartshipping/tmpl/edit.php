@@ -23,7 +23,7 @@ Joomla.submitbutton = function(task) {
 	}
 }
 ';
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
 echo '<div class="span12 form-horizontal">';

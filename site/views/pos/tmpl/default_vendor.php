@@ -9,6 +9,7 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die();
 
@@ -52,7 +53,7 @@ echo '</form>';
 
 // LOGOUT
 echo '<div class="ph-dropdown-header">'.Text::_('COM_PHOCACART_LOGOUT').'</div>';
-echo '<form action="'. JRoute::_('index.php?option=com_users&task=user.logout').'" method="post">';
+echo '<form action="'. Route::_('index.php?option=com_users&task=user.logout').'" method="post">';
 echo '<button type="submit" class="'.$this->s['c']['btn.btn-danger'].'  ph-pos-btn-dropdown">'.PhocacartRenderIcon::icon($this->s['i']['log-out'] . ' icon-white', '', ' &nbsp;') .Text::_('JLOGOUT').'</button>';
 echo '<input type="hidden" name="return" value="'. base64_encode(PhocacartRoute::getPosRoute()).'" />';
 echo HTMLHelper::_('form.token');

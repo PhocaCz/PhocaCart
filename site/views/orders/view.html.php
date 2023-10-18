@@ -24,7 +24,7 @@ class PhocaCartViewOrders extends HtmlView
 	{
 		$app								= Factory::getApplication();
 		$this->u							= PhocacartUser::getUser();
-		//$document							= JFactory::getDocument();
+		//$document							= Factory::getDocument();
 		$this->s							= PhocacartRenderStyle::getStyles();
 		$this->p 							= $app->getParams();
 		$model								= $this->getModel();
@@ -37,7 +37,7 @@ class PhocaCartViewOrders extends HtmlView
 			$this->t['token'] = '';
 		}
 
-		/*$app								= JFactory::getApplication();
+		/*$app								= Factory::getApplication();
 		$document							= Factory::getDocument();
 		$this->p 							= $app->getParams();
 		$this->t['categories']				= $model->getCategoriesList();

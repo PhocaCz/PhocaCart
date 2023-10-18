@@ -42,10 +42,10 @@ class PhocacartFileUploadmultiple
 
 
 		/*if ($uploadMethod == 2) {
-			//$document->addScript(JUri::root(true).'/media/com_phocacart/js/plupload/gears_init.js');
+			//$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/gears_init.js');
 		}
 		if ($uploadMethod == 5) {
-			//$document->addScript(JUri::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
+			//$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
 		}*/
 
 		$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.js');
@@ -166,7 +166,7 @@ class PhocacartFileUploadmultiple
 		$js.='		unique_names : false,'."\n";
 		$js.='		multipart: true,'."\n";
 		$js.='		filters : ['."\n";
-		//$js.='			{title : "'.JText::_('com_phocacart_IMAGE_FILES').'", extensions : "jpg,gif,png,webp"}'."\n";
+		//$js.='			{title : "'.Text::_('com_phocacart_IMAGE_FILES').'", extensions : "jpg,gif,png,webp"}'."\n";
 		//$js.='			{title : "Zip files", extensions : "zip"}'."\n";
 		$js.='		],'."\n";
 		$js.=''."\n";

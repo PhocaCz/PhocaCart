@@ -24,7 +24,7 @@ Joomla.submitbutton = function(task) {
 	}
 }
 ';
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 // First Column
 echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
@@ -495,7 +495,7 @@ if (!empty($this->itemproducts)) {
                     echo '<tr><td>' . $type. '</td>';
                     echo '<td>'.htmlspecialchars($v2->download_file) . '</td></tr>';
 
-                    //$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+                    //$dLink = Route::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
                     //. '&d='.htmlspecialchars($v->download_token));
                     $link = PhocacartRoute::getDownloadRoute() . '&o=' . htmlspecialchars($this->itemcommon->order_token)
                         . '&d=' . htmlspecialchars($v2->download_token);
@@ -541,7 +541,7 @@ if (!empty($this->itemproducts)) {
 
         if (isset($v->download_token)) {
             echo '<tr><td>'.$v->title.'</td>';
-            //$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+            //$dLink = Route::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
             //. '&d='.htmlspecialchars($v->download_token));
             $link = PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
             . '&d='.htmlspecialchars($v->download_token);
@@ -601,7 +601,7 @@ if (isset($this->itemcommon->order_token)) {
         echo '<div class="ph-admin-order-link">';
 		echo '<table class="ph-table-order-link">';
         echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
-		//$dLink = JRoute::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+		//$dLink = Route::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
 				//. '&d='.htmlspecialchars($v->download_token));
 		$link = PhocacartRoute::getOrdersRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token);
 		$oLink = PhocacartPath::getRightPathLink($link);

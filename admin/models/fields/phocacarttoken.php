@@ -42,10 +42,10 @@ class JFormFieldPhocaCartToken extends FormField
 		$html[] = '<div class="input-append input-group">';
 		$html[] = '<input type="text" id="'.$this->id.'" name="'.$this->name.'" value="'. $this->value.'"' .
 					' '.$class.$size.$disabled.$readonly.$onchangeOutput.$maxLength.' />';
-		/*$html[] = '<a class="btn btn-primary" title="'.JText::_('COM_PHOCADOWNLOAD_SET_TOKEN').'"'
+		/*$html[] = '<a class="btn btn-primary" title="'.Text::_('COM_PHOCADOWNLOAD_SET_TOKEN').'"'
 					.' href="javascript:void(0);"'
 					.' onclick="javascript:document.getElementById(\''.$this->id.'_id\').value = \''.$token.'\';return true;">'
-					. JText::_('COM_PHOCADOWNLOAD_SET_TOKEN').'</a>';*/
+					. Text::_('COM_PHOCADOWNLOAD_SET_TOKEN').'</a>';*/
 		$html[] = '</div>'. "\n";
 		return implode("\n", $html);
 

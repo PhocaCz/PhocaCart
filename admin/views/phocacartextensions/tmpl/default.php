@@ -31,14 +31,14 @@ if ($this->t['load_extension_list'] == 0) {
 
    // echo '<div class="alert alert-warning">';
     echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
-    //echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
+    //echo '<h4 class="alert-heading">'.Text::_('COM_PHOCACART_INFO').'</h4>';
     echo '<div class="alert alert-warning alert-dismissible fade show">' . Text::_('COM_PHOCACART_LOADING_OF_EXTENSION_LIST_DISABLED') . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button></div>';
     //echo '</div>';
 
   //  echo '<div class="alert alert-info">';
     //echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
-    //echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
-    echo '<div class="alert alert-info alert-dismissible fade show">' . JText::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon;
+    //echo '<h4 class="alert-heading">'.Text::_('COM_PHOCACART_INFO').'</h4>';
+    echo '<div class="alert alert-info alert-dismissible fade show">' . Text::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . Text::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon;
     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button>' . '</div>';
    // echo '</div>';
 
@@ -81,8 +81,8 @@ if ($this->t['load_extension_list'] == 0) {
 
     //echo '<div class="alert alert-info">';
    // echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
-    //echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
-    echo '<div class="alert alert-info alert-dismissible fade show">' . JText::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . JText::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon;
+    //echo '<h4 class="alert-heading">'.Text::_('COM_PHOCACART_INFO').'</h4>';
+    echo '<div class="alert alert-info alert-dismissible fade show">' . Text::_('COM_PHOCACART_DISCOVER') . ' <a href="https://www.phoca.cz/phocacart-extensions" target="_blank" style="text-decoration: underline">' . Text::_('COM_PHOCACART_PHOCA_CART_EXTENSIONS') . '</a> ' . $linkIcon;
     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button>' . '</div>';
     //echo '</div>';
 
@@ -187,7 +187,7 @@ if ($this->t['load_extension_list'] == 0) {
             $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
             $linkEdit 		= Route::_( $urlEdit. $item->id );
 
-            //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
+            //$linkCat	= Route::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
             $canEditCat	= $user->authorise('core.edit', $this->t['o']);*/
 
             $canCreate  = $user->authorise('core.create', $this->t['o']);

@@ -9,11 +9,12 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\Associations;
 
 // ASSOCIATION
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $assoc = Associations::isEnabled();
 $app = Factory::getApplication();
 $input = $app->input;
@@ -31,7 +32,7 @@ Joomla.submitbutton = function(task) {
 	}
 }
 ';
-JFactory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm', '', $layout, $tmpl);
 // First Column

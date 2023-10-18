@@ -138,7 +138,7 @@ class PhocacartReward
 	public static function getPoints($points, $type = 'received', $groupPoints = null) {
 
 		$pointsO 			= null;
-		//$app				= JFactory::getApplication();
+		//$app				= Factory::getApplication();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$enable_rewards		= $paramsC->get( 'enable_rewards', 1 );
 

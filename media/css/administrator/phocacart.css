@@ -124,7 +124,9 @@ color: #999;
 
 
 
-
+.ph-no-btn {
+	border: 0;
+}
 
 
 
@@ -2015,7 +2017,7 @@ a[target=_blank]::before {
 .table-striped.join > tbody > tr:nth-child(4n-3) > * {
     --table-accent-bg: var(--table-striped-bg);
     color: var(--table-striped-color);
-	
+
 }
 
 .table-striped.join > tbody > tr:nth-child(4n-1) > * {
@@ -2087,7 +2089,7 @@ a[target=_blank]::before {
 .ph-order-edit-shipping-info .ph-item .ph-value,
 .ph-order-edit-payment-info .ph-item .ph-value,
 .ph-order-edit-user-info .ph-item .ph-value{
-	
+
 }
 
 
@@ -2127,7 +2129,7 @@ a[target=_blank]::before {
 .ph-attributes-options-link-box {
 	display: flex;
 	justify-content: end;
-	
+
 }
 .ph-attributes-options-link {
 	text-decoration: underline;
@@ -2157,7 +2159,7 @@ a[target=_blank]::before {
 #phocacartitem joomla-tab-element#reward, #phocacartitem joomla-tab button[aria-controls="reward"],
 #phocacartitem joomla-tab-element#publishing, #phocacartitem joomla-tab button[aria-controls="publishing"],
 #phocacartitem joomla-tab-element#feed, #phocacartitem joomla-tab button[aria-controls="feed"],
-#phocacartitem joomla-tab-element#metadata, #phocacartitem joomla-tab button[aria-controls="metadata"] { 
+#phocacartitem joomla-tab-element#metadata, #phocacartitem joomla-tab button[aria-controls="metadata"] {
 	display: none;
 }
 

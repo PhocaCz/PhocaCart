@@ -175,7 +175,7 @@ if (is_array($this->items)) {
         //$statusSelect	= JHtml::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="form-control"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
         $statusClass = PhocacartUtilsSettings::getOrderStatusClass($item->status_title);
         $status      = '<span class="' . $statusClass . '">' . $this->escape(Text::_($item->status_title)) . '</span>';
-        //$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.JText::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
+        //$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.Text::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
 
         $status .= ' <span><a href="#' . $idMd . '" role="button" class="ph-u ph-no-wrap ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a></span>';
 

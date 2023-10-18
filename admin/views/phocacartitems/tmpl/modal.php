@@ -19,7 +19,7 @@ use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Multilanguage;
 // ASSOCIATION
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $app = Factory::getApplication();
 if ($app->isClient('site')) {
@@ -184,7 +184,7 @@ if (!empty($this->items)) {
         $linkEdit   = Route::_($urlEdit . $item->id);
         $linkLang   = Route::_('index.php?option=' . $this->t['o'] . '&view=phocacartitem&id=' . $this->escape($item->id) . '&lang=' . $this->escape($item->language));
 
-        //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
+        //$linkCat	= Route::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
         $canEditCat = 0;// FORCE NOT EDITING CATEGORY IN MODAL $user->authorise('core.edit', $this->t['o']);
         if ($item->language && Multilanguage::isEnabled()) {
             $tag = strlen($item->language);

@@ -13,7 +13,7 @@ use Joomla\CMS\Language\Associations;
 
 use Joomla\CMS\Association\AssociationExtensionHelper;
 
-JTable::addIncludePath(__DIR__ . '/../tables');
+Table::addIncludePath(__DIR__ . '/../tables');
 
 /**
  * Content associations helper.

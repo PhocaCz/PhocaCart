@@ -370,9 +370,9 @@ class PhocacartRenderAdminview extends Adminview
 
 
 		$o .='<input class="imageCreateThumbs inputbox" id="jform_image'.$id.'" name="pformimg['.$id.'][image]" value="'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8').'" size="40" type="text">';
-		//$o .= '<a class="modal_jform_image btn" title="'.JText::_('COM_PHOCACART_FORM_SELECT_IMAGE').'" href="'.$url.$id.'"';
+		//$o .= '<a class="modal_jform_image btn" title="'.Text::_('COM_PHOCACART_FORM_SELECT_IMAGE').'" href="'.$url.$id.'"';
 
-		//$o .= '<a href="#'.$idA.'" onclick="setPhRowImageId('.$id.')" role="button" class="btn btn-primary phbtnaddimages" data-bs-toggle="modal" title="' . JText::_($textButton) . '">'
+		//$o .= '<a href="#'.$idA.'" onclick="setPhRowImageId('.$id.')" role="button" class="btn btn-primary phbtnaddimages" data-bs-toggle="modal" title="' . Text::_($textButton) . '">'
 
 
 
@@ -545,7 +545,7 @@ class PhocacartRenderAdminview extends Adminview
 		$html[] = '<span class="input-append input-group">';
 		$html[] = '<input class="imageCreateThumbs ph-w40 input-mini" type="text" id="jform_optionimage'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][image]" value="'. htmlspecialchars($image, ENT_QUOTES, 'UTF-8').'"' .' '.$attr.' />';
 
-		/*$html[] = '<a class="modal_jform_optionimage'.$attrId.$id.' btn" title="'.JText::_($textButton).'"'
+		/*$html[] = '<a class="modal_jform_optionimage'.$attrId.$id.' btn" title="'.Text::_($textButton).'"'
 				.' href="'.$link.'"'
 				.' rel="{handler: &quot;iframe&quot;, size: {x: 780, y: 560}}">'
 				. Text::_($textButton).'</a>';
@@ -553,7 +553,7 @@ class PhocacartRenderAdminview extends Adminview
 
 		$html[] = '<a href="#'.$idA.'" onclick="setPhRowImgOptionId('.$attrId.','.$id.')" role="button" class="btn btn-primary phbtnaddimagesoptions" data-bs-toggle="modal" title="' . Text::_($textButton) . '">'
 			. '<span class="icon-list icon-white"></span> '
-			. JText::_($textButton) . '</a>';*//*
+			. Text::_($textButton) . '</a>';*//*
 
 		$html[] = ' <a href="#'.$idA.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="'.$url . $attrId. $id.'" data-height="'.$h.'" data-width="'.$w.'">'
 			. '<span class="icon-list icon-white"></span>'
@@ -656,7 +656,7 @@ class PhocacartRenderAdminview extends Adminview
 					jQuery('BODY').css('backgroundColor', hex);
 
 				});";
-		JFactory::getDocument()->addScriptDeclaration($jQ);*//*
+		Factory::getDocument()->addScriptDeclaration($jQ);*//*
 
 		$html 	= array();
 		$html[] =  '<input type="text" id="jform_optioncolor'.$attrId.$id.'" name="pformattr['.$attrId.'][options]['.$id.'][color]"'
@@ -922,7 +922,7 @@ class PhocacartRenderAdminview extends Adminview
 					jQuery('BODY').css('backgroundColor', hex);
 
 				});";
-		JFactory::getDocument()->addScriptDeclaration($jQ);*//*
+		Factory::getDocument()->addScriptDeclaration($jQ);*//*
 
 		$html 	= array();
 		$html[] = Text::_('COM_PHOCACART_COLOR') . '<br />';
@@ -1158,8 +1158,8 @@ class PhocacartRenderAdminview extends Adminview
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. Text::_('COM_PHOCACART_DISCOUNT') . '</div>'
 		. '<div class="col-xs-12 col-sm-1 col-md-1">'. Text::_('COM_PHOCACART_CALCULATION_TYPE') . '</div>';
 
-		/*. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_QUANTITY_FROM') . '</div>'
-		. '<div class="col-xs-12 col-sm-1 col-md-1">'. JText::_('COM_PHOCACART_QUANTITY_TO') . '</div>'*//*
+		/*. '<div class="col-xs-12 col-sm-1 col-md-1">'. Text::_('COM_PHOCACART_QUANTITY_FROM') . '</div>'
+		. '<div class="col-xs-12 col-sm-1 col-md-1">'. Text::_('COM_PHOCACART_QUANTITY_TO') . '</div>'*//*
 		$o .= '<div class="col-xs-12 col-sm-1 col-md-1">'. Text::_('COM_PHOCACART_MINIMUM_QUANTITY') . '</div>'
 		. '<div class="col-xs-12 col-sm-2 col-md-2">'. Text::_('COM_PHOCACART_VALID_FROM') . '</div>'
 		. '<div class="col-xs-12 col-sm-2 col-md-2">'. Text::_('COM_PHOCACART_VALID_TO') . '</div>'

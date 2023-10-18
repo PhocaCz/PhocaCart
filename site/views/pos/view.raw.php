@@ -336,8 +336,8 @@ class PhocaCartViewPos extends HtmlView
 				$this->t['action']			= $uri->toString();
 				$this->t['actionbase64']	= base64_encode($this->t['action']);
 				$this->t['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute(0));
-				//$this->t['linkcomparison']	= JRoute::_(PhocacartRoute::getComparisonRoute(0));
-				//$this->t['linkwishlist']	= JRoute::_(PhocacartRoute::getWishListRoute(0));
+				//$this->t['linkcomparison']	= Route::_(PhocacartRoute::getComparisonRoute(0));
+				//$this->t['linkwishlist']	= Route::_(PhocacartRoute::getWishListRoute(0));
 				//$this->t['limitstarturl'] 	= $this->t['limitstart'] > 0 ? '&start='.$this->t['limitstart'] : '';
 				$this->t['pathcat'] 		= PhocacartPath::getPath('categoryimage');
 				$this->t['pathitem'] 		= PhocacartPath::getPath('productimage');

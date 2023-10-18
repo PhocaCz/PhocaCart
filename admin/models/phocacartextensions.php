@@ -111,14 +111,14 @@ class PhocaCartCpModelPhocacartExtensions extends ListModel
 						$news = $contentJSON['content'];
 					}
 				} else {
-					//$msg = JText::_('COM_PHOCACART_ERROR_NEWS_CHANNEL_NOT_FOUND'). ' ('.ucfirst($type).')';
+					//$msg = Text::_('COM_PHOCACART_ERROR_NEWS_CHANNEL_NOT_FOUND'). ' ('.ucfirst($type).')';
 					//$app->enqueueMessage($msg, 'error');
 				}
 			}
 
 			$app->setUserState('com_phocacart.getNews.'.$type, $news);
 		} else if (empty($news)) {
-			//$msg = JText::_('COM_PHOCACART_ERROR_NO_NEWS_ENTRY_FOUND'). ' ('.ucfirst($type).')';
+			//$msg = Text::_('COM_PHOCACART_ERROR_NO_NEWS_ENTRY_FOUND'). ' ('.ucfirst($type).')';
 			//$app->enqueueMessage($msg, 'error');
 		}
 

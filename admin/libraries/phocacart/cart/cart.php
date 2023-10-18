@@ -307,7 +307,7 @@ class PhocacartCart
             $checkP = PhocacartProduct::checkIfAccessPossible($id, $catid, $this->type);
 
             if (!$checkP) {
-                //$uri 			= JUri::getInstance();
+                //$uri 			= Uri::getInstance();
                 //$action			= $uri->toString();
 
                 $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_NO_RIGHTS_FOR_ORDERING_PRODUCT'), 'error');
@@ -323,7 +323,7 @@ class PhocacartCart
 
 
             if (!$checkedA) {
-                //$uri 			= JUri::getInstance();
+                //$uri 			= Uri::getInstance();
                 //$action			= $uri->toString();
 
                 $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_SHOPPING_CART_SELECTING_ATTRIBUTE_IS_REQUIRED'), 'error');
@@ -1082,7 +1082,7 @@ class PhocacartCart
     public function addShippingCosts($shippingId = 0, $paymentId = 0) {
 
 
-        //$app = JFactory::getApplication();
+        //$app = Factory::getApplication();
         if ($shippingId == 0) {
             $shippingId = $this->shipping['id'];
         }
@@ -1102,7 +1102,7 @@ class PhocacartCart
 
             // Wait for payment costs
             //PhocacartPayment::removePayment();// It does not remove payment immediately (but after reload) or when ordering (order tests the conditions)
-            //$app->enqueueMessage(JText::_('COM_PHOCACART_NO_SHIPPING_METHOD_FOUND'));
+            //$app->enqueueMessage(Text::_('COM_PHOCACART_NO_SHIPPING_METHOD_FOUND'));
             unset($sI);
         }
 

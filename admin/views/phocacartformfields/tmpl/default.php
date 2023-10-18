@@ -120,7 +120,7 @@ echo $r->td($item->label . '<br /><small>('.Text::_($this->escape($item->label))
 echo $r->td($item->type, "small");
 
 if ($item->type_default == 1) {
-	$default = '<a data-original-title="'.Text::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip" title="'.Text::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
+	$default = '<a data-original-title="'.Text::_('COM_PHOCACART_DEFAULT').'" class="btn btn-micro disabled jgrid hasTooltip ph-no-btn" title="'.Text::_('COM_PHOCACART_DEFAULT').'"><i class="icon-featured"></i></a>';
 	echo $r->td($default, "small ph-center");
 } else {
 	echo $r->td('', "small");

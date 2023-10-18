@@ -41,7 +41,7 @@ class PhocaCartViewSubmit extends HtmlView
 		$this->t['enable_submit_item'] 		= $this->p->get('enable_submit_item', 0);
 
 		if ($this->t['enable_submit_item'] == 0) {
-			//throw new Exception(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 500);
+			//throw new Exception(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 500);
 			$app->enqueueMessage(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 'error');
 			return false;
 		}
@@ -77,7 +77,7 @@ class PhocaCartViewSubmit extends HtmlView
 
 			$this->t['enable_submit_item'] = $this->p->get('enable_submit_item', 0);
 			if ($this->t['enable_submit_item'] == 0) {
-				//throw new Exception(JText::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 403);
+				//throw new Exception(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 403);
 				$app->enqueueMessage(Text::_('COM_PHOCACART_SUBMIT_ITEM_DISABLED'), 'error');
 				return false;
 			}

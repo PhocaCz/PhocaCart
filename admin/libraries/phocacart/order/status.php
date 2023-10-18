@@ -106,7 +106,7 @@ class PhocacartOrderStatus
 	 * User will be not checked when:
 	 * 1) status is changed in administration (vendor in admin is the the shopper user)
 	 * 2) guest user makes the order (there is nothing to check)
-	 * 3) payment method contact server to change status (payment method does not identify as user - $user = JFactory::getUser())
+	 * 3) payment method contact server to change status (payment method does not identify as user - $user = Factory::getUser())
 	 *
 	 * $notifyUser 0 ... no  1 ... yes 99 ... defined in order status settings
 	 * $notifyOthers   0 ... no  1 ... yes 99 ... defined in order status settings

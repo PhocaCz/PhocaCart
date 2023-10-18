@@ -45,23 +45,23 @@
 			<option value="2">COM_PHOCACART_YES_EXCLUDING_POS</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
-        <field name="email_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="JComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC"/>
+        <field name="email_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC"/>
 
 
         <field name="email_subject" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC"/>
 
-        <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
 
-        <field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC"/>
 
         <field name="email_subject_others" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC"/>
 
-        <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
 
-        <field name="email_downloadlink_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_downloadlink_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
 
         <field name="email_send" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC" class="form-select" size="1" default="0">
@@ -104,12 +104,12 @@
 
 		<field name="email_subject_gift_sender" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC"/>
 
-        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
 
 		<field name="email_subject_gift_recipient" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC"/>
 
-        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" filter="JComponentHelper::filterText"
+        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
 
 		<field name="email_gift_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_DESC" class="form-select">
@@ -118,7 +118,7 @@
                 <option value="2">COM_PHOCACART_BOTH</option>
             </field>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
     </fieldset>

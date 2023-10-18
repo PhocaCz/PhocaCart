@@ -149,7 +149,7 @@ foreach ($v->options as $k2 => $v2) {
 
 					$image = '';
 					if (isset($v3['image']) && $v3['image'] != '') {
-						$image = /*JUri::base(true) . '/' .*/ $v3['image'];
+						$image = /*Uri::base(true) . '/' .*/ $v3['image'];
 						if ($i == 0) {
 							$defaultImage = $image;
 						}

@@ -41,7 +41,7 @@ echo $r->startMainContainer();
 if($this->t['enable_logging'] == 0) {
 	echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
 	//echo '<button type="button" class="close" data-bs-dismiss="alert">×</button>';
-	//echo '<h4 class="alert-heading">'.JText::_('COM_PHOCACART_INFO').'</h4>';
+	//echo '<h4 class="alert-heading">'.Text::_('COM_PHOCACART_INFO').'</h4>';
 	echo '<div class="alert-message">'.Text::_('COM_PHOCACART_LOGGING_IS_DISABLED_AT_THE_MOMENT').'</div>';
 	echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button>';
 	echo '</div>';
@@ -144,7 +144,7 @@ echo $r->td($type, "small");
 $checkO = $this->escape($item->title);
 echo $r->td('<b>'.$checkO.'</b>', "small");
 
-//echo $r->td(JHtml::date($v->date, JText::_('DATE_FORMAT_LC5')), "small");
+//echo $r->td(JHtml::date($v->date, Text::_('DATE_FORMAT_LC5')), "small");
 //echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td($item->user_username, "small");

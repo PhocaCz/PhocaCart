@@ -29,7 +29,7 @@
 
 <field name="background_image" type="media" label="COM_PHOCACART_FIELD_DISCOUNT_BACKGROUND_IMAGE_LABEL"  class="form-control" size="40"/>
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DISCOUNT_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DISCOUNT_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
               />
 
 

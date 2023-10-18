@@ -93,7 +93,7 @@ class PhocaCartControllerCheckout extends FormController
             $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_SELECTED'), 'error');
         }
 
-        //$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+        //$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
         $app->redirect(base64_decode($item['return']));
     }
 
@@ -263,7 +263,7 @@ class PhocaCartControllerCheckout extends FormController
             }
 
         } else {
-            $app->enqueueMessage(JText::_('COM_PHOCACART_NO_DATA_STORED') . $msgSuffix, 'error');// Not used: COM_PHOCACART_ERROR_NO_DATA_STORED
+            $app->enqueueMessage(Text::_('COM_PHOCACART_NO_DATA_STORED') . $msgSuffix, 'error');// Not used: COM_PHOCACART_ERROR_NO_DATA_STORED
             $app->redirect(base64_decode($item['return']));
             return false;                                                            // as in fact this can be possible
         }                                                                            // that admin does not require any data
@@ -317,7 +317,7 @@ class PhocaCartControllerCheckout extends FormController
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                     $error = 1;
                 } else {
-                    //$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+                    //$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
                     //$app->enqueueMessage($msg, 'message');
                     // Waiting for shipping
                 }
@@ -331,7 +331,7 @@ class PhocaCartControllerCheckout extends FormController
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                     $error = 1;
                 } else {
-                    //$msg = JText::_('COM_PHOCACART_SUCCESS_DATA_STORED');
+                    //$msg = Text::_('COM_PHOCACART_SUCCESS_DATA_STORED');
                     //$app->enqueueMessage($msg, 'message');
                     // Waiting for shipping
                 }
@@ -868,7 +868,7 @@ class PhocaCartControllerCheckout extends FormController
             }
         }
 
-        //$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+        //$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
         $app->redirect(base64_decode($item['return']));
     }
     /*
@@ -998,7 +998,7 @@ class PhocaCartControllerCheckout extends FormController
 
             } else {
                 // Ordered OK, but the payment method does not have any instruction to proceed to payment (e.g. cash on delivery)
-                //$msg = JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
+                //$msg = Text::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
                 // We produce not message but we redirect to specific view with message and additional instructions
                 //$app->enqueueMessage($msg, 'message');
 
@@ -1039,7 +1039,7 @@ class PhocaCartControllerCheckout extends FormController
                 $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DURING_CANCELING_GUESTBOOK_CHECKOUT') . $msgSuffix, 'error');
             }
         }
-        //$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+        //$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
         $app->redirect(base64_decode($item['return']));
     }
     /*
@@ -1058,7 +1058,7 @@ class PhocaCartControllerCheckout extends FormController
         } else {
             $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_ADDED_TO_COMPARISON_LIST'), 'error');
         }
-        //$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+        //$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
         $app->redirect(base64_decode($item['return']));
     }
 
@@ -1077,7 +1077,7 @@ class PhocaCartControllerCheckout extends FormController
         } else {
             $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_NOT_REMOVED_FROM_COMPARISON_LIST'), 'error');
         }
-        //$app->redirect(JRoute::_('index.php?option=com_phocacart&view=checkout'));
+        //$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
         $app->redirect(base64_decode($item['return']));
     }*/
 

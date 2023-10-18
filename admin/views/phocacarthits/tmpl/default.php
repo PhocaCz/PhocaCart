@@ -96,7 +96,7 @@ if (is_array($this->items)) {
         $canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
         $linkEdit 		= Route::_( $urlEdit. $item->id );
 
-        //$linkCat	= JRoute::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
+        //$linkCat	= Route::_( 'index.php?option='.$this->t['o'].'&task='.$this->t['c'].'category.edit&id='.(int) $item->category_id );
         $canEditCat	= $user->authorise('core.edit', $this->t['o']);*/
 
         $this->t['ordering'] = 0;

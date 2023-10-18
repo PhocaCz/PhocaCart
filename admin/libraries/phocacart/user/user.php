@@ -78,7 +78,7 @@ class PhocacartUser
 					return Factory::getUser($userid);
 				} else {
 					// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR - NO CUSTOMER FOUND
-					return JFactory::getUser(0);// Joomla! User is administrator and there is no information about user
+					return Factory::getUser(0);// Joomla! User is administrator and there is no information about user
 				}
 
 
@@ -758,7 +758,7 @@ class PhocacartUser
 
 				// Output
 				if ($filledOk == 1 && $this->t['editaddress'] == 0) {
-					//$billingO .= '<div class="col-sm-5">'.JText::_($v->title).'</div>';
+					//$billingO .= '<div class="col-sm-5">'.Text::_($v->title).'</div>';
 					if ($v->title == 'name_first' || $v->title == 'name_middle' || $v->title == 'name_last' || $v->title == 'name_degree' ) {
 						$billNameO .= $value . ' ';
 					} else if ($v->title == 'country') {
@@ -796,7 +796,7 @@ class PhocacartUser
 
 				// Output
 				if ($filledOk == 1 && $this->t['editaddress'] == 0) {
-					//$shippingO .= '<div class="col-sm-5">'.JText::_($v->title).'</div>';
+					//$shippingO .= '<div class="col-sm-5">'.Text::_($v->title).'</div>';
 					if ($v->title == 'name_first' || $v->title == 'name_middle' || $v->title == 'name_last' || $v->title == 'name_degree' ) {
 						$shipNameO .= $value . ' ';
 					} else if ($v->title == 'country') {

@@ -76,9 +76,9 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 
 		// FIELD: IMAGE, ADDITIONAL IMAGE
 		// EVENT - ONCHANGE - 1) create thumbnails
-		//PhocacartRenderAdminjs::phEventCreateImageThumbnail($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage', 'imageCreateThumbs');
+		//PhocacartRenderAdminjs::phEventCreateImageThumbnail($url, Text::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage', 'imageCreateThumbs');
 		// EVENT - ONCLICK - 1) paste selected image 2) create thumbnails
-		//PhocacartRenderAdminjs::phAddValueImage($url, JText::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage');
+		//PhocacartRenderAdminjs::phAddValueImage($url, Text::_('COM_PHOCACART_CHECKING_IMAGE_THUMBNAIL_PLEASE_WAIT'), 'productimage');
 
 		// FIELD: FILE (DOWNLOAD), ADDITIONAL FILES (DOWNLOAD), PUBLIC DOWNLOAD FILE
 		// EVENT - ONCLICK - 1) paste selected image 2) create thumbnails

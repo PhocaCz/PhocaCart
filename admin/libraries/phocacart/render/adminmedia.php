@@ -97,7 +97,7 @@ class PhocacartRenderAdminmedia
 		$s[] = ' ';
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   jQuery(".ph-editinplace-text").editable("'.$urlText.'", {';
-		$s[] = '      tooltip : "'.JText::_('COM_PHOCACART_CLICK_TO_EDIT').'",'; //submit : \'OK\',
+		$s[] = '      tooltip : "'.Text::_('COM_PHOCACART_CLICK_TO_EDIT').'",'; //submit : \'OK\',
 		$s[] = '      select : true,';
 		$s[] = '      type : jQuery(this).hasClass("autogrow") ? "text" : "textarea",';
 		$s[] = '      cancel : "'.Text::_('COM_PHOCACART_CANCEL').'",';

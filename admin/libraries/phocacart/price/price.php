@@ -601,7 +601,7 @@ class PhocacartPrice
         $taxTitle    = $taxChangedA['taxtitle'];
 
 
-        //$taxTitle					= JText::_($taxTitle);
+        //$taxTitle					= Text::_($taxTitle);
 
 
         // Define - the function always return all variables so we don't need to check them
@@ -632,7 +632,7 @@ class PhocacartPrice
         $priceO['brutto_title_lang'] = 'COM_PHOCACART_' . $langPrefix . 'PRICE_INCL_TAX';
         $priceO['brutto_title']      = Text::_($priceO['brutto_title_lang']);
 
-        //$app						= JFactory::getApplication();
+        //$app						= Factory::getApplication();
         //$paramsC 					= PhocacartUtils::getComponentParameters();
         $paramsC                  = PhocacartUtils::getComponentParameters();
         $tax_calculation_shipping = $paramsC->get('tax_calculation_shipping', 0);
@@ -651,7 +651,7 @@ class PhocacartPrice
             $priceO['bruttoformat'] = $this->getPriceFormat($priceO['brutto']);
             $priceO['freeshipping'] = 1;
             $priceO['zero']         = 1;
-            //$priceO['title']			= JText::_('COM_PHOCACART_FREE_SHIPPING');
+            //$priceO['title']			= Text::_('COM_PHOCACART_FREE_SHIPPING');
             $priceO['description'] = '';
             $priceO['costinfo']    = '';
 
@@ -862,10 +862,10 @@ class PhocacartPrice
         $tax         = $this->roundPrice($taxChangedA['taxrate'], 'payment');
         $taxTitle    = $taxChangedA['taxtitle'];
 
-        //$taxTitle					= JText::_($taxTitle);
+        //$taxTitle					= Text::_($taxTitle);
 
 
-        //$app						= JFactory::getApplication();
+        //$app						= Factory::getApplication();
         //$paramsC 					= PhocacartUtils::getComponentParameters();
         $paramsC                 = PhocacartUtils::getComponentParameters();
         $tax_calculation_payment = $paramsC->get('tax_calculation_payment', 0);

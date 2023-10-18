@@ -90,10 +90,10 @@ class PhocaCartModelCheckout extends FormModel
 
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = ArrayHelper::toObject($properties, 'JObject');
+		$item = ArrayHelper::toObject($properties, 'stdClass');
 
 		$propertiesS = $tableS->getProperties(1);
-		//$itemS = JArrayHelper::toObject($propertiesS, 'JObject');
+		//$itemS = JArrayHelper::toObject($propertiesS, 'stdClass');
 
 		//Add shipping data to billing and do both data package
 		if(!empty($propertiesS) && is_object($item)) {

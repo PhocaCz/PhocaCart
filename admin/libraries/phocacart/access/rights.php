@@ -142,7 +142,7 @@ class PhocacartAccessRights
 
                 if ($item->type == 3) {
                     // PRODUCTTYPE - price on demand product cannot be added to cart
-                   // PhocacartLog::add(3, 'Warning', $item->id, 'Product could not be added to cart or ordered because its type (Product on demand) does not allow it' . ' ' . JText::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
+                   // PhocacartLog::add(3, 'Warning', $item->id, 'Product could not be added to cart or ordered because its type (Product on demand) does not allow it' . ' ' . Text::_('COM_PHOCACART_PRODUCT'). ': ' . $item->title );
                     return false;
 
                 } else {
@@ -165,7 +165,7 @@ class PhocacartAccessRights
                 $hide_add_to_cart_zero_price = $this->params->get('hide_add_to_cart_zero_price', 0);
 
                 if ($hide_add_to_cart_zero_price == 1 && $price < 0.01) {
-                   // PhocacartLog::add(3, 'Warning', $item->id, 'Product could not be added to cart or ordered because its price is zero and option \'Hide Add To Cart Button (Zero Price)\' is enabled' . ' ' . JText::_('COM_PHOCACART_PRODUCT') . ': ' . $item->title);
+                   // PhocacartLog::add(3, 'Warning', $item->id, 'Product could not be added to cart or ordered because its price is zero and option \'Hide Add To Cart Button (Zero Price)\' is enabled' . ' ' . Text::_('COM_PHOCACART_PRODUCT') . ': ' . $item->title);
                     return false;
 
                 } else {

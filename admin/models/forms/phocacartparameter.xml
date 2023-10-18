@@ -35,7 +35,7 @@
         -->
         <field name="ordering" type="phocacartOrdering" table="tag" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="JComponentHelper::filterText"
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
     </fieldset>

@@ -23,7 +23,7 @@ if ($d['t']['show_pagination_top']) {
 	if ($d['t']['display_item_ordering_top']) {
 
 		$ordering = str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select" style="width: 16em;" aria-label="'.Text::_('COM_PHOCACART_ORDER_FRONT').'"', $d['t']['ordering']);
-		$ordering = str_replace( 'id="itemordering"', 'id="itemorderingtop" aria-label="'.JText::_('COM_PHOCACART_ORDER_FRONT').'"', $ordering);// possible two the same ID
+		$ordering = str_replace( 'id="itemordering"', 'id="itemorderingtop" aria-label="'.Text::_('COM_PHOCACART_ORDER_FRONT').'"', $ordering);// possible two the same ID
 		echo $d['t']['display_pagination_labels'] == 1 ? Text::_('COM_PHOCACART_ORDER_FRONT') .':&nbsp;' : '';
 		echo $ordering;
 
@@ -34,7 +34,7 @@ if ($d['t']['show_pagination_top']) {
 	if ($d['t']['show_pagination_limit_top']) {
 
 		$limit = str_replace( 'class="form-control"', 'class="'.$d['s']['c']['inputbox.form-select'].' chosen-select" aria-label="'.Text::_('COM_PHOCACART_DISPLAY_NUM').'"', $d['t']['pagination']->getLimitBox());
-		$limit = str_replace( 'id="limit"', 'id="limittop" aria-label="'.JText::_('COM_PHOCACART_DISPLAY_NUM').'"', $limit);// possible two the same ID
+		$limit = str_replace( 'id="limit"', 'id="limittop" aria-label="'.Text::_('COM_PHOCACART_DISPLAY_NUM').'"', $limit);// possible two the same ID
 		echo $d['t']['display_pagination_labels'] == 1 ? Text::_('COM_PHOCACART_DISPLAY_NUM') .':&nbsp;' : '';
 		echo $limit;
 

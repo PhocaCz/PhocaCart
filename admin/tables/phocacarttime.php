@@ -42,8 +42,8 @@ class TablePhocacartTime extends Table
 		}
 
 		if(strtotime($timeFrom) > strtotime($timeTo)) {
-			//$app	= JFactory::getApplication();
-			//$app->enqueueMessage(JText::_('COM_PHOCACART_TIME_FROM_CANNOT_BE_GREATER_THAN_TIME_TO'), 'error');
+			//$app	= Factory::getApplication();
+			//$app->enqueueMessage(Text::_('COM_PHOCACART_TIME_FROM_CANNOT_BE_GREATER_THAN_TIME_TO'), 'error');
 			$this->setError(Text::_('COM_PHOCACART_TIME_FROM_CANNOT_BE_GREATER_THAN_TIME_TO'));
 			return false;
 		}

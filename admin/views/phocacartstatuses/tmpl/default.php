@@ -120,7 +120,7 @@ if (is_array($this->items)) {
         echo $r->td($download, "small ph-center");
 
         if ($item->type == 1) {
-            $default = '<a data-original-title="' . Text::_('COM_PHOCACART_DEFAULT') . '" class="btn btn-micro disabled jgrid hasTooltip" title="' . Text::_('COM_PHOCACART_DEFAULT') . '"><i class="icon-featured"></i></a>';
+            $default = '<a data-original-title="' . Text::_('COM_PHOCACART_DEFAULT') . '" class="btn btn-micro disabled jgrid hasTooltip ph-no-btn" title="' . Text::_('COM_PHOCACART_DEFAULT') . '"><i class="icon-featured"></i></a>';
             echo $r->td($default, "small ph-center");
         } else {
             echo $r->td('', "small");

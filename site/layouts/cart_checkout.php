@@ -719,7 +719,7 @@ if (!empty($d['fullitems'][1])) {
 				//- *$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
 				$c = $d['total'][0]['taxrecapitulation']['rounding'];
 			}
-			echo '<tr><td>'.JText::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
+			echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
 
 		//}
 

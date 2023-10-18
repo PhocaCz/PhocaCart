@@ -20,7 +20,7 @@ $s = 'jQuery(document).ready(function (){
 		jQuery(".circle").attr(\'class\', \'circle-active\');
 	})
 });';
-JFactory::getDocument()->addScriptDeclaration($s);
+Factory::getDocument()->addScriptDeclaration($s);
 
 
 echo '<div id="'.$this->t['tasks'].'">';

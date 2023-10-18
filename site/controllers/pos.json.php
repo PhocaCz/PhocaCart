@@ -854,7 +854,7 @@ class PhocaCartControllerPos extends FormController
 
 					$printPos = new PhocacartPosPrint(1);
 					$printPos->printOrder($o);
-					//echo JText::_('COM_PHOCACART_RECEIPT_SENT_TO_PRINTER');
+					//echo Text::_('COM_PHOCACART_RECEIPT_SENT_TO_PRINTER');
 				} catch(Exception $e) {
 					$msg .= "<br />" . Text::_('COM_PHOCACART_ERROR'). ': '. $e->getMessage();
 					/*$response = array(
@@ -887,7 +887,7 @@ class PhocaCartControllerPos extends FormController
 
 			} else {
 				// Ordered OK, but the payment method does not have any instruction to proceed to payment (e.g. cash on delivery)
-				//$msg = JText::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
+				//$msg = Text::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED');
 				// We produce not message but we redirect to specific view with message and additional instructions
 				//$app->enqueueMessage($msg, 'message');
 				$response = array(
@@ -898,7 +898,7 @@ class PhocaCartControllerPos extends FormController
 				return;
 				//$session->set('infoaction', $action, 'phocaCart');
 				//$session->set('infomessage', $message, 'phocaCart');
-				//$app->redirect(JRoute::_(PhocacartRoute::getInfoRoute(), false));
+				//$app->redirect(Route::_(PhocacartRoute::getInfoRoute(), false));
 				return true;
 			}
 		}

@@ -34,7 +34,7 @@ final class PhocacartRenderAdminjs
 	/*public static function phEventCreateImageThumbnail($url, $msg, $manager = 'product', $value = 'imageCreateThumbs') {
 
 		$path = PhocacartPath::getPath($manager);
-		$pathImage = Juri::root() . $path['orig_rel_ds'];
+		$pathImage = Uri::root() . $path['orig_rel_ds'];
 
 		$s 	= array();
 		$s[] = ' ';
@@ -70,7 +70,7 @@ final class PhocacartRenderAdminjs
 	public static function phAddValueImage($url, $msg, $manager = 'productimage') {
 
 		$path = PhocacartPath::getPath($manager);
-		$pathImage = Juri::root() . $path['orig_rel_ds'];
+		$pathImage = Uri::root() . $path['orig_rel_ds'];
 
 		$s 	= array();
 		$s[] = ' ';
@@ -107,7 +107,7 @@ final class PhocacartRenderAdminjs
 	/*public static function phAddValueFile() {
 
 		//$path = PhocacartPath::getPath($manager);
-		//$pathImage = Juri::root() . $path['orig_rel_ds'];
+		//$pathImage = Uri::root() . $path['orig_rel_ds'];
 
 		$s 	= array();
 		$s[] = ' ';

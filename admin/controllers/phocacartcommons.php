@@ -24,7 +24,7 @@ class PhocaCartCpControllerPhocaCartCommons extends AdminController
 	
 	public function saveOrderAjax() {
 		
-		//JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		//JSession::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		$pks = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('order', array(), 'array');
 		

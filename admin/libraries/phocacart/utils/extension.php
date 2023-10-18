@@ -190,7 +190,7 @@ class PhocacartUtilsExtension
 							// Direct Install
 							$link   = '';
 							if ($download != '') {
-								$link = JRoute::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . JSession::getFormToken() . '=1', false);//SEC
+								$link = Route::_('index.php?option=com_phocacart&task=phocacartextension.install&link=' . base64_encode($download) . '&' . JSession::getFormToken() . '=1', false);//SEC
 							}
 							$icon 	= 'refresh';
 							$class	= 'btn-success';
