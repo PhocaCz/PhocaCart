@@ -8,6 +8,7 @@
  */
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -84,7 +85,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 
 		// Convert to the \JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = ArrayHelper::toObject($properties, 'stdClass');
+		$item = ArrayHelper::toObject($properties, CMSObject::class);
 
 
 		if (property_exists($item, 'params'))
