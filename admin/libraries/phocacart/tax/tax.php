@@ -11,6 +11,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartTax
 {
@@ -284,22 +286,15 @@ class PhocacartTax
 		$dynamic_tax_rate_priority	= $paramsC->get( 'dynamic_tax_rate_priority', 1 );// country prioritized
 
 
-       $pluginLayout 	= PluginHelper::importPlugin('pct');
-       if ($taxId > 0) {
-            if ($pluginLayout) {
-                $eventData = [];
-                $results   = Factory::getApplication()->triggerEvent('onPCTonChangeTaxBasedRule', array('com_phocacart.tax', &$taxChangedA, $eventData));
-                if (!empty($results)) {
-                    foreach ($results as $k => $v) {
-                        if ($v) {
-
-                            return $taxChangedA;
-                        }
-                    }
-                }
-            }
+    if ($taxId > 0) {
+      $eventData = [];
+      $results = Dispatcher::dispatch(new Event\Tax\ChangeTaxBasedRule('com_phocacart.tax', $taxChangedA, $eventData));
+      foreach ($results as $v) {
+        if ($v) {
+          return $taxChangedA;
         }
-
+      }
+    }
 
 		if ($dynamic_tax_rate == 0) {
 			return $taxChangedA;
