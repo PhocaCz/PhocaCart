@@ -12,6 +12,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.view');
 class PhocaCartViewPayment extends HtmlView
 {
@@ -52,14 +55,9 @@ class PhocaCartViewPayment extends HtmlView
 				$paymentO = $payment->getPaymentMethod((int)$o['common']->payment_id );
 
 				if (isset($paymentO->method)) {
-					//$dispatcher = J EventDispatcher::getInstance();
-					PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
-					$eventData 					= array();
-					$proceed 					= '';
-					$eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
-					Factory::getApplication()->triggerEvent('onPCPbeforeSetPaymentForm', array(&$proceed, $this->p, $paymentO->params, $o, $eventData));
-
-
+					Dispatcher::dispatch(new Event\Payment\BeforeSetPaymentForm($proceed, $this->p, $paymentO->params, $o, [
+						'pluginname' => $paymentO->method,
+					]));
 				}
 			}
 
