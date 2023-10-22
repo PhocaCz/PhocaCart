@@ -15,6 +15,8 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
@@ -41,12 +43,12 @@ if (!$this->t['ajax']) {
 // ITEMS a) items displayed by layout plugin, b) items displayed common way, c) no items found
 if (!empty($this->items) && $this->t['pluginlayout']) {
 
-	$pluginOptions 				= array();
-	$eventData 					= array();
-	$dLA 						= array();
-	$eventData['pluginname'] 	= $this->t['items_layout_plugin'];
+	$pluginOptions = [];
+	$dLA = [];
 
-	Factory::getApplication()->triggerEvent('onPCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+	Dispatcher::dispatch(new Event\Layout\Items\GetOptions('com_phocacart.items', $pluginOptions, [
+		'pluginname' => $this->t['items_layout_plugin'],
+	]));
 
 	if (isset($pluginOptions['layouttype']) && $pluginOptions['layouttype'] != '') {
 		$this->t['layouttype'] = PhocacartText::filterValue($pluginOptions['layouttype'], 'alphanumeric5');
