@@ -13,6 +13,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartDiscount extends AdminModel
@@ -58,9 +60,6 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
-
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
@@ -77,9 +76,6 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 		$table->discount		= PhocacartUtils::replaceCommaWithPoint($table->discount);
 
 		if (empty($table->id)) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = Factory::getDbo();
@@ -89,16 +85,10 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 				$table->ordering = $max+1;
 			}
 		}
-		else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
-		}
 	}
 
 	public function save($data)
 	{
-		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
 
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
@@ -146,10 +136,9 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 
-			if (in_array(false, $result, true))
-			{
+			if (in_array(false, $result, true)) {
 				$this->setError($table->getError());
 				return false;
 			}
@@ -168,19 +157,19 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 				if (!isset($data['product_ids'])) {
 					$data['product_ids'] = '';
 				}
-				PhocacartDiscountCart::storeDiscountProductsById($data['product_ids'], (int)$table->id );
+				PhocacartDiscountCart::storeDiscountProductsById($data['product_ids'], (int)$table->getId());
 
 				if (!isset($data['cat_ids'])) {
 					$data['cat_ids'] = array();
 				}
-				PhocacartDiscountCart::storeDiscountCatsById($data['cat_ids'], (int)$table->id);
+				PhocacartDiscountCart::storeDiscountCatsById($data['cat_ids'], (int)$table->getId());
 			}
 
 			// Clean the cache.
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 		}
 		catch (Exception $e)
 		{

@@ -13,6 +13,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartCoupon extends AdminModel
@@ -144,7 +146,7 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 
 			if (in_array(false, $result, true))
 			{
@@ -159,34 +161,30 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 				return false;
 			}
 
-
-
-
-
-			if ((int)$table->id > 0) {
+			if ((int)$table->getId() > 0) {
 
 				if (!isset($data['product_ids'])) {
 					$data['product_ids'] = '';
 				}
-				PhocacartCoupon::storeCouponProductsById($data['product_ids'], (int)$table->id );
+				PhocacartCoupon::storeCouponProductsById($data['product_ids'], (int)$table->getId() );
 
 				if (!isset($data['cat_ids'])) {
 					$data['cat_ids'] = array();
 				}
-				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->id);
+				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->getId());
 
 				if (empty($data['group'])) {
 					$data['group'] = array();
 				}
 
-				PhocacartGroup::storeGroupsById((int)$table->id, 6, $data['group']);
+				PhocacartGroup::storeGroupsById((int)$table->getId(), 6, $data['group']);
 			}
 
 			// Clean the cache.
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 		}
 		catch (Exception $e)
 		{
