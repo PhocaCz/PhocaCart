@@ -9,17 +9,13 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 
 $fieldSets = $this->form->getFieldsets();
 
 $o = '';
-
-PluginHelper::importPlugin('pcf');
 
 foreach($fieldSets as $name => $fieldSet) {
 

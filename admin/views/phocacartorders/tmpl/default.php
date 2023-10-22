@@ -12,7 +12,6 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
@@ -212,12 +211,6 @@ if (is_array($this->items)) {
         }
         $info .= '</div>';
 
-
-
-
-
-
-
         echo $r->td($info, "small");
         // ACTION
         $view = '<div class="ph-action-row">';
@@ -347,12 +340,6 @@ if (is_array($this->items)) {
             echo  '</div></td>';
             echo $r->endTr();
         }
-
-
-
-
-
-        //}
     }
 }
 echo $r->endTblBody();
