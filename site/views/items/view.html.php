@@ -238,8 +238,6 @@ class PhocaCartViewItems extends HtmlView
 
 
         // Plugins ------------------------------------------
-        PluginHelper::importPlugin('pcv');
-        //$this->t['dispatcher']	= J EventDispatcher::getInstance();
         $this->t['event']                      = new stdClass;
         $results                               = Dispatcher::dispatch(new Event\View\Items\BeforeHeader('com_phocacart.items', $this->items, $this->p));
         $this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
@@ -280,5 +278,3 @@ class PhocaCartViewItems extends HtmlView
         PhocacartRenderFront::prepareDocument($this->document, $this->p, $category);
     }
 }
-
-?>
