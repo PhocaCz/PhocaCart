@@ -88,32 +88,22 @@ if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['ship
 
 // Display Payment Method Info Description
 if (isset($this->t['infodata']['payment_id']) && (int)$this->t['infodata']['payment_id'] > 0) {
-
     $paymentDescription = PhocacartPayment::getInfoDescriptionById((int)$this->t['infodata']['payment_id']);
     if ($paymentDescription != '') {
         echo '<div class="ph-info-payment-description">'.HTMLHelper::_('content.prepare', $paymentDescription).'</div>';
     }
-
 }
 
 // Run payment method event
 if (isset($this->t['infodata']['payment_method']) && $this->t['infodata']['payment_method'] != '') {
-	$pluginPayment = PluginHelper::importPlugin('pcp');
-	if ($pluginPayment) {
+	$results = Dispatcher::dispatch(new Event\Payment\InfoViewDisplayContent($this->t['infodata'], [
+		'pluginname' => $this->t['infodata']['payment_method'],
+	]));
 
-
-
-		PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($this->t['infodata']['payment_method'])));
-		$eventData               = array();
-		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['payment_method']));
-
-		$results = Factory::getApplication()->triggerEvent('onPCPonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
-
-		if (!empty($results)) {
-			foreach ($results as $k => $v) {
-				if ($v != false && isset($v['content']) && $v['content'] != '') {
-					echo '<div class="ph-info-payment-content">'.$v['content'].'</div>';
-				}
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['content']) && $v['content'] != '') {
+				echo '<div class="ph-info-payment-content">'.$v['content'].'</div>';
 			}
 		}
 	}
@@ -122,4 +112,3 @@ if (isset($this->t['infodata']['payment_method']) && $this->t['infodata']['payme
 echo '</div>';// end ph-pc-info-box
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
-?>
