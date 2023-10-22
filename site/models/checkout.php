@@ -614,29 +614,20 @@ class PhocaCartModelCheckout extends FormModel
 		}
 
 		if (PhocacartUserGuestuser::storeShipping((int)$shippingId)) {
-
 			// Store information from Shipping method e.g. info about Branch (but test all the params)
-
 			$dataShippingParams = '';
 			if (!empty($shippingParams)){
 
 				if (isset($isValidShipping[0]->method) && $isValidShipping[0]->method != ''){
+					Dispatcher::dispatch(new Event\Shipping\CheckShippingBranchFormFields('com_phocacart.checkout',$shippingParams, $isValidShipping[0], [
+						'pluginname' => $isValidShipping[0]->method,
+					]));
 
-					PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($isValidShipping[0]->method)));
-					$eventData 					= array();
-					$eventData['pluginname'] 	= htmlspecialchars(strip_tags($isValidShipping[0]->method));
-
-					$results 					= Factory::getApplication()->triggerEvent('onPCScheckShippingBranchFormFields', array('com_phocacart.checkout', &$shippingParams, $isValidShipping[0], $eventData));
 					$dataShippingParams	= json_encode($shippingParams);
-
-
 				}
 			}
 
 			PhocacartUserGuestuser::storeShippingParams($dataShippingParams);
-
-
-
 
 			return true;
 		}
