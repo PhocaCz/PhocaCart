@@ -5,8 +5,11 @@ use Phoca\PhocaCart\Event\AbstractEvent;
 
 class DisplayPaymentPos extends AbstractEvent
 {
-  public function __construct() {
-    parent::__construct('pcp', '', [
+  public function __construct(string &$output, array $templateData, array $data) {
+    parent::__construct('pcp', 'onPCPonDisplayPaymentPos', [
+      'output' => &$output,
+      'templateData' => $templateData,
+      'data' => $data,
     ]);
   }
 }
