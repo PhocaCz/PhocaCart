@@ -81,9 +81,8 @@ class PhocaCartControllerResponse extends FormController
 	public function paymentnotify()
 	{
 		$app 	= Factory::getApplication();
-		$type 	= $app->input->getCmd('type');
-		$pid 	= $app->input->getInt('pid'); // payment id
-		$uri	= Uri::getInstance();
+		$type = $app->input->getCmd('type');
+		$pid = $app->input->getInt('pid'); // payment id
 
 		$plugin = PluginHelper::importPlugin('pcp', $type);
 		if ($plugin) {
@@ -91,6 +90,7 @@ class PhocaCartControllerResponse extends FormController
 				'pluginname' => $type,
 			]));
 		} else {
+			$uri	= Uri::getInstance();
 			Log::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
 			header('Allow: POST', true, 405);
       throw new Exception("Invalid HTTP request method.");
@@ -105,17 +105,14 @@ class PhocaCartControllerResponse extends FormController
 		$app 	= Factory::getApplication();
 		$type = $app->input->getCmd('type');
 		$pid 	= $app->input->getInt('pid'); // payment id
-		$uri	= Uri::getInstance();
 
 		$plugin = PluginHelper::importPlugin('pcp', $type);
 		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPonPaymentWebhook', array($pid, $eventData));
-			Dispatcher::dispatch(new Event\Payment\BeforeCheckPayment($pid, [
+			Dispatcher::dispatch(new Event\Payment\Webhook($pid, [
 				'pluginname' => $type,
 			]));
 		} else {
+			$uri	= Uri::getInstance();
 			Log::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
 			header('Allow: POST', true, 405);
 			throw new Exception("Invalid HTTP request method.");
@@ -125,4 +122,4 @@ class PhocaCartControllerResponse extends FormController
 	}
 
 }
-?>
+
