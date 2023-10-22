@@ -253,8 +253,6 @@ class PhocaCartViewCategory extends HtmlView
 			$model->hit((int)$this->t['categoryid']);
 
 			// Plugins ------------------------------------------
-			PluginHelper::importPlugin('pcv');
-			//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 			$this->t['event']		= new stdClass;
 			$results = Dispatcher::dispatch(new Event\View\Category\BeforeHeader('com_phocacart.category', $this->items, $this->p));
 			$this->t['event']->onCategoryBeforeHeader = trim(implode("\n", $results));
