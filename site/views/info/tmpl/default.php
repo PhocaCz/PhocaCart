@@ -7,9 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
@@ -23,25 +25,16 @@ if ( $this->t['info_view_description'] != '') {
 
 
 // Run view event, for conversions
-$pluginView = PluginHelper::importPlugin('pcv');
-if ($pluginView) {
-	$eventData               = array();
-	$results = Factory::getApplication()->triggerEvent('onPCVonInfoViewDisplayContent', array('com_phocacart.info', &$this->t['infodata'], &$this->t['infoaction'], $eventData));
-	if (!empty($results)) {
-		foreach ($results as $k => $v) {
-			if ($v != false && isset($v['content']) && $v['content'] != '') {
-				echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
-			}
+$results = Dispatcher::dispatch(new Event\View\Info\DisplayContent('com_phocacart.info', $this->t['infodata'], $this->t['infoaction']));
+if (!empty($results)) {
+	foreach ($results as $k => $v) {
+		if ($v != false && isset($v['content']) && $v['content'] != '') {
+			echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
 		}
 	}
 }
 
-
-
-
-
 switch($this->t['infoaction']) {
-
 	case 1:
 		// ORDER PROCESSED - STANDARD PRODUCTS (ORDER/NO DOWNLOAD)
 		echo $this->loadTemplate('order_nodownload');
@@ -66,7 +59,6 @@ switch($this->t['infoaction']) {
 		// PAYMENT CANCELED
 		echo $this->loadTemplate('payment_canceled');
 	break;
-
 }
 
 // Display Shipping Method Info Description
