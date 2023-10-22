@@ -9,10 +9,12 @@
 
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport('joomla.application.component.model');
 
 class PhocaCartModelItems extends BaseDatabaseModel
@@ -389,25 +391,22 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		$additionalColumns = array();
 		if ($this->items_layout_plugin != '') {
 			$this->items_layout_plugin = PhocacartText::filterValue($this->items_layout_plugin, 'alphanumeric2');
-			$pluginLayout 	= PluginHelper::importPlugin('pcl', $this->items_layout_plugin);
-			if ($pluginLayout) {
-				$pluginOptions 				= array();
-				$eventData 					= array();
-				$eventData['pluginname'] 	= $this->items_layout_plugin;
-				Factory::getApplication()->triggerEvent('onPCLonItemsGetOptions', array('com_phocacart.items', &$pluginOptions, $eventData));
+			$pluginOptions = [];
+			Dispatcher::dispatch(new Event\Layout\Items\GetOptions('com_phocacart.items', $pluginOptions, [
+				'pluginname' => $this->items_layout_plugin,
+			]));
 
-				if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
-					$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
-					if ($pluginOrdering != '') {
-						$itemOrdering = $pluginOrdering . ',' . $itemOrdering;
-					}
+			if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
+				$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
+				if ($pluginOrdering != '') {
+					$itemOrdering = $pluginOrdering . ',' . $itemOrdering;
 				}
+			}
 
-				if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-					if (!empty($pluginOptions['columns'])) {
-						foreach ($pluginOptions['columns'] as $k => $v) {
-							$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-						}
+			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+				if (!empty($pluginOptions['columns'])) {
+					foreach ($pluginOptions['columns'] as $k => $v) {
+						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
 					}
 				}
 			}
