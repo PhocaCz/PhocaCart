@@ -60,7 +60,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
 
-	Factory::getApplication()->triggerEvent('onPCLonItemsInsideLayout', array('com_phocacart.items', &$this->items, $dLA, $eventData));
+	Dispatcher::dispatch(new Event\Layout\Items\InsideLayout('com_phocacart.items', $this->items, $dLA, [
+		'pluginname' => $this->t['items_layout_plugin'],
+	]));
 
 	echo $this->loadTemplate('pagination');
 
