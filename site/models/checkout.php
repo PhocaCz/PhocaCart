@@ -7,8 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Object\CMSObject;
@@ -16,6 +16,9 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Form\Form;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport('joomla.application.component.model');
 
 class PhocaCartModelCheckout extends FormModel
@@ -175,13 +178,12 @@ class PhocaCartModelCheckout extends FormModel
 		$pluginLayout 	= PluginHelper::importPlugin('pct');
 		if ($pluginLayout) {
 
-			$eventData	= [];
 			if ($typeView == 'account') {
 				// Account
-				Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveCheckout', array('com_phocacart.checkout', &$row, $eventData));
+				Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveAccount('com_phocacart.checkout',$row));
 			} else {
 				// Checkout
-				Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveAccount', array('com_phocacart.account', &$row, $eventData));
+				Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveCheckout('com_phocacart.checkout',$row));
 			}
 
 		}
