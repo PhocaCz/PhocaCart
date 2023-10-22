@@ -8,11 +8,11 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
@@ -38,9 +38,7 @@ if ($this->a->addressedit == 1) {
 	// Body
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
-	$pluginLayout 	= PluginHelper::importPlugin('pct');
-	$eventData = [];
-	$results = Factory::getApplication()->triggerEvent('onPCVonCheckoutInsideAddressAfterHeader', array('com_phocacart.checkout', $this->data, $eventData));
+	$results = Dispatcher::dispatch(new Event\View\Checkout\InsideAddressAfterHeader('com_phocacart.checkout', $this->data));
 	if (!empty($results)) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 		echo trim(implode("\n", $results));
@@ -138,15 +136,12 @@ if ($this->a->addressedit == 1) {
 		echo '</div>';
 	}
 
-	$pluginLayout 	= PluginHelper::importPlugin('pct');
-	if ($pluginLayout) {
-		$eventData	= [];
-		$results = Factory::getApplication()->triggerEvent('onPCTonAfterUserAddressCheckoutView', array('com_phocacart.checkout', &$this->data, $eventData));
-		if (!empty($results)) {
-			foreach ($results as $k => $v) {
-				if ($v != false && isset($v['content']) && $v['content'] != '') {
-					echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
-				}
+	$results = Dispatcher::dispatch(new Event\Tax\UserAddressAfterCheckoutView('com_phocacart.checkout', $this->data));
+
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['content']) && $v['content'] != '') {
+				echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
 			}
 		}
 	}

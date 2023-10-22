@@ -563,12 +563,8 @@ class PhocaCartModelCheckout extends FormModel
 	}
 
 	public function getDataGuest() {
-
-		//$guest	= new PhocacartUserGuestuser();
 		$data	= PhocacartUserGuestuser::getAddress();
 		if (!empty($data)) {
-
-
 			$dataN = PhocacartUser::convertAddressTwo($data, 0);
 
 			$dataN[0]->countrytitle = null;
