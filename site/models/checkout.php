@@ -239,13 +239,10 @@ class PhocaCartModelCheckout extends FormModel
 		if (!empty($shippingParams)){
 
 			if (isset($isValidShipping[0]->method) && $isValidShipping[0]->method != ''){
-
-				PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($isValidShipping[0]->method)));
-				$eventData 					= array();
-				$eventData['pluginname'] 	= htmlspecialchars(strip_tags($isValidShipping[0]->method));
-				$results 					= Factory::getApplication()->triggerEvent('onPCScheckShippingBranchFormFields', array('com_phocacart.checkout', &$shippingParams, $isValidShipping[0], $eventData));
+				Dispatcher::dispatch(new Event\Shipping\CheckShippingBranchFormFields('com_phocacart.checkout', $shippingParams, $isValidShipping[0], [
+					'pluginname' => $isValidShipping[0]->method,
+				]));
 				$data['params_shipping']	= json_encode($shippingParams);
-
 			}
 		}
 
