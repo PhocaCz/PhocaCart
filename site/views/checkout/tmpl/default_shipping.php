@@ -221,16 +221,10 @@ if ($this->a->shippingnotused == 1) {
 
 		// Event
 		if (isset($v->method) && $v->method != '') {
+			$results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranches('com_phocacart.checkout', $v, [
+				'pluginname' => $v->method,
+			]));
 
-			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
-			$eventData 					= array();
-			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
-
-			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranches', array('com_phocacart.checkout', $v, $eventData));
-
-			/*if (!empty($results)) {
-				echo trim(implode("\n", $results));
-			}*/
 			if (!empty($results)) {
 				foreach ($results as $k2 => $v2) {
 					if ($v2 != false && isset($v2['content']) && $v2['content'] != '') {
