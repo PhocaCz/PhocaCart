@@ -10,9 +10,11 @@
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $r 			=  new PhocacartRenderAdminview();
 $js ='
@@ -103,18 +105,13 @@ if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id
 	$paramsShipping = json_decode($this->itemcommon->params_shipping, true);
 
 	if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
-
-		PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($paramsShipping['method'])));
-		$eventData               			= array();
-		$eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsShipping['method']));
-		$eventData['item']['id'] 			= (int)$this->itemcommon->id;
-		$eventData['item']['shipping_id'] 	= (int)$this->itemcommon->shipping_id;
-
-		$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminEdit', array('com_phocacart.phocacartorder', $this->itemcommon, $eventData));
-
-		/*if (!empty($results)) {
-			echo trim(implode("\n", $results));
-		}*/
+		$results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfoAdminEdit('com_phocacart.phocacartorder', $this->itemcommon, [
+			'pluginname' => $paramsShipping['method'],
+			'item' => [
+				'id' => (int)$this->itemcommon->id,
+				'shipping_id' => (int)$this->itemcommon->shipping_id,
+			]
+		]));
 
 		if (!empty($results)) {
 			foreach ($results as $k => $v) {
@@ -145,10 +142,7 @@ echo $data['b'];
 if (isset($this->itemcommon->params_user)) {
 
 	if (!empty($this->itemcommon)) {
-
-		PluginHelper::importPlugin('pct');
-		$eventData  = array();
-		$results = Factory::getApplication()->triggerEvent('onPCTgetUserBillingInfoAdminEdit', array('com_phocacart.phocacartorder', $this->itemcommon, $eventData));
+		$results = Dispatcher::dispatch(new Event\Tax\GetUserBillingInfoAdminEdit('com_phocacart.phocacartorder', $this->itemcommon));
 
 		if (!empty($results)) {
 			foreach ($results as $k => $v) {
@@ -157,7 +151,6 @@ if (isset($this->itemcommon->params_user)) {
 				}
 			}
 		}
-
 	}
 }
 
