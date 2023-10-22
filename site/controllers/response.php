@@ -62,17 +62,13 @@ class PhocaCartControllerResponse extends FormController
 
 		$type 		= $app->input->get('type', '', 'string');
 		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
-		$message	= array();
-		//$dispatcher = J EventDispatcher::getInstance();
-		$plugin 	= PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
-		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPafterCancelPayment', array($mid, &$message, $eventData));
-		}
+
+		$message	= [];
+		Dispatcher::dispatch(new Event\Payment\AfterCancelPayment($mid,$message, [
+			'pluginname' => $type,
+		]));
 
 		$return = PhocacartRoute::getInfoRoute();
-
 
 		$session->set('infoaction', 5, 'phocaCart');
 		$session->set('infomessage', $message, 'phocaCart');
