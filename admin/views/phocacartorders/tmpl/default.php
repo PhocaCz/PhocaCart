@@ -327,14 +327,10 @@ if (is_array($this->items)) {
                         echo '<div><b>' . Text::_('COM_PHOCACART_PAYMENT_METHOD') . '</b>: ' . $paymentInfo->title . '</div>';
                     }
 
-                    PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paramsPayment['method'])));
-                    $eventData               			= array();
-                    $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsPayment['method']));
-                    $results = Factory::getApplication()->triggerEvent('onPCPgetPaymentBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $paymentInfo, $eventData));
+                    $results = Dispatcher::dispatch(new Event\Payment\GetPaymentBranchInfoAdminList('com_phocacart.phocacartorders', $item, $paymentInfo, [
+                      'pluginname' => $paramsPayment['method'],
+                    ]));
 
-                    /*if (!empty($results)) {
-                        echo trim(implode("\n", $results));
-                    }*/
                     if (!empty($results)) {
                         foreach ($results as $k => $v) {
                             if ($v != false && isset($v['content']) && $v['content'] != '') {
