@@ -15,8 +15,8 @@
 
 <field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40" />
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
-<field name="description_info" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_DESC" />
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+<field name="description_info" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_DESC" />
 
 <field name="ordering" type="PhocacartOrdering" table="shipping" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1" />
@@ -47,7 +47,7 @@
 
 <field name="tracking_link" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_TRACKING_LINK_DESC" />
 
-<field name="tracking_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" />
+<field name="tracking_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" />
 
 <!-- Height -->
 <field name="lowest_weight" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_LOWEST_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_LOWEST_WEIGHT_DESC" />
