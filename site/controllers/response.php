@@ -7,13 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport('joomla.log.log');
+
 JLog::addLogger( array('text_file' => 'com_phocacart_error_log.php'), JLog::ALL, array('com_phocacart'));
 
 class PhocaCartControllerResponse extends FormController
@@ -37,14 +41,10 @@ class PhocaCartControllerResponse extends FormController
 		$type 		= $app->input->get('type', '', 'string');
 		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
 
-		$message	= array();
-		//$dispatcher = J EventDispatcher::getInstance();
-		$plugin 	= PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
-		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPafterRecievePayment', array($mid, &$message, $eventData));
-		}
+		$message = [];
+		Dispatcher::dispatch(new Event\Payment\AfterRecievePayment($mid, $message, [
+			'pluginname' => $type,
+		]));
 
 		if (!empty($message)) {
 			$session->set('infomessage', $message, 'phocaCart');
