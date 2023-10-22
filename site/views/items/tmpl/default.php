@@ -432,7 +432,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 
 		// Events
-		$results = Factory::getApplication()->triggerEvent('onPCVonItemsItemAfterAddToCart', array('com_phocacart.items', &$v, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Items\ItemAfterAddToCart('com_phocacart.items', $v, $this->p));
 		$dL['event']['onCategoryItemsItemAfterAddToCart'] = trim(implode("\n", $results));
 
 		// LABELS
