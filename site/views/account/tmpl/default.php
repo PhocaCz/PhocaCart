@@ -7,13 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 $layoutUL 		= new FileLayout('user_login', null, array('component' => 'com_phocacart'));
 $layoutUR 		= new FileLayout('user_register', null, array('component' => 'com_phocacart'));
 
@@ -54,11 +57,7 @@ if ((int)$this->u->id > 0) {
 
 	echo '<div class="'.$this->s['c']['row'].' ph-account-box-action">';
 
-	$pluginLayout 	= PluginHelper::importPlugin('pct');
-	$eventData = [];
-	$results = Factory::getApplication()->triggerEvent('onPCVonAccountInsideAddressAfterHeader', array('com_phocacart.account', $this->data, $eventData));
-
-	if (!empty($results)) {
+	if ($results = Dispatcher::dispatch(new Event\View\Account\InsideAddressAfterHeader('com_phocacart.account', $this->data))) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 		echo trim(implode("\n", $results));
 		echo '</div>';
