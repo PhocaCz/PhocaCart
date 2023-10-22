@@ -11,13 +11,16 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
@@ -253,7 +256,7 @@ class PhocaCartViewCategory extends HtmlView
 			PluginHelper::importPlugin('pcv');
 			//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 			$this->t['event']		= new stdClass;
-			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforeHeader', array('com_phocacart.category', &$this->items, &$this->p));
+			$results = Dispatcher::dispatch(new Event\View\Category\BeforeHeader('com_phocacart.category', $this->items, $this->p));
 			$this->t['event']->onCategoryBeforeHeader = trim(implode("\n", $results));
 
 			$results = Factory::getApplication()->triggerEvent('onPCVonCategoryBeforePaginationTop', array('com_phocacart.category', &$this->items, &$this->p));
