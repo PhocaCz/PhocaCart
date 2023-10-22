@@ -413,17 +413,13 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		}
 
 		// Views Plugin can load additional columns
-		$pluginLayout 	= PluginHelper::importPlugin('pcv');
-		if ($pluginLayout) {
-			$pluginOptions 				= array();
-			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('onPCVonItemsBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
+		$pluginOptions = [];
+		Dispatcher::dispatch(new Event\View\Items\BeforeLoadColumns('com_phocacart.items', $pluginOptions));
 
-			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-				if (!empty($pluginOptions['columns'])) {
-					foreach ($pluginOptions['columns'] as $k => $v) {
-						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-					}
+		if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+			if (!empty($pluginOptions['columns'])) {
+				foreach ($pluginOptions['columns'] as $v) {
+					$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
 				}
 			}
 		}
