@@ -10,11 +10,13 @@
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
@@ -102,18 +104,13 @@ if ($this->a->shippingnotused == 1) {
 		// Event
 		$paramsShipping = array();
 		if (isset($this->t['shippingmethod']['params_shipping']) && !empty($this->t['shippingmethod']['params_shipping'])) {
-
 			$paramsShipping = json_decode($this->t['shippingmethod']['params_shipping'], true);
 		}
 
 		if (isset($this->t['shippingmethod']['method']) && $this->t['shippingmethod']['method'] != '') {
-
-			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['shippingmethod']['method'])));
-			$eventData 					= array();
-			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($this->t['shippingmethod']['method']));
-
-
-			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $paramsShipping, $eventData));
+			$results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfo('com_phocacart.checkout', $this->t['shippingmethod'], $paramsShipping, [
+				'pluginname' => $this->t['shippingmethod']['method'],
+			]));
 
 			if (!empty($results)) {
 				foreach ($results as $k => $v) {
@@ -123,7 +120,7 @@ if ($this->a->shippingnotused == 1) {
 				}
 			}
 			/*
-			// INSTRUCTINS: test the plugin in event this way:
+			// INSTRUCTIONS: test the plugin in event this way:
 
 			protected $name 	= 'plugin_name';
 
