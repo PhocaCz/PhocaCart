@@ -8,12 +8,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $d = new PhocacartPrice();
 $d->setCurrency(1, 6);
@@ -285,23 +287,15 @@ if (is_array($this->items)) {
                     $titleExistsS = 1;
                 }
                 if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
-
-
-
                     $shippingInfo             = $shipping->getShippingMethod($item->shipping_id);
                     if ($titleExistsS == 0 && isset($shippingInfo->title) && $shippingInfo->title != '') {
                         echo '<div><b>' . Text::_('COM_PHOCACART_SHIPPING_METHOD') . '</b>: ' . $shippingInfo->title . '</div>';
                     }
 
+                    $results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfoAdminList('com_phocacart.phocacartorders', $item, $shippingInfo, [
+                      'pluginname' => $paramsShipping['method'],
+                    ]));
 
-                    PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($paramsShipping['method'])));
-                    $eventData               			= array();
-                    $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsShipping['method']));
-                    $results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $shippingInfo, $eventData));
-
-                    /*if (!empty($results)) {
-                        echo trim(implode("\n", $results));
-                    }*/
                     if (!empty($results)) {
                         foreach ($results as $k => $v) {
                             if ($v != false && isset($v['content']) && $v['content'] != '') {
