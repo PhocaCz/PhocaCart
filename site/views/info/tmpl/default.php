@@ -73,21 +73,14 @@ if (isset($this->t['infodata']['shipping_id']) && (int)$this->t['infodata']['shi
 
 // Run shipping method event
 if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['shipping_method'] != '') {
-	$pluginView = PluginHelper::importPlugin('pcs');
-	if ($pluginView) {
+	$results = Dispatcher::dispatch(new Event\Shipping\InfoViewDisplayContent($this->t['infodata'], [
+		'pluginname' => $this->t['infodata']['shipping_method'],
+	]));
 
-		PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['infodata']['shipping_method'])));
-		$eventData               = array();
-		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['shipping_method']));
-		$results = Factory::getApplication()->triggerEvent('onPCSonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
-		/*if (isset($results[0]['content']) && $results[0]['content'] != '') {
-			echo '<div class="ph-info-shipping-content">'.$results[0]['content'].'</div>';
-		}*/
-		if (!empty($results)) {
-			foreach ($results as $k => $v) {
-				if ($v != false && isset($v['content']) && $v['content'] != '') {
-					echo '<div class="ph-info-shipping-content">'.$v['content'].'</div>';
-				}
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['content']) && $v['content'] != '') {
+				echo '<div class="ph-info-shipping-content">'.$v['content'].'</div>';
 			}
 		}
 	}
