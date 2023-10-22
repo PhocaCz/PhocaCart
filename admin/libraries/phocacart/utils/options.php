@@ -42,7 +42,6 @@ class PhocacartUtilsOptions
 
 		if( is_null( $elementOption ) ) {
 			throw new Exception('Function Error: No element added', 500);
-			return false;
 		}
 
 		if( !array_key_exists( $elementOption, self::$options ) ) {
