@@ -10,10 +10,11 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 jimport('joomla.application.component.model');
 
@@ -201,18 +202,14 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		}
 
 		// Views Plugin can load additional columns
-		$additionalColumns = array();
-		$pluginLayout 	= PluginHelper::importPlugin('pcv');
-		if ($pluginLayout) {
-			$pluginOptions 				= array();
-			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('onPCVonItemBeforeLoadColumns', array('com_phocacart.items', &$pluginOptions, $eventData));
+		$additionalColumns = [];
+		$pluginOptions = [];
+		Dispatcher::dispatch(new Event\View\Item\BeforeLoadColumns('com_phocacart.items',$pluginOptions));
 
-			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-				if (!empty($pluginOptions['columns'])) {
-					foreach ($pluginOptions['columns'] as $k => $v) {
-						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-					}
+		if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+			if (!empty($pluginOptions['columns'])) {
+				foreach ($pluginOptions['columns'] as $k => $v) {
+					$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
 				}
 			}
 		}

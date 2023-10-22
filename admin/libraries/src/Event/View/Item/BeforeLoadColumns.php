@@ -5,8 +5,11 @@ use Phoca\PhocaCart\Event\AbstractEvent;
 
 class BeforeLoadColumns extends AbstractEvent
 {
-  public function __construct() {
-    parent::__construct('pcv', '', [
+  public function __construct(string $context, array &$pluginOptions, array $eventData = []) {
+    parent::__construct('pcv', 'onPCVonItemBeforeLoadColumns', [
+      'context' => $context,
+      'pluginOptions' => &$pluginOptions,
+      'eventData' => $eventData,
     ]);
   }
 }
