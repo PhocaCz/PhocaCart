@@ -544,7 +544,6 @@ class PhocaCartModelCheckout extends FormModel
 	}
 
 	public function saveAddressGuest($data) {
-		//$guest	= new PhocacartUserGuestuser();
 		$data['user_id']	= 0;
 		$data['type']		= 0;
 
@@ -553,11 +552,7 @@ class PhocaCartModelCheckout extends FormModel
 		}
 
 		// Event user e.g. check valid VAT and store information about it
-		$pluginLayout 	= PluginHelper::importPlugin('pct');
-		if ($pluginLayout) {
-			$eventData	= [];
-			Factory::getApplication()->triggerEvent('onPCTonGuestUserAddressBeforeSaveCheckout', array('com_phocacart.checkout', &$data, $eventData));
-		}
+		Dispatcher::dispatch(new Event\Tax\GuestUserAddressBeforeSaveCheckout('com_phocacart.checkout', $data));
 
 		if (PhocacartUserGuestuser::storeAddress($data)) {
 			return true;
