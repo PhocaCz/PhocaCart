@@ -16,7 +16,6 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -325,9 +324,7 @@ class PhocacartOrder
 
         if (isset($payment['method'])) {
             Dispatcher::dispatch(new Event\Payment\BeforeSaveOrder($statusId, (int)$payment['id'], [
-              [
-                'pluginname' => $payment['method']
-              ]
+              'pluginname' => $payment['method']
             ]));
             $d['status_id'] = (int)$statusId; // e.g. by POS Cash we get automatically the status as completed
         } else {
@@ -1219,12 +1216,10 @@ class PhocacartOrder
 
             // EVENT Shipping
             if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
-
-                PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingC['method'])));
-                $eventData 					= array();
-                $eventData['pluginname'] 	= htmlspecialchars(strip_tags($shippingC['method']));
-                $eventData['id'] 			= (int)$row->id;
-                Factory::getApplication()->triggerEvent('onPCSafterSaveOrder', array('com_phocacart.library.order', $eventData));
+              Dispatcher::dispatch(new Event\Shipping\AfterSaveOrder('com_phocacart.library.order', [
+                  'pluginname' => $shippingC['method'],
+                  'id' => (int)$row->id,
+              ]));
             }
 
 
