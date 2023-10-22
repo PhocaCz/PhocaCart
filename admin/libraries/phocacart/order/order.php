@@ -323,23 +323,16 @@ class PhocacartOrder
 
         }
 
-
-        //$dispatcher = J EventDispatcher::getInstance();
         if (isset($payment['method'])) {
-            $plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
-            if ($plugin) {
-                $eventData               = array();
-                $eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
-                Factory::getApplication()->triggerEvent('onPCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
-                $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
-            } else {
-
-                $d['status_id'] = $statusId;// no plugin or no event found
-            }
+            Dispatcher::dispatch(new Event\Payment\BeforeSaveOrder($statusId, (int)$payment['id'], [
+              [
+                'pluginname' => $payment['method']
+              ]
+            ]));
+            $d['status_id'] = (int)$statusId; // e.g. by POS Cash we get automatically the status as completed
         } else {
             $d['status_id'] = $statusId;// no plugin or no event found
         }
-
 
         $d['type'] = PhocacartType::getTypeByTypeArray($this->type);
 

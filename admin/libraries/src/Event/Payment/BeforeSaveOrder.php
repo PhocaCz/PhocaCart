@@ -1,11 +1,11 @@
 <?php
 namespace Phoca\PhocaCart\Event\Payment;
 
-use PhocaCart\Event\AbstractEvent;
+use Phoca\PhocaCart\Event\AbstractEvent;
 
 class BeforeSaveOrder extends AbstractEvent
 {
-  public function __construct(int &$statusId, int $paymentId, array $data) {
+  public function __construct(string $statusId, int $paymentId, array $data) {
     parent::__construct('pcp', 'onPCPbeforeSaveOrder', [
       'statusId' => &$statusId,
       'paymentId' => $paymentId,
