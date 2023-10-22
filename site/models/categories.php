@@ -7,11 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 jimport('joomla.application.component.model');
 
 class PhocaCartModelCategories extends BaseDatabaseModel
@@ -133,13 +135,12 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		$additionalColumns = array();
 		$pluginLayout 	= PluginHelper::importPlugin('pcv');
 		if ($pluginLayout) {
-			$pluginOptions 				= array();
-			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('onPCVonCategoriesBeforeLoadColumns', array('com_phocacart.categories', &$pluginOptions, $eventData));
+			$pluginOptions = [];
+      Dispatcher::dispatch(new Event\View\Categories\BeforeLoadColumns('com_phocacart.categories', $pluginOptions));
 
 			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
 				if (!empty($pluginOptions['columns'])) {
-					foreach ($pluginOptions['columns'] as $k => $v) {
+					foreach ($pluginOptions['columns'] as $v) {
 						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
 					}
 				}
