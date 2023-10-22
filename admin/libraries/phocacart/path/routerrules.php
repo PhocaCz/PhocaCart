@@ -15,7 +15,7 @@ use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 use Joomla\Registry\Registry;
 
-class PhocaCartRouterrules extends MenuRules
+class PhocacartRouterrules extends MenuRules
 {
     public function preprocess(&$query) {
         parent::preprocess($query);
