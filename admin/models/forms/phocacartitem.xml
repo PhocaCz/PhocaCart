@@ -202,7 +202,7 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="ComponentHelper::filterText" translateformat="true" />
+        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" translateformat="true" showtime="true" filter="user_utc" />
         <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="ComponentHelper::filterText" translateformat="true" />
 
         <field name="tags" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC"  size="1"/>
