@@ -7,12 +7,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport('joomla.application.component.view');
 
 class PhocaCartViewCheckout extends HtmlView
@@ -605,26 +607,25 @@ class PhocaCartViewCheckout extends HtmlView
 
         // Plugins ------------------------------------------
         $this->t['total'] = $total;
-        PluginHelper::importPlugin('pcv');
-        //$this->t['dispatcher']	= J EventDispatcher::getInstance();
+
         $this->t['event'] = new stdClass;
 
-        $results                               = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterCart('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterCart = trim(implode("\n", $results));
 
-        $results                                = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterLogin('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterLogin = trim(implode("\n", $results));
 
-        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterAddress('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterAddress = trim(implode("\n", $results));
 
-        $results                                   = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterShipping('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterShipping = trim(implode("\n", $results));
 
-        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterPayment('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterPayment = trim(implode("\n", $results));
 
-        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterConfirm('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
 
         // END Plugins --------------------------------------
@@ -642,4 +643,3 @@ class PhocaCartViewCheckout extends HtmlView
     }
 }
 
-?>
