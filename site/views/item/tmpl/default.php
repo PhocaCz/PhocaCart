@@ -14,6 +14,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
@@ -63,7 +65,7 @@ echo $this->t['event']->onItemBeforeHeader;
 
 
 $popupAskAQuestion = 0;// we need this info for the container at the bottom (if modal popup is used for ask a question)
-$x = isset($this->item[0]) ? $this->item[0]: 0;
+$x = isset($this->item[0]) ? $this->item[0] : null;
 
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
@@ -73,8 +75,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// === IMAGE PANEL
 	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .' ph-item-view-image-box">';
 
-	//PluginHelper::importPlugin('pcv');
-	$results = Factory::getApplication()->triggerEvent('onPCVonItemImage', array('com_phocacart.item', &$x, &$this->t, &$this->p));
+	$results = Dispatcher::dispatch(new Event\View\Item\Image('com_phocacart.item', $x, $this->t, $this->p));
 	$imageOutput = trim(implode("\n", $results));
 
 

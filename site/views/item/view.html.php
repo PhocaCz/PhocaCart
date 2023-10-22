@@ -190,7 +190,7 @@ class PhocaCartViewItem extends HtmlView
 			PluginHelper::importPlugin('pcv');
 			$eventData 					= array();
 			$result = Factory::getApplication()->triggerEvent('onPCVonItemImageBeforeLoadingImageLibrary', array(&$pluginData, $eventData));
-            if ($result) {
+			if ($result) {
 				$this->t['image_popup_method'] = $pluginData['image_popup_method'];
 			}
 
