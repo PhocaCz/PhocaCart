@@ -27,6 +27,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 jimport('joomla.application.component.modeladmin');
 
@@ -441,18 +442,14 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		// Trigger the before event.
 		PluginHelper::importPlugin('pca');
-		$result = Factory::getApplication()->triggerEvent('onPCAonItemBeforeSave', array('com_phocacart.phocacartitem', &$table, $isNew, $data));
+		$result = Dispatcher::dispatch(new Event\Admin\Item\BeforeSave('com_phocacart.phocacartitem', $table, $isNew, $data));
 		// Store the data.
 		if (in_array(false, $result, true) || !$table->store()) {
 			$this->setError($table->getError());
 			return false;
 		}
 		// Trigger the after save event.
-		Factory::getApplication()->triggerEvent('onPCAonItemAfterSave', array('com_phocacart.phocacartitem', &$table, $isNew, $data));
-
-
-
-
+		Dispatcher::dispatch(new Event\Admin\Item\AfterSave('com_phocacart.phocacartitem', $table, $isNew, $data));
 
 		// Test Thumbnails (Create if not exists)
 		if ($table->image != '') {
