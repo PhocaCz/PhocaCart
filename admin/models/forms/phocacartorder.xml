@@ -17,7 +17,7 @@
         <field name="tracking_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL" description="COM_PHOCACART_FIELD_TRACKING_NUMBER_DESC"/>
         <field name="tracking_link_custom" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_DESC"/>
         <field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL"
-               filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC"/>
 
         <field name="tracking_date_shipped" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" translateformat="true" filter="user_utc" />
 
@@ -41,18 +41,18 @@
         <!--
         <field name="required_delivery_time" type="calendar" class="date" size="40" label="" description="" translateformat="true" filter="user_utc" />-->
 
-        <field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
+        <field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC"/>
         <field name="invoice_spec_middle_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_LABEL"
-               filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC"/>
         <field name="invoice_spec_bottom_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_LABEL"
-               filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC"/>
 
         <field name="oidn_spec_billing_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_LABEL"
-               filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_DESC"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_DESC"/>
 
         <field name="oidn_spec_shipping_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"
-               filter="ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"/>
 
 
         <field name="terms" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_LABEL" description="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_DESC" size="1" default="0">

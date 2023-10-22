@@ -14,7 +14,7 @@
         <field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
 
-        <field name="description" type="textarea" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
+        <field name="description" type="textarea" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
 		<field name="status" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_STATUS_LABEL" description="COM_PHOCACART_FIELD_STATUS_DESC" size="1" default="0" readonly="true">
