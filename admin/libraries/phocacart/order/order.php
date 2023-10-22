@@ -20,6 +20,8 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
@@ -97,11 +99,7 @@ class PhocacartOrder
         // 1. Check the VAT by external service if it is enabled in plugin
         if (!empty($address[0])) {
             // Event user e.g. check valid VAT and store information about it
-            $pluginLayout = PluginHelper::importPlugin('pct');
-            if ($pluginLayout) {
-                $eventData = [];
-                Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveOrder', array('com_phocacart.order', &$address[0], $eventData));
-            }
+            Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveOrder('com_phocacart.order', $address[0]));
         }
         // 2. Use stored information and change the VAT (before calculation)
 
