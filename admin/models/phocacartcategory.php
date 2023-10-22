@@ -272,8 +272,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->cleanCache();
 
 			// Trigger the after save event.
-			Factory::getApplication()->triggerEvent('onPCAonCategoryAfterSave', array('com_phocacart.category', &$table, $isNew, $data));
-
+			Dispatcher::dispatch(new Event\Admin\Category\AfterSave('com_phocacart.category', $table, $isNew, $data));
 		} catch (\Exception $e) {
 			$this->setError($e->getMessage());
 			return false;
