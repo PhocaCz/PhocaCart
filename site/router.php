@@ -18,9 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\Database\ParameterType;
 
-if (! class_exists('PhocaCartLoader')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
-}
+require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/bootstrap.php');
 
 class PhocacartRouter extends RouterView
 {
@@ -153,11 +151,8 @@ class PhocacartRouter extends RouterView
 
     parent::__construct($app, $menu);
 
-    phocacartimport('phocacart.path.routerrules');
-    phocacartimport('phocacart.category.category');
-
     $this->attachRule(new MenuRules($this));
-    $this->attachRule(new PhocaCartRouterrules($this));
+    $this->attachRule(new PhocacartRouterrules($this));
     $this->attachRule(new StandardRules($this));
     $this->attachRule(new NomenuRules($this));
   }
@@ -181,10 +176,10 @@ class PhocacartRouter extends RouterView
 
   public function getCategorySegment($id, $query)
   {
-    $category = PhocaCartCategory::getCategoryById($id);
+    $category = PhocacartCategory::getCategoryById($id);
 
     if ($category) {
-      $path = PhocaCartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $category->title, $category->alias);
+      $path = PhocacartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $category->title, $category->alias);
 
       //$path = array_reverse($path, true);
       //$path = array_reverse($category->getPath(), true);
@@ -317,7 +312,7 @@ class PhocacartRouter extends RouterView
             // We don't have query ID because of e.g. language
             // Should not happen because of modifications in build function here: administrator/components/com_phocacart/libraries/phocacart/path/routerrules.php
             /*if ((int)$segment > 0) {
-		        $category = PhocaCartCategory::getCategoryById((int)$segment);
+                $category = PhocacartCategory::getCategoryById((int)$segment);
                 if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
                     // We don't have root category with 0 so we need to start with segment one
                     return (int)$category->id;
