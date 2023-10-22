@@ -8,8 +8,6 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Plugin\PluginHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 

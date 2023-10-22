@@ -8,13 +8,16 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
@@ -183,13 +186,11 @@ class PhocaCartViewItem extends HtmlView
 				$media->loadWindowPopup();
 			}
 
-
 			// Possible change of image_popup_method parameter in plugin - to no load e.g. magnific or prettyphoto if not needed
-			$pluginData     = array();
-            $pluginData['image_popup_method'] = $this->t['image_popup_method'];
-			PluginHelper::importPlugin('pcv');
-			$eventData 					= array();
-			$result = Factory::getApplication()->triggerEvent('onPCVonItemImageBeforeLoadingImageLibrary', array(&$pluginData, $eventData));
+			$pluginData = [
+				'image_popup_method' => $this->t['image_popup_method'],
+			];
+			$result = Dispatcher::dispatch(new Event\View\Item\BeforeLoadImageLibrary($pluginData));
 			if ($result) {
 				$this->t['image_popup_method'] = $pluginData['image_popup_method'];
 			}
