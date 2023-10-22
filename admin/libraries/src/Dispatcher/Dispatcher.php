@@ -21,4 +21,12 @@ final class Dispatcher
     $result = Factory::getApplication()->getDispatcher()->dispatch($event->getName(), $event);
     return !isset($result['result']) || \is_null($result['result']) ? [] : $result['result'];
   }
+
+  public static function dispatchChangeText(string &$text)
+  {
+    // Event for hacked JoomlaCK Mulitlanguages CK plugin
+    // see: https://www.joomlack.fr/en/download-joomla-extensions?task=view_category&category_id=17
+    // see: https://www.phoca.cz/forum/viewtopic.php?t=58960&start=10
+    Factory::getApplication()->triggerEvent('onChangeText', [&$text]);
+  }
 }
