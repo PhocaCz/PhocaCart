@@ -90,8 +90,7 @@ if ((int)$this->u->id > 0) {
 	$pluginLayout 	= PluginHelper::importPlugin('pct');
 	if ($pluginLayout) {
 		$eventData	= [];
-		$results = Factory::getApplication()->triggerEvent('onPCTonAfterUserAddressAccountView', array('com_phocacart.account', $this->t['datauser'], $eventData));
-		if (!empty($results)) {
+		if ($results = Dispatcher::dispatch(new Event\Tax\UserAddressAfterAccountView('com_phocacart.account', $this->t['datauser']))) {
 			foreach ($results as $k => $v) {
 				if ($v != false && isset($v['content']) && $v['content'] != '') {
 					echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
