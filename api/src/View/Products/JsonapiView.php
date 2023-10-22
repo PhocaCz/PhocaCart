@@ -10,8 +10,11 @@
 
 namespace Joomla\Component\PhocaCart\Api\View\Products;
 
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Joomla\Component\PhocaCart\Api\Serializer\ProductsSerializer;
+use Joomla\Component\PhocaCart\Api\View\BaseJsonApiView;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -22,46 +25,254 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  *
  * @since  4.0.0
  */
-class JsonapiView extends BaseApiView
+class JsonApiView extends BaseJsonApiView
 {
-    /**
-     * The fields to render item in the documents
-     *
-     * @var  array
-     * @since  4.0.0
-     */
-    protected $fieldsToRenderItem = [
-        'id',
-        'title',
-        'alias',
-    ];
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  protected $model = 'items';
 
-    /**
-     * The fields to render items in the documents
-     *
-     * @var  array
-     * @since  4.0.0
-     */
-    protected $fieldsToRenderList = [
-        'id',
-        'title',
-        'alias',
-        'price',
-        'price_original',
-        'stock',
-    ];
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  protected $modelItem = 'item';
 
-    private $model = 'items';
-    public function displayItem($item = null)
-    {
-      $this->model = 'item';
-      return parent::displayItem($item);
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  protected $fieldsToRenderItem = [
+    'id',
+    'title',
+    'alias',
+    'title_long',
+    'sku',
+    'upc',
+    'ean',
+    'jan',
+    'isbn',
+    'mpn',
+    'serial_number',
+    'registration_key',
+    'external_id',
+    'external_key',
+    'external_link',
+    'external_text',
+    'external_link2',
+    'external_text2',
+    'featured',
+    'featured_background_image',
+    'price',
+    'price_original',
+    'tax_id',
+    'catid_multiple',
+    'catid',
+    'manufacturer_id',
+    'ordering',
+    'access',
+    'group',
+    'description',
+    'description_long',
+    'features',
+    'stock',
+    'stock_calculation',
+    'min_quantity',
+    'min_multiple_quantity',
+    'min_quantity_calculation',
+    'stockstatus_a_id',
+    'stockstatus_n_id',
+    'related',
+    'image',
+    'special_parameter',
+    'special_image',
+    'public_download_file',
+    'public_download_text',
+    'public_play_file',
+    'public_play_text',
+    'video',
+    'download_folder',
+    'download_file',
+    'download_days',
+    'download_token',
+    'download_hits',
+    'unit_amount',
+    'unit_unit',
+    'length',
+    'width',
+    'height',
+    'weight',
+    'volume',
+    'points_needed',
+    'points_received',
+    'condition',
+    'type_feed',
+    'type_category_feed',
+    'delivery_date',
+    'metatitle',
+    'metakey',
+    'metadesc',
+    'metadata',
+    'additional_images',
+    'attributes',
+    'specifications',
+    'discounts',
+    'additional_download_files',
+    'published',
+    'type',
+    'language',
+    'date',
+    'date_update',
+    'tags',
+    'taglabels',
+    'created',
+    'created_by',
+    'modified',
+    'modified_by',
+    'hits',
+    'sales',
+    'gift_types',
+    'internal_comment',
+    'ai_keywords',
+  ];
+
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  protected $fieldsToRenderList = [
+    'id',
+    'title',
+    'alias',
+    'title_long',
+    'sku',
+    'upc',
+    'ean',
+    'jan',
+    'isbn',
+    'mpn',
+    'external_id',
+    'external_key',
+    'featured',
+    'price',
+    'price_original',
+    'tax_id',
+    'catid_multiple',
+    'catid',
+    'manufacturer_id',
+    'ordering',
+    'access',
+    'group',
+    'stock',
+    'min_quantity',
+    'min_multiple_quantity',
+    'min_quantity_calculation',
+    'image',
+    'unit_amount',
+    'unit_unit',
+    'length',
+    'width',
+    'height',
+    'weight',
+    'volume',
+    'condition',
+    'type_feed',
+    'type_category_feed',
+    'delivery_date',
+    'metatitle',
+    'metakey',
+    'metadesc',
+    'metadata',
+    'discounts',
+    'published',
+    'type',
+    'language',
+    'date',
+    'date_update',
+    'internal_comment',
+  ];
+
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  protected $relationship = [
+    'category',
+    'manufacturer',
+    'created_by',
+    'modified_by',
+  ];
+
+  public function __construct($config = [])
+  {
+    if (\array_key_exists('contentType', $config)) {
+      $this->serializer = new ProductsSerializer($config['contentType']);
     }
 
-  public function getModel($name = null)
-    {
-      BaseDatabaseModel::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models');
-      return BaseDatabaseModel::getInstance('PhocaCart' . $this->model, 'PhocaCartCpModel');
+    parent::__construct($config);
+  }
+
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  public function displayItem($item = null)
+  {
+    if (FieldsHelper::getFields('com_phocacart.phocacartitem')) {
+      $this->fieldsToRenderItem[] = 'fields';
     }
 
+    if (Multilanguage::isEnabled()) {
+      $this->fieldsToRenderItem[] = 'languageAssociations';
+      $this->relationship[] = 'languageAssociations';
+    }
+
+    return parent::displayItem();
+  }
+
+  /**
+   * @inheritdoc
+   * @since  4.1.0
+   */
+  protected function prepareItem($item)
+  {
+    foreach (FieldsHelper::getFields('com_phocacart.phocacartitem', $item, true) as $field) {
+      if (!isset($item->fields))
+        $item->fields = new \stdClass();
+
+      $item->fields->{$field->name} = $field->apivalue ?? $field->rawvalue;
+    }
+
+    if (Multilanguage::isEnabled() && !empty($item->associations)) {
+      $associations = [];
+
+      foreach ($item->associations as $language => $association) {
+        $itemId = explode(':', $association)[0];
+
+        $associations[] = (object) [
+          'id'       => $itemId,
+          'language' => $language,
+        ];
+      }
+
+      $item->associations = $associations;
+    }
+
+    if (in_array($item->stock_calculation, [2, 3])) {
+      $item->fields->variants = [];
+      $db = Factory::getDbo();
+      $query = $db->getQuery(true)
+        ->select('*')
+        ->from('#__phocacart_product_stock')
+        ->where('product_id = ' . $item->id);
+      $db->setQuery($query);
+      $variants = $db->loadObjectList();
+      if ($variants) {
+        $item->fields->variants = $variants;
+      }
+    }
+
+    return parent::prepareItem($item);
+  }
 }
