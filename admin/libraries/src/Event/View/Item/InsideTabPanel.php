@@ -10,7 +10,7 @@ class InsideTabPanel extends AbstractEvent
 {
   use ResultAware, ResultTypeArrayAware;
 
-  public function __construct(string $context, object $item, Registry $appParams) {
+  public function __construct(string $context, array $item, Registry $appParams) {
     parent::__construct('pcv', 'onPCVonItemInsideTabPanel', [
       'context' => $context,
       'item' => &$item,
