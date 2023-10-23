@@ -14,7 +14,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Plugin\PluginHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 
@@ -247,20 +246,18 @@ class PhocaCartViewItem extends HtmlView
 		PhocacartStatisticsHits::productHit((int)$id);
 
 		// Plugins ------------------------------------------
-		PluginHelper::importPlugin('pcv');
-		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 
-		$results = Factory::getApplication()->triggerEvent('onPCVonItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Item\BeforeHeader('com_phocacart.item', $this->item, $this->p));
 		$this->t['event']->onItemBeforeHeader = trim(implode("\n", $results));
 
-		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Item\AfterAddToCart('com_phocacart.item', $this->item, $this->p));
 		$this->t['event']->onItemAfterAddToCart = trim(implode("\n", $results));
 
-		$results = Factory::getApplication()->triggerEvent('onPCVonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Item\BeforeEndPricePanel('com_phocacart.item', $this->item, $this->p));
 		$this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
 
-		$results = Factory::getApplication()->triggerEvent('onPCVonItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Item\InsideTabPanel('com_phocacart.item', $this->item, $this->p));
 		$this->t['event']->onItemInsideTabPanel = [];
 		foreach($results as $result) {
 			if (!is_array($result)) {
@@ -279,16 +276,14 @@ class PhocaCartViewItem extends HtmlView
 			}
 		}
 
-		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Item\AfterTabs('com_phocacart.item', $this->item, $this->p));
 		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
 
 		// Some payment plugins want to display specific information in detail view
-		PluginHelper::importPlugin('pcp');
-		$results = Factory::getApplication()->triggerEvent('onPCPonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$results = Dispatcher::dispatch(new Event\Payment\ItemBeforeEndPricePanel('com_phocacart.item', $this->item, $this->p));
 		$this->t['event']->PCPonItemBeforeEndPricePanel = trim(implode("\n", $results));
 
 		// END Plugins --------------------------------------
-
 
 		parent::display($tpl);
 	}
@@ -307,4 +302,3 @@ class PhocaCartViewItem extends HtmlView
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, $category, $item);
 	}
 }
-?>
