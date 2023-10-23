@@ -44,11 +44,9 @@ class PhocaCartCpControllerPhocacartOrders extends PhocaCartCpControllerPhocaCar
 
 		$shippingInfo = $shipping->getShippingMethod($shippingId);
 		if ($shippingId > 0 && isset($shippingInfo->method) && $shippingInfo->method != '') {
-			$eventData = [
-				'pluginname' => htmlspecialchars(strip_tags($shippingInfo->method))
-			];
-
-			$result = Dispatcher::dispatch(new Event\Shipping\ExportShippingBranchInfo('com_phocacart.phocacartorders', $pks, $shippingInfo, $eventData));
+			$result = Dispatcher::dispatch(new Event\Shipping\ExportShippingBranchInfo('com_phocacart.phocacartorders', $pks, $shippingInfo, [
+				'pluginname' => $shippingInfo->method
+			]));
 			echo trim(implode("\n", $result->getArgument('result', [])));
 		}
 
@@ -60,4 +58,3 @@ class PhocaCartCpControllerPhocacartOrders extends PhocaCartCpControllerPhocaCar
 		 */
     }
 }
-?>
