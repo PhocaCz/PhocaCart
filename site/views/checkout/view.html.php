@@ -631,7 +631,7 @@ class PhocaCartViewCheckout extends HtmlView
         // END Plugins --------------------------------------
 
         $media->loadSpec();
-        
+
         parent::display($tpl);
     }
 

@@ -9,7 +9,7 @@ class StartCheckoutView extends AbstractEvent
 {
   use ResultAware, ResultTypeArrayAware;
 
-  public function __construct(string $context, array &$address, array $eventData = []) {
+  public function __construct(string $context, &$address, array $eventData = []) {
     parent::__construct('pct', 'onPCTonStartCheckoutView', [
       'context' => $context,
       'address' => &$address,
