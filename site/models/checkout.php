@@ -180,7 +180,7 @@ class PhocaCartModelCheckout extends FormModel
 
 			if ($typeView == 'account') {
 				// Account
-				Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveAccount('com_phocacart.checkout',$row));
+				Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveAccount('com_phocacart.account',$row));
 			} else {
 				// Checkout
 				Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveCheckout('com_phocacart.checkout',$row));
