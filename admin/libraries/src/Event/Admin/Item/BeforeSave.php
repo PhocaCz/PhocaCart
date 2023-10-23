@@ -10,12 +10,12 @@ class BeforeSave extends AbstractEvent
 {
   use ResultAware, ResultTypeBooleanAware;
 
-  public function __construct(string $context, Table &$product, bool $isNew, array $data) {
+  public function __construct(string $context, Table &$product, bool $isNew, array $eventData = []) {
     parent::__construct('pca', 'onPCAonItemBeforeSave', [
       'context' => $context,
       'product' => &$product,
       'isNew' => $isNew,
-      'data' => $data,
+      'eventData' => $eventData,
     ]);
   }
 }

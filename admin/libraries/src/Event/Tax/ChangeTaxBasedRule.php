@@ -9,11 +9,11 @@ class ChangeTaxBasedRule extends AbstractEvent
 {
   use ResultAware, ResultTypeBooleanAware;
 
-  public function __construct(string $context, array &$taxRule, array $data) {
+  public function __construct(string $context, array &$taxRule, array $eventData = []) {
     parent::__construct('pct', 'onPCTonChangeTaxBasedRule', [
       'context' => $context,
       'taxRule' => &$taxRule,
-      'data' => $data,
+      'eventData' => $eventData,
     ]);
   }
 }

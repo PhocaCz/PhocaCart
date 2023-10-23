@@ -9,12 +9,12 @@ class AfterSave extends AbstractEvent
 {
   use ResultAware, ResultTypeBooleanAware;
 
-  public function __construct(string $context, object &$category, bool $isNew, array $data) {
+  public function __construct(string $context, object &$category, bool $isNew, array $eventData = []) {
     parent::__construct('pca', 'onPCAonCategoryAfterSave', [
       'context' => $context,
       'category' => &$category,
       'isNew' => $isNew,
-      'data' => $data,
+      'eventData' => $eventData,
     ]);
   }
 }

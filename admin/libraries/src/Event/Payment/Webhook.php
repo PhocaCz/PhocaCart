@@ -5,10 +5,10 @@ use Phoca\PhocaCart\Event\AbstractEvent;
 
 class Webhook extends AbstractEvent
 {
-  public function __construct(int $paymentId, array $data) {
+  public function __construct(int $paymentId, array $eventData) {
     parent::__construct('pcp', 'onPCPonPaymentWebhook', [
       'paymentId' => $paymentId,
-      'data' => $data,
+      'eventData' => $eventData,
     ]);
   }
 }

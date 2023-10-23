@@ -6,7 +6,7 @@ use Joomla\Registry\Registry;
 
 class BeforeEmptyCartAfterOrder extends AbstractEvent
 {
-  public function __construct(string &$proceed, array &$pluginData, Registry $componentParams, ?Registry $paymentParams, object $order, array $eventData) {
+  public function __construct(string &$proceed, array &$pluginData, Registry $componentParams, ?Registry $paymentParams, object $order, array $eventData = []) {
     parent::__construct('pcp', 'onPCPbeforeEmptyCartAfterOrder', [
       'proceed' => &$proceed,
       'pluginData' => &$pluginData,

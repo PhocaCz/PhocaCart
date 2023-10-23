@@ -9,12 +9,12 @@ class GetShippingBranchInfoAdminList extends AbstractEvent
 {
   use ResultAware, ResultTypeArrayAware;
 
-  public function __construct(string $context, object $order, object $shippingMethod, array $data) {
+  public function __construct(string $context, object $order, object $shippingMethod, array $eventData = []) {
     parent::__construct('pcs', 'onPCSgetShippingBranchInfoAdminList', [
       'context' => $context,
       'order' => $order,
       'shippingMethod' => $shippingMethod,
-      'data' => $data,
+      'eventData' => $eventData,
     ]);
   }
 }

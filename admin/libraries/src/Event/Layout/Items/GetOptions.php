@@ -5,7 +5,7 @@ use Phoca\PhocaCart\Event\AbstractEvent;
 
 class GetOptions extends AbstractEvent
 {
-  public function __construct(string $context, array &$pluginOptions, array $eventData) {
+  public function __construct(string $context, array &$pluginOptions, array $eventData = []) {
     parent::__construct('pcl', 'onPCLonItemsGetOptions', [
       'context' => $context,
       'pluginOptions' => &$pluginOptions,

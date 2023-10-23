@@ -10,12 +10,12 @@ class ExportShippingBranchInfo extends AbstractEvent implements ResultAwareInter
 {
   use ResultAware, ResultTypeStringAware;
 
-  public function __construct(string $context, array $pks, object $shippingInfo, array $data = []) {
+  public function __construct(string $context, array $pks, object $shippingInfo, array $eventData = []) {
     parent::__construct('pcs', 'onPCSexportShippingBranchInfo', [
       'context' => $context,
       'pks' => $pks,
       'shippingInfo' => $shippingInfo,
-      'data' => $data,
+      'eventData' => $eventData,
     ]);
   }
 }
