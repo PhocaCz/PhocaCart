@@ -85,7 +85,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 
 		// Convert to the \JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = ArrayHelper::toObject($properties, CMSObject::class);
+		$item = ArrayHelper::toObject($properties, Result::class);
 
 
 		if (property_exists($item, 'params'))

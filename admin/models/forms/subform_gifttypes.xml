@@ -9,7 +9,7 @@
 <field name="image" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_LABEL" />
 <field name="image_small" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL" />
 
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
+<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_GIFT_DESCRIPTION_DESC"/>
 
 

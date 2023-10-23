@@ -31,7 +31,7 @@
             <option value="1">COM_PHOCACART_YES</option>
         </field>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="ComponentHelper::filterText"
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
                description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
         <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_DESC" class="form-control"/>
