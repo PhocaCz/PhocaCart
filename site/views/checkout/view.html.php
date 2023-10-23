@@ -610,32 +610,29 @@ class PhocaCartViewCheckout extends HtmlView
 
         $this->t['event'] = new stdClass;
 
-        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterCart('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterCart('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterCart = trim(implode("\n", $results));
 
-        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterLogin('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterLogin('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterLogin = trim(implode("\n", $results));
 
-        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterAddress('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterAddress('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterAddress = trim(implode("\n", $results));
 
-        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterShipping('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterShipping('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterShipping = trim(implode("\n", $results));
 
-        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterPayment('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterPayment('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterPayment = trim(implode("\n", $results));
 
-        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterConfirm('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterConfirm('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
 
         // END Plugins --------------------------------------
 
         $media->loadSpec();
-
-
+        
         parent::display($tpl);
-
-
     }
 
     protected function _prepareDocument() {
