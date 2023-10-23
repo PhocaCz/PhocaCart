@@ -9,14 +9,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\Utilities\ArrayHelper;
-
 defined('_JEXEC') or die();
-use Joomla\Registry\Registry;
+
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 /*
  * Payment Method - is the method stored in Phoca Cart
@@ -259,20 +259,12 @@ class PhocacartPayment
 					}
 				} else {
 					// Payment is active but payment method plugin can deactivate it
-					$pluginPayment 	= PluginHelper::importPlugin('pcp');
-					if ($pluginPayment) {
-
-						PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($v->method)));
-						$eventData 					= array();
-                    	$active 					= true;
-						$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
-                    	Factory::getApplication()->triggerEvent('onPCPbeforeShowPossiblePaymentMethod', array(&$active, $v, $eventData));
-
-                    	if ($active == false) {
-                    		if (isset($payments[$i])) {
-								unset($payments[$i]);
-							}
-						}
+					$active = true;
+					Dispatcher::dispatch(new Event\Payment\BeforeShowPossiblePaymentMethod($active, $v, [
+						'pluginname' => $v->method,
+					]));
+					if (!$active && isset($payments[$i])) {
+						unset($payments[$i]);
 					}
 				}
 
@@ -698,26 +690,20 @@ class PhocacartPayment
 	}
 
 	public static function proceedToPaymentGateway($payment) {
-
 		$proceed = 0;
-		$message = array();
+		$message = [];
 
 		if (isset($payment['method'])) {
-			//$dispatcher = J EventDispatcher::getInstance();
-			PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
-			$eventData 					= array();
-			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($payment['method']));
-
-			Factory::getApplication()->triggerEvent('onPCPbeforeProceedToPayment', array(&$proceed, &$message, $eventData));
+			Dispatcher::dispatch(new Event\Payment\BeforeProceedToPayment($proceed, $message, [
+				'pluginname' => $payment['method'],
+			]));
 		}
 
 		// Response is not a part of event parameter because of backward compatibility
 		$response['proceed'] = $proceed;
 		$response['message'] = $message;
 
-
 		return $response;
-
 	}
 
 	/*

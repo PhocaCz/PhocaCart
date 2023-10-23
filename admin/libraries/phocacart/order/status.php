@@ -16,6 +16,8 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+
 /*
 phocacart import('phocacart.path.route');
 */
@@ -1391,7 +1393,7 @@ class PhocacartOrderStatus
 			//}
 			$object = HTMLHelper::_('content.prepare', $object);
 
-			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
+			Dispatcher::dispatchChangeText($object);
 
 			// Set language back to default
 			$pLang->setLanguageBack();
@@ -1405,7 +1407,7 @@ class PhocacartOrderStatus
 			//}
 			$object = HTMLHelper::_('content.prepare', $object);
 
-			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
+			Dispatcher::dispatchChangeText($object);
 		}
 	}
 
@@ -1420,7 +1422,6 @@ class PhocacartOrderStatus
 		//}
 		$object = HTMLHelper::_('content.prepare', $object);
 
-		Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
+		Dispatcher::dispatchChangeText($object);
 	}
 }
-?>

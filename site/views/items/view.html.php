@@ -15,6 +15,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -235,13 +238,11 @@ class PhocaCartViewItems extends HtmlView
 
 
         // Plugins ------------------------------------------
-        PluginHelper::importPlugin('pcv');
-        //$this->t['dispatcher']	= J EventDispatcher::getInstance();
         $this->t['event']                      = new stdClass;
-        $results                               = Factory::getApplication()->triggerEvent('onPCVonItemsBeforeHeader', array('com_phocacart.items', &$this->items, &$this->p));
+        $results                               = Dispatcher::dispatch(new Event\View\Items\BeforeHeader('com_phocacart.items', $this->items, $this->p));
         $this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
 
-        $results                               = Factory::getApplication()->triggerEvent('onPCVonItemsBeforePaginationTop', array('com_phocacart.items', &$this->items, &$this->p));
+        $results                               = Dispatcher::dispatch(new Event\View\Items\BeforePaginationTop('com_phocacart.items', $this->items, $this->p));
         $this->t['event']->onItemsBeforePaginationTop = trim(implode("\n", $results));
         // Foreach values are rendered in default foreaches
 
@@ -277,5 +278,3 @@ class PhocaCartViewItems extends HtmlView
         PhocacartRenderFront::prepareDocument($this->document, $this->p, $category);
     }
 }
-
-?>

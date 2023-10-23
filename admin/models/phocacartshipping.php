@@ -15,6 +15,8 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartShipping extends AdminModel
@@ -169,7 +171,8 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
+
 
 			if (in_array(false, $result, true))
 			{
@@ -206,7 +209,7 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 		}
 		catch (Exception $e)
 		{

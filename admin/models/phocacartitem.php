@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
@@ -24,8 +25,12 @@ use Joomla\CMS\UCM\UCMType;
 use Joomla\CMS\Table\Observer\Tags;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
-jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
+jimport('joomla.application.component.modeladmin');
+
 
 class PhocaCartCpModelPhocaCartItem extends AdminModel
 {
@@ -305,7 +310,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}*/
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
-		//$dispatcher = J Dispatcher::getInstance();
+
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
@@ -428,38 +433,23 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 		// Trigger the onContentBeforeSave event.
-		$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
+		PluginHelper::importPlugin($this->events_map['save']);
+		$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 		if (in_array(false, $result, true)) {
 			$this->setError($table->getError());
 			return false;
 		}
-		// Trigger the before event.
-		PluginHelper::importPlugin($this->events_map['save']);
-
-		$result = $app->triggerEvent($this->event_before_save, array('com_phocacart.phocacartitem', $table, $isNew, $data));
-
-		if (\in_array(false, $result, true))
-		{
-			$this->setError($table->getError());
-
-			return false;
-		}
-
 
 		// Trigger the before event.
 		PluginHelper::importPlugin('pca');
-		$result = Factory::getApplication()->triggerEvent('onPCAonItemBeforeSave', array('com_phocacart.phocacartitem', &$table, $isNew, $data));
+		$result = Dispatcher::dispatch(new Event\Admin\Item\BeforeSave('com_phocacart.phocacartitem', $table, $isNew, $data));
 		// Store the data.
 		if (in_array(false, $result, true) || !$table->store()) {
 			$this->setError($table->getError());
 			return false;
 		}
 		// Trigger the after save event.
-		Factory::getApplication()->triggerEvent('onPCAonItemAfterSave', array('com_phocacart.phocacartitem', &$table, $isNew, $data));
-
-
-
-
+		Dispatcher::dispatch(new Event\Admin\Item\AfterSave('com_phocacart.phocacartitem', $table, $isNew, $data));
 
 		// Test Thumbnails (Create if not exists)
 		if ($table->image != '') {
@@ -588,7 +578,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$cache->clean();
 
 		// Trigger the onContentAfterSave event. CUSTOM FIELDS
-		$app->triggerEvent($this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
+		Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {

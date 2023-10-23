@@ -12,11 +12,10 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
 
 class PhocacartRenderFront
 {
@@ -778,9 +777,7 @@ class PhocacartRenderFront
 
 
             if ($changeLang == 1) {
-                PluginHelper::importPlugin('system');
-                PluginHelper::importPlugin('plgSystemMultilanguagesck');
-                Factory::getApplication()->triggerEvent('onChangeText', array(&$o));
+                Dispatcher::dispatchChangeText($o);
             }
 
             if ($format == 'pdf' || $format == 'text') {

@@ -20,8 +20,12 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
-jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
+jimport('joomla.application.component.modeladmin');
+
 
 class PhocaCartCpModelPhocacartCategory extends AdminModel
 {
@@ -253,7 +257,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 
 			// Trigger the before save event.
-			$result = Factory::getApplication()->triggerEvent('onPCAonCategoryBeforeSave', array('com_phocacart.category', &$table, $isNew, $data));
+			$result = Dispatcher::dispatch(new Event\Admin\Category\BeforeSave('com_phocacart.category', $table, $isNew, $data));
 
 			if (in_array(false, $result, true)) {
 				$this->setError($table->getError());
@@ -268,8 +272,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->cleanCache();
 
 			// Trigger the after save event.
-			Factory::getApplication()->triggerEvent('onPCAonCategoryAfterSave', array('com_phocacart.category', &$table, $isNew, $data));
-
+			Dispatcher::dispatch(new Event\Admin\Category\AfterSave('com_phocacart.category', $table, $isNew, $data));
 		} catch (\Exception $e) {
 			$this->setError($e->getMessage());
 			return false;

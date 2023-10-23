@@ -112,7 +112,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			$this->context .= '.' . $forcedLanguage;
 		}
 
-
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
@@ -126,13 +125,15 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', null);
 		$this->setState('filter.category_id', $categoryId);
 
-
-
 		$manId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
 		$this->setState('filter.manufacturer_id', $manId);
 
-		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
+		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language');
 		$this->setState('filter.language', $language);
+
+		// API filters
+		$this->setState('filter.sku', $app->getUserState($this->context.'.filter.sku'));
+		$this->setState('filter.gtin', $app->getUserState($this->context.'.filter.gtin'));
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
@@ -265,6 +266,14 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			$query->where('a.language = ' . $db->quote($language));
 		}
 
+		if ($sku = $this->getState('filter.sku')) {
+			$query->where('a.sku = ' . $db->quote($sku));
+		}
+
+		if ($gtin = $this->getState('filter.gtin')) {
+			$query->where('a.ean = ' . $db->quote($gtin));
+		}
+
 		// Search EAN, SKU in attributes (advanced stock management) - Moved to subquery
 		//$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
 
@@ -303,7 +312,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 							$wheres[]		= implode(' OR ', $wheresSub);
 						}
 
-						$query->where('(' . implode(($search_matching_option_admin == 'all' ? ') AND (' : ') OR ('), $wheres) . ')');
+						$query->where('((' . implode(($search_matching_option_admin == 'all' ? ') AND (' : ') OR ('), $wheres) . '))');
 
 						break;
 
@@ -319,7 +328,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 						$wheresSub[]	= 'a.sku LIKE '.$text;
 						$wheresSub[]	= 'a.ean LIKE '.$text;
 						$wheresSub[]	= 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $text . ' OR ps.ean LIKE ' . $text . ') ';
-						$query->where('(' . implode(') OR (', $wheresSub) . ')');
+						$query->where('((' . implode(') OR (', $wheresSub) . '))');
 
 						break;
 				}

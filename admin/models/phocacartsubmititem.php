@@ -283,9 +283,6 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$cache = Factory::getCache($this->option);
 		$cache->clean();
 
-		// Trigger the onContentAfterSave event.
-		//Factory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
-
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
 			$this->setState($this->getName().'.id', $table->$pkName);

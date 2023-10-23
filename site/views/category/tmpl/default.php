@@ -11,10 +11,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
@@ -41,13 +43,11 @@ if (!$this->t['ajax']) {
 
 // ITEMS a) items displayed by layout plugin, b) items displayed common way, c) no items found
 if (!empty($this->items) && $this->t['pluginlayout']) {
-
-	$pluginOptions 				= array();
-	$eventData 					= array();
-	$dLA 						= array();
-	$eventData['pluginname'] 	= $this->t['category_layout_plugin'];
-
-	Factory::getApplication()->triggerEvent('onPCLonCategoryGetOptions', array('com_phocacart.category', &$pluginOptions, $eventData));
+	$pluginOptions = [];
+	$dLA = [];
+	Dispatcher::dispatch(new Event\Layout\Category\GetOptions('com_phocacart.category', $pluginOptions, [
+		'pluginname' => $this->t['category_layout_plugin'],
+	]));
 
 	if (isset($pluginOptions['layouttype']) && $pluginOptions['layouttype'] != '') {
 		$this->t['layouttype'] = PhocacartText::filterValue($pluginOptions['layouttype'], 'alphanumeric5');
@@ -59,7 +59,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
 
-	Factory::getApplication()->triggerEvent('onPCLonCategoryInsideLayout', array('com_phocacart.category', &$this->items, $dLA, $eventData));
+	Dispatcher::dispatch(new Event\Layout\Category\InsideLayout('com_phocacart.category', $this->items, $dLA, [
+		'pluginname' => $this->t['category_layout_plugin'],
+	]));
 
 	echo $this->loadTemplate('pagination');
 
@@ -443,7 +445,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 
 		// Events
-		$results = Factory::getApplication()->triggerEvent('onPCVonCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Category\ItemAfterAddToCart('com_phocacart.category', $v, $this->p));
 		$dL['event']['onCategoryItemsItemAfterAddToCart'] = trim(implode("\n", $results));
 
 		// LABELS

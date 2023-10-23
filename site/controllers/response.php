@@ -7,13 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport('joomla.log.log');
+
 JLog::addLogger( array('text_file' => 'com_phocacart_error_log.php'), JLog::ALL, array('com_phocacart'));
 
 class PhocaCartControllerResponse extends FormController
@@ -34,17 +38,13 @@ class PhocaCartControllerResponse extends FormController
 		// NO message here, we have set the message during order and it stays unchanged as it is in session
 		// the message will be deleted after it will be displayed in view
 
-		$type 		= $app->input->get('type', '', 'string');
-		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
+		$type = $app->input->getCmd('type');
+		$mid = $app->input->getInt('mid'); // message id - possible different message IDs
 
-		$message	= array();
-		//$dispatcher = J EventDispatcher::getInstance();
-		$plugin 	= PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
-		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPafterRecievePayment', array($mid, &$message, $eventData));
-		}
+		$message = [];
+		Dispatcher::dispatch(new Event\Payment\AfterRecievePayment($mid, $message, [
+			'pluginname' => $type,
+		]));
 
 		if (!empty($message)) {
 			$session->set('infomessage', $message, 'phocaCart');
@@ -60,19 +60,15 @@ class PhocaCartControllerResponse extends FormController
 		$session->set('proceedpayment', array(), 'phocaCart');
 		//JSession::checkToken() or jexit( 'Invalid Token' );
 
-		$type 		= $app->input->get('type', '', 'string');
-		$mid 		= $app->input->get('mid', 0, 'int'); // message id - possible different message IDs
-		$message	= array();
-		//$dispatcher = J EventDispatcher::getInstance();
-		$plugin 	= PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
-		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPafterCancelPayment', array($mid, &$message, $eventData));
-		}
+		$type = $app->input->getCmd('type');
+		$mid = $app->input->getInt('mid'); // message id - possible different message IDs
+
+		$message	= [];
+		Dispatcher::dispatch(new Event\Payment\AfterCancelPayment($mid,$message, [
+			'pluginname' => $type,
+		]));
 
 		$return = PhocacartRoute::getInfoRoute();
-
 
 		$session->set('infoaction', 5, 'phocaCart');
 		$session->set('infomessage', $message, 'phocaCart');
@@ -82,51 +78,48 @@ class PhocaCartControllerResponse extends FormController
 
 
 	// Robot gets info
-	public function paymentnotify() {
-
+	public function paymentnotify()
+	{
 		$app 	= Factory::getApplication();
-		$type 	= $app->input->get('type', '', 'string');
-		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
-		$uri	= Uri::getInstance();
+		$type = $app->input->getCmd('type');
+		$pid = $app->input->getInt('pid'); // payment id
 
-		//$dispatcher = J EventDispatcher::getInstance();
-		$plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
+		$plugin = PluginHelper::importPlugin('pcp', $type);
 		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPbeforeCheckPayment', array($pid, $eventData));
+			Dispatcher::dispatch(new Event\Payment\BeforeCheckPayment($pid, [
+				'pluginname' => $type,
+			]));
 		} else {
-
+			$uri	= Uri::getInstance();
 			Log::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
-            header('Allow: POST', true, 405);
-            throw new Exception("Invalid HTTP request method.");
+			header('Allow: POST', true, 405);
+      throw new Exception("Invalid HTTP request method.");
 		}
 
 		exit;
 	}
 
 
-	public function paymentwebhook() {
-
+	public function paymentwebhook()
+	{
 		$app 	= Factory::getApplication();
-		$type 	= $app->input->get('type', '', 'string');
-		$pid 	= $app->input->get('pid', 0, 'int'); // payment id
-		$uri	= Uri::getInstance();
+		$type = $app->input->getCmd('type');
+		$pid 	= $app->input->getInt('pid'); // payment id
 
-		//$dispatcher = J EventDispatcher::getInstance();
-		$plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($type)));
+		$plugin = PluginHelper::importPlugin('pcp', $type);
 		if ($plugin) {
-			$eventData 					= array();
-            $eventData['pluginname'] 	= htmlspecialchars(strip_tags($type));
-			Factory::getApplication()->triggerEvent('onPCPonPaymentWebhook', array($pid, $eventData));
+			Dispatcher::dispatch(new Event\Payment\Webhook($pid, [
+				'pluginname' => $type,
+			]));
 		} else {
-
+			$uri	= Uri::getInstance();
 			Log::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
 			header('Allow: POST', true, 405);
 			throw new Exception("Invalid HTTP request method.");
 		}
+
 		exit;
 	}
 
 }
-?>
+

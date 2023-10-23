@@ -16,10 +16,11 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
@@ -97,11 +98,7 @@ class PhocacartOrder
         // 1. Check the VAT by external service if it is enabled in plugin
         if (!empty($address[0])) {
             // Event user e.g. check valid VAT and store information about it
-            $pluginLayout = PluginHelper::importPlugin('pct');
-            if ($pluginLayout) {
-                $eventData = [];
-                Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveOrder', array('com_phocacart.order', &$address[0], $eventData));
-            }
+            Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveOrder('com_phocacart.order', $address[0]));
         }
         // 2. Use stored information and change the VAT (before calculation)
 
@@ -325,23 +322,14 @@ class PhocacartOrder
 
         }
 
-
-        //$dispatcher = J EventDispatcher::getInstance();
         if (isset($payment['method'])) {
-            $plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
-            if ($plugin) {
-                $eventData               = array();
-                $eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
-                Factory::getApplication()->triggerEvent('onPCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
-                $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
-            } else {
-
-                $d['status_id'] = $statusId;// no plugin or no event found
-            }
+            Dispatcher::dispatch(new Event\Payment\BeforeSaveOrder($statusId, (int)$payment['id'], [
+              'pluginname' => $payment['method']
+            ]));
+            $d['status_id'] = (int)$statusId; // e.g. by POS Cash we get automatically the status as completed
         } else {
             $d['status_id'] = $statusId;// no plugin or no event found
         }
-
 
         $d['type'] = PhocacartType::getTypeByTypeArray($this->type);
 
@@ -1228,12 +1216,10 @@ class PhocacartOrder
 
             // EVENT Shipping
             if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
-
-                PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingC['method'])));
-                $eventData 					= array();
-                $eventData['pluginname'] 	= htmlspecialchars(strip_tags($shippingC['method']));
-                $eventData['id'] 			= (int)$row->id;
-                Factory::getApplication()->triggerEvent('onPCSafterSaveOrder', array('com_phocacart.library.order', $eventData));
+              Dispatcher::dispatch(new Event\Shipping\AfterSaveOrder('com_phocacart.library.order', [
+                  'pluginname' => $shippingC['method'],
+                  'id' => (int)$row->id,
+              ]));
             }
 
 

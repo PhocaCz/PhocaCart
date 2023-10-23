@@ -18,6 +18,8 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartProduct
 {
@@ -67,21 +69,17 @@ class PhocacartProduct
 
 
         // Views Plugin can load additional columns
-		$additionalColumns = array();
-		$pluginLayout 	= PluginHelper::importPlugin('pcv');
-		if ($pluginLayout) {
-			$pluginOptions 				= array();
-			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('onPCVonProductBeforeLoadColumns', array('com_phocacart.product', &$pluginOptions, $eventData));
+		$additionalColumns = [];
+    $pluginOptions = [];
+    Dispatcher::dispatch(new Event\View\Product\BeforeLoadColumns('com_phocacart.product', $pluginOptions));
 
-			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-				if (!empty($pluginOptions['columns'])) {
-					foreach ($pluginOptions['columns'] as $k => $v) {
-						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-					}
+		if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+		  if (!empty($pluginOptions['columns'])) {
+				foreach ($pluginOptions['columns'] as $v) {
+					$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
 				}
 			}
-		}
+    }
 
 		$baseColumns = array('i.id', 'i.title', 'i.title_long', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types');
 
@@ -633,18 +631,14 @@ class PhocacartProduct
         }
 
         // Views Plugin can load additional columns
-		$additionalColumns = array();
-		$pluginLayout 	= PluginHelper::importPlugin('pcv');
-		if ($pluginLayout) {
-			$pluginOptions 				= array();
-			$eventData 					= array();
-			Factory::getApplication()->triggerEvent('onPCVonProductsBeforeLoadColumns', array('com_phocacart.products', &$pluginOptions, $eventData));
+		$additionalColumns = [];
+		$pluginOptions = [];
+    Dispatcher::dispatch(new Event\View\Products\BeforeLoadColumns('com_phocacart.products', $pluginOptions));
 
-			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-				if (!empty($pluginOptions['columns'])) {
-					foreach ($pluginOptions['columns'] as $k => $v) {
-						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-					}
+		if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
+			if (!empty($pluginOptions['columns'])) {
+				foreach ($pluginOptions['columns'] as $v) {
+					$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
 				}
 			}
 		}

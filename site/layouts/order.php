@@ -28,6 +28,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
 
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
@@ -1230,7 +1231,7 @@ if ($pR) {
 
 	$oPr2 = HTMLHelper::_('content.prepare', $oPr2);
 
-	Factory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
+	Dispatcher::dispatchChangeText($oPr2);
 
 	echo $oPr2;
 } else {
@@ -1244,8 +1245,6 @@ if ($pR) {
 	}
 	$o2 = HTMLHelper::_('content.prepare', $o2);
 
-	Factory::getApplication()->triggerEvent('onChangeText', array(&$o2));
+	Dispatcher::dispatchChangeText($o2);
 	echo $o2;
 }
-
-?>

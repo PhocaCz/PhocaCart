@@ -7,10 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.view');
 
 class PhocaCartViewCategories extends HtmlView
@@ -25,7 +28,6 @@ class PhocaCartViewCategories extends HtmlView
 
 		$app									= Factory::getApplication();
 		$model									= $this->getModel();
-		$document								= Factory::getDocument();
 		$this->p 								= $app->getParams();
 		$this->s								= PhocacartRenderStyle::getStyles();
 
@@ -66,13 +68,9 @@ class PhocaCartViewCategories extends HtmlView
 		$this->t['path'] = PhocacartPath::getPath('categoryimage');
 
 		// Plugins ------------------------------------------
-		PluginHelper::importPlugin('pcv');
-		//$this->t['dispatcher'] 	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 
-		$results = Factory::getApplication()->triggerEvent('onPCVonCategoriesBeforeHeader', array('com_phocacart.categories', &$this->t['categories'], &$this->p));
-
-
+		$results = Dispatcher::dispatch(new Event\View\Categories\BeforeHeader('com_phocacart.categories', $this->t['categories'], $this->p));
 		$this->t['event']->onCategoriesBeforeHeader = trim(implode("\n", $results));
 		// END Plugins --------------------------------------
 

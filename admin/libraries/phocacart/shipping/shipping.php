@@ -18,6 +18,8 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartShipping
 {
@@ -288,22 +290,14 @@ class PhocacartShipping
 					}
 				} else {
 					// Shipping is active but shipping method plugin can deactivate it
-					$pluginShipping 	= PluginHelper::importPlugin('pcs');
-					if ($pluginShipping) {
+					$active = true;
+					Dispatcher::dispatch(new Event\Shipping\BeforeShowPossibleShippingMethod($active, $v, [
+						'pluginname' => $v->method,
+					]));
 
-						PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
-						$eventData 					= array();
-                    	$active 					= true;
-						$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
-                    	Factory::getApplication()->triggerEvent('onPCSbeforeShowPossibleShippingMethod', array(&$active, $v, $eventData));
-
-                    	if ($active == false) {
-                    		if (isset($shippings[$i])) {
-								unset($shippings[$i]);
-							}
-						}
+					if (!$active && isset($shippings[$i])) {
+						unset($shippings[$i]);
 					}
-
 				}
 
 				// Try to set default for frontend form
