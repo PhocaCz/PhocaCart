@@ -25,46 +25,27 @@ use Joomla\CMS\MVC\Model\LegacyModelLoaderTrait;
  *
  * @since  4.1.0
  */
-class ProductsController extends BaseApiController
+class OrdersController extends BaseApiController
 {
   /**
    * @inheritdoc
    * @since  4.1.0
    */
-  protected $contentType = 'products';
+  protected $contentType = 'orders';
 
   /**
    * @inheritdoc
    * @since  4.1.0
    */
-  protected $default_view = 'products';
-
-  public function getModel($name = '', $prefix = '', $config = [])
-  {
-    if ($name === 'products')
-      $name = 'items';
-
-    if ($name === 'product')
-      $name = 'item';
-
-    return parent::getModel($name, $prefix, $config);
-  }
+  protected $default_view = 'orders';
 
   public function displayList()
   {
     $app = Factory::getApplication();
 
-    if ($lang = $app->input->getCmd('language')) {
-      $app->setUserState('com_phocacart.phocacartitems.filter.language', $lang);
-    }
-
-    if ($sku = $app->input->getCmd('sku')) {
-      $app->setUserState('com_phocacart.phocacartitems.filter.sku', $sku);
-    }
-
-    if ($gtin = $app->input->getCmd('gtin')) {
-      $app->setUserState('com_phocacart.phocacartitems.filter.gtin', $gtin);
-    }
+    /*if ($sku = $app->input->getCmd('gtin')) {
+      $app->setUserState('com_phocacart.phocacartitems.filter.gtin', $sku);
+    }*/
 
     return parent::displayList();
   }
