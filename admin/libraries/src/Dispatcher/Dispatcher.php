@@ -36,14 +36,16 @@ final class Dispatcher
   {
     // Joomla 4 do not have defined specific event
     if (Version::MAJOR_VERSION >= 5) {
-      return Factory::getApplication()->getDispatcher()->dispatch($eventName, new \Joomla\CMS\Event\Model\BeforeSaveEvent($eventName, [
+      $result = Factory::getApplication()->getDispatcher()->dispatch($eventName, new \Joomla\CMS\Event\Model\BeforeSaveEvent($eventName, [
         'context' => $context,
         'subject' => $subject,
         'isNew' => $isNew,
         'data' => $data,
       ]));
-    } else
+      return !isset($result['result']) || \is_null($result['result']) ? [] : $result['result'];
+    } else {
       return Factory::getApplication()->triggerEvent($eventName, [$context, $subject, $isNew, $data]);
+    }
   }
 
   public static function dispatchAfterSave(string $eventName, string $context, Table $subject, bool $isNew, $data): void
@@ -56,7 +58,8 @@ final class Dispatcher
         'isNew' => $isNew,
         'data' => $data,
       ]));
-    } else
+    } else {
       Factory::getApplication()->triggerEvent($eventName, [$context, $subject, $isNew, $data]);
+    }
   }
 }
