@@ -7,11 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.modellist' );
@@ -85,7 +88,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 
 		// Convert to the \JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = ArrayHelper::toObject($properties, Result::class);
+		$item = ArrayHelper::toObject($properties, CMSObject::class);
 
 
 		if (property_exists($item, 'params'))
