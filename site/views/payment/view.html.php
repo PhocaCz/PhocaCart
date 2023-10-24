@@ -51,18 +51,19 @@ class PhocaCartViewPayment extends HtmlView
 			$o['total'] 	= $order->getItemTotal($id);
 
 
+			$form = '';
 			if (isset($o['common']->payment_id) && (int)$o['common']->payment_id > 0) {
 				$paymentO = $payment->getPaymentMethod((int)$o['common']->payment_id );
 
 				if (isset($paymentO->method)) {
-					Dispatcher::dispatch(new Event\Payment\BeforeSetPaymentForm($proceed, $this->p, $paymentO->params, $o, [
+					Dispatcher::dispatch(new Event\Payment\BeforeSetPaymentForm($form, $this->p, $paymentO->params, $o, [
 						'pluginname' => $paymentO->method,
 					]));
 				}
 			}
 
 			//$session->set('proceedpayment', array(), 'phocaCart');
-			$this->t['o'] = $proceed;
+			$this->t['o'] = $form;
 		} else {
 			// No order set, no payment - this should not happen but if, then just repeat thank you
 			//$this->t['o'] =  '<div>'.Text::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED').'</div>';
