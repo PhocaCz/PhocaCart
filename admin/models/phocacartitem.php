@@ -28,6 +28,7 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\Product\Bundled;
 
 jimport('joomla.application.component.modeladmin');
 
@@ -105,6 +106,29 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 						$i++;
 					}
 					$data['related'] = $value;
+				}
+			}
+
+			if (isset($data['bundles']) && is_array($data['bundles'])) {
+				$relatedOption = array_shift($data['bundles']);
+				$relatedOption = explode(',', $relatedOption);
+
+				if($relatedOption) {
+					$i = 0;
+					$value = '';
+					foreach($relatedOption as $id) {
+						$v = PhocacartProduct::getProductByProductId($id);
+						if ($i > 0) {
+							$value .= '[|]';
+						}
+
+						$title = PhocacartText::filterValue($v->title, 'text');
+						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
+
+						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
+						$i++;
+					}
+					$data['bundles'] = $value;
 				}
 			}
 		} else {
@@ -205,8 +229,25 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 			$item->set('related', $value);
 
+			$value = '';
+			if ((int)$item->id > 0) {
+				$relatedOption	= Bundled::getBundledItemsById((int)$item->id, Bundled::SELECT_COMPLETE);
+				if($relatedOption) {
+					$i = 0;
+					foreach($relatedOption as $v) {
+						if ($i > 0) {
+							$value .= '[|]';
+						}
 
+						$title = PhocacartText::filterValue($v->title, 'text');
+						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
 
+						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
+						$i++;
+					}
+				}
+			}
+			$item->set('bundles', $value);
 
 			// ASSOCIATION
 			// Load associated Phoca Cart items
@@ -472,13 +513,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$allCategories = array_unique(array_merge($previousCategories, $data['catid_multiple']));
 			PhocacartCount::setProductCount($allCategories, 'category', 1);// We need to recount all categories - previous (now deleted), and new
 
-
-
 			if (isset($data['featured'])) {
 				$this->featured((int)$table->id, $data['featured']);
 			}
 
-			$dataRelated = '';
 			if (!isset($data['related'])) {
 				$dataRelated = '';
 			} else {
@@ -487,8 +525,16 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$dataRelated = $data['related'][0];
 				}
 			}
-
 			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
+
+			$dataRelated = '';
+			if (isset($data['bundles'])) {
+				$dataRelated = $data['bundles'];
+				if (isset($data['bundles'][0])) {
+					$dataRelated = $data['bundles'][0];
+				}
+			}
+			Bundled::storeBundledItemsById($dataRelated, (int)$table->id);
 
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
@@ -724,6 +770,12 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			// 4. DELETE RELATED
 			$query = 'DELETE FROM #__phocacart_product_related'
 				. ' WHERE product_a IN ( '.$cids.' ) OR product_b IN ('.$cids.')';
+			$this->_db->setQuery( $query );
+			$this->_db->execute();
+
+			// 4a. DELETE BUNDLED
+			$query = 'DELETE FROM #__phocacart_product_bundles'
+				. ' WHERE main_product_id IN ( '.$cids.' ) OR child_product_id IN ('.$cids.')';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
 
