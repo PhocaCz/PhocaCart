@@ -36,7 +36,7 @@ final class Dispatcher
   {
     // Joomla 4 do not have defined specific event
     if (Version::MAJOR_VERSION >= 5) {
-      return Factory::getApplication()->getDispatcher()->dispatch($eventName, new Joomla\CMS\Event\Model\BeforeSaveEvent($eventName, [
+      return Factory::getApplication()->getDispatcher()->dispatch($eventName, new \Joomla\CMS\Event\Model\BeforeSaveEvent($eventName, [
         'context' => $context,
         'subject' => $subject,
         'isNew' => $isNew,
@@ -50,7 +50,7 @@ final class Dispatcher
   {
     // Joomla 4 do not have defined specific event
     if (Version::MAJOR_VERSION >= 5) {
-      Factory::getApplication()->getDispatcher()->dispatch($eventName, new Joomla\CMS\Event\Model\AfterSaveEvent($eventName, [
+      Factory::getApplication()->getDispatcher()->dispatch($eventName, new \Joomla\CMS\Event\Model\AfterSaveEvent($eventName, [
         'context' => $context,
         'subject' => $subject,
         'isNew' => $isNew,
