@@ -9,7 +9,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 if (class_exists('\\n3tDebug')) {
-    \n3tDebug::callStack('PhocaCart loading ' . pathinfo(__FILE__, PATHINFO_BASENAME));
+    \n3tDebug::callStack();
 }
 
 require_once __DIR__ . '/bootstrap.php';
