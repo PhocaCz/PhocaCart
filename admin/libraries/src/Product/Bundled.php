@@ -95,7 +95,6 @@ class Bundled
             $wheres[] = " a.published = 1";
 
             $catid = \PhocacartCategoryMultiple::getCurrentCategoryId();
-
         }
 
         if ($selectType == self::SELECT_ID) {
@@ -117,7 +116,7 @@ class Bundled
 
         if (!$frontend) {
             $query .= ',';
-            $query .= ' GROUP_CONCAT(c.title SEPARATOR " ") AS categories_title';
+            $query .= ' GROUP_CONCAT(c.title SEPARATOR ", ") AS categories_title';
         }
 
         $query .= ' FROM #__phocacart_products AS a'

@@ -48,7 +48,7 @@ class PhocaCartCpViewPhocaCartItemA extends HtmlView
 
 			$query->select('group_concat(CONCAT_WS(":", c.id, c.title) SEPARATOR \',\') AS categories');
 			$query->select('group_concat(c.id SEPARATOR \',\') AS categories_id');
-			$query->select('group_concat(c.title SEPARATOR \' \') AS categories_title');
+			$query->select('group_concat(c.title SEPARATOR \', \') AS categories_title');
 			$query->join('LEFT', '#__phocacart_product_categories AS pc ON pc.product_id = a.id');
 			$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
 
@@ -59,6 +59,7 @@ class PhocaCartCpViewPhocaCartItemA extends HtmlView
 			$query->where('( a.title LIKE '.$search.')');
 			$query->group($db->escape($groups));
 			$query->order($db->escape('a.ordering'));
+			$query->setLimit(10);
 
 			$db->setQuery($query);
 
@@ -107,7 +108,6 @@ class PhocaCartCpViewPhocaCartItemA extends HtmlView
 		'status'	=> '1',
 		'items'		=> array());
 		echo json_encode($response);
-		return;
 	}
 }
-?>
+
