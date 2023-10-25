@@ -24,6 +24,13 @@ use Phoca\PhocaCart\Event;
 class PhocacartProduct
 {
 
+    public const PRODUCT_TYPE_PHYSICAL_PRODUCT = 0;
+    public const PRODUCT_TYPE_DIGITAL_DOWNLOADABLE_PRODUCT = 1;
+    public const PRODUCT_TYPE_MIXED_PRODUCT_DIGITAL_PHYSICAL = 2;
+    public const PRODUCT_TYPE_PRICE_ON_DEMAND_PRODUCT = 3;
+    public const PRODUCT_TYPE_GIFT_VOUCHER = 4;
+    public const PRODUCT_TYPE_BUNDLE = 5;
+
     private static $productAccess = array();
     private static $productAttributes = array();
 
