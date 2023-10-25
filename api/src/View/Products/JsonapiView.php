@@ -21,7 +21,7 @@ use Joomla\Component\PhocaCart\Api\View\BaseJsonApiView;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * The banners view
+ * The products view
  *
  * @since  4.0.0
  */

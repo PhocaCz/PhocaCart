@@ -8,14 +8,9 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-trigger_error(
-  sprintf(
-    'Bootstrapping PhocaCart using the %1$s file is deprecated.  Use %2$s instead.',
-    __FILE__,
-    __DIR__ . '/bootstrap.php'
-  ),
-  E_USER_DEPRECATED
-);
+if (class_exists('\\n3tDebug')) {
+    \n3tDebug::callStack('PhocaCart loading ' . pathinfo(__FILE__, PATHINFO_BASENAME));
+}
 
 require_once __DIR__ . '/bootstrap.php';
 

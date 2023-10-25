@@ -151,7 +151,7 @@
                 <option value="4">COM_PHOCACART_YES_STANDARD_ICON_ONLY</option>
                 <option value="102">COM_PHOCACART_YES_BUY_NOW_PADDLE</option>
                 <option value="103">COM_PHOCACART_YES_EXTERNAL_LINK</option>
-				<option value="104">COM_PHOCACART_YES_QUICK_VIEW_BUTTON</option>
+				        <option value="104">COM_PHOCACART_YES_QUICK_VIEW_BUTTON</option>
             </field>
 
 

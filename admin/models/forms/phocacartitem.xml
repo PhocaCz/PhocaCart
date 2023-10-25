@@ -83,6 +83,7 @@
         <field name="stockstatus_n_id" type="phocastockstatus" manager="n" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
 
         <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
+        <field name="bundles" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_BUNDLED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_BUNDLED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
 
         <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs" size="40"/>
 
@@ -195,7 +196,8 @@
             <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
             <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
             <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
-			<option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
+			      <option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
+            <option value="5">COM_PHOCACART_BUNDLE</option>
         </field>
 
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">

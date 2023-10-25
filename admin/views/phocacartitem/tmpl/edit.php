@@ -249,7 +249,7 @@ echo $r->endTab();
 
 // RELATED
 echo $r->startTab('related', $tabs['related']);
-$formArray = array('related');
+$formArray = array('related', 'bundles');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 

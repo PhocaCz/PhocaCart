@@ -461,7 +461,7 @@ class PhocacartCategoryMultiple
 
   public static function getCategoryChildrenString($id, $children = '') {
 
-    $categories = PhocaCartCategory::getChildren($id);
+    $categories = PhocacartCategory::getChildren($id);
     if ($categories) {
       foreach ($categories as $v) {
         if ($children != '') {
@@ -477,7 +477,7 @@ class PhocacartCategoryMultiple
   }
 
   public static function getCategoryChildrenArray($id) {
-    $categories = PhocaCartCategory::getChildren($id);
+    $categories = PhocacartCategory::getChildren($id);
     $children = [];
 
     if ($categories) {
