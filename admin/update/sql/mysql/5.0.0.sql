@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_bundles` (
     PRIMARY KEY (`id`),
     KEY `main_product_id` (`main_product_id`),
     KEY `child_product_id` (`child_product_id`)
-) DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 -- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 -- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;

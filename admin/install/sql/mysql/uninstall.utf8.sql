@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS `#__phocacart_payment_method_regions`;
 DROP TABLE IF EXISTS `#__phocacart_payment_method_shipping`;
 DROP TABLE IF EXISTS `#__phocacart_payment_method_zones`;
 DROP TABLE IF EXISTS `#__phocacart_products`;
+DROP TABLE IF EXISTS `#__phocacart_product_bundles`;
 DROP TABLE IF EXISTS `#__phocacart_product_categories`;
 DROP TABLE IF EXISTS `#__phocacart_product_discounts`;
 DROP TABLE IF EXISTS `#__phocacart_product_featured`;
