@@ -141,17 +141,19 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 			///ToolbarHelper::divider();
 			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
 			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
+			$childBar->archive($this->t['tasks'].'.archive')->listCheck(true);
 			$childBar->standardButton('featured')->text('JFEATURE')->task($this->t['tasks'].'.featured')->listCheck(true);
 			$childBar->standardButton('unfeatured')->text('JUNFEATURE')->task($this->t['tasks'].'.unfeatured')->listCheck(true);
-			//ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			//ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-			//ToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
+            n3tDebug::barDump($this->state->get('filter.published'));
+            if ($this->state->get('filter.published') != -2) {
+                $childBar->trash($this->t['tasks'] . '.trash')->text($this->t['l'] . '_TRASH')->icon('icon-trash')->listCheck(true);
+            }
 		}
 
 		if ($canDo->get('core.delete')) {
-			$childBar->delete($this->t['tasks'].'.delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
-			//ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
-
+            if ($this->state->get('filter.published') == -2) {
+                $childBar->delete($this->t['tasks'] . '.delete')->text($this->t['l'] . '_DELETE')->message($this->t['l'] . '_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
+            }
 		}
 
 		// Add a batch button
@@ -191,4 +193,3 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 	}
 
 }
-?>
