@@ -1633,14 +1633,10 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 }
 
 .ph-admin-additional-box {
-
-	float: right;
-	width: 35%;
 	border-radius: 0.25em;
 	margin: 0 0 0.75em 0.75em;
 	padding: 0.5em;
 	background:#ffde7d;
-
 }
 
 .ph-admin-additional-box.ph-box-warning {
