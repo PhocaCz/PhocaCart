@@ -381,36 +381,37 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// This form can get two events:
 	// when option selected - price or image is changed id=phItemPriceBoxForm
 	// when ajax cart is active and submit button is clicked class=phItemCartBoxForm
-
 	echo '<form 
 	id="phCartAddToCartButton'.(int)$x->id.'"
 	class="phItemCartBoxForm phjAddToCart phjItem phjAddToCartVItemP'.(int)$x->id.' form-inline" 
 	action="'.$this->t['linkcheckout'].'" method="post">';
 
-	// ATTRIBUTES, OPTIONS
+	if ($x->type == PhocacartProduct::PRODUCT_TYPE_BUNDLE) {
 
-	$d							= array();
-	$d['s']						= $this->s;
-	$d['attr_options']			= $this->t['attr_options'];
-	$d['hide_attributes']		= $this->t['hide_attributes_item'];
-	$d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];
-	$d['zero_attribute_price']	= $this->t['zero_attribute_price'];
-	$d['stock_calculation']		= (int)$x->stock_calculation;
-	$d['remove_select_option_attribute']	= $this->t['remove_select_option_attribute'];
-	$d['pathitem']				= $this->t['pathitem'];
-	$d['init_type']				= 0;
-	$d['price']					= $price;
-	$d['product_id']			= (int)$x->id;
-	$d['gift_types']			= $x->gift_types;
-	$d['image_size']			= 'large';
-	$d['typeview']				= 'Item';
-	$d['priceitems']			= $priceItems;
-	echo $layoutAB->render($d);
+	} else {
+		// ATTRIBUTES, OPTIONS
+		$d = array();
+		$d['s'] = $this->s;
+		$d['attr_options'] = $this->t['attr_options'];
+		$d['hide_attributes'] = $this->t['hide_attributes_item'];
+		$d['dynamic_change_image'] = $this->t['dynamic_change_image'];
+		$d['zero_attribute_price'] = $this->t['zero_attribute_price'];
+		$d['stock_calculation'] = (int)$x->stock_calculation;
+		$d['remove_select_option_attribute'] = $this->t['remove_select_option_attribute'];
+		$d['pathitem'] = $this->t['pathitem'];
+		$d['init_type'] = 0;
+		$d['price'] = $price;
+		$d['product_id'] = (int)$x->id;
+		$d['gift_types'] = $x->gift_types;
+		$d['image_size'] = 'large';
+		$d['typeview'] = 'Item';
+		$d['priceitems'] = $priceItems;
+		echo $layoutAB->render($d);
+	}
 
 
 
-
-	if ($x->type == 3) {
+	if ($x->type == PhocacartProduct::PRODUCT_TYPE_PRICE_ON_DEMAND_PRODUCT) {
 		// PRODUCTTYPE - price on demand product cannot be added to cart
 		$addToCartHidden = 1;
 
@@ -1073,4 +1074,4 @@ if ($popupAskAQuestion == 2) {
 
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
-?>
+
