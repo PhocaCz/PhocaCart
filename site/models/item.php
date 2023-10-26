@@ -143,7 +143,6 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 
 		return $query;
-
 	}
 	private function getItemQuery( $itemId, $catId ) {
 
@@ -173,7 +172,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		$wheres		= array();
 		$wheres[]	= " pc.category_id= ".(int) $categoryId;
 		$wheres[]	= " pc.category_id= c.id";
-		$wheres[] 	= " i.published = 1";
+		$wheres[] 	= " i.published in (1, 2)";
 		$wheres[] 	= " c.published = 1";
 		$wheres[] 	= " i.id = " . (int) $itemId;
 

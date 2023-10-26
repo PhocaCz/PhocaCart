@@ -127,6 +127,13 @@ class PhocaCartViewItem extends HtmlView
             $app->setHeader('status',  '404 Not found');
 			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_NO_PRODUCT_FOUND')));
 		} else {
+            if ($this->item[0]->published !== 1) {
+                // Archived product
+                $this->t['can_display_price'] = false;
+                $this->t['display_stock_status'] = false;
+                $this->t['item_display_delivery_date'] = false;
+                $this->item[0]->type = PhocacartProduct::PRODUCT_TYPE_PRICE_ON_DEMAND_PRODUCT;
+            }
 
 			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);

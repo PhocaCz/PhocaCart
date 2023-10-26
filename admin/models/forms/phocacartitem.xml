@@ -186,6 +186,8 @@
         <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select-color-state" default="1" validate="options">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
+            <option value="2">JARCHIVED</option>
+            <option value="-2">JTRASHED</option>
         </field>
 
     		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
