@@ -34,6 +34,7 @@ $layoutPOQ	= new FileLayout('product_order_quantity', null, array('component' =>
 $layoutSZ	= new FileLayout('product_size', null, array('component' => 'com_phocacart'));
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAAQ	= new FileLayout('popup_container_iframe', null, array('component' => 'com_phocacart'));
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 echo '<div id="ph-pc-item-box" class="pc-view pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
@@ -377,6 +378,12 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	echo $layoutID->render($dID);
 	// END ID OPTIONS ===========================================
 
+
+	// ARCHIVED PRODUCT ===========================================
+	if ($x->published == 2) {
+		echo $layoutAl->render(array('type' => 'warning', 'text' => Text::_('COM_PHOCACART_ARCHIVED_PRODUCT')));
+	}
+	// END ARCHIVED PRODUCT ===========================================
 
 	// This form can get two events:
 	// when option selected - price or image is changed id=phItemPriceBoxForm
