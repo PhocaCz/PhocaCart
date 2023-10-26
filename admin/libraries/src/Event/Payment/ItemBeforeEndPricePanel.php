@@ -10,7 +10,7 @@ class ItemBeforeEndPricePanel extends AbstractEvent
 {
   use ResultAware, ResultTypeStringAware;
 
-  public function __construct(string $context, array $item, Registry $appParams) {
+  public function __construct(string $context, ?array $item, Registry $appParams) {
     parent::__construct('pcp', 'onPCPonItemBeforeEndPricePanel', [
       'context' => $context,
       'item' => &$item,
