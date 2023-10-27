@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-
     <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
-
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
 
         <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
@@ -34,7 +32,7 @@
             <option value="1">COM_PHOCACART_YES</option>
         </field>
 
-		<field name="featured_background_image" type="media" label="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" class="form-control" size="40"/>
+    		<field name="featured_background_image" type="media" label="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" class="form-control" size="40"/>
         <field name="price" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PRICE_LABEL" description="COM_PHOCACART_FIELD_PRICE_DESC"/>
         <field name="price_original" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_DESC"/>
 
@@ -66,7 +64,7 @@
             <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
             <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
-			<option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
+            <option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
         </field>
 
 
@@ -107,7 +105,7 @@
 
         <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="form-select" size="40"/>
 
-		<field name="download_days" default="-1" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_DESC"/>
+    		<field name="download_days" default="-1" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_DESC"/>
 
         <field name="download_token" type="phocacarttoken" manager="token" class="form-control" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC"/>
 
@@ -185,13 +183,17 @@
     </fieldset>
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
-
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-control" size="1" default="1">
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select-color-state" default="1" validate="options">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
+            <option value="2">JARCHIVED</option>
+            <option value="-2">JTRASHED</option>
         </field>
 
-		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
+        <field name="redirect_product_id" type="Modal_Phocacartitem" label="COM_PHOCACART_FIELD_REDIRECT_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_REDIRECT_PRODUCT_ID_DESC" />
+        <field name="redirect_url" type="text" label="COM_PHOCACART_FIELD_REDIRECT_URL_LABEL" description="COM_PHOCACART_FIELD_REDIRECT_URL_DESC" />
+
+    		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
             <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
             <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
             <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
@@ -245,10 +247,10 @@
                    description="JFIELD_METADATA_ROBOTS_DESC"
             >
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="index, follow" />
-				<option value="noindex, follow" />
-				<option value="index, nofollow" />
-				<option value="noindex, nofollow" />
+		        		<option value="index, follow" />
+				        <option value="noindex, follow" />
+				        <option value="index, nofollow" />
+				        <option value="noindex, nofollow" />
             </field>
             <!--
                 <field name="author" type="text" label="JAUTHOR"
@@ -262,10 +264,7 @@
 
     <fields name="aidata">
         <fieldset name="aidata" label="COM_PHOCACART_FIELDSET_AIDATA_OPTIONS">
-
             <field name="ai_keywords" type="text" class="form-control" size="6" label="COM_PHOCACART_FIELD_AI_KEYWORDS_LABEL" description="COM_PHOCACART_FIELD_AI_KEYWORDS_DESC" />
         </fieldset>
     </fields>
-
-
 </form>

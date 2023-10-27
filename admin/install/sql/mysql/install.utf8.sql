@@ -154,6 +154,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `metadata` text,
   `aidata` text,
   `language` char(7) NOT NULL DEFAULT '',
+  `redirect_product_id` int(11),
+  `redirect_url` varchar(255),
   PRIMARY KEY  (`id`),
   KEY `product_idx` (`published`,`access`),
   KEY `idx_price` (`price`),
@@ -1773,6 +1775,14 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_submit_items` (
   KEY `published` (`published`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#__phocacart_product_bundles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `main_product_id` int(11) NOT NULL DEFAULT 0,
+  `child_product_id` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `main_product_id` (`main_product_id`),
+  KEY `child_product_id` (`child_product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 -- Data
 INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`, `date`) VALUES

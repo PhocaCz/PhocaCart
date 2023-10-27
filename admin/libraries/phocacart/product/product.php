@@ -507,7 +507,7 @@ class PhocacartProduct
             return false;
         }
         $db = Factory::getDBO();
-        $query = ' SELECT a.id, a.title,'
+        $query = ' SELECT a.id, a.title, a.catid, a.language, '
             . ' group_concat(CONCAT_WS(":", c.id, c.title) SEPARATOR \',\') AS categories,'
             . ' group_concat(c.title SEPARATOR \' \') AS categories_title,'
             . ' group_concat(c.id SEPARATOR \',\') AS categories_id'

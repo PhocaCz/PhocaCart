@@ -8,9 +8,12 @@
 
 		<field name="published" type="list" class="form-select" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
 
-		<option value="">JOPTION_SELECT_PUBLISHED</option>
-		<option value="1">COM_PHOCACART_PUBLISHED</option>
-		<option value="0">COM_PHOCACART_UNPUBLISHED</option>
+			<option value="">JOPTION_SELECT_PUBLISHED</option>
+			<option value="1">COM_PHOCACART_PUBLISHED</option>
+			<option value="0">COM_PHOCACART_UNPUBLISHED</option>
+			<option value="2">JARCHIVED</option>
+			<option value="-2">JTRASHED</option>
+			<option value="*">JALL</option>
 		</field>
 
 		<field name="category_id" typemethod="filter" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="JOPTION_FILTER_CATEGORY" description="JOPTION_FILTER_CATEGORY_DESC" onchange="this.form.submit();" />

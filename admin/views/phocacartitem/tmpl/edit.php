@@ -83,7 +83,7 @@ $this->ignore_fieldsets = array('details', 'item_associations', 'jmetadata');
 
 echo $r->startForm($this->t['o'], $this->t['task'], (int)$this->item->id, 'adminForm', 'adminForm', '', $layout, $tmpl);
 // First Column
-echo '<div class="span12 form-horizontal">';
+echo '<div class="form-horizontal">';
 $tabs                   = array();
 $tabs['general']        = Text::_($this->t['l'] . '_GENERAL_OPTIONS');
 $tabs['image']          = Text::_($this->t['l'] . '_IMAGE_OPTIONS');
@@ -120,9 +120,29 @@ $textButton = 'COM_PHOCACART_CUSTOMER_GROUP_PRICES';
 $w          = 500;
 $h          = 400;
 
+echo '<div class="row">';
+echo '<div class="col-lg-9">';
+
+$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'title_long', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
+echo $r->group($this->form, $formArray);
+$formArray = array('description');
+echo $r->group($this->form, $formArray, 1);
+$formArray = array('description_long');
+echo $r->group($this->form, $formArray, 1);
+$formArray = array('features');
+echo $r->group($this->form, $formArray, 1);
+$formArray = array ('special_parameter', 'special_image');
+echo $r->group($this->form, $formArray);
+
+
+// ASSOCIATION
+$this->form->setFieldAttribute('id', 'type', 'hidden');
+$formArray = array('id');
+echo $r->group($this->form, $formArray);
+
+echo '</div>'; // END col-lg-9
+echo '<div class="col-lg-3">';
 echo '<div class="ph-admin-additional-box">';
-
-
 if ($this->item->image != '') {
     $pathImage = PhocacartPath::getPath('productimage');
     $image     = PhocacartImage::getThumbnailName($pathImage, $this->item->image, 'small');
@@ -156,7 +176,7 @@ if ((int)$this->item->id > 0) {
         $w          = 500;
         $h          = 400;
 
-        $linkPreview = PhocacartRoute::getItemRoute((int)$this->item->id, (int)$catidA[0], '', '', array('pl-PL'), 1) /* . '&tmpl=component'*/
+        $linkPreview = PhocacartRoute::getItemRoute((int)$this->item->id, (int)$catidA[0], '', '', array(), 1) /* . '&tmpl=component'*/
         ;
 
         $linkPreview = PhocacartPath::getRightPathLink($linkPreview);
@@ -170,31 +190,12 @@ if ((int)$this->item->id > 0) {
     }
 }
 
-echo '</div>';
+echo '</div>'; // END ph-admin-additional-box
 
-// ORDERING cannot be used
+echo $r->group($this->form, ['published', 'type', 'language', 'tags', 'labels', 'internal_comment']);
 
-// $formArray = array('title', 'alias',
-
-$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'title_long', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
-echo $r->group($this->form, $formArray);
-$formArray = array('description');
-echo $r->group($this->form, $formArray, 1);
-$formArray = array('description_long');
-echo $r->group($this->form, $formArray, 1);
-$formArray = array('features');
-echo $r->group($this->form, $formArray, 1);
-//$formArray = array ('upc', 'ean', 'jan', 'mpn', 'isbn');
-//echo $r->group($this->form, $formArray);
-$formArray = array ('special_parameter', 'special_image');
-echo $r->group($this->form, $formArray);
-
-
-// ASSOCIATION
-$this->form->setFieldAttribute('id', 'type', 'hidden');
-$formArray = array('id');
-echo $r->group($this->form, $formArray);
-
+echo '</div>'; // END col-lg-3
+echo '</div>'; // END row
 echo $r->endTab();
 
 
@@ -322,10 +323,20 @@ echo $r->endTab();
 // PUBLISHING
 echo $r->startTab('publishing', $tabs['publishing']);
 foreach ($this->form->getFieldset('publish') as $field) {
+    if (in_array($field->fieldname, ['published', 'type', 'language', 'tags', 'labels', 'internal_comment'])) {
+        continue;
+    }
+
+    $description = Text::_($field->description);
+    $descriptionOutput = '';
+    if ($description != '') {
+        $descriptionOutput = '<div role="tooltip">'.$description.'</div>';
+    }
+
 
     echo '<div class="control-group ph-par-'.$field->fieldname.'">';
     if (!$field->hidden) {
-        echo '<div class="control-label">' . $field->label . '</div>';
+        echo '<div class="control-label">' . $field->label . $descriptionOutput . '</div>';
     }
     echo '<div class="controls">';
     echo $field->input;

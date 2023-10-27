@@ -143,7 +143,6 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 
 		return $query;
-
 	}
 	private function getItemQuery( $itemId, $catId ) {
 
@@ -173,7 +172,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		$wheres		= array();
 		$wheres[]	= " pc.category_id= ".(int) $categoryId;
 		$wheres[]	= " pc.category_id= c.id";
-		$wheres[] 	= " i.published = 1";
+		$wheres[] 	= " i.published in (1, 2)";
 		$wheres[] 	= " c.published = 1";
 		$wheres[] 	= " i.id = " . (int) $itemId;
 
@@ -214,7 +213,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			}
 		}
 
-		$baseColumns = array('i.id', 'i.title', 'i.title_long', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types');
+		$baseColumns = array('i.id', 'i.title', 'i.title_long', 'i.published', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types', 'i.redirect_product_id', 'i.redirect_url');
 
 		$col = array_merge($baseColumns, $additionalColumns);
 		$col = array_unique($col);
