@@ -195,9 +195,7 @@ if (!empty($this->t['items'])) {
 	foreach($c as $k => $v) {
 		echo $v;
 	}
-
-
-
+	
 	foreach($this->t['spec'] as $k => $v) {
 		if($k != '') {
 			echo '<tr><td><b><u>'.$k.'</u></b></td><td colspan="'.$count.'"></td></tr>';
