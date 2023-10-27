@@ -154,6 +154,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `metadata` text,
   `aidata` text,
   `language` char(7) NOT NULL DEFAULT '',
+  `redirect_product_id` int(11),
+  `redirect_url` varchar(255),
   PRIMARY KEY  (`id`),
   KEY `product_idx` (`published`,`access`),
   KEY `idx_price` (`price`),
