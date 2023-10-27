@@ -527,8 +527,13 @@ class PhocaCartModelCheckout extends FormModel
 	protected function loadFormDataGuest() {
 		$formData = (array) Factory::getApplication()->getUserState('com_phocacart.checkout.data', array());
 
-		if (empty($data)) {
+		if (empty($formData)) {
 			$formData = $this->getItemGuest();
+		}
+
+		if ($formData === false) {
+			// $this->preprocessForm needs array or object not bool
+			$formData = array();
 		}
 
 		return $formData;
