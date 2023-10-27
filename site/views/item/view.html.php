@@ -127,6 +127,14 @@ class PhocaCartViewItem extends HtmlView
             $app->setHeader('status',  '404 Not found');
 			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_NO_PRODUCT_FOUND')));
 		} else {
+            if (false && $this->item[0]->redirect_product_id) {
+                $redirectProduct = PhocacartProduct::getProductByProductId($this->item[0]->redirect_product_id);
+                $linkPreview = PhocacartRoute::getItemRoute($redirectProduct->id, $redirectProduct->catid, '', '', [$redirectProduct->language]);
+                $app->redirect(Route::_($linkPreview));
+            } elseif ($this->item[0]->redirect_url) {
+                $app->redirect(Route::_($this->item[0]->redirect_url));
+            }
+
             if ($this->item[0]->published !== 1) {
                 // Archived product
                 $this->t['can_display_price'] = false;

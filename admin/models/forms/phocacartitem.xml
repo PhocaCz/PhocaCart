@@ -190,6 +190,9 @@
             <option value="-2">JTRASHED</option>
         </field>
 
+        <field name="redirect_product_id" type="Modal_Phocacartitem" label="COM_PHOCACART_FIELD_REDIRECT_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_REDIRECT_PRODUCT_ID_DESC" />
+        <field name="redirect_url" type="text" label="COM_PHOCACART_FIELD_REDIRECT_URL_LABEL" description="COM_PHOCACART_FIELD_REDIRECT_URL_DESC" />
+
     		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
             <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
             <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>

@@ -176,7 +176,7 @@ if ((int)$this->item->id > 0) {
         $w          = 500;
         $h          = 400;
 
-        $linkPreview = PhocacartRoute::getItemRoute((int)$this->item->id, (int)$catidA[0], '', '', array('pl-PL'), 1) /* . '&tmpl=component'*/
+        $linkPreview = PhocacartRoute::getItemRoute((int)$this->item->id, (int)$catidA[0], '', '', array(), 1) /* . '&tmpl=component'*/
         ;
 
         $linkPreview = PhocacartPath::getRightPathLink($linkPreview);
@@ -326,9 +326,17 @@ foreach ($this->form->getFieldset('publish') as $field) {
     if (in_array($field->fieldname, ['published', 'type', 'language', 'tags', 'labels', 'internal_comment'])) {
         continue;
     }
+
+    $description = Text::_($field->description);
+    $descriptionOutput = '';
+    if ($description != '') {
+        $descriptionOutput = '<div role="tooltip">'.$description.'</div>';
+    }
+
+
     echo '<div class="control-group ph-par-'.$field->fieldname.'">';
     if (!$field->hidden) {
-        echo '<div class="control-label">' . $field->label . '</div>';
+        echo '<div class="control-label">' . $field->label . $descriptionOutput . '</div>';
     }
     echo '<div class="controls">';
     echo $field->input;

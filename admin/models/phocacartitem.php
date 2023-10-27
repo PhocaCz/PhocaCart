@@ -318,6 +318,14 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
+		if (empty($table->redirect_product_id)) {
+			$table->redirect_product_id = null;
+		}
+
+		if (empty($table->redirect_url)) {
+			$table->redirect_url = null;
+		}
+
 		/*
 		if (empty($table->id)) {
 			// Set the values
@@ -342,7 +350,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 
 	function save($data) {
-
 		//$app		= Factory::getApplication();
 
 
