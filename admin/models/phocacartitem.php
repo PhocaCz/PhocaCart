@@ -640,6 +640,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
+			// need to be here to initialize populatestate
+			$this->getState();
 			$this->setState($this->getName().'.id', $table->$pkName);
 		}
 		$this->setState($this->getName().'.new', $isNew);
