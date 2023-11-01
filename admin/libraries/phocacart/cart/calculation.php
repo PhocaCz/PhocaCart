@@ -157,6 +157,8 @@ class PhocacartCartCalculation
             $fullItems[$k]['points_received']        = 0;
             $fullItems[$k]['type']                    = 0;
             $fullItems[$k]['owner_id']                = null;
+            $fullItems[$k]['owner_name']              = null;
+            $fullItems[$k]['owner_ordering']          = null;
 
 
             // GROUP QUANTITY
@@ -197,6 +199,12 @@ class PhocacartCartCalculation
                 $fullItems[$k]['image'] = $itemD->image;
                 $fullItems[$k]['type']  = $itemD->type;
                 $fullItems[$k]['owner_id'] = $itemD->owner_id;
+                if ($itemD->owner_id) {
+                    if ($vendor = PhocacartVendor::getVendor($itemD->owner_id)) {
+                        $fullItems[$k]['owner_name'] = $vendor->title;
+                        $fullItems[$k]['owner_ordering'] = $vendor->ordering;
+                    }
+                }
 
 
                 $fullItems[$k]['default_price'] = $itemD->price;
@@ -581,9 +589,7 @@ class PhocacartCartCalculation
             if ($this->correctsubtotal) {
                 $this->correctSubTotal($fullItems[$k], $total);
             }
-
         }
-
     }
 
 

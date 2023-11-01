@@ -69,12 +69,21 @@ class PhocacartVendor
 		return false;
 	}
 
-    public static function getName(int $vendorId): ?string {
+    /**
+     * Returns vendor by ID
+     *
+     * @param int $vendorId
+     * @return object|mixed|null
+     *
+     * @since 5.0.0
+     */
+    public static function getVendor(int $vendorId): ?object {
         self::loadCache();
         if (isset(self::$cache[$vendorId])) {
-            return self::$cache[$vendorId]->title;
+            return self::$cache[$vendorId];
         }
 
         return null;
     }
+
 }

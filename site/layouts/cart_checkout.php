@@ -32,7 +32,7 @@ $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_ca
 $p['display_reward_points_receive_info']= $d['params']->get( 'display_reward_points_receive_info', 0 );
 $p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
 $p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
-
+$p['checkout_separate_by_owner']			    = $d['params']->get( 'checkout_separate_by_owner', 0 );
 
 //$p['min_quantity_calculation']	= $d['params']->get( 'min_quantity_calculation', 0 ); set in product xml - product options, not in global
 
@@ -137,7 +137,14 @@ if (!empty($d['fullitems'][1])) {
 	echo '<div class="'.$cA.'"><div class="ph-hr"></div></div>';
 	echo '</div>'. "\n"; // end row
 
+	$lastOwner = null;
 	foreach($d['fullitems'][1] as $k => $v) {
+		if ($p['checkout_separate_by_owner'] && ($lastOwner !== $v['owner_id'])) {
+			echo '<div class="'.$r.' ph-cart-cart-row-vendor">';
+			echo '<div class="'.$cA.'"><h5>' . ($v['owner_name'] ? Text::sprintf('COM_PHOCACART_CART_VENDOR', $v['owner_name']) : Text::_('COM_PHOCACART_CART_UNKNOWN_VENDOR')) . '</h5></div>';
+			echo '</div>';
+		}
+
 
 		$link 				= PhocacartRoute::getItemRoute((int)$v['id'], (int)$v['catid'], $v['alias']);
 
