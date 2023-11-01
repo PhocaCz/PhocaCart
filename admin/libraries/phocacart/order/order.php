@@ -1430,6 +1430,8 @@ class PhocacartOrder
         $itemP = PhocacartProduct::getProduct((int)$d['id'], $d['catid']);
         $d['attributes'] = !empty($d['attributes']) ? $d['attributes'] : array();
         if (!empty($itemP)) {
+            if ($itemP->owner_id)
+                $d['owner_id'] = $itemP->owner_id;
             $price  = new PhocacartPrice();
             $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price, $itemP->taxhide);
 
