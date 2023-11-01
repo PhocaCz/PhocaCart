@@ -96,7 +96,6 @@ if (!empty($d['fullitems'])) {
 	echo '<div class="'.$cA.'"><div class="ph-hr"></div></div>';
 	echo '</div>';// end row
 
-	n3tDebug::barDump($d['fullitems']);
 	foreach($d['fullitems'][1] as $k => $v) {
 
 		$link = PhocacartRoute::getItemRoute((int)$v['id'], (int)$v['catid'], $v['alias']);

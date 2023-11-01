@@ -16,34 +16,65 @@ class PhocacartVendor
     public const POS_VENDOR = 0;
     public const PRODUCT_VENDOR = 1;
 
+    private static $cache = null;
+
+    /**
+     * Loads internal vendors cache
+     *
+     * @return void
+     *
+     * @since 5.0.0
+     */
+    private static function loadCache(): void
+    {
+        if (self::$cache === null) {
+            $db = Factory::getDBO();
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from('#__phocacart_vendors');
+            $db->setQuery($query);
+            self::$cache = $db->loadObjectList('id');
+        }
+    }
+
     /**
      * Checks if provided vendor is valid POS vendor
      *
-     * @param $vendor
+     * @param $user
      * @return bool
+     *
+     * @since 5.0.0
      */
-    public static function isVendor(&$vendor) {
-		if (!empty($vendor) && isset($vendor->id) && (int)$vendor->id > 0) {
+    public static function isVendor(&$user): bool {
+        if (!empty($user) && isset($user->id) && (int)$user->id > 0) {
+            self::loadCache();
+            n3tDebug::barDump(self::$cache, 'Sem tu');
+            $userId = (int)$user->id;
+            $vendors = array_filter(self::$cache, function($vendor) use ($userId) {
+                return !!$vendor->published
+                    && $vendor->type === self::POS_VENDOR
+                    && $vendor->user_id === $userId;
+            });
 
-			$db 	= Factory::getDBO();
-			$query = ' SELECT a.id, a.title, a.image FROM #__phocacart_vendors AS a'
-					.' WHERE a.user_id = '.(int)$vendor->id
-					.' AND a.published = 1'
-                    .' AND a.type = ' . self::POS_VENDOR
-					.' ORDER BY a.ordering';
-			$db->setQuery($query);
-			$vendorO = $db->loadObject();
+            if ($vendors) {
+                $vendorO = array_shift($vendors);
+                if ($vendorO->image) {
+                    $user->image = $vendorO->image;// Add image info to vendor object
+                }
 
-			if (isset($vendorO->id) && (int)$vendorO->id > 0) {
-				if (isset($vendorO->image) && $vendorO->image != '') {
-					$vendor->image = $vendorO->image;// Add image info to vendor object
-				}
-				return true;// current user is vendor
-			}
-
-			return false;
+                return true;// current user is vendor
+            }
 		}
 
 		return false;
 	}
+
+    public static function getName(int $vendorId): ?string {
+        self::loadCache();
+        if (isset(self::$cache[$vendorId])) {
+            return self::$cache[$vendorId]->title;
+        }
+
+        return null;
+    }
 }
