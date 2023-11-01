@@ -29,12 +29,6 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 	public $activeFilters;
 
 	function display($tpl = null) {
-
-
-		//if ($this->getLayout() !== 'modal') {
-		//	ContactHelper::addSubmenu('phocacartitems');
-		//}
-
 		$this->t			= PhocacartUtils::setVars('item');
 		$this->r 			= new PhocacartRenderAdminviews();
 		$this->items			= $this->get('Items');
@@ -138,7 +132,6 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 
 
 		if ($canDo->get('core.edit.state')) {
-			///ToolbarHelper::divider();
 			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
 			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
 			$childBar->archive($this->t['tasks'].'.archive')->listCheck(true);
@@ -159,29 +152,13 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 		if ($user->authorise('core.edit'))
 		{
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-
-			/*$title = Text::_('JTOOLBAR_BATCH');
-			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModal\" class=\"btn btn-small\">
-						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
-						$title</button></joomla-toolbar-button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');*/
-
 			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal')->listCheck(true);
 
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
-			/*$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
-			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModalCA\" class=\"btn btn-small\">
-						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
-						$title</button></joomla-toolbar-button>";
-			$bar->appendButton('Custom', $dhtml, 'copy_attributes');*/
-
 			$childBar->popupButton('copy_attributes')->text('COM_PHOCACART_COPY_ATTRIBUTES')->selector('collapseModalCA')->icon('icon-list')->listCheck(true);
 		}
 
 		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){Joomla.submitbutton(\'phocacartitem.recreate\');}}';
-		//$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="'.$onClick.'" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button></joomla-toolbar-button>';
-		//$bar->appendButton('Custom', $dhtml);
-
 
 		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image');
 

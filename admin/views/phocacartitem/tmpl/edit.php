@@ -192,7 +192,7 @@ if ((int)$this->item->id > 0) {
 
 echo '</div>'; // END ph-admin-additional-box
 
-echo $r->group($this->form, ['published', 'type', 'language', 'tags', 'labels', 'internal_comment']);
+echo $r->group($this->form, ['published', 'type', 'language', 'tags', 'labels', 'owner_id', 'internal_comment']);
 
 echo '</div>'; // END col-lg-3
 echo '</div>'; // END row
@@ -323,7 +323,7 @@ echo $r->endTab();
 // PUBLISHING
 echo $r->startTab('publishing', $tabs['publishing']);
 foreach ($this->form->getFieldset('publish') as $field) {
-    if (in_array($field->fieldname, ['published', 'type', 'language', 'tags', 'labels', 'internal_comment'])) {
+    if (in_array($field->fieldname, ['published', 'type', 'language', 'tags', 'labels', 'owner_id', 'internal_comment'])) {
         continue;
     }
 

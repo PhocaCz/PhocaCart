@@ -236,6 +236,9 @@
 
        <field name="internal_comment" type="textarea"  class="form-control" label="COM_PHOCACART_FIELD_INTERNAL_COMMENT_LABEL" description="COM_PHOCACART_FIELD_INTERNAL_COMMENT_DESC"/>
 
+        <field name="owner_id" type="PhocacartProductVendor" label="COM_PHOCACART_FIELD_OWNER_ID_LABEL" description="COM_PHOCACART_FIELD_OWNER_ID_DESC">
+            <option value="0">JSELECT</option>
+        </field>
     </fieldset>
 
     <fields name="metadata">

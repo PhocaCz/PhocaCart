@@ -86,14 +86,15 @@ if (is_array($this->items)) {
 		}
 		echo $r->td($image, "small");
 
-		if ($item->title) {
-			$uO = $this->escape($item->title) . '<br>';
-		} else {
-			$uO = '';
-		}
+        if ($canCreate || $canEdit) {
+            $uO = '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->title).'</a>';
+        } else {
+            $uO = $this->escape($item->title);
+        }
+
 		if ($item->user_id) {
-			$uO .= $this->escape($item->user_name);
-			$uO .= ' <small>('.$this->escape($item->user_username).')</small>';
+            $uO .= '<br>' . $this->escape($item->user_name);
+            $uO .= ' <small>('.$this->escape($item->user_username).')</small>';
 		}
 
 		$checkO = '';
@@ -101,12 +102,7 @@ if (is_array($this->items)) {
 			$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
 		}
 
-		if ($canCreate || $canEdit) {
-			$checkO .= '<a href="'. Route::_($linkEdit).'">'. $uO.'</a>';
-		} else {
-			$checkO .= $uO;
-		}
-		echo $r->td($checkO, "small", 'th');
+		echo $r->td($checkO . $uO);
 
 		echo $r->td(Text::_($item->type ? 'COM_PHOCACART_VENDOR_TYPE_OWNER' : 'COM_PHOCACART_VENDOR_TYPE_VENDOR'), "small");
 
