@@ -272,8 +272,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
 
 		$table->title					= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias					= ApplicationHelper::stringURLSafe($table->alias);
@@ -294,13 +292,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$table->points_needed			= PhocacartUtils::getIntFromString($table->points_needed);
 		$table->unit_amount				= PhocacartUtils::getNullFromEmpty($table->unit_amount);
 
-
-
-
-
 		if ($table->delivery_date == '0' || $table->delivery_date == '') {
 			$table->delivery_date = '0000-00-00 00:00:00';
 		}
+
 		if ($table->date_update == '0' || $table->date_update == '') {
 			$table->date_update = '0000-00-00 00:00:00';
 		}
@@ -312,7 +307,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		if (!isset($table->modified) || $table->modified == '0' || $table->modified == '') {
 			$table->modified = '0000-00-00 00:00:00';
 		}
-
 
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
@@ -348,6 +342,17 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		*/
 	}
 
+	public function validate($form, $data, $group = null)
+	{
+		// only date fields are defined as datetime in DB - causing issues with format in API, need to convert them to date only
+		if (isset($data['date']) && is_string($data['date']) && $data['date']) {
+			$data['date'] = (new Joomla\CMS\Date\Date($data['date']))->format('Y-m-d');
+		}
+		if (isset($data['date_update']) && is_string($data['date_update']) && $data['date_update']) {
+			$data['date_update'] = (new Joomla\CMS\Date\Date($data['date_update']))->format('Y-m-d');
+		}
+		return parent::validate($form, $data, $group);
+	}
 
 	function save($data) {
 		//$app		= Factory::getApplication();
@@ -635,6 +640,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
+			// need to be here to initialize populatestate
+			$this->getState();
 			$this->setState($this->getName().'.id', $table->$pkName);
 		}
 		$this->setState($this->getName().'.new', $isNew);
