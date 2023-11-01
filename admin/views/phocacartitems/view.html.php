@@ -144,7 +144,6 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 			$childBar->archive($this->t['tasks'].'.archive')->listCheck(true);
 			$childBar->standardButton('featured')->text('JFEATURE')->task($this->t['tasks'].'.featured')->listCheck(true);
 			$childBar->standardButton('unfeatured')->text('JUNFEATURE')->task($this->t['tasks'].'.unfeatured')->listCheck(true);
-            n3tDebug::barDump($this->state->get('filter.published'));
             if ($this->state->get('filter.published') != -2) {
                 $childBar->trash($this->t['tasks'] . '.trash')->text($this->t['l'] . '_TRASH')->icon('icon-trash')->listCheck(true);
             }

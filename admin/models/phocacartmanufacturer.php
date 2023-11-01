@@ -64,7 +64,6 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 
         if ($item->id) {
           $associations = Associations::getAssociations('com_phocacart', '#__phocacart_manufacturers', $this->associationsContext, $item->id, 'id', 'alias', false);
-          n3tDebug::barDump($associations);
 
           foreach ($associations as $tag => $association){
             $item->associations[$tag] = $association->id;
