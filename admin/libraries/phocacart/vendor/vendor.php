@@ -13,19 +13,27 @@ use Joomla\CMS\Factory;
 
 class PhocacartVendor
 {
-	public static function isVendor(&$vendor) {
-		
-		
+    public const POS_VENDOR = 0;
+    public const PRODUCT_VENDOR = 1;
+
+    /**
+     * Checks if provided vendor is valid POS vendor
+     *
+     * @param $vendor
+     * @return bool
+     */
+    public static function isVendor(&$vendor) {
 		if (!empty($vendor) && isset($vendor->id) && (int)$vendor->id > 0) {
-			
+
 			$db 	= Factory::getDBO();
 			$query = ' SELECT a.id, a.title, a.image FROM #__phocacart_vendors AS a'
 					.' WHERE a.user_id = '.(int)$vendor->id
 					.' AND a.published = 1'
+                    .' AND a.type = ' . self::POS_VENDOR
 					.' ORDER BY a.ordering';
 			$db->setQuery($query);
 			$vendorO = $db->loadObject();
-		
+
 			if (isset($vendorO->id) && (int)$vendorO->id > 0) {
 				if (isset($vendorO->image) && $vendorO->image != '') {
 					$vendor->image = $vendorO->image;// Add image info to vendor object
@@ -35,8 +43,7 @@ class PhocacartVendor
 
 			return false;
 		}
-		
+
 		return false;
-		
 	}
 }
