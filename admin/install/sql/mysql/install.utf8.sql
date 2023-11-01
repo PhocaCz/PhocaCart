@@ -1660,6 +1660,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_vendors` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
+  `type` int(11) NOT NULL DEFAULT 0,
   `image` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `published` tinyint(1) NOT NULL DEFAULT '0',

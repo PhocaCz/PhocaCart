@@ -66,7 +66,6 @@ class PhocaCartCpViewPhocacartVendors extends HtmlView
             ToolbarHelper::editList($this->t['task'] . '.edit', 'JTOOLBAR_EDIT');
         }
         if ($canDo->get('core.edit.state')) {
-
             ToolbarHelper::divider();
             ToolbarHelper::custom($this->t['tasks'] . '.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
             ToolbarHelper::custom($this->t['tasks'] . '.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
