@@ -156,6 +156,7 @@ class PhocacartCartCalculation
             $fullItems[$k]['points_needed']          = 0;
             $fullItems[$k]['points_received']        = 0;
             $fullItems[$k]['type']                    = 0;
+            $fullItems[$k]['owner_id']                = null;
 
 
             // GROUP QUANTITY
@@ -195,6 +196,7 @@ class PhocacartCartCalculation
                 $fullItems[$k]['sku']   = $itemD->sku;
                 $fullItems[$k]['image'] = $itemD->image;
                 $fullItems[$k]['type']  = $itemD->type;
+                $fullItems[$k]['owner_id'] = $itemD->owner_id;
 
 
                 $fullItems[$k]['default_price'] = $itemD->price;

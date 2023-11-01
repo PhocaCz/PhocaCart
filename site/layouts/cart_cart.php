@@ -1,4 +1,4 @@
-<?php
+4<?php
 /* @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
@@ -96,6 +96,7 @@ if (!empty($d['fullitems'])) {
 	echo '<div class="'.$cA.'"><div class="ph-hr"></div></div>';
 	echo '</div>';// end row
 
+	n3tDebug::barDump($d['fullitems']);
 	foreach($d['fullitems'][1] as $k => $v) {
 
 		$link = PhocacartRoute::getItemRoute((int)$v['id'], (int)$v['catid'], $v['alias']);
