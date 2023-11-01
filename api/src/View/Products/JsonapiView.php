@@ -214,7 +214,8 @@ class JsonApiView extends BaseJsonApiView
     protected $fieldsToResult = [
         'id',
         'success',
-        'true',
+        'error',
+        'count',
     ];
 
     public function __construct($config = [])
