@@ -11,9 +11,11 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\TextField;
+
 JFormHelper::loadFieldClass('text');
 
-class JFormFieldPhocaText extends FormFieldText
+class JFormFieldPhocaText extends TextField
 {
 	protected $type 		= 'PhocaText';
 
