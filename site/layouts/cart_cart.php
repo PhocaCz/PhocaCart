@@ -1,4 +1,4 @@
-<?php
+4<?php
 /* @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
@@ -97,7 +97,6 @@ if (!empty($d['fullitems'])) {
 	echo '</div>';// end row
 
 	foreach($d['fullitems'][1] as $k => $v) {
-
 		$link = PhocacartRoute::getItemRoute((int)$v['id'], (int)$v['catid'], $v['alias']);
 		if ($v['netto']) {
 			$priceItem = (int)$v['quantity'] * $v['netto'];

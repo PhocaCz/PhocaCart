@@ -55,7 +55,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		}
 
 		// Add ordering and fields needed for filtering (search tools)
-		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'published', 'language'), $this->columns);
+		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'owner_id', 'published', 'language'), $this->columns);
 
 
 		//$config['filter_fields'][] = 'pc.ordering';
@@ -128,6 +128,9 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$manId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
 		$this->setState('filter.manufacturer_id', $manId);
 
+		$ownerId = $app->getUserStateFromRequest($this->context.'.filter.owner_id', 'filter_owner_id');
+		$this->setState('filter.owner_id', $ownerId);
+
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language');
 		$this->setState('filter.language', $language);
 
@@ -156,7 +159,8 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.category_id');
 		$id	.= ':'.$this->getState('filter.manufacturer_id');
-    $id .= ':'.$this->getState('filter.language');
+		$id	.= ':'.$this->getState('filter.owner_id');
+    	$id .= ':'.$this->getState('filter.language');
 		$id	.= ':'.$this->getState('filter.item_id');
 
 		return parent::getStoreId($id);
@@ -259,6 +263,11 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		if (is_numeric($manufacturerId)) {
 			$query->join('LEFT', '#__phocacart_manufacturers AS pm ON pm.id = a.manufacturer_id');
 			$query->where('a.manufacturer_id = ' . (int) $manufacturerId);
+		}
+
+		$ownerId = $this->getState('filter.owner_id');
+		if (is_numeric($ownerId)) {
+			$query->where('a.owner_id = ' . (int) $ownerId);
 		}
 
 		// Filter on the language.

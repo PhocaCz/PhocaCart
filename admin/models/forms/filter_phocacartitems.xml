@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
-	<fields name="filter">
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fields name="filter">
 
 
-	<field name="search" type="text" inputmode="search" label="COM_PHOCACART_SEARCH" description="COM_PHOCACART_SEARCH" hint="JSEARCH_FILTER" />
+			<field name="search" type="text" inputmode="search" label="COM_PHOCACART_SEARCH" description="COM_PHOCACART_SEARCH" hint="JSEARCH_FILTER" />
 
-		<field name="published" type="list" class="form-select" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
+			<field name="published" type="list" class="form-select" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
 
-			<option value="">JOPTION_SELECT_PUBLISHED</option>
-			<option value="1">COM_PHOCACART_PUBLISHED</option>
-			<option value="0">COM_PHOCACART_UNPUBLISHED</option>
-			<option value="2">JARCHIVED</option>
-			<option value="-2">JTRASHED</option>
-			<option value="*">JALL</option>
-		</field>
+				<option value="">JOPTION_SELECT_PUBLISHED</option>
+				<option value="1">COM_PHOCACART_PUBLISHED</option>
+				<option value="0">COM_PHOCACART_UNPUBLISHED</option>
+				<option value="2">JARCHIVED</option>
+				<option value="-2">JTRASHED</option>
+				<option value="*">JALL</option>
+			</field>
 
-		<field name="category_id" typemethod="filter" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="JOPTION_FILTER_CATEGORY" description="JOPTION_FILTER_CATEGORY_DESC" onchange="this.form.submit();" />
+			<field name="category_id" typemethod="filter" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="JOPTION_FILTER_CATEGORY" description="JOPTION_FILTER_CATEGORY_DESC" onchange="this.form.submit();" />
 
-		<field name="manufacturer_id" type="PhocaManufacturer" label="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" description="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" onchange="this.form.submit();" />
+			<field name="manufacturer_id" type="PhocaManufacturer" label="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" description="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" onchange="this.form.submit();" />
 
-		<field name="language" type="contentlanguage" label="JOPTION_FILTER_LANGUAGE" description="JOPTION_FILTER_LANGUAGE_DESC" onchange="this.form.submit();">
-			<option value="">JOPTION_SELECT_LANGUAGE</option>
-			<option value="*">JALL</option>
-		</field>
+			<field name="owner_id" type="PhocacartProductVendor" label="COM_PHOCACART_FIELD_OWNER_ID_LABEL" onchange="this.form.submit();">
+				<option value="">COM_PHOCACART_FILTER_PRODUCT_VENDOR_SELECT</option>
+			</field>
 
-		<input type="hidden" name="form_submited" value="1"/>
-	</fields>
+			<field name="language" type="contentlanguage" label="JOPTION_FILTER_LANGUAGE" description="JOPTION_FILTER_LANGUAGE_DESC" onchange="this.form.submit();">
+				<option value="">JOPTION_SELECT_LANGUAGE</option>
+				<option value="*">JALL</option>
+			</field>
 
-	<fields name="list">
-		<field name="fullordering" type="list" class="form-select" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.title ASC" validate="options" >
-			<option value="">JGLOBAL_SORT_BY</option>
-			<option value="pc.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
-			<option value="pc.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
-			<!-- GENERATED DYNAMICALLY BY OPTIONS
-			<option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
-			<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
-			<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>
-			<option value="a.published DESC" >COM_PHOCACART_PUBLISHED_DESC</option>
-			<option value="category_id ASC">JCATEGORY_ASC</option>
-			<option value="category_id DESC">JCATEGORY_DESC</option>
-			<option value="a.sku ASC">COM_PHOCACART_SKU_ASC</option>
-			<option value="a.sku DESC">COM_PHOCACART_SKU_DESC</option>
-			<option value="a.price ASC">COM_PHOCACART_PRICE_ASC</option>
-			<option value="a.price DESC">COM_PHOCACART_PRICE_DESC</option>
-			<option value="a.price_original ASC">COM_PHOCACART_ORIGINAL_PRICE_ASC</option>
-			<option value="a.price_original DESC">COM_PHOCACART_ORIGINAL_PRICE_DESC</option>
-			<option value="a.stock ASC">COM_PHOCACART_STOCK_ASC</option>
-			<option value="a.stock DESC">COM_PHOCACART_STOCK_DESC</option>
-			<option value="a.language ASC">JGRID_HEADING_LANGUAGE_ASC</option>
-			<option value="a.language DESC">JGRID_HEADING_LANGUAGE_DESC</option>
-			<option value="a.hits ASC">JGLOBAL_HITS_ASC</option>
-			<option value="a.hits DESC">JGLOBAL_HITS_DESC</option>
-			<option value="a.date ASC">JDATE_ASC</option>
-			<option value="a.date DESC">JDATE_DESC</option>
-			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
-			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option> -->
-		</field>
+			<input type="hidden" name="form_submited" value="1"/>
+		</fields>
 
-		<field name="limit" type="limitbox" label="COM_PHOCACART_LIST_LIMIT" description="COM_PHOCACART_LIST_LIMIT_DESC" class="input-mini" default="25" onchange="this.form.submit();" />
-	</fields>
+		<fields name="list">
+			<field name="fullordering" type="list" class="form-select" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.title ASC" validate="options" >
+				<option value="">JGLOBAL_SORT_BY</option>
+				<option value="pc.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+				<option value="pc.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+				<!-- GENERATED DYNAMICALLY BY OPTIONS
+        <option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
+        <option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
+        <option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>
+        <option value="a.published DESC" >COM_PHOCACART_PUBLISHED_DESC</option>
+        <option value="category_id ASC">JCATEGORY_ASC</option>
+        <option value="category_id DESC">JCATEGORY_DESC</option>
+        <option value="a.sku ASC">COM_PHOCACART_SKU_ASC</option>
+        <option value="a.sku DESC">COM_PHOCACART_SKU_DESC</option>
+        <option value="a.price ASC">COM_PHOCACART_PRICE_ASC</option>
+        <option value="a.price DESC">COM_PHOCACART_PRICE_DESC</option>
+        <option value="a.price_original ASC">COM_PHOCACART_ORIGINAL_PRICE_ASC</option>
+        <option value="a.price_original DESC">COM_PHOCACART_ORIGINAL_PRICE_DESC</option>
+        <option value="a.stock ASC">COM_PHOCACART_STOCK_ASC</option>
+        <option value="a.stock DESC">COM_PHOCACART_STOCK_DESC</option>
+        <option value="a.language ASC">JGRID_HEADING_LANGUAGE_ASC</option>
+        <option value="a.language DESC">JGRID_HEADING_LANGUAGE_DESC</option>
+        <option value="a.hits ASC">JGLOBAL_HITS_ASC</option>
+        <option value="a.hits DESC">JGLOBAL_HITS_DESC</option>
+        <option value="a.date ASC">JDATE_ASC</option>
+        <option value="a.date DESC">JDATE_DESC</option>
+        <option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+        <option value="a.id DESC">JGRID_HEADING_ID_DESC</option> -->
+			</field>
+
+			<field name="limit" type="limitbox" label="COM_PHOCACART_LIST_LIMIT" description="COM_PHOCACART_LIST_LIMIT_DESC" class="input-mini" default="25" onchange="this.form.submit();" />
+		</fields>
 	</fieldset>
 </form>

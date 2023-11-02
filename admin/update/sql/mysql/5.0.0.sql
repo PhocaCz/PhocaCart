@@ -9,5 +9,11 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_bundles` (
 
 ALTER TABLE `#__phocacart_products` ADD COLUMN `redirect_product_id` int(11);
 ALTER TABLE `#__phocacart_products` ADD COLUMN `redirect_url` varchar(255);
+
+ALTER TABLE `#__phocacart_vendors` ADD COLUMN `type` int(11) NOT NULL DEFAULT 0 AFTER `alias`;
+UPDATE `#__phocacart_vendors` v
+    JOIN `#__users` u ON u.`id` = v.`user_id`
+    SET `title` = u.`name`
+    WHERE `title` = '';
 -- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 -- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;

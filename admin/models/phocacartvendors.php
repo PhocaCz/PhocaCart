@@ -21,6 +21,7 @@ class PhocaCartCpModelPhocacartVendors extends ListModel
 				'id', 'a.id',
 				'title', 'a.title',
 				'alias', 'a.alias',
+				'type', 'a.type',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
@@ -39,16 +40,11 @@ class PhocaCartCpModelPhocacartVendors extends ListModel
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-/*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);*/
-
-
+		$vendorType = $app->getUserStateFromRequest($this->context.'.filter.type', 'filter_type', null, 'int');
+		$this->setState('filter.type', $vendorType);
 
 		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
 		$this->setState('filter.published', $state);
-
-		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		//$this->setState('filter.language', $language);
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
@@ -62,7 +58,7 @@ class PhocaCartCpModelPhocacartVendors extends ListModel
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
-		//$id	.= ':'.$this->getState('filter.access');
+		$id	.= ':'.$this->getState('filter.type');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.vendor_id');
 		return parent::getStoreId($id);
@@ -94,12 +90,11 @@ class PhocaCartCpModelPhocacartVendors extends ListModel
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
 
-		// Filter by access level.
-/*		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = '.(int) $access);
-		}*/
-
-
+		// Filter by vendor type
+		$vendorType = $this->getState('filter.type');
+		if (is_numeric($vendorType)) {
+			$query->where('a.type = '.(int)$vendorType);
+		}
 
 		// Filter by published state.
 		$published = $this->getState('filter.published');
@@ -109,7 +104,6 @@ class PhocaCartCpModelPhocacartVendors extends ListModel
 		else if ($published === '') {
 			$query->where('(a.published IN (0, 1))');
 		}
-
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -129,8 +123,7 @@ class PhocaCartCpModelPhocacartVendors extends ListModel
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}
 }
-?>
+

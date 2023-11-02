@@ -681,6 +681,19 @@ class PhocacartCart
                 // --------------------
                 $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
 
+                $options = PhocaCartUtils::getComponentParameters();
+                if ($options->get('checkout_separate_by_owner')) {
+                    usort($this->fullitems[1], function($a, $b) {
+                        switch (true) {
+                            case $a['owner_id'] === $b['owner_id']: return 0;
+                            case !$a['owner_id']: return 1;
+                            case !$b['owner_id']: return -1;
+                            case $a['owner_ordering'] === $b['owner_ordering']: return strcmp($a['owner_name'], $b['owner_name']);
+                            default: return $a['owner_ordering'] < $b['owner_ordering'] ? -1 : 1;
+                        }
+                    });
+                }
+
                 //$calc->round($this->total[1]);
 
                 // Fixed subtotal amount
