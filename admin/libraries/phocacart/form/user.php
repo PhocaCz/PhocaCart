@@ -246,8 +246,11 @@ class PhocacartFormUser
 
 						}
 
-
-						$o[] = implode( "", $fB ) . implode( "", $fS );
+						if ($shippingSuffix) {
+							$o[] = implode("", $fB) . implode("", $fS);
+						} else {
+							$o[] = implode("", $fB);
+						}
 
 					} else {
 						continue;
