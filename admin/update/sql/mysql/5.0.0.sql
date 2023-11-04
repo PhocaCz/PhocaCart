@@ -15,5 +15,24 @@ UPDATE `#__phocacart_vendors` v
     JOIN `#__users` u ON u.`id` = v.`user_id`
     SET `title` = u.`name`
     WHERE `title` = '';
+
+ALTER TABLE `#__phocacart_form_fields` ADD COLUMN `autocomplete` varchar(50) AFTER `validate`;
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'given-name' WHERE `title` = 'name_first';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'additional-name' WHERE `title` = 'name_middle';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'family-name' WHERE `title` = 'name_last';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'honorific-prefix' WHERE `title` = 'name_degree';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'organization' WHERE `title` = 'company';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'street-address' WHERE `title` = 'address_1';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'postal-code' WHERE `title` = 'zip';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'address-level2' WHERE `title` = 'city';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'country-name' WHERE `title` = 'country';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'address-level1' WHERE `title` = 'region';
+
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'email' WHERE `title` = 'email';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'email' WHERE `title` = 'email_contact';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'phone_1';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'phone_2';
+UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'phone_mobile';
+
 -- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 -- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;

@@ -989,6 +989,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_form_fields` (
   `read_only` tinyint(1) NOT NULL DEFAULT '0',
   `required` tinyint(1) NOT NULL DEFAULT '0',
   `validate` varchar(50) NOT NULL DEFAULT '',
+  `autocomplete` varchar(50),
   `unique` tinyint(1) NOT NULL DEFAULT '0',
   `preicon` varchar(100) NOT NULL DEFAULT '',
   `format` varchar(50) NOT NULL DEFAULT '',
@@ -1808,27 +1809,26 @@ INSERT INTO `#__phocacart_currencies` (`id`, `title`, `code`, `exchange_rate`, `
 (1, 'Euro', 'EUR', 1, '€', 3, ',', 2, '.', '', '', 1);
 
 -- -
-INSERT INTO `#__phocacart_form_fields` ( `title`, `label`, `description`, `type`, `type_default`, `published`, `display_billing`, `display_shipping`, `display_account`, `required`, `read_only`, `filter`, `unique`, `class`, `validate`, `ordering`, `access`) VALUES
-('name_first', 'COM_PHOCACART_FIRST_NAME_LABEL', 'COM_PHOCACART_FIRST_NAME_DESC', 'text:varchar(100)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 1, 1),
-('name_middle', 'COM_PHOCACART_MIDDLE_NAME_LABEL', 'COM_PHOCACART_MIDDLE_NAME_DESC', 'text:varchar(100)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 2, 1),
-('name_last', 'COM_PHOCACART_LAST_NAME_LABEL', 'COM_PHOCACART_LAST_NAME_DESC', 'text:varchar(100)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 3, 1),
-('name_degree', 'COM_PHOCACART_DEGREE_LABEL', 'COM_PHOCACART_DEGREE_DESC', 'text:varchar(100)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 4, 1),
-('company', 'COM_PHOCACART_COMPANY_LABEL', 'COM_PHOCACART_COMPANY_DESC', 'text:varchar(255)', 1, 1, 1, 1, 1, 0, 0, '', 0, '', '', 5, 1),
-('vat_1', 'COM_PHOCACART_VAT_1_LABEL', 'COM_PHOCACART_VAT_1_DESC', 'text:varchar(25)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 6, 1),
-('vat_2', 'COM_PHOCACART_VAT_2_LABEL', 'COM_PHOCACART_VAT_2_DESC', 'text:varchar(25)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 7, 1),
-('address_1', 'COM_PHOCACART_ADDRESS_1_LABEL', 'COM_PHOCACART_ADDRESS_1_DESC', 'text:varchar(255)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 8, 1),
-('address_2', 'COM_PHOCACART_ADDRESS_2_LABEL', 'COM_PHOCACART_ADDRESS_2_DESC', 'text:varchar(255)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 9, 1),
-('zip', 'COM_PHOCACART_ZIP_LABEL', 'COM_PHOCACART_ZIP_DESC', 'text:varchar(20)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 10, 1),
-('city', 'COM_PHOCACART_CITY_LABEL', 'COM_PHOCACART_CITY_DESC', 'text:varchar(255)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 11, 1),
-('country', 'COM_PHOCACART_COUNTRY_LABEL', 'COM_PHOCACART_COUNTRY_DESC', 'phocaformcountry:int(11)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 12, 1),
-('region', 'COM_PHOCACART_REGION_LABEL', 'COM_PHOCACART_REGION_DESC', 'phocaformregion:int(11)', 1, 1, 1, 1, 1, 0, 0, '', 0, '', '', 13, 1),
-('email', 'COM_PHOCACART_EMAIL_LABEL', 'COM_PHOCACART_EMAIL_DESC', 'text:varchar(100)', 1, 1, 1, 0, 1, 1, 2, 'string', 1, '', 'email', 14, 1),
-('email_contact', 'COM_PHOCACART_CONTACT_EMAIL_LABEL', 'COM_PHOCACART_CONTACT_EMAIL_DESC', 'text:varchar(100)', 1, 0, 0, 0, 0, 0, 0, 'string', 1, '', 'email', 15, 1),
-('phone_1', 'COM_PHOCACART_PHONE_1_LABEL', 'COM_PHOCACART_PHONE_1_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '',0, '', '', 16, 1),
-('phone_2', 'COM_PHOCACART_PHONE_2_LABEL', 'COM_PHOCACART_PHONE_2_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 17, 1),
-('phone_mobile', 'COM_PHOCACART_MOBILE_PHONE_LABEL', 'COM_PHOCACART_MOBILE_PHONE_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 18, 1),
-('fax', 'COM_PHOCACART_FAX_LABEL', 'COM_PHOCACART_FAX_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 19, 1);
-
+INSERT INTO `#__phocacart_form_fields` ( `title`, `label`, `description`, `type`, `type_default`, `published`, `display_billing`, `display_shipping`, `display_account`, `required`, `read_only`, `filter`, `unique`, `class`, `validate`, `ordering`, `access`, `autocomplete`) VALUES
+('name_first', 'COM_PHOCACART_FIRST_NAME_LABEL', 'COM_PHOCACART_FIRST_NAME_DESC', 'text:varchar(100)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 1, 1, 'given-name'),
+('name_middle', 'COM_PHOCACART_MIDDLE_NAME_LABEL', 'COM_PHOCACART_MIDDLE_NAME_DESC', 'text:varchar(100)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 2, 1, 'additional-name'),
+('name_last', 'COM_PHOCACART_LAST_NAME_LABEL', 'COM_PHOCACART_LAST_NAME_DESC', 'text:varchar(100)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 3, 1, 'family-name'),
+('name_degree', 'COM_PHOCACART_DEGREE_LABEL', 'COM_PHOCACART_DEGREE_DESC', 'text:varchar(100)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 4, 1, 'honorific-prefix'),
+('company', 'COM_PHOCACART_COMPANY_LABEL', 'COM_PHOCACART_COMPANY_DESC', 'text:varchar(255)', 1, 1, 1, 1, 1, 0, 0, '', 0, '', '', 5, 1, 'organization'),
+('vat_1', 'COM_PHOCACART_VAT_1_LABEL', 'COM_PHOCACART_VAT_1_DESC', 'text:varchar(25)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 6, 1, null),
+('vat_2', 'COM_PHOCACART_VAT_2_LABEL', 'COM_PHOCACART_VAT_2_DESC', 'text:varchar(25)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 7, 1, null),
+('address_1', 'COM_PHOCACART_ADDRESS_1_LABEL', 'COM_PHOCACART_ADDRESS_1_DESC', 'text:varchar(255)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 8, 1, 'street-address'),
+('address_2', 'COM_PHOCACART_ADDRESS_2_LABEL', 'COM_PHOCACART_ADDRESS_2_DESC', 'text:varchar(255)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 9, 1, null),
+('zip', 'COM_PHOCACART_ZIP_LABEL', 'COM_PHOCACART_ZIP_DESC', 'text:varchar(20)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 10, 1, 'postal-code'),
+('city', 'COM_PHOCACART_CITY_LABEL', 'COM_PHOCACART_CITY_DESC', 'text:varchar(255)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 11, 1, 'address-level2'),
+('country', 'COM_PHOCACART_COUNTRY_LABEL', 'COM_PHOCACART_COUNTRY_DESC', 'phocaformcountry:int(11)', 1, 1, 1, 1, 1, 1, 0, '', 0, '', '', 12, 1, 'country-name'),
+('region', 'COM_PHOCACART_REGION_LABEL', 'COM_PHOCACART_REGION_DESC', 'phocaformregion:int(11)', 1, 1, 1, 1, 1, 0, 0, '', 0, '', '', 13, 1, 'address-level1'),
+('email', 'COM_PHOCACART_EMAIL_LABEL', 'COM_PHOCACART_EMAIL_DESC', 'text:varchar(100)', 1, 1, 1, 0, 1, 1, 2, 'string', 1, '', 'email', 14, 1, 'email'),
+('email_contact', 'COM_PHOCACART_CONTACT_EMAIL_LABEL', 'COM_PHOCACART_CONTACT_EMAIL_DESC', 'text:varchar(100)', 1, 0, 0, 0, 0, 0, 0, 'string', 1, '', 'email', 15, 1, 'email'),
+('phone_1', 'COM_PHOCACART_PHONE_1_LABEL', 'COM_PHOCACART_PHONE_1_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '',0, '', '', 16, 1, 'tel'),
+('phone_2', 'COM_PHOCACART_PHONE_2_LABEL', 'COM_PHOCACART_PHONE_2_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 17, 1, 'tel'),
+('phone_mobile', 'COM_PHOCACART_MOBILE_PHONE_LABEL', 'COM_PHOCACART_MOBILE_PHONE_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 18, 1, 'tel'),
+('fax', 'COM_PHOCACART_FAX_LABEL', 'COM_PHOCACART_FAX_DESC', 'text:varchar(20)', 1, 0, 0, 0, 0, 0, 0, '', 0, '', '', 19, 1, null);
 
 INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, `display_addtocart`, `display_attributes`, `ordering`, `type`) VALUES (1, 'COM_PHOCACART_DEFAULT', '1', '1', '1', '1', '1', '1');
 

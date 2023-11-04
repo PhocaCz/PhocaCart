@@ -204,9 +204,9 @@ class PhocacartFormUser
 							$class .= ' validate-'.htmlspecialchars($v->validate);
 						}
 
-
-
-
+						if (isset($v->autocomplete) && $v->autocomplete) {
+							$fB[] = $fS[] =  ' autocomplete="'.htmlspecialchars($v->autocomplete).'"';
+						}
 
 						$fB[] = ' class="'.htmlspecialchars($class).'"';
 
