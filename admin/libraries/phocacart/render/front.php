@@ -108,7 +108,7 @@ class PhocacartRenderFront
         $menus = $app->getMenu();
         $menu = $menus->getActive();
         $pathway = $app->getPathway();
-        $title = null;
+
         $metakey = $params->get('cart_metakey', '');
         $metadesc = $params->get('cart_metadesc', '');
         $render_canonical_url = $params->get('render_canonical_url', 0);
@@ -140,12 +140,6 @@ class PhocacartRenderFront
 
 
         if (isset($name->title) && $name->title != '') {
-            /*if ($title != '') {
-                $title = $title .' - ' .  $name->title;
-            } else {
-                $title = $name->title;
-            }*/
-
             $title = $name->title;
         }
 

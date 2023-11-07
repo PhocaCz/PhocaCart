@@ -605,6 +605,11 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
+          <field name="display_user_orders_details_style" type="list" default="popup" label="COM_PHOCACART_FIELD_DISPLAY_USER_ORDERS_DETAILS_STYLE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ORDERS_DETAILS_STYLE_DESC">
+            <option value="nopopup">COM_PHOCACART_FIELD_DETAILS_STYLE_NOPOPUP</option>
+            <option value="popup">COM_PHOCACART_FIELD_DETAILS_STYLE_POPUP</option>
+            <option value="blank">COM_PHOCACART_FIELD_DETAILS_STYLE_BLANK</option>
+          </field>
 			<field name="phocahead39" type="phocahead" default="COM_PHOCACART_INFO_VIEW_LABEL" label="" description=""/>
 
 			<field name="info_view_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_LABEL"

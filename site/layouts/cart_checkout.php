@@ -143,6 +143,7 @@ if (!empty($d['fullitems'][1])) {
 			echo '<div class="'.$r.' ph-cart-cart-row-vendor">';
 			echo '<div class="'.$cA.'"><h5>' . ($v['owner_name'] ? Text::sprintf('COM_PHOCACART_CART_VENDOR', $v['owner_name']) : Text::_('COM_PHOCACART_CART_UNKNOWN_VENDOR')) . '</h5></div>';
 			echo '</div>';
+			$lastOwner = $v['owner_id'];
 		}
 
 

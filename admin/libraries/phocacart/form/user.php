@@ -18,7 +18,7 @@ class PhocacartFormUser
 
 	private function __construct(){}
 
-	public static function getFormXml($billingSuffix = '', $shippingSuffix = '_phs', $billing = 1, $shipping = 1, $account = 0, $guest = 0) {
+	public static function getFormXml($billingSuffix = '', $shippingSuffix = '_phs', $billing = 1, $shipping = 1, $account = 0, $guest = 0, ?string $fieldsName = null) {
 
 		if(self::$form === false){
 
@@ -28,7 +28,10 @@ class PhocacartFormUser
 			$oFs = array();
 			$o[] = '<form>';
 
-			$o[] = '<fieldset name="user" addrulepath="/components/com_phocacart/models/rules" addfieldpath="/components/com_phocacart/models/fields" label="COM_PHOCACART_FORM_LABEL">';
+			$o[] = '<fieldset name="user" addrulepath="/components/com_phocacart/models/rules" addfieldpath="/components/com_phocacart/models/fields">';
+			if ($fieldsName) {
+				$o[] = '<fields name="' . $fieldsName. '">';
+			}
 
 			$fields	= new PhocacartFormItems();
 			$f		= $fields->getFormItems($billing, $shipping, $account);
@@ -201,9 +204,9 @@ class PhocacartFormUser
 							$class .= ' validate-'.htmlspecialchars($v->validate);
 						}
 
-
-
-
+						if (isset($v->autocomplete) && $v->autocomplete) {
+							$fB[] = $fS[] =  ' autocomplete="'.htmlspecialchars($v->autocomplete).'"';
+						}
 
 						$fB[] = ' class="'.htmlspecialchars($class).'"';
 
@@ -243,8 +246,11 @@ class PhocacartFormUser
 
 						}
 
-
-						$o[] = implode( "", $fB ) . implode( "", $fS );
+						if ($shippingSuffix) {
+							$o[] = implode("", $fB) . implode("", $fS);
+						} else {
+							$o[] = implode("", $fB);
+						}
 
 					} else {
 						continue;
@@ -253,6 +259,9 @@ class PhocacartFormUser
 				}
 			}
 
+			if ($fieldsName) {
+				$o[] = '</fields>';
+			}
 			$o[] = '</fieldset>';
 			$o[] = '</form>';
 

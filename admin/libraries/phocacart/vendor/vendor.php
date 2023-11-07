@@ -48,7 +48,6 @@ class PhocacartVendor
     public static function isVendor(&$user): bool {
         if (!empty($user) && isset($user->id) && (int)$user->id > 0) {
             self::loadCache();
-            n3tDebug::barDump(self::$cache, 'Sem tu');
             $userId = (int)$user->id;
             $vendors = array_filter(self::$cache, function($vendor) use ($userId) {
                 return !!$vendor->published
