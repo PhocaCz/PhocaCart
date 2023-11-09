@@ -34,5 +34,11 @@ UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'ph
 UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'phone_2';
 UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'phone_mobile';
 
+ALTER TABLE `#__phocacart_users` ADD UNIQUE `uq_phocacart_users` (`type`, `user_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_user_id` (`user_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_vendor_id` (`vendor_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_section_id` (`section_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_unit_id` (`unit_id`);
+
 -- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 -- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
