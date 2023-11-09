@@ -1047,7 +1047,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_users` (
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime,
   `ordering` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_phocacart_users` (`type`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 /*
@@ -1078,7 +1079,11 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_cart_multiple` (
   `reward` int(11) NOT NULL DEFAULT '0',
   `type` tinyint(3) NOT NULL default '0',
   `date` datetime NOT NULL,
-  KEY `idx_uvtus` (`user_id`, `vendor_id`, `ticket_id`, `unit_id`, `section_id`)
+  KEY `idx_uvtus` (`user_id`, `vendor_id`, `ticket_id`, `unit_id`, `section_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_vendor_id` (`vendor_id`),
+  KEY `idx_section_id` (`section_id`),
+  KEY `idx_unit_id` (`unit_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 

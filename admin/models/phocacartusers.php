@@ -47,16 +47,8 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 		$user = $app->getUserStateFromRequest($this->context.'.filter.user_id', 'filter_user_id');
 		$this->setState('filter.user_id', $user);
 
-/*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);*/
-
-
-
 		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
 		$this->setState('filter.published', $state);
-
-		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		//$this->setState('filter.language', $language);
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
@@ -77,48 +69,31 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.user_id');
-		//$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.user_id_id');
 		return parent::getStoreId($id);
 	}
 
 	protected function getListQuery() {
-
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
 		$columns	= 'a.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city, a.ordering, a.email';
-		$groupsFull	= 'u.id, a.checked_out, a.name_last, a.name_first, a.address_1, a.city, a.ordering, a.email' . ', ' . 'c.date, c.user_id, c.vendor_id, c.ticket_id, c.unit_id, c.section_id, uc.name';
-		$groupsFast	= 'u.id';
-		$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
+		$query->select($this->getState('list.select', '' . ' ' .$columns))
+			->select('u.name AS user_name, u.username AS user_username, u.id as user_id, u.email AS user_email')
+			->from('`#__users` AS u')
+			->join('LEFT', '#__phocacart_users AS a ON a.user_id=u.id AND a.type = 1');
 
-		$query->select($this->getState('list.select', '' . ' ' .$columns));
-		$query->from('`#__users` AS u');
-
-		// Join over the language
-		//$query->select('l.title AS language_title');
-		//$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
-
-		// Join over the users for the checked out user.
-
-		// GROUP_CONCAT(c.date ORDER BY c.date) AS cartdate,
 		$query->select('c.date AS cartdate, c.user_id as cartuserid, c.vendor_id as cartvendorid, c.ticket_id as cartticketid, c.unit_id as cartunitid, c.section_id as cartsectionid');
 		$query->join('LEFT', '#__phocacart_cart_multiple AS c ON c.user_id = u.id');
 
+		// Has order
+		$query->select('(SELECT ou.user_id FROM #__phocacart_orders ou WHERE ou.user_id = a.user_id LIMIT 1) AS orderuserid');
 
-		$query->select('u.name AS user_name, u.username AS user_username, u.id as user_id, u.email AS user_email');
-		$query->join('LEFT', '#__phocacart_users AS a ON a.user_id=u.id');
-
-		$query->select('ou.user_id AS orderuserid');
-		$query->join('LEFT', '#__phocacart_orders AS ou ON a.user_id=ou.user_id');
-
-
-
+		// POS
 		$query->select('uv.name AS vendor_name, uv.username AS vendor_username');
 		$query->join('LEFT', '#__users AS uv ON uv.id=c.vendor_id');
-
 
 		$query->select('sc.title AS section_name');
 		$query->join('LEFT', '#__phocacart_sections AS sc ON sc.id=c.section_id');
@@ -126,40 +101,12 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 		$query->select('un.title AS unit_name');
 		$query->join('LEFT', '#__phocacart_units AS un ON un.id=c.unit_id');
 
-
-
-
+		// Checked out user
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
-
-
-		$query->select('GROUP_CONCAT(DISTINCT g.title ORDER BY g.title) AS usergroups');
-		$query->join('LEFT', '#__phocacart_item_groups AS ug ON ug.item_id=u.id AND ug.type = 1');
-		$query->join('LEFT', '#__phocacart_groups AS g ON g.id=ug.group_id');
-
-
-
-		// Filter by access level.
-/*		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = '.(int) $access);
-		}*/
-
-
-
-		// Filter by published state.
-		/*$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('u.published = '.(int) $published);
-		}
-		else if ($published === '') {
-			$query->where('(u.published IN (0, 1))');
-		}*/
-
-
-		// List only payment or shipping data - to not duplicity the list
-		//$query->where('a.type = 0');
-
+		// Usergroups
+		$query->select('(SELECT GROUP_CONCAT(DISTINCT g.title ORDER BY g.title) FROM #__phocacart_item_groups ug LEFT JOIN #__phocacart_groups AS g ON g.id=ug.group_id WHERE ug.item_id=u.id AND ug.type = 1) AS usergroups');
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -175,17 +122,6 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 			}
 		}
 
-		// We have two rows for one customer - for billing and shipping address, but we need to list only one
-		// is type zero (not one) or type does not exists (for users who are not stored in phoca user table yet)
-		$query->where('(a.type = 0 OR a.type IS NULL)');
-
-
-		// ONLY AS CUSTOMERS
-	//	$query->where('c.vendor_id = 0');
-
-		//$query->where('u.name <> '.$db->quote('Super User'));
-		$query->group($groups);
-
 		$user = $this->getState('filter.user_id');
 
 		if (!empty($user)){
@@ -198,8 +134,6 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 		$orderDirn	= $this->state->get('list.direction', 'u.name');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}
 }
-?>
