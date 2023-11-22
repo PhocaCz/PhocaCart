@@ -357,7 +357,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	function save($data) {
 		//$app		= Factory::getApplication();
 
-
 		/*if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
 		}*/

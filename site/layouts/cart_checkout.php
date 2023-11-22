@@ -12,6 +12,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
@@ -178,7 +179,7 @@ if (!empty($d['fullitems'][1])) {
 
 		echo '<div class="'.$r.$cV.' ph-checkout-cart-row-item">';
 		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.$imageOutput.'</div>';
-		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'"><a href="'.$link.'">'.$v['title'].'</a>';
+		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'"><a href="'.Route::_($link).'">'.$v['title'].'</a>';
 		echo '</div>';
 
 

@@ -159,7 +159,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 	public function save($data) {
 
-
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 		//$dispatcher = JDispatcher::getInstance();
@@ -263,6 +262,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				$this->setError($table->getError());
 				return false;
 			}
+
 
 			if (!$table->store()) {
 				$this->setError($table->getError());

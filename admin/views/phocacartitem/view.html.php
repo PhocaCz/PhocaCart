@@ -34,6 +34,7 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
+
 		$params    = PhocacartUtils::getComponentParameters();
 		$media = new PhocacartRenderAdminmedia();
 

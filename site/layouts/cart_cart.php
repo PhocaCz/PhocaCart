@@ -1,4 +1,4 @@
-4<?php
+<?php
 /* @package Joomla
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
@@ -153,7 +153,7 @@ if (!empty($d['fullitems'])) {
 		if ($d['client'] == 1) {
 			echo $v['title'];
 		} else {
-			echo '<a href="'.$link.'">'.$v['title'].'</a>';
+			echo '<a href="'.Route::_($link).'">'.$v['title'].'</a>';
 		}
 
 		echo '</div>';

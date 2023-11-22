@@ -326,6 +326,7 @@ class PhocacartOrder
             Dispatcher::dispatch(new Event\Payment\BeforeSaveOrder($statusId, (int)$payment['id'], [
               'pluginname' => $payment['method']
             ]));
+
             $d['status_id'] = (int)$statusId; // e.g. by POS Cash we get automatically the status as completed
         } else {
             $d['status_id'] = $statusId;// no plugin or no event found
