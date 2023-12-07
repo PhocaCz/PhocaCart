@@ -36,6 +36,8 @@ if ($this->a->shippingnotused == 1) {
 
 	$d['status']	= 'finished';
 
+	echo '<div class="ph-checkout-box-shipping ph-checkout-box-status-'.$d['status'].'">';
+
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutshippingview">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.Text::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
@@ -167,12 +169,16 @@ if ($this->a->shippingnotused == 1) {
 	echo '</form>'. "\n";
 	//echo '</div>';// end checkout box row
 
+	echo '</div>';// end box shipping
+
 // ADD OR EDIT - user didn't add the shipping yet or user wants to edit it now
 } else if ($this->a->shippingedit == 1)  {
 
 	$d['status']	= 'pending';
 	$total			= $this->cart->getTotal();
 	$price			= new PhocacartPrice();
+
+	echo '<div class="ph-checkout-box-shipping ph-checkout-box-status-'.$d['status'].'">';
 
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
@@ -305,7 +311,7 @@ if ($this->a->shippingnotused == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-shipping-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_CHECKOUT_SHIPPING_SAVE').'</button>';
 	echo '</div>';
 	echo '</div>';
 
@@ -320,6 +326,8 @@ if ($this->a->shippingnotused == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box shipping
+
 
 }  else {
 
@@ -327,9 +335,13 @@ if ($this->a->shippingnotused == 1) {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-shipping ph-checkout-box-status-'.$d['status'].'">';
+
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.Text::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div>';
+
+	echo '</div>';// end box shipping
 }
 
 

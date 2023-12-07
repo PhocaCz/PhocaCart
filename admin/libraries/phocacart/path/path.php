@@ -28,7 +28,7 @@ class PhocacartPath
 		$app			= Factory::getApplication();
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		// Folder where to stored files for download
-		$productImagePath		= $paramsC->get( 'product_image_path', 'images/phocacartproducts' );
+		$productImagePath		= $paramsC->get( 'product_image_path', 'images/phocacartproductsnewfolderforidiots' );
 		$categoryImagePath		= $paramsC->get( 'category_image_path', 'images/phocacartcategories' );
 		$downloadFolder			= $paramsC->get( 'download_folder', 'phocacartdownload' );
 		$downloadFolderPublic	= $paramsC->get( 'public_download_folder', 'phocacartdownloadpublic' );
@@ -125,6 +125,7 @@ class PhocacartPath
 			$path['orig_rel'] 				= '';
 			$path['orig_rel_ds'] 			= '';
 		}
+
 		return $path;
 	}
 

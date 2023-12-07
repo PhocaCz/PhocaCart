@@ -2346,6 +2346,13 @@ img.ph-lazyload:not([src]) {
     stroke: #5f5f5f;
 }
 
+.pc-si-ok-circle {
+    stroke: var(--ph-success);
+}
+.pc-si-not-ok-circle {
+    stroke: var(--ph-error);
+}
+
 .pc-wishlist-view .pc-si.pc-si-remove,
 .pc-wishlist-view .pc-si.pc-si-search,
 .ph-comparison-table .pc-si.pc-si-remove,

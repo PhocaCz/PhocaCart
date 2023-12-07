@@ -73,11 +73,19 @@
 <path d="m5.75 6.75-1 1c0.75 1.0833 1.5 2.1667 2.25 3.25h1c1.3333-2 2.6667-4 4-6-0.33333-0.25-0.66667-0.5-1-0.75-1.1667 1.3333-2.3333 2.6667-3.5 4-0.58333-0.5-1.1667-1-1.75-1.5z" fill="#fff"/></g>
         </symbol>
 
+        <symbol id="pc-si-ok-circle" viewBox="0 0 512 512">
+            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M352 176 217.6 336 160 272"/>
+        </symbol>
+
         <symbol id="pc-si-clear" viewBox="0 0 512 512">
             <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
         </symbol>
 
         <symbol id="pc-si-not-ok" viewBox="0 0 512 512">
+            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
+        </symbol>
+
+        <symbol id="pc-si-not-ok-circle" viewBox="0 0 512 512">
             <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
         </symbol>
 

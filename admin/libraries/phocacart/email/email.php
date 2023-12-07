@@ -28,7 +28,7 @@ class PhocacartEmail
 
 	//public static function sendEmail($from = '', $fromName = '', $recipient, $subject, $body, $mode = false, $cc = array(), $bcc = array(), $attachment = null, $replyTo = null, $replyToName = null) {
 
-		$config			= Factory::getConfig();
+		$config			= Factory::getConfig();// Factory::getApplication()->get('mailfrom', '');
 
 		if ($from == '') {
 			$from 		= $config->get('mailfrom');

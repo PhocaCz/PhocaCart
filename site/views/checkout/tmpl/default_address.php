@@ -25,6 +25,7 @@ if ($this->a->addressedit == 1) {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-address ph-checkout-box-status-'.$d['status'].'">';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
 
@@ -73,7 +74,7 @@ if ($this->a->addressedit == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-address-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].'">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].'">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_CHECKOUT_ADDRESS_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
 	echo '</div>';
@@ -90,10 +91,14 @@ if ($this->a->addressedit == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box address
+
 } else if ($this->a->addressview == 1){
 
 	$d['status']	= 'finished';
 	// User completed all items in the form
+
+	echo '<div class="ph-checkout-box-address ph-checkout-box-status-'.$d['status'].'">';
 
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
@@ -168,12 +173,18 @@ if ($this->a->addressedit == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box address
+
 } else {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-address ph-checkout-box-status-'.$d['status'].'">';
+
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['na'].'. '.Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div>';
+
+	echo '</div>';// end box address
 }
 ?>

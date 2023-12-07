@@ -64,6 +64,10 @@ if (isset($this->t['infodata']['shipping_id']) && (int)$this->t['infodata']['shi
 
     $shippingDescription = PhocacartShipping::getInfoDescriptionById((int)$this->t['infodata']['shipping_id']);
     if ($shippingDescription != '') {
+
+        if ($this->t['preparereplace']) {
+            $shippingDescription = PhocacartText::completeText($shippingDescription, $this->t['preparereplace'], 1);
+        }
         echo '<div class="ph-info-shipping-description">'.HTMLHelper::_('content.prepare', $shippingDescription).'</div>';
     }
 
@@ -88,6 +92,11 @@ if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['ship
 if (isset($this->t['infodata']['payment_id']) && (int)$this->t['infodata']['payment_id'] > 0) {
     $paymentDescription = PhocacartPayment::getInfoDescriptionById((int)$this->t['infodata']['payment_id']);
     if ($paymentDescription != '') {
+
+        if ($this->t['preparereplace']) {
+            $paymentDescription = PhocacartText::completeText($paymentDescription, $this->t['preparereplace'], 1);
+        }
+
         echo '<div class="ph-info-payment-description">'.HTMLHelper::_('content.prepare', $paymentDescription).'</div>';
     }
 }

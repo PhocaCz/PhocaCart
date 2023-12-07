@@ -273,6 +273,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		echo '<div class="ph-manufacturer-txt">'.Text::_('COM_PHOCACART_MANUFACTURER').':</div>';
 		echo '<div class="ph-manufacturer">';
 		echo PhocacartRenderFront::displayLink($x->manufacturertitle, $x->manufacturerlink);
+
+       /* if (isset($x->manufacturerimage) && $x->manufacturerimage) {
+            echo  '<img src="'.Uri::base(true) . '/' . $x->manufacturerimage.'" alt="'.PhocacartText::filterValue($x->manufacturertitle, 'text').'" />';
+        }*/
+
 		echo '</div>';
 		echo '</div>';
 		echo '<div class="ph-cb"></div>';

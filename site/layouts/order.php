@@ -969,6 +969,15 @@ if ($d['type'] == 2) {
 // -----------------------
 // INVOICE QR CODE, STAMP IMAGE
 // -----------------------
+
+// No PDF invoice - we can add QR code to no PDF document using TCPDF method but Phoca PDF must be enabled
+
+if (($d['format'] == 'html' || $d['format'] == '') && $d['type'] == 2 && ($d['qrcode'] != '')) {
+
+    $o[] = PhocacartUtils::getQrImage($d['qrcode']);
+}
+
+
 if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invoice_signature_image != '')) {
 	$o[] = '<div>&nbsp;</div><div>&nbsp;</div>';
 	$o[] = '<table>';// End box in

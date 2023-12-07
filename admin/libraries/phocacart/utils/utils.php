@@ -10,6 +10,7 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Filter\OutputFilter;
@@ -21,38 +22,38 @@ use Joomla\CMS\HTML\HTMLHelper;
 class PhocacartUtils
 {
 
-    private static $pluginId = [];
+	private static $pluginId = [];
 	private static $pluginIdsGroup = [];
 
-	public static function setVars( $task = '') {
+	public static function setVars($task = '') {
 
-		$a				= array();
-		$app			= Factory::getApplication();
-		$a['o'] 		= htmlspecialchars(strip_tags($app->input->get('option')));
-		$a['c'] 		= str_replace('com_', '', $a['o']);
-		$a['n'] 		= 'Phoca' . str_replace('com_phoca', '', $a['o']);
-		$a['l'] 		= strtoupper($a['o']);
-		$a['i']			= 'media/'.$a['o'].'/images/administrator/';
-		$a['ja']		= 'media/'.$a['o'].'/js/administrator/';
-		$a['jf']		= 'media/'.$a['o'].'/js/';
-		$a['s']			= 'media/'.$a['o'].'/css/administrator/'.$a['c'].'.css';
-		$a['css']		= 'media/'.$a['o'].'/css/';
-		$a['bootstrap']	= 'media/'.$a['o'].'/bootstrap/';
-		$a['task']		= $a['c'] . htmlspecialchars(strip_tags($task));
-		$a['tasks'] 	= $a['task']. 's';
+		$a              = array();
+		$app            = Factory::getApplication();
+		$a['o']         = htmlspecialchars(strip_tags($app->input->get('option')));
+		$a['c']         = str_replace('com_', '', $a['o']);
+		$a['n']         = 'Phoca' . str_replace('com_phoca', '', $a['o']);
+		$a['l']         = strtoupper($a['o']);
+		$a['i']         = 'media/' . $a['o'] . '/images/administrator/';
+		$a['ja']        = 'media/' . $a['o'] . '/js/administrator/';
+		$a['jf']        = 'media/' . $a['o'] . '/js/';
+		$a['s']         = 'media/' . $a['o'] . '/css/administrator/' . $a['c'] . '.css';
+		$a['css']       = 'media/' . $a['o'] . '/css/';
+		$a['bootstrap'] = 'media/' . $a['o'] . '/bootstrap/';
+		$a['task']      = $a['c'] . htmlspecialchars(strip_tags($task));
+		$a['tasks']     = $a['task'] . 's';
 
 		switch ($task) {
-		 case 'tax':
-		 case 'stockstatus':
-		 case 'status':
-			$a['tasks'] = $a['task']. 'es';
-		 break;
-		 case 'category':
-		 case 'currency':
-		 case 'country':
-			$tStr = substr($a['task'],0,-1);
-			$a['tasks'] = $tStr. 'ies';
-		 break;
+			case 'tax':
+			case 'stockstatus':
+			case 'status':
+				$a['tasks'] = $a['task'] . 'es';
+			break;
+			case 'category':
+			case 'currency':
+			case 'country':
+				$tStr       = substr($a['task'], 0, -1);
+				$a['tasks'] = $tStr . 'ies';
+			break;
 		}
 
 		return $a;
@@ -60,12 +61,12 @@ class PhocacartUtils
 
 	public static function getPhocaVersion($component = 'com_phocacart') {
 		$component = 'com_phocacart';
-		$folder = JPATH_ADMINISTRATOR .'/components'.'/'.$component;
+		$folder    = JPATH_ADMINISTRATOR . '/components' . '/' . $component;
 
 		if (Folder::exists($folder)) {
 			$xmlFilesInDir = Folder::files($folder, '.xml$');
 		} else {
-			$folder = JPATH_SITE . '/components'.'/'.$component;
+			$folder = JPATH_SITE . '/components' . '/' . $component;
 			if (Folder::exists($folder)) {
 				$xmlFilesInDir = Folder::files($folder, '.xml$');
 			} else {
@@ -74,19 +75,17 @@ class PhocacartUtils
 		}
 
 		$xml_items = array();
-		if (count($xmlFilesInDir))
-		{
-			foreach ($xmlFilesInDir as $xmlfile)
-			{
-				if ($data = Installer::parseXMLInstallFile($folder.'/'.$xmlfile)) {
-					foreach($data as $key => $value) {
+		if (count($xmlFilesInDir)) {
+			foreach ($xmlFilesInDir as $xmlfile) {
+				if ($data = Installer::parseXMLInstallFile($folder . '/' . $xmlfile)) {
+					foreach ($data as $key => $value) {
 						$xml_items[$key] = $value;
 					}
 				}
 			}
 		}
 
-		if (isset($xml_items['version']) && $xml_items['version'] != '' ) {
+		if (isset($xml_items['version']) && $xml_items['version'] != '') {
 			return $xml_items['version'];
 		} else {
 			return '';
@@ -96,7 +95,7 @@ class PhocacartUtils
 	public static function getAliasName($alias) {
 
 		if (Factory::getConfig()->get('unicodeslugs') == 1) {
-			$alias= OutputFilter::stringURLUnicodeSlug($alias);
+			$alias = OutputFilter::stringURLUnicodeSlug($alias);
 		} else {
 			$alias = OutputFilter::stringURLSafe($alias);
 		}
@@ -110,7 +109,7 @@ class PhocacartUtils
 	public static function setMessage($new = '', $current = '') {
 
 		$message = $current;
-		if($new != '') {
+		if ($new != '') {
 			if ($current != '') {
 				$message .= '<br />';
 			}
@@ -130,31 +129,33 @@ class PhocacartUtils
 
 	public static function getToken($type = 'token') {
 
-		$app		= Factory::getApplication();
-		$secret		= $app->get('secret');
-		$secretPartA= substr($secret, mt_rand(4,15), mt_rand(0,10));
-		$secretPartB= substr($secret, mt_rand(4,15), mt_rand(0,10));
+		$app         = Factory::getApplication();
+		$secret      = $app->get('secret');
+		$secretPartA = substr($secret, mt_rand(4, 15), mt_rand(0, 10));
+		$secretPartB = substr($secret, mt_rand(4, 15), mt_rand(0, 10));
 
-		$saltArray	= array('a', '0', 'c', '1', 'e', '2', 'h', '3', 'i', '4', 'k', '5', 'm', '6', 'o', '7', 'q', '8', 'r', '0', 'u', '1', 'w', '2', 'y');
-		$randA		= mt_rand(0,9999);
-		$randB		= mt_rand(0, $randA);
-		$randC		= mt_rand(0, $randB);
-		$randD		= mt_rand(0,24);
-		$randD2		= mt_rand(0,24);
+		$saltArray = array('a', '0', 'c', '1', 'e', '2', 'h', '3', 'i', '4', 'k', '5', 'm', '6', 'o', '7', 'q', '8', 'r', '0', 'u', '1', 'w', '2', 'y');
+		$randA     = mt_rand(0, 9999);
+		$randB     = mt_rand(0, $randA);
+		$randC     = mt_rand(0, $randB);
+		$randD     = mt_rand(0, 24);
+		$randD2    = mt_rand(0, 24);
 
 
-		$salt 		= md5('string '. $secretPartA . date('s'). $randA . str_replace($randC, $randD, date('r')). $secretPartB . 'end string');
-		$salt 		= str_replace($saltArray[$randD], $saltArray[$randD2], $salt);
+		$salt = md5('string ' . $secretPartA . date('s') . $randA . str_replace($randC, $randD, date('r')) . $secretPartB . 'end string');
+		$salt = str_replace($saltArray[$randD], $saltArray[$randD2], $salt);
 		if ($type > 100) {
-			$salt 	=  md5($salt);
+			$salt = md5($salt);
 		}
 
 
 		// use password_hash since php 5.5.0
-		$salt		= crypt($salt, $salt);
-		$rT			= $randC + $randA;
-		if ($rT < 1) {$rT = 1;}
-		$time		= (int)time() * $randB / $rT;
+		$salt = crypt($salt, $salt);
+		$rT   = $randC + $randA;
+		if ($rT < 1) {
+			$rT = 1;
+		}
+		$time  = (int)time() * $randB / $rT;
 		$token = hash('sha256', $salt . $time . time());
 
 		if ($type == 'folder') {
@@ -177,13 +178,13 @@ class PhocacartUtils
 		$code = md5(uniqid(rand(), true));
 		if ($length != '' && (int)$length > 0) {
 			$length = $length - 1;
-			return chr(rand(97,122)) . substr($code, 0, $length);
+			return chr(rand(97, 122)) . substr($code, 0, $length);
 		} else {
-			return chr(rand(97,122)) . $code;
+			return chr(rand(97, 122)) . $code;
 		}
 	}
 
-	public static function wordDelete($string,$length,$end) {
+	public static function wordDelete($string, $length, $end) {
 		if (strlen($string) < $length || strlen($string) == $length) {
 			return $string;
 		} else {
@@ -191,7 +192,7 @@ class PhocacartUtils
 		}
 	}
 
-	public static function wordDeleteWhole($string,$length,$end = '...') {
+	public static function wordDeleteWhole($string, $length, $end = '...') {
 		if (strlen($string) < $length || strlen($string) == $length) {
 			return $string;
 		} else {
@@ -202,29 +203,29 @@ class PhocacartUtils
 
 
 	public static function strTrimAll($input) {
-		$output	= '';
-	    $input	= trim($input);
-	    for($i=0;$i<strlen($input);$i++) {
-	        if(substr($input, $i, 1) != " ") {
-	            $output .= trim(substr($input, $i, 1));
-	        } else {
-	            $output .= " ";
-	        }
-	    }
-	    return $output;
+		$output = '';
+		$input  = trim($input);
+		for ($i = 0; $i < strlen($input); $i++) {
+			if (substr($input, $i, 1) != " ") {
+				$output .= trim(substr($input, $i, 1));
+			} else {
+				$output .= " ";
+			}
+		}
+		return $output;
 	}
 
 	public static function convertEncoding($string) {
 
-		$pC						= PhocacartUtils::getComponentParameters();
-		$import_encoding_method	= $pC->get( 'import_encoding_method', '' );
-		$import_encoding		= $pC->get( 'import_encoding', '' );
-		$returnString		= '';
+		$pC                     = PhocacartUtils::getComponentParameters();
+		$import_encoding_method = $pC->get('import_encoding_method', '');
+		$import_encoding        = $pC->get('import_encoding', '');
+		$returnString           = '';
 
 		if ($import_encoding != '') {
 
 			if ($import_encoding_method == 1) { //'iconv'
-				$returnString = iconv( $import_encoding, "UTF-8", $string );
+				$returnString = iconv($import_encoding, "UTF-8", $string);
 			} else if ($import_encoding_method == 2) {//'mb_convert_encoding'
 				$returnString = mb_convert_encoding($string, "UTF-8", $import_encoding);
 			} else {
@@ -238,7 +239,7 @@ class PhocacartUtils
 	}
 
 	public static function removeUtf8Bom($text) {
-		$bom = pack('H*','EFBBBF');
+		$bom  = pack('H*', 'EFBBBF');
 		$text = preg_replace("/^$bom/", '', $text);
 		return $text;
 	}
@@ -246,18 +247,18 @@ class PhocacartUtils
 	public static function getIp() {
 
 
-		$pC						= PhocacartUtils::getComponentParameters();
-		$store_ip				= $pC->get( 'store_ip', 0 );
+		$pC       = PhocacartUtils::getComponentParameters();
+		$store_ip = $pC->get('store_ip', 0);
 
 		if ($store_ip == 0) {
 			return 'anonymous';
 		}
 
 		$ip = false;
-		if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) {
-			$ip  = $_SERVER['REMOTE_ADDR'];
+		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) {
+			$ip = $_SERVER['REMOTE_ADDR'];
 		} else {
-			$ip  = getenv('HTTP_X_FORWARDED_FOR');
+			$ip = getenv('HTTP_X_FORWARDED_FOR');
 		}
 		if (!$ip) {
 			$ip = $_SERVER['REMOTE_ADDR'];
@@ -268,8 +269,8 @@ class PhocacartUtils
 
 	public static function getUserAgent() {
 
-		$pC						= PhocacartUtils::getComponentParameters();
-		$store_user_agent		= $pC->get( 'store_user_agent', 0 );
+		$pC               = PhocacartUtils::getComponentParameters();
+		$store_user_agent = $pC->get('store_user_agent', 0);
 
 		if ($store_user_agent == 0) {
 			return '';
@@ -286,20 +287,20 @@ class PhocacartUtils
 	public static function StripHiddenChars($str) {
 		$chars = array("\r\n", "\n", "\r", "\t", "\0", "\x0B", "\xEF", "\xBB", "\xBF");
 
-		$str = str_replace($chars," ",$str);
+		$str = str_replace($chars, " ", $str);
 
-		return preg_replace('/\s+/',' ',$str);
+		return preg_replace('/\s+/', ' ', $str);
 	}
 
 
 	public static function setOptionParameter($parameter, $value = '') {
 
-		$component			= 'com_phocacart';
-		$paramsC			= ComponentHelper::getParams($component) ;
+		$component = 'com_phocacart';
+		$paramsC   = ComponentHelper::getParams($component);
 		$paramsC->set($parameter, $value);
-		$data['params'] 	= $paramsC->toArray();
-		$table 				= Table::getInstance('extension');
-		$idCom				= $table->find( array('element' => $component ));
+		$data['params'] = $paramsC->toArray();
+		$table          = Table::getInstance('extension');
+		$idCom          = $table->find(array('element' => $component));
 		$table->load($idCom);
 
 		if (!$table->bind($data)) {
@@ -386,22 +387,23 @@ class PhocacartUtils
 	public static function isJCompatible($version) {
 
 		$currentVersion = new Version();
-		if($currentVersion->isCompatible($version)) {
+		if ($currentVersion->isCompatible($version)) {
 			return true;
 		}
 		return false;
 	}
+
 	public static function setConcatCharCount($count = 16384) {
 
 		$db = Factory::getDBO();
-		$db->setQuery("SET @@group_concat_max_len = ".(int)$count);
+		$db->setQuery("SET @@group_concat_max_len = " . (int)$count);
 		$db->execute();
 	}
 
 	public static function issetMessage() {
 
-		$app		= Factory::getApplication();
-		$message 	= $app->getMessageQueue();
+		$app     = Factory::getApplication();
+		$message = $app->getMessageQueue();
 
 		if (!empty($message)) {
 			return true;
@@ -425,16 +427,16 @@ class PhocacartUtils
 
 	public static function getComponentParameters() {
 
-		$app 	= Factory::getApplication();
-		$option	= $app->input->get('option');
-		$client	= $app->isClient('administrator') ? 'A' : 'S';
+		$app    = Factory::getApplication();
+		$option = $app->input->get('option');
+		$client = $app->isClient('administrator') ? 'A' : 'S';
 		return PhocacartUtilsOptions::getOptions('PC', $client, $option);
 	}
 
 	public static function replaceCommaWithPoint($item) {
 
-		$paramsC 			= PhocacartUtils::getComponentParameters();
-		$comma_point		= $paramsC->get( 'comma_point', 0 );
+		$paramsC     = PhocacartUtils::getComponentParameters();
+		$comma_point = $paramsC->get('comma_point', 0);
 
 		$item = PhocacartUtils::getDecimalFromString($item);
 		if ($comma_point == 1) {
@@ -449,8 +451,8 @@ class PhocacartUtils
 		if (empty($string)) {
 			return 0;
 		}
-		$int	= '';//$int = 0
-		$parts 	= explode(':', $string);
+		$int   = '';//$int = 0
+		$parts = explode(':', $string);
 		if (isset($parts[0])) {
 			$int = (int)$parts[0];
 		}
@@ -458,7 +460,7 @@ class PhocacartUtils
 	}
 
 	public static function getNullFromEmpty($value = '') {
-		if ($value  == '') {
+		if ($value == '') {
 			return 0;
 		}
 		return $value;
@@ -497,7 +499,7 @@ class PhocacartUtils
 	public static function getDefaultTemplate() {
 
 		$db = Factory::getDBO();
-		$q = 'SELECT template FROM #__template_styles WHERE client_id = 0 AND home = 1;';
+		$q  = 'SELECT template FROM #__template_styles WHERE client_id = 0 AND home = 1;';
 		$db->setQuery($q);
 		$item = $db->loadResult();
 		return $item;
@@ -505,8 +507,8 @@ class PhocacartUtils
 	}
 
 	public static function cleanExternalHtml($html) {
-		$allowedTags = PhocacartUtilsSettings::getHTMLTagsExternalSource();
-		$allowedTagsString = '<' . implode('><', $allowedTags). '>';
+		$allowedTags       = PhocacartUtilsSettings::getHTMLTagsExternalSource();
+		$allowedTagsString = '<' . implode('><', $allowedTags) . '>';
 
 		$html = strip_tags($html, $allowedTagsString);
 
@@ -540,9 +542,9 @@ class PhocacartUtils
 	public static function isView($viewToCheck = '') {
 
 		if ($viewToCheck != '') {
-			$app 		= Factory::getApplication();
-			$view 		= $app->input->get('view', '');
-			$option 	= $app->input->get('option', '');
+			$app    = Factory::getApplication();
+			$view   = $app->input->get('view', '');
+			$option = $app->input->get('option', '');
 
 			if ($option == 'com_phocacart' && $view == $viewToCheck) {
 				return true;
@@ -554,9 +556,9 @@ class PhocacartUtils
 	public static function isTypeView($viewToCheck = '') {
 
 		if ($viewToCheck != '') {
-			$app 		= Factory::getApplication();
-			$view 		= $app->input->get('typeview', '');
-			$option 	= $app->input->get('option', '');
+			$app    = Factory::getApplication();
+			$view   = $app->input->get('typeview', '');
+			$option = $app->input->get('option', '');
 
 			if ($option == 'com_phocacart' && $view == $viewToCheck) {
 				return true;
@@ -568,10 +570,10 @@ class PhocacartUtils
 	public static function isController($controllerToCheck = '') {
 
 		if ($controllerToCheck != '') {
-			$app 		= Factory::getApplication();
+			$app = Factory::getApplication();
 			//$task 		= $app->input->get('task','', 'raw');
 			$controller = $app->input->get('controller', '');// Set in POS controllers
-			$option 	= $app->input->get('option', '');
+			$option     = $app->input->get('option', '');
 
 			//$taskA		= explode('.', $task);
 
@@ -585,7 +587,7 @@ class PhocacartUtils
 
 
 	public static function validateDate($date) {
-		$format = 'Y-m-d H:i:s';
+		$format   = 'Y-m-d H:i:s';
 		$dateTime = DateTime::createFromFormat($format, $date);
 
 		if ($dateTime instanceof DateTime && $dateTime->format('Y-m-d H:i:s') == $date) {
@@ -595,87 +597,148 @@ class PhocacartUtils
 		return false;
 	}
 
-	public static function convertWeightToKg($weight, $unit){
+	public static function convertWeightToKg($weight, $unit) {
 
-        if ($unit == 'kg') {
-            return $weight;
-        } else if ($unit == 'g') {
-            return $weight/1000;
-        } else if ($unit == 'lb') {
-            return $weight*0.45359237;
-        } else if ($unit == 'oz') {
-            return $weight*0.0283495231;
-        } else {
-            return $weight;
-        }
+		if ($unit == 'kg') {
+			return $weight;
+		} else if ($unit == 'g') {
+			return $weight / 1000;
+		} else if ($unit == 'lb') {
+			return $weight * 0.45359237;
+		} else if ($unit == 'oz') {
+			return $weight * 0.0283495231;
+		} else {
+			return $weight;
+		}
 
 	}
 
-	public static function convertWeightFromKg($weight, $unit){
+	public static function convertWeightFromKg($weight, $unit) {
 
-        if ($unit == 'kg') {
-            return $weight;
-        } else if ($unit == 'g') {
-            return $weight*1000;
-        } else if ($unit == 'lb') {
-            return $weight/0.45359237;
-        } else if ($unit == 'oz') {
-            return $weight/0.0283495231;
-        } else {
-            return $weight;
-        }
+		if ($unit == 'kg') {
+			return $weight;
+		} else if ($unit == 'g') {
+			return $weight * 1000;
+		} else if ($unit == 'lb') {
+			return $weight / 0.45359237;
+		} else if ($unit == 'oz') {
+			return $weight / 0.0283495231;
+		} else {
+			return $weight;
+		}
 
 	}
 
 	public static function getNumberFromText($text) {
 
-		return (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
+		return (int)filter_var($text, FILTER_SANITIZE_NUMBER_INT);
 	}
 
 
 	public static function getPluginId($folder, $element) {
 
-		if(!isset(self::$pluginId[$folder][$element])) {
-            $db    = Factory::getDbo();
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('extension_id'))
-                ->from($db->quoteName('#__extensions'))
-                ->where($db->quoteName('folder') . ' = ' . $db->quote($folder))
-                ->where($db->quoteName('element') . ' = ' . $db->quote($element));
-            $db->setQuery($query);
+		if (!isset(self::$pluginId[$folder][$element])) {
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select($db->quoteName('extension_id'))
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('folder') . ' = ' . $db->quote($folder))
+				->where($db->quoteName('element') . ' = ' . $db->quote($element));
+			$db->setQuery($query);
 
-            try {
-                $result = (int)$db->loadResult();
-            } catch (\RuntimeException $e) {
-                $result = 0;
-                //Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-            }
+			try {
+				$result = (int)$db->loadResult();
+			} catch (\RuntimeException $e) {
+				$result = 0;
+				//Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			}
 
-            self::$pluginId[$folder][$element] = $result;
-        }
-        return self::$pluginId[$folder][$element];
-    }
+			self::$pluginId[$folder][$element] = $result;
+		}
+		return self::$pluginId[$folder][$element];
+	}
 
 	public static function getPluginIdsByGroup($folder) {
 
-		if(!isset(self::$pluginIdsGroup[$folder])) {
-            $db    = Factory::getDbo();
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('extension_id'))
-                ->from($db->quoteName('#__extensions'))
-                ->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
-            $db->setQuery($query);
+		if (!isset(self::$pluginIdsGroup[$folder])) {
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select($db->quoteName('extension_id'))
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
+			$db->setQuery($query);
 
-            try {
-                $result = $db->loadColumn();
-            } catch (\RuntimeException $e) {
-                $result = [];
-                //Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-            }
+			try {
+				$result = $db->loadColumn();
+			} catch (\RuntimeException $e) {
+				$result = [];
+				//Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			}
 
-            self::$pluginIdsGroup[$folder] = $result;
-        }
-        return self::$pluginIdsGroup[$folder];
-    }
+			self::$pluginIdsGroup[$folder] = $result;
+		}
+		return self::$pluginIdsGroup[$folder];
+	}
+
+
+	public static function isPhocaPdfAvailable() {
+
+		$pdfV                  = array();
+		$pdfV['plugin-pdf']    = PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');
+		$pdfV['component-pdf'] = PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
+		$pdfV['pdf']           = false;
+
+
+		if ($pdfV['plugin-pdf'] == 1 && $pdfV['component-pdf'] == 1) {
+			if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocapdf/helpers/phocapdfrender.php')) {
+				require_once(JPATH_ADMINISTRATOR . '/components/com_phocapdf/helpers/phocapdfrender.php');
+			}
+			$pdfV['pdf'] = true;
+		}
+
+		return $pdfV['pdf'];
+	}
+
+	public static function isPhocaPDFBarcodeAvailable() {
+
+		$pdfV                  = array();
+		$pdfV['component-pdf'] = PhocacartUtilsExtension::getExtensionInfo('com_phocapdf');
+		$pdfV['pdf']           = false;
+
+
+		if ($pdfV['component-pdf'] == 1) {
+
+			if (File::exists(JPATH_ADMINISTRATOR . '/components/com_phocapdf/assets/tcpdf/tcpdf_barcodes_2d.php')) {
+				require_once(JPATH_ADMINISTRATOR . '/components/com_phocapdf/assets/tcpdf/tcpdf_barcodes_2d.php');
+			}
+
+			$pdfV['pdf'] = true;
+		}
+
+		return $pdfV['pdf'];
+	}
+
+	public static function getQrImage($qrCode) {
+
+		if (PhocacartUtils::isPhocaPDFBarcodeAvailable()) {
+
+			// Remove possible loop
+			$qrCode = str_replace('{invoiceqr}', '', $qrCode);
+
+			$barCodeObj = new TCPDF2DBarcode($qrCode, 'QRCODE,H');
+
+			// The barcode was not initialized properly, e.g. the $qrCode format is wrong
+			$barCodeA = $barCodeObj->getBarcodeArray();
+			if (!isset($barCodeA['num_rows']) || !isset($barCodeA['num_cols']) || !isset($barCodeA['bcode'])) {
+				return '';
+			}
+
+			// Be aware some clients do not support base64 image or SVG image so let the image be in PDF document and not in email body
+			//return '<img src="data:image/png;base64,'. base64_encode($barCodeObj->getBarcodePngData(2,2)).'">';
+			return $barCodeObj->getBarcodeSVGcode();
+		}
+
+		return '';
+	}
 }
 ?>

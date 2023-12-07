@@ -27,7 +27,7 @@ class PhocacartText {
 	public static function completeText($body, $replace, $type = 1) {
 
 
-		$body = isset($replace['name']) ? str_replace('{name}', $replace['name'], $body) : $body;
+		$body = isset($replace['name']) ? str_replace('{name}', $replace['name'], (string)$body) : $body;
 
 		if ($type == 3) {
 		    $body = isset($replace['email_gift_recipient']) ? str_replace('{emailgiftrecipient}', $replace['email_gift_recipient'], $body) : $body;
@@ -89,6 +89,7 @@ class PhocacartText {
 		$body = isset($replace['invoiceyear'])				? str_replace('{invoiceyear}', $replace['invoiceyear'], $body)						: $body;
 		$body = isset($replace['invoicemonth'])				? str_replace('{invoicemonth}', $replace['invoicemonth'], $body)					: $body;
 		$body = isset($replace['invoiceday'])				? str_replace('{invoiceday}', $replace['invoiceday'], $body)						: $body;
+        $body = isset($replace['invoiceqr'])				? str_replace('{invoiceqr}', $replace['invoiceqr'], $body)						: $body;
 
 		$body = isset($replace['orderdate'])				? str_replace('{orderdate}', $replace['orderdate'], $body)						    : $body;
 
@@ -230,6 +231,7 @@ class PhocacartText {
 		$totalBrutto	= $order->getItemTotal($orderId, 0, 'brutto');
 
 		$download_guest_access = $pC->get('download_guest_access', 0);
+        $pdf_invoice_qr_code = $pC->get('pdf_invoice_qr_code', '');
 
         $email_downloadlink_description = isset($status['email_downloadlink_description']) && $status['email_downloadlink_description'] != '' ? $status['email_downloadlink_description'] : '';
 
@@ -379,7 +381,7 @@ class PhocacartText {
         $r['trackinglink'] 			= PhocacartOrderView::getTrackingLink($common);
 		$r['trackingdescription'] 	= PhocacartOrderView::getTrackingDescription($common);
 		$r['shippingtitle'] 		= PhocacartOrderView::getShippingTitle($common);
-        $r['shippingdescriptioninfo'] 		= PhocacartOrderView::getShippingDescriptionInfo($common);
+        $r['shippingdescriptioninfo'] 	= PhocacartOrderView::getShippingDescriptionInfo($common);
 
 
         $r['shippingbranchname']    = '';
@@ -424,6 +426,8 @@ class PhocacartText {
 		//$r['invoiceduedateyear']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'Y');
 		//$r['invoiceduedatemonth']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'm');
 		//$r['invoiceduedateday']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'd');
+
+        $r['invoiceqr']             = PhocacartUtils::getQrImage($pdf_invoice_qr_code);
 
         $dateIdd					= PhocacartDate::splitDate($r['invoiceduedate']);
         $r['invoicedueyear']	    = $dateIdd['year'];
