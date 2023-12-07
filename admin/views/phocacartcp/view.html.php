@@ -31,54 +31,10 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		$this->t	= PhocacartUtils::setVars();
 		$this->s    = PhocacartRenderStyle::getStyles();
 		$this->r	= new PhocacartRenderAdminview();
-		/*$this->views= array(
-		'items'			=> array($this->t['l'] . '_PRODUCTS', 'folder-close', '#c1a46d'),
-		'categories'	=> array($this->t['l'] . '_CATEGORIES', 'folder-open', '#da7400'),
-		'specifications'=> array($this->t['l'] . '_SPECIFICATIONS', 'th-list', '#4e5f81'),
-		'manufacturers'	=> array($this->t['l'] . '_MANUFACTURERS', 'home', '#ff7d49'),
-		'orders'		=> array($this->t['l'] . '_ORDERS', 'shopping-cart', '#0099CC'),
-		'statuses'		=> array($this->t['l'] . '_ORDER_STATUSES', 'time', '#c1976d'),
-		'stockstatuses'	=> array($this->t['l'] . '_STOCK_STATUSES', 'tasks', '#777777'),
-		'shippings'		=> array($this->t['l'] . '_SHIPPING', 'barcode', '#afbb6a'),
-		'countries'		=> array($this->t['l'] . '_COUNTRIES', 'globe', '#478CD1'),
-		'regions'		=> array($this->t['l'] . '_REGIONS', 'globe', '#01868B'),
-		'zones'			=> array($this->t['l'] . '_ZONES', 'globe', '#a5dee5'),
-		'payments'		=> array($this->t['l'] . '_PAYMENT', 'credit-card', '#4f9ce2'),
-		'currencies'	=> array($this->t['l'] . '_CURRENCIES', 'eur', '#dca300'),
-		'taxes'			=> array($this->t['l'] . '_TAXES', 'calendar', '#dd5500'),
-		'users'			=> array($this->t['l'] . '_CUSTOMERS', 'user', '#7faa7f'),
-		'groups'		=> array($this->t['l'] . '_CUSTOMER_GROUPS', 'user', '#aa7faa'),
-		'rewards'		=> array($this->t['l'] . '_REWARD_POINTS', 'certificate', '#7faaaa'),
-		'formfields'	=> array($this->t['l'] . '_FORM_FIELDS', 'list-alt', '#ffde00'),
-		'reviews'		=> array($this->t['l'] . '_REVIEWS', 'comment', '#399ed0'),
-		//'ratings'		=> array($this->t['l'] . '_RATINGS', 'x x x', '#ffde00'),
-		//'vouchers'	=> array($this->t['l'] . '_VOUCHERS', 'x x x', '#ffde00'),
-		'coupons'		=> array($this->t['l'] . '_COUPONS', 'gift', '#FF6685'),
-		'discounts'		=> array($this->t['l'] . '_DISCOUNTS', 'piggy-bank', '#aa56fe'),
-		'downloads'		=> array($this->t['l'] . '_DOWNLOADS', 'download-alt', '#33af49'),
-		'tags'			=> array($this->t['l'] . '_TAGS', 'tag', '#CC0033'),
-		'parameters'	=> array($this->t['l'] . '_PARAMETERS', 'align-justify', '#0040ff'),
-		'parametervalues'=> array($this->t['l'] . '_PARAMETER_VALUES', 'list', '#0040ff'),
-		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', 'bullhorn', '#ffb300'),
-		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', 'heart', '#EA7C7C'),
-		'questions'		=> array($this->t['l'] . '_QUESTIONS', 'question-sign', '#9900CC'),
-		'times'			=> array($this->t['l'] . '_OPENING_TIMES', 'time', '#73b9ff'),
-		'submititems'	=> array($this->t['l'] . '_SUBMITTED_ITEMS', 'duplicate', '#7fff73'),
-		'statistics'	=> array($this->t['l'] . '_STATISTICS', 'stats', '#c1756d'),
-		'reports'		=> array($this->t['l'] . '_REPORTS', 'list-alt', '#8c0069'),
-		'hits'			=> array($this->t['l'] . '_HITS', 'equalizer', '#fb1000'),
-		'imports'		=> array($this->t['l'] . '_IMPORT', 'import', '#668099'),
-		'exports'		=> array($this->t['l'] . '_EXPORT', 'export', '#669999'),
-		'logs'			=> array($this->t['l'] . '_SYSTEM_LOG', 'list', '#c0c0c0'),
-		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#3378cc'),
-		'extensions'	=> array($this->t['l'] . '_EXTENSIONS', 'th-large', '#2693ff'),
-		'vendors'		=> array($this->t['l'] . '_VENDORS', 'user', '#b30059'),
-		'sections'		=> array($this->t['l'] . '_SECTIONS', 'unchecked', '#b35900'),
-		'units'			=> array($this->t['l'] . '_UNITS', 'modal-window', '#ff9326'),
-		);*/
 
 		$i = ' icon-';
 		$d = 'duotone ';
+
 		$this->views= array(
 		'items'			=> array($this->t['l'] . '_PRODUCTS', $d.$i .'archive', '#c1a46d'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', $d.$i .'folder-open', '#da7400'),
@@ -129,46 +85,15 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'info'			=> array($this->t['l'] . '_INFO', $d.$i .'info-circle', '#3378cc'),
 		);
 
-	/*
-		$this->views= array(
-		'items'			=> array($this->t['l'] . '_PRODUCTS', 'folder-close', '#eff8a5'),
-		'categories'	=> array($this->t['l'] . '_CATEGORIES', 'folder-open', '#fdb784'),
-		'specifications'=> array($this->t['l'] . '_SPECIFICATIONS', 'th-list', '#fa9d58'),
-		'manufacturers'	=> array($this->t['l'] . '_MANUFACTURERS', 'home', '#ed145b'),
-		'orders'		=> array($this->t['l'] . '_ORDERS', 'shopping-cart', '#f86cb5'),
-		'statuses'		=> array($this->t['l'] . '_ORDER_STATUSES', 'time', '#f86cd9'),
-		'stockstatuses'	=> array($this->t['l'] . '_STOCK_STATUSES', 'tasks', '#d673dd'),
-		'shippings'		=> array($this->t['l'] . '_SHIPPING', 'barcode', '#f4adf9'),
-		'countries'		=> array($this->t['l'] . '_COUNTRIES', 'globe', '#4f70a6'),
-		'regions'		=> array($this->t['l'] . '_REGIONS', 'globe', '#7fadf8'),
-		'payments'		=> array($this->t['l'] . '_PAYMENT', 'credit-card', '#88ecac'),
-		'currencies'	=> array($this->t['l'] . '_CURRENCIES', 'eur', '#b9f3cd'),
-		'taxes'			=> array($this->t['l'] . '_TAXES', 'calendar', '#eff8a5'),
-		'users'			=> array($this->t['l'] . '_USERS', 'user', '#fdb784'),
-		'formfields'	=> array($this->t['l'] . '_FORM_FIELDS', 'list-alt', '#fa9d58'),
-		'reviews'		=> array($this->t['l'] . '_REVIEWS', 'comment', '#ed145b'),
-		//'ratings'		=> array($this->t['l'] . '_RATINGS', 'x x x', '#ffde00'),
-		//'vouchers'	=> array($this->t['l'] . '_VOUCHERS', 'x x x', '#ffde00'),
-		'coupons'		=> array($this->t['l'] . '_COUPONS', 'gift', '#f86cb5'),
-		'downloads'		=> array($this->t['l'] . '_DOWNLOADS', 'download-alt', '#f86cd9'),
-		'tags'			=> array($this->t['l'] . '_TAGS', 'tag', '#d673dd'),
-		'statistics'	=> array($this->t['l'] . '_STATISTICS', 'stats', '#f4adf9'),
-		'logs'			=> array($this->t['l'] . '_SYSTEM_LOG', 'list', '#4f70a6'),
-		'info'			=> array($this->t['l'] . '_INFO', 'info-sign', '#7fadf8')
-		);
-		*/
-
 		$this->t['version'] = PhocacartUtils::getPhocaVersion('com_phocacart');
 
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$this->t['enable_wizard']	= $paramsC->get( 'enable_wizard', 1 );
 
-		$media = new PhocacartRenderAdminmedia();
-
+		new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);
-
 	}
 
 	protected function addToolbar() {
