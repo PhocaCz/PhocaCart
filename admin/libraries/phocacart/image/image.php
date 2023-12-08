@@ -13,6 +13,7 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 
 class PhocacartImage
@@ -59,6 +60,10 @@ class PhocacartImage
                 $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
         }
+
+        PluginHelper::importPlugin('pcv');
+        Factory::getApplication()->triggerEvent('onPCVonGetThumbnailName', array($path, $filename, $size, &$thumbName));
+
         return $thumbName;
     }
 
