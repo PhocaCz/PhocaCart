@@ -206,6 +206,12 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 		$query->select('os.title AS status_title');
 		$query->join('LEFT', '#__phocacart_order_statuses AS os ON os.id = a.status_id');
 
+		$query->select('sm.title AS shipping_name');
+		$query->join('LEFT', '#__phocacart_shipping_methods AS sm ON sm.id=a.shipping_id');
+
+		$query->select('pm.title AS payment_name');
+		$query->join('LEFT', '#__phocacart_payment_methods AS pm ON pm.id=a.payment_id');
+
 		$query->select('t.amount AS total_amount, t.amount_currency AS total_amount_currency');
 		$query->join('LEFT', '#__phocacart_order_total AS t ON a.id = t.order_id AND (t.type = '.$db->quote('brutto').' OR t.type = \'\')');
 		// $query->where('(t.type = '.$db->quote('brutto').' OR t.type = \'\' OR t.type IS NULL)');
