@@ -17,6 +17,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 jimport( 'joomla.application.component.view' );
 
 use Joomla\Event\Event;
+use Phoca\PhocaCart\User\AdvancedACL;
 use Phoca\Render\Adminviews;
 
 class PhocaCartCpViewPhocaCartCp extends HtmlView
@@ -35,7 +36,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		$i = ' icon-';
 		$d = 'duotone ';
 
-		$this->views= array(
+		$this->views = array(
 		'items'			=> array($this->t['l'] . '_PRODUCTS', $d.$i .'archive', '#c1a46d'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', $d.$i .'folder-open', '#da7400'),
 		'specifications'=> array($this->t['l'] . '_SPECIFICATIONS', $d.$i .'equalizer', '#4e5f81'),
@@ -55,8 +56,6 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'rewards'		=> array($this->t['l'] . '_REWARD_POINTS',  $d.$i .'vcard', '#7faaaa'),
 		'formfields'	=> array($this->t['l'] . '_FORM_FIELDS',  $d.$i .'fields', '#ffde00'),
 		'reviews'		=> array($this->t['l'] . '_REVIEWS', $d.$i.'comment', '#399ed0'),
-		//'ratings'		=> array($this->t['l'] . '_RATINGS', $i .'x x x', '#ffde00'),
-		//'vouchers'	=> array($this->t['l'] . '_VOUCHERS', $i .'x x x', '#ffde00'),
 		'coupons'		=> array($this->t['l'] . '_COUPONS', $i .'gift', '#FF6685'),
 		'discounts'		=> array($this->t['l'] . '_DISCOUNTS',$d.$i .'scissors', '#aa56fe'),
 		'downloads'		=> array($this->t['l'] . '_DOWNLOADS', $i .'download-alt', '#33af49'),
@@ -80,10 +79,22 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'vendors'		=> array($this->t['l'] . '_VENDORS', $d.$i .'users', '#b30059'),
 		'sections'		=> array($this->t['l'] . '_SECTIONS', $d.$i .'notification-circle', '#b35900'),
 		'units'			=> array($this->t['l'] . '_UNITS', $d.$i .'menu', '#ff9326'),
-		'bulkprices'			=> array($this->t['l'] . '_BULK_PRICE_EDITOR', $d.$i .'click', '#f310de'),
+		'bulkprices'	=> array($this->t['l'] . '_BULK_PRICE_EDITOR', $d.$i .'click', '#f310de'),
 
 		'info'			=> array($this->t['l'] . '_INFO', $d.$i .'info-circle', '#3378cc'),
 		);
+
+		foreach($this->views as $view => $params) {
+			if (isset($params[3])) {
+				$action = $view;
+			} else {
+				$action = AdvancedACL::getActionFromView('phocacart' . $view);
+			}
+
+			if (!empty($action) && !AdvancedACL::authorise($action)) {
+				unset($this->views[$view]);
+			}
+		}
 
 		$this->t['version'] = PhocacartUtils::getPhocaVersion('com_phocacart');
 

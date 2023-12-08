@@ -7,13 +7,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Phoca\PhocaCart\MVC\Controller\AdminControllerTrait;
 
-jimport('joomla.application.component.controller');
 $app		= Factory::getApplication();
 $option 	= $app->input->get('option');
 
@@ -86,10 +86,21 @@ if ($layout == 'edit') {
 		}
 	}
 }
+
 class phocaCartCpController extends BaseController
 {
+	use AdminControllerTrait;
+
+	protected $option = 'com_phocacart';
+
+	public function execute($task)
+	{
+		$this->checkAdvancedPermission();
+		return parent::execute($task);
+	}
+
 	function display($cachable = false, $urlparams = array()) {
 		parent::display($cachable, $urlparams);
 	}
 }
-?>
+
