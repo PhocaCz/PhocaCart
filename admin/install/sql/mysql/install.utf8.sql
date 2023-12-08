@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `features` text,
   `price` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `price_original` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
+  `discount_percent` DECIMAL(15,2) AS (if(price_original <> 0, (price_original - price) / price_original * 100, 0)) VIRTUAL,
   `length` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `width` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `height` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',

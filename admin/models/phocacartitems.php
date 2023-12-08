@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$c = new PhocacartRenderAdmincolumns();
 
-        $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
+        $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, discount_percent, stock=E, access_level, language, association, hits, id');
         $admin_columns_products = explode(',', $admin_columns_products);
 
 
