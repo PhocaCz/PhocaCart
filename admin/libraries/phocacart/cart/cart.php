@@ -11,13 +11,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-
-/*
-phocacart import('phocacart.user.user');
-phocacart import('phocacart.user.guestuser');
-phocacart import('phocacart.shipping.shipping');
-phocacart import('phocacart.payment.payment');
-*/
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartCart
 {
@@ -359,12 +354,15 @@ class PhocacartCart
 
         if ($k != '' && (int)$quantity > 0) {
             if (isset($this->items[$k]['quantity']) && (int)$this->items[$k]['quantity'] > 0) {
-
+                $oldQuantity = $this->items[$k]['quantity'];
                 $this->items[$k]['quantity'] = $this->items[$k]['quantity'] + (int)$quantity;
             } else {
+                $oldQuantity = 0;
                 $this->items[$k]['quantity'] = (int)$quantity;
             }
-            $this->updateItems();
+
+            $this->updateItems($k, $this->items[$k], $oldQuantity, $this->items[$k]['quantity']);
+
             //$this->updateSubTotal();
             return true;
         } else {
@@ -378,24 +376,30 @@ class PhocacartCart
      * UPDATE - public function to update from CHECKOUT (update, remove buttons)
      */
     public function updateItemsFromCheckout($idKey = '', $quantity = 0) {
-
         // Don't check for quantity as it can be NULL
-        if ($idKey != '' && (int)$quantity > 0) {
-            $this->items[$idKey]['quantity'] = (int)$quantity;
-            $this->updateItems();
-            return true;
-        } else if ($idKey != '' && (int)$quantity == 0) {
-            unset($this->items[$idKey]);
-            $this->updateItems();
+        if ($idKey != '') {
+            $oldQuantity = $this->items[$idKey]['quantity'];
+
+            if ((int)$quantity > 0) {
+                $this->items[$idKey]['quantity'] = (int)$quantity;
+                $newQuantity = $quantity;
+            } else  {
+                unset($this->items[$idKey]);
+                $newQuantity = 0;
+            }
+
+            $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
             return true;
         }
+
+        return false;
     }
 
 
     /*
      * UPDATE - protected internal function to update session or database
      */
-    protected function updateItems() {
+    protected function updateItems(string $idKey, array $item, int $quantityOld, int $quantityNew) {
 
         $session = Factory::getSession();
 
@@ -415,6 +419,8 @@ class PhocacartCart
 
         $this->updateShipping();
         $this->updatePayment();
+
+        Dispatcher::dispatch(new Event\View\Cart\UpdateItems($idKey, $item, $quantityOld, $quantityNew));
     }
 
     /*
