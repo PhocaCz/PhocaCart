@@ -126,7 +126,7 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			if (stripos($search, 'id:') === 0) {
-				$query->where('a.id = '.(int) substr($search, 3));
+				$query->where('a.id = '. (int)substr($search, 3));
 			} elseif (is_numeric($search)) {
 				// Searching numeric value, so we search oonly ID and order numbers. This is must faster than numeric search
 				$searchInP = [];
@@ -139,18 +139,17 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 				$searchInP[] = 'a.invoice_number LIKE '. $search;
 
 				$query->where('('.implode(' OR ', $searchInP).')');
-			} elseif (true) {
+			} else {
 				$searchInUser = array('name_first', 'name_middle', 'name_last', 'name_degree', 'company', 'vat_1', 'vat_2', 'address_1', 'address_2', 'city', 'zip', 'email', 'email_contact', 'phone_1', 'phone_2', 'phone_mobile', 'fax' );
-				$searchInOrder = array('order_number', 'receipt_number', 'invoice_number');
 
 				$searchInP =  [];
 				$searchInP[] = 'a.id in (' .
 					'select order_id from #__phocacart_order_users where match(' . implode(', ', $searchInUser) . ') against (' . $db->Quote($search) . ')'.
 					')';
-				//$searchInP[] = 'match(a.comment) against (' . $db->Quote($search) . ')' ;
 
 				$query->where('('.implode(' OR ', $searchInP).')');
-			} else {
+
+				/*
 				$searchIn = array('name_first', 'name_middle', 'name_last', 'name_degree', 'company', 'vat_1', 'vat_2', 'address_1', 'address_2', 'city', 'zip', 'email', 'email_contact', 'phone_1', 'phone_2', 'phone_mobile', 'fax' );
 
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
@@ -170,13 +169,13 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 				}
 
 				$query->where('('.implode(' OR ', $searchInP).')');
+				*/
 			}
 		}
 	}
 
 	protected function getListQuery()
 	{
-
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);

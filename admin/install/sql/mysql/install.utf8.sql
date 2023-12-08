@@ -1243,7 +1243,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_order_users` (
 	`phone_mobile` varchar(20) NOT NULL DEFAULT '',
 	`fax` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`)
+  KEY `order_id` (`order_id`),
+  FULLTEXT KEY `idx_fulltext` (`name_first`,`name_middle`,`name_last`,`name_degree`,`company`,`vat_1`,`vat_2`,`address_1`,`address_2`,`city`,`zip`,`email`,`email_contact`,`phone_1`,`phone_2`,`phone_mobile`,`fax`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_order_products` (
