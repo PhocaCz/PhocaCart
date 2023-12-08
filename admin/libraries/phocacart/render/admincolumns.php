@@ -643,7 +643,7 @@ class PhocacartRenderAdmincolumns
             }
         }
 
-        return $this->r->td(implode("\n", $o), 'small');
+        return $this->r->td(implode(",\n", $o), 'small');
     }
 
     public function association($item, &$options) {
