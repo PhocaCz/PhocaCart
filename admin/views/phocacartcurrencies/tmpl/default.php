@@ -120,9 +120,20 @@ $this->t['current_currency']['exchange_rate'] = $item->exchange_rate;
 
 $exchangeInfo = PhocacartCurrency::getCurrencyRelation($this->t['current_currency'], $this->t['default_currency']);
 //echo $r->td($this->escape(PhocacartPrice::cleanPrice($item->exchange_rate)) . $exchangeInfo, "small");
-echo $r->td('<span class="ph-editinplace-text ph-eip-text ph-eip-price" id="currencies:exchange_rate:'.(int)$item->id.'" data-id="'.(int)$item->id.'">'
-	. $this->escape(PhocacartPrice::cleanPrice($item->exchange_rate)).'</span>'
-	. '<div class="ph-exchange-info phChangeEditInPlace'.(int)$item->id.'">'.$exchangeInfo.'</div>', "small");
+$td = '';
+if ($this->t['current_currency']['id'] != $this->t['default_currency']['id']) {
+	echo $r->td(
+		'<div><div class="row">' .
+		'<div class="col"><span class="ph-editinplace-text ph-eip-text ph-eip-price" id="currencies:exchange_rate:'.(int)$item->id.'" data-id="'.(int)$item->id.'">' .
+		$this->escape(PhocacartPrice::cleanPrice($item->exchange_rate)).'</span></div>' .
+		'<div class="col"><span class="col ph-editinplace-text ph-eip-text ph-eip-price" id="currencies:exchange_rate_reverse:'.(int)$item->id.'" data-id="'.(int)$item->id.'">' .
+		$this->escape(PhocacartPrice::cleanPrice($item->exchange_rate ? 1 / $item->exchange_rate : 0)).'</span></div>' .
+		'</div>' .
+		'<div class="row ph-exchange-info phChangeEditInPlace'.(int)$item->id.'">'.$exchangeInfo.'</div></div>', "small"
+	);
+} else {
+	echo $r->td('&nbsp;', "small");
+}
 
 echo $r->td($item->id, "small");
 

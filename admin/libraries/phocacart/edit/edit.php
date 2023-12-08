@@ -50,7 +50,7 @@ class PhocacartEdit
             '#__phocacart_shipping_methods' => 'PhocacartShipping'
 		);
 		$allowedColumns = array(
-			'price', 'price_original', 'title', 'sku', 'hits', 'stock', 'exchange_rate', 'tax_rate', 'discount', 'cost',
+			'price', 'price_original', 'title', 'sku', 'hits', 'stock', 'exchange_rate', 'exchange_rate_reverse', 'tax_rate', 'discount', 'cost',
 
 			'upc', 'ean', 'jan', 'isbn', 'mpn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link',
 			'external_text', 'external_link2', 'external_text2', 'min_quantity', 'min_multiple_quantity', 'unit_amount', 'unit_unit',
@@ -104,7 +104,6 @@ class PhocacartEdit
 		}
 
 
-
 		switch($column) {
 
 			case 'price':
@@ -116,6 +115,15 @@ class PhocacartEdit
 				$options['value'] = PhocacartUtils::replaceCommaWithPoint($options['value']);
 				$options['value'] = (float)$options['value'];
 			break;
+			case 'exchange_rate_reverse':
+				$options['value'] = PhocacartUtils::replaceCommaWithPoint($options['value']);
+				$options['value'] = (float)$options['value'];
+				$options['value_result'] = $options['value'];
+				if ($options['value'] != 0) {
+					$options['value'] = 1 / $options['value'];
+				}
+				$column = 'exchange_rate';
+				break;
 			case 'stock':
 				$options['value'] = (int)$options['value'];
 			break;
@@ -207,6 +215,9 @@ class PhocacartEdit
 				return false;
 			}
 
+			if (isset($options['value_result'])) {
+				$options['value'] = $options['value_result'];
+			}
 
 			// Update product price history and product group price
 			if ($tableDbName == 'PhocaCartItem' && $column == 'price') {

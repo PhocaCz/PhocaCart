@@ -208,6 +208,12 @@ if (is_array($this->items)) {
             }
         } else if ($item->type == 1) {
             $info = '<span class="label label-info badge bg-info">' . Text::_('COM_PHOCACART_ONLINE_SHOP') . '</span>';
+            if (isset($item->shipping_name)) {
+                $info .= '<br><span class="badge text-bg-light mt-1">' . $item->shipping_name . '</span>';
+            }
+            if (isset($item->payment_name)) {
+                $info .= '<br><span class="badge text-bg-light mt-1">' . $item->payment_name . '</span>';
+            }
         }
         $info .= '</div>';
 

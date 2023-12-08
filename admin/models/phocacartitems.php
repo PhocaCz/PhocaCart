@@ -34,7 +34,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$c = new PhocacartRenderAdmincolumns();
 
-        $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
+        $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, discount_percent, stock=E, access_level, language, association, hits, id');
         $admin_columns_products = explode(',', $admin_columns_products);
 
 
@@ -55,7 +55,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		}
 
 		// Add ordering and fields needed for filtering (search tools)
-		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'owner_id', 'published', 'language'), $this->columns);
+		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'owner_id', 'instock',  'published', 'language'), $this->columns);
 
 
 		//$config['filter_fields'][] = 'pc.ordering';
@@ -131,6 +131,9 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$ownerId = $app->getUserStateFromRequest($this->context.'.filter.owner_id', 'filter_owner_id');
 		$this->setState('filter.owner_id', $ownerId);
 
+		$inStock = $app->getUserStateFromRequest($this->context.'.filter.instock', 'filter_instock');
+		$this->setState('filter.instock', $inStock);
+
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language');
 		$this->setState('filter.language', $language);
 
@@ -160,6 +163,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$id	.= ':'.$this->getState('filter.category_id');
 		$id	.= ':'.$this->getState('filter.manufacturer_id');
 		$id	.= ':'.$this->getState('filter.owner_id');
+		$id	.= ':'.$this->getState('filter.instock');
     	$id .= ':'.$this->getState('filter.language');
 		$id	.= ':'.$this->getState('filter.item_id');
 
@@ -268,6 +272,15 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$ownerId = $this->getState('filter.owner_id');
 		if (is_numeric($ownerId)) {
 			$query->where('a.owner_id = ' . (int) $ownerId);
+		}
+
+		$inStock = $this->getState('filter.instock');
+		if (is_numeric($inStock)) {
+			if ($inStock) {
+				$query->where('a.stock > 0');
+			} else {
+				$query->where('a.stock <= 0');
+			}
 		}
 
 		// Filter on the language.

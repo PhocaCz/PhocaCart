@@ -185,6 +185,11 @@ class PhocacartRenderAdmincolumns
         return $this->renderHeaderColumn($data, $options);
     }
 
+    public function discount_percentHeader(&$options) {
+        $data = array('class' => 'ph-discount-percent', 'title' => 'COM_PHOCACART_FIELD_DISCOUNT_PERCENT_LABEL', 'tool' => 'searchtools.sort', 'column' => 'a.discount_percent');
+        return $this->renderHeaderColumn($data, $options);
+    }
+
     public function stockHeader(&$options) {
         $data = array('class' => 'ph-stock', 'title' => 'COM_PHOCACART_FIELD_IN_STOCK_LABEL', 'tool' => 'searchtools.sort', 'column' => 'a.stock');
         return $this->renderHeaderColumn($data, $options);
@@ -532,6 +537,11 @@ class PhocacartRenderAdmincolumns
         return $this->commonColumn($item, $options);
     }
 
+    public function discount_percent($item, &$options) {
+        $item['value'] = PhocacartPrice::cleanPrice($item['value']) . '%';
+        return $this->commonColumn($item, $options);
+    }
+
     public function stock($item, &$options) {
         $item['value'] = PhocacartPrice::cleanPrice($item['value']);
         return $this->commonColumn($item, $options);
@@ -633,7 +643,7 @@ class PhocacartRenderAdmincolumns
             }
         }
 
-        return $this->r->td(implode("\n", $o), 'small');
+        return $this->r->td(implode(",\n", $o), 'small');
     }
 
     public function association($item, &$options) {
