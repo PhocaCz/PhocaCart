@@ -2,12 +2,9 @@
 <form>
 	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
 		<fields name="filter">
-
-
 			<field name="search" type="text" inputmode="search" label="COM_PHOCACART_SEARCH" description="COM_PHOCACART_SEARCH" hint="JSEARCH_FILTER" />
 
 			<field name="published" type="list" class="form-select" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
-
 				<option value="">JOPTION_SELECT_PUBLISHED</option>
 				<option value="1">COM_PHOCACART_PUBLISHED</option>
 				<option value="0">COM_PHOCACART_UNPUBLISHED</option>
@@ -22,6 +19,12 @@
 
 			<field name="owner_id" type="PhocacartProductVendor" label="COM_PHOCACART_FIELD_OWNER_ID_LABEL" onchange="this.form.submit();">
 				<option value="">COM_PHOCACART_FILTER_PRODUCT_VENDOR_SELECT</option>
+			</field>
+
+			<field name="instock" type="list" class="form-select" label="COM_PHOCACART_FILTER_INSTOCK_LABEL" onchange="this.form.submit();" >
+				<option value="">COM_PHOCACART_FILTER_INSTOCK_SELECT</option>
+				<option value="1">COM_PHOCACART_FILTER_INSTOCK_INSTOCK</option>
+				<option value="0">COM_PHOCACART_FILTER_INSTOCK_OUTOFSTOCK</option>
 			</field>
 
 			<field name="language" type="contentlanguage" label="JOPTION_FILTER_LANGUAGE" description="JOPTION_FILTER_LANGUAGE_DESC" onchange="this.form.submit();">
