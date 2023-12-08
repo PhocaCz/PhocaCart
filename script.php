@@ -25,9 +25,31 @@ class com_phocacartInstallerScript
 	protected $extensiontext= 'COM_PHOCACART';
 	protected $configuretext= 'COM_PHOCACART_CONFIGURE';
 
+	private $enablePlugins = [
+		'plg_pcp_cash_on_delivery',
+		'plg_pcp_paypal_standard',
+		'plg_pcs_shipping_standard',
+		'plg_pcp_pos_cash',
+		'plg_system_phocacart',
+	];
+
+	private $createFolders = [
+		'images/phocacartcategories',
+		'images/phocacartproducts',
+		'phocacartdownload',
+		'phocacartdownloadpublic',
+		'phocacartattachment',
+		'plugins/pcs',
+		'plugins/pcs',
+		'plugins/pcs',
+		'plugins/pcs',
+		'plugins/pcs',
+		'plugins/pcs',
+	];
+
 	function createFolders() {
 
-        $folder[0][0]	=	'images' . '/phocacartcategories' ;
+        $folder[0][0]	=	'images/phocacartcategories' ;
         $folder[0][1]	= 	JPATH_ROOT . '/' . $folder[0][0];
 
         $folder[1][0]	=	'images' . '/phocacartproducts' ;
@@ -58,42 +80,34 @@ class com_phocacartInstallerScript
         $folder[9][1]	= 	JPATH_ROOT . '/' . $folder[9][0];
 
 		$msg = '';
-		foreach ($folder as $k => $v) {
-			if (!Folder::exists( $v[1])) {
-				if (Folder::create( $v[1], 0755 )) {
+		foreach ($this->createFolders as $folder) {
+			if (!Folder::exists( JPATH_ROOT . '/' . $folder)) {
+				if (Folder::create( JPATH_ROOT . '/' . $folder )) {
 					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-					File::write($v[1].'/'."index.html", $data);
-					$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $v[0]
-						 .' <span style="color:#009933">created!</span></b></div>';
+					File::write(JPATH_ROOT . '/' . $folder . '/' . "index.html", $data);
+					$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $folder
+						.' <span style="color:#009933">created!</span></b></div>';
 				} else {
-					$msg .= '<div><b><span style="color:#CC0033">Folder</span> ' . $v[0]
-						 .' <span style="color:#CC0033">creation failed!</span></b> Please create it manually.</div>';
+					$msg .= '<div><b><span style="color:#CC0033">Folder</span> ' . $folder
+						.' <span style="color:#CC0033">creation failed!</span></b> Please create it manually.</div>';
 				}
 			} else {
 				// Folder exists
-				$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $v[0]
-					 .' <span style="color:#009933">exists!</span></b></div>';
+				$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $folder
+					.' <span style="color:#009933">exists!</span></b></div>';
 			}
 		}
+
 		return $msg;
 	}
 
 	function enablePlugins() {
-
         // Enable plugins
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->update('#__extensions');
         $query->set($db->quoteName('enabled') . ' = 1');
-        $query->where(
-            '(' . $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_cash_on_delivery')
-            . ' OR '
-            . $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_paypal_standard')
-            . ' OR '
-            . $db->quoteName('name') . ' = ' . $db->quote('plg_pcs_shipping_standard')
-            . ' OR '
-            . $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_pos_cash')
-            . ')');
+        $query->whereIn($db->quoteName('name'), $this->enablePlugins, \Joomla\Database\ParameterType::STRING);
         $query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
         $db->setQuery($query);
         $db->execute();
@@ -107,13 +121,12 @@ class com_phocacartInstallerScript
 		Factory::getApplication()->enqueueMessage($msg, 'message');
 		return true;
 	}
+
 	function uninstall($parent) {
-		//$this->loadLanguage($parent);
 		return true;
 	}
 
 	function update($parent) {
-		//$this->loadLanguage($parent);
 		$msg = $this->createFolders();
 		Factory::getApplication()->enqueueMessage($msg, 'message');
 		return true;
