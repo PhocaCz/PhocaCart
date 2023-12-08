@@ -1188,7 +1188,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`invoice_due_date` datetime NOT NULL,
 	`invoice_time_of_supply` datetime NOT NULL,
 	`invoice_prn` varchar(64) NOT NULL DEFAULT '',
-  `required_delivery_time` datetime NOT NULL,
+    `required_delivery_time` datetime NOT NULL,
 	`invoice_spec_top_desc` text,
 	`invoice_spec_middle_desc` text,
 	`invoice_spec_bottom_desc` text,
@@ -1210,6 +1210,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`user_lang` char(7) NOT NULL DEFAULT '',
 	`default_lang` char(7) NOT NULL DEFAULT '',
 	`language` char(7) NOT NULL DEFAULT '',
+    `internal_comment` text,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 

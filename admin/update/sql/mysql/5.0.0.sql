@@ -40,5 +40,7 @@ ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_vendor_id` (`vendor_id`
 ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_section_id` (`section_id`);
 ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_unit_id` (`unit_id`);
 
+ALTER TABLE `#__phocacart_orders` ADD COLUMN `internal_comment` text;
+
 -- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 -- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;

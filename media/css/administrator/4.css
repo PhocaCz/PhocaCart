@@ -9,7 +9,7 @@
 .ph-extension-info-box {
 	background: #fff;
 	padding: 1em;
-} 
+}
 
 .ph-extension-links-box {
 	margin-top: 1em;
@@ -46,7 +46,7 @@
 
 }
 
-.com_phocacart .table > :not(caption) > * > * {
+.com_phocacart .table:not(.table-sm) > :not(caption) > * > * {
     padding: 0.75rem 0.25rem;
 }
 

@@ -98,9 +98,6 @@ if ($this->itemcommon->shippingtitle != '') {
 
 
 if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id > 0 && isset($this->itemcommon->params_shipping)) {
-	//$shipping       = new PhocacartShipping();
-	//$shippingMethod = $shipping->getShippingMethod((int)$this->itemcommon->shipping_id);
-
 	$paramsShipping = json_decode($this->itemcommon->params_shipping, true);
 
 	if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
@@ -186,7 +183,7 @@ echo $r->endTab();
 
 echo $r->startTab('products', $tabs['products']);
 
-echo '<table class="ph-order-products" id="phAdminEditProducts">';
+echo '<table class="ph-order-products table table-sm table-striped table-hover" id="phAdminEditProducts">';
 
 echo '<div class="alert alert-error alert-danger">'.Text::_('COM_PHOCACART_WARNING_EDIT_ORDER').'</div>';
 
@@ -231,18 +228,6 @@ if (!empty($this->itemproducts)) {
 			}
 
 		}
-
-		/*if ($v->dnetto != '' || $v->dbrutto != '' || $v->dtax != '') {
-			echo '<tr>';
-			echo '<td colspan="2" align="right">'.Text::_('COM_PHOCACART_PRICE_AFTER_DISCOUNT').': </td>';
-			//echo '<td></td>';
-			echo '<td>'.$r->itemCalc($v->id, 'dnetto', PhocacartPrice::cleanPrice($v->dnetto)).'</td>';
-			echo '<td>'.$r->itemCalc($v->id, 'dtax', PhocacartPrice::cleanPrice($v->dtax)).'</td>';
-			echo '<td>'.$r->itemCalc($v->id, 'dbrutto', PhocacartPrice::cleanPrice($v->dbrutto)).'</td>';
-			echo '<td align="center"></td>';
-			echo '<td class="ph-col-add-cur">( '.$this->pr->getPriceFormat($v->dbrutto).' )</td>';
-			echo '</tr>';
-		}*/
 
 		if (!empty($v->attributes)) {
 			foreach ($v->attributes as $k2 => $v2) {
@@ -360,16 +345,10 @@ echo '<h3>'.Text::_('COM_PHOCACART_TAX_RECAPITULATION').'</h3>';
 // Tax Recapitulation
 
 if (!empty($this->itemtaxrecapitulation)) {
-
-
-	// First we render the body of the table to know if there is some currency value
-	// If yes then add specific column even add specific column to header
 	$oTr = array();
 	$totalCurrency = 0;
 	foreach($this->itemtaxrecapitulation as $k => $v) {
-
 		// Tax recapitulation rounding included rounding (Tax recapitulation rounding = Tax recapitulation rounding + calculation rounding)
-
 		$oTr[] = '<tr>';
 
 		// Language Variables
@@ -378,12 +357,9 @@ if (!empty($this->itemtaxrecapitulation)) {
             $oTr[] =  ''.$r->itemCalc($v->id, 'title_lang_suffix', $v->title_lang_suffix, 'tcform', 1). '';
             $oTr[] =  ''.$r->itemCalc($v->id, 'title_lang_suffix2', $v->title_lang_suffix2, 'tcform', 0). '<br>';
             $oTr[] =  '</td>';
-
         } else {
             $oTr[] = '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'tcform', 2).'</td>';
         }
-
-
 
 		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_netto', PhocacartPrice::cleanPrice($v->amount_netto), 'tcform', 0, 'ph-right').'</td>';
 		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_tax', PhocacartPrice::cleanPrice($v->amount_tax), 'tcform', 0, 'ph-right').'</td>';
@@ -459,8 +435,6 @@ echo $r->endTab();
 echo $r->startTab('download', $tabs['download']);
 
 if (!empty($this->itemproducts)) {
-    /*phocacart import('phocacart.path.route');*/
-
     foreach($this->itemproducts as $k => $v) {
 
 
@@ -480,9 +454,7 @@ if (!empty($this->itemproducts)) {
                         $type = '<span class="label label-success badge bg-success">' . Text::_('COM_PHOCACART_DOWNLOAD_FILE') . '</span>';
                     } else if ($v2->type == 2) {
                         $type = '<span class="label label-info badge bg-info">' . Text::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE') . '</span>';
-                    } /*else {
-                    $type = '<span class="label label-warning badge bg-warning">'.Text::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
-                    }*/
+                    }
 
                     echo '<tr><td>' . $type. '</td>';
                     echo '<td>'.htmlspecialchars($v2->download_file) . '</td></tr>';
@@ -496,7 +468,7 @@ if (!empty($this->itemproducts)) {
 
 
                     echo '<tr><td>'.Text::_('COM_PHOCACART_DOWNLOAD_LINK').': </td>';
-                    echo '<td><input type="text" name="" value="' . $dLink . '" class="form-control" style="width: 90%;" /></td></tr>';
+                    echo '<td><input type="text" name="" value="' . $dLink . '" class="form-control" style="width: 90%;" readonly /></td></tr>';
 
                 }
 
@@ -519,7 +491,7 @@ if (!empty($this->itemproducts)) {
 
                         echo '<tr><td>'.$v2->attribute_title.': '.$v2->option_title.'</td>';
 
-                        echo '<td><input type="text" name="" value="'.$dLink.'" class="form-control" style="width: 90%;" /></td></tr>';
+                        echo '<td><input type="text" name="" value="'.$dLink.'" class="form-control" style="width: 90%;" readonly /></td></tr>';
 
 
                     }
@@ -529,59 +501,7 @@ if (!empty($this->itemproducts)) {
         }
         echo '</table>';
         echo '</div>';
-/*
-
-        if (isset($v->download_token)) {
-            echo '<tr><td>'.$v->title.'</td>';
-            //$dLink = Route::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
-            //. '&d='.htmlspecialchars($v->download_token));
-            $link = PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
-            . '&d='.htmlspecialchars($v->download_token);
-
-            $dLink = PhocacartPath::getRightPathLink($link);
-
-            echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
-
-            if ($v->download_type == 0 || $v->download_type == 1) {
-                $type = '<span class="label label-success badge bg-success">'.Text::_('COM_PHOCACART_DOWNLOAD_FILE').'</span>';
-            } else if ($v->download_type == 2) {
-                $type = '<span class="label label-info badge bg-info">'.Text::_('COM_PHOCACART_ADDITIONAL_DOWNLOAD_FILE').'</span>';
-            } /*else {
-                $type = '<span class="label label-warning badge bg-warning">'.Text::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
-            }*/
-        /*	echo '<tr><td>'.$type.'</td>';
-            echo '<td><small>('.htmlspecialchars($v->download_file).')</small></td></tr>';
-
-
-
-
-            // Product Attribute Option Download File
-            if (!empty($v->attributes)) {
-                foreach ($v->attributes as $k2 => $v2) {
-
-                    if ($v2->download_token) {
-                        echo '<tr><td>&nbsp;</td>';
-                        echo '<td>&nbsp;</td></tr>';
-
-                        echo '<tr><td>'.$v->title.'('.$v2->attribute_title.': '.$v2->option_title.')</td>';
-                        $link = PhocacartRoute::getDownloadRoute() . '&o='.$this->itemcommon->order_token.'&d='.htmlspecialchars($v2->download_token);
-                        $dLink = PhocacartPath::getRightPathLink($link);
-                        echo '<td><input type="text" name="" value="'.$dLink.'" style="width: 90%;" /></td></tr>';
-
-                        $type = '<span class="label label-warning badge bg-warning">'.Text::_('COM_PHOCACART_DOWNLOAD_FILE_ATTRIBUTE').'</span>';
-                        echo '<tr><td>'.$type.'</td>';
-                        echo '<td><small>('.htmlspecialchars($v2->download_file).')</small></td></tr>';
-
-                    }
-                }
-            }
-
-            echo '<tr><td>&nbsp;</td>';
-            echo '<td>&nbsp;</td></tr>';
-        }*/
     }
-    //echo '</table>';*/
-
 }
 echo $r->endTab();
 
@@ -598,15 +518,12 @@ if (isset($this->itemcommon->order_token)) {
 		$link = PhocacartRoute::getOrdersRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token);
 		$oLink = PhocacartPath::getRightPathLink($link);
 
-		echo '<tr><td>'.Text::_('COM_PHOCACART_ORDER_LINK').': </td><td><input type="text" name="" value="'.$oLink.'" class="form-control" style="width: 90%;" /></td></tr>';
+		echo '<tr><td>'.Text::_('COM_PHOCACART_ORDER_LINK').': </td><td><input type="text" name="" value="'.$oLink.'" class="form-control" style="width: 90%;" readonly /></td></tr>';
 		echo '</table>';
 		echo '</div>';
 	}
 }
 echo $r->endTab();
-
-
-
 
 echo $r->startTab('billing', $tabs['billing']);
 $formArray = array ('order_number', 'order_number_id', 'receipt_number', 'receipt_number_id', 'invoice_number', 'invoice_number_id', 'invoice_prn', 'queue_number', 'queue_number_id', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'date', 'modified', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
@@ -614,26 +531,8 @@ echo $r->group($this->form, $formArray);
 echo $r->endTab();
 
 
-/*
-echo $r->startTab('publishing', $tabs['publishing']);
-foreach($this->form->getFieldset('publish') as $field) {
-	echo '<div class="control-group">';
-	if (!$field->hidden) {
-		echo '<div class="control-label">'.$field->label.'</div>';
-	}
-	echo '<div class="controls">';
-	echo $field->input;
-	echo '</div></div>';
-}
-echo '</div>';*/
-
 echo $r->endTabs();
 echo '</div>';//end col-xs-12 col-sm-12 col-md-12
-// Second Column
-//echo '<div class="col-xs-12 col-sm-2 col-md-2">';
-//echo '<div class="alert alert-error alert-danger">'.Text::_('COM_PHOCACART_WARNING_EDIT_ORDER').'</div>';
-//echo '</div>';//end span2
+
 echo $r->formInputs();
 echo $r->endForm();
-?>
-
