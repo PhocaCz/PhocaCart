@@ -450,7 +450,7 @@ jQuery(document).ready(function() {
 					allMenus.css('display', 'none');
 				});
 
-				console.log(container.length);
+				//console.log(container.length);
 				container.append(phSubmenu);
 				allMenus.css('display', 'none');
 			}

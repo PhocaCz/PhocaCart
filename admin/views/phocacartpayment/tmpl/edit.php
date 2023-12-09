@@ -12,6 +12,10 @@ use Joomla\CMS\Factory;
 
 Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('webcomponent.field-subform');
 
+
+Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('showon');
+
+
 $r 			=  $this->r;
 $js ='
 Joomla.submitbutton = function(task) {

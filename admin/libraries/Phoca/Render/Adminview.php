@@ -13,6 +13,7 @@ namespace Phoca\Render;
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\HTML\HTMLHelper;
 
@@ -262,6 +263,7 @@ class Adminview
 
 	public function group($form, $formArray, $clear = 0) {
 
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 
 		$o = '';
 		if (!empty($formArray)) {
@@ -274,9 +276,18 @@ class Adminview
 						$descriptionOutput = '<div role="tooltip">'.$description.'</div>';
 					}
 
+					$datashowon = '';
+					$showon = $form->getFieldAttribute($value, 'showon');
+					$group = $form->getFieldAttribute($value, 'group');
+					$formControl = $form->getFormControl();
+					if($showon) {
+						$wa->useScript('showon');
+						$datashowon = ' data-showon=\'' . json_encode(FormHelper::parseShowOnConditions($showon, $formControl,$group)) . '\'';
+					}
+
 					$o .=
 
-						'<div class="control-group-clear ph-par-'.$value.'">'."\n"
+						'<div class="control-group-clear ph-par-'.$value.'"  '.$datashowon.'>'."\n"
 					 .'<div class="control-label">'. $form->getLabel($value) . $descriptionOutput . '</div>'."\n"
 					//. '<div class="clearfix"></div>'. "\n"
 					. '<div>' . $form->getInput($value). '</div>'."\n"
@@ -293,8 +304,17 @@ class Adminview
 						$descriptionOutput = '<div role="tooltip">'.$description.'</div>';
 					}
 
+					$datashowon = '';
+					$showon = $form->getFieldAttribute($value, 'showon');
+					$group = $form->getFieldAttribute($value, 'group');
+					$formControl = $form->getFormControl();
+					if($showon) {
+						$wa->useScript('showon');
+						$datashowon = ' data-showon=\'' . json_encode(FormHelper::parseShowOnConditions($showon, $formControl,$group)) . '\'';
+					}
+
 					//$o .= $form->renderField($value) ;
-					$o .= '<div class="control-group ph-par-'.$value.'">'."\n"
+					$o .= '<div class="control-group ph-par-'.$value.'" '.$datashowon.'>'."\n"
 					. '<div class="control-label">'. $form->getLabel($value)  . $descriptionOutput . '</div>'
 					. '<div class="controls">' . $form->getInput($value). '</div>'."\n"
 					. '</div>' . "\n";
@@ -305,6 +325,9 @@ class Adminview
 	}
 
 	public function item($form, $item, $suffix = '', $realSuffix = 0) {
+
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+
 		$value = $o = '';
 		if ($suffix != '' && $suffix != '<small>()</small>') {
 			if ($realSuffix) {
@@ -324,8 +347,17 @@ class Adminview
 			$descriptionOutput = '<div role="tooltip">'.$description.'</div>';
 		}
 
+		$datashowon = '';
+		$showon = $form->getFieldAttribute($item, 'showon');
+		$group = $form->getFieldAttribute($item, 'group');
+		$formControl = $form->getFormControl();
+		if($showon) {
+			$wa->useScript('showon');
+			$datashowon = ' data-showon=\'' . json_encode(FormHelper::parseShowOnConditions($showon, $formControl,$group)) . '\'';
+		}
 
-		$o .= '<div class="control-group ph-par-'.$item.'">'."\n";
+
+		$o .= '<div class="control-group ph-par-'.$item.'"  '.$datashowon.'>'."\n";
 		$o .= '<div class="control-label">'. $form->getLabel($item) . $descriptionOutput . '</div>'."\n"
 		. '<div class="controls">' . $value.'</div>'."\n"
 		. '</div>' . "\n";

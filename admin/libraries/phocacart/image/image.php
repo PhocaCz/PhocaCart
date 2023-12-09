@@ -15,6 +15,8 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartImage
 {
@@ -61,9 +63,9 @@ class PhocacartImage
             break;
         }
 
-        PluginHelper::importPlugin('pcv');
-        Factory::getApplication()->triggerEvent('onPCVonGetThumbnailName', array($path, $filename, $size, &$thumbName));
-
+        PluginHelper::importPlugin('pca');
+        //Factory::getApplication()->triggerEvent('onPCAonImageGetThumbnailName', array($path, $filename, $size, &$thumbName));
+        Dispatcher::dispatch(new Event\Admin\Image\GetThumbnailName($path, $filename, $size, $thumbName ));
         return $thumbName;
     }
 
