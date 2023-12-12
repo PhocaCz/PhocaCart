@@ -95,6 +95,13 @@ class PhocaCartCpViewPhocaCartParamA extends HtmlView
 					$o .= '<div class="control-group" ';
 
 
+					$description = $field->description;
+					$descriptionOutput = '';
+					if ($description != '') {
+						$descriptionOutput = '<div role="tooltip">'.Text::_($description).'</div>';
+					}
+
+
 					if($field->showon) {
                         //$wa->useScript('showon');
                         $datashowon = ' data-showon=\'' . json_encode(FormHelper::parseShowOnConditions($field->showon, str_replace('jform', 'phform',$field->formControl), $field->group)) . '\'';
@@ -105,7 +112,7 @@ class PhocaCartCpViewPhocaCartParamA extends HtmlView
 
 
 					if (!$field->hidden && $name != "permissions") {
-						$o .= '<div class="control-label">' . str_replace('jform', 'phform', $field->label) . '</div>';
+						$o .= '<div class="control-label">' . str_replace('jform', 'phform', $field->label) .  $descriptionOutput . '</div>';
 					}
 					$o .= '<div class="';
 					if ($name != "permissions") {
