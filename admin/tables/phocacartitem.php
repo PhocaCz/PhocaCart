@@ -14,15 +14,24 @@ use Joomla\String\StringHelper;
 
 class TablePhocaCartItem extends Table
 {
-	
 	protected $_jsonEncode = array('params', 'metadata');
-	
+
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_products', 'id', $db);
 	}
-	
+
+	public function bind($src, $ignore = [])
+	{
+		if (!\is_array($ignore)) {
+			$ignore = explode(' ', $ignore);
+		}
+		$ignore[] = 'discount_percent';
+
+		return parent::bind($src, $ignore);
+	}
+
 	function check() {
-		
+
 		if (trim( $this->title ) == '') {
 			$this->setError( Text::_( 'COM_PHOCACART_PRODUCT_MUST_HAVE_TITLE') );
 			return false;
@@ -32,7 +41,7 @@ class TablePhocaCartItem extends Table
 			$this->alias = $this->title;
 		}
 		$this->alias = PhocacartUtils::getAliasName($this->alias);
-		
+
 		// Clean up keywords -- eliminate extra spaces between phrases
 		// and cr (\r) and lf (\n) characters from string if not empty
 		if (!empty($this->metakey))
