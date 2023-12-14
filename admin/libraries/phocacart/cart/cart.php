@@ -399,7 +399,7 @@ class PhocacartCart
     /*
      * UPDATE - protected internal function to update session or database
      */
-    protected function updateItems(string $idKey, array $item, int $quantityOld, int $quantityNew) {
+    protected function updateItems(string $idKey, ?array $item, ?int $quantityOld, int $quantityNew) {
 
         $session = Factory::getSession();
 
