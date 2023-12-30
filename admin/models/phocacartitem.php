@@ -95,15 +95,17 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$value = '';
 					foreach($relatedOption as $id) {
 						$v = PhocacartProduct::getProductByProductId($id);
-						if ($i > 0) {
-							$value .= '[|]';
+						if ($v) {
+							if ($i > 0) {
+								$value .= '[|]';
+							}
+
+							$title    = PhocacartText::filterValue($v->title, 'text');
+							$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
+
+							$value .= (int)$v->id . ':' . $title . ' (' . $titleCat . ')';
+							$i++;
 						}
-
-						$title = PhocacartText::filterValue($v->title, 'text');
-						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
-
-						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
-						$i++;
 					}
 					$data['related'] = $value;
 				}
@@ -118,15 +120,17 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$value = '';
 					foreach($relatedOption as $id) {
 						$v = PhocacartProduct::getProductByProductId($id);
-						if ($i > 0) {
-							$value .= '[|]';
+						if ($v) {
+							if ($i > 0) {
+								$value .= '[|]';
+							}
+
+							$title    = PhocacartText::filterValue($v->title, 'text');
+							$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
+
+							$value .= (int)$v->id . ':' . $title . ' (' . $titleCat . ')';
+							$i++;
 						}
-
-						$title = PhocacartText::filterValue($v->title, 'text');
-						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
-
-						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
-						$i++;
 					}
 					$data['bundles'] = $value;
 				}
@@ -346,10 +350,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	{
 		// only date fields are defined as datetime in DB - causing issues with format in API, need to convert them to date only
 		if (isset($data['date']) && is_string($data['date']) && $data['date']) {
-			$data['date'] = (new Joomla\CMS\Date\Date($data['date']))->format('Y-m-d');
+			$data['date'] = (new Joomla\CMS\Date\Date($data['date']))->format(Text::_('DATE_FORMAT_FILTER_DATE'));
 		}
 		if (isset($data['date_update']) && is_string($data['date_update']) && $data['date_update']) {
-			$data['date_update'] = (new Joomla\CMS\Date\Date($data['date_update']))->format('Y-m-d');
+			$data['date_update'] = (new Joomla\CMS\Date\Date($data['date_update']))->format(Text::_('DATE_FORMAT_FILTER_DATE'));
 		}
 		return parent::validate($form, $data, $group);
 	}
@@ -360,6 +364,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		/*if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
 		}*/
+
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 

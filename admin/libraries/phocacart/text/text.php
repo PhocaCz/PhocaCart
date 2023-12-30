@@ -427,7 +427,7 @@ class PhocacartText {
 		//$r['invoiceduedatemonth']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'm');
 		//$r['invoiceduedateday']	= PhocacartOrder::getInvoiceDueDate($orderId, $common->date, $common->invoice_due_date, 'd');
 
-        $r['invoiceqr']             = PhocacartUtils::getQrImage($pdf_invoice_qr_code);
+
 
         $dateIdd					= PhocacartDate::splitDate($r['invoiceduedate']);
         $r['invoicedueyear']	    = $dateIdd['year'];
@@ -490,6 +490,10 @@ class PhocacartText {
             $r['venderusername']    = $vendor->username;
         }
 
+
+        // Specific Case - QR Code inside {invoiceqr} parameter
+        $pdf_invoice_qr_code_translated = PhocacartText::completeText($pdf_invoice_qr_code, $r, 1);
+        $r['invoiceqr']                 = PhocacartUtils::getQrImage($pdf_invoice_qr_code_translated);
 
 		return $r;
 
