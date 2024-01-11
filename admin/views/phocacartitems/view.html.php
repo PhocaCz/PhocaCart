@@ -26,15 +26,17 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 	protected $t;
 	protected $r;
     public $filterForm;
+    public $batchForm;
 	public $activeFilters;
 
 	function display($tpl = null) {
-		$this->t			= PhocacartUtils::setVars('item');
-		$this->r 			= new PhocacartRenderAdminviews();
+		$this->t			    = PhocacartUtils::setVars('item');
+		$this->r 			    = new PhocacartRenderAdminviews();
 		$this->items			= $this->get('Items');
 		$this->pagination		= $this->get('Pagination');
 		$this->state			= $this->get('State');
 		$this->filterForm   	= $this->get('FilterForm');
+        $this->batchForm   	    = $this->get('BatchForm');
         $this->activeFilters 	= $this->get('ActiveFilters');
 
 

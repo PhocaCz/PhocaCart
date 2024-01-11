@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 
 defined( '_JEXEC' ) or die();
@@ -387,5 +388,10 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 		return $form;
 	}
+
+	public function getBatchForm(): Form
+	{
+		return $this->loadForm($this->context . '.batch', 'batch_item', ['control' => '', 'load_data' => false]);
+	}
+
 }
-?>
