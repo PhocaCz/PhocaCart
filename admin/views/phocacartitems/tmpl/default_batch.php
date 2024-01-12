@@ -15,7 +15,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 $batchForm = $this->batchForm;
 ?>
 <div id="collapseModal" role="dialog" tabindex="-1" class="joomla-modal modal fade">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-phoca-batch">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title"><?php echo Text::_('COM_PHOCACART_BATCH_OPTIONS_ITEMS');?></h3>
@@ -25,7 +25,7 @@ $batchForm = $this->batchForm;
 
       <div class="modal-body">
         <div class="p-3">
-          <p class="alert alert-info"><?php echo Text::_('COM_PHOCACART_BATCH_ITEMS_TIP'); ?></p>
+          <?php echo $batchForm->renderFieldset('top'); ?>
 
           <div class="row">
             <div class="col-sm-6 col-md-6">

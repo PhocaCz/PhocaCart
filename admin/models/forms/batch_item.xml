@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fields name="batch">
-        <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <fieldset name="top">
+            <field name="items_filter" type="list" default="selected" hiddenLabel="true" label="COM_PHOCACART_BATCH_ITEMS_FILTER">
+                <option value="selected">COM_PHOCACART_BATCH_ITEMS_FILTER_SELECTED</option>
+                <option value="filtered">COM_PHOCACART_BATCH_ITEMS_FILTER_FILTER</option>
+                <option value="all">COM_PHOCACART_BATCH_ITEMS_FILTER_ALL</option>
+            </field>
+
+            <field name="items_filter_selected_tip" type="note" showon="items_filter:selected" class="alert alert-info w-100" description="COM_PHOCACART_BATCH_ITEMS_FILTER_SELECTED_TIP" />
+
+            <field name="items_filter_filtered_tip" type="note" showon="items_filter:filtered" class="alert alert-warning w-100" description="COM_PHOCACART_BATCH_ITEMS_FILTER_FILTERED_TIP" />
+
+            <field name="items_filter_all_tip" type="note" showon="items_filter:all" class="alert alert-danger w-100" description="COM_PHOCACART_BATCH_ITEMS_FILTER_ALL_TIP" />
+        </fieldset>
+
+        <fieldset name="basic">
             <field name="assetgroup_id" type="accesslevel" label="JLIB_HTML_BATCH_ACCESS_LABEL">
                 <option value="">JLIB_HTML_BATCH_NOCHANGE</option>
             </field>
@@ -15,13 +29,13 @@
                 <option value="c">JLIB_HTML_BATCH_COPY</option>
                 <option value="m">JLIB_HTML_BATCH_MOVE</option>
             </field>
+        </fieldset>
 
+        <fieldset name="copy" addfieldpath="/administrator/components/com_phocacart/models/fields">
             <field name="category_id" type="phocacartcategory" showon="copy_move:c[OR]copy_move:m" layout="joomla.form.field.list-fancy-select" label="JLIB_HTML_BATCH_MENU_LABEL">
                 <option value="0">JLIB_HTML_ADD_TO_ROOT</option>
             </field>
-        </fieldset>
 
-        <fieldset name="copy">
             <field name="copy_all_cats" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ALL_CATEGORIES_FROM_SOURCE">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>

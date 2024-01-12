@@ -8,8 +8,8 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Associations;
@@ -1802,5 +1802,138 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		parent::preprocessForm($form, $data, $group);
 	}
+
+	public function batch($commands, $pks, $contexts)
+	{
+        $input = Factory::getApplication()->getInput();
+        $itemsFilter = isset($commands['items_filter']) ? $commands['items_filter'] : 'selected';
+		if (empty($pks) && in_array($itemsFilter, ['filtered', 'all'])) {
+            $db    = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select('DISTINCT a.id')
+                ->from('`#__phocacart_products` AS a');
+
+            if ($itemsFilter == 'filtered') {
+                $filter = new Registry($input->get('filter', [], 'raw'));
+
+                $paramsC                      = PhocacartUtils::getComponentParameters();
+                $search_matching_option_admin = $paramsC->get('search_matching_option_admin', 'exact');
+
+                // Filter by access level
+                $access = $filter->get('access');
+                if ($access) {
+                    $query->where('a.access = ' . (int) $access);
+                }
+
+                // Filter by published state.
+                $published = $filter->get('published', '');
+                if (is_numeric($published)) {
+                    $query->where('a.published = ' . (int) $published);
+                }
+                else if ($published === '') {
+                    $query->where('(a.published IN (0, 1))');
+                }
+
+                // When category is selected, we need to get info about selected category
+                // When it is not selected, don't ask for it to make the query faster
+                // pc.ordering is set as default ordering and it can be set (even igonered) even whey category not selected
+                // is complicated but loads much faster
+
+                // Filter by category.
+                $categoryId = $filter->get('category_id');
+                if (is_numeric($categoryId)) {
+                    $query->join('LEFT', '#__phocacart_product_categories AS pc ON a.id = pc.product_id');
+                    $query->where('pc.category_id = ' . (int) $categoryId);
+                }
+
+                // Filter by manufacturer
+                $manufacturerId = $filter->get('manufacturer_id');
+                if (is_numeric($manufacturerId)) {
+                    $query->where('a.manufacturer_id = ' . (int) $manufacturerId);
+                }
+
+                // Filter by owner
+                $ownerId = $filter->get('owner_id');
+                if (is_numeric($ownerId)) {
+                    $query->where('a.owner_id = ' . (int) $ownerId);
+                }
+
+                // Filter by stock
+                $inStock = $filter->get('instock');
+                if (is_numeric($inStock)) {
+                    if ($inStock) {
+                        $query->where('a.stock > 0');
+                    }
+                    else {
+                        $query->where('a.stock <= 0');
+                    }
+                }
+
+                // Filter by language.
+                if ($language = $filter->get('language')) {
+                    $query->where('a.language = ' . $db->quote($language));
+                }
+
+                // Filter by search in title
+                $search = $filter->get('search');
+                if (!empty($search)) {
+                    if (stripos($search, 'id:') === 0) {
+                        $query->where('a.id = ' . (int) substr($search, 3));
+                    }
+                    else {
+                        switch ($search_matching_option_admin) {
+                            case 'all':
+                            case 'any':
+                                $words  = explode(' ', $search);
+                                $wheres = array();
+                                foreach ($words as $word) {
+                                    if (!$word = trim($word)) {
+                                        continue;
+                                    }
+
+                                    $word        = $db->quote('%' . $db->escape($word, true) . '%', false);
+                                    $wheresSub   = array();
+                                    $wheresSub[] = 'a.title LIKE ' . $word;
+                                    $wheresSub[] = 'a.alias LIKE ' . $word;
+                                    $wheresSub[] = 'a.metakey LIKE ' . $word;
+                                    $wheresSub[] = 'a.metadesc LIKE ' . $word;
+                                    $wheresSub[] = 'a.description LIKE ' . $word;
+                                    $wheresSub[] = 'a.sku LIKE ' . $word;
+                                    $wheresSub[] = 'a.ean LIKE ' . $word;
+                                    $wheresSub[] = 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $word . ' OR ps.ean LIKE ' . $word . ') ';
+                                    $wheres[]    = implode(' OR ', $wheresSub);
+                                }
+
+                                $query->where('((' . implode(($search_matching_option_admin == 'all' ? ') AND (' : ') OR ('), $wheres) . '))');
+
+                                break;
+
+                            case 'exact':
+                            default:
+                                $text        = $db->quote('%' . $db->escape($search, true) . '%', false);
+                                $wheresSub   = array();
+                                $wheresSub[] = 'a.title LIKE ' . $text;
+                                $wheresSub[] = 'a.alias LIKE ' . $text;
+                                $wheresSub[] = 'a.metakey LIKE ' . $text;
+                                $wheresSub[] = 'a.metadesc LIKE ' . $text;
+                                $wheresSub[] = 'a.description LIKE ' . $text;
+                                $wheresSub[] = 'a.sku LIKE ' . $text;
+                                $wheresSub[] = 'a.ean LIKE ' . $text;
+                                $wheresSub[] = 'exists (select ps.id from #__phocacart_product_stock AS ps WHERE a.id = ps.product_id AND ps.sku LIKE ' . $text . ' OR ps.ean LIKE ' . $text . ') ';
+                                $query->where('((' . implode(') OR (', $wheresSub) . '))');
+
+                                break;
+                        }
+                    }
+                }
+            }
+
+            $db->setQuery($query);
+            $pks = $db->loadColumn();
+		}
+
+		parent::batch($commands, $pks, $contexts);
+	}
+
 }
-?>
+
