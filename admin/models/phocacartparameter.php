@@ -78,5 +78,27 @@ class PhocaCartCpModelPhocacartParameter extends AdminModel
 			//$table->modified_by	= $user->get('id');
 		}
 	}
+
+	public function delete(&$pks)
+	{
+		$result = parent::delete($pks);
+
+		if ($result) {
+			$db = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->delete('#__phocacart_parameter_values')
+				->whereIn('parameter_id', $pks);
+			$db->setQuery($query);
+			$db->execute();
+
+			$query = $db->getQuery(true)
+				->delete('#__phocacart_parameter_values_related')
+				->whereIn('parameter_id', $pks);
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+		return $result;
+	}
 }
-?>
+
