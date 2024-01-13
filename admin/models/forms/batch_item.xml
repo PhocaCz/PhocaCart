@@ -57,6 +57,11 @@
                 <!--<option value="3">COM_PHOCACART_CONDITION_DAMAGED</option>-->
             </field>
 
+            <field name="_group" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_GROUP">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+
             <field name="type" type="list" label="COM_PHOCACART_BATCH_TYPE">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
                 <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
@@ -128,6 +133,12 @@
             <field name="catid_remove" type="phocacartcategory" multiple="true" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID_REMOVE">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
             </field>
+
+            <field name="_group_heading" type="note" showon="_group:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_GROUP_HEADING" />
+
+            <field name="group_add" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" showon="_group:1" addempty="false" multiple="true" label="COM_PHOCACART_BATCH_GROUP_ADD" />
+
+            <field name="group_remove" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" showon="_group:1" addempty="false" multiple="true" label="COM_PHOCACART_BATCH_GROUP_REMOVE" />
 
             <field name="_tags_heading" type="note" showon="_tags:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_TAGS_HEADING" />
 
