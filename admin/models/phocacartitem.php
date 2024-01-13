@@ -71,6 +71,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'tags_remove'               => 'batchTagsRemove',
         'taglabels_add'             => 'batchLabelsAdd',
         'taglabels_remove'          => 'batchLabelsRemove',
+        'pcf'                       => 'batchFeedOptions',
     ];
 
 	protected function canDelete($record){
@@ -2193,8 +2194,59 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         return $this->batchTags(PhocacartTag::TYPE_LABEL, false, (array)$value, $pks, $contexts);
     }
 
+    protected function batchFeedOptions($newValues, $pks, $contexts): bool
+    {
+        $this->initBatch();
+
+        foreach ($pks as $pk) {
+            if ($this->user->authorise('core.edit', $contexts[$pk])) {
+                $this->table->reset();
+                $this->table->load($pk);
+
+                $feedOptions = new Registry($this->table->params_feed);
+                foreach ($newValues as $plugin => $values) {
+                    foreach ($values as $name => $value) {
+                        if ($value !== null && $value !== '') {
+                            $feedOptions->set($plugin . '.' . $name, $value);
+                        }
+                    }
+                }
+                $this->table->params_feed = $feedOptions->toString();
+
+                $event = new BeforeBatchEvent(
+                    $this->event_before_batch,
+                    ['src' => $this->table, 'type' => 'pcf']
+                );
+                $this->dispatchEvent($event);
+
+                // Check the row.
+                if (!$this->table->check()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                if (!$this->table->store()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
     /*
      * TODO batch
+     * - categories
      * - customer group
      * - related products??
      * - feed plugins

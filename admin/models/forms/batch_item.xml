@@ -66,22 +66,22 @@
                 <option value="5">COM_PHOCACART_BUNDLE</option>
             </field>
 
-            <field name="_tags" type="list" class="form-select-color-state" label="COM_PHOCACART_BATCH_TAGS">
+            <field name="_tags" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_TAGS">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
                 <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
             </field>
 
-            <field name="_stock_options" type="list" class="form-select-color-state" label="COM_PHOCACART_BATCH_STOCK_OPTIONS">
+            <field name="_stock_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_STOCK_OPTIONS">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
                 <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
             </field>
 
-            <field name="_size_options" type="list" class="form-select-color-state" label="COM_PHOCACART_BATCH_SIZE_OPTIONS">
+            <field name="_size_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_SIZE_OPTIONS">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
                 <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
             </field>
 
-            <field name="_rewards_options" type="list" class="form-select-color-state" label="COM_PHOCACART_BATCH_REWARDS_OPTIONS">
+            <field name="_rewards_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_REWARDS_OPTIONS">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
                 <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
             </field>
