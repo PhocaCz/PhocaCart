@@ -47,6 +47,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'owner_id'                  => 'batchOwner',
         'tax_id'                    => 'batchTax',
         'catid'                     => 'batchCategory',
+        'catid_add'                 => 'batchCategoryAdd',
+        'catid_remove'              => 'batchCategoryRemove',
         'manufacturer_id'           => 'batchManufacturer',
         'condition'                 => 'batchCondition',
         'type'                      => 'batchType',
@@ -2125,6 +2127,60 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         return $this->batchDBField('points_received', (int)$value, $pks, $contexts);
     }
 
+    private function batchCategories(bool $add, array $value, $pks, $contexts): bool
+    {
+        $this->initBatch();
+
+        foreach ($pks as $pk) {
+            if ($this->user->authorise('core.edit', $contexts[$pk])) {
+                $this->table->reset();
+                $this->table->load($pk);
+
+                $event = new BeforeBatchEvent(
+                    $this->event_before_batch,
+                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                );
+                $this->dispatchEvent($event);
+
+                // Check the row.
+                if (!$this->table->check()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                $categories = PhocacartCategoryMultiple::getCategories((int)$pk, 1);
+                $allCategories = array_unique(array_merge($categories, $value));
+                if ($add) {
+                    $categories = $allCategories;
+                } else {
+                    $categories = array_diff($categories, $value);
+                }
+                PhocacartCategoryMultiple::storeCategories($categories, (int)$pk);
+                PhocacartCount::setProductCount($allCategories, 'category', 1);
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    protected function batchCategoryAdd($value, $pks, $contexts): bool
+    {
+        return $this->batchCategories(true, (array)$value, $pks, $contexts);
+    }
+
+    protected function batchCategoryRemove($value, $pks, $contexts): bool
+    {
+        return $this->batchCategories(false, (array)$value, $pks, $contexts);
+    }
+
     private function batchTags(int $tagsType, bool $add, array $value, $pks, $contexts): bool
     {
         $this->initBatch();
@@ -2246,7 +2302,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
     /*
      * TODO batch
-     * - categories
      * - customer group
      * - related products??
      * - feed plugins

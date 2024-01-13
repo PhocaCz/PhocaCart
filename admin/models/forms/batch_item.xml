@@ -40,8 +40,9 @@
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
             </field>
 
-            <field name="catid" type="phocacartcategory" label="COM_PHOCACART_BATCH_CATID">
+            <field name="_category_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_CATEGORY_OPTIONS">
                 <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
             </field>
 
             <field name="manufacturer_id" type="phocamanufacturer" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_BATCH_MANUFACTURER_ID">
@@ -112,6 +113,20 @@
             <field name="copy_attributes_download_files" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
+            </field>
+
+            <field name="_category_heading" type="note" showon="_category_options:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_CATEGORY_OPTIONS_HEADING" />
+
+            <field name="catid" type="phocacartcategory" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="catid_add" type="phocacartcategory" multiple="true" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID_ADD">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="catid_remove" type="phocacartcategory" multiple="true" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID_REMOVE">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
             </field>
 
             <field name="_tags_heading" type="note" showon="_tags:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_TAGS_HEADING" />
