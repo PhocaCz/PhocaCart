@@ -8,6 +8,7 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Event\Model\BeforeBatchEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -39,6 +40,38 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	protected 	$text_prefix	        = 'com_phocacart';
 	public      $typeAlias 		        = 'com_phocacart.phocacartitem';
 	protected   $associationsContext    = 'com_phocacart.item';	// ASSOCIATION
+
+    protected $batch_commands = [
+        'assetgroup_id'             => 'batchAccess',
+        'language_id'               => 'batchLanguage',
+        'owner_id'                  => 'batchOwner',
+        'tax_id'                    => 'batchTax',
+        'catid'                     => 'batchCategory',
+        'manufacturer_id'           => 'batchManufacturer',
+        'condition'                 => 'batchCondition',
+        'type'                      => 'batchType',
+        'stock'                     => 'batchStock',
+        'stock_calculation'         => 'batchStockCalculation',
+        'min_quantity'              => 'batchMinQuantity',
+        'min_multiple_quantity'     => 'batchMinMultipleQuantity',
+        'min_quantity_calculation'  => 'batchMinQuantityCalculation',
+        'stockstatus_a_id'          => 'batchStockStatusA',
+        'stockstatus_n_id'          => 'batchStockStatusN',
+        'delivery_date'             => 'batchDeliveryDate',
+        'length'                    => 'batchLength',
+        'width'                     => 'batchWidth',
+        'height'                    => 'batchHeight',
+        'weight'                    => 'batchWeight',
+        'volume'                    => 'batchVolume',
+        'unit_amount'               => 'batchUnitAmount',
+        'unit_unit'                 => 'batchUnitUnit',
+        'points_needed'             => 'batchPointsNeeded',
+        'points_received'           => 'batchPointsReceived',
+        'tags_add'                  => 'batchTagsAdd',
+        'tags_remove'               => 'batchTagsRemove',
+        'taglabels_add'             => 'batchLabelsAdd',
+        'taglabels_remove'          => 'batchLabelsRemove',
+    ];
 
 	protected function canDelete($record){
 		$user = Factory::getUser();
@@ -1932,8 +1965,241 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
             $pks = $db->loadColumn();
 		}
 
-		parent::batch($commands, $pks, $contexts);
+		return parent::batch($commands, $pks, $contexts);
 	}
 
+    private function batchDBField(string $fieldname, $value, $pks, $contexts): bool
+    {
+        $this->initBatch();
+
+        foreach ($pks as $pk) {
+            if ($this->user->authorise('core.edit', $contexts[$pk])) {
+                $this->table->reset();
+                $this->table->load($pk);
+                $this->table->$fieldname = $value;
+
+                $event = new BeforeBatchEvent(
+                    $this->event_before_batch,
+                    ['src' => $this->table, 'type' => $fieldname]
+                );
+                $this->dispatchEvent($event);
+
+                // Check the row.
+                if (!$this->table->check()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                if (!$this->table->store()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    protected function batchOwner($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('owner_id', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchTax($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('tax_id', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchCategory($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('catid', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchManufacturer($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('manufacturer_id', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchCondition($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('condition', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchType($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('type', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchStock($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('stock', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchStockCalculation($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('stock_calculation', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchMinQuantity($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('min_quantity', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchMinMultipleQuantity($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('min_multiple_quantity', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchMinQuantityCalculation($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('min_quantity_calculation', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchStockStatusA($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('stockstatus_a_id', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchStockStatusN($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('stockstatus_n_id', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchDeliveryDate($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('delivery_date', $value, $pks, $contexts);
+    }
+
+    protected function batchLength($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('length', (float)$value, $pks, $contexts);
+    }
+
+    protected function batchWidth($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('width', (float)$value, $pks, $contexts);
+    }
+
+    protected function batchHeight($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('height', (float)$value, $pks, $contexts);
+    }
+
+    protected function batchWeight($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('weight', (float)$value, $pks, $contexts);
+    }
+
+    protected function batchVolume($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('volume', (float)$value, $pks, $contexts);
+    }
+
+    protected function batchUnitAmount($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('unit_amount', (float)$value, $pks, $contexts);
+    }
+
+    protected function batchUnitUnit($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('unit_unit', $value, $pks, $contexts);
+    }
+
+    protected function batchPointsNeeded($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('points_needed', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchPointsReceived($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('points_received', (int)$value, $pks, $contexts);
+    }
+
+    private function batchTags(int $tagsType, bool $add, array $value, $pks, $contexts): bool
+    {
+        $this->initBatch();
+
+        foreach ($pks as $pk) {
+            if ($this->user->authorise('core.edit', $contexts[$pk])) {
+                $this->table->reset();
+                $this->table->load($pk);
+
+                $event = new BeforeBatchEvent(
+                    $this->event_before_batch,
+                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                );
+                $this->dispatchEvent($event);
+
+                // Check the row.
+                if (!$this->table->check()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                $tags = PhocacartTag::getTags((int)$pk, 1);
+                $allTags = array_unique(array_merge($tags, $value));
+                if ($add) {
+                    $tags = $allTags;
+                } else {
+                    $tags = array_diff($tags, $value);
+                }
+                if ($tagsType == PhocacartTag::TYPE_TAG) {
+                    PhocacartTag::storeTags($tags, (int)$pk);
+                    PhocacartCount::setProductCount($allTags, 'tag', 1);
+                } else {
+                    PhocacartTag::storeTagLabels($tags, (int)$pk);
+                    PhocacartCount::setProductCount($allTags, 'label', 1);
+                }
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    protected function batchTagsAdd($value, $pks, $contexts): bool
+    {
+        return $this->batchTags(PhocacartTag::TYPE_TAG, true, (array)$value, $pks, $contexts);
+    }
+
+    protected function batchTagsRemove($value, $pks, $contexts): bool
+    {
+        return $this->batchTags(PhocacartTag::TYPE_TAG, false, (array)$value, $pks, $contexts);
+    }
+
+    protected function batchLabelsAdd($value, $pks, $contexts): bool
+    {
+        return $this->batchTags(PhocacartTag::TYPE_LABEL, true, (array)$value, $pks, $contexts);
+    }
+
+    protected function batchLabelsRemove($value, $pks, $contexts): bool
+    {
+        return $this->batchTags(PhocacartTag::TYPE_LABEL, false, (array)$value, $pks, $contexts);
+    }
+
+    /*
+     * TODO batch
+     * - customer group
+     * - related products??
+     * - feed plugins
+     * - custom fields
+     * - texty??
+     * */
 }
 

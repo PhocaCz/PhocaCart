@@ -28,12 +28,12 @@ $batchForm = $this->batchForm;
           <?php echo $batchForm->renderFieldset('top'); ?>
 
           <div class="row">
-            <div class="col-sm-6 col-md-6">
+            <div class="col-sm-6">
                 <?php echo $batchForm->renderFieldset('basic'); ?>
             </div>
 
-            <div class="col-sm-6 col-md-6">
-                <?php echo $batchForm->renderFieldset('copy'); ?>
+            <div class="col-sm-6">
+                <?php echo $batchForm->renderFieldset('params'); ?>
             </div>
           </div>
         </div>
