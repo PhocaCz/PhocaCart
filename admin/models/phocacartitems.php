@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Factory;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 
@@ -395,7 +396,11 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 	public function getBatchForm(): Form
 	{
 		$form = $this->loadForm($this->context . '.batch', 'batch_item', ['control' => '', 'load_data' => false]);
+
+        PhocacartFields::prepareBatchForm('com_phocacart.phocacartitem', $form);
+
         Dispatcher::dispatch(new Event\Feed\BatchForm('com_phocacart.phocacartitem', $form));
+
         return $form;
 	}
 

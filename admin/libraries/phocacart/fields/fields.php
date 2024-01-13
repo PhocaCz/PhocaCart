@@ -11,6 +11,9 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Joomla\Database\ParameterType;
 
@@ -75,11 +78,11 @@ class PhocacartFields
         return $groups;
     }
 
-    public static function getAllFields(): array
+    public static function getAllFields($context = 'com_phocacart.phocacartitem'): array
     {
         static $fields = null;
         if ($fields === null) {
-            $fields = FieldsHelper::getFields('com_phocacart.phocacartitem');
+            $fields = FieldsHelper::getFields($context);
         }
 
         return $fields;
@@ -161,5 +164,80 @@ class PhocacartFields
         return $items;
     }
 
+    public static function prepareBatchForm(string $context, Form $form)
+    {
+        $fields = FieldsHelper::getFields($context, new CMSObject());
+
+        if (!$fields) {
+            return true;
+        }
+
+        $batchFields = [];
+        foreach ($fields as $field) {
+            if ($field->params->get('allow_batch')) {
+                $batchFields[] = $field;
+            }
+        }
+
+        if (!$batchFields) {
+            return true;
+        }
+
+        // Creating the dom
+        $xml        = new \DOMDocument('1.0', 'UTF-8');
+        $fieldsNode = $xml->appendChild(new \DOMElement('form'))->appendChild(new \DOMElement('fields'));
+        $fieldsNode->setAttribute('name', 'batch');
+        $fieldsNode = $fieldsNode->appendChild(new \DOMElement('fields'));
+        $fieldsNode->setAttribute('name', 'com_fields');
+        $fieldset = $fieldsNode->appendChild(new \DOMElement('fieldset'));
+        $fieldset->setAttribute('name', 'params');
+
+        foreach ($batchFields as $field) {
+            try {
+                $field->params->set('showon', '_custom_fields:1');
+                Factory::getApplication()->triggerEvent('onCustomFieldsPrepareDom', [$field, $fieldset, $form]);
+                //$form->setFieldAttribute($field->name, 'showon', '_custom_fields:1', $field->group);
+            }
+            catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            }
+        }
+
+        $form->load($xml->saveXML());
+
+        foreach ($batchFields as $field) {
+            $form->setFieldAttribute($field->name, 'showon', '_custom_fields:1', $field->group);
+        }
+
+        return true;
+    }
+
+    public static function saveFieldValue(string $context, int $itemId, string $fieldName, $value): bool
+    {
+        $fields = self::getAllFields($context);
+
+        /** @var \Joomla\Component\Fields\Administrator\Model\FieldModel $model */
+        $model = Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()
+            ->createModel('Field', 'Administrator', ['ignore_request' => true]);
+
+        // If no value set (empty) remove value from database
+        if (is_array($value) ? !count($value) : !strlen($value)) {
+            $value = null;
+        }
+
+        // JSON encode value for complex fields
+        if (is_array($value) && (count($value, COUNT_NORMAL) !== count($value, COUNT_RECURSIVE) || !count(array_filter(array_keys($value), 'is_numeric')))) {
+            $value = json_encode($value);
+        }
+
+        foreach ($fields as $field) {
+            if ($field->name == $fieldName) {
+                $model->setFieldValue($field->id, $itemId, $value);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
