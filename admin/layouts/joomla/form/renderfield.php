@@ -41,7 +41,7 @@ if ($field->group) {
   $class = [];
 }
 $class[] = $field->fieldname;
-$class = 'ph-par-' . implode('-', $class);
+$class = ' ph-par-' . implode('-', $class);
 
 $class          .= empty($options['class']) ? '' : ' ' . $options['class'];
 $rel             = empty($options['rel']) ? '' : ' ' . $options['rel'];
