@@ -62,7 +62,7 @@ class PhocaCartCpViewPhocaCartExports extends HtmlView
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.export'));
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_EXPORT'), 'export');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_EXPORT'), 'sign-out');
 
 
         // This button is unnecessary but it is displayed because Joomla! design bug

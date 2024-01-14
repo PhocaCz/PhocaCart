@@ -54,7 +54,7 @@ class PhocaCartCpViewPhocaCartStatus extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.status_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ORDER_STATUS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'time');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ORDER_STATUS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'disable-motion');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

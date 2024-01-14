@@ -34,7 +34,7 @@ class PhocaCartCpViewPhocaCartInfo extends HtmlView
         $class = $this->t['n'] . 'CpHelper';
         $canDo = $class::getActions($this->t['c']);
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_PM_INFO'), 'info-sign');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_PM_INFO'), 'info-circle');
 
         // This button is unnecessary but it is displayed because Joomla! design bug
         $bar   = Toolbar::getInstance('toolbar');

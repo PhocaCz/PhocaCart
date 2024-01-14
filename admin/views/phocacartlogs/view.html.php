@@ -60,7 +60,7 @@ class PhocaCartCpViewPhocacartLogs extends HtmlView
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.log_id'));
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_SYSTEM_LOG'), 'list');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_SYSTEM_LOG'), 'logs');
 
         // This button is unnecessary but it is displayed because Joomla! design bug
         $bar   = Toolbar::getInstance('toolbar');

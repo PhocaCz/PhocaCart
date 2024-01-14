@@ -59,7 +59,7 @@ class PhocaCartCpViewPhocacartParameterValues extends HtmlView
 
 		$bar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_PARAMETER_VALUES' ), 'list' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_PARAMETER_VALUES' ), 'ellipsis-v' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

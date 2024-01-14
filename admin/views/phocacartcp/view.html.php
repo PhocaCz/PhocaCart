@@ -40,7 +40,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'items'			=> array($this->t['l'] . '_PRODUCTS', $d.$i .'archive', '#c1a46d'),
 		'categories'	=> array($this->t['l'] . '_CATEGORIES', $d.$i .'folder-open', '#da7400'),
 		'specifications'=> array($this->t['l'] . '_SPECIFICATIONS', $d.$i .'equalizer', '#4e5f81'),
-		'manufacturers'	=> array($this->t['l'] . '_MANUFACTURERS', $d.$i .'home', '#ff7d49'),
+		'manufacturers'	=> array($this->t['l'] . '_MANUFACTURERS', $d.$i .'wrench', '#ff7d49'),
 		'orders'		=> array($this->t['l'] . '_ORDERS', $d.$i .'cart', '#0099CC'),
 		'statuses'		=> array($this->t['l'] . '_ORDER_STATUSES', $d.$i .'disable-motion', '#c1976d'),
 		'stockstatuses'	=> array($this->t['l'] . '_STOCK_STATUSES', $d.$i .'components', '#777777'),

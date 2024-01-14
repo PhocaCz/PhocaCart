@@ -67,7 +67,7 @@ class PhocaCartCpViewPhocacartManufacturers extends HtmlView
 
 		$bar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_MANUFACTURERS' ), 'home' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_MANUFACTURERS' ), 'wrench' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

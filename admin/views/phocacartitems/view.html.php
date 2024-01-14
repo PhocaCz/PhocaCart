@@ -117,7 +117,7 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 		$user  	= Factory::getUser();
 		$bar 	= Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'archive' );
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 

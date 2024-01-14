@@ -53,7 +53,7 @@ class PhocaCartCpViewPhocacartDiscount extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.discount_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_DISCOUNT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'piggy-bank');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_DISCOUNT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'scissors');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

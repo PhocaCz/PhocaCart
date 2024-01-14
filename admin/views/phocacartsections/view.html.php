@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartSections extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.section_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_SECTIONS' ), 'unchecked' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_SECTIONS' ), 'notification-circle' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

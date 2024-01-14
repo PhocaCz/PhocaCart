@@ -89,7 +89,7 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.report_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_REPORTS' ), 'list-alt' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_REPORTS' ), 'chart' );
 
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = Toolbar::getInstance( 'toolbar' );

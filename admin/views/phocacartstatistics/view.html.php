@@ -148,7 +148,7 @@ class PhocaCartCpViewPhocacartStatistics extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.statistic_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_STATISTICS' ), 'stats' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_STATISTICS' ), 'pie' );
 
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = Toolbar::getInstance( 'toolbar' );

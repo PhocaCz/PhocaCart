@@ -66,7 +66,7 @@ class PhocaCartCpViewPhocaCartSubmititems extends HtmlView
 
 
 
-		ToolbarHelper::title( Text::_($this->t['l'].'_SUBMITTED_ITEMS'), 'duplicate' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_SUBMITTED_ITEMS'), 'duplicate-alt' );
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 

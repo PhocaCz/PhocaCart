@@ -62,7 +62,7 @@ class PhocaCartCpViewPhocaCartImports extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.import'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_IMPORT' ), 'import' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_IMPORT' ), 'sign-in' );
 
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = Toolbar::getInstance( 'toolbar' );
