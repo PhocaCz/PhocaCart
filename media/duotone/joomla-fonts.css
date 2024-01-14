@@ -549,22 +549,22 @@
   content: "\13d10";
 }
 
-.phi.icon-ellipsis-h::after,.phi.icon-more::after,.phi.icon-overflow-menu::after,.phi.icon-menu-horizontal::after
+.phi.duotone.icon-ellipsis-h::after,.phi.duotone.icon-more::after,.phi.duotone.icon-overflow-menu::after,.phi.duotone.icon-menu-horizontal::after
 {
   content: "\13ce3";
 }
 
-.phi.icon-ellipsis-h::before,.phi.icon-more::before,.phi.icon-overflow-menu::before,.phi.icon-menu-horizontal::before
+.phi.duotone.icon-ellipsis-h::before,.phi.duotone.icon-more::before,.phi.duotone.icon-overflow-menu::before,.phi.duotone.icon-menu-horizontal::before
 {
   content: "";
 }
 
-.phi.icon-ellipsis-v::after,.phi.icon-menu-vertical::after
+.phi.duotone.icon-ellipsis-v::after,.phi.duotone.icon-menu-vertical::after
 {
   content: "\13ce4";
 }
 
-.phi.icon-ellipsis-v::before,.phi.icon-menu-vertical::before
+.phi.duotone.icon-ellipsis-v::before,.phi.duotone.icon-menu-vertical::before
 {
   content: "";
 }
