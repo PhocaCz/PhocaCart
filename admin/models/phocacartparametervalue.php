@@ -128,5 +128,20 @@ class PhocaCartCpModelPhocacartParameterValue extends AdminModel
         }
 
     }
+
+	public function delete(&$pks)
+	{
+		$result = parent::delete($pks);
+
+		if ($result) {
+			$db = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->delete('#__phocacart_parameter_values_related')
+				->whereIn('parameter_value_id', $pks);
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+		return $result;
+	}
 }
-?>

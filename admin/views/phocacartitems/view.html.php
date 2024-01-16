@@ -26,15 +26,17 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 	protected $t;
 	protected $r;
     public $filterForm;
+    public $batchForm;
 	public $activeFilters;
 
 	function display($tpl = null) {
-		$this->t			= PhocacartUtils::setVars('item');
-		$this->r 			= new PhocacartRenderAdminviews();
+		$this->t			    = PhocacartUtils::setVars('item');
+		$this->r 			    = new PhocacartRenderAdminviews();
 		$this->items			= $this->get('Items');
 		$this->pagination		= $this->get('Pagination');
 		$this->state			= $this->get('State');
 		$this->filterForm   	= $this->get('FilterForm');
+        $this->batchForm   	    = $this->get('BatchForm');
         $this->activeFilters 	= $this->get('ActiveFilters');
 
 
@@ -115,7 +117,7 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 		$user  	= Factory::getUser();
 		$bar 	= Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'archive' );
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
@@ -125,11 +127,8 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 
-		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action')->listCheck(true);
+		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action');
 		$childBar = $dropdown->getChildToolbar();
-
-
-
 
 		if ($canDo->get('core.edit.state')) {
 			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
@@ -152,7 +151,7 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 		if ($user->authorise('core.edit'))
 		{
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal')->listCheck(true);
+			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal');
 
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
 			$childBar->popupButton('copy_attributes')->text('COM_PHOCACART_COPY_ATTRIBUTES')->selector('collapseModalCA')->icon('icon-list')->listCheck(true);
@@ -160,7 +159,7 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 
 		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){Joomla.submitbutton(\'phocacartitem.recreate\');}}';
 
-		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image');
+		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image')->listCheck(true);
 
 		ToolbarHelper::divider();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );

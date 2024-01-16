@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocacartSpecification extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.specification_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_SPECIFICATION_GROUP' ).': <small><small>[ ' . $text.' ]</small></small>' , 'list');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_SPECIFICATION_GROUP' ).': <small><small>[ ' . $text.' ]</small></small>' , 'equalizer');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

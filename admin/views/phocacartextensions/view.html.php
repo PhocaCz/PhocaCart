@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartExtensions extends HtmlView
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.extension_id'));
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_EXTENSIONS'), 'th-large');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_EXTENSIONS'), 'modules');
 
         // This button is unnecessary but it is displayed because Joomla! design bug
         $bar   = Toolbar::getInstance('toolbar');

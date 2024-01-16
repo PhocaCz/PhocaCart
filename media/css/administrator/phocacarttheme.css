@@ -435,7 +435,7 @@ table#extensionList tr td {
 	background-color: #F9E151 !important;
 	border-color: #F9E151 !important;
 	border: 0px !important;
-	
+
 }
 
 .btn-buy:hover, .btn-buy:focus {
@@ -514,7 +514,7 @@ a.ph-submenu:before {
 }
 .nav a.ph-submenu.ph-submenu-manufacturers:before {
 	color: #ff7d49;
-	content: "\13c5b";/*home*/
+	content: "\13cda";/*wrench*/
 }
 .nav a.ph-submenu.ph-submenu-orders:before {
 	color: #0099cc;

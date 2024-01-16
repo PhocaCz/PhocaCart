@@ -50,7 +50,7 @@ class PhocaCartCpViewPhocacartBulkprice extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.bulkprice_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_BULK_PRICE_JOB' ).': <small><small>[ ' . $text.' ]</small></small>' , 'folder-close');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_BULK_PRICE_JOB' ).': <small><small>[ ' . $text.' ]</small></small>' , 'click');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

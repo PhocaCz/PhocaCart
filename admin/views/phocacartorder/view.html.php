@@ -78,7 +78,7 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.order_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ORDER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'shopping-cart');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ORDER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'cart');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

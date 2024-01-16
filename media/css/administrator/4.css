@@ -53,3 +53,7 @@
 .com_phocacart .ph-multiple-table > :not(caption) > * > * {
 	padding: 0.15rem 0.25rem;
 }
+
+.modal-phoca-batch {
+	--modal-width: 95vw;
+}

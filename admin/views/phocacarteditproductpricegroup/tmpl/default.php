@@ -98,7 +98,11 @@ if (!empty($this->t['product'])) {
 						$price = PhocacartPrice::cleanPrice($price);
 					}
 				}
-				$percent = ((float)$priceDef - (float)$price) / ((float)$priceDef / 100);
+				if ($priceDef) {
+					$percent = ((float) $priceDef - (float) $price) / ((float) $priceDef / 100);
+				} else {
+					$percent = 0;
+				}
 				echo '<td><input type="text" class="input-small form-control calc-price" name="jform['.$v['id'].'][price]" value="'.$price.'" id="calc-price' . $v['id'] . '" data-price-index="' . $v['id'] . '" />';
 				echo '</td><td>';
 				echo '<input type="text" class="input-small form-control calc-percent" value="'.$percent.'" id="calc-percent' . $v['id'] . '" data-price-index="' . $v['id'] . '" />';

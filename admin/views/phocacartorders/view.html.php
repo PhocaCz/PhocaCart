@@ -76,7 +76,7 @@ class PhocaCartCpViewPhocacartOrders extends HtmlView
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.order_id'));
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_ORDERS'), 'shopping-cart');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_ORDERS'), 'cart');
 
         if ($canDo->get('core.create')) {
             //JToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
@@ -125,5 +125,3 @@ class PhocaCartCpViewPhocacartOrders extends HtmlView
         );
     }
 }
-
-?>

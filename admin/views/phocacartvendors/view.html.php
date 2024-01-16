@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartVendors extends HtmlView
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.vendor_id'));
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_VENDORS'), 'user');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_VENDORS'), 'users');
 
         if ($canDo->get('core.create')) {
             ToolbarHelper::addNew($this->t['task'] . '.add', 'JTOOLBAR_NEW');

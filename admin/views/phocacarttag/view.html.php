@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocacartTag extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.tag_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_TAG' ).': <small><small>[ ' . $text.' ]</small></small>' , 'tags');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_TAG' ).': <small><small>[ ' . $text.' ]</small></small>' , 'tag-double');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

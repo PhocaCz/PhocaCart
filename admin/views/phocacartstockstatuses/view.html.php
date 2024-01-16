@@ -58,7 +58,7 @@ class PhocaCartCpViewPhocacartStockStatuses extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.stockstatus_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_STOCK_STATUSES' ), 'tasks' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_STOCK_STATUSES' ), 'components' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

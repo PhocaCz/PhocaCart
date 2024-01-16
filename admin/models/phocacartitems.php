@@ -7,12 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Factory;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.modellist' );
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
@@ -387,5 +392,16 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 		return $form;
 	}
+
+	public function getBatchForm(): Form
+	{
+		$form = $this->loadForm($this->context . '.batch', 'batch_item', ['control' => '', 'load_data' => false]);
+
+        PhocacartFields::prepareBatchForm('com_phocacart.phocacartitem', $form);
+
+        Dispatcher::dispatch(new Event\Feed\BatchForm('com_phocacart.phocacartitem', $form));
+
+        return $form;
+	}
+
 }
-?>

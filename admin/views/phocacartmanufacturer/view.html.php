@@ -60,7 +60,7 @@ class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.manufacturer_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_MANUFACTURER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'home');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_MANUFACTURER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'wrench');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

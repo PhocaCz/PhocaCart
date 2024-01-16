@@ -51,7 +51,7 @@ class PhocaCartCpViewPhocacartZone extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.zone_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ZONE' ).': <small><small>[ ' . $text.' ]</small></small>' , 'globe');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_ZONE' ).': <small><small>[ ' . $text.' ]</small></small>' , 'location');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

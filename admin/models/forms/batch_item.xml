@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="batch">
+        <fieldset name="top">
+            <field name="items_filter" type="list" default="selected" hiddenLabel="true" label="COM_PHOCACART_BATCH_ITEMS_FILTER">
+                <option value="selected">COM_PHOCACART_BATCH_ITEMS_FILTER_SELECTED</option>
+                <option value="filtered">COM_PHOCACART_BATCH_ITEMS_FILTER_FILTER</option>
+                <option value="all">COM_PHOCACART_BATCH_ITEMS_FILTER_ALL</option>
+            </field>
+
+            <field name="_items_filter_selected_tip" type="note" showon="items_filter:selected" class="alert alert-info w-100 m-0" description="COM_PHOCACART_BATCH_ITEMS_FILTER_SELECTED_TIP" />
+
+            <field name="_items_filter_filtered_tip" type="note" showon="items_filter:filtered" class="alert alert-warning w-100 m-0" description="COM_PHOCACART_BATCH_ITEMS_FILTER_FILTERED_TIP" />
+
+            <field name="_items_filter_all_tip" type="note" showon="items_filter:all" class="alert alert-danger w-100 m-0" description="COM_PHOCACART_BATCH_ITEMS_FILTER_ALL_TIP" />
+        </fieldset>
+
+        <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields">
+            <field name="copy_move" type="list" label="COM_PHOCACART_BATCH_COPY_MOVE">
+                <option value="">COM_PHOCACART_BATCH_COPY_MOVE_NO</option>
+                <option value="c">JLIB_HTML_BATCH_COPY</option>
+                <option value="m">JLIB_HTML_BATCH_MOVE</option>
+            </field>
+
+            <field name="_copy_move_tip" type="note" showon="copy_move:c" class="alert alert-info w-100 m-0" description="COM_PHOCACART_BATCH_COPY_TIP" />
+
+            <field name="assetgroup_id" type="accesslevel" label="JLIB_HTML_BATCH_ACCESS_LABEL">
+                <option value="">JLIB_HTML_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="language_id" type="contentlanguage" label="JLIB_HTML_BATCH_LANGUAGE_LABEL">
+                <option value="">JLIB_HTML_BATCH_LANGUAGE_NOCHANGE</option>
+            </field>
+
+            <field name="owner_id" type="PhocacartProductVendor" label="COM_PHOCACART_BATCH_OWNER_ID">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="tax_id" type="phocatax" label="COM_PHOCACART_BATCH_TAX_ID">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="_category_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_CATEGORY_OPTIONS">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+
+            <field name="manufacturer_id" type="phocamanufacturer" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_BATCH_MANUFACTURER_ID">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="condition" type="list" label="COM_PHOCACART_BATCH_CONDITION">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="0">COM_PHOCACART_CONDITION_NEW</option>
+                <option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
+                <option value="2">COM_PHOCACART_CONDITION_USED</option>
+                <!--<option value="3">COM_PHOCACART_CONDITION_DAMAGED</option>-->
+            </field>
+
+            <field name="_group" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_GROUP">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+
+            <field name="type" type="list" label="COM_PHOCACART_BATCH_TYPE">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
+                <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
+                <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
+                <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
+                <option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
+                <option value="5">COM_PHOCACART_BUNDLE</option>
+            </field>
+
+            <field name="_tags" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_TAGS">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+
+            <field name="_stock_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_STOCK_OPTIONS">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+
+            <field name="_size_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_SIZE_OPTIONS">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+
+            <field name="_rewards_options" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_REWARDS_OPTIONS">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+            <field name="_move_copy_params_heading" type="note" showon="copy_move:c[OR]copy_move:m" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_MOVE_COPY_PARAMS_HEADING" />
+
+            <field name="category_id" type="phocacartcategory" showon="copy_move:c[OR]copy_move:m" layout="joomla.form.field.list-fancy-select" label="JLIB_HTML_BATCH_MENU_LABEL">
+                <option value="0">JLIB_HTML_ADD_TO_ROOT</option>
+            </field>
+
+            <field name="copy_all_cats" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ALL_CATEGORIES_FROM_SOURCE">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field name="skip_creating_unique_name" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_SKIP_CREATING_UNIQUE_NAME">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field name="copy_download_files" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_DOWNLOAD_FILES">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field name="copy_attributes_download_files" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field name="_category_heading" type="note" showon="_category_options:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_CATEGORY_OPTIONS_HEADING" />
+
+            <field name="catid" type="phocacartcategory" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="catid_add" type="phocacartcategory" multiple="true" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID_ADD">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="catid_remove" type="phocacartcategory" multiple="true" showon="_category_options:1" label="COM_PHOCACART_BATCH_CATID_REMOVE">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="_group_heading" type="note" showon="_group:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_GROUP_HEADING" />
+
+            <field name="group_add" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" showon="_group:1" addempty="false" multiple="true" label="COM_PHOCACART_BATCH_GROUP_ADD" />
+
+            <field name="group_remove" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" showon="_group:1" addempty="false" multiple="true" label="COM_PHOCACART_BATCH_GROUP_REMOVE" />
+
+            <field name="_tags_heading" type="note" showon="_tags:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_TAGS_HEADING" />
+
+            <field name="tags_add" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" showon="_tags:1" label="COM_PHOCACART_BATCH_TAGS_ADD" />
+
+            <field name="tags_remove" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" showon="_tags:1" label="COM_PHOCACART_BATCH_TAGS_REMOVE" />
+
+            <field name="taglabels_add" type="phocataglabels" layout="joomla.form.field.list-fancy-select" multiple="true" showon="_tags:1" label="COM_PHOCACART_BATCH_LABELS_ADD" />
+
+            <field name="taglabels_remove" type="phocataglabels" layout="joomla.form.field.list-fancy-select" multiple="true" showon="_tags:1" label="COM_PHOCACART_BATCH_LABELS_REMOVE" />
+
+            <field name="_stock_options_heading" type="note" showon="_stock_options:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_STOCK_OPTIONS_HEADING" />
+
+            <field name="stock" type="number" showon="_stock_options:1" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" />
+
+            <field name="stock_calculation" type="list" showon="_stock_options:1" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
+                <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
+                <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+                <option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
+            </field>
+
+            <field name="min_quantity" type="number" showon="_stock_options:1" label="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL" />
+
+            <field name="min_multiple_quantity" type="text" showon="_stock_options:1" label="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL" />
+
+            <field name="min_quantity_calculation" type="list" showon="_stock_options:1" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
+                <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
+                <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+            </field>
+
+            <field name="stockstatus_a_id" type="phocastockstatus" manager="a" showon="_stock_options:1" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" />
+
+            <field name="stockstatus_n_id" type="phocastockstatus" manager="n" showon="_stock_options:1" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" />
+
+            <field name="delivery_date" type="Calendar" filter="user_utc" showtime="true" translateformat="true" showon="_stock_options:1" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" />
+
+            <field name="_size_options_heading" type="note" showon="_size_options:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_SIZE_OPTIONS_HEADING" />
+
+            <field name="length" type="number" step="any" filter="float" showon="_size_options:1" label="COM_PHOCACART_FIELD_LENGTH_LABEL" />
+
+            <field name="width" type="number" step="any" filter="float" showon="_size_options:1" label="COM_PHOCACART_FIELD_WIDTH_LABEL" />
+
+            <field name="height" type="number" step="any" filter="float" showon="_size_options:1" label="COM_PHOCACART_FIELD_HEIGHT_LABEL" />
+
+            <field name="weight" type="number" step="any" filter="float" showon="_size_options:1" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" />
+
+            <field name="volume" type="number" step="any" filter="float" showon="_size_options:1" label="COM_PHOCACART_FIELD_VOLUME_LABEL" />
+
+            <field name="unit_amount" type="number" step="any" filter="float" showon="_size_options:1" label="COM_PHOCACART_FIELD_UNIT_AMOUNT_LABEL" />
+
+            <field name="unit_unit" type="text" showon="_size_options:1" label="COM_PHOCACART_FIELD_UNIT_UNIT_LABEL" />
+
+            <field name="_rewards_options_heading" type="note" showon="_rewards_options:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_REWARDS_OPTIONS_HEADING" />
+
+            <field name="points_needed" type="number" showon="_rewards_options:1" label="COM_PHOCACART_FIELD_POINTS_NEEDED_LABEL" />
+
+            <field name="points_received" type="number" showon="_rewards_options:1" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" />
+        </fieldset>
+
+        <fields name="com_fields">
+            <fieldset name="basic">
+                <field name="_custom_fields" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_CUSTOM_FIELDS">
+                    <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                    <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+                <field name="_custom_fields_heading" type="note" showon="_custom_fields:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_CUSTOM_FIELDS_HEADING" />
+            </fieldset>
+        </fields>
+    </fields>
+</form>

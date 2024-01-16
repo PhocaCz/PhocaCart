@@ -58,7 +58,7 @@ class PhocaCartCpViewPhocacartTags extends HtmlView
 		$canDo	= $class::getActions($this->t, $state->get('filter.tag_id'));
         $bar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_TAGS' ), 'tags' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_TAGS' ), 'tag-double' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

@@ -34,7 +34,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 	function getItem( $itemId, $catId) {
 		if (empty($this->item)) {
-			$query			= $this->getItemQuery( $itemId, $catId);
+			$query			= $this->getItemQuery($itemId, $catId);
 			$this->item		= $this->_getList( $query, 0 , 1 );
 
 			if (empty($this->item)) {
