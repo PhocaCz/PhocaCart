@@ -47,7 +47,7 @@
 
         <field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
-        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1"/>
+        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" size="1"/>
 
         <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"/>
 
@@ -135,7 +135,7 @@
 
         <field name="points_received" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_POINTS_RECEIVED_DESC"/>
 
-        <field name="condition" type="list" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC" class="form-control" size="1" default="0">
+        <field name="condition" type="list" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC" size="1" default="0">
             <option value="0">COM_PHOCACART_CONDITION_NEW</option>
             <option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
             <option value="2">COM_PHOCACART_CONDITION_USED</option>
@@ -202,7 +202,7 @@
             <option value="5">COM_PHOCACART_BUNDLE</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC">
             <option value="*">JALL</option>
         </field>
 

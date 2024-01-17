@@ -267,7 +267,7 @@ jQuery(document).ready(function() {
         src = src.replace("{ph-field-id}", id);
         src = src.replace("{ph-field-parent-id}", parentId);
 
-        
+
 		//var phDownloadFolder = jQuery("#jform_download_folder").val();
 		//src = src + "&folder=&downloadfolder=";
 
@@ -424,7 +424,6 @@ jQuery(document).ready(function() {
         var requestUrl  = element.attr("data-requesturl");
         var requestMsg  = element.attr("data-requestmsg");
 
-
         var phVars = Joomla.getOptions('phVars');
         var phLang = Joomla.getOptions('phLang');
         var url = 'index.php?option=com_phocacart&view=phocacartimagea&format=json&tmpl=component&' + phVars['token'] + '=1';
@@ -468,7 +467,7 @@ jQuery(document).ready(function() {
 
                             jQuery("#ph-ajaxtop").html(phGetMsg(' &nbsp; ', 1));
                             jQuery("#ph-ajaxtop").show();
-                            jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));
+                            jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));z
                             phCloseMsgBoxSuccess();
                             if ( response.file != '' ){
                                 element.val(response.file);

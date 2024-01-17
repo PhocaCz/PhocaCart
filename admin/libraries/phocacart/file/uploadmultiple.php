@@ -166,7 +166,7 @@ class PhocacartFileUploadmultiple
 		$js.='		unique_names : false,'."\n";
 		$js.='		multipart: true,'."\n";
 		$js.='		filters : ['."\n";
-		//$js.='			{title : "'.Text::_('com_phocacart_IMAGE_FILES').'", extensions : "jpg,gif,png,webp"}'."\n";
+		//$js.='			{title : "'.Text::_('com_phocacart_IMAGE_FILES').'", extensions : "jpg,gif,png,webp,avif"}'."\n";
 		//$js.='			{title : "Zip files", extensions : "zip"}'."\n";
 		$js.='		],'."\n";
 		$js.=''."\n";

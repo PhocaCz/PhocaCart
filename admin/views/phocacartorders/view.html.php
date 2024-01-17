@@ -101,7 +101,7 @@ class PhocaCartCpViewPhocacartOrders extends HtmlView
         if ((int)$this->state->get('filter.shipping_id') > 0) {
             //ToolbarHelper::custom($this->t['tasks'] . '.exportshipping', 'share.png', 'share.png', 'COM_PHOCACART_EXPORT_SHIPPING', true);
             $bar 	= Toolbar::getInstance('toolbar');
-            $dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_EXPORT_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_INFO_SHIPPING_EXPORT').'\')){Joomla.submitbutton(\'phocacartorders.exportshipping\');}}" ><i class="icon-share" title="'.Text::_('COM_PHOCACART_EXPORT_SHIPPING').'"></i> '.Text::_('COM_PHOCACART_EXPORT_SHIPPING').'</button></joomla-toolbar-button>';
+            $dhtml = '<joomla-toolbar-button><button class="btn btn-primary btn-small" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_EXPORT_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_INFO_SHIPPING_EXPORT').'\')){Joomla.submitbutton(\'phocacartorders.exportshipping\');}}" ><i class="icon-share" title="'.Text::_('COM_PHOCACART_EXPORT_SHIPPING').'"></i> '.Text::_('COM_PHOCACART_EXPORT_SHIPPING').'</button></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml);
         }
 

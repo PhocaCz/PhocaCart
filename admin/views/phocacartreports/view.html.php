@@ -93,7 +93,7 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = Toolbar::getInstance( 'toolbar' );
-		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.Text::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.Text::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
+		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-primary btn-small"><i class="icon-home-2" title="'.Text::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.Text::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
 
 
@@ -103,7 +103,7 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		// Direct download
 		$linkTxtHandler	= 'onclick="window.open(this.href, \'orderview\', \'width=880,height=560,scrollbars=yes,menubar=no,resizable=yes\');return false;"';
 		//$linkTxtHandler = '';
-		$dhtml = '<joomla-toolbar-button><a href="'.$linkTxt.'" class="btn btn-small btn-primary" '.$linkTxtHandler.'><i id="ph-icon-text" class="icon-dummy fa fa-list-alt fa-fw ph-icon-text fas fa fa-file"></i>'.Text::_('COM_PHOCACART_VIEW_REPORT_HTML').'</a></joomla-toolbar-button>';
+		$dhtml = '<joomla-toolbar-button><a href="'.$linkTxt.'" class="btn btn-primary btn-small" '.$linkTxtHandler.'><i id="ph-icon-text" class="icon-dummy fa fa-list-alt fa-fw ph-icon-text fas fa fa-file"></i>'.Text::_('COM_PHOCACART_VIEW_REPORT_HTML').'</a></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml);
 
 		$this->t['plugin-pdf']		= PhocacartUtilsExtension::getExtensionInfo('phocacart', 'plugin', 'phocapdf');

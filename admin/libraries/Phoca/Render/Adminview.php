@@ -16,7 +16,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\HTML\HTMLHelper;
-
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -42,31 +41,17 @@ class Adminview
 		$this->option		= $app->input->get('option');
 		$this->optionLang = strtoupper($this->option);
 		$this->sidebar 		= Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
-		$this->document	  = Factory::getDocument();
+		$this->document	  	= Factory::getDocument();
+		$wa 				= $app->getDocument()->getWebAssetManager();
 
+		HTMLHelper::_('behavior.formvalidator');
+		HTMLHelper::_('behavior.keepalive');
+		HTMLHelper::_('jquery.framework', false);
 
-		//switch($this->view) {
-         //   default:
-				HTMLHelper::_('behavior.formvalidator');
-				HTMLHelper::_('behavior.keepalive');
-				HTMLHelper::_('jquery.framework', false);
-
-				if (!$this->compatible) {
-					HTMLHelper::_('behavior.tooltip');
-					HTMLHelper::_('formbehavior.chosen', 'select');
-				}
-		//	break;
-		//}
-
-		HTMLHelper::_('stylesheet', 'media/'.$this->option.'/duotone/joomla-fonts.css', array('version' => 'auto'));
-		HTMLHelper::_('stylesheet', 'media/'.$this->option.'/css/administrator/'.str_replace('com_', '', $this->option).'.css', array('version' => 'auto'));
-
-		if ($this->compatible) {
-			HTMLHelper::_('stylesheet', 'media/'.$this->option.'/css/administrator/4.css', array('version' => 'auto'));
-		} else {
-			HTMLHelper::_('stylesheet', 'media/'.$this->option.'/css/administrator/3.css', array('version' => 'auto'));
-		}
-
+		$wa->registerAndUseStyle($this->option . '.font', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.main', 'media/' .$this->option . '/css/administrator/'.str_replace('com_', '', $this->option).'.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.version', 'media/' .$this->option . '/css/administrator/4.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.theme', 'media/' .$this->option . '/css/administrator/theme-dark.css', array('version' => 'auto'), [], ['template.active']);
 	}
 
 	public function startHeader() {

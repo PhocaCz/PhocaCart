@@ -329,22 +329,22 @@
   content: "\13ae7";
 }
 
-.phi.icon-clock-alt::after,.phi.icon-clock-2::after
+.phi.duotone.icon-clock-alt::after,.phi.icon-clock-2::after
 {
   content: "\13c21";
 }
 
-.phi.icon-clock-alt::before,.phi.icon-clock-2::before
+.phi.duotone.icon-clock-alt::before,.phi.icon-clock-2::before
 {
   content: "";
 }
 
-.phi.icon-clock::after
+.phi.duotone.icon-clock::after
 {
   content: "\13c22";
 }
 
-.phi.icon-clock::before
+.phi.duotone.icon-clock::before
 {
   content: "";
 }
@@ -849,22 +849,22 @@
   content: "\13b3f";
 }
 
-.phi.icon-heart-stroke::after
+.phi.duotone.icon-heart-stroke::after
 {
   content: "\13c59";
 }
 
-.phi.icon-heart-stroke::before
+.phi.duotone.icon-heart-stroke::before
 {
   content: "";
 }
 
-.phi.icon-heart::after
+.phi.duotone.icon-heart::after
 {
   content: "\13c5a";
 }
 
-.phi.icon-heart::before
+.phi.duotone.icon-heart::before
 {
   content: "";
 }

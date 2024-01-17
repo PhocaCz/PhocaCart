@@ -37,30 +37,16 @@ class Adminviews
 
     public function __construct() {
 
-        $app              = Factory::getApplication();
-        $version          = new Version();
-        $this->compatible = $version->isCompatible('4.0.0-alpha');
-        $this->view       = $app->input->get('view');
-        $this->option     = $app->input->get('option');
-        $this->optionLang = strtoupper($this->option);
+        $app				= Factory::getApplication();
+		$version 			= new Version();
+		$this->compatible 	= $version->isCompatible('4.0.0-alpha');
+		$this->view			= $app->input->get('view');
+		$this->option		= $app->input->get('option');
+		$this->optionLang   = strtoupper($this->option);
         $this->tmpl       = $app->input->get('tmpl');
-        $this->document   = Factory::getDocument();
-
-
-        $this->sidebar = Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
-
-
-        /* switch($this->view) {
-
-             case 2:
-                 HTMLHelper::_('behavior.keepalive');
-                 if (!$this->compatible) {
-                     HTMLHelper::_('formbehavior.chosen', 'select');
-                 }
-             break;
-
-             case 1:
-             default:*/
+		$this->sidebar 		= Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
+		$this->document	  	= Factory::getDocument();
+		$wa 				= $app->getDocument()->getWebAssetManager();
 
 				HTMLHelper::_('bootstrap.tooltip');
                 if ($this->view == 'phocacartorders') {
@@ -80,27 +66,18 @@ class Adminviews
 
 				HTMLHelper::_('jquery.framework', false);
 
-        //	break;
-        //}
+		$wa->registerAndUseStyle($this->option . '.font', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.main', 'media/' .$this->option . '/css/administrator/'.str_replace('com_', '', $this->option).'.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.version', 'media/' .$this->option . '/css/administrator/4.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.theme', 'media/' .$this->option . '/css/administrator/theme-dark.css', array('version' => 'auto'), [], ['template.active']);
 
         // Modal
         if ($this->tmpl == 'component') {
-
             HTMLHelper::_('behavior.core');
             HTMLHelper::_('behavior.polyfill', array('event'), 'lt IE 9');
             HTMLHelper::_('script', 'media/' . $this->option . '/js/administrator/admin-phocaitems-modal.min.js', array('version' => 'auto', 'relative' => true));
             HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
             HTMLHelper::_('bootstrap.popover', '.hasPopover', array('placement' => 'bottom'));
-
-        }
-
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/' . str_replace('com_', '', $this->option) . '.css', array('version' => 'auto'));
-
-        if ($this->compatible) {
-            HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/4.css', array('version' => 'auto'));
-        } else {
-            HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/3.css', array('version' => 'auto'));
         }
     }
 

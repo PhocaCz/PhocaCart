@@ -1355,6 +1355,8 @@
             <field name="phocahead13" type="phocahead" default="COM_PHOCACART_IMAGES_AND_THUMBNAILS_LABEL" label="" description=""/>
 
 
+            <field name="thumbnail_quality" default="100" size="4" type="text" label="COM_PHOCACART_FIELD_THUMBNAIL_QUALITY_LABEL" description="COM_PHOCACART_FIELD_THUMBNAIL_QUALITY_DESC"/>
+
             <field name="large_image_width" default="640" size="4" type="text" label="COM_PHOCACART_FIELD_LARGE_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_LARGE_IMAGE_WIDTH_DESC"/>
 
             <field name="large_image_height" default="480" size="4" type="text" label="COM_PHOCACART_FIELD_LARGE_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_LARGE_IMAGE_HEIGHT_DESC"/>
@@ -1382,6 +1384,22 @@
                 <option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
             </field>
+
+            <field name="create_watermark" type="list" default="0" label="COM_PHOCACART_FIELD_CREATE_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_CREATE_WATERMARK_DESC">
+	<option value="1">COM_PHOCACART_YES_FOLDER</option>
+	<option value="2">COM_PHOCACART_YES_ROOT</option>
+	<option value="0">COM_PHOCACART_NO</option>
+</field>
+<field name="watermark_position_x" type="list" default="center" label="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_DESC">
+	<option value="left">COM_PHOCACART_LEFT</option>
+	<option value="center">COM_PHOCACART_CENTER</option>
+	<option value="right">COM_PHOCACART_RIGHT</option>
+</field>
+<field name="watermark_position_y" type="list" default="middle" label="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_DESC">
+	<option value="top">COM_PHOCACART_TOP</option>
+	<option value="middle">COM_PHOCACART_MIDDLE</option>
+	<option value="bottom">COM_PHOCACART_BOTTOM</option>
+</field>
 
 
 			<field name="phocahead36" type="phocahead" default="COM_PHOCACART_HEAD_COPY_PASTE_IMAGES_OPTIONS_LABEL" label="" description=""/>
@@ -2383,9 +2401,9 @@
             </field>
 
 
-			<field name="allowed_file_types_upload_frontend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_DESC"/>
+			<field name="allowed_file_types_upload_frontend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{avif=image/avif}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_DESC"/>
 
-			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}{epub=application/epub+zip}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
+			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{avif=image/avif}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}{epub=application/epub+zip}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
 
 
 			<field name="upload_maxsize" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
@@ -2431,6 +2449,7 @@
                 <option value="text-curie-001">text-curie-001</option>
                 <option value="text-babbage-001">text-babbage-001</option>
                 <option value="text-ada-001">text-ada-001</option>
+                <option value="gpt-3.5-turbo-instruct">gpt-3.5-turbo-instruct</option>
             </field>
 
             <field name="ai_premade_question_description" type="text" default="Create a product description based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_DESC" filter="safehtml" />

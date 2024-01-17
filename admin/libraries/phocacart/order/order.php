@@ -1588,7 +1588,7 @@ class PhocacartOrder
 
                         if (!$row2->store()) {
                             //throw new Exception($row2->getError());
-                            $msg = Text::_($row2->getErrorMsg());
+                            $msg = Text::_($row2->getError());
                             $app->enqueueMessage($msg, 'error');
                             return false;
                         }
@@ -1638,7 +1638,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1646,7 +1646,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1677,7 +1677,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1685,7 +1685,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1742,7 +1742,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1750,7 +1750,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1782,7 +1782,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1790,7 +1790,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1881,14 +1881,14 @@ class PhocacartOrder
 
             if (!$row->check()) {
                 //throw new Exception($row->getError());
-                $msg = Text::_($row->getErrorMsg());
+                $msg = Text::_($row->getError());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
 
             if (!$row->store()) {
                 //throw new Exception($row->getError());
-                $msg = Text::_($row->getErrorMsg());
+                $msg = Text::_($row->getError());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
@@ -1932,14 +1932,14 @@ class PhocacartOrder
 
                     if (!$row->check()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->store()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
@@ -1983,14 +1983,14 @@ class PhocacartOrder
 
                     if (!$row->check()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->store()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
@@ -2050,6 +2050,8 @@ class PhocacartOrder
         $d['title']                 = Text::_('COM_PHOCACART_GIFT_VOUCHER');
         $d['alias']                 = PhocacartUtils::getAliasName($d['title']);
         $d['code']                  = PhocacartCoupon::generateCouponCode();
+
+        $d['valid_from']            = gmdate('Y-m-d H:i:s');
 
         $product = PhocacartProduct::getProduct((int)$v['id'], (int)$v['catid'], $this->type);
 
@@ -2154,14 +2156,14 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2289,7 +2291,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2297,7 +2299,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -3038,14 +3040,14 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }

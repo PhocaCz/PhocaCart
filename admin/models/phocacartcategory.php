@@ -458,7 +458,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 					. ' WHERE id IN ( '.$cids.' )';
 					$db->setQuery( $query );
 					if (!$db->execute()) {
-						$this->setError($db->getErrorMsg());
+						//$this->setError($db->getError());
+						throw new Exception('Database Error: Delete items in category', 500);
 						return false;
 					}
 

@@ -19,7 +19,7 @@
 <field name="description_info" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_DESC" />
 
 <field name="ordering" type="PhocacartOrdering" table="shipping" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1" />
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" size="1" />
 
 <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="7" size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
@@ -34,13 +34,13 @@
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>
 
-<field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" class="form-control" size="1" default="0">
+<field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" size="1" default="0">
 	<option	value="0">COM_PHOCACART_COMMON</option>
 	<option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
 	<option value="2">COM_PHOCACART_POS_ONLY</option>
 </field>
 
-<field name="default" type="list" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" class="form-control" size="1" default="0">
+<field name="default" type="list" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" class="form-select" size="1" default="0">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>
 </field>
@@ -155,13 +155,13 @@ COM_PHOCACART_FIELD_SHORTEST_LENGTH_DESC="Set shortest length"
 
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-control" size="1" default="1">
+<field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
 	<option value="1">JPUBLISHED</option>
 	<option	value="0">JUNPUBLISHED</option>
 </field>
 
 <!--
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
 	<option value="*">JALL</option>
 </field>
 <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />

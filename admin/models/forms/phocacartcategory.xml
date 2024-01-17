@@ -11,16 +11,16 @@
 
         <field name="title_long" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
 
-        <field name="parent_id" type="phocacartcategory" layout="joomla.form.field.list" class="form-control" label="COM_PHOCACART_FIELD_PARENT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PARENT_CATEGORY_DESC"/>
+        <field name="parent_id" type="phocacartcategory" layout="joomla.form.field.list" label="COM_PHOCACART_FIELD_PARENT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PARENT_CATEGORY_DESC"/>
 
         <field name="ordering" type="PhocacartOrdering" table="category" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
-        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1"/>
+        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC"  size="1"/>
 
 
         <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="2"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"/>
 
-        <field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" class="form-control" size="1" default="0">
+        <field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" size="1" default="0">
             <option value="0">COM_PHOCACART_COMMON</option>
             <option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
             <option value="2">COM_PHOCACART_POS_ONLY</option>
@@ -60,12 +60,12 @@
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
 
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-control" size="1" default="1">
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select" size="1" default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
             <option value="*">JALL</option>
         </field>
 

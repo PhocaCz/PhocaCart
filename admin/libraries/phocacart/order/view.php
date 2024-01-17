@@ -34,7 +34,7 @@ class PhocacartOrderView
 		/*if(isset($orderId) && (int)$orderId > 0) {
 			$return = $table->load(array('order_id' => (int)$orderId, 'type' => 0));
 			if ($return === false && $table->getError()) {
-				throw new Exception($table->getErrorMsg());
+				throw new Exception($table->getError());
 				return false;
 			}
 		}
@@ -43,7 +43,7 @@ class PhocacartOrderView
 		if(isset($orderId) && (int)$orderId > 0) {
 			$returnS = $tableS->load(array('order_id' => (int)$orderId, 'type' => 1));
 			if ($returnS === false && $tableS->getError()) {
-				throw new Exception($tableS->getErrorMsg());
+				throw new Exception($tableS->getError());
 				return false;
 			}
 		}*/

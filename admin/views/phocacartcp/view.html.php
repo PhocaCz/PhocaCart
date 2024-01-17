@@ -116,7 +116,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 
 		// This button is unnecessary but it is displayed because Joomla! design bug
 		$bar = Toolbar::getInstance( 'toolbar' );
-		$dhtml = '<joomla-toolbar-button><a href="index.php?option=com_phocacart" class="btn btn-small"><i class="icon-home-2" title="'.Text::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.Text::_('COM_PHOCACART_CONTROL_PANEL').'</a></joomla-toolbar-button>';
+		$dhtml = '<joomla-toolbar-button><a href="index.php?option=com_phocacart" class="btn btn-primary btn-small"><i class="icon-home-2" title="'.Text::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.Text::_('COM_PHOCACART_CONTROL_PANEL').'</a></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml);
 
 
@@ -184,7 +184,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		.' <input type="hidden" name="task" value="phocacartwizard.skipwizard">'
 		.' <input type="hidden" name="tmpl" value="component" />'
 		.' <input type="hidden" name="option" value="com_phocacart" />'
-		.' <button class="btn btn-primary ph-btn"><span class="icon-delete"></span> '.Text::_('COM_PHOCACART_SKIP_WIZARD').'</button>'
+		.' <button class="btn ph-btn"><span class="icon-delete"></span> '.Text::_('COM_PHOCACART_SKIP_WIZARD').'</button>'
 		. HTMLHelper::_('form.token')
 		. '</form> ';
 		$pageClass = 'ph-wizard-start-page-window';

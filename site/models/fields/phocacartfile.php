@@ -105,7 +105,7 @@ class JFormFieldPhocacartFile extends FormField
 			$accepts = '';
 			if ($typeMethod == 'image'){
 				$accepts = 'accept="image/*"';
-				$accepts = 'accept="image/x-png,image/gif,image/jpeg,image/webp"';
+				$accepts = 'accept="image/x-png,image/gif,image/jpeg,image/webp,image/avif"';
 			}
 
 			$s  = PhocacartRenderStyle::getStyles();
