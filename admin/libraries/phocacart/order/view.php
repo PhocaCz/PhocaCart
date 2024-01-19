@@ -140,7 +140,7 @@ class PhocacartOrderView
 				.' sc.title as section_name, un.title as unit_name'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__users AS u ON u.id = o.user_id'
-				.' LEFT JOIN #__users AS uv ON uv.id = o.user_id'
+				.' LEFT JOIN #__users AS uv ON uv.id = o.vendor_id'
 				.' LEFT JOIN #__phocacart_order_statuses AS os ON os.id = o.status_id'
 				.' LEFT JOIN #__phocacart_payment_methods AS p ON p.id = o.payment_id'
 				.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
