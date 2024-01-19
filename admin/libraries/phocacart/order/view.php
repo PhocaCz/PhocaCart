@@ -275,7 +275,7 @@ class PhocacartOrderView
 		$db = Factory::getDBO();
 		$q = 'SELECT d.*'
 			.' FROM #__phocacart_orders AS o'
-			.' LEFT JOIN #__phocacart_order_product_discounts AS d ON o.id = d.order_id'
+			.' JOIN #__phocacart_order_product_discounts AS d ON o.id = d.order_id'
 			.' WHERE o.id = '.(int)$orderId;
 		if ($onlyPublished == 1) {
 			$q.= ' AND d.published = 1';

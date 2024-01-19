@@ -532,13 +532,13 @@ class Adminview
 	public function itemCalc($id, $name, $value, $form = 'pform', $size = 1, $class = '') {
 
 		switch ($size){
-			case 3: $class = 'form-control input-xxlarge'. ' ' . $class;
+			case 3: $class = 'form-control form-control-sm input-xxlarge'. ' ' . $class;
 			break;
-			case 2: $class = 'form-control input-xlarge'. ' ' . $class;
+			case 2: $class = 'form-control form-control-sm input-xlarge'. ' ' . $class;
 			break;
-			case 0: $class = 'form-control input-mini'. ' ' . $class;
+			case 0: $class = 'form-control form-control-sm input-mini'. ' ' . $class;
 			break;
-			default: $class= 'form-control input-small'. ' ' . $class;
+			default: $class= 'form-control form-control-sm input-small'. ' ' . $class;
 			break;
 		}
 		$o = '';

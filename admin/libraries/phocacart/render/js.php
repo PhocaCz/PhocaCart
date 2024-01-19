@@ -1207,15 +1207,14 @@ final class PhocacartRenderJs
     public static function renderJsAddTrackingCode($idSource, $classDestination) {
         $s = array();
         $s[] = 'jQuery(document).ready(function() {';
-        $s[] = '   var destGlobal 	= jQuery( \'.' . $classDestination . '\').text();';
+        $s[] = '   var destGlobal 	= jQuery( \'.' . $classDestination . '\').val();';
         $s[] = '   var sourceGlobal	= jQuery(\'#' . $idSource . '\').val();';
-        $s[] = '   var textGlobal 	= destGlobal + sourceGlobal';
-        $s[] = '   jQuery( \'.' . $classDestination . '\').html(textGlobal);';
+        $s[] = '   jQuery( \'.' . $classDestination . '\').val(destGlobal + sourceGlobal);';
 
         $s[] = '   jQuery(\'#' . $idSource . '\').on("input", function() {';
         $s[] = '       var source	= jQuery(this).val();';
         $s[] = '       var text = destGlobal + source;';
-        $s[] = '       jQuery( \'.' . $classDestination . '\').html(text);';
+        $s[] = '       jQuery( \'.' . $classDestination . '\').val(text);';
         $s[] = '   })';
         $s[] = '})';
         Factory::getDocument()->addScriptDeclaration(implode("\n", $s));

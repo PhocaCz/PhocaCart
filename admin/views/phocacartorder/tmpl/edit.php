@@ -12,10 +12,10 @@ use Joomla\CMS\Factory;
 defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
 
-$r 			=  new PhocacartRenderAdminview();
+/** @var \Joomla\CMS\Form\Form $form */
+$form = $this->form;
+$r = new PhocacartRenderAdminview();
 $js ='
 Joomla.submitbutton = function(task) {
 	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
@@ -26,153 +26,104 @@ Joomla.submitbutton = function(task) {
 }
 ';
 Factory::getDocument()->addScriptDeclaration($js);
-echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
-// First Column
-echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
-$tabs = array (
-'order' 			=> Text::_($this->t['l'].'_ORDER_OPTIONS'),
-'billingaddress' 	=> Text::_($this->t['l'].'_BILLING_ADDRESS'),
-'shippingaddress' 	=> Text::_($this->t['l'].'_SHIPPING_ADDRESS'),
-'tracking' 			=> Text::_($this->t['l'].'_SHIPMENT_TRACKING_OPTIONS'),
-'products' 			=> Text::_($this->t['l'].'_ORDERED_PRODUCTS'),
-'download' 			=> Text::_($this->t['l'].'_DOWNLOAD_LINKS'),
-'orderlink' 		=> Text::_($this->t['l'].'_ORDER_LINK'),
-'billing' 			=> Text::_($this->t['l'].'_BILLING'));
 
-echo $r->navigation($tabs);
+if ($this->itemcommon->shippingtrackinglink != '') {
+    PhocacartRenderJs::renderJsAddTrackingCode('jform_tracking_number', 'tracking-link');
+}
+
+echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id);
+
+$tabs = [];
+foreach ($form->getFieldsets() as $fieldset) {
+  $tabs[$fieldset->name] = Text::_($fieldset->label);
+}
 
 echo $r->startTabs();
 
 echo $r->startTab('order', $tabs['order'], 'active');
+?>
+<div class="row">
+    <div class="col-lg-9">
+        <div class="row">
+            <div class="card col-md-6 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><?php echo Text::_($this->t['l'].'_BILLING_ADDRESS'); ?></h5>
+                    <div class="card-text">
+                    <?php
+                      echo $form->renderFieldset('billing_address', ['inlineHelp' => true]);
+                      echo $this->events->GetUserBillingInfoAdminEdit;
+                    ?>
+                    </div>
+                </div>
+            </div>
 
-echo $r->itemText(PhocacartOrder::getOrderNumber($this->itemcommon->id, $this->itemcommon->date, $this->itemcommon->order_number), Text::_('COM_PHOCACART_ORDER_NUMBER'), '', 'order_number');
+          <div class="card col-md-6 mb-4">
+            <div class="card-body">
+              <h5 class="card-title"><?php echo Text::_($this->t['l'].'_SHIPPING_ADDRESS'); ?></h5>
+              <div class="card-text">
+                  <?php echo $form->renderFieldset('shipping_address', ['inlineHelp' => true]); ?>
+              </div>
+            </div>
+          </div>
+        </div>
 
-$guest = 0;
-$user = $this->itemcommon->user_name;
-if ($this->itemcommon->user_username != '') {
-	$user .= ' <small>('.$this->itemcommon->user_username.')</small>';
-}
-if ($user != '') {
-	echo $r->itemText($user, Text::_('COM_PHOCACART_USER'), '', 'user');
-} else {
-	$guest = 1;
-	echo $r->itemText('<span class="label label-info badge bg-info">'.Text::_('COM_PHOCACART_GUEST').'</span>', Text::_('COM_PHOCACART_USER'), '', 'guest');
-}
+        <?php
+        if ($this->itemcommon->shippingtitle != '') {
+            echo $r->itemText($this->itemcommon->shippingtitle, Text::_('COM_PHOCACART_SHIPPING_METHOD'), '', 'shipping_method');
+        }
 
-if (isset($this->itemcommon->vendor_name) && $this->itemcommon->vendor_name != '') {
-	$vendor = $this->itemcommon->vendor_name;
-	if ($this->itemcommon->vendor_username != '') {
-		$vendor .= ' <small>('.$this->itemcommon->vendor_username.')</small>';
-	}
-	echo $r->itemText($vendor, Text::_('COM_PHOCACART_VENDOR'), '', 'vendor');
-}
-if (isset($this->itemcommon->section_name) && $this->itemcommon->section_name != '') {
-	echo $r->itemText($this->itemcommon->section_name, Text::_('COM_PHOCACART_SECTION'), '', 'section');
-}
-if (isset($this->itemcommon->unit_name) && $this->itemcommon->unit_name != '') {
-	echo $r->itemText($this->itemcommon->unit_name, Text::_('COM_PHOCACART_UNIT'), '', 'unit');
-}
-if (isset($this->itemcommon->ticket_id) && $this->itemcommon->ticket_id != '') {
-	echo $r->itemText($this->itemcommon->ticket_id, Text::_('COM_PHOCACART_TICKET'), '', 'ticket');
-}
+        echo $this->events->GetShippingBranchInfoAdminEdit;
 
+        if ($this->itemcommon->paymenttitle != '') {
+            echo $r->itemText($this->itemcommon->paymenttitle, Text::_('COM_PHOCACART_PAYMENT_METHOD'), '', 'payment_method');
+        }
 
-echo $r->itemText($this->itemcommon->ip, Text::_('COM_PHOCACART_USER_IP'), '', 'user_ip');
-echo $r->itemText($this->itemcommon->user_agent, Text::_('COM_PHOCACART_USER_AGENT'), '', 'user_agent');
-echo $r->itemText($this->itemcommon->user_lang, Text::_('COM_PHOCACART_USER_LANGUAGE'), '', 'user_lang');
-echo $r->itemText(HTMLHelper::date($this->itemcommon->date, Text::_('DATE_FORMAT_LC2')), Text::_('COM_PHOCACART_DATE'), '', 'date');
-if ($this->itemcommon->currencytitle != '') {
-	echo $r->itemText($this->itemcommon->currencytitle, Text::_('COM_PHOCACART_CURRENCY'), '', 'currency');
-}
+        echo $form->renderFieldset('info', ['inlineHelp' => true]);
 
-if ($this->itemcommon->discounttitle != '') {
-	echo $r->itemText($this->itemcommon->discounttitle, Text::_('COM_PHOCACART_CART_DISCOUNT'), '', 'discount');
-}
-if ($this->itemcommon->coupontitle != '') {
-	echo $r->itemText($this->itemcommon->coupontitle, Text::_('COM_PHOCACART_COUPON'), '', 'coupon');
-}
-if ($this->itemcommon->shippingtitle != '') {
-	echo $r->itemText($this->itemcommon->shippingtitle, Text::_('COM_PHOCACART_SHIPPING_METHOD'), '', 'shipping_method');
-}
+        echo $r->itemText($this->itemcommon->ip, Text::_('COM_PHOCACART_USER_IP'), '', 'user_ip');
+        echo $r->itemText($this->itemcommon->user_agent, Text::_('COM_PHOCACART_USER_AGENT'), '', 'user_agent');
+        echo $r->itemText($this->itemcommon->user_lang, Text::_('COM_PHOCACART_USER_LANGUAGE'), '', 'user_lang');
+        echo $r->itemText(HTMLHelper::date($this->itemcommon->date, Text::_('DATE_FORMAT_LC2')), Text::_('COM_PHOCACART_DATE'), '', 'date');
+        if ($this->itemcommon->currencytitle != '') {
+            echo $r->itemText($this->itemcommon->currencytitle, Text::_('COM_PHOCACART_CURRENCY'), '', 'currency');
+        }
 
+        if ($this->itemcommon->discounttitle != '') {
+            echo $r->itemText($this->itemcommon->discounttitle, Text::_('COM_PHOCACART_CART_DISCOUNT'), '', 'discount');
+        }
+        if ($this->itemcommon->coupontitle != '') {
+            echo $r->itemText($this->itemcommon->coupontitle, Text::_('COM_PHOCACART_COUPON'), '', 'coupon');
+        }
 
+        if (isset($this->itemcommon->order_token)) {
+            if (!empty($this->itemproducts)) {
+                /*phocacart import('phocacart.path.route');*/
+                echo '<div class="ph-admin-order-link">';
+                echo '<table class="ph-table-order-link">';
+                echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
+                //$dLink = Route::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
+                //. '&d='.htmlspecialchars($v->download_token));
+                $link = PhocacartRoute::getOrdersRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token);
+                $oLink = PhocacartPath::getRightPathLink($link);
 
-if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id > 0 && isset($this->itemcommon->params_shipping)) {
-	$paramsShipping = json_decode($this->itemcommon->params_shipping, true);
+                echo '<tr><td>'.Text::_('COM_PHOCACART_ORDER_LINK').': </td><td><input type="text" name="" value="'.$oLink.'" class="form-control" style="width: 90%;" readonly /></td></tr>';
+                echo '</table>';
+                echo '</div>';
+            }
+        }
+        ?>
+    </div>
 
-	if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
-		$results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfoAdminEdit('com_phocacart.phocacartorder', $this->itemcommon, [
-			'pluginname' => $paramsShipping['method'],
-			'item' => [
-				'id' => (int)$this->itemcommon->id,
-				'shipping_id' => (int)$this->itemcommon->shipping_id,
-			]
-		]));
+    <div class="col-lg-3">
+      <?php echo $form->renderFieldset('order', ['inlineHelp' => true]); ?>
+    </div>
+</div>
 
-		if (!empty($results)) {
-			foreach ($results as $k => $v) {
-				if ($v != false && isset($v['content']) && $v['content'] != '') {
-					echo $v['content'];
-				}
-			}
-		}
-
-	}
-}
-
-if ($this->itemcommon->paymenttitle != '') {
-	echo $r->itemText($this->itemcommon->paymenttitle, Text::_('COM_PHOCACART_PAYMENT_METHOD'), '', 'payment_method');
-}
-
-$formArray = array ('id', 'status_id', 'order_token', 'comment', 'terms', 'privacy', 'newsletter');
-echo $r->group($this->form, $formArray);
+<?php
 echo $r->endTab();
-
-$data = PhocacartUser::getAddressDataForm($this->formbas, $this->fieldsbas['array'], $this->u, '_phb', '_phs', $guest);
-
-
-echo $r->startTab('billingaddress', $tabs['billingaddress']);
-echo $data['b'];
-
-
-if (isset($this->itemcommon->params_user)) {
-
-	if (!empty($this->itemcommon)) {
-		$results = Dispatcher::dispatch(new Event\Tax\GetUserBillingInfoAdminEdit('com_phocacart.phocacartorder', $this->itemcommon));
-
-		if (!empty($results)) {
-			foreach ($results as $k => $v) {
-				if ($v != false && isset($v['content']) && $v['content'] != '') {
-					echo $v['content'];
-				}
-			}
-		}
-	}
-}
-
-
-
-echo $r->endTab();
-
-
-echo $r->startTab('shippingaddress', $tabs['shippingaddress']);
-
-if ((isset($this->itembas['b']['ba_sa']) && $this->itembas['b']['ba_sa'] == 1) || (isset($this->itembas['s']['ba_sa']) && $this->itembas['s']['ba_sa'] == 1)) {
-	echo '<div class="alert alert-error alert-danger">'.Text::_('COM_PHOCACART_WARNING_USER_SET_SHIPPING_ADDRESS_SAME_AS_BILLING_ADDRESS').'</div>';
-}
-echo $data['s'];
-echo $r->endTab();
-
 
 echo $r->startTab('tracking', $tabs['tracking']);
-
-if ($this->itemcommon->shippingtrackinglink != '') {
-	PhocacartRenderJs::renderJsAddTrackingCode('jform_tracking_number', 'tracking-link');
-	echo $r->itemText($this->itemcommon->shippingtrackinglink, Text::_('COM_PHOCACART_TRACKING_LINK'), 'tracking-link', 'tracking_link');
-}
-
-$formArray = array ('tracking_number', 'tracking_link_custom', 'tracking_date_shipped', 'tracking_description_custom');
-echo $r->group($this->form, $formArray);
+echo $form->renderFieldset('tracking', ['inlineHelp' => true]);
 
 if ($this->itemcommon->shippingtrackingdescription != '') {
 	echo $r->itemText($this->itemcommon->shippingtrackingdescription, Text::_('COM_PHOCACART_TRACKING_DESCRIPTION'), '', 'tracking_description');
@@ -210,11 +161,8 @@ if (!empty($this->itemproducts)) {
 		echo '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->brutto).' )</td>';
 		echo '</tr>';
 
-
 		if (!empty($this->itemproductdiscounts[$v->product_id_key])) {
 			foreach($this->itemproductdiscounts[$v->product_id_key] as $k3 => $v3) {
-
-
 				echo '<tr>';
 				//echo '<td></td>';
 				echo '<td colspan="2" align="right">'.$v3->title.': </td>';
@@ -361,41 +309,27 @@ if (!empty($this->itemtaxrecapitulation)) {
             $oTr[] = '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'tcform', 2).'</td>';
         }
 
-		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_netto', PhocacartPrice::cleanPrice($v->amount_netto), 'tcform', 0, 'ph-right').'</td>';
-		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_tax', PhocacartPrice::cleanPrice($v->amount_tax), 'tcform', 0, 'ph-right').'</td>';
-		$oTr[] = '<td>'.$r->itemCalc($v->id, 'amount_brutto', PhocacartPrice::cleanPrice($v->amount_brutto), 'tcform', 0, 'ph-right').'</td>';
+		$oTr[] = '<td>'
+        . $r->itemCalc($v->id, 'amount_netto', PhocacartPrice::cleanPrice($v->amount_netto), 'tcform', 0, 'ph-right')
+        . ' <span class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_netto).' )</span>'
+        . '</td>';
+		$oTr[] = '<td>'
+        . $r->itemCalc($v->id, 'amount_tax', PhocacartPrice::cleanPrice($v->amount_tax), 'tcform', 0, 'ph-right')
+        . ' <span class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_tax).' )</span>'
+        . '</td>';
+		$oTr[] = '<td>'
+        . $r->itemCalc($v->id, 'amount_brutto', PhocacartPrice::cleanPrice($v->amount_brutto), 'tcform', 0, 'ph-right')
+        . ' <span class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_brutto).' )</span>'
+        . '</td>';
 		if ($v->amount_brutto_currency > 0) {
 			$oTr[] = '<td class="ph-col-add-cur ph-currency-col">'.$r->itemCalc($v->id, 'amount_brutto_currency', PhocacartPrice::cleanPrice($v->amount_brutto_currency), 'tcform', 0, 'ph-right').'</td>';
 			$totalCurrency = 1;
-		} else {
-			$oTr[] = '<td class=""></td>';
-		}
-		$oTr[] = '</tr>';
-
-		$oTr[] = '<tr>';
-
-        // Language Variables
-        if ($this->p['order_language_variables'] == 1) {
-            $oTr[] = '<td class="ph-col-title-small">'.PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</td>';
-
-        } else {
-            $oTr[] = '<td class="ph-col-add-cur"></td>';
-        }
-
-
-		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_netto).' )</td>';
-		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_tax).' )</td>';
-		$oTr[] = '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->amount_brutto).' )</td>';
-		if ($v->amount_brutto_currency > 0) {
-			$oTr[] = '<td class="ph-col-add-cur ph-currency-col"></td>';
-		} else {
-			$oTr[] = '<td class=""></td>';
 		}
 		$oTr[] = '</tr>';
 	}
 
 
-	echo '<table class="ph-order-tax-recapitulation" id="phAdminEditTaxRecapitulation">';
+	echo '<table class="ph-order-tax-recapitulation table table-sm table-striped table-hover" id="phAdminEditTaxRecapitulation">';
 
 	echo '<tr>';
 	echo '<th>'.Text::_('COM_PHOCACART_TITLE').'</th>';
@@ -436,14 +370,12 @@ echo $r->startTab('download', $tabs['download']);
 
 if (!empty($this->itemproducts)) {
     foreach($this->itemproducts as $k => $v) {
-
-
-        echo '<div class="ph-admin-download-links">';
-        echo '<h3>'.$v->title.'</h3>';
-        echo '<table class="ph-table-download-links">';
-        echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
-
         if (!empty($v->downloads)) {
+
+          echo '<div class="ph-admin-download-links">';
+          echo '<h3>'.$v->title.'</h3>';
+          echo '<table class="ph-table-download-links">';
+          echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
 
             foreach ($v->downloads as $k2 => $v2) {
 
@@ -468,7 +400,7 @@ if (!empty($this->itemproducts)) {
 
 
                     echo '<tr><td>'.Text::_('COM_PHOCACART_DOWNLOAD_LINK').': </td>';
-                    echo '<td><input type="text" name="" value="' . $dLink . '" class="form-control" style="width: 90%;" readonly /></td></tr>';
+                    echo '<td><input type="text" value="' . $dLink . '" class="form-control" style="width: 90%;" readonly /></td></tr>';
 
                 }
 
@@ -491,48 +423,28 @@ if (!empty($this->itemproducts)) {
 
                         echo '<tr><td>'.$v2->attribute_title.': '.$v2->option_title.'</td>';
 
-                        echo '<td><input type="text" name="" value="'.$dLink.'" class="form-control" style="width: 90%;" readonly /></td></tr>';
+                        echo '<td><input type="text" value="'.$dLink.'" class="form-control" style="width: 90%;" readonly /></td></tr>';
 
 
                     }
                 }
             }
-
+            echo '</table>';
+            echo '</div>';
         }
-        echo '</table>';
-        echo '</div>';
     }
 }
 echo $r->endTab();
 
-echo $r->startTab('orderlink', $tabs['orderlink']);
-
-if (isset($this->itemcommon->order_token)) {
-	if (!empty($this->itemproducts)) {
-		/*phocacart import('phocacart.path.route');*/
-        echo '<div class="ph-admin-order-link">';
-		echo '<table class="ph-table-order-link">';
-        echo '<tr><td width="10%">&nbsp;</td><td width="90%">&nbsp;</td></tr>';
-		//$dLink = Route::_(PhocacartRoute::getDownloadRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token)
-				//. '&d='.htmlspecialchars($v->download_token));
-		$link = PhocacartRoute::getOrdersRoute() . '&o='.htmlspecialchars($this->itemcommon->order_token);
-		$oLink = PhocacartPath::getRightPathLink($link);
-
-		echo '<tr><td>'.Text::_('COM_PHOCACART_ORDER_LINK').': </td><td><input type="text" name="" value="'.$oLink.'" class="form-control" style="width: 90%;" readonly /></td></tr>';
-		echo '</table>';
-		echo '</div>';
-	}
-}
-echo $r->endTab();
-
 echo $r->startTab('billing', $tabs['billing']);
-$formArray = array ('order_number', 'order_number_id', 'receipt_number', 'receipt_number_id', 'invoice_number', 'invoice_number_id', 'invoice_prn', 'queue_number', 'queue_number_id', 'invoice_date', 'invoice_due_date', 'invoice_time_of_supply', 'date', 'modified', 'invoice_spec_top_desc', 'invoice_spec_middle_desc', 'invoice_spec_bottom_desc', 'oidn_spec_billing_desc', 'oidn_spec_shipping_desc');
-echo $r->group($this->form, $formArray);
+echo $form->renderFieldset('billing', ['inlineHelp' => true]);
 echo $r->endTab();
 
+echo $r->startTab('pos', $tabs['pos']);
+echo $form->renderFieldset('pos', ['inlineHelp' => true]);
+echo $r->endTab();
 
 echo $r->endTabs();
-echo '</div>';//end col-xs-12 col-sm-12 col-md-12
 
 echo $r->formInputs();
 echo $r->endForm();
