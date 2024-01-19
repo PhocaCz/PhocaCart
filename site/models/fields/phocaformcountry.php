@@ -23,14 +23,7 @@ class JFormFieldPhocaFormCountry extends FormField
 
 		$app	= Factory::getApplication();
 		$db	 	= Factory::getDBO();
-
-		if ($this->id == 'jform_country') {
-			$regionId = 'jform_region';
-		} else if ($this->id == 'jform_country_phs') {
-			$regionId = 'jform_region_phs';
-		} else if ($this->id == 'jform_country_phb') {
-			$regionId = 'jform_region_phb';
-		}
+		$regionId = str_replace('country', 'region', $this->id);
 
 		$s 	= array();
 		$s[] 	= 'function phUpdateRegion'.$this->id.'(value) {';
