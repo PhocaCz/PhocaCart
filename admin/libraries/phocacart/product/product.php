@@ -1261,6 +1261,7 @@ class PhocacartProduct
         if(isset($table->featured) && $table->featured == '') {$table->featured = 0;}
         if(isset($table->tax_id) && $table->tax_id == '') {$table->tax_id = 0;}
         if(isset($table->stock) && $table->stock == '') {$table->stock = 0;}
+        if(isset($table->created_by) && $table->created_by == '') {$table->created_by = 0;}
         if(isset($table->modified_by) && $table->modified_by == '') {$table->modified_by = 0;}
         if(isset($table->sales) && $table->sales == '') {$table->sales = 0;}
         if(isset($table->sales) && $table->sales == '') {$table->sales = 0;}
