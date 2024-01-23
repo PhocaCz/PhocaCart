@@ -7,204 +7,129 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die();
-use Joomla\CMS\Form\FormField;
-use Joomla\CMS\HTML\HTMLHelper;
-jimport('joomla.html.html');
-jimport('joomla.form.formfield');
 
-class JFormFieldPhocacartOrdering extends FormField
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Language\Text;
+
+class JFormFieldPhocacartOrdering extends ListField
 {
-
 	protected $type = 'PhocacartOrdering';
 
-	protected function getInput() {
-		// Initialize variables.
-		$html = array();
-		$attr = '';
+    protected function getOptions()
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('ordering AS value, title AS text')
+            ->order('ordering');
 
-		// Get some field values from the form.
-		$id			= (int) $this->form->getValue('id');
-
-		if ($this->element['table']) {
-			switch (strtolower($this->element['table'])) {
-
-				case "payment":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_payment_methods';
-				break;
-
-				case "status":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_order_statuses';
-				break;
-
-				case "stockstatus":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_stock_statuses';
-				break;
-
-				case "country":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_countries';
-				break;
-
-				case "region":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_regions';
-				break;
-
-				case "zone":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_zones';
-				break;
-
-				case "currency":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_currencies';
-				break;
-
-				case "tag":
-                case "label":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_tags';
-				break;
-
-				case "manufacturer":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_manufacturers';
-				break;
-
-				case "shipping":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_shipping_methods';
-				break;
-
-                case "specificationgroup":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_specification_groups';
-				break;
-
-				case "formfield":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_form_fields';
-				break;
-
-				case "user":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_users';
-				break;
-
-				case "order":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_orders';
-				break;
-
-				case "review":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_reviews';
-				break;
-
-				case "question":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_questions';
-				break;
-
-				case "submititem":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_submit_items';
-				break;
-
-				case "wishlist":
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_wishlists';
-				break;
-
-                case "category":
-                    $whereLabel	=	'';
-                    $whereValue	=	'';
-                    $table		=	'#__phocacart_categories';
+        $table = strtolower($this->element['table']);
+        switch ($table) {
+            case "payment":
+                $query->from('#__phocacart_payment_methods');
                 break;
 
-                case "section":
-                    $whereLabel	=	'';
-                    $whereValue	=	'';
-                    $table		=	'#__phocacart_sections';
+            case "status":
+                $query->from('#__phocacart_order_statuses');
                 break;
 
-                case "unit":
-                    $whereLabel	=	'';
-                    $whereValue	=	'';
-                    $table		=	'#__phocacart_units';
+            case "stockstatus":
+                $query->from('#__phocacart_stock_statuses');
                 break;
 
-                case "tax":
-                    $whereLabel	=	'';
-                    $whereValue	=	'';
-                    $table		=	'#__phocacart_taxes';
+            case "country":
+                $query->from('#__phocacart_countries');
                 break;
 
-                case "attribute":
-				default:
-					$whereLabel	=	'';
-					$whereValue	=	'';
-					$table		=	'#__phocacart_attributes';
-				break;
+            case "region":
+                $query->from('#__phocacart_regions');
+                break;
 
-			}
-		} else {
-			$whereLabel	=	'catid';
-			$whereValue	=	(int) $this->form->getValue('catid');
-			$table		=	'#__phocacart';
-		}
+            case "zone":
+                $query->from('#__phocacart_zones');
+                break;
 
-		// Initialize some field attributes.
-		$attr .= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : '';
-		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
-		$attr .= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
+            case "currency":
+                $query->from('#__phocacart_currencies');
+                break;
 
-		// Initialize JavaScript field attributes.
-		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
+            case "tag":
+            case "label":
+            $query->from('#__phocacart_tags');
+                break;
 
+            case "manufacturer":
+                $query->from('#__phocacart_manufacturers');
+                break;
 
-		// Build the query for the ordering list.
-		$query = 'SELECT ordering AS value, title AS text' .
-				' FROM ' . $table;
-		if ($whereLabel != '') {
-			$query .= ' WHERE '.$whereLabel.' = ' . (int) $whereValue;
-		}
-		$query .= ' ORDER BY ordering';
+            case "shipping":
+                $query->from('#__phocacart_shipping_methods');
+                break;
 
-		// Create a read-only list (no name) with a hidden input to store the value.
-		if ((string) $this->element['readonly'] == 'true') {
-			$html[] = HTMLHelper::_('list.ordering', '', $query, trim($attr), $this->value, $id ? 0 : 1);
-			$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$this->value.'"/>';
-		}
-		// Create a regular list.
-		else {
-			$html[] = HTMLHelper::_('list.ordering', $this->name, $query, trim($attr), $this->value, $id ? 0 : 1);
+            case "specificationgroup":
+                $query->from('#__phocacart_specification_groups');
+                break;
 
-		}
+            case "formfield":
+                $query->from('#__phocacart_form_fields');
+                break;
 
+            case "user":
+                $query->from('#__phocacart_users');
+                break;
 
+            case "order":
+                $query->from('#__phocacart_orders');
+                break;
 
-		return implode($html);
-	}
+            case "review":
+                $query->from('#__phocacart_reviews');
+                break;
+
+            case "question":
+                $query->from('#__phocacart_questions');
+                break;
+
+            case "submititem":
+                $query->from('#__phocacart_submit_items');
+                break;
+
+            case "wishlist":
+                $query->from('#__phocacart_wishlists');
+                break;
+
+            case "category":
+                $query->from('#__phocacart_categories');
+                break;
+
+            case "section":
+                $query->from('#__phocacart_sections');
+                break;
+
+            case "unit":
+                $query->from('#__phocacart_units');
+                break;
+
+            case "tax":
+                $query->from('#__phocacart_taxes');
+                break;
+
+            case "attribute":
+                $query->from('#__phocacart_attributes');
+                break;
+
+            default:
+                $query->from('#__phocacart_' . $table);
+                break;
+        }
+
+        $db->setQuery($query);
+        $options = $db->loadObjectList();
+
+        foreach ($options as $option) {
+            $option->text = Text::_($option->text);
+        }
+
+        return array_merge(parent::getOptions(), $options);
+    }
 }
