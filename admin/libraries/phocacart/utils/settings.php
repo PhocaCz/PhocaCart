@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 
 
 //=========
@@ -364,7 +365,7 @@ class PhocacartUtilsSettings
 	}
 
 
-	public static function getOrderStatusClass($status) {
+	public static function getOrderStatusClass($status, string $extraClass = '') {
 	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status);
 
         switch ($status) {
@@ -381,7 +382,7 @@ class PhocacartUtilsSettings
                 break;
 
             case 'PENDING':
-                $class = 'badge bg-info label-primary ph-order-status-pending';
+                $class = 'badge bg-info ph-order-status-pending';
                 break;
 
             case 'REFUNDED':
@@ -396,7 +397,33 @@ class PhocacartUtilsSettings
                 $class = 'badge bg-secondary ph-order-status-default';
                 break;
         }
+
+		if ($extraClass) {
+			$class .= ' ' . $extraClass;
+		}
         return $class;
     }
+
+	public static function getOrderStatusBadge($title, $params, string $extraClass = '') {
+		$params = new Registry($params);
+
+		$statusClass = PhocacartUtilsSettings::getOrderStatusClass($title, $params->get('class') . ' ' . $extraClass);
+
+		$style = '';
+		if ($params->get('background')) {
+			$style .= 'background: ' . $params->get('background') . ' !important;';
+		}
+
+		if ($params->get('foreground')) {
+			$style .= 'color: ' . $params->get('foreground') . ' !important;';
+		}
+
+		if ($style) {
+			$style = ' style="' . $style . '"';
+		}
+
+		return '<span class="' . $statusClass . '"' . $style . '>' . Text::_($title) . '</span>';
+	}
+
 }
 

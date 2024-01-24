@@ -40,11 +40,8 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			echo '<div class="'.$this->s['c']['row'].'  ph-orders-item-box-row" >';
 
 			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $v->order_number).'</div>';
-			$statusClass = PhocacartUtilsSettings::getOrderStatusClass($v->status_title);
 
-
-
-			$status = '<span class="'.$statusClass.'">'.Text::_($v->status_title).'</span>';
+            $status = PhocacartUtilsSettings::getOrderStatusBadge($v->status_title, $v->status_params);
 			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.$status.'</div>';
 
 			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.PhocacartUtils::date($v->date).'</div>';

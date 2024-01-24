@@ -12,7 +12,7 @@ use Joomla\CMS\Table\Table;
 class TablePhocaCartStatus extends Table
 {
     protected $_jsonEncode = ['params'];
-    
+
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_order_statuses', 'id', $db);
 	}
