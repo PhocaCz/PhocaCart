@@ -8,14 +8,15 @@
  */
 defined('_JEXEC') or die;
 use Joomla\CMS\Table\Table;
-jimport('joomla.filter.input');
 
 class TablePhocaCartStatus extends Table
 {
+    protected $_jsonEncode = ['params'];
+    
 	function __construct(& $db) {
 		parent::__construct('#__phocacart_order_statuses', 'id', $db);
 	}
-	
+
 	function check() {
 		if(empty($this->alias)) {
 			$this->alias = $this->title;
@@ -24,4 +25,3 @@ class TablePhocaCartStatus extends Table
 		return true;
 	}
 }
-?>

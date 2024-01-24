@@ -9,10 +9,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocaCartStatus extends HtmlView
 {
@@ -25,15 +23,13 @@ class PhocaCartCpViewPhocaCartStatus extends HtmlView
 
 
 	public function display($tpl = null) {
-
-
 		$this->t		= PhocacartUtils::setVars('status');
 		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
-		$media = new PhocacartRenderAdminmedia();
+		new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 
@@ -41,11 +37,9 @@ class PhocaCartCpViewPhocaCartStatus extends HtmlView
 	}
 
 	protected function addToolbar() {
-
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
-		$bar 		= Toolbar::getInstance('toolbar');
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 
@@ -63,14 +57,10 @@ class PhocaCartCpViewPhocaCartStatus extends HtmlView
 			ToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
 
-		if (empty($this->item->id))  {
-			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
-		}
-		else {
-			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
-		}
+		ToolbarHelper::cancel($this->t['task'].'.cancel', $this->item->id ? 'JTOOLBAR_CLOSE' : 'JTOOLBAR_CANCEL');
+
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
-?>
