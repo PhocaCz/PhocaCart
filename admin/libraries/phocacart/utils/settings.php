@@ -366,7 +366,7 @@ class PhocacartUtilsSettings
 
 
 	public static function getOrderStatusClass($status, string $extraClass = '') {
-	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status);
+	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status ?? '');
 
         switch ($status) {
             case 'CANCELED':

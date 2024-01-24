@@ -102,7 +102,6 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
         $data['billing_address'] = $addressData['b'];
         $data['shipping_address'] = $addressData['s'];
 
-        n3tDebug::barDump($data);
 		return $data;
 	}
 
