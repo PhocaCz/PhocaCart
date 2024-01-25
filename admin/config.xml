@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+    <inlinehelp button="show"/>
+
     <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
         <fieldset name="display" label="COM_PHOCACART_CONFIG_HEAD_DISPLAY_LABEL" addfieldprefix="Joomla\Component\Content\Administrator\Field">
 
