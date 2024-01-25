@@ -114,7 +114,7 @@ if ($showLinkButton) {
     $addonAfterHtml .= '<a href="#" class="btn btn-primary" target="_blank" onclick="let el = document.getElementById(\'' . $id . '\'); this.setAttribute(\'href\', el.value); return true;"><span class="icon icon-link"></span></a>';
 }
 if ($showTranslation) {
-    $addonAfterHtml .= '<span class="input-group-text bg-light text-dark border-primary-subtle"><span class="icon icon-globe me-2"></span> ' . Text::_($value) . '</span>';
+    $addonAfterHtml .= '<span class="input-group-text bg-light text-dark border-primary-subtle"><span class="icon icon-language me-2"></span> ' . Text::_($value) . '</span>';
 }
 ?>
 
