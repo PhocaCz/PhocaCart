@@ -83,11 +83,11 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 			//$table->modified_by	= $user->get('id');
 		}
 
-		if (isset($table->type) && isset($table->published) && $table->type == 1 && $table->published == 0) {
+		/*if (isset($table->type) && isset($table->published) && $table->type == 1 && $table->published == 0) {
 			$table->published = 1;
 			$app = Factory::getApplication();
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
-		}
+		}*/
 	}
 
 	public function delete(&$cid = array()) {
