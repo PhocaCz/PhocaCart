@@ -52,6 +52,7 @@ extract($displayData);
  * @var   boolean  $charcounter     Does this field support a character counter?
  * @var   boolean  $showCopyButton  Show copy button?
  * @var   boolean  $showLinkButton  Show link button?
+ * @var   boolean  $showTranslation Show value translation?
  */
 
 $list = '';
@@ -111,6 +112,9 @@ if ($showCopyButton) {
 }
 if ($showLinkButton) {
     $addonAfterHtml .= '<a href="#" class="btn btn-primary" target="_blank" onclick="let el = document.getElementById(\'' . $id . '\'); this.setAttribute(\'href\', el.value); return true;"><span class="icon icon-link"></span></a>';
+}
+if ($showTranslation) {
+    $addonAfterHtml .= '<span class="input-group-text bg-light text-dark border-primary-subtle"><span class="icon icon-globe me-2"></span> ' . Text::_($value) . '</span>';
 }
 ?>
 

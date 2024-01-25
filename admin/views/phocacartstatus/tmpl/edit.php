@@ -11,6 +11,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 
 /** @var Form $form */
 $form = $this->form;
@@ -29,10 +30,7 @@ Factory::getDocument()->addScriptDeclaration($js);
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
 
-$translatedTitle = $form->getValue('title') ? '<small>('.Text::_($form->getValue('title')).')</small>' : '';
-$formArray = array ('title');
-$formArraySuffix = array($translatedTitle);
-echo $r->groupHeader($form, $formArray, '', $formArraySuffix, 1);
+echo LayoutHelper::render('joomla.edit.title_alias', $this);
 
 echo $r->startTabs();
 

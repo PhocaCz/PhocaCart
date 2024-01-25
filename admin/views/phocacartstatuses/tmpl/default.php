@@ -81,10 +81,11 @@ if (is_array($this->items)) {
             $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
         }
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape(Text::_($item->title)) . '</a>' . ' <small>(' . $this->escape($item->title) . ')</small>';
+            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape(Text::_($item->title)) . '</a>' . ' <span class="small">(' . $this->escape($item->title) . ')</span>';
         } else {
-            $checkO .= $this->escape(Text::_($item->title)) . ' <small>(' . $this->escape($item->title) . ')</small>';
+            $checkO .= $this->escape(Text::_($item->title)) . ' <span class="small">(' . $this->escape($item->title) . ')</span>';
         }
+        $checkO .= '<br /><span class="small">(' . Text::_('COM_PHOCACART_FIELD_ALIAS_LABEL') . ': ' . $item->alias . ')</span>';
         echo $r->td($checkO, "small", 'th');
 
         echo $r->td(PhocacartUtilsSettings::getOrderStatusBadge($item->title, $item->params), "small ph-center");

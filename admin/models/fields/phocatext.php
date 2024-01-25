@@ -20,6 +20,8 @@ class JFormFieldPhocaText extends TextField
     protected bool $showCopyButton = false;
     protected bool $showLinkButton = false;
 
+    protected bool $showTranslation = false;
+
     protected function getRenderer($layoutId = 'default')
     {
         $renderer = parent::getRenderer($layoutId);
@@ -32,6 +34,7 @@ class JFormFieldPhocaText extends TextField
         switch ($name) {
             case 'showCopyButton':
             case 'showLinkButton':
+            case 'showTranslation':
                 return $this->$name;
         }
 
@@ -43,6 +46,7 @@ class JFormFieldPhocaText extends TextField
         switch ($name) {
             case 'showCopyButton':
             case 'showLinkButton':
+            case 'showTranslation':
                 $this->$name = strtolower($value) === 'true';
                 break;
 
@@ -58,6 +62,7 @@ class JFormFieldPhocaText extends TextField
         if ($result == true) {
             $this->showCopyButton = isset($this->element['showCopyButton']) ? strtolower($this->element['showCopyButton']) === 'true' : false;
             $this->showLinkButton = isset($this->element['showLinkButton']) ? strtolower($this->element['showLinkButton']) === 'true' : false;
+            $this->showTranslation = isset($this->element['showTranslation']) ? strtolower($this->element['showTranslation']) === 'true' : false;
         }
 
         return $result;
@@ -70,6 +75,7 @@ class JFormFieldPhocaText extends TextField
         $extraData = [
             'showCopyButton' => $this->showCopyButton,
             'showLinkButton' => $this->showLinkButton,
+            'showTranslation' => $this->showTranslation,
         ];
 
         return array_merge($data, $extraData);
