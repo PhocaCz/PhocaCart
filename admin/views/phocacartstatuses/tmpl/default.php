@@ -114,7 +114,7 @@ if (is_array($this->items)) {
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 8);
+echo $r->tblFoot($this->pagination->getListFooter(), 9);
 echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
