@@ -66,8 +66,9 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
         $statusChanged = $data['status_id'] !== '';
         $commentChanged = !!trim($data['comment_history']);
         $trackingChanged = !!trim($data['tracking_number']);
+        $trackingDateChanged = !!trim($data['tracking_date_shipped']);
 
-        if ($statusChanged || $commentChanged || $trackingChanged) {
+        if ($statusChanged || $commentChanged || $trackingChanged || $trackingDateChanged) {
             if ($statusChanged) {
                 $status = PhocacartOrderStatus::getStatus($data['status_id']);
             } else {
@@ -84,6 +85,10 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 
             if ($trackingChanged) {
                 $orderData['tracking_number']        = $data['tracking_number'];
+            }
+
+            if ($trackingDateChanged) {
+                $orderData['tracking_date_shipped'] = $data['tracking_date_shipped'];
             }
 
             if (!$order->bind($orderData)) {
