@@ -125,6 +125,8 @@
 
         <field name="ordering" type="PhocacartOrdering" table="status" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
+        <field name="code" type="text" readonly="true" filter="unset" label="COM_PHOCACART_FIELD_CODE_LABEL" description="COM_PHOCACART_FIELD_CODE_DESC" />
+
         <field name="id" type="text" default="0" readonly="true" label="JGLOBAL_FIELD_ID_LABEL" />
     </fieldset>
 
