@@ -155,11 +155,11 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 					return false;
 				}
 
-				if (property_exists($table, 'type') && $table->type && ((int)$table->type == 1) && $value == 0){
+				/*if (property_exists($table, 'type') && $table->type && ((int)$table->type == 1) && $value == 0){
 					$error = 1;
 					unset($pks[$i]);
 					//return false;
-				}
+				}*/
 			}
 		}
 
@@ -174,14 +174,14 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 
 
 
-		if ($error) {
+/*		if ($error) {
 
 			//$this->setError(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			return true;
-		} else {
+		} else {*/
 			return true;
-		}
+		/*}*/
 		$this->cleanCache();
 	}
 
