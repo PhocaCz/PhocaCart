@@ -48,3 +48,18 @@ ALTER TABLE `#__phocacart_products` ADD `discount_percent` DECIMAL(15,2) AS (if(
 
 -- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 -- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_categories_i18n` (
+    `id` int(11) NOT NULL auto_increment,
+    `language` char(7) NOT NULL DEFAULT '',
+    `title` varchar(255) NOT NULL DEFAULT '',
+    `title_long` varchar(255) NOT NULL DEFAULT '',
+    `alias` varchar(255) NOT NULL DEFAULT '',
+    `title_feed` varchar(255) NOT NULL DEFAULT '',
+    `description` text,
+    `metatitle` varchar(255) NOT NULL DEFAULT '',
+    `metakey` text,
+    `metadesc` text,
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

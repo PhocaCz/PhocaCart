@@ -5,11 +5,11 @@
 
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
 
-        <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
+        <field name="title" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
 
-        <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+        <field name="alias" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
-        <field name="title_long" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
+        <field name="title_long" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
 
         <field name="parent_id" type="phocacartcategory" layout="joomla.form.field.list" label="COM_PHOCACART_FIELD_PARENT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PARENT_CATEGORY_DESC"/>
 
@@ -31,31 +31,24 @@
             <option value="1">COM_PHOCACART_YES</option>
         </field>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
+        <field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
         <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_DESC" class="form-control"/>
         <field name="special_image" type="media" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_DESC" class="form-control" size="40"/>
 
         <field name="image" type="phocaselectfilenameimage" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40"/>
 
-		<field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" class="form-control" size="40" />
+		    <field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" class="form-control" size="40" />
 
-        <field name="title_feed" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC"/>
+        <field name="title_feed" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC"/>
 
         <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TYPE_FEED_DESC" class="form-control" rows="3" cols="30"/>
 
-        <field name="metatitle" type="text"
-               label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"
-               class="form-control"/>
+        <field name="metatitle" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_META_TITLE_LABEL" description="COM_PHOCACART_FIELD_META_TITLE_DESC" />
 
-        <field name="metakey" type="textarea"
-               label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
-               class="form-control" rows="3" cols="30"/>
+        <field name="metakey" type="phocatextarea" i18n="true" rows="3" cols="30" label="JFIELD_META_KEYWORDS_LABEL" description="JFIELD_META_KEYWORDS_DESC" />
 
-        <field name="metadesc" type="textarea"
-               label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
-               class="form-control" rows="3" cols="30"/>
+        <field name="metadesc" type="phocatextarea" i18n="true" rows="3" cols="30" label="JFIELD_META_DESCRIPTION_LABEL" description="JFIELD_META_DESCRIPTION_DESC" />
     </fieldset>
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">

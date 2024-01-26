@@ -17,6 +17,7 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Version;
@@ -253,15 +254,29 @@ class Adminview
 						$datashowon = ' data-showon=\'' . json_encode(FormHelper::parseShowOnConditions($showon, $formControl,$group)) . '\'';
 					}
 
-					$o .=
-
-						'<div class="control-group-clear ph-par-'.$value.'"  '.$datashowon.'>'."\n"
-					 .'<div class="control-label">'. $form->getLabel($value) . $descriptionOutput . '</div>'."\n"
-					//. '<div class="clearfix"></div>'. "\n"
-					. '<div>' . $form->getInput($value). '</div>'."\n"
-					. '<div class="clearfix"></div>' . "\n"
-					. '</div>'. "\n";
-
+					$inputs = $form->getInput($value);
+					if (is_array($inputs)) {
+						$o .= '<div class="control-group-clear ph-par-' . $value . '"  ' . $datashowon . '>' . "\n"
+							. '<div class="control-label">' . $form->getLabel($value) . $descriptionOutput . '</div><div>' . "\n";
+						$field = $form->getField($value);
+						$o .= HTMLHelper::_('uitab.startTabSet', $field->id . '_i18nTabs', ['active' =>  array_key_first($inputs), 'recall' => true, 'breakpoint' => 768]);
+						$languages = LanguageHelper::getLanguages('lang_code');
+						foreach ($inputs as $lang => $input) {
+							$language = $languages[$lang];
+							$o .= HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title);
+							$o .= $input . "\n";
+							$o .= HTMLHelper::_('uitab.endTab');
+						}
+						$o .= HTMLHelper::_('uitab.endTabSet');
+						$o .= '</div><div class="clearfix"></div>' . "\n"
+							. '</div>' . "\n";
+					} else {
+						$o .= '<div class="control-group-clear ph-par-' . $value . '"  ' . $datashowon . '>' . "\n"
+							. '<div class="control-label">' . $form->getLabel($value) . $descriptionOutput . '</div>' . "\n"
+							. '<div>' . $inputs . '</div>' . "\n"
+							. '<div class="clearfix"></div>' . "\n"
+							. '</div>' . "\n";
+					}
 				}
 			} else {
 				foreach ($formArray as $value) {

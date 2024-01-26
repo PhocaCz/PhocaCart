@@ -10,18 +10,12 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Form\Field\TextField;
+use Joomla\CMS\Form\Field\EditorField;
 use Joomla\CMS\Language\LanguageHelper;
 
-class JFormFieldPhocaText extends TextField
+class JFormFieldPhocaEditor extends EditorField
 {
-	protected $type 		= 'PhocaText';
-	protected $layout       = 'phocacart.form.field.phocatext';
-
-    protected bool $showCopyButton = false;
-    protected bool $showLinkButton = false;
-
-    protected bool $showTranslation = false;
+	public $type 		= 'PhocaEditor';
 
     protected bool $i18n = false;
 
@@ -35,9 +29,6 @@ class JFormFieldPhocaText extends TextField
     public function __get($name)
     {
         switch ($name) {
-            case 'showCopyButton':
-            case 'showLinkButton':
-            case 'showTranslation':
             case 'i18n':
                 return $this->$name;
         }
@@ -48,9 +39,6 @@ class JFormFieldPhocaText extends TextField
     public function __set($name, $value)
     {
         switch ($name) {
-            case 'showCopyButton':
-            case 'showLinkButton':
-            case 'showTranslation':
             case 'i18n':
                 $this->$name = strtolower($value) === 'true';
                 break;
@@ -65,17 +53,17 @@ class JFormFieldPhocaText extends TextField
         $result = parent::setup($element, $value, $group);
 
         if ($result == true) {
-            $this->showCopyButton = isset($this->element['showCopyButton']) ? strtolower($this->element['showCopyButton']) === 'true' : false;
-            $this->showLinkButton = isset($this->element['showLinkButton']) ? strtolower($this->element['showLinkButton']) === 'true' : false;
-            $this->showTranslation = isset($this->element['showTranslation']) ? strtolower($this->element['showTranslation']) === 'true' : false;
-
             $params = PhocacartUtils::getComponentParameters();
             if ($params->get('i18n')) {
                 $this->i18n = isset($this->element['i18n']) ? strtolower($this->element['i18n']) === 'true' : false;
             } else {
                 $this->i18n = false;
             }
+
             $this->multiple = $this->i18n;
+            if ($this->i18n) {
+                $this->renderLayout = 'phocacart.form.renderi18nfield';
+            }
         }
 
         return $result;
@@ -96,13 +84,49 @@ class JFormFieldPhocaText extends TextField
         }
 
         $extraData = [
-            'showCopyButton' => $this->showCopyButton,
-            'showLinkButton' => $this->showLinkButton,
-            'showTranslation' => $this->showTranslation,
             'i18n' => $this->i18n,
             'languages' => $languages,
         ];
 
         return array_merge($data, $extraData);
+    }
+
+    protected function getInput()
+    {
+        if ($this->i18n) {
+            $languages = LanguageHelper::getLanguages();
+        } else {
+            $languages = [
+                (object)[
+                    'lang_code' => null,
+                ]
+            ];
+        }
+
+        $params = [
+            'autofocus' => $this->autofocus,
+            'readonly'  => $this->readonly || $this->disabled,
+            'syntax'    => (string) $this->element['syntax'],
+        ];
+
+        $editor = $this->getEditor();
+        $editors = [];
+        foreach ($languages as $language) {
+            $editors[$language->lang_code] = $editor->display(
+                $this->name . ($this->i18n ? '[' . $language->lang_code . ']' : ''),
+                htmlspecialchars($this->i18n ? $this->value[$language->lang_code] : $this->value, ENT_COMPAT, 'UTF-8'),
+                $this->width,
+                $this->height,
+                $this->columns,
+                $this->rows,
+                $this->buttons ? (\is_array($this->buttons) ? array_merge($this->buttons, $this->hide) : $this->hide) : false,
+                $this->id . ($this->i18n ? '-' . $language->lang_code : ''),
+                $this->asset,
+                $this->form->getValue($this->authorField),
+                $params
+            );
+        }
+
+        return $editors;
     }
 }

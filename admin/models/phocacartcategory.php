@@ -23,16 +23,37 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 
 jimport('joomla.application.component.modeladmin');
 
 
 class PhocaCartCpModelPhocacartCategory extends AdminModel
 {
+	use I18nAdminModelTrait;
+
 	protected	$option 		    = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public $typeAlias 			        = 'com_phocacart.phocacartcategory';
     protected   $associationsContext    = 'com_phocacart.category';	// ASSOCIATION
+
+
+	public function __construct($config = [], \Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, \Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
+	{
+		parent::__construct($config, $factory, $formFactory);
+
+		$this->i18nTable = '#__phocacart_categories_i18n';
+		$this->i18nFields = [
+			'title',
+			'alias',
+			'title_long',
+			'title_feed',
+            'description',
+            'metatitle',
+            'metakey',
+            'metadesc',
+		];
+	}
 
 	protected function canDelete($record) {
 		$user = Factory::getUser();
@@ -108,6 +129,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
                 }
             }
 		}
+
+		$this->loadI18nItem($item);
 		return $item;
 	}
 
@@ -158,7 +181,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	}
 
 	public function save($data) {
-
+		$i18nData = $this->prepareI18nData($data);
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 		//$dispatcher = JDispatcher::getInstance();
@@ -269,6 +292,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				return false;
 			}
 
+			$this->saveI18nData($table->id, $i18nData);
 			$this->cleanCache();
 
 			// Trigger the after save event.

@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 extract($displayData);
@@ -53,6 +54,8 @@ extract($displayData);
  * @var   boolean  $showCopyButton  Show copy button?
  * @var   boolean  $showLinkButton  Show link button?
  * @var   boolean  $showTranslation Show value translation?
+ * @var   boolean  $i18n            I18n support?
+ * @var   array    $languages       Languages list for i18n?
  */
 
 $list = '';
@@ -118,28 +121,35 @@ if ($showTranslation) {
 }
 ?>
 
-<?php if ($addonBeforeHtml || $addonAfterHtml) : ?>
-<div class="input-group">
-<?php endif; ?>
+<?php foreach($languages as $language) : ?>
+  <?php if ($addonBeforeHtml || $addonAfterHtml || $i18n) : ?>
+  <div class="input-group">
+  <?php endif; ?>
+
+    <?php if ($i18n) : ?>
+      <span class="input-group-text bg-light text-dark border-primary-subtle">
+        <?php echo HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true); ?>
+      </span>
+    <?php endif; ?>
 
     <?php echo $addonBeforeHtml; ?>
 
     <input
         type="text"
-        name="<?php echo $name; ?>"
-        id="<?php echo $id; ?>"
-        value="<?php echo htmlspecialchars($value, ENT_COMPAT, 'UTF-8'); ?>"
+        name="<?php echo $name . ($i18n ? '[' . $language->lang_code . ']' : ''); ?>"
+        id="<?php echo $id . ($i18n ? '-' . $language->lang_code : ''); ?>"
+        value="<?php echo htmlspecialchars($i18n ? $value[$language->lang_code] ?? '' : $value, ENT_COMPAT, 'UTF-8'); ?>"
         <?php echo $dirname; ?>
         <?php echo implode(' ', $attributes); ?>>
 
     <?php echo $addonAfterHtml; ?>
 
-<?php if ($addonBeforeHtml || $addonAfterHtml) : ?>
-</div>
-<?php endif; ?>
+  <?php if ($addonBeforeHtml || $addonAfterHtml || $i18n) : ?>
+  </div>
+  <?php endif; ?>
 
-<?php if ($options) : ?>
-    <datalist id="<?php echo $id; ?>_datalist">
+  <?php if ($options) : ?>
+    <datalist id="<?php echo $id . ($i18n ? '-' . $language->lang_code : ''); ?>_datalist">
         <?php foreach ($options as $option) : ?>
             <?php if (!$option->value) : ?>
                 <?php continue; ?>
@@ -147,4 +157,5 @@ if ($showTranslation) {
             <option value="<?php echo $option->value; ?>"><?php echo $option->text; ?></option>
         <?php endforeach; ?>
     </datalist>
-<?php endif; ?>
+  <?php endif; ?>
+<?php endforeach; ?>
