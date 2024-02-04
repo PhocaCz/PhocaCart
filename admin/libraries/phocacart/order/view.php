@@ -115,7 +115,7 @@ class PhocacartOrderView
 
 		$db = Factory::getDBO();
 		$query = 'SELECT u.*,'
-				.' c.title AS countrytitle, r.title AS regiontitle, c.code2 AS countrycode'
+				.' c.title AS countrytitle, r.title AS regiontitle, c.code2 AS countrycode, c.code3 AS countrycode3'
 				.' FROM #__phocacart_order_users AS u'
 				.' LEFT JOIN #__phocacart_countries AS c ON c.id = u.country'
 				.' LEFT JOIN #__phocacart_regions AS r ON r.id = u.region'

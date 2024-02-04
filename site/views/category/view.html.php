@@ -64,6 +64,7 @@ class PhocaCartViewCategory extends HtmlView
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
 		$this->t['columns_cat']				= $this->p->get( 'columns_cat', 3 );
+		$this->t['columns_cat_mobile']		= $this->p->get( 'columns_cat_mobile', 1 );
 		$this->t['columns_subcat_cat']		= $this->p->get( 'columns_subcat_cat', 3 );
 		$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['cv_display_subcategories']= $this->p->get( 'cv_display_subcategories', 5 );
@@ -165,6 +166,7 @@ class PhocaCartViewCategory extends HtmlView
 
 			$this->t['layouttypeactive'] 	= PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
 			$this->t['columns_cat'] 		= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat'] : 1;
+			$this->t['columns_cat_mobile'] 	= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat_mobile'] : 1;
 			$this->t['action']				= $uri->toString();
 			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);

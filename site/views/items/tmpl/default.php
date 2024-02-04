@@ -70,8 +70,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 } else if (!empty($this->items)) {
 
-	$price	= new PhocacartPrice;
-	$col 	= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat']);
+	$price		= new PhocacartPrice;
+	$col 		= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat']);
+	$colMobile 	= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat_mobile']);
 
 	$lt		= $this->t['layouttype'];
 	$i		= 1; // Not equal Heights
@@ -397,6 +398,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dL['t']				= $this->t;
 		$dL['s']				= $this->s;
 		$dL['col']				= $col;
+		$dL['col_mobile']		= $colMobile;
 		$dL['link'] 			= $link;
 		$dL['lt']				= $lt;// Layout Type
 		$dL['layout']['dI']		= $dI;// Image

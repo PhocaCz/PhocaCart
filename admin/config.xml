@@ -16,6 +16,11 @@
                 <option value="12">12</option>
             </field>
 
+            <field name="columns_cats_mobile" type="list" class="form-select" default="1" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_MOBILE_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_MOBILE_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </field>
+
             <field name="csv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_DESC"/>
 
             <field name="csv_display_category_desc" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CATEGORY_DESCRIPTION_CSV_LABEL"
@@ -106,6 +111,11 @@
                 <option value="4">4</option>
                 <option value="6">6</option>
                 <option value="12">12</option>
+            </field>
+
+             <field name="columns_cat_mobile" type="list" class="form-select" default="1" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_MOBILE_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_MOBILE_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
             </field>
 
             <field name="cv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_LABEL"
