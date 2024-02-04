@@ -79,14 +79,6 @@ trait I18nAdminModelTrait
                 $item->$field[$defLanguage] = $defValue;
             }
         }
-
-        if (in_array('alias', $this->i18nFields) && in_array('title', $this->i18nFields)) {
-            foreach ($item->alias as $language => &$alias) {
-                if ($alias === null || $alias === '') {
-                    $alias = ApplicationHelper::stringURLSafe($item->title[$language]);
-                }
-            }
-        }
     }
 
     private function prepareI18nData(array &$data): array
@@ -124,8 +116,8 @@ trait I18nAdminModelTrait
         $db = Factory::getDbo();
 
         $query = $db->getQuery(true)
-            ->delete($db->quoteName($this->i18nTable));
-            $query->where([
+            ->delete($db->quoteName($this->i18nTable))
+            ->where([
                 $db->quoteName('id') . ' = ' . $id
             ]);
 
@@ -138,6 +130,17 @@ trait I18nAdminModelTrait
         foreach ($data as $language => $fields) {
             $fields['id'] = $id;
             $fields['language'] = $language;
+
+            foreach ($fields as &$field) {
+                if (!$field) {
+                    $field = null;
+                }
+            }
+
+            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields)) {
+                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
+            }
+
             $fields = (object)$fields;
             $db->insertObject($this->i18nTable, $fields);
         }

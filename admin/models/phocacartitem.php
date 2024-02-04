@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Event\Model\BeforeBatchEvent;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormFactoryInterface;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
@@ -29,6 +31,7 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 use Phoca\PhocaCart\Product\Bundled;
 
 jimport('joomla.application.component.modeladmin');
@@ -36,6 +39,8 @@ jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocaCartItem extends AdminModel
 {
+    use I18nAdminModelTrait;
+
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public      $typeAlias 		        = 'com_phocacart.phocacartitem';
@@ -79,7 +84,25 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'com_fields'                => 'batchCustomFields',
     ];
 
-	protected function canDelete($record){
+    public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+    {
+        parent::__construct($config, $factory, $formFactory);
+
+        $this->i18nTable = '#__phocacart_products_i18n';
+        $this->i18nFields = [
+            'title',
+            'alias',
+            'title_long',
+            'description',
+            'description_long',
+            'features',
+            'metatitle',
+            'metakey',
+            'metadesc',
+        ];
+    }
+
+    protected function canDelete($record){
 		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
@@ -309,6 +332,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		}
 
+        $this->loadI18nItem($item);
 		return $item;
 	}
 
@@ -398,12 +422,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	}
 
 	function save($data) {
-		//$app		= Factory::getApplication();
-
-		/*if ($data['alias'] == '') {
-			$data['alias'] = $data['title'];
-		}*/
-
+        $i18nData   = $this->prepareI18nData($data);
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 
@@ -674,9 +693,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		}
 
-		// Clean the cache.
-		$cache = Factory::getCache($this->option);
-		$cache->clean();
+        $this->saveI18nData($table->id, $i18nData);
+        $this->cleanCache();
 
 		// Trigger the onContentAfterSave event. CUSTOM FIELDS
 		Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);

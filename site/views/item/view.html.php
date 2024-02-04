@@ -18,10 +18,6 @@ use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\Product;
 
-jimport( 'joomla.application.component.view');
-jimport( 'joomla.filesystem.folder' );
-jimport( 'joomla.filesystem.file' );
-
 class PhocaCartViewItem extends HtmlView
 {
 	protected $item;
