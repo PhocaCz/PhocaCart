@@ -81,6 +81,7 @@ class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 		}
 
 		ToolbarHelper::divider();
-		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
+        ToolbarHelper::inlinehelp();
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true);
 	}
 }

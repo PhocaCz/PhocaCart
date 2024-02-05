@@ -127,7 +127,6 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 		if (!$checkedOut && $canDo->get('core.edit')){
 			ToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
 			ToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			//JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
 
 		if (empty($this->item->id))  {

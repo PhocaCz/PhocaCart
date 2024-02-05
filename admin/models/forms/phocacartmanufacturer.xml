@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="header">
+	<config>
+		<inlinehelp button="show"/>
+	</config>
+
+	<fieldset name="title">
 		<field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
 
 		<field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
@@ -13,8 +17,6 @@
 		<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" />
 
 		<field name="link" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_MANUFACTURER_LINK_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_LINK_DESC" />
-
-		<field name="ordering" type="PhocacartOrdering" table="manufacturer" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 		<field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 	</fieldset>
@@ -29,6 +31,8 @@
 			<option value="0">COM_PHOCACART_NO</option>
 			<option value="1">COM_PHOCACART_YES</option>
 		</field>
+
+		<field name="ordering" type="PhocacartOrdering" table="manufacturer" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 		<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
 			<option value="*">JALL</option>
