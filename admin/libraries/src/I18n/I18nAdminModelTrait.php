@@ -21,22 +21,14 @@ trait I18nAdminModelTrait
 	private array $i18nFields = [];
     private string $i18nTable = '';
 
-    private function getI18nLanguages(): array
-    {
-        $languageList = LanguageHelper::getLanguages();
-        $languages = [];
-        foreach ($languageList as $language) {
-            $languages[] = $language->lang_code;
-        }
-        return $languages;
-    }
-
     private function getComponentParams(): Registry
     {
         static $params = null;
+
         if ($params === null) {
             $params = \PhocacartUtils::getComponentParameters();
         }
+
         return $params;
     }
 
@@ -55,8 +47,6 @@ trait I18nAdminModelTrait
             return;
         }
 
-        $defLanguage = $this->getComponentParams()->get('i18n_language');
-
         $db = Factory::getDbo();
 
         $query = $db->getQuery(true)
@@ -71,12 +61,12 @@ trait I18nAdminModelTrait
             $defValue = $item->$field;
 
             $item->$field = [];
-            foreach ($this->getI18nLanguages() as $language) {
-                $item->$field[$language] = $i18nData[$language]->$field ?? null;
+            foreach (I18nHelper::getI18nLanguages() as $language) {
+                $item->$field[$language->lang_code] = $i18nData[$language->lang_code]->$field ?? null;
             }
 
-            if ($item->$field[$defLanguage] === null || $item->$field[$defLanguage] === '') {
-                $item->$field[$defLanguage] = $defValue;
+            if ($item->$field[I18nHelper::getDefLanguage()] === null || $item->$field[I18nHelper::getDefLanguage()] === '') {
+                $item->$field[I18nHelper::getDefLanguage()] = $defValue;
             }
         }
     }
@@ -88,19 +78,18 @@ trait I18nAdminModelTrait
         }
 
         $i18nData = [];
-        $defLanguage = $this->getComponentParams()->get('i18n_language');
 
-        foreach ($this->getI18nLanguages() as $language) {
-            $i18nData[$language] = [];
+        foreach (I18nHelper::getI18nLanguages() as $language) {
+            $i18nData[$language->lang_code] = [];
         }
 
         foreach ($this->i18nFields as $field) {
             if ($value = $data[$field] ?? null) {
-                foreach ($this->getI18nLanguages() as $language) {
-                    $i18nData[$language][$field] = $value[$language] ?? null;
+                foreach (I18nHelper::getI18nLanguages() as $language) {
+                    $i18nData[$language->lang_code][$field] = $value[$language->lang_code] ?? null;
                 }
 
-                $data[$field] = $value[$defLanguage] ?? null;
+                $data[$field] = $value[I18nHelper::getDefLanguage()] ?? null;
             }
         }
 
@@ -137,7 +126,7 @@ trait I18nAdminModelTrait
                 }
             }
 
-            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields)) {
+            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
                 $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
             }
 

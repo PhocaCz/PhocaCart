@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Form\Field\TextareaField;
 use Joomla\CMS\Language\LanguageHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class JFormFieldPhocaTextArea extends TextareaField
 {
@@ -71,7 +72,7 @@ class JFormFieldPhocaTextArea extends TextareaField
         $data = parent::getLayoutData();
 
         if ($this->i18n) {
-            $languages = LanguageHelper::getLanguages();
+            $languages = I18nHelper::getI18nLanguages();
         } else {
             $languages = [
                 (object)[
@@ -83,6 +84,7 @@ class JFormFieldPhocaTextArea extends TextareaField
         $extraData = [
             'i18n' => $this->i18n,
             'languages' => $languages,
+            'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 
         return array_merge($data, $extraData);

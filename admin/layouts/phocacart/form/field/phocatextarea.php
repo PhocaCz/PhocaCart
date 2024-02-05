@@ -50,7 +50,8 @@ extract($displayData);
  * @var   string   $dataAttribute   Miscellaneous data attributes preprocessed for HTML output
  * @var   array    $dataAttributes  Miscellaneous data attribute for eg, data-*.
  * @var   boolean  $i18n            I18n support?
- * @var   array    $languages       Languages list for i18n?
+ * @var   array    $languages       Languages list for i18n.
+ * @var   string   $defLanguage     Default language for i18n.
  */
 
 // Initialize some field attributes.
@@ -86,11 +87,17 @@ $attributes = [
 ];
 ?>
 <?php if($i18n) : ?>
-    <?php echo HTMLHelper::_('uitab.startTabSet', $id . '_i18nTabs', ['active' => $languages[0]->lang_code, 'recall' => true, 'breakpoint' => 768]); ?>
+    <?php echo HTMLHelper::_('uitab.startTabSet', $id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]); ?>
 <?php endif; ?>
 <?php foreach($languages as $language) : ?>
     <?php if($i18n) : ?>
-        <?php echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title); ?>
+        <?php
+          $i18nsuffix = '';
+          if ($language->lang_code !== $defLanguage && $value[$defLanguage] && !$value[$language->lang_code]) {
+            $i18nsuffix = ' <span class="icon-warning text-danger"></span>';
+          }
+          echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);
+        ?>
     <?php endif; ?>
 
     <textarea name="<?php echo $name .  ($i18n ? '[' . $language->lang_code . ']' : ''); ?>"

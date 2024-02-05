@@ -22,6 +22,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Version;
 use Joomla\CMS\Layout\FileLayout;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class Adminview
 {
@@ -259,11 +260,18 @@ class Adminview
 						$o .= '<div class="control-group-clear ph-par-' . $value . '"  ' . $datashowon . '>' . "\n"
 							. '<div class="control-label">' . $form->getLabel($value) . $descriptionOutput . '</div><div>' . "\n";
 						$field = $form->getField($value);
-						$o .= HTMLHelper::_('uitab.startTabSet', $field->id . '_i18nTabs', ['active' =>  array_key_first($inputs), 'recall' => true, 'breakpoint' => 768]);
-						$languages = LanguageHelper::getLanguages('lang_code');
+						$o .= HTMLHelper::_('uitab.startTabSet', $field->id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]);
+						$languages = I18nHelper::getI18nLanguages();
+						$defLanguage = I18nHelper::getDefLanguage();
 						foreach ($inputs as $lang => $input) {
 							$language = $languages[$lang];
-							$o .= HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title);
+
+							$i18nsuffix = '';
+							if ($language->lang_code !== $defLanguage && $field->value[$defLanguage] && !$field->value[$language->lang_code]) {
+								$i18nsuffix = ' <span class="icon-warning text-danger"></span>';
+							}
+
+							$o .= HTMLHelper::_('uitab.addTab', $field->id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);
 							$o .= $input . "\n";
 							$o .= HTMLHelper::_('uitab.endTab');
 						}

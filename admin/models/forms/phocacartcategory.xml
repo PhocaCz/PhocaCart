@@ -5,22 +5,22 @@
 
         <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
 
-        <field name="title" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
+        <field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"/>
 
-        <field name="alias" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+        <field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
-        <field name="title_long" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
+        <field name="title_long" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
 
         <field name="parent_id" type="phocacartcategory" layout="joomla.form.field.list" label="COM_PHOCACART_FIELD_PARENT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PARENT_CATEGORY_DESC"/>
 
-        <field name="ordering" type="PhocacartOrdering" table="category" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+        <field name="ordering" type="PhocacartOrdering" table="category" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
-        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC"  size="1"/>
+        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" />
 
 
-        <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="2"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"/>
+        <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="2"  label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"/>
 
-        <field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" size="1" default="0">
+        <field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" default="0">
             <option value="0">COM_PHOCACART_COMMON</option>
             <option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
             <option value="2">COM_PHOCACART_POS_ONLY</option>
@@ -33,16 +33,16 @@
 
         <field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
-        <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_DESC" class="form-control"/>
-        <field name="special_image" type="media" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_DESC" class="form-control" size="40"/>
+        <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_PARAMETER_DESC"/>
+        <field name="special_image" type="media" label="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_SPECIAL_IMAGE_DESC"/>
 
-        <field name="image" type="phocaselectfilenameimage" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40"/>
+        <field name="image" type="phocaselectfilenameimage" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC"/>
 
-		    <field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" class="form-control" size="40" />
+		    <field name="icon_class" type="text" label="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_CATEGORY_ICON_CLASS_DESC" />
 
-        <field name="title_feed" type="phocatext" i18n="true" class="form-control" size="40" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC"/>
+        <field name="title_feed" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TITLE_XML_FEED_DESC"/>
 
-        <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TYPE_FEED_DESC" class="form-control" rows="3" cols="30"/>
+        <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_CATEGORY_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TYPE_FEED_DESC" rows="3" cols="30"/>
 
         <field name="metatitle" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_META_TITLE_LABEL" description="COM_PHOCACART_FIELD_META_TITLE_DESC" />
 
@@ -53,7 +53,7 @@
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
 
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select" size="1" default="1">
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
@@ -62,17 +62,17 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
+        <field name="date" type="Calendar" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
 
-		<field name="created" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" filter="user_utc" />
+		<field name="created" type="Calendar" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" filter="user_utc" />
 
-<field name="created_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_CREATED_BY_LABEL" description="COM_PHOCACART_FIELD_CREATED_BY_DESC" readonly="readonly" />
+<field name="created_by" type="user" label="COM_PHOCACART_FIELD_CREATED_BY_LABEL" description="COM_PHOCACART_FIELD_CREATED_BY_DESC" readonly="readonly" />
 
-<field name="modified" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" filter="user_utc" />
+<field name="modified" type="Calendar" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true" filter="user_utc" />
 
-<field name="modified_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly" />
+<field name="modified_by" type="user" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly" />
         <!--
-        <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
+        <field name="hits" type="Text" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
         -->
     </fieldset>
 
@@ -92,7 +92,7 @@
             </field>
             <!--
                 <field name="author" type="text" label="JAUTHOR"
-                    description="JField_Metadata_Author_Desc" size="20" />
+                    description="JField_Metadata_Author_Desc"  />
 
                 <field name="rights" type="text"
                     label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"

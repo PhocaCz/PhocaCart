@@ -55,7 +55,8 @@ extract($displayData);
  * @var   boolean  $showLinkButton  Show link button?
  * @var   boolean  $showTranslation Show value translation?
  * @var   boolean  $i18n            I18n support?
- * @var   array    $languages       Languages list for i18n?
+ * @var   array    $languages       Languages list for i18n.
+ * @var   string   $defLanguage     Default language for i18n.
  */
 
 $list = '';
@@ -79,8 +80,11 @@ if ($charcounter) {
     $counterlabel = 'data-counter-label="' . $this->escape(Text::_('JFIELD_META_DESCRIPTION_COUNTER')) . '"';
 }
 
+if ($class) {
+    $class = trim(str_replace('required', '', $class));
+}
+
 $attributes = [
-    !empty($class) ? 'class="form-control ' . $class . $charcounterclass . '"' : 'class="form-control' . $charcounterclass . '"',
     !empty($size) ? 'size="' . $size . '"' : '',
     !empty($description) ? 'aria-describedby="' . ($id ?: $name) . '-desc"' : '',
     $disabled ? 'disabled' : '',
@@ -90,7 +94,6 @@ $attributes = [
     strlen($hint) ? 'placeholder="' . htmlspecialchars($hint, ENT_COMPAT, 'UTF-8') . '"' : '',
     $onchange ? ' onchange="' . $onchange . '"' : '',
     !empty($maxLength) ? $maxLength : '',
-    $required ? 'required' : '',
     !empty($autocomplete) ? 'autocomplete="' . $autocomplete . '"' : '',
     $autofocus ? ' autofocus' : '',
     $spellcheck ? '' : 'spellcheck="false"',
@@ -101,6 +104,16 @@ $attributes = [
     // @TODO add a proper string here!!!
     !empty($validationtext) ? 'data-validation-text="' . $validationtext . '"' : '',
 ];
+
+$defLangAttributes = $attributes;
+$attributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounterclass . '"' : 'class="form-control' . $charcounterclass . '"';
+
+$requiredClass = '';
+if ($required) {
+    $requiredClass = ' required';
+}
+$defLangAttributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounterclass . $requiredClass . '"' : 'class="form-control' . $charcounterclass . $requiredClass . '"';
+$defLangAttributes[] = $required ? 'required' : '';
 
 $addonBeforeHtml = '';
 if ($addonBefore) {
@@ -127,7 +140,13 @@ if ($showTranslation) {
   <?php endif; ?>
 
     <?php if ($i18n) : ?>
-      <span class="input-group-text bg-light text-dark border-primary-subtle">
+      <?php
+        $i18nClass = 'bg-light';
+        if ($language->lang_code !== $defLanguage && $value[$defLanguage] && !$value[$language->lang_code]) {
+            $i18nClass = 'bg-danger';
+        }
+      ?>
+      <span class="input-group-text <?php echo $i18nClass; ?> text-dark border-primary-subtle">
         <?php echo HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true); ?>
       </span>
     <?php endif; ?>
@@ -140,7 +159,7 @@ if ($showTranslation) {
         id="<?php echo $id . ($i18n ? '-' . $language->lang_code : ''); ?>"
         value="<?php echo htmlspecialchars($i18n ? $value[$language->lang_code] ?? '' : $value, ENT_COMPAT, 'UTF-8'); ?>"
         <?php echo $dirname; ?>
-        <?php echo implode(' ', $attributes); ?>>
+        <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>>
 
     <?php echo $addonAfterHtml; ?>
 
