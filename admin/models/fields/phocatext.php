@@ -11,7 +11,6 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Form\Field\TextField;
-use Joomla\CMS\Language\LanguageHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class JFormFieldPhocaText extends TextField

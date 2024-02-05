@@ -12,20 +12,24 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
 
 extract($displayData);
 
 /**
  * Layout variables
  * -----------------
- * @var   array   $options      Optional parameters
- * @var   string  $id           The id of the input this label is for
- * @var   string  $name         The name of the input this label is for
- * @var   string  $label        The html code for the label
- * @var   string  $input        The input field html code
- * @var   string  $description  An optional description to use as in–line help text
- * @var   string  $descClass    The class name to use for the description
- * @var   FormField $field The Field object
+ * @var   array         $options      Optional parameters
+ * @var   string        $id           The id of the input this label is for
+ * @var   string        $name         The name of the input this label is for
+ * @var   string        $label        The html code for the label
+ * @var   string|array  $input        The input field html code
+ * @var   string        $description  An optional description to use as in–line help text
+ * @var   string        $descClass    The class name to use for the description
+ * @var   FormField     $field        The Field object
+ * @var   boolean       $i18n         I18n support?
+ * @var   array         $languages    Languages list for i18n.
+ * @var   string        $defLanguage  Default language for i18n.
  */
 
 if (!empty($options['showonEnabled'])) {
@@ -62,7 +66,27 @@ if (!empty($parentclass)) {
         <div class="control-label"><?php echo $label; ?></div>
     <?php endif; ?>
     <div class="controls">
-        <?php echo $input; ?>
+        <?php if (is_array($input)) : ?>
+          <?php
+            echo HTMLHelper::_('uitab.startTabSet', $id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]);
+            foreach ($input as $lang => $singleInput) {
+                $language = $languages[$lang];
+
+                $i18nsuffix = '';
+                if ($language->lang_code !== $defLanguage && $field->value[$defLanguage] && !$field->value[$language->lang_code]) {
+                    $i18nsuffix = ' <span class="icon-warning text-danger"></span>';
+                }
+                echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);
+
+                echo $singleInput;
+
+                echo HTMLHelper::_('uitab.endTab');
+            }
+            echo HTMLHelper::_('uitab.endTabSet');
+          ?>
+        <?php else : ?>
+            <?php echo $input; ?>
+        <?php endif; ?>
         <?php if (!$hideDescription && !empty($description)) : ?>
             <div id="<?php echo $id; ?>" class="<?php echo $descClass ?>">
                 <small class="form-text">

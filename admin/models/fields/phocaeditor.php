@@ -11,7 +11,6 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Form\Field\EditorField;
-use Joomla\CMS\Language\LanguageHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class JFormFieldPhocaEditor extends EditorField
@@ -75,7 +74,7 @@ class JFormFieldPhocaEditor extends EditorField
         $data = parent::getLayoutData();
 
         if ($this->i18n) {
-            $languages = LanguageHelper::getLanguages();
+            $languages = I18nHelper::getI18nLanguages();
         } else {
             $languages = [
                 (object)[
@@ -87,6 +86,7 @@ class JFormFieldPhocaEditor extends EditorField
         $extraData = [
             'i18n' => $this->i18n,
             'languages' => $languages,
+            'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 
         return array_merge($data, $extraData);
