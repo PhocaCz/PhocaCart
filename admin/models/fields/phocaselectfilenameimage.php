@@ -33,7 +33,7 @@ class JFormFieldPhocaSelectFilenameImage extends FormField
 
 		$onchange 		= (string) $this->element['onchange'];
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
-		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="text_area"';
+		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="form-control"';
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 		$idA			= 'phImageFile';
 
