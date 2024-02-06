@@ -51,8 +51,8 @@ if (isset($d['activefilter']) && $d['activefilter']) {
     <div style="display:none">
 <?php } ?>
 
-        <span class="input-group-btn">
-        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'] . $d['paramname'] . 'Btn'; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?></button><button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button></span>
+        <?php /*<span class="input-group-btn"> */ ?>
+        <button class="<?php echo $d['s']['c']['btn.btn-success'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsSet; ?>" title="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" id="<?php echo $d['id'] . $d['paramname'] . 'Btn'; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?></button><button class="<?php echo $d['s']['c']['btn.btn-danger'] ?> tip <?php echo $d['s']['c']['hastooltip'] ?>" type="button" onclick="<?php echo $jsClear; ?>" title="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>" aria-label="<?php echo Text::_('COM_PHOCACART_CLEAR'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['clear']) ?></button><?php /* </span> */ ?>
 
 <?php if ($d['hide_buttons'] == 1) { ?>
     </div>

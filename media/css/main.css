@@ -1625,7 +1625,7 @@ h3.gridlist {
 
 @media screen and (max-width: 576px) {
     .ph-row-flex.grid {
-        display: block;
+       /* display: block; */
     }
 }
 

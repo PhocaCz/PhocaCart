@@ -123,7 +123,7 @@
 }
 .plupload_file_size, .plupload_file_status, .plupload_file_action {text-align: right;}
 
-.plupload_filelist .plupload_file_name {width: 205px}
+.plupload_filelist .plupload_file_name {width: 205px; width: auto;}
 
 .plupload_file_action {
 	float: right;
@@ -167,6 +167,12 @@ li.plupload_done a {
 .plupload_progress_bar {
 	width: 0px;
 	height: 7px;
+	height: 22px;
+}
+
+.plupload_progress_bar.bar,
+.progress.plupload_file_statusbar .bar {
+	background: green;
 }
 
 .plupload_scroll .plupload_filelist_header .plupload_file_action, .plupload_scroll .plupload_filelist_footer .plupload_file_action {

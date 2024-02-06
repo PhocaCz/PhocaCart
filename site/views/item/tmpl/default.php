@@ -978,7 +978,6 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 }
 
-
 if ((isset($this->itemnext[0]) && $this->itemnext[0]) || (isset($this->itemprev[0]) && $this->itemprev[0])) {
 	echo '<div class="'.$this->s['c']['row'].' ph-item-navigation">';
 

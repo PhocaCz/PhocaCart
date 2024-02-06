@@ -378,18 +378,20 @@ class PhocacartCart
     public function updateItemsFromCheckout($idKey = '', $quantity = 0) {
         // Don't check for quantity as it can be NULL
         if ($idKey != '') {
-            $oldQuantity = $this->items[$idKey]['quantity'];
+            if (isset($this->items[$idKey])) {
+                $oldQuantity = $this->items[$idKey]['quantity'];
 
-            if ((int)$quantity > 0) {
-                $this->items[$idKey]['quantity'] = (int)$quantity;
-                $newQuantity = $quantity;
-            } else  {
-                unset($this->items[$idKey]);
-                $newQuantity = 0;
+                if ((int)$quantity > 0) {
+                    $this->items[$idKey]['quantity'] = (int)$quantity;
+                    $newQuantity                     = $quantity;
+                } else {
+                    unset($this->items[$idKey]);
+                    $newQuantity = 0;
+                }
+
+                $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
+                return true;
             }
-
-            $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
-            return true;
         }
 
         return false;

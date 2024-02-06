@@ -26,10 +26,11 @@ $d 		= $displayData;
 $t		= $d['t'];
 $s      = $d['s'];
 $col    = $d['col'];
+$colMobile    = $d['col_mobile'];
 
 
 
-echo '<div class="'.$s['c']['row-item'].' '.$s['c']["col.xs12.sm{$col}.md{$col}"].'">';
+echo '<div class="'.$s['c']['row-item'].' '.$s['c']["col.xs{$colMobile}.sm{$col}.md{$col}"].'">';
 echo '<div class="ph-item-box '.$d['lt'].'">';
 
 if (!empty($d['labels'])) { echo '<div class="ph-label-box">' . $d['labels'] . '</div>';}
