@@ -21,12 +21,13 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Associations;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 {
-    use I18nAdminModelTrait;
+    use I18nAdminModelTrait, AdminModelTrait;
 
     protected	$option 		= 'com_phocacart';
     protected $text_prefix	= 'com_phocacart';
@@ -198,5 +199,22 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
         }
 
         parent::preprocessForm($form, $data, $group);
+    }
+
+    public function delete(&$pks)
+    {
+        if (!parent::delete($pks)) {
+            return false;
+        }
+
+        $query = $this->getQuery()
+            ->update('#__phocacart_products')
+            ->set([
+                'manufacturer_id = 0',
+            ])
+            ->whereIn('manufacturer_id', $pks);
+
+        $this->executeQuery($query);
+        return $this->deleteI18nData($pks);
     }
 }
