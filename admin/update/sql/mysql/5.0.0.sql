@@ -94,3 +94,21 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products_i18n` (
     PRIMARY KEY  (`id`, `language`),
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_attributes_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_attribute_values_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

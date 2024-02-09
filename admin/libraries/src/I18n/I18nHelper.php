@@ -11,11 +11,24 @@ namespace Phoca\PhocaCart\I18n;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
 
 abstract class I18nHelper
 {
+    public static function isI18n(): bool
+    {
+        static $isI18n = null;
+        if ($isI18n === null) {
+            $params = ComponentHelper::getParams('com_phocacart');
+            $isI18n = !!$params->get('i18n');
+        }
+
+        return $isI18n;
+    }
+
     public static function getI18nLanguages(): array
     {
         return LanguageHelper::getContentLanguages([0, 1], true, 'lang_code', 'ordering', 'asc');
@@ -32,4 +45,71 @@ abstract class I18nHelper
 
         return $defLanguage;
     }
+
+    public static function prepareI18nData(array &$data, array $i18nFields): array
+    {
+        if (!self::isI18n()) {
+            return [];
+        }
+
+        $i18nData = [];
+
+        foreach (self::getI18nLanguages() as $language) {
+            $i18nData[$language->lang_code] = [];
+        }
+
+        foreach ($i18nFields as $field) {
+            if ($value = $data[$field] ?? null) {
+                foreach (I18nHelper::getI18nLanguages() as $language) {
+                    $i18nData[$language->lang_code][$field] = $value[$language->lang_code] ?? null;
+                }
+
+                $data[$field] = $value[I18nHelper::getDefLanguage()] ?? null;
+            }
+        }
+
+        return $i18nData;
+    }
+
+    public static function saveI18nData(int $id, array &$data, string $i18nTable): bool
+    {
+        if (!I18nHelper::isI18n()) {
+            return true;
+        }
+
+        $db = Factory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->delete($db->quoteName($i18nTable))
+            ->where([
+                $db->quoteName('id') . ' = ' . $id
+            ]);
+
+        $db->setQuery($query);
+        if (!$db->execute()) {
+            // TODO error
+            return false;
+        }
+
+        foreach ($data as $language => $fields) {
+            $fields['id'] = $id;
+            $fields['language'] = $language;
+
+            foreach ($fields as &$field) {
+                if (!$field) {
+                    $field = null;
+                }
+            }
+
+            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
+                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
+            }
+
+            $fields = (object)$fields;
+            $db->insertObject($i18nTable, $fields);
+        }
+
+        return true;
+    }
+
 }

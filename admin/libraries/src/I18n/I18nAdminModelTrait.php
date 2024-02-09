@@ -13,33 +13,15 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\LanguageHelper;
-use Joomla\Registry\Registry;
 
 trait I18nAdminModelTrait
 {
 	private array $i18nFields = [];
     private string $i18nTable = '';
 
-    private function getComponentParams(): Registry
-    {
-        static $params = null;
-
-        if ($params === null) {
-            $params = \PhocacartUtils::getComponentParameters();
-        }
-
-        return $params;
-    }
-
-    private function isI18n(): bool
-    {
-        return $this->getComponentParams()->get('i18n');
-    }
-
     private function loadI18nItem(object $item)
     {
-        if (!$this->isI18n()) {
+        if (!I18nHelper::isI18n()) {
             return;
         }
 
@@ -71,70 +53,52 @@ trait I18nAdminModelTrait
         }
     }
 
-    private function prepareI18nData(array &$data): array
+    private function loadI18nArray(?array $items, string $i18nTable, array $i18nFields): ?array
     {
-        if (!$this->isI18n()) {
-            return [];
+        if (!I18nHelper::isI18n()) {
+            return $items;
         }
 
-        $i18nData = [];
-
-        foreach (I18nHelper::getI18nLanguages() as $language) {
-            $i18nData[$language->lang_code] = [];
-        }
-
-        foreach ($this->i18nFields as $field) {
-            if ($value = $data[$field] ?? null) {
-                foreach (I18nHelper::getI18nLanguages() as $language) {
-                    $i18nData[$language->lang_code][$field] = $value[$language->lang_code] ?? null;
-                }
-
-                $data[$field] = $value[I18nHelper::getDefLanguage()] ?? null;
-            }
-        }
-
-        return $i18nData;
-    }
-
-    private function saveI18nData(int $id, array &$data): bool
-    {
-        if (!$this->isI18n()) {
-            return true;
+        if (!$items) {
+            return $items;
         }
 
         $db = Factory::getDbo();
 
-        $query = $db->getQuery(true)
-            ->delete($db->quoteName($this->i18nTable))
-            ->where([
-                $db->quoteName('id') . ' = ' . $id
-            ]);
+        foreach ($items as &$item) {
+            $query = $db->getQuery(true)
+                ->select(array_merge($i18nFields, ['language']))
+                ->from($i18nTable)
+                ->where($db->quoteName('id') . ' = ' . $item['id']);
 
-        $db->setQuery($query);
-        if (!$db->execute()) {
-            // TODO error
-            return false;
-        }
+            $db->setQuery($query);
+            $i18nData = $db->loadObjectList('language');
 
-        foreach ($data as $language => $fields) {
-            $fields['id'] = $id;
-            $fields['language'] = $language;
+            foreach ($i18nFields as $field) {
+                $defValue = $item[$field];
 
-            foreach ($fields as &$field) {
-                if (!$field) {
-                    $field = null;
+                $item[$field] = [];
+                foreach (I18nHelper::getI18nLanguages() as $language) {
+                    $item[$field][$language->lang_code] = $i18nData[$language->lang_code]->$field ?? null;
+                }
+
+                if ($item[$field][I18nHelper::getDefLanguage()] === null || $item[$field][I18nHelper::getDefLanguage()] === '') {
+                    $item[$field][I18nHelper::getDefLanguage()] = $defValue;
                 }
             }
-
-            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
-                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
-            }
-
-            $fields = (object)$fields;
-            $db->insertObject($this->i18nTable, $fields);
         }
 
-        return true;
+        return $items;
+    }
+
+    private function prepareI18nData(array &$data): array
+    {
+        return I18nHelper::prepareI18nData($data, $this->i18nFields);
+    }
+
+    private function saveI18nData(int $id, array &$data): bool
+    {
+        return I18nHelper::saveI18nData($id, $data, $this->i18nTable);
     }
 
 }

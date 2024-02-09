@@ -333,6 +333,13 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
         $this->loadI18nItem($item);
+        if ($item->attributes) {
+            $item->attributes = $this->loadI18nArray($item->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
+            foreach ($item->attributes as &$attribute) {
+                $attribute['options'] = $this->loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
+            }
+        }
+
 		return $item;
 	}
 
@@ -423,6 +430,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 	function save($data) {
         $i18nData   = $this->prepareI18nData($data);
+
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 
