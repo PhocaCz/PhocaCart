@@ -114,6 +114,11 @@ abstract class I18nHelper
                 $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
             }
 
+            // Specifications has alias also for value
+            if (array_key_exists('alias_value', $fields) && !$fields['alias_value'] && array_key_exists('value', $fields) && $fields['value']) {
+                $fields['alias_value'] = ApplicationHelper::stringURLSafe($fields['value']);
+            }
+
             $fields = (object)$fields;
             $db->insertObject($i18nTable, $fields);
         }

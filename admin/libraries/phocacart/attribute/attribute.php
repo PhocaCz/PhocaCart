@@ -13,7 +13,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\HTML\HTMLHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartAttribute
@@ -269,8 +268,6 @@ class PhocacartAttribute
             $db             = Factory::getDBO();
             $app            = Factory::getApplication();
             $pathAttributes = PhocacartPath::getPath('attributefile');// to check if attribute option download file exists
-            $isI18n         = I18nHelper::isI18n();
-
 
             // When you add or update attributes and options, you need to have some info about which attributes and options
             // are now active - so all others will be removed

@@ -333,12 +333,13 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
         $this->loadI18nItem($item);
+        $item->attributes = $this->loadI18nArray($item->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
         if ($item->attributes) {
-            $item->attributes = $this->loadI18nArray($item->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
             foreach ($item->attributes as &$attribute) {
                 $attribute['options'] = $this->loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
             }
         }
+        $item->specifications = $this->loadI18nArray($item->specifications, '#__phocacart_specifications_i18n', ['title', 'alias', 'value', 'alias_value']);
 
 		return $item;
 	}
@@ -628,15 +629,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->getId(), $data['additional_download_files']);
 			PhocacartImageAdditional::storeImagesByProductId((int)$table->getId(), $data['additional_images']);
-
-
-
 			PhocacartAttribute::storeAttributesById((int)$table->getId(), $data['attributes']);
-
-
 			PhocacartSpecification::storeSpecificationsById((int)$table->getId(), $data['specifications']);
-
-
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->getId(), $data['discounts']);
 
 
