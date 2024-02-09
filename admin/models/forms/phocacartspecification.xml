@@ -11,7 +11,7 @@
 			<field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 		</fieldset>
 
-		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS" >
+		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
 			<!-- Keep for rendering -->
 		</fieldset>
 

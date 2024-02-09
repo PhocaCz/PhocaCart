@@ -27,7 +27,7 @@ foreach ($this->form->getFieldSets() as $fieldset) {
 	if (in_array($fieldset->name, $skipFieldsets)) {
 		continue;
 	}
-	echo $r->startTab($fieldset->name, Text::_($fieldset->label), $isActiveTab ? 'active' : '');
+	echo $r->startTab($fieldset->name, Text::_($fieldset->label));
 	if ($fieldset->name == 'general') {
 		echo '<div class="row">';
 		echo '<div class="col-md-9">';
@@ -41,7 +41,6 @@ foreach ($this->form->getFieldSets() as $fieldset) {
 		echo '</div>';
 	}
 	echo $r->endTab();
-	$isActiveTab = false;
 }
 
 echo $r->endTabs();

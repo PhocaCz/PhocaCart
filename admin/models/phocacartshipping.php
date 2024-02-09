@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
@@ -24,43 +25,29 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
-	protected function canDelete($record) {
-		return parent::canDelete($record);
-	}
-
-	protected function canEditState($record) {
-		return parent::canEditState($record);
-	}
-
 	public function getTable($type = 'PhocacartShipping', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacartshipping', 'phocacartshipping', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+		return $this->loadForm('com_phocacart.phocacartshipping', 'phocacartshipping', array('control' => 'jform', 'load_data' => $loadData));
 	}
 
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartshipping.data', array());
+
 		if (empty($data)) {
 			$data = $this->getItem();
 			$price = new PhocacartPrice();
-			$data->cost 			= $price->cleanPrice($data->cost);
+			$data->cost = $price->cleanPrice($data->cost);
 			$data->cost_additional = $price->cleanPrice($data->cost_additional);
 		}
+
 		return $data;
 	}
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
-
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
@@ -89,9 +76,6 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);
 
 		if (empty($table->id)) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = Factory::getDbo();
@@ -101,16 +85,10 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 				$table->ordering = $max+1;
 			}
 		}
-		else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
-		}
 	}
 
 	public function save($data)
 	{
-		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
 
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
@@ -124,8 +102,6 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 
 		// Include the content plugins for the on save events.
 		PluginHelper::importPlugin('content');
-
-
 
 		// Allow an exception to be thrown.
 		try
@@ -249,7 +225,6 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 
 
 	public function setDefault($id = 0) {
-
 		$user = Factory::getUser();
 		$db   = $this->getDbo();
 
@@ -298,4 +273,3 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 		return true;
 	}
 }
-?>
