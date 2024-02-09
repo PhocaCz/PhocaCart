@@ -268,9 +268,14 @@ class Adminview
 						foreach ($inputs as $lang => $input) {
 							$language = $languages[$lang];
 
-							$i18nsuffix = '';
-							if ($language->lang_code !== $defLanguage && $fieldValue[$defLanguage] && !$fieldValue[$language->lang_code]) {
-								$i18nsuffix = ' <span class="icon-warning text-danger"></span>';
+							if ($language->lang_code === $defLanguage) {
+								$i18nsuffix = ' <span class="icon icon-language text-info"></span>';
+							} elseif (!$fieldValue[$defLanguage] && !$fieldValue[$language->lang_code]) {
+								$i18nsuffix = ' <span class="icon icon-cancel"></span>';
+							} elseif ($fieldValue[$defLanguage] && $fieldValue[$language->lang_code]) {
+								$i18nsuffix = ' <span class="icon icon-ok text-success"></span>';
+							} elseif ($language->lang_code !== $defLanguage && (!$fieldValue[$defLanguage] || !$fieldValue[$language->lang_code])) {
+								$i18nsuffix = ' <span class="icon icon-warning text-danger"></span>';
 							}
 
 							$o .= HTMLHelper::_('uitab.addTab', $field->id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);

@@ -140,13 +140,7 @@ if ($showTranslation) {
   <?php endif; ?>
 
     <?php if ($i18n) : ?>
-      <?php
-        $i18nClass = 'bg-light';
-        if ($language->lang_code !== $defLanguage && $value[$defLanguage] && !$value[$language->lang_code]) {
-            $i18nClass = 'bg-danger';
-        }
-      ?>
-      <span class="input-group-text <?php echo $i18nClass; ?> text-dark border-primary-subtle">
+      <span class="input-group-text bg-light text-dark border-primary-subtle">
         <?php echo HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true); ?>
       </span>
     <?php endif; ?>
@@ -160,6 +154,24 @@ if ($showTranslation) {
         value="<?php echo htmlspecialchars($i18n ? $value[$language->lang_code] ?? '' : $value, ENT_COMPAT, 'UTF-8'); ?>"
         <?php echo $dirname; ?>
         <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>>
+
+    <span class="input-group-text input-group-i18n bg-light text-dark border-primary-subtle">
+      <?php if ($language->lang_code === $defLanguage) { ?>
+        <span class="icon icon-language text-info"></span>
+      <?php } elseif (!$value[$defLanguage] && !$value[$language->lang_code]) { ?>
+        <span class="icon icon-cancel"></span>
+      <?php } elseif ($value[$defLanguage] && $value[$language->lang_code]) { ?>
+        <span class="icon icon-ok text-success"></span>
+      <?php } elseif ($language->lang_code !== $defLanguage && (!$value[$defLanguage] || !$value[$language->lang_code])) { ?>
+        <span class="icon icon-warning text-danger"></span>
+      <?php } ?>
+    </span>
+    <?php
+    $i18nClass = 'bg-light';
+    if ($language->lang_code !== $defLanguage && $value[$defLanguage] && !$value[$language->lang_code]) {
+        $i18nClass = 'bg-danger';
+    }
+    ?>
 
     <?php echo $addonAfterHtml; ?>
 

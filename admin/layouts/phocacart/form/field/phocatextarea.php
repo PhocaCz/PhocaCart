@@ -92,9 +92,14 @@ $attributes = [
 <?php foreach($languages as $language) : ?>
     <?php if($i18n) : ?>
         <?php
-          $i18nsuffix = '';
-          if ($language->lang_code !== $defLanguage && $value[$defLanguage] && !$value[$language->lang_code]) {
-            $i18nsuffix = ' <span class="icon-warning text-danger"></span>';
+          if ($language->lang_code === $defLanguage) {
+              $i18nsuffix = ' <span class="icon icon-language text-info"></span>';
+          } elseif (!$value[$defLanguage] && !$value[$language->lang_code]) {
+              $i18nsuffix = ' <span class="icon icon-cancel"></span>';
+          } elseif ($value[$defLanguage] && $value[$language->lang_code]) {
+              $i18nsuffix = ' <span class="icon icon-ok text-success"></span>';
+          } elseif ($language->lang_code !== $defLanguage && (!$value[$defLanguage] || !$value[$language->lang_code])) {
+              $i18nsuffix = ' <span class="icon icon-warning text-danger"></span>';
           }
           echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);
         ?>
