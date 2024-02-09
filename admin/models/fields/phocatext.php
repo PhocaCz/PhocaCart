@@ -88,12 +88,7 @@ class JFormFieldPhocaText extends TextField
 
         if ($this->i18n) {
             $languages = I18nHelper::getI18nLanguages();
-            if (!($data['value'] ?? null)) {
-                $data['value'] = [];
-                foreach ($languages as $language) {
-                    $data['value'][$language->lang_code] = null;
-                }
-            }
+            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
         } else {
             $languages = [
                 (object)[

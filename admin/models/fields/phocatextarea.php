@@ -73,6 +73,7 @@ class JFormFieldPhocaTextArea extends TextareaField
 
         if ($this->i18n) {
             $languages = I18nHelper::getI18nLanguages();
+            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
         } else {
             $languages = [
                 (object)[

@@ -125,4 +125,24 @@ abstract class I18nHelper
         return $db->execute();
     }
 
+    public static function checkI18nValue($value)
+    {
+        if (!self::isI18n()) {
+            return $value;
+        }
+
+        if (!is_array($value)) {
+            $defValue = $value;
+            $languages = self::getI18nLanguages();
+
+            $value = [];
+            foreach ($languages as $language) {
+                $value[$language->lang_code] = null;
+            }
+
+            $value[self::getDefLanguage()] = $defValue;
+        }
+
+        return $value;
+    }
 }

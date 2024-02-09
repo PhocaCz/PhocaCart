@@ -35,7 +35,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	protected	$option 		    = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public $typeAlias 			        = 'com_phocacart.phocacartcategory';
-    protected   $associationsContext    = 'com_phocacart.category';	// ASSOCIATION
+	protected   $associationsContext    = 'com_phocacart.category';	// ASSOCIATION
 
 
 	public function __construct($config = [], \Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, \Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
@@ -398,136 +398,105 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		return true;
 	}
 
-	public function delete(&$cid = array()) {
-		$app	= Factory::getApplication();
-		$db 	= Factory::getDBO();
+	public function delete(&$pks = [])
+	{
+		$app = Factory::getApplication();
+		$db  = $this->getDatabase();
 
-		$result = false;
-		if (count( $cid )) {
-			ArrayHelper::toInteger($cid);
-			$cids = implode( ',', $cid );
+		ArrayHelper::toInteger($pks);
 
-			$table = $this->getTable();
-			if (!$this->canDelete($table)){
-				$error = $this->getError();
-				if ($error){
-					Log::add($error, Log::WARNING);
-					return false;
-				} else {
-					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
-					return false;
-				}
+		$table = $this->getTable();
+		if (!$this->canDelete($table)) {
+			if ($error = $this->getError()) {
+				Log::add($error, Log::WARNING);
+			}
+			else {
+				Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
 			}
 
-			// FIRST - if there are subcategories - - - - -
-			$query = 'SELECT c.id, c.title, COUNT( s.parent_id ) AS numcat'
+			return false;
+		}
+
+		// FIRST - if there are subcategories - - - - -
+		$query = 'SELECT c.id, c.title, COUNT( s.parent_id ) AS numcat'
 			. ' FROM #__phocacart_categories AS c'
 			. ' LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id'
-			. ' WHERE c.id IN ( '.$cids.' )'
-			. ' GROUP BY c.id, c.title, s.parent_id'
-			;
-			$db->setQuery( $query );
+			. ' WHERE c.id IN ( ' . implode(',', $pks) . ' )'
+			. ' GROUP BY c.id, c.title';
+		$db->setQuery($query);
 
-			if (!($rows2 = $db->loadObjectList())) {
-				throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
-				return false;
-			}
+		if (!($subcategories = $db->loadObjectList())) {
+			throw new Exception(Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500);
+		}
 
-			// Add new CID without categories which have subcategories (we don't delete categories with subcat)
-			$err_cat = array();
-			$cid 	 = array();
-			foreach ($rows2 as $row) {
-				if ($row->numcat == 0) {
-					$cid[] = (int) $row->id;
-				} else {
-					$err_cat[] = $row->title;
-				}
-			}
-			// - - - - - - - - - - - - - - -
-
-			// Product with new cid - - - - -
-			$err_img = array();
-			if (count( $cid )) {
-				ArrayHelper::toInteger($cid);
-				$cids = implode( ',', $cid );
-
-				// Select id's from product table, if there are some items, don't delete it.
-				$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numproduct'
-				. ' FROM #__phocacart_categories AS c'
-				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
-				. ' WHERE c.id IN ( '.$cids.' )'
-				. ' GROUP BY c.id, c.title, s.category_id';
-
-				$db->setQuery( $query );
-
-				if (!($rows = $db->loadObjectList())) {
-					throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
-					return false;
-				}
-
-
-
-				$cid 	 = array();
-				foreach ($rows as $row) {
-					if ($row->numproduct == 0) {
-						$cid[] = (int) $row->id;
-					} else {
-						$err_img[] = $row->title;
-					}
-				}
-
-				if (count( $cid )) {
-					$cids = implode( ',', $cid );
-					$query = 'DELETE FROM #__phocacart_categories'
-					. ' WHERE id IN ( '.$cids.' )';
-					$db->setQuery( $query );
-					if (!$db->execute()) {
-						//$this->setError($db->getError());
-						throw new Exception('Database Error: Delete items in category', 500);
-						return false;
-					}
-
-					// 7. DELETE CATEGORY RELATIONSHIP (should not happen as this should be deleted when products are deleted)
-					$query = 'DELETE FROM #__phocacart_product_categories'
-						. ' WHERE category_id IN ( '.$cids.' )';
-					$db->setQuery( $query );
-					$db->execute();
-
-					// Delete items in phocadownload_user_category
-				/*	$query = 'DELETE FROM #__phocadownload_user_category'
-					. ' WHERE catid IN ( '.$cids.' )';
-					$db->setQuery( $query );
-					if (!$db->query()) {
-						$this->setError($row->getError());
-						return false;
-					}*/
-
-					// 9. DELETE PRODUCT CUSTOMER GROUPS
-					$query = 'DELETE FROM #__phocacart_item_groups'
-						. ' WHERE item_id IN ( '.$cids.' )'
-						. ' AND type = 2';
-					$db->setQuery( $query );
-					$db->execute();
-				}
-			}
-
-			// There are some images in the category - don't delete it
-			$msg = '';
-			if (!empty( $err_cat ) || !empty( $err_img )) {
-				if (!empty( $err_cat )) {
-					$cids_cat = implode( ", ", $err_cat );
-					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', $cids_cat );
-				}
-
-				if (!empty( $err_img )) {
-					$cids_img = implode( ", ", $err_img );
-					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', $cids_img );
-				}
-				$link = 'index.php?option=com_phocacart&view=phocacartcategories';
-				$app->enqueueMessage($msg, 'error');
-				$app->redirect($link);
+		// Add new CID without categories which have subcategories (we don't delete categories with subcat)
+		$errHasSubactegories = [];
+		$pks                 = [];
+		foreach ($subcategories as $row) {
+			if ($row->numcat == 0) {
+				$pks[] = $row->id;
+			} else {
+				$errHasSubactegories[] = $row->title;
 			}
 		}
+
+		$errHasItems = [];
+		if ($pks) {
+			// Select id's from product table, if there are some items, don't delete it.
+			$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numproduct'
+				. ' FROM #__phocacart_categories AS c'
+				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
+				. ' WHERE c.id IN ( ' . implode(',', $pks) . ' )'
+				. ' GROUP BY c.id, c.title';
+
+			$db->setQuery($query);
+
+			if (!($rows = $db->loadObjectList())) {
+				throw new Exception(Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500);
+			}
+
+
+			$pks = [];
+			foreach ($rows as $row) {
+				if ($row->numproduct == 0) {
+					$pks[] = $row->id;
+				} else {
+					$errHasItems[] = $row->title;
+				}
+			}
+		}
+
+		if ($pks) {
+			$cids  = implode(',', $pks);
+			$query = 'DELETE FROM #__phocacart_categories WHERE id IN ( ' . implode(',', $pks) . ' )';
+			$db->setQuery($query);
+
+			if (!$db->execute()) {
+				throw new Exception('Database Error: Delete items in category', 500);
+			}
+
+			// DELETE PRODUCT CUSTOMER GROUPS
+			$query = 'DELETE FROM #__phocacart_item_groups WHERE item_id IN ( ' . $cids . ' ) AND type = 2';
+			$db->setQuery($query);
+			$db->execute();
+
+			$this->deleteI18nData($pks);
+		}
+
+
+		// There are some items or subcategries in the category - don't delete it
+		$msg = '';
+		if ($errHasSubactegories || $errHasItems) {
+			if ($errHasSubactegories) {
+				$msg .= Text::plural('COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', implode(", ", $errHasSubactegories));
+			}
+
+			if (!empty($errHasItems)) {
+				$msg .= Text::plural('COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', implode(", ", $errHasItems));
+			}
+			$app->enqueueMessage($msg, 'error');
+		}
+
 		return true;
 	}
 

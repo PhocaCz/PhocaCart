@@ -263,11 +263,13 @@ class Adminview
 						$o .= HTMLHelper::_('uitab.startTabSet', $field->id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]);
 						$languages = I18nHelper::getI18nLanguages();
 						$defLanguage = I18nHelper::getDefLanguage();
+						$fieldValue = I18nHelper::checkI18nValue($field->value);
+
 						foreach ($inputs as $lang => $input) {
 							$language = $languages[$lang];
 
 							$i18nsuffix = '';
-							if ($language->lang_code !== $defLanguage && $field->value[$defLanguage] && !$field->value[$language->lang_code]) {
+							if ($language->lang_code !== $defLanguage && $fieldValue[$defLanguage] && !$fieldValue[$language->lang_code]) {
 								$i18nsuffix = ' <span class="icon-warning text-danger"></span>';
 							}
 
