@@ -101,4 +101,8 @@ trait I18nAdminModelTrait
         return I18nHelper::saveI18nData($id, $data, $this->i18nTable);
     }
 
+    private function deleteI18nData(array $ids): bool
+    {
+        return I18nHelper::deleteI18nData($ids, $this->i18nTable);
+    }
 }

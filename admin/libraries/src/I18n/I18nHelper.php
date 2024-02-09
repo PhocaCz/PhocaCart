@@ -15,6 +15,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
+use Joomla\Database\DatabaseInterface;
 
 abstract class I18nHelper
 {
@@ -77,7 +78,7 @@ abstract class I18nHelper
             return true;
         }
 
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = $db->getQuery(true)
             ->delete($db->quoteName($i18nTable))
@@ -110,6 +111,18 @@ abstract class I18nHelper
         }
 
         return true;
+    }
+
+    public static function deleteI18nData(array $ids, string $i18nTable): bool
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->delete($i18nTable)
+            ->whereIn($db->quoteName('id'), $ids);
+
+        $db->setQuery($query);
+        return $db->execute();
     }
 
 }
