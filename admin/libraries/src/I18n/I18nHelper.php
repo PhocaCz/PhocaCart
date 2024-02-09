@@ -34,7 +34,7 @@ abstract class I18nHelper
     {
         $languages = LanguageHelper::getContentLanguages([0, 1], true, 'lang_code', 'ordering', 'asc');
         $defLanguage = self::getDefLanguage();
-        usort($languages, function($a, $b) use ($defLanguage) {
+        uasort($languages, function($a, $b) use ($defLanguage) {
             if ($a->lang_code === $defLanguage) return -1;
             if ($b->lang_code === $defLanguage) return 1;
             if ($a->ordering === $b->ordering) return 0;
