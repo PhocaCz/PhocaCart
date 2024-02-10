@@ -34,9 +34,6 @@ use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 use Phoca\PhocaCart\Product\Bundled;
 
-jimport('joomla.application.component.modeladmin');
-
-
 class PhocaCartCpModelPhocaCartItem extends AdminModel
 {
     use I18nAdminModelTrait;
@@ -199,6 +196,15 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		} else {
 			$data = $this->getItem();
+
+            $this->loadI18nItem($data);
+            $data->attributes = $this->loadI18nArray($data->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
+            if ($data->attributes) {
+                foreach ($data->attributes as &$attribute) {
+                    $attribute['options'] = $this->loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
+                }
+            }
+            $data->specifications = $this->loadI18nArray($data->specifications, '#__phocacart_specifications_i18n', ['title', 'alias', 'value', 'alias_value']);
 		}
 
 		$this->preprocessData('com_phocacart.phocacartitem', $data);
@@ -331,15 +337,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				}
 			}
 		}
-
-        $this->loadI18nItem($item);
-        $item->attributes = $this->loadI18nArray($item->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
-        if ($item->attributes) {
-            foreach ($item->attributes as &$attribute) {
-                $attribute['options'] = $this->loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
-            }
-        }
-        $item->specifications = $this->loadI18nArray($item->specifications, '#__phocacart_specifications_i18n', ['title', 'alias', 'value', 'alias_value']);
 
 		return $item;
 	}

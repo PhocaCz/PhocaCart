@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
@@ -24,9 +25,6 @@ use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
-
-jimport('joomla.application.component.modeladmin');
-
 
 class PhocaCartCpModelPhocacartCategory extends AdminModel
 {
@@ -95,7 +93,9 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 		if (empty($data)) {
 			$data = $this->getItem();
+			$this->loadI18nItem($data);
 		}
+
 		return $data;
 	}
 
@@ -130,7 +130,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
             }
 		}
 
-		$this->loadI18nItem($item);
 		return $item;
 	}
 

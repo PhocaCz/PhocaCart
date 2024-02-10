@@ -23,8 +23,6 @@ use Joomla\CMS\Language\Associations;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
-jimport('joomla.application.component.modeladmin');
-
 class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 {
     use I18nAdminModelTrait, AdminModelTrait;
@@ -87,14 +85,15 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
             }
         }
 
-        $this->loadI18nItem($item);
         return $item;
     }
 
     protected function loadFormData() {
         $data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartmanufacturer.data', array());
+
         if (empty($data)) {
             $data = $this->getItem();
+            $this->loadI18nItem($data);
         }
 
         $this->preprocessData('com_phocacart.phocacartmanufacturer', $data);

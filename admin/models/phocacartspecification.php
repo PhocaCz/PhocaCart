@@ -50,16 +50,10 @@ class PhocaCartCpModelPhocacartSpecification extends AdminModel
 
 		if (empty($data)) {
 			$data = $this->getItem();
+            $this->loadI18nItem($data);
 		}
 
 		return $data;
-	}
-
-	public function getItem($pk = null)
-	{
-		$item = parent::getItem($pk);
-		$this->loadI18nItem($item);
-		return $item;
 	}
 
 	protected function prepareTable($table)
