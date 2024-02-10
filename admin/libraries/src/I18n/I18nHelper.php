@@ -22,12 +22,24 @@ abstract class I18nHelper
     public static function isI18n(): bool
     {
         static $isI18n = null;
+
         if ($isI18n === null) {
             $params = ComponentHelper::getParams('com_phocacart');
             $isI18n = !!$params->get('i18n');
         }
 
         return $isI18n;
+    }
+
+    public static function useI18n(): bool
+    {
+        static $useI18n = null;
+
+        if ($useI18n === null) {
+            $useI18n = Factory::getApplication()->isClient('site') && self::isI18n();
+        }
+
+        return $useI18n;
     }
 
     public static function getI18nLanguages(): array
