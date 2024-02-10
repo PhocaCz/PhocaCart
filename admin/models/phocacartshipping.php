@@ -23,6 +23,7 @@ use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 class PhocaCartCpModelPhocacartShipping extends AdminModel
 {
     use I18nAdminModelTrait;
+
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

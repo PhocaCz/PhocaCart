@@ -7,23 +7,32 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+use Joomla\CMS\Form\FormFactoryInterface;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
-jimport('joomla.application.component.modeladmin');
+use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 
 class PhocaCartCpModelPhocacartTag extends AdminModel
 {
+	use I18nAdminModelTrait;
+
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
-	protected function canDelete($record) {
-		return parent::canDelete($record);
-	}
+	public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+	{
+		parent::__construct($config, $factory, $formFactory);
 
-	protected function canEditState($record) {
-		return parent::canEditState($record);
+		$this->i18nTable = '#__phocacart_tags_i18n';
+		$this->i18nFields = [
+			'title',
+			'alias',
+			'description',
+		];
 	}
 
 	public function getTable($type = 'PhocacartTag', $prefix = 'Table', $config = array()) {
@@ -31,26 +40,20 @@ class PhocaCartCpModelPhocacartTag extends AdminModel
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacarttag', 'phocacarttag', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+		return $this->loadForm('com_phocacart.phocacarttag', 'phocacarttag', array('control' => 'jform', 'load_data' => $loadData));
 	}
 
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacarttag.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
+			$this->loadI18nItem($data);
 		}
 		return $data;
 	}
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
@@ -60,9 +63,6 @@ class PhocaCartCpModelPhocacartTag extends AdminModel
 		}
 
 		if (empty($table->id)) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = Factory::getDbo();
@@ -72,30 +72,31 @@ class PhocaCartCpModelPhocacartTag extends AdminModel
 				$table->ordering = $max+1;
 			}
 		}
-		else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
-		}
 	}
 
+	public function save($data)
+	{
+		$data['link_cat'] = (int) $data['link_cat'];
 
-	public function save($data) {
+		$i18nData = $this->prepareI18nData($data);
+		if (parent::save($data)) {
+			$savedId = $this->getState($this->getName() . '.id');
+			PhocacartCount::setProductCount(array(0 => (int) $savedId), 'tag', 1);
+			PhocacartCount::setProductCount(array(0 => (int) $savedId), 'label', 1);
 
-		$data['link_cat'] = $data['link_cat'] == '' ? 0 : $data['link_cat'];
+			return $this->saveI18nData($savedId, $i18nData);
+		}
 
-	    if (parent::save($data)) {
+		return false;
+	}
 
-	        $savedId = $this->getState($this->getName().'.id');
-		    if ((int)$savedId > 0) {
-               PhocacartCount::setProductCount(array(0 => (int)$savedId), 'tag', 1);
-               PhocacartCount::setProductCount(array(0 => (int)$savedId), 'label', 1);
-            }
-		    return true;
-        } else {
-	        return false;
-        }
+	public function delete(&$pks)
+	{
+		if (parent::delete($pks)) {
+			return $this->deleteI18nData($pks);
+		}
 
-    }
+		return false;
+	}
 }
-?>
+
