@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
 
 class JFormFieldPhocaPlaceholder extends FormField
 {
@@ -22,7 +23,13 @@ class JFormFieldPhocaPlaceholder extends FormField
             return '';
         }
 
-        return '</div><div id="' . $this->class . '" class="' . $this->class . ' w-100">';
+        if ($description = (string)$this->element['description']) {
+            $class = (string)$this->element['contentClass'];
+            $class = $class ? ' class="' . $class . '"' : '';
+            $description = '<div' . $class . '>' . Text::_($description) . '</div>';
+        }
+
+        return '</div><div id="' . $this->class . '" class="' . $this->class . ' w-100">' . $description;
     }
 
     protected function getInput()

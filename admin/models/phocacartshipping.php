@@ -231,8 +231,10 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
             $this->_db->setQuery($query);
             $this->_db->execute();
 
-            $this->deleteI18nData($pks);
+            return $this->deleteI18nData($pks);
         }
+
+        return false;
     }
 
 
