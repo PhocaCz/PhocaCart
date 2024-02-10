@@ -1794,6 +1794,145 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_product_bundles` (
   KEY `child_product_id` (`child_product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#__phocacart_categories_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `title_long` varchar(255),
+    `alias` varchar(255),
+    `title_feed` varchar(255),
+    `description` text,
+    `metatitle` varchar(255),
+    `metakey` text,
+    `metadesc` text,
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_manufacturers_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `title_long` varchar(255),
+    `alias` varchar(255),
+    `link` varchar(255),
+    `description` text,
+    `metatitle` varchar(255),
+    `metakey` text,
+    `metadesc` text,
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_products_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `title_long` varchar(255),
+    `alias` varchar(255),
+    `description` text,
+    `description_long` text,
+    `features` text,
+    `metatitle` varchar(255),
+    `metakey` text,
+    `metadesc` text,
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_attributes_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_attribute_values_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_specification_groups_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_specifications_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `value` varchar(255),
+    `alias_value` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`),
+    KEY `idx_alias_value` (`alias_value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `description` text,
+    `description_info` text,
+    `tracking_title` varchar(255),
+    `tracking_description` text,
+    `tracking_link` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_payment_methods_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `description` text,
+    `description_info` text,
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_tags_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `description` text,
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_parameters_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `title_header` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_parameter_values_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
 -- Data
 INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`, `date`) VALUES
 (1, 'COM_PHOCACART_STATUS_PENDING', 'P', '1', '1', '-', '1', '0', '0', '1', '0', '[1]', CURRENT_TIMESTAMP),
