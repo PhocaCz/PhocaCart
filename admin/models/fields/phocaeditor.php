@@ -53,8 +53,7 @@ class JFormFieldPhocaEditor extends EditorField
         $result = parent::setup($element, $value, $group);
 
         if ($result == true) {
-            $params = PhocacartUtils::getComponentParameters();
-            if ($params->get('i18n')) {
+            if (I18nHelper::isI18n()) {
                 $this->i18n = isset($this->element['i18n']) ? strtolower($this->element['i18n']) === 'true' : false;
             } else {
                 $this->i18n = false;
@@ -73,20 +72,11 @@ class JFormFieldPhocaEditor extends EditorField
     {
         $data = parent::getLayoutData();
 
-        if ($this->i18n) {
-            $languages = I18nHelper::getI18nLanguages();
-            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
-        } else {
-            $languages = [
-                (object)[
-                    'lang_code' => null,
-                ]
-            ];
-        }
+        $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
 
         $extraData = [
             'i18n' => $this->i18n,
-            'languages' => $languages,
+            'languages' => I18nHelper::getEditLanguages(),
             'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 

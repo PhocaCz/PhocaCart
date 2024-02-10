@@ -46,8 +46,6 @@ ALTER TABLE `#__phocacart_order_users` ADD FULLTEXT KEY `idx_fulltext` (`name_fi
 
 ALTER TABLE `#__phocacart_products` ADD `discount_percent` DECIMAL(15,2) AS (if(price_original <> 0, (price_original - price) / price_original * 100, 0)) VIRTUAL AFTER `price_original`;
 
--- ALTER TABLE `#__phocacart_attributes` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
--- ALTER TABLE `#__phocacart_attribute_values` ADD COLUMN `uuid` char(36) NOT NULL DEFAULT UUID() AFTER `id`;
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_categories_i18n` (
     `id` int(11) NOT NULL,
@@ -118,6 +116,32 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_specification_groups_i18n` (
     `language` char(7) NOT NULL,
     `title` varchar(255),
     `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_specifications_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `value` varchar(255),
+    `alias_value` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`),
+    KEY `idx_alias_value` (`alias_value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    `description` text,
+    `description_info` text,
+    `tracking_title` varchar(255),
+    `tracking_description` text,
+    `tracking_link` varchar(255),
     PRIMARY KEY  (`id`, `language`),
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

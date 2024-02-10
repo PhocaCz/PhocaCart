@@ -158,4 +158,17 @@ abstract class I18nHelper
 
         return $value;
     }
+
+    public static function getEditLanguages()
+    {
+        if (!self::isI18n()) {
+            return [
+                (object)[
+                    'lang_code' => null,
+                ]
+            ];
+        }
+
+        return I18nHelper::getI18nLanguages();
+    }
 }

@@ -10,16 +10,13 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Form\Field\TextareaField;
-use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Form\Field\HiddenField;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
-class JFormFieldPhocaTextArea extends TextareaField
+class JFormFieldPhocaHidden extends HiddenField
 {
-	protected $type 		= 'PhocaTextArea';
-	protected $layout       = 'phocacart.form.field.phocatextarea';
-
-    protected bool $i18n = false;
+	protected $type 		= 'PhocaText';
+	protected $layout       = 'phocacart.form.field.phocahidden';
 
     protected function getRenderer($layoutId = 'default')
     {
@@ -28,33 +25,15 @@ class JFormFieldPhocaTextArea extends TextareaField
         return $renderer;
     }
 
-    public function __get($name)
-    {
-        switch ($name) {
-            case 'i18n':
-                return $this->$name;
-        }
-
-        return parent::__get($name);
-    }
-
-    public function __set($name, $value)
-    {
-        switch ($name) {
-            case 'i18n':
-                $this->$name = strtolower($value) === 'true';
-                break;
-
-            default:
-                parent::__set($name, $value);
-        }
-    }
-
     public function setup(\SimpleXMLElement $element, $value, $group = null)
     {
         $result = parent::setup($element, $value, $group);
 
         if ($result == true) {
+            $this->showCopyButton = isset($this->element['showCopyButton']) ? strtolower($this->element['showCopyButton']) === 'true' : false;
+            $this->showLinkButton = isset($this->element['showLinkButton']) ? strtolower($this->element['showLinkButton']) === 'true' : false;
+            $this->showTranslation = isset($this->element['showTranslation']) ? strtolower($this->element['showTranslation']) === 'true' : false;
+
             if (I18nHelper::isI18n()) {
                 $this->i18n = isset($this->element['i18n']) ? strtolower($this->element['i18n']) === 'true' : false;
                 $this->multiple = $this->i18n;

@@ -70,13 +70,12 @@ class JFormFieldPhocaText extends TextField
             $this->showLinkButton = isset($this->element['showLinkButton']) ? strtolower($this->element['showLinkButton']) === 'true' : false;
             $this->showTranslation = isset($this->element['showTranslation']) ? strtolower($this->element['showTranslation']) === 'true' : false;
 
-            $params = PhocacartUtils::getComponentParameters();
-            if ($params->get('i18n')) {
+            if (I18nHelper::isI18n()) {
                 $this->i18n = isset($this->element['i18n']) ? strtolower($this->element['i18n']) === 'true' : false;
+                $this->multiple = $this->i18n;
             } else {
                 $this->i18n = false;
             }
-            $this->multiple = $this->i18n;
         }
 
         return $result;
@@ -86,23 +85,14 @@ class JFormFieldPhocaText extends TextField
     {
         $data = parent::getLayoutData();
 
-        if ($this->i18n) {
-            $languages = I18nHelper::getI18nLanguages();
-            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
-        } else {
-            $languages = [
-                (object)[
-                    'lang_code' => null,
-                ]
-            ];
-        }
+        $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
 
         $extraData = [
             'showCopyButton' => $this->showCopyButton,
             'showLinkButton' => $this->showLinkButton,
             'showTranslation' => $this->showTranslation,
             'i18n' => $this->i18n,
-            'languages' => $languages,
+            'languages' => I18nHelper::getEditLanguages(),
             'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 

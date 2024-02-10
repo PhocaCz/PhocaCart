@@ -6,9 +6,9 @@
 
 	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
 		<fieldset name="title">
-			<field name="title" type="text" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+			<field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
 
-			<field name="alias" type="hidden" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+			<field name="alias" type="phocahidden" i18n="true" />
 		</fieldset>
 
 		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
@@ -27,9 +27,9 @@
 
 			<field name="image" type="media" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" />
 
-			<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText"  label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+			<field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 
-			<field name="description_info" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText"  label="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_DESC" />
+			<field name="description_info" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_DESCRIPTION_INFO_VIEW_DESC" />
 		</fieldset>
 
 		<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
@@ -141,9 +141,9 @@
 		</fieldset>
 
 		<fieldset name="tracking" label="COM_PHOCACART_SHIPMENT_TRACKING_OPTIONS">
-			<field name="tracking_link" type="text" label="COM_PHOCACART_FIELD_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_TRACKING_LINK_DESC" />
+			<field name="tracking_link" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_TRACKING_LINK_DESC" />
 
-			<field name="tracking_description" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" />
+			<field name="tracking_description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_TRACKING_DESCRIPTION_LABEL" />
 		</fieldset>
 	</fields>
 </form>
