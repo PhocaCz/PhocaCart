@@ -7,11 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\ParameterType;
 use Phoca\PhocaCart\Constants\GroupType;
 use Phoca\PhocaCart\Constants\ProductType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
@@ -95,15 +93,16 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 
 	public function getCategory($categoryId) {
 		if (empty($this->category)) {
-			$query					= $this->getCategoriesQuery( $categoryId, FALSE );
-			$this->category 		= $this->_getList( $query, 0, 1 );
+			$query					= $this->getCategoriesQuery($categoryId);
+			$this->category 		= $this->_getList($query, 0, 1);
 		}
+
 		return $this->category;
 	}
 
 	public function getSubcategories($categoryId) {
 		if (empty($this->subcategories)) {
-			$query					= $this->getCategoriesQuery( $categoryId, TRUE );
+			$query					= $this->getCategoriesQuery( $categoryId, true);
 			$this->subcategories 	= $this->_getList( $query );
 		}
 		return $this->subcategories;
@@ -283,7 +282,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
                 $join[] = 'LEFT JOIN #__phocacart_products_i18n AS i18n_a ON i18n_a.id = a.id AND i18n_a.language = ' . $db->quote($lang);
                 $columns[] = 'coalesce(i18n_a.title, a.title) AS title';
                 $columns[] = 'coalesce(i18n_a.alias, a.alias) AS alias';
-                $columns[] = 'coalesce(i18n_a.description, a.description) AS description';
+                $columns[] = 'i18n_a.description';
             } else {
                 $columns[] = 'a.title';
                 $columns[] = 'a.alias';
@@ -342,58 +341,74 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 		return $query;
 	}
 
-	protected function getCategoriesQuery($categoryId, $subcategories = FALSE) {
-
-		$wheres		= array();
-		$app		= Factory::getApplication();
-		$params 	= $app->getParams();
+	protected function getCategoriesQuery($categoryId, bool $isSubcategoriesQuery = false) {
 		$user 		= PhocacartUser::getUser();
-		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+        $lang 		= Factory::getApplication()->getLanguage()->getTag();
+        $db 		= $this->getDatabase();
 
-		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+        $where		= [];
+        $join		= [];
 
-		// Get the current category or get parent categories of the current category
-		if ($subcategories) {
-			$wheres[]			= " c.parent_id = ".(int)$categoryId;
+        $join[] = 'LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
+
+        if (I18nHelper::isI18n()) {
+            $join[] = 'LEFT JOIN #__phocacart_categories_i18n AS i18n_c ON i18n_c.id = c.id AND i18n_c.language = ' . $db->quote($lang);
+        }
+
+		if ($isSubcategoriesQuery) {
+			$where[] = 'c.parent_id = ' . (int)$categoryId;
 			$categoryOrdering 	= $this->getCategoryOrdering();
 		} else {
-			$wheres[]			= " c.id= ".(int)$categoryId;
+			$where[] = 'c.id = ' . (int)$categoryId;
+            $join[] = 'LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id';
+            if (I18nHelper::isI18n()) {
+                $join[] = 'LEFT JOIN #__phocacart_categories_i18n AS i18n_cc ON i18n_cc.id = cc.id AND i18n_cc.language = ' . $db->quote($lang);
+            }
 		}
 
-		$wheres[] = " c.published = 1";
-		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
-		$wheres[] = " c.access IN (".$userLevels.")";
-		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		$where[] = 'c.published = 1';
+		$where[] = 'c.type IN (' . implode(', ', [ProductType::Common, ProductType::Shop]) . ')';
+		$where[] = 'c.access IN ('. implode (',', $user->getAuthorisedViewLevels()) . ')';
+		$where[] = '(gc.group_id IN (' . implode (',', PhocacartGroup::getGroupsById($user->id,  GroupType::User, 1)) . ') OR gc.group_id IS NULL)';
 
 		if ($this->getState('filter.language')) {
-			$lang 		= Factory::getLanguage()->getTag();
-			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
+			$lang 		= Factory::getApplication()->getLanguage()->getTag();
+			$where[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 
-		if ($subcategories) {
-
-			$columns	= 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image, COUNT(c.id) AS numdoc';
-			$groupsFull	= 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
+		if ($isSubcategoriesQuery) {
+            if (I18nHelper::isI18n()) {
+                $columns    = 'c.id, c.parent_id, coalesce(i18n_c.title, c.title) as title, i18n_c.title_long, coalesce(i18n_c.alias, c.alias) as alias, c.image';
+                $groupsFull = 'c.id, c.parent_id, coalesce(i18n_c.title, c.title), i18n_c.title_long, coalesce(i18n_c.alias, c.alias), c.image';
+            } else {
+                $columns    = 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
+                $groupsFull = 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
+            }
 			$groupsFast	= 'c.id';
-			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+			$groupBy	= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
-			$query = " SELECT ".$columns
-				. " FROM #__phocacart_categories AS c"
-				//. " LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id"
-				//. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id AND a.published = 1 AND a.access IN (".$userLevels.")"
-				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-				. " WHERE " . implode( " AND ", $wheres )
-				. " GROUP BY ".$groups
-				. " ORDER BY ".$categoryOrdering;
+			$query = 'SELECT ' . $columns
+				. ' FROM #__phocacart_categories AS c'
+				. ' ' . implode(' ', $join)
+				. ' WHERE ' . implode( " AND ", $where)
+				. ' GROUP BY ' . $groupBy
+				. ' ORDER BY ' . $categoryOrdering;
 		} else {
-			$query = " SELECT c.id, c.parent_id, c.title, c.title_long, c.alias, c.image, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata, cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias"
-				. " FROM #__phocacart_categories AS c"
-				. " LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id"
-				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-				. " WHERE " . implode( " AND ", $wheres )
-				. " ORDER BY c.ordering";
+            if (I18nHelper::isI18n()) {
+                $columns	= 'c.id, c.parent_id, coalesce(i18n_c.title, c.title) as title, i18n_c.title_long, coalesce(i18n_c.alias, c.alias) as alias, c.image,'
+                    . ' i18n_c.description, i18n_c.metatitle, i18n_c.metakey, i18n_c.metadesc, c.metadata,'
+                    . ' coalesce(i18n_cc.title, cc.title) as parenttitle, c.parent_id as parentid, coalesce(i18n_cc.alias, cc.alias) as parentalias';
+            } else {
+                $columns	= 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata,'
+                    . ' cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias';
+            }
+			$query = ' SELECT ' . $columns
+				. ' FROM #__phocacart_categories AS c'
+                . ' ' . implode(' ', $join)
+				. ' WHERE ' . implode( ' AND ', $where )
+				. ' ORDER BY c.ordering';
 		}
-		//echo nl2br(str_replace('#__', 'jos_', $query));
+
 		return $query;
 	}
 
