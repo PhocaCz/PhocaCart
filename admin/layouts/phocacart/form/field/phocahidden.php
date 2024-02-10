@@ -1,11 +1,10 @@
 <?php
-
-/**
- * @package     Joomla.Site
- * @subpackage  Layout
- *
- * @copyright   (C) 2016 Open Source Matters, Inc. <https://www.joomla.org>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+/* @package Joomla
+ * @copyright Copyright (C) Open Source Matters. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @extension Phoca Extension
+ * @copyright Copyright (C) Jan Pavelka www.phoca.cz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die;
