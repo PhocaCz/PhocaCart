@@ -203,7 +203,7 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 		$query->join('LEFT', '#__phocacart_units AS un ON un.id=a.unit_id');
 
 
-		$query->select('os.title AS status_title');
+		$query->select('os.title AS status_title, os.params AS status_params');
 		$query->join('LEFT', '#__phocacart_order_statuses AS os ON os.id = a.status_id');
 
 		$query->select('sm.title AS shipping_name');

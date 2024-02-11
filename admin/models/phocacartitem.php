@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Event\Model\BeforeBatchEvent;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormFactoryInterface;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
@@ -27,15 +29,16 @@ use Joomla\CMS\Table\Observer\Tags;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
+use Phoca\PhocaCart\Constants\TagType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 use Phoca\PhocaCart\Product\Bundled;
-
-jimport('joomla.application.component.modeladmin');
-
 
 class PhocaCartCpModelPhocaCartItem extends AdminModel
 {
+    use I18nAdminModelTrait;
+
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public      $typeAlias 		        = 'com_phocacart.phocacartitem';
@@ -79,7 +82,25 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'com_fields'                => 'batchCustomFields',
     ];
 
-	protected function canDelete($record){
+    public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+    {
+        parent::__construct($config, $factory, $formFactory);
+
+        $this->i18nTable = '#__phocacart_products_i18n';
+        $this->i18nFields = [
+            'title',
+            'alias',
+            'title_long',
+            'description',
+            'description_long',
+            'features',
+            'metatitle',
+            'metakey',
+            'metadesc',
+        ];
+    }
+
+    protected function canDelete($record){
 		$user = Factory::getUser();
 
 		if (!empty($record->catid)) {
@@ -176,6 +197,15 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		} else {
 			$data = $this->getItem();
+
+            $this->loadI18nItem($data);
+            $data->attributes = $this->loadI18nArray($data->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
+            if ($data->attributes) {
+                foreach ($data->attributes as &$attribute) {
+                    $attribute['options'] = $this->loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
+                }
+            }
+            $data->specifications = $this->loadI18nArray($data->specifications, '#__phocacart_specifications_i18n', ['title', 'alias', 'value', 'alias_value']);
 		}
 
 		$this->preprocessData('com_phocacart.phocacartitem', $data);
@@ -362,27 +392,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		if (empty($table->redirect_url)) {
 			$table->redirect_url = null;
 		}
-
-		/*
-		if (empty($table->id)) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
-			// Set ordering to the last item if not set
-			// WE HAVE SPECIFIC ORDERING
-			/*if (empty($table->ordering)) {
-				$db = Factory::getDbo();
-				//$db->setQuery('SELECT MAX(ordering) FROM #__phocadownload');
-				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_productcategories WHERE category_id = '.(int)$table->category_id);
-				$max = $db->loadResult();
-				$table->ordering = $max+1;
-			}
-		} else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
-		}
-		*/
 	}
 
 	public function validate($form, $data, $group = null)
@@ -398,11 +407,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	}
 
 	function save($data) {
-		//$app		= Factory::getApplication();
-
-		/*if ($data['alias'] == '') {
-			$data['alias'] = $data['title'];
-		}*/
+        $i18nData   = $this->prepareI18nData($data);
 
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
@@ -434,7 +439,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					Factory::getApplication()->enqueueMessage($msg, 'warning');
 				}
 			}
-		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
+		} else if ($table->load(array('alias' => $data['alias'])) && ($table->getId() != $data['id'] || $data['id'] == 0)) {
 			$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			return false;
 		}
@@ -514,7 +519,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		// if new item, order last in appropriate group
 		// Not used in multiple mode
-		//if (!$table->id) {
+		//if (!$table->getId()) {
 		//	$where = 'catid = ' . (int) $table->catid ;
 		//	$table->ordering = $table->getNextOrder( $where );
 		//}
@@ -552,7 +557,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$thumb = PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
 		}
 
-		if ((int)$table->id > 0) {
+		if ((int)$table->getId() > 0) {
 
 
 		    $currentManufacturers = isset($data['manufacturer_id']) && (int)$data['manufacturer_id'] > 0 ? array(0 => (int)$data['manufacturer_id']) : array();
@@ -563,13 +568,13 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$data['catid_multiple'] = array();
 			}
 
-			$previousCategories = PhocacartCategoryMultiple::getCategories((int)$table->id, 1);
-			PhocacartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->id);
+			$previousCategories = PhocacartCategoryMultiple::getCategories((int)$table->getId(), 1);
+			PhocacartCategoryMultiple::storeCategories($data['catid_multiple'], (int)$table->getId());
 			$allCategories = array_unique(array_merge($previousCategories, $data['catid_multiple']));
 			PhocacartCount::setProductCount($allCategories, 'category', 1);// We need to recount all categories - previous (now deleted), and new
 
 			if (isset($data['featured'])) {
-				$this->featured((int)$table->id, $data['featured']);
+				$this->featured((int)$table->getId(), $data['featured']);
 			}
 
 			if (!isset($data['related'])) {
@@ -580,7 +585,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$dataRelated = $data['related'][0];
 				}
 			}
-			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id );
+			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->getId());
 
 			$dataRelated = '';
 			if (isset($data['bundles'])) {
@@ -589,7 +594,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$dataRelated = $data['bundles'][0];
 				}
 			}
-			Bundled::storeBundledItemsById($dataRelated, (int)$table->id);
+			Bundled::storeBundledItemsById($dataRelated, (int)$table->getId());
 
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
@@ -599,34 +604,27 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 
 
-			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->id, $data['additional_download_files']);
-			PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['additional_images']);
-
-
-
-			PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
-
-
-			PhocacartSpecification::storeSpecificationsById((int)$table->id, $data['specifications']);
-
-
-			PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $data['discounts']);
+			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->getId(), $data['additional_download_files']);
+			PhocacartImageAdditional::storeImagesByProductId((int)$table->getId(), $data['additional_images']);
+			PhocacartAttribute::storeAttributesById((int)$table->getId(), $data['attributes']);
+			PhocacartSpecification::storeSpecificationsById((int)$table->getId(), $data['specifications']);
+			PhocacartDiscountProduct::storeDiscountsById((int)$table->getId(), $data['discounts']);
 
 
 
 			//$pFormImg = $app->input->post->get('pformimg', array(), 'array');
-			//PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $pFormImg);
+			//PhocacartImageAdditional::storeImagesByProductId((int)$table->getId(), $pFormImg);
 			//$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
-			//PhocacartAttribute::storeAttributesById((int)$table->id, $pFormAttr);
+			//PhocacartAttribute::storeAttributesById((int)$table->getId(), $pFormAttr);
 			//$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
-			//PhocacartSpecification::storeSpecificationsById((int)$table->id, $pFormSpec);
+			//PhocacartSpecification::storeSpecificationsById((int)$table->getId(), $pFormSpec);
 			//$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
-			//PhocacartDiscountProduct::storeDiscountsById((int)$table->id, $pFormDisc);
+			//PhocacartDiscountProduct::storeDiscountsById((int)$table->getId(), $pFormDisc);
 
-			PhocacartGroup::storeGroupsById((int)$table->id, 3, $data['group']);
-			PhocacartPriceHistory::storePriceHistoryById((int)$table->id, $data['price']);
-			PhocacartGroup::updateGroupProductPriceById((int)$table->id, $data['price']);
-			PhocacartGroup::updateGroupProductRewardPointsById((int)$table->id, $data['points_received']);
+			PhocacartGroup::storeGroupsById((int)$table->getId(), 3, $data['group']);
+			PhocacartPriceHistory::storePriceHistoryById((int)$table->getId(), $data['price']);
+			PhocacartGroup::updateGroupProductPriceById((int)$table->getId(), $data['price']);
+			PhocacartGroup::updateGroupProductRewardPointsById((int)$table->getId(), $data['points_received']);
 
 
 			// UPDATE this file too:
@@ -637,8 +635,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$data['tags'] = array();
 			}
 
-			$previousTags = PhocacartTag::getTags((int)$table->id, 1);
-			PhocacartTag::storeTags($data['tags'], (int)$table->id);
+			$previousTags = PhocacartTag::getTags((int)$table->getId(), 1);
+			PhocacartTag::storeTags($data['tags'], (int)$table->getId());
 			$allTags = array_unique(array_merge($previousTags, $data['tags']));
 			PhocacartCount::setProductCount($allTags, 'tag', 1);// We need to update product count even for values which were removed when editing ($allTags)
 
@@ -647,8 +645,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$data['taglabels'] = array();
 			}
 
-			$previousLabels = PhocacartTag::getTagLabels((int)$table->id, 1);
-			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->id);
+			$previousLabels = PhocacartTag::getTagLabels((int)$table->getId(), 1);
+			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->getId());
 			$allLabels = array_unique(array_merge($previousLabels, $data['taglabels']));
 			PhocacartCount::setProductCount($allLabels, 'label', 1);// We need to update product count even for values which were removed when editing ($allLabels)
 
@@ -665,8 +663,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 							$data['items_parameter'][$idP] = array();
 						}
 
-						$previousParameterValues = PhocacartParameter::getParameterValues((int)$table->id, $idP, 1);
-						PhocacartParameter::storeParameterValues($data['items_parameter'][$idP], (int)$table->id, $idP);
+						$previousParameterValues = PhocacartParameter::getParameterValues((int)$table->getId(), $idP, 1);
+						PhocacartParameter::storeParameterValues($data['items_parameter'][$idP], (int)$table->getId(), $idP);
 						$allParameterValues = array_unique(array_merge($previousParameterValues, $data['items_parameter'][$idP]));
 						PhocacartCount::setProductCount($allParameterValues, 'parameter', 1);
 					}
@@ -674,9 +672,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		}
 
-		// Clean the cache.
-		$cache = Factory::getCache($this->option);
-		$cache->clean();
+        $this->saveI18nData($table->getId(), $i18nData);
+        $this->cleanCache();
 
 		// Trigger the onContentAfterSave event. CUSTOM FIELDS
 		Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
@@ -765,184 +762,186 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 
 
-	public function delete(&$cid = array()) {
+	public function delete(&$pks = [])
+    {
+        ArrayHelper::toInteger($pks);
+        $cids = implode(',', $pks);
+
+        // Get all manufacturers from products which should be removed so we can update count of products for manufacturers
+        $allManufacturers = PhocacartManufacturer::getManufacturersByIds($cids);
+
+        $table = $this->getTable();
+        if (!$this->canDelete($table)) {
+            $error = $this->getError();
+            if ($error) {
+                Log::add($error, Log::WARNING);
+
+                return false;
+            }
+            else {
+                Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
+
+                return false;
+            }
+        }
+
+        // Find all downloadable files to remove them
+        $foldersP = PhocacartDownload::getProductDownloadFolderByProducts($pks);
+        $foldersA = PhocacartDownload::getAttributeOptionDownloadFolderByProducts($pks);
+        // Will be deleted at the bottom if everything is OK
 
 
-		if (count( $cid )) {
-			ArrayHelper::toInteger($cid);
-			$cids = implode( ',', $cid );
+        // 1. DELETE ITEMS
+        $query = 'DELETE FROM #__phocacart_products'
+            . ' WHERE id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-            // Get all manufacturers from products which should be removed so we can update count of products for manufacturers
-			$allManufacturers = PhocacartManufacturer::getManufacturersByIds($cids);
+        // 2. DELETE ATTRIBUTE OPTIONS
+        $query = 'SELECT id FROM #__phocacart_attributes WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $attrOptions = $this->_db->loadAssocList();
+        $attrArray   = array();
+        if (!empty($attrOptions)) {
+            foreach ($attrOptions as $k => $v) {
+                $attrArray[] = $v['id'];
+            }
+            if (!empty($attrArray)) {
+                $attrs = implode(',', $attrArray);
+                $query = 'DELETE FROM #__phocacart_attribute_values'
+                    . ' WHERE attribute_id IN ( ' . $attrs . ' )';
+                $this->_db->setQuery($query);
+                $this->_db->execute();
+            }
+        }
 
-			$table = $this->getTable();
-			if (!$this->canDelete($table)){
-				$error = $this->getError();
-				if ($error){
-					Log::add($error, Log::WARNING);
-					return false;
-				} else {
-					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
-					return false;
-				}
-			}
-
-			// Find all downloadable files to remove them
-			$foldersP = PhocacartDownload::getProductDownloadFolderByProducts($cid);
-			$foldersA = PhocacartDownload::getAttributeOptionDownloadFolderByProducts($cid);
-			// Will be deleted at the bottom if everything is OK
-
-
-			// 1. DELETE ITEMS
-			$query = 'DELETE FROM #__phocacart_products'
-				. ' WHERE id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-
-			// 2. DELETE ATTRIBUTE OPTIONS
-			$query = 'SELECT id FROM #__phocacart_attributes WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery($query);
-			$attrOptions = $this->_db->loadAssocList();
-			$attrArray = array();
-			if (!empty($attrOptions)) {
-				foreach($attrOptions as $k => $v) {
-					$attrArray[] = $v['id'];
-				}
-				if (!empty($attrArray)) {
-					$attrs = implode( ',', $attrArray );
-					$query = 'DELETE FROM #__phocacart_attribute_values'
-							. ' WHERE attribute_id IN ( '.$attrs.' )';
-					$this->_db->setQuery( $query );
-					$this->_db->execute();
-				}
-			}
-
-			// 3. DELETE ATTRIBUTES
-			$query = 'DELETE FROM #__phocacart_attributes'
-					. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 3. DELETE ATTRIBUTES
+        $query = 'DELETE FROM #__phocacart_attributes'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
 
-			// 4. DELETE RELATED
-			$query = 'DELETE FROM #__phocacart_product_related'
-				. ' WHERE product_a IN ( '.$cids.' ) OR product_b IN ('.$cids.')';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 4. DELETE RELATED
+        $query = 'DELETE FROM #__phocacart_product_related'
+            . ' WHERE product_a IN ( ' . $cids . ' ) OR product_b IN (' . $cids . ')';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 4a. DELETE BUNDLED
-			$query = 'DELETE FROM #__phocacart_product_bundles'
-				. ' WHERE main_product_id IN ( '.$cids.' ) OR child_product_id IN ('.$cids.')';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 4a. DELETE BUNDLED
+        $query = 'DELETE FROM #__phocacart_product_bundles'
+            . ' WHERE main_product_id IN ( ' . $cids . ' ) OR child_product_id IN (' . $cids . ')';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 5. DELETE FEATURED
-			$query = 'DELETE FROM #__phocacart_product_featured'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-			$tableF = $this->getTable('PhocacartFeatured', 'Table');
-			$tableF->reorder();
+        // 5. DELETE FEATURED
+        $query = 'DELETE FROM #__phocacart_product_featured'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+        $tableF = $this->getTable('PhocacartFeatured', 'Table');
+        $tableF->reorder();
 
-			// 6. DELETE IMAGES
-			$query = 'DELETE FROM #__phocacart_product_images'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 6. DELETE IMAGES
+        $query = 'DELETE FROM #__phocacart_product_images'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 7. DELETE REVIEWS
-			$query = 'DELETE FROM #__phocacart_reviews'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 7. DELETE REVIEWS
+        $query = 'DELETE FROM #__phocacart_reviews'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 8. DELETE CATEGORY RELATIONSHIP
-            $allCategories = PhocacartCategoryMultiple::getCategoriesByIds($cids);
-			$query = 'DELETE FROM #__phocacart_product_categories'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-			PhocacartCount::setProductCount($allCategories, 'category', 1);
+        // 8. DELETE CATEGORY RELATIONSHIP
+        $allCategories = PhocacartCategoryMultiple::getCategoriesByIds($cids);
+        $query         = 'DELETE FROM #__phocacart_product_categories'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+        PhocacartCount::setProductCount($allCategories, 'category', 1);
 
-			// 9. DELETE SPECIFICATIONS
-			$query = 'DELETE FROM #__phocacart_specifications'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 9. DELETE SPECIFICATIONS
+        $query = 'DELETE FROM #__phocacart_specifications'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 9. DELETE PRODUCT DISCOUNTS
-			$query = 'DELETE FROM #__phocacart_product_discounts'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 9. DELETE PRODUCT DISCOUNTS
+        $query = 'DELETE FROM #__phocacart_product_discounts'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 9. DELETE PRODUCT CUSTOMER GROUPS
-			$query = 'DELETE FROM #__phocacart_item_groups'
-				. ' WHERE item_id IN ( '.$cids.' )'
-				. ' AND type = 3';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 9. DELETE PRODUCT CUSTOMER GROUPS
+        $query = 'DELETE FROM #__phocacart_item_groups'
+            . ' WHERE item_id IN ( ' . $cids . ' )'
+            . ' AND type = 3';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 10. DELETE PRODUCT PRICE CUSTOMER GROUPS
-			$query = 'DELETE FROM #__phocacart_product_price_groups'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-
-
-			// 11. DELETE PRODUCT POINT CUSTOMER GROUPS
-			$query = 'DELETE FROM #__phocacart_product_point_groups'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-
-			// 12. DELETE PRODUCT ADDITIONAL FILES
-			$query = 'DELETE FROM #__phocacart_product_files'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 10. DELETE PRODUCT PRICE CUSTOMER GROUPS
+        $query = 'DELETE FROM #__phocacart_product_price_groups'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
 
-			// 12. DELETE PRODUCT TAGS
-            $allTags = PhocacartTag::getTagsByIds($cids);// All these tags will be influneced by deleting the item, so we need to recount the products for tags then
-			$query = 'DELETE FROM #__phocacart_tags_related'
-				. ' WHERE item_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-			PhocacartCount::setProductCount($allTags, 'tag', 1);
+        // 11. DELETE PRODUCT POINT CUSTOMER GROUPS
+        $query = 'DELETE FROM #__phocacart_product_point_groups'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 13. DELETE PRODUCT LABELS
-            $allLabels = PhocacartTag::getTagsLabelsByIds($cids);
-			$query = 'DELETE FROM #__phocacart_taglabels_related'
-				. ' WHERE item_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-			PhocacartCount::setProductCount($allLabels, 'label', 1);
+        // 12. DELETE PRODUCT ADDITIONAL FILES
+        $query = 'DELETE FROM #__phocacart_product_files'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-			// 14. DELETE PRODUCT PARAMTERS
-			$allParameterValues = PhocacartParameter::getParameterValuesByIds($cids);
-			$query = 'DELETE FROM #__phocacart_parameter_values_related'
-				. ' WHERE item_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
-			PhocacartCount::setProductCount($allParameterValues, 'parameter', 1);
 
-			// Recount all manufacturers which will be removed (after removing) so the count will be updated
-            PhocacartCount::setProductCount($allManufacturers, 'manufacturer', 1);
+        // 12. DELETE PRODUCT TAGS
+        $allTags = PhocacartTag::getTagsByIds($cids);// All these tags will be influneced by deleting the item, so we need to recount the products for tags then
+        $query   = 'DELETE FROM #__phocacart_tags_related'
+            . ' WHERE item_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+        PhocacartCount::setProductCount($allTags, 'tag', 1);
 
-            // 16. DELETE ADVANCED STOCK ITEMS
-			$query = 'DELETE FROM #__phocacart_product_stock'
-				. ' WHERE product_id IN ( '.$cids.' )';
-			$this->_db->setQuery( $query );
-			$this->_db->execute();
+        // 13. DELETE PRODUCT LABELS
+        $allLabels = PhocacartTag::getTagsLabelsByIds($cids);
+        $query     = 'DELETE FROM #__phocacart_taglabels_related'
+            . ' WHERE item_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+        PhocacartCount::setProductCount($allLabels, 'label', 1);
 
-			// Remove download folders
-			PhocacartFile::deleteDownloadFolders($foldersP, 'productfile');
-			PhocacartFile::deleteDownloadFolders($foldersA, 'attributefile');
+        // 14. DELETE PRODUCT PARAMTERS
+        $allParameterValues = PhocacartParameter::getParameterValuesByIds($cids);
+        $query              = 'DELETE FROM #__phocacart_parameter_values_related'
+            . ' WHERE item_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+        PhocacartCount::setProductCount($allParameterValues, 'parameter', 1);
 
-		}
-		return true;
-	}
+        // Recount all manufacturers which will be removed (after removing) so the count will be updated
+        PhocacartCount::setProductCount($allManufacturers, 'manufacturer', 1);
+
+        // 16. DELETE ADVANCED STOCK ITEMS
+        $query = 'DELETE FROM #__phocacart_product_stock'
+            . ' WHERE product_id IN ( ' . $cids . ' )';
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+
+        // Remove download folders
+        PhocacartFile::deleteDownloadFolders($foldersP, 'productfile');
+        PhocacartFile::deleteDownloadFolders($foldersA, 'attributefile');
+
+        $this->deleteI18nData($pks);
+
+        return true;
+    }
 
 	protected function batchCopy($value, $pks, $contexts)
 	{
@@ -1264,7 +1263,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			$dataCat[]	= (int)$categoryId;
 
-			PhocacartCategoryMultiple::storeCategories($dataCat, (int)$table->id);
+			PhocacartCategoryMultiple::storeCategories($dataCat, (int)$table->getId());
 		}
 
 		// Clean the cache
@@ -2141,7 +2140,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
                 $event = new BeforeBatchEvent(
                     $this->event_before_batch,
-                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                    ['src' => $this->table, 'type' => 'categories']
                 );
                 $this->dispatchEvent($event);
 
@@ -2195,7 +2194,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
                 $event = new BeforeBatchEvent(
                     $this->event_before_batch,
-                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                    ['src' => $this->table, 'type' => 'groups']
                 );
                 $this->dispatchEvent($event);
 
@@ -2247,7 +2246,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
                 $event = new BeforeBatchEvent(
                     $this->event_before_batch,
-                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                    ['src' => $this->table, 'type' => $tagsType == TagType::Tag ? 'tags' : 'labels']
                 );
                 $this->dispatchEvent($event);
 
@@ -2265,7 +2264,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
                 } else {
                     $tags = array_diff($tags, $value);
                 }
-                if ($tagsType == PhocacartTag::TYPE_TAG) {
+                if ($tagsType == TagType::Tag) {
                     PhocacartTag::storeTags($tags, (int)$pk);
                     PhocacartCount::setProductCount($allTags, 'tag', 1);
                 } else {
@@ -2287,22 +2286,22 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
     protected function batchTagsAdd($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_TAG, true, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Tag, true, (array)$value, $pks, $contexts);
     }
 
     protected function batchTagsRemove($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_TAG, false, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Tag, false, (array)$value, $pks, $contexts);
     }
 
     protected function batchLabelsAdd($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_LABEL, true, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Label, true, (array)$value, $pks, $contexts);
     }
 
     protected function batchLabelsRemove($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_LABEL, false, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Label, false, (array)$value, $pks, $contexts);
     }
 
     protected function batchFeedOptions($newValues, $pks, $contexts): bool

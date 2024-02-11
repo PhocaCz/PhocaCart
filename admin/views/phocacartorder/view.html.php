@@ -7,11 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartOrder extends HtmlView
@@ -30,6 +34,7 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 	protected $pr;
 	protected $p;
 
+    protected object $events;
 
 	public function display($tpl = null) {
 
@@ -60,7 +65,45 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 		$this->itembas					= $order->getItemBaS($this->item->id, 1);
 
 
-		$media = new PhocacartRenderAdminmedia();
+		new PhocacartRenderAdminmedia();
+
+        $this->events = (object)[
+            'GetUserBillingInfoAdminEdit' => '',
+            'GetShippingBranchInfoAdminEdit' => '',
+        ];
+        if (!empty($this->itemcommon) && isset($this->itemcommon->params_user)) {
+            $results = Dispatcher::dispatch(new Event\Tax\GetUserBillingInfoAdminEdit('com_phocacart.phocacartorder', $this->itemcommon));
+
+            if (!empty($results)) {
+                foreach ($results as $k => $v) {
+                    if ($v != false && isset($v['content']) && $v['content'] != '') {
+                        $this->events->GetUserBillingInfoAdminEdit .= $v['content'];
+                    }
+                }
+            }
+        }
+
+        if (isset($this->itemcommon->shipping_id) && (int)$this->itemcommon->shipping_id > 0 && isset($this->itemcommon->params_shipping)) {
+            $paramsShipping = json_decode($this->itemcommon->params_shipping, true);
+
+            if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
+                $results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfoAdminEdit('com_phocacart.phocacartorder', $this->itemcommon, [
+                    'pluginname' => $paramsShipping['method'],
+                    'item'       => [
+                        'id'          => (int) $this->itemcommon->id,
+                        'shipping_id' => (int) $this->itemcommon->shipping_id,
+                    ]
+                ]));
+
+                if (!empty($results)) {
+                    foreach ($results as $k => $v) {
+                        if ($v != false && isset($v['content']) && $v['content'] != '') {
+                            $this->events->GetShippingBranchInfoAdminEdit .= $v['content'];
+                        }
+                    }
+                }
+            }
+        }
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -84,7 +127,6 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 		if (!$checkedOut && $canDo->get('core.edit')){
 			ToolbarHelper::apply($this->t['task'].'.apply', 'JTOOLBAR_APPLY');
 			ToolbarHelper::save($this->t['task'].'.save', 'JTOOLBAR_SAVE');
-			//JToolbarHelper::addNew($this->t['task'].'.save2new', 'JTOOLBAR_SAVE_AND_NEW');
 		}
 
 		if (empty($this->item->id))  {
@@ -94,7 +136,7 @@ class PhocaCartCpViewPhocacartOrder extends HtmlView
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
-?>

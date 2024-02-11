@@ -7,60 +7,66 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+use Joomla\CMS\Form\FormFactoryInterface;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
-
-jimport('joomla.application.component.modeladmin');
+use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 
 class PhocaCartCpModelPhocacartShipping extends AdminModel
 {
+    use I18nAdminModelTrait;
+
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
-	protected function canDelete($record) {
-		return parent::canDelete($record);
-	}
+    public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+    {
+        parent::__construct($config, $factory, $formFactory);
 
-	protected function canEditState($record) {
-		return parent::canEditState($record);
-	}
+        $this->i18nTable = '#__phocacart_shipping_methods_i18n';
+        $this->i18nFields = [
+            'title',
+            'alias',
+            'description',
+            'description_info',
+            'tracking_title',
+            'tracking_description',
+            'tracking_link',
+        ];
+    }
 
-	public function getTable($type = 'PhocacartShipping', $prefix = 'Table', $config = array()) {
+    public function getTable($type = 'PhocacartShipping', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacartshipping', 'phocacartshipping', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+		return $this->loadForm('com_phocacart.phocacartshipping', 'phocacartshipping', array('control' => 'jform', 'load_data' => $loadData));
 	}
 
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartshipping.data', array());
+
 		if (empty($data)) {
 			$data = $this->getItem();
+            $this->loadI18nItem($data);
 			$price = new PhocacartPrice();
-			$data->cost 			= $price->cleanPrice($data->cost);
+			$data->cost = $price->cleanPrice($data->cost);
 			$data->cost_additional = $price->cleanPrice($data->cost_additional);
 		}
+
 		return $data;
 	}
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
-
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
@@ -89,9 +95,6 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 		$table->tax_id 	= PhocacartUtils::getIntFromString($table->tax_id);
 
 		if (empty($table->id)) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = Factory::getDbo();
@@ -101,31 +104,23 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 				$table->ordering = $max+1;
 			}
 		}
-		else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
-		}
 	}
 
 	public function save($data)
 	{
-		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
 
-		if ((!empty($data['tags']) && $data['tags'][0] != ''))
-		{
+		if ((!empty($data['tags']) && $data['tags'][0] != '')) {
 			$table->newTags = $data['tags'];
 		}
 
 		$key = $table->getKeyName();
 		$pk = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
 		$isNew = true;
+        $i18nData = $this->prepareI18nData($data);
 
 		// Include the content plugins for the on save events.
 		PluginHelper::importPlugin('content');
-
-
 
 		// Allow an exception to be thrown.
 		try
@@ -188,7 +183,6 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 			}
 
 			if ((int)$table->id > 0) {
-
 				if (!isset($data['zone'])) { $data['zone'] = array();}
 				PhocacartZone::storeZones($data['zone'], (int)$table->id);
 
@@ -202,7 +196,7 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 				if (!isset($data['group'])) {$data['group'] = array();}
 				PhocacartGroup::storeGroupsById((int)$table->id, 7, $data['group']);
 
-
+                $this->saveI18nData($table->id, $i18nData);
 			}
 
 			// Clean the cache.
@@ -229,27 +223,23 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 		return true;
 	}
 
-	public function delete(&$cid = array()) {
+	public function delete(&$pks = [])
+    {
+        if (parent::delete($pks)) {
+            $query = 'DELETE FROM #__phocacart_item_groups'
+                . ' WHERE item_id IN ( ' . implode(',', $pks) . ' )'
+                . ' AND type = 7';
+            $this->_db->setQuery($query);
+            $this->_db->execute();
 
-		if (count( $cid )) {
-			$delete = parent::delete($cid);
-			if ($delete) {
+            return $this->deleteI18nData($pks);
+        }
 
-				ArrayHelper::toInteger($cid);
-				$cids = implode( ',', $cid );
-
-				$query = 'DELETE FROM #__phocacart_item_groups'
-				. ' WHERE item_id IN ( '.$cids.' )'
-				. ' AND type = 7';
-				$this->_db->setQuery( $query );
-				$this->_db->execute();
-			}
-		}
-	}
+        return false;
+    }
 
 
 	public function setDefault($id = 0) {
-
 		$user = Factory::getUser();
 		$db   = $this->getDbo();
 
@@ -298,4 +288,3 @@ class PhocaCartCpModelPhocacartShipping extends AdminModel
 		return true;
 	}
 }
-?>

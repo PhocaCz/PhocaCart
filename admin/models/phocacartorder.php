@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Form\Form;
@@ -14,7 +15,6 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
-jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartOrder extends AdminModel
 {
@@ -24,7 +24,7 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 	protected $fieldsbas; //Billing and Shipping
 
 	// Billing and Shipping
-	public function getFieldsBaS(){
+	public function getFieldsBaS() {
 		if (empty($this->fieldsbas)) {
 			$this->fieldsbas = PhocacartFormUser::getFormXml('_phb', '_phs', 1, 1, 0);
 		}
@@ -32,13 +32,9 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 	}
 
 	public function getFormBas($orderId) {
-
-		$options			= array('control' => 'jform', 'load_data' => true);
-		$options['control'] = ArrayHelper::getValue($options, 'control', false);
+		$options = ['control' => 'jform', 'load_data' => true];
 		Form::addFormPath(JPATH_COMPONENT . '/models/forms');
 		Form::addFieldPath(JPATH_COMPONENT . '/models/fields');
-		Form::addFormPath(JPATH_COMPONENT . '/model/form');
-		Form::addFieldPath(JPATH_COMPONENT . '/model/field');
 
 		try {
 			$form = Form::getInstance('com_phocacart.order.bas', (string)$this->fieldsbas['xml'], $options, false, false);
@@ -50,54 +46,93 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			$this->setError($e->getMessage());
 			return false;
 		}
+
 		if (empty($form)) {
 			return false;
 		}
+
 		return $form;
 	}
 
 
 	/* Order table */
-	protected function canDelete($record) {
-		return parent::canDelete($record);
-	}
-
-	protected function canEditState($record) {
-		return parent::canEditState($record);
-	}
-
 	public function getTable($type = 'PhocacartOrder', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
 
-	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacartorder', 'phocacartorder', array('control' => 'jform', 'load_data' => $loadData));
+	public function getForm($data = [], $loadData = true) {
+        /** @var Form $form */
+		$form = $this->loadForm('com_phocacart.phocacartorder', 'phocacartorder', ['control' => 'jform', 'load_data' => $loadData]);
+
 		if (empty($form)) {
 			return false;
 		}
+
+        PhocacartFormUser::loadAddressForm($form, true, true, false, true, false);
+
 		return $form;
 	}
 
-	protected function loadFormData() {
-		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartorder.data', array());
+    protected function preprocessForm(Form $form, $data, $group = 'content') {
+        PhocacartFormUser::loadAddressForm($form, true, true, false, true, false);
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    protected function loadFormData() {
+		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartorder.data', []);
+
 		if (empty($data)) {
 			$data = $this->getItem();
+            if (is_object($data)) {
+                if ($data instanceof \Joomla\Registry\Registry) {
+                    $data = $data->toArray();
+                } else if ($data instanceof \Joomla\CMS\Object\CMSObject) {
+                    $data = $data->getProperties();
+                } else {
+                    $data = (array)$data;
+                }
+            }
 		}
+
+        $orderView = new PhocacartOrderView();
+        $addressData = $orderView->getItemBaS($data['id'], 1);
+        $addressData['s']['ba_sa'] = $addressData['b']['ba_sa'];
+
+        $data['billing_address'] = $addressData['b'];
+        $data['shipping_address'] = $addressData['s'];
+
 		return $data;
 	}
 
 	protected function prepareTable($table) {
 		$table->currency_exchange_rate 			= PhocacartUtils::replaceCommaWithPoint($table->currency_exchange_rate);
 
-		if ($table->tracking_date_shipped == '0' || $table->tracking_date_shipped == '') {
+		if ($table->tracking_date_shipped === '0' || $table->tracking_date_shipped === '') {
 			$table->tracking_date_shipped = '0000-00-00 00:00:00';
 		}
 	}
 
+    public function getItem($pk = null)
+    {
+        $item = parent::getItem($pk);
+        if ($item) {
+            $item->tracking_link = null;
+            if ($item->shipping_id) {
+                $db = $this->getDbo();
+                $query = $db->getQuery(true)
+                    ->select('tracking_link')
+                    ->from('#__phocacart_shipping_methods')
+                    ->where('id = ' . $item->shipping_id);
+                $db->setQuery($query);
+                $item->tracking_link = $db->loadResult();
+            }
+        }
 
-	public function save($data) {
+        return $item;
+    }
 
+    public function save($data) {
 		$app	= Factory::getApplication();
 		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
@@ -112,36 +147,10 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		$dform 	= $app->input->get('dform', array(), 'array');
 		$tcform	= $app->input->get('tcform', array(), 'array');
 
+        $data['billing_address']['ba_sa'] = $data['shipping_address']['ba_sa'];
 
-
-
-		// Shipping, Billing
-		if(!empty($jform)) {
-
-			// Form Data
-			$billing	= array();
-			$shipping	= array();
-			foreach($jform as $k => &$v) {
-				$posB = strpos($k, '_phb');
-				if ($posB === false) {
-
-				} else {
-					$k = str_replace('_phb', '', $k);
-					$billing[$k] = $v;
-				}
-
-				$posS = strpos($k, '_phs');
-				if ($posS === false) {
-
-				} else {
-					$k = str_replace('_phs', '', $k);
-					$shipping[$k] = $v;
-				}
-			}
-
-			$billingO 	= $this->storeOrderAddress($billing);
-			$shippingO 	= $this->storeOrderAddress($shipping, 1, $data['id']);
-		}
+        $this->storeOrderAddress($data['billing_address'], 0, $data['id']);
+        $this->storeOrderAddress($data['shipping_address'], 1, $data['id']);
 
 		// Products
 		if (!empty($pform)) {
@@ -222,6 +231,10 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			return false;
 		}
 
+        $data['section_id'] = $data['section_id'] ?: 0;
+        $data['unit_id'] = $data['unit_id'] ?: 0;
+        $data['ticket_id'] = $data['ticket_id'] ?: 0;
+
 		if (!$table->bind($data)) {
 			$this->setError($table->getError());
 			return false;
@@ -257,7 +270,6 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 			// Store the history
 			PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
-
 		}
 
 
@@ -286,39 +298,32 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->store()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 	}
 
 	public function storeOrderAttributes($d) {
 		$row = Table::getInstance('PhocacartOrderAttributes', 'Table', array());
 
-
 		$d['option_value'] = urlencode($d['option_value']);
 
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->store()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 	}
 
@@ -330,17 +335,14 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->store()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 	}
 
@@ -355,23 +357,19 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
         }
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->store()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 	}
 
-	public function storeOrderAddress($d, $type = 0, $orderId = 0) {
+	public function storeOrderAddress($d, $type = 0, $orderId = 0): bool {
 		$row = Table::getInstance('PhocacartOrderUsers', 'Table', array());
-
 
 		// it can happen that shipping (delivery) address was not created yet
 		if ($type == 1) {
@@ -385,16 +383,12 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			}
 		}
 
-
-
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if ($row->country == '') {
@@ -406,8 +400,9 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 		if (!$row->store()) {
 			throw new Exception($row->getError());
-			return false;
 		}
+
+		return true;
 	}
 
 	public function storeOrderProductDiscounts($d) {
@@ -419,28 +414,21 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 		if (!$row->bind($d)) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->check()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 
 		if (!$row->store()) {
 			throw new Exception($row->getError());
-			return false;
 		}
 	}
 
 	function delete(&$cid = array()) {
-
-
-		if (count( $cid )) {
+		if (count($cid)) {
 			ArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
-
-
 
 			// 1. DELETE ITEMS
 			$query = 'DELETE FROM #__phocacart_orders'
@@ -514,4 +502,3 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		return true;
 	}
 }
-?>

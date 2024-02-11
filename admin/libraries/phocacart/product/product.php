@@ -18,8 +18,10 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
+use Phoca\PhocaCart\Constants\GroupType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartProduct
 {
@@ -34,116 +36,109 @@ class PhocacartProduct
     private static $productAccess = array();
     private static $productAttributes = array();
 
-    public function __construct() { }
+    private static function dispatchLoadColumns(array &$columns)
+    {
+        $pluginOptions = [];
+        Dispatcher::dispatch(new Event\View\Product\BeforeLoadColumns('com_phocacart.product', $pluginOptions));
+
+        $pluginColumns = $pluginOptions['columns'] ?? [];
+        array_walk($pluginColumns, function($column) {
+            return PhocacartText::filterValue($column, 'alphanumeric3');
+        });
+
+        $columns = array_merge($columns, $pluginColumns);
+    }
 
     public static function getProduct($productId, $prioritizeCatid = 0, $type = array(0, 1))
     {
-
-        $db = Factory::getDBO();
-        $app = Factory::getApplication();
-        $wheres = array();
+        $db     = Factory::getDBO();
+        $app    = Factory::getApplication();
+        $where  = [];
         $params = PhocacartUtils::getComponentParameters();
-        $user = PhocacartUser::getUser();
+        $user   = PhocacartUser::getUser();
 
+        $where[] = 'i.id = ' . (int) $productId;
 
-        $userLevels = implode(',', $user->getAuthorisedViewLevels());
-        $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+        $columns = [
+            'i.id', 'i.metadata',
+            'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume',
+            'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation',
+            'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit',
+            'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text',
+            'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number',
+            'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days',
+            'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types', 'i.owner_id',
+            'pc.ordering', 'c.id AS catid',
+            'm.id as manufacturerid',
+        ];
 
-        $skip = array();
-
-        //$skip['access']	        = $params->get('sql_product_skip_access', 0);
-		$skip['group']	        = $params->get('sql_product_skip_group', 0);
-		//$skip['attributes']	    = $params->get('sql_product_skip_attributes', 0);
-		//$skip['category_type']  = $params->get('sql_product_skip_category_type', 0);
-		$skip['tax']   			= $params->get('sql_product_skip_tax', 0);
-
-        // Access is check by checkIfAccessPossible
-        //$wheres[] 	= " a.access IN (".$userLevels.")";
-        //$wheres[] 	= " c.access IN (".$userLevels.")";
-        //$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-        //$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
-        //$wheres[] 	= " a.published = 1";
-        //$wheres[] 	= " c.published = 1";
-        //- $wheres[] 	= ' c.id = '.(int)$catid;
-        //- $typeS = implode(',', $type);
-        //- if (!$skip['category_type']) {
-        //-   $wheres[] = " c.type IN (".$typeS.")";// type: common, onlineshop, pos
-        //- }
-
-
-        $wheres[] = ' i.id = ' . (int)$productId;
-
-
-
-        // Views Plugin can load additional columns
-		$additionalColumns = [];
-    $pluginOptions = [];
-    Dispatcher::dispatch(new Event\View\Product\BeforeLoadColumns('com_phocacart.product', $pluginOptions));
-
-		if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-		  if (!empty($pluginOptions['columns'])) {
-				foreach ($pluginOptions['columns'] as $v) {
-					$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-				}
-			}
-    }
-
-		$baseColumns = array('i.id', 'i.title', 'i.title_long', 'i.alias', 'i.description', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey', 'i.metadata', 'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume', 'i.description', 'i.description_long', 'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation', 'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days', 'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types', 'i.owner_id');
-
-		$col = array_merge($baseColumns, $additionalColumns);
-		$col = array_unique($col);
-
-
-        $columns = implode(',', $col) . ',pc.ordering, c.id AS catid, c.title AS cattitle, c.alias AS catalias, m.id as manufacturerid, m.title as manufacturertitle, m.alias as manufactureralias,';
-
-
-        if (!$skip['tax']) {
-            $columns .= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
+        if (I18nHelper::useI18n()) {
+            $columns = array_merge($columns, [
+                'coalesce(i18n_i.title, i.title) as title', 'i18n_i.title_long', 'coalesce(i18n_i.alias, i.alias) as alias', 'i18n_i.description', 'i18n_i.description_long', 'i18n_i.features', 'i18n_i.metatitle', 'i18n_i.metadesc', 'i18n_i.metakey',
+                'coalesce(i18n_c.title, c.title) AS cattitle', 'coalesce(i18n_c.alias, c.alias) AS catalias',
+                'coalesce(i18n_m.title, m.title) as manufacturertitle', 'coalesce(i18n_m.alias, m.alias) as manufactureralias',
+            ]);
         } else {
-            $columns .= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
+            $columns = array_merge($columns, [
+                'i.title', 'i.title_long', 'i.alias', 'i.description', 'i.description_long', 'i.features', 'i.metatitle', 'i.metadesc', 'i.metakey',
+                'c.title AS cattitle', 'c.alias AS catalias',
+                'm.title as manufacturertitle', 'm.alias as manufactureralias',
+            ]);
+        }
+
+        if (!$params->get('sql_product_skip_tax', false)) {
+            $columns = array_merge($columns, [
+                't.id as taxid', 't.tax_rate as taxrate', 't.calculation_type as taxcalculationtype', 't.title as taxtitle', 't.tax_hide as taxhide'
+            ]);
+        } else {
+            $columns = array_merge($columns, [
+                'NULL as taxid', 'NULL as taxrate', 'NULL as taxcalculationtype', 'NULL as taxtitle', 'NULL as taxhide'
+            ]);
         }
 
 
-        if (!$skip['group']) {
-            $columns .= ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+        if (!$params->get('sql_product_skip_group', false)) {
+            $columns = array_merge($columns, [
+                'MIN(ppg.price) as group_price', 'MAX(pptg.points_received) as group_points_received'
+            ]);
         } else {
-            $columns .= ' NULL as group_price, NULL as group_points_received';
+            $columns = array_merge($columns, [
+                'NULL as group_price', 'NULL as group_points_received'
+            ]);
         }
 
+        self::dispatchLoadColumns($columns);
 
-        $query = ' SELECT ' . $columns
+        $columns = array_unique($columns);
+
+
+        $query = ' SELECT ' . implode(', ', $columns)
             . ' FROM #__phocacart_products AS i'
             . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = i.id'
             . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
             . ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id';
 
-        if (!$skip['tax']) {
+        if (I18nHelper::useI18n()) {
+            $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_i', 'i');
+            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
+            $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
+        }
+
+        if (!$params->get('sql_product_skip_tax', false)) {
             $query .= ' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id';
         }
 
-        if (!$skip['group']) {
-            $query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON i.id = ga.item_id AND ga.type = 3';// type 3 is product
-            $query .= ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+        if (!$params->get('sql_product_skip_group', false)) {
+            $userGroups = implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+            $query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON i.id = ga.item_id AND ga.type = ' . GroupType::Product;
+            $query .= ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
             // user is in more groups, select lowest price by best group
-            $query .= ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON i.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN (' . $userGroups . ') AND type = 3)';
+            $query .= ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON i.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN (' . $userGroups . ') AND type = ' . GroupType::Product . ')';
             // user is in more groups, select highest points by best group
-            $query .= ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN (' . $userGroups . ') AND type = 3)';
+            $query .= ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON i.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = i.id AND group_id IN (' . $userGroups . ') AND type = ' . GroupType::Product . ')';
         }
 
-        $groupsFull = implode(',', $col) .',pc.ordering, c.id, c.title, c.alias, m.id, m.title, m.alias';
-
-        if (!$skip['tax']) {
-            $groupsFull .= ', t.id, t.tax_rate, t.calculation_type, t.title, t.tax_hide';
-        }
-
-
-        $groupsFast = 'i.id';
-        $groups = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-
-
-        $query .= ' WHERE ' . implode(' AND ', $wheres)
-            . ' GROUP BY ' . $groups
-            . ' ORDER BY i.id'
+        $query .= ' WHERE ' . implode(' AND ', $where)
             . ' LIMIT 1';
         $db->setQuery($query);
         $product = $db->loadObject();
@@ -153,18 +148,19 @@ class PhocacartProduct
         // BUT the product can be displayed in cart e.g. 3x so only the last added catid
         // is used for creating the SEF URL
         // Using catid is only about SEF URL
-        if ((int)$prioritizeCatid > 0) {
-            if (isset($product->catid) && (int)$product->catid == (int)$prioritizeCatid) {
+        if ((int) $prioritizeCatid > 0) {
+            if (isset($product->catid) && (int) $product->catid == (int) $prioritizeCatid) {
                 //$product->catid is $product->catid
-            } else {
+            }
+            else {
                 // Recheck the category id of product
                 $checkCategory = false;
                 if (isset($product->id)) {
-                    $checkCategory = PhocacartProduct::checkIfAccessPossible((int)$product->id, (int)$prioritizeCatid, $type);
+                    $checkCategory = PhocacartProduct::checkIfAccessPossible((int) $product->id, (int) $prioritizeCatid, $type);
                 }
 
                 if ($checkCategory) {
-                    $product->catid = (int)$prioritizeCatid;
+                    $product->catid = (int) $prioritizeCatid;
                 }
             }
         }
@@ -177,10 +173,10 @@ class PhocacartProduct
             $tax = PhocacartTax::getTaxById($product->taxid);
 
             if (isset($product->taxhide)) {
-				$registry = new Registry;
-				$registry->loadString($product->taxhide);
-				$product->taxhide = $registry->toArray();
-			}
+                $registry = new Registry;
+                $registry->loadString($product->taxhide);
+                $product->taxhide = $registry->toArray();
+            }
 
             if ($tax) {
                 $taxChangedA           = PhocacartTax::changeTaxBasedOnRule($product->taxid, $product->taxrate, $product->taxcalculationtype, $product->taxtitle, $product->taxhide);

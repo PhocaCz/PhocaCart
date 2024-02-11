@@ -172,15 +172,11 @@ if (is_array($this->items)) {
         }
         echo $r->td($userO, "small");
 
-        //$status			= PhocacartOrderStatus::getStatus((int)$item->status_id, $item->id);
-        //$statusSelect	= JHtml::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="form-control"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
-        $statusClass = PhocacartUtilsSettings::getOrderStatusClass($item->status_title);
-        $status      = '<span class="' . $statusClass . '">' . $this->escape(Text::_($item->status_title)) . '</span>';
-        //$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.Text::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
+        $status = PhocacartUtilsSettings::getOrderStatusBadge($item->status_title, $item->status_params, 'mb-2');
 
-        $status .= ' <span><a href="#' . $idMd . '" role="button" class="ph-u ph-no-wrap ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a></span>';
+        $status .= ' <a href="#' . $idMd . '" role="button" class="ph-no-wrap btn btn-outline-primary btn-sm ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 
-        echo $r->td($status, "small");
+        echo $r->td($status, "small text-center");
 
 
         // INFO

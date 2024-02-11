@@ -13,20 +13,29 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartAttribute
 {
-    public static function getAttributesById($productId, $return = 0, bool $showUnpublished = false) {
-
+    public static function getAttributesById($productId, $return = 0, bool $showUnpublished = false)
+    {
         $db = Factory::getDBO();
 
-        $query = 'SELECT a.id, a.title, a.alias, a.required, a.type, a.published'
-            . ' FROM #__phocacart_attributes AS a'
-            . ' WHERE a.product_id = ' . (int)$productId;
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.required, a.type, a.published'
+                . ' FROM #__phocacart_attributes AS a'
+                . I18nHelper::sqlJoin('#__phocacart_attributes_i18n')
+                . ' WHERE a.product_id = ' . (int) $productId;
+        } else {
+            $query = 'SELECT a.id, a.title, a.alias, a.required, a.type, a.published'
+                . ' FROM #__phocacart_attributes AS a'
+                . ' WHERE a.product_id = ' . (int) $productId;
+        }
+
         if (!$showUnpublished) {
             $query .= ' AND a.published = 1';
         }
+
         $query .= ' ORDER BY a.ordering';
         $db->setQuery($query);
 
@@ -37,33 +46,39 @@ class PhocacartAttribute
             return $db->loadAssocList();
         } else {
             $attributes        = $db->loadAssocList();
-            $attributesSubform = array();
+            $attributesSubform = [];
             $i                 = 0;
-            if (!empty($attributes)) {
-                foreach ($attributes as $k => $v) {
-                    $attributesSubform['attributes' . $i]['id']       = (int)$v['id'];
-                    $attributesSubform['attributes' . $i]['title']    = (string)$v['title'];
-                    $attributesSubform['attributes' . $i]['alias']    = (string)$v['alias'];
-                    $attributesSubform['attributes' . $i]['published'] = (int)$v['published'];
-                    $attributesSubform['attributes' . $i]['required'] = (int)$v['required'];
-                    $attributesSubform['attributes' . $i]['type']     = (int)$v['type'];
+            if ($attributes) {
+                foreach ($attributes as $attribute) {
+                    $attributesSubform['attributes' . $i]['id']       = (int)$attribute['id'];
+                    $attributesSubform['attributes' . $i]['title']    = (string)$attribute['title'];
+                    $attributesSubform['attributes' . $i]['alias']    = (string)$attribute['alias'];
+                    $attributesSubform['attributes' . $i]['published'] = (int)$attribute['published'];
+                    $attributesSubform['attributes' . $i]['required'] = (int)$attribute['required'];
+                    $attributesSubform['attributes' . $i]['type']     = (int)$attribute['type'];
                     $i++;
                 }
             }
             return $attributesSubform;
         }
-
-        return false;
     }
 
     public static function getOptionsById($attributeId, $return = 0, bool $showUnpublished = false) {
 
         $db = Factory::getDBO();
 
-
-        $query = 'SELECT a.id, a.title, a.alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type';
-        $query .= ' FROM #__phocacart_attribute_values AS a'
-            . ' WHERE a.attribute_id = ' . (int)$attributeId;
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
+                . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
+                . ' FROM #__phocacart_attribute_values AS a'
+                . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n')
+                . ' WHERE a.attribute_id = ' . (int) $attributeId;
+        } else {
+            $query = 'SELECT a.id, a.title, a.alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
+                . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
+                . ' FROM #__phocacart_attribute_values AS a'
+                . ' WHERE a.attribute_id = ' . (int) $attributeId;
+        }
         if (!$showUnpublished) {
             $query .= ' AND a.published = 1';
         }
@@ -269,7 +284,6 @@ class PhocacartAttribute
             $app            = Factory::getApplication();
             $pathAttributes = PhocacartPath::getPath('attributefile');// to check if attribute option download file exists
 
-
             // When you add or update attributes and options, you need to have some info about which attributes and options
             // are now active - so all others will be removed
             $notDeleteAttribs = array();                              // Select all attributes which will be not deleted
@@ -278,105 +292,103 @@ class PhocacartAttribute
             // ADD ATTRIBUTES
             if (!empty($attributesArray)) {
 
-                foreach ($attributesArray as $k => $v) {
+                foreach ($attributesArray as &$attribute) {
+                    $i18nData = I18nHelper::prepareI18nData($attribute, ['title', 'alias']);
+                    $attribute = PhocacartUtils::arrayDefValues($attribute, [
+                       'title' => Factory::getDate()->format("Y-m-d-H-i-s"),
+                       'published' => 1,
+                       'required' => '',
+                       'type' => '',
+                    ]);
 
-                    if (empty($v['title'])) {
-                        $v['title'] = Factory::getDate()->format("Y-m-d-H-i-s");
+                    if (empty($attribute['alias'])) {
+                        $attribute['alias'] = $attribute['title'];
                     }
-
-                    if (empty($v['alias'])) {
-                        $v['alias'] = $v['title'];
-                    }
-                    $v['alias'] = PhocacartUtils::getAliasName($v['alias']);
-
-                    // correct simple xml
-                    if (empty($v['title'])) {
-                        $v['title'] = '';
-                    }
-                    if (empty($v['alias'])) {
-                        $v['alias'] = '';
-                    }
-                    if (!isset($v['published'])) {
-                        $v['published'] = 1;
-                    }
-                    if (empty($v['required'])) {
-                        $v['required'] = '';
-                    }
-                    if (empty($v['type'])) {
-                        $v['type'] = '';
-                    }
-
+                    $attribute['alias'] = PhocacartUtils::getAliasName($attribute['alias']);
 
                     $idExists = 0;
                     if ($new == 0) {
-                        if (isset($v['id']) && $v['id'] > 0) {
-
+                        if (isset($attribute['id']) && $attribute['id'] > 0) {
                             // Does the row exist
-                            $query = ' SELECT id '
-                                . ' FROM #__phocacart_attributes'
-                                . ' WHERE id = ' . (int)$v['id']
-                                . ' ORDER BY id';
+                            $query = ' SELECT id FROM #__phocacart_attributes WHERE id = ' . (int)$attribute['id'] . ' ORDER BY id';
                             $db->setQuery($query);
                             $idExists = $db->loadResult();
-
                         }
                     }
 
                     if ((int)$idExists > 0) {
-
                         $query = 'UPDATE #__phocacart_attributes SET'
                             . ' product_id = ' . (int)$productId . ','
-                            . ' title = ' . $db->quote($v['title']) . ','
-                            . ' alias = ' . $db->quote($v['alias']) . ','
-                            . ' published = ' . (int)$v['published'] . ','
-                            . ' required = ' . (int)$v['required'] . ','
-                            . ' type = ' . (int)$v['type'] . ','
-                            . ' ordering = ' . (int)$i
+                            . ' title = ' . $db->quote($attribute['title']) . ','
+                            . ' alias = ' . $db->quote($attribute['alias']) . ','
+                            . ' published = ' . (int)$attribute['published'] . ','
+                            . ' required = ' . (int)$attribute['required'] . ','
+                            . ' type = ' . (int)$attribute['type'] . ','
+                            . ' ordering = ' . $i
                             . ' WHERE id = ' . (int)$idExists;
                         $db->setQuery($query);
                         $db->execute();
                         $i++;
                         $newIdA = $idExists;
-
                     } else {
-
                         $date = Factory::getDate();
                         $now  = $date->toSql();
-                        $valuesString = '';
-                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($v['title']) . ', ' . $db->quote($v['alias']) . ', ' . (int)$v['published'] . ', ' . (int)$v['required'] . ', ' . (int)$v['type'] . ', ' . $db->quote($now) . ', '.  $i . ')';
+
+                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($attribute['title']) . ', ' . $db->quote($attribute['alias']) . ', ' . (int)$attribute['published'] . ', ' . (int)$attribute['required'] . ', ' . (int)$attribute['type'] . ', ' . $db->quote($now) . ', '.  $i . ')';
                         $query        = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, published, required, type, date, ordering)'
-                            . ' VALUES ' . (string)$valuesString;
+                            . ' VALUES ' . $valuesString;
                         $db->setQuery($query);
                         $db->execute(); // insert is not done together but step by step because of getting last insert id
 
                         $i++;
                         // ADD OPTIONS
                         $newIdA = $db->insertid();
-
                     }
 
+                    I18nHelper::saveI18nData($newIdA, $i18nData, '#__phocacart_attributes_i18n');
                     $notDeleteAttribs[] = $newIdA;
 
-                    $notDeleteOptions = array();// Select all options which will be not deleted
+                    $notDeleteOptions = [];// Select all options which will be not deleted
 
-                    if (!empty($v['options']) && isset($newIdA) && (int)$newIdA > 0) {
-
-                        $options = array();
-
+                    if (!empty($attribute['options']) && isset($newIdA) && (int)$newIdA > 0) {
                         // Get Default Value Type - if the attribute type is single select box or multiple checkbox
                         // If 1 ... it is multiple, you don't need to check for unique default value
                         // If 0 ... it is single, you need to check that the attribute has selected only one value
-                        $dTV = self::getTypeArray($v['type'], 1);
+                        $dTV = self::getTypeArray($attribute['type'], 1);
                         $dI  = 0;// defaultValue $i
                         $dVR = 0;// defaultValue removed?
                         $j   = 0;// ordering
 
-                        foreach ($v['options'] as $k2 => $v2) {
+                        foreach ($attribute['options'] as &$option) {
+                            $i18nData = I18nHelper::prepareI18nData($option, ['title', 'alias']);
 
-                            if (empty($v2['alias'])) {
-                                $v2['alias'] = $v2['title'];
+                            $option = PhocacartUtils::arrayDefValues($option, [
+                                'title' => '',
+                                'alias' => '',
+                                'amount' => '',
+                                'operator' => '1',
+                                'stock' => '',
+                                'operator_weight' => '',
+                                'weight' => '0.0',
+                                'image' => '',
+                                'image_medium' => '',
+                                'image_small' => '',
+                                'download_folder' => '',
+                                'download_file' => '',
+                                'download_token' => '',
+                                'color' => '',
+                                'required' => '0',
+                                'type' => '0',
+                            ]);
+
+                            if (!isset($option['published'])) {
+                                $option['published'] = '1';
                             }
-                            $v2['alias'] = PhocacartUtils::getAliasName($v2['alias']);
+
+                            if (empty($option['alias'])) {
+                                $option['alias'] = $option['title'];
+                            }
+                            $option['alias'] = PhocacartUtils::getAliasName($option['alias']);
 
                             // Transform checkbox to INT (1 or 0)
                             // And check if there are more default values which is not possible e.g. for select box
@@ -384,9 +396,8 @@ class PhocacartAttribute
                             //PhocacartLog::add(3, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
 
                             // can be "on" (sent by form) or "0" or "1" sent by database e.g. in batch
-                            if (isset($v2['default_value']) && $v2['default_value'] != '0') {
+                            if (isset($option['default_value']) && $option['default_value'] != '0') {
                                 $defaultValue = 1;
-
 
                                 //  SELECTBOX OR TEXT
                                 if ($dTV == 0 || $dTV == '') {
@@ -401,115 +412,48 @@ class PhocacartAttribute
                                     $defaultValue = 0;
                                     $dVR          = 1;
                                 } else if ($dTV === '' && (int)$dI > 0) {
-
                                     // TEXT - no default value
                                     $defaultValue = 0;
                                     $dVR          = 1;
-
                                 }
                             }
 
-                            // correct simple xml
-                            if (empty($v2['title'])) {
-                                $v2['title'] = '';
-                            }
-                            if (empty($v2['alias'])) {
-                                $v2['alias'] = '';
-                            }
-                            if (!isset($v2['published'])) {
-                                $v2['published'] = '1';
-                            }
-                            if (empty($v2['operator'])) {
-                                $v2['operator'] = '';
-                            }
-                            if (empty($v2['amount'])) {
-                                $v2['amount'] = '';
-                            }
-
-                            $v2['amount'] = PhocacartText::filterValue($v2['amount'], 'number3');
-
-                            if (empty($v2['stock'])) {
-                                $v2['stock'] = '';
-                            }
-                            if (empty($v2['operator_weight'])) {
-                                $v2['operator_weight'] = '';
-                            }
-                            if (empty($v2['weight'])) {
-                                $v2['weight'] = '0.0';
-                            }
-                            if (empty($v2['image'])) {
-                                $v2['image'] = '';
-                            }
-                            if (empty($v2['image_medium'])) {
-                                $v2['image_medium'] = '';
-                            }
-                            if (empty($v2['image_small'])) {
-                                $v2['image_small'] = '';
-                            }
-                            if (empty($v2['download_folder'])) {
-                                $v2['download_folder'] = '';
-                            }
-                            if (empty($v2['download_file'])) {
-                                $v2['download_file'] = '';
-                            }
-                            if (empty($v2['download_token'])) {
-                                $v2['download_token'] = '';
-                            }
-                            if (empty($v2['color'])) {
-                                $v2['color'] = '';
-                            }
-
-                            if (empty($v2['required'])) {
-                                $v2['required'] = '0';
-                            }
-                            if (empty($v2['type'])) {
-                                $v2['type'] = '0';
-                            }
-
-
-                            //if (empty($v2['default_value'])) 	{$v2['default_value'] 	= '';}
-
+                            $option['amount'] = PhocacartText::filterValue($option['amount'], 'number3');
 
                             // COPY OR BATCH functions - we cannot do the same tokens so create new token and token folder and if set copy the files
                             // EACH ATTRIBUTE OPTION DOWNLOAD FILE MUST HAVE UNIQUE DOWNLOAD TOKEN AND DOWNLOAD FOLDER
                             if ($copy > 0) {
                                 // First create new token and token folder
-                                $oldDownloadFolder     = $v2['download_folder'];
-                                $v2['download_token']  = PhocacartUtils::getToken();
-                                $v2['download_folder'] = PhocacartUtils::getToken('folder');
+                                $oldDownloadFolder     = $option['download_folder'];
+                                $option['download_token']  = PhocacartUtils::getToken();
+                                $option['download_folder'] = PhocacartUtils::getToken('folder');
 
-
-                                if ($copy == 2 && $v2['download_file'] != '' && File::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
-
-                                    $newDownloadFile = str_replace($oldDownloadFolder, $v2['download_folder'], $v2['download_file']);
-                                    if (!Folder::create($pathAttributes['orig_abs_ds'] . $v2['download_folder'])) {
+                                if ($copy == 2 && $option['download_file'] != '' && File::exists($pathAttributes['orig_abs_ds'] . $option['download_file'])) {
+                                    $newDownloadFile = str_replace($oldDownloadFolder, $option['download_folder'], $option['download_file']);
+                                    if (!Folder::create($pathAttributes['orig_abs_ds'] . $option['download_folder'])) {
                                         // Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
                                     }
 
-                                    if (!File::copy($pathAttributes['orig_abs_ds'] . $v2['download_file'], $pathAttributes['orig_abs_ds'] . $newDownloadFile)) {
+                                    if (!File::copy($pathAttributes['orig_abs_ds'] . $option['download_file'], $pathAttributes['orig_abs_ds'] . $newDownloadFile)) {
                                         // Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
                                     }
-                                    $v2['download_file'] = $newDownloadFile;
+                                    $option['download_file'] = $newDownloadFile;
                                 } else {
-                                    $v2['download_file'] = '';
+                                    $option['download_file'] = '';
                                 }
-
-
                             }
 
-
                             // CHECK DOWNLOAD FILE
-                            if ($v2['download_file'] != '' && $v2['download_folder'] == '') {
-                                $msg = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
+                            if ($option['download_file'] != '' && $option['download_folder'] == '') {
+                                $msg = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $attribute['title'] . "<br />";
                                 $msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_DOES_NOT_INCLUDE_DOWNLOAD_FOLDER');
                                 $app->enqueueMessage($msg, 'error');
-
                             }
 
                             // If download_file does not exist on the server, remove it
-                            if ($v2['download_file'] != '' && !File::exists($pathAttributes['orig_abs_ds'] . $v2['download_file'])) {
-                                $v2['download_file'] = '';
-                                $msg                 = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
+                            if ($option['download_file'] != '' && !File::exists($pathAttributes['orig_abs_ds'] . $option['download_file'])) {
+                                $option['download_file'] = '';
+                                $msg                 = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $attribute['title'] . "<br />";
                                 $msg                 .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST');
                                 $app->enqueueMessage($msg, 'error');
                             }
@@ -517,45 +461,41 @@ class PhocacartAttribute
                             $idExists = 0;
 
                             if ($new == 0) {
-                                if (isset($v2['id']) && $v2['id'] > 0) {
-
+                                if (isset($option['id']) && $option['id'] > 0) {
                                     // Does the row exist
                                     $query = ' SELECT id '
                                         . ' FROM #__phocacart_attribute_values'
-                                        . ' WHERE id = ' . (int)$v2['id']
+                                        . ' WHERE id = ' . (int)$option['id']
                                         . ' ORDER BY id';
                                     $db->setQuery($query);
                                     $idExists = $db->loadResult();
-
                                 }
                             }
 
                             if ((int)$idExists > 0) {
-
-
-                                $v2['amount'] = PhocacartUtils::replaceCommaWithPoint($v2['amount']);
-                                $v2['weight'] = PhocacartUtils::replaceCommaWithPoint($v2['weight']);
+                                $option['amount'] = PhocacartUtils::replaceCommaWithPoint($option['amount']);
+                                $option['weight'] = PhocacartUtils::replaceCommaWithPoint($option['weight']);
 
                                 $query = 'UPDATE #__phocacart_attribute_values SET'
                                     . ' attribute_id = ' . (int)$newIdA . ','
-                                    . ' title = ' . $db->quote($v2['title']) . ','
-                                    . ' alias = ' . $db->quote($v2['alias']) . ','
-                                    . ' published = ' . (int)$v2['published'] . ','
-                                    . ' operator = ' . $db->quote($v2['operator']) . ','
-                                    . ' amount = ' . $db->quote($v2['amount']) . ','
-                                    . ' stock = ' . (int)$v2['stock'] . ','
-                                    . ' operator_weight = ' . $db->quote($v2['operator_weight']) . ','
-                                    . ' weight = ' . $db->quote($v2['weight']) . ','
-                                    . ' image = ' . $db->quote($v2['image']) . ','
-                                    . ' image_medium = ' . $db->quote($v2['image_medium']) . ','
-                                    . ' image_small = ' . $db->quote($v2['image_small']) . ','
-                                    . ' download_folder = ' . $db->quote($v2['download_folder']) . ','
-                                    . ' download_file = ' . $db->quote($v2['download_file']) . ','
-                                    . ' download_token = ' . $db->quote($v2['download_token']) . ','
-                                    . ' color = ' . $db->quote($v2['color']) . ','
+                                    . ' title = ' . $db->quote($option['title']) . ','
+                                    . ' alias = ' . $db->quote($option['alias']) . ','
+                                    . ' published = ' . (int)$option['published'] . ','
+                                    . ' operator = ' . $db->quote($option['operator']) . ','
+                                    . ' amount = ' . $db->quote($option['amount']) . ','
+                                    . ' stock = ' . (int)$option['stock'] . ','
+                                    . ' operator_weight = ' . $db->quote($option['operator_weight']) . ','
+                                    . ' weight = ' . $db->quote($option['weight']) . ','
+                                    . ' image = ' . $db->quote($option['image']) . ','
+                                    . ' image_medium = ' . $db->quote($option['image_medium']) . ','
+                                    . ' image_small = ' . $db->quote($option['image_small']) . ','
+                                    . ' download_folder = ' . $db->quote($option['download_folder']) . ','
+                                    . ' download_file = ' . $db->quote($option['download_file']) . ','
+                                    . ' download_token = ' . $db->quote($option['download_token']) . ','
+                                    . ' color = ' . $db->quote($option['color']) . ','
                                     . ' default_value = ' . (int)$defaultValue . ','
-                                    . ' required = ' . (int)$v2['required'] . ','
-                                    . ' type = ' . (int)$v2['type'] . ','
+                                    . ' required = ' . (int)$option['required'] . ','
+                                    . ' type = ' . (int)$option['type'] . ','
                                     . ' ordering = ' . (int)$j
                                     . ' WHERE id = ' . (int)$idExists;
 
@@ -565,31 +505,29 @@ class PhocacartAttribute
                                 $j++;
 
                                 $newIdO = $idExists;
-
                             } else {
-
-                                $v2['amount'] = PhocacartUtils::replaceCommaWithPoint($v2['amount']);
-                                $v2['weight'] = PhocacartUtils::replaceCommaWithPoint($v2['weight']);
+                                $option['amount'] = PhocacartUtils::replaceCommaWithPoint($option['amount']);
+                                $option['weight'] = PhocacartUtils::replaceCommaWithPoint($option['weight']);
 
                                 $options = '(' . (int)$newIdA . ', '
-                                    . $db->quote($v2['title']) . ', '
-                                    . $db->quote($v2['alias']) . ', '
-                                    . (int)$v2['published'] . ', '
-                                    . $db->quote($v2['operator']) . ', '
-                                    . $db->quote($v2['amount']) . ', '
-                                    . (int)$v2['stock'] . ', '
-                                    . $db->quote($v2['operator_weight']) . ', '
-                                    . $db->quote($v2['weight']) . ', '
-                                    . $db->quote($v2['image']) . ', '
-                                    . $db->quote($v2['image_medium']) . ', '
-                                    . $db->quote($v2['image_small']) . ', '
-                                    . $db->quote($v2['download_folder']) . ','
-                                    . $db->quote($v2['download_file']) . ','
-                                    . $db->quote($v2['download_token']) . ','
-                                    . $db->quote($v2['color']) . ', '
+                                    . $db->quote($option['title']) . ', '
+                                    . $db->quote($option['alias']) . ', '
+                                    . (int)$option['published'] . ', '
+                                    . $db->quote($option['operator']) . ', '
+                                    . $db->quote($option['amount']) . ', '
+                                    . (int)$option['stock'] . ', '
+                                    . $db->quote($option['operator_weight']) . ', '
+                                    . $db->quote($option['weight']) . ', '
+                                    . $db->quote($option['image']) . ', '
+                                    . $db->quote($option['image_medium']) . ', '
+                                    . $db->quote($option['image_small']) . ', '
+                                    . $db->quote($option['download_folder']) . ','
+                                    . $db->quote($option['download_file']) . ','
+                                    . $db->quote($option['download_token']) . ','
+                                    . $db->quote($option['color']) . ', '
                                     . (int)$defaultValue . ','
-                                    . (int)$v2['required'] . ', '
-                                    . (int)$v2['type'] . ', '
+                                    . (int)$option['required'] . ', '
+                                    . (int)$option['type'] . ', '
                                     . (int)$j . ')';
 
 
@@ -602,14 +540,14 @@ class PhocacartAttribute
                                 $newIdO = $db->insertid();
                             }
 
+                            I18nHelper::saveI18nData($newIdO, $i18nData, '#__phocacart_attribute_values_i18n');
                             $notDeleteOptions[] = $newIdO;
-
                         }
 
 
                         // One or more default values removed
                         if ($dVR == 1) {
-                            $msg = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $v['title'] . "<br />";
+                            $msg = Text::_('COM_PHOCACART_ATTRIBUTE') . ': ' . $attribute['title'] . "<br />";
                             $msg .= Text::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_DEFAULT_VALUES_OR_MULTIPLE_DEFAULT_VALUES');
                             $app->enqueueMessage($msg, 'error');
                         }
@@ -617,31 +555,17 @@ class PhocacartAttribute
 
 
                     // Remove all options except the active
-                    if (!empty($notDeleteOptions)) {
-                        $notDeleteOptionsString = implode(',', $notDeleteOptions);
-
-                        // Remove all download files from not active attribute values:
-                        $qS = ' SELECT download_folder, download_file'
-                            . ' FROM #__phocacart_attribute_values'
-                            . ' WHERE attribute_id = ' . (int)$newIdA
-                            . ' AND id NOT IN (' . $notDeleteOptionsString . ')';
-
-                        $query = ' DELETE '
-                            . ' FROM #__phocacart_attribute_values'
-                            . ' WHERE attribute_id = ' . (int)$newIdA
-                            . ' AND id NOT IN (' . $notDeleteOptionsString . ')';
-
+                    $qS = ' SELECT download_folder, download_file FROM #__phocacart_attribute_values WHERE attribute_id = ' . (int)$newIdA;
+                    if (I18nHelper::isI18n()) {
+                        $query = 'DELETE v, i18n FROM #__phocacart_attribute_values v'
+                            . ' LEFT JOIN #__phocacart_attribute_values_i18n i18n ON i18n.id = v.id'
+                            . ' WHERE v.attribute_id = ' . (int) $newIdA;
                     } else {
-
-                        // Remove all download files from not active attribute values:
-                        $qS = ' SELECT download_folder, download_file'
-                            . ' FROM #__phocacart_attribute_values'
-                            . ' WHERE attribute_id = ' . (int)$newIdA;
-
-                        $query = ' DELETE '
-                            . ' FROM #__phocacart_attribute_values'
-                            . ' WHERE attribute_id = ' . (int)$newIdA;
-
+                        $query = 'DELETE FROM #__phocacart_attribute_values v WHERE v.attribute_id = ' . (int)$newIdA;
+                    }
+                    if (!empty($notDeleteOptions)) {
+                        $qS .= ' AND id NOT IN (' . implode(',', $notDeleteOptions) . ')';
+                        $query .= ' AND v.id NOT IN (' . implode(',', $notDeleteOptions) . ')';
                     }
 
                     $db->setQuery($qS);
@@ -654,32 +578,25 @@ class PhocacartAttribute
             }
 
             // Remove all attributes except the active
-            if (!empty($notDeleteAttribs)) {
-                $notDeleteAttribsString = implode(',', $notDeleteAttribs);
+            $qS = ' SELECT v.download_folder, v.download_file FROM #__phocacart_attribute_values AS v'
+                . ' LEFT JOIN #__phocacart_attributes AS a ON a.id = v.attribute_id'
+                . ' WHERE a.product_id = ' . (int)$productId;
 
-                // Remove all download files from not active attributes:
-                $qS = ' SELECT v.download_folder, v.download_file'
-                    . ' FROM #__phocacart_attribute_values AS v'
-                    . ' LEFT JOIN #__phocacart_attributes AS a ON a.id = v.attribute_id'
-                    . ' WHERE a.product_id = ' . (int)$productId
-                    . ' AND a.id NOT IN (' . $notDeleteAttribsString . ')';
-
-                $query = ' DELETE '
-                    . ' FROM #__phocacart_attributes'
-                    . ' WHERE product_id = ' . (int)$productId
-                    . ' AND id NOT IN (' . $notDeleteAttribsString . ')';
-
-            } else {
-
-                // Remove all download files from not active attributes:
-                $qS = ' SELECT v.download_folder, v.download_file'
-                    . ' FROM #__phocacart_attribute_values AS v'
-                    . ' LEFT JOIN #__phocacart_attributes AS a ON a.id = v.attribute_id'
+            if (I18nHelper::isI18n()) {
+                $query = ' DELETE a, v, i18n, i18n_v FROM #__phocacart_attributes a'
+                    . ' LEFT JOIN #__phocacart_attributes_i18n i18n ON i18n.id = a.id'
+                    . ' LEFT JOIN #__phocacart_attribute_values v ON v.attribute_id = a.id'
+                    . ' LEFT JOIN #__phocacart_attribute_values_i18n i18n_v ON i18n_v.id = v.id'
                     . ' WHERE a.product_id = ' . (int)$productId;
+            } else {
+                $query = ' DELETE a, v FROM #__phocacart_attributes a'
+                    . ' LEFT JOIN #__phocacart_attribute_values v ON v.attribute_id = a.id'
+                    . ' WHERE a.product_id = ' . (int)$productId;
+            }
 
-                $query = ' DELETE '
-                    . ' FROM #__phocacart_attributes'
-                    . ' WHERE product_id = ' . (int)$productId;
+            if (!empty($notDeleteAttribs)) {
+                $qS .= ' AND a.id NOT IN (' . implode(',', $notDeleteAttribs) . ')';
+                $query .= ' AND a.id NOT IN (' . implode(',', $notDeleteAttribs) . ')';
             }
 
             $db->setQuery($qS);
@@ -704,173 +621,28 @@ class PhocacartAttribute
         }
     }
 
-    /*
-    public static function storeAttributesById($productId, $attributesArray) {
-
-
-        if ((int)$productId > 0) {
-            $db 	= Factory::getDBO();
-            $app	= Factory::getApplication();
-
-
-            // REMOVE OPTIONS
-            // Get attribute ids which will be removed (to remove options)
-            $query = ' SELECT id '
-                    .' FROM #__phocacart_attributes'
-                    . ' WHERE product_id = '. (int)$productId
-                    .' ORDER BY id';
-            $db->setQuery($query);
-            $deleteIds = $db->loadColumn();
-
-            if (!empty($deleteIds)) {
-                $deleteString = implode(',', $deleteIds);
-
-                $query = ' DELETE '
-                    .' FROM #__phocacart_attribute_values'
-                    . ' WHERE attribute_id IN ('. (string)$deleteString.')';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            // REMOVE ATTRIBUTES
-            $query = ' DELETE '
-                    .' FROM #__phocacart_attributes'
-                    . ' WHERE product_id = '. (int)$productId;
-            $db->setQuery($query);
-            $db->execute();
-
-            // ADD ATTRIBUTES
-            if (!empty($attributesArray)) {
-
-
-                foreach($attributesArray as $k => $v) {
-
-                    if(empty($v['alias'])) {
-                        $v['alias'] = $v['title'];
-                    }
-                    $v['alias'] = PhocacartUtils::getAliasName($v['alias']);
-
-                    // correct simple xml
-                    if (empty($v['title'])) 		{$v['title'] 			= '';}
-                    if (empty($v['alias'])) 		{$v['alias'] 			= '';}
-                    if (empty($v['required'])) 		{$v['required'] 		= '';}
-                    if (empty($v['type'])) 			{$v['type'] 			= '';}
-
-                    $valuesString 	= '';
-                    $valuesString 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.(int)$v['required'].', '.(int)$v['type'].')';
-                    $query = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type)'
-                                .' VALUES '.(string)$valuesString;
-                    $db->setQuery($query);
-                    $db->execute(); // insert is not done together but step by step because of getting last insert id
-
-                    // ADD OPTIONS
-                    $newId = $db->insertid();
-
-                    if (!empty($v['options']) && isset($newId) && (int)$newId > 0) {
-
-                        $options		= array();
-
-                        // Get Default Value Type - if the attribute type is single select box or multiple checkbox
-                        // If 1 ... it is multiple, you don't need to check for unique default value
-                        // If 0 ... it is single, you need to check that the attribute has selected only one value
-                        $dTV = self::getTypeArray($v['type'], 1);
-                        $dI  = 0;// defaultValue $i
-                        $dVR = 0;// defaultValue removed?
-
-
-                        foreach($v['options'] as $k2 => $v2) {
-
-                            if(empty($v2['alias'])) {
-                                $v2['alias'] = $v2['title'];
-                            }
-                            $v2['alias'] = PhocacartUtils::getAliasName($v2['alias']);
-
-                            // Transform checkbox to INT (1 or 0)
-                            // And check if there are more default values which is not possible e.g. for select box
-                            $defaultValue = 0;
-                            //PhocacartLog::add(3, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
-
-                            // can be "on" (sent by form) or "0" or "1" sent by database e.g. in batch
-                            if (isset($v2['default_value']) && $v2['default_value'] != '0') {
-                                $defaultValue = 1;
-
-                                if ($dTV == 0) {
-                                    $dI++;
-                                }
-
-                                // Example: we are in loop of options of select box
-                                // User has selected two default values (checked)
-                                // But select box can have only one default value, so we need to skip it and inform user
-                                if ((int)$dI > 1) {
-                                    $defaultValue = 0;
-                                    $dVR = 1;
-                                }
-                            }
-
-                            // correct simple xml
-                            if (empty($v2['title'])) 			{$v2['title'] 			= '';}
-                            if (empty($v2['alias'])) 			{$v2['alias'] 			= '';}
-                            if (empty($v2['operator'])) 		{$v2['operator'] 		= '';}
-                            if (empty($v2['amount'])) 			{$v2['amount'] 			= '';}
-                            if (empty($v2['stock'])) 			{$v2['stock'] 			= '';}
-                            if (empty($v2['operator_weight'])) 	{$v2['operator_weight'] = '';}
-                            if (empty($v2['weight'])) 			{$v2['weight'] 			= '';}
-                            if (empty($v2['image'])) 			{$v2['image'] 			= '';}
-                            if (empty($v2['image_small']))		{$v2['image_small'] 	= '';}
-                            if (empty($v2['color'])) 			{$v2['color'] 			= '';}
-
-
-                            $options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
-                            if (!empty($options)) {
-                                $valuesString2 = implode(',', $options);
-                            }
-                        }
-                        $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_small, color, default_value)'
-                                    .' VALUES '.(string)$valuesString2;
-
-                        $db->setQuery($query);
-                        $db->execute();
-
-                        // One or more default values removed
-                        if ($dVR == 1) {
-                            $msg = Text::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
-                            $msg .= Text::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_MULTIPLE_DEFAULT_VALUES');
-                            $app->enqueueMessage($msg, 'error');
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
     public static function getAttributesAndOptions($productId) {
-
-        $attributes = array();
         $attributes = self::getAttributesById($productId);
 
-        $attributesKey = array();
-        if (!empty($attributes)) {
-            foreach ($attributes as $k => $v) {
-                $attributesKey[$v->id] = $v;
-                $options               = self::getOptionsById((int)$v->id);
-                if (!empty($options)) {
-                    //$attributes[$k]->options 		= $options;
+        $attributesKey = [];
+        if ($attributes) {
+            foreach ($attributes as $attribute) {
+                $attributesKey[$attribute->id] = $attribute;
+                $attributesKey[$attribute->id]->options = false;
 
-                    $optionsKey = array();
-                    foreach ($options as $k2 => $v2) {
-                        $optionsKey[$v2->id] = $v2;
+                $options = self::getOptionsById($attribute->id);
+                if ($options) {
+                    $optionsKey = [];
+                    foreach ($options as $option) {
+                        $optionsKey[$option->id] = $option;
                     }
-                    $attributesKey[$v->id]->options = $optionsKey;
-                } else {
-                    //$attributes[$k]->options 		= false;
-                    $attributesKey[$v->id]->options = false;
+                    $attributesKey[$attribute->id]->options = $optionsKey;
                 }
             }
         }
 
         return $attributesKey;
     }
-
 
     public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
@@ -968,10 +740,19 @@ class PhocacartAttribute
 
     public static function getAttributeValue($id, $attributeId) {
         $db    = Factory::getDBO();
-        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
-            . ' aa.id as aid, aa.title as atitle, aa.type as atype'
+        if (I18nHelper::useI18n()) {
+            $columns = 'coalesce(i18n_a.title, a.title) as title, coalesce(i18n_a.alias, a.alias) as alias, coalesce(i18n_aa.title, aa.title) as atitle';
+        } else {
+            $columns = 'a.title, a.alias, aa.title as atitle';
+        }
+
+        $query = ' SELECT a.id, a.type, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, '
+            . 'a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
+            . ' aa.id as aid, aa.type as atype, ' . $columns
             . ' FROM #__phocacart_attribute_values AS a'
             . ' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
+            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_a')
+            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_aa', 'aa')
             . ' WHERE a.id = ' . (int)$id . ' AND a.attribute_id = ' . (int)$attributeId
             . ' ORDER BY a.id'
             . ' LIMIT 1';
@@ -1000,82 +781,6 @@ class PhocacartAttribute
         }
         return $fullAttributes;
     }
-
-
-
-
-    /*
-     * Check if attribute is required or not
-     * This is checked when adding products to cart (normally, this should not happen, as html5 input form checking should do it)
-     * Adding products to cart - this is only security check
-     * Checking products before making order - this is only security check
-     * Standard user will not add empty attributes if required because html5 form checking will tell him
-     * This is really only for cases, someone will try to forge the form - server side checking
-     */
-    /*public static function checkIfRequired($id, $value) {
-
-        // Multiple value
-        if ((int)$id > 0 && is_array($value) && !empty($value)) {
-
-            return true;
-        }
-        // One value
-        if ((int)$id > 0 && (int)$value > 0) {
-            return true;// Attribute set and value set too - we don't have anything to check, as attribute value was selected
-        }
-
-        if ((int)$id > 0 && (int)$value == 0) {
-            $db =Factory::getDBO();
-            $query = ' SELECT a.required'
-            .' FROM #__phocacart_attributes AS a'
-            .' WHERE a.id = '.(int)$id
-            .' ORDER BY a.id'
-            .' LIMIT 1';
-            $db->setQuery($query);
-            $attrib = $db->loadObject();
-            if (isset($attrib->required) && $attrib->required == 0) {
-                return true;
-            } else {
-                return false;// seems like attribute is required but not selected
-            }
-        }
-
-        return false;
-    }*/
-
-
-    /* Check if the product includes some required attribute
-     * If yes, but users tries to add the product without attribute (forgery)
-     * just check it on server side
-     * BE AWARE - this test runs only in case when attributes are empty
-     * We don't check if attribute was selected or not or if is required or not
-     * We didn't get any attribute when ordering this product and we only check
-     * if the product includes some attribute
-     */
-    /*public static function checkIfExistsAndRequired($productId) {
-
-        $wheres		= array();
-        $wheres[] 	= ' a.id = '.(int)$productId;
-        $db 		= Factory::getDBO();
-        $query = ' SELECT a.id,'
-        .' at.required AS attribute_required'
-        .' FROM #__phocacart_products AS a'
-        .' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
-        . ' WHERE ' . implode( ' AND ', $wheres )
-        . ' ORDER BY a.id'
-        . ' LIMIT 1';
-        $db->setQuery($query);
-        $attrib = $db->loadObject();
-
-        if ((int)$attrib->attribute_required > 0) {
-            return false;
-        } else {
-            return true;
-        }
-
-        return false;
-    }*/
-
 
     public static function getAllRequiredAttributesByProduct($productId) {
 

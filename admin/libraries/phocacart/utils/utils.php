@@ -740,5 +740,16 @@ class PhocacartUtils
 
 		return '';
 	}
+
+	public static function arrayDefValues(array $array, array $defValues): array
+	{
+		foreach ($defValues as $key => $value) {
+			if (!array_key_exists($key, $array) || empty($array[$key])) {
+				$array[$key] = $value;
+			}
+		}
+
+		return $array;
+	}
 }
-?>
+

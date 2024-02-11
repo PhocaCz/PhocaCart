@@ -7,15 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
-jimport( 'joomla.application.component.view' );
-/*
-phocacart import('phocacart.cart.cart');
-phocacart import('phocacart.cart.cartdb');
-phocacart import('phocacart.cart.rendercart');
-phocacart import('phocacart.currency.currency');
-*/
 
 class PhocaCartCpViewPhocaCartEditStatus extends HtmlView
 {
@@ -24,6 +19,8 @@ class PhocaCartCpViewPhocaCartEditStatus extends HtmlView
 	protected $item;
 	protected $itemhistory;
 	protected $id;
+    protected Form $form;
+
 	function display($tpl = null) {
 
 		$app				= Factory::getApplication();
@@ -33,13 +30,10 @@ class PhocaCartCpViewPhocaCartEditStatus extends HtmlView
 		$this->r 			= new PhocacartRenderAdminviews();
 		$this->item			= $this->get('Data');
 		$this->itemhistory	= $this->get('HistoryData');
+        $this->form			= $this->get('Form');
 
-
-
-		$media = new PhocacartRenderAdminmedia();
-		PhocacartRenderAdminjs::renderHtmlAfterChange('#jform_status_id', '#phWarningNotify');
+		new PhocacartRenderAdminmedia();
 
 		parent::display($tpl);
 	}
 }
-?>

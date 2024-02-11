@@ -17,10 +17,12 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Version;
 use Joomla\CMS\Layout\FileLayout;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class Adminview
 {
@@ -28,7 +30,7 @@ class Adminview
 	public $viewtype		= 2;
 	public $option			= '';
 	public $optionLang  	= '';
-	public $compatible		= false;
+	public $compatible		= true;
 	public $sidebar 		= true;
 	protected $document		= false;
 
@@ -36,7 +38,6 @@ class Adminview
 
 		$app				= Factory::getApplication();
 		$version 			= new Version();
-		$this->compatible 	= $version->isCompatible('4.0.0-alpha');
 		$this->view			= $app->input->get('view');
 		$this->option		= $app->input->get('option');
 		$this->optionLang = strtoupper($this->option);
@@ -74,19 +75,13 @@ class Adminview
 
 
 		$o = array();
-		if ($this->compatible) {
 
-			if ($this->sidebar) {
-				$o[] = '<div class="ph-group-class '.$groupClass.'">';
-			} else {
-				$o[] = '<div class="row '.$groupClass.'">';
-				$o[] = '<div id="j-main-container" class="col-md-2">'. Sidebar::render().'</div>';
-				$o[] = '<div id="j-main-container" class="col-md-10">';
-			}
-
+		if ($this->sidebar) {
+			$o[] = '<div class="ph-group-class '.$groupClass.'">';
 		} else {
-			$o[] = '<div id="j-sidebar-container" class="span2">' . Sidebar::render() . '</div>'."\n";
-			$o[] = '<div id="j-main-container" class="span10">'."\n";
+			$o[] = '<div class="row ' . $groupClass . '">';
+			$o[] = '<div id="j-main-container" class="col-md-2">' . Sidebar::render() . '</div>';
+			$o[] = '<div id="j-main-container" class="col-md-10">';
 		}
 
 		return implode("\n", $o);
@@ -95,15 +90,10 @@ class Adminview
 	public function endCp() {
 
 		$o = array();
-		if ($this->compatible) {
-			if ($this->sidebar) {
-				$o[] = '</div>';// end groupClass
-			} else {
-
-				$o[] = '</div></div>';
-			}
+		if ($this->sidebar) {
+			$o[] = '</div>';// end groupClass
 		} else {
-			$o[] = '</div>';
+			$o[] = '</div></div>';
 		}
 
 		return implode("\n", $o);
@@ -122,11 +112,6 @@ class Adminview
 			$tmpl = '&tmpl='.$tmpl;
 		}
 
-		$containerClass = 'container';
-		if ($this->compatible) {
-			$containerClass = '';
-		}
-
 		// CSS based on user groups
 		$user = Factory::getUser();
 		$groupClass = '';
@@ -137,7 +122,7 @@ class Adminview
 		}
 
 		return '<div id="'.$view.'" class="'.$groupClass.'"><form action="'.Route::_('index.php?option='.$option . $viewP . $layout . '&id='.(int) $itemId . $tmpl).'" method="post" name="'.$name.'" id="'.$id.'" class="form-validate '.$class.'" role="form">'."\n"
-		.'<div id="phAdminEdit" class="'.$containerClass.'"><div class="row">'."\n";
+		.'<div id="phAdminEdit"><div class="row">'."\n";
 	}
 
 	public function endForm() {
@@ -270,15 +255,43 @@ class Adminview
 						$datashowon = ' data-showon=\'' . json_encode(FormHelper::parseShowOnConditions($showon, $formControl,$group)) . '\'';
 					}
 
-					$o .=
+					$inputs = $form->getInput($value);
+					if (is_array($inputs)) {
+						$o .= '<div class="control-group-clear ph-par-' . $value . '"  ' . $datashowon . '>' . "\n"
+							. '<div class="control-label">' . $form->getLabel($value) . $descriptionOutput . '</div><div>' . "\n";
+						$field = $form->getField($value);
+						$o .= HTMLHelper::_('uitab.startTabSet', $field->id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]);
+						$languages = I18nHelper::getI18nLanguages();
+						$defLanguage = I18nHelper::getDefLanguage();
+						$fieldValue = I18nHelper::checkI18nValue($field->value);
 
-						'<div class="control-group-clear ph-par-'.$value.'"  '.$datashowon.'>'."\n"
-					 .'<div class="control-label">'. $form->getLabel($value) . $descriptionOutput . '</div>'."\n"
-					//. '<div class="clearfix"></div>'. "\n"
-					. '<div>' . $form->getInput($value). '</div>'."\n"
-					. '<div class="clearfix"></div>' . "\n"
-					. '</div>'. "\n";
+						foreach ($inputs as $lang => $input) {
+							$language = $languages[$lang];
 
+							if ($language->lang_code === $defLanguage) {
+								$i18nsuffix = ' <span class="icon icon-language text-info"></span>';
+							} elseif (!$fieldValue[$defLanguage] && !$fieldValue[$language->lang_code]) {
+								$i18nsuffix = ' <span class="icon icon-cancel"></span>';
+							} elseif ($fieldValue[$defLanguage] && $fieldValue[$language->lang_code]) {
+								$i18nsuffix = ' <span class="icon icon-ok text-success"></span>';
+							} elseif ($language->lang_code !== $defLanguage && (!$fieldValue[$defLanguage] || !$fieldValue[$language->lang_code])) {
+								$i18nsuffix = ' <span class="icon icon-warning text-danger"></span>';
+							}
+
+							$o .= HTMLHelper::_('uitab.addTab', $field->id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);
+							$o .= $input . "\n";
+							$o .= HTMLHelper::_('uitab.endTab');
+						}
+						$o .= HTMLHelper::_('uitab.endTabSet');
+						$o .= '</div><div class="clearfix"></div>' . "\n"
+							. '</div>' . "\n";
+					} else {
+						$o .= '<div class="control-group-clear ph-par-' . $value . '"  ' . $datashowon . '>' . "\n"
+							. '<div class="control-label">' . $form->getLabel($value) . $descriptionOutput . '</div>' . "\n"
+							. '<div>' . $inputs . '</div>' . "\n"
+							. '<div class="clearfix"></div>' . "\n"
+							. '</div>' . "\n";
+					}
 				}
 			} else {
 				foreach ($formArray as $value) {
@@ -526,74 +539,36 @@ class Adminview
 
 	// TABS
 	public function navigation($tabs, $activeTab = '') {
-
-		if ($this->compatible) {
-			return '';
-		}
-
-		$o = '<ul class="nav nav-tabs">';
-		$i = 0;
-		foreach($tabs as $k => $v) {
-			$cA = 0;
-			if ($activeTab != '') {
-				if ($activeTab == $k) {
-					$cA = 'class="active"';
-				}
-			} else {
-				if ($i == 0) {
-					$cA = 'class="active"';
-				}
-			}
-			$o .= '<li '.$cA.'><a href="#'.$k.'" data-bs-toggle="tab">'. $v.'</a></li>'."\n";
-			$i++;
-		}
-		$o .= '</ul>';
-		return $o;
+		return '';
 	}
 
 
 	public function startTabs($active = 'general') {
-		if ($this->compatible) {
-			return HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => $active));
-		} else {
-			return '<div id="phAdminEditTabs" class="tab-content">'. "\n";
-		}
+		return HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => $active));
 	}
 
 	public function endTabs() {
-		if ($this->compatible) {
-			return HTMLHelper::_('uitab.endTabSet');
-		} else {
-			return '</div>';
-		}
+		return HTMLHelper::_('uitab.endTabSet');
 	}
 
 	public function startTab($id, $name, $active = '') {
-		if ($this->compatible) {
-			return HTMLHelper::_('uitab.addTab', 'myTab', $id, $name);
-		} else {
-			return '<div class="tab-pane '.$active.'" id="'.$id.'">'."\n";
-		}
+		return HTMLHelper::_('uitab.addTab', 'myTab', $id, $name);
 	}
 
 	public function endTab() {
-		if ($this->compatible) {
-			return HTMLHelper::_('uitab.endTab');
-		} else {
-			return '</div>';
-		}
+		return HTMLHelper::_('uitab.endTab');
 	}
 
 	public function itemCalc($id, $name, $value, $form = 'pform', $size = 1, $class = '') {
 
 		switch ($size){
-			case 3: $class = 'form-control input-xxlarge'. ' ' . $class;
+			case 3: $class = 'form-control form-control-sm input-xxlarge'. ' ' . $class;
 			break;
-			case 2: $class = 'form-control input-xlarge'. ' ' . $class;
+			case 2: $class = 'form-control form-control-sm input-xlarge'. ' ' . $class;
 			break;
-			case 0: $class = 'form-control input-mini'. ' ' . $class;
+			case 0: $class = 'form-control form-control-sm input-mini'. ' ' . $class;
 			break;
-			default: $class= 'form-control input-small'. ' ' . $class;
+			default: $class= 'form-control form-control-sm input-small'. ' ' . $class;
 			break;
 		}
 		$o = '';

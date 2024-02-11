@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="status" label="COM_PHOCACART_ORDER_OPTIONS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <field name="status_id" type="PhocacartOrderStatus" label="COM_PHOCACART_STATUS">
+            <option value="">COM_PHOCACART_NO_CHANGE</option>
+        </field>
+
+        <field name="comment_history" type="textarea" label="COM_PHOCACART_COMMENT" />
+
+        <field name="tracking_number" type="text" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL"/>
+
+        <field name="tracking_number" type="text" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL"/>
+
+        <field name="tracking_date_shipped" type="calendar" translateformat="true" filter="user_utc" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" />
+
+        <field name="id" type="hidden" />
+    </fieldset>
+
+    <fieldset name="params">
+        <field name="_advanced" type="radio" default="0" filter="unset" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_EDIT_ORDER_STATUS_ADVANCED_OPTIONS">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="_advanced_desc" type="note" hiddenLabel="true" showon="_advanced:1" class="w-100 alert alert-warning" label="COM_PHOCACART_EDIT_ORDER_STATUS_ADVANCED_OPTIONS_DESC" />
+
+        <field name="notify_customer" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_NOTIFY_CUSTOMER">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="notify_others" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_NOTIFY_OTHERS">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="email_send" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_EMAIL_SEND_ATTACHMENT_LABEL">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="0">COM_PHOCACART_NOTHING</option>
+            <option value="1">COM_PHOCACART_ORDER</option>
+            <option value="2">COM_PHOCACART_INVOICE</option>
+            <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
+        </field>
+
+        <field name="email_send_format" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="0">COM_PHOCACART_HTML</option>
+            <option value="1">COM_PHOCACART_PDF</option>
+            <option value="2">COM_PHOCACART_BOTH</option>
+        </field>
+
+
+        <field name="stock_movements" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="=">COM_PHOCACART_ITEMS_UNCHANGED</option>
+            <option value="+">COM_PHOCACART_ITEMS_ADDED</option>
+            <option value="-">COM_PHOCACART_ITEMS_SUBTRACTED</option>
+        </field>
+
+        <field name="change_user_group" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="0">COM_PHOCACART_USER_GROUP_UNCHANGED</option>
+            <option value="1">COM_PHOCACART_USER_GROUP_CHANGED</option>
+        </field>
+
+
+        <field name="change_points_needed" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
+            <option value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
+            <option value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
+        </field>
+
+        <field name="change_points_received" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL">
+            <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
+            <option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
+            <option value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
+            <option value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
+        </field>
+    </fieldset>
+</form>

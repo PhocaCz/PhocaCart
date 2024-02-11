@@ -15,6 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 jimport('joomla.application.component.model');
 
@@ -124,7 +125,14 @@ final class PhocacartCategory
     private static function loadCategoriesCache(): void {
         if (self::$categoriesCache === null) {
             $db = Factory::getDBO();
-            $db->setQuery('SELECT a.*, null AS children FROM #__phocacart_categories AS a ORDER BY a.ordering, a.id');
+            if (I18nHelper::useI18n()) {
+                $db->setQuery('SELECT a.*, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, null AS children ' .
+                    'FROM #__phocacart_categories AS a ' .
+                    I18nHelper::sqlJoin('#__phocacart_categories_i18n') .
+                    'ORDER BY a.ordering, a.id');
+            } else {
+                $db->setQuery('SELECT a.*, null AS children FROM #__phocacart_categories AS a ORDER BY a.ordering, a.id');
+            }
             $categories = $db->loadObjectList('id') ?? [];
 
             array_walk($categories, function ($category) use ($categories) {

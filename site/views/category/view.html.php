@@ -291,4 +291,4 @@ class PhocaCartViewCategory extends HtmlView
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, $category);
 	}
 }
-?>
+

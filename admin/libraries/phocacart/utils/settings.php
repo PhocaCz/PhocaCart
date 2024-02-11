@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 
 
 //=========
@@ -364,43 +365,65 @@ class PhocacartUtilsSettings
 	}
 
 
-	public static function getOrderStatusClass($status) {
-
-
-	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status);
-
+	public static function getOrderStatusClass($status, string $extraClass = '') {
+	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status ?? '');
 
         switch ($status) {
             case 'CANCELED':
-                $class = 'label label-warning badge bg-warning ph-order-status-canceled';
-            break;
+                $class = 'badge bg-warning ph-order-status-canceled';
+                break;
 
             case 'COMPLETED':
-                $class = 'label label-success badge bg-success ph-order-status-completed';
-            break;
+                $class = 'badge bg-success ph-order-status-completed';
+                break;
 
             case 'CONFIRMED':
-                $class = 'label label-success badge bg-success ph-order-status-confirmed';
-            break;
+                $class = 'badge bg-success ph-order-status-confirmed';
+                break;
 
             case 'PENDING':
-                $class = 'label label-info badge bg-info label-primary ph-order-status-pending';
-            break;
+                $class = 'badge bg-info ph-order-status-pending';
+                break;
 
             case 'REFUNDED':
-                $class = 'label label-important label-danger badge bg-danger ph-order-status-refunded';
-            break;
+                $class = 'badge bg-danger ph-order-status-refunded';
+                break;
 
             case 'SHIPPED':
-                $class = 'label label-info badge bg-info ph-order-status-shipped';
-            break;
+                $class = 'badge bg-info ph-order-status-shipped';
+                break;
 
-            default:
-                $class = 'label label-default ph-order-status-default';
-            break;
-
+			default:
+                $class = 'badge bg-secondary ph-order-status-default';
+                break;
         }
+
+		if ($extraClass) {
+			$class .= ' ' . $extraClass;
+		}
         return $class;
     }
+
+	public static function getOrderStatusBadge($title, $params, string $extraClass = '') {
+		$params = new Registry($params);
+
+		$statusClass = PhocacartUtilsSettings::getOrderStatusClass($title, $params->get('class') . ' ' . $extraClass);
+
+		$style = '';
+		if ($params->get('background')) {
+			$style .= 'background: ' . $params->get('background') . ' !important;';
+		}
+
+		if ($params->get('foreground')) {
+			$style .= 'color: ' . $params->get('foreground') . ' !important;';
+		}
+
+		if ($style) {
+			$style = ' style="' . $style . '"';
+		}
+
+		return '<span class="' . $statusClass . '"' . $style . '>' . Text::_($title) . '</span>';
+	}
+
 }
-?>
+

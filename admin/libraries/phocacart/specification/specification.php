@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartSpecification
 {
@@ -74,98 +75,78 @@ class PhocacartSpecification
 
 
 	public static function storeSpecificationsById($productId, $specsArray, $new = 0) {
-
 		if ((int)$productId > 0) {
 			$db =Factory::getDBO();
 
-
-
-			$notDeleteSpecs = array();
+			$notDeleteSpecs = [];
 
 			if (!empty($specsArray)) {
-				$values 	= array();
 				$i = 1;
-				foreach($specsArray as $k => $v) {
-
+				foreach($specsArray as $specification) {
 					// Don't store empty specification
-					if ($v['title'] == '') {
+					if ($specification['title'] == '') {
 						continue;
 					}
 
-					if(empty($v['alias'])) {
-						$v['alias'] = $v['title'];
+					$i18nData = I18nHelper::prepareI18nData($specification, ['title', 'alias', 'value', 'alias_value']);
+
+					if(empty($specification['alias'])) {
+						$specification['alias'] = $specification['title'];
 					}
-					$v['alias'] = PhocacartUtils::getAliasName($v['alias']);
+					$specification['alias'] = PhocacartUtils::getAliasName($specification['alias']);
 
-
-
-					if(empty($v['alias_value'])) {
-						$v['alias_value'] = $v['value'];
+					if(empty($specification['alias_value'])) {
+						$specification['alias_value'] = $specification['value'];
 					}
 
 					// When no value, then no alias
-					if ($v['alias_value'] != '' && !empty($v['alias_value'])) {
-
-						$v['alias_value'] = PhocacartUtils::getAliasName($v['alias_value']);
+					if ($specification['alias_value']) {
+						$specification['alias_value'] = PhocacartUtils::getAliasName($specification['alias_value']);
 					}
 
-					if(empty($v['group_id'])) {
-						$v['group_id'] = 0;
-					}
-
-					// correct simple xml
-					if (empty($v['title'])) 		{$v['title'] 			= '';}
-					if (empty($v['alias'])) 		{$v['alias'] 			= '';}
-					if (empty($v['value'])) 		{$v['value'] 			= '';}
-					if (empty($v['alias_value'])) 	{$v['alias_value'] 		= '';}
-					if (empty($v['group_id'])) 		{$v['group_id'] 		= '';}
-                    if (empty($v['image'])) 		{$v['image'] 		    = '';}
-                    if (empty($v['image_medium'])) 	{$v['image_medium'] 	= '';}
-                    if (empty($v['image_small'])) 	{$v['image_small'] 		= '';}
-                    if (empty($v['color'])) 		{$v['color'] 		    = '';}
+					$specification = PhocacartUtils::arrayDefValues($specification, [
+						'group_id' => 0,
+						'value' => '',
+						'alias_value' => '',
+						'image' => '',
+						'image_medium' => '',
+						'image_small' => '',
+						'color' => '',
+					]);
 
 					$idExists = 0;
-
 					if ($new == 0) {
-						if (isset($v['id']) && $v['id'] > 0) {
-
+						if (isset($specification['id']) && $specification['id'] > 0) {
 							// Does the row exist
-							$query = ' SELECT id '
-							.' FROM #__phocacart_specifications'
-							. ' WHERE id = '. (int)$v['id']
-							.' ORDER BY id';
+							$query = ' SELECT id FROM #__phocacart_specifications WHERE id = '. (int)$specification['id'];
 							$db->setQuery($query);
 							$idExists = $db->loadResult();
-
 						}
 					}
 
-					if ((int)$idExists > 0) {
-
+					if ($idExists) {
 						$query = 'UPDATE #__phocacart_specifications SET'
 						.' product_id = '.(int)$productId.','
-						.' title = '.$db->quote($v['title']).','
-						.' alias = '.$db->quote($v['alias']).','
-						.' value = '.$db->quote($v['value']).','
-						.' alias_value = '.$db->quote($v['alias_value']).','
-						.' group_id = '.(int)$v['group_id'].','
-                        .' image = '.$db->quote($v['image']).','
-                        .' image_medium = '.$db->quote($v['image_medium']).','
-                        .' image_small = '.$db->quote($v['image_small']).','
-                        .' color = '.$db->quote($v['color']).','
+						.' title = '.$db->quote($specification['title']).','
+						.' alias = '.$db->quote($specification['alias']).','
+						.' value = '.$db->quote($specification['value']).','
+						.' alias_value = '.$db->quote($specification['alias_value']).','
+						.' group_id = '.(int)$specification['group_id'].','
+                        .' image = '.$db->quote($specification['image']).','
+                        .' image_medium = '.$db->quote($specification['image_medium']).','
+                        .' image_small = '.$db->quote($specification['image_small']).','
+                        .' color = '.$db->quote($specification['color']).','
 						.' ordering = '.$i
 						.' WHERE id = '.(int)$idExists;
 						$db->setQuery($query);
 						$db->execute();
 						$i++;
 
-						$newIdS 				= $idExists;
-
+						$newIdS = $idExists;
 					} else {
-
 						$date             = gmdate('Y-m-d H:i:s');// not null
 
-						$values 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.$db->quote($v['value']).', '.$db->quote($v['alias_value']).', '.(int)$v['group_id'].', '.$db->quote($v['image']).', '.$db->quote($v['image_medium']).', '.$db->quote($v['image_small']).', '.$db->quote($v['color']).', '.$db->quote($date).', '.$i.')';
+						$values 	= '('.(int)$productId.', '.$db->quote($specification['title']).', '.$db->quote($specification['alias']).', '.$db->quote($specification['value']).', '.$db->quote($specification['alias_value']).', '.(int)$specification['group_id'].', '.$db->quote($specification['image']).', '.$db->quote($specification['image_medium']).', '.$db->quote($specification['image_small']).', '.$db->quote($specification['color']).', '.$db->quote($date).', '.$i.')';
 
 						$query = ' INSERT INTO #__phocacart_specifications (product_id, title, alias, value, alias_value, group_id, image, image_medium, image_small, color, date, ordering)'
 								.' VALUES '.$values;
@@ -176,22 +157,21 @@ class PhocacartSpecification
 						$newIdS = $db->insertid();
 					}
 
+					I18nHelper::saveI18nData($newIdS, $i18nData, '#__phocacart_specifications_i18n');
 					$notDeleteSpecs[]	= $newIdS;
 				}
 			}
 
 			// Remove all specifications except the active
-			if (!empty($notDeleteSpecs)) {
-				$notDeleteSpecsString = implode(',', $notDeleteSpecs);
-				$query = ' DELETE '
-						.' FROM #__phocacart_specifications'
-						.' WHERE product_id = '. (int)$productId
-						.' AND id NOT IN ('.$notDeleteSpecsString.')';
-
+			if (I18nHelper::isI18n()) {
+				$query = ' DELETE s, i18n FROM #__phocacart_specifications s '
+					. ' JOIN #__phocacart_specifications_i18n i18n ON i18n.id = s.id';
 			} else {
-				$query = ' DELETE '
-						.' FROM #__phocacart_specifications'
-						.' WHERE product_id = '. (int)$productId;
+				$query = ' DELETE FROM #__phocacart_specifications s';
+			}
+			$query .= ' WHERE s.product_id = '. (int)$productId;
+			if ($notDeleteSpecs) {
+				$query .= ' AND s.id NOT IN (' . implode(',', $notDeleteSpecs) . ')';
 			}
 			$db->setQuery($query);
 			$db->execute();
@@ -262,12 +242,19 @@ class PhocacartSpecification
 	*/
 
 	public static function getSpecificationGroupsAndSpecifications($productId) {
-
 		$db = Factory::getDBO();
 
-		$query = 'SELECT s.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color, g.id as groupid, g.title as grouptitle'
+		if (I18nHelper::useI18n()) {
+			$columns = 's.id, coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.alias, s.alias) as alias, coalesce(i18n_s.value, s.value) as value, coalesce(i18n_s.alias_value, s.alias_value) as alias_value, '
+				. 's.image, s.image_medium, s.image_small, s.color, g.id as groupid, coalesce(i18n_g.title, g.title) as grouptitle';
+		} else {
+			$columns = 's.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color, g.id as groupid, g.title as grouptitle';
+		}
+		$query = 'SELECT ' . $columns
 				.' FROM #__phocacart_specifications AS s'
 				.' LEFT JOIN #__phocacart_specification_groups AS g ON g.id = s.group_id'
+				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s', 's')
+				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'i18n_g', 'g')
 				.' WHERE s.product_id = '.(int)$productId
 			    .' ORDER by g.ordering';
 		$db->setQuery($query);

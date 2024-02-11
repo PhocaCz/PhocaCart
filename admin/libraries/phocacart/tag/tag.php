@@ -13,25 +13,18 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Constants\TagType;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartTag
 {
-  /**
-   * Standard Tags - are displayed at the bottom
-   */
-  public const TYPE_TAG = 0;
-  /**
-   * Labels - are displayed at the top
-   */
-  public const TYPE_LABEL = 1;
-
   private static function getRelatedTable($type)
   {
     switch ($type) {
-      case self::TYPE_TAG:
+      case TagType::Tag:
       default:
         return '#__phocacart_tags_related';
-      case self::TYPE_LABEL:
+      case TagType::Label:
         return '#__phocacart_taglabels_related';
     }
   }
@@ -42,16 +35,28 @@ class PhocacartTag
 
     if ($select == 1) {
       $query = 'SELECT r.tag_id';
-    } else if ($select == 2){
-      $query = 'SELECT a.id, a.alias ';
+    } else if ($select == 2) {
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.alias, a.alias) as alias';
+        } else {
+            $query = 'SELECT a.id, a.alias';
+        }
     } else {
-      $query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+        } else {
+          $query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+        }
     }
 
     $query .= ' FROM #__phocacart_tags AS a'
-      .' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id'
-      .' WHERE a.type = ' . (int)$type
-      .' AND r.item_id = '.(int) $itemId;
+        . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id';
+    if (I18nHelper::useI18n()) {
+        $query .= I18nHelper::sqlJoin('#__phocacart_tags_i18n');
+    }
+    $query .= ' WHERE a.type = ' . (int)$type
+      .' AND r.item_id = ' . (int)$itemId;
+
     if ($checkPublish == 1) {
         $query .= ' AND a.published = 1';
     }
@@ -81,11 +86,11 @@ class PhocacartTag
     if (!empty($items)) {
       $itemsA = json_decode($items, true);
       switch ($type) {
-        case self::TYPE_TAG:
+        case TagType::Tag:
         default:
           $fieldName = 'tags';
           break;
-        case self::TYPE_LABEL:
+        case TagType::Label:
           $fieldName = 'taglabels';
           break;
       }
@@ -126,7 +131,7 @@ class PhocacartTag
 	 */
 	public static function getTags($itemId, $select = 0, $checkPublish = 0)
   {
-    return self::getProductTags(self::TYPE_TAG, $itemId, $select, $checkPublish);
+    return self::getProductTags(TagType::Tag, $itemId, $select, $checkPublish);
 	}
 
 	/*
@@ -134,12 +139,12 @@ class PhocacartTag
 	 */
 	public static function getTagsSubmitItems($itemId)
   {
-    return self::getSubmittedProductTags(self::TYPE_TAG, $itemId);
+    return self::getSubmittedProductTags(TagType::Tag, $itemId);
 	}
 
 	public static function getTagsByIds($cids)
   {
-    return self::getProductsTags(self::TYPE_TAG, $cids);
+    return self::getProductsTags(TagType::Tag, $cids);
 	}
 
 	/**
@@ -150,7 +155,7 @@ class PhocacartTag
 	 */
 	public static function getTagLabels($itemId, $select = 0, $checkPublish = 0)
   {
-    return self::getProductTags(self::TYPE_LABEL, $itemId, $select, $checkPublish);
+    return self::getProductTags(TagType::Label, $itemId, $select, $checkPublish);
 	}
 
 	/*
@@ -158,11 +163,11 @@ class PhocacartTag
 	 */
 	public static function getTagLabelsSubmitItems($itemId)
   {
-    return self::getSubmittedProductTags(self::TYPE_LABEL, $itemId);
+    return self::getSubmittedProductTags(TagType::Label, $itemId);
 	}
 
 	public static function getTagsLabelsByIds($cids) {
-    return self::getProductsTags(self::TYPE_LABEL, $cids);
+    return self::getProductsTags(TagType::Label, $cids);
 	}
 
     /**
@@ -172,7 +177,7 @@ class PhocacartTag
      * @param string $lang
      * @return mixed
      */
-	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = self::TYPE_TAG, $lang = '', $filterProducts = array(), $limitCount = -1)
+	public static function getAllTags($ordering = 1, $onlyAvailableProducts = 0, $type = TagType::Tag, $lang = '', $filterProducts = array(), $limitCount = -1)
   {
     $wheres		= array();
     $lefts		= array();
@@ -262,15 +267,15 @@ class PhocacartTag
 
 	public static function storeTags($tagsArray, $itemId)
   {
-    self::storeProductTags(self::TYPE_TAG, $tagsArray, $itemId);
+    self::storeProductTags(TagType::Tag, $tagsArray, $itemId);
 	}
 
   public static function storeTagLabels($tagsArray, $itemId)
   {
-    self::storeProductTags(self::TYPE_LABEL, $tagsArray, $itemId);
+    self::storeProductTags(TagType::Label, $tagsArray, $itemId);
   }
 
-  public static function getAllTagsList($order = 'id', $type = self::TYPE_TAG)
+  public static function getAllTagsList($order = 'id', $type = TagType::Tag)
   {
     $db = Factory::getDBO();
     $query = 'SELECT a.id AS value, a.title AS text'
@@ -281,7 +286,7 @@ class PhocacartTag
     return $db->loadObjectList();
   }
 
-	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = self::TYPE_TAG, $attributes = '')
+	public static function getAllTagsSelectBox($name, $id, $activeArray, $javascript = NULL, $order = 'id', $type = TagType::Tag, $attributes = '')
   {
 		return HTMLHelper::_('select.genericlist', self::getAllTagsList($order, $type), $name, $attributes, 'value', 'text', $activeArray, $id);
 	}
@@ -292,8 +297,8 @@ class PhocacartTag
 	 * @param number $types 0 ... nothing, 1 ... tags only, 2 ... labels only, 3 ... tags and labels
 	 * @return string
 	 */
-	public static function getTagsRendered($itemId, $types = 0, $separator = '') {
-
+	public static function getTagsRendered($itemId, $types = 0, $separator = '')
+    {
 	    if ($types == 1) {
 	        // Only tags
 			$tags 	= self::getTags($itemId, 0, 1);
@@ -394,9 +399,9 @@ class PhocacartTag
 	}
 
 
-  public static function getTagType($type = self::TYPE_TAG) {
+  public static function getTagType($type = TagType::Tag) {
     switch ($type) {
-      case self::TYPE_LABEL:
+      case TagType::Label:
         return Text::_('COM_PHOCACART_LABEL');
       default:
         return Text::_('COM_PHOCACART_TAG');
@@ -424,10 +429,10 @@ class PhocacartTag
   }
 
   public static function getActiveTags($items, $ordering) {
-    return self::getActiveItems(self::TYPE_TAG, $items, $ordering);
+    return self::getActiveItems(TagType::Tag, $items, $ordering);
   }
 
   public static function getActiveLabels($items, $ordering) {
-    return self::getActiveItems(self::TYPE_LABEL, $items, $ordering);
+    return self::getActiveItems(TagType::Label, $items, $ordering);
   }
 }
