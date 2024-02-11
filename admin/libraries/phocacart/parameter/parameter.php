@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartParameter
 {
@@ -42,59 +43,45 @@ class PhocacartParameter
 	}
 
 
-	public static function getAllParameters($key = 'id', $ordering = 1, $lang = '') {
+	public static function getAllParameters($key = 'id', $ordering = 1, $lang = ''): array
+	{
+		$keyP = $key . ':' . $ordering . ':' . $lang;
 
-
-		$keyP = base64_encode(serialize($key) . ':' . serialize((int)$ordering . ':' . $lang ));
-
-		if( !array_key_exists( (string)$keyP, self::$parameter )) {
-
-
+		if(!array_key_exists($keyP, self::$parameter)) {
 			$db = Factory::getDBO();
 			$orderingText = PhocacartOrdering::getOrderingText($ordering, 12);
 
-			$wheres = array();
-			$lefts = array();
+			$where = [];
+			$join = [];
 
-			$columns = 'pp.id, pp.title, pp.title_header, pp.image, pp.alias, pp.description, pp.limit_count, pp.link_type';
-			/*$groupsFull		= $columns;
-			$groupsFast		= 'm.id';
-			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
-
-			$wheres[] = ' pp.published = 1';
-
-			if ($lang != '' && $lang != '*') {
-
-				$wheres[] = PhocacartUtilsSettings::getLangQuery('pp.language', $lang);
+			if (I18nHelper::useI18n()) {
+				$columns = 'pp.id, coalesce(i18n_pp.title, pp.title) as title, i18n_pp.title_header, pp.image,'
+					. ' coalesce(i18n_pp.alias, pp.alias) as alias, i18n_pp.description, pp.limit_count, pp.link_type';
+				$join[] = I18nHelper::sqlJoin('#__phocacart_parameters_i18n', 'i18n_pp', 'pp');
+			} else {
+				$columns = 'pp.id, pp.title, pp.title_header, pp.image, pp.alias, pp.description, pp.limit_count, pp.link_type';
 			}
 
+			$where[] = ' pp.published = 1';
+			if ($lang != '' && $lang != '*') {
+				$where[] = PhocacartUtilsSettings::getLangQuery('pp.language', $lang);
+			}
 
 			$q = ' SELECT DISTINCT ' . $columns
 				. ' FROM  #__phocacart_parameters AS pp'
-				. (!empty($lefts) ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $lefts) : '')
-				. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
-				//.' GROUP BY '.$groups
+				. ' ' . implode(' ', $join)
+				. ' WHERE ' . implode(' AND ', $where)
 				. ' ORDER BY ' . $orderingText;
 
 			$db->setQuery($q);
 
 
 			try {
-				$items = $db->loadObjectList($key);
+				self::$parameter[$keyP] = $db->loadObjectList($key);
 			} catch (Exception $e) {
 				Factory::getApplication()->enqueueMessage(Text::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()), 'error');
-				return;
+				return [];
 			}
-			/*
-			try {
-				$items = $db->loadObjectList();
-			} catch (RuntimeException $e) {
-				throw new Exception($e->getMessage(), 500, $e);
-				return false;
-			}*/
-
-
-			self::$parameter[$keyP] = $items;
 		}
 
 		return self::$parameter[$keyP];
@@ -105,20 +92,27 @@ class PhocacartParameter
 	 * PARAMETER VALUES (stored in products) Field PhocacartParameterValues
 	 */
 	public static function getParameterValues($itemId, $parameterId, $select = 0) {
-
 		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT r.parameter_value_id';
 		} else if ($select == 2){
-			$query = 'SELECT a.id, a.alias ';
+			if (I18nHelper::useI18n()) {
+				$query = 'SELECT a.id, coalesce(i18n.alias, a.alias) as alias ';
+			} else {
+				$query = 'SELECT a.id, a.alias ';
+			}
 		} else {
-			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
+			if (I18nHelper::useI18n()) {
+				$query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.type, a.display_format';
+			} else {
+				$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
+			}
 		}
 		$query .= ' FROM #__phocacart_parameter_values AS a'
-				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
 				.' LEFT JOIN #__phocacart_parameter_values_related AS r ON a.id = r.parameter_value_id'
 				.' LEFT JOIN #__phocacart_parameters AS p ON a.parameter_id = p.id'
+				. I18nHelper::sqlJoin('#__phocacart_parameter_values_i18n')
 				.' WHERE r.item_id = '.(int) $itemId
 				.' AND p.id = '.(int) $parameterId
                 .' ORDER BY a.id';

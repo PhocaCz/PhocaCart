@@ -197,8 +197,12 @@ abstract class I18nHelper
 
     public static function sqlJoin(string $i18nTable, string $i18nAlias = 'i18n', string $mainTableAlias = 'a'): string
     {
-        $db = Factory::getDbo();
         // space at the beginning and end in purpose, do not delete
+        if (!self::useI18n()) {
+            return ' ';
+        }
+
+        $db = Factory::getDbo();
         return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nAlias . ' ON ' . $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
     }
 }
