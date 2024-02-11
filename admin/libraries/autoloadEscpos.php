@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 if (class_exists('\\n3tDebug')) {
-    \n3tDebug::callStack();
+    \n3tDebug::callStack('Legacy PhocaCart loader');
 }
 
 require_once __DIR__ . '/bootstrap.php';
