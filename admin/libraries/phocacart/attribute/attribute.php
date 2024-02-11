@@ -17,16 +17,25 @@ use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartAttribute
 {
-    public static function getAttributesById($productId, $return = 0, bool $showUnpublished = false) {
-
+    public static function getAttributesById($productId, $return = 0, bool $showUnpublished = false)
+    {
         $db = Factory::getDBO();
 
-        $query = 'SELECT a.id, a.title, a.alias, a.required, a.type, a.published'
-            . ' FROM #__phocacart_attributes AS a'
-            . ' WHERE a.product_id = ' . (int)$productId;
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.required, a.type, a.published'
+                . ' FROM #__phocacart_attributes AS a'
+                . I18nHelper::sqlJoin('#__phocacart_attributes_i18n')
+                . ' WHERE a.product_id = ' . (int) $productId;
+        } else {
+            $query = 'SELECT a.id, a.title, a.alias, a.required, a.type, a.published'
+                . ' FROM #__phocacart_attributes AS a'
+                . ' WHERE a.product_id = ' . (int) $productId;
+        }
+
         if (!$showUnpublished) {
             $query .= ' AND a.published = 1';
         }
+
         $query .= ' ORDER BY a.ordering';
         $db->setQuery($query);
 
@@ -37,33 +46,39 @@ class PhocacartAttribute
             return $db->loadAssocList();
         } else {
             $attributes        = $db->loadAssocList();
-            $attributesSubform = array();
+            $attributesSubform = [];
             $i                 = 0;
-            if (!empty($attributes)) {
-                foreach ($attributes as $k => $v) {
-                    $attributesSubform['attributes' . $i]['id']       = (int)$v['id'];
-                    $attributesSubform['attributes' . $i]['title']    = (string)$v['title'];
-                    $attributesSubform['attributes' . $i]['alias']    = (string)$v['alias'];
-                    $attributesSubform['attributes' . $i]['published'] = (int)$v['published'];
-                    $attributesSubform['attributes' . $i]['required'] = (int)$v['required'];
-                    $attributesSubform['attributes' . $i]['type']     = (int)$v['type'];
+            if ($attributes) {
+                foreach ($attributes as $attribute) {
+                    $attributesSubform['attributes' . $i]['id']       = (int)$attribute['id'];
+                    $attributesSubform['attributes' . $i]['title']    = (string)$attribute['title'];
+                    $attributesSubform['attributes' . $i]['alias']    = (string)$attribute['alias'];
+                    $attributesSubform['attributes' . $i]['published'] = (int)$attribute['published'];
+                    $attributesSubform['attributes' . $i]['required'] = (int)$attribute['required'];
+                    $attributesSubform['attributes' . $i]['type']     = (int)$attribute['type'];
                     $i++;
                 }
             }
             return $attributesSubform;
         }
-
-        return false;
     }
 
     public static function getOptionsById($attributeId, $return = 0, bool $showUnpublished = false) {
 
         $db = Factory::getDBO();
 
-
-        $query = 'SELECT a.id, a.title, a.alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type';
-        $query .= ' FROM #__phocacart_attribute_values AS a'
-            . ' WHERE a.attribute_id = ' . (int)$attributeId;
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
+                . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
+                . ' FROM #__phocacart_attribute_values AS a'
+                . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n')
+                . ' WHERE a.attribute_id = ' . (int) $attributeId;
+        } else {
+            $query = 'SELECT a.id, a.title, a.alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
+                . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
+                . ' FROM #__phocacart_attribute_values AS a'
+                . ' WHERE a.attribute_id = ' . (int) $attributeId;
+        }
         if (!$showUnpublished) {
             $query .= ' AND a.published = 1';
         }
@@ -606,173 +621,28 @@ class PhocacartAttribute
         }
     }
 
-    /*
-    public static function storeAttributesById($productId, $attributesArray) {
-
-
-        if ((int)$productId > 0) {
-            $db 	= Factory::getDBO();
-            $app	= Factory::getApplication();
-
-
-            // REMOVE OPTIONS
-            // Get attribute ids which will be removed (to remove options)
-            $query = ' SELECT id '
-                    .' FROM #__phocacart_attributes'
-                    . ' WHERE product_id = '. (int)$productId
-                    .' ORDER BY id';
-            $db->setQuery($query);
-            $deleteIds = $db->loadColumn();
-
-            if (!empty($deleteIds)) {
-                $deleteString = implode(',', $deleteIds);
-
-                $query = ' DELETE '
-                    .' FROM #__phocacart_attribute_values'
-                    . ' WHERE attribute_id IN ('. (string)$deleteString.')';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            // REMOVE ATTRIBUTES
-            $query = ' DELETE '
-                    .' FROM #__phocacart_attributes'
-                    . ' WHERE product_id = '. (int)$productId;
-            $db->setQuery($query);
-            $db->execute();
-
-            // ADD ATTRIBUTES
-            if (!empty($attributesArray)) {
-
-
-                foreach($attributesArray as $k => $v) {
-
-                    if(empty($v['alias'])) {
-                        $v['alias'] = $v['title'];
-                    }
-                    $v['alias'] = PhocacartUtils::getAliasName($v['alias']);
-
-                    // correct simple xml
-                    if (empty($v['title'])) 		{$v['title'] 			= '';}
-                    if (empty($v['alias'])) 		{$v['alias'] 			= '';}
-                    if (empty($v['required'])) 		{$v['required'] 		= '';}
-                    if (empty($v['type'])) 			{$v['type'] 			= '';}
-
-                    $valuesString 	= '';
-                    $valuesString 	= '('.(int)$productId.', '.$db->quote($v['title']).', '.$db->quote($v['alias']).', '.(int)$v['required'].', '.(int)$v['type'].')';
-                    $query = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, required, type)'
-                                .' VALUES '.(string)$valuesString;
-                    $db->setQuery($query);
-                    $db->execute(); // insert is not done together but step by step because of getting last insert id
-
-                    // ADD OPTIONS
-                    $newId = $db->insertid();
-
-                    if (!empty($v['options']) && isset($newId) && (int)$newId > 0) {
-
-                        $options		= array();
-
-                        // Get Default Value Type - if the attribute type is single select box or multiple checkbox
-                        // If 1 ... it is multiple, you don't need to check for unique default value
-                        // If 0 ... it is single, you need to check that the attribute has selected only one value
-                        $dTV = self::getTypeArray($v['type'], 1);
-                        $dI  = 0;// defaultValue $i
-                        $dVR = 0;// defaultValue removed?
-
-
-                        foreach($v['options'] as $k2 => $v2) {
-
-                            if(empty($v2['alias'])) {
-                                $v2['alias'] = $v2['title'];
-                            }
-                            $v2['alias'] = PhocacartUtils::getAliasName($v2['alias']);
-
-                            // Transform checkbox to INT (1 or 0)
-                            // And check if there are more default values which is not possible e.g. for select box
-                            $defaultValue = 0;
-                            //PhocacartLog::add(3, $v['title'] . '- '. $v2['title']. $v2['type']. ' - '. $v2['default_value']);
-
-                            // can be "on" (sent by form) or "0" or "1" sent by database e.g. in batch
-                            if (isset($v2['default_value']) && $v2['default_value'] != '0') {
-                                $defaultValue = 1;
-
-                                if ($dTV == 0) {
-                                    $dI++;
-                                }
-
-                                // Example: we are in loop of options of select box
-                                // User has selected two default values (checked)
-                                // But select box can have only one default value, so we need to skip it and inform user
-                                if ((int)$dI > 1) {
-                                    $defaultValue = 0;
-                                    $dVR = 1;
-                                }
-                            }
-
-                            // correct simple xml
-                            if (empty($v2['title'])) 			{$v2['title'] 			= '';}
-                            if (empty($v2['alias'])) 			{$v2['alias'] 			= '';}
-                            if (empty($v2['operator'])) 		{$v2['operator'] 		= '';}
-                            if (empty($v2['amount'])) 			{$v2['amount'] 			= '';}
-                            if (empty($v2['stock'])) 			{$v2['stock'] 			= '';}
-                            if (empty($v2['operator_weight'])) 	{$v2['operator_weight'] = '';}
-                            if (empty($v2['weight'])) 			{$v2['weight'] 			= '';}
-                            if (empty($v2['image'])) 			{$v2['image'] 			= '';}
-                            if (empty($v2['image_small']))		{$v2['image_small'] 	= '';}
-                            if (empty($v2['color'])) 			{$v2['color'] 			= '';}
-
-
-                            $options[] 	= '('.(int)$newId.', '.$db->quote($v2['title']).', '.$db->quote($v2['alias']).', '.$db->quote($v2['operator']).', '.$db->quote($v2['amount']).', '.(int)$v2['stock'].', '.$db->quote($v2['operator_weight']).', '.$db->quote($v2['weight']).', '.$db->quote($v2['image']).', '.$db->quote($v2['image_small']).', '.$db->quote($v2['color']).', '.(int)$defaultValue.')';
-                            if (!empty($options)) {
-                                $valuesString2 = implode(',', $options);
-                            }
-                        }
-                        $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, operator, amount, stock, operator_weight, weight, image, image_small, color, default_value)'
-                                    .' VALUES '.(string)$valuesString2;
-
-                        $db->setQuery($query);
-                        $db->execute();
-
-                        // One or more default values removed
-                        if ($dVR == 1) {
-                            $msg = Text::_('COM_PHOCACART_ATTRIBUTE'). ': '. $v['title'] . "<br />";
-                            $msg .= Text::_('COM_PHOCACART_THIS_ATTRIBUTE_DOES_NOT_ALLOW_TO_STORE_MULTIPLE_DEFAULT_VALUES');
-                            $app->enqueueMessage($msg, 'error');
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
     public static function getAttributesAndOptions($productId) {
-
-        $attributes = array();
         $attributes = self::getAttributesById($productId);
 
-        $attributesKey = array();
-        if (!empty($attributes)) {
-            foreach ($attributes as $k => $v) {
-                $attributesKey[$v->id] = $v;
-                $options               = self::getOptionsById((int)$v->id);
-                if (!empty($options)) {
-                    //$attributes[$k]->options 		= $options;
+        $attributesKey = [];
+        if ($attributes) {
+            foreach ($attributes as $attribute) {
+                $attributesKey[$attribute->id] = $attribute;
+                $attributesKey[$attribute->id]->options = false;
 
-                    $optionsKey = array();
-                    foreach ($options as $k2 => $v2) {
-                        $optionsKey[$v2->id] = $v2;
+                $options = self::getOptionsById($attribute->id);
+                if ($options) {
+                    $optionsKey = [];
+                    foreach ($options as $option) {
+                        $optionsKey[$option->id] = $option;
                     }
-                    $attributesKey[$v->id]->options = $optionsKey;
-                } else {
-                    //$attributes[$k]->options 		= false;
-                    $attributesKey[$v->id]->options = false;
+                    $attributesKey[$attribute->id]->options = $optionsKey;
                 }
             }
         }
 
         return $attributesKey;
     }
-
 
     public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
 
