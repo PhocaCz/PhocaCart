@@ -740,10 +740,19 @@ class PhocacartAttribute
 
     public static function getAttributeValue($id, $attributeId) {
         $db    = Factory::getDBO();
-        $query = ' SELECT a.id, a.title, a.type, a.alias, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
-            . ' aa.id as aid, aa.title as atitle, aa.type as atype'
+        if (I18nHelper::useI18n()) {
+            $columns = 'coalesce(i18n_a.title, a.title) as title, coalesce(i18n_a.alias, a.alias) as alias, coalesce(i18n_aa.title, aa.title) as atitle';
+        } else {
+            $columns = 'a.title, a.alias, aa.title as atitle';
+        }
+
+        $query = ' SELECT a.id, a.type, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, '
+            . 'a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
+            . ' aa.id as aid, aa.type as atype, ' . $columns
             . ' FROM #__phocacart_attribute_values AS a'
             . ' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
+            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_a')
+            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_aa', 'aa')
             . ' WHERE a.id = ' . (int)$id . ' AND a.attribute_id = ' . (int)$attributeId
             . ' ORDER BY a.id'
             . ' LIMIT 1';
@@ -772,82 +781,6 @@ class PhocacartAttribute
         }
         return $fullAttributes;
     }
-
-
-
-
-    /*
-     * Check if attribute is required or not
-     * This is checked when adding products to cart (normally, this should not happen, as html5 input form checking should do it)
-     * Adding products to cart - this is only security check
-     * Checking products before making order - this is only security check
-     * Standard user will not add empty attributes if required because html5 form checking will tell him
-     * This is really only for cases, someone will try to forge the form - server side checking
-     */
-    /*public static function checkIfRequired($id, $value) {
-
-        // Multiple value
-        if ((int)$id > 0 && is_array($value) && !empty($value)) {
-
-            return true;
-        }
-        // One value
-        if ((int)$id > 0 && (int)$value > 0) {
-            return true;// Attribute set and value set too - we don't have anything to check, as attribute value was selected
-        }
-
-        if ((int)$id > 0 && (int)$value == 0) {
-            $db =Factory::getDBO();
-            $query = ' SELECT a.required'
-            .' FROM #__phocacart_attributes AS a'
-            .' WHERE a.id = '.(int)$id
-            .' ORDER BY a.id'
-            .' LIMIT 1';
-            $db->setQuery($query);
-            $attrib = $db->loadObject();
-            if (isset($attrib->required) && $attrib->required == 0) {
-                return true;
-            } else {
-                return false;// seems like attribute is required but not selected
-            }
-        }
-
-        return false;
-    }*/
-
-
-    /* Check if the product includes some required attribute
-     * If yes, but users tries to add the product without attribute (forgery)
-     * just check it on server side
-     * BE AWARE - this test runs only in case when attributes are empty
-     * We don't check if attribute was selected or not or if is required or not
-     * We didn't get any attribute when ordering this product and we only check
-     * if the product includes some attribute
-     */
-    /*public static function checkIfExistsAndRequired($productId) {
-
-        $wheres		= array();
-        $wheres[] 	= ' a.id = '.(int)$productId;
-        $db 		= Factory::getDBO();
-        $query = ' SELECT a.id,'
-        .' at.required AS attribute_required'
-        .' FROM #__phocacart_products AS a'
-        .' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1'
-        . ' WHERE ' . implode( ' AND ', $wheres )
-        . ' ORDER BY a.id'
-        . ' LIMIT 1';
-        $db->setQuery($query);
-        $attrib = $db->loadObject();
-
-        if ((int)$attrib->attribute_required > 0) {
-            return false;
-        } else {
-            return true;
-        }
-
-        return false;
-    }*/
-
 
     public static function getAllRequiredAttributesByProduct($productId) {
 
