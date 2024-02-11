@@ -29,6 +29,7 @@ use Joomla\CMS\Table\Observer\Tags;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
+use Phoca\PhocaCart\Constants\TagType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
@@ -391,27 +392,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		if (empty($table->redirect_url)) {
 			$table->redirect_url = null;
 		}
-
-		/*
-		if (empty($table->getId())) {
-			// Set the values
-			//$table->created	= $date->toSql();
-
-			// Set ordering to the last item if not set
-			// WE HAVE SPECIFIC ORDERING
-			/*if (empty($table->ordering)) {
-				$db = Factory::getDbo();
-				//$db->setQuery('SELECT MAX(ordering) FROM #__phocadownload');
-				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_productcategories WHERE category_id = '.(int)$table->category_id);
-				$max = $db->loadResult();
-				$table->ordering = $max+1;
-			}
-		} else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
-		}
-		*/
 	}
 
 	public function validate($form, $data, $group = null)
@@ -2160,7 +2140,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
                 $event = new BeforeBatchEvent(
                     $this->event_before_batch,
-                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                    ['src' => $this->table, 'type' => 'categories']
                 );
                 $this->dispatchEvent($event);
 
@@ -2214,7 +2194,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
                 $event = new BeforeBatchEvent(
                     $this->event_before_batch,
-                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                    ['src' => $this->table, 'type' => 'groups']
                 );
                 $this->dispatchEvent($event);
 
@@ -2266,7 +2246,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
                 $event = new BeforeBatchEvent(
                     $this->event_before_batch,
-                    ['src' => $this->table, 'type' => $tagsType == PhocacartTag::TYPE_TAG ? 'tags' : 'labels']
+                    ['src' => $this->table, 'type' => $tagsType == TagType::Tag ? 'tags' : 'labels']
                 );
                 $this->dispatchEvent($event);
 
@@ -2284,7 +2264,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
                 } else {
                     $tags = array_diff($tags, $value);
                 }
-                if ($tagsType == PhocacartTag::TYPE_TAG) {
+                if ($tagsType == TagType::Tag) {
                     PhocacartTag::storeTags($tags, (int)$pk);
                     PhocacartCount::setProductCount($allTags, 'tag', 1);
                 } else {
@@ -2306,22 +2286,22 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
     protected function batchTagsAdd($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_TAG, true, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Tag, true, (array)$value, $pks, $contexts);
     }
 
     protected function batchTagsRemove($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_TAG, false, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Tag, false, (array)$value, $pks, $contexts);
     }
 
     protected function batchLabelsAdd($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_LABEL, true, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Label, true, (array)$value, $pks, $contexts);
     }
 
     protected function batchLabelsRemove($value, $pks, $contexts): bool
     {
-        return $this->batchTags(PhocacartTag::TYPE_LABEL, false, (array)$value, $pks, $contexts);
+        return $this->batchTags(TagType::Label, false, (array)$value, $pks, $contexts);
     }
 
     protected function batchFeedOptions($newValues, $pks, $contexts): bool
