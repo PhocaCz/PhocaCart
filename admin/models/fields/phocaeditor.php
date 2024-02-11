@@ -83,19 +83,8 @@ class JFormFieldPhocaEditor extends EditorField
         return array_merge($data, $extraData);
     }
 
-    protected function getInput()
+    protected function renderEditor(?string $langCode, ?string $value): string
     {
-        if ($this->i18n) {
-            $languages = I18nHelper::getI18nLanguages();
-            $this->value = I18nHelper::checkI18nValue($this->value);
-        } else {
-            $languages = [
-                (object)[
-                    'lang_code' => null,
-                ]
-            ];
-        }
-
         $params = [
             'autofocus' => $this->autofocus,
             'readonly'  => $this->readonly || $this->disabled,
@@ -103,23 +92,34 @@ class JFormFieldPhocaEditor extends EditorField
         ];
 
         $editor = $this->getEditor();
-        $editors = [];
-        foreach ($languages as $language) {
-            $editors[$language->lang_code] = $editor->display(
-                $this->name . ($this->i18n ? '[' . $language->lang_code . ']' : ''),
-                $this->i18n ? $this->value[$language->lang_code] : $this->value,
-                $this->width,
-                $this->height,
-                $this->columns,
-                $this->rows,
-                $this->buttons ? (\is_array($this->buttons) ? array_merge($this->buttons, $this->hide) : $this->hide) : false,
-                $this->id . ($this->i18n ? '-' . $language->lang_code : ''),
-                $this->asset,
-                $this->form->getValue($this->authorField),
-                $params
-            );
-        }
+        return $editor->display(
+            $this->name . ($langCode ? '[' . $langCode . ']' : ''),
+            $value,
+            $this->width,
+            $this->height,
+            $this->columns,
+            $this->rows,
+            $this->buttons ? (\is_array($this->buttons) ? array_merge($this->buttons, $this->hide) : $this->hide) : false,
+            $this->id . ($langCode ? '-' . $langCode : ''),
+            $this->asset,
+            $this->form->getValue($this->authorField),
+            $params
+        );
+    }
+    protected function getInput()
+    {
+        if ($this->i18n) {
+            $languages = I18nHelper::getI18nLanguages();
+            $this->value = I18nHelper::checkI18nValue($this->value);
 
-        return $editors;
+            $editors = [];
+            foreach ($languages as $language) {
+                $editors[$language->lang_code] = $this->renderEditor($language->lang_code, $this->value[$language->lang_code]);
+            }
+
+            return $editors;
+        } else {
+            return $this->renderEditor(null, $this->value);
+        }
     }
 }
