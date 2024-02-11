@@ -290,53 +290,63 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 	function getCategory($itemId, $catId) {
 		if (empty($this->category)) {
-			$query			= $this->getCategoryQuery( $itemId, $catId );
-
-			$this->category		= $this->_getList( $query, 0, 1 );
+			$query = $this->getCategoryQuery( $itemId, $catId );
+			$this->category = $this->_getList( $query, 0, 1 );
 		}
 		return $this->category;
 	}
 
-	function getCategoryQuery($itemId, $catId) {
-
+	private function getCategoryQuery($itemId, $catId) {
+		$app		= Factory::getApplication();
 		$user 		= PhocacartUser::getUser();
-		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
-		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+		$db 		= $this->getDatabase();
+		$lang       = $app->getLanguage()->getTag();
 
-		$wheres		= array();
-		//$app		= Factory::getApplication();
-		//$params 	= $app->getParams();
-
-		$wheres[] = " c.published = 1";
-
-		$wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		$where		= [];
+		$where[] = ' c.published = 1';
+		$where[] = ' c.type IN (' . implode(', ', [ProductType::Common, ProductType::Shop]) . ')';
 
 		if ($this->getState('filter.language')) {
 			$lang 		= Factory::getLanguage()->getTag();
-			//$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
-			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
+			$where[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 
 		if ((int)$catId > 0) {
-			$wheres[]	= " c.id= ".(int)$catId;
+			$where[]	= ' c.id = ' . (int)$catId;
 		} else {
-			$wheres[]	= " a.id= ".(int)$itemId;
+			$where[]	= ' a.id = ' . (int)$itemId;
 		}
 
-		$wheres[] = " c.access IN (".$userLevels.")";
-		$wheres[] = " a.access IN (".$userLevels.")";
+		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
+		$where[] = 'c.access IN (' . $userLevels . ')';
+		$where[] = 'a.access IN (' . $userLevels . ")";
 
-		$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-		$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, GroupType::User, 1));
+		$where[] = '(ga.group_id IN (' . $userGroups . ') OR ga.group_id IS NULL)';
+		$where[] = '(gc.group_id IN (' . $userGroups . ') OR gc.group_id IS NULL)';
 
-		$query = " SELECT c.id, c.title, c.alias, c.description, c.parent_id"
-				. " FROM #__phocacart_categories AS c"
+		$columns = ['c.id', 'c.parent_id'];
+		if (I18nHelper::isI18n()) {
+			$columns = array_merge($columns, [
+				'coalesce(i18n.title, c.title) as title', 'coalesce(i18n.alias, c.alias) as alias', 'i18n.description'
+			]);
+		} else {
+			$columns = array_merge($columns, [
+				'c.title', 'c.alias', 'c.description'
+			]);
+		}
+
+		$query = ' SELECT ' . implode(', ', $columns)
+				. ' FROM #__phocacart_categories AS c'
 				. ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.category_id = c.id'
-				. " LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id"
-				. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-				. " WHERE " . implode( " AND ", $wheres )
-				. " ORDER BY c.ordering";
+				. ' LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id'
+				. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = ' . GroupType::Product
+				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
+		if (I18nHelper::isI18n()) {
+			$query .= ' LEFT JOIN #__phocacart_categories_i18n AS i18n ON i18n.id = c.id AND i18n.language = ' . $db->quote($lang);
+		}
+		$query .= ' WHERE ' . implode( ' AND ', $where)
+				. ' ORDER BY c.ordering';
 
 		return $query;
 	}
@@ -356,4 +366,3 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		return true;
 	}
 }
-?>
