@@ -206,7 +206,7 @@ class PhocacartFields
         $form->load($xml->saveXML());
 
         foreach ($batchFields as $field) {
-            $form->setFieldAttribute($field->name, 'showon', '_custom_fields:1', $field->group);
+            $form->setFieldAttribute($field->name, 'showon', '_custom_fields:1', $field->group ?? null);
         }
 
         return true;
