@@ -14,6 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Phoca\PhocaCart\Constants\TagType;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartTag
 {
@@ -34,16 +35,28 @@ class PhocacartTag
 
     if ($select == 1) {
       $query = 'SELECT r.tag_id';
-    } else if ($select == 2){
-      $query = 'SELECT a.id, a.alias ';
+    } else if ($select == 2) {
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.alias, a.alias) as alias';
+        } else {
+            $query = 'SELECT a.id, a.alias';
+        }
     } else {
-      $query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+        if (I18nHelper::useI18n()) {
+            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+        } else {
+          $query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+        }
     }
 
     $query .= ' FROM #__phocacart_tags AS a'
-      .' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id'
-      .' WHERE a.type = ' . (int)$type
-      .' AND r.item_id = '.(int) $itemId;
+        . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id';
+    if (I18nHelper::useI18n()) {
+        $query .= ' LEFT JOIN #__phocacart_tags_i18n AS i18n ON i18n.id = a.id AND i18n.language = ' . $db->quote(Factory::getApplication()->getLanguage()->getTag());
+    }
+    $query .= ' WHERE a.type = ' . (int)$type
+      .' AND r.item_id = ' . (int)$itemId;
+
     if ($checkPublish == 1) {
         $query .= ' AND a.published = 1';
     }
@@ -284,8 +297,8 @@ class PhocacartTag
 	 * @param number $types 0 ... nothing, 1 ... tags only, 2 ... labels only, 3 ... tags and labels
 	 * @return string
 	 */
-	public static function getTagsRendered($itemId, $types = 0, $separator = '') {
-
+	public static function getTagsRendered($itemId, $types = 0, $separator = '')
+    {
 	    if ($types == 1) {
 	        // Only tags
 			$tags 	= self::getTags($itemId, 0, 1);
