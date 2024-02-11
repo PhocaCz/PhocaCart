@@ -242,12 +242,19 @@ class PhocacartSpecification
 	*/
 
 	public static function getSpecificationGroupsAndSpecifications($productId) {
-
 		$db = Factory::getDBO();
 
-		$query = 'SELECT s.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color, g.id as groupid, g.title as grouptitle'
+		if (I18nHelper::useI18n()) {
+			$columns = 's.id, coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.alias, s.alias) as alias, coalesce(i18n_s.value, s.value) as value, coalesce(i18n_s.alias_value, s.alias_value) as alias_value, '
+				. 's.image, s.image_medium, s.image_small, s.color, g.id as groupid, coalesce(i18n_g.title, g.title) as grouptitle';
+		} else {
+			$columns = 's.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color, g.id as groupid, g.title as grouptitle';
+		}
+		$query = 'SELECT ' . $columns
 				.' FROM #__phocacart_specifications AS s'
 				.' LEFT JOIN #__phocacart_specification_groups AS g ON g.id = s.group_id'
+				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s', 's')
+				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'i18n_g', 'g')
 				.' WHERE s.product_id = '.(int)$productId
 			    .' ORDER by g.ordering';
 		$db->setQuery($query);
