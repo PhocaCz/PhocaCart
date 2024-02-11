@@ -128,7 +128,7 @@ final class PhocacartCategory
             if (I18nHelper::useI18n()) {
                 $db->setQuery('SELECT a.*, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, null AS children ' .
                     'FROM #__phocacart_categories AS a ' .
-                    'LEFT JOIN #__phocacart_categories_i18n AS i18n ON i18n.id = a.id AND i18n.language = ' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) .
+                    I18nHelper::sqlJoin('#__phocacart_categories_i18n') .
                     'ORDER BY a.ordering, a.id');
             } else {
                 $db->setQuery('SELECT a.*, null AS children FROM #__phocacart_categories AS a ORDER BY a.ordering, a.id');

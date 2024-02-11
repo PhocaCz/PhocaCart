@@ -85,14 +85,13 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 
 	public function getCategoriesListQuery($id, $categoriesOrdering)
     {
-		$user 				= PhocacartUser::getUser();
-		$app				= Factory::getApplication();
-		$params 			= $app->getParams();
-        $lang 		= $app->getLanguage()->getTag();
+		$user 		= PhocacartUser::getUser();
+		$app		= Factory::getApplication();
+		$params 	= $app->getParams();
         $db 		= $this->getDatabase();
 
-        $where				= [];
-        $join				= [];
+        $where		= [];
+        $join		= [];
 
         $join[] = 'LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
 
@@ -112,7 +111,7 @@ class PhocaCartModelCategories extends BaseDatabaseModel
 		}
 
 		if ($this->getState('filter.language')) {
-			$where[] =  ' c.language IN (' . $db->quote($lang) . ', ' . $db->quote('*') . ')';
+			$where[] =  ' c.language IN (' . $db->quote($app->getLanguage()->getTag()) . ', ' . $db->quote('*') . ')';
 		}
 
 		$where[] = 'c.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')';
@@ -138,7 +137,7 @@ class PhocaCartModelCategories extends BaseDatabaseModel
         }
 
         if (I18nHelper::isI18n()) {
-            $join[] = 'LEFT JOIN #__phocacart_categories_i18n AS i18n_c ON i18n_c.id = c.id AND i18n_c.language = ' . $db->quote($lang);
+            $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
 
             $columns[] = 'coalesce(i18n_c.title, c.title) as title';
             $columns[] = 'coalesce(i18n_c.alias, c.alias) as alias';

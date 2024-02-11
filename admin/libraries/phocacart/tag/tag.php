@@ -52,7 +52,7 @@ class PhocacartTag
     $query .= ' FROM #__phocacart_tags AS a'
         . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id';
     if (I18nHelper::useI18n()) {
-        $query .= ' LEFT JOIN #__phocacart_tags_i18n AS i18n ON i18n.id = a.id AND i18n.language = ' . $db->quote(Factory::getApplication()->getLanguage()->getTag());
+        $query .= I18nHelper::sqlJoin('#__phocacart_tags_i18n');
     }
     $query .= ' WHERE a.type = ' . (int)$type
       .' AND r.item_id = ' . (int)$itemId;

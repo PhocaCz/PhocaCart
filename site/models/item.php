@@ -264,9 +264,9 @@ class PhocaCartModelItem extends BaseDatabaseModel
 				.' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id';
 
 		if (I18nHelper::isI18n()) {
-			$query .= ' LEFT JOIN #__phocacart_products_i18n AS i18n_i ON i18n_i.id = i.id and i18n_i.language = ' . $db->quote($lang);
-			$query .= ' LEFT JOIN #__phocacart_categories_i18n AS i18n_c ON i18n_c.id = c.id and i18n_c.language = ' . $db->quote($lang);
-			$query .= ' LEFT JOIN #__phocacart_manufacturers_i18n AS i18n_m ON i18n_m.id = m.id and i18n_m.language = ' . $db->quote($lang);
+			$query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_i', 'i');
+			$query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
+            $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
 		}
 
 		if (!$params->get('sql_product_skip_tax', false)) {
@@ -343,7 +343,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 				. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = ' . GroupType::Product
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
 		if (I18nHelper::isI18n()) {
-			$query .= ' LEFT JOIN #__phocacart_categories_i18n AS i18n ON i18n.id = c.id AND i18n.language = ' . $db->quote($lang);
+			$query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n', 'c');
 		}
 		$query .= ' WHERE ' . implode( ' AND ', $where)
 				. ' ORDER BY c.ordering';

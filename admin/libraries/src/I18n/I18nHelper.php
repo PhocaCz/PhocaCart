@@ -67,6 +67,17 @@ abstract class I18nHelper
         return $defLanguage;
     }
 
+    public static function getI18nLanguage(): string
+    {
+        static $i18nLanguage = null;
+
+        if ($i18nLanguage === null) {
+            $i18nLanguage = Factory::getApplication()->getLanguage()->getTag();
+        }
+
+        return $i18nLanguage;
+    }
+
     public static function prepareI18nData(array &$data, array $i18nFields): array
     {
         if (!self::isI18n()) {
@@ -182,5 +193,12 @@ abstract class I18nHelper
         }
 
         return I18nHelper::getI18nLanguages();
+    }
+
+    public static function sqlJoin(string $i18nTable, string $i18nAlias = 'i18n', string $mainTableAlias = 'a'): string
+    {
+        $db = Factory::getDbo();
+        // space at the beginning and end in purpose, do not delete
+        return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nAlias . ' ON ' . $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
     }
 }

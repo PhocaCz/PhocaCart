@@ -279,7 +279,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
             }
 
             if (I18nHelper::isI18n()) {
-                $join[] = 'LEFT JOIN #__phocacart_products_i18n AS i18n_a ON i18n_a.id = a.id AND i18n_a.language = ' . $db->quote($lang);
+                $join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a');
                 $columns[] = 'coalesce(i18n_a.title, a.title) AS title';
                 $columns[] = 'coalesce(i18n_a.alias, a.alias) AS alias';
                 $columns[] = 'i18n_a.description';
@@ -352,7 +352,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
         $join[] = 'LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
 
         if (I18nHelper::isI18n()) {
-            $join[] = 'LEFT JOIN #__phocacart_categories_i18n AS i18n_c ON i18n_c.id = c.id AND i18n_c.language = ' . $db->quote($lang);
+            $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
         }
 
 		if ($isSubcategoriesQuery) {
@@ -362,7 +362,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 			$where[] = 'c.id = ' . (int)$categoryId;
             $join[] = 'LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id';
             if (I18nHelper::isI18n()) {
-                $join[] = 'LEFT JOIN #__phocacart_categories_i18n AS i18n_cc ON i18n_cc.id = cc.id AND i18n_cc.language = ' . $db->quote($lang);
+                $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_cc', 'cc');
             }
 		}
 

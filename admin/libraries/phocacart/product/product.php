@@ -53,7 +53,6 @@ class PhocacartProduct
     {
         $db     = Factory::getDBO();
         $app    = Factory::getApplication();
-        $lang   = $app->getLanguage()->getTag();
         $where  = [];
         $params = PhocacartUtils::getComponentParameters();
         $user   = PhocacartUser::getUser();
@@ -120,9 +119,9 @@ class PhocacartProduct
             . ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id';
 
         if (I18nHelper::useI18n()) {
-            $query .= ' LEFT JOIN #__phocacart_products_i18n AS i18n_i ON i18n_i.id = i.id AND i18n_i.language = ' . $db->quote($lang);
-            $query .= ' LEFT JOIN #__phocacart_categories_i18n AS i18n_c ON i18n_c.id = c.id AND i18n_c.language = ' . $db->quote($lang);
-            $query .= ' LEFT JOIN #__phocacart_manufacturers_i18n AS i18n_m ON i18n_m.id = m.id AND i18n_m.language = ' . $db->quote($lang);
+            $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_i', 'i');
+            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
+            $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
         }
 
         if (!$params->get('sql_product_skip_tax', false)) {
