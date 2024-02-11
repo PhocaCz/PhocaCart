@@ -167,7 +167,7 @@ class PhocacartSpecification
 				$query = ' DELETE s, i18n FROM #__phocacart_specifications s '
 					. ' JOIN #__phocacart_specifications_i18n i18n ON i18n.id = s.id';
 			} else {
-				$query = ' DELETE FROM #__phocacart_specifications s';
+				$query = ' DELETE s FROM #__phocacart_specifications s';
 			}
 			$query .= ' WHERE s.product_id = '. (int)$productId;
 			if ($notDeleteSpecs) {
