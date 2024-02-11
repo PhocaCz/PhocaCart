@@ -173,6 +173,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_parameters_i18n` (
     `title` varchar(255),
     `alias` varchar(255),
     `title_header` varchar(255),
+    `description` text,
     PRIMARY KEY  (`id`, `language`),
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

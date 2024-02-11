@@ -32,6 +32,7 @@ class PhocaCartCpModelPhocacartParameter extends AdminModel
             'title',
             'alias',
             'title_header',
+            'description',
         ];
     }
 
