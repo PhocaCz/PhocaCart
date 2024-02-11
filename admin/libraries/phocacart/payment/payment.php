@@ -17,6 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 /*
  * Payment Method - is the method stored in Phoca Cart
@@ -55,9 +56,8 @@ class PhocacartPayment
 	 *
 	 */
 
-	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $paymentId = 0, $paymentSelected = 0, $currency = 0) {
-
-		$app			= Factory::getApplication();
+	public function getPossiblePaymentMethods($amountNetto, $amountBrutto, $country, $region, $shipping, $paymentId = 0, $paymentSelected = 0, $currency = 0)
+	{
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$payment_amount_rule	= $paramsC->get( 'payment_amount_rule', 0 );
 
@@ -79,13 +79,12 @@ class PhocacartPayment
 		if ((int)$paymentId > 0) {
 			$wheres[] =  'p.id = '.(int)$paymentId;
 			$limit = ' LIMIT 1';
-			//$group = '';
 		} else {
 			$limit = '';
-
 		}
 
-		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.access, p.description, p.method,'
+
+		$columns		= 'p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.image, p.access, p.method,'
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping, p.active_currency,'
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
 		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
@@ -98,19 +97,23 @@ class PhocacartPayment
 		.' p.active_amount, p.active_zone, p.active_country, p.active_region, p.active_shipping, p.active_currency,'
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
+
+		if (I18nHelper::useI18n()) {
+			$columns .= ', coalesce(i18n_p.title, p.title) as title, coalesce(i18n_p.description, p.description) as description';
+			$groupsFull .= ', coalesce(i18n_p.title, p.title), coalesce(i18n_p.description, p.description)';
+		} else {
+			$columns .= ', p.title, p.description';
+			$groupsFull .= ', p.title, p.description';
+		}
+
 		$groupsFast		= 'p.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 
-		/*$query = ' SELECT p.id, p.title, p.image'
-				.' FROM #__phocacart_payment_methods AS p'
-				.' WHERE p.published = 1'
-				.' ORDER BY p.ordering';
-		$db->setQuery($query);*/
-
 		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_payment_methods AS p'
+				. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'i18n_p', 'p')
 				.' LEFT JOIN #__phocacart_payment_method_regions AS r ON r.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_countries AS c ON c.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_zones AS z ON z.payment_id = p.id'
@@ -288,15 +291,6 @@ class PhocacartPayment
 
 	}
 
-/*	public function checkAndGetPaymentMethodInsideCart($id, $total, $shippingId) {
-
-		if ((int)$id > 0 && !empty($total)) {
-			return $this->checkAndGetPaymentMethods($id, 0, $total, $shippingId);
-		}
-		return false;
-
-	}*/
-
 	/**
 	 * Check current payment method
 	 * Payment method must be selected
@@ -469,21 +463,19 @@ class PhocacartPayment
 	}
 
 	public function getPaymentMethod($paymentId) {
-
-		//$paramsC 				= PhocacartUtils::getComponentParameters();
-		//$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
-
 		$db = Factory::getDBO();
 
-		/*$query = ' SELECT p.id, p.title, p.image,'
-				.' FROM #__phocacart_payment_methods AS s'
-				.' WHERE p.id = '.(int)$paymentId
-				.' LIMIT 1';
-		$db->setQuery($query);*/
+		if (I18nHelper::useI18n()) {
+			$columns = 'coalesce(i18n_p.title, p.title) as title, coalesce(i18n_p.description, p.description) as description';
+		} else {
+			$columns = 'p.title, p.description';
+		}
 
-		$query = ' SELECT p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.title, p.image, p.method, p.params, p.description, '
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
+		$query = ' SELECT p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.image, p.method, p.params, '
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide, '
+				. $columns
 				.' FROM #__phocacart_payment_methods AS p'
+				. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'i18n_p', 'p')
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId
 				.' ORDER BY p.id'
