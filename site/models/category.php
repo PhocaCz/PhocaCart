@@ -238,7 +238,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 				$join[] = 'LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . implode(', ', $userGroups) . ') AND type = 3)';
 			}
 
-            $ordering = PhocacartOrdering::getOrdering($this->getState('itemordering'));
+            $ordering = PhocacartOrdering::getOrdering($this->getState('itemordering'), true);
             $columns = [
                 'a.id', 'a.image', 'a.unit_amount', 'a.unit_unit',
                 'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
@@ -417,7 +417,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 			$app						= Factory::getApplication();
 			$params						= $app->getParams();
 			$ordering					= $params->get( 'category_ordering', 1 );
-			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1);
+			$this->category_ordering 	= PhocacartOrdering::getOrderingText($ordering, 1, true);
 		}
 		return $this->category_ordering;
 	}

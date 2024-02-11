@@ -15,7 +15,8 @@ use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartOrdering
 {
-	public static function getOrdering($ordering, $type = 0): array {
+	public static function getOrdering($ordering, $type = 0, bool $usei18n = false): array {
+		$usei18n = $usei18n && I18nHelper::useI18n();
 		switch ($type) {
 			case 1:// CATEGORY
 				switch ((int)$ordering) {
@@ -137,8 +138,8 @@ class PhocacartOrdering
 			case 13:// PARAMETER VALUES
 				switch ((int)$ordering) {
 					case 2: return ['pv.ordering DESC'];
-					case 3: return ['pv.title ASC'];
-					case 4: return ['pv.title DESC'];
+					case 3: return $usei18n ? ['coalecse(i18n_pv.title, pv.title) ASC'] : ['pv.title ASC'];
+					case 4: return $usei18n ? ['coalecse(i18n_pv.title, pv.title) DESC'] : ['pv.title DESC'];
 					case 5: return ['pv.id ASC'];
 					case 6: return ['pv.id DESC'];
 					case 7: return ['pv.count_products ASC'];
@@ -150,7 +151,7 @@ class PhocacartOrdering
 			default://PRODUCTS
 				switch ((int)$ordering) {
 					case 2: return ['c.id, pc.ordering DESC'];
-					case 3: return I18nHelper::useI18n() ? ['coalesce(i18n_a.title, a.title) ASC'] : ['a.title ASC'];
+					case 3: return $usei18n ? ['coalesce(i18n_a.title, a.title) ASC'] : ['a.title ASC'];
 					case 4: return ['a.title DESC'];
 					case 5: return ['a.price ASC'];
 					case 6: return ['a.price DESC'];
@@ -185,8 +186,8 @@ class PhocacartOrdering
 		}
 	}
 
-	public static function getOrderingText ($ordering, $type = 0) {
-		return implode(self::getOrdering($ordering, $type));
+	public static function getOrderingText($ordering, $type = 0, bool $usei18n = false) {
+		return implode(self::getOrdering($ordering, $type, $usei18n));
 	}
 
 	public static function renderOrderingFront( $selected, $type = 0) {
