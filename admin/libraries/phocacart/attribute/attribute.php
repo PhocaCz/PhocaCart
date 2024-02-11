@@ -561,7 +561,7 @@ class PhocacartAttribute
                             . ' LEFT JOIN #__phocacart_attribute_values_i18n i18n ON i18n.id = v.id'
                             . ' WHERE v.attribute_id = ' . (int) $newIdA;
                     } else {
-                        $query = 'DELETE FROM #__phocacart_attribute_values v WHERE v.attribute_id = ' . (int)$newIdA;
+                        $query = 'DELETE v FROM #__phocacart_attribute_values v WHERE v.attribute_id = ' . (int)$newIdA;
                     }
                     if (!empty($notDeleteOptions)) {
                         $qS .= ' AND id NOT IN (' . implode(',', $notDeleteOptions) . ')';

@@ -256,7 +256,7 @@ class Adminview
 					}
 
 					$inputs = $form->getInput($value);
-					if (is_array($inputs)) {
+					if (I18nHelper::isI18n() && is_array($inputs)) {
 						$o .= '<div class="control-group-clear ph-par-' . $value . '"  ' . $datashowon . '>' . "\n"
 							. '<div class="control-label">' . $form->getLabel($value) . $descriptionOutput . '</div><div>' . "\n";
 						$field = $form->getField($value);

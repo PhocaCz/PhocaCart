@@ -155,23 +155,19 @@ if ($showTranslation) {
         <?php echo $dirname; ?>
         <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>>
 
-    <span class="input-group-text input-group-i18n bg-light text-dark border-primary-subtle">
-      <?php if ($language->lang_code === $defLanguage) { ?>
-        <span class="icon icon-language text-info"></span>
-      <?php } elseif (!$value[$defLanguage] && !$value[$language->lang_code]) { ?>
-        <span class="icon icon-cancel"></span>
-      <?php } elseif ($value[$defLanguage] && $value[$language->lang_code]) { ?>
-        <span class="icon icon-ok text-success"></span>
-      <?php } elseif ($language->lang_code !== $defLanguage && (!$value[$defLanguage] || !$value[$language->lang_code])) { ?>
-        <span class="icon icon-warning text-danger"></span>
-      <?php } ?>
-    </span>
-    <?php
-    $i18nClass = 'bg-light';
-    if ($language->lang_code !== $defLanguage && $value[$defLanguage] && !$value[$language->lang_code]) {
-        $i18nClass = 'bg-danger';
-    }
-    ?>
+    <?php if ($i18n) : ?>
+      <span class="input-group-text input-group-i18n bg-light text-dark border-primary-subtle">
+        <?php if ($language->lang_code === $defLanguage) { ?>
+          <span class="icon icon-language text-info"></span>
+        <?php } elseif (!$value[$defLanguage] && !$value[$language->lang_code]) { ?>
+          <span class="icon icon-cancel"></span>
+        <?php } elseif ($value[$defLanguage] && $value[$language->lang_code]) { ?>
+          <span class="icon icon-ok text-success"></span>
+        <?php } elseif ($language->lang_code !== $defLanguage && (!$value[$defLanguage] || !$value[$language->lang_code])) { ?>
+          <span class="icon icon-warning text-danger"></span>
+        <?php } ?>
+      </span>
+    <?php endif; ?>
 
     <?php echo $addonAfterHtml; ?>
 
