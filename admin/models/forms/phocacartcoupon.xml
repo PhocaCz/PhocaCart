@@ -77,14 +77,14 @@
 
 			<field name="available_quantity_user" type="text" label="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_LABEL" description="COM_PHOCACART_FIELD_AVAILABLE_QUANTITY_USER_DESC" />
 
-			<field name="cat_ids" type="phocacouponcategory" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" multiple="true" layout="joomla.form.field.list-fancy-select" />
+			<field name="cat_ids" type="phocacouponcategory" multiple="true" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" />
 
 			<field name="category_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
 				<option	value="0">COM_PHOCACART_EXCLUDE</option>
 				<option value="1">COM_PHOCACART_INCLUDE</option>
 			</field>
 
-			<field name="product_ids" type="phocacouponproduct" label="COM_PHOCACART_FIELD_COUPON_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_COUPON_PRODUCT_DESC" layout="joomla.form.field.list-fancy-select" />
+			<field name="product_ids" type="phocacouponproduct" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_COUPON_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_COUPON_PRODUCT_DESC" />
 
 			<field name="product_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PRODUCT_FILTER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FILTER_DESC" size="1" default="1">
 				<option	value="0">COM_PHOCACART_EXCLUDE</option>

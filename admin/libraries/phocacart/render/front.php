@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
@@ -729,11 +730,9 @@ class PhocacartRenderFront
             // Associated article by language - lang, assoc
             if (Associations::isEnabled())
             {
-                $itemAssociations = array();
-
                 if ($id != null)
                 {
-                    $associations = JLanguageAssociations::getAssociations('com_content', '#__content', 'com_content.item', $id);
+                    $associations = Associations::getAssociations('com_content', '#__content', 'com_content.item', $id);
 
 
                     $lang = Factory::getLanguage();

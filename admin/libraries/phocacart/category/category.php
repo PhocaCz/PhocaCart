@@ -25,12 +25,10 @@ final class PhocacartCategory
     public const TYPE_SHOP_ONLY = 1;
     public const TYPE_POS_ONLY = 2;
 
-    /** @var array $categoriesCache */
-    private static $categoriesCache = null;
+    private static ?array $categoriesCache = null;
     private static $categoryA = array();
     private static $categoryF = array();
     private static $categoryP = array();
-    private static $categoryPR = array();
 
     public static function CategoryTreeOption($data, $tree, $id = 0, $text = '', $currentId = 0) {
         foreach ($data as $key) {
@@ -135,13 +133,39 @@ final class PhocacartCategory
             }
             $categories = $db->loadObjectList('id') ?? [];
 
-            array_walk($categories, function ($category) use ($categories) {
+            $i18nData = [];
+            foreach (I18nHelper::getI18nLanguages() as $langCode => $language) {
+                $i18nData[$langCode] = (object)[];
+            }
+
+            array_walk($categories, function ($category) use ($categories, $i18nData) {
+                if (I18nHelper::useI18n()) {
+                    $category->i18n = $i18nData;
+                }
+
                 if ($category->parent_id) {
                     if ($categories[$category->parent_id]->children === null)
                         $categories[$category->parent_id]->children = [];
                     $categories[$category->parent_id]->children[] = $category;
                 }
             });
+
+            if (I18nHelper::useI18n()) {
+                $db->setQuery('SELECT i18n.* FROM #__phocacart_categories_i18n AS i18n');
+                $i18n = $db->loadObjectList() ?? [];
+
+                foreach ($i18n as $value) {
+                    if (!array_key_exists($value->id, $categories)) {
+                        continue;
+                    }
+
+                    if (!array_key_exists($value->language, $categories[$value->id]->i18n)) {
+                        continue;
+                    }
+
+                    $categories[$value->id]->i18n[$value->language] = $value;
+                }
+            }
 
             self::$categoriesCache = $categories;
         }
@@ -199,23 +223,27 @@ final class PhocacartCategory
         return $path;
     }
 
-    public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
-        if (empty(self::$categoryPR[$id])) {
-            self::$categoryPR[$id] = self::getPathTreeRouter($path, $id, $parent_id, $title, $alias);
-        }
-        return self::$categoryPR[$id];
+    public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '', ?string $i18nLanguage = null)
+    {
+        return self::getPathTreeRouter($path, $id, $parent_id, $title, $alias, $i18nLanguage);
     }
 
-    public static function getPathTreeRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '') {
+    public static function getPathTreeRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '', ?string $i18nLanguage = null) {
         if ((int)$id > 0) {
             $path[$id] = (int)$id . ':' . $alias;
         }
 
         if ((int)$parent_id > 0) {
             $category = self::getCategoryById($parent_id);
-
             if ($category) {
-                $path = self::getPathTreeRouter($path, $category->id, $category->parent_id, $category->title, $category->alias);
+                $title = $category->title;
+                $alias = $category->alias;
+                if ($i18nLanguage !== null) {
+                    $title = $category->i18n[$i18nLanguage]->title ?? $title;
+                    $alias = $category->i18n[$i18nLanguage]->alias ?? $alias;
+                }
+
+                $path = self::getPathTreeRouter($path, $category->id, $category->parent_id, $title, $alias, $i18nLanguage);
             }
         }
 

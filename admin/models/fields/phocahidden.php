@@ -18,6 +18,8 @@ class JFormFieldPhocaHidden extends HiddenField
 	protected $type 		= 'PhocaText';
 	protected $layout       = 'phocacart.form.field.phocahidden';
 
+    protected bool $i18n = false;
+
     protected function getRenderer($layoutId = 'default')
     {
         $renderer = parent::getRenderer($layoutId);
@@ -29,11 +31,7 @@ class JFormFieldPhocaHidden extends HiddenField
     {
         $result = parent::setup($element, $value, $group);
 
-        if ($result == true) {
-            $this->showCopyButton = isset($this->element['showCopyButton']) ? strtolower($this->element['showCopyButton']) === 'true' : false;
-            $this->showLinkButton = isset($this->element['showLinkButton']) ? strtolower($this->element['showLinkButton']) === 'true' : false;
-            $this->showTranslation = isset($this->element['showTranslation']) ? strtolower($this->element['showTranslation']) === 'true' : false;
-
+        if ($result) {
             if (I18nHelper::isI18n()) {
                 $this->i18n = isset($this->element['i18n']) ? strtolower($this->element['i18n']) === 'true' : false;
                 $this->multiple = $this->i18n;

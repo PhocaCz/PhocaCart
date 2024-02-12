@@ -7,6 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+use Joomla\CMS\Form\FormFactoryInterface;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
@@ -14,20 +17,25 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
-
-jimport('joomla.application.component.modeladmin');
+use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 
 class PhocaCartCpModelPhocacartDiscount extends AdminModel
 {
+	use I18nAdminModelTrait;
+
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
-	protected function canDelete($record) {
-		return parent::canDelete($record);
-	}
+	public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+	{
+		parent::__construct($config, $factory, $formFactory);
 
-	protected function canEditState($record) {
-		return parent::canEditState($record);
+		$this->i18nTable = '#__phocacart_discounts_i18n';
+		$this->i18nFields = [
+			'title',
+			'alias',
+			'description',
+		];
 	}
 
 	public function getTable($type = 'PhocacartDiscount', $prefix = 'Table', $config = array()) {
@@ -35,18 +43,14 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacartdiscount', 'phocacartdiscount', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+		return $this->loadForm('com_phocacart.phocacartdiscount', 'phocacartdiscount', array('control' => 'jform', 'load_data' => $loadData));
 	}
 
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartdiscount.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
+			$this->loadI18nItem($data);
 		}
 		return $data;
 	}
@@ -89,6 +93,7 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 
 	public function save($data)
 	{
+		$i18nData = $this->prepareI18nData($data);
 		$table = $this->getTable();
 
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
@@ -163,6 +168,8 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 					$data['cat_ids'] = array();
 				}
 				PhocacartDiscountCart::storeDiscountCatsById($data['cat_ids'], (int)$table->getId());
+
+				$this->saveI18nData($table->getId(), $i18nData);
 			}
 
 			// Clean the cache.
@@ -192,22 +199,20 @@ class PhocaCartCpModelPhocacartDiscount extends AdminModel
 		return true;
 	}
 
-	public function delete(&$cid = array()) {
-
-		if (count( $cid )) {
-			$delete = parent::delete($cid);
-			if ($delete) {
-
-				ArrayHelper::toInteger($cid);
-				$cids = implode( ',', $cid );
-
-				$query = 'DELETE FROM #__phocacart_item_groups'
-				. ' WHERE item_id IN ( '.$cids.' )'
+	public function delete(&$pks = array())
+	{
+		ArrayHelper::toInteger($pks);
+		$delete = parent::delete($pks);
+		if ($delete) {
+			$query = 'DELETE FROM #__phocacart_item_groups'
+				. ' WHERE item_id IN ( ' . implode(',', $pks) . ' )'
 				. ' AND type = 5';
-				$this->_db->setQuery( $query );
-				$this->_db->execute();
-			}
+			$this->_db->setQuery($query);
+			$this->_db->execute();
+
+			return $this->deleteI18nData($pks);
 		}
+
+		return false;
 	}
 }
-?>
