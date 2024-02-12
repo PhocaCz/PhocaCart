@@ -10,12 +10,13 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Constants\GroupType;
+use Phoca\PhocaCart\Constants\ProductType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 defined('_JEXEC') or die();
-jimport('joomla.application.component.model');
 
 class PhocaCartModelItems extends BaseDatabaseModel
 {
@@ -64,7 +65,6 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		// =FILTER=
 		$this->setState('tag', $app->input->get('tag', '', 'string'));
 		$this->setState('label', $app->input->get('label', '', 'string'));
-		$manufacturerParameter = '';
 		$this->setState('manufacturer', $app->input->get($manufacturer_alias, '', 'string'));
 		$this->setState('price_from', $app->input->get('price_from', '', 'float'));
 		$this->setState('price_to', $app->input->get('price_to', '', 'float'));
@@ -120,7 +120,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 	public function getTotal() {
 		if (empty($this->total)) {
-			$query = $this->getItemListQuery(1);
+			$query = $this->getItemListQuery(true);
 			$this->total = $this->_getListCount($query);
 		}
 		return $this->total;
@@ -150,416 +150,362 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		return $this->subcategories;
 	}
 
-	protected function getItemListQuery($count = 0) {
-
-		$app		= Factory::getApplication();
-		$user 		= PhocacartUser::getUser();
-		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
-		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
-		$params 	= $app->getParams();
-		$wheres		= array();
-		$lefts		= array();
-
-
-		$skip			        = array();
-		$skip['access']	        = $params->get('sql_products_skip_access', 0);
-		$skip['group']	        = $params->get('sql_products_skip_group', 0);
-		$skip['attributes']	    = $params->get('sql_products_skip_attributes', 0);
-		$skip['category_type']  = $params->get('sql_products_skip_category_type', 0);
-		$skip['tax']   			= $params->get('sql_products_skip_tax', 0);
-
-		$p = array();
-		$p['hide_products_out_of_stock']	= $params->get( 'hide_products_out_of_stock', 0);
-		$p['switch_image_category_items']	= $params->get( 'switch_image_category_items', 0 );
-		$p['join_tag_label_filter']			= $params->get( 'join_tag_label_filter', 0 );
-		$p['search_matching_option']		= $params->get( 'search_matching_option', 'any' );
-		$p['search_deep']					= $params->get( 'search_deep', 0);
-		$p['sql_search_skip_id']			= $params->get( 'sql_search_skip_id', 1 );
-		$p['search_custom_fields']			= $params->get( 'search_custom_fields', 0 );
-
-		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (Online Shop)
-		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 2){
-			$p['sql_search_skip_id_specific_type'] = 0;
-
+	private function dispatchItemsLayout(array &$ordering, array &$columns): void
+	{
+		if (!$this->items_layout_plugin) {
+			return;
 		}
 
-		$p['sql_filter_method_tag']				= $params->get('sql_filter_method_tag', 0);
-		$p['sql_filter_method_label']			= $params->get('sql_filter_method_label', 0);
-		$p['sql_filter_method_parameter']		= $params->get('sql_filter_method_parameter', 0);
-		$p['sql_filter_method_attribute']		= $params->get('sql_filter_method_attribute', 0);
-		$p['sql_filter_method_specification']	= $params->get('sql_filter_method_specification', 0);
+		$plugin = PhocacartText::filterValue($this->items_layout_plugin, 'alphanumeric2');
+		$pluginOptions = [];
 
-		$wheres		= array();
-		$wheres[] = ' a.published = 1';
-		$wheres[] = ' c.published = 1';
+		Dispatcher::dispatch(new Event\Layout\Items\GetOptions('com_phocacart.category', $pluginOptions, [
+			'pluginname' => $plugin,
+		]));
 
-		if (!$skip['category_type']) {
-            $wheres[] = " c.type IN (0,1)";// type: common, onlineshop, pos
+		$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'] ?? '', 'alphanumeric5');
+		$pluginColumns = $pluginOptions['columns'] ?? [];
+		array_walk($pluginColumns, function($column) {
+			return PhocacartText::filterValue($column, 'alphanumeric3');
+		});
+
+		if ($pluginOrdering) {
+			array_unshift($ordering, $pluginOrdering);
+		}
+
+		$columns = array_merge($columns, $pluginColumns);
+	}
+
+	private function dispatchLoadColumns(array &$columns)
+	{
+		$pluginOptions = [];
+		Dispatcher::dispatch(new Event\View\Items\BeforeLoadColumns('com_phocacart.items', $pluginOptions));
+
+		$pluginColumns = $pluginOptions['columns'] ?? [];
+		array_walk($pluginColumns, function($column) {
+			return PhocacartText::filterValue($column, 'alphanumeric3');
+		});
+
+		$columns = array_merge($columns, $pluginColumns);
+	}
+
+	protected function getItemListQuery(bool $isCountQuery = false)
+	{
+		$app		= Factory::getApplication();
+		$user 		= PhocacartUser::getUser();
+		$params 	= $app->getParams();
+		$lang 		= $app->getLanguage()->getTag();
+
+		if ($this->getState('search')) {
+			// Hit only one time
+			if (!$isCountQuery) {
+				PhocacartStatisticsHits::searchHit($this->getState('search'));
+			}
+		}
+
+		$searchParams = [
+			'hide_products_out_of_stock' => $params->get( 'hide_products_out_of_stock', 0),
+			'switch_image_category_items' => $params->get( 'switch_image_category_items', 0 ),
+			'join_tag_label_filter' => $params->get( 'join_tag_label_filter', 0 ),
+			'search_matching_option' => $params->get( 'search_matching_option', 'any'),
+			'search_deep' => $params->get( 'search_deep', 0),
+			'sql_search_skip_id' => $params->get( 'sql_search_skip_id', 1),
+			'search_custom_fields' => $params->get( 'search_custom_fields', 0 ),
+			'sql_search_skip_id_specific_type' => in_array($params->get('search_custom_fields', 0), [0, 3]),
+			'sql_filter_method_tag' => $params->get('sql_filter_method_tag', 0),
+			'sql_filter_method_label' => $params->get('sql_filter_method_label', 0),
+			'sql_filter_method_parameter' => $params->get('sql_filter_method_parameter', 0),
+			'sql_filter_method_attribute' => $params->get('sql_filter_method_attribute', 0),
+			'sql_filter_method_specification' => $params->get('sql_filter_method_specification', 0),
+
+		];
+
+		$where		= [];
+		$join		= [];
+
+		$where[] = ' a.published = 1';
+		$where[] = ' c.published = 1';
+
+		if (!$params->get('sql_products_skip_category_type', false)) {
+			$where[] = 'c.type IN (' . implode(', ', [ProductType::Common, ProductType::Shop]) . ')';
         }
 
 		if ($this->getState('filter.language')) {
-			$lang 		= Factory::getLanguage()->getTag();
-			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
-			$wheres[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
-		}
-		$itemOrdering = $this->getItemOrdering();
-
-
-		if (!$skip['access']) {
-			$wheres[] = " c.access IN (".$userLevels.")";
-			$wheres[] = " a.access IN (".$userLevels.")";
+			$where[] 	= PhocacartUtilsSettings::getLangQuery('a.language', $lang);
+			$where[] 	= PhocacartUtilsSettings::getLangQuery('c.language', $lang);
 		}
 
-		if (!$skip['group']) {
-			$wheres[] = " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-			$wheres[] = " (gc.group_id IN (".$userGroups.") OR gc.group_id IS NULL)";
+		if (!$params->get('sql_products_skip_access', false)) {
+			$userLevels	= $user->getAuthorisedViewLevels();
+			$where[] = ' c.access IN (' . implode(', ', $userLevels) . ')';
+			$where[] = ' a.access IN (' . implode(', ', $userLevels) . ")";
 		}
 
-		if ($p['hide_products_out_of_stock'] == 1) {
-			$wheres[] = " a.stock > 0";
+		$userGroups = PhocacartGroup::getGroupsById($user->id, GroupType::User, 1);
+		if (!$params->get('sql_products_skip_group', false)) {
+			$where[] = ' (ga.group_id IN (' . implode(', ', $userGroups) . ') OR ga.group_id IS NULL)';
+			$where[] = ' (gc.group_id IN (' . implode(', ', $userGroups) . ') OR gc.group_id IS NULL)';
+		}
+
+		if ($searchParams['hide_products_out_of_stock'] == 1) {
+			$where[] = 'a.stock > 0';
 		}
 
 		// =FILTER=
 		// -TAG- -LABEL-
-		if ($p['join_tag_label_filter'] == 1) {
-
+		if ($searchParams['join_tag_label_filter'] == 1) {
 			// -TAG-
-			$wheresTL = array();
+			$wheresTL = [];
 			if ($this->getState('tag')) {
-				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $p);
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $searchParams);
 				$wheresTL[]	= $s['where'];
-				$lefts[]	= $s['left'];
+				$join[]	= $s['left'];
 			}
+
 			// -LABEL-
 			if ($this->getState('label')) {
-				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $p);
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $searchParams);
 				$wheresTL[]	= $s['where'];
-				$lefts[]	= $s['left'];
+				$join[]	= $s['left'];
 			}
 
 			if ($this->getState('tag') || $this->getState('label')) {
-				$startP = '';
-				$endP 	= '';
-				if (count($wheresTL) > 1) {
-					$startP = '(';
-					$endP 	= ')';
-				}
+				$wheresTL = array_filter($wheresTL);
 
-
-				if (!empty($wheresTL)) {
-					$wheresTL = array_filter($wheresTL);
-					if (!empty($wheresTL)) {
-						$wheres[] = $startP . implode(' OR ', $wheresTL) . $endP;
-					}
+				if ($wheresTL) {
+					$where[] = '(' . implode(' OR ', $wheresTL) . ')';
 				}
 			}
 		} else {
-
 			// -TAG-
 			if ($this->getState('tag')) {
-				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $p);
-				$wheres[]	= $s['where'];
-				$lefts[]	= $s['left'];
-
+				$s = PhocacartSearch::getSqlParts('int', 'tag', $this->getState('tag'), $searchParams);
+				$where[] = $s['where'];
+				$join[]	= $s['left'];
 			}
+
 			// -LABEL-
 			if ($this->getState('label')) {
-				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $p);
-				$wheres[]	= $s['where'];
-				$lefts[]	= $s['left'];
+				$s = PhocacartSearch::getSqlParts('int', 'label', $this->getState('label'), $searchParams);
+				$where[] = $s['where'];
+				$join[]	= $s['left'];
 			}
-
 		}
 
-		// -PARAMETER
-		// Custom parameters set by user in administrator
-		// All custom parameters are stored in one table so they are unique
-		// So we can use one left for all parameters
-
-		/*if ($this->getState('parameter')) {
-			$parameterValues = array();
-			foreach ($this->getState('parameter') as $k => $v) {
-				$alias = PhocacartText::filterValue($v->alias, 'url');
-				$parameter = $app->input->get($alias, '', 'string');
-
-				if($parameter != '') {
-					$parameterValues[] = $parameter;
-				}
-			}
-			if (!empty($parameterValues)) {
-				$parameterValuesString = implode(',', $parameterValues);//Join all custom parameters together because of SQL query - all should be in one IN(): AND pr.parameter_id IN (1,2,3)
-				if ($parameterValuesString != '') {
-					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameterValuesString);
-					$wheres[] = $s['where'];
-					$lefts[] = $s['left'];
-
-				}
-			}
-		}*/
-
 		if ($this->getState('parameter')) {
-			//$leftOnce = 0;
 			foreach ($this->getState('parameter') as $k => $v) {
 				$alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
 				$parameter = $app->input->get($alias, '', 'string');
 
 				if($parameter != '') {
-					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, $p, $v->id);
-					$wheres[] = $s['where'];// There must be AND between custom parameters
-					//if ($leftOnce < 1) {
-						$lefts[] = $s['left'];
-						//$leftOnce = 1;
-					//}
+					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, $searchParams, $v->id);
+					$where[] = $s['where'];// There must be AND between custom parameters
+					$join[] = $s['left'];
 				}
 			}
-
 		}
 
 
 		// -MANUFACTURER-
 		if ($this->getState('manufacturer')) {
 			$s = PhocacartSearch::getSqlParts('int', 'manufacturer', $this->getState('manufacturer'));
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
+
 		// -PRICE-
 		if ($this->getState('price_from')) {
 			$s = PhocacartSearch::getSqlParts('int', 'price_from', $this->getState('price_from'));
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
 		if ($this->getState('price_to')) {
 			$s = PhocacartSearch::getSqlParts('int', 'price_to', $this->getState('price_to'));
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
 
 		// -CATEGORY-
 		if ($this->getState('id')) {
 			$s = PhocacartSearch::getSqlParts('int', 'id', $this->getState('id'));
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
 
 		// -CATEGORY MORE-
 		if ($this->getState('c')) {
 			$s = PhocacartSearch::getSqlParts('int', 'c', $this->getState('c'));
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
 
 		// -ATTRIBUTES-
 		if ($this->getState('a')) {
-			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'), $p);
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$s = PhocacartSearch::getSqlParts('array', 'a', $this->getState('a'), $searchParams);
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
 
 		// -SPECIFICATIONS-
 		if ($this->getState('s')) {
-			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'), $p);
-			$wheres[]	= $s['where'];
-			$lefts[]	= $s['left'];
+			$s = PhocacartSearch::getSqlParts('array', 's', $this->getState('s'), $searchParams);
+			$where[] = $s['where'];
+			$join[]	= $s['left'];
 		}
 
 		// =SEARCH=
 		if ($this->getState('search')) {
-			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'), $p);
-			$wheres[]	= '('.$s['where'].')';
-			$lefts[]	= $s['left'];
-
-			// Hit only one time
-			if ($count == 0) {
-				PhocacartStatisticsHits::searchHit($this->getState('search'));
-			}
+			$s = PhocacartSearch::getSqlParts('string', 'search', $this->getState('search'), $searchParams);
+			$where[] = '(' . $s['where'] . ')';
+			$join[]	= $s['left'];
 		}
-
-		// Additional Images
-		$leftImages = '';
-		$selImages = '';
-
-		if ($p['switch_image_category_items'] == 1) {
-			//$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON a.id = im.product_id';
-			// To have ordering of additional images
-			$leftImages = ' LEFT JOIN #__phocacart_product_images AS im ON im.id = (SELECT id FROM #__phocacart_product_images WHERE product_id = a.id ORDER BY ordering ASC LIMIT 1)';
-			$selImages	= ' GROUP_CONCAT(im.image) as additional_image,';
-
-		}
-
-		// Items Layout Plugin can change ordering
-		// Items Layout Plugin can load additional columns
-		$additionalColumns = array();
-		if ($this->items_layout_plugin != '') {
-			$this->items_layout_plugin = PhocacartText::filterValue($this->items_layout_plugin, 'alphanumeric2');
-			$pluginOptions = [];
-			Dispatcher::dispatch(new Event\Layout\Items\GetOptions('com_phocacart.items', $pluginOptions, [
-				'pluginname' => $this->items_layout_plugin,
-			]));
-
-			if (isset($pluginOptions['ordering']) && $pluginOptions['ordering'] != '') {
-				$pluginOrdering = PhocacartText::filterValue($pluginOptions['ordering'], 'alphanumeric5');
-				if ($pluginOrdering != '') {
-					$itemOrdering = $pluginOrdering . ',' . $itemOrdering;
-				}
-			}
-
-			if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-				if (!empty($pluginOptions['columns'])) {
-					foreach ($pluginOptions['columns'] as $k => $v) {
-						$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-					}
-				}
-			}
-		}
-
-		// Views Plugin can load additional columns
-		$pluginOptions = [];
-		Dispatcher::dispatch(new Event\View\Items\BeforeLoadColumns('com_phocacart.items', $pluginOptions));
-
-		if (isset($pluginOptions['columns']) && $pluginOptions['columns'] != '') {
-			if (!empty($pluginOptions['columns'])) {
-				foreach ($pluginOptions['columns'] as $v) {
-					$additionalColumns[] = PhocacartText::filterValue($v, 'alphanumeric3');
-				}
-			}
-		}
-
-		$baseColumns = array('a.id', 'a.title', 'a.image', 'a.alias', 'a.unit_amount', 'a.unit_unit', 'a.description',
-			'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
-			'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity',
-			'a.stockstatus_a_id', 'a.stockstatus_n_id','a.date', 'a.sales', 'a.featured',
-			'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price', 'a.gift_types');
-
-		$col = array_merge($baseColumns, $additionalColumns);
-		$col = array_unique($col);
-
 
 		// Remove empty values:
-		$wheres = array_filter($wheres);
-		$lefts	= array_filter($lefts);
+		$where = array_filter($where);
+		$join = array_filter($join);
 
-		if ($count == 1) {
-			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
-			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
-			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
-			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
+		$join[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
+		$join[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
+		$join[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
 
-			if ($p['sql_search_skip_id_specific_type'] == 0){
-				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
-			}
+		if ($searchParams['sql_search_skip_id_specific_type'] == 0){
+			$join[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
+		}
 
+		if (!$params->get('sql_products_skip_attributes', false)) {
+			$join[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
+		}
 
-			if (!$skip['attributes']) {
-			    // see below for explanation
-				// LEFT JOIN (SELECT id, product_id, MAX(required) AS required FROM jos_phocacart_attributes GROUP BY product_id) AS at ON a.id = at.product_id AND at.id > 0
-			    $lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
-            }
+		if (!$params->get('sql_products_skip_group', false)) {
+			$join[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = ' . GroupType::Product;
+			$join[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
+		}
 
-			if (!$skip['group']) {
-				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
-				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
-			}
-
-			//$query = ' SELECT COUNT(DISTINCT a.id) AS count'; // 2.85ms 0.12mb
-			$q = ' SELECT a.id' // 2.42ms 0.12mb
+		if ($isCountQuery) {
+			$query = ' SELECT a.id'
 			. ' FROM #__phocacart_products AS a'
-			. implode( ' ', $lefts )
-			. ' WHERE ' . implode( ' AND ', $wheres )
+			. ' ' . implode( ' ', $join)
+			. ' WHERE ' . implode(' AND ', $where)
 			. ' GROUP BY a.id';
 
 		} else {
+			$join[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
 
-			//$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = a.catid';
-			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id';
-			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
-			$lefts[] = ' LEFT JOIN #__phocacart_reviews AS r ON a.id = r.product_id AND r.id > 0';
-			$lefts[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
-
-			if ($p['sql_search_skip_id_specific_type'] == 0){
-				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
+			if (!$params->get('sql_products_skip_tax', false)) {
+				$join[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
 			}
 
-			if (!$skip['tax']) {
-				$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
-			}
-
-			if (!$skip['attributes']) {
-
-				// We need to get information if at least one of the attributes of selected product is required
-
-				// 1) Select more rows - one product is displayed e.g. in two rows
-				//$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0';
-
-				// 2) right solution as it select only the maximal value and if maximal value is 1 then one of product attribute is required
-				// LEFT JOIN (SELECT id, product_id, MAX(required) AS required FROM jos_phocacart_attributes GROUP BY product_id) AS at ON a.id = at.product_id AND at.id > 0
-
-				// 3) faster version of 2)
-				$lefts[] = ' LEFT JOIN #__phocacart_attributes AS at ON a.id = at.product_id AND at.id > 0 AND at.required = 1';
-            }
-
-			if (!$skip['group']) {
-				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3';// type 3 is product
-				$lefts[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
+			if (!$params->get('sql_products_skip_group', false)) {
 				// user is in more groups, select lowest price by best group
-				$lefts[] = ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . $userGroups . ') AND type = 3)';
+				$join[] = ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . implode(', ', $userGroups) . ') AND type = ' . GroupType::Product . ')';
 				// user is in more groups, select highest points by best group
-				$lefts[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . $userGroups . ') AND type = 3)';
+				$join[] = ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . implode(', ', $userGroups) . ') AND type = ' . GroupType::Product . ')';
 			}
 
+			$ordering = PhocacartOrdering::getOrdering($this->getState('itemordering'), 0, true);
+			$columns = [
+				'a.id', 'a.image', 'a.unit_amount', 'a.unit_unit',
+				'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
+				'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity',
+				'a.stockstatus_a_id', 'a.stockstatus_n_id','a.date', 'a.sales', 'a.featured',
+				'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price', 'a.gift_types'
+			];
 
-			$columns	= implode(',', $col) . ','
-						.' GROUP_CONCAT(DISTINCT c.id) AS catid, GROUP_CONCAT(DISTINCT c.title) AS cattitle,'
-						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid,';
+			$this->dispatchItemsLayout($ordering, $columns);
+			$this->dispatchLoadColumns($columns);
 
-			if (!$skip['tax']) {
-				$columns	.= ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,';
+			$columns = array_unique($columns);
+			if (PhocacartUtilsSettings::isFullGroupBy()) {
+				$groupBy = $columns;
+				if (!$params->get('sql_products_skip_tax', false)) {
+					$groupBy[] = 't.id';
+					$groupBy[] = 't.tax_rate';
+					$groupBy[] = 't.calculation_type';
+					$groupBy[] = 't.title';
+				}
+
+				if (!$params->get('sql_products_skip_attributes', false)) {
+					$groupBy[] = 'at.required';
+				}
+
+				$groupBy[] = 'a.title';
+				$groupBy[] = 'a.alias';
+				$groupBy[] = 'a.description';
+
+				if (I18nHelper::isI18n()) {
+					$groupBy[] = 'i18n_a.title';
+					$groupBy[] = 'i18n_a.alias';
+					$groupBy[] = 'i18n_a.description';
+				}
 			} else {
-				$columns	.= ' NULL as taxid, NULL as taxrate, NULL as taxcalculationtype, NULL as taxtitle, NULL as taxhide,';
+				$groupBy = ['a.id'];
 			}
 
-			if (!$skip['attributes']) {
-                $columns	.= 'at.required AS attribute_required, ';
-            }
+			$columns[] = 'm.id as manufacturerid';
+			if (I18nHelper::isI18n()) {
+				$join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a');
+				$join[] = I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
+				$columns[] = 'coalesce(i18n_a.title, a.title) AS title';
+				$columns[] = 'coalesce(i18n_a.alias, a.alias) AS alias';
+				$columns[] = 'i18n_a.description';
+				$columns[] = 'coalesce(i18n_m.title, m.title) as manufacturertitle';
+				$columns[] = 'coalesce(i18n_m.alias, m.alias) as manufactureralias';
+			} else {
+				$columns[] = 'a.title';
+				$columns[] = 'a.alias';
+				$columns[] = 'a.description';
+				$columns[] = 'm.title as manufacturertitle';
+				$columns[] = 'm.alias as manufactureralias';
+			}
 
-			if (!$skip['group']) {
-                $columns	.= ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received,';
-            } else {
-                $columns	.= ' NULL as group_price, NULL as group_points_received,';
-            }
+			if ($searchParams['switch_image_category_items']) {
+				$columns[] = '(SELECT im.image FROM #__phocacart_product_images im WHERE im.product_id = a.id ORDER BY im.ordering LIMIT 1) as additional_image';
+			}
 
+			$columns[] = 'GROUP_CONCAT(DISTINCT c.id) AS catid';
+			$columns[] = 'GROUP_CONCAT(DISTINCT c.title) AS cattitle';
+			$columns[] = 'GROUP_CONCAT(DISTINCT c.alias) AS catalias';
+			$columns[] = 'a.catid AS preferred_catid';
 
-			$columns	.= ' m.id as manufacturerid, m.title as manufacturertitle, m.alias as manufactureralias,'
-						. $selImages
-						.' AVG(r.rating) AS rating';
+			if (!$params->get('sql_products_skip_tax', false)) {
+				$columns[] = 't.id as taxid';
+				$columns[] = 't.tax_rate as taxrate';
+				$columns[] = 't.calculation_type as taxcalculationtype';
+				$columns[] = 't.title as taxtitle';
+				$columns[] = 't.tax_hide as taxhide';
+			} else {
+				$columns[] = 'NULL as taxid';
+				$columns[] = 'NULL as taxrate';
+				$columns[] = 'NULL as taxcalculationtype';
+				$columns[] = 'NULL as taxtitle';
+				$columns[] = 'NULL as taxhide';
+			}
 
+			if (!$params->get('sql_products_skip_attributes', false)) {
+				$columns[] = 'at.required AS attribute_required';
+			} else {
+				$columns[] = '0 AS attribute_required';
+			}
 
-			$groupsFull	= implode(',', $col) ;
+			if (!$params->get('sql_products_skip_group', false)) {
+				$columns[] = 'MIN(ppg.price) as group_price';
+				$columns[] = 'MAX(pptg.points_received) as group_points_received';
+			} else {
+				$columns[] = 'NULL as group_price';
+				$columns[] = 'NULL as group_points_received';
+			}
 
-			if (!$skip['tax']) {
-                $groupsFull	.= ', t.id, t.tax_rate, t.calculation_type, t.title';
-            }
-			if (!$skip['attributes']) {
-                $groupsFull	.= ', at.required';
-            }
+			$columns[] = 'AVG(r.rating) AS rating';
 
-			$groupsFast	= 'a.id';
-			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-
-
-			$q = ' SELECT '.$columns
-			. ' FROM #__phocacart_products AS a'
-			. implode( ' ', $lefts )
-			. $leftImages
-			. ' WHERE ' . implode( ' AND ', $wheres )
-			. ' GROUP BY '.$groups
-			. ' ORDER BY '.$itemOrdering;
-
-
+			$query = 'SELECT ' . implode(', ', $columns)
+				. ' FROM #__phocacart_products AS a'
+				. ' ' . implode(' ', $join)
+				. ' WHERE ' . implode(' AND ', $where)
+				. ' GROUP BY ' . implode(', ', $groupBy)
+				. ' ORDER BY ' . implode(', ', $ordering);
 		}
 
-		//echo "<br><br>" . nl2br(str_replace('#__', 'jos_', $q));
-
-		return $q;
+		return $query;
 	}
 
 	protected function getCategoriesQuery( $categoryId, $subcategories = FALSE ) {
@@ -612,18 +558,6 @@ class PhocaCartModelItems extends BaseDatabaseModel
 				. " ORDER BY c.ordering";
 		}
 		return $query;
-	}
-
-
-	protected function getItemOrdering() {
-		if (empty($this->item_ordering)) {
-			$app						= Factory::getApplication();
-			$params						= $app->getParams();
-			//$ordering					= $params->get( 'item_ordering', 1 );
-			$ordering					= $this->getState('itemordering');
-			$this->item_ordering 		= PhocacartOrdering::getOrderingText($ordering);
-		}
-		return $this->item_ordering;
 	}
 
 	protected function getCategoryOrdering() {
