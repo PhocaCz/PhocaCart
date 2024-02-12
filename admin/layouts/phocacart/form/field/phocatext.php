@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 extract($displayData);
 /**
@@ -156,18 +157,10 @@ if ($showTranslation) {
         <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>>
 
     <?php if ($i18n) : ?>
-      <span class="input-group-text input-group-i18n bg-light text-dark border-primary-subtle">
-        <?php if ($language->lang_code === $defLanguage) { ?>
-          <span class="icon icon-language text-info"></span>
-        <?php } elseif (!$value[$defLanguage] && !$value[$language->lang_code]) { ?>
-          <span class="icon icon-cancel"></span>
-        <?php } elseif ($value[$defLanguage] && $value[$language->lang_code]) { ?>
-          <span class="icon icon-ok text-success"></span>
-        <?php } elseif ($language->lang_code !== $defLanguage && (!$value[$defLanguage] || !$value[$language->lang_code])) { ?>
-          <span class="icon icon-warning text-danger"></span>
-        <?php } ?>
+      <span class="input-group-text input-group-i18n bg-light text-dark border-primary-subtle" title="<?php echo I18nHelper::getEditorIconTitle($language->lang_code, $value); ?>">
+        <?php echo I18nHelper::getEditorIcon($language->lang_code, $value); ?>
       </span>
-    <?php endif; ?>
+    <?php endif;  ?>
 
     <?php echo $addonAfterHtml; ?>
 

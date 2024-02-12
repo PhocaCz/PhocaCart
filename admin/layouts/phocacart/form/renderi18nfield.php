@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 extract($displayData);
 
@@ -71,17 +72,12 @@ if (!empty($parentclass)) {
             foreach ($input as $lang => $singleInput) {
                 $language = $languages[$lang];
 
-                if ($language->lang_code === $defLanguage) {
-                    $i18nsuffix = ' <span class="icon icon-language text-info"></span>';
-                } elseif (!$field->value[$defLanguage] && !$field->value[$language->lang_code]) {
-                    $i18nsuffix = ' <span class="icon icon-cancel"></span>';
-                } elseif ($field->value[$defLanguage] && $field->value[$language->lang_code]) {
-                    $i18nsuffix = ' <span class="icon icon-ok text-success"></span>';
-                } elseif ($language->lang_code !== $defLanguage && (!$field->value[$defLanguage] || !$field->value[$language->lang_code])) {
-                    $i18nsuffix = ' <span class="icon icon-warning text-danger"></span>';
-                }
+                $tabTitle = HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true)
+                    . $language->title
+                    . ' ' . I18nHelper::getEditorIcon($language->lang_code, $value);
+                $tabTitle = '<span title="' . I18nHelper::getEditorIconTitle($language->lang_code, $value) . '">' . $tabTitle . '</span>';
 
-                echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, HTMLHelper::_('image', 'mod_languages/' . $language->image . '.gif', '', ['class' => 'me-1'], true) . $language->title . $i18nsuffix);
+                echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, $tabTitle);
 
                 echo $singleInput;
 
