@@ -150,7 +150,7 @@ class PhocacartOrdering
 
 			default://PRODUCTS
 				switch ((int)$ordering) {
-					case 2: return ['c.id, pc.ordering DESC'];
+					case 2: return ['c.id', 'pc.ordering DESC'];
 					case 3: return $usei18n ? ['coalesce(i18n_a.title, a.title) ASC'] : ['a.title ASC'];
 					case 4: return ['a.title DESC'];
 					case 5: return ['a.price ASC'];
@@ -187,7 +187,7 @@ class PhocacartOrdering
 	}
 
 	public static function getOrderingText($ordering, $type = 0, bool $usei18n = false) {
-		return implode(self::getOrdering($ordering, $type, $usei18n));
+		return implode(', ', self::getOrdering($ordering, $type, $usei18n));
 	}
 
 	public static function renderOrderingFront( $selected, $type = 0) {
