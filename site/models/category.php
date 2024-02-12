@@ -151,7 +151,6 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 		$app		= Factory::getApplication();
 		$user 		= PhocacartUser::getUser();
         $lang 		= $app->getLanguage()->getTag();
-        $db 		= $this->getDatabase();
 
         $categoryId = max((int) $categoryId, 0);
 
@@ -238,7 +237,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 				$join[] = 'LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . implode(', ', $userGroups) . ') AND type = 3)';
 			}
 
-            $ordering = PhocacartOrdering::getOrdering($this->getState('itemordering'), true);
+            $ordering = PhocacartOrdering::getOrdering($this->getState('itemordering'), 0, true);
             $columns = [
                 'a.id', 'a.image', 'a.unit_amount', 'a.unit_unit',
                 'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
@@ -278,15 +277,21 @@ class PhocaCartModelCategory extends BaseDatabaseModel
                 $groupBy = ['a.id'];
             }
 
+            $columns[] = 'm.id as manufacturerid';
             if (I18nHelper::isI18n()) {
                 $join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a');
+                $join[] = I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
                 $columns[] = 'coalesce(i18n_a.title, a.title) AS title';
                 $columns[] = 'coalesce(i18n_a.alias, a.alias) AS alias';
                 $columns[] = 'i18n_a.description';
+                $columns[] = 'coalesce(i18n_m.title, m.title) as manufacturertitle';
+                $columns[] = 'coalesce(i18n_m.alias, m.alias) as manufactureralias';
             } else {
                 $columns[] = 'a.title';
                 $columns[] = 'a.alias';
                 $columns[] = 'a.description';
+                $columns[] = 'm.title as manufacturertitle';
+                $columns[] = 'm.alias as manufactureralias';
             }
 
             if ($params->get('switch_image_category_items', false)) {
@@ -325,9 +330,6 @@ class PhocaCartModelCategory extends BaseDatabaseModel
                 $columns[] = 'NULL as group_points_received';
             }
 
-            $columns[] = 'm.id as manufacturerid';
-            $columns[] = 'm.title as manufacturertitle';
-            $columns[] = 'm.alias as manufactureralias';
             $columns[] = 'AVG(r.rating) AS rating';
 
 			$query = 'SELECT ' . implode(', ', $columns)

@@ -97,7 +97,7 @@ $attributes = [
               . $language->title
               . ' ' . I18nHelper::getEditorIcon($language->lang_code, $value);
           $tabTitle = '<span title="' . I18nHelper::getEditorIconTitle($language->lang_code, $value) . '">' . $tabTitle . '</span>';
-          
+
           echo HTMLHelper::_('uitab.addTab', $id . '_i18nTabs', $language->lang_code, $tabTitle);
         ?>
     <?php endif; ?>
