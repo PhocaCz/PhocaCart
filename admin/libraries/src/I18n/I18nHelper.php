@@ -15,6 +15,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 
 abstract class I18nHelper
@@ -205,4 +206,42 @@ abstract class I18nHelper
         $db = Factory::getDbo();
         return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nAlias . ' ON ' . $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
     }
+
+    public static function getEditorIcon($langCode, $value): string
+    {
+        $defLanguage = self::getDefLanguage();
+        $i18nValue = $value[$langCode];
+        $defValue = $value[$defLanguage];
+        $description = 'aria-description="' . self::getEditorIconTitle($langCode, $value). '"';
+        if ($langCode === $defLanguage) {
+            return '<span class="icon icon-language text-info" ' . $description. '></span>';
+        } elseif (!$defValue && !$i18nValue) {
+            return '<span class="icon fa fa-ban" ' . $description. '></span>';
+        } elseif ($defValue && $i18nValue) {
+            return '<span class="icon icon-ok text-success" ' . $description. '></span>';
+        } elseif ($defValue) {
+            return '<span class="icon icon-error text-danger" ' . $description. '></span>';
+        } else {
+            return '<span class="icon icon-error text-warning" ' . $description. '></span>';
+        }
+    }
+
+    public static function getEditorIconTitle($langCode, $value): string
+    {
+        $defLanguage = self::getDefLanguage();
+        $i18nValue = $value[$langCode];
+        $defValue = $value[$defLanguage];
+        if ($langCode === $defLanguage) {
+            return Text::_('COM_PHOCACART_I18N_DEF_LANGUAGE');
+        } elseif (!$defValue && !$i18nValue) {
+            return Text::_('COM_PHOCACART_I18N_EMPTY');
+        } elseif ($defValue && $i18nValue) {
+            return Text::_('COM_PHOCACART_I18N_TRANSLATED');
+        } elseif (!$defValue) {
+            return Text::_('COM_PHOCACART_I18N_MISSING_ORIGINAL');
+        } else {
+            return Text::_('COM_PHOCACART_I18N_MISSING_TRANSLATION');
+        }
+    }
+
 }
