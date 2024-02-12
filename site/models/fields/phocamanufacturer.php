@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -17,7 +18,7 @@ class JFormFieldPhocaManufacturer extends FormField
 	protected $type 		= 'PhocaManufacturer';
 
 		protected function getInput() {
-		
+
 		$db = Factory::getDBO();
 
 		$query = 'SELECT a.title AS text, a.id AS value'
@@ -26,7 +27,7 @@ class JFormFieldPhocaManufacturer extends FormField
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$data = $db->loadObjectList();
-		
+
 		array_unshift($data, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
 		return HTMLHelper::_('select.genericlist',  $data,  $this->name, 'class="form-control"', 'value', 'text', $this->value, $this->id );
 	}

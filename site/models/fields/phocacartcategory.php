@@ -7,33 +7,30 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 
-if (! class_exists('PhocacartCategory')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/category.php');
-}
-if (! class_exists('PhocacartCategoryMultiple')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/category/multiple.php');
-}
-
-$lang = Factory::getLanguage();
-$lang->load('com_phocacart');
+require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/bootstrap.php');
 
 class JFormFieldPhocacartCategory extends FormField
 {
 	protected $type 		= 'PhocacartCategory';
 
+	public function __construct($form = null)
+	{
+		parent::__construct($form);
+
+		$lang = Factory::getApplication()->getLanguage();
+		$lang->load('com_phocacart');
+	}
+
 	protected function getInput() {
-
-
-
 		$db = Factory::getDBO();
 
 		$javascript		= '';
-		//$required		= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
 		$required		= $this->required;// accept dynamically added required
 		$multiple		= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
 		$class			= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
@@ -150,4 +147,3 @@ class JFormFieldPhocacartCategory extends FormField
 
 	}
 }
-?>
