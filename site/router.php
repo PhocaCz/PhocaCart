@@ -29,7 +29,6 @@ class PhocacartRouter extends RouterView
   {
     $viewsNoId 		= array('checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit');
     $viewsId		= array('feed');
-    $viewsNotOwnId	= array('question');
 
     $params = ComponentHelper::getParams('com_phocacart');;
     $this->noIDs = (bool)$params->get('remove_sef_ids');
@@ -126,47 +125,79 @@ class PhocacartRouter extends RouterView
 
   public function getCategorySegment($id, $query)
   {
-    $category = PhocacartCategory::getCategoryById($id);
+      $category = PhocacartCategory::getCategoryById($id);
 
-    if ($category) {
-      $path = PhocacartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $category->title, $category->alias);
+      if ($category) {
+          $lang = null;
+          $alias = $category->alias;
+          $title = $category->title;
+          if (I18nHelper::isI18n()) {
+              if (isset($query['lang'])) {
+                  $lang = $query['lang'];
+              } else {
+                  $lang = Factory::getApplication()->getLanguage()->getTag();
+              }
 
-      $path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
+              $alias = $category->i18n[$lang]->alias ?? $alias;
+              $title = $category->i18n[$lang]->title ?? $title;
+          }
 
-      if ($this->noIDs) {
-        foreach ($path as &$segment){
-          list($id, $segment) = explode(':', $segment, 2);
-        }
+          $path = PhocacartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $title, $alias, $lang);
+
+          $path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
+
+          if ($this->noIDs) {
+              foreach ($path as &$segment) {
+                  list($id, $segment) = explode(':', $segment, 2);
+              }
+          }
+
+          return $path;
       }
-      return $path;
-    }
 
-    return [];
+      return [];
   }
 
-	public function getItemSegment($id, $query) {
-    if (!strpos($id, ':')) {
-			$db = Factory::getDbo();
-			$dbquery = $db->getQuery(true);
-			$dbquery->select($dbquery->quoteName('p.alias'))
-				->from($dbquery->quoteName('#__phocacart_products', 'p'))
-				->where('p.id = :id')
-                ->bind(':id', $id, ParameterType::INTEGER);
+	public function getItemSegment($id, $query)
+    {
+        static $cache = [];
+        if (!strpos($id, ':')) {
+            $lang = null;
             if (I18nHelper::isI18n()) {
                 if (isset($query['lang'])) {
                     $lang = $query['lang'];
                 } else {
                     $lang = Factory::getApplication()->getLanguage()->getTag();
                 }
-
-                $dbquery
-                    ->select('coalesce(' . $dbquery->quoteName('i18n.alias') . ', ' . $dbquery->quoteName('p.alias') . ')')
-                    ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n'), 'i18n.id = p.id AND i18n.language = ' . $db->quote($lang));
-            } else {
-                $dbquery->select($dbquery->quoteName('p.alias'));
             }
-			$db->setQuery($dbquery);
-			$id .= ':' . $db->loadResult();
+
+            $cacheKey = $id . '-' . $lang;
+
+            if (!array_key_exists($cacheKey, $cache)) {
+                $db      = Factory::getDbo();
+                $dbquery = $db->getQuery(true);
+                $dbquery
+                    ->from($dbquery->quoteName('#__phocacart_products', 'p'))
+                    ->where('p.id = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
+                if (I18nHelper::isI18n()) {
+                    if (isset($query['lang'])) {
+                        $lang = $query['lang'];
+                    } else {
+                        $lang = Factory::getApplication()->getLanguage()->getTag();
+                    }
+
+                    $dbquery
+                        ->select('coalesce(' . $dbquery->quoteName('i18n.alias') . ', ' . $dbquery->quoteName('p.alias') . ')')
+                        ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n'), 'i18n.id = p.id AND i18n.language = ' . $db->quote($lang));
+                } else {
+                    $dbquery->select($dbquery->quoteName('p.alias'));
+                }
+                $db->setQuery($dbquery);
+                $cache[$cacheKey] = $db->loadResult();
+            }
+
+            $id .= ':' . $cache[$cacheKey];
 		}
 
 		if ($this->noIDs) {
