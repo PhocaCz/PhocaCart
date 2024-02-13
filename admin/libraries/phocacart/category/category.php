@@ -451,13 +451,20 @@ final class PhocacartCategory
                 $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
             }
 
-            $columns    = 'c.id, c.title, c.alias, c.parent_id';
-            $groupsFull = $columns;
+            $columns    = 'c.id, c.parent_id, c.ordering';
+            if (I18nHelper::useI18n()) {
+                $columns   .= ', c.title, c.alias';
+                $groupsFull = $columns;
+            } else {
+                $groupsFull = $columns . ', coalesce(i18n_c.title, c.title), coalesce(i18n_c.alias, c.alias)';
+                $columns .= ', coalesce(i18n_c.title, c.title) as title, coalesce(i18n_c.alias, c.alias) as  alias';
+            }
             $groupsFast = 'c.id';
             $groups     = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
-            $query = 'SELECT c.id, c.ordering, c.title, c.alias, c.parent_id'
+            $query = 'SELECT ' . $columns
                 . ' FROM #__phocacart_categories AS c'
+                . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c')
                 . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
                 . ' WHERE ' . implode(' AND ', $wheres)
                 . ' GROUP BY ' . $groups
