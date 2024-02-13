@@ -381,6 +381,11 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			$join[] = ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
 		}
 
+		if (I18nHelper::isI18n()) {
+			$join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a');
+			$join[] = I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
+		}
+
 		if ($isCountQuery) {
 			$query = ' SELECT a.id'
 			. ' FROM #__phocacart_products AS a'
@@ -443,8 +448,6 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 			$columns[] = 'm.id as manufacturerid';
 			if (I18nHelper::isI18n()) {
-				$join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a');
-				$join[] = I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
 				$columns[] = 'coalesce(i18n_a.title, a.title) AS title';
 				$columns[] = 'coalesce(i18n_a.alias, a.alias) AS alias';
 				$columns[] = 'i18n_a.description';
@@ -508,11 +511,9 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		return $query;
 	}
 
-	protected function getCategoriesQuery( $categoryId, $subcategories = FALSE ) {
-
+	protected function getCategoriesQuery( $categoryId, $subcategories = false)
+	{
 		$wheres		= array();
-		$app		= Factory::getApplication();
-		$params 	= $app->getParams();
 		$user 		= PhocacartUser::getUser();
 		$userLevels	= implode (',', $user->getAuthorisedViewLevels());
 		$userGroups = implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
