@@ -195,7 +195,7 @@ class PhocacartEmail
 		$notify = false;
 		// Send email to selected user
 		if ($mailfrom != '' && $send_email_question != '' && $email != '') {
-			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, null, '', '', $mailfrom, $fromname);
+			$notify = PhocacartEmail::sendEmail('', '', $email, $subject, $body, true, null, null, null, '', '', $mailfrom, $fromname);
 		}
 
 
@@ -211,7 +211,7 @@ class PhocacartEmail
 
 		$notifyOthers = false;
 		if ($emailOthers != '' && MailHelper::isEmailAddress($emailOthers)) {
-			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, null, '', '', $mailfrom, $fromname);
+			$notifyOthers = PhocacartEmail::sendEmail('', '', $emailOthers, $subject, $body, true, null, $bcc, null, '', '', $mailfrom, $fromname);
 		}
 
 
@@ -309,7 +309,7 @@ class PhocacartEmail
 		$notify = false;
 		// Send email to selected user
 		if ($mailfrom != '' && $send_email_submit_item != '' && $email != '') {
-			$notify = PhocacartEmail::sendEmail($mailfrom, $fromname, $email, $subject, $body, true, null, null, null, '', '', $mailfrom, $fromname);
+			$notify = PhocacartEmail::sendEmail('', '', $email, $subject, $body, true, null, null, null, '', '', $mailfrom, $fromname);
 		}
 
 
@@ -325,7 +325,7 @@ class PhocacartEmail
 
 		$notifyOthers = false;
 		if ($emailOthers != '' && MailHelper::isEmailAddress($emailOthers)) {
-			$notifyOthers = PhocacartEmail::sendEmail($mailfrom, $fromname, $emailOthers, $subject, $body, true, null, $bcc, null, '', '', $mailfrom, $fromname);
+			$notifyOthers = PhocacartEmail::sendEmail('', '', $emailOthers, $subject, $body, true, null, $bcc, null, '', '', $mailfrom, $fromname);
 		}
 
 

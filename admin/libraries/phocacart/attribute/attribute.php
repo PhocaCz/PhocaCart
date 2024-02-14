@@ -650,8 +650,21 @@ class PhocacartAttribute
         $orderingText = PhocacartOrdering::getOrderingText($ordering, 5);
 
 
-        $columns    = 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
-        $groupsFull = 'v.id, v.title, v.alias, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type attralias, at.id, at.title, at.alias, at.type';
+        $columns    = 'v.id, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
+        $groupsFull = 'v.id, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type attralias, at.id, at.type';
+
+        if (I18nHelper::useI18n()) {
+            $groupsFull = $columns . ', coalesce(i18n_v.title, v.title), coalesce(i18n_v.alias, v.alias)';
+            $groupsFull = $columns . ', coalesce(i18n_at.title, at.title), coalesce(i18n_at.alias, at.alias)';
+            $columns .= ', coalesce(i18n_v.title, v.title) as title, coalesce(i18n_v.alias, v.alias) as alias';
+            $columns .= ', coalesce(i18n_at.title, at.title) as attrtitle, coalesce(i18n_at.alias, at.alias) as attralias';
+        } else {
+            $columns   .= ', v.title, v.alias, at.title AS attrtitle, at.alias AS attralias';
+            $groupsFull .= ', v.title, v.alias, at.title, at.alias';
+        }
+
+
+
         $groupsFast = 'v.id';
         $groups     = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -693,6 +706,8 @@ class PhocacartAttribute
         $q = ' SELECT ' . $columns
             . ' FROM  #__phocacart_attribute_values AS v'
             . (!empty($lefts) ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $lefts) : '')
+            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_at', 'at')
+            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v', 'v')
             . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
             . ' GROUP BY ' . $groups
             . ' ORDER BY ' . $orderingText;

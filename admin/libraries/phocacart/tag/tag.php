@@ -63,7 +63,6 @@ class PhocacartTag
 
     $query .= ' ORDER BY a.id';
     $db->setQuery($query);
-
     if ($select == 1) {
       $tags = $db->loadColumn();
     } else {
@@ -186,7 +185,12 @@ class PhocacartTag
 
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 3);
 
-		$columns		= 't.id, t.title, t.alias, t.type, t.count_products';
+		$columns		= 't.id, t.type, t.count_products';
+        if (I18nHelper::useI18n()) {
+            $columns .= ', coalesce(i18n_t.title, t.title) as title, coalesce(i18n_t.alias, t.alias) as  alias';
+        } else {
+            $columns   .= ', t.title, t.alias';
+        }
 		$wheres[]	= ' t.published = 1';
 
     $productTableAdded = 0;
@@ -229,6 +233,7 @@ class PhocacartTag
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_tags AS t'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+            . I18nHelper::sqlJoin('#__phocacart_tags_i18n', 'i18n_t', 't')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			.' ORDER BY '.$orderingText;
 
@@ -299,6 +304,7 @@ class PhocacartTag
 	 */
 	public static function getTagsRendered($itemId, $types = 0, $separator = '')
     {
+
 	    if ($types == 1) {
 	        // Only tags
 			$tags 	= self::getTags($itemId, 0, 1);

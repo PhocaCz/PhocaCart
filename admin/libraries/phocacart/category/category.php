@@ -453,12 +453,14 @@ final class PhocacartCategory
 
             $columns    = 'c.id, c.parent_id, c.ordering';
             if (I18nHelper::useI18n()) {
-                $columns   .= ', c.title, c.alias';
-                $groupsFull = $columns;
-            } else {
                 $groupsFull = $columns . ', coalesce(i18n_c.title, c.title), coalesce(i18n_c.alias, c.alias)';
                 $columns .= ', coalesce(i18n_c.title, c.title) as title, coalesce(i18n_c.alias, c.alias) as  alias';
+            } else {
+                $columns   .= ', c.title, c.alias';
+                $groupsFull = $columns;
             }
+
+
             $groupsFast = 'c.id';
             $groups     = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -469,6 +471,7 @@ final class PhocacartCategory
                 . ' WHERE ' . implode(' AND ', $wheres)
                 . ' GROUP BY ' . $groups
                 . ' ORDER BY ' . $itemOrdering;
+
             $db->setQuery($query);
 
             $items = $db->loadAssocList();
@@ -565,8 +568,17 @@ final class PhocacartCategory
                 $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
             }
 
-            $query = 'SELECT c.id, c.title, c.alias, c.parent_id, c.icon_class, c.image, c.description, c.count_products'
+            $columns    = 'c.id, c.parent_id, c.ordering';
+            if (I18nHelper::useI18n()) {
+                $columns .= ', coalesce(i18n_c.title, c.title) as title, coalesce(i18n_c.alias, c.alias) as  alias';
+            } else {
+                $columns   .= ', c.title, c.alias';
+            }
+
+            $columns .= ', c.icon_class, c.image, c.description, c.count_products';
+            $query = 'SELECT ' . $columns
                 . ' FROM #__phocacart_categories AS c'
+                . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c')
                 . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
                 . ' WHERE ' . implode(' AND ', $wheres)
                 . ' ORDER BY ' . $itemOrdering;

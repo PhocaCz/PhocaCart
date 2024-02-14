@@ -700,7 +700,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_parameter_values_related` (
   `item_id` int(11) NOT NULL DEFAULT '0',
   `parameter_value_id` int(11) NOT NULL DEFAULT '0',
   `parameter_id` int(11) NOT NULL DEFAULT '0',
-  UNIQUE KEY `i_parameter_id` (`item_id`,`parameter_value_id`)
+  UNIQUE KEY `i_parameter_id` (`item_id`, `parameter_value_id`, `parameter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_taxes` (

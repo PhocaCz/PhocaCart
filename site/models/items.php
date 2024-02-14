@@ -507,7 +507,6 @@ class PhocaCartModelItems extends BaseDatabaseModel
 				. ' GROUP BY ' . implode(', ', $groupBy)
 				. ' ORDER BY ' . implode(', ', $ordering);
 		}
-
 		return $query;
 	}
 

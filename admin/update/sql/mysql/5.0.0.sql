@@ -208,3 +208,5 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_discounts_i18n` (
     PRIMARY KEY  (`id`, `language`),
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `#__phocacart_parameter_values_related` DROP INDEX `i_parameter_id`, ADD UNIQUE `i_parameter_id` (`item_id`, `parameter_value_id`, `parameter_id`);

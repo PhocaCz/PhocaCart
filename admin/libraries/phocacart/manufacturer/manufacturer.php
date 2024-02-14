@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartManufacturer
 {
@@ -24,10 +25,17 @@ class PhocacartManufacturer
 		$wheres		= array();
 		$lefts		= array();
 
-		$columns		= 'm.id, m.title, m.image, m.alias, m.description, m.count_products';
+		$columns		= 'm.id, m.image, m.description, m.count_products';
 		/*$groupsFull		= $columns;
 		$groupsFast		= 'm.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
+
+		if (I18nHelper::useI18n()) {
+			$columns .= ', coalesce(i18n_m.title, m.title) as title, coalesce(i18n_m.alias, m.alias) as  alias';
+		} else {
+			$columns   .= ', m.title, m.alias';
+		}
+
 
 		$wheres[]	= ' m.published = 1';
 
@@ -73,6 +81,7 @@ class PhocacartManufacturer
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_manufacturers AS m'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+			. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			//.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;

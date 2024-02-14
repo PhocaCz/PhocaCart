@@ -313,24 +313,46 @@ class PhocacartSearch
                     if ($searchArea == 'a') {
                         // Attributes
                         // QUERY METHOD ANY (product to display must include one of selected attributes)
-                        $inA[] = '(at2.alias = ' . $db->quote($k) . ' AND v2.alias IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                        if (I18nHelper::useI18n()) {
+                            $inA[] = '(coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2.alias, v2.alias) IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                        } else {
+                            $inA[] = '(at2.alias = ' . $db->quote($k) . ' AND v2.alias IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                        }
+
 
                         // QUERY METHOD ALL (product to display must include all attributes togehter)
                         $i = 0;
                         foreach ($a as $v2) {
-                            $inAS[$i] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $i . '.alias = "' . $v2 . '"';
+
+                            if (I18nHelper::useI18n()) {
+                                $inAS[$i] = 'coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2x'.$i.'.alias, v2x'.$i.'.alias) = "' . $v2 . '"';
+                            } else {
+                                $inAS[$i] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $i . '.alias = "' . $v2 . '"';
+                            }
+
                             $i++;
                         }
                     }
                     else if ($searchArea == 's') {
                         // Specifications
                         // QUERY METHOD ANY (product to display must include one of selected specifications)
-                        $inA[] = '(s2.alias = ' . $db->quote($k) . ' AND s2.alias_value IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                        if (I18nHelper::useI18n()) {
+                            $inA[] = '(coalesce(i18n_s2.alias, s2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2.alias_value, s2.alias_value) IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                        } else {
+                            $inA[] = '(s2.alias = ' . $db->quote($k) . ' AND s2.alias_value IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                        }
 
                         // QUERY METHOD ALL (product to display must include all specifications togehter)
                         $i = 0;
                         foreach ($a as $v2) {
-                            $inAS[$i] = 's2x' . $i . '.alias = ' . $db->quote($k) . ' AND s2x' . $i . '.alias_value = "' . $v2 . '"';
+                            //$inAS[$i] = 's2x' . $i . '.alias = ' . $db->quote($k) . ' AND s2x' . $i . '.alias_value = "' . $v2 . '"';
+
+                            if (I18nHelper::useI18n()) {
+                                $inAS[$i] = 'coalesce(i18n_s2x'.$i.'.alias, s2x'.$i.'.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2x'.$i.'.alias_value, s2x'.$i.'.alias_value) = "' . $v2 . '"';
+                            } else {
+                                $inAS[$i] = 's2x' . $i . '.alias = ' . $db->quote($k) . ' AND s2x' . $i . '.alias_value = "' . $v2 . '"';
+                            }
+
                             $i++;
                         }
                     }
@@ -347,9 +369,18 @@ class PhocacartSearch
                         // QUERY METHOD ALL (product to display must include all attributes togehter)
                         if (!empty($inAS)) {
                             $where = ' a.id IN (SELECT at2.product_id FROM #__phocacart_attributes AS at2';
+
                             foreach ($inAS as $k => $v) {
+
                                 $where .= ' INNER JOIN  #__phocacart_attribute_values AS v2x' . $k . ' ON v2x' . $k . '.attribute_id = at2.id AND ' . $v;
+                                $where .= I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v2x' . $k, 'v2x' . $k );
                             }
+
+
+                            $where .= I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_at2', 'at2');
+                            $where .= I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v2', 'v2');
+
+
                             $where .= ' GROUP BY at2.product_id)';
                         }
                     }
@@ -360,6 +391,10 @@ class PhocacartSearch
                             $c     = count($condition);
                             $where = ' a.id IN (SELECT at2.product_id FROM #__phocacart_attributes AS at2'
                                 . ' LEFT JOIN  #__phocacart_attribute_values AS v2 ON v2.attribute_id = at2.id'
+
+
+                                . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_at2', 'at2')
+                                . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v2', 'v2')
                                 . ' WHERE ' . implode(' OR ', $condition)
                                 . ' GROUP BY at2.product_id'
                                 //.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
@@ -371,6 +406,7 @@ class PhocacartSearch
 
                 case 's': // Specifications
                     if ($searchParams['sql_filter_method_specification'] == 1) {
+
                         // QUERY METHOD ALL (product to display must include all specifications togehter)
                         if (!empty($inAS)) {
                             // We don't have any main table so we need to split all items into:
@@ -389,6 +425,9 @@ class PhocacartSearch
                                 }
                                 $i++;
                             }
+
+                            $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s2', 's2');
+
                             $where .= ' ' . $closeWhere . ')';
                         }
                     }
@@ -396,7 +435,10 @@ class PhocacartSearch
                         // QUERY METHOD ANY (product to display must include one of selected specifications)
                         if (!empty($condition)) {
                             $c     = count($condition);
+
                             $where = ' a.id IN (SELECT s2.product_id FROM #__phocacart_specifications AS s2'
+                                . I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s2', 's2')
+
                                 . ' WHERE ' . implode(' OR ', $condition)
                                 . ' GROUP BY s2.product_id'
                                 . ' HAVING COUNT(s2.alias) >= ' . $c

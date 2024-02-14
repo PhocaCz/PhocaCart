@@ -275,7 +275,13 @@ class PhocacartParameter
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 13);
 
 
-		$columns		= 'pv.id, pv.title, pv.alias, pv.count_products';
+		$columns		= 'pv.id, pv.count_products';
+        if (I18nHelper::useI18n()) {
+            $columns .= ', coalesce(i18n_pv.title, pv.title) as title, coalesce(i18n_pv.alias, pv.alias) as  alias';
+        } else {
+            $columns   .= ', pv.title, pv.alias';
+        }
+
 		/*$groupsFull		= $columns;
 		$groupsFast		= 'm.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
@@ -327,14 +333,15 @@ class PhocacartParameter
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_parameter_values AS pv'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+			. I18nHelper::sqlJoin('#__phocacart_parameter_values_i18n', 'i18n_pv', 'pv')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			//.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;
 
 		$db->setQuery($q);
 
-
 		$items = $db->loadObjectList();
+
 
 		return $items;
 	}

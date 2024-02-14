@@ -277,8 +277,18 @@ class PhocacartSpecification
 		$db 			= Factory::getDBO();
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 6);
 
-		$columns		= 's.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color';
-		$groupsFull		= $columns;
+		$columns		= 's.id, s.image, s.image_medium, s.image_small, s.color';
+		//$groupsFull		= $columns;
+
+		if (I18nHelper::useI18n()) {
+			$groupsFull = $columns . ', coalesce(i18n_s.title, s.title), coalesce(i18n_s.alias, s.alias), coalesce(i18n_s.value, s.value), coalesce(i18n_s.alias_value, s.alias_value)';
+            $columns .= ', coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.alias, s.alias) as  alias, coalesce(i18n_s.value, s.value) as value, coalesce(i18n_s.alias_value, s.alias_value) as alias_value';
+        } else {
+            $columns   .= ', s.title, s.alias, s.value, s.alias_value';
+			$groupsFull = $columns;
+        }
+
+
 		$groupsFast		= 's.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -322,6 +332,8 @@ class PhocacartSpecification
 		$query = 'SELECT '.$columns
 				.' FROM  #__phocacart_specifications AS s'
 				. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'i18n_sg', 'sg')
+				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s', 's')
 				. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 				.' GROUP BY '.$groups
 				.' ORDER BY '.$orderingText;
