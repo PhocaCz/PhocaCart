@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
 
-	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fieldset name="title">
+			<field name="name" type="text" required="true" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" />
+		</fieldset>
 
-<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+			<field name="product_id" type="PhocaSelectItem" required="true" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
 
+			<field name="user_id" type="user" required="true" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" />
 
+			<field name="date" type="Calendar" showtime="true" filter="user_utc" translateformat="true" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" />
 
-<field name="product_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" required="true" />
+			<field name="rating" type="list" default="1" label="COM_PHOCACART_FIELD_RATING_LABEL" description="COM_PHOCACART_FIELD_RATING_DESC">
+				<option value="1">1</option>
+				<option	value="2">2</option>
+				<option	value="3">3</option>
+				<option	value="4">4</option>
+				<option	value="5">5</option>
+			</field>
 
-<field name="user_id" type="user" class="form-control" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" required="true" />
+			<field name="review" type="textarea" label="COM_PHOCACART_FIELD_REVIEW_LABEL" description="COM_PHOCACART_FIELD_REVIEW_DESC" />
+		</fieldset>
 
-<field name="name" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_NAME_DESC" required="true" />
+		<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
+			<field name="published" type="list" default="1" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
+				<option value="1">JPUBLISHED</option>
+				<option	value="0">JUNPUBLISHED</option>
+			</field>
 
+			<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
+				<option value="*">JALL</option>
+			</field>
 
+			<field name="ordering" type="PhocacartOrdering" table="review" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-<field name="rating" type="list" class="form-select" label="COM_PHOCACART_FIELD_RATING_LABEL" description="COM_PHOCACART_FIELD_RATING_DESC" size="1" default="1">
-	<option value="1">1</option>
-	<option	value="2">2</option>
-	<option	value="3">3</option>
-	<option	value="4">4</option>
-	<option	value="5">5</option>
-</field>
-
-<field name="review" type="textarea" class="form-control"  label="COM_PHOCACART_FIELD_REVIEW_LABEL" description="COM_PHOCACART_FIELD_REVIEW_DESC"   />
-
-<field name="ordering" type="PhocacartOrdering" table="review" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-	</fieldset>
-	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-
-<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
-
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
-	<option value="*">JALL</option>
-</field>
-
-<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" showtime="true" filter="user_utc" translateformat="true" />
-
-	</fieldset>
-
-
+			<field name="id" type="hidden" />
+		</fieldset>
+	</fields>
 </form>
