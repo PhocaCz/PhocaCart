@@ -76,7 +76,7 @@ class JFormFieldPhocaTextArea extends TextareaField
 
         $extraData = [
             'i18n' => $this->i18n,
-            'languages' => I18nHelper::getEditLanguages(),
+            'languages' => I18nHelper::getEditLanguages($this->i18n),
             'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 

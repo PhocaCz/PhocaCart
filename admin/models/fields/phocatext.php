@@ -93,7 +93,7 @@ class JFormFieldPhocaText extends TextField
             'showLinkButton' => $this->showLinkButton,
             'showTranslation' => $this->showTranslation,
             'i18n' => $this->i18n,
-            'languages' => I18nHelper::getEditLanguages(),
+            'languages' => I18nHelper::getEditLanguages($this->i18n),
             'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 
