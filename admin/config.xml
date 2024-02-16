@@ -948,6 +948,17 @@
             </field>
 
 
+          <field name="_schemaorg_heading" type="phocahead" default="COM_PHOCACART_CONFIG_SCHEMAORG_OPTIONS_LABEL"/>
+
+          <field name="schema_product" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_SCHEMA_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_SCHEMA_PRODUCT_DESC">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+          </field>
+
+          <field name="schema_cache" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_SCHEMA_CACHE_LABEL" description="COM_PHOCACART_FIELD_SCHEMA_CACHE_DESC">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+          </field>
         </fieldset>
 
         <fieldset name="calculation" label="COM_PHOCACART_CONFIG_HEAD_CALCULATION_LABEL">

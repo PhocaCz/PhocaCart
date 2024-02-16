@@ -9,31 +9,27 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 class PhocacartReview
 {
 	public static function getReviewsByProduct($productId) {
-		$db = Factory::getDBO();
+		$db = Factory::getContainer()->get(DatabaseInterface::class);
 		if ((int)$productId > 0) {
-
 			$columns		= 'a.id, a.product_id, a.user_id, a.name, a.rating, a.review, a.date, a.published';
-			$groupsFull		= $columns;
-			$groupsFast		= 'a.id';
-			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
-
-
 			$query = 'SELECT '.$columns
 					   .' FROM #__phocacart_reviews AS a'
 					   .' WHERE a.product_id = '.(int) $productId
-					   .' AND a.published = 1'
-					   .' GROUP BY '.$groups;
+					   .' AND a.published = 1';
 			$db->setQuery($query);
 
 			$reviews = $db->loadObjectList();
 
 			return $reviews;
 		}
+
 		return false;
 	}
 

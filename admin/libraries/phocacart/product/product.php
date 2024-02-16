@@ -52,7 +52,6 @@ class PhocacartProduct
     public static function getProduct($productId, $prioritizeCatid = 0, $type = array(0, 1))
     {
         $db     = Factory::getDBO();
-        $app    = Factory::getApplication();
         $where  = [];
         $params = PhocacartUtils::getComponentParameters();
         $user   = PhocacartUser::getUser();
@@ -68,7 +67,7 @@ class PhocacartProduct
             'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number',
             'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days',
             'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types', 'i.owner_id',
-            'pc.ordering', 'c.id AS catid',
+            'pc.ordering', 'c.id AS catid', 'i.condition', 'i.language',
             'm.id as manufacturerid',
         ];
 
@@ -754,7 +753,7 @@ class PhocacartProduct
         if ((int)$limitCount > 0) {
             $q .= ' LIMIT ' . (int)$limitOffset . ', ' . (int)$limitCount;
         }
-        
+
         $db->setQuery($q);
 
         if ($return == 'column') {

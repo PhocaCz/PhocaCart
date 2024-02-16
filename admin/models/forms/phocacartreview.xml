@@ -10,7 +10,7 @@
 		</fieldset>
 
 		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
-			<field name="product_id" type="PhocaSelectItem" required="true" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
+			<field name="product_id" type="PhocaSelectItem" required="true" filter="integer" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
 
 			<field name="user_id" type="user" required="true" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" />
 
@@ -31,10 +31,6 @@
 			<field name="published" type="list" default="1" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
 				<option value="1">JPUBLISHED</option>
 				<option	value="0">JUNPUBLISHED</option>
-			</field>
-
-			<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
-				<option value="*">JALL</option>
 			</field>
 
 			<field name="ordering" type="PhocacartOrdering" table="review" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
