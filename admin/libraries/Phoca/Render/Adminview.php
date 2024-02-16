@@ -262,7 +262,6 @@ class Adminview
 						$field = $form->getField($value);
 						$o .= HTMLHelper::_('uitab.startTabSet', $field->id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]);
 						$languages = I18nHelper::getI18nLanguages();
-						$defLanguage = I18nHelper::getDefLanguage();
 						$fieldValue = I18nHelper::checkI18nValue($field->value);
 
 						foreach ($inputs as $lang => $input) {

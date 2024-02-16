@@ -72,7 +72,9 @@ class JFormFieldPhocaEditor extends EditorField
     {
         $data = parent::getLayoutData();
 
-        $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
+        if ($this->i18n) {
+            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
+        }
 
         $extraData = [
             'i18n' => $this->i18n,
