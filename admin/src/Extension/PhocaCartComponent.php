@@ -144,11 +144,18 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
 
     public function getSchemaorgContexts(): array
     {
-        Factory::getApplication()->getLanguage()->load('com_phocacart', JPATH_ADMINISTRATOR);
+        $app = Factory::getApplication();
+        $app->getLanguage()->load('com_phocacart', JPATH_ADMINISTRATOR);
 
-        $contexts = [
-            'com_phocacart.phocacartitem' => Text::_('COM_PHOCACART_SCHEMAORG_PRODUCT'),
-        ];
+        if ($app->isClient('site')) {
+            $contexts = [
+                'com_phocacart.item' => Text::_('COM_PHOCACART_SCHEMAORG_PRODUCT'),
+            ];
+        } else {
+            $contexts = [
+                'com_phocacart.phocacartitem' => Text::_('COM_PHOCACART_SCHEMAORG_PRODUCT'),
+            ];
+        }
 
         return $contexts;
     }
