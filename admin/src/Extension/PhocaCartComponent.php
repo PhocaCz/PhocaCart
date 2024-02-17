@@ -14,6 +14,7 @@ use Joomla\CMS\Categories\CategoryInterface;
 use Joomla\CMS\Categories\CategoryNode;
 use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
 use Joomla\CMS\Dispatcher\DispatcherInterface;
+use Joomla\CMS\Event\Model\AfterSaveEvent;
 use Joomla\CMS\Event\Model\PrepareDataEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\BeforeCompileHeadEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareSaveEvent;
@@ -66,6 +67,7 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
             // Need this because admin contexts differs from frontend contexts
             Factory::getApplication()->getDispatcher()->addListener('onContentPrepareData', [$this, 'onContentPrepareData']);
             Factory::getApplication()->getDispatcher()->addListener('onSchemaPrepareSave', [$this, 'onSchemaPrepareSave']);
+            Factory::getApplication()->getDispatcher()->addListener('onContentAfterSave', [$this, 'onContentAfterSave']);
         }
         $this->dispatcherFactory = $dispatcherFactory;
     }
@@ -218,6 +220,39 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
             ->bind(':context', $subject->context, ParameterType::STRING);
         $db->setQuery($query);
         $subject->id = $db->loadResult();
+    }
+
+    /**
+     * Deletes obsolete Schema.org data with proper context
+     * We need this, as admin contexts are different with frontend contexts
+     *
+     * @since   5.0.0
+     */
+    public function onContentAfterSave(AfterSaveEvent $event): void
+    {
+        if (!Factory::getApplication()->isClient('administrator') || $event->getContext() !== 'com_phocacart.phocacartitem') {
+            return;
+        }
+
+        $context = 'com_phocacart.item';
+        $table   = $event->getItem();
+        $data    = $event->getData();
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $itemId = (int) $table->id;
+
+        if (empty($data['schema']) || empty($data['schema']['schemaType']) || $data['schema']['schemaType'] === 'None') {
+            $query = $db->getQuery(true);
+
+            $query->delete($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . '= :itemId')
+                ->bind(':itemId', $itemId, ParameterType::INTEGER)
+                ->where($db->quoteName('context') . '= :context')
+                ->bind(':context', $context, ParameterType::STRING);
+
+            $db->setQuery($query)->execute();
+        }
     }
 
     /**
