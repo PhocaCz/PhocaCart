@@ -14,16 +14,23 @@ use Joomla\CMS\Categories\CategoryInterface;
 use Joomla\CMS\Categories\CategoryNode;
 use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
 use Joomla\CMS\Dispatcher\DispatcherInterface;
+use Joomla\CMS\Event\Model\PrepareDataEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\BeforeCompileHeadEvent;
+use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareSaveEvent;
 use Joomla\CMS\Extension\LegacyComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Factory\MVCFactoryServiceTrait;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Schemaorg\SchemaorgServiceInterface;
 use Joomla\CMS\Version;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Event\Event;
+use Joomla\Event\Priority;
+use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Schemaorg\Schema;
 
 \defined('JPATH_PLATFORM') or die;
@@ -56,6 +63,9 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
         Factory::getApplication()->getDispatcher()->addListener('onContentPrepareForm', [$this, 'onContentPrepareForm']);
         if (Version::MAJOR_VERSION >= 5) {
             Factory::getApplication()->getDispatcher()->addListener('onSchemaBeforeCompileHead', [$this, 'onSchemaBeforeCompileHead']);
+            // Need this because admin contexts differs from frontend contexts
+            Factory::getApplication()->getDispatcher()->addListener('onContentPrepareData', [$this, 'onContentPrepareData']);
+            Factory::getApplication()->getDispatcher()->addListener('onSchemaPrepareSave', [$this, 'onSchemaPrepareSave']);
         }
         $this->dispatcherFactory = $dispatcherFactory;
     }
@@ -142,6 +152,11 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
         }
     }
 
+    /**
+     * @inheritdoc
+     *
+     * @since   5.0.0
+     */
     public function getSchemaorgContexts(): array
     {
         $app = Factory::getApplication();
@@ -161,7 +176,7 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
     }
 
     /**
-     * @inheritdoc
+     * Adds Schema.org data
      *
      * @since   5.0.0
      */
@@ -176,4 +191,85 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
 
         Schema::injectProductSchema($context, $schema);
     }
+
+    /**
+     * Modifies Schema.org data with proper context
+     * We need this, as admin contexts are different with frontend contexts
+     *
+     * @since   5.0.0
+     */
+    public function onSchemaPrepareSave(PrepareSaveEvent $event): void
+    {
+        if (!Factory::getApplication()->isClient('administrator') || $event->getContext() !== 'com_phocacart.phocacartitem') {
+            return;
+        }
+
+        $subject = $event->getArgument('subject');
+        $subject->context = 'com_phocacart.item';
+
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from($db->quoteName('#__schemaorg'))
+            ->where($db->quoteName('itemId') . '= :itemId')
+            ->bind(':itemId', $subject->itemId, ParameterType::INTEGER)
+            ->where($db->quoteName('context') . '= :context')
+            ->bind(':context', $subject->context, ParameterType::STRING);
+        $db->setQuery($query);
+        $subject->id = $db->loadResult();
+    }
+
+    /**
+     * Loads Schema.org data with proper context
+     * We need this, as admin contexts are different with frontend contexts
+     *
+     * @since   5.0.0
+     */
+    public function onContentPrepareData(PrepareDataEvent $event): void
+    {
+        $context = $event->getContext();
+
+        if (!Factory::getApplication()->isClient('administrator') || $context !== 'com_phocacart.phocacartitem') {
+            return;
+        }
+
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $data = (object)$event->getData();
+        if ($data->id ?? 0) {
+            $context = 'com_phocacart.item';
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . '= :itemId')
+                ->bind(':itemId', $data->id, ParameterType::INTEGER)
+                ->where($db->quoteName('context') . '= :context')
+                ->bind(':context', $context, ParameterType::STRING);
+
+            $results = $db->setQuery($query)->loadAssoc();
+
+            if (empty($results)) {
+                return;
+            }
+
+            $schemaType                 = $results['schemaType'];
+            $data->schema['schemaType'] = $schemaType;
+
+            $schema = new Registry($results['schema']);
+
+            $data->schema[$schemaType] = $schema->toArray();
+        }
+
+        $dispatcher = Factory::getApplication()->getDispatcher();
+        $event      = new \Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareDataEvent('onSchemaPrepareData', [
+            'subject' => $data,
+            'context' => $context,
+        ]);
+
+        PluginHelper::importPlugin('schemaorg', null, true, $dispatcher);
+        $dispatcher->dispatch('onSchemaPrepareData', $event);
+    }
+
 }
