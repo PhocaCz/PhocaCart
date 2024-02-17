@@ -14,6 +14,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\Database\DatabaseInterface;
+use Phoca\PhocaCart\Constants\WishListType;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartWishlist
@@ -77,6 +79,7 @@ class PhocacartWishlist
 			$query = 'SELECT a.product_id, a.category_id, a.user_id'
 					.' FROM #__phocacart_wishlists AS a'
 					.' WHERE a.user_id = '.(int)$this->user->id
+					.' AND a.type = ' . WishListType::WishList
 					.' ORDER BY a.id';
 			$db->setQuery($query);
 			$items = $db->loadAssocList();
@@ -114,8 +117,8 @@ class PhocacartWishlist
 				// but it does not work with multiple columns product_id x category_id x user_id in combination
 				foreach($this->items as $k => $v) {
 					if (isset($v['product_id']) && isset($v['category_id']) && (int)$v['product_id'] > 0 && (int)$v['category_id'] > 0) {
-						$q = ' INSERT INTO #__phocacart_wishlists (product_id, category_id, user_id, date)';
-						$q .= ' VALUES ('.(int)$v['product_id'].', '.(int)$v['category_id'].', '.(int)$this->user->id.',  '.$db->quote($now).')';;
+						$q = ' INSERT INTO #__phocacart_wishlists (product_id, category_id, user_id, date, type)';
+						$q .= ' VALUES ('.(int)$v['product_id'].', '.(int)$v['category_id'].', '.(int)$this->user->id.',  '.$db->quote($now). ', ' . WishListType::WishList . ')';
 						$q .= ' ON DUPLICATE KEY UPDATE  product_id = VALUES(product_id), category_id = VALUES(category_id), user_id = VALUES(user_id), date = VALUES(date);';
 					}
 				}
@@ -179,7 +182,8 @@ class PhocacartWishlist
 						.' FROM #__phocacart_wishlists'
 						.' WHERE product_id = '.(int)$this->items[$id]['product_id']
 						.' AND category_id =  '.(int)$this->items[$id]['category_id']
-						.' AND user_id =  '.(int)$this->user->id;
+						.' AND user_id =  '.(int)$this->user->id
+						.' AND type =  '. WishListType::WishList;
 
 						unset($this->items[$id]);// Because of ajax
 
@@ -330,12 +334,12 @@ class PhocacartWishlist
 		return $itemsR;
 	}
 
-	public function renderList() {
-
-		$db 				    = Factory::getDBO();
+	public function renderList()
+	{
+		/** @var DatabaseInterface $db */
+		$db 				    = Factory::getContainer()->get(DatabaseInterface::class);
 		$uri 				    = Uri::getInstance();
 		$action			        = $uri->toString();
-		$app			        = Factory::getApplication();
 		$s                      = PhocacartRenderStyle::getStyles();
 		$paramsC 		        = PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
@@ -405,4 +409,3 @@ class PhocacartWishlist
 		return count($this->items);
 	}
 }
-?>

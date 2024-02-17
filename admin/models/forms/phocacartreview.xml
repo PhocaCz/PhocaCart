@@ -10,9 +10,9 @@
 		</fieldset>
 
 		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
-			<field name="product_id" type="PhocaSelectItem" required="true" filter="integer" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
-
 			<field name="user_id" type="user" required="true" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC" />
+
+			<field name="product_id" type="PhocaSelectItem" required="true" filter="integer" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
 
 			<field name="date" type="Calendar" showtime="true" filter="user_utc" translateformat="true" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" />
 
