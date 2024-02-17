@@ -119,7 +119,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
+		$this->setState('filter.search', trim($search));
 
 		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);
@@ -308,24 +308,20 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$search = $this->getState('filter.search');
 		if (!empty($search))
 		{
+            $search = trim($search);
 			if (stripos($search, 'id:') === 0) {
 				$query->where('a.id = '.(int) substr($search, 3));
 			}
 			else
 			{
+                $words	= explode(' ', $search);
+                $words = array_filter($words);
 
 				switch ($search_matching_option_admin) {
 					case 'all':
 					case 'any':
-
-						$words	= explode(' ', $search);
 						$wheres = array();
 						foreach ($words as $word) {
-
-							if (!$word = trim($word)) {
-								continue;
-							}
-
 							$word			= $db->quote('%'.$db->escape($word, true).'%', false);
 							$wheresSub 		= array();
 							$wheresSub[]	= 'a.title LIKE '.$word;
@@ -345,7 +341,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 					case 'exact':
 					default:
-						$text		= $db->quote('%'.$db->escape($search, true).'%', false);
+						$text		= $db->quote('%'.$db->escape(implode(' ', $words), true).'%', false);
 						$wheresSub	= array();
 						$wheresSub[]	= 'a.title LIKE '.$text;
 						$wheresSub[]	= 'a.alias LIKE '.$text;

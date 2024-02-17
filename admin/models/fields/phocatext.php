@@ -62,7 +62,6 @@ class JFormFieldPhocaText extends TextField
 
     public function setup(\SimpleXMLElement $element, $value, $group = null)
     {
-
         $result = parent::setup($element, $value, $group);
 
         if ($result == true) {
@@ -85,14 +84,16 @@ class JFormFieldPhocaText extends TextField
     {
         $data = parent::getLayoutData();
 
-        $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
+        if ($this->i18n) {
+            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
+        }
 
         $extraData = [
             'showCopyButton' => $this->showCopyButton,
             'showLinkButton' => $this->showLinkButton,
             'showTranslation' => $this->showTranslation,
             'i18n' => $this->i18n,
-            'languages' => I18nHelper::getEditLanguages(),
+            'languages' => I18nHelper::getEditLanguages($this->i18n),
             'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 

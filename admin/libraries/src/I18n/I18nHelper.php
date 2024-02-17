@@ -183,9 +183,9 @@ abstract class I18nHelper
         return $value;
     }
 
-    public static function getEditLanguages()
+    public static function getEditLanguages(bool $useI18n)
     {
-        if (!self::isI18n()) {
+        if (!$useI18n || !self::isI18n()) {
             return [
                 (object)[
                     'lang_code' => null,

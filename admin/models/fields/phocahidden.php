@@ -47,11 +47,13 @@ class JFormFieldPhocaHidden extends HiddenField
     {
         $data = parent::getLayoutData();
 
-        $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
+        if ($this->i18n) {
+            $data['value'] = I18nHelper::checkI18nValue($data['value'] ?? null);
+        }
 
         $extraData = [
             'i18n' => $this->i18n,
-            'languages' => I18nHelper::getEditLanguages(),
+            'languages' => I18nHelper::getEditLanguages($this->i18n),
             'defLanguage' => I18nHelper::getDefLanguage(),
         ];
 
