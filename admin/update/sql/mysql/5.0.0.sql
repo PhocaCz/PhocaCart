@@ -210,3 +210,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_discounts_i18n` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE `#__phocacart_parameter_values_related` DROP INDEX `i_parameter_id`, ADD UNIQUE `i_parameter_id` (`item_id`, `parameter_value_id`, `parameter_id`);
+
+ALTER TABLE `#__phocacart_wishlists` ADD COLUMN `language` CHAR(7) NOT NULL DEFAULT '';
+
+INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","product_title","product_sku","product_url","site_name","site_url"]}');

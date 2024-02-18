@@ -139,7 +139,7 @@ final class PhocacartCategory
             }
 
             array_walk($categories, function ($category) use ($categories, $i18nData) {
-                if (I18nHelper::useI18n()) {
+                if (I18nHelper::isI18n()) {
                     $category->i18n = $i18nData;
                 }
 
@@ -150,7 +150,7 @@ final class PhocacartCategory
                 }
             });
 
-            if (I18nHelper::useI18n()) {
+            if (I18nHelper::isI18n()) {
                 $db->setQuery('SELECT i18n.* FROM #__phocacart_categories_i18n AS i18n');
                 $i18n = $db->loadObjectList() ?? [];
 

@@ -16,6 +16,7 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 jimport('joomla.application.component.helper');
@@ -536,8 +537,9 @@ class PhocacartRoute
 			}
 
 			if (Multilanguage::isEnabled() || I18nHelper::useI18n()) {
-				if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
-					$link .= '&lang='.$lang[0];
+                $lang = $lang[0] ?? '';
+				if ($lang && $lang !== '*'){
+					$link .= '&lang='.$lang;
 				}
 			}
 		}
@@ -829,11 +831,11 @@ class PhocacartRoute
 	}
 
 
-	public static function getProductCanonicalLink($id, $catid, $idAlias, $catidAlias, $preferredCatid = 0 ) {
-
+	public static function getProductCanonicalLink($id, $catid, $idAlias, $catidAlias, $preferredCatid = 0, string $lang = '')
+    {
 		if ((int)$preferredCatid > 0) {
-
-			$db    = Factory::getDBO();
+            /** @var DatabaseInterface $db */
+			$db    = Factory::getContainer()->get(DatabaseInterface::class);
 			$query = 'SELECT c.id, c.alias'
 				. ' FROM #__phocacart_categories AS c'
 				. ' WHERE c.id = ' . (int)$preferredCatid
@@ -846,6 +848,6 @@ class PhocacartRoute
 			}
 		}
 
-		return self::getItemRoute($id, $catid, $idAlias, $catidAlias);
+		return self::getItemRoute($id, $catid, $idAlias, $catidAlias, [$lang]);
 	}
 }
