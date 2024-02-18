@@ -217,18 +217,20 @@ abstract class I18nHelper
      * @param string $type             Different types like default, GROUP_CONCAT(...), GROUP_CONCAT(DISTINCT ...)
      * @param string $prefix           If this SQL entry is a part of whole SQL query, add e.g. "," as prefix
      * @param string $suffix           If this SQL entry is a part of whole SQL query, add e.g. "," as suffix
+     *
      * @return string
+     *
+     * @since 5.0.0
      */
-    public static function sqlCoalesce(array $i18nColumns, string $i18nAlias = 'i18n', string $mainTableAlias = 'a', string $finalAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = ''): string {
-
+    public static function sqlCoalesce(array $i18nColumns, string $i18nAlias = 'i18n', string $mainTableAlias = 'a', string $finalAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = ''): string
+    {
         $output = '';
 
         if ($prefix != '') {
             $output .= $prefix;
         }
 
-        switch($type){
-
+        switch($type) {
             case 'groupconcat':
                 $columnPrefix = 'GROUP_CONCAT(';
                 $columnSuffix = ')';
@@ -250,15 +252,12 @@ abstract class I18nHelper
         $useI18n = self::useI18n();
         $columns = [];
         if (!empty($i18nColumns)) {
-            foreach($i18nColumns as $k => $v) {
-
+            foreach($i18nColumns as $column) {
                 if ($useI18n) {
-                    $columns[] = $columnPrefix . 'coalesce(' . $i18nAlias . '_' . $mainTableAlias . '.' . $v. ', ' . $mainTableAlias. '.' . $v . ')' . $columnSuffix. ' as ' . $finalAliasPrefix . $v;
+                    $columns[] = $columnPrefix . 'coalesce(' . $i18nAlias . '_' . $mainTableAlias . '.' . $column. ', ' . $mainTableAlias. '.' . $column . ')' . $columnSuffix. ' as ' . $finalAliasPrefix . $column;
                 } else {
-                    $columns[] =  $columnPrefix . $mainTableAlias. '.' . $v . $columnSuffix. ' as ' . $finalAliasPrefix . $v;
+                    $columns[] =  $columnPrefix . $mainTableAlias. '.' . $column . $columnSuffix. ' as ' . $finalAliasPrefix . $column;
                 }
-
-
             }
 
             $output = implode(', ', $columns);
@@ -270,9 +269,38 @@ abstract class I18nHelper
         }
 
         return $output;
-
     }
 
+    public static function query(QueryInterface $query, string $i18nTable, array $fallbackColumns, array $additionalColumns = [], string $mainTableAlias = 'a', ?string $lang = null): void
+    {
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $i18nAlias = 'i18n_' . $mainTableAlias;
+        if (!$lang || $lang === '*') {
+            $lang = self::getI18nLanguage();
+        }
+
+        if (self::isI18n()) {
+            $query->join('LEFT', $db->quoteName($i18nTable, $i18nAlias),
+                $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote($lang));
+
+            foreach ($fallbackColumns as $column => $alias) {
+                $query->select('coalesce(' . $i18nAlias . '.' . $column . ', ' . $mainTableAlias . '.' . $column .') AS ' . ($alias ?: $column));
+            }
+
+            foreach ($additionalColumns as $column => $alias) {
+                $query->select($i18nAlias . '.' . $column .' AS ' . ($alias ?: $column));
+            }
+        } else {
+            foreach ($fallbackColumns as $column => $alias) {
+                $query->select($mainTableAlias . '.' . $column .' AS ' . ($alias ?: $column));
+            }
+
+            foreach ($additionalColumns as $column => $alias) {
+                $query->select($mainTableAlias . '.' . $column .' AS ' . ($alias ?: $column));
+            }
+        }
+    }
 
     public static function getEditorIcon($langCode, $value): string
     {
