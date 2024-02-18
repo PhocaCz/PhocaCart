@@ -207,6 +207,72 @@ abstract class I18nHelper
         return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nAlias . ' ON ' . $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
     }
 
+
+    /**
+     * @param array $i18nColumns       List of columns to be transformed to coalesce in case useI18n is used
+     * @param string $i18nAlias        I18n column alias
+     * @param string $mainTableAlias   Main table column alias
+     * @param string $finalAliasPrefix Final alias for columns, e.g. "shipping" will be "shippingtitle" based on main column alias: coalesce(i18n_s.title, s.title) as shippingtitle
+     * @param string $type             Different types like default, GROUP_CONCAT(...), GROUP_CONCAT(DISTINCT ...)
+     * @param string $prefix           If this SQL entry is a part of whole SQL query, add e.g. "," as prefix
+     * @param string $suffix           If this SQL entry is a part of whole SQL query, add e.g. "," as suffix
+     * @return string
+     */
+    public static function sqlCoalesce(array $i18nColumns, string $i18nAlias = 'i18n', string $mainTableAlias = 'a', string $finalAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = ''): string {
+
+        $output = '';
+
+        if ($prefix != '') {
+            $output .= $prefix;
+        }
+
+        switch($type){
+
+            case 'groupconcat':
+                $columnPrefix = 'GROUP_CONCAT(';
+                $columnSuffix = ')';
+            break;
+
+            case 'groupconcatdistinct':
+                $columnPrefix = 'GROUP_CONCAT(DISTINCT ';
+                $columnSuffix = ')';
+            break;
+
+            case '':
+            default:
+                $columnPrefix = '';
+                $columnSuffix = '';
+            break;
+
+        }
+
+        $useI18n = self::useI18n();
+        $columns = [];
+        if (!empty($i18nColumns)) {
+            foreach($i18nColumns as $k => $v) {
+
+                if ($useI18n) {
+                    $columns[] = $columnPrefix . 'coalesce(' . $i18nAlias . '_' . $mainTableAlias . '.' . $v. ', ' . $mainTableAlias. '.' . $v . ')' . $columnSuffix. ' as ' . $finalAliasPrefix . $v;
+                } else {
+                    $columns[] =  $columnPrefix . $mainTableAlias. '.' . $v . $columnSuffix. ' as ' . $finalAliasPrefix . $v;
+                }
+
+
+            }
+
+            $output = implode(', ', $columns);
+        }
+
+
+        if ($suffix != '') {
+            $output .= $suffix;
+        }
+
+        return $output;
+
+    }
+
+
     public static function getEditorIcon($langCode, $value): string
     {
         $defLanguage = self::getDefLanguage();

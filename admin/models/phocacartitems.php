@@ -119,7 +119,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', trim($search));
+		$this->setState('filter.search', trim((string)$search));
 
 		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
 		$this->setState('filter.access', $accessId);
