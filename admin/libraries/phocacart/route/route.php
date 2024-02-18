@@ -59,8 +59,15 @@ class PhocacartRoute
 				$link .= '&Itemid='.$item->id;
 			} else if ((int)$itemId > 0) {
 				$link .= '&Itemid='.(int)$itemId;
-			}
-		};
+            }
+
+            if (Multilanguage::isEnabled() || I18nHelper::useI18n()) {
+                if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
+                    $link .= '&lang='.$lang[0];
+                }
+            }
+		}
+
 		return $link;
 	}
 
