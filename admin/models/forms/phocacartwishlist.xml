@@ -21,6 +21,10 @@
 				<option value="1">COM_PHOCACART_WISHLIST_TYPE_WATCHDOG</option>
 			</field>
 
+			<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
+				<option value="*">JALL</option>
+			</field>
+
 			<field name="ordering" type="PhocacartOrdering" table="wishlist" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
 			<field name="id" type="hidden"  />

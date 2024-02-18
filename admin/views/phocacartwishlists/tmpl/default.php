@@ -26,7 +26,6 @@ $saveOrderingUrl = '';
 if ($saveOrder && !empty($this->items)) {
     $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
-$sortFields = $this->getSortFields();
 
 echo $r->jsJorderTable($listOrder);
 
