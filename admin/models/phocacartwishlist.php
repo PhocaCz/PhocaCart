@@ -9,6 +9,7 @@
 defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Mail\MailTemplate;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -57,9 +58,10 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
 
-		$table->date 				= PhocacartUtils::getDateFromString($table->date);
 		if (empty($table->id)) {
-			// Set ordering to the last item if not set
+            $table->date = Factory::getDate()->toSql();
+
+            // Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = $this->getDatabase();
 				$db->setQuery('SELECT MAX(ordering) FROM #__phocacart_wishlists WHERE user_id = '. (int) $table->user_id);
